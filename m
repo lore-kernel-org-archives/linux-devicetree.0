@@ -1,84 +1,29 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Thu, 22 Oct 2015 11:05:26 -0400
-Message-ID: <5628FB36.4010303@ti.com>
-References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/4] add missing of_node_put
+Date: Thu, 22 Oct 2015 10:08:36 -0500
+Message-ID: <CAL_Jsq+MsKSF4r8S50YYaQYH0N0SzQZHJ0sSW6eHK_XXdvAmnQ@mail.gmail.com>
+References: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1445432201-16007-1-git-send-email-w-kwok2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: WingMan Kwok <w-kwok2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <1445504571-19838-1-git-send-email-Julia.Lawall@lip6.fr>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2015 08:56 AM, WingMan Kwok wrote:
-> On TI's Keystone platforms, several peripherals such as the
-> gbe ethernet switch, 10gbe ethernet switch and PCIe controller
-> require the use of a SerDes for converting SoC parallel data into
-> serialized data that can be output over a high-speed electrical
-> interface, and also converting high-speed serial input data
-> into parallel data that can be processed by the SoC.  The
-> SerDeses used by those peripherals, though they may be different,
-> are largely similar in functionality and setup.
->
-> This patch series provides a SerDes phy driver implementation that can be
-> used by the above mentioned peripheral drivers to configure their
-> respective SerDeses.
->
-> As an example of the using the SerDes driver, this patch series also
-> updates the Keystone PCIe host driver to enable and use its SerDes block.
->
-> References:
-> [1] KeyStone II Architecture Serializer/Deserializer (SerDes) User's Guide
->      (http://www.ti.com/lit/ug/spruho3a/spruho3a.pdf)
->
-> v3:
-> 	- addresses the following review comments
-> 		1. https://lkml.org/lkml/2015/10/19/756
-> 			-- included sizes.h
-> 		2. https://lkml.org/lkml/2015/10/19/781
-> 			-- updated base on Fengguang Wu's suggestions.
-> 		3. https://lkml.org/lkml/2015/10/15/896
-> 			-- clarified here https://lkml.org/lkml/2015/10/20/512
-> 			-- nothing to do.
->
-> v2:
-> 	- addresses the following review comments on v1:
-> 		1. https://lkml.org/lkml/2015/10/15/896
-> 			-- this does not address the question:
-> 			   "The current code does not do this when compiled,
-> 			    which might be a problem for distributors.
-> 			    Can you clarify the license?"
-> 			-- the question is still under discussion here:
-> 			   https://lkml.org/lkml/2015/10/19/471
-> 		2. https://lkml.org/lkml/2015/10/15/895
->
-> v1:
-> 	- addresses the following review comments
-> 		1. https://lkml.org/lkml/2015/10/13/803
-> 		2. https://lkml.org/lkml/2015/10/14/613
-> 		3. https://lkml.org/lkml/2015/10/13/818
->
-> 	- An update to PCIe dts bindings to enable the PCIe SerDes is
-> 	  submitted in a separate patch.
->
-> WingMan Kwok (2):
->    phy: keystone: serdes driver for gbe 10gbe and pcie
->    PCI: keystone: update to use generic keystone serdes driver
->
->   Documentation/devicetree/bindings/phy/ti-phy.txt |  239 +++
->   drivers/pci/host/pci-keystone.c                  |   24 +-
->   drivers/pci/host/pci-keystone.h                  |    1 +
->   drivers/phy/Kconfig                              |    8 +
->   drivers/phy/Makefile                             |    1 +
->   drivers/phy/phy-keystone-serdes.c                | 2366 ++++++++++++++++++++++
->   6 files changed, 2629 insertions(+), 10 deletions(-)
->   create mode 100644 drivers/phy/phy-keystone-serdes.c
->
-Kishon, Bjorn
+On Thu, Oct 22, 2015 at 4:02 AM, Julia Lawall <Julia.Lawall@lip6.fr> wrote:
+> The various for_each device_node iterators performs an of_node_get on each
+> iteration, so a break out of the loop requires an of_node_put.
 
-Who will pick this up? Do we have time to get this in 4.4?
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+> ---
+>
+>  drivers/of/irq.c      |    7 +++++--
+>  drivers/of/overlay.c  |    5 ++++-
+>  drivers/of/platform.c |    8 ++++++--
+>  drivers/of/unittest.c |    8 ++++++--
+>  4 files changed, 21 insertions(+), 7 deletions(-)
+
+Series applied, thanks.
+
+Rob
