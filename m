@@ -1,117 +1,93 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v11 1/6] PCI: designware: move calculation of bus
- addresses to DRA7xx
-Date: Thu, 22 Oct 2015 16:37:17 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E162759DA@lhreml503-mbs>
-References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com>
- <1444991021-109306-2-git-send-email-wangzhou1@hisilicon.com>
- <20151021221524.GM1583@localhost>
- <EE11001F9E5DDD47B7634E2F8A612F2E16274DCC@lhreml503-mbs>
- <20151022163534.GB21237@localhost>
+From: Laura Abbott <laura@labbott.name>
+Subject: Re: [RFC][PATCH 1/2] WIP: Devicetree bindings for Ion
+Date: Thu, 22 Oct 2015 10:23:15 -0700
+Message-ID: <56291B83.6060208@labbott.name>
+References: <vnkw8u6xts6n.fsf@codeaurora.org>
+ <1444164433-9107-1-git-send-email-labbott@fedoraproject.org>
+ <1444164433-9107-2-git-send-email-labbott@fedoraproject.org>
+ <CAL_JsqJ+i3zC7UJ3BcdtOhdmQd8YnRC7bs3D2Ei5JD-4-C+A0g@mail.gmail.com>
+ <vnkwh9lwlymo.fsf@codeaurora.org>
+ <1c6ea0362f5336d9bc8acbfbd7ceae06@mail.ncrmnt.org>
+ <93351858f57ca6e1220a0007f98baa25@cloud.ncrmnt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151022163534.GB21237@localhost>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <93351858f57ca6e1220a0007f98baa25@cloud.ncrmnt.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: andrew@ncrmnt.org, Mitchel Humpherys <mitchelh@codeaurora.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Feng Tang <feng.tang@intel.com>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, a.makarov@module.ru, Riley Andrews <riandrews@android.com>, Colin Cross <ccross@google.com>, linux-kernel@vger.kernel.org, a.bogdanova@module.ru, arve@android.com, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, John Stultz <john.stultz@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, linux-arm-kernel@lists.infradead.org, Laura Abbott <labbott@fedoraproject.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
-> owner@vger.kernel.org] On Behalf Of Bjorn Helgaas
-> Sent: Thursday, October 22, 2015 5:36 PM
-> To: Gabriele Paoloni
-> Cc: Wangzhou (B); Bjorn Helgaas; jingoohan1@gmail.com;
-> pratyush.anand@gmail.com; Arnd Bergmann; linux@arm.linux.org.uk;
-> thomas.petazzoni@free-electrons.com; lorenzo.pieralisi@arm.com;
-> james.morse@arm.com; Liviu.Dudau@arm.com; jason@lakedaemon.net;
-> robh@kernel.org; gabriel.fernandez@linaro.org;
-> Minghuan.Lian@freescale.com; linux-pci@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; zhangjukuo; qiuzhenfa; liudongdong (C);
-> qiujiang; xuwei (O); Liguozhu (Kenneth)
-> Subject: Re: [PATCH v11 1/6] PCI: designware: move calculation of bus
-> addresses to DRA7xx
-> 
-> Hi Gabriele,
-> 
-> On Thu, Oct 22, 2015 at 07:21:41AM +0000, Gabriele Paoloni wrote:
-> > > -----Original Message-----
-> > > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> 
-> > > >  #define	PCIECTRL_DRA7XX_CONF_PHY_CS			0x010C
-> > > >  #define	LINK_UP						BIT(16)
-> > > > +#define	CPU_TO_BUS_ADDR					0x0FFFFFFF
-> > >
-> > > "CPU_TO_BUS_ADDR" is a very generic name.  Since you do have DRA7XX
-> in
-> > > other #defines and static symbols in this file, maybe it could be
-> DRA7XX to
-> > > make it obvious that it only applies here?
-> >
-> > Ok will change to DRA7XX_CPU_TO_BUS_ADRR in v12
-> > ..
-> 
-> > > > +	if (pp->io_mod_base)
-> > > > +		pp->io_mod_base &= CPU_TO_BUS_ADDR;
-> > >
-> > > These are equivalent to
-> > >
-> > >   pp->io_mod_base &= CPU_TO_BUS_ADDR;
-> > >
-> > > (You don't need to test whether they're zero first.)
-> >
-> > Yes agreed, will change in v12
-> > ...
-> 
-> > > >  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> "config");
-> > > > @@ -415,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >  			pp->io_base = range.cpu_addr;
-> > > >
-> > > >  			/* Find the untranslated IO space address */
-> > > > -			pp->io_mod_base = of_read_number(parser.range -
-> > > > -							 parser.np + na, ns);
-> > > > +			pp->io_mod_base = range.cpu_addr;
-> > >
-> > > So apparently
-> > >
-> > >   "of_read_number() == range.cpu_addr & CPU_TO_BUS_ADDR" on DRA7xx
-> > >   "of_read_number() == range.cpu_addr" everywhere else?
-> >
-> > Yes correct
-> >
-> > > Is that right?  Is that a valid assumption, i.e., are we assuming
-> > > anything about DTs in the field that we shouldn't?
-> >
-> > Before I wrote a patch that was generic to accommodate intermediate
-> level
-> > of translation between PCI_addr -> BUS_addr -> CPU_addr
-> >
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
-> July/360922.html
-> >
-> > After discussion we agreed to solve it with a bitmask rather than
-> adding
-> > a field to of_pci_range to make it generic.
-> > The bitmask only applies to DRA7xx
-> 
-> I haven't gotten all the way through this series yet, but don't bother
-> with
-> a v12 just for these minor changes.  I can easily fix them up when
-> applying
-> it.
-
-Great Many Thanks for this!
-
-Gab
-
-> 
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTAvMjIvMTUgMzozNiBBTSwgYW5kcmV3QG5jcm1udC5vcmcgd3JvdGU6Cj4gMjAg0L7QutGC
+0Y/QsdGA0Y8gMjAxNSDQsy4sIDE5OjM0LCAiTWl0Y2hlbCBIdW1waGVyeXMiIDxtaXRjaGVsaEBj
+b2RlYXVyb3JhLm9yZz4g0L3QsNC/0LjRgdCw0Ls6Cj4+IE9uIFR1ZSwgT2N0IDEzIDIwMTUgYXQg
+MTE6MTQ6MjMgQU0sIEFuZHJldyA8YW5kcmV3QG5jcm1udC5vcmc+IHdyb3RlOgo+Pgo+Pj4gT24g
+MjAxNS0xMC0xMiAyMTozOSwgTWl0Y2hlbCBIdW1waGVyeXMgd3JvdGU6Cj4+Pj4gT24gVHVlLCBP
+Y3QgMDYgMjAxNSBhdCAwNTozNTo0MSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcyQGdtYWls
+LmNvbT4KPj4+PiB3cm90ZToKPj4+Pj4gT24gVHVlLCBPY3QgNiwgMjAxNSBhdCAzOjQ3IFBNLCBM
+YXVyYSBBYmJvdHQgPGxhYmJvdHRAZmVkb3JhcHJvamVjdC5vcmc+Cj4+Pj4+IHdyb3RlOgo+Pj4+
+Cj4+Pj4gWy4uLl0KPj4+Pgo+Pj4+Pj4gK0V4YW1wbGU6Cj4+Pj4+PiArCj4+Pj4+PiArIGlvbiB7
+Cj4+Pj4+PiArIGNvbXBhdGJpbGUgPSAibGludXgsaW9uIjsKPj4+Pj4+ICsgI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4+Pj4+PiArICNzaXplLWNlbGxzID0gPDA+Owo+Pj4+Pj4gKwo+Pj4+Pj4gKyBp
+b24tc3lzdGVtLWhlYXAgewo+Pj4+Pj4gKyBsaW51eCxpb24taGVhcC1pZCA9IDwwPjsKPj4+Pj4+
+ICsgbGludXgsaW9uLWhlYXAtdHlwZSA9IDxJT05fU1lTVEVNX0hFQVBfVFlQRT47Cj4+Pj4+PiAr
+IGxpbnV4LGlvbi1oZWFwLW5hbWUgPSAic3lzdGVtIjsKPj4+Pj4KPj4+Pj4gSG93IGRvZXMgdGhp
+cyB2YXJ5IGFjcm9zcyBwbGF0Zm9ybXM/IElzIGFsbCBvZiB0aGlzIGJlaW5nIHB1c2hlZCBkb3du
+Cj4+Pj4+IHRvIERULCBiZWNhdXNlIHRoZXJlIGlzIG5vIGNvb3JkaW5hdGlvbiBvZiB0aGlzIGF0
+IHRoZSBrZXJuZWwgQUJJCj4+Pj4+IGxldmVsIGFjcm9zcyBwbGF0Zm9ybXMuIEluIG90aGVyIHdv
+cmRzLCB3aHkgY2FuJ3QgaGVhcCAwIGJlIGhhcmRjb2RlZAo+Pj4+PiBhcyBzeXN0ZW0gaGVhcCBp
+biB0aGUgZHJpdmVyLiBJdCBzZWVtcyB0byBtZSBhbnkgMSBvZiB0aGVzZSAzCj4+Pj4+IHByb3Bl
+cnRpZXMgY291bGQgYmUgdXNlZCB0byBkZXJpdmUgdGhlIG90aGVyIDIuCj4+Pj4KPj4+PiBUaGUg
+aGVhcC1pZDwtPmhlYXAtdHlwZSBtYXBwaW5nIGlzbid0IG5lY2Vzc2FyaWx5IDE6MS4gQXMgTGF1
+cmEKPj4+PiBpbmRpY2F0ZWQgZWxzZXdoZXJlIG9uIHRoaXMgdGhyZWFkLCBhIGdpdmVuIGhlYXAg
+bWlnaHQgbmVlZCB0byBiZQo+Pj4+IGNvbnRpZ3VvdXMgb24gb25lIHBsYXRmb3JtIGJ1dCBub3Qg
+b24gYW5vdGhlci4gSW4gdGhhdCBjYXNlIHlvdSBqdXN0Cj4+Pj4gc3dhcCBvdXQgdGhlIGhlYXAt
+dHlwZSBoZXJlIGFuZCB0aGVyZSdzIG5vIG5lZWQgZm9yIHVzZXJzcGFjZSB0byBjaGFuZ2UuCj4+
+Pj4KPj4+PiBUaGUgaGVhcC1uYW1lLCBPVE9ILCBjb3VsZCBiZSBkZXJpdmVkIGZyb20gdGhlIGhl
+YXAtaWQsIHdoaWNoIGlzIHdoYXQgd2UKPj4+PiBoYWNraXNobHkgZG8gaGVyZSBbMV0gYW5kIGhl
+cmVbMl0uCj4+Pgo+Pj4gQnkgdGhlIHdheSwgc2luY2Ugd2UgYWdyZWVkIHRoYXQgaGVhcCBpZCBh
+bmQgaGVhcCB0eXBlIG1hcHBpbmdzCj4+PiBhcmUgbm90IDE6MSAtIHdlIGhhdmUgYSBwcm9ibGVt
+IHdpdGggdGhlIGN1cnJlbnQgQVBJLgo+Pj4KPj4+IEluIHVzZXJzcGFjZSB3ZSBjdXJyZW50bHkg
+aGF2ZSB0aGlzOgo+Pj4KPj4+IGludCBpb25fYWxsb2MoaW50IGZkLCBzaXplX3QgbGVuLCBzaXpl
+X3QgYWxpZ24sIHVuc2lnbmVkIGludCBoZWFwX21hc2ssCj4+PiB1bnNpZ25lZCBpbnQgZmxhZ3Ms
+IGlvbl91c2VyX2hhbmRsZV90ICpoYW5kbGUpOwo+Pj4KPj4+IFdlIGRvIG5vdCBzcGVjaWZ5IGhl
+cmUgd2hhdCBUWVBFIG9mIGhlYXAgd2Ugd2FudCB0aGUgYWxsb2NhdGlvbiB0byBjb21lCj4+PiBm
+cm9tLgo+Pj4gVGhpcyBtYXkgbGVhZCB0byB2ZXJ5IHVucGxlYXNhbnQgc3R1ZmYgd2hlbiBwb3J0
+aW5nIGZyb20gb25lIHBsYXRmcm9tIHRvCj4+PiBhbm90aGVyLgo+Cj4gT2theSwgSSBtYXkgYmUg
+dG90YWxseSBtaXNzaW5nIHNvbWUgcG9pbnQgaGVyZSB0aGVuLgo+Cj4+IFdoYXQgInVucGxlYXNh
+bnQgc3R1ZmYiIGFyZSB5b3UgcmVmZXJyaW5nIHRvLCBleGFjdGx5Pwo+Cj4gSXQncyBub3QgcmVh
+bGx5IGNsZWFyIGZvciBtZSBob3cgKGFuZCBhdCB3aGVyZSAtIGtlcm5lbCBvciB1c2Vyc3BhY2Up
+Cj4gd2Ugc2hvdWxkIHByb3Blcmx5IHNvcnQgb3V0IGNhc2VzIHdoZW4gdGhlIG5leHQgZGV2aWNl
+IHRoZSBwaXBlbGluZQo+IGludHJvZHVjZXMgc29tZSBjb25zdHJhaW50cyBvbiB0aGUgYnVmZmVy
+IGl0IGNhbiB1c2UuCj4KPiBGb3IgaW5zdGFuY2U6IGNhbWVyYSBjYW4gc2F2ZSBkYXRhIGludG8g
+YSBub24tY29udGlndW91cyBidWZmZXIsIGJ1dCB0aGUKPiBpbWFnZSBwcm9jZXNzaW5nIGhhcmR3
+YXJlICh0aGF0IG1heSBvciBtYXkgbm90IGJlIGludm9sdmVkKSBleHBlY3RzIHRoZQo+IGJ1ZmZl
+ciB0byBiZSBjb250aWd1b3VzLgo+CgpZb3UndmUganVzdCBoaXQgb24gb25lIG9mIHRoZSBvcGVu
+IHByb2JsZW1zLiBUaGVyZSBpc24ndCBhIGdvb2QgYW5zd2VyCnJpZ2h0IG5vdyBmb3IgaG93IHRo
+YXQgaXMgc3VwcG9zZWQgdG8gd29yay4gU3VtaXQgd2FzIHdvcmtpbmcgb24KY2VuYWxsb2MgYXMg
+YW4gYW5zd2VyIHRvIHNvbWUgb2YgdGhhdC4gSSB0aGluayB3ZSd2ZSBkZWNpZGVkIHRoYXQKbWF5
+IGJlY29tZSBtb3JlIG9mIGEgbG9uZyB0ZXJtIHRoZW9yZXRpY2FsIHByb2JsZW0gdG8gc29sdmUg
+cmF0aGVyCnRoYW4gYSBwcmVzc2luZyBwcmFjdGljYWwgcHJvYmxlbS4gVGhlc2UgZGF5cyBJT01N
+VXMgYW5kIHRoZSBsaWtlIGFyZQptdWNoIG1vcmUgY29tbW9uIGFjcm9zcyB0aGUgZW50aXJlIHN5
+c3RlbSBzbyBpdCdzIGJlY29taW5nIHJhcmVyIHRvCmhhdmUgYSBjYXNlIHdoZXJlIHNvbWUgaGFy
+ZHdhcmUgY2FuIGhhdmUgZGlzY29udGlndW91cyBidWZmZXJzIGJ1dApzb21lIGNhbm5vdC4gVGhp
+cyBpc24ndCB0byBzYXkgaXQncyBub3QgYSBwcm9ibGVtIHRoYXQgbmVlZHMgdG8gYmUKc29sdmVk
+LCBidXQgd2UncmUgZm9jdXNpbmcgb24gb3RoZXIgZWZmb3J0cyBvZiBJb24gcmlnaHQgbm93LgoK
+SW4gZ2VuZXJhbCB0aG91Z2ggd2UncmUgd29ya2luZyBvZmYgdGhlIGFzc3VtcHRpb24gdGhhdCB0
+aGUKa2VybmVsIGtub3dzIHRoZSBjb25zdHJhaW50cyBhbmQgaWYgdXNlcnNwYWNlIGlzIHJlcXVl
+c3RpbmcgbWVtb3J5IGZyb20KYSBwYXJ0aWN1bGFyIGhlYXAgdGhlIGtlcm5lbCB3aWxsIGFsbG9j
+YXRlIHRoZSBjb3JyZWN0IG1lbW9yeS4gVGhpcwptZWFucyB0aGF0IGl0J3MgdXAgdG8gdGhlIGtl
+cm5lbCB0byBzZXQgdXAgdGhlIGhlYXBzIGNvcnJlY3RseSBmb3IKYSBwYXJ0aWN1bGFyIHBsYXRm
+b3JtIChvbmNlIGFnYWluLCBhbiBvcGVuIHByb2JsZW0pLgoKVGhhbmtzLApMYXVyYQoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcg
+bGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhk
+cml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
