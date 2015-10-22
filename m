@@ -1,92 +1,64 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v4 00/11] exynos-ufs: add support for Exynos
-Date: Thu, 22 Oct 2015 09:54:19 +0530
-Message-ID: <562864F3.9000305@samsung.com>
-References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] MT8173 IOMMU SUPPORT
+Date: Thu, 22 Oct 2015 12:40:02 +0800
+Message-ID: <1445488802.27202.67.camel@mhfsdcap03>
+References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
+	<20151014125620.GQ27420@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-reply-to: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: JBottomley@odin.com, vinholikatti@gmail.com, Kishon Vijay Abraham I <kishon@ti.com>, essuuj@gmail.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20151014125620.GQ27420-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A Gentle Reminder !!
+On Wed, 2015-10-14 at 14:56 +0200, Joerg Roedel wrote:
+> On Fri, Oct 09, 2015 at 10:23:02AM +0800, Yong Wu wrote:
+> > Yong Wu (6):
+> >   dt-bindings: iommu: Add binding for mediatek IOMMU
+> >   dt-bindings: mediatek: Add smi dts binding
+> >   iommu: add ARM short descriptor page table allocator
+> >   memory: mediatek: Add SMI driver
+> >   iommu/mediatek: Add mt8173 IOMMU driver
+> >   dts: mt8173: Add iommu/smi nodes for mt8173
+> > 
+> >  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  61 ++
+> >  .../memory-controllers/mediatek,smi-larb.txt       |  25 +
+> >  .../bindings/memory-controllers/mediatek,smi.txt   |  24 +
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  81 ++
+> >  drivers/iommu/Kconfig                              |  33 +
+> >  drivers/iommu/Makefile                             |   2 +
+> >  drivers/iommu/io-pgtable-arm-short.c               | 827 +++++++++++++++++++++
+> >  drivers/iommu/io-pgtable-arm.c                     |   3 -
+> >  drivers/iommu/io-pgtable.c                         |   3 +
+> >  drivers/iommu/io-pgtable.h                         |  18 +-
+> >  drivers/iommu/mtk_iommu.c                          | 767 +++++++++++++++++++
+> >  drivers/memory/Kconfig                             |   8 +
+> >  drivers/memory/Makefile                            |   1 +
+> >  drivers/memory/mtk-smi.c                           | 274 +++++++
+> >  include/dt-bindings/memory/mt8173-larb-port.h      | 105 +++
+> >  include/soc/mediatek/smi.h                         |  60 ++
+> 
+> So this contains not only IOMMU code. Are the patches dependent on each
+> other or can the iommu parts be merged independently?
+> 
+> 	Joerg
+> 
+Hi Joerg,
+     Sorry for reply late.
+     The ARM short descriptor is independent. This one can be merged
+independently.
 
-On 10/14/2015 06:25 PM, Alim Akhtar wrote:
-> This patch-set introduces UFS (Universal Flash Storage) host support
-> for Samsung Exynos SoC. Mostly, it consists of UFS PHY and host specific driver.
-> And it also contains some quirks handling for Exynos.
->
-> NOTE: ** This series has a dependency on [4]. **
->
-> -Changes since v3:
-> * Fixed compilation warrings as reported by "Kbuild Test Robot"[5].
-> * Restructure the driver to make it as a platform driver, rebased on top of [4].
-> * Addressed review comments from Arnd Bergmann[5].
-> * Other misc changes and improvements.
->
-> -Changes since v2:
-> * Addressed review comments from Kishon[1] and Rob Herring [2]
-> * Splited ufs dt binding documetation from ufs driver patch
->
-> -Changes since v1:
-> * Addressed review comments from Alexey[3] and various review comments from Amit.
-> * Updated email id of Seungwon as his samsung id is void now.
-> * Added ufs platform data
->
-> [1]-> https://lkml.org/lkml/2015/9/18/29
-> [2]-> https://lkml.org/lkml/2015/9/21/668
-> [3]-> https://lkml.org/lkml/2015/8/23/124
-> [4]-> https://lkml.org/lkml/2015/9/2/364
-> [5]-> https://lkml.org/lkml/2015/10/1/402
->
-> This patch set is tested on exynos7-espresso board.
->
-> Alim Akhtar (1):
->    Documentation: samsung-phy: Add dt bindings for UFS
->
-> Seungwon Jeon (10):
->    phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
->    scsi: ufs: add quirk to contain unconformable utrd field
->    scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
->    scsi: ufs: add quirk not to allow reset of interrupt aggregation
->    scsi: ufs: add quirk to enable host controller without hce
->    scsi: ufs: add specific callback for nexus type
->    scsi: ufs: add add specific callback for hibern8
->    scsi: ufs: make ufshcd_config_pwr_mode of non-static func
->    Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
->      controller
->    scsi: ufs-exynos: add UFS host support for Exynos SoCs
->
->   .../devicetree/bindings/phy/samsung-phy.txt        |   22 +
->   .../devicetree/bindings/ufs/ufs-exynos.txt         |  104 ++
->   drivers/phy/Kconfig                                |    7 +
->   drivers/phy/Makefile                               |    1 +
->   drivers/phy/phy-exynos-ufs.c                       |  257 ++++
->   drivers/phy/phy-exynos-ufs.h                       |   88 ++
->   drivers/phy/phy-exynos7-ufs.h                      |   89 ++
->   drivers/scsi/ufs/Kconfig                           |   12 +
->   drivers/scsi/ufs/Makefile                          |    1 +
->   drivers/scsi/ufs/ufs-exynos-hw.c                   |  131 ++
->   drivers/scsi/ufs/ufs-exynos-hw.h                   |   43 +
->   drivers/scsi/ufs/ufs-exynos.c                      | 1317 ++++++++++++++++++++
->   drivers/scsi/ufs/ufs-exynos.h                      |  247 ++++
->   drivers/scsi/ufs/ufshcd.c                          |  168 ++-
->   drivers/scsi/ufs/ufshcd.h                          |   54 +
->   drivers/scsi/ufs/ufshci.h                          |   26 +-
->   drivers/scsi/ufs/unipro.h                          |   47 +
->   include/linux/phy/phy-exynos-ufs.h                 |  101 ++
->   18 files changed, 2695 insertions(+), 20 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->   create mode 100644 drivers/phy/phy-exynos-ufs.c
->   create mode 100644 drivers/phy/phy-exynos-ufs.h
->   create mode 100644 drivers/phy/phy-exynos7-ufs.h
->   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
->   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
->   create mode 100644 drivers/scsi/ufs/ufs-exynos.c
->   create mode 100644 drivers/scsi/ufs/ufs-exynos.h
->   create mode 100644 include/linux/phy/phy-exynos-ufs.h
->
+     But the mtk-iommu depend on the drivers/memory/mtk-smi.c(mtk-iommu
+has called a function of the mtk-smi).
+     So if there is dependence here, How should we do to merge them?
