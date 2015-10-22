@@ -1,62 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
-Date: Thu, 22 Oct 2015 14:35:00 +0200
-Message-ID: <CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
-	<56261239.5030007@linaro.org>
-	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/13] ARM: add some L220 DT settings
+Date: Thu, 22 Oct 2015 14:57:13 +0200
+Message-ID: <CACRpkdaQxbvtdrX4Vat4mJ1gRORCWjwReeAyjafnK5_mLAL1nw@mail.gmail.com>
+References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
+	<1444916813-31024-2-git-send-email-linus.walleij@linaro.org>
+	<20151015135730.GC32532@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151015135730.GC32532-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 6:32 PM, Maxime Coquelin
-<mcoquelin.stm32@gmail.com> wrote:
-> 2015-10-20 12:06 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
->> On 17/10/15 18:23, Maxime Coquelin wrote:
+On Thu, Oct 15, 2015 at 3:57 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Thu, Oct 15, 2015 at 03:46:41PM +0200, Linus Walleij wrote:
 
->> I suggesting that, like with the clock driver, there is no need to the
->> STM32F429_PAXX_FUNC_YYY macros at all.
->>
->> Given the way you can enumerate pin config options in stm32f429.dtsi then I
->> think stm32f429.dtsi is the only file that will ever include this header? If
->> so then why not just plug the values directly into the pinmux fields. Its
->> not duplicative and is easier to map back to data sheets.
->>
->> ~~~
->> #define PIN_NO(x) ...
->> #define PIN_AF(x) ...
->>
->> usart1_pins_a: usart1@0 {
->>                                 pins1 {
->>                                         pinmux = PIN_NO(9) | PIN_AF(7);
->>                                         bias-disable;
->>                                         drive-push-pull;
->>                                         slew-rate = <0>;
->>                                 };
->>                                 ...
->>                         };
->> ~~~
+>> +- arm,eventmon-enable : enable the event monitor on the L2 cache (PL220 only).
 >
-> The advantage with the defines is that you can see easily which pin we
-> are talking about.
-> Moreover, the defines are generated from the datasheet, so it is
-> painless to generate them.
-> And it will be consistent with Mediatek implementation, on which I
-> heavily inspired.
->
-> Linus, what is your view?
+> I don't think we should introduce a DT property for this: if we support
+> the event monitor, then the event monitor support code should be
+> controlling this bit.
 
-I have no strong view of this at all.
-
-I would ask the opinion of other people doing numbered muxes
-to see what is generally best for everyone to use,
-Sascha Hauer specifically, or the Mediatek people.
+OK that's reasonable. I'll make a patch for the parity enable and think
+about how to implement eventmonitor bit setting.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
