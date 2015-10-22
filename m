@@ -1,69 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] devicetree: add binding for Aurora VLSI NB8800
- Ethernet controller
-Date: Thu, 22 Oct 2015 13:07:45 -0500
-Message-ID: <CAL_Jsq+aiDjoCHASFeMdR8ndJ1zv3UCC3vOBSoKS_sfaPv6_DQ@mail.gmail.com>
-References: <1445531330-17461-1-git-send-email-mans@mansr.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH 0/4] Sony Xperia Z dts
+Date: Thu, 22 Oct 2015 11:13:47 -0700
+Message-ID: <1445537631-29055-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445531330-17461-1-git-send-email-mans@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mans Rullgard <mans@mansr.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 11:28 AM, Mans Rullgard <mans@mansr.com> wrote:
-> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
-> using the "aurora,nb8800" compatible string.  When used in Sigma
-> Designs chips a few additional control registers are available.
-> This variant is indicated by the "sigma,smp8640-ethernet" compatible
-> string.
->
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
+This series starts by adding hwspinlock, smem, gsbi5 and cleans up the
+8064 regulator definitions.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Based on this it adds the necessary nodes for booting the Sony Xperia Z
+(APQ8064 based) to userspace, with UART, eMMC, uSD, USB gadget and hw
+buttons.
 
-> ---
-> Changes:
-> - correct order of compatible strings
-> ---
->  .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> new file mode 100644
-> index 0000000..cf7108d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> @@ -0,0 +1,26 @@
-> +* Aurora VLSI AU-NB8800 Ethernet controller
-> +
-> +Required properties:
-> +- compatible: Should be "sigma,smp8640-ethernet", "aurora,nb8800"
-> +       The former indicates presence of extra features added by Sigma Designs.
-> +- reg: Should be MMIO address space of the device
-> +- interrupts: Should contain the interrupt specifier for the device
-> +- interrupt-parent: Should be a phandle for the interrupt controller
-> +- clocks: Should be a phandle for the clock for the device
-> +
-> +Common properties described in ethernet.txt:
-> +- local-mac-address
-> +- mac-address
-> +- max-speed
-> +- phy-mode
-> +
-> +Example:
-> +
-> +ethernet@26000 {
-> +       compatible = "aurora,nb8800";
-> +       reg = <0x10000 0x800>;
-> +       interrupts = <42>;
-> +       clocks = <&sys_clk>;
-> +       max-speed = <1000>;
-> +       phy-connection-type = "rgmii";
-> +};
-> --
-> 2.5.3
->
+Bjorn Andersson (4):
+  ARM: dts: qcom: apq8064: Add hwmutex and SMEM nodes
+  ARM: dts: qcom: apq8064: Declare all pm8921 regulators
+  ARM: dts: qcom: apq8064: Introduce gsbi5 and gsbi5 serial node
+  ARM: dts: qcom: apq8064: Introduce Sony Xperia Z dts
+
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts        |  16 +-
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts         |  20 +-
+ .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts | 436 +++++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |  97 +++++
+ 5 files changed, 552 insertions(+), 18 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
+
+-- 
+2.4.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
