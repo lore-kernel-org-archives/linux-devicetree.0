@@ -1,35 +1,139 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/13] ARM: add some L220 DT settings
-Date: Thu, 22 Oct 2015 14:57:13 +0200
-Message-ID: <CACRpkdaQxbvtdrX4Vat4mJ1gRORCWjwReeAyjafnK5_mLAL1nw@mail.gmail.com>
-References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
-	<1444916813-31024-2-git-send-email-linus.walleij@linaro.org>
-	<20151015135730.GC32532@n2100.arm.linux.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
+Date: Thu, 22 Oct 2015 14:58:11 +0200
+Message-ID: <CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
+	<20151020122448.20687.11926@quantum>
+	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
+	<20151020130004.20687.91058@quantum>
+	<CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151015135730.GC32532-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 3:57 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Thu, Oct 15, 2015 at 03:46:41PM +0200, Linus Walleij wrote:
+Hi Mike,
 
->> +- arm,eventmon-enable : enable the event monitor on the L2 cache (PL220 only).
+On Tue, Oct 20, 2015 at 3:07 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Tue, Oct 20, 2015 at 3:00 PM, Michael Turquette
+> <mturquette@baylibre.com> wrote:
+>> Quoting Geert Uytterhoeven (2015-10-20 05:31:12)
+>>> On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette
+>>> <mturquette@baylibre.com> wrote:
+>>> > Quoting Geert Uytterhoeven (2015-10-16 05:49:20)
+>>> >> +static void __init r8a7795_cpg_mssr_init(struct device_node *np=
+)
+>>> >> +{
+>>> >> +       struct regmap *regmap;
+>>> >> +       u32 reg, cpg_mode;
+>>> >> +
+>>> >> +       regmap =3D syscon_regmap_lookup_by_phandle(np, "renesas,=
+modemr");
+>>> >> +       if (IS_ERR(regmap) ||
+>>> >> +           of_property_read_u32_index(np, "renesas,modemr", 1, =
+&reg) ||
+>>> >> +           regmap_read(regmap, reg, &cpg_mode)) {
+>>> >> +               pr_err("%s: failed to parse renesas,modemr\n", n=
+p->full_name);
+>>> >> +               return;
+>>> >> +       }
+>>> >> +
+>>> >> +       cpg_pll_config =3D &cpg_pll_configs[CPG_PLL_CONFIG_INDEX=
+(cpg_mode)];
+>>> >> +       if (!cpg_pll_config->extal_div) {
+>>> >> +               pr_err("%s: Prohibited setting (cpg_mode=3D0x%x)=
+\n",
+>>> >> +                      __func__, cpg_mode);
+>>> >> +               return;
+>>> >> +       }
+>>> >> +
+>>> >> +       cpg_mssr_probe(np, &r8a7795_cpg_mssr_info);
+>>> >> +}
+>>> >> +CLK_OF_DECLARE(r8a7795_cpg_mssr, "renesas,r8a7795-cpg-mssr",
+>>> >> +              r8a7795_cpg_mssr_init);
+>>> >
+>>> > Is CLK_OF_DECLARE needed? Is it possible to make this a real
+>>> > platform_driver =C3=A0 la drivers/clk/qcom/gcc-apq8084.c?
+>>>
+>>> I tried making it a real platform driver, but it failed: devices th=
+at are
+>>> part of the Clock Domain failed to get their clock (error -2, IIRC,=
+ which is
+>>> -ENOENT), and thus couldn't be instantiated.
+>>> I didn't look deeper at that time.
+>>>
+>>> [... reading code ...]
+>>>
+>>> Aha, this may be caused by __of_clk_get_from_provider() returning
+>>> hardcoded -ENOENT instead of propagating the error returned by
+>>> __clk_create_clk()?
+>>
+>> Well the only other error thrown by __clk_create_clk is -ENOMEM, so =
+I'm
+>> not sure how that would help things.
 >
-> I don't think we should introduce a DT property for this: if we support
-> the event monitor, then the event monitor support code should be
-> controlling this bit.
+> Hmm, you're right.
+>
+>> The bindings should go in for 4.4, but if the driver is slated for 4=
+=2E5
+>> then can you investigate this some more? Stephen and I are on a miss=
+ion
+>> to have _real_ clk drivers.
+>
+> Sure, I'll have a deeper look.
 
-OK that's reasonable. I'll make a patch for the parity enable and think
-about how to implement eventmonitor bit setting.
+And so I did (on r8a7791/koelsch).
 
-Yours,
-Linus Walleij
+As I want to have as much clock data/code __init as possible (think
+multi-platform kernels --- pinmux data is a disaster here), I have to u=
+se
+platform_driver_probe().
+
+  - Calling platform_driver_probe() from core_initcall() or postcore_in=
+itcall()
+    is too early, as the platform device for the CPG hasn't been create=
+d yet.
+    Hence the CPG Clock Domain isn't registered, and all devices fail t=
+o probe
+    as they can't be attached to their Clock Domain.
+      -> This is where the -ENOENT came from (I incorrectly assumed it =
+came
+         from the clock code; sorry for that), and it's converted into
+         -EPROBE_DEFER by genpd_dev_pm_attach().
+
+  - Calling platform_driver_probe() from arch_initcall() is too late, a=
+s the
+    IRQC is initialized first (it's located before the CPG in .dtsi).
+    Hence the IRQC can't find it's Clock Domain, and its probe is defer=
+red.
+    IRQC will be reprobed later, but in the mean time the Ethernet PHY =
+can't
+    find its IRQ, as the of_mdio code uses irq_of_parse_and_map(), whic=
+h
+    plainly ignores EPROBE_DEFER :-(
+    Nevertheless, Ethernet works...
+
+  - Using subsys_initcall() and later causes even more probe deferral.
+
+So that's why I went with CLK_OF_DECLARE() again...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
