@@ -1,94 +1,96 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Generic DT binding for IPIs
-Date: Thu, 22 Oct 2015 08:43:53 -0500
-Message-ID: <CAL_JsqKb3VFyo+xrWeC99-z=xhKbei0=cETU=Nip79K1xU6FSw@mail.gmail.com>
-References: <561E2BE6.2090807@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/13 v2] ARM: add some L220 DT settings
+Date: Thu, 22 Oct 2015 15:44:53 +0200
+Message-ID: <1445521493-21509-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561E2BE6.2090807-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 14, 2015 at 5:18 AM, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> This is an attempt to revive a discussion on the right list this time with
-> all the correct people hopefully on CC.
+The RealView ARM11MPCore enables parity, eventmon and shared
+override in the cache controller through its current boardfile,
+but the code and DT bindings for the ARM L220 is currently
+lacking the ability to set this up from DT. Add the required
+bool parameters for parity and shared override, but keep
+eventmon out of it: this should be enabled by the event
+monitor code.
 
-devicetree-spec would be more appropriate list for something like this.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Drop event monitor setup.
+- Support both parity enable and disable: could be useful.
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
+ arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
-> While trying to upstream a driver, Thomas and Marc Zyngier pointed out the
-> need for a generic IPI support in the kernel to allow driver to reserve and
-> send ones. Hopefully my latest RFC patch will help to clarify what's being
-> done.
->
->     https://lkml.org/lkml/2015/10/13/227
->
-> We need a generic DT binding support to accompany that to allow a driver to
-> reserve an IPI using this new mechanism.
->
-> MarcZ had the following suggestion:
->
->     https://lkml.org/lkml/2015/8/24/628
->
-> Which in summary is
->
->         mydevice@f0000000 {
->                 interrupt-source = <&intc INT_SPEC 2 &inttarg1 &inttarg1>;
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index 06c88a4d28ac..d181b7c4c522 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -67,12 +67,14 @@ Optional properties:
+   disable if zero.
+ - arm,prefetch-offset : Override prefetch offset value. Valid values are
+   0-7, 15, 23, and 31.
+-- arm,shared-override : The default behavior of the pl310 cache controller with
+-  respect to the shareable attribute is to transform "normal memory
+-  non-cacheable transactions" into "cacheable no allocate" (for reads) or
+-  "write through no write allocate" (for writes).
++- arm,shared-override : The default behavior of the L220 or PL310 cache
++  controllers with respect to the shareable attribute is to transform "normal
++  memory non-cacheable transactions" into "cacheable no allocate" (for reads)
++  or "write through no write allocate" (for writes).
+   On systems where this may cause DMA buffer corruption, this property must be
+   specified to indicate that such transforms are precluded.
++- arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
++- arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
+ - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
+   (forcibly enable), property absent (retain settings set by firmware)
+ - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 493692d838c6..3f3008e5c662 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1060,6 +1060,18 @@ static void __init l2x0_of_parse(const struct device_node *np,
+ 		val |= (dirty - 1) << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
+ 	}
+ 
++	if (of_property_read_bool(np, "arm,parity-enable")) {
++		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
++		val |= L2C_AUX_CTRL_PARITY_ENABLE;
++	} else if (of_property_read_bool(np, "arm,parity-disable")) {
++		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
++	}
++
++	if (of_property_read_bool(np, "arm,shared-override")) {
++		mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
++		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
++	}
++
+ 	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
+ 	if (ret)
+ 		return;
+@@ -1176,6 +1188,14 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
+ 	}
+ 
++	if (of_property_read_bool(np, "arm,parity-enable")) {
++		*aux_val |= L2C_AUX_CTRL_PARITY_ENABLE;
++		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
++	} else if (of_property_read_bool(np, "arm,parity-disable")) {
++		*aux_val &= ~L2C_AUX_CTRL_PARITY_ENABLE;
++		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
++	}
++
+ 	prefetch = l2x0_saved_regs.prefetch_ctrl;
+ 
+ 	ret = of_property_read_u32(np, "arm,double-linefill", &val);
+-- 
+2.4.3
 
-What is INT_SPEC and "2"? A drawing of the h/w connections and then
-what the binding looks like would be helpful.
-
->         };
->
->         inttarg1: mydevice@f1000000 {
->                 interrupt-sink = <&intc HWAFFINITY1>;
-
-What is HWAFFINITY1? I want to be able to see if say this value is 1,
-then the affinity is for cpu0.
-
->         };
->
->         inttarg2: cpu@1 {
->                 interrupt-sink = <&intc HWAFFINITY2>;
->         };
->
->
-> interrupt-sink requests to reserve an IPI that it will receive at HWAFFINITY
-> cpumask. interrupt-source will not do any reservation. It will simply
-> connect an IPI reserved by interrupt-sink to the device that will be
-> responsible for generating that IPI. This description should allow
-> connecting any 2 devices.
-> Correct me Marc if I got it wrong please.
->
-> I suggested a simplification by assuming that IPIs will only be between host
-> OS and a coprocessor which would gives us this form which I think is easier
-> to deal with
->
->         coprocessor {
->              interrupt-source = <&intc INT_SPEC COP_HWAFFINITY>;
->              interrupt-sink = <&intc INT_SPEC CPU_HWAFFINITY>;
->         }
->
->
-> interrupt-source here reserves an IPI to be sent from host OS to coprocessor
-> at COP_HWAFFINITY. interrupt-sink will reserve an IPI to be received by host
-> OS at CPU_HWAFFINITY. Less generic but I don't know how important it is for
-> host OS to setup IPIs between 2 external coprocessors and whether it should
-> really be doing that.
-
-Could we use the existing interrupts binding for interrupt-sink?
-
->
-> What do the DT experts think? Any preference or a better suggestion?
-
-Depends how you would assign coproc to coproc IPIs in a system. It may
-be fixed in firmware, or more complex coprocs may read the dtb.
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
