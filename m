@@ -1,57 +1,56 @@
-From: Mans Rullgard <mans@mansr.com>
-Subject: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800 Ethernet controller
-Date: Thu, 22 Oct 2015 15:02:37 +0100
-Message-ID: <1445522558-5808-2-git-send-email-mans@mansr.com>
-References: <1445522558-5808-1-git-send-email-mans@mansr.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445522558-5808-1-git-send-email-mans@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/10] clk: iproc: add support for BCM NS, NSP, and NS2
+Date: Thu, 22 Oct 2015 10:16:19 -0400
+Message-ID: <20151022141618.GC651@broadcom.com>
+References: <1444938513-10758-1-git-send-email-jonmason@broadcom.com>
+ <20151021235144.GQ19782@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151021235144.GQ19782-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a binding for the Aurora VLSI NB8800 Ethernet controller
-using the "aurora,nb8800" compatible string.  When used in Sigma
-Designs chips a few additional control registers are available.
-This variant is indicated by the "sigma,smp8640-ethernet" compatible
-string.
+On Wed, Oct 21, 2015 at 04:51:44PM -0700, Stephen Boyd wrote:
+> On 10/15, Jon Mason wrote:
+> > 
+> > v3 - Added a patch to fix cygnus clk link failures, and added back the
+> > DT documentation patches that were removed from v2.
+> > 
+> > v2 - Added a patch to change the Cygnus clk macros to uppercase,
+> > removed the device tree changes from the series (will send out those as
+> > an RFC), and other minor changes that Stephen Boyd requested.
+> > 
+> > This patch series adds support for the Broadcom Northstar, Northstar
+> > Plus, and Northstar 2 clocks.  Some slight modifications were necessary
+> > to clk-iproc-pll to get Northstar and Northstar Plus working, due to
+> > differences in register layout.  This is the reason why the first patch
+> > is necessary.  Some more modifications were necessary to clk-iproc-pll
+> > to get Northstar 2 working, due to differences in register layout (and
+> > resulting fallout in Cygnus and NSP).  This is the reason why the sixth
+> > and seventh patches are necessary.  The fifth patch is clean-up to
+> > prevent accidentally forgetting to adjust for the base write errata
+> > (which happened a few times, but was caught in internal review).
+> > 
+> 
+> Can you please use git cover-letter format where the diffstat for
+> the series is shown? Without that information here I started
+> applying patches until I realized this added dt-bindings headers,
+> thus probably needing some stable clk branch to pull into arm-soc.
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
- .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
+My apologies.  I will do so in the future.
 
-diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-new file mode 100644
-index 0000000..c19f615
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-@@ -0,0 +1,26 @@
-+* Aurora VLSI AU-NB8800 Ethernet controller
-+
-+Required properties:
-+- compatible: Should be "aurora,nb8800", "sigma,smp8640-ethernet"
-+	The latter indicates presence of extra features added by Sigma Designs.
-+- reg: Should be MMIO address space of the device
-+- interrupts: Should contain the interrupt specifier for the device
-+- interrupt-parent: Should be a phandle for the interrupt controller
-+- clocks: Should be a phandle for the clock for the device
-+
-+Common properties described in ethernet.txt:
-+- local-mac-address
-+- mac-address
-+- max-speed
-+- phy-mode
-+
-+Example:
-+
-+ethernet@26000 {
-+	compatible = "aurora,nb8800";
-+	reg = <0x10000 0x800>;
-+	interrupts = <42>;
-+	clocks = <&sys_clk>;
-+	max-speed = <1000>;
-+	phy-connection-type = "rgmii";
-+};
--- 
-2.5.3
+Thanks,
+Jon
+
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
