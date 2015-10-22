@@ -1,74 +1,91 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Fri, 23 Oct 2015 01:39:42 +0900
-Message-ID: <20151022163942.GX8232@sirena.org.uk>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
- <20151016002243.GA23912@codeaurora.org>
- <20151016060227.GS19018@linux>
- <20151016191658.GA16437@codeaurora.org>
- <20151017041055.GZ19018@linux>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] regulator: arizona: Add regulator specific device
+ tree binding document
+Date: Thu, 22 Oct 2015 13:44:49 +0100
+Message-ID: <20151022124449.GH8232@sirena.org.uk>
+References: <1444916828-8965-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1444916828-8965-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LmcuB6YxSMQAV95c"
-Return-path: <linux-pm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="8/pVXlBMPtxfSuJG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151017041055.GZ19018@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+In-Reply-To: <1444916828-8965-2-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---LmcuB6YxSMQAV95c
+--8/pVXlBMPtxfSuJG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 17, 2015 at 09:40:55AM +0530, Viresh Kumar wrote:
+On Thu, Oct 15, 2015 at 02:47:07PM +0100, Charles Keepax wrote:
 
-> Okay here is the problem statement:
+> +This document lists regulator specific bindings, see the primary binding
+> +document:
+> +  ../mfd/arizona.txt
+> +
+> +Required properties:
+> +
+> +  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+> +    as covered in regulator.txt
+> +
+> +  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
+> +    wm5110, wm8280, wm8998, wm1814)
+> +
+> +  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
+> +    wm5110, wm8280, wm8998, wm1814)
+> +
+> +  - SPKVDD-supply : Speaker driver power supply (wm8997)
+> +
 
-> We have two supplies for a device and the device node will have
-> something like:
+I'd expect these to be on the MFD since they're (with the exception of
+AVDD which supplies the regulators IIRC) not part of the regulator
+component of the device and are core for bringing it online.
 
-> name1-supply =3D <&supply1>;
-> name2-supply =3D <&supply2>;
+> +Optional properties:
+> +  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
+> +
+> +Optional subnodes:
+> +  - ldo1 : Initial data for the LDO1 regulator, as covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
+> +  - micvdd : Initial data for the MICVDD regulator, as covered in
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
 
-> And the OPP node needs to have voltages for both of them:
+These are the properties for the regulator itself.
 
-> opp-microvolt =3D <X1 Y1 Z1>, <X2 Y2 Z2>;
+> +++ b/MAINTAINERS
+> @@ -11381,6 +11381,7 @@ W:	http://opensource.wolfsonmicro.com/content/linux-drivers-wolfson-devices
+>  S:	Supported
+>  F:	Documentation/hwmon/wm83??
+>  F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+>  F:	arch/arm/mach-s3c64xx/mach-crag6410*
+>  F:	drivers/clk/clk-wm83*.c
+>  F:	drivers/extcon/extcon-arizona.c
 
-> Where XYZ(1) are for supply1 and XYZ(2) are for supply2.
+I'd suggest moving this to a separate patch which adds all the new files
+together to make it easier to merge things.
 
-> Now we need to identify the supplies for which the values are present
-> here and their order as well. How do we do that?
-
-> The way I am suggesting is to add a property in opp node which will
-> keep "name1" and "name2" in it.
-
-When we start doing this we also start having to worry about things like
-the sequencing of the updates between the various supplies and end up in
-full on power sequencing (or at least baking some sequencing into the DT
-which will doubtless need extending at some point).  I'm not sure that's
-a place we want to end up just yet, I think it's safer to just have a
-little bit of code in the kernel that glues things together in the cases
-where this is needed. =20
-
---LmcuB6YxSMQAV95c
+--8/pVXlBMPtxfSuJG
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWKRFOAAoJECTWi3JdVIfQxx4IAIY1m5byAsOBC5SOE7OOONSG
-2aft2M/qrZF99jfNtX2N3jFK0q+cb0Cb7m+gT1JalpKyIUEVtaoIrPgn7d4R9E/Y
-f/hb5xOsGUVVM/96X6533BAz1Q3cgnYswKEcgN4kqz3gTNASBckKq/ntTaiajWGY
-HKFrl9MjDaIHc+Jr78xPSFR0ci1mgd+/5HG+52IKX6Vb92i19UVf7CrWRExg4SV7
-v0KP5LaZvK6+vstvXoMUb5Nd53VjhOIJPhx/HHXrTmlQ1V2zVTzAIUkBmAVFkZnX
-Lu88RIoM2GyfZOsIvxckYIjNLtarJ9Bze3uKcpSeRbyNxwT0sE/ey+SvdG4r350=
-=kqLR
+iQEcBAEBCAAGBQJWKNpBAAoJECTWi3JdVIfQgw8H/0dzmffT2T5o0Myh9yFG2RVH
+4m5e+EvREDRm9p3uA9U2lE6WnJpnamvE7Y69H2bJO/xfN6yfxPilgwZcKKGOjWri
+AsV8JSR8Y/5jK6z1Q9+GULG+cDVHuoBc8gJiFP4K9rvGvgzilLU0n51ZEiVSqVgX
+EzCqkROPjI70a+yacbhczwPjezHigXxQYH5AkWxjuiGCWZYBBAHcofbWyPSrPaa1
+rLz9swuqyMjrWYOGMeDz4eQArkBaJYV6e5UF22FPY0LJZ1CUkeT1htdAkmzfW/FV
+BuhEeB3rlcScBExk4n902g49zfs4kAJa6+jySBQSTApe0uVts9nvflDaqJJeWn4=
+=vYs3
 -----END PGP SIGNATURE-----
 
---LmcuB6YxSMQAV95c--
+--8/pVXlBMPtxfSuJG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
