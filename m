@@ -1,47 +1,68 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v11 1/6] arm: add msi.h to Kbuild
-Date: Thu, 22 Oct 2015 17:27:26 +0800
-Message-ID: <1445506051-21688-2-git-send-email-lftan@altera.com>
-References: <1445506051-21688-1-git-send-email-lftan@altera.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 14/19] ARM: dts: shmobile/r8a7xxx: replace gpio-key,wakeup
+ with wakeup-source property
+Date: Thu, 22 Oct 2015 10:37:54 +0100
+Message-ID: <5628AE72.3020809@arm.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+ <1445422216-29375-15-git-send-email-sudeep.holla@arm.com>
+ <CAMuHMdXpY7gSOPAGxh9Z_LurpL392y7Vx0pBe-FqfauXjVnMFQ@mail.gmail.com>
+ <56276787.6090900@arm.com> <20151022005051.GD8879@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445506051-21688-1-git-send-email-lftan@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, lftan.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Ley Foon Tan <lftan@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151022005051.GD8879@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Include asm-generic/msi.h to support CONFIG_GENERIC_MSI_IRQ_DOMAIN.
-This to fix compilation error:
-"include/linux/msi.h:123:21: fatal error: asm/msi.h:
-No such file or directory"
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
----
- arch/arm/include/asm/Kbuild | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-index be648eb..bd42530 100644
---- a/arch/arm/include/asm/Kbuild
-+++ b/arch/arm/include/asm/Kbuild
-@@ -14,6 +14,7 @@ generic-y += local.h
- generic-y += local64.h
- generic-y += mm-arch-hooks.h
- generic-y += msgbuf.h
-+generic-y += msi.h
- generic-y += param.h
- generic-y += parport.h
- generic-y += poll.h
+On 22/10/15 01:50, Simon Horman wrote:
+> On Wed, Oct 21, 2015 at 11:23:03AM +0100, Sudeep Holla wrote:
+>>
+>>
+>> On 21/10/15 11:18, Geert Uytterhoeven wrote:
+>>> On Wed, Oct 21, 2015 at 12:10 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>>> Though the keyboard driver for GPIO buttons(gpio-keys) will continue to
+>>>> check for/support the legacy "gpio-key,wakeup" boolean property to
+>>>> enable gpio buttons as wakeup source, "wakeup-source" is the new
+>>>> standard binding.
+>>>>
+>>>> This patch replaces the legacy "gpio-key,wakeup" with the unified
+>>>> "wakeup-source" property in order to avoid any futher copy-paste
+>>>> duplication.
+>>>
+>>> Thanks!
+>>>
+>>> I made the same changes to my local tree a few weeks ago, but never found
+>>> time to send them out...
+>>>
+>>
+>> Ah OK, even I had these changes for long. I waited until I fixed all the
+>> binding documents(which was boring ;))
+>>
+>>>> Cc: Simon Horman <horms@verge.net.au>
+>>>> Cc: Magnus Damm <magnus.damm@gmail.com>
+>>>> Cc: linux-sh@vger.kernel.org
+>>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>>>
+>>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Can I clarify that you would like me to pick up this patch?
+> If so I'm happy to do so.
+>
+
+Yes you can pick up this patch as it has no dependency on driver changes.
+
+> Else:
+>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+>
+
+Thanks.
+
 -- 
-1.8.2.1
+Regards,
+Sudeep
