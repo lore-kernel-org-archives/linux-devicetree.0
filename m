@@ -1,185 +1,97 @@
-From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH] power: qcom_smbb: Add otg regulator for control of vbus
-Date: Thu, 22 Oct 2015 14:12:17 -0700
-Message-ID: <1445548337-14612-1-git-send-email-tim.bird@sonymobile.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: Use pinctrl constants
+Date: Thu, 22 Oct 2015 14:23:57 -0700
+Message-ID: <20151022212356.GU3078@atomide.com>
+References: <1445530847-25217-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445530847-25217-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a regulator to control the OTG chargepath switch.  The OTG
-switch gets its power from pm8941_5vs1, and that should be expressed
-as an usb_otg_in-supply property in the DT node for the charger driver.
-The regulator name is "otg".  This is used by USB code to control VBUS
-direction.
+* Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> [151022 09:21]:
+> Using constants for pinctrl allows better readability and removes
+> redundancy with comments.
 
-Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
----
- .../devicetree/bindings/power_supply/qcom_smbb.txt | 20 ++++++
- drivers/power/qcom_smbb.c                          | 74 ++++++++++++++++++++++
- 2 files changed, 94 insertions(+)
+You should use the include/dt-bindings/pinctrl/omap.h macro
+AM33XX_IOPAD(pa, val) while at it. Otherwise we'll end up patching
+the same things again later on.
 
-diff --git a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
-index 65b88fa..dc0f91d 100644
---- a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
-+++ b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
-@@ -105,6 +105,23 @@ PROPERTIES
-                regulation must be done externally to fully comply with
-                the JEITA safety guidelines if this flag is set.
- 
-+- usb_otg_in-supply:
-+  Usage: optional
-+  Value type: <phandle>
-+  Description: Reference to the regulator supplying power to the USB_OTG_IN
-+               pin.
-+
-+child nodes:
-+- otg:
-+  Usage: optional
-+  Description: This node is used to define a regulator which is used by
-+               other parts of the system to control the direction of VBUS
-+               voltage - specifically: whether to supply voltage to VBUS for
-+               host mode operation of the OTG port. The driver registers a
-+               regulator with this name, which can be looked up by string.
-+               Alternatively, you can add a DT label, which can then be
-+               referenced by phandle.
-+
- EXAMPLE
- charger@1000 {
-        compatible = "qcom,pm8941-charger";
-@@ -128,4 +145,7 @@ charger@1000 {
- 
-        qcom,fast-charge-current-limit = <1000000>;
-        qcom,dc-charge-current-limit = <1000000>;
-+       usb_otg_in-supply = <&pm8941_5vs1>;
-+
-+       otg {};
- };
-diff --git a/drivers/power/qcom_smbb.c b/drivers/power/qcom_smbb.c
-index 0dabfe8..fa2983a 100644
---- a/drivers/power/qcom_smbb.c
-+++ b/drivers/power/qcom_smbb.c
-@@ -34,6 +34,9 @@
- #include <linux/power_supply.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
- 
- #define SMBB_CHG_VMAX		0x040
- #define SMBB_CHG_VSAFE		0x041
-@@ -71,6 +74,8 @@
- #define BTC_CTRL_HOT_EXT_N	BIT(0)
- 
- #define SMBB_USB_IMAX		0x344
-+#define SMBB_USB_OTG_CTL	0x348
-+#define OTG_CTL_EN		BIT(0)
- #define SMBB_USB_ENUM_TIMER_STOP 0x34e
- #define ENUM_TIMER_STOP		BIT(0)
- #define SMBB_USB_SEC_ACCESS	0x3d0
-@@ -123,6 +128,9 @@ struct smbb_charger {
- 	struct power_supply *dc_psy;
- 	struct power_supply *bat_psy;
- 	struct regmap *regmap;
-+
-+	struct regulator_desc otg_rdesc;
-+	struct regulator_dev *otg_reg;
- };
- 
- static int smbb_vbat_weak_fn(unsigned int index)
-@@ -778,12 +786,56 @@ static const struct power_supply_desc dc_psy_desc = {
- 	.property_is_writeable = smbb_charger_writable_property,
- };
- 
-+static int smbb_chg_otg_enable(struct regulator_dev *rdev)
-+{
-+	struct smbb_charger *chg = rdev_get_drvdata(rdev);
-+	int rc;
-+
-+	rc = regmap_update_bits(chg->regmap, chg->addr + SMBB_USB_OTG_CTL,
-+				OTG_CTL_EN, OTG_CTL_EN);
-+	if (rc)
-+		dev_err(chg->dev, "failed to update OTG_CTL\n");
-+	return rc;
-+}
-+
-+static int smbb_chg_otg_disable(struct regulator_dev *rdev)
-+{
-+	struct smbb_charger *chg = rdev_get_drvdata(rdev);
-+	int rc;
-+
-+	rc = regmap_update_bits(chg->regmap, chg->addr + SMBB_USB_OTG_CTL,
-+				OTG_CTL_EN, 0);
-+	if (rc)
-+		dev_err(chg->dev, "failed to update OTG_CTL\n");
-+	return rc;
-+}
-+
-+static int smbb_chg_otg_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct smbb_charger *chg = rdev_get_drvdata(rdev);
-+	unsigned int value = 0;
-+	int rc;
-+
-+	rc = regmap_read(chg->regmap, chg->addr + SMBB_USB_OTG_CTL, &value);
-+	if (rc)
-+		dev_err(chg->dev, "failed to read OTG_CTL\n");
-+
-+	return !!(value & OTG_CTL_EN);
-+}
-+
-+static struct regulator_ops smbb_chg_otg_ops = {
-+	.enable = smbb_chg_otg_enable,
-+	.disable = smbb_chg_otg_disable,
-+	.is_enabled = smbb_chg_otg_is_enabled,
-+};
-+
- static int smbb_charger_probe(struct platform_device *pdev)
- {
- 	struct power_supply_config bat_cfg = {};
- 	struct power_supply_config usb_cfg = {};
- 	struct power_supply_config dc_cfg = {};
- 	struct smbb_charger *chg;
-+	struct regulator_config config = { };
- 	int rc, i;
- 
- 	chg = devm_kzalloc(&pdev->dev, sizeof(*chg), GFP_KERNEL);
-@@ -884,6 +936,28 @@ static int smbb_charger_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	/*
-+	 * otg regulator is used to control VBUS voltage direction
-+	 * when USB switches between host and gadget mode
-+	 */
-+	chg->otg_rdesc.id = -1;
-+	chg->otg_rdesc.name = "otg";
-+	chg->otg_rdesc.ops = &smbb_chg_otg_ops;
-+	chg->otg_rdesc.owner = THIS_MODULE;
-+	chg->otg_rdesc.type = REGULATOR_VOLTAGE;
-+	chg->otg_rdesc.supply_name = "usb_otg_in";
-+	chg->otg_rdesc.fixed_uV = 5000000;
-+	chg->otg_rdesc.n_voltages = 1;
-+	chg->otg_rdesc.of_match = "otg";
-+
-+	config.dev = &pdev->dev;
-+	config.driver_data = chg;
-+
-+	chg->otg_reg = devm_regulator_register(&pdev->dev, &chg->otg_rdesc,
-+					       &config);
-+	if (IS_ERR(chg->otg_reg))
-+		return PTR_ERR(chg->otg_reg);
-+
- 	chg->jeita_ext_temp = of_property_read_bool(pdev->dev.of_node,
- 			"qcom,jeita-extended-temp-range");
- 
--- 
-1.8.2.2
+Regards,
 
+Tony
+
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-boneblack.dts | 44 +++++++++++++++++-----------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+> index eadbba3..a540a10 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -36,32 +36,32 @@
+>  &am33xx_pinmux {
+>  	nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
+>  		pinctrl-single,pins = <
+> -			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+> -			0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -			0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> -			0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> -			0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> -			0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> +			0x1b0 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
+> +			0xa0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data0.lcd_data0 */
+> +			0xa4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data1.lcd_data1 */
+> +			0xa8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data2.lcd_data2 */
+> +			0xac (PIN_OUTPUT | MUX_MODE0)		/* lcd_data3.lcd_data3 */
+> +			0xb0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data4.lcd_data4 */
+> +			0xb4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data5.lcd_data5 */
+> +			0xb8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data6.lcd_data6 */
+> +			0xbc (PIN_OUTPUT | MUX_MODE0)		/* lcd_data7.lcd_data7 */
+> +			0xc0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data8.lcd_data8 */
+> +			0xc4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data9.lcd_data9 */
+> +			0xc8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data10.lcd_data10 */
+> +			0xcc (PIN_OUTPUT | MUX_MODE0)		/* lcd_data11.lcd_data11 */
+> +			0xd0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data12.lcd_data12 */
+> +			0xd4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data13.lcd_data13 */
+> +			0xd8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data14.lcd_data14 */
+> +			0xdc (PIN_OUTPUT | MUX_MODE0)		/* lcd_data15.lcd_data15 */
+> +			0xe0 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_vsync.lcd_vsync */
+> +			0xe4 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_hsync.lcd_hsync */
+> +			0xe8 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_pclk.lcd_pclk */
+> +			0xec (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_ac_bias_en.lcd_ac_bias_en */
+>  		>;
+>  	};
+>  	nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
+>  		pinctrl-single,pins = <
+> -			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+> +			0x1b0 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
+>  		>;
+>  	};
+>  };
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
