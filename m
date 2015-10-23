@@ -1,84 +1,234 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v4 1/3] dt-bindings: rockchip-thermal: Add the pinctrl states in this document
-Date: Fri, 23 Oct 2015 19:25:26 +0800
-Message-ID: <1445599528-18825-2-git-send-email-wxt@rock-chips.com>
-References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445599528-18825-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, dianders@chromium.org, Eduardo Valentin <edubezval@gmail.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 3/5] [RFC] clk: shmobile: div6: Extract cpg_div6_register()
+Date: Fri, 23 Oct 2015 14:28:43 +0300
+Message-ID: <12260553.nd9Kq07kR3@avalon>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be> <1444999760-15750-4-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444999760-15750-4-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The "init" pinctrl is defined we'll set
-pinctrl to this state before probe and then "default" after probe.
-Add the "init" and "sleep" pinctrl as the OTP gpio state, since we need
-switch the pin to gpio state before the TSADC controller is reset.
+Hi Geert,
 
-AFAIK, the TSADC controller is reset, the tshut polarity will be
-a *low* signal in a short period of time for some devices.
+Thank you for the patch.
 
-Says:
-The TSADC get the temperature on rockchip thermal.
+On Friday 16 October 2015 14:49:18 Geert Uytterhoeven wrote:
+> Extract cpg_div6_register(), to allow registering div6 clocks from
+> another clock driver.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v4:
+>   - New.
+> ---
+>  drivers/clk/shmobile/clk-div6.c | 119 +++++++++++++++++++++++-------------
+>  drivers/clk/shmobile/clk-div6.h |   3 +
+>  2 files changed, 77 insertions(+), 45 deletions(-)
+>  create mode 100644 drivers/clk/shmobile/clk-div6.h
+> 
+> diff --git a/drivers/clk/shmobile/clk-div6.c
+> b/drivers/clk/shmobile/clk-div6.c index 57016ff9c585fc6e..5e8525fc60427229
+> 100644
+> --- a/drivers/clk/shmobile/clk-div6.c
+> +++ b/drivers/clk/shmobile/clk-div6.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/of_address.h>
+>  #include <linux/slab.h>
+> 
+> +#include "clk-div6.h"
+> +
+>  #define CPG_DIV6_CKSTP		BIT(8)
+>  #define CPG_DIV6_DIV(d)		((d) & 0x3f)
+>  #define CPG_DIV6_DIV_MASK	0x3f
+> @@ -172,60 +174,34 @@ static const struct clk_ops cpg_div6_clock_ops = {
+>  	.set_rate = cpg_div6_clock_set_rate,
+>  };
 
-If T(current temperature) < (setting temperature), the OTP output the
-*high* signal.
-If T(current temperature) > (setting temperature), the OTP output the
-*low* Signal.
+Non-static functions deserve a bit of documentation :-)
 
-In some cases, the OTP pin is connected to the PMIC, maybe the
-PMIC can accept the reset response time to avoid this issue.
+> -static void __init cpg_div6_clock_init(struct device_node *np)
+> +struct clk * __init cpg_div6_register(const char *name,
+> +				      unsigned int num_parents,
+> +				      const char **parent_names,
+> +				      void __iomem *reg)
+>  {
+> -	unsigned int num_parents, valid_parents;
+> -	const char **parent_names;
+> +	unsigned int valid_parents;
+>  	struct clk_init_data init;
+>  	struct div6_clock *clock;
+> -	const char *clk_name = np->name;
+>  	struct clk *clk;
+>  	unsigned int i;
+> 
+>  	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
+>  	if (!clock)
+> -		return;
+> -
+> -	num_parents = of_clk_get_parent_count(np);
+> -	if (num_parents < 1) {
+> -		pr_err("%s: no parent found for %s DIV6 clock\n",
+> -		       __func__, np->name);
+> -		return;
+> -	}
+> +		return ERR_PTR(-ENOMEM);
+> 
+>  	clock->parents = kmalloc_array(num_parents, sizeof(*clock->parents),
+> -		GFP_KERNEL);
+> -	parent_names = kmalloc_array(num_parents, sizeof(*parent_names),
+> -				GFP_KERNEL);
+> -	if (!parent_names)
+> -		return;
+> +				       GFP_KERNEL);
+> +	if (!clock->parents)
+> +		return ERR_PTR(-ENOMEM);
+> 
+> -	/* Remap the clock register and read the divisor. Disabling the
+> -	 * clock overwrites the divisor, so we need to cache its value for the
+> -	 * enable operation.
+> -	 */
+> -	clock->reg = of_iomap(np, 0);
+> -	if (clock->reg == NULL) {
+> -		pr_err("%s: failed to map %s DIV6 clock register\n",
+> -		       __func__, np->name);
+> -		goto error;
+> -	}
+> +	clock->reg = reg;
+> 
+> +	/*
+> +	 * Read the divisor. Disabling the clock overwrites the divisor, so we
+> +	 * need to cache its value for the enable operation.
+> +	 */
+>  	clock->div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
+> 
+> -	/* Parse the DT properties. */
+> -	of_property_read_string(np, "clock-output-names", &clk_name);
+> -
+> -	for (i = 0, valid_parents = 0; i < num_parents; i++) {
+> -		const char *name = of_clk_get_parent_name(np, i);
+> -
+> -		if (name) {
+> -			parent_names[valid_parents] = name;
+> -			clock->parents[valid_parents] = i;
+> -			valid_parents++;
+> -		}
+> -	}
+> -
+>  	switch (num_parents) {
+>  	case 1:
+>  		/* fixed parent clock */
+> @@ -243,12 +219,22 @@ static void __init cpg_div6_clock_init(struct
+> device_node *np) break;
+>  	default:
+>  		pr_err("%s: invalid number of parents for DIV6 clock %s\n",
+> -		       __func__, np->name);
+> +		       __func__, name);
+> +		clk = ERR_PTR(-EINVAL);
+>  		goto error;
+>  	}
+> 
+> +	/* Filter out invalid parents */
+> +	for (i = 0, valid_parents = 0; i < num_parents; i++) {
+> +		if (parent_names[i]) {
+> +			parent_names[valid_parents] = parent_names[i];
+> +			clock->parents[valid_parents] = i;
+> +			valid_parents++;
+> +		}
+> +	}
+> +
+>  	/* Register the clock. */
+> -	init.name = clk_name;
+> +	init.name = name;
+>  	init.ops = &cpg_div6_clock_ops;
+>  	init.flags = CLK_IS_BASIC;
+>  	init.parent_names = parent_names;
+> @@ -257,6 +243,50 @@ static void __init cpg_div6_clock_init(struct
+> device_node *np) clock->hw.init = &init;
+> 
+>  	clk = clk_register(NULL, &clock->hw);
+> +	if (!IS_ERR(clk))
+> +		return clk;
+> +
+> +error:
+> +	kfree(clock->parents);
+> +	kfree(clock);
 
-In other words, the system will be always reboot if we make the
-OTP pin is connected the others IC to control the power.
+If you think that errors when registering the DIV6 clock are not fatal enough 
+to not have to care about memory leakage, you should kfree(clock) when the 
+kmalloc_array() above fails.
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
+> +	return clk;
+> +}
+> +
+> +static void __init cpg_div6_clock_init(struct device_node *np)
+> +{
+> +	unsigned int num_parents;
+> +	const char **parent_names;
+> +	const char *clk_name = np->name;
+> +	void __iomem *reg;
+> +	struct clk *clk;
+> +	unsigned int i;
+> +
+> +	num_parents = of_clk_get_parent_count(np);
+> +	if (num_parents < 1) {
+> +		pr_err("%s: no parent found for %s DIV6 clock\n",
+> +		       __func__, np->name);
+> +		return;
+> +	}
+> +
+> +	parent_names = kmalloc_array(num_parents, sizeof(*parent_names),
+> +				GFP_KERNEL);
+> +	if (!parent_names)
+> +		return;
+> +
+> +	reg = of_iomap(np, 0);
+> +	if (reg == NULL) {
+> +		pr_err("%s: failed to map %s DIV6 clock register\n",
+> +		       __func__, np->name);
+> +		goto error;
+> +	}
+> +
+> +	/* Parse the DT properties. */
+> +	of_property_read_string(np, "clock-output-names", &clk_name);
+> +
+> +	for (i = 0; i < num_parents; i++)
+> +		parent_names[i] = of_clk_get_parent_name(np, i);
+> +
+> +	clk = cpg_div6_register(clk_name, num_parents, parent_names, reg);
+>  	if (IS_ERR(clk)) {
+>  		pr_err("%s: failed to register %s DIV6 clock (%ld)\n",
+>  		       __func__, np->name, PTR_ERR(clk));
+> @@ -269,9 +299,8 @@ static void __init cpg_div6_clock_init(struct
+> device_node *np) return;
+> 
+>  error:
+> -	if (clock->reg)
+> -		iounmap(clock->reg);
+> +	if (reg)
+> +		iounmap(reg);
+>  	kfree(parent_names);
+> -	kfree(clock);
+>  }
+>  CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock",
+> cpg_div6_clock_init); diff --git a/drivers/clk/shmobile/clk-div6.h
+> b/drivers/clk/shmobile/clk-div6.h new file mode 100644
+> index 0000000000000000..d19531f42953c83f
+> --- /dev/null
+> +++ b/drivers/clk/shmobile/clk-div6.h
+> @@ -0,0 +1,3 @@
+> +
+> +struct clk *cpg_div6_register(const char *name, unsigned int num_parents,
+> +			      const char **parent_names, void __iomem *reg);
 
-Changes in v4: None
-Changes in v3:
-  - Add the pictrl states decription in document.
+Could you please add #ifdef include guard macros ?
 
-Changes in v2:
-  - Add the 'init' pinctrl more decription in commit.
-  - Fix the subject to make more obvious in PATCH[1/2]
-  - Resend this patch v2 since fix the subject to be specific.
-
-Changes in v1:
-  - As the Doug comments, add the 'init' property to sync document.
-
- .../devicetree/bindings/thermal/rockchip-thermal.txt          | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-index ef802de..b38200d 100644
---- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-@@ -12,6 +12,11 @@ Required properties:
- - resets : Must contain an entry for each entry in reset-names.
- 	   See ../reset/reset.txt for details.
- - reset-names : Must include the name "tsadc-apb".
-+- pinctrl-names : The pin control state names;
-+- pinctrl-0 : The "init" pinctrl state, it will be set before device probe.
-+- pinctrl-1 : The "default" pinctrl state, it will be set after reset the
-+	      TSADC controller.
-+- pinctrl-2 : The "sleep" pinctrl state, it will be in for suspend.
- - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
- - rockchip,hw-tshut-temp : The hardware-controlled shutdown temperature value.
- - rockchip,hw-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPIO.
-@@ -27,8 +32,10 @@ tsadc: tsadc@ff280000 {
- 	clock-names = "tsadc", "apb_pclk";
- 	resets = <&cru SRST_TSADC>;
- 	reset-names = "tsadc-apb";
--	pinctrl-names = "default";
--	pinctrl-0 = <&otp_out>;
-+	pinctrl-names = "init", "default", "sleep";
-+	pinctrl-0 = <&otp_gpio>;
-+	pinctrl-1 = <&otp_out>;
-+	pinctrl-2 = <&otp_gpio>;
- 	#thermal-sensor-cells = <1>;
- 	rockchip,hw-tshut-temp = <95000>;
- 	rockchip,hw-tshut-mode = <0>;
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
+
