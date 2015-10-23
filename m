@@ -1,7 +1,7 @@
 From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] ARM64: zynqmp: DT: Add interrupt-controller property to GPIO
-Date: Fri, 23 Oct 2015 09:25:32 -0700
-Message-ID: <1445617532-10228-3-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH 2/3] ARM: zynq: DT: Add interrupt-controller property to GPIO
+Date: Fri, 23 Oct 2015 09:25:31 -0700
+Message-ID: <1445617532-10228-2-git-send-email-soren.brinkmann@xilinx.com>
 References: <1445617532-10228-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,22 +17,22 @@ the GPIO node.
 
 Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 ++
+ arch/arm/boot/dts/zynq-7000.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 857eda5c7217..200fb588d0f5 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -133,6 +133,8 @@
- 			clocks = <&misc_clk>;
- 			interrupt-parent = <&gic>;
- 			interrupts = <0 16 4>;
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 1a5220e05109..fe1a5d0cf03b 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -101,6 +101,8 @@
+ 			#gpio-cells = <2>;
+ 			clocks = <&clkc 42>;
+ 			gpio-controller;
 +			interrupt-controller;
 +			#interrupt-cells = <2>;
- 			reg = <0x0 0xff0a0000 0x1000>;
- 		};
- 
+ 			interrupt-parent = <&intc>;
+ 			interrupts = <0 20 4>;
+ 			reg = <0xe000a000 0x1000>;
 -- 
 2.6.2.3.ga463a5b
 
