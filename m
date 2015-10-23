@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 1/9] NFC: nfcmrvl: remove unneeded version defines
-Date: Fri, 23 Oct 2015 14:22:58 +0200
-Message-ID: <1445602986-3254-2-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v3 6/9] NFC: NCI: move generic spi driver to a module
+Date: Fri, 23 Oct 2015 14:23:03 +0200
+Message-ID: <1445602986-3254-7-git-send-email-cuissard@marvell.com>
 References: <1445602986-3254-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,63 +12,61 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+SPI driver should be a module.
+
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/nfc/nfcmrvl/main.c | 7 ++-----
- drivers/nfc/nfcmrvl/usb.c  | 5 +----
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ net/nfc/nci/Kconfig  | 2 +-
+ net/nfc/nci/Makefile | 3 ++-
+ net/nfc/nci/spi.c    | 4 ++++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
-index 4a8866d..77e292f 100644
---- a/drivers/nfc/nfcmrvl/main.c
-+++ b/drivers/nfc/nfcmrvl/main.c
-@@ -1,7 +1,7 @@
- /*
-  * Marvell NFC driver: major functions
-  *
-- * Copyright (C) 2014, Marvell International Ltd.
-+ * Copyright (C) 2014-2015 Marvell International Ltd.
-  *
-  * This software file (the "File") is distributed by Marvell International
-  * Ltd. under the terms of the GNU General Public License Version 2, June 1991
-@@ -25,8 +25,6 @@
- #include <net/nfc/nci_core.h>
- #include "nfcmrvl.h"
+diff --git a/net/nfc/nci/Kconfig b/net/nfc/nci/Kconfig
+index 901c1dd..85d4819 100644
+--- a/net/nfc/nci/Kconfig
++++ b/net/nfc/nci/Kconfig
+@@ -12,7 +12,7 @@ config NFC_NCI
+ config NFC_NCI_SPI
+ 	depends on NFC_NCI && SPI
+ 	select CRC_CCITT
+-	bool "NCI over SPI protocol support"
++	tristate "NCI over SPI protocol support"
+ 	default n
+ 	help
+ 	  NCI (NFC Controller Interface) is a communication protocol between
+diff --git a/net/nfc/nci/Makefile b/net/nfc/nci/Makefile
+index b4b85b8..0ca31d9 100644
+--- a/net/nfc/nci/Makefile
++++ b/net/nfc/nci/Makefile
+@@ -6,7 +6,8 @@ obj-$(CONFIG_NFC_NCI) += nci.o
  
--#define VERSION "1.0"
--
- static int nfcmrvl_nci_open(struct nci_dev *ndev)
- {
- 	struct nfcmrvl_private *priv = nci_get_drvdata(ndev);
-@@ -252,6 +250,5 @@ int nfcmrvl_parse_dt(struct device_node *node,
- EXPORT_SYMBOL_GPL(nfcmrvl_parse_dt);
+ nci-objs := core.o data.o lib.o ntf.o rsp.o hci.o
  
- MODULE_AUTHOR("Marvell International Ltd.");
--MODULE_DESCRIPTION("Marvell NFC driver ver " VERSION);
--MODULE_VERSION(VERSION);
-+MODULE_DESCRIPTION("Marvell NFC driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
-index 7d1fe43..5e624d1 100644
---- a/drivers/nfc/nfcmrvl/usb.c
-+++ b/drivers/nfc/nfcmrvl/usb.c
-@@ -23,8 +23,6 @@
- #include <net/nfc/nci_core.h>
- #include "nfcmrvl.h"
+-nci-$(CONFIG_NFC_NCI_SPI) += spi.o
++nci_spi-y += spi.o
++obj-$(CONFIG_NFC_NCI_SPI) += nci_spi.o
  
--#define VERSION "1.0"
--
- static struct usb_device_id nfcmrvl_table[] = {
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x1286, 0x2046,
- 					USB_CLASS_VENDOR_SPEC, 4, 1) },
-@@ -469,6 +467,5 @@ static struct usb_driver nfcmrvl_usb_driver = {
- module_usb_driver(nfcmrvl_usb_driver);
+ nci_uart-y += uart.o
+ obj-$(CONFIG_NFC_NCI_UART) += nci_uart.o
+diff --git a/net/nfc/nci/spi.c b/net/nfc/nci/spi.c
+index ec250e7..25153d0 100644
+--- a/net/nfc/nci/spi.c
++++ b/net/nfc/nci/spi.c
+@@ -18,6 +18,8 @@
  
- MODULE_AUTHOR("Marvell International Ltd.");
--MODULE_DESCRIPTION("Marvell NFC-over-USB driver ver " VERSION);
--MODULE_VERSION(VERSION);
-+MODULE_DESCRIPTION("Marvell NFC-over-USB driver");
- MODULE_LICENSE("GPL v2");
+ #define pr_fmt(fmt) "nci_spi: %s: " fmt, __func__
+ 
++#include <linux/module.h>
++
+ #include <linux/export.h>
+ #include <linux/spi/spi.h>
+ #include <linux/crc-ccitt.h>
+@@ -320,3 +322,5 @@ done:
+ 	return skb;
+ }
+ EXPORT_SYMBOL_GPL(nci_spi_read);
++
++MODULE_LICENSE("GPL");
 -- 
 2.2.0.33.gc18b867
 
