@@ -1,118 +1,120 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Fri, 23 Oct 2015 17:41:13 +0200
-Message-ID: <4105684.I1HD0kYY7F@wuerfel>
-References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com> <3702663.07h6YO0UjY@wuerfel> <20151023144631.GZ32532@n2100.arm.linux.org.uk>
+From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Fri, 23 Oct 2015 08:45:06 -0700
+Message-ID: <562A5602.7000208@sonymobile.com>
+References: <20151018192931.GY14956@sirena.org.uk>
+ <20151018193757.GA9147@kroah.com> <20151018195330.GB14956@sirena.org.uk>
+ <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
+ <5627B677.5090109@gmail.com> <20151021162758.GP32054@sirena.org.uk>
+ <5627D6E0.5020708@gmail.com>
+ <CAL_Jsq+FPtCuBnte2HTgbdpNYM=v_kLaCRcOC1kMaCQwVC=5Kw@mail.gmail.com>
+ <562808AF.7090406@gmail.com>
+ <CAAObsKAkyjdvNOS3+nuT0N9sudUFLsZXFtcm6Y038p+HSdsZsg@mail.gmail.com>
+ <20151022144405.GC21861@kroah.com> <562930AB.1070203@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151023144631.GZ32532@n2100.arm.linux.org.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Loc Ho <lho@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, KISHON VIJAY <kishon@ti.com>, WingMan Kwok <w-kwok2@ti.com>, Rob Herring <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562930AB.1070203-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, =?UTF-8?Q?Terje_Bergstr=c3=b6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Jingoo
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 October 2015 15:46:31 Russell King - ARM Linux wrote:
-> On Fri, Oct 23, 2015 at 11:17:06AM +0200, Arnd Bergmann wrote:
-> > On Thursday 22 October 2015 15:27:05 Loc Ho wrote:
-> > However, for embedded systems that tend to ship with a minimal binary
-> > bootloader and no way to update that as an end-user, we rely on Linux
-> > to know about all the hardware that requires some form of setup, which
-> > is why we have all sorts of drivers and frameworks in the kernel that
-> > a server can easily ignore.
-> > 
-> > While keystone can show up in servers that won't use this driver, my
-> > impression is that its main market is actually in embedded space.
+On 10/22/2015 11:53 AM, Frank Rowand wrote:
+> On 10/22/2015 7:44 AM, Greg Kroah-Hartman wrote:
+>> <oops, sent too early...>
+>>
+>> On Thu, Oct 22, 2015 at 11:05:11AM +0200, Tomeu Vizoso wrote:
+>>> But that's moot currently because Greg believes that the time spent
+>>> probing devices at boot time could be reduced enough so that the order
+>>> in which devices are probed becomes irrelevant. IME that would have to
+>>> be under 200ms so that the user doesn't notice and that's unicorn-far
+>>> from any bootlog I have ever seen.
+>>
+>> But as no one has actually produced a bootlog, how do you know that?
+>> Where exactly is your time being spent?  What driver is causing long
+>> delays?  Why is the long-delay-drivers not being done in their own
+>> thread?  And most importantly, why are you ignoring the work that people
+>> did back in 2008 to solve the issue on other hardware platforms?
+>>
+>>> Given that downstreams are already carrying as many hacks as they
+>>> could think of to speed total boot up, I think this is effectively
+>>> telling them to go away.
+>>
+>> No I'm not, I'm asking for real data, not hand-wavy-this-is-going-to
+>> solve-the-random-issue-i'm-having type patch by putting random calls in
+>> semi-random subsystems all over the kernel.
+>>
+>> And when I ask for real data, you respond with the fact that you aren't
+>> trying to speed up boot time here at all, so what am I supposed to think
 > 
-> That's an interesting point of view - especially as you can't make the
-> argument that Marvell Armada chips would ever be anything but the
-> embedded space, but we're so far getting away with having the serdes
-> setup in u-boot - and even Marvell's BSP doesn't have it in the kernel.
+> I also had the understanding that this patch series was about improving
+> boot time.  But I was kindly corrected that the behavior change was
+> getting the panel displaying stuff at an earlier point in the boot sequence,
+> _not_ completing the entire boot faster. 
 > 
-> The real question here is:
+> The claim for the current series, in patch 0 in v7 is:
 > 
->   Why would we want to statically setup serdes links in the kernel
->   according to the DTB, rather than having the boot loader set them up?
-> 
-> For the most part, the choice between the serdes modes is fairly static,
-> depending on the board wiring.  You wouldn't ever want to configure a
-> mini-PCIe socket for gigabit ethernet.
+>    With this series I get the kernel to output to the panel in 0.5s,
+>    instead of 2.8s.
 
-To rephrase what I was saying above: we need to know whether we can
-trust the bootloader to get it right. In servers, it's absolutely
-required for the firmware to do this properly as far as I'm concerned.
-
-If Marvell's bootloader gets this right reliably as well, that's great.
-However, certain companies have been known in the past to ship
-crazy broken bootloaders and for each thing that they get wrong, we
-have to make up in the kernel unless we can get all users to upgrade
-their bootloaders to a fixed version.
-
-> However, there are cases when you would want to change it, and I'm
-> aware of these cases:
+It's very common to want to get the display up before the
+rest of the system.  So wanting to accelerate one part of the boot
+at the expense to the rest of the system is a valid use case.
+Deferred initcalls, which is out of tree primarily because it requires
+the type of manual tweaking that Tomeu describes, specifically
+addressed this issue.
 > 
-> * Serdes routed to a mini-PCIe socket, which is compatible with mSATA.
->   There's an argument here to allow the serdes link to be switched at
->   runtime between PCIe and mSATA.  However, the card type can't be
->   detected at run time, so this would have to be a manual configuration
->   change by the user.
+> Just to get side-tracked, one other approach at ordering to reduce
+> deferrals reported a modest boot time reduction for four boards and a
+> very slight boot time increase for one other board.) The report of boot
+> times with that approach was in:
 > 
->   Since mini-PCIe is not hot-pluggable, this configuration isn't
->   something that could be changed without powering the system down.
-
-Right, but isn't this something that the firmware ought to be able
-to figure out? For a server, I would expect that there needs to be
-a way to detect what card is plugged and, have it set up correctly
-and put all the right entries into the DT.
-
-u-boot could probably do the same thing, but I would expect at least
-some hardware vendors to get some part of it wrong on an embedded
-machine.
-
-> * Serdes routed to a SFP cage, where the serdes link is configured
->   for gigabit (or faster for SFP+) ethernet.  For gigabit only, serdes
->   is configured in either 1000base-X or Cisco SGMII mode (SGMII is a
->   non-802.3 modification to 1000base-X) depending on the type of
->   transceiver plugged in.
+>   http://article.gmane.org/gmane.linux.drivers.devicetree/133010
 > 
->   Arguably, there's a third option here, which is SATA as well -  I'm
->   aware of one non-standard SFP module on the market which provides a
->   SATA connector, but this is highly non-standard, is not covered by
->   the SFP specifications, so such a switch to this mode would have to
->   be done manually.
+> from Alexander Holler.
 > 
-> The difference between 1000base-X vs SGMII is to do with the generation
-> and interpretation of a 16-bit configuration word passed across the
-> link.  Otherwise, the two are identical - and so far I've seen the
-> configuration word mode is determined by the ethernet block rather than
-> the serdes block.
+> I have not searched further to see if there is more data of boot time
+> reductions from any of the other attempts to change driver binding
+> order to move dependencies before use of a resource.  But whether
+> there is a performance improvement or not, there continues to be
+> a stream of developers creatively impacting the binding order for
+> their specific driver(s) or board.  So it seems that maybe there
+> is an underlying problem, or we don't have adequate documentation
+> explaining how to avoid a need to order bindings, or the
+> documentation exists and is not being read.
+
+Well, I have probe order problems unrelated to boot time, that
+I solved by resorting to putting stuff into modules and loading
+them post-boot.  So I'd be interested in easy solutions to managing
+boot order in mainline.
+
 > 
-> My argument would be that even in the case of the last paragraph,
-> normal use for serdes reconfiguration would be a power cycle, even in
-> the embedded environment.
-> 
-> Now, that all said, it looks to me like TI's serdes implementation can't
-> be switched between different modes - it's statically configured to
-> whatever the DTB says it should be.
+> I have been defaulting to the position that has been asserted by
+> the device tree maintainters, that probe deferrals work just fine
+> for at least the majority of cases (and is the message I have been
+> sharing in my conference presentations about device tree).  But I
+> suspect that there is at least a small minority of cases that are not
+> well served by probe deferral.  (Not to be read as an endorsement of
+> this specific patch series, just a generic observation.)
 
-Right, otherwise we would use a single compatible string and use the
-settings as an argument.
+I've been worried about DT overhead adding to boot time for a while.
+And IMHO probe deferral is just about the lamest way to solve boot
+order dependencies I can imagine, from a computer science perspective.
+(Well, there's a certain elegance to it, but it's a stupid "make
+everything re-doable, back up and start over, time-wasting" elegance.)
 
-> So, this brings up the obvious question: why do we need to support
-> serdes configuration in the kernel rather than statically in the boot
-> loader according to the board setup?
-> 
-> Specifically on this patch series, I think that if we're going to have
-> code doing serdes configuration in the kernel, we need to come up with
-> a common set of DT properties for it, rather than having everyone doing
-> their own thing.  I'd also like to see the code shrink in size - it
-> doesn't do anything beyond configuring the hardware for the settings
-> that DTB tells it to, so why it has to be 2.5k lines I've no idea.
+However, when Android takes 35 seconds to boot, and most people almost never
+cold-boot your product, a few seconds of kernel time-wasting on
+cold-boot seem less important. Alas, when I started working on mobile
+phones I stopped caring much about boot time.
 
-I can think of one more point that you have not mentioned: we may need
-to want to include the PHY in the runtime power management. If the PHY
-loses its state in low-power mode, we need to either read it out on
-suspend to program it back, or regenerate the settings from DT.
-
-	Arnd
+Thus, I've never worried about the DT overhead enough to actually
+measure it, as requested by Greg.  So I'll just shut up now. :-)
+ -- Tim
+  
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
