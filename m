@@ -1,134 +1,43 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 3/6] pci:host: Add Altera PCIe host controller driver
-Date: Fri, 23 Oct 2015 00:31:11 -0500
-Message-ID: <20151023053111.GK21237@localhost>
-References: <1445506051-21688-1-git-send-email-lftan@altera.com>
- <1445506051-21688-4-git-send-email-lftan@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445506051-21688-4-git-send-email-lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH v3 0/3] Add RT5033 Flash LED driver
+Date: Fri, 23 Oct 2015 14:48:01 +0900
+Message-ID: <1445579285-6866-1-git-send-email-ingi2.kim@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, j.anaszewski@samsung.com
+Cc: inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ley,
+This patch supports flash led of RT5033 PMIC.
 
-On Thu, Oct 22, 2015 at 05:27:28PM +0800, Ley Foon Tan wrote:
-> This patch adds the Altera PCIe host controller driver.
+Changes since v3:
+ - Use mutex and work queue
+ - Split brightness set func (sync / async)
+ - Add flash API (flash_brightness_set)
+ - Move struct(rt5033_led_config_data) to local area
+ - Code clean
 
-> +static void altera_pcie_fixups(struct pci_bus *bus)
-> +{
-> +	struct pci_dev *dev;
-> +
-> +	list_for_each_entry(dev, &bus->devices, bus_list) {
-> +		altera_pcie_retrain(dev);
-> +		altera_pcie_fixup_res(dev);
-> +	}
-> +}
+Changes since v2:
+ - Split MFC code from rt5033 flash led patch
+ - Fix typo error
+ - Change naming of mfd register back again
+ - Fix compile error
 
-I'd really like to avoid this particular fixup because it's done
-between pci_scan_root_bus() and pci_assign_unassigned_bus_resources()
-and pci_bus_add_devices().  That path is almost 100% arch-independent,
-and someday we should be able to pull all that out into one PCI core
-interface.
+Ingi Kim (3):
+  leds: rt5033: Add DT binding for RT5033
+  mfd: rt5033: Add RT5033 Flash led sub device
+  leds: rt5033: Add RT5033 Flash led device driver
 
-You might be able to do the link retrain fixup as a header quirk.
-That's not really ideal either, but I don't think we have a good
-mechanism of inserting per-host bridge hooks in the enumeration path.
-There are some pcibios_*() hooks, but those are per-arch, not per-host
-bridge, so they're not really what you want here.
+ .../devicetree/bindings/leds/leds-rt5033.txt       |  38 +++
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-rt5033.c                         | 314 +++++++++++++++++++++
+ drivers/mfd/rt5033.c                               |   3 +
+ include/linux/mfd/rt5033-private.h                 |  49 ++++
+ include/linux/mfd/rt5033.h                         |  13 +
+ 7 files changed, 426 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-rt5033.txt
+ create mode 100644 drivers/leds/leds-rt5033.c
 
-I think other host drivers have handled the "prevent enumeration of
-root complex resources" problem by adding a similar check in the
-config accessors.
-
-> +static int altera_pcie_cfg_write(struct pci_bus *bus, unsigned int devfn,
-> +				 int where, int size, u32 value)
-
-This needs a comment to the effect that this hardware can only generate
-32-bit config accesses.  We also need a printk in the probe routine so
-there's a note in dmesg so we have a clue that RW1C bits in config space
-may be corrupted.
-
-> +{
-> +	struct altera_pcie *pcie = bus->sysdata;
-> +	u32 data32;
-> +	u32 shift = 8 * (where & 3);
-> +	u8 byte_en;
-> +
-> +	if (!altera_pcie_valid_config(pcie, bus, PCI_SLOT(devfn)))
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	switch (size) {
-> +	case 1:
-> +		data32 = (value & 0xff) << shift;
-> +		byte_en = 1 << (where & 3);
-> +		break;
-> +	case 2:
-> +		data32 = (value & 0xffff) << shift;
-> +		byte_en = 3 << (where & 3);
-> +		break;
-> +	default:
-> +		data32 = value;
-> +		byte_en = 0xf;
-> +		break;
-> +	}
-> +
-> +	return tlp_cfg_dword_write(pcie, bus->number, devfn,
-> +		(where & ~DWORD_MASK), byte_en, data32);
-> +}
-
-> +static void altera_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct altera_pcie *pcie;
-> +	unsigned long status;
-> +	u32 bit;
-> +	u32 virq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pcie = irq_desc_get_handler_data(desc);
-> +
-> +	while ((status = cra_readl(pcie, P2A_INT_STATUS)
-> +		& P2A_INT_STS_ALL) != 0) {
-> +		for_each_set_bit(bit, &status, INTX_NUM) {
-> +			/* clear interrupts */
-> +			cra_writel(pcie, 1 << bit, P2A_INT_STATUS);
-> +
-> +			virq = irq_find_mapping(pcie->irq_domain, bit + 1);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err(&pcie->pdev->dev, "unexpected IRQ\n");
-
-Include the bit number here.  A printk string with no % substitutions
-is rarely as useful as it could be.
-
-> ...
-> +	bus = pci_scan_root_bus(&pdev->dev, pcie->root_bus_nr, &altera_pcie_ops,
-> +				pcie, &pcie->resources);
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	altera_pcie_fixups(bus);
-> +	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-> +	pci_assign_unassigned_bus_resources(bus);
-> +	pci_bus_add_devices(bus);
-> +
-> +	/* Configure PCI Express setting. */
-> +	list_for_each_entry(child, &bus->children, node)
-> +		pcie_bus_configure_settings(child);
-
-This loop should be before pci_bus_add_devices().  When we call
-pci_bus_add_devices(), drivers may claim devices immediately, and the
-PCI core shouldn't be changing device configuration while a driver
-owns the device.
-
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.0.5
