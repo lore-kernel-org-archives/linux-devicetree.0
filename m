@@ -1,7 +1,7 @@
 From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: [PATCH 09/10] MIPS: BMIPS: brcmstb: add SATA nodes for bcm7360
-Date: Fri, 23 Oct 2015 10:44:22 +0900
-Message-ID: <1445564663-66824-10-git-send-email-jaedon.shin@gmail.com>
+Subject: [PATCH 10/10] MIPS: BMIPS: brcmstb: add SATA nodes for bcm7362
+Date: Fri, 23 Oct 2015 10:44:23 +0900
+Message-ID: <1445564663-66824-11-git-send-email-jaedon.shin@gmail.com>
 References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
 Return-path: <linux-ide-owner@vger.kernel.org>
 In-Reply-To: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
@@ -10,25 +10,25 @@ To: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baec
 Cc: linux-ide@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add AHCI and PHY device nodes to BMIPS based BCM7360 platform.
+Add AHCI and PHY device nodes to BMIPS based BCM7362 platform.
 
 Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 ---
- arch/mips/boot/dts/brcm/bcm7360.dtsi     | 40 ++++++++++++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm97360svmb.dts |  8 +++++++
+ arch/mips/boot/dts/brcm/bcm7362.dtsi     | 40 ++++++++++++++++++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts |  8 +++++++
  2 files changed, 48 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7360.dtsi b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-index 9e1e571ba346..1f5c99e9d0d1 100644
---- a/arch/mips/boot/dts/brcm/bcm7360.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-@@ -183,5 +183,45 @@
+diff --git a/arch/mips/boot/dts/brcm/bcm7362.dtsi b/arch/mips/boot/dts/brcm/bcm7362.dtsi
+index 6e65db86fc61..51c58a41d2b5 100644
+--- a/arch/mips/boot/dts/brcm/bcm7362.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm7362.dtsi
+@@ -189,5 +189,45 @@
  			interrupts = <66>;
  			status = "disabled";
  		};
 +
 +		sata: sata@181000 {
-+			compatible = "brcm,bcm7360-ahci", "brcm,sata3-ahci";
++			compatible = "brcm,bcm7362-ahci", "brcm,sata3-ahci";
 +			reg-names = "ahci", "top-ctrl";
 +			reg = <0x181000 0xa9c>, <0x180020 0x8>;
 +			interrupt-parent = <&periph_intc>;
@@ -49,7 +49,7 @@ index 9e1e571ba346..1f5c99e9d0d1 100644
 +		};
 +
 +		sata_phy: sata-phy@1800000 {
-+			compatible = "brcm,bcm7360-sata-phy", "brcm,phy-sata3";
++			compatible = "brcm,bcm7362-sata-phy", "brcm,phy-sata3";
 +			reg = <0x180100 0x0eff>;
 +			reg-names = "phy";
 +			#address-cells = <1>;
@@ -68,10 +68,10 @@ index 9e1e571ba346..1f5c99e9d0d1 100644
 +		};
  	};
  };
-diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-index eee8b0e32681..0088925cc36a 100644
---- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
+diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
+index 739c2ef5663b..ef9a69b79bc4 100644
+--- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
++++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
 @@ -40,3 +40,11 @@
  &ohci0 {
  	status = "okay";
