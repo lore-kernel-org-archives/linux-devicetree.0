@@ -1,90 +1,135 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
-Date: Fri, 23 Oct 2015 20:14:06 +0200
-Message-ID: <20151023181406.GK10947@lukather>
-References: <1445444428-4652-1-git-send-email-jenskuske@gmail.com>
- <1445444428-4652-2-git-send-email-jenskuske@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: document linux-specific partition parser DT binding
+Date: Fri, 23 Oct 2015 11:14:36 -0700
+Message-ID: <20151023181436.GL13239@google.com>
+References: <1444915191-28350-1-git-send-email-linus.walleij@linaro.org>
+ <20151015162210.GA4545@localhost>
+ <CACRpkdYboyXQ7tz8gSTafVLJy26E3qLAbcKyjOsEhh8j=3S1bQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hvDi6/M7gW6JbuLr"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4HRVGYQKGQEWO6V2UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445444428-4652-2-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CACRpkdYboyXQ7tz8gSTafVLJy26E3qLAbcKyjOsEhh8j=3S1bQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---hvDi6/M7gW6JbuLr
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Linus,
 
-On Wed, Oct 21, 2015 at 06:20:27PM +0200, Jens Kuske wrote:
-> +		bus_gates: clk@01c20060 {
-> +			#clock-cells = <1>;
-> +			compatible = "allwinner,sun8i-h3-bus-gates-clk";
-> +			reg = <0x01c20060 0x14>;
-> +			clock-indices = <5>, <6>, <8>,
-> +					<9>, <10>, <13>,
-> +					<14>, <17>, <18>,
-> +					<19>, <20>,
-> +					<21>, <23>,
-> +					<24>, <25>,
-> +					<26>, <27>,
-> +					<28>, <29>,
-> +					<30>, <31>, <32>,
-> +					<35>, <36>, <37>,
-> +					<40>, <41>, <43>,
-> +					<44>, <52>, <53>,
-> +					<54>, <64>,
-> +					<65>, <69>, <72>,
-> +					<76>, <77>, <78>,
-> +					<96>, <97>, <98>,
-> +					<112>, <113>,
-> +					<114>, <115>, <116>,
-> +					<128>, <135>;
-> +			clocks = <&ahb1>, <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb2>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb2>,
-> +				 <&ahb2>, <&ahb2>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&ahb1>, <&ahb1>,
-> +				 <&ahb1>, <&apb1>,
-> +				 <&apb1>, <&apb1>, <&apb1>,
-> +				 <&apb1>, <&apb1>, <&apb1>,
-> +				 <&apb2>, <&apb2>, <&apb2>,
-> +				 <&apb2>, <&apb2>,
-> +				 <&apb2>, <&apb2>, <&apb2>,
-> +				 <&ahb1>, <&ahb1>;
+On Fri, Oct 23, 2015 at 11:17:54AM +0200, Linus Walleij wrote:
+> On Thu, Oct 15, 2015 at 6:22 PM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > Are you trying to use this binding, or is this just purely a mechanical
+> > documentation issue? I ask, because it seems that binding never really
+> > got reviewed at all, and others have recently tried to extend support
+> > for it generically [1], but a few objections came up [2][3].
+> 
+> I am using it in this devicetree patch:
+> http://marc.info/?l=linux-arm-kernel&m=144492610417605&w=2
+> 
+> And this devicetree patch:
+> http://marc.info/?l=linux-arm-kernel&m=144490455308758&w=2
+> 
+> Otherwise the AFS partition type will not be scanned.
+> 
+> The other option is to add "afs" to this list in
+> drivers/mtd/maps/physmap_of.c:
+> 
+> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+> index 3e614e9119d5..6233473a55d6 100644
+> --- a/drivers/mtd/maps/physmap_of.c
+> +++ b/drivers/mtd/maps/physmap_of.c
+> @@ -110,7 +110,7 @@ static struct mtd_info *obsolete_probe(struct
+> platform_device *dev,
+>     default is use. These take precedence over other device tree
+>     information. */
+>  static const char * const part_probe_types_def[] = {
+> -       "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
+> +       "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", "afs", NULL };
+> 
+> I can send a patch like this if you prefer?
 
-This is not really what I had in mind...
+Hmm, not really. While I'd love to have a good common set of reasonably
+generic partition parsers that we could always run on all MTDs (or in
+this case, all physmap_of MTDs) similar to how the block subsystem does
+it, I don't think that is really workable here, as there is too much
+variation in parsers and mamy of them actually scan the whole flash (or
+at least, the headers of each block). This can get very expensive, and
+potentially leaves room for false matches, especially when you start
+layering on all the other potential parsers others might want to use.
 
-This IP has 2 parents, and only two parents. The mapping between the
-IPs should be done in the driver itself, not in the DT where it is
-very error prone and barely readable.
+IOW, this solution is not scalable IMO. In previous discussions, I think
+we've agreed that partition parsing must be informed by platform
+knowledge.
 
-And note that I never have expected you to use clk-simple-gates
-either. This is a complicated clock, unlike the other we've seen so
-far, it definitely deserves a driver of its own.
+> > Unfortunately I/we dropped the ball a bit on that thread, but we'd
+> > ideally like to address those concerns in a new binding that is
+> > supported for all MTDs, and deprecate the old one. The new one would
+> > probably not directly use the parser name as used by Linux, but define
+> > some list of compatible strings that fit DT conventions better. Also, I
+> > don't want people including things like "cmdlinepart" in DT, but it
+> > should be available as an override if necessary. IOW, DT shouldn't
+> > supersede the kernel command line.
+> 
+> This is not for cmdlinepart, as AFS is an actual on-flash format.
 
-Thanks!
-Maxime
+Right. I was just mentioning that this binding:
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---hvDi6/M7gW6JbuLr--
+  (1) allows people to specify nonsensical things like "ofpart" and
+  "cmdlinepart" in their DT and
+  (2) allows people to specify DTs that *don't* allow developer
+  overrides like cmdlinepart (e.g., the partition layout is corrupted,
+  so we want to boot a recovery kernel with a predetermined
+  'mtdparts=...' parameter)
+
+Neither is directly related to your use of AFS, but it's just part of my
+thoughts on codifying the use of this binding.
+
+> > That's not to say we can't document the old one, but I'm curious if
+> > there are real users. I'd also like to encourage new users to avoid the
+> > old one if we can make that feasible.
+> 
+> I'm happy to do either patch, or define a new binding if you
+> prefer, like simply:
+
+I would prefer a new binding. And personally, I'd like to get something
+like this extended to all MTDs (there are other users asking for similar
+things), but I haven't made the time to write the patch :(
+
+> partition-type = <string>;
+> 
+> and then we define this as "arm,arm-flash-structure" or something,
+> and parse that to "afs" internally in physmap_of.c.
+
+Seems OK to me. Again, I'd prefer this not live in physmap_of.c, but if
+that's the expedient solution, I could probably take it from there.
+
+> >> + - linux,part-probe: a flash partition type to look for, using the
+> >> +   Linux-internal partition naming scheme, e.g. "afs" for the ARM
+> >> +   Flash footers.
+> >
+> > IIUC, this property actually supports a list of parsers, not just a
+> > single partition type.
+> 
+> Ah it does. If we wanna go with this patch I'll fix it.
+
+I'd rather not take this patch if we can safely pivot to an improved
+binding, but I'm not sure if that violates the DT policy party line :)
+
+> > Also, if we're really going to support this, we should list exactly what
+> > strings we support. And that's one of the problems with the existing
+> > binding; it supports any old string Linux supports, which doesn't match
+> > how we typically want to add bindings (i.e., via proposal + review).
+> 
+> OK that sounds like a case for "arm,arm-flash-structure" for this
+> specific binding.
+
+Right.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
