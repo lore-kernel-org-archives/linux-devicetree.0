@@ -1,65 +1,92 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: of_mdiobus_register_phy() and deferred probe
-Date: Fri, 23 Oct 2015 09:38:33 +0200
-Message-ID: <CAMuHMdUpeHXze=BMRsafWbzHT8WL9L+WO5xbO7niqk0wi_eRJQ@mail.gmail.com>
-References: <CAMuHMdX+_0Cf0VwmKDtcfMNwaPEN5jvjZQUXg6MKMJa+cvYz3w@mail.gmail.com>
-	<56294202.5020507@cogentembedded.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: drm/msm: Update bindings for MDP5
+Date: Fri, 23 Oct 2015 13:17:34 +0530
+Message-ID: <5629E616.1090601@codeaurora.org>
+References: <1444997172-9308-1-git-send-email-architt@codeaurora.org>
+ <CAJAp7OhSLFHAdg9POwfhFRU2NmYS8Oc-Zpn8-UCdLfpBWepbdw@mail.gmail.com>
+ <56248452.6060509@codeaurora.org>
+ <CAF6AEGsyN_FNXGO+SrM6SFQJA7jtCnVBjcCdYqVWgQ23-fH+ZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56294202.5020507-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGsyN_FNXGO+SrM6SFQJA7jtCnVBjcCdYqVWgQ23-fH+ZQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Andy Gross <agross@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
 
-On Thu, Oct 22, 2015 at 10:07 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> On 10/22/2015 04:31 PM, Geert Uytterhoeven wrote:
+
+On 10/20/2015 11:47 PM, Rob Clark wrote:
+> On Mon, Oct 19, 2015 at 1:49 AM, Archit Taneja <architt@codeaurora.org> wrote:
+>>
+>> On 10/18/2015 08:49 AM, Bjorn Andersson wrote:
+>>>
+>>> On Fri, Oct 16, 2015 at 5:06 AM, Archit Taneja <architt@codeaurora.org>
+>>> wrote:
+>>>>
+>>>> MDP5 has a different compatible string (which causes checkpatch warnings
+>>>> when we try to add MDP5 device nodes). It also has different list of
+>>>> clocks.
+>>>>
+>>>> Update the bindings for MDP5.
+>>>>
+>>>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/drm/msm/mdp.txt | 23
+>>>> ++++++++++++++++-------
+>>>>    1 file changed, 16 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/drm/msm/mdp.txt
+>>>> b/Documentation/devicetree/bindings/drm/msm/mdp.txt
+>>>> index 1a0598e..e926daa 100644
+>>>> --- a/Documentation/devicetree/bindings/drm/msm/mdp.txt
+>>>> +++ b/Documentation/devicetree/bindings/drm/msm/mdp.txt
+>>>> @@ -3,18 +3,27 @@ Qualcomm adreno/snapdragon display controller
+>>>>    Required properties:
+>>>>    - compatible:
+>>>>      * "qcom,mdp" - mdp4
+>>>> +  * "qcom,mdss_mdp" - mdp5
+>>>
+>>>
+>>> Wouldn't it be better to name these "qcom,mdp4" and "qcom,mdp5" so
+>>> that we don't have to rely on some magic detection mechanism to
+>>> support future versions?
+>>
+>>
+>> My guess is that compatibility string "mdss_mdp" came from the
+>> downstream kernels. Chips having MDP4 were supported on downstream
+>> kernels that preceded DT.
+>>
+>> Since we don't have any MDP DT upstream, I think we could go with the
+>> string names you suggested. It might break things for people who might
+>> try to use an old downstream dts file with a new kernel. But that
+>> doesn't sound like the worst thing.
 >
->> Due to a probe deferral of an interrupt controller[1], the Micrel
->> Ethernet PHY on
->> r8a7791/koelsch started failing to get its IRQ:
->>
->>      no irq domain found for /interrupt-controller@e61c0000 !
->>
->> However, of_mdiobus_register_phy() uses irq_of_parse_and_map(), which
->> plainly
->> ignores EPROBE_DEFER, and it just continues.
->>
->> Later I get:
->>
->>      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ -1) to driver
->> Micrel KSZ8041RNLI
->>
->> instead of
->>
->>      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ 408) to driver
->> Micrel KSZ8041RNLI
->>
->> Ethernet still works, as the interrupt seems to be unneeded(?).
+> it would break things for downstream 3.10/mdp5 dt files..  but what
+> I'd suggest is to make the code look for both qcom,mdp5 and
+> qcom,mdss_mdp but only document the former
+
+That's a good idea. I'll update the patches to do that.
+
+Archit
+
 >
->    Yes, the phylib uses PHY polling anyway, IRQ isn't strictly necessary.
+> BR,
+> -R
 >
->> Has anyone already looked into fixing of_mdio to handle deferred probing?
->
->    It's the first time I hear about that. Will have to look into this...
+>> Archit
+>>
+>>>
+>>> Regards,
+>>> Bjorn
+>>>
+>>
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> hosted by The Linux Foundation
 
-Thanks a lot!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
