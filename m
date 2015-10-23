@@ -1,88 +1,61 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800
- Ethernet controller
-Date: Fri, 23 Oct 2015 14:10:33 +0200
-Message-ID: <562A23B9.3090208@sigmadesigns.com>
-References: <1445522558-5808-1-git-send-email-mans@mansr.com>
- <1445522558-5808-2-git-send-email-mans@mansr.com>
+From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/9] Marvell NFC drivers for i2c and spi
+Date: Fri, 23 Oct 2015 14:22:57 +0200
+Message-ID: <1445602986-3254-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445522558-5808-2-git-send-email-mans@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
-Cc: Mans Rullgard <mans@mansr.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Sebastian Frias <sebastian_frias@sigmadesigns.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Mason <slash.tmp@free.fr>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/10/2015 16:02, Mans Rullgard wrote:
+Hi,
 
-> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
-> using the "aurora,nb8800" compatible string.  When used in Sigma
-> Designs chips a few additional control registers are available.
-> This variant is indicated by the "sigma,smp8640-ethernet" compatible
-> string.
-> 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
->  .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> new file mode 100644
-> index 0000000..c19f615
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> @@ -0,0 +1,26 @@
-> +* Aurora VLSI AU-NB8800 Ethernet controller
-> +
-> +Required properties:
-> +- compatible: Should be "aurora,nb8800", "sigma,smp8640-ethernet"
-> +	The latter indicates presence of extra features added by Sigma Designs.
+Please find patches that enable Marvell NFC controlled over i2c
+and spi. This patchset includes also firmware download support and
+few enhancements.
 
-I've been meaning to ask a noob question to the devicetree group
-about how names for compatible strings are chosen.
+Br,
 
-Sigma Designs has two active SoC families, Tango3 (which consists of
-about a dozen MIPS-based SoCs, typically named SMP86xx) and Tango4
-(a few ARM-based SoCs, typically named SMP87xx). I should note that
-there is no SMP8640 SoC AFAIK, rather SMP864x is a Tango3 sub-family
-(I could locate 42,43,44,45,46).
+Vincent Cuissard (9):
+  NFC: nfcmrvl: remove unneeded version defines
+  NFC: NCI: export nci_send_frame and nci_send_cmd function
+  NFC: nfcmrvl: add firmware download support
+  NFC: nfcmrvl: configure head/tail room values per low level drivers
+  NFC: nfcmrvl: add i2c driver
+  NFC: NCI: move generic spi driver to a module
+  NFC: NCI: allow spi driver to choose transfer clock
+  NFC: nfcmrvl: add spi driver
+  NFC: nfcmrvl: update device tree bindings for Marvell NFC
 
-AFAIK, all our SoCs are using the same Aurora NB8800 Ethernet MAC,
-along with the extra features. I find it odd to use a specific SoC
-model to refer to this device, instead of a more generic name.
-(It's weird having to mention smp8640 in the tango4 DT.)
+ .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  61 ++-
+ drivers/nfc/nfcmrvl/Kconfig                        |  22 +
+ drivers/nfc/nfcmrvl/Makefile                       |   8 +-
+ drivers/nfc/nfcmrvl/fw_dnld.c                      | 551 +++++++++++++++++++++
+ drivers/nfc/nfcmrvl/fw_dnld.h                      |  98 ++++
+ drivers/nfc/nfcmrvl/i2c.c                          | 291 +++++++++++
+ drivers/nfc/nfcmrvl/main.c                         |  75 ++-
+ drivers/nfc/nfcmrvl/nfcmrvl.h                      |  23 +-
+ drivers/nfc/nfcmrvl/spi.c                          | 226 +++++++++
+ drivers/nfc/nfcmrvl/uart.c                         |  18 +-
+ drivers/nfc/nfcmrvl/usb.c                          |  10 +-
+ include/linux/platform_data/nfcmrvl.h              |   8 +
+ include/net/nfc/nci.h                              |   1 +
+ include/net/nfc/nci_core.h                         |   5 +
+ net/nfc/nci/Kconfig                                |   2 +-
+ net/nfc/nci/Makefile                               |   3 +-
+ net/nfc/nci/core.c                                 |   4 +-
+ net/nfc/nci/spi.c                                  |  11 +-
+ 18 files changed, 1378 insertions(+), 39 deletions(-)
+ create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.c
+ create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.h
+ create mode 100644 drivers/nfc/nfcmrvl/i2c.c
+ create mode 100644 drivers/nfc/nfcmrvl/spi.c
 
-Would it be possible to have a compatible string which makes it
-clear that it is an Aurora MAC with vendor-specific tweaks?
-Something like "sigma,aurora-nb8800-mac" ?
-
-> +- reg: Should be MMIO address space of the device
-> +- interrupts: Should contain the interrupt specifier for the device
-> +- interrupt-parent: Should be a phandle for the interrupt controller
-> +- clocks: Should be a phandle for the clock for the device
-> +
-> +Common properties described in ethernet.txt:
-> +- local-mac-address
-> +- mac-address
-> +- max-speed
-> +- phy-mode
-> +
-> +Example:
-> +
-> +ethernet@26000 {
-> +	compatible = "aurora,nb8800";
-> +	reg = <0x10000 0x800>;
-> +	interrupts = <42>;
-
-I thought one had to specify also whether the device sent "edge"
-or "level" IRQs?
-
-> +	clocks = <&sys_clk>;
-> +	max-speed = <1000>;
-> +	phy-connection-type = "rgmii";
-> +};
-
-Regards.
+--
+2.2.0.33.gc18b867
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
