@@ -1,64 +1,113 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 1/5] [RFC] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
-Date: Fri, 23 Oct 2015 14:11:41 +0300
-Message-ID: <19544825.jsyW3b77En@avalon>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be> <1832656.BCXoHFFChX@avalon> <CAMuHMdW=bNeoXWMbw74HVT4rZGYq=HekW9a=ZfvhS3wpuG1hZg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] [RFC] clk: shmobile: Add r8a7795 CPG Core Clock Definitions
+Date: Fri, 23 Oct 2015 14:21:04 +0300
+Message-ID: <2464036.AexIB1O0H1@avalon>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be> <1444999760-15750-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW=bNeoXWMbw74HVT4rZGYq=HekW9a=ZfvhS3wpuG1hZg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1444999760-15750-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Geert,
 
-On Friday 23 October 2015 13:09:22 Geert Uytterhoeven wrote:
-> On Fri, Oct 23, 2015 at 1:05 PM, Laurent Pinchart wrote:
-> > On Wednesday 21 October 2015 01:01:03 Magnus Damm wrote:
-> >> On Tue, Oct 20, 2015 at 9:16 PM, Geert Uytterhoeven wrote:
-> >>> On Fri, Oct 16, 2015 at 2:49 PM, Geert Uytterhoeven wrote:
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> >>>> @@ -0,0 +1,71 @@
-> >>>> +* Renesas Clock Pulse Generator / Module Standby and Software Reset
-> >>>> +
-> >>>> +On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse
-> >>>> Generator)
-> >>>> +and MSSR (Module Standby and Software Reset) blocks are intimately
-> >>>> connected,
-> >>>> +and share the same register block.
-> >>>> +
-> >>>> +They provide the following functionalities:
-> >>>> +  - The CPG block generates various core clocks,
-> >>>> +  - The MSSR block provides two functions:
-> >>>> +      1. Module Standby, providing a Clock Domain to control the
-> >>>> clock supply
-> >>>> +        to individual SoC devices,
-> >>>> +      2. Reset Control, to perform a software reset of individual SoC
-> >>>> devices.
-> >>>> +
-> >>>> +Required Properties:
-> >>>> +  - compatible: Must be one of:
-> >>>> +      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC
-> >>> 
-> >>> I'll drop the reference to "r8a7791", as we won't convert r8a7791
-> >>> (yet).
-> > 
-> > I'm fine with supporting r8a7795 only in the initial patch set, but when
-> > do we plan to convert r8a7791 ? I think it would be a good idea to
-> > validate these
->
-> That's a political question...
-> 
-> > bindings on r8a7791 before considering them as stable.
-> 
-> I did the validation on both r8a7795/salvator-x and r8a7791/koelsch.
-> Please try branch topic/cpg-mssr-v4 of renesas-drivers.
+Thank you for the patch.
 
-If it works what's blocking r8a7791 support from being upstreamed ? :-)
+On Friday 16 October 2015 14:49:17 Geert Uytterhoeven wrote:
+> Add all R-Car H3 CPG Core Clock Outputs defined in the datasheet.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v4:
+>   - Add all clocks instead of just the ones used by the current DTS.
+> 
+> v3:
+>   - New.
+> ---
+>  include/dt-bindings/clock/r8a7795-cpg-mssr.h | 63 +++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/r8a7795-cpg-mssr.h
+> 
+> diff --git a/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+> b/include/dt-bindings/clock/r8a7795-cpg-mssr.h new file mode 100644
+> index 0000000000000000..e864aae0a2561c4b
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r8a7795-cpg-mssr.h
+> @@ -0,0 +1,63 @@
+> +/*
+> + * Copyright (C) 2015 Renesas Electronics Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* r8a7795 CPG Core Clocks */
+> +#define R8A7795_CLK_Z			0
+> +#define R8A7795_CLK_Z2			1
+> +#define R8A7795_CLK_ZR			2
+> +#define R8A7795_CLK_ZG			3
+> +#define R8A7795_CLK_ZTR			4
+> +#define R8A7795_CLK_ZTRD2		5
+> +#define R8A7795_CLK_ZT			6
+> +#define R8A7795_CLK_ZX			7
+> +#define R8A7795_CLK_S0D1		8
+> +#define R8A7795_CLK_S0D4		9
+> +#define R8A7795_CLK_S1D1		10
+> +#define R8A7795_CLK_S1D2		11
+> +#define R8A7795_CLK_S1D4		12
+> +#define R8A7795_CLK_S2D1		13
+> +#define R8A7795_CLK_S2D2		14
+> +#define R8A7795_CLK_S2D4		15
+> +#define R8A7795_CLK_S3D1		16
+> +#define R8A7795_CLK_S3D2		17
+> +#define R8A7795_CLK_S3D4		18
+> +#define R8A7795_CLK_LB			19
+> +#define R8A7795_CLK_CL			20
+> +#define R8A7795_CLK_ZB3			21
+> +#define R8A7795_CLK_ZB3D2		22
+> +#define R8A7795_CLK_CR			23
+> +#define R8A7795_CLK_CRD2		24
+> +#define R8A7795_CLK_SD0H		25
+> +#define R8A7795_CLK_SD0			26
+> +#define R8A7795_CLK_SD1H		27
+> +#define R8A7795_CLK_SD1			28
+> +#define R8A7795_CLK_SD2H		29
+> +#define R8A7795_CLK_SD2			30
+> +#define R8A7795_CLK_SD3H		31
+> +#define R8A7795_CLK_SD3			32
+> +#define R8A7795_CLK_SSP2		33
+> +#define R8A7795_CLK_SSP1		34
+> +#define R8A7795_CLK_SSPRS		35
+> +#define R8A7795_CLK_RPC			36
+> +#define R8A7795_CLK_RPCD2		37
+> +#define R8A7795_CLK_MSO			38
+> +#define R8A7795_CLK_CANFD		39
+> +#define R8A7795_CLK_HDMI		40
+> +#define R8A7795_CLK_CSI0		41
+> +#define R8A7795_CLK_CSIREF		42
+> +#define R8A7795_CLK_CP			43
+> +#define R8A7795_CLK_CPEX		44
+> +#define R8A7795_CLK_R			45
+> +#define R8A7795_CLK_OSC			46
+
+Those two clocks are called RCLK and OSCCLK in the datasheet, shouldn't we use 
+those names ?
+
+Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +#endif /* __DT_BINDINGS_CLOCK_R8A7795_CPG_MSSR_H__ */
 
 -- 
 Regards,
