@@ -1,74 +1,46 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 05/11] dt-binding: Add ngpios property to GPIO controller node
-Date: Fri, 23 Oct 2015 12:08:50 +0300
-Message-ID: <3735458.2h6HCQhAOs@avalon>
-References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com> <56293052.80402@broadcom.com> <CAL_JsqJP3SDwiQ95WLJo0isTTxsQkpXDNNBpfVJXqbK99qtC=g@mail.gmail.com>
+From: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] Add iommu driver for hi6220 SoC platform
+Date: Fri, 23 Oct 2015 17:10:31 +0800
+Message-ID: <5629F987.3060701@hisilicon.com>
+References: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com>
+ <1445330724-129401-2-git-send-email-puck.chen@hisilicon.com>
+ <56265783.5040406@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJP3SDwiQ95WLJo0isTTxsQkpXDNNBpfVJXqbK99qtC=g@mail.gmail.com>
+In-Reply-To: <56265783.5040406-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jason Uy <jasonuy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-Dw/NWeUnuQfQT0dZR+AlfA@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 October 2015 18:41:05 Rob Herring wrote:
-> On Thu, Oct 22, 2015 at 1:52 PM, Ray Jui wrote:
-> > On 10/22/2015 11:43 AM, Rob Herring wrote:
-> >> On Mon, Oct 19, 2015 at 12:43 AM, Pramod Kumar wrote:
-> >>> Add ngpios property to the gpio controller's DT node so that controller
-> >>> driver extracts total number of gpio lines present in controller
-> >>> from DT and removes dependency on driver.
-> >>> 
-> >>> Signed-off-by: Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >>> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>> 
-> >>>  Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt | 5 +++
-> >>>  1 file changed, 5 insertions(+)
-> >>> 
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
-> >>> b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
-> >>> index f92b833..655a8d7 100644
-> >>> --- a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
-> >>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
-> >>> 
-> >>> @@ -10,6 +10,9 @@ Required properties:
-> >>>       Define the base and range of the I/O address space that contains
-> >>> the Cygnus
-> >>>   GPIO/PINCONF controller registers
-> >>> 
-> >>> +- ngpios:
-> >>> +    Total number of GPIOs the controller provides
-> >> 
-> >> This must be optional for compatibility and the driver needs to handle
-> >> it not present.
-> > 
-> > You meant to be compatible with existing Cygnus devices, correct?
-> > 
-> > Just to clarify, here you suggest we still leave the existing hard coded
-> > ngpios in the driver, in order to be compatible with all existing Cygnus
-> > devices (while the Cygnus device tree changes to use ngpio is still being
-> > merged and through different maintainer), and have all new iProc SoCs
-> > switch to use ngpios from device tree, right?
+Hi Robin,
+
+On 2015/10/20 23:02, Robin Murphy wrote:
+> On 20/10/15 09:45, Chen Feng wrote:
+>> iommu/hisilicon: Add hi6220-SoC smmu driver
 > 
-> Yes, an existing dtb should continue to work with a new kernel. You
-> can add the DT property to the older devices too and then eventually
-> remove the hard coded values some time in the future. That could be
-> immediately (don't care about compatibility at all), a couple of
-> kernel cycles, never... It all depends on users of the impacted
-> platforms.
 
-But shouldn't the property still be documented as required to ensure that new 
-DTs always include it ?
+>> +
+>> +static int hi6220_smmu_attach_dev(struct iommu_domain *domain,
+>> +                  struct device *dev)
+>> +{
+>> +    dev->archdata.iommu = &iova_allocator;
+> 
+> If the hardware doesn't offer any kind of device isolation (i.e. multiple translation contexts), then you should probably have more logic here to ensure only a single domain can ever be active at once.
+> 
+>> +    return 0;
+>> +}
+>> +
+I feel confused about your above comments. Could you help explain "ensure only a single domain can ever be active at once"?
 
--- 
-Regards,
 
-Laurent Pinchart
+> Robin.
+> 
+> 
+> .
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
