@@ -1,69 +1,40 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] simplefb: Add regulator handling support
-Date: Fri, 23 Oct 2015 08:05:45 +0200
-Message-ID: <20151023060545.GE10947@lukather>
-References: <1445572241-13259-1-git-send-email-wens@csie.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all
+ vendors
+Date: Fri, 23 Oct 2015 08:06:26 +0200
+Message-ID: <20151023060626.GF10947@lukather>
+References: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tpXFRyzAyQ/GSAaD"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ExIO7AL6tcaLjJBF"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1445572241-13259-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---tpXFRyzAyQ/GSAaD
+--ExIO7AL6tcaLjJBF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 23, 2015 at 11:50:37AM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
+On Fri, Oct 23, 2015 at 10:39:19AM +0900, Krzysztof Kozlowski wrote:
+> SRAM bindings for various SoCs, using the mmio-sram genalloc
+> API, are spread over different places - per SoC vendor. Since all of
+> these are quite similar (they depend on mmio-sram) move them to a common
+> place.
 >=20
-> This is v4 of the simplefb regulator support series. This series adds
-> regulator claiming and enabling support for simplefb.
->=20
-> Changes since v4:
->   - Fixed inverted logic when testing the property name.
->   - Fixed regulator supply name string copy length off by 1.
->   - Added real world user, MSI Primo 81 dts patches.
->=20
-> Changes since v3:
->   - Dropped extra "if" which is always true, leftover from v1.
->   - Updated commit message of patch 1
->=20
-> Sometimes the simplefb display output path consits of external conversion
-> chips and/or LCD drivers and backlights. These devices normally have
-> GPIOs to turn them on and/or bring them out of reset, and regulators
-> supplying power to them.
->=20
-> While the kernel does not touch unclaimed GPIOs, the regulator core
-> happily disables unused regulators. Thus we need simplefb to claim
-> and enable the regulators used throughout the display pipeline.
->=20
-> The binding supports any named regulator supplies under its device
-> node. The driver will look through its properties, and claim any
-> regulators by matching "*-supply", as Mark suggested.
->=20
-> I've not done a generic helper in the regulator core yet, instead doing
-> the regulator property handling in the simplefb code for now.
->=20
->=20
-> Patch 1 adds the regulator properties to the DT binding.
->=20
-> Patch 2 adds code to the simplefb driver to claim and enable regulators.
-> Hans, I dropped your Reviewed-by tag from this patch.
->=20
-> Patch 3 adds labels to the simplefb device nodes in sun6i-a31.dtsi
-> so we can reference them in the board dts files, like in the next
-> patch.
->=20
-> Patch 4 adds a dts file for MSI's Primo 81 tablet.
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
 
-Applied 3 and 4.
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
 Thanks!
 Maxime
@@ -73,30 +44,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---tpXFRyzAyQ/GSAaD
+--ExIO7AL6tcaLjJBF
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJWKc45AAoJEBx+YmzsjxAguikP/1rkc7+H/3E0XZTRo1GqEERc
-iOdaJKIEhRD/OkCKkabSEiH7Yk9vAV0mgkGHHPsf58pdcUZlnlwwIJJs1/OzUGZX
-sQvBpYAlAPKPxqrhQgFJv1vI4Z5gnWKVg7j+xK8GeuCmzflIBtHVFrfAi7D57SfT
-zqtIHQPAgmBkZtiWh7VnQe//Lbd0OFqt6vv3Hhod2D3cgf4tNwkmbcDPqse+X09s
-Bn4s5rgG8a9Vk/19Yz7h1rK60cY18H48UpphtuxTFP8Hx8ImCF1BxGCuH2lzJpll
-5+xq2TzTWWsPWDKoGY0ZbwKkXIhpkkWhvBgkqgkQIildk+2XsmyjflWq51VzkAy3
-BPC+BDbq71yUBDP1bqCW2+PWf/bNzdH750XHX3q4C3OrOmlxkMpvUeWoaolpOlcw
-hCOmhs1wP0boAM9N/5voljuGEzhnNtemgAPa8Xz+5R63v4LXtaFLjmxrXIREi02Y
-MQscfeJSFZ8IlnbrkNhE0bbYfPuAgsnfXrblNW7BCyeruAZj315jV3gVeMjadnXK
-vbL3/udU7fmY1RYOyCAREDw8vTbAkIjHKBFEcQ6Xw5kicd0J9P6nyMVjVQ+3/8an
-4sCXxAC/cGC2EZPN0hXjP6yWa692/MwSLopedt5yKrjMFaLgJcV2pMlOW4UwIvmp
-8i1Acn0TsLp8G/63yoE5
-=lFV4
+iQIcBAEBAgAGBQJWKc5iAAoJEBx+YmzsjxAgc+gP/29kUZr7wgzjVzELbUk4l1P2
+WCCi73QCiBOAGisd9Mw8OBYmMAiyLNKXyH6zrbHY8jio1oWE4ZIBC3POMcrTl95g
+wn51ta1nIUSEz04pp5XYfUzcKENZQ6EGcHpSmR7TLN69GbY+KGHgu31exQD9wkqm
+wFuVYMHnCATgaVPHg3WjDT8f44paiRKosLX4GLPiabbiUA+tBnZd6Up6ts6TB2xE
+C8Bu9deLYs1LCXORNjTLuPRaNOai9uGdGXgx3jBMIGRBbtmUYWVH1anNgKEER6Yt
+3zUJ+682unnEoLzh77RWfSP3sq2w5dEBSEyzbpFl1SY+gY7vFITmi6ifUXKodiex
+2ybruOeOx91E/iG/SBXEGVSm/k7qv7D2gI4kKWYNBnDLZOUv1GaOdppqPCePDwtQ
+gUYjqFdYydXHUC5bfbwyBlpZAGiZlnc/CA4sFOZ51DGHZbxMDtYPAc9pFX1K4GVQ
+0AWN8gQkLhQBtz6g/qkVhEiVl49aWMBTUnNG7/Kv/Gs8AEweq1Gi7a4IElpsb1X0
+aErMe8rJ12jaAO1dqpWB3l9aHFkF/NVvu0Dm0S0PzJxU/ogPkzual5YZwarcQckd
+kwOAor4dwOTsUzLHPp9fAQi1iNSoS3uerhoMci1XMsdtvxOmYcPAg+mo/yKG2jIw
+E2pLFtDPzG9jO/hYL+Ic
+=u71Q
 -----END PGP SIGNATURE-----
 
---tpXFRyzAyQ/GSAaD--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ExIO7AL6tcaLjJBF--
