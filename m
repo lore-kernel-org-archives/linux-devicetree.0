@@ -1,113 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all vendors
-Date: Fri, 23 Oct 2015 10:39:19 +0900
-Message-ID: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+From: Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH] EDAC: Add AMD Seattle SoC EDAC
+Date: Fri, 23 Oct 2015 09:38:48 +0800
+Message-ID: <56298FA8.2000406@huawei.com>
+References: <1445282597-18999-1-git-send-email-brijeshkumar.singh@amd.com>
+ <20151019205236.GB453@leverpostej> <56266F7E.6030404@amd.com>
+ <20151020165744.GE31130@pd.tnic> <20151020172654.GC4943@leverpostej>
+ <20151020173639.GH31130@pd.tnic> <5626F09F.4050107@huawei.com>
+ <20151021093536.GA3575@pd.tnic>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151021093536.GA3575@pd.tnic>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, Andre Przywara <andre.przywara@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brijesh Singh <brijeshkumar.singh@amd.com>, Arnd Bergmann <arnd@arndb.de>, ijc+devicetree@hellion.org.uk, dougthompson@xmission.com, linux-kernel@vger.kernel.org, Huxinwei <huxinwei@huawei.com>, robh+dt@kernel.org, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SRAM bindings for various SoCs, using the mmio-sram genalloc
-API, are spread over different places - per SoC vendor. Since all of
-these are quite similar (they depend on mmio-sram) move them to a common
-place.
+On 2015/10/21 17:35, Borislav Petkov wrote:
+> On Wed, Oct 21, 2015 at 09:55:43AM +0800, Hanjun Guo wrote:
+>> So I think the meaning of those error register is the same, but the way
+>> of handle it may different from SoCs, for single bit error:
+>>
+>>  - SoC may trigger a interrupt;
+>>  - SoC may just keep silent so we need to scan the registers using poll
+>>    mechanism.
+>>
+>> For Double bit error:
+>>   - SoC may also keep silent
+>>   - Trigger a interrupt
+>>   - Trigger a SEI (system error)
+>>
+>> Any suggestion to cover those cases?
+> Well, I guess we can implement all those and have them configurable
+> in the sense that a single driver loads, it has all functionality and
+> dependent on the vendor detection, it does only what the vendor wants
+> like trigger an interrupt or remain silent or ...
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Kukjin Kim <kgene@kernel.org>
-Suggested-by: Rob Herring <robh+dt@kernel.org>
+Hmm, so we need to keep the DT bindings for different SoCs which
+have different ways of handling the errors.
 
----
-
-Changes since v2:
-1. Update paths to sram.txt.
-
-Changes since v1:
-1. New patch. Extended suggestion from Rob.
----
- Documentation/devicetree/bindings/arm/arm,scpi.txt                      | 2 +-
- .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt}  | 0
- .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt}  | 2 +-
- .../bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt}       | 2 +-
- Documentation/devicetree/bindings/{misc => sram}/sram.txt               | 0
- .../devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt}     | 2 +-
- 6 files changed, 4 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} (92%)
- rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt} (95%)
- rename Documentation/devicetree/bindings/{misc => sram}/sram.txt (100%)
- rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt} (97%)
-
-diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-index 86302de67c2c..313dabdc14f9 100644
---- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-+++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-@@ -63,7 +63,7 @@ Required properties:
- - compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
- 
- The rest of the properties should follow the generic mmio-sram description
--found in ../../misc/sysram.txt
-+found in ../../sram/sram.txt
- 
- Each sub-node represents the reserved area for SCPI.
- 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-rename to Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-similarity index 92%
-rename from Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-rename to Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-index d9416fb8db6f..800701ecffca 100644
---- a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-+++ b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-@@ -12,7 +12,7 @@ Required sub-node properties:
- - compatible : should be "rockchip,rk3066-smp-sram"
- 
- The rest of the properties should follow the generic mmio-sram discription
--found in ../../misc/sram.txt
-+found in Documentation/devicetree/bindings/sram/sram.txt
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-similarity index 95%
-rename from Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-rename to Documentation/devicetree/bindings/sram/samsung-sram.txt
-index 4a0a4f70a0ce..6bc474b2b885 100644
---- a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-+++ b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-@@ -15,7 +15,7 @@ Required sub-node properties:
- 		"samsung,exynos4210-sysram-ns" : for Non-secure SYSRAM
- 
- The rest of the properties should follow the generic mmio-sram discription
--found in ../../misc/sysram.txt
-+found in Documentation/devicetree/bindings/sram/sram.txt
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/misc/sram.txt
-rename to Documentation/devicetree/bindings/sram/sram.txt
-diff --git a/Documentation/devicetree/bindings/soc/sunxi/sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-similarity index 97%
-rename from Documentation/devicetree/bindings/soc/sunxi/sram.txt
-rename to Documentation/devicetree/bindings/sram/sunxi-sram.txt
-index 067698112f5f..8d5665468fe7 100644
---- a/Documentation/devicetree/bindings/soc/sunxi/sram.txt
-+++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-@@ -16,7 +16,7 @@ SRAM nodes
- ----------
- 
- Each SRAM is described using the mmio-sram bindings documented in
--Documentation/devicetree/bindings/misc/sram.txt
-+Documentation/devicetree/bindings/sram/sram.txt
- 
- Each SRAM will have SRAM sections that are going to be handled by the
- SRAM controller as subnodes. These sections are represented following
--- 
-1.9.1
+Thanks
+Hanjun
