@@ -1,165 +1,88 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 10/10] drm/exynos/decon5433: add support for DECON-TV
-Date: Fri, 23 Oct 2015 20:55:39 +0900
-Message-ID: <562A203B.7060505@samsung.com>
-References: <1445332961-25419-1-git-send-email-a.hajda@samsung.com>
- <1445332961-25419-11-git-send-email-a.hajda@samsung.com>
+From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800
+ Ethernet controller
+Date: Fri, 23 Oct 2015 14:10:33 +0200
+Message-ID: <562A23B9.3090208@sigmadesigns.com>
+References: <1445522558-5808-1-git-send-email-mans@mansr.com>
+ <1445522558-5808-2-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1445332961-25419-11-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445522558-5808-2-git-send-email-mans@mansr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Mans Rullgard <mans@mansr.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Sebastian Frias <sebastian_frias@sigmadesigns.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcnplaiwKCgoyMDE164WEIDEw7JuUIDIw7J28IDE4OjIy7JeQIEFuZHJ6ZWogSGFqZGEg
-7J20KOqwgCkg7JO0IOq4gDoKPiBERUNPTi1UViBJUCBpcyByZXNwb25zaWJsZSBmb3IgZ2VuZXJh
-dGluZyB2aWRlbyBzdHJlYW0gd2hpY2ggaXMgdHJhbnNmZXJyZWQKPiB0byBIRE1JIElQLiBJdCBp
-cyBhbG1vc3QgZnVsbHkgY29tcGF0aWJsZSB3aXRoIERFQ09OIElQLgo+Cj4gVGhlIHBhdGNoIGlz
-IGJhc2VkIG9uIGluaXRpYWwgd29yayBvZiBIeXVuZ3dvbiBId2FuZy4KPgo+IFNpZ25lZC1vZmYt
-Ynk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4gLS0tCj4gICBkcml2ZXJz
-L2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMgfCAxNTQgKysrKysrKysrKysr
-KysrKy0tLS0tLS0tLS0KPiAgIGluY2x1ZGUvdmlkZW8vZXh5bm9zNTQzM19kZWNvbi5oICAgICAg
-ICAgICAgICB8ICAyOSArKysrKwo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAxMjIgaW5zZXJ0aW9ucygr
-KSwgNjEgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
-cy9leHlub3M1NDMzX2RybV9kZWNvbi5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3M1
-NDMzX2RybV9kZWNvbi5jCj4gaW5kZXggM2M5YWE0ZS4uZmJlMWIzMSAxMDA2NDQKPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMKPiArKysgYi9kcml2
-ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vczU0MzNfZHJtX2RlY29uLmMKPiBAQCAtMTMsNiArMTMs
-NyBAQAo+ICAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICAgI2luY2x1ZGUg
-PGxpbnV4L2Nsay5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+ICsjaW5jbHVk
-ZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4gICAjaW5jbHVkZSA8bGludXgvb2ZfZ3Bpby5oPgo+ICAg
-I2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KPgo+IEBAIC0zNyw2ICszOCwxMiBAQCBzdGF0
-aWMgY29uc3QgY2hhciAqIGNvbnN0IGRlY29uX2Nsa3NfbmFtZVtdID0gewo+ICAgCSJzY2xrX2Rl
-Y29uX2VjbGsiLAo+ICAgfTsKPgo+ICtlbnVtIGRlY29uX2lmdHlwZSB7Cj4gKwlJRlRZUEVfUkdC
-LAo+ICsJSUZUWVBFX0k4MCwKPiArCUlGVFlQRV9IRE1JCj4gK307Cj4gKwo+ICAgZW51bSBkZWNv
-bl9mbGFnX2JpdHMgewo+ICAgCUJJVF9DTEtTX0VOQUJMRUQsCj4gICAJQklUX0lSUVNfRU5BQkxF
-RCwKPiBAQCAtNTMsNyArNjAsOCBAQCBzdHJ1Y3QgZGVjb25fY29udGV4dCB7Cj4gICAJc3RydWN0
-IGNsawkJCSpjbGtzW0FSUkFZX1NJWkUoZGVjb25fY2xrc19uYW1lKV07Cj4gICAJaW50CQkJCXBp
-cGU7Cj4gICAJdW5zaWduZWQgbG9uZwkJCWZsYWdzOwo+IC0JYm9vbAkJCQlpODBfaWY7Cj4gKwll
-bnVtIGRlY29uX2lmdHlwZQkJb3V0X3R5cGU7Cj4gKwlpbnQJCQkJZmlyc3Rfd2luOwo+ICAgfTsK
-Pgo+ICAgc3RhdGljIGNvbnN0IHVpbnQzMl90IGRlY29uX2Zvcm1hdHNbXSA9IHsKPiBAQCAtODAs
-NyArODgsNyBAQCBzdGF0aWMgaW50IGRlY29uX2VuYWJsZV92Ymxhbmsoc3RydWN0IGV4eW5vc19k
-cm1fY3J0YyAqY3J0YykKPgo+ICAgCWlmICh0ZXN0X2FuZF9zZXRfYml0KEJJVF9JUlFTX0VOQUJM
-RUQsICZjdHgtPmZsYWdzKSkgewo+ICAgCQl2YWwgPSBWSURJTlRDT04wX0lOVEVOOwo+IC0JCWlm
-IChjdHgtPmk4MF9pZikKPiArCQlpZiAoY3R4LT5vdXRfdHlwZSA9PSBJRlRZUEVfSTgwKQo+ICAg
-CQkJdmFsIHw9IFZJRElOVENPTjBfRlJBTUVET05FOwo+ICAgCQllbHNlCj4gICAJCQl2YWwgfD0g
-VklESU5UQ09OMF9JTlRGUk1FTjsKPiBAQCAtMTA0LDggKzExMiwxMSBAQCBzdGF0aWMgdm9pZCBk
-ZWNvbl9kaXNhYmxlX3ZibGFuayhzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjKQo+Cj4gICBz
-dGF0aWMgdm9pZCBkZWNvbl9zZXR1cF90cmlnZ2VyKHN0cnVjdCBkZWNvbl9jb250ZXh0ICpjdHgp
-Cj4gICB7Cj4gLQl1MzIgdmFsID0gVFJJR0NPTl9UUklHRU5fUEVSX0YgfCBUUklHQ09OX1RSSUdF
-Tl9GIHwKPiAtCQkJVFJJR0NPTl9URV9BVVRPX01BU0sgfCBUUklHQ09OX1NXVFJJR0VOOwo+ICsJ
-dTMyIHZhbCA9IChjdHgtPm91dF90eXBlICE9IElGVFlQRV9IRE1JKQo+ICsJCT8gVFJJR0NPTl9U
-UklHRU5fUEVSX0YgfCBUUklHQ09OX1RSSUdFTl9GIHwKPiArCQkgIFRSSUdDT05fVEVfQVVUT19N
-QVNLIHwgVFJJR0NPTl9TV1RSSUdFTgo+ICsJCTogVFJJR0NPTl9UUklHRU5fUEVSX0YgfCBUUklH
-Q09OX1RSSUdFTl9GIHwKPiArCQkgIFRSSUdDT05fSFdUUklHTUFTS19JODBfUkdCIHwgVFJJR0NP
-Tl9IV1RSSUdFTl9JODBfUkdCOwo+ICAgCXdyaXRlbCh2YWwsIGN0eC0+YWRkciArIERFQ09OX1RS
-SUdDT04pOwo+ICAgfQo+Cj4gQEAgLTExOCwxMyArMTI5LDIyIEBAIHN0YXRpYyB2b2lkIGRlY29u
-X2NvbW1pdChzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjKQo+ICAgCWlmICh0ZXN0X2JpdChC
-SVRfU1VTUEVOREVELCAmY3R4LT5mbGFncykpCj4gICAJCXJldHVybjsKPgo+ICsJaWYgKGN0eC0+
-b3V0X3R5cGUgPT0gSUZUWVBFX0hETUkpIHsKPiArCQltLT5jcnRjX2hzeW5jX3N0YXJ0ID0gbS0+
-Y3J0Y19oZGlzcGxheSArIDEwOwo+ICsJCW0tPmNydGNfaHN5bmNfZW5kID0gbS0+Y3J0Y19odG90
-YWwgLSA5MjsKPiArCQltLT5jcnRjX3ZzeW5jX3N0YXJ0ID0gbS0+Y3J0Y192ZGlzcGxheSArIDE7
-Cj4gKwkJbS0+Y3J0Y192c3luY19lbmQgPSBtLT5jcnRjX3ZzeW5jX3N0YXJ0ICsgMTsKPiArCX0K
-PiArCj4gKwlkZWNvbl9zZXRfYml0cyhjdHgsIERFQ09OX1ZJRENPTjAsIFZJRENPTjBfRU5WSUQs
-IDApOwo+ICsKPiAgIAkvKiBlbmFibGUgY2xvY2sgZ2F0ZSAqLwo+ICAgCXZhbCA9IENNVV9DTEtH
-QUdFX01PREVfU0ZSX0YgfCBDTVVfQ0xLR0FHRV9NT0RFX01FTV9GOwo+ICAgCXdyaXRlbCh2YWws
-IGN0eC0+YWRkciArIERFQ09OX0NNVSk7Cj4KPiAgIAkvKiBsY2Qgb24gYW5kIHVzZSBjb21tYW5k
-IGlmICovCj4gICAJdmFsID0gVklET1VUX0xDRF9PTjsKPiAtCWlmIChjdHgtPmk4MF9pZikKPiAr
-CWlmIChjdHgtPm91dF90eXBlID09IElGVFlQRV9JODApCj4gICAJCXZhbCB8PSBWSURPVVRfQ09N
-TUFORF9JRjsKPiAgIAllbHNlCj4gICAJCXZhbCB8PSBWSURPVVRfUkdCX0lGOwo+IEBAIC0xMzQs
-NyArMTU0LDcgQEAgc3RhdGljIHZvaWQgZGVjb25fY29tbWl0KHN0cnVjdCBleHlub3NfZHJtX2Ny
-dGMgKmNydGMpCj4gICAJCVZJRFRDT04yX0hPWlZBTChtLT5oZGlzcGxheSAtIDEpOwo+ICAgCXdy
-aXRlbCh2YWwsIGN0eC0+YWRkciArIERFQ09OX1ZJRFRDT04yKTsKPgo+IC0JaWYgKCFjdHgtPmk4
-MF9pZikgewo+ICsJaWYgKGN0eC0+b3V0X3R5cGUgIT0gSUZUWVBFX0k4MCkgewo+ICAgCQl2YWwg
-PSBWSURUQ09OMDBfVkJQRF9GKAo+ICAgCQkJCW0tPmNydGNfdnRvdGFsIC0gbS0+Y3J0Y192c3lu
-Y19lbmQgLSAxKSB8Cj4gICAJCQlWSURUQ09OMDBfVkZQRF9GKAo+IEBAIC0xNTksMTUgKzE3OSw5
-IEBAIHN0YXRpYyB2b2lkIGRlY29uX2NvbW1pdChzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRj
-KQo+ICAgCWRlY29uX3NldHVwX3RyaWdnZXIoY3R4KTsKPgo+ICAgCS8qIGVuYWJsZSBvdXRwdXQg
-YW5kIGRpc3BsYXkgc2lnbmFsICovCj4gLQl2YWwgPSBWSURDT04wX0VOVklEIHwgVklEQ09OMF9F
-TlZJRF9GOwo+IC0Jd3JpdGVsKHZhbCwgY3R4LT5hZGRyICsgREVDT05fVklEQ09OMCk7Cj4gKwlk
-ZWNvbl9zZXRfYml0cyhjdHgsIERFQ09OX1ZJRENPTjAsIFZJRENPTjBfRU5WSUQgfCBWSURDT04w
-X0VOVklEX0YsIH4wKTsKPiAgIH0KPgo+IC0jZGVmaW5lIENPT1JESU5BVEVfWCh4KQkJKCgoeCkg
-JiAweGZmZikgPDwgMTIpCj4gLSNkZWZpbmUgQ09PUkRJTkFURV9ZKHgpCQkoKHgpICYgMHhmZmYp
-Cj4gLSNkZWZpbmUgT0ZGU0laRSh4KQkJKCgoeCkgJiAweDNmZmYpIDw8IDE0KQo+IC0jZGVmaW5l
-IFBBR0VXSURUSCh4KQkJKCh4KSAmIDB4M2ZmZikKPiAtCj4gICBzdGF0aWMgdm9pZCBkZWNvbl93
-aW5fc2V0X3BpeGZtdChzdHJ1Y3QgZGVjb25fY29udGV4dCAqY3R4LCB1bnNpZ25lZCBpbnQgd2lu
-LAo+ICAgCQkJCSBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYikKPiAgIHsKPiBAQCAtMjM4LDYg
-KzI1MiwxMCBAQCBzdGF0aWMgdm9pZCBkZWNvbl9hdG9taWNfYmVnaW4oc3RydWN0IGV4eW5vc19k
-cm1fY3J0YyAqY3J0YywKPiAgIAlkZWNvbl9zaGFkb3dfcHJvdGVjdF93aW4oY3R4LCBwbGFuZS0+
-enBvcywgdHJ1ZSk7Cj4gICB9Cj4KPiArI2RlZmluZSBCSVRfVkFMKHgsIGUsIHMpICgoKHgpICYg
-KCgxIDw8ICgoZSkgLSAocykgKyAxKSkgLSAxKSkgPDwgKHMpKQo+ICsjZGVmaW5lIENPT1JESU5B
-VEVfWCh4KSBCSVRfVkFMKCh4KSwgMjMsIDEyKQo+ICsjZGVmaW5lIENPT1JESU5BVEVfWSh4KSBC
-SVRfVkFMKCh4KSwgMTEsIDApCj4gKwo+ICAgc3RhdGljIHZvaWQgZGVjb25fdXBkYXRlX3BsYW5l
-KHN0cnVjdCBleHlub3NfZHJtX2NydGMgKmNydGMsCj4gICAJCQkgICAgICAgc3RydWN0IGV4eW5v
-c19kcm1fcGxhbmUgKnBsYW5lKQo+ICAgewo+IEBAIC0yNzEsOCArMjg5LDEyIEBAIHN0YXRpYyB2
-b2lkIGRlY29uX3VwZGF0ZV9wbGFuZShzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRjLAo+ICAg
-CXZhbCA9IHBsYW5lLT5kbWFfYWRkclswXSArIHBpdGNoICogcGxhbmUtPmNydGNfaDsKPiAgIAl3
-cml0ZWwodmFsLCBjdHgtPmFkZHIgKyBERUNPTl9WSURXMHhBREQxQjAod2luKSk7Cj4KPiAtCXZh
-bCA9IE9GRlNJWkUocGl0Y2ggLSBwbGFuZS0+Y3J0Y193ICogYnBwKQo+IC0JCXwgUEFHRVdJRFRI
-KHBsYW5lLT5jcnRjX3cgKiBicHApOwo+ICsJaWYgKGN0eC0+b3V0X3R5cGUgIT0gSUZUWVBFX0hE
-TUkpCj4gKwkJdmFsID0gQklUX1ZBTChwaXRjaCAtIHBsYW5lLT5jcnRjX3cgKiBicHAsIDI3LCAx
-NCkKPiArCQkJfCBCSVRfVkFMKHBsYW5lLT5jcnRjX3cgKiBicHAsIDEzLCAwKTsKPiArCWVsc2UK
-PiArCQl2YWwgPSBCSVRfVkFMKHBpdGNoIC0gcGxhbmUtPmNydGNfdyAqIGJwcCwgMjksIDE1KQo+
-ICsJCQl8IEJJVF9WQUwocGxhbmUtPmNydGNfdyAqIGJwcCwgMTQsIDApOwo+ICAgCXdyaXRlbCh2
-YWwsIGN0eC0+YWRkciArIERFQ09OX1ZJRFcweEFERDIod2luKSk7Cj4KPiAgIAlkZWNvbl93aW5f
-c2V0X3BpeGZtdChjdHgsIHdpbiwgc3RhdGUtPmZiKTsKPiBAQCAtMzE0LDcgKzMzNiw3IEBAIHN0
-YXRpYyB2b2lkIGRlY29uX2F0b21pY19mbHVzaChzdHJ1Y3QgZXh5bm9zX2RybV9jcnRjICpjcnRj
-LAo+Cj4gICAJZGVjb25fc2hhZG93X3Byb3RlY3Rfd2luKGN0eCwgcGxhbmUtPnpwb3MsIGZhbHNl
-KTsKPgo+IC0JaWYgKGN0eC0+aTgwX2lmKQo+ICsJaWYgKGN0eC0+b3V0X3R5cGUgPT0gSUZUWVBF
-X0k4MCkKPiAgIAkJc2V0X2JpdChCSVRfV0lOX1VQREFURUQsICZjdHgtPmZsYWdzKTsKPiAgIH0K
-Pgo+IEBAIC0zMzksNiArMzYxLDE3IEBAIHN0YXRpYyB2b2lkIGRlY29uX3N3cmVzZXQoc3RydWN0
-IGRlY29uX2NvbnRleHQgKmN0eCkKPiAgIAl9Cj4KPiAgIAlXQVJOKHRyaWVzID09IDAsICJmYWls
-ZWQgdG8gc29mdHdhcmUgcmVzZXQgREVDT05cbiIpOwo+ICsKPiArCWlmIChjdHgtPm91dF90eXBl
-ICE9IElGVFlQRV9IRE1JKQo+ICsJCXJldHVybjsKPiArCj4gKwl3cml0ZWwoVklEQ09OMF9DTEtW
-QUxVUCB8IFZJRENPTjBfVkxDS0ZSRUUsIGN0eC0+YWRkciArIERFQ09OX1ZJRENPTjApOwo+ICsJ
-ZGVjb25fc2V0X2JpdHMoY3R4LCBERUNPTl9DTVUsCj4gKwkJICAgICAgIENNVV9DTEtHQUdFX01P
-REVfU0ZSX0YgfCBDTVVfQ0xLR0FHRV9NT0RFX01FTV9GLCB+MCk7Cj4gKwl3cml0ZWwoVklEQ09O
-MV9WQ0xLX1JVTl9WREVOX0RJU0FCTEUsIGN0eC0+YWRkciArIERFQ09OX1ZJRENPTjEpOwo+ICsJ
-d3JpdGVsKENSQ0NUUkxfQ1JDRU4gfCBDUkNDVFJMX0NSQ1NUQVJUX0YgfCBDUkNDVFJMX0NSQ0NM
-S0VOLAo+ICsJICAgICAgIGN0eC0+YWRkciArIERFQ09OX0NSQ0NUUkwpOwo+ICsJZGVjb25fc2V0
-dXBfdHJpZ2dlcihjdHgpOwo+ICAgfQo+Cj4gICBzdGF0aWMgdm9pZCBkZWNvbl9lbmFibGUoc3Ry
-dWN0IGV4eW5vc19kcm1fY3J0YyAqY3J0YykKPiBAQCAtMzg3LDcgKzQyMCw3IEBAIHN0YXRpYyB2
-b2lkIGRlY29uX2Rpc2FibGUoc3RydWN0IGV4eW5vc19kcm1fY3J0YyAqY3J0YykKPiAgIAkgKiBz
-dXNwZW5kIHRoYXQgY29ubmVjdG9yLiBPdGhlcndpc2Ugd2UgbWlnaHQgdHJ5IHRvIHNjYW4gZnJv
-bQo+ICAgCSAqIGEgZGVzdHJveWVkIGJ1ZmZlciBsYXRlci4KPiAgIAkgKi8KPiAtCWZvciAoaSA9
-IDA7IGkgPCBXSU5ET1dTX05SOyBpKyspCj4gKwlmb3IgKGkgPSBjdHgtPmZpcnN0X3dpbjsgaSA8
-IFdJTkRPV1NfTlI7IGkrKykKPiAgIAkJZGVjb25fZGlzYWJsZV9wbGFuZShjcnRjLCAmY3R4LT5w
-bGFuZXNbaV0pOwo+Cj4gICAJZGVjb25fc3dyZXNldChjdHgpOwo+IEBAIC00NjEsMjUgKzQ5NCwz
-MCBAQCBzdGF0aWMgaW50IGRlY29uX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
-aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gICAJc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXYg
-PSBkYXRhOwo+ICAgCXN0cnVjdCBleHlub3NfZHJtX3ByaXZhdGUgKnByaXYgPSBkcm1fZGV2LT5k
-ZXZfcHJpdmF0ZTsKPiAgIAlzdHJ1Y3QgZXh5bm9zX2RybV9wbGFuZSAqZXh5bm9zX3BsYW5lOwo+
-ICsJZW51bSBleHlub3NfZHJtX291dHB1dF90eXBlIG91dF90eXBlOwo+ICAgCWVudW0gZHJtX3Bs
-YW5lX3R5cGUgdHlwZTsKPiAtCXVuc2lnbmVkIGludCB6cG9zOwo+ICsJdW5zaWduZWQgaW50IHdp
-bjsKPiAgIAlpbnQgcmV0Owo+Cj4gICAJY3R4LT5kcm1fZGV2ID0gZHJtX2RldjsKPiAgIAljdHgt
-PnBpcGUgPSBwcml2LT5waXBlKys7Cj4KPiAtCWZvciAoenBvcyA9IDA7IHpwb3MgPCBXSU5ET1dT
-X05SOyB6cG9zKyspIHsKPiAtCQl0eXBlID0gZXh5bm9zX3BsYW5lX2dldF90eXBlKHpwb3MsIENV
-UlNPUl9XSU4pOwo+IC0JCXJldCA9IGV4eW5vc19wbGFuZV9pbml0KGRybV9kZXYsICZjdHgtPnBs
-YW5lc1t6cG9zXSwKPiArCWZvciAod2luID0gY3R4LT5maXJzdF93aW47IHdpbiA8IFdJTkRPV1Nf
-TlI7IHdpbisrKSB7Cj4gKwkJaW50IHRtcCA9ICh3aW4gPT0gY3R4LT5maXJzdF93aW4pID8gMCA6
-IHdpbjsKCkFGQUlLLCBERUNPTiBUViBmb3IgRXh5bm9zNTQzMyBTb0MgaGFzIGZvdXIgaGFyZHdh
-cmUgb3ZlcmxheXMgc28gSSBndWVzcyAKeW91IHVzZWQgY3R4LT5maXJzdF93aW4gdG8gaW5pdGlh
-bGl6ZSBmb3VyIHBsYW5lcyBpbiBjYXNlIG9mIElGVFlQRV9IRE1JLgoKSG93ZXZlciwgd2l0aCBJ
-RlRZUEVfSERNSSBjdHgtPmZpcnN0X3dpbiBoYXMgMSwgYXMgYSByZXN1bHQsIApjdHgtPnBsYW5l
-c1tdIHdpbGwgaGF2ZSAwLCAybmQsIDNyZCBhbmQgNHRoIHBsYW5lcyBhbmQgdGhpcyBtZWFucyB3
-ZSAKc2hvdWxkIHVzZSAwLCAybmQgfiA0dGggaGFyZHdhcmUgb3ZlcmxheSBleGNlcHRpbmcgMXN0
-IG92ZXJsYXkuIElzIHRoaXMgCnlvdXIgaW50ZW50aW9uPwpTaG91bGRuJ3QgY3R4LT5wbGFuZXNb
-XSBoYXZlIDFzdCwgMm5kICwzcmQgYW5kIDR0aCBwbGFuZXMgc28gdGhhdCB3ZSBjYW4gCnVzZSAx
-c3QgfiA0dGggaGFyZHdhcmUgb3ZlcmxheSBmb3IgREVDT04gVFY/CgpERUNPTiBUViBmb3IgRXh5
-bm9zNTQzMyBTb0MgY2FuIHVzZSBvbmx5IDFzdCB+IDR0aCBoYXJkd2FyZSBvdmVybGF5cy4KCkFu
-ZCBvdGhlciB0aGluZywgaXQgbWF5IGJlIHRyaXZpYWwgYnV0IEkgdGhpbmsgaXQnZCBiZSBiZXR0
-ZXIgdG8gdXNlIAonb3ZsJyBpbnN0ZWFkIG9mICd0bXAuCgpUaGFua3MsCklua2kgRGFlCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 22/10/2015 16:02, Mans Rullgard wrote:
+
+> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
+> using the "aurora,nb8800" compatible string.  When used in Sigma
+> Designs chips a few additional control registers are available.
+> This variant is indicated by the "sigma,smp8640-ethernet" compatible
+> string.
+> 
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> ---
+>  .../devicetree/bindings/net/aurora,nb8800.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> new file mode 100644
+> index 0000000..c19f615
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+> @@ -0,0 +1,26 @@
+> +* Aurora VLSI AU-NB8800 Ethernet controller
+> +
+> +Required properties:
+> +- compatible: Should be "aurora,nb8800", "sigma,smp8640-ethernet"
+> +	The latter indicates presence of extra features added by Sigma Designs.
+
+I've been meaning to ask a noob question to the devicetree group
+about how names for compatible strings are chosen.
+
+Sigma Designs has two active SoC families, Tango3 (which consists of
+about a dozen MIPS-based SoCs, typically named SMP86xx) and Tango4
+(a few ARM-based SoCs, typically named SMP87xx). I should note that
+there is no SMP8640 SoC AFAIK, rather SMP864x is a Tango3 sub-family
+(I could locate 42,43,44,45,46).
+
+AFAIK, all our SoCs are using the same Aurora NB8800 Ethernet MAC,
+along with the extra features. I find it odd to use a specific SoC
+model to refer to this device, instead of a more generic name.
+(It's weird having to mention smp8640 in the tango4 DT.)
+
+Would it be possible to have a compatible string which makes it
+clear that it is an Aurora MAC with vendor-specific tweaks?
+Something like "sigma,aurora-nb8800-mac" ?
+
+> +- reg: Should be MMIO address space of the device
+> +- interrupts: Should contain the interrupt specifier for the device
+> +- interrupt-parent: Should be a phandle for the interrupt controller
+> +- clocks: Should be a phandle for the clock for the device
+> +
+> +Common properties described in ethernet.txt:
+> +- local-mac-address
+> +- mac-address
+> +- max-speed
+> +- phy-mode
+> +
+> +Example:
+> +
+> +ethernet@26000 {
+> +	compatible = "aurora,nb8800";
+> +	reg = <0x10000 0x800>;
+> +	interrupts = <42>;
+
+I thought one had to specify also whether the device sent "edge"
+or "level" IRQs?
+
+> +	clocks = <&sys_clk>;
+> +	max-speed = <1000>;
+> +	phy-connection-type = "rgmii";
+> +};
+
+Regards.
