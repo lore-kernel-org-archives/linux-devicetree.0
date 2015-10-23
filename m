@@ -1,42 +1,62 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all vendors
-Date: Fri, 23 Oct 2015 12:49:29 +0200
-Message-ID: <1694120.gDU4knuKKT@diego>
-References: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 0/2] i2c: uniphier: add two I2C controller drivers for
+ UniPhier SoC platform
+Date: Fri, 23 Oct 2015 19:51:58 +0900
+Message-ID: <1445597520-6299-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-i2c@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Andrew Bresticker <abrestic@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, David Box <david.e.box@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Xudong Chen <xudong.chen@mediatek.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Subhendu Sekhar Behera <sbehera@broadcom.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Feng Kan <fkan@apm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jiri Slaby <jslaby@suse.com>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, devicetree@vger.kernel.org, James Hogan <james.hogan@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Pawel Moll <pawel.moll@ar>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 23. Oktober 2015, 10:39:19 schrieb Krzysztof Kozlowski:
-> SRAM bindings for various SoCs, using the mmio-sram genalloc
-> API, are spread over different places - per SoC vendor. Since all of
-> these are quite similar (they depend on mmio-sram) move them to a common
-> place.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Update paths to sram.txt.
-> 
-> Changes since v1:
-> 1. New patch. Extended suggestion from Rob.
-> ---
 
-> .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} 
-> .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} 
+This series adds two I2C controller drivers.
+(they are completely different IPs.)
 
-for the Rockchip parts
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+The first one is a very simple FIFO-less I2C controller,
+which is used on some older UniPhier SoCs.
+
+The other one is higher-performance I2C controller with TX/RX FIFO,
+used on newer UniPhier SoCs.
+
+
+Changes in v2:
+  - Delete if-block after platform_get_resource()
+  - Add I2C_FUNC_SMBUS_EMUL to functionality
+  - Add bindings document
+  - Add entry to MAINTAINERS
+  - Delete if-block after platform_get_resource()
+  - Add I2C_FUNC_SMBUS_EMUL to functionality
+  - Add bindings document
+  - Fix a typo in a comment block
+
+Masahiro Yamada (2):
+  i2c: uniphier: add UniPhier FIFO-less I2C driver
+  i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver
+
+ .../devicetree/bindings/i2c/i2c-uniphier-f.txt     |  25 +
+ .../devicetree/bindings/i2c/i2c-uniphier.txt       |  25 +
+ MAINTAINERS                                        |   1 +
+ drivers/i2c/busses/Kconfig                         |  16 +
+ drivers/i2c/busses/Makefile                        |   2 +
+ drivers/i2c/busses/i2c-uniphier-f.c                | 584 +++++++++++++++++++++
+ drivers/i2c/busses/i2c-uniphier.c                  | 441 ++++++++++++++++
+ 7 files changed, 1094 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphier-f.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphier.txt
+ create mode 100644 drivers/i2c/busses/i2c-uniphier-f.c
+ create mode 100644 drivers/i2c/busses/i2c-uniphier.c
+
+-- 
+1.9.1
