@@ -1,64 +1,65 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Fri, 23 Oct 2015 10:09:19 +0300
-Message-ID: <5629DD1F.60506@ti.com>
-References: <20151006083346.GL23801@atomide.com> <56139A72.6040600@ti.com>
- <20151006100000.GN23801@atomide.com> <56139CE9.8020002@ti.com>
- <5613A256.8000105@ti.com> <20151006110134.GO23801@atomide.com>
- <5613ABEF.9000904@ti.com> <20151016212510.GF24370@atomide.com>
- <562496DB.4050803@ti.com> <56274D69.1090402@ti.com>
- <20151021152028.GO3078@atomide.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: of_mdiobus_register_phy() and deferred probe
+Date: Fri, 23 Oct 2015 09:38:33 +0200
+Message-ID: <CAMuHMdUpeHXze=BMRsafWbzHT8WL9L+WO5xbO7niqk0wi_eRJQ@mail.gmail.com>
+References: <CAMuHMdX+_0Cf0VwmKDtcfMNwaPEN5jvjZQUXg6MKMJa+cvYz3w@mail.gmail.com>
+	<56294202.5020507@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151021152028.GO3078@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, computersforpeace@gmail.com, dwmw2@infradead.org, fcooper@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56294202.5020507-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/10/15 18:20, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [151021 01:31]:
->> On 19/10/15 10:08, Roger Quadros wrote:
->>> On 17/10/15 00:25, Tony Lindgren wrote:
->>>> * Roger Quadros <rogerq@ti.com> [151006 04:13]:
->>>>>
->>>>> Fine. The updated series is now at
->>>>>
->>>>> git@github.com:rogerq/linux.git
->>>>>  * [new branch]      for-v4.4/gpmc-v4
->>>>
->>>> Looks like it produces some build errors, this with RMKs 3430 and =
-4430
->>>> only .configs:
->>>>
->>>> drivers/memory/omap-gpmc.c:2035:43: error: =E2=80=98struct gpio_ch=
-ip=E2=80=99 has no
->>>> member named =E2=80=98irqdomain=E2=80=99
->>>> drivers/memory/omap-gpmc.c:2116:8: error: implicit declaration of
->>>> function =E2=80=98gpiochip_irqchip_add=E2=80=99 [-Werror=3Dimplici=
-t-function-declaration]
->>>>
->>>
->>> Good catch. We'll have to select GPIOLIB_IRQCHIP for this driver.
->>>
->>>> Maybe run randconfig builds on it for overnight?
->>>
->>> OK. I'll do that.
+Hi Sergei,
+
+On Thu, Oct 22, 2015 at 10:07 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> On 10/22/2015 04:31 PM, Geert Uytterhoeven wrote:
+>
+>> Due to a probe deferral of an interrupt controller[1], the Micrel
+>> Ethernet PHY on
+>> r8a7791/koelsch started failing to get its IRQ:
 >>
->> I couldn't run randconfig beyond few iterations as it keeps failing
->> everywhere. How do we limit the randconfig options to OMAP only
->> platforms?
->=20
-> You can use Felipe's scripts from github.
+>>      no irq domain found for /interrupt-controller@e61c0000 !
+>>
+>> However, of_mdiobus_register_phy() uses irq_of_parse_and_map(), which
+>> plainly
+>> ignores EPROBE_DEFER, and it just continues.
+>>
+>> Later I get:
+>>
+>>      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ -1) to driver
+>> Micrel KSZ8041RNLI
+>>
+>> instead of
+>>
+>>      sh-eth ee700000.ethernet eth0: attached PHY 1 (IRQ 408) to driver
+>> Micrel KSZ8041RNLI
+>>
+>> Ethernet still works, as the interrupt seems to be unneeded(?).
+>
+>    Yes, the phylib uses PHY polling anyway, IRQ isn't strictly necessary.
+>
+>> Has anyone already looked into fixing of_mdio to handle deferred probing?
+>
+>    It's the first time I hear about that. Will have to look into this...
 
-Thanks. I used his scripts and ran 10 randconfigs per platform.
-Didn't find any issues with this series.
+Thanks a lot!
 
-How can we proceed?
-Patches are on https://github.com/rogerq/linux/commits/for-v4.4/gpmc-v4
+Gr{oetje,eeting}s,
 
-cheers,
--roger
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
