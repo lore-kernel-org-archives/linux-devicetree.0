@@ -1,96 +1,118 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: rockchip-thermal: Add the pinctrl
- states in this document
-Date: Fri, 23 Oct 2015 08:29:23 -0500
-Message-ID: <CAL_JsqJasEvQKkT-ubyBwxR6GhLejCF=XiihgjmQ9nXeBPveOw@mail.gmail.com>
-References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com> <1445599528-18825-2-git-send-email-wxt@rock-chips.com>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800 Ethernet controller
+Date: Fri, 23 Oct 2015 14:41:45 +0100
+Message-ID: <yw1xio5xg0rq.fsf@unicorn.mansr.com>
+References: <1445522558-5808-1-git-send-email-mans@mansr.com>
+	<1445522558-5808-2-git-send-email-mans@mansr.com>
+	<562A23B9.3090208@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445599528-18825-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <562A23B9.3090208-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org> (Marc Gonzalez's message of
+	"Fri, 23 Oct 2015 14:10:33 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sebastian_frias-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thibaud Cornic <thibaud_cornic-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 6:25 AM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> The "init" pinctrl is defined we'll set
-> pinctrl to this state before probe and then "default" after probe.
-> Add the "init" and "sleep" pinctrl as the OTP gpio state, since we need
-> switch the pin to gpio state before the TSADC controller is reset.
->
-> AFAIK, the TSADC controller is reset, the tshut polarity will be
-> a *low* signal in a short period of time for some devices.
->
-> Says:
-> The TSADC get the temperature on rockchip thermal.
->
-> If T(current temperature) < (setting temperature), the OTP output the
-> *high* signal.
-> If T(current temperature) > (setting temperature), the OTP output the
-> *low* Signal.
->
-> In some cases, the OTP pin is connected to the PMIC, maybe the
-> PMIC can accept the reset response time to avoid this issue.
->
-> In other words, the system will be always reboot if we make the
-> OTP pin is connected the others IC to control the power.
->
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org> writes:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> On 22/10/2015 16:02, Mans Rullgard wrote:
+>
+>> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
+>> using the "aurora,nb8800" compatible string.  When used in Sigma
+>> Designs chips a few additional control registers are available.
+>> This variant is indicated by the "sigma,smp8640-ethernet" compatible
+>> string.
+>>=20
+>> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/net/aurora,nb8800.txt      | 26 +++++++++++=
++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb8=
+800.txt
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt=
+ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+>> new file mode 100644
+>> index 0000000..c19f615
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
+>> @@ -0,0 +1,26 @@
+>> +* Aurora VLSI AU-NB8800 Ethernet controller
+>> +
+>> +Required properties:
+>> +- compatible: Should be "aurora,nb8800", "sigma,smp8640-ethernet"
+>> +	The latter indicates presence of extra features added by Sigma Des=
+igns.
+>
+> I've been meaning to ask a noob question to the devicetree group
+> about how names for compatible strings are chosen.
+>
+> Sigma Designs has two active SoC families, Tango3 (which consists of
+> about a dozen MIPS-based SoCs, typically named SMP86xx) and Tango4
+> (a few ARM-based SoCs, typically named SMP87xx). I should note that
+> there is no SMP8640 SoC AFAIK, rather SMP864x is a Tango3 sub-family
+> (I could locate 42,43,44,45,46).
+>
+> AFAIK, all our SoCs are using the same Aurora NB8800 Ethernet MAC,
+> along with the extra features. I find it odd to use a specific SoC
+> model to refer to this device, instead of a more generic name.
+> (It's weird having to mention smp8640 in the tango4 DT.)
 
-> ---
+I picked 8640 since all 8640 or higher chips are compatible (863x chips
+(tango2) are not).  Some of the later versions have additional extra
+features, but they all work with the basic driver.
+
+There also appear to be some differences (bug fixes?) between 8643 and
+8759 (the ones I have) not documented anywhere.
+
+> Would it be possible to have a compatible string which makes it
+> clear that it is an Aurora MAC with vendor-specific tweaks?
+> Something like "sigma,aurora-nb8800-mac" ?
+
+This doesn't indicate which Sigma modifications are present.  If the
+driver is at some point modified to take advantage of features/fixes in
+newer chips, it's good to have a naming scheme that can accommodate
+that.
+
+=46or the SMP8759 devicetree, one could set the compatible list to
+"sigma,smp8759-ethernet", "sigma,smp8640-ethernet", "aurora,nb8800"
+indicating the exact device even if the driver currently doesn't care,
+that it is compatible with the 8640 baseline, and finally the plain
+aurora as a last fallback.
+
+>> +- reg: Should be MMIO address space of the device
+>> +- interrupts: Should contain the interrupt specifier for the device
+>> +- interrupt-parent: Should be a phandle for the interrupt controlle=
+r
+>> +- clocks: Should be a phandle for the clock for the device
+>> +
+>> +Common properties described in ethernet.txt:
+>> +- local-mac-address
+>> +- mac-address
+>> +- max-speed
+>> +- phy-mode
+>> +
+>> +Example:
+>> +
+>> +ethernet@26000 {
+>> +	compatible =3D "aurora,nb8800";
+>> +	reg =3D <0x10000 0x800>;
+>> +	interrupts =3D <42>;
 >
-> Changes in v4: None
-> Changes in v3:
->   - Add the pictrl states decription in document.
->
-> Changes in v2:
->   - Add the 'init' pinctrl more decription in commit.
->   - Fix the subject to make more obvious in PATCH[1/2]
->   - Resend this patch v2 since fix the subject to be specific.
->
-> Changes in v1:
->   - As the Doug comments, add the 'init' property to sync document.
->
->  .../devicetree/bindings/thermal/rockchip-thermal.txt          | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> index ef802de..b38200d 100644
-> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> @@ -12,6 +12,11 @@ Required properties:
->  - resets : Must contain an entry for each entry in reset-names.
->            See ../reset/reset.txt for details.
->  - reset-names : Must include the name "tsadc-apb".
-> +- pinctrl-names : The pin control state names;
-> +- pinctrl-0 : The "init" pinctrl state, it will be set before device probe.
-> +- pinctrl-1 : The "default" pinctrl state, it will be set after reset the
-> +             TSADC controller.
-> +- pinctrl-2 : The "sleep" pinctrl state, it will be in for suspend.
->  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
->  - rockchip,hw-tshut-temp : The hardware-controlled shutdown temperature value.
->  - rockchip,hw-tshut-mode : The hardware-controlled shutdown mode 0:CRU 1:GPIO.
-> @@ -27,8 +32,10 @@ tsadc: tsadc@ff280000 {
->         clock-names = "tsadc", "apb_pclk";
->         resets = <&cru SRST_TSADC>;
->         reset-names = "tsadc-apb";
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&otp_out>;
-> +       pinctrl-names = "init", "default", "sleep";
-> +       pinctrl-0 = <&otp_gpio>;
-> +       pinctrl-1 = <&otp_out>;
-> +       pinctrl-2 = <&otp_gpio>;
->         #thermal-sensor-cells = <1>;
->         rockchip,hw-tshut-temp = <95000>;
->         rockchip,hw-tshut-mode = <0>;
-> --
-> 1.9.1
->
+> I thought one had to specify also whether the device sent "edge"
+> or "level" IRQs?
+
+Depends on the interrupt controller.  This is just an example.
+
+--=20
+M=E5ns Rullg=E5rd
+mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
