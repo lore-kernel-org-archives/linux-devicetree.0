@@ -1,44 +1,51 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all vendors
-Date: Fri, 23 Oct 2015 16:33:11 -0500
-Message-ID: <CAL_JsqKPd2vRZO-Y3aZKmS=RpKsg5+9+UHSQbb3yObB_VM0Dcw@mail.gmail.com>
-References: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
- <562A8ED8.6060904@kernel.org> <562A9300.5060105@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <562A9300.5060105@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-rockchip@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3] irqchip/gic: fix ARM11MPCore GIC bindings
+Date: Sat, 24 Oct 2015 00:15:51 +0200
+Message-ID: <1445638553-8825-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 3:05 PM, Kukjin Kim <kgene@kernel.org> wrote:
-> On 10/24/15 04:47, Kukjin Kim wrote:
->> On 10/23/15 10:39, Krzysztof Kozlowski wrote:
->>> SRAM bindings for various SoCs, using the mmio-sram genalloc
->>> API, are spread over different places - per SoC vendor. Since all of
->>> these are quite similar (they depend on mmio-sram) move them to a common
->>> place.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>> Cc: Heiko Stuebner <heiko@sntech.de>
->>> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
->>> Cc: Chen-Yu Tsai <wens@csie.org>
->>> Cc: Kukjin Kim <kgene@kernel.org>
->
-> Acked-by: Kukjin Kim <kgene@kernel.org>
->
->>> Suggested-by: Rob Herring <robh+dt@kernel.org>
->>>
->> Applied with Heiko and Maxime's ack.
->>
-> + Sudeep
->
-> Oops, I can't because of ..bindings/arm/arm,scpi.txt, this series should
-> be handled with "DT binding for ARM System Control and Power
-> Interface(SCPI) protocol"
+The GIC bindings for the ARM11MPCore need to differentiate between
+the GIC on the Test Chip and the one on the evaluation baseboard.
+Split the binding in two and define new compatible-strings.
 
-I'll take it after the merge window.
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Make this a pure devicetree bindings patch.
+- Keep the old binding arm,arm11mp-gic for the "normal" GIC on
+  the PB11MPCore as it is probably similar to other ARM11MPCore
+  systems.
+- Broke out this irqchip stuff from the rest of the series so as
+  not to stress the irqchip maintainers. It has no dependencies
+  on the other patches anyways, and can be merged stand-alone.
+---
+ Documentation/devicetree/bindings/arm/gic.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+index 2da059a4790c..0ffa69755d5e 100644
+--- a/Documentation/devicetree/bindings/arm/gic.txt
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -16,6 +16,7 @@ Main node required properties:
+ 	"arm,cortex-a9-gic"
+ 	"arm,cortex-a7-gic"
+ 	"arm,arm11mp-gic"
++	"arm,tc11mp-gic"
+ 	"brcm,brahma-b15-gic"
+ 	"arm,arm1176jzf-devchip-gic"
+ 	"qcom,msm-8660-qgic"
+-- 
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
