@@ -1,80 +1,139 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 08/13 v2] clk: add ARM syscon ICST device tree bindings
-Date: Fri, 23 Oct 2015 11:50:26 +0200
-Message-ID: <1445593826-32484-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] EDAC: Add ARM64 EDAC
+Date: Fri, 23 Oct 2015 10:51:54 +0100
+Message-ID: <562A033A.5050105@arm.com>
+References: <1445460097-10260-1-git-send-email-brijeshkumar.singh@amd.com>
+ <56282550.4000201@arm.com> <5628F6B5.5080701@amd.com>
+ <56299042.5090109@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56299042.5090109-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huxinwei <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the ARM Syscon ICST
-oscillators, which is a register-level interface to the
-Integrated Device Technology (IDT) ICS525 and ICS307
-serially programmable oscillators.
+On 23/10/15 02:41, Hanjun Guo wrote:
+> Hi Brijesh,
+> 
+> On 2015/10/22 22:46, Brijesh Singh wrote:
+>> Hi Andre,
+>>
+>> On 10/21/2015 06:52 PM, Andre Przywara wrote:
+>>> On 21/10/15 21:41, Brijesh Singh wrote:
+>>>> Add support for Cortex A57 and A53 EDAC driver.
+>>> Hi Brijesh,
+>>>
+>>> thanks for the quick update! Some comments below.
+>>>
+>>>> Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
+>>>> CC: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+>>>> CC: pawel.moll-5wv7dgnIgG8@public.gmane.org
+>>>> CC: mark.rutland-5wv7dgnIgG8@public.gmane.org
+>>>> CC: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+>>>> CC: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+>>>> CC: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org
+>>>> CC: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org
+>>>> CC: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
+>>>> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> CC: guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+>>>> CC: andre.przywara-5wv7dgnIgG8@public.gmane.org
+>>>> CC: arnd-r2nGTMty4D4@public.gmane.org
+>>>> CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> CC: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> ---
+>>>>
+>>>> v2:
+>>>> * convert into generic arm64 edac driver
+>>>> * remove AMD specific references from dt binding
+>>>> * remove poll_msec property from dt binding
+>>>> * add poll_msec as a module param, default is 100ms
+>>>> * update copyright text
+>>>> * define macro mnemonics for L1 and L2 RAMID
+>>>> * check L2 error per-cluster instead of per core
+>>>> * update function names
+>>>> * use get_online_cpus() and put_online_cpus() to make L1 and L2 register 
+>>>>   read hotplug-safe
+>>>> * add error check in probe routine
+>>>>
+>>>>  .../devicetree/bindings/edac/armv8-edac.txt        |  15 +
+>>>>  drivers/edac/Kconfig                               |   6 +
+>>>>  drivers/edac/Makefile                              |   1 +
+>>>>  drivers/edac/cortex_arm64_edac.c                   | 457 +++++++++++++++++++++
+>>>>  4 files changed, 479 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/edac/armv8-edac.txt
+>>>>  create mode 100644 drivers/edac/cortex_arm64_edac.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/edac/armv8-edac.txt b/Documentation/devicetree/bindings/edac/armv8-edac.txt
+>>>> new file mode 100644
+>>>> index 0000000..dfd128f
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/edac/armv8-edac.txt
+>>>> @@ -0,0 +1,15 @@
+>>>> +* ARMv8 L1/L2 cache error reporting
+>>>> +
+>>>> +On ARMv8, CPU Memory Error Syndrome Register and L2 Memory Error Syndrome
+>>>> +Register can be used for checking L1 and L2 memory errors.
+>>>> +
+>>>> +The following section describes the ARMv8 EDAC DT node binding.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: Should be "arm,armv8-edac"
+>>>> +
+>>>> +Example:
+>>>> +	edac {
+>>>> +		compatible = "arm,armv8-edac";
+>>>> +	};
+>>>> +
+>>> So if there is nothing in here, why do we need the DT binding at all (I
+>>> think Mark hinted at that already)?
+>>> Can't we just use the MIDR as already suggested by others?
+>>> Secondly, armv8-edac is wrong here, as this feature is ARM-Cortex
+>>> specific and not architectural.
+>>>
+>> Yes, I was going with Mark suggestion to remove DT binding but then came across these cases which kind of hinted to keep DT binding:
+>>
+>> * Without DT binding, the driver will always be loaded on arm64 unless its blacklisted.
 
-Cc: devicetree@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Spelling fixes.
+So I checked the x86 code: the driver is always loaded as soon as the
+hardware is there (looking at PCI device IDs from the on-chip
+northbridge, for instance). The trick here is to have the Kconfig option
+defaulting to "=n", so a kernel builder would have to explicitly enable
+this. Android or embedded kernels wouldn't do this, for instance, while
+a server distribution would do.
+If a user doesn't want to be bothered with the driver, there is always
+the possibility of blacklisting the module.
+Setting a system policy is IMHO out of scope for a DT binding.
 
-I'm looking for an ACK from the CLK maintainers to take this
-through the ARM SoC tree once the series stabilize.
----
- .../devicetree/bindings/clock/arm-syscon-icst.txt  | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+>> * Its possible that other SoC's might handle single-bit and double-bit errors differently compare to 
+>>   Seattle platform. In Seattle platform both errors are handled by firmware but if other SoC 
+>>   wants OS to handle these errors then they might need DT binding to provide the irq numbers etc.
 
-diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-new file mode 100644
-index 000000000000..8b7177cecb36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-@@ -0,0 +1,40 @@
-+ARM System Controller ICST clocks
-+
-+The ICS525 and ICS307 oscillators are produced by Integrated Devices
-+Technology (IDT). ARM integrated these oscillators deeply into their
-+reference designs by adding special control registers that manage such
-+oscillators to their system controllers.
-+
-+The ARM system controller contains logic to serialize and initialize
-+an ICST clock request after a write to the 32 bit register at an offset
-+into the system controller. Furthermore, to even be able to alter one of
-+these frequencies, the system controller must first be unlocked by
-+writing a special token to another offset in the system controller.
-+
-+The ICST oscillator must be provided inside a system controller node.
-+
-+Required properties:
-+- lock-offset: the offset address into the system controller where the
-+  unlocking register is located
-+- vco-offset: the offset address into the system controller where the
-+  ICST control register is located (even 32 bit address)
-+- compatible: must be one of "arm,syscon-icst525" or "arm,syscon-icst307"
-+- #clock-cells: must be <0>
-+- clocks: parent clock, since the ICST needs a parent clock to derive its
-+  frequency from, this attribute is compulsory.
-+
-+Example:
-+
-+syscon: syscon@10000000 {
-+	compatible = "syscon";
-+	reg = <0x10000000 0x1000>;
-+
-+	oscclk0: osc0@0c {
-+		compatible = "arm,syscon-icst307";
-+		#clock-cells = <0>;
-+		lock-offset = <0x20>;
-+		vco-offset = <0x0c>;
-+		clocks = <&xtal24mhz>;
-+	};
-+	(...)
-+};
--- 
-2.4.3
+What do you mean exactly with "firmware handles these errors"?
+What would the firmware do? I guess just logging the error and then
+possibly reset the register? How would this change the driver?
 
+> I totally agree with you here,  thanks for putting them together.
+> Different SoCs may handle the error in different ways, we need
+> bindings to specialize them, irq number is a good example :)
+
+But how does this affect this very driver, polling just those two registers?
+Where would the interrupt come into the game here? Where is the proposed
+DT binding for that interrupt?
+
+AFAICT EL3 firmware handling errors would just hide this information
+from the driver, so if the f/w decides to "handle" uncorrectable ECC
+errors in a fatal way, there is nothing the driver could do anyway, right?
+
+Can you sketch a concrete example where we would actually need the
+driver to know about the firmware capabilities?
+
+Cheers,
+Andre.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
