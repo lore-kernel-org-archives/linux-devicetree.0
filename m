@@ -1,74 +1,131 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH v3 9/9] NFC: nfcmrvl: update device tree
- bindings for Marvell NFC
-Date: Sat, 24 Oct 2015 01:00:34 +0200
-Message-ID: <20151023230034.GA23609@zurbaran.home>
-References: <1445602986-3254-1-git-send-email-cuissard@marvell.com>
- <1445602986-3254-10-git-send-email-cuissard@marvell.com>
- <CAL_JsqJ7a+MNA8BPseGu_L+3yMr=jK-3YiSo+HZkoqJq2XpWgg@mail.gmail.com>
- <CE8AEFC3-74F2-44B9-B7B6-EBDD1966FB3A@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CE8AEFC3-74F2-44B9-B7B6-EBDD1966FB3A-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+From: Constantine Shulyupin <const@makelinux.com>
+Subject: [PATCH v7] Documentation: add Device tree bindings for hwmon/nct7802
+Date: Sat, 24 Oct 2015 02:03:33 +0300
+Message-ID: <1445641413-18662-1-git-send-email-const@makelinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Constantine Shulyupin <const@MakeLinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+Introduced subnodes sensor, fan and peci with properties.
 
-On Fri, Oct 23, 2015 at 01:47:56PM +0000, Vincent Cuissard wrote:
-> Hi Rob,
->=20
-> > Le 23 oct. 2015 =E0 15:18, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> a =E9crit =
-:
-> >=20
-> >> On Fri, Oct 23, 2015 at 7:23 AM, Vincent Cuissard <cuissard@marvel=
-l.com> wrote:
-> >> Align NFC bindgins to use marvell instead of mrvl.
-> >>=20
-> >> Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >> Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt | 12 ++++++-=
------
-> >> drivers/nfc/nfcmrvl/i2c.c                             |  2 +-
-> >> drivers/nfc/nfcmrvl/spi.c                             |  2 +-
-> >> drivers/nfc/nfcmrvl/uart.c                            |  2 +-
-> >> 4 files changed, 9 insertions(+), 9 deletions(-)
-> >>=20
-> >> diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt=
- b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> >> index 41058fc..0f95924 100644
-> >> --- a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> >> +++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-> >> @@ -2,9 +2,9 @@
-> >>=20
-> >> Required properties:
-> >> - compatible: Should be:
-> >> -  - "mrvl,nfc-uart" for UART devices
-> >> -  - "mrvl,nfc-i2c" for I2C devices
-> >> -  - "mrvl,nfc-spi" for SPI devices
-> >> +  - "marvell,nfc-uart" for UART devices
-> >> +  - "marvell,nfc-i2c" for I2C devices
-> >> +  - "marvell,nfc-spi" for SPI devices
-> >=20
-> > There is no point in changing these and doing so breaks backwards c=
-ompatibility.
->=20
-> There is no break since these 2 drivers are new. In the same patchset=
- I first set mrvl and replace it to marvell since I figured out that th=
-is is the name for all other Marvell drivers.
->
-I agree the i2c and spi drivers are new, but not the uart one.
-That one should be supported in a backward compatible way.
+Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
+---
+Changed in v7:
+- sensors type (thermistor, thermistor, voltage) and pwm type
+selected with type property instead of compatible property.
 
-Cheers,
-Samuel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changed in v6:
+- Removed previous definition.
+- Introduced subnodes sensor, fan and peci with properties.
+
+Changed in v5:
+- Fixed typos
+
+Changed in v4:
+- Removed registers initialization by names
+- Added properties nuvoton,sensor*-type
+
+Changed in v3:
+- Fixed vendor prefix
+- Added short registers description,
+  full registers description is available at
+https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+
+Changed in v2:
+- Removed nct7802,reg-init
+- Added registers initialization by names
+
+Introduced in v1:
+ - nct7802,reg-init
+---
+ .../devicetree/bindings/hwmon/nct7802.txt          | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+new file mode 100644
+index 0000000..1619202
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+@@ -0,0 +1,77 @@
++Nuvoton NCT7802Y Hardware Monitoring IC
++
++Required node properties:
++
++ - "compatible": must be "nuvoton,nct7802"
++ - "reg": I2C bus address of the device
++ - #address-cells=<1>;
++ - #size-cells=<0>;
++
++Optional subnodes:
++
++Sensor subnodes properties:
++ - "reg": index in range 0..2
++ - "compatible", allowed values:
++	 - "nuvoton,nct7802"
++ - "sensor-type", allowed values:
++	"thermal-diode"
++	"thermistor"
++	"voltage"
++
++Except sensor at address 2 can't be "thermal-diode".
++
++Fan subnode:
++
++Required properties:
++ - "reg" :index of in range 0 .. 2.
++ - "compatible", should be "nuvoton,nct7802-fan"
++Optional boolean properties:
++ - "direct-current" :direct current powered fan instead default PWM
++ - "invert" :inverted polarity
++ - "open-drain" :open-drain output instead push pull
++
++Subnode "peci" properties:
++ - "reg" :index in range 0..1
++ - "compatible", should be "nuvoton,nct7802-peci"
++
++Subnode vcc properties:
++ - "compatible", should be "nuvoton,nct7802-vcc"
++
++Subnode vcore properties:
++ - "compatible", should be "nuvoton,nct7802-vcore"
++
++Not defined sensors, fans and PECI modules will be disabled.
++
++Example nct7802 node:
++
++nct7802 {
++	compatible = "nuvoton,nct7802";
++	reg = <0x2a>;
++	#address-cells=<1>;
++	#size-cells=<0>;
++	sensor@0 {
++		reg = <0>;
++		compatible = "nuvoton,nct7802";
++		sensor-type = "thermistor"
++	};
++	sensor@1 {
++		reg = <1>;
++		compatible = "nuvoton,nct7802";
++		sensor-type = "thermal-diode";
++	};
++	pwm-fan@0 {
++		reg = <0>;
++		compatible = "nuvoton,nct7802-fan";
++	};
++	dc-fan@1 {
++		reg = <1>;
++		compatible = "nuvoton,nct7802-fan";
++		dc;
++		invert;
++		open-drain;
++	};
++	peci@0 {
++		reg = <0>;
++		compatible = "nuvoton,nct7802-peci";
++	};
++};
+-- 
+1.9.1
