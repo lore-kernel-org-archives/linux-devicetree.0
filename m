@@ -1,11 +1,13 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host" port
-Date: Fri, 23 Oct 2015 11:28:07 -0700
-Message-ID: <1445624891-31680-1-git-send-email-dianders@chromium.org>
+Subject: [PATCH 4/4] ARM: dts: rockchip: Point rk3288 dwc2 usb at phy port reset
+Date: Fri, 23 Oct 2015 11:28:11 -0700
+Message-ID: <1445624891-31680-5-git-send-email-dianders@chromium.org>
+References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445624891-31680-1-git-send-email-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, kishon@ti.com, johnyoun@synopsys.com, balbi@ti.com
-Cc: gregkh@linuxfoundation.org, lyz@rock-chips.com, wulf@rock-chips.com, Douglas Anderson <dianders@chromium.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, gregory.herrero@intel.com, paulz@synopsys.com, linux-arm-kernel@lists.infradead.org
+Cc: gregkh@linuxfoundation.org, lyz@rock-chips.com, wulf@rock-chips.com, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
@@ -13,35 +15,41 @@ has a hardware errata that causes everything to get confused when we get
 a remote wakeup.  It appears that the "port reset" bit that's in the USB
 phy (located in the rk3288 GRF) fixes things up and appears safe to do.
 
-This series of patches exports the "port reset" from the PHY and then
-hooks it up to dwc2 through a quirk.
+We recently added code to the PHY to expose this reset and code to dwc2
+to use it, so now let's hook things up.
 
-I've tested this series atop a bit of a conglomeration of Heiko's github
-"somewhat stable" branch (v4.3-rc3-876-g6509232) but with Greg KH's
-usb-next merged in.
+Note that we add the PHY port reset to both dwc2 controllers even though
+only one has the errata in case we find some other use for this reset
+that's unrelated to the current hardware errata.  Only the host port
+gets the quirk property, though.
 
-These patches currently conflict with patches that I posted previously
-to enable USB wakeup from S3, specifically:
-* https://patchwork.kernel.org/patch/6727081/
-* https://patchwork.kernel.org/patch/6727121/
-...those patches no longer apply anyway, so presumably they need to be
-reposted and I can do so later atop these patches.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-
-Douglas Anderson (4):
-  phy: rockchip-usb: Support the PHY's "port reset"
-  usb: dwc2: optionally assert phy "port reset" when waking up
-  ARM: dts: rockchip: Enable the USB phys as reset providers on rk3288
-  ARM: dts: rockchip: Point rk3288 dwc2 usb at phy port reset
-
- .../devicetree/bindings/phy/rockchip-usb-phy.txt   |  6 ++
- Documentation/devicetree/bindings/usb/dwc2.txt     |  7 ++
- arch/arm/boot/dts/rk3288.dtsi                      |  8 +++
- drivers/phy/phy-rockchip-usb.c                     | 74 ++++++++++++++++++++++
- drivers/usb/dwc2/core.h                            |  5 ++
- drivers/usb/dwc2/core_intr.c                       |  7 ++
- drivers/usb/dwc2/platform.c                        | 13 ++++
- 7 files changed, 120 insertions(+)
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 4f76805..03de41d 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -496,6 +496,9 @@
+ 		dr_mode = "host";
+ 		phys = <&usbphy2>;
+ 		phy-names = "usb2-phy";
++		resets = <&usbphy2>;
++		reset-names = "phy-port-reset";
++		snps,need-phy-port-reset-on-wake;
+ 		status = "disabled";
+ 	};
+ 
+@@ -513,6 +516,8 @@
+ 		g-use-dma;
+ 		phys = <&usbphy0>;
+ 		phy-names = "usb2-phy";
++		resets = <&usbphy0>;
++		reset-names = "phy-port-reset";
+ 		status = "disabled";
+ 	};
+ 
 -- 
 2.6.0.rc2.230.g3dd15c0
