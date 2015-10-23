@@ -1,7 +1,7 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 9/9] NFC: nfcmrvl: update device tree bindings for Marvell NFC
-Date: Fri, 23 Oct 2015 14:23:06 +0200
-Message-ID: <1445602986-3254-10-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v3 7/9] NFC: NCI: allow spi driver to choose transfer clock
+Date: Fri, 23 Oct 2015 14:23:04 +0200
+Message-ID: <1445602986-3254-8-git-send-email-cuissard@marvell.com>
 References: <1445602986-3254-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,99 +12,78 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Align NFC bindgins to use marvell instead of mrvl.
+In some cases low level drivers might want to update the SPI transfer clock
+(e.g. during firmware download).
+
+This patch adds this support. Without any modification the driver will use the
+default SPI clock (from pdata or device tree).
 
 Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt | 12 ++++++------
- drivers/nfc/nfcmrvl/i2c.c                             |  2 +-
- drivers/nfc/nfcmrvl/spi.c                             |  2 +-
- drivers/nfc/nfcmrvl/uart.c                            |  2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ include/net/nfc/nci_core.h | 4 ++++
+ net/nfc/nci/spi.c          | 7 ++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-index 41058fc..0f95924 100644
---- a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
-@@ -2,9 +2,9 @@
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index f0bb5e7..0f91e09 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -381,6 +381,10 @@ struct nci_spi {
  
- Required properties:
- - compatible: Should be:
--  - "mrvl,nfc-uart" for UART devices
--  - "mrvl,nfc-i2c" for I2C devices
--  - "mrvl,nfc-spi" for SPI devices
-+  - "marvell,nfc-uart" for UART devices
-+  - "marvell,nfc-i2c" for I2C devices
-+  - "marvell,nfc-spi" for SPI devices
+ 	unsigned int		xfer_udelay;	/* microseconds delay between
+ 						  transactions */
++
++	unsigned int		xfer_speed_hz; /* SPI clock frequency
++						 0 => default clock */
++
+ 	u8			acknowledge_mode;
  
- Optional SoC specific properties:
- - pinctrl-names: Contains only one value - "default".
-@@ -28,7 +28,7 @@ Example (for ARM-based BeagleBoard Black with 88W8887 on UART5):
- 	status = "okay";
+ 	struct completion	req_completion;
+diff --git a/net/nfc/nci/spi.c b/net/nfc/nci/spi.c
+index 25153d0..d904cd2 100644
+--- a/net/nfc/nci/spi.c
++++ b/net/nfc/nci/spi.c
+@@ -58,6 +58,7 @@ static int __nci_spi_send(struct nci_spi *nspi, struct sk_buff *skb,
+ 	}
+ 	t.cs_change = cs_change;
+ 	t.delay_usecs = nspi->xfer_udelay;
++	t.speed_hz = nspi->xfer_speed_hz;
  
- 	nfcmrvluart: nfcmrvluart@5 {
--		compatible = "mrvl,nfc-uart";
-+		compatible = "marvell,nfc-uart";
+ 	spi_message_init(&m);
+ 	spi_message_add_tail(&t, &m);
+@@ -144,7 +145,8 @@ struct nci_spi *nci_spi_allocate_spi(struct spi_device *spi,
  
- 		reset-n-io = <&gpio3 16 0>;
+ 	nspi->acknowledge_mode = acknowledge_mode;
+ 	nspi->xfer_udelay = delay;
+-
++	/* Use controller max SPI speed by default */
++	nspi->xfer_speed_hz = 0;
+ 	nspi->spi = spi;
+ 	nspi->ndev = ndev;
+ 	init_completion(&nspi->req_completion);
+@@ -197,12 +199,14 @@ static struct sk_buff *__nci_spi_read(struct nci_spi *nspi)
+ 	tx.tx_buf = req;
+ 	tx.len = 2;
+ 	tx.cs_change = 0;
++	tx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&tx, &m);
  
-@@ -45,7 +45,7 @@ Example (for ARM-based BeagleBoard Black with 88W8887 on I2C1):
- 	clock-frequency = <400000>;
+ 	memset(&rx, 0, sizeof(struct spi_transfer));
+ 	rx.rx_buf = resp_hdr;
+ 	rx.len = 2;
+ 	rx.cs_change = 1;
++	rx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&rx, &m);
  
- 	nfcmrvli2c0: i2c@1 {
--		compatible = "mrvl,nfc-i2c";
-+		compatible = "marvell,nfc-i2c";
+ 	ret = spi_sync(nspi->spi, &m);
+@@ -226,6 +230,7 @@ static struct sk_buff *__nci_spi_read(struct nci_spi *nspi)
+ 	rx.len = rx_len;
+ 	rx.cs_change = 0;
+ 	rx.delay_usecs = nspi->xfer_udelay;
++	rx.speed_hz = nspi->xfer_speed_hz;
+ 	spi_message_add_tail(&rx, &m);
  
- 		reg = <0x8>;
- 
-@@ -67,7 +67,7 @@ Example (for ARM-based BeagleBoard Black on SPI0):
- &spi0 {
- 
- 	mrvlnfcspi0: spi@0 {
--		compatible = "mrvl,nfc-spi";
-+		compatible = "marvell,nfc-spi";
- 
- 		reg = <0>;
- 
-diff --git a/drivers/nfc/nfcmrvl/i2c.c b/drivers/nfc/nfcmrvl/i2c.c
-index acc721f..4dae227 100644
---- a/drivers/nfc/nfcmrvl/i2c.c
-+++ b/drivers/nfc/nfcmrvl/i2c.c
-@@ -262,7 +262,7 @@ static int nfcmrvl_i2c_remove(struct i2c_client *client)
- 
- 
- static const struct of_device_id of_nfcmrvl_i2c_match[] = {
--	{ .compatible = "mrvl,nfc-i2c", },
-+	{ .compatible = "marvell,nfc-i2c", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, of_nfcmrvl_i2c_match);
-diff --git a/drivers/nfc/nfcmrvl/spi.c b/drivers/nfc/nfcmrvl/spi.c
-index 19154c8..cd1da85 100644
---- a/drivers/nfc/nfcmrvl/spi.c
-+++ b/drivers/nfc/nfcmrvl/spi.c
-@@ -197,7 +197,7 @@ static int nfcmrvl_spi_remove(struct spi_device *spi)
- }
- 
- static const struct of_device_id of_nfcmrvl_spi_match[] = {
--	{ .compatible = "mrvl,nfc-spi", },
-+	{ .compatible = "marvell,nfc-spi", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, of_nfcmrvl_spi_match);
-diff --git a/drivers/nfc/nfcmrvl/uart.c b/drivers/nfc/nfcmrvl/uart.c
-index 4dccee2..d8fdbaa 100644
---- a/drivers/nfc/nfcmrvl/uart.c
-+++ b/drivers/nfc/nfcmrvl/uart.c
-@@ -75,7 +75,7 @@ static int nfcmrvl_uart_parse_dt(struct device_node *node,
- 	struct device_node *matched_node;
- 	int ret;
- 
--	matched_node = of_find_compatible_node(node, NULL, "mrvl,nfc-uart");
-+	matched_node = of_find_compatible_node(node, NULL, "marvell,nfc-uart");
- 	if (!matched_node)
- 		return -ENODEV;
- 
+ 	ret = spi_sync(nspi->spi, &m);
 -- 
 2.2.0.33.gc18b867
 
