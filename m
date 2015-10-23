@@ -1,177 +1,70 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: Re: [PATCH net-next 1/2] drivers: net: xgene: Add support RGMII TX/RX
- delay configuration
-Date: Fri, 23 Oct 2015 11:02:19 -0700
-Message-ID: <CAKh23Fnv5t=y_EhuvjBwoeN3nwPmx8bBCCAF5aH-4kLfk7_TzA@mail.gmail.com>
-References: <1445027752-16982-1-git-send-email-isubramanian@apm.com>
-	<1445027752-16982-2-git-send-email-isubramanian@apm.com>
-	<56216DCE.6020800@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Fri, 23 Oct 2015 20:09:27 +0200
+Message-ID: <20151023180927.GJ10947@lukather>
+References: <1445444428-4652-1-git-send-email-jenskuske@gmail.com>
+ <1445444428-4652-2-git-send-email-jenskuske@gmail.com>
+ <20151022080508.GN10947@lukather>
+ <20151022102959.09f0a1f4@OPI2>
+ <20151022084735.GR10947@lukather>
+ <20151022105745.2cc158a3@OPI2>
+ <20151022091410.GW10947@lukather>
+ <5628C8E2.6040703@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56216DCE.6020800@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xcivb/T/gnJQjo5J"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWPPVGYQKGQEWSJTLJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5628C8E2.6040703-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 16, 2015 at 2:36 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 16/10/15 13:35, Iyappan Subramanian wrote:
->> Add RGMII TX/RX delay configuration support. RGMII standard requires 2ns
->> delay to help the RGMII bridge receiver to sample data correctly. If the
->> default value does not provide proper centering of the data sample, the
->> TX/RX delay parameters can be used to adjust accordingly.
->
-> There is a standard 'phy-mode' property which can take multiple values
-> for RGMII: "rgmii" (no delay), "rgmii-txid" (transmit delay),
-> "rgmii-rxid" (receive delay) and "rgmii-id" (symetric delay). There does
-> not seem to be any verification of whether the rx or tx delay parameters
-> you introduce are going to be either sensible, or not conflicting with
-> the 'phy-mode' that should be configured.
+--xcivb/T/gnJQjo5J
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-X-Gene RGMII ethernet controller has a RGMII bridge that performs the
-task of converting the RGMII signal {RX_CLK,RX_CTL, RX_DATA[3:0]} from
-PHY to GMII signal {RX_DV,RX_ER,RX_DATA[7:0]} and vice versa.  This
-RGMII bridge has a provision to internally delay the input RX_CLK and
-the output TX_CLK using configuration registers. This will help in
-maintain the CLK-CTL delay relationship in various operating
-conditions.
+On Thu, Oct 22, 2015 at 01:30:42PM +0200, Jens Kuske wrote:
+> On 22/10/15 11:14, Maxime Ripard wrote:
+> > On Thu, Oct 22, 2015 at 10:57:45AM +0200, Jean-Francois Moine wrote:
+> >> On Thu, 22 Oct 2015 10:47:35 +0200
+> >> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >>
+> >>> Not really. The uart0 reset is the bit 16, in the reset register 4.
+> >>>
+> >>> 4 * 32 + 16 = 44.
+> >>>
+> >>> Not 112, but still not 208 either.
+> >>
+> >> The registers are numbered 1..5, then
+> >>
+> >> (4 - 1) * 32 + 16 = 112
+> > 
+> > Not on my version, and even then, UARTs are on the last reset
+> > register, which would still make 144.
+> > 
+> > Maxime
+> > 
+> 
+> There are holes between reg2 and reg3 and reg4 for some reason, but even
+> if we would correct that with some of_xlate() function they won't
+> completely line up with the gates.
 
-This is similar to the following patch that got accepted.
-https://lkml.org/lkml/2014/12/29/77
+Indeed. Still, dealing with the holes and sticking to what the
+datasheet says seems like the right solution.
 
-I will submit v2 with updated documentation.
+Maxime
 
->
->>
->> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
->> ---
->>  drivers/net/ethernet/apm/xgene/xgene_enet_hw.c   |  8 +++-
->>  drivers/net/ethernet/apm/xgene/xgene_enet_hw.h   |  1 +
->>  drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 49 ++++++++++++++++++++++++
->>  drivers/net/ethernet/apm/xgene/xgene_enet_main.h |  2 +
->>  4 files changed, 59 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
->> index 652f218..33850a0 100644
->> --- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
->> +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
->> @@ -461,6 +461,7 @@ static void xgene_gmac_reset(struct xgene_enet_pdata *pdata)
->>
->>  static void xgene_gmac_init(struct xgene_enet_pdata *pdata)
->>  {
->> +     struct device *dev = &pdata->pdev->dev;
->>       u32 value, mc2;
->>       u32 intf_ctl, rgmii;
->>       u32 icm0, icm2;
->> @@ -490,7 +491,12 @@ static void xgene_gmac_init(struct xgene_enet_pdata *pdata)
->>       default:
->>               ENET_INTERFACE_MODE2_SET(&mc2, 2);
->>               intf_ctl |= ENET_GHD_MODE;
->> -             CFG_TXCLK_MUXSEL0_SET(&rgmii, 4);
->> +
->> +             if (dev->of_node) {
->> +                     CFG_TXCLK_MUXSEL0_SET(&rgmii, pdata->tx_delay);
->> +                     CFG_RXCLK_MUXSEL0_SET(&rgmii, pdata->rx_delay);
->> +             }
->> +
->>               xgene_enet_rd_csr(pdata, DEBUG_REG_ADDR, &value);
->>               value |= CFG_BYPASS_UNISEC_TX | CFG_BYPASS_UNISEC_RX;
->>               xgene_enet_wr_csr(pdata, DEBUG_REG_ADDR, value);
->> diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
->> index ff05bbc..6dee73c 100644
->> --- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
->> +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
->> @@ -144,6 +144,7 @@ enum xgene_enet_rm {
->>  #define CFG_BYPASS_UNISEC_RX         BIT(1)
->>  #define CFG_CLE_BYPASS_EN0           BIT(31)
->>  #define CFG_TXCLK_MUXSEL0_SET(dst, val)      xgene_set_bits(dst, val, 29, 3)
->> +#define CFG_RXCLK_MUXSEL0_SET(dst, val)      xgene_set_bits(dst, val, 26, 3)
->>
->>  #define CFG_CLE_IP_PROTOCOL0_SET(dst, val)   xgene_set_bits(dst, val, 16, 2)
->>  #define CFG_CLE_DSTQID0_SET(dst, val)                xgene_set_bits(dst, val, 0, 12)
->> diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
->> index 6b1846d..ce10687 100644
->> --- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
->> +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
->> @@ -1118,6 +1118,47 @@ static int xgene_get_port_id_dt(struct device *dev, struct xgene_enet_pdata *pda
->>       return ret;
->>  }
->>
->> +static int xgene_get_tx_delay(struct xgene_enet_pdata *pdata)
->> +{
->> +     struct device *dev = &pdata->pdev->dev;
->> +     int delay, ret;
->> +
->> +     ret = of_property_read_u32(dev->of_node, "tx-delay", &delay);
->> +     if (ret) {
->> +             pdata->tx_delay = 4;
->> +             return 0;
->> +     }
->> +
->> +     if (delay < 0 || delay > 7) {
->> +             dev_err(dev, "Invalid tx-delay specified\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     pdata->tx_delay = delay;
->> +
->> +     return 0;
->> +}
->> +
->> +static int xgene_get_rx_delay(struct xgene_enet_pdata *pdata)
->> +{
->> +     struct device *dev = &pdata->pdev->dev;
->> +     int delay, ret;
->> +
->> +     ret = of_property_read_u32(dev->of_node, "rx-delay", &delay);
->> +     if (ret) {
->> +             pdata->rx_delay = 2;
->> +             return 0;
->> +     }
->> +
->> +     if (delay < 0 || delay > 7) {
->> +             dev_err(dev, "Invalid rx-delay specified\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     pdata->rx_delay = delay;
->> +
->> +     return 0;
->> +}
->>
->>  static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
->>  {
->> @@ -1194,6 +1235,14 @@ static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
->>               return -ENODEV;
->>       }
->>
->> +     ret = xgene_get_tx_delay(pdata);
->> +     if (ret)
->> +             return ret;
->> +
->> +     ret = xgene_get_rx_delay(pdata);
->> +     if (ret)
->> +             return ret;
->> +
->>       ret = platform_get_irq(pdev, 0);
->>       if (ret <= 0) {
->>               dev_err(dev, "Unable to get ENET Rx IRQ\n");
->> diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
->> index ff89a5d..a6e56b8 100644
->> --- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
->> +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
->> @@ -184,6 +184,8 @@ struct xgene_enet_pdata {
->>       u8 bp_bufnum;
->>       u16 ring_num;
->>       u32 mss;
->> +     u8 tx_delay;
->> +     u8 rx_delay;
->>  };
->>
->>  struct xgene_indirect_ctl {
->>
->
->
-> --
-> Florian
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--xcivb/T/gnJQjo5J--
