@@ -1,42 +1,48 @@
-From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/3] ARM: zynq: DT: Add interrupt-controller property to GPIO
-Date: Fri, 23 Oct 2015 09:25:31 -0700
-Message-ID: <1445617532-10228-2-git-send-email-soren.brinkmann@xilinx.com>
-References: <1445617532-10228-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH 1/3] DT binding: gpio-zynq: Document interrupt-controller
+Date: Fri, 23 Oct 2015 09:25:30 -0700
+Message-ID: <1445617532-10228-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445617532-10228-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-GPIO can be used as interrupt-controller. Add the missing properties to
-the GPIO node.
+HW and driver support the GPIO as interrupt-controller. Document that in
+the DT binding.
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 ---
- arch/arm/boot/dts/zynq-7000.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/gpio/gpio-zynq.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 1a5220e05109..fe1a5d0cf03b 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -101,6 +101,8 @@
- 			#gpio-cells = <2>;
- 			clocks = <&clkc 42>;
- 			gpio-controller;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			interrupt-parent = <&intc>;
- 			interrupts = <0 20 4>;
- 			reg = <0xe000a000 0x1000>;
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
+index db4c6a663c03..7b542657f259 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
+@@ -12,6 +12,13 @@ Required properties:
+ - interrupts		: Interrupt specifier (see interrupt bindings for
+ 			  details)
+ - interrupt-parent	: Must be core interrupt controller
++- interrupt-controller	: Marks the device node as an interrupt controller.
++- #interrupt-cells 	: Should be 2.  The first cell is the GPIO number.
++			  The second cell bits[3:0] is used to specify trigger type and level flags:
++			      1 = low-to-high edge triggered.
++			      2 = high-to-low edge triggered.
++			      4 = active high level-sensitive.
++			      8 = active low level-sensitive.
+ - reg			: Address and length of the register set for the device
+ 
+ Example:
+@@ -22,5 +29,7 @@ Example:
+ 		gpio-controller;
+ 		interrupt-parent = <&intc>;
+ 		interrupts = <0 20 4>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
+ 		reg = <0xe000a000 0x1000>;
+ 	};
 -- 
 2.6.2.3.ga463a5b
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
