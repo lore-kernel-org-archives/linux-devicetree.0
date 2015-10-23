@@ -1,40 +1,82 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 3/3] i2c: uniphier: add bindings for UniPhier I2C controllers
-Date: Fri, 23 Oct 2015 19:54:25 +0900
-Message-ID: <CAK7LNARtLzE42t3XoiSXAjwgeL=7tcC6i+baQA9hZ2U-zAiqiw@mail.gmail.com>
-References: <1438243942-26401-1-git-send-email-yamada.masahiro@socionext.com>
-	<1438243942-26401-4-git-send-email-yamada.masahiro@socionext.com>
-	<20151022210039.GB1516@katana>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] [RFC] clk: shmobile: Add new Renesas CPG/MSSR DT bindings
+Date: Fri, 23 Oct 2015 14:05:34 +0300
+Message-ID: <1832656.BCXoHFFChX@avalon>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be> <CAMuHMdVhBipbf13o0jb3H6qmcewh6CCtq3=Hj-9nvgar+AYdFg@mail.gmail.com> <CANqRtoS6QpWJY99aD8KyGHgySxqzzBPic-k_a-VcZE6LVFFRow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151022210039.GB1516@katana>
+In-Reply-To: <CANqRtoS6QpWJY99aD8KyGHgySxqzzBPic-k_a-VcZE6LVFFRow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-10-23 6:00 GMT+09:00 Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>:
-> On Thu, Jul 30, 2015 at 05:12:22PM +0900, Masahiro Yamada wrote:
->> Device Tree bindings for two I2C controllers embedded in
->> UniPhier SoCs.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->
-> Please split this into two files with filenames matching those of the
-> drivers. I know they will be very similar but I'd like to keep
-> consistent.
->
+Hello,
 
-OK, I splited it in v2.
+On Wednesday 21 October 2015 01:01:03 Magnus Damm wrote:
+> On Tue, Oct 20, 2015 at 9:16 PM, Geert Uytterhoeven wrote:
+> > On Fri, Oct 16, 2015 at 2:49 PM, Geert Uytterhoeven wrote:
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> >> @@ -0,0 +1,71 @@
+> >> +* Renesas Clock Pulse Generator / Module Standby and Software Reset
+> >> +
+> >> +On Renesas ARM SoCs (SH/R-Mobile, R-Car, RZ), the CPG (Clock Pulse
+> >> Generator)
+> >> +and MSSR (Module Standby and Software Reset) blocks are intimately
+> >> connected,
+> >> +and share the same register block.
+> >> +
+> >> +They provide the following functionalities:
+> >> +  - The CPG block generates various core clocks,
+> >> +  - The MSSR block provides two functions:
+> >> +      1. Module Standby, providing a Clock Domain to control the clock
+> >> supply
+> >> +        to individual SoC devices,
+> >> +      2. Reset Control, to perform a software reset of individual SoC
+> >> devices.
+> >> +
+> >> +Required Properties:
+> >> +  - compatible: Must be one of:
+> >> +      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC
+> > 
+> > I'll drop the reference to "r8a7791", as we won't convert r8a7791 (yet).
 
-Each document was merged into the corresponding driver patch.
+I'm fine with supporting r8a7795 only in the initial patch set, but when do we 
+plan to convert r8a7791 ? I think it would be a good idea to validate these 
+bindings on r8a7791 before considering them as stable.
 
-
+> >> +      - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
+> >> +
+> >> +  - reg: Base address and length of the memory resource used by the
+> >> CPG/MSSR
+> >> +    block
+> >> +
+> >> +  - clocks: References to external parent clocks, one entry for each
+> >> entry in
+> >> +    clock-names
+> >> +  - clock-names: List of external parent clock names. Valid names are:
+> >> +      - "extal" (r8a7791, r8a7795)
+> >> +      - "extalr" (r8a7795)
+> >> +      - "usb_extal" (r8a7791)
+> > 
+> > Likewise.
+> 
+> Yeah, dropping r8a7791 from the initial version of this DT binding
+> seems like a good idea to me as well.
+> 
+> All looks good to me. Thanks for preparing this nicely written DT
+> binding document!
+> 
+> Reviewed-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
 -- 
-Best Regards
-Masahiro Yamada
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
