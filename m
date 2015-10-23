@@ -1,33 +1,35 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all
- vendors
-Date: Sat, 24 Oct 2015 04:47:36 +0900
-Message-ID: <562A8ED8.6060904@kernel.org>
-References: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: dts: fix cpu compatible values
+Date: Fri, 23 Oct 2015 22:00:37 +0200
+Message-ID: <6261588.UmaTDKo2vv@wuerfel>
+References: <1443202506-13732-1-git-send-email-vz@mleia.com> <5625303C.6090902@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5625303C.6090902-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/15 10:39, Krzysztof Kozlowski wrote:
-> SRAM bindings for various SoCs, using the mmio-sram genalloc
-> API, are spread over different places - per SoC vendor. Since all of
-> these are quite similar (they depend on mmio-sram) move them to a common
-> place.
+On Monday 19 October 2015 21:02:36 Vladimir Zapolskiy wrote:
+> On 25.09.2015 20:35, Vladimir Zapolskiy wrote:
+> > The changeset corrects severeal cpu compatible properties
+> > to defined ones in Documentation/devicetree/bindings/arm/cpus.txt
+> > 
+> > Vladimir Zapolskiy (5):
+> >   ARM: dts: i.MX31: fix cpu compatible value
+> >   ARM: dts: i.MX35: fix cpu compatible value
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
+> Ping. Two patches above are applied by Shawn, could ARM maintainers
+> apply the rest? Thank you in advance.
 > 
-Applied with Heiko and Maxime's ack.
 
-Thanks,
-Kukjin
+Applied the missing two as well now, thanks for the fixes!
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
