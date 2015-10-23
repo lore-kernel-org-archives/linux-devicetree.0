@@ -1,204 +1,97 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81 tablet
-Date: Fri, 23 Oct 2015 23:56:35 +0800
-Message-ID: <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com>
-References: <1445572241-13259-1-git-send-email-wens@csie.org>
- <1445572241-13259-5-git-send-email-wens@csie.org> <20151023145309.GA1885@excalibur.cnev.de>
- <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 05/11] dt-binding: Add ngpios property to GPIO controller
+ node
+Date: Fri, 23 Oct 2015 09:08:21 -0700
+Message-ID: <562A5B75.7010804@broadcom.com>
+References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
+ <3735458.2h6HCQhAOs@avalon>
+ <CAL_Jsq+Va0ZnvNoqKWocFYE4_DD-A+2sQaLswy5_eO2ZHn+3Kw@mail.gmail.com>
+ <2123166.E4KEJx3AQ2@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2123166.E4KEJx3AQ2@avalon>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pramod Kumar <pramodku@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 11:46 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Fri, Oct 23, 2015 at 10:53 PM, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Oct 23, 2015 at 11:50:41AM +0800, Chen-Yu Tsai wrote:
->>
->>> From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->>>
->>> The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
->>> 768x1024 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
->>> rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
->>> and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
->>> (both volume buttons are also connected to the UBOOT_SEL pin). The
->>
->> Hello Chen-Yu,
->>
->> the volume button function is something that I wanted to confirm
->> again but forgot to ask previously: Siarhei had pointed out that
->> only the volume+ button triggers UBOOT_SEL, but for me actually
->> both volume buttons work as described above.  Could you
->> cross-check that on your Primo81?
+
+
+On 10/23/2015 6:02 AM, Laurent Pinchart wrote:
+> Hi Rob,
 >
-> IIRC both work. I can test next week.
+> On Friday 23 October 2015 06:51:28 Rob Herring wrote:
+>> On Fri, Oct 23, 2015 at 4:08 AM, Laurent Pinchart wrote:
+>>> On Thursday 22 October 2015 18:41:05 Rob Herring wrote:
+>>>> On Thu, Oct 22, 2015 at 1:52 PM, Ray Jui wrote:
+>>>>> On 10/22/2015 11:43 AM, Rob Herring wrote:
+>>>>>> On Mon, Oct 19, 2015 at 12:43 AM, Pramod Kumar wrote:
+>>>>>>> Add ngpios property to the gpio controller's DT node so that
+>>>>>>> controller driver extracts total number of gpio lines present in
+>>>>>>> controller from DT and removes dependency on driver.
+>>>>>>>
+>>>>>>> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+>>>>>>> Reviewed-by: Ray Jui <rjui@broadcom.com>
+>>>>>>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>>   Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt | 5
+>>>>>>>   +++
+>>>>>>>   1 file changed, 5 insertions(+)
+>>>>>>>
+>>>>>>> diff --git
+>>>>>>> a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>>>>>>> b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>>>>>>> index f92b833..655a8d7 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>>>>>>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>>>>>>>
+>>>>>>> @@ -10,6 +10,9 @@ Required properties:
+>>>>>>>        Define the base and range of the I/O address space that
+>>>>>>>        contains
+>>>>>>>
+>>>>>>> the Cygnus
+>>>>>>>
+>>>>>>>    GPIO/PINCONF controller registers
+>>>>>>>
+>>>>>>> +- ngpios:
+>>>>>> +    Total number of GPIOs the controller provides
+>>>>>>
+>>>>>> This must be optional for compatibility and the driver needs to handle
+>>>>>> it not present.
+>>>>>
+>>>>> You meant to be compatible with existing Cygnus devices, correct?
+>>>>>
+>>>>> Just to clarify, here you suggest we still leave the existing hard
+>>>>> coded ngpios in the driver, in order to be compatible with all existing
+>>>>> Cygnus devices (while the Cygnus device tree changes to use ngpio is
+>>>>> still being merged and through different maintainer), and have all new
+>>>>> iProc SoCs switch to use ngpios from device tree, right?
+>>>>
+>>>> Yes, an existing dtb should continue to work with a new kernel. You
+>>>> can add the DT property to the older devices too and then eventually
+>>>> remove the hard coded values some time in the future. That could be
+>>>> immediately (don't care about compatibility at all), a couple of
+>>>> kernel cycles, never... It all depends on users of the impacted
+>>>> platforms.
+>>>
+>>> But shouldn't the property still be documented as required to ensure that
+>>> new DTs always include it ?
+>>
+>> Good point. If the intent is to eventually remove it from the driver,
+>> then yes. We probably need "required for new designs" as a category or
+>> maybe "recommended"? The wording is not so important here, but I'm
+>> thinking about as we try to standardize the naming.
 >
->>
->>> external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
->>> OTG and 3.5mm headphone jack.
->>>
->>> USB OTG is enabled in host only mode. AXP221 USB power supply and
->>> GPIO support are required for full USB OTG support.
->>>
->>> Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> ---
->>>
->>> Changes since last submission (was part of Sinlinx SinA31s series)
->>>
->>>   - Update axp22x.dtsi file name
->>>   - Sort regulators
->>>   - Drop URL in commit message
->>>   - Drop comment for capacitive touch panel
->>>   - Add simplefb regulators
->>>   - Drop regulator-always-on for regulators that aren't critical
->>>   - Fix CPU and GPU regulator supply mix-up
->>>
->>> ---
->>>  arch/arm/boot/dts/Makefile               |   1 +
->>>  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 255 +++++++++++++++++++++++++++++++
->>>  2 files changed, 256 insertions(+)
->>>  create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index c00b72e750ab..78ade1a5e886 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -612,6 +612,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->>>       sun6i-a31-m9.dtb \
->>>       sun6i-a31-mele-a1000g-quad.dtb \
->>>       sun6i-a31s-cs908.dtb \
->>> +     sun6i-a31s-primo81.dtb \
->>>       sun6i-a31s-sina31s.dtb \
->>>       sun6i-a31s-sinovoip-bpi-m2.dtb \
->>>       sun6i-a31s-yones-toptech-bs1078-v2.dtb
->>> diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->>> new file mode 100644
->>> index 000000000000..2d4250b1faf8
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->>> @@ -0,0 +1,255 @@
->>> +/*
->>> + * Copyright 2014 Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> + * Copyright 2015 Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->>> + * Copyright 2015 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> + *
->>> + * This file is dual-licensed: you can use it either under the terms
->>> + * of the GPL or the X11 license, at your option. Note that this dual
->>> + * licensing only applies to this file, and not this project as a
->>> + * whole.
->>> + *
->>> + *  a) This file is free software; you can redistribute it and/or
->>> + *     modify it under the terms of the GNU General Public License as
->>> + *     published by the Free Software Foundation; either version 2 of the
->>> + *     License, or (at your option) any later version.
->>> + *
->>> + *     This file is distributed in the hope that it will be useful,
->>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + *     GNU General Public License for more details.
->>> + *
->>> + * Or, alternatively,
->>> + *
->>> + *  b) Permission is hereby granted, free of charge, to any person
->>> + *     obtaining a copy of this software and associated documentation
->>> + *     files (the "Software"), to deal in the Software without
->>> + *     restriction, including without limitation the rights to use,
->>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->>> + *     sell copies of the Software, and to permit persons to whom the
->>> + *     Software is furnished to do so, subject to the following
->>> + *     conditions:
->>> + *
->>> + *     The above copyright notice and this permission notice shall be
->>> + *     included in all copies or substantial portions of the Software.
->>> + *
->>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->>> + *     OTHER DEALINGS IN THE SOFTWARE.
->>> + */
->>> +
->>> +/dts-v1/;
->>> +#include "sun6i-a31s.dtsi"
->>> +#include "sunxi-common-regulators.dtsi"
->>> +
->>> +#include <dt-bindings/gpio/gpio.h>
->>> +#include <dt-bindings/input/input.h>
->>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->>> +
->>> +/ {
->>> +     model = "MSI Primo81 tablet";
->>> +     compatible = "msi,primo81", "allwinner,sun6i-a31s";
->>> +};
->>> +
->>> +&cpu0 {
->>> +     cpu-supply = <&reg_dcdc3>;
->>> +};
->>> +
->>> +&ehci0 {
->>> +     /* rtl8188etv wifi is connected here */
->>> +     status = "okay";
->>> +};
->>> +
->>> +&i2c0 {
->>> +     /* pull-ups and device VDDIO use AXP221 DLDO3 */
->>> +     pinctrl-names = "default";
->>> +     pinctrl-0 = <&i2c0_pins_a>;
->>> +     status = "failed";
->>> +};
->>> +
->>> +&i2c1 {
->>> +     pinctrl-names = "default";
->>> +     pinctrl-0 = <&i2c1_pins_a>;
->>> +     status = "okay";
->>> +
->>> +     ctp@5d {
->>> +             pinctrl-names = "default";
->>> +             pinctrl-0 = <&gt911_int_primo81>;
->>> +             compatible = "goodix,gt911";
->>> +             reg = <0x5d>;
->>> +             interrupt-parent = <&pio>;
->>> +             interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>; /* PA3 */
->>
->> I'd like to add a
->>
->>                 touchscreen-swapped-x-y = "true";
-
-You don't need the '="true"' part. Boolean properties mean true
-if they exist, and false if they aren't.
-
->>
->> as described in
->> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->> here, as the display is in portrait mode while the touchscreen is
->> in landscape mode and needs to have the x and y axes swapped to
->> work in the same coordinate system as the display.
->>
->> Regarding the driver side: the goodix driver in kernel 4.3
->> doesn't yet support this property, but patches to add support for
->> it are on the linux-input list and should hopefully make it into
->> kernel 4.4.
+> Required for new designs sounds better than recommended. Or maybe something
+> like "Required (optional for backward compatibility)".
 >
-> The DTS is already in Maxime's tree, and in sunxi-next. Feel free to
-> send a follow-up patch adding them. I was waiting for those patches
-> to be merged.
 
-Sorry, spoke too soon. Maxime hasn't pushed it out yet. Could you send
-a patch adding touchscreen-swapped-x-y for Maxime to squash in?
+Yes, it should be phrased as "required for new designs" because all new 
+iProc SoCs using this GPIO driver need to have this in DT.
 
-My tablet is at my office. I won't be able to test it over the weekend.
+Thanks,
 
-Thanks
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ray
