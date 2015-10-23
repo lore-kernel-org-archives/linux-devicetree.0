@@ -1,52 +1,32 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 08/13] clk: add ARM syscon ICST device tree bindings
-Date: Fri, 23 Oct 2015 09:43:47 -0700
-Message-ID: <20151023164347.GB19782@codeaurora.org>
-References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
- <1444916813-31024-9-git-send-email-linus.walleij@linaro.org>
- <20151015192325.GN4558@codeaurora.org>
- <CACRpkdbXLs7hP=8WH6uK_3mQQEy4Y6TJsjpt4=LpeT=jmF-9Kw@mail.gmail.com>
+Subject: Re: [PATCH 08/13 v2] clk: add ARM syscon ICST device tree bindings
+Date: Fri, 23 Oct 2015 09:44:19 -0700
+Message-ID: <20151023164419.GC19782@codeaurora.org>
+References: <1445593826-32484-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbXLs7hP=8WH6uK_3mQQEy4Y6TJsjpt4=LpeT=jmF-9Kw@mail.gmail.com>
+In-Reply-To: <1445593826-32484-1-git-send-email-linus.walleij@linaro.org>
 Sender: linux-clk-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/23, Linus Walleij wrote:
-> On Thu, Oct 15, 2015 at 9:23 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > On 10/15, Linus Walleij wrote:
+> This adds the device tree bindings for the ARM Syscon ICST
+> oscillators, which is a register-level interface to the
+> Integrated Device Technology (IDT) ICS525 and ICS307
+> serially programmable oscillators.
 > 
-> >> +Required properties:
-> >> +- lock-offset: the offset address into the system controller where the
-> >> +  unlocking register is located
-> >> +- vco-offset: the offset address into the system controller where the
-> >> +  ICST control register is located (even 32 bit address)
-> >
-> > Is there any reason why we don't use a reg property for this?
-> 
-> Usually reg = <> is used with two (or more) tokens:
-> 
-> reg = <phys_addr size>;
-> 
-> The exception being things like I2C addresses which
-> are just one token.
-> 
-> Since in this case, there is a "mother" reg property in the
-> syscon-compatible node, which we are indexing into,
-> it is confusing to use the same name for subnodes.
-> 
-> Also there is a bunch of precedents doing it like this
-> for sybdevices to system controllers, just
-> git grep offset Documentation/devicetree/bindings
-> will give you a bunch of them.
-> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-Ok. I'm no DT expert, but it seems odd to have subnodes without a
-reg property.
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
