@@ -1,140 +1,85 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] EDAC: Add ARM64 EDAC
-Date: Fri, 23 Oct 2015 09:58:57 -0700
-Message-ID: <20151023165857.GD19782@codeaurora.org>
-References: <1445460097-10260-1-git-send-email-brijeshkumar.singh@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445460097-10260-1-git-send-email-brijeshkumar.singh@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, andre.przywara@arm.com, dougthompson@xmission.com, guohanjun@huawei.com, linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org, bp@alien8.de, galak@codeaurora.org, mchehab@osg.samsung.com, linux-edac@vger.kernel.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 2/3] clk: bcm: Add BCM63138 clock support
+Date: Fri, 23 Oct 2015 10:30:47 -0700
+Message-ID: <1445621448-11894-3-git-send-email-f.fainelli@gmail.com>
+References: <1445621448-11894-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445621448-11894-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Drive by nitpicks
+BCM63138 has a simple clocking domain which is primarily the ARMPLL
+clocking complex, from which the ARM (CPU), APB and AXI clocks would be
+derived from.
 
-On 10/21, Brijesh Singh wrote:
-> diff --git a/drivers/edac/cortex_arm64_edac.c b/drivers/edac/cortex_arm64_edac.c
-> new file mode 100644
-> index 0000000..c37bb94
-> --- /dev/null
-> +++ b/drivers/edac/cortex_arm64_edac.c
-> +
-> +#define L1_CACHE		     0
-> +#define L2_CACHE		     1
-> +
-> +int poll_msec = 100;
+Since the ARMPLL controller is entirely compatible with the iProc ARM
+PLL, we just initialize it without additional parameters.
 
-static?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/clk/bcm/Kconfig       | 10 ++++++++++
+ drivers/clk/bcm/Makefile      |  1 +
+ drivers/clk/bcm/clk-bcm63xx.c | 22 ++++++++++++++++++++++
+ 3 files changed, 33 insertions(+)
+ create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
 
-> +
-> +struct cortex_arm64_edac {
-> +	struct edac_device_ctl_info *edac_ctl;
-> +};
-[..]
-> +
-> +static int cortex_arm64_edac_probe(struct platform_device *pdev)
-> +{
-> +	int rc;
-> +	struct cortex_arm64_edac *drv;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
-> +	if (!drv)
-> +		return -ENOMEM;
-> +
-> +	drv->edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-> +						   num_possible_cpus(), "L", 2,
-> +						   1, NULL, 0,
-> +						   edac_device_alloc_index());
-> +	if (IS_ERR(drv->edac_ctl))
-> +		return -ENOMEM;
-> +
-> +	drv->edac_ctl->poll_msec = poll_msec;
-> +	drv->edac_ctl->edac_check = arm64_monitor_cache_errors;
-> +	drv->edac_ctl->dev = dev;
-> +	drv->edac_ctl->mod_name = dev_name(dev);
-> +	drv->edac_ctl->dev_name = dev_name(dev);
-> +	drv->edac_ctl->ctl_name = "cpu_err";
-> +	drv->edac_ctl->panic_on_ue = 1;
-> +	platform_set_drvdata(pdev, drv);
-> +
-> +	rc = edac_device_add_device(drv->edac_ctl);
-> +	if (rc)
-> +		goto edac_alloc_failed;
-> +
-> +	return 0;
-> +
-> +edac_alloc_failed:
-> +	edac_device_free_ctl_info(drv->edac_ctl);
-> +	return rc;
-
-Simplify to:
-
-	rc = edac_device_add_device(...
-	if (rc)
-		edac_device_free_ctl_info(..
-
-	return rc;
-
-> +}
-> +
-> +
-> +static const struct of_device_id cortex_arm64_edac_of_match[] = {
-> +	{ .compatible = "arm,armv8-edac" },
-> +	{},
-
-Dropping the comma here is good style because it forces us to add
-a comma if we were to add an element after the sentinel,
-hopefully causing us to question why we're doing that in the
-first place.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-> +
-> +static struct platform_driver cortex_arm64_edac_driver = {
-> +	.probe = cortex_arm64_edac_probe,
-> +	.remove = cortex_arm64_edac_remove,
-> +	.driver = {
-> +		.name = "arm64-edac",
-> +		.owner = THIS_MODULE,
-
-platform_driver_register() sets this so we can drop this
-assignment here.
-
-> +		.of_match_table = cortex_arm64_edac_of_match,
-> +	},
-> +};
-> +
-> +static int __init cortex_arm64_edac_init(void)
-> +{
-> +	int rc;
-> +
-> +	/* Only POLL mode is supported so far */
-> +	edac_op_state = EDAC_OPSTATE_POLL;
-> +
-> +	rc = platform_driver_register(&cortex_arm64_edac_driver);
-> +	if (rc) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_STR, "failed to register\n");
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-
-This could be simplified to
-
-	rc = ...
-	if (rc)
-		edac_printk(...
-
-	return rc;
-
-Or even just 'return platform_driver_register()' and not care
-about printing a message in that case because the end-user can't
-do anything with the message anyway.
-
+diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+index 85260fb96b36..eb4daed6aa56 100644
+--- a/drivers/clk/bcm/Kconfig
++++ b/drivers/clk/bcm/Kconfig
+@@ -1,3 +1,13 @@
++config CLK_BCM_63XX
++	bool "Broadcom BCM63xx clock support"
++	depends on ARCH_BCM_63XX
++	depends on COMMON_CLK
++	select COMMON_CLK_IPROC
++	default y
++	help
++	  Enable common clock framework support for Broadcom BCM63xx DSL SoCs
++	  based on the ARM architecture
++
+ config CLK_BCM_KONA
+ 	bool "Broadcom Kona CCU clock support"
+ 	depends on ARCH_BCM_MOBILE || COMPILE_TEST
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index 3fc95060d875..247c26750d8b 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -1,3 +1,4 @@
++obj-$(CONFIG_CLK_BCM_63XX)	+= clk-bcm63xx.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
+diff --git a/drivers/clk/bcm/clk-bcm63xx.c b/drivers/clk/bcm/clk-bcm63xx.c
+new file mode 100644
+index 000000000000..b7e0469d0522
+--- /dev/null
++++ b/drivers/clk/bcm/clk-bcm63xx.c
+@@ -0,0 +1,22 @@
++/*
++ * Copyright (C) 2015 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/kernel.h>
++#include <linux/clk-provider.h>
++#include <linux/of.h>
++#include "clk-iproc.h"
++
++static void __init bcm63138_armpll_init(struct device_node *node)
++{
++	iproc_armpll_setup(node);
++}
++CLK_OF_DECLARE(bcm63138_armpll, "brcm,bcm63138-armpll", bcm63138_armpll_init);
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.1.0
+
