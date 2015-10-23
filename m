@@ -1,73 +1,57 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
-Date: Fri, 23 Oct 2015 10:25:54 -0400
-Message-ID: <562A4372.4040008@ti.com>
-References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com> <56295B9E.9030201@ti.com> <CAPw-ZTk1vJA3YSwLHBNMYP0t5k2tW0HTKse+37rL8izWN33y-w@mail.gmail.com> <3702663.07h6YO0UjY@wuerfel>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: Use pinctrl constants
+Date: Fri, 23 Oct 2015 16:29:49 +0200
+Message-ID: <CABxcv=kDXK3CR=YfS-P9VaaXY-rmT2KpuKsAs_BdfZMVtfwzDQ@mail.gmail.com>
+References: <1445530847-25217-1-git-send-email-afd@ti.com>
+	<20151022212356.GU3078@atomide.com>
+	<562A3141.9000701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3702663.07h6YO0UjY@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, KISHON VIJAY <kishon-l0cyMroinI0@public.gmane.org>, WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <562A3141.9000701@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2015 05:17 AM, Arnd Bergmann wrote:
-> On Thursday 22 October 2015 15:27:05 Loc Ho wrote:
->>>
->>> phy-xgene.c
->>> -----------
->>>
->>> Looking at other drivers under drivers/phy, I could find phy-xgene.c which
->>> is close Keystone SerDes driver (. This is called APM X-Gene Multi-Purpose
->>> PHY driver. It defines following mode per the driver code
->>>
->>>          MODE_SATA       = 0,    /* List them for simple reference */
->>>          MODE_SGMII      = 1,
->>>          MODE_PCIE       = 2,
->>>          MODE_USB        = 3,
->>>          MODE_XFI        = 4,
->>>
->>> But seems to support only MODE_SATA. From the code, it appears, this driver
->>> is expected to be enhanced in the future to support additional modes. I have
->>> copied the author to this email to participate in this discussion.
+Hello Andrew,
+
+On Fri, Oct 23, 2015 at 3:08 PM, Andrew F. Davis <afd@ti.com> wrote:
+> On 10/22/2015 04:23 PM, Tony Lindgren wrote:
 >>
->> Let me comment on this APM X-Gene driver. This driver is dead and
->> won't be supported in near or foreseeable future. And someday, it will
->> be ripped out. Based on experience, this solution (having PHY driver
->> in Linux) can't be supported across boards and etc as it is just too
->> much maintenance. And therefore, we followed Arnd B guidance and move
->> all this into the boot loader. From Linux or OS perspective, it only
->> cares about the interface in which its interface with. This is just
->> your reference and may be this will help you as well.
+>> * Andrew F. Davis <afd@ti.com> [151022 09:21]:
+>>>
+>>> Using constants for pinctrl allows better readability and removes
+>>> redundancy with comments.
+>>
+>>
+>> You should use the include/dt-bindings/pinctrl/omap.h macro
+>> AM33XX_IOPAD(pa, val) while at it. Otherwise we'll end up patching
+>> the same things again later on.
+>>
 >
-> This depends a lot on the use case. If the chip is only used on server
-> parts that have a real firmware and you can deliver bug fixes for the
-> firmware if necessary, it's always best to do as much of the setup as
-> possible there, and let Linux see a simplified view of the hardware.
+> Hmm, I haven't really been following this change, it kind of seems to add
+> some unnecessary abstraction by using physical hardware addresses instead
+> of offsets, then just converting them back to offsets. The offset style DT
+> nodes are already auto-generated with existing tools anyway:
+> https://dev.ti.com/pinmux
 >
-> However, for embedded systems that tend to ship with a minimal binary
-> bootloader and no way to update that as an end-user, we rely on Linux
-> to know about all the hardware that requires some form of setup, which
-> is why we have all sorts of drivers and frameworks in the kernel that
-> a server can easily ignore.
->
-> While keystone can show up in servers that won't use this driver, my
-> impression is that its main market is actually in embedded space.
-It is in embedded space predominantly. From our experience, this has to 
-be a Linux driver and moving this to boot loader doesn't make sense.
-
-Murali
->
-> 	Arnd
+> I'm sure this has been discussed already so if this is a blocker I'll
+> re-spin this.
 >
 
+The good thing about the IOPAD pinmux macros is that matches what is
+in the TRM so it is easier to read the DTS and verify that is correct.
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've on my queue to migrate all the remaining DTS for TI SoCs to use
+the IOPAD macros but is just that I didn't have time to do it this
+week. Probably I'll do it at the end of the next week.
+
+> Andrew
+>
+>
+>> Regards,
+>>
+
+Best regards,
+Javier
