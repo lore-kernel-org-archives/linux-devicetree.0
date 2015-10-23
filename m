@@ -1,120 +1,189 @@
-From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Fri, 23 Oct 2015 08:45:06 -0700
-Message-ID: <562A5602.7000208@sonymobile.com>
-References: <20151018192931.GY14956@sirena.org.uk>
- <20151018193757.GA9147@kroah.com> <20151018195330.GB14956@sirena.org.uk>
- <CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
- <5627B677.5090109@gmail.com> <20151021162758.GP32054@sirena.org.uk>
- <5627D6E0.5020708@gmail.com>
- <CAL_Jsq+FPtCuBnte2HTgbdpNYM=v_kLaCRcOC1kMaCQwVC=5Kw@mail.gmail.com>
- <562808AF.7090406@gmail.com>
- <CAAObsKAkyjdvNOS3+nuT0N9sudUFLsZXFtcm6Y038p+HSdsZsg@mail.gmail.com>
- <20151022144405.GC21861@kroah.com> <562930AB.1070203@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81 tablet
+Date: Fri, 23 Oct 2015 23:46:59 +0800
+Message-ID: <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
+References: <1445572241-13259-1-git-send-email-wens@csie.org>
+ <1445572241-13259-5-git-send-email-wens@csie.org> <20151023145309.GA1885@excalibur.cnev.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <562930AB.1070203-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, =?UTF-8?Q?Terje_Bergstr=c3=b6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Jingoo
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151023145309.GA1885@excalibur.cnev.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Karsten Merker <merker@debian.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Siarhei Siamashka <siarhei.siamashka@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2015 11:53 AM, Frank Rowand wrote:
-> On 10/22/2015 7:44 AM, Greg Kroah-Hartman wrote:
->> <oops, sent too early...>
+On Fri, Oct 23, 2015 at 10:53 PM, Karsten Merker <merker@debian.org> wrote:
+> On Fri, Oct 23, 2015 at 11:50:41AM +0800, Chen-Yu Tsai wrote:
+>
+>> From: Karsten Merker <merker@debian.org>
 >>
->> On Thu, Oct 22, 2015 at 11:05:11AM +0200, Tomeu Vizoso wrote:
->>> But that's moot currently because Greg believes that the time spent
->>> probing devices at boot time could be reduced enough so that the order
->>> in which devices are probed becomes irrelevant. IME that would have to
->>> be under 200ms so that the user doesn't notice and that's unicorn-far
->>> from any bootlog I have ever seen.
+>> The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
+>> 768x1024 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
+>> rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
+>> and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
+>> (both volume buttons are also connected to the UBOOT_SEL pin). The
+>
+> Hello Chen-Yu,
+>
+> the volume button function is something that I wanted to confirm
+> again but forgot to ask previously: Siarhei had pointed out that
+> only the volume+ button triggers UBOOT_SEL, but for me actually
+> both volume buttons work as described above.  Could you
+> cross-check that on your Primo81?
+
+IIRC both work. I can test next week.
+
+>
+>> external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
+>> OTG and 3.5mm headphone jack.
 >>
->> But as no one has actually produced a bootlog, how do you know that?
->> Where exactly is your time being spent?  What driver is causing long
->> delays?  Why is the long-delay-drivers not being done in their own
->> thread?  And most importantly, why are you ignoring the work that people
->> did back in 2008 to solve the issue on other hardware platforms?
+>> USB OTG is enabled in host only mode. AXP221 USB power supply and
+>> GPIO support are required for full USB OTG support.
 >>
->>> Given that downstreams are already carrying as many hacks as they
->>> could think of to speed total boot up, I think this is effectively
->>> telling them to go away.
+>> Signed-off-by: Siarhei Siamashka <siarhei.siamashka@gmail.com>
+>> Signed-off-by: Karsten Merker <merker@debian.org>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
 >>
->> No I'm not, I'm asking for real data, not hand-wavy-this-is-going-to
->> solve-the-random-issue-i'm-having type patch by putting random calls in
->> semi-random subsystems all over the kernel.
+>> Changes since last submission (was part of Sinlinx SinA31s series)
 >>
->> And when I ask for real data, you respond with the fact that you aren't
->> trying to speed up boot time here at all, so what am I supposed to think
-> 
-> I also had the understanding that this patch series was about improving
-> boot time.  But I was kindly corrected that the behavior change was
-> getting the panel displaying stuff at an earlier point in the boot sequence,
-> _not_ completing the entire boot faster. 
-> 
-> The claim for the current series, in patch 0 in v7 is:
-> 
->    With this series I get the kernel to output to the panel in 0.5s,
->    instead of 2.8s.
+>>   - Update axp22x.dtsi file name
+>>   - Sort regulators
+>>   - Drop URL in commit message
+>>   - Drop comment for capacitive touch panel
+>>   - Add simplefb regulators
+>>   - Drop regulator-always-on for regulators that aren't critical
+>>   - Fix CPU and GPU regulator supply mix-up
+>>
+>> ---
+>>  arch/arm/boot/dts/Makefile               |   1 +
+>>  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 255 +++++++++++++++++++++++++++++++
+>>  2 files changed, 256 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index c00b72e750ab..78ade1a5e886 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -612,6 +612,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>>       sun6i-a31-m9.dtb \
+>>       sun6i-a31-mele-a1000g-quad.dtb \
+>>       sun6i-a31s-cs908.dtb \
+>> +     sun6i-a31s-primo81.dtb \
+>>       sun6i-a31s-sina31s.dtb \
+>>       sun6i-a31s-sinovoip-bpi-m2.dtb \
+>>       sun6i-a31s-yones-toptech-bs1078-v2.dtb
+>> diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>> new file mode 100644
+>> index 000000000000..2d4250b1faf8
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>> @@ -0,0 +1,255 @@
+>> +/*
+>> + * Copyright 2014 Siarhei Siamashka <siarhei.siamashka@gmail.com>
+>> + * Copyright 2015 Karsten Merker <merker@debian.org>
+>> + * Copyright 2015 Chen-Yu Tsai <wens@csie.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun6i-a31s.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> +     model = "MSI Primo81 tablet";
+>> +     compatible = "msi,primo81", "allwinner,sun6i-a31s";
+>> +};
+>> +
+>> +&cpu0 {
+>> +     cpu-supply = <&reg_dcdc3>;
+>> +};
+>> +
+>> +&ehci0 {
+>> +     /* rtl8188etv wifi is connected here */
+>> +     status = "okay";
+>> +};
+>> +
+>> +&i2c0 {
+>> +     /* pull-ups and device VDDIO use AXP221 DLDO3 */
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&i2c0_pins_a>;
+>> +     status = "failed";
+>> +};
+>> +
+>> +&i2c1 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&i2c1_pins_a>;
+>> +     status = "okay";
+>> +
+>> +     ctp@5d {
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&gt911_int_primo81>;
+>> +             compatible = "goodix,gt911";
+>> +             reg = <0x5d>;
+>> +             interrupt-parent = <&pio>;
+>> +             interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>; /* PA3 */
+>
+> I'd like to add a
+>
+>                 touchscreen-swapped-x-y = "true";
+>
+> as described in
+> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> here, as the display is in portrait mode while the touchscreen is
+> in landscape mode and needs to have the x and y axes swapped to
+> work in the same coordinate system as the display.
+>
+> Regarding the driver side: the goodix driver in kernel 4.3
+> doesn't yet support this property, but patches to add support for
+> it are on the linux-input list and should hopefully make it into
+> kernel 4.4.
 
-It's very common to want to get the display up before the
-rest of the system.  So wanting to accelerate one part of the boot
-at the expense to the rest of the system is a valid use case.
-Deferred initcalls, which is out of tree primarily because it requires
-the type of manual tweaking that Tomeu describes, specifically
-addressed this issue.
-> 
-> Just to get side-tracked, one other approach at ordering to reduce
-> deferrals reported a modest boot time reduction for four boards and a
-> very slight boot time increase for one other board.) The report of boot
-> times with that approach was in:
-> 
->   http://article.gmane.org/gmane.linux.drivers.devicetree/133010
-> 
-> from Alexander Holler.
-> 
-> I have not searched further to see if there is more data of boot time
-> reductions from any of the other attempts to change driver binding
-> order to move dependencies before use of a resource.  But whether
-> there is a performance improvement or not, there continues to be
-> a stream of developers creatively impacting the binding order for
-> their specific driver(s) or board.  So it seems that maybe there
-> is an underlying problem, or we don't have adequate documentation
-> explaining how to avoid a need to order bindings, or the
-> documentation exists and is not being read.
+The DTS is already in Maxime's tree, and in sunxi-next. Feel free to
+send a follow-up patch adding them. I was waiting for those patches
+to be merged.
 
-Well, I have probe order problems unrelated to boot time, that
-I solved by resorting to putting stuff into modules and loading
-them post-boot.  So I'd be interested in easy solutions to managing
-boot order in mainline.
-
-> 
-> I have been defaulting to the position that has been asserted by
-> the device tree maintainters, that probe deferrals work just fine
-> for at least the majority of cases (and is the message I have been
-> sharing in my conference presentations about device tree).  But I
-> suspect that there is at least a small minority of cases that are not
-> well served by probe deferral.  (Not to be read as an endorsement of
-> this specific patch series, just a generic observation.)
-
-I've been worried about DT overhead adding to boot time for a while.
-And IMHO probe deferral is just about the lamest way to solve boot
-order dependencies I can imagine, from a computer science perspective.
-(Well, there's a certain elegance to it, but it's a stupid "make
-everything re-doable, back up and start over, time-wasting" elegance.)
-
-However, when Android takes 35 seconds to boot, and most people almost never
-cold-boot your product, a few seconds of kernel time-wasting on
-cold-boot seem less important. Alas, when I started working on mobile
-phones I stopped caring much about boot time.
-
-Thus, I've never worried about the DT overhead enough to actually
-measure it, as requested by Greg.  So I'll just shut up now. :-)
- -- Tim
-  
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+ChenYu
