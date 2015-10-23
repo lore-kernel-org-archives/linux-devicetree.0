@@ -1,31 +1,50 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] MT8173 IOMMU SUPPORT
-Date: Fri, 23 Oct 2015 11:26:37 +0200
-Message-ID: <20151023092636.GX27420@8bytes.org>
-References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
- <20151014125620.GQ27420@8bytes.org>
- <1445488802.27202.67.camel@mhfsdcap03>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/13] clk: add ARM syscon ICST device tree bindings
+Date: Fri, 23 Oct 2015 11:48:09 +0200
+Message-ID: <CACRpkdbXLs7hP=8WH6uK_3mQQEy4Y6TJsjpt4=LpeT=jmF-9Kw@mail.gmail.com>
+References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
+	<1444916813-31024-9-git-send-email-linus.walleij@linaro.org>
+	<20151015192325.GN4558@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445488802.27202.67.camel@mhfsdcap03>
+In-Reply-To: <20151015192325.GN4558-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 12:40:02PM +0800, Yong Wu wrote:
->      But the mtk-iommu depend on the drivers/memory/mtk-smi.c(mtk-iommu
-> has called a function of the mtk-smi).
->      So if there is dependence here, How should we do to merge them?
+On Thu, Oct 15, 2015 at 9:23 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 10/15, Linus Walleij wrote:
 
-I can surely merge mtk-smi too, if it gets proper Reviewed-by and
-Acked-by tags from the maintainer(s).
+>> +Required properties:
+>> +- lock-offset: the offset address into the system controller where the
+>> +  unlocking register is located
+>> +- vco-offset: the offset address into the system controller where the
+>> +  ICST control register is located (even 32 bit address)
+>
+> Is there any reason why we don't use a reg property for this?
 
+Usually reg = <> is used with two (or more) tokens:
 
-	Joerg
+reg = <phys_addr size>;
 
+The exception being things like I2C addresses which
+are just one token.
+
+Since in this case, there is a "mother" reg property in the
+syscon-compatible node, which we are indexing into,
+it is confusing to use the same name for subnodes.
+
+Also there is a bunch of precedents doing it like this
+for sybdevices to system controllers, just
+git grep offset Documentation/devicetree/bindings
+will give you a bunch of them.
+
+(Fixing the spelling comments.)
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
