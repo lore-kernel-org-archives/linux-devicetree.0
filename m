@@ -1,131 +1,75 @@
-From: Constantine Shulyupin <const@makelinux.com>
-Subject: [PATCH v7] Documentation: add Device tree bindings for hwmon/nct7802
-Date: Sat, 24 Oct 2015 02:03:33 +0300
-Message-ID: <1445641413-18662-1-git-send-email-const@makelinux.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Sat, 24 Oct 2015 08:18:22 +0900
+Message-ID: <20151023231822.GQ29919@sirena.org.uk>
+References: <1443731874-21362-1-git-send-email-afd@ti.com>
+ <1443731874-21362-5-git-send-email-afd@ti.com>
+ <20151022164724.GZ8232@sirena.org.uk>
+ <562A2C2F.1020808@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HAv5+T9jbwMPl6Kw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <562A2C2F.1020808@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Constantine Shulyupin <const@MakeLinux.com>
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Introduced subnodes sensor, fan and peci with properties.
 
-Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
----
-Changed in v7:
-- sensors type (thermistor, thermistor, voltage) and pwm type
-selected with type property instead of compatible property.
+--HAv5+T9jbwMPl6Kw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changed in v6:
-- Removed previous definition.
-- Introduced subnodes sensor, fan and peci with properties.
+On Fri, Oct 23, 2015 at 07:46:39AM -0500, Andrew F. Davis wrote:
 
-Changed in v5:
-- Fixed typos
+> I know just because other drivers do it doesn't mean it's a good idea,
+> but this is not new for MFDs and it is done in other regulators as well
+> (mt6397, tps659038, qcom,spmi, etc..).
 
-Changed in v4:
-- Removed registers initialization by names
-- Added properties nuvoton,sensor*-type
+mt6397 doesn't do this, it doesn't have a compatible string at all (it's
+doing what I'm recommending that you do).  The SPMI devices are
+standalone devices, their parent device is actually functioning as a bus
+controller here (it's really a microcontroller inside the SoC).  The
+Palmas is part of how we realised this was a problem.
 
-Changed in v3:
-- Fixed vendor prefix
-- Added short registers description,
-  full registers description is available at
-https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+> >It seems like this is describing how Linux
+> >loads drivers not how the hardware is constructed but DT should describe
+> >the hardware.
 
-Changed in v2:
-- Removed nct7802,reg-init
-- Added registers initialization by names
+> While I agree to a point, if we follow this to its logical conclusion we
+> would end up with one compatible binding per SoC and be basically back to
+> board files. We need some granularity, just finding out where is the issue,
 
-Introduced in v1:
- - nct7802,reg-init
----
- .../devicetree/bindings/hwmon/nct7802.txt          | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+The fact that the SoC DT is not distinct from the board DT is actually
+one of the problems with the way we're using DT at the minute, it means
+that DTBs are much less stable than they should be since we can enhance
+support for SoCs but DTBs need regenerating to take advantage of it.  It
+would be much better if the boards just referenced the SoC they use and
+pulled in a separate definition of the SoC (DT overlays will make it
+much more tractable to implement that if someone has time...).
 
-diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-new file mode 100644
-index 0000000..1619202
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-@@ -0,0 +1,77 @@
-+Nuvoton NCT7802Y Hardware Monitoring IC
-+
-+Required node properties:
-+
-+ - "compatible": must be "nuvoton,nct7802"
-+ - "reg": I2C bus address of the device
-+ - #address-cells=<1>;
-+ - #size-cells=<0>;
-+
-+Optional subnodes:
-+
-+Sensor subnodes properties:
-+ - "reg": index in range 0..2
-+ - "compatible", allowed values:
-+	 - "nuvoton,nct7802"
-+ - "sensor-type", allowed values:
-+	"thermal-diode"
-+	"thermistor"
-+	"voltage"
-+
-+Except sensor at address 2 can't be "thermal-diode".
-+
-+Fan subnode:
-+
-+Required properties:
-+ - "reg" :index of in range 0 .. 2.
-+ - "compatible", should be "nuvoton,nct7802-fan"
-+Optional boolean properties:
-+ - "direct-current" :direct current powered fan instead default PWM
-+ - "invert" :inverted polarity
-+ - "open-drain" :open-drain output instead push pull
-+
-+Subnode "peci" properties:
-+ - "reg" :index in range 0..1
-+ - "compatible", should be "nuvoton,nct7802-peci"
-+
-+Subnode vcc properties:
-+ - "compatible", should be "nuvoton,nct7802-vcc"
-+
-+Subnode vcore properties:
-+ - "compatible", should be "nuvoton,nct7802-vcore"
-+
-+Not defined sensors, fans and PECI modules will be disabled.
-+
-+Example nct7802 node:
-+
-+nct7802 {
-+	compatible = "nuvoton,nct7802";
-+	reg = <0x2a>;
-+	#address-cells=<1>;
-+	#size-cells=<0>;
-+	sensor@0 {
-+		reg = <0>;
-+		compatible = "nuvoton,nct7802";
-+		sensor-type = "thermistor"
-+	};
-+	sensor@1 {
-+		reg = <1>;
-+		compatible = "nuvoton,nct7802";
-+		sensor-type = "thermal-diode";
-+	};
-+	pwm-fan@0 {
-+		reg = <0>;
-+		compatible = "nuvoton,nct7802-fan";
-+	};
-+	dc-fan@1 {
-+		reg = <1>;
-+		compatible = "nuvoton,nct7802-fan";
-+		dc;
-+		invert;
-+		open-drain;
-+	};
-+	peci@0 {
-+		reg = <0>;
-+		compatible = "nuvoton,nct7802-peci";
-+	};
-+};
--- 
-1.9.1
+> I would say that as these devices belong to different subsystems and are
+> almost completely independent there should be no problem with having their
+> own compatible matched hardware sub-node.
+
+All it's adding is more typing for users.
+
+--HAv5+T9jbwMPl6Kw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWKsA9AAoJECTWi3JdVIfQdu4H/2TuG9Bkmg0RbCd9hllXO+oN
+oj9qDxl5fYuI71NuNNsyRz6Boyzg5rRcOCYkORit8RC3VXXEd9uocYVETxyAp9VL
+R5YtdhhdagZtYGEtymFGl9N0u969dhcqpGy3SPnyBANaEHRlr8dCYWuI6xkBCXPH
+xeLD5/QkB+QkrUe7kGpVzuMYPoAsds+YfYgCmlxeyl+ZVktscyHIBvh3A0nIMxWv
+3IOKWYbII8ymd9sNsCETIvHLXeMxgNFrpva1a7X4X5wbizYgGv3XYS/bYNbcto0N
+ecrPDibsxnpGyeYhg4AunIZcyWp93u8ikQJiapmnuJte1FYTyO/VsfvVdRuNRaA=
+=4ADp
+-----END PGP SIGNATURE-----
+
+--HAv5+T9jbwMPl6Kw--
