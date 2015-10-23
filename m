@@ -1,69 +1,147 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all
- vendors
-Date: Fri, 23 Oct 2015 08:06:26 +0200
-Message-ID: <20151023060626.GF10947@lukather>
-References: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: Re: [PATCH v11 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Fri, 23 Oct 2015 14:24:20 +0800
+Message-ID: <CAFiDJ5_XwgQB_DwmC=BTN8zf2g41ABdAHTRsp9gK5AfDKfNaSA@mail.gmail.com>
+References: <1445506051-21688-1-git-send-email-lftan@altera.com>
+	<1445506051-21688-4-git-send-email-lftan@altera.com>
+	<20151023053111.GK21237@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ExIO7AL6tcaLjJBF"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20151023053111.GK21237@localhost>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 23, 2015 at 1:31 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> Hi Ley,
+>
+> On Thu, Oct 22, 2015 at 05:27:28PM +0800, Ley Foon Tan wrote:
+>> This patch adds the Altera PCIe host controller driver.
+>
+>> +static void altera_pcie_fixups(struct pci_bus *bus)
+>> +{
+>> +     struct pci_dev *dev;
+>> +
+>> +     list_for_each_entry(dev, &bus->devices, bus_list) {
+>> +             altera_pcie_retrain(dev);
+>> +             altera_pcie_fixup_res(dev);
+>> +     }
+>> +}
+>
+> I'd really like to avoid this particular fixup because it's done
+> between pci_scan_root_bus() and pci_assign_unassigned_bus_resources()
+> and pci_bus_add_devices().  That path is almost 100% arch-independent,
+> and someday we should be able to pull all that out into one PCI core
+> interface.
+>
+> You might be able to do the link retrain fixup as a header quirk.
+> That's not really ideal either, but I don't think we have a good
+> mechanism of inserting per-host bridge hooks in the enumeration path.
+> There are some pcibios_*() hooks, but those are per-arch, not per-host
+> bridge, so they're not really what you want here.
+Okay, will change the retrain fixup to use *PCI_FIXUP* macro.
+By doing this, we need [PATCH v11 2/6] pci: add Altera PCI vendor ID patch.
 
---ExIO7AL6tcaLjJBF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+> I think other host drivers have handled the "prevent enumeration of
+> root complex resources" problem by adding a similar check in the
+> config accessors.
+Okay, will handle this in config accessors.
 
-On Fri, Oct 23, 2015 at 10:39:19AM +0900, Krzysztof Kozlowski wrote:
-> SRAM bindings for various SoCs, using the mmio-sram genalloc
-> API, are spread over different places - per SoC vendor. Since all of
-> these are quite similar (they depend on mmio-sram) move them to a common
-> place.
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
+>
+>> +static int altera_pcie_cfg_write(struct pci_bus *bus, unsigned int devfn,
+>> +                              int where, int size, u32 value)
+>
+> This needs a comment to the effect that this hardware can only generate
+> 32-bit config accesses.  We also need a printk in the probe routine so
+> there's a note in dmesg so we have a clue that RW1C bits in config space
+> may be corrupted.
+I have checked the PCIe/TLP spec, we can use the "First BE" (byte
+enable) field in TLP packet to write
+specific bytes only. And I have update driver to support this "First
+BE" feature.
+So, we don't have corrupted RW1C bit issue now.
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>
+>> +{
+>> +     struct altera_pcie *pcie = bus->sysdata;
+>> +     u32 data32;
+>> +     u32 shift = 8 * (where & 3);
+>> +     u8 byte_en;
+>> +
+>> +     if (!altera_pcie_valid_config(pcie, bus, PCI_SLOT(devfn)))
+>> +             return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>> +     switch (size) {
+>> +     case 1:
+>> +             data32 = (value & 0xff) << shift;
+>> +             byte_en = 1 << (where & 3);
+>> +             break;
+>> +     case 2:
+>> +             data32 = (value & 0xffff) << shift;
+>> +             byte_en = 3 << (where & 3);
+>> +             break;
+>> +     default:
+>> +             data32 = value;
+>> +             byte_en = 0xf;
+>> +             break;
+>> +     }
+>> +
+>> +     return tlp_cfg_dword_write(pcie, bus->number, devfn,
+>> +             (where & ~DWORD_MASK), byte_en, data32);
+>> +}
+>
+>> +static void altera_pcie_isr(struct irq_desc *desc)
+>> +{
+>> +     struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +     struct altera_pcie *pcie;
+>> +     unsigned long status;
+>> +     u32 bit;
+>> +     u32 virq;
+>> +
+>> +     chained_irq_enter(chip, desc);
+>> +     pcie = irq_desc_get_handler_data(desc);
+>> +
+>> +     while ((status = cra_readl(pcie, P2A_INT_STATUS)
+>> +             & P2A_INT_STS_ALL) != 0) {
+>> +             for_each_set_bit(bit, &status, INTX_NUM) {
+>> +                     /* clear interrupts */
+>> +                     cra_writel(pcie, 1 << bit, P2A_INT_STATUS);
+>> +
+>> +                     virq = irq_find_mapping(pcie->irq_domain, bit + 1);
+>> +                     if (virq)
+>> +                             generic_handle_irq(virq);
+>> +                     else
+>> +                             dev_err(&pcie->pdev->dev, "unexpected IRQ\n");
+>
+> Include the bit number here.  A printk string with no % substitutions
+> is rarely as useful as it could be.
+Okay.
+>
+>> ...
+>> +     bus = pci_scan_root_bus(&pdev->dev, pcie->root_bus_nr, &altera_pcie_ops,
+>> +                             pcie, &pcie->resources);
+>> +     if (!bus)
+>> +             return -ENOMEM;
+>> +
+>> +     altera_pcie_fixups(bus);
+>> +     pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+>> +     pci_assign_unassigned_bus_resources(bus);
+>> +     pci_bus_add_devices(bus);
+>> +
+>> +     /* Configure PCI Express setting. */
+>> +     list_for_each_entry(child, &bus->children, node)
+>> +             pcie_bus_configure_settings(child);
+>
+> This loop should be before pci_bus_add_devices().  When we call
+> pci_bus_add_devices(), drivers may claim devices immediately, and the
+> PCI core shouldn't be changing device configuration while a driver
+> owns the device.
+Okay, will move this before pci_bus_add_devices().
 
-Thanks!
-Maxime
+Thanks.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---ExIO7AL6tcaLjJBF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWKc5iAAoJEBx+YmzsjxAgc+gP/29kUZr7wgzjVzELbUk4l1P2
-WCCi73QCiBOAGisd9Mw8OBYmMAiyLNKXyH6zrbHY8jio1oWE4ZIBC3POMcrTl95g
-wn51ta1nIUSEz04pp5XYfUzcKENZQ6EGcHpSmR7TLN69GbY+KGHgu31exQD9wkqm
-wFuVYMHnCATgaVPHg3WjDT8f44paiRKosLX4GLPiabbiUA+tBnZd6Up6ts6TB2xE
-C8Bu9deLYs1LCXORNjTLuPRaNOai9uGdGXgx3jBMIGRBbtmUYWVH1anNgKEER6Yt
-3zUJ+682unnEoLzh77RWfSP3sq2w5dEBSEyzbpFl1SY+gY7vFITmi6ifUXKodiex
-2ybruOeOx91E/iG/SBXEGVSm/k7qv7D2gI4kKWYNBnDLZOUv1GaOdppqPCePDwtQ
-gUYjqFdYydXHUC5bfbwyBlpZAGiZlnc/CA4sFOZ51DGHZbxMDtYPAc9pFX1K4GVQ
-0AWN8gQkLhQBtz6g/qkVhEiVl49aWMBTUnNG7/Kv/Gs8AEweq1Gi7a4IElpsb1X0
-aErMe8rJ12jaAO1dqpWB3l9aHFkF/NVvu0Dm0S0PzJxU/ogPkzual5YZwarcQckd
-kwOAor4dwOTsUzLHPp9fAQi1iNSoS3uerhoMci1XMsdtvxOmYcPAg+mo/yKG2jIw
-E2pLFtDPzG9jO/hYL+Ic
-=u71Q
------END PGP SIGNATURE-----
-
---ExIO7AL6tcaLjJBF--
+Regards
+Ley Foon
