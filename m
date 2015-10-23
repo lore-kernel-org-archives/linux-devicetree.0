@@ -1,108 +1,76 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH] ARM: dts: am335x-boneblack: Use pinctrl constants
-Date: Fri, 23 Oct 2015 08:08:17 -0500
-Message-ID: <562A3141.9000701@ti.com>
-References: <1445530847-25217-1-git-send-email-afd@ti.com>
- <20151022212356.GU3078@atomide.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH] of/fdt: fix error checking for earlycon address
+Date: Fri, 23 Oct 2015 09:15:22 -0400
+Message-ID: <562A32EA.20808@hurleysoftware.com>
+References: <1445600840-26749-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151022212356.GU3078@atomide.com>
+In-Reply-To: <1445600840-26749-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, linux-serial@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2015 04:23 PM, Tony Lindgren wrote:
-> * Andrew F. Davis <afd@ti.com> [151022 09:21]:
->> Using constants for pinctrl allows better readability and removes
->> redundancy with comments.
->
-> You should use the include/dt-bindings/pinctrl/omap.h macro
-> AM33XX_IOPAD(pa, val) while at it. Otherwise we'll end up patching
-> the same things again later on.
->
+Hi Masahiro,
 
-Hmm, I haven't really been following this change, it kind of seems to add
-some unnecessary abstraction by using physical hardware addresses instead
-of offsets, then just converting them back to offsets. The offset style DT
-nodes are already auto-generated with existing tools anyway:
-https://dev.ti.com/pinmux
+On 10/23/2015 07:47 AM, Masahiro Yamada wrote:
+> fdt_translate_address() returns OF_BAD_ADDR on error.  It is defined as
+> a u64 value, so the variable "addr" should be defined as u64 as well.
 
-I'm sure this has been discussed already so if this is a blocker I'll
-re-spin this.
+Good catch.
 
-Andrew
+I would prefer if fdt_translate_address() returned resource_size_t (which
+is the proper type for handling addresses as integers) and that type
+was propagated through early_init_dt_scan_chosen_serial => of_setup_earlycon.
 
-> Regards,
->
-> Tony
->
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>   arch/arm/boot/dts/am335x-boneblack.dts | 44 +++++++++++++++++-----------------
->>   1 file changed, 22 insertions(+), 22 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
->> index eadbba3..a540a10 100644
->> --- a/arch/arm/boot/dts/am335x-boneblack.dts
->> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
->> @@ -36,32 +36,32 @@
->>   &am33xx_pinmux {
->>   	nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
->>   		pinctrl-single,pins = <
->> -			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
->> -			0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
->> -			0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
->> -			0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
->> -			0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
->> -			0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
->> +			0x1b0 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
->> +			0xa0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data0.lcd_data0 */
->> +			0xa4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data1.lcd_data1 */
->> +			0xa8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data2.lcd_data2 */
->> +			0xac (PIN_OUTPUT | MUX_MODE0)		/* lcd_data3.lcd_data3 */
->> +			0xb0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data4.lcd_data4 */
->> +			0xb4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data5.lcd_data5 */
->> +			0xb8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data6.lcd_data6 */
->> +			0xbc (PIN_OUTPUT | MUX_MODE0)		/* lcd_data7.lcd_data7 */
->> +			0xc0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data8.lcd_data8 */
->> +			0xc4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data9.lcd_data9 */
->> +			0xc8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data10.lcd_data10 */
->> +			0xcc (PIN_OUTPUT | MUX_MODE0)		/* lcd_data11.lcd_data11 */
->> +			0xd0 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data12.lcd_data12 */
->> +			0xd4 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data13.lcd_data13 */
->> +			0xd8 (PIN_OUTPUT | MUX_MODE0)		/* lcd_data14.lcd_data14 */
->> +			0xdc (PIN_OUTPUT | MUX_MODE0)		/* lcd_data15.lcd_data15 */
->> +			0xe0 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_vsync.lcd_vsync */
->> +			0xe4 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_hsync.lcd_hsync */
->> +			0xe8 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_pclk.lcd_pclk */
->> +			0xec (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_ac_bias_en.lcd_ac_bias_en */
->>   		>;
->>   	};
->>   	nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
->>   		pinctrl-single,pins = <
->> -			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
->> +			0x1b0 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
->>   		>;
->>   	};
->>   };
->> --
->> 1.9.1
->>
+Regards,
+Peter Hurley
+
+
+PS - It seems that there is a new user of fdt_translate_address() in the
+nios arch:
+
+commit e8bf5bc776edef44777b13b2eb4461d653519bae
+Author: Ley Foon Tan <lftan@altera.com>
+Date:   Tue Feb 10 23:21:08 2015 +0800
+
+    nios2: add early printk support
+    
+    Signed-off-by: Ley Foon Tan <lftan@altera.com>
+
+I've copied the author as that should have been an earlycon in the
+altera uart driver(s) rather than early_printk. Oh well.
+
+
+> Fixes: fb11ffe74c79 ("of/fdt: add FDT serial scanning for earlycon")
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  drivers/of/fdt.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 9fc3568..196e449 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -822,14 +822,15 @@ static int __init early_init_dt_scan_chosen_serial(void)
+>  		return -ENODEV;
+>  
+>  	while (match->compatible[0]) {
+> -		unsigned long addr;
+> +		u64 addr;
+> +
+>  		if (fdt_node_check_compatible(fdt, offset, match->compatible)) {
+>  			match++;
+>  			continue;
+>  		}
+>  
+>  		addr = fdt_translate_address(fdt, offset);
+> -		if (!addr)
+> +		if (addr == OF_BAD_ADDR)
+>  			return -ENXIO;
+>  
+>  		of_setup_earlycon(addr, match->data);
+> 
