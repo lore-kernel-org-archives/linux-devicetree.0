@@ -1,73 +1,98 @@
-From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 9/9] NFC: nfcmrvl: update device tree bindings for
- Marvell NFC
-Date: Fri, 23 Oct 2015 13:47:56 +0000
-Message-ID: <CE8AEFC3-74F2-44B9-B7B6-EBDD1966FB3A@marvell.com>
-References: <1445602986-3254-1-git-send-email-cuissard@marvell.com>
- <1445602986-3254-10-git-send-email-cuissard@marvell.com>,<CAL_JsqJ7a+MNA8BPseGu_L+3yMr=jK-3YiSo+HZkoqJq2XpWgg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 0/4] simplefb: Add regulator handling support
+Date: Fri, 23 Oct 2015 15:49:31 +0200
+Message-ID: <562A3AEB.2080502@redhat.com>
+References: <1445572241-13259-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ7a+MNA8BPseGu_L+3yMr=jK-3YiSo+HZkoqJq2XpWgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: fr-FR
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445572241-13259-1-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-> Le 23 oct. 2015 =E0 15:18, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> a =E9crit :
->=20
->> On Fri, Oct 23, 2015 at 7:23 AM, Vincent Cuissard <cuissard@marvell.=
-com> wrote:
->> Align NFC bindgins to use marvell instead of mrvl.
->>=20
->> Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->> ---
->> Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt | 12 ++++++---=
----
->> drivers/nfc/nfcmrvl/i2c.c                             |  2 +-
->> drivers/nfc/nfcmrvl/spi.c                             |  2 +-
->> drivers/nfc/nfcmrvl/uart.c                            |  2 +-
->> 4 files changed, 9 insertions(+), 9 deletions(-)
->>=20
->> diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt b=
-/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->> index 41058fc..0f95924 100644
->> --- a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->> +++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->> @@ -2,9 +2,9 @@
->>=20
->> Required properties:
->> - compatible: Should be:
->> -  - "mrvl,nfc-uart" for UART devices
->> -  - "mrvl,nfc-i2c" for I2C devices
->> -  - "mrvl,nfc-spi" for SPI devices
->> +  - "marvell,nfc-uart" for UART devices
->> +  - "marvell,nfc-i2c" for I2C devices
->> +  - "marvell,nfc-spi" for SPI devices
->=20
-> There is no point in changing these and doing so breaks backwards com=
-patibility.
+Patches 1/2 look good and are:
 
-There is no break since these 2 drivers are new. In the same patchset I=
- first set mrvl and replace it to marvell since I figured out that this=
- is the name for all other Marvell drivers.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-> These bindings have a bigger issue in that it doesn't describe the
-> hardware, but rather just something to bind the Linux driver. The
-> compatible strings should be tied to what NFC chip you have (i.e. the
-> part number).
+And the approach used for the regulators in them is also:
 
-Chips with same physical interface are compatible so I don't need to us=
-e a part number that's why I using a generic binding.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Br,
---=20
-Vincent--
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So patches 1/2 are ready for merging.
+
+Jean-Christophe or Tomi, can you pick up patch 1 &  2 please ?
+
+Regards,
+
+Hans
+
+
+
+On 10/23/2015 05:50 AM, Chen-Yu Tsai wrote:
+> Hi everyone,
+>
+> This is v4 of the simplefb regulator support series. This series adds
+> regulator claiming and enabling support for simplefb.
+>
+> Changes since v4:
+>    - Fixed inverted logic when testing the property name.
+>    - Fixed regulator supply name string copy length off by 1.
+>    - Added real world user, MSI Primo 81 dts patches.
+>
+> Changes since v3:
+>    - Dropped extra "if" which is always true, leftover from v1.
+>    - Updated commit message of patch 1
+>
+> Sometimes the simplefb display output path consits of external conversion
+> chips and/or LCD drivers and backlights. These devices normally have
+> GPIOs to turn them on and/or bring them out of reset, and regulators
+> supplying power to them.
+>
+> While the kernel does not touch unclaimed GPIOs, the regulator core
+> happily disables unused regulators. Thus we need simplefb to claim
+> and enable the regulators used throughout the display pipeline.
+>
+> The binding supports any named regulator supplies under its device
+> node. The driver will look through its properties, and claim any
+> regulators by matching "*-supply", as Mark suggested.
+>
+> I've not done a generic helper in the regulator core yet, instead doing
+> the regulator property handling in the simplefb code for now.
+>
+>
+> Patch 1 adds the regulator properties to the DT binding.
+>
+> Patch 2 adds code to the simplefb driver to claim and enable regulators.
+> Hans, I dropped your Reviewed-by tag from this patch.
+>
+> Patch 3 adds labels to the simplefb device nodes in sun6i-a31.dtsi
+> so we can reference them in the board dts files, like in the next
+> patch.
+>
+> Patch 4 adds a dts file for MSI's Primo 81 tablet.
+>
+>
+> Regards
+> ChenYu
+>
+> Chen-Yu Tsai (3):
+>    dt-bindings: simplefb: Support regulator supply properties
+>    simplefb: Claim and enable regulators
+>    ARM: dts: sun6i: Add simplefb node labels to reference at board level
+>
+> Karsten Merker (1):
+>    ARM: dts: sun6i: Add dts file for MSI Primo81 tablet
+>
+>   .../bindings/video/simple-framebuffer.txt          |  13 +-
+>   arch/arm/boot/dts/Makefile                         |   1 +
+>   arch/arm/boot/dts/sun6i-a31.dtsi                   |   4 +-
+>   arch/arm/boot/dts/sun6i-a31s-primo81.dts           | 255 +++++++++++++++++++++
+>   drivers/video/fbdev/simplefb.c                     | 120 +++++++++-
+>   5 files changed, 386 insertions(+), 7 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>
