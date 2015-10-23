@@ -1,48 +1,58 @@
-From: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] Add iommu driver for hi6220 SoC platform
-Date: Fri, 23 Oct 2015 17:10:31 +0800
-Message-ID: <5629F987.3060701@hisilicon.com>
-References: <1445330724-129401-1-git-send-email-puck.chen@hisilicon.com>
- <1445330724-129401-2-git-send-email-puck.chen@hisilicon.com>
- <56265783.5040406@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Fri, 23 Oct 2015 11:17:06 +0200
+Message-ID: <3702663.07h6YO0UjY@wuerfel>
+References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com> <56295B9E.9030201@ti.com> <CAPw-ZTk1vJA3YSwLHBNMYP0t5k2tW0HTKse+37rL8izWN33y-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56265783.5040406-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-Dw/NWeUnuQfQT0dZR+AlfA@public.gmane.org, weidong2-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.panshilin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAPw-ZTk1vJA3YSwLHBNMYP0t5k2tW0HTKse+37rL8izWN33y-w@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, KISHON VIJAY <kishon@ti.com>, WingMan Kwok <w-kwok2@ti.com>, Rob Herring <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+On Thursday 22 October 2015 15:27:05 Loc Ho wrote:
+> >
+> > phy-xgene.c
+> > -----------
+> >
+> > Looking at other drivers under drivers/phy, I could find phy-xgene.c which
+> > is close Keystone SerDes driver (. This is called APM X-Gene Multi-Purpose
+> > PHY driver. It defines following mode per the driver code
+> >
+> >         MODE_SATA       = 0,    /* List them for simple reference */
+> >         MODE_SGMII      = 1,
+> >         MODE_PCIE       = 2,
+> >         MODE_USB        = 3,
+> >         MODE_XFI        = 4,
+> >
+> > But seems to support only MODE_SATA. From the code, it appears, this driver
+> > is expected to be enhanced in the future to support additional modes. I have
+> > copied the author to this email to participate in this discussion.
+> 
+> Let me comment on this APM X-Gene driver. This driver is dead and
+> won't be supported in near or foreseeable future. And someday, it will
+> be ripped out. Based on experience, this solution (having PHY driver
+> in Linux) can't be supported across boards and etc as it is just too
+> much maintenance. And therefore, we followed Arnd B guidance and move
+> all this into the boot loader. From Linux or OS perspective, it only
+> cares about the interface in which its interface with. This is just
+> your reference and may be this will help you as well.
 
-On 2015/10/20 23:02, Robin Murphy wrote:
-> On 20/10/15 09:45, Chen Feng wrote:
->> iommu/hisilicon: Add hi6220-SoC smmu driver
-> 
+This depends a lot on the use case. If the chip is only used on server
+parts that have a real firmware and you can deliver bug fixes for the
+firmware if necessary, it's always best to do as much of the setup as
+possible there, and let Linux see a simplified view of the hardware.
 
->> +
->> +static int hi6220_smmu_attach_dev(struct iommu_domain *domain,
->> +                  struct device *dev)
->> +{
->> +    dev->archdata.iommu = &iova_allocator;
-> 
-> If the hardware doesn't offer any kind of device isolation (i.e. multiple translation contexts), then you should probably have more logic here to ensure only a single domain can ever be active at once.
-> 
->> +    return 0;
->> +}
->> +
-I feel confused about your above comments. Could you help explain "ensure only a single domain can ever be active at once"?
+However, for embedded systems that tend to ship with a minimal binary
+bootloader and no way to update that as an end-user, we rely on Linux
+to know about all the hardware that requires some form of setup, which
+is why we have all sorts of drivers and frameworks in the kernel that
+a server can easily ignore.
 
+While keystone can show up in servers that won't use this driver, my
+impression is that its main market is actually in embedded space.
 
-> Robin.
-> 
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
