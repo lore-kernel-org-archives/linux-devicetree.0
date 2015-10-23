@@ -1,138 +1,57 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/4] usb: dwc2: optionally assert phy "port reset" when waking up
-Date: Fri, 23 Oct 2015 11:28:09 -0700
-Message-ID: <1445624891-31680-3-git-send-email-dianders@chromium.org>
-References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445624891-31680-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, kishon@ti.com, johnyoun@synopsys.com, balbi@ti.com
-Cc: gregkh@linuxfoundation.org, lyz@rock-chips.com, wulf@rock-chips.com, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, paulz@synopsys.com, gregory.herrero@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 0/3] clk: Broadcom BCM63138 support
+Date: Fri, 23 Oct 2015 11:35:28 -0700
+Message-ID: <562A7DF0.20709@broadcom.com>
+References: <1445621448-11894-1-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445621448-11894-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-clk@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On the rk3288 USB host-only port (the one that's not the OTG-enabled
-port) the phy can get into a bad state when a wakeup is asserted (not
-just a wakeup from full system suspend but also a wakeup from
-autosuspend).  Asserting the "port reset" bit in the PHY upon wakeup
-seems to resolve the issue.
+Hi Florian,
 
-Here we add the ability to specify the PHY "port reset" source to dwc2
-and add a quirk property that says that we should assert the PHY "port
-reset" source when we get a wakeup.
+On 10/23/2015 10:30 AM, Florian Fainelli wrote:
+> Hi all,
+>
+> This patch series adds support for the Broadcom BCM63138 DSL SoCs
+> clocking framework.
+>
+> Since the HW is identical to the one found in Broadcom iProc SoCs, but the
+> integration is different (obviously), there is still a new compatible string
+> introduced just in case we happen to find issues in the future.
+>
+> This applies on top of clk/next as of
+>
+> f63d19ef52aa66e97fca2425974845177ce02b0a ("Merge branch 'clk-iproc' into clk-next")
+>
+> Since there is an obvious dependency between patch 2 and 3, we can either
+> merge this through the Clock tree or via a future arm-soc pull requests
+> for Broadcom SoCs.
+>
+> Thanks!
+>
+> Florian Fainelli (3):
+>    clk: iproc: Extend binding to cover BCM63138
+>    clk: bcm: Add BCM63138 clock support
+>    ARM: dts: BCM63xx: Add ARMPLL device tree nodes
+>
+>   .../bindings/clock/brcm,iproc-clocks.txt           |  5 +++
+>   arch/arm/boot/dts/bcm63138.dtsi                    | 39 ++++++++++++++++------
+>   drivers/clk/bcm/Kconfig                            | 10 ++++++
+>   drivers/clk/bcm/Makefile                           |  1 +
+>   drivers/clk/bcm/clk-bcm63xx.c                      | 22 ++++++++++++
+>   5 files changed, 67 insertions(+), 10 deletions(-)
+>   create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
+>
 
-See the patch ("phy: rockchip-usb: Support the PHY's "port reset"") for
-some details on the reset that we plan to use.
+The entire patch set looks good to me (- Scott's comment of adding 
+COMPILE_TEST to increase build test coverage).
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
----
- Documentation/devicetree/bindings/usb/dwc2.txt |  7 +++++++
- drivers/usb/dwc2/core.h                        |  5 +++++
- drivers/usb/dwc2/core_intr.c                   |  7 +++++++
- drivers/usb/dwc2/platform.c                    | 13 +++++++++++++
- 4 files changed, 32 insertions(+)
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index fd132cb..36c4919 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -17,6 +17,13 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
- Optional properties:
- - phys: phy provider specifier
- - phy-names: shall be "usb2-phy"
-+- snps,need-phy-port-reset-on-wake: if present indicates that we need to assert
-+  the PHY "port reset" when we detect a wakeup due to a hardware errata.  If
-+  present you must specify a "phy-port-reset" reset.
-+
-+Resets:
-+- phy-port-reset (optional): Asserts the PHY's "port reset".
-+
- Refer to phy/phy-bindings.txt for generic phy consumer properties
- - dr_mode: shall be one of "host", "peripheral" and "otg"
-   Refer to usb/generic.txt
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index a66d3cb..5cd58ab 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -582,8 +582,11 @@ struct dwc2_hregs_backup {
-  * @hcd_enabled		Host mode sub-driver initialization indicator.
-  * @gadget_enabled	Peripheral mode sub-driver initialization indicator.
-  * @ll_hw_enabled	Status of low-level hardware resources.
-+ * @need_phy_port_reset_on_wake: Quirk saying that we should assert
-+ *                               phy_port_reset on a remote wakeup.
-  * @phy:                The otg phy transceiver structure for phy control.
-  * @uphy:               The otg phy transceiver structure for old USB phy control.
-+ * @phy_port_reset:     Reset control for the PHY's "port reset".
-  * @plat:               The platform specific configuration data. This can be removed once
-  *                      all SoCs support usb transceiver.
-  * @supplies:           Definition of USB power supplies
-@@ -710,9 +713,11 @@ struct dwc2_hsotg {
- 	unsigned int hcd_enabled:1;
- 	unsigned int gadget_enabled:1;
- 	unsigned int ll_hw_enabled:1;
-+	unsigned int need_phy_port_reset_on_wake:1;
- 
- 	struct phy *phy;
- 	struct usb_phy *uphy;
-+	struct reset_control *phy_port_reset;
- 	struct dwc2_hsotg_plat *plat;
- 	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
- 	u32 phyif;
-diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-index 27daa42..52e22a5 100644
---- a/drivers/usb/dwc2/core_intr.c
-+++ b/drivers/usb/dwc2/core_intr.c
-@@ -45,6 +45,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-+#include <linux/reset.h>
- #include <linux/usb.h>
- 
- #include <linux/usb/hcd.h>
-@@ -378,6 +379,12 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- 			/* Restart the Phy Clock */
- 			pcgcctl &= ~PCGCTL_STOPPCLK;
- 			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-+
-+			if (hsotg->need_phy_port_reset_on_wake) {
-+				reset_control_assert(hsotg->phy_port_reset);
-+				reset_control_deassert(hsotg->phy_port_reset);
-+			}
-+
- 			mod_timer(&hsotg->wkp_timer,
- 				  jiffies + msecs_to_jiffies(71));
- 		} else {
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index 5859b0f..2f7b5d0 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -45,6 +45,7 @@
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
-+#include <linux/reset.h>
- 
- #include <linux/usb/of.h>
- 
-@@ -376,6 +377,18 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 			"Configuration mismatch. Forcing peripheral mode\n");
- 	}
- 
-+	hsotg->need_phy_port_reset_on_wake =
-+		of_property_read_bool(dev->dev.of_node,
-+				      "snps,need-phy-port-reset-on-wake");
-+	hsotg->phy_port_reset = devm_reset_control_get(hsotg->dev,
-+						       "phy-port-reset");
-+	if (IS_ERR(hsotg->phy_port_reset) &&
-+	    hsotg->need_phy_port_reset_on_wake) {
-+		dev_warn(hsotg->dev, "Missing phy port reset (%ld); skipping\n",
-+			 PTR_ERR(hsotg->phy_port_reset));
-+		hsotg->need_phy_port_reset_on_wake = false;
-+	}
-+
- 	retval = dwc2_lowlevel_hw_init(hsotg);
- 	if (retval)
- 		return retval;
--- 
-2.6.0.rc2.230.g3dd15c0
+Ray
