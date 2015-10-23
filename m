@@ -1,69 +1,44 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v3 3/3] ARM: dts: rockchip: Add the OTP gpio pinctrl
-Date: Fri, 23 Oct 2015 09:54:56 +0800
-Message-ID: <1445565296-31517-4-git-send-email-wxt@rock-chips.com>
-References: <1445565296-31517-1-git-send-email-wxt@rock-chips.com>
+From: "Singh, Brijeshkumar" <Brijeshkumar.Singh@amd.com>
+Subject: RE: [PATCH v2] EDAC: Add ARM64 EDAC
+Date: Fri, 23 Oct 2015 03:07:35 +0000
+Message-ID: <D506FF644BBE48498B87295D58C770F82D632096@satlexdag03.amd.com>
+References: <56299292.5040408@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445565296-31517-1-git-send-email-wxt@rock-chips.com>
+In-Reply-To: <56299292.5040408@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, dianders@chromium.org, Eduardo Valentin <edubezval@gmail.com>, Caesar Wang <wxt@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Stepan Moskovchenko <stepanm@codeaurora.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dougthompson@xmission.com" <dougthompson@xmission.com>, "bp@alien8.de" <bp@alien8.de>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "guohanjun@huawei.com" <guohanjun@huawei.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the "init" anf "sleep" pinctrl as the OTP gpio state.
-We need the OTP pin is gpio state before resetting the TSADC controller,
-since the tshut polarity will generate a high signal.
+Hi Steve,
 
-"init" pinctrl property is defined by Doug's Patch[0].
+Thanks for pointing the link, I have not seen that driver before; I was mainly looking at driver/edac/xgene_edac.c and some other arm edac drivers.  My first attempt was to do AMD specific edac driver to log correctable L1/L2 error but based on feedback I worked on v2 generic driver which now looks very similar to your driver, are you planning to upstream your driver ? I can work with you to verify it on my current hardware setup. It seems your driver also handles single-bit and double-bit error which I have no way to test in my current hardware setup. On Seattle platform most of error handling is done through firmware APEI except correctable L1/L2.  Let me know your thoughts. 
 
-Patch[0]:
-https://patchwork.kernel.org/patch/7454311/
+-Brijesh
+________________________________________
+From: Stepan Moskovchenko [stepanm@codeaurora.org]
+Sent: Thursday, October 22, 2015 8:51 PM
+To: Singh, Brijeshkumar
+Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; galak@codeaurora.org; dougthompson@xmission.com; bp@alien8.de; mchehab@osg.samsung.com; devicetree@vger.kernel.org; guohanjun@huawei.com; andre.przywara@arm.com; arnd@arndb.de; linux-kernel@vger.kernel.org; linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2] EDAC: Add ARM64 EDAC
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
+ >>> +++ b/drivers/edac/cortex_arm64_edac.c
+ >>> @@ -0,0 +1,457 @@
+ >>> +/*
+ >>> + * Cortex ARM64 EDAC
+ >>> + *
+ >>> + * Copyright (c) 2015, Advanced Micro Devices
+ >>> + * Author: Brijesh Singh <brijeshkumar.singh@amd.com>
+ >>> + *
 
-Changes in v3:
-  - Add the "sleep" pinctrl as the gpio state in PATCH[3/3]
+>Hi Brijesh,
 
-Changes in v2:
-  - Add some commits for more obvious in PATCH[2/2]
+>Your ARM64 EDAC driver seems rather similar to the existing driver that
+>is linked below. If you have indeed based your driver on this one, can
+>you please provide the appropriate attribution?
 
-Changes in v1:
-  - As the Doug comments, drop the thermal driver patchs since
-    we can with pinctrl changing to work.
-  - As the Doug's patch to add the 'init' property.
-
- arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 906e938..13ff09a 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -447,8 +447,10 @@
- 		clock-names = "tsadc", "apb_pclk";
- 		resets = <&cru SRST_TSADC>;
- 		reset-names = "tsadc-apb";
--		pinctrl-names = "default";
--		pinctrl-0 = <&otp_out>;
-+		pinctrl-names = "init", "default", "sleep";
-+		pinctrl-0 = <&otp_gpio>;
-+		pinctrl-1 = <&otp_out>;
-+		pinctrl-2 = <&otp_gpio>;
- 		#thermal-sensor-cells = <1>;
- 		rockchip,hw-tshut-temp = <95000>;
- 		status = "disabled";
-@@ -1273,6 +1275,10 @@
- 		};
- 
- 		tsadc {
-+			otp_gpio: otp-gpio {
-+				rockchip,pins = <0 10 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+
- 			otp_out: otp-out {
- 				rockchip,pins = <0 10 RK_FUNC_1 &pcfg_pull_none>;
- 			};
--- 
-1.9.1
+>https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.14/tree/drivers/edac/cortex_arm64_edac.c?h=LA.HB.1.1.1_rb1.10
