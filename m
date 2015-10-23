@@ -1,135 +1,47 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: document linux-specific partition parser DT binding
-Date: Fri, 23 Oct 2015 11:14:36 -0700
-Message-ID: <20151023181436.GL13239@google.com>
-References: <1444915191-28350-1-git-send-email-linus.walleij@linaro.org>
- <20151015162210.GA4545@localhost>
- <CACRpkdYboyXQ7tz8gSTafVLJy26E3qLAbcKyjOsEhh8j=3S1bQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYboyXQ7tz8gSTafVLJy26E3qLAbcKyjOsEhh8j=3S1bQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host" port
+Date: Fri, 23 Oct 2015 11:28:07 -0700
+Message-ID: <1445624891-31680-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, kishon@ti.com, johnyoun@synopsys.com, balbi@ti.com
+Cc: gregkh@linuxfoundation.org, lyz@rock-chips.com, wulf@rock-chips.com, Douglas Anderson <dianders@chromium.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, gregory.herrero@intel.com, paulz@synopsys.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
+has a hardware errata that causes everything to get confused when we get
+a remote wakeup.  It appears that the "port reset" bit that's in the USB
+phy (located in the rk3288 GRF) fixes things up and appears safe to do.
 
-On Fri, Oct 23, 2015 at 11:17:54AM +0200, Linus Walleij wrote:
-> On Thu, Oct 15, 2015 at 6:22 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> > Are you trying to use this binding, or is this just purely a mechanical
-> > documentation issue? I ask, because it seems that binding never really
-> > got reviewed at all, and others have recently tried to extend support
-> > for it generically [1], but a few objections came up [2][3].
-> 
-> I am using it in this devicetree patch:
-> http://marc.info/?l=linux-arm-kernel&m=144492610417605&w=2
-> 
-> And this devicetree patch:
-> http://marc.info/?l=linux-arm-kernel&m=144490455308758&w=2
-> 
-> Otherwise the AFS partition type will not be scanned.
-> 
-> The other option is to add "afs" to this list in
-> drivers/mtd/maps/physmap_of.c:
-> 
-> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-> index 3e614e9119d5..6233473a55d6 100644
-> --- a/drivers/mtd/maps/physmap_of.c
-> +++ b/drivers/mtd/maps/physmap_of.c
-> @@ -110,7 +110,7 @@ static struct mtd_info *obsolete_probe(struct
-> platform_device *dev,
->     default is use. These take precedence over other device tree
->     information. */
->  static const char * const part_probe_types_def[] = {
-> -       "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
-> +       "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", "afs", NULL };
-> 
-> I can send a patch like this if you prefer?
+This series of patches exports the "port reset" from the PHY and then
+hooks it up to dwc2 through a quirk.
 
-Hmm, not really. While I'd love to have a good common set of reasonably
-generic partition parsers that we could always run on all MTDs (or in
-this case, all physmap_of MTDs) similar to how the block subsystem does
-it, I don't think that is really workable here, as there is too much
-variation in parsers and mamy of them actually scan the whole flash (or
-at least, the headers of each block). This can get very expensive, and
-potentially leaves room for false matches, especially when you start
-layering on all the other potential parsers others might want to use.
+I've tested this series atop a bit of a conglomeration of Heiko's github
+"somewhat stable" branch (v4.3-rc3-876-g6509232) but with Greg KH's
+usb-next merged in.
 
-IOW, this solution is not scalable IMO. In previous discussions, I think
-we've agreed that partition parsing must be informed by platform
-knowledge.
+These patches currently conflict with patches that I posted previously
+to enable USB wakeup from S3, specifically:
+* https://patchwork.kernel.org/patch/6727081/
+* https://patchwork.kernel.org/patch/6727121/
+...those patches no longer apply anyway, so presumably they need to be
+reposted and I can do so later atop these patches.
 
-> > Unfortunately I/we dropped the ball a bit on that thread, but we'd
-> > ideally like to address those concerns in a new binding that is
-> > supported for all MTDs, and deprecate the old one. The new one would
-> > probably not directly use the parser name as used by Linux, but define
-> > some list of compatible strings that fit DT conventions better. Also, I
-> > don't want people including things like "cmdlinepart" in DT, but it
-> > should be available as an override if necessary. IOW, DT shouldn't
-> > supersede the kernel command line.
-> 
-> This is not for cmdlinepart, as AFS is an actual on-flash format.
 
-Right. I was just mentioning that this binding:
+Douglas Anderson (4):
+  phy: rockchip-usb: Support the PHY's "port reset"
+  usb: dwc2: optionally assert phy "port reset" when waking up
+  ARM: dts: rockchip: Enable the USB phys as reset providers on rk3288
+  ARM: dts: rockchip: Point rk3288 dwc2 usb at phy port reset
 
-  (1) allows people to specify nonsensical things like "ofpart" and
-  "cmdlinepart" in their DT and
-  (2) allows people to specify DTs that *don't* allow developer
-  overrides like cmdlinepart (e.g., the partition layout is corrupted,
-  so we want to boot a recovery kernel with a predetermined
-  'mtdparts=...' parameter)
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt   |  6 ++
+ Documentation/devicetree/bindings/usb/dwc2.txt     |  7 ++
+ arch/arm/boot/dts/rk3288.dtsi                      |  8 +++
+ drivers/phy/phy-rockchip-usb.c                     | 74 ++++++++++++++++++++++
+ drivers/usb/dwc2/core.h                            |  5 ++
+ drivers/usb/dwc2/core_intr.c                       |  7 ++
+ drivers/usb/dwc2/platform.c                        | 13 ++++
+ 7 files changed, 120 insertions(+)
 
-Neither is directly related to your use of AFS, but it's just part of my
-thoughts on codifying the use of this binding.
-
-> > That's not to say we can't document the old one, but I'm curious if
-> > there are real users. I'd also like to encourage new users to avoid the
-> > old one if we can make that feasible.
-> 
-> I'm happy to do either patch, or define a new binding if you
-> prefer, like simply:
-
-I would prefer a new binding. And personally, I'd like to get something
-like this extended to all MTDs (there are other users asking for similar
-things), but I haven't made the time to write the patch :(
-
-> partition-type = <string>;
-> 
-> and then we define this as "arm,arm-flash-structure" or something,
-> and parse that to "afs" internally in physmap_of.c.
-
-Seems OK to me. Again, I'd prefer this not live in physmap_of.c, but if
-that's the expedient solution, I could probably take it from there.
-
-> >> + - linux,part-probe: a flash partition type to look for, using the
-> >> +   Linux-internal partition naming scheme, e.g. "afs" for the ARM
-> >> +   Flash footers.
-> >
-> > IIUC, this property actually supports a list of parsers, not just a
-> > single partition type.
-> 
-> Ah it does. If we wanna go with this patch I'll fix it.
-
-I'd rather not take this patch if we can safely pivot to an improved
-binding, but I'm not sure if that violates the DT policy party line :)
-
-> > Also, if we're really going to support this, we should list exactly what
-> > strings we support. And that's one of the problems with the existing
-> > binding; it supports any old string Linux supports, which doesn't match
-> > how we typically want to add bindings (i.e., via proposal + review).
-> 
-> OK that sounds like a case for "arm,arm-flash-structure" for this
-> specific binding.
-
-Right.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.6.0.rc2.230.g3dd15c0
