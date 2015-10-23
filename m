@@ -1,51 +1,80 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 08/13] clk: add ARM syscon ICST device tree bindings
-Date: Fri, 23 Oct 2015 11:48:09 +0200
-Message-ID: <CACRpkdbXLs7hP=8WH6uK_3mQQEy4Y6TJsjpt4=LpeT=jmF-9Kw@mail.gmail.com>
-References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org>
-	<1444916813-31024-9-git-send-email-linus.walleij@linaro.org>
-	<20151015192325.GN4558@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151015192325.GN4558-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 08/13 v2] clk: add ARM syscon ICST device tree bindings
+Date: Fri, 23 Oct 2015 11:50:26 +0200
+Message-ID: <1445593826-32484-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 9:23 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 10/15, Linus Walleij wrote:
+This adds the device tree bindings for the ARM Syscon ICST
+oscillators, which is a register-level interface to the
+Integrated Device Technology (IDT) ICS525 and ICS307
+serially programmable oscillators.
 
->> +Required properties:
->> +- lock-offset: the offset address into the system controller where the
->> +  unlocking register is located
->> +- vco-offset: the offset address into the system controller where the
->> +  ICST control register is located (even 32 bit address)
->
-> Is there any reason why we don't use a reg property for this?
+Cc: devicetree@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Spelling fixes.
 
-Usually reg = <> is used with two (or more) tokens:
+I'm looking for an ACK from the CLK maintainers to take this
+through the ARM SoC tree once the series stabilize.
+---
+ .../devicetree/bindings/clock/arm-syscon-icst.txt  | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
 
-reg = <phys_addr size>;
+diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+new file mode 100644
+index 000000000000..8b7177cecb36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+@@ -0,0 +1,40 @@
++ARM System Controller ICST clocks
++
++The ICS525 and ICS307 oscillators are produced by Integrated Devices
++Technology (IDT). ARM integrated these oscillators deeply into their
++reference designs by adding special control registers that manage such
++oscillators to their system controllers.
++
++The ARM system controller contains logic to serialize and initialize
++an ICST clock request after a write to the 32 bit register at an offset
++into the system controller. Furthermore, to even be able to alter one of
++these frequencies, the system controller must first be unlocked by
++writing a special token to another offset in the system controller.
++
++The ICST oscillator must be provided inside a system controller node.
++
++Required properties:
++- lock-offset: the offset address into the system controller where the
++  unlocking register is located
++- vco-offset: the offset address into the system controller where the
++  ICST control register is located (even 32 bit address)
++- compatible: must be one of "arm,syscon-icst525" or "arm,syscon-icst307"
++- #clock-cells: must be <0>
++- clocks: parent clock, since the ICST needs a parent clock to derive its
++  frequency from, this attribute is compulsory.
++
++Example:
++
++syscon: syscon@10000000 {
++	compatible = "syscon";
++	reg = <0x10000000 0x1000>;
++
++	oscclk0: osc0@0c {
++		compatible = "arm,syscon-icst307";
++		#clock-cells = <0>;
++		lock-offset = <0x20>;
++		vco-offset = <0x0c>;
++		clocks = <&xtal24mhz>;
++	};
++	(...)
++};
+-- 
+2.4.3
 
-The exception being things like I2C addresses which
-are just one token.
-
-Since in this case, there is a "mother" reg property in the
-syscon-compatible node, which we are indexing into,
-it is confusing to use the same name for subnodes.
-
-Also there is a bunch of precedents doing it like this
-for sybdevices to system controllers, just
-git grep offset Documentation/devicetree/bindings
-will give you a bunch of them.
-
-(Fixing the spelling comments.)
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
