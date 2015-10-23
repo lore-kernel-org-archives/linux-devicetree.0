@@ -1,62 +1,52 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v4 1/4] dt-bindings: simplefb: Support regulator supply properties
-Date: Fri, 23 Oct 2015 11:50:38 +0800
-Message-ID: <1445572241-13259-2-git-send-email-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v4 3/4] ARM: dts: sun6i: Add simplefb node labels to reference at board level
+Date: Fri, 23 Oct 2015 11:50:40 +0800
+Message-ID: <1445572241-13259-4-git-send-email-wens@csie.org>
 References: <1445572241-13259-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445572241-13259-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445572241-13259-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The physical display tied to the framebuffer may have regulators
-providing power to it, such as power for LCDs or interface conversion
-chips.
+Some boards, such as tablets, have regulators providing power to parts
+of the display pipeline, like signal converters and LCD panels.
 
-The number of regulators in use may vary, but the regulator supply
-binding can not be a list. Instead just support any named regulator
-supply properties under the device node. These should be properly
-named to match the device schematics / design. The driver should
-take care to go through them all.
+Add labels to the simplefb device nodes so that we can reference them
+in the board dts files to add regulator supply properties.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../devicetree/bindings/video/simple-framebuffer.txt        | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-index 4474ef6e0b95..8c9e9f515c87 100644
---- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-@@ -47,10 +47,14 @@ Required properties:
-   - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 83c18798cae0..b6ad7850fac6 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -61,7 +61,7 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
- Optional properties:
--- clocks : List of clocks used by the framebuffer. Clocks listed here
--           are expected to already be configured correctly. The OS must
--           ensure these clocks are not modified or disabled while the
--           simple framebuffer remains active.
-+- clocks : List of clocks used by the framebuffer.
-+- *-supply : Any number of regulators used by the framebuffer. These should
-+	     be named according to the names in the device's design.
-+
-+  The above resources are expected to already be configured correctly.
-+  The OS must ensure they are not modified or disabled while the simple
-+  framebuffer remains active.
-+
- - display : phandle pointing to the primary display hardware node
+-		framebuffer@0 {
++		simplefb_hdmi: framebuffer@0 {
+ 			compatible = "allwinner,simple-framebuffer",
+ 				     "simple-framebuffer";
+ 			allwinner,pipeline = "de_be0-lcd0-hdmi";
+@@ -69,7 +69,7 @@
+ 			status = "disabled";
+ 		};
  
- Example:
-@@ -68,6 +72,7 @@ chosen {
- 		stride = <(1600 * 2)>;
- 		format = "r5g6b5";
- 		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
-+		lcd-supply = <&reg_dc1sw>;
- 		display = <&lcdc0>;
- 	};
- 	stdout-path = "display0";
+-		framebuffer@1 {
++		simplefb_lcd: framebuffer@1 {
+ 			compatible = "allwinner,simple-framebuffer",
+ 				     "simple-framebuffer";
+ 			allwinner,pipeline = "de_be0-lcd0";
 -- 
 2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
