@@ -1,39 +1,44 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/10] add support SATA for BMIPS_GENERIC
-Date: Fri, 23 Oct 2015 14:30:12 -0700
-Message-ID: <CAJiQ=7A6L1m3nd4UfU_EYE+LGi0mz6Jq9yy6xkfnOvJBSmsL6A@mail.gmail.com>
-References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
- <20151023035817.GA18907@mtj.duckdns.org> <CAGVrzcYLeoXDPkMKvAtfok1dwgGQDu06FxP05u6YiO9-nHJqqw@mail.gmail.com>
- <20151023203511.GN13239@google.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Consolidate SRAM bindings from all vendors
+Date: Fri, 23 Oct 2015 16:33:11 -0500
+Message-ID: <CAL_JsqKPd2vRZO-Y3aZKmS=RpKsg5+9+UHSQbb3yObB_VM0Dcw@mail.gmail.com>
+References: <1445564361-16974-1-git-send-email-k.kozlowski@samsung.com>
+ <562A8ED8.6060904@kernel.org> <562A9300.5060105@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151023203511.GN13239-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <562A9300.5060105@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-rockchip@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 1:35 PM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Oct 22, 2015 at 09:51:30PM -0700, Florian Fainelli wrote:
->> 2015-10-22 20:58 GMT-07:00 Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> I think we have a bit too many compatible strings defined, I need to
->> lookup tomorrow when I am back in the office which BCM7xxx started
->> featuring a SATA3 AHCI compliant core, it might be 7420, but I am not
->> sure
+On Fri, Oct 23, 2015 at 3:05 PM, Kukjin Kim <kgene@kernel.org> wrote:
+> On 10/24/15 04:47, Kukjin Kim wrote:
+>> On 10/23/15 10:39, Krzysztof Kozlowski wrote:
+>>> SRAM bindings for various SoCs, using the mmio-sram genalloc
+>>> API, are spread over different places - per SoC vendor. Since all of
+>>> these are quite similar (they depend on mmio-sram) move them to a common
+>>> place.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> Cc: Heiko Stuebner <heiko@sntech.de>
+>>> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+>>> Cc: Chen-Yu Tsai <wens@csie.org>
+>>> Cc: Kukjin Kim <kgene@kernel.org>
 >
-> I thought it was BCM7425, but you probably have the resources to check
-> better than I do.
+> Acked-by: Kukjin Kim <kgene@kernel.org>
+>
+>>> Suggested-by: Rob Herring <robh+dt@kernel.org>
+>>>
+>> Applied with Heiko and Maxime's ack.
+>>
+> + Sudeep
+>
+> Oops, I can't because of ..bindings/arm/arm,scpi.txt, this series should
+> be handled with "DT binding for ARM System Control and Power
+> Interface(SCPI) protocol"
 
-It was originally introduced on 7422 A0 (40nm) and the test chip that
-preceded it.  The production rev of 7422 uses the 7425 die, so
-"BCM7425" is a good enough answer for our purposes.
+I'll take it after the merge window.
 
-BCM7420, BCM7400, and other 65nm SoCs had a ServerWorks SATA2 core on
-an internal PCI-X bus.  These ran a modified version of sata_svw.c,
-and could support QDMA.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
