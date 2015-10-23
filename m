@@ -1,38 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/4] ARM: dts: uniphier: delete i2c aliases
-Date: Fri, 23 Oct 2015 22:16:29 +0200
-Message-ID: <4000897.7Un1B3qMyp@wuerfel>
-References: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com> <1445427390-22750-3-git-send-email-yamada.masahiro@socionext.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 00/10] add support SATA for BMIPS_GENERIC
+Date: Fri, 23 Oct 2015 13:35:11 -0700
+Message-ID: <20151023203511.GN13239@google.com>
+References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
+ <20151023035817.GA18907@mtj.duckdns.org>
+ <CAGVrzcYLeoXDPkMKvAtfok1dwgGQDu06FxP05u6YiO9-nHJqqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445427390-22750-3-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGVrzcYLeoXDPkMKvAtfok1dwgGQDu06FxP05u6YiO9-nHJqqw@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 October 2015 20:36:28 Masahiro Yamada wrote:
-> The user space should not expect that a particular I2C channel is
-> always visible through the same character device.
-> No reason to fix the I2C indexes with aliases.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> 
+On Thu, Oct 22, 2015 at 09:51:30PM -0700, Florian Fainelli wrote:
+> 2015-10-22 20:58 GMT-07:00 Tejun Heo <tj@kernel.org>:
+> I think we have a bit too many compatible strings defined, I need to
+> lookup tomorrow when I am back in the office which BCM7xxx started
+> featuring a SATA3 AHCI compliant core, it might be 7420, but I am not
+> sure
 
-As I said in my reply to the earlier mail, I didn't really like the
-idea of having holes in the numbering for the i2c controllers, but
-this new approach also doesn't look ideal.
+I thought it was BCM7425, but you probably have the resources to check
+better than I do.
 
-We should have stable bus numbers on any given board, and the aliases
-work well for that. I just don't think the aliases need to be stable
-between different boards just because they are based on the same
-SoC.
+There were also some small (probably mostly undocumented) bugfixes at
+some point. I think the early cores actually had problems with the
+upstream libahci. You might look at AHCI_HFLAG_DELAY_ENGINE for that, if
+you care.
 
-I'd suggest staying with the current slightly awkward approach though,
-to avoid regressions. Please send a follow-up patch to add the same
-aliases on the new boards and drop this patch, unless someone else
-can come up with a better idea.
+You might also notice that the "strict-ahci" stuff we were using got
+dropped:
 
-	Arnd
+commit f1df8641e27b7edb978bdc7aaf50c235bc9e8be9
+Author: Hans de Goede <hdegoede@redhat.com>
+Date:   Sat Feb 22 17:22:53 2014 +0100
+
+    ahci_platform: Drop support for ahci-strict platform device type
+
+But that's less relevant, now that there's a proper brcmstb driver.
+
+Brian
