@@ -1,96 +1,73 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 2/3] clk: bcm: Add BCM63138 clock support
-Date: Fri, 23 Oct 2015 10:39:36 -0700
-Message-ID: <562A70D8.1090401@broadcom.com>
-References: <1445621448-11894-1-git-send-email-f.fainelli@gmail.com>
- <1445621448-11894-3-git-send-email-f.fainelli@gmail.com>
+From: Brijesh Singh <brijeshkumar.singh@amd.com>
+Subject: Re: [PATCH v2] EDAC: Add ARM64 EDAC
+Date: Fri, 23 Oct 2015 12:58:29 -0500
+Message-ID: <562A7545.2050306@amd.com>
+References: <1445460097-10260-1-git-send-email-brijeshkumar.singh@amd.com>
+ <56282550.4000201@arm.com> <5628F6B5.5080701@amd.com>
+ <56299042.5090109@huawei.com> <562A033A.5050105@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1445621448-11894-3-git-send-email-f.fainelli@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-clk@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, rjui@broadcom.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <562A033A.5050105@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>, Hanjun Guo <guohanjun@huawei.com>, linux-arm-kernel@lists.infradead.org
+Cc: brijeshkumar.singh@amd.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, devicetree@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, Huxinwei <huxinwei@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
 
-You should probably add COMPILE_TEST to increase compiler code coverage.
+> So I checked the x86 code: the driver is always loaded as soon as the
+> hardware is there (looking at PCI device IDs from the on-chip
+> northbridge, for instance). The trick here is to have the Kconfig option
+> defaulting to "=n", so a kernel builder would have to explicitly enable
+> this. Android or embedded kernels wouldn't do this, for instance, while
+> a server distribution would do.
+> If a user doesn't want to be bothered with the driver, there is always
+> the possibility of blacklisting the module.
+> Setting a system policy is IMHO out of scope for a DT binding.
+> 
+Will update Kconfig to make it n by default.
 
-On 15-10-23 10:30 AM, Florian Fainelli wrote:
-> BCM63138 has a simple clocking domain which is primarily the ARMPLL
-> clocking complex, from which the ARM (CPU), APB and AXI clocks would be
-> derived from.
->
-> Since the ARMPLL controller is entirely compatible with the iProc ARM
-> PLL, we just initialize it without additional parameters.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->   drivers/clk/bcm/Kconfig       | 10 ++++++++++
->   drivers/clk/bcm/Makefile      |  1 +
->   drivers/clk/bcm/clk-bcm63xx.c | 22 ++++++++++++++++++++++
->   3 files changed, 33 insertions(+)
->   create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
->
-> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> index 85260fb96b36..eb4daed6aa56 100644
-> --- a/drivers/clk/bcm/Kconfig
-> +++ b/drivers/clk/bcm/Kconfig
-> @@ -1,3 +1,13 @@
-> +config CLK_BCM_63XX
-> +	bool "Broadcom BCM63xx clock support"
-> +	depends on ARCH_BCM_63XX
-|| COMPILE_TEST
-> +	depends on COMMON_CLK
-> +	select COMMON_CLK_IPROC
-> +	default y
-> +	help
-> +	  Enable common clock framework support for Broadcom BCM63xx DSL SoCs
-> +	  based on the ARM architecture
-> +
->   config CLK_BCM_KONA
->   	bool "Broadcom Kona CCU clock support"
->   	depends on ARCH_BCM_MOBILE || COMPILE_TEST
-> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> index 3fc95060d875..247c26750d8b 100644
-> --- a/drivers/clk/bcm/Makefile
-> +++ b/drivers/clk/bcm/Makefile
-> @@ -1,3 +1,4 @@
-> +obj-$(CONFIG_CLK_BCM_63XX)	+= clk-bcm63xx.o
->   obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona.o
->   obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
->   obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
-> diff --git a/drivers/clk/bcm/clk-bcm63xx.c b/drivers/clk/bcm/clk-bcm63xx.c
-> new file mode 100644
-> index 000000000000..b7e0469d0522
-> --- /dev/null
-> +++ b/drivers/clk/bcm/clk-bcm63xx.c
-> @@ -0,0 +1,22 @@
-> +/*
-> + * Copyright (C) 2015 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/of.h>
-> +#include "clk-iproc.h"
-> +
-> +static void __init bcm63138_armpll_init(struct device_node *node)
-> +{
-> +	iproc_armpll_setup(node);
-> +}
-> +CLK_OF_DECLARE(bcm63138_armpll, "brcm,bcm63138-armpll", bcm63138_armpll_init);
->
+>>> * Its possible that other SoC's might handle single-bit and double-bit errors differently compare to 
+>>>   Seattle platform. In Seattle platform both errors are handled by firmware but if other SoC 
+>>>   wants OS to handle these errors then they might need DT binding to provide the irq numbers etc.
+> 
+> What do you mean exactly with "firmware handles these errors"?
+> What would the firmware do? I guess just logging the error and then
+> possibly reset the register? How would this change the driver?
+> 
+On Seattle platform SoC generates a interrupt on both single bit and double bit error
+and that interrupt is handled by firmware, so we don't need to do anything in the driver.
+Driver just need to poll registers to log correctable errors (because they do not generate interrupt).
+This very driver is doing exactly what we want. DT binding is not required.
 
-Regards,
-Scott
+But Hanjun's comment on very first patch hinted me that there is possibility that
+SoC generate a interrupt on single bit and double bit but firmware does not handle it.
+In those cases driver will need be extended to handle interrupt.
+
+I will submit v3 for review with DT binding removed. We can revisit DT binding need in future.
+
+>> I totally agree with you here,  thanks for putting them together.
+>> Different SoCs may handle the error in different ways, we need
+>> bindings to specialize them, irq number is a good example :)
+> 
+> But how does this affect this very driver, polling just those two registers?
+> Where would the interrupt come into the game here? Where is the proposed
+> DT binding for that interrupt?
+> 
+> AFAICT EL3 firmware handling errors would just hide this information
+> from the driver, so if the f/w decides to "handle" uncorrectable ECC
+> errors in a fatal way, there is nothing the driver could do anyway, right?
+> 
+> Can you sketch a concrete example where we would actually need the
+> driver to know about the firmware capabilities?
+> 
+> Cheers,
+> Andre.
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
