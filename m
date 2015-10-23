@@ -1,57 +1,76 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 2/2] i2c: uniphier_f: add UniPhier FIFO-builtin I2C
- driver
-Date: Fri, 23 Oct 2015 13:49:15 +0200
-Message-ID: <20151023114915.GJ13380@katana>
-References: <1445597520-6299-1-git-send-email-yamada.masahiro@socionext.com>
- <1445597520-6299-3-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 05/11] dt-binding: Add ngpios property to GPIO controller node
+Date: Fri, 23 Oct 2015 06:51:28 -0500
+Message-ID: <CAL_Jsq+Va0ZnvNoqKWocFYE4_DD-A+2sQaLswy5_eO2ZHn+3Kw@mail.gmail.com>
+References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
+ <56293052.80402@broadcom.com> <CAL_JsqJP3SDwiQ95WLJo0isTTxsQkpXDNNBpfVJXqbK99qtC=g@mail.gmail.com>
+ <3735458.2h6HCQhAOs@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcccYpVZDxQ8hzPO"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445597520-6299-3-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-i2c@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kamal Dasu <kdasu.kdev@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Ray Jui <rjui@broadcom.com>, David Box <david.e.box@linux.intel.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Max Schwarz <max.schwarz@online.de>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Andrew Bresticker <abrestic@chromium.org>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Subhendu Sekhar Behera <sbehera@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <3735458.2h6HCQhAOs@avalon>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ray Jui <rjui@broadcom.com>, Pramod Kumar <pramodku@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 23, 2015 at 4:08 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Thursday 22 October 2015 18:41:05 Rob Herring wrote:
+>> On Thu, Oct 22, 2015 at 1:52 PM, Ray Jui wrote:
+>> > On 10/22/2015 11:43 AM, Rob Herring wrote:
+>> >> On Mon, Oct 19, 2015 at 12:43 AM, Pramod Kumar wrote:
+>> >>> Add ngpios property to the gpio controller's DT node so that controller
+>> >>> driver extracts total number of gpio lines present in controller
+>> >>> from DT and removes dependency on driver.
+>> >>>
+>> >>> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+>> >>> Reviewed-by: Ray Jui <rjui@broadcom.com>
+>> >>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>> >>> ---
+>> >>>
+>> >>>  Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt | 5 +++
+>> >>>  1 file changed, 5 insertions(+)
+>> >>>
+>> >>> diff --git
+>> >>> a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>> >>> b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>> >>> index f92b833..655a8d7 100644
+>> >>> --- a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>> >>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+>> >>>
+>> >>> @@ -10,6 +10,9 @@ Required properties:
+>> >>>       Define the base and range of the I/O address space that contains
+>> >>> the Cygnus
+>> >>>   GPIO/PINCONF controller registers
+>> >>>
+>> >>> +- ngpios:
+>> >>> +    Total number of GPIOs the controller provides
+>> >>
+>> >> This must be optional for compatibility and the driver needs to handle
+>> >> it not present.
+>> >
+>> > You meant to be compatible with existing Cygnus devices, correct?
+>> >
+>> > Just to clarify, here you suggest we still leave the existing hard coded
+>> > ngpios in the driver, in order to be compatible with all existing Cygnus
+>> > devices (while the Cygnus device tree changes to use ngpio is still being
+>> > merged and through different maintainer), and have all new iProc SoCs
+>> > switch to use ngpios from device tree, right?
+>>
+>> Yes, an existing dtb should continue to work with a new kernel. You
+>> can add the DT property to the older devices too and then eventually
+>> remove the hard coded values some time in the future. That could be
+>> immediately (don't care about compatibility at all), a couple of
+>> kernel cycles, never... It all depends on users of the impacted
+>> platforms.
+>
+> But shouldn't the property still be documented as required to ensure that new
+> DTs always include it ?
 
---HcccYpVZDxQ8hzPO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good point. If the intent is to eventually remove it from the driver,
+then yes. We probably need "required for new designs" as a category or
+maybe "recommended"? The wording is not so important here, but I'm
+thinking about as we try to standardize the naming.
 
-On Fri, Oct 23, 2015 at 07:52:00PM +0900, Masahiro Yamada wrote:
-> Add support for on-chip I2C controller used on newer UniPhier SoCs
-> such as PH1-Pro4, PH1-Pro5, etc.  This adapter is equipped with
-> 8-depth TX/RX FIFOs.
->=20
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Applied to for-next, thanks!
-
-
---HcccYpVZDxQ8hzPO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWKh67AAoJEBQN5MwUoCm2AcEQAK1G4AiCdmua6Sk2+r2hsQHH
-7/yHqS58TOzUItJ4FwP0zvMVf6UuNabOivF35eiwPJgVOGqNAI2Q3Twg2Yltrz3G
-Fua38ArehrJiL7qOMa22bHFmGYjq8DlCpNyQsAdkmf0FK/gNd660McF6BXrmOJ7k
-l76MOvOz+4cjB4pA0k/xwgqmY4ibOMAwlsX+Yd/iSnXwj64u9emxcBR8nYR5DRRL
-OsnAHuqecmN0GVQAuSqcsalONdRrDe9rXzexe5wOUF80KXmtR4ESPQP3m8OpC5Tw
-QDqK3IC/IbNu0FpAk0GP1eGyZtrCqj7FO6imNBmH47YSc9HA0HepLo+Zf9CRh3Io
-16j3iTVuolYQqDbipxgnT1fGqpUvNlk/9yL8Us5WjPWO5DfI2RZuSlxJjqqFi7g+
-CkqIm/SVOX689uFYsR+saZ3gNTTWdnloI28PxR1nZNqathLWXw0RYLmKKNErp7H2
-HaUrfaqUMWWB/KuepDxFiDwSVBDy6gc3N6VLCxHg1/3WQMgaMqO4HdZYJbo0DaM9
-OC1ttuo2Hx1sdicA52lBLW3zefUGxINs8/jpu+MUWhXsj6wH06MDHJ+3xmvcNFAa
-lUIaTse/yPj2tiI8M5BhaIaH9KuWDszGGijqZdkcgdkU/Hgn99ysxXyUUClmUGYM
-iIWk/GJXToqRyRaB0cat
-=tzko
------END PGP SIGNATURE-----
-
---HcccYpVZDxQ8hzPO--
+Rob
