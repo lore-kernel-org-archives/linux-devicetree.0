@@ -1,46 +1,62 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/4] ARM: dts: uniphier: delete i2c aliases
-Date: Sat, 24 Oct 2015 12:24:07 +0900
-Message-ID: <CAK7LNAQGGdcDq8Q=9LG2ev_O3eaH55Hq-Te5NZCTSuB-K+9dVw@mail.gmail.com>
-References: <1445427390-22750-1-git-send-email-yamada.masahiro@socionext.com>
-	<1445427390-22750-3-git-send-email-yamada.masahiro@socionext.com>
-	<4000897.7Un1B3qMyp@wuerfel>
+Subject: [PATCH] ARM: dts: uniphier: add I2C aliases for ProXstream2 boards
+Date: Sat, 24 Oct 2015 12:25:31 +0900
+Message-ID: <1445657131-6351-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4000897.7Un1B3qMyp@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2015-10-24 5:16 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wednesday 21 October 2015 20:36:28 Masahiro Yamada wrote:
->> The user space should not expect that a particular I2C channel is
->> always visible through the same character device.
->> No reason to fix the I2C indexes with aliases.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>
->
-> As I said in my reply to the earlier mail, I didn't really like the
-> idea of having holes in the numbering for the i2c controllers, but
-> this new approach also doesn't look ideal.
->
-> We should have stable bus numbers on any given board, and the aliases
-> work well for that. I just don't think the aliases need to be stable
-> between different boards just because they are based on the same
-> SoC.
->
-> I'd suggest staying with the current slightly awkward approach though,
-> to avoid regressions. Please send a follow-up patch to add the same
-> aliases on the new boards and drop this patch, unless someone else
-> can come up with a better idea.
->
+Add aliases to fix the I2C indexes like the other UniPhier boards.
 
-OK, will do.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ arch/arm/boot/dts/uniphier-proxstream2-gentil.dts | 4 ++++
+ arch/arm/boot/dts/uniphier-proxstream2-vodka.dts  | 4 ++++
+ 2 files changed, 8 insertions(+)
 
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts b/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
+index 5cb58b6..9d7ec5c 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
++++ b/arch/arm/boot/dts/uniphier-proxstream2-gentil.dts
+@@ -62,6 +62,10 @@
+ 		serial0 = &serial0;
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
++		i2c0 = &i2c0;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++		i2c6 = &i2c6;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts b/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
+index 76040bb..498acac 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
++++ b/arch/arm/boot/dts/uniphier-proxstream2-vodka.dts
+@@ -62,6 +62,10 @@
+ 		serial0 = &serial0;
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
++		i2c0 = &i2c0;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++		i2c6 = &i2c6;
+ 	};
+ };
+ 
 -- 
-Best Regards
-Masahiro Yamada
+1.9.1
