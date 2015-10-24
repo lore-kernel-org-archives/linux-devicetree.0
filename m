@@ -1,33 +1,81 @@
-From: Willy Tarreau <w@1wt.eu>
-Subject: Re: [PATCH 19/30] nfc: netlink: Add missing NFC_ATTR comments
-Date: Sat, 24 Oct 2015 09:01:30 +0200
-Message-ID: <20151024070130.GA5827@1wt.eu>
-References: <1445377701-8353-1-git-send-email-christophe-h.ricard@st.com> <1445377701-8353-20-git-send-email-christophe-h.ricard@st.com> <20151024064841.GE23609@zurbaran.home> <20151024065852.GA5823@1wt.eu>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81
+ tablet
+Date: Sat, 24 Oct 2015 09:09:45 +0200
+Message-ID: <20151024070945.GP10947@lukather>
+References: <1445572241-13259-1-git-send-email-wens@csie.org>
+ <1445572241-13259-5-git-send-email-wens@csie.org>
+ <20151023145309.GA1885@excalibur.cnev.de>
+ <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
+ <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i1d8offQF8oqidLm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151024065852.GA5823@1wt.eu>
-Sender: stable-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Christophe Ricard <christophe.ricard@gmail.com>, linux-nfc@ml01.01.org, christophe-h.ricard@st.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Karsten Merker <merker@debian.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Siarhei Siamashka <siarhei.siamashka@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 24, 2015 at 08:58:52AM +0200, Willy Tarreau wrote:
-> Hi Samuel,
-> 
-> On Sat, Oct 24, 2015 at 08:48:41AM +0200, Samuel Ortiz wrote:
-> > Hi Christophe,
-> > 
-> > On Tue, Oct 20, 2015 at 11:48:10PM +0200, Christophe Ricard wrote:
-> > > NFC_CMD_ACTIVATE_TARGET and NFC_ATTR_SE_PARAMS comments are missing.
-> > > 
-> > > Cc: stable@vger.kernel.org
-> > That's not a stable material.
-> 
-> Well, if it can help backport fixes later, at least it cannot harm.
 
-Ah sorry I thought you were objecting against a patch being part of
-a stable series under review. Then indeed that's not needed.
+--i1d8offQF8oqidLm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Willy
+Hi,
+
+On Fri, Oct 23, 2015 at 11:56:35PM +0800, Chen-Yu Tsai wrote:
+> >> as described in
+> >> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> >> here, as the display is in portrait mode while the touchscreen is
+> >> in landscape mode and needs to have the x and y axes swapped to
+> >> work in the same coordinate system as the display.
+> >>
+> >> Regarding the driver side: the goodix driver in kernel 4.3
+> >> doesn't yet support this property, but patches to add support for
+> >> it are on the linux-input list and should hopefully make it into
+> >> kernel 4.4.
+> >
+> > The DTS is already in Maxime's tree, and in sunxi-next. Feel free to
+> > send a follow-up patch adding them. I was waiting for those patches
+> > to be merged.
+>=20
+> Sorry, spoke too soon. Maxime hasn't pushed it out yet. Could you send
+> a patch adding touchscreen-swapped-x-y for Maxime to squash in?
+
+I did the last DT pull request for 4.4 yesterday, so I won't squash
+any patches.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--i1d8offQF8oqidLm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWKy65AAoJEBx+YmzsjxAgyCIP/2o9Q7JxdVllytw0GoFF0TIP
+YtdanIUQwcJARGOxdg63TKBMtaxPNMv3jbPalblMSFw4F4dVC6DMlnQXWDnOIZ67
+GsS+Dkqmk0b/BTBoNTxGh8H6On1ty4fw+LUiw57njcsmZV2NACZSrEqICTCw5JXL
+JnxdpNshd6YFkcxywdcrfaa/ocwCt71ah2ro+gJkpQ0PgyfOQVKZinYf6pRAIvED
+M/3ptTTnlU4DOGG6fiDBTzJX7Z3KmTdYt+/bG92Oozp/uQYg/kl/5BJOjRrCKxHg
+qm14ShQll580TYHcknED/JwerXy35Iw4Ix9j1ZZQXWPY9+ejb0lhXZgCjVqz2Weh
+d+Gk5AClv3V2J0lbBWcQ4wyqRzykU5cJulYawznJOwVUppZp0VSVIhs5FxfmU0YW
+8Z0rbYn/pUCO5Gg3Buz72zRTrvrIGDE/V1JR35vtzziIaNn2BybjrrQ9tjq7ZuyE
+Y2ROIQIBDKKqXUJIvBF7PsJCiRe+c0n9WKWeVxADQKcOUDrzWhHdf0utldEBQHl7
+4VBA7VO5GCEsJ33yuM6fhMc3VHJCCg8M5E/wLo7t6A7FxStDX6i2sP/ZG5DN3kZd
+7dxdovMR7ZNEXwZvLT4+y+PLXXov2QwM5IIIvrAAF3xbFeV6PLUC8OJ3ALphhIGt
+Fsr8uuQ/Zo+/01Mgslh7
+=61SF
+-----END PGP SIGNATURE-----
+
+--i1d8offQF8oqidLm--
