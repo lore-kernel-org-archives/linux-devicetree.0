@@ -1,81 +1,153 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81
- tablet
-Date: Sat, 24 Oct 2015 09:09:45 +0200
-Message-ID: <20151024070945.GP10947@lukather>
-References: <1445572241-13259-1-git-send-email-wens@csie.org>
- <1445572241-13259-5-git-send-email-wens@csie.org>
- <20151023145309.GA1885@excalibur.cnev.de>
- <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
- <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Sat, 24 Oct 2015 09:13:28 +0200
+Message-ID: <20151024071328.GQ10947@lukather>
+References: <1445444428-4652-1-git-send-email-jenskuske@gmail.com>
+ <1445444428-4652-2-git-send-email-jenskuske@gmail.com>
+ <20151023181406.GK10947@lukather>
+ <20151023212013.50bcbe4a@OPI2>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i1d8offQF8oqidLm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="zX3fAKQGR/qU2rkc"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBGW7VSYQKGQE2GBC3UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Karsten Merker <merker@debian.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Siarhei Siamashka <siarhei.siamashka@gmail.com>
+In-Reply-To: <20151023212013.50bcbe4a@OPI2>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---i1d8offQF8oqidLm
-Content-Type: text/plain; charset=us-ascii
+--zX3fAKQGR/qU2rkc
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Oct 23, 2015 at 09:20:13PM +0200, Jean-Francois Moine wrote:
+> On Fri, 23 Oct 2015 20:14:06 +0200
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > On Wed, Oct 21, 2015 at 06:20:27PM +0200, Jens Kuske wrote:
+> > > +		bus_gates: clk@01c20060 {
+> > > +			#clock-cells = <1>;
+> > > +			compatible = "allwinner,sun8i-h3-bus-gates-clk";
+> > > +			reg = <0x01c20060 0x14>;
+> > > +			clock-indices = <5>, <6>, <8>,
+> > > +					<9>, <10>, <13>,
+> > > +					<14>, <17>, <18>,
+> > > +					<19>, <20>,
+> > > +					<21>, <23>,
+> > > +					<24>, <25>,
+> > > +					<26>, <27>,
+> > > +					<28>, <29>,
+> > > +					<30>, <31>, <32>,
+> > > +					<35>, <36>, <37>,
+> > > +					<40>, <41>, <43>,
+> > > +					<44>, <52>, <53>,
+> > > +					<54>, <64>,
+> > > +					<65>, <69>, <72>,
+> > > +					<76>, <77>, <78>,
+> > > +					<96>, <97>, <98>,
+> > > +					<112>, <113>,
+> > > +					<114>, <115>, <116>,
+> > > +					<128>, <135>;
+> > > +			clocks = <&ahb1>, <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb2>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb2>,
+> > > +				 <&ahb2>, <&ahb2>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&ahb1>, <&ahb1>,
+> > > +				 <&ahb1>, <&apb1>,
+> > > +				 <&apb1>, <&apb1>, <&apb1>,
+> > > +				 <&apb1>, <&apb1>, <&apb1>,
+> > > +				 <&apb2>, <&apb2>, <&apb2>,
+> > > +				 <&apb2>, <&apb2>,
+> > > +				 <&apb2>, <&apb2>, <&apb2>,
+> > > +				 <&ahb1>, <&ahb1>;  
+> > 
+> > This is not really what I had in mind...
+> > 
+> > This IP has 2 parents, and only two parents. The mapping between the
+> > IPs should be done in the driver itself, not in the DT where it is
+> > very error prone and barely readable.
+> > 
+> > And note that I never have expected you to use clk-simple-gates
+> > either. This is a complicated clock, unlike the other we've seen so
+> > far, it definitely deserves a driver of its own.
+> 
+> It seems that Allwinner puts the gate definitions anywhere in the array
+> of registers, so, I think that the H3 scheme will not be the last
+> complicated one,
 
-On Fri, Oct 23, 2015 at 11:56:35PM +0800, Chen-Yu Tsai wrote:
-> >> as described in
-> >> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> >> here, as the display is in portrait mode while the touchscreen is
-> >> in landscape mode and needs to have the x and y axes swapped to
-> >> work in the same coordinate system as the display.
-> >>
-> >> Regarding the driver side: the goodix driver in kernel 4.3
-> >> doesn't yet support this property, but patches to add support for
-> >> it are on the linux-input list and should hopefully make it into
-> >> kernel 4.4.
-> >
-> > The DTS is already in Maxime's tree, and in sunxi-next. Feel free to
-> > send a follow-up patch adding them. I was waiting for those patches
-> > to be merged.
->=20
-> Sorry, spoke too soon. Maxime hasn't pushed it out yet. Could you send
-> a patch adding touchscreen-swapped-x-y for Maxime to squash in?
+Maybe, but that's the first one. It doesn't prevent us from reusing
+the driver later if it happens.
 
-I did the last DT pull request for 4.4 yesterday, so I won't squash
-any patches.
+> and if the parent clocks are in the code instead of in the DT, we
+> will have more and more code to develop.
+
+I never asked that either.
+
+> An other way to describe the gates would be to add containers per parent
+> (with still a small patch in the clk-simple-gates):
+> 
+> 	bus_gates: clk@01c20060 {
+> 		#clock-cells = <1>;
+> 		compatible = "allwinner,sun8i-h3-bus-gates-clk";
+> 		reg = <0x01c20060 0x14>;
+> 		ahb1_gates {
+> 			clocks = <&ahb1>;
+> 			clock-indices = <5>, <6>, <8>,
+> 					<9>, <10>, <13>,
+> 					<14>, <18>,
+> 					<19>, <20>,
+> 					...;
+> 			};
+> 			clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
+> 				"ahb1_mmc1", "ahb1_mmc2", "ahb1_nand",
+> 				"ahb1_sdram", "ahb1_ts",
+> 				"ahb1_hstimer", "ahb1_spi0",
+> 				...;
+> 		};
+> 		ahb2_gates {
+> 			clocks = <&ahb2>;
+> 			clock-indices = <17>, <29>,
+> 					<30>, <31>, <32>,
+> 					...;
+> 			clock-output-names = "ahb2_gmac", "ahb2_ohic1",
+> 					"ahb2_ohic2", "ahb2_ohic3", "ahb1_ve",
+> 					...;
+> 		};
+> 		apb1_gates {
+> 			...
+> 		};
+> 		apb2_gates {
+> 			...
+> 		};
+> 	};
+
+Or simply
+
+bus_gates {
+	clocks = <&ahb1>, <&ahb2>;
+	clock-indices = <5>, <6>, <8>, ...
+	clock-output-names = "bus_ce", "bus_dma", "bus_mmc0"
+};
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---i1d8offQF8oqidLm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWKy65AAoJEBx+YmzsjxAgyCIP/2o9Q7JxdVllytw0GoFF0TIP
-YtdanIUQwcJARGOxdg63TKBMtaxPNMv3jbPalblMSFw4F4dVC6DMlnQXWDnOIZ67
-GsS+Dkqmk0b/BTBoNTxGh8H6On1ty4fw+LUiw57njcsmZV2NACZSrEqICTCw5JXL
-JnxdpNshd6YFkcxywdcrfaa/ocwCt71ah2ro+gJkpQ0PgyfOQVKZinYf6pRAIvED
-M/3ptTTnlU4DOGG6fiDBTzJX7Z3KmTdYt+/bG92Oozp/uQYg/kl/5BJOjRrCKxHg
-qm14ShQll580TYHcknED/JwerXy35Iw4Ix9j1ZZQXWPY9+ejb0lhXZgCjVqz2Weh
-d+Gk5AClv3V2J0lbBWcQ4wyqRzykU5cJulYawznJOwVUppZp0VSVIhs5FxfmU0YW
-8Z0rbYn/pUCO5Gg3Buz72zRTrvrIGDE/V1JR35vtzziIaNn2BybjrrQ9tjq7ZuyE
-Y2ROIQIBDKKqXUJIvBF7PsJCiRe+c0n9WKWeVxADQKcOUDrzWhHdf0utldEBQHl7
-4VBA7VO5GCEsJ33yuM6fhMc3VHJCCg8M5E/wLo7t6A7FxStDX6i2sP/ZG5DN3kZd
-7dxdovMR7ZNEXwZvLT4+y+PLXXov2QwM5IIIvrAAF3xbFeV6PLUC8OJ3ALphhIGt
-Fsr8uuQ/Zo+/01Mgslh7
-=61SF
------END PGP SIGNATURE-----
-
---i1d8offQF8oqidLm--
+--zX3fAKQGR/qU2rkc--
