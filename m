@@ -1,45 +1,108 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host" port
-Date: Sat, 24 Oct 2015 14:26:21 +0200
-Message-ID: <1633226.9pFzvpSks6@diego>
-References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
+Date: Sat, 24 Oct 2015 15:51:46 +0200
+Message-ID: <4624753.sJZLTYh1pZ@vostro.rjw.lan>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com> <1445549230.701.116.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445624891-31680-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1445549230.701.116.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hu Mingkai-B21284 <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 23. Oktober 2015, 11:28:07 schrieb Douglas Anderson:
-> The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
-> has a hardware errata that causes everything to get confused when we get
-> a remote wakeup.  It appears that the "port reset" bit that's in the USB
-> phy (located in the rk3288 GRF) fixes things up and appears safe to do.
+On Thursday, October 22, 2015 04:27:10 PM Scott Wood wrote:
+> On Thu, 2015-10-22 at 15:04 +0200, Tomeu Vizoso wrote:
+> > On 22 October 2015 at 00:51, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > On Wed, 2015-10-21 at 08:44 -0500, Rob Herring wrote:
+> > > > On Wed, Oct 21, 2015 at 12:54 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > wrote:
+> > > > > On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
+> > > > > > Instead of trying to match and probe platform and AMBA devices right
+> > > > > > after each is registered, delay their probes until 
+> > > > > > device_initcall_sync.
+> > > > > > 
+> > > > > > This means that devices will start probing once all built-in drivers
+> > > > > > have registered, and after all platform and AMBA devices from the DT
+> > > > > > have been registered already.
+> > > > > > 
+> > > > > > This allows us to prevent deferred probes by probing dependencies on
+> > > > > > demand.
+> > > > > > 
+> > > > > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > > > > > ---
+> > > > > > 
+> > > > > > Changes in v4:
+> > > > > > - Also defer probes of AMBA devices registered from the DT as they 
+> > > > > > can
+> > > > > >   also request resources.
+> > > > > > 
+> > > > > >  drivers/of/platform.c | 11 ++++++++---
+> > > > > >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF 
+> > > > > platform
+> > > > > device, and it must be probed before pcibios_init() which is a
+> > > > > subsys_initcall(), or else the PCI bus never gets scanned.
+> > > > 
+> > > > Thanks for the report. This is probably getting dropped, but it could
+> > > > be disabled for PPC.
+> > > 
+> > > I don't think that adding another arbitrary arch difference would be the
+> > > right solution.
+> > 
+> > I think Rob meant temporarily disable it while things get fixed. At
+> > least, 
 > 
-> This series of patches exports the "port reset" from the PHY and then
-> hooks it up to dwc2 through a quirk.
+> So, what is the permanent fix for the swiotlb issue (or more generally, the 
+> inability to have a late_initcall that runs after non-module, non-hotplug 
+> platform devices have been probed)?
 > 
-> I've tested this series atop a bit of a conglomeration of Heiko's github
-> "somewhat stable" branch (v4.3-rc3-876-g6509232) but with Greg KH's
-> usb-next merged in.
+> > I don't see any reason why PPC wouldn't benefit from this
+> > series.
+> 
+> It's not clear to me what the benefit of this is at all, much less for PPC.   
+> What is the fundamental problem with deferred probes?  In the cover letter 
+> you say this change saves 2.3 seconds, but where is that time being consumed? 
+>  Are the drivers taking too long in their probe function trying to initialize 
+> and then deferring, rather than checking for dependencies up front?  Or are 
+> there really so many devices and such a pessimal ordering that most of the 
+> time is spent iterating through and reordering the list, with each defer 
+> happening quickly?
+> 
+> Even if something different does need to be done at this level, forcing all 
+> OF platform devices to be probed at the late_initcall level seems quite 
+> intrusive.
 
-I've been involved in the earlier revisions already, so this version already 
-implements the review-comments I had. I've also gave this a spin on 4.3-rc6 
-with usb-next merged in on a rk3288-firefly, so
+Totally agreed.
 
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> You limited it to OF because people complained that other things 
+> will break.
 
+Right.
 
-If the first two patches get picked up, I'll pick the two dts patches 
-afterwards.
+And I'm not sure why that was regarded as a good enough reason to do it.
 
+> Things still broke.
 
-Thanks
-Heiko
+Yes, they did.
+
+> Surely there's a better way to address the 
+> problem.  Can't the delay be requested by drivers that might otherwise need 
+> to defer (which could be done incrementally, focusing on the worst 
+> performance problems), rather than enabling it for everything?
+
+Well, I was suggesting to use an opt-in flag there, but I'm not sure if Tomeu
+took that into consideration.
+
+In any case, probing is just one aspect of a deeper issue, which is that
+we have no way to represent functional dependencies between devices.
+
+Thanks,
+Rafael
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
