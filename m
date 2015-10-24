@@ -1,40 +1,64 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 04/22] of: add function to allow probing a device from a OF node
-Date: Sat, 24 Oct 2015 16:28:28 +0200
-Message-ID: <3439880.XMRknxAf8e@vostro.rjw.lan>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <CAAObsKCAX4DQGydQoYjJEYKTOEqpVozXdHnqXWdNYVkLsg7BVg@mail.gmail.com> <20151022235419.GF29919@sirena.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host"
+ port
+Date: Sat, 24 Oct 2015 10:10:23 -0500
+Message-ID: <562B9F5F.1080800@kernel.org>
+References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20151022235419.GF29919@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445624891-31680-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 23, 2015 08:54:19 AM Mark Brown wrote:
+On 10/23/2015 01:28 PM, Douglas Anderson wrote:
+> The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
+> has a hardware errata that causes everything to get confused when we get
+> a remote wakeup.  It appears that the "port reset" bit that's in the USB
+> phy (located in the rk3288 GRF) fixes things up and appears safe to do.
 > 
-> --7cm2iqirTL37Ot+N
-> Content-Type: text/plain; charset=us-ascii
-> Content-Disposition: inline
+> This series of patches exports the "port reset" from the PHY and then
+> hooks it up to dwc2 through a quirk.
 > 
-> On Thu, Oct 22, 2015 at 03:03:37PM +0200, Tomeu Vizoso wrote:
-> > On 22 October 2015 at 03:06, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> I've tested this series atop a bit of a conglomeration of Heiko's github
+> "somewhat stable" branch (v4.3-rc3-876-g6509232) but with Greg KH's
+> usb-next merged in.
 > 
-> > > Same question as from Greg: How does a subsystem know whether or not to use
-> > > this function?
+> These patches currently conflict with patches that I posted previously
+> to enable USB wakeup from S3, specifically:
+> * https://patchwork.kernel.org/patch/6727081/
+> * https://patchwork.kernel.org/patch/6727121/
+> ...those patches no longer apply anyway, so presumably they need to be
+> reposted and I can do so later atop these patches.
 > 
-> > Maybe I don't understand the comment, but as the commit message says,
-> > subsystems can use this when looking up resources for drivers. Or you
-> > mean that this information should be in the API docs?
 > 
-> I'm pretty sure what he's suggesting here is changing to "should always"
-> (ie, explain the situations when a subsystem would do this, including
-> decision criteria if it's optional).
+> Douglas Anderson (4):
+>   phy: rockchip-usb: Support the PHY's "port reset"
+>   usb: dwc2: optionally assert phy "port reset" when waking up
+>   ARM: dts: rockchip: Enable the USB phys as reset providers on rk3288
+>   ARM: dts: rockchip: Point rk3288 dwc2 usb at phy port reset
+> 
+>  .../devicetree/bindings/phy/rockchip-usb-phy.txt   |  6 ++
+>  Documentation/devicetree/bindings/usb/dwc2.txt     |  7 ++
+>  arch/arm/boot/dts/rk3288.dtsi                      |  8 +++
+>  drivers/phy/phy-rockchip-usb.c                     | 74 ++++++++++++++++++++++
+>  drivers/usb/dwc2/core.h                            |  5 ++
+>  drivers/usb/dwc2/core_intr.c                       |  7 ++
+>  drivers/usb/dwc2/platform.c                        | 13 ++++
+>  7 files changed, 120 insertions(+)
 
-Right.
+A DT reset controller seems like a bit of an overkill here. I think this
+would be much more simple if we just add a phy reset hook to the phy
+subsystem.
 
-Thanks,
-Rafael
+Rob
 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
