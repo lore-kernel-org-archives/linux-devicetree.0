@@ -1,97 +1,43 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Sat, 24 Oct 2015 19:34:03 +0200
-Message-ID: <CAMuHMdUyu6w0LAoH78H2+VHczrWwozDKMX2j8_A4V=jgz0snwA@mail.gmail.com>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
-	<20151020122448.20687.11926@quantum>
-	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
-	<20151020130004.20687.91058@quantum>
-	<CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
-	<CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
-	<20151024011003.GE19782@codeaurora.org>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Sat, 24 Oct 2015 19:55:51 +0200
+Message-ID: <CAMuHMdUOtx+rsV9FkYqgj3g5S0cqD6qH=gp6p-69Ord8gykY3w@mail.gmail.com>
+References: <20151018192931.GY14956@sirena.org.uk>
+	<20151018193757.GA9147@kroah.com>
+	<20151018195330.GB14956@sirena.org.uk>
+	<CAAObsKB2BUZ-smid45wOdAQw6h2yNqCydk+azAFNk69ewHJtZQ@mail.gmail.com>
+	<5627B677.5090109@gmail.com>
+	<20151021162758.GP32054@sirena.org.uk>
+	<5627D6E0.5020708@gmail.com>
+	<CAL_Jsq+FPtCuBnte2HTgbdpNYM=v_kLaCRcOC1kMaCQwVC=5Kw@mail.gmail.com>
+	<562808AF.7090406@gmail.com>
+	<CAAObsKAkyjdvNOS3+nuT0N9sudUFLsZXFtcm6Y038p+HSdsZsg@mail.gmail.com>
+	<20151022144405.GC21861@kroah.com>
+	<562930AB.1070203@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151024011003.GE19782@codeaurora.org>
+In-Reply-To: <562930AB.1070203@gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gma>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Thu, Oct 22, 2015 at 8:53 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> I have been defaulting to the position that has been asserted by
+> the device tree maintainters, that probe deferrals work just fine
+> for at least the majority of cases (and is the message I have been
+> sharing in my conference presentations about device tree).  But I
+> suspect that there is at least a small minority of cases that are not
+> well served by probe deferral.  (Not to be read as an endorsement of
+> this specific patch series, just a generic observation.)
 
-On Sat, Oct 24, 2015 at 3:10 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 10/22, Geert Uytterhoeven wrote:
->> On Tue, Oct 20, 2015 at 3:07 PM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->> > On Tue, Oct 20, 2015 at 3:00 PM, Michael Turquette
->> > <mturquette@baylibre.com> wrote:
->> >> Quoting Geert Uytterhoeven (2015-10-20 05:31:12)
->> >>> On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette
->> >>> <mturquette@baylibre.com> wrote:
->> >
->> >> The bindings should go in for 4.4, but if the driver is slated for 4.5
->> >> then can you investigate this some more? Stephen and I are on a mission
->> >> to have _real_ clk drivers.
->> >
->> > Sure, I'll have a deeper look.
->>
->> And so I did (on r8a7791/koelsch).
->>
->> As I want to have as much clock data/code __init as possible (think
->> multi-platform kernels --- pinmux data is a disaster here), I have to use
->> platform_driver_probe().
->>
->>   - Calling platform_driver_probe() from core_initcall() or postcore_initcall()
->>     is too early, as the platform device for the CPG hasn't been created yet.
->>     Hence the CPG Clock Domain isn't registered, and all devices fail to probe
->>     as they can't be attached to their Clock Domain.
->>       -> This is where the -ENOENT came from (I incorrectly assumed it came
->>          from the clock code; sorry for that), and it's converted into
->>          -EPROBE_DEFER by genpd_dev_pm_attach().
->>
->>   - Calling platform_driver_probe() from arch_initcall() is too late, as the
->>     IRQC is initialized first (it's located before the CPG in .dtsi).
->>     Hence the IRQC can't find it's Clock Domain, and its probe is deferred.
->>     IRQC will be reprobed later, but in the mean time the Ethernet PHY can't
->>     find its IRQ, as the of_mdio code uses irq_of_parse_and_map(), which
->>     plainly ignores EPROBE_DEFER :-(
->>     Nevertheless, Ethernet works...
->>
->>   - Using subsys_initcall() and later causes even more probe deferral.
->>
->> So that's why I went with CLK_OF_DECLARE() again...
->
-> Understandable for the few clocks that are used by the interrupt
-> controller, but for the other clocks, could those be registered
-> from a real platform device driver probe path? I've been
+Yep, once in a while people still stumble on obscure subsystems and drivers
+not supporting probe deferral. Usually they don't fail with a big bang, so
+everything seems fine.
 
-In this particular case, that would be the IRQC module clocks and its
-parent, the CP clock, which is derived directly from the external crystal.
-
-If we ever have to do this for the GIC, that's gonna be several more
-clocks (INTC-SYS / ZS / PLL1 / MAIN / external crystal).
-
-> considering making some API that lets devices associate with the
-> clocks that the file had to register with CLK_OF_DECLARE(). The
-> driver would have to be builtin then (no modules) but otherwise
-> we would be able to benefit from the device driver model for most
-> other clocks.
-
-To be honest, that still feels like a hack to me.
-
-I hope dependencies and probe order, and obscure drivers not handling
-deferred probe correctly, will be solved later sooner or later,
-so hacks like that are no longer needed.
-
-For new SoCs like r8a7795 we can probably just make it a real platform driver,
-and make sure the irqc node is located after the cpg node in the .dtsi.
-
-Upon second thought, that may even be feasible for existing SoCs, as
-they would need a DTS update to make use of the new bindings/driver anyway,
-so the irqc node can be moved at the same time. Backwards compatibility
-through the old bindings/drivers would keep on using CLK_OF_DECLARE().
+E.g. last week's "of_mdiobus_register_phy() and deferred probe"
+(https://lkml.org/lkml/2015/10/22/377).
 
 Gr{oetje,eeting}s,
 
