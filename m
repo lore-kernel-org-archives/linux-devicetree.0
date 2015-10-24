@@ -1,75 +1,103 @@
+Return-Path: <karsten@excalibur.cnev.de>
+Date: Sat, 24 Oct 2015 22:57:16 +0200
+From: Karsten Merker <merker@debian.org>
+Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81
+ tablet
+Message-ID: <20151024205716.GA16644@excalibur.cnev.de>
+References: <1445572241-13259-1-git-send-email-wens@csie.org>
+ <1445572241-13259-5-git-send-email-wens@csie.org>
+ <20151023145309.GA1885@excalibur.cnev.de>
+ <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
+ <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com>
+ <20151023165641.GB1885@excalibur.cnev.de>
+ <CAGb2v66VRDPmm_AuVq4WWx-LWFCge+UNUZ51bEehEGMyO3KdAA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CE8AEFC3-74F2-44B9-B7B6-EBDD1966FB3A@marvell.com>
-References: <1445602986-3254-1-git-send-email-cuissard@marvell.com>
-	<1445602986-3254-10-git-send-email-cuissard@marvell.com>
-	<CAL_JsqJ7a+MNA8BPseGu_L+3yMr=jK-3YiSo+HZkoqJq2XpWgg@mail.gmail.com>
-	<CE8AEFC3-74F2-44B9-B7B6-EBDD1966FB3A@marvell.com>
-Date: Fri, 23 Oct 2015 16:34:01 -0500
-Message-ID: <CAL_JsqL4YS0T7PiFa=9wNHfaRjkc1tLL7vGRqWcrr6QdQfPSpA@mail.gmail.com>
-Subject: Re: [PATCH v3 9/9] NFC: nfcmrvl: update device tree bindings for
- Marvell NFC
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Vincent Cuissard <cuissard@marvell.com>
-Cc: "linux-nfc@lists.01.org" <linux-nfc@lists.01.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v66VRDPmm_AuVq4WWx-LWFCge+UNUZ51bEehEGMyO3KdAA@mail.gmail.com>
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Karsten Merker <merker@debian.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Siarhei Siamashka <siarhei.siamashka@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Oct 23, 2015 at 8:47 AM, Vincent Cuissard <cuissard@marvell.com> wr=
-ote:
-> Hi Rob,
->
->> Le 23 oct. 2015 =C3=A0 15:18, Rob Herring <robh@kernel.org> a =C3=A9crit=
- :
->>
->>> On Fri, Oct 23, 2015 at 7:23 AM, Vincent Cuissard <cuissard@marvell.com=
-> wrote:
->>> Align NFC bindgins to use marvell instead of mrvl.
->>>
->>> Signed-off-by: Vincent Cuissard <cuissard@marvell.com>
->>> ---
->>> Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt | 12 ++++++------
->>> drivers/nfc/nfcmrvl/i2c.c                             |  2 +-
->>> drivers/nfc/nfcmrvl/spi.c                             |  2 +-
->>> drivers/nfc/nfcmrvl/uart.c                            |  2 +-
->>> 4 files changed, 9 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt b/Do=
-cumentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->>> index 41058fc..0f95924 100644
->>> --- a/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->>> +++ b/Documentation/devicetree/bindings/net/nfc/nfcmrvl.txt
->>> @@ -2,9 +2,9 @@
->>>
->>> Required properties:
->>> - compatible: Should be:
->>> -  - "mrvl,nfc-uart" for UART devices
->>> -  - "mrvl,nfc-i2c" for I2C devices
->>> -  - "mrvl,nfc-spi" for SPI devices
->>> +  - "marvell,nfc-uart" for UART devices
->>> +  - "marvell,nfc-i2c" for I2C devices
->>> +  - "marvell,nfc-spi" for SPI devices
->>
->> There is no point in changing these and doing so breaks backwards compat=
-ibility.
->
-> There is no break since these 2 drivers are new. In the same patchset I f=
-irst set mrvl and replace it to marvell since I figured out that this is th=
-e name for all other Marvell drivers.
+On Sat, Oct 24, 2015 at 11:15:51AM +0800, Chen-Yu Tsai wrote:
+> On Sat, Oct 24, 2015 at 12:56 AM, Karsten Merker <merker@debian.org> wrote:
+> > On Fri, Oct 23, 2015 at 11:56:35PM +0800, Chen-Yu Tsai wrote:
+> >> On Fri, Oct 23, 2015 at 11:46 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> >> > On Fri, Oct 23, 2015 at 10:53 PM, Karsten Merker <merker@debian.org> wrote:
+> >> >> On Fri, Oct 23, 2015 at 11:50:41AM +0800, Chen-Yu Tsai wrote:
+> > [...]
+> >> >>> +/ {
+> >> >>> +     model = "MSI Primo81 tablet";
+> >> >>> +     compatible = "msi,primo81", "allwinner,sun6i-a31s";
+> >> >>> +};
+> > [...]
+> >> >>> +&i2c1 {
+> >> >>> +     pinctrl-names = "default";
+> >> >>> +     pinctrl-0 = <&i2c1_pins_a>;
+> >> >>> +     status = "okay";
+> >> >>> +
+> >> >>> +     ctp@5d {
+> >> >>> +             pinctrl-names = "default";
+> >> >>> +             pinctrl-0 = <&gt911_int_primo81>;
+> >> >>> +             compatible = "goodix,gt911";
+> >> >>> +             reg = <0x5d>;
+> >> >>> +             interrupt-parent = <&pio>;
+> >> >>> +             interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>; /* PA3 */
+> >> >>
+> >> >> I'd like to add a
+> >> >>
+> >> >>                 touchscreen-swapped-x-y = "true";
+> >> >>
+> >> >> as described in
+> >> >> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> >> >> here, as the display is in portrait mode while the touchscreen is
+> >> >> in landscape mode and needs to have the x and y axes swapped to
+> >> >> work in the same coordinate system as the display.
+> >> >>
+> >> >> Regarding the driver side: the goodix driver in kernel 4.3
+> >> >> doesn't yet support this property, but patches to add support for
+> >> >> it are on the linux-input list and should hopefully make it into
+> >> >> kernel 4.4.
+> >> >
+> >> > The DTS is already in Maxime's tree, and in sunxi-next. Feel free to
+> >> > send a follow-up patch adding them. I was waiting for those patches
+> >> > to be merged.
+> >>
+> >> Sorry, spoke too soon. Maxime hasn't pushed it out yet. Could you send
+> >> a patch adding touchscreen-swapped-x-y for Maxime to squash in?
+> >
+> > I'm happy to do so, but I have just stumbled over a problem with
+> > actually building the dtb for testing - it fails with
+> >
+> >   arch/arm/boot/dts/sun6i-a31s-primo81.dts:242.1-14 Label or path simplefb_lcd not found
+> >
+> > The dts references simplefb_lcd:
+> >
+> > +&simplefb_lcd {
+> > +       vcc-lcd-supply = <&reg_dc1sw>;
+> > +       vdd-mipi-bridge-supply = <&reg_eldo3>;
+> > +};
+> >
+> > but I don't see where it would be defined. This is on the current
+> > sunxi/for-next branch of
+> > https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git
+> > with the Primo81 dts patch on top. Am I perhaps missing some
+> > required additional patch here?
+> 
+> Yes. The previous patch that adds labels to the simplefb nodes.
 
+Thanks for the info, that one doesn't seem to have landed in
+my inbox.
 
->
->> These bindings have a bigger issue in that it doesn't describe the
->> hardware, but rather just something to bind the Linux driver. The
->> compatible strings should be tied to what NFC chip you have (i.e. the
->> part number).
->
-> Chips with same physical interface are compatible so I don't need to use =
-a part number that's why I using a generic binding.
+> Both patches are now in sunxi/for-next in Maxime's tree now.
 
-They=20
+I've pulled them in the meantime and will post a follow-up patch
+immediately.
 
->
-> Br,
-> --
-> Vincent
+Regards,
+Karsten
+-- 
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
