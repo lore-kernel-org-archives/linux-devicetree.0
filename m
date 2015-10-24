@@ -1,96 +1,97 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Sun, 25 Oct 2015 07:14:57 +0900
-Message-ID: <20151024221457.GS29919@sirena.org.uk>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
- <20151022164724.GZ8232@sirena.org.uk>
- <562A2C2F.1020808@ti.com>
- <20151023231822.GQ29919@sirena.org.uk>
- <562ACCCC.503@ti.com>
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH 0/3] ARM: dts: Enable Exynos RNG module
+Date: Sun, 25 Oct 2015 01:58:15 +0200
+Message-ID: <562C1B17.3080303@math.uni-bielefeld.de>
+References: <1445230834-32689-1-git-send-email-k.kozlowski@samsung.com>
+ <56251627.4050908@math.uni-bielefeld.de> <562581BD.3070609@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NAmHCRPXNp23hR9r"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <562ACCCC.503-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <562581BD.3070609@samsung.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello Krzysztof,
 
---NAmHCRPXNp23hR9r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Oct 23, 2015 at 07:11:56PM -0500, Andrew F. Davis wrote:
-> On 10/23/2015 06:18 PM, Mark Brown wrote:
+Krzysztof Kozlowski wrote:
+> On 20.10.2015 01:11, Tobias Jakobi wrote:
+>> Hello Krzysztof,
+>>
+>> I can confirm that this also works on a Odroid-X2, so I guess it's safe
+>> to enable the PRNG for all Exynos4412-based Odroid devices.
+> 
+> Sure, I can send a patch for that. I can test it later also on Odroid-U3.
+Thanks already!
 
-> >mt6397 doesn't do this, it doesn't have a compatible string at all (it's
-> >doing what I'm recommending that you do).  The SPMI devices are
-> >standalone devices, their parent device is actually functioning as a bus
-> >controller here (it's really a microcontroller inside the SoC).  The
-> >Palmas is part of how we realised this was a problem.
 
-> mt6397: Documentation/devicetree/bindings/mfd/mt6397.txt
-> Doing exactly what I'm doing,
 
-Tbe binding document is buggy and doesn't reflect the code, there's no
-compatible string in the driver.
+>> Any chance that you might also take a look at the other hwcrypto stuff
+>> on the SoC ('samsung,exynos4210-secss' compatible)?
+> 
+> What do you mean? The s5p-sss driver already supports Device Tree.
+The driver supports DT, but it doesn't really work.
 
-> The Palmas is a great example of why this is a good idea, there are
-> so many spins on this common base, and look how we can re-use sub-nodes:
+I'm using the following DT entry to let the driver probe correctly:
+https://github.com/tobiasjakobi/linux-odroid/commit/82c00cddb5cbf89fad994784c28c8125beae8e13
 
-There's no real reuse here, we have to have a table in both the MFD and
-regulator listing every variant.  Remember that the only reason the user
-is having to type most of those subnodes at all is that we pushed things
-into the DT, if someone forgot to include one of the nodes in their
-board DT then they won't be able to use the relevant feature even if
-it's there.
+But the crypto self-test fails on boot:
+alg: skcipher: encryption failed on test 1 for ecb-aes-s5p: ret=22
 
-> >The fact that the SoC DT is not distinct from the board DT is actually
-> >one of the problems with the way we're using DT at the minute, it means
-> >that DTBs are much less stable than they should be since we can enhance
-> >support for SoCs but DTBs need regenerating to take advantage of it.  It
-> >would be much better if the boards just referenced the SoC they use and
-> >pulled in a separate definition of the SoC (DT overlays will make it
-> >much more tractable to implement that if someone has time...).
 
-> I figured this can already be done by keeping the SoC stuff in dtsi files?
+Another problems is that SSS and PRNG can't be used at the same time,
+since they both use common hardware resources (I think it was IO).
 
-That doesn't help with the above issue, include files get processed at
-the time the binary is generated.
 
-> Well I have to match the sub-devices on something, it's ether the node name
-> or the compatible string, so they might have to get used to typing :)
+With best wishes,
+Tobias
 
-No, that's not the case - remember, users don't have to write a new
-driver every time they instantiate a device on a board.  They're going
-to have to list the in-use regulators one way or another but if we have
-the extra compatible for regulators they have to bind both the core
-device (which is going to be required anyway due to the control bus) and
-the subnode saying that it has regulators (which we knew anyway as soon
-as we knew we had the core device).
 
---NAmHCRPXNp23hR9r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWLALhAAoJECTWi3JdVIfQ09sH/3mGN9ky9ogqxLmC15pUDj4b
-ipp8GZre6415gU7rqSy7elmqkRKJPSYyZcc55V4W1eCdcOtQ3yciHvS7VhH3StK4
-SMhTiM3PCjWfpVpDkL3tly/kq41I34y2Wqa3t2X6tecMJ5NJLTejX24m2gat8TtR
-ORKlKIkBvu+EfQLOk6xnOB7TMD8qaG1bdAGOQobuBkLkvbzf1ZYTkhLSphXfHTs7
-Ny7VKYe5JHeUci5y6HBkHpEAmOhI+TTDYP8VIK9AMkpky6m1cWK3sRe3OgKzWL49
-VjArkIw7uUggMp4igI+CauYPWdrO3JWUkSh37CvQTx9zVmc5MH+SNEEsxN4MtgA=
-=Ltje
------END PGP SIGNATURE-----
-
---NAmHCRPXNp23hR9r--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Best regards,
+> Krzysztof
+> 
+>>
+>> With best wishes,
+>> Tobias
+>>
+>>
+>> Krzysztof Kozlowski wrote:
+>>> Hi,
+>>>
+>>>
+>>> The patchset adds necessary clock from Security SubSystem (SSS)
+>>> and enables the PRNG module of Exynos for Trats2 board.
+>>>
+>>> The first patch (clock) is required for other ones so please
+>>> take everything in one step.
+>>>
+>>> The actual Device Tree support (and compatible) was sent in separate
+>>> patch:
+>>>  - https://patchwork.kernel.org/patch/7432891/
+>>>  - http://marc.info/?l=linux-crypto-vger&m=144522952725052&w=2
+>>>
+>>> The device can be tested (after applying both patchsets) with:
+>>> $ echo exynos > /sys/class/misc/hw_random/rng_current
+>>> $ dd if=/dev/hwrng of=/dev/null bs=1 count=16
+>>>
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>> Krzysztof Kozlowski (3):
+>>>   clk: samsung: exynos4: Add SSS gate clock
+>>>   ARM: dts: Add PRNG module for exynos4
+>>>   ARM: dts: Enable PRNG module on exynos4412-trats2
+>>>
+>>>  arch/arm/boot/dts/exynos4.dtsi          | 8 ++++++++
+>>>  arch/arm/boot/dts/exynos4412-trats2.dts | 4 ++++
+>>>  drivers/clk/samsung/clk-exynos4.c       | 1 +
+>>>  include/dt-bindings/clock/exynos4.h     | 1 +
+>>>  4 files changed, 14 insertions(+)
+>>>
+>>
+>>
+> 
