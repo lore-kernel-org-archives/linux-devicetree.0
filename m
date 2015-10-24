@@ -1,82 +1,105 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v2] ARM: dts: am335x-boneblack: Use pinctrl constants and AM33XX_IOPAD macro
-Date: Sat, 24 Oct 2015 12:05:13 -0500
-Message-ID: <1445706313-14761-1-git-send-email-afd@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
+Date: Sat, 24 Oct 2015 19:34:03 +0200
+Message-ID: <CAMuHMdUyu6w0LAoH78H2+VHczrWwozDKMX2j8_A4V=jgz0snwA@mail.gmail.com>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
+	<20151020122448.20687.11926@quantum>
+	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
+	<20151020130004.20687.91058@quantum>
+	<CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
+	<CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
+	<20151024011003.GE19782@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151024011003.GE19782@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Using constants for pinctrl allows better readability and removes
-redundancy with comments. AM33XX_IOPAD allows us to use part of the
-pinctrl physical address as in the TRM instead of an offset.
+Hi Stephen,
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- arch/arm/boot/dts/am335x-boneblack.dts | 44 +++++++++++++++++-----------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+On Sat, Oct 24, 2015 at 3:10 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 10/22, Geert Uytterhoeven wrote:
+>> On Tue, Oct 20, 2015 at 3:07 PM, Geert Uytterhoeven
+>> <geert@linux-m68k.org> wrote:
+>> > On Tue, Oct 20, 2015 at 3:00 PM, Michael Turquette
+>> > <mturquette@baylibre.com> wrote:
+>> >> Quoting Geert Uytterhoeven (2015-10-20 05:31:12)
+>> >>> On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette
+>> >>> <mturquette@baylibre.com> wrote:
+>> >
+>> >> The bindings should go in for 4.4, but if the driver is slated for 4.5
+>> >> then can you investigate this some more? Stephen and I are on a mission
+>> >> to have _real_ clk drivers.
+>> >
+>> > Sure, I'll have a deeper look.
+>>
+>> And so I did (on r8a7791/koelsch).
+>>
+>> As I want to have as much clock data/code __init as possible (think
+>> multi-platform kernels --- pinmux data is a disaster here), I have to use
+>> platform_driver_probe().
+>>
+>>   - Calling platform_driver_probe() from core_initcall() or postcore_initcall()
+>>     is too early, as the platform device for the CPG hasn't been created yet.
+>>     Hence the CPG Clock Domain isn't registered, and all devices fail to probe
+>>     as they can't be attached to their Clock Domain.
+>>       -> This is where the -ENOENT came from (I incorrectly assumed it came
+>>          from the clock code; sorry for that), and it's converted into
+>>          -EPROBE_DEFER by genpd_dev_pm_attach().
+>>
+>>   - Calling platform_driver_probe() from arch_initcall() is too late, as the
+>>     IRQC is initialized first (it's located before the CPG in .dtsi).
+>>     Hence the IRQC can't find it's Clock Domain, and its probe is deferred.
+>>     IRQC will be reprobed later, but in the mean time the Ethernet PHY can't
+>>     find its IRQ, as the of_mdio code uses irq_of_parse_and_map(), which
+>>     plainly ignores EPROBE_DEFER :-(
+>>     Nevertheless, Ethernet works...
+>>
+>>   - Using subsys_initcall() and later causes even more probe deferral.
+>>
+>> So that's why I went with CLK_OF_DECLARE() again...
+>
+> Understandable for the few clocks that are used by the interrupt
+> controller, but for the other clocks, could those be registered
+> from a real platform device driver probe path? I've been
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index eadbba3..346f529 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -36,32 +36,32 @@
- &am33xx_pinmux {
- 	nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
- 		pinctrl-single,pins = <
--			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
--			0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
--			0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
--			0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
--			0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
--			0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
-+			AM33XX_IOPAD(0x9b0, (PIN_OUTPUT_PULLDOWN | MUX_MODE3))	/* xdma_event_intr0 */
-+			AM33XX_IOPAD(0x8a0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data0.lcd_data0 */
-+			AM33XX_IOPAD(0x8a4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data1.lcd_data1 */
-+			AM33XX_IOPAD(0x8a8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data2.lcd_data2 */
-+			AM33XX_IOPAD(0x8ac, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data3.lcd_data3 */
-+			AM33XX_IOPAD(0x8b0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data4.lcd_data4 */
-+			AM33XX_IOPAD(0x8b4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data5.lcd_data5 */
-+			AM33XX_IOPAD(0x8b8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data6.lcd_data6 */
-+			AM33XX_IOPAD(0x8bc, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data7.lcd_data7 */
-+			AM33XX_IOPAD(0x8c0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data8.lcd_data8 */
-+			AM33XX_IOPAD(0x8c4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data9.lcd_data9 */
-+			AM33XX_IOPAD(0x8c8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data10.lcd_data10 */
-+			AM33XX_IOPAD(0x8cc, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data11.lcd_data11 */
-+			AM33XX_IOPAD(0x8d0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data12.lcd_data12 */
-+			AM33XX_IOPAD(0x8d4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data13.lcd_data13 */
-+			AM33XX_IOPAD(0x8d8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data14.lcd_data14 */
-+			AM33XX_IOPAD(0x8dc, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data15.lcd_data15 */
-+			AM33XX_IOPAD(0x8e0, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_vsync.lcd_vsync */
-+			AM33XX_IOPAD(0x8e4, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_hsync.lcd_hsync */
-+			AM33XX_IOPAD(0x8e8, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_pclk.lcd_pclk */
-+			AM33XX_IOPAD(0x8ec, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_ac_bias_en.lcd_ac_bias_en */
- 		>;
- 	};
- 	nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
- 		pinctrl-single,pins = <
--			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
-+			AM33XX_IOPAD(0x9b0, (PIN_OUTPUT_PULLDOWN | MUX_MODE3))	/* xdma_event_intr0 */
- 		>;
- 	};
- };
--- 
-1.9.1
+In this particular case, that would be the IRQC module clocks and its
+parent, the CP clock, which is derived directly from the external crystal.
+
+If we ever have to do this for the GIC, that's gonna be several more
+clocks (INTC-SYS / ZS / PLL1 / MAIN / external crystal).
+
+> considering making some API that lets devices associate with the
+> clocks that the file had to register with CLK_OF_DECLARE(). The
+> driver would have to be builtin then (no modules) but otherwise
+> we would be able to benefit from the device driver model for most
+> other clocks.
+
+To be honest, that still feels like a hack to me.
+
+I hope dependencies and probe order, and obscure drivers not handling
+deferred probe correctly, will be solved later sooner or later,
+so hacks like that are no longer needed.
+
+For new SoCs like r8a7795 we can probably just make it a real platform driver,
+and make sure the irqc node is located after the cpg node in the .dtsi.
+
+Upon second thought, that may even be feasible for existing SoCs, as
+they would need a DTS update to make use of the new bindings/driver anyway,
+so the irqc node can be moved at the same time. Backwards compatibility
+through the old bindings/drivers would keep on using CLK_OF_DECLARE().
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
