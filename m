@@ -1,228 +1,91 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v4 2/8] clk: rockchip: add dt-binding header for rk3036
-Date: Sat, 24 Oct 2015 18:30:23 +0800
-Message-ID: <1445682629-21632-3-git-send-email-zhengxing@rock-chips.com>
-References: <1445682629-21632-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445682629-21632-1-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/8] Build and support rk3036 SoC platform
+Date: Sat, 24 Oct 2015 18:30:21 +0800
+Message-ID: <1445682629-21632-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the dt-bindings header for the rk3036, that gets shared between
-the clock controller and the clock references in the dts.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
----
+Hi,
+  We need to support rk3036 soc platform via upstream, there are
+3 primary parts for the initial release of minimum system: dts,
+pinctrl, and clock tree for rk3036, and additional, we can use
+these startup and run to init processs.
 
-Changes in v4: None
+Thanks.
 
- include/dt-bindings/clock/rk3036-cru.h |  195 ++++++++++++++++++++++++++++++++
- 1 file changed, 195 insertions(+)
+Changed in v4:
+- add some basic IP modules on rk3036.dtsi
+- optimized supporting smp codes
+
+Changed in v3:
+- optimized some codes based on v2
+- removed the patch "initial set time for rtc-hym8563" (useless)
+- removed the patch "pinctrl" (approved)
+
+Changed in v2:
+- based on v1, add clock controller documentation
+- enable timer5 startup
+- add smp for cpu1
+- initial set time for rtc-hym8563
+
+Changes in v1:
+- add dts, pinctrl and clock tree for rk3036 soc platform
+
+The patchset (8):
+8) rockchip: make sure timer5 is enabled on rk3036 platforms
+7) ARM: dts: enable smp for rk3036
+6) ARM: rockchip: add support smp for rk3036
+5) ARM: dts: rockchip: add core rk3036 dts
+4) clk: rockchip: add new pll-type for rk3036 and similar socs
+3) clk: rockchip: add clock controller for rk3036
+2) clk: rockchip: add dt-binding header for rk3036
+1) dt-bindings: add documentation of rk3036 clock controller
+
+
+Changes in v4:
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+Heiko Stuebner (1):
+  ARM: rockchip: add support smp for rk3036
+
+Xing Zheng (7):
+  dt-bindings: add documentation of rk3036 clock controller
+  clk: rockchip: add dt-binding header for rk3036
+  clk: rockchip: add clock controller for rk3036
+  clk: rockchip: add new pll-type for rk3036 and similar socs
+  ARM: dts: rockchip: add core rk3036 dts
+  ARM: dts: enable smp for rk3036
+  rockchip: make sure timer5 is enabled on rk3036 platforms
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |    1 +
+ .../bindings/clock/rockchip,rk3036-cru.txt         |   56 ++
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/rk3036-evb.dts                   |   64 +++
+ arch/arm/boot/dts/rk3036.dtsi                      |  541 ++++++++++++++++++++
+ arch/arm/mach-rockchip/platsmp.c                   |   45 +-
+ arch/arm/mach-rockchip/rockchip.c                  |   44 +-
+ drivers/clk/rockchip/Makefile                      |    1 +
+ drivers/clk/rockchip/clk-pll.c                     |  243 ++++++++-
+ drivers/clk/rockchip/clk-rk3036.c                  |  500 ++++++++++++++++++
+ drivers/clk/rockchip/clk.h                         |   30 ++
+ include/dt-bindings/clock/rk3036-cru.h             |  195 +++++++
+ 12 files changed, 1691 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+ create mode 100644 arch/arm/boot/dts/rk3036-evb.dts
+ create mode 100644 arch/arm/boot/dts/rk3036.dtsi
+ create mode 100644 drivers/clk/rockchip/clk-rk3036.c
  create mode 100644 include/dt-bindings/clock/rk3036-cru.h
 
-diff --git a/include/dt-bindings/clock/rk3036-cru.h b/include/dt-bindings/clock/rk3036-cru.h
-new file mode 100644
-index 0000000..b0da216
---- /dev/null
-+++ b/include/dt-bindings/clock/rk3036-cru.h
-@@ -0,0 +1,195 @@
-+/*
-+ * Copyright (c) 2015 Rockchip Electronics Co. Ltd.
-+ * Author: Xing Zheng <zhengxing@rock-chips.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_ROCKCHIP_RK3036_H
-+#define _DT_BINDINGS_CLK_ROCKCHIP_RK3036_H
-+
-+/* core clocks */
-+#define PLL_APLL		1
-+#define PLL_DPLL		2
-+#define PLL_GPLL		3
-+#define ARMCLK			4
-+
-+/* sclk gates (special clocks) */
-+#define SCLK_GPU		64
-+#define SCLK_SPI		65
-+#define SCLK_SDMMC		68
-+#define SCLK_SDIO		69
-+#define SCLK_EMMC		71
-+#define SCLK_NANDC		76
-+#define SCLK_UART0		77
-+#define SCLK_UART1		78
-+#define SCLK_UART2		79
-+#define SCLK_I2S		82
-+#define SCLK_SPDIF		83
-+#define SCLK_TIMER0		85
-+#define SCLK_TIMER1		86
-+#define SCLK_TIMER2		87
-+#define SCLK_TIMER3		88
-+#define SCLK_OTGPHY0		93
-+#define SCLK_LCDC		100
-+#define SCLK_HDMI		109
-+#define SCLK_HEVC		111
-+#define SCLK_I2S_OUT		113
-+#define SCLK_SDMMC_DRV		114
-+#define SCLK_SDIO_DRV		115
-+#define SCLK_EMMC_DRV		117
-+#define SCLK_SDMMC_SAMPLE	118
-+#define SCLK_SDIO_SAMPLE	119
-+#define SCLK_EMMC_SAMPLE	121
-+#define SCLK_PVTM_CORE          123
-+#define SCLK_PVTM_GPU           124
-+#define SCLK_PVTM_VIDEO         125
-+#define SCLK_MAC		151
-+#define SCLK_MACREF		152
-+#define SCLK_SFC		160
-+
-+#define DCLK_LCDC		190
-+
-+/* aclk gates */
-+#define ACLK_DMAC2		194
-+#define ACLK_LCDC		197
-+#define ACLK_VIO		203
-+#define ACLK_VCODEC		208
-+#define ACLK_CPU		209
-+#define ACLK_PERI		210
-+
-+/* pclk gates */
-+#define PCLK_GPIO0		320
-+#define PCLK_GPIO1		321
-+#define PCLK_GPIO2		322
-+#define PCLK_GRF		329
-+#define PCLK_I2C0		332
-+#define PCLK_I2C1		333
-+#define PCLK_I2C2		334
-+#define PCLK_SPI		338
-+#define PCLK_UART0		341
-+#define PCLK_UART1		342
-+#define PCLK_UART2		343
-+#define PCLK_PWM		350
-+#define PCLK_TIMER		353
-+#define PCLK_HDMI		360
-+#define PCLK_CPU		362
-+#define PCLK_PERI		363
-+#define PCLK_DDRUPCTL		364
-+#define PCLK_WDT		368
-+#define PCLK_ACODEC		369
-+
-+/* hclk gates */
-+#define HCLK_OTG0		449
-+#define HCLK_OTG1		450
-+#define HCLK_NANDC		453
-+#define HCLK_SDMMC		456
-+#define HCLK_SDIO		457
-+#define HCLK_EMMC		459
-+#define HCLK_I2S		462
-+#define HCLK_LCDC		465
-+#define HCLK_ROM		467
-+#define HCLK_VIO_BUS		472
-+#define HCLK_VCODEC		476
-+#define HCLK_CPU		477
-+#define HCLK_PERI		478
-+
-+#define CLK_NR_CLKS		(HCLK_PERI + 1)
-+
-+/* soft-reset indices */
-+#define SRST_CORE0		0
-+#define SRST_CORE1		1
-+#define SRST_CORE0_DBG		4
-+#define SRST_CORE1_DBG		5
-+#define SRST_CORE0_POR		8
-+#define SRST_CORE1_POR		9
-+#define SRST_L2C		12
-+#define SRST_TOPDBG		13
-+#define SRST_STRC_SYS_A		14
-+#define SRST_PD_CORE_NIU	15
-+
-+#define SRST_TIMER2		16
-+#define SRST_CPUSYS_H		17
-+#define SRST_AHB2APB_H		19
-+#define SRST_TIMER3		20
-+#define SRST_INTMEM		21
-+#define SRST_ROM		22
-+#define SRST_PERI_NIU		23
-+#define SRST_I2S		24
-+#define SRST_DDR_PLL		25
-+#define SRST_GPU_DLL		26
-+#define SRST_TIMER0		27
-+#define SRST_TIMER1		28
-+#define SRST_CORE_DLL		29
-+#define SRST_EFUSE_P		30
-+#define SRST_ACODEC_P		31
-+
-+#define SRST_GPIO0		32
-+#define SRST_GPIO1		33
-+#define SRST_GPIO2		34
-+#define SRST_UART0		39
-+#define SRST_UART1		40
-+#define SRST_UART2		41
-+#define SRST_I2C0		43
-+#define SRST_I2C1		44
-+#define SRST_I2C2		45
-+#define SRST_SFC		47
-+
-+#define SRST_PWM0		48
-+#define SRST_DAP		51
-+#define SRST_DAP_SYS		52
-+#define SRST_GRF		55
-+#define SRST_PERIPHSYS_A	57
-+#define SRST_PERIPHSYS_H	58
-+#define SRST_PERIPHSYS_P	59
-+#define SRST_CPU_PERI		61
-+#define SRST_EMEM_PERI		62
-+#define SRST_USB_PERI		63
-+
-+#define SRST_DMA2		64
-+#define SRST_MAC		66
-+#define SRST_NANDC		68
-+#define SRST_USBOTG0		69
-+#define SRST_OTGC0		71
-+#define SRST_USBOTG1		72
-+#define SRST_OTGC1		74
-+#define SRST_DDRMSCH		79
-+
-+#define SRST_MMC0		81
-+#define SRST_SDIO		82
-+#define SRST_EMMC		83
-+#define SRST_SPI0		84
-+#define SRST_WDT		86
-+#define SRST_DDRPHY		88
-+#define SRST_DDRPHY_P		89
-+#define SRST_DDRCTRL		90
-+#define SRST_DDRCTRL_P		91
-+
-+#define SRST_HDMI_P		96
-+#define SRST_VIO_BUS_H		99
-+#define SRST_UTMI0		103
-+#define SRST_UTMI1		104
-+#define SRST_USBPOR		105
-+
-+#define SRST_VCODEC_A		112
-+#define SRST_VCODEC_H		113
-+#define SRST_VIO1_A		114
-+#define SRST_HEVC		115
-+#define SRST_VCODEC_NIU_A	116
-+#define SRST_LCDC1_A		117
-+#define SRST_LCDC1_H		118
-+#define SRST_LCDC1_D		119
-+#define SRST_GPU		120
-+#define SRST_GPU_NIU_A		122
-+
-+#define SRST_DBG_P		131
-+
-+#endif
 -- 
 1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
