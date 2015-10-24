@@ -1,76 +1,94 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
-Date: Sat, 24 Oct 2015 10:47:49 +0200
-Message-ID: <20151024104749.179dab64@OPI2>
-References: <1445444428-4652-1-git-send-email-jenskuske@gmail.com>
-	<1445444428-4652-2-git-send-email-jenskuske@gmail.com>
-	<20151023181406.GK10947@lukather>
-	<20151023212013.50bcbe4a@OPI2>
-	<20151024071328.GQ10947@lukather>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
+From: Siarhei Siamashka <siarhei.siamashka@gmail.com>
+Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81
+ tablet
+Date: Sat, 24 Oct 2015 12:33:03 +0300
+Message-ID: <20151024123303.3617260e@i7>
+References: <1445572241-13259-1-git-send-email-wens@csie.org>
+ <1445572241-13259-5-git-send-email-wens@csie.org>
+ <20151023145309.GA1885@excalibur.cnev.de>
+ <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBS4LVWYQKGQE53LCYBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151024071328.GQ10947@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?UTF-8?B?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Karsten Merker <merker@debian.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 24 Oct 2015 09:13:28 +0200
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hello,
 
-> Or simply
->=20
-> bus_gates {
-> 	clocks =3D <&ahb1>, <&ahb2>;
-> 	clock-indices =3D <5>, <6>, <8>, ...
-> 	clock-output-names =3D "bus_ce", "bus_dma", "bus_mmc0"
-> };
+On Fri, 23 Oct 2015 23:46:59 +0800
+Chen-Yu Tsai <wens@csie.org> wrote:
 
-I don't understand: the apb1, apb2, ahb1 and ahb2 clocks may be
-programmed independently to different frequencies and you have to know
-which of them is the parent of each leaf clock.
+> On Fri, Oct 23, 2015 at 10:53 PM, Karsten Merker <merker@debian.org> wrote:
+> > On Fri, Oct 23, 2015 at 11:50:41AM +0800, Chen-Yu Tsai wrote:
+> >
+> >> From: Karsten Merker <merker@debian.org>
+> >>
+> >> The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
+> >> 768x1024 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
+> >> rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
+> >> and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
+> >> (both volume buttons are also connected to the UBOOT_SEL pin). The
+> >
+> > Hello Chen-Yu,
+> >
+> > the volume button function is something that I wanted to confirm
+> > again but forgot to ask previously: Siarhei had pointed out that
+> > only the volume+ button triggers UBOOT_SEL, but for me actually
+> > both volume buttons work as described above.  Could you
+> > cross-check that on your Primo81?
+> 
+> IIRC both work. I can test next week.
 
-So, either you hard-code the parents as Jens did in a first proposal,
-or you define the full list of parents in the DT as in the last
-proposal, or you use a container per parent in the DT as I proposed.
+Both buttons work this way because the Allwinner's firmware
+additionally checks the buttons state via LRADC and switches
+into the FEL mode in a software way. But if somebody flashes a
+broken bootloader to NAND (something that is recognized by the
+BROM, but dies instead of booting) then we may potentially have
+a bricked device because booting from NAND has the highest
+priority on A31s.
 
-There could be an other solution using the output clock name to define
-the parent clock:
+The UBOOT_SEL pin on the SoC can be used to change the default
+boot order and allow to boot from the SD card or USB first
+regardless of what is in NAND. So if at least one of the hardware
+buttons is connected to the UBOOT_SEL pin, then we have an
+unbrickable device.
 
-bus_gates {
-	clocks =3D <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
-	clock-indices =3D <5>, <6>, <8>, ...
-	clock-output-names =3D "ahb1_ce", "ahb1_dma", "ahb1_mmc0"
-};
+Checking whether the hardware button is really connected to the
+UBOOT_SEL pin can be done by reading the SRAM_VER_REG hardware
+register and looking at the BOOT_SEL_PAD_STA bits:
+    http://linux-sunxi.org/SRAM_Controller_Register_Guide#SRAM_VER_REG
 
-with the documentation:
+And this can be done, for example, via using the devmem2 tool:
+    "devmem2 0x01c00024"
 
-	"the clocks MUST be defined in order: ahb1, ahb2, apb1, apb2."
+Alternatively, it is also possible to use a modified variant of the
+dialog tool, which is additionally polling the state of the FEL
+button and interpreting long FEL button press as KEY_ENTER and
+short press as KEY_DOWN:
+    https://github.com/ssvb/dialog-sunxi
 
-and the code
+This patched dialog tool is a part of the board type selection stub,
+used for creating universal board-independent SD card based installers
+for Allwinner devices, which has been available for Linux distribution
+maintainers since a while ago:
+    http://lists.denx.de/pipermail/u-boot/2015-January/202306.html
 
-	if (strncmp(clock_name, "ahb1", 4) =3D=3D 0)
-		clk_parent =3D of_clk_get_parent_name(node, 0);
-	else if (..)
+Regarding the UBOOT_SEL pin in the MSI Primo81 tablet. After
+buying this tablet, I was happy to confirm that at least the
+"volume+" button is connected to the UBOOT_SEL pin, making the
+tablet unbrickable. However appears that it was not just some sane
+decision made by MSI engineers, but in fact connecting both LRADC
+and UBOOT_SEL to tablet buttons is a part of the standard Allwinner's
+reference schematics. One can search for "a20_pad_std_v1_1.pdf",
+"a13-sch.pdf", "A31_PAD_STD_V1_90_130225.pdf" documents on the
+Internet to find this information. Basically, we should expect
+the majority of Allwinner A31(s) tablets to have a hardware FEL
+button and be perfectly unbrickable :-)
 
-but it seems a bit hacky.
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Best regards,
+Siarhei Siamashka
