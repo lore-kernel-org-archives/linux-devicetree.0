@@ -1,101 +1,85 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v7 14/17] drm: bridge: analogix/dp: add max link rate and lane count limit for RK3288
-Date: Sat, 24 Oct 2015 11:06:40 +0800
-Message-ID: <1445656003-15300-4-git-send-email-ykk@rock-chips.com>
-References: <1445599415-30856-1-git-send-email-ykk@rock-chips.com>
- <1445656003-15300-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1445656003-15300-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, joe@perches.com, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
-Cc: Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v4 4/4] ARM: dts: sun6i: Add dts file for MSI Primo81 tablet
+Date: Sat, 24 Oct 2015 11:15:51 +0800
+Message-ID: <CAGb2v66VRDPmm_AuVq4WWx-LWFCge+UNUZ51bEehEGMyO3KdAA@mail.gmail.com>
+References: <1445572241-13259-1-git-send-email-wens@csie.org>
+ <1445572241-13259-5-git-send-email-wens@csie.org> <20151023145309.GA1885@excalibur.cnev.de>
+ <CAGb2v67HO5isvUxG09traLUBrBp-0Bea9cXn_O0oqBCTYtfN=w@mail.gmail.com>
+ <CAGb2v64xESxh0Dzsh9GijYZADbB-SM99ZVtu=9FGB2Gfz2-Z6Q@mail.gmail.com> <20151023165641.GB1885@excalibur.cnev.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151023165641.GB1885@excalibur.cnev.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Karsten Merker <merker@debian.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Siarhei Siamashka <siarhei.siamashka@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-There are some IP limit on rk3288 that only support 4 physical lanes
-of 2.7/1.6 Gbps/lane, so seprate them out by device_type flag.
+On Sat, Oct 24, 2015 at 12:56 AM, Karsten Merker <merker@debian.org> wrote:
+> On Fri, Oct 23, 2015 at 11:56:35PM +0800, Chen-Yu Tsai wrote:
+>> On Fri, Oct 23, 2015 at 11:46 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>> > On Fri, Oct 23, 2015 at 10:53 PM, Karsten Merker <merker@debian.org> wrote:
+>> >> On Fri, Oct 23, 2015 at 11:50:41AM +0800, Chen-Yu Tsai wrote:
+> [...]
+>> >>> +/ {
+>> >>> +     model = "MSI Primo81 tablet";
+>> >>> +     compatible = "msi,primo81", "allwinner,sun6i-a31s";
+>> >>> +};
+> [...]
+>> >>> +&i2c1 {
+>> >>> +     pinctrl-names = "default";
+>> >>> +     pinctrl-0 = <&i2c1_pins_a>;
+>> >>> +     status = "okay";
+>> >>> +
+>> >>> +     ctp@5d {
+>> >>> +             pinctrl-names = "default";
+>> >>> +             pinctrl-0 = <&gt911_int_primo81>;
+>> >>> +             compatible = "goodix,gt911";
+>> >>> +             reg = <0x5d>;
+>> >>> +             interrupt-parent = <&pio>;
+>> >>> +             interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>; /* PA3 */
+>> >>
+>> >> I'd like to add a
+>> >>
+>> >>                 touchscreen-swapped-x-y = "true";
+>> >>
+>> >> as described in
+>> >> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>> >> here, as the display is in portrait mode while the touchscreen is
+>> >> in landscape mode and needs to have the x and y axes swapped to
+>> >> work in the same coordinate system as the display.
+>> >>
+>> >> Regarding the driver side: the goodix driver in kernel 4.3
+>> >> doesn't yet support this property, but patches to add support for
+>> >> it are on the linux-input list and should hopefully make it into
+>> >> kernel 4.4.
+>> >
+>> > The DTS is already in Maxime's tree, and in sunxi-next. Feel free to
+>> > send a follow-up patch adding them. I was waiting for those patches
+>> > to be merged.
+>>
+>> Sorry, spoke too soon. Maxime hasn't pushed it out yet. Could you send
+>> a patch adding touchscreen-swapped-x-y for Maxime to squash in?
+>
+> I'm happy to do so, but I have just stumbled over a problem with
+> actually building the dtb for testing - it fails with
+>
+>   arch/arm/boot/dts/sun6i-a31s-primo81.dts:242.1-14 Label or path simplefb_lcd not found
+>
+> The dts references simplefb_lcd:
+>
+> +&simplefb_lcd {
+> +       vcc-lcd-supply = <&reg_dc1sw>;
+> +       vdd-mipi-bridge-supply = <&reg_eldo3>;
+> +};
+>
+> but I don't see where it would be defined. This is on the current
+> sunxi/for-next branch of
+> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git
+> with the Primo81 dts patch on top. Am I perhaps missing some
+> required additional patch here?
 
-Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
-- Seprate the link-rate and lane-count limit out with the device_type
-  flag. (Thierry)
+Yes. The previous patch that adds labels to the simplefb nodes.
+Both patches are now in sunxi/for-next in Maxime's tree now.
 
-Changes in v3: None
-Changes in v2: None
-
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 33 ++++++++++++++--------
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  4 +--
- 2 files changed, 23 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index 6307060..563ffb1d 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -890,8 +890,8 @@ static void analogix_dp_commit(struct analogix_dp_device *dp)
- 		return;
- 	}
- 
--	ret = analogix_dp_set_link_train(dp, dp->video_info.lane_count,
--					 dp->video_info.link_rate);
-+	ret = analogix_dp_set_link_train(dp, dp->video_info.max_lane_count,
-+					 dp->video_info.max_link_rate);
- 	if (ret) {
- 		dev_err(dp->dev, "unable to do link train\n");
- 		return;
-@@ -1156,16 +1156,25 @@ static int analogix_dp_dt_parse_pdata(struct analogix_dp_device *dp)
- 	struct device_node *dp_node = dp->dev->of_node;
- 	struct video_info *video_info = &dp->video_info;
- 
--	if (of_property_read_u32(dp_node, "samsung,link-rate",
--				 &video_info->link_rate)) {
--		dev_err(dp->dev, "failed to get link-rate\n");
--		return -EINVAL;
--	}
--
--	if (of_property_read_u32(dp_node, "samsung,lane-count",
--				 &video_info->lane_count)) {
--		dev_err(dp->dev, "failed to get lane-count\n");
--		return -EINVAL;
-+	switch (dp->plat_data && dp->plat_data->dev_type) {
-+	case RK3288_DP:
-+		/*
-+		 * Like Rk3288 DisplayPort TRM indicate that "Main link
-+		 * containing 4 physical lanes of 2.7/1.62 Gbps/lane".
-+		 */
-+		video_info->max_link_rate = 0x0A;
-+		video_info->max_lane_count = 0x04;
-+		break;
-+	case EXYNOS_DP:
-+		/*
-+		 * NOTE: those property parseing code is used for
-+		 * providing backward compatibility for samsung platform.
-+		 */
-+		of_property_read_u32(dp_node, "samsung,link-rate",
-+				     &video_info->max_link_rate);
-+		of_property_read_u32(dp_node, "samsung,lane-count",
-+				     &video_info->max_lane_count);
-+		break;
- 	}
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-index e37cef6..e6f8243 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-@@ -129,8 +129,8 @@ struct video_info {
- 	enum color_coefficient ycbcr_coeff;
- 	enum color_depth color_depth;
- 
--	enum link_rate_type link_rate;
--	enum link_lane_count_type lane_count;
-+	enum link_rate_type max_link_rate;
-+	enum link_lane_count_type max_lane_count;
- };
- 
- struct link_train {
--- 
-2.1.2
+ChenYu
