@@ -1,195 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 3/3] Documentation: dt-bindings: add example DT
- binding document
-Date: Sat, 24 Oct 2015 11:59:53 -0500
-Message-ID: <562BB909.8070200@kernel.org>
-References: <1442894358-15606-1-git-send-email-mporter@konsulko.com>
- <1442894358-15606-4-git-send-email-mporter@konsulko.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v2] ARM: dts: am335x-boneblack: Use pinctrl constants and AM33XX_IOPAD macro
+Date: Sat, 24 Oct 2015 12:05:13 -0500
+Message-ID: <1445706313-14761-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442894358-15606-4-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2015 10:59 PM, Matt Porter wrote:
-> Add a skeleton DT binding document that serves as the canonical
-> example for implementing YAML-based DT bindings documentation.
-> The skeleton binding illustrates use of all fields and variations
-> described in the dt-binding-format.txt documentation.
-> 
-> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/skeleton.yaml | 138 ++++++++++++++++++++++++
->  1 file changed, 138 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/skeleton.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/skeleton.yaml b/Documentation/devicetree/bindings/skeleton.yaml
-> new file mode 100644
-> index 0000000..d7a27cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/skeleton.yaml
-> @@ -0,0 +1,138 @@
-> +%YAML 1.2
-> +---
-> +version: 1
-> +
-> +id: skel-device
-> +
-> +title: Skeleton Device
-> +
-> +maintainer:
-> +    -   name: Skeleton Person <skel-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Using constants for pinctrl allows better readability and removes
+redundancy with comments. AM33XX_IOPAD allows us to use part of the
+pinctrl physical address as in the TRM instead of an offset.
 
-Do we need more than just name and more than 1 maintainer? With both
-we'd need to figure out the grouping.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ arch/arm/boot/dts/am335x-boneblack.dts | 44 +++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-> +
-> +description: >
-> +    The Skeleton Device binding represents the SK11 device produced by
-> +    the Skeleton Corporation. The binding can also support compatible
-> +    clones made by second source vendors.
-> +
-> +# This binding inherits property characteristics from the generic
-> +# spi-slave binding
-> +
-> +inherits:
-> +    -   id: spi-slave
-
-I would drop "id" here and inherits is just an array of values.
-
-> +
-> +properties:
-> +
-> +# The compatible property is a reserved name. The type is always "string"
-> +# and should not be repeated device binding.
-
-I think we should just always be explicit with type.
-
-> +
-> +    -   name: "compatible"
-> +        constraint: |
-> +            "skel,sk11" || "faux,fx11" , BASE("skel,sk11")
-> +        description: FX11 is a clone of the original SK11 device
-> +
-> +# The reg property is a reserved name. The type is always "int" and
-> +# should not be repeated in a device binding. Constraints are defined
-> +# only in the context of the parent node's address, size, and ranges
-> +# cells. The description is inherited from the spi-slave binding.
-
-Is this a general statement or specific to spi-slave? On I2C devices, we
-know the constraints. It may be a single value or a list of strapped values.
-
-> +
-> +    -   name: "reg"
-
-We also need to know how many entries and what each entry is. We will
-only ever be able to validate the count except cases we have
-constraints, but those should only have 1 entry I think. So I would just
-add "count" which can be a list of valid counts.
-
-
-> +
-> +# spi-max-frequency needs the device-specific constraint to be supplied
-> +
-> +    -   name: "spi-max-frequency"
-> +        constraint: |
-> +            if (compatible == "skel,sk11") c <= 10000000 else c <= 1000000
-> +
-> +# This property overrides the generic binding description with
-> +# a device specific description in order to mention the chip's
-> +# h/w cfg strapping pins.
-> +
-> +    -   name: "spi-cs-high"
-> +        description: >
-> +            Set if skeleton device configuration pins are set for chip
-> +            select polarity high
-> +
-> +# Device specific properties don't inherit characteristic from a generic
-> +# binding so category, type, constraint, and description must be specified
-> +# if needed.
-> +
-> +    -   name: "skel,deprecated1"
-> +        category: deprecated
-> +        type: int
-> +        constraint: |
-> +            (c >= 100000) && (c <= 200000)
-> +        description: >
-> +            First of two deprecated properties.
-> +
-> +# There are no constraints for properties of empty type
-> +
-> +    -   name: "skel,deprecated2"
-> +        category: deprecated
-> +        type: empty
-> +        description: >
-> +            Second of two deprecated properties.
-> +
-> +# This example could be auto-generated rather than explicitly included
-> +# in the yaml source.
-> +
-> +example:
-> +    -   dts: |
-> +            sk11@0 {
-> +                compatible = "skel,sk11";
-> +                reg = <0>;
-> +                spi-max-frequency = <1000000>;
-> +                spi-cs-high;
-> +            };
-> +...
-> +
-> +---
-> +version: 1
-> +
-> +id: skel-mini
-> +
-> +title: Skeleton Mini Device
-> +
-> +maintainer:
-> +    -   name: Rogue Developer <rogue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> +
-> +description: >
-> +    The Skeleton Mini Device binding represents the SK47x series devices
-> +    produced by the Skeleton Corporation.
-> +
-> +properties:
-> +    -   name: "compatible"
-> +        category: required
-> +        constraint: |
-> +            "skel,sk472" || skel,sk473" || "skel,sk474" , BASE("skel,sk472")
-> +        deprecated: "skel,sk47x"
-> +        description: >
-> +            SK472 is the original part in the family. SK473/4 are later releases
-> +            with minor register changes.
-> +
-> +    -   name: "reg"
-> +        category: required
-> +        description: Address and size of Skeleton Mini register range.
-> +
-> +    -   name: "skel,sync-mode"
-> +        category: optional
-> +        type: empty
-> +        description: Enable synchronous transfer mode
-> +
-> +example:
-> +    -   dts: |
-> +            sk472@beef0000 {
-> +                compatible = "skel,sk472";
-> +                reg = <0xbeef0000 0x100>;
-> +            };
-> +        description: >
-> +            Demonstrates an SK472 in normal mode.
-> +
-> +    -   dts: |
-> +            sk474@dead0000 {
-> +                compatible = "skel,sk474", "skel,sk472";
-> +                reg = <0xdead0000 0x100>;
-> +                skel,sync-mode;
-> +            };
-> +        description: >
-> +            Demonstrates an SK474 in synchronous mode.
-> +...
-> 
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index eadbba3..346f529 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -36,32 +36,32 @@
+ &am33xx_pinmux {
+ 	nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
+ 		pinctrl-single,pins = <
+-			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+-			0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+-			0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+-			0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+-			0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+-			0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
++			AM33XX_IOPAD(0x9b0, (PIN_OUTPUT_PULLDOWN | MUX_MODE3))	/* xdma_event_intr0 */
++			AM33XX_IOPAD(0x8a0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data0.lcd_data0 */
++			AM33XX_IOPAD(0x8a4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data1.lcd_data1 */
++			AM33XX_IOPAD(0x8a8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data2.lcd_data2 */
++			AM33XX_IOPAD(0x8ac, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data3.lcd_data3 */
++			AM33XX_IOPAD(0x8b0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data4.lcd_data4 */
++			AM33XX_IOPAD(0x8b4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data5.lcd_data5 */
++			AM33XX_IOPAD(0x8b8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data6.lcd_data6 */
++			AM33XX_IOPAD(0x8bc, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data7.lcd_data7 */
++			AM33XX_IOPAD(0x8c0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data8.lcd_data8 */
++			AM33XX_IOPAD(0x8c4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data9.lcd_data9 */
++			AM33XX_IOPAD(0x8c8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data10.lcd_data10 */
++			AM33XX_IOPAD(0x8cc, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data11.lcd_data11 */
++			AM33XX_IOPAD(0x8d0, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data12.lcd_data12 */
++			AM33XX_IOPAD(0x8d4, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data13.lcd_data13 */
++			AM33XX_IOPAD(0x8d8, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data14.lcd_data14 */
++			AM33XX_IOPAD(0x8dc, (PIN_OUTPUT | MUX_MODE0))		/* lcd_data15.lcd_data15 */
++			AM33XX_IOPAD(0x8e0, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_vsync.lcd_vsync */
++			AM33XX_IOPAD(0x8e4, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_hsync.lcd_hsync */
++			AM33XX_IOPAD(0x8e8, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_pclk.lcd_pclk */
++			AM33XX_IOPAD(0x8ec, (PIN_OUTPUT_PULLDOWN | MUX_MODE0))	/* lcd_ac_bias_en.lcd_ac_bias_en */
+ 		>;
+ 	};
+ 	nxp_hdmi_bonelt_off_pins: nxp_hdmi_bonelt_off_pins {
+ 		pinctrl-single,pins = <
+-			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
++			AM33XX_IOPAD(0x9b0, (PIN_OUTPUT_PULLDOWN | MUX_MODE3))	/* xdma_event_intr0 */
+ 		>;
+ 	};
+ };
+-- 
+1.9.1
