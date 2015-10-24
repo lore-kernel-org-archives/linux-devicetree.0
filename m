@@ -1,76 +1,105 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 32/35] nfc: st21nfca: Add error messages when an unexpected HCI event occurs
-Date: Sun, 25 Oct 2015 22:54:47 +0100
-Message-ID: <1445810090-18403-33-git-send-email-christophe-h.ricard@st.com>
-References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 04/22] of: add function to allow probing a device from
+ a OF node
+Date: Sat, 24 Oct 2015 15:09:06 -0500
+Message-ID: <562BE562.8090704@kernel.org>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
+ <10119606.2TraDKGPVy@vostro.rjw.lan>
+ <CAAObsKCAX4DQGydQoYjJEYKTOEqpVozXdHnqXWdNYVkLsg7BVg@mail.gmail.com>
+ <8510008.IC14Fu2Aos@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <8510008.IC14Fu2Aos@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Potentially an unexpected HCI event may occur because of a firmware bug.
-It could be transparent for the user but at least log this.
+On 10/24/2015 08:55 AM, Rafael J. Wysocki wrote:
+> On Thursday, October 22, 2015 03:03:37 PM Tomeu Vizoso wrote:
+>> On 22 October 2015 at 03:06, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>>> On Monday, September 21, 2015 04:02:44 PM Tomeu Vizoso wrote:
+>>>> Walks the OF tree up and finds the closest ancestor that has a struct
+>>>> device associated with it, probing it if isn't bound to a driver yet.
+>>>>
+>>>> The above should ensure that the dependency represented by the passed OF
+>>>> node is available, because probing a device should cause its descendants
+>>>> to be probed as well (when they get registered).
+>>>>
+>>>> Subsystems can use this when looking up resources for drivers, to reduce
+>>>> the chances of deferred probes because of the probing order of devices.
+>>>>
+>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>>> ---
+>>>>
+>>>> Changes in v5:
+>>>> - Move the assignment to device_node->device for AMBA devices to another
+>>>>   commit.
+>>>> - Hold a reference to the struct device while it's in use in
+>>>>   of_device_probe().
+>>>>
+>>>> Changes in v4:
+>>>> - Rename of_platform_probe to of_device_probe
+>>>> - Use device_node.device instead of device_node.platform_dev
+>>>>
+>>>> Changes in v3:
+>>>> - Set and use device_node.platform_dev instead of reversing the logic to
+>>>>   find the platform device that encloses a device node.
+>>>> - Drop the fwnode API to probe firmware nodes and add OF-only API for
+>>>>   now. I think this same scheme could be used for machines with ACPI,
+>>>>   but I haven't been able to find one that had to defer its probes because
+>>>>   of the device probe order.
+>>>>
+>>>>  drivers/of/device.c       | 61 +++++++++++++++++++++++++++++++++++++++++++++++
+>>>>  include/linux/of_device.h |  3 +++
+>>>>  2 files changed, 64 insertions(+)
+>>>>
+>>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>>>> index 8b91ea241b10..836be71fc90e 100644
+>>>> --- a/drivers/of/device.c
+>>>> +++ b/drivers/of/device.c
+>>>> @@ -286,3 +286,64 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+>>>>
+>>>>       return 0;
+>>>>  }
+>>>> +
+>>>> +/**
+>>>> + * of_device_probe() - Probe device associated with OF node
+>>>> + * @np: node to probe
+>>>> + *
+>>>> + * Probe the device associated with the passed device node.
+>>>> + */
+>>>> +void of_device_probe(struct device_node *np)
+>>>
+>>> Same question as from Greg: How does a subsystem know whether or not to use
+>>> this function?
+>>
+>> Maybe I don't understand the comment, but as the commit message says,
+>> subsystems can use this when looking up resources for drivers. Or you
+>> mean that this information should be in the API docs?
+> 
+> I'm not really sure this is the only case.
+> 
+> Most likely, you'd end up with that being called by every subsystem using DT
+> just in case.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st21nfca/core.c | 2 ++
- drivers/nfc/st21nfca/dep.c  | 1 +
- drivers/nfc/st21nfca/se.c   | 4 ++++
- 3 files changed, 7 insertions(+)
+No, it is binding dependent. If a consumer is looking up the provider
+from the binding, then yes it needs a call. There may be some cases
+where it doesn't make sense. But that is why it is called from the
+binding specific code.
 
-diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
-index d36e290..dd8b150 100644
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -893,6 +893,8 @@ static int st21nfca_admin_event_received(struct nfc_hci_dev *hdev, u8 event,
- 			}
- 		}
- 	break;
-+	default:
-+		nfc_err(&hdev->ndev->dev, "Unexpected event on admin gate\n");
- 	}
- 	kfree_skb(skb);
- 	return 0;
-diff --git a/drivers/nfc/st21nfca/dep.c b/drivers/nfc/st21nfca/dep.c
-index c011712..798a32b 100644
---- a/drivers/nfc/st21nfca/dep.c
-+++ b/drivers/nfc/st21nfca/dep.c
-@@ -435,6 +435,7 @@ int st21nfca_dep_event_received(struct nfc_hci_dev *hdev,
- 			return r;
- 		return 0;
- 	default:
-+		nfc_err(&hdev->ndev->dev, "Unexpected event on card f gate\n");
- 		return 1;
- 	}
- 	kfree_skb(skb);
-diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
-index e04f603..85fe3cc 100644
---- a/drivers/nfc/st21nfca/se.c
-+++ b/drivers/nfc/st21nfca/se.c
-@@ -344,6 +344,7 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 		r = nfc_se_transaction(hdev->ndev, host, transaction);
- 		break;
- 	default:
-+		nfc_err(&hdev->ndev->dev, "Unexpected event on connectivity gate\n");
- 		return 1;
- 	}
- 	kfree_skb(skb);
-@@ -375,6 +376,9 @@ int st21nfca_apdu_reader_event_received(struct nfc_hci_dev *hdev,
- 		mod_timer(&info->se_info.bwi_timer, jiffies +
- 				msecs_to_jiffies(info->se_info.wt_timeout));
- 		break;
-+	default:
-+		nfc_err(&ndev->nfc_dev->dev, "Unexpected event on apdu reader gate\n");
-+		return 1;
- 	}
- 
- exit:
--- 
-2.1.4
+> And then each of those subsystems would need to call acpi_device_probe(), and
+> then another_platform_firmware_interface_device_probe() and so on.
+> 
+> Don't you see a problem here?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Only for the 3rd firmware interface. ;)
+
+Let's get agreement on the flow and structure and how to address other
+issues like suspend, then we can worry about whether this needs to be
+abstracted from subsystems. We can discuss more this week at KS.
+
+Rob
+
