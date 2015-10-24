@@ -1,121 +1,92 @@
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 03/22] of/platform: Point to struct device from device node
-Date: Sat, 24 Oct 2015 15:57:24 +0200
-Message-ID: <1806288.pmhamH8mKQ@vostro.rjw.lan>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <1800338.r1NE3r6BDS@vostro.rjw.lan> <CAAObsKA+ky+6XjqQYswdB4K41V0-_kM9bhLwY0RiCT0rm2qSgw@mail.gmail.com>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Sat, 24 Oct 2015 16:17:12 +0200
+Message-ID: <24100858.2KIS8Y2npV@vostro.rjw.lan>
+References: <20151018192931.GY14956@sirena.org.uk> <562A5602.7000208@sonymobile.com> <CAL_JsqLNSM=+j2r9HPcbSzsZrgnGEY3=kv21EXxisKwP5+57ag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKA+ky+6XjqQYswdB4K41V0-_kM9bhLwY0RiCT0rm2qSgw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLNSM=+j2r9HPcbSzsZrgnGEY3=kv21EXxisKwP5+57ag@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tim Bird <tim.bird@sonymobile.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Brown <broonie@kernel.org>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Terje =?ISO-8859-1?Q?Bergstr=F6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwo>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, October 22, 2015 03:01:45 PM Tomeu Vizoso wrote:
-> On 22 October 2015 at 03:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > On Monday, September 21, 2015 04:02:43 PM Tomeu Vizoso wrote:
-> >> When adding platform and AMBA devices, set the device node's device
-> >> member to point to it.
+On Friday, October 23, 2015 11:34:34 AM Rob Herring wrote:
+> On Fri, Oct 23, 2015 at 10:45 AM, Tim Bird <tim.bird@sonymobile.com> wrote:
+> > On 10/22/2015 11:53 AM, Frank Rowand wrote:
+> >> On 10/22/2015 7:44 AM, Greg Kroah-Hartman wrote:
+> >>> <oops, sent too early...>
+> >>>
+> >>> On Thu, Oct 22, 2015 at 11:05:11AM +0200, Tomeu Vizoso wrote:
+> >>>> But that's moot currently because Greg believes that the time spent
+> >>>> probing devices at boot time could be reduced enough so that the order
+> >>>> in which devices are probed becomes irrelevant. IME that would have to
+> >>>> be under 200ms so that the user doesn't notice and that's unicorn-far
+> >>>> from any bootlog I have ever seen.
+> >>>
+> >>> But as no one has actually produced a bootlog, how do you know that?
+> >>> Where exactly is your time being spent?  What driver is causing long
+> >>> delays?  Why is the long-delay-drivers not being done in their own
+> >>> thread?  And most importantly, why are you ignoring the work that people
+> >>> did back in 2008 to solve the issue on other hardware platforms?
+> >>>
+> >>>> Given that downstreams are already carrying as many hacks as they
+> >>>> could think of to speed total boot up, I think this is effectively
+> >>>> telling them to go away.
+> >>>
+> >>> No I'm not, I'm asking for real data, not hand-wavy-this-is-going-to
+> >>> solve-the-random-issue-i'm-having type patch by putting random calls in
+> >>> semi-random subsystems all over the kernel.
+> >>>
+> >>> And when I ask for real data, you respond with the fact that you aren't
+> >>> trying to speed up boot time here at all, so what am I supposed to think
 > >>
-> >> This speeds lookups considerably and is safe because we only create one
-> >> of these devices for any given device node.
+> >> I also had the understanding that this patch series was about improving
+> >> boot time.  But I was kindly corrected that the behavior change was
+> >> getting the panel displaying stuff at an earlier point in the boot sequence,
+> >> _not_ completing the entire boot faster.
 > >>
-> >> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> >> ---
+> >> The claim for the current series, in patch 0 in v7 is:
 > >>
-> >> Changes in v5:
-> >> - Set the pointer to struct device also for AMBA devices
-> >> - Unset the pointer to struct device when the platform device is about
-> >>   to be unregistered
-> >> - Increase the reference count of the device before returning from
-> >>   of_find_device_by_node()
-> >>
-> >>  drivers/of/platform.c | 19 ++++++++++---------
-> >>  include/linux/of.h    |  1 +
-> >>  2 files changed, 11 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >> index 1001efaedcb8..408d89f1d124 100644
-> >> --- a/drivers/of/platform.c
-> >> +++ b/drivers/of/platform.c
-> >> @@ -32,11 +32,6 @@ const struct of_device_id of_default_bus_match_table[] = {
-> >>       {} /* Empty terminated list */
-> >>  };
-> >>
-> >> -static int of_dev_node_match(struct device *dev, void *data)
-> >> -{
-> >> -     return dev->of_node == data;
-> >> -}
-> >> -
-> >>  /**
-> >>   * of_find_device_by_node - Find the platform_device associated with a node
-> >>   * @np: Pointer to device tree node
-> >> @@ -45,10 +40,10 @@ static int of_dev_node_match(struct device *dev, void *data)
-> >>   */
-> >>  struct platform_device *of_find_device_by_node(struct device_node *np)
-> >>  {
-> >> -     struct device *dev;
-> >> -
-> >> -     dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
-> >> -     return dev ? to_platform_device(dev) : NULL;
-> >> +     if (np->device && np->device->bus == &platform_bus_type &&
-> >> +         get_device(np->device))
-> >> +             return to_platform_device(np->device);
-> >> +     return NULL;
-> >>  }
-> >>  EXPORT_SYMBOL(of_find_device_by_node);
-> >>
-> >> @@ -192,6 +187,8 @@ static struct platform_device *of_platform_device_create_pdata(
-> >>               goto err_clear_flag;
-> >>       }
-> >>
-> >> +     np->device = &dev->dev;
-> >> +
-> >>       return dev;
-> >>
-> >>  err_clear_flag:
-> >> @@ -272,6 +269,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
-> >>               goto err_free;
-> >>       }
-> >>
-> >> +     node->device = &dev->dev;
-> >> +
-> >>       return dev;
-> >>
-> >>  err_free:
-> >> @@ -476,6 +475,8 @@ static int of_platform_device_destroy(struct device *dev, void *data)
-> >>       if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
-> >>               device_for_each_child(dev, NULL, of_platform_device_destroy);
-> >>
-> >> +     dev->of_node->device = NULL;
-> >> +
-> >>       if (dev->bus == &platform_bus_type)
-> >>               platform_device_unregister(to_platform_device(dev));
-> >>  #ifdef CONFIG_ARM_AMBA
-> >> diff --git a/include/linux/of.h b/include/linux/of.h
-> >> index 2194b8ca41f9..eb091be0f8ee 100644
-> >> --- a/include/linux/of.h
-> >> +++ b/include/linux/of.h
-> >> @@ -52,6 +52,7 @@ struct device_node {
-> >>       phandle phandle;
-> >>       const char *full_name;
-> >>       struct fwnode_handle fwnode;
-> >> +     struct device *device;
+> >>    With this series I get the kernel to output to the panel in 0.5s,
+> >>    instead of 2.8s.
 > >
-> > There are cases in which multiple device objects point to the same device_node,
-> > so is the single struct device pointer here really sufficient?
+> > It's very common to want to get the display up before the
+> > rest of the system.  So wanting to accelerate one part of the boot
+> > at the expense to the rest of the system is a valid use case.
+> > Deferred initcalls, which is out of tree primarily because it requires
+> > the type of manual tweaking that Tomeu describes, specifically
+> > addressed this issue.
 > 
-> Only one struct device is registered for a given DT device node when
-> the DT is scanned (otherwise, of_find_device_by_node wouldn't be
-> safe).
-> 
-> If some driver makes a struct device to point to a device_node that
-> already has a struct device associated with it, that's fine.
+> Agreed and other folks will want other things up first. But it seems
+> we are getting lucky with link order with the speed ups in this case.
+> We need a way to specify priority of probing devices. If we have that
+> piece, then all this plumbing can be used. A simple solution would be
+> looking at stdout-path to get the console device to probe. That would
+> be trivial to add on top of this. That may work for the display too,
+> but you may not want the console on the display. That wouldn't work
+> for CAN bus either, but then I'm not sure there is a generic solution
+> for its requirements (respond within 50ms IIRC).
 
-Well, once that has happened, your new device pointer in the given device_node
-becomes useless.  Why exactly is that fine?
+Well, I'm not quite sure why exactly everyone is so focused on probing here.
+
+Probing is just one aspect of the fact that we need functional dependencies
+to be tracked somehow and acted on when necessary.  And this is not limited
+to probing, as I have already said for a few times.  Other cases include:
+system shutdown, system suspend/resume, runtime PM, unbinding of drivers.
+
+If there is a functional dependency between two devices (say, B requires A
+to be present and functional, meaning that the driver of A has to be present
+and working for the driver of B to be working), all of the above need to be
+done in a specific order.
+
+Today, however, the driver core only knows about structural dependencies
+and only in the specific parent-child case.
+
+So perhaps it's better to start discussing about a solution for the general
+issue?
 
 Thanks,
 Rafael
