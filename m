@@ -1,60 +1,38 @@
-From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: Re: [PATCH 00/10] add support SATA for BMIPS_GENERIC
-Date: Sat, 24 Oct 2015 13:51:10 +0900
-Message-ID: <E3E038D1-BD83-49D8-887A-B215AA685701@gmail.com>
-References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com> <20151023035817.GA18907@mtj.duckdns.org> <CAGVrzcYLeoXDPkMKvAtfok1dwgGQDu06FxP05u6YiO9-nHJqqw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 20/30] nfc: st-nci: Add ese-present/uicc-present dts
+ properties
+Date: Sat, 24 Oct 2015 08:48:49 +0200
+Message-ID: <20151024064849.GF23609@zurbaran.home>
+References: <1445377701-8353-1-git-send-email-christophe-h.ricard@st.com>
+ <1445377701-8353-21-git-send-email-christophe-h.ricard@st.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcYLeoXDPkMKvAtfok1dwgGQDu06FxP05u6YiO9-nHJqqw@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445377701-8353-21-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Oct 23, 2015, at 1:51 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 
-> 2015-10-22 20:58 GMT-07:00 Tejun Heo <tj@kernel.org>:
->> On Fri, Oct 23, 2015 at 10:44:13AM +0900, Jaedon Shin wrote:
->>> Hi all,
->>> 
->>> This patch series adds support SATA for BMIPS_GENERIC.
->>> 
->>> Ralf,
->>> I request you to drop already submitted patches for NAND device nodes.
->>> It is merge conflicts with this patches.
->>> http://patchwork.linux-mips.org/patch/10577/
->>> http://patchwork.linux-mips.org/patch/10578/
->>> http://patchwork.linux-mips.org/patch/10579/
->>> http://patchwork.linux-mips.org/patch/10580/
->>> 
->>> Jaedon Shin (10):
->>>  ata: ahci_brcmstb: make the driver buildable on BMIPS_GENERIC
->>>  ata: ahch_brcmstb: add data for port offset
->>>  ata: ahci_brcmstb: add support 40nm platforms
->> 
->> ata part looks fine to me.  Let me know when the other parts get in.
->> I'll apply the ata ones to libata/for-4.4.
-> 
-> There are a few comments coming on the ATA and Device Tree part, and I
-> also would like Brian Norris (who submitted the patches) to take a
-> look at these. But overall, this looks great.
-> 
-> I think we have a bit too many compatible strings defined, I need to
-> lookup tomorrow when I am back in the office which BCM7xxx started
-> featuring a SATA3 AHCI compliant core, it might be 7420, but I am not
-> sure
-> 
+Hi Christophe,
 
-I agree with you. If you have good opinion, I want you to tell me.
+On Tue, Oct 20, 2015 at 11:48:11PM +0200, Christophe Ricard wrote:
+> diff --git a/drivers/nfc/st-nci/st-nci_se.h b/drivers/nfc/st-nci/st-nci_se.h
+> index ea66e87..e3f8e7e 100644
+> --- a/drivers/nfc/st-nci/st-nci_se.h
+> +++ b/drivers/nfc/st-nci/st-nci_se.h
+> @@ -18,6 +18,8 @@
+>  #ifndef __LOCAL_ST_NCI_SE_H_
+>  #define __LOCAL_ST_NCI_SE_H_
+>  
+> +#include <net/nfc/nci_core.h>
+> +
+Why is that needed ?
 
-> Thanks!
-> -- 
-> Florian
-
-I will review carefully and submit v2 revision.
-
-Regards,
-
-Jaedon
+Cheers,
+Samuel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
