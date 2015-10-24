@@ -1,107 +1,45 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 18/30] nfc: st-nci: Add support for proprietary commands
- for factory tests
-Date: Sat, 24 Oct 2015 14:19:03 +0200
-Message-ID: <562B7737.6000106@gmail.com>
-References: <1445377701-8353-1-git-send-email-christophe-h.ricard@st.com>
- <1445377701-8353-19-git-send-email-christophe-h.ricard@st.com>
- <20151024064835.GD23609@zurbaran.home>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host" port
+Date: Sat, 24 Oct 2015 14:26:21 +0200
+Message-ID: <1633226.9pFzvpSks6@diego>
+References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151024064835.GD23609-nKCvNrh56OoJmsy6czSMtA@public.gmane.org>
+In-Reply-To: <1445624891-31680-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: kishon-l0cyMroinI0@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+Am Freitag, 23. Oktober 2015, 11:28:07 schrieb Douglas Anderson:
+> The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
+> has a hardware errata that causes everything to get confused when we get
+> a remote wakeup.  It appears that the "port reset" bit that's in the USB
+> phy (located in the rk3288 GRF) fixes things up and appears safe to do.
+> 
+> This series of patches exports the "port reset" from the PHY and then
+> hooks it up to dwc2 through a quirk.
+> 
+> I've tested this series atop a bit of a conglomeration of Heiko's github
+> "somewhat stable" branch (v4.3-rc3-876-g6509232) but with Greg KH's
+> usb-next merged in.
 
-On 24/10/2015 08:48, Samuel Ortiz wrote:
-> Hi Christophe,
->
-> Just a couple of nitpicks:
->
-> On Tue, Oct 20, 2015 at 11:48:09PM +0200, Christophe Ricard wrote:
->> diff --git a/drivers/nfc/st-nci/Makefile b/drivers/nfc/st-nci/Makefile
->> index 348ce76..60e569b 100644
->> --- a/drivers/nfc/st-nci/Makefile
->> +++ b/drivers/nfc/st-nci/Makefile
->> @@ -2,7 +2,7 @@
->>   # Makefile for ST21NFCB NCI based NFC driver
->>   #
->>   
->> -st-nci-objs = ndlc.o core.o st-nci_se.o
->> +st-nci-objs = ndlc.o core.o st-nci_se.o st-nci_vendor_cmds.o
-> Please rename that file to vendor_cmds.c.
-> I pushed a change to rename st-nci_se.c to se.c already, to keep the
-> file names consistent there.
-I think your latest change introduced a build break :(. The log message 
-mention also MFC instead of NFC ;).
+I've been involved in the earlier revisions already, so this version already 
+implements the review-comments I had. I've also gave this a spin on 4.3-rc6 
+with usb-next merged in on a rk3288-firefly, so
 
-"In file included from drivers/nfc/st-nci/ndlc.c:23:0:
-drivers/nfc/st-nci/st-nci.h:22:23: fatal error: st-nci_se.h: No such 
-file or directory
-#include "st-nci_se.h""
-I will send a fix in the v2 ;).
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
->
->>   obj-$(CONFIG_NFC_ST_NCI)     += st-nci.o
->>   
->>   st-nci_i2c-objs = i2c.o
->> diff --git a/drivers/nfc/st-nci/core.c b/drivers/nfc/st-nci/core.c
->> index c419d39..fd2a5ca 100644
->> --- a/drivers/nfc/st-nci/core.c
->> +++ b/drivers/nfc/st-nci/core.c
->> @@ -25,6 +25,7 @@
->>   
->>   #include "st-nci.h"
->>   #include "st-nci_se.h"
->> +#include "st-nci_vendor_cmds.h"
-> Ditto: Please rename it to vendor_cmds.h.
-Don't you think it would be better for headers to either:
-- merge st-nci_se.h and st-nci_vendor_cmds.h in st-nci.h
-- or keep st-nci_ prefix for header files only.
-Which option do you prefer ?
 
-I have no concern to remove the st-nci prefix and the st21nfca for .c 
-file in their respective directory.
->
->> +void st_nci_hci_loopback_event_received(struct nci_dev *ndev, u8 event,
->> +					struct sk_buff *skb)
->> +{
->> +	struct st_nci_info *info = nci_get_drvdata(ndev);
->> +
->> +	switch (event) {
->> +	case ST_NCI_EVT_POST_DATA:
->> +		info->vendor_info.rx_skb = skb;
->> +
->> +		complete(&info->vendor_info.req_completion);
->> +	break;
->> +	}
-> Wouldn't it make sense to complete regardless of the event you're
-> receiving ?
-> Since you're checking for rx_skb after the completion, it's safe and
-> would prevent you from being stuck waiting for the right event in the
-> below routine.
-The only reason for receiving a EVT_POST_DATA from the CLF loopback gate 
-should come from a
-previous EVT_POST_DATA sent from the Device Host.
-The loopback gate is a standard hci echo test mechanism.
+If the first two patches get picked up, I'll pick the two dts patches 
+afterwards.
 
-Also, according to etsi 102 622 and ST implementation, the loopback gate 
-only support EVT_POST_DATA.
 
-I believe a "complete regardless of the event" we are receiving (on the 
-loopback gate) may hide a CLF firmware bug and should not happen...
-
-Are you in favour of hiding a potential bug ?
-
-[snip]
-
-Best Regards
-Christophe
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
