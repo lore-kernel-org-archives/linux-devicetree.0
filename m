@@ -1,46 +1,48 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 23/35] nfc: netlink: Add missing NFC_ATTR comments
-Date: Sun, 25 Oct 2015 22:54:38 +0100
-Message-ID: <1445810090-18403-24-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [PATCH v2 27/35] nfc: st21nfca: Fix host_list verification after secure element activation
+Date: Sun, 25 Oct 2015 22:54:42 +0100
+Message-ID: <1445810090-18403-28-git-send-email-christophe-h.ricard@st.com>
 References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-NFC_CMD_ACTIVATE_TARGET and NFC_ATTR_SE_PARAMS comments are missing.
+A secure element can be activated in different order. The host_list is
+updated keeping a fixed order: <terminal_host_id><uicc_id><ese_id>.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- include/uapi/linux/nfc.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nfc/st21nfca/se.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/nfc.h b/include/uapi/linux/nfc.h
-index dd3f753..399f39f 100644
---- a/include/uapi/linux/nfc.h
-+++ b/include/uapi/linux/nfc.h
-@@ -86,6 +86,7 @@
-  *	for this event is the application ID (AID).
-  * @NFC_CMD_GET_SE: Dump all discovered secure elements from an NFC controller.
-  * @NFC_CMD_SE_IO: Send/Receive APDUs to/from the selected secure element.
-+ * @NFC_CMD_ACTIVATE_TARGET: Request NFC controller to reactivate target.
-  * @NFC_CMD_VENDOR: Vendor specific command, to be implemented directly
-  *	from the driver in order to support hardware specific operations.
-  */
-@@ -156,6 +157,7 @@ enum nfc_commands {
-  * @NFC_ATTR_APDU: Secure element APDU
-  * @NFC_ATTR_TARGET_ISO15693_DSFID: ISO 15693 Data Storage Format Identifier
-  * @NFC_ATTR_TARGET_ISO15693_UID: ISO 15693 Unique Identifier
-+ * @NFC_ATTR_SE_PARAMS: Parameters data from an evt_transaction
-  * @NFC_ATTR_VENDOR_ID: NFC manufacturer unique ID, typically an OUI
-  * @NFC_ATTR_VENDOR_SUBCMD: Vendor specific sub command
-  * @NFC_ATTR_VENDOR_DATA: Vendor specific data, to be optionally passed
+diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
+index 6aa4e34..8e05d73 100644
+--- a/drivers/nfc/st21nfca/se.c
++++ b/drivers/nfc/st21nfca/se.c
+@@ -100,7 +100,7 @@ static int st21nfca_hci_control_se(struct nfc_hci_dev *hdev, u32 se_idx,
+ 				u8 state)
+ {
+ 	struct st21nfca_hci_info *info = nfc_hci_get_clientdata(hdev);
+-	int r;
++	int r, i;
+ 	struct sk_buff *sk_host_list;
+ 	u8 se_event, host_id;
+ 
+@@ -148,7 +148,10 @@ static int st21nfca_hci_control_se(struct nfc_hci_dev *hdev, u32 se_idx,
+ 	if (r < 0)
+ 		return r;
+ 
+-	host_id = sk_host_list->data[sk_host_list->len - 1];
++	for (i = 0; i < sk_host_list->len &&
++		sk_host_list->data[i] != se_idx; i++)
++		;
++	host_id = sk_host_list->data[i];
+ 	kfree_skb(sk_host_list);
+ 
+ 	if (state == ST21NFCA_SE_MODE_ON && host_id == se_idx)
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
