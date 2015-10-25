@@ -1,97 +1,57 @@
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: Re: [PATCH 0/3] ARM: dts: Enable Exynos RNG module
-Date: Sun, 25 Oct 2015 01:58:15 +0200
-Message-ID: <562C1B17.3080303@math.uni-bielefeld.de>
-References: <1445230834-32689-1-git-send-email-k.kozlowski@samsung.com>
- <56251627.4050908@math.uni-bielefeld.de> <562581BD.3070609@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ARM: dts: rockchip: Add the OTP gpio pinctrl
+Date: Sun, 25 Oct 2015 08:55:03 +0100
+Message-ID: <2741625.HAsG2fX6yg@diego>
+References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com> <1445599528-18825-4-git-send-email-wxt@rock-chips.com> <CAD=FV=WBCD8WsXV2mAGUD6y=BFScbFc9U3XA7jAB-rqOLp4qGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <562581BD.3070609@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=WBCD8WsXV2mAGUD6y=BFScbFc9U3XA7jAB-rqOLp4qGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-
-Krzysztof Kozlowski wrote:
-> On 20.10.2015 01:11, Tobias Jakobi wrote:
->> Hello Krzysztof,
->>
->> I can confirm that this also works on a Odroid-X2, so I guess it's safe
->> to enable the PRNG for all Exynos4412-based Odroid devices.
+Am Freitag, 23. Oktober 2015, 08:25:08 schrieb Doug Anderson:
+> On Fri, Oct 23, 2015 at 4:25 AM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> > Add the "init" anf "sleep" pinctrl as the OTP gpio state.
+> > We need the OTP pin is gpio state before resetting the TSADC controller,
+> > since the tshut polarity will generate a high signal.
+> > 
+> > "init" pinctrl property is defined by Doug's Patch[0].
+> > 
+> > Patch[0]:
+> > https://patchwork.kernel.org/patch/7454311/
+> > 
+> > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> > 
+> > Changes in v4: None
+> > 
+> > Changes in v3:
+> >   - Add the "sleep" pinctrl as the gpio state in PATCH[3/3]
+> > 
+> > Changes in v2:
+> >   - Add some commits for more obvious in PATCH[2/2]
+> > 
+> > Changes in v1:
+> >   - As the Doug comments, drop the thermal driver patchs since
+> >   
+> >     we can with pinctrl changing to work.
+> >   
+> >   - As the Doug's patch to add the 'init' property.
+> >  
+> >  arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> Sure, I can send a patch for that. I can test it later also on Odroid-U3.
-Thanks already!
+> I realized that the subject of this patch should probably contain the
+> word rk3288, but I presume Heiko would rather add that himself than
+> for you to spin this again.  ;)
 
-
-
->> Any chance that you might also take a look at the other hwcrypto stuff
->> on the SoC ('samsung,exynos4210-secss' compatible)?
-> 
-> What do you mean? The s5p-sss driver already supports Device Tree.
-The driver supports DT, but it doesn't really work.
-
-I'm using the following DT entry to let the driver probe correctly:
-https://github.com/tobiasjakobi/linux-odroid/commit/82c00cddb5cbf89fad994784c28c8125beae8e13
-
-But the crypto self-test fails on boot:
-alg: skcipher: encryption failed on test 1 for ecb-aes-s5p: ret=22
-
-
-Another problems is that SSS and PRNG can't be used at the same time,
-since they both use common hardware resources (I think it was IO).
-
-
-With best wishes,
-Tobias
-
-
-> Best regards,
-> Krzysztof
-> 
->>
->> With best wishes,
->> Tobias
->>
->>
->> Krzysztof Kozlowski wrote:
->>> Hi,
->>>
->>>
->>> The patchset adds necessary clock from Security SubSystem (SSS)
->>> and enables the PRNG module of Exynos for Trats2 board.
->>>
->>> The first patch (clock) is required for other ones so please
->>> take everything in one step.
->>>
->>> The actual Device Tree support (and compatible) was sent in separate
->>> patch:
->>>  - https://patchwork.kernel.org/patch/7432891/
->>>  - http://marc.info/?l=linux-crypto-vger&m=144522952725052&w=2
->>>
->>> The device can be tested (after applying both patchsets) with:
->>> $ echo exynos > /sys/class/misc/hw_random/rng_current
->>> $ dd if=/dev/hwrng of=/dev/null bs=1 count=16
->>>
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>> Krzysztof Kozlowski (3):
->>>   clk: samsung: exynos4: Add SSS gate clock
->>>   ARM: dts: Add PRNG module for exynos4
->>>   ARM: dts: Enable PRNG module on exynos4412-trats2
->>>
->>>  arch/arm/boot/dts/exynos4.dtsi          | 8 ++++++++
->>>  arch/arm/boot/dts/exynos4412-trats2.dts | 4 ++++
->>>  drivers/clk/samsung/clk-exynos4.c       | 1 +
->>>  include/dt-bindings/clock/exynos4.h     | 1 +
->>>  4 files changed, 14 insertions(+)
->>>
->>
->>
-> 
+yep :-) ... no need to respin for such an easy change.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
