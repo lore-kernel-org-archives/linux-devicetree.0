@@ -1,47 +1,102 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [GIT PULL] On-demand device probing
-Date: Sun, 25 Oct 2015 14:54:39 +0100
-Message-ID: <CAJZ5v0hPVu7AL8zBdU4Kb7+MVfYv0mTa43RhnCyyPR+RKDbhLA@mail.gmail.com>
-References: <20151018192931.GY14956@sirena.org.uk>
-	<562A5602.7000208@sonymobile.com>
-	<CAL_JsqLNSM=+j2r9HPcbSzsZrgnGEY3=kv21EXxisKwP5+57ag@mail.gmail.com>
-	<24100858.2KIS8Y2npV@vostro.rjw.lan>
-	<20151024220648.GR29919@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151024220648.GR29919@sirena.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tim Bird <tim.bird@sonymobile.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] arm: Test for CONFIG_USE_OF to handle the USE_OF=n/OF=y case
+Date: Sun, 25 Oct 2015 16:25:59 +0100
+Message-ID: <1445786759-22005-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 25, 2015 at 12:06 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Sat, Oct 24, 2015 at 04:17:12PM +0200, Rafael J. Wysocki wrote:
->
->> Well, I'm not quite sure why exactly everyone is so focused on probing here.
->
-> Probe deferral is really noisy even if it's working fine on a given
-> system so it's constantly being highlighted to people in a way that
-> other issues aren't if you're not directly having problems.
->
-> There's also the understanding people had that the order things get
-> bound changes the ordering for some of the other cases (perhaps it's a
-> good idea to do that, it seems likely to be sensible?).
+Until commit 0166dc11be911213 ("of: make CONFIG_OF user selectable"),
+CONFIG_OF=y implied CONFIG_USE_OF=y on ARM, as the former could solely
+be enabled by being selected by the latter.
 
-But it really doesn't do that.  Also making it do so doesn't help much
-in the cases where things can happen asynchronously (system
-suspend/resume, runtime PM).
+However, if the user now manually enables CONFIG_OF=y while
+CONFIG_USE_OF=n:
 
-If, instead, there was a way to specify a functional dependency at the
-device registration time, it might be used to change the order of
-everything relevant, including probe.  That should help to reduce the
-noise you're referring to.
+    arch/arm/kernel/devtree.c: In function 'setup_machine_fdt':
+    arch/arm/kernel/devtree.c:215:2: error: implicit declaration of function 'early_init_dt_verify' [-Werror=implicit-function-declaration]
+      if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys)))
+      ^
+    arch/arm/kernel/devtree.c:218:2: error: implicit declaration of function 'of_flat_dt_match_machine' [-Werror=implicit-function-declaration]
+      mdesc = of_flat_dt_match_machine(mdesc_best, arch_get_next_mach);
+      ^
+    arch/arm/kernel/devtree.c:218:8: warning: assignment makes pointer from integer without a cast
+      mdesc = of_flat_dt_match_machine(mdesc_best, arch_get_next_mach);
+	    ^
+    arch/arm/kernel/devtree.c:228:3: error: implicit declaration of function 'of_get_flat_dt_root' [-Werror=implicit-function-declaration]
+       dt_root = of_get_flat_dt_root();
+       ^
+    arch/arm/kernel/devtree.c:229:3: error: implicit declaration of function 'of_get_flat_dt_prop' [-Werror=implicit-function-declaration]
+       prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
+       ^
+    arch/arm/kernel/devtree.c:229:8: warning: assignment makes pointer from integer without a cast
+       prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
+	    ^
+    arch/arm/kernel/devtree.c:244:2: error: implicit declaration of function 'early_init_dt_scan_nodes' [-Werror=implicit-function-declaration]
+      early_init_dt_scan_nodes();
+      ^
 
-If the dependency could only be discovered at the probe time, the
-order of things might be changed in response to letting the driver
-core know about it rather than "just in case", which should be more
-efficient.
+and
 
-Thanks,
-Rafael
+    arch/arm/kernel/built-in.o: In function `setup_arch':
+    arch/arm/kernel/setup.c:940: undefined reference to `setup_machine_fdt'
+    arch/arm/kernel/setup.c:979: undefined reference to `arm_dt_init_cpu_maps'
+
+Replace tests for CONFIG_OF by tests for CONFIG_USE_OF where appropriate
+to fix this.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+Cfr. http://kisskb.ellerman.id.au/kisskb/buildresult/12531538/
+
+I only fixed the particular issue with the randconfig from the build
+above.  Are there more tests for CONFIG_OF that should be converted to
+CONFIG_USE_OF?
+---
+ arch/arm/include/asm/prom.h | 6 +++---
+ arch/arm/kernel/Makefile    | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
+index cd94ef2ef283e14e..aac51015d18e27fb 100644
+--- a/arch/arm/include/asm/prom.h
++++ b/arch/arm/include/asm/prom.h
+@@ -11,12 +11,12 @@
+ #ifndef __ASMARM_PROM_H
+ #define __ASMARM_PROM_H
+ 
+-#ifdef CONFIG_OF
++#ifdef CONFIG_USE_OF
+ 
+ extern const struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
+ extern void __init arm_dt_init_cpu_maps(void);
+ 
+-#else /* CONFIG_OF */
++#else /* CONFIG_USE_OF */
+ 
+ static inline const struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
+ {
+@@ -25,5 +25,5 @@ static inline const struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
+ 
+ static inline void arm_dt_init_cpu_maps(void) { }
+ 
+-#endif /* CONFIG_OF */
++#endif /* CONFIG_USE_OF */
+ #endif /* ASMARM_PROM_H */
+diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
+index af9e59bf3831b9fd..4f6014eee0fe65bd 100644
+--- a/arch/arm/kernel/Makefile
++++ b/arch/arm/kernel/Makefile
+@@ -58,7 +58,7 @@ obj-$(CONFIG_ARM_THUMBEE)	+= thumbee.o
+ obj-$(CONFIG_KGDB)		+= kgdb.o patch.o
+ obj-$(CONFIG_ARM_UNWIND)	+= unwind.o
+ obj-$(CONFIG_HAVE_TCM)		+= tcm.o
+-obj-$(CONFIG_OF)		+= devtree.o
++obj-$(CONFIG_USE_OF)		+= devtree.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ obj-$(CONFIG_SWP_EMULATE)	+= swp_emulate.o
+ CFLAGS_swp_emulate.o		:= -Wa,-march=armv7-a
+-- 
+1.9.1
