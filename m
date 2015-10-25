@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v2 04/35] nfc: st-nci: Fix incorrect spi buffer size
-Date: Sun, 25 Oct 2015 22:54:19 +0100
-Message-ID: <1445810090-18403-5-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 07/35] nfc: nci: extract pipe value using NCI_HCP_MSG_GET_PIPE
+Date: Sun, 25 Oct 2015 22:54:22 +0100
+Message-ID: <1445810090-18403-8-git-send-email-christophe-h.ricard@st.com>
 References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
@@ -10,37 +10,36 @@ To: sameo@linux.intel.com
 Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When sending data over SPI, the maximum expected length is the maximum
-nci packet payload + data header size + the frame head room (1 for the
-ndlc header) + the frame trail room (0).
+When receiving data in nci_hci_msg_rx_work, extract pipe value using
+NCI_HCP_MSG_GET_PIPE macro.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- drivers/nfc/st-nci/spi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/nfc/nci/hci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/spi.c b/drivers/nfc/st-nci/spi.c
-index 9a39871..b43f448 100644
---- a/drivers/nfc/st-nci/spi.c
-+++ b/drivers/nfc/st-nci/spi.c
-@@ -25,6 +25,7 @@
- #include <linux/interrupt.h>
- #include <linux/delay.h>
- #include <linux/nfc.h>
-+#include <net/nfc/nci.h>
- #include <linux/platform_data/st-nci.h>
+diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
+index 73afb47..abe0200 100644
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -400,7 +400,7 @@ static void nci_hci_msg_rx_work(struct work_struct *work)
+ 	u8 pipe, type, instruction;
  
- #include "st-nci.h"
-@@ -94,7 +95,8 @@ static int st_nci_spi_write(void *phy_id, struct sk_buff *skb)
- 	struct st_nci_spi_phy *phy = phy_id;
- 	struct spi_device *dev = phy->spi_dev;
- 	struct sk_buff *skb_rx;
--	u8 buf[ST_NCI_SPI_MAX_SIZE];
-+	u8 buf[ST_NCI_SPI_MAX_SIZE + NCI_DATA_HDR_SIZE +
-+	       ST_NCI_FRAME_HEADROOM + ST_NCI_FRAME_TAILROOM];
- 	struct spi_transfer spi_xfer = {
- 		.tx_buf = skb->data,
- 		.rx_buf = buf,
+ 	while ((skb = skb_dequeue(&hdev->msg_rx_queue)) != NULL) {
+-		pipe = skb->data[0];
++		pipe = NCI_HCP_MSG_GET_PIPE(skb->data[0]);
+ 		skb_pull(skb, NCI_HCI_HCP_PACKET_HEADER_LEN);
+ 		message = (struct nci_hcp_message *)skb->data;
+ 		type = NCI_HCP_MSG_GET_TYPE(message->header);
+@@ -437,7 +437,7 @@ void nci_hci_data_received_cb(void *context,
+ 
+ 	/* it's the last fragment. Does it need re-aggregation? */
+ 	if (skb_queue_len(&ndev->hci_dev->rx_hcp_frags)) {
+-		pipe = packet->header & NCI_HCI_FRAGMENT;
++		pipe = NCI_HCP_MSG_GET_PIPE(packet->header);
+ 		skb_queue_tail(&ndev->hci_dev->rx_hcp_frags, skb);
+ 
+ 		msg_len = 0;
 -- 
 2.1.4
