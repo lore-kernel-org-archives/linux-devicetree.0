@@ -1,186 +1,202 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] iio:adc:palmas: add DT support
-Date: Sun, 25 Oct 2015 12:04:52 +0000
-Message-ID: <562CC564.7090402@kernel.org>
-References: <cover.1445000017.git.hns@goldelico.com>
- <79429ca1a6d0465b6b19ede16d90de23e4363431.1445000017.git.hns@goldelico.com>
+From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 11/11] scsi: ufs-exynos: add UFS host support for
+ Exynos SoCs
+Date: Sun, 25 Oct 2015 17:34:47 +0530
+Message-ID: <CAGOxZ51cFDvvSKN+=nNnHD=P756r74edUX5XrkvrHv+NXU_NTw@mail.gmail.com>
+References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
+ <1444827351-24128-12-git-send-email-alim.akhtar@samsung.com>
+ <561F18C5.10406@samsung.com> <562A4FE3.9080200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <79429ca1a6d0465b6b19ede16d90de23e4363431.1445000017.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Pradeep Goudagunta <pgoudagunta-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562A4FE3.9080200-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "James E.J. Bottomley" <JBottomley-wo1vFcy6AUs@public.gmane.org>, vinayak holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/10/15 13:53, H. Nikolaus Schaller wrote:
-> From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> 
-> Code was found at:
-> https://android.googlesource.com/kernel/tegra/+/a90856a6626d502d42c6e7abccbdf9d730b36270%5E%21/#F1
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [Fixed minor typos + add channels list to documentation]
-I am happy with your responses to Lars and that kind of covers what Mark raised as well.
+Hi Kishon
+Thanks again for you review.
 
-One typo correction applied.
+On Fri, Oct 23, 2015 at 8:48 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Thursday 15 October 2015 08:38 AM, Alim Akhtar wrote:
+>> +CCing kishon Vijay,
+>>
+>> On 10/14/2015 06:25 PM, Alim Akhtar wrote:
+>>> From: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> This patch introduces Exynos UFS host controller driver,
+>>> which mainly handles vendor-specific operations including
+>>> link startup, power mode change and hibernation/unhibernation.
+>>>
+>>> Signed-off-by: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   drivers/scsi/ufs/Kconfig         |   12 +
+>>>   drivers/scsi/ufs/Makefile        |    1 +
+>>>   drivers/scsi/ufs/ufs-exynos-hw.c |  131 ++++
+>>>   drivers/scsi/ufs/ufs-exynos-hw.h |   43 ++
+>>>   drivers/scsi/ufs/ufs-exynos.c    | 1317
+>>> ++++++++++++++++++++++++++++++++++++++
+>>>   drivers/scsi/ufs/ufs-exynos.h    |  247 +++++++
+>>>   drivers/scsi/ufs/ufshci.h        |   26 +-
+>>>   drivers/scsi/ufs/unipro.h        |   47 ++
+>>>   8 files changed, 1823 insertions(+), 1 deletion(-)
+>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+>>>
+> .
+> .
+> <snip>
+> .
+> .
+>>> diff --git a/drivers/scsi/ufs/ufs-exynos-hw.c
+>>> b/drivers/scsi/ufs/ufs-exynos-hw.c
+>>> new file mode 100644
+>>> index 000000000000..be6c61541a8f
+>>> --- /dev/null
+>>> +++ b/drivers/scsi/ufs/ufs-exynos-hw.c
+>>> @@ -0,0 +1,131 @@
+> .
+> .
+> <snip>
+> .
+> .
+>>> +
+>>> +#define PWR_MODE_STR_LEN    64
+>>> +static int exynos_ufs_post_pwr_mode(struct ufs_hba *hba,
+>>> +                struct ufs_pa_layer_attr *pwr_max,
+>>> +                struct ufs_pa_layer_attr *pwr_req)
+>>> +{
+>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>> +    struct exynos_ufs_phy_info *phy_info = phy_get_drvdata(ufs->phy);
+>
+> This is abusing the interface. phy_get_drvdata is meant to be used only
+> by the PHY driver.
+>>> +    struct exynos_ufs_phy_specific_ops *phy_ops =
+>>> +                    phy_info->phy_specific_ops;
+>
+> I'm really not happy about having platform specific ops for PHY. We have
+> to see if existing PHY ops can be used for this or in worst case add new
+> PHY ops.
+Well you said you like the controller driver to use only PHY ops[1], I
+am sorry If I misunderstood that point, can you please help me to
+understand that?
+[1]-> https://lkml.org/lkml/2015/9/18/29
 
-Applied to the togreg branch of iio.git
+>>> +    struct uic_pwr_mode *pwr = &ufs->pwr_act;
+>>> +    char pwr_str[PWR_MODE_STR_LEN] = "";
+>>> +    int ret = 0;
+>>> +
+>>> +    if (ufs->drv_data->post_pwr_change)
+>>> +        ufs->drv_data->post_pwr_change(ufs, pwr);
+>>> +
+>>> +    if (IS_UFS_PWR_MODE_HS(pwr->mode)) {
+>>> +        switch (pwr->hs_series) {
+>>> +        case PA_HS_MODE_A:
+>>> +        case PA_HS_MODE_B:
+>>> +            phy_ops->calibrate_phy(ufs->phy, CFG_POST_PWR_HS,
+>>> +                PWR_MODE_HS(pwr->gear, pwr->hs_series));
+>>> +            break;
+>>> +        }
+>>> +
+>>> +        ret = phy_ops->wait_for_lock_acq(ufs->phy);
+>>> +        snprintf(pwr_str, sizeof(pwr_str), "Fast%s series_%s G_%d L_%d",
+>>> +            pwr->mode == FASTAUTO_MODE ? "_Auto" : "",
+>>> +            pwr->hs_series == PA_HS_MODE_A ? "A" : "B",
+>>> +            pwr->gear, pwr->lane);
+>>> +    } else if (IS_UFS_PWR_MODE_PWM(pwr->mode)) {
+>>> +        snprintf(pwr_str, sizeof(pwr_str), "Slow%s G_%d L_%d",
+>>> +            pwr->mode == SLOWAUTO_MODE ? "_Auto" : "",
+>>> +            pwr->gear, pwr->lane);
+>>> +    }
+>>> +
+>>> +    dev_info(hba->dev, "Power mode change %d : %s\n", ret, pwr_str);
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static void exynos_ufs_specify_nexus_t_xfer_req(struct ufs_hba *hba,
+>>> +                        int tag, struct scsi_cmnd *cmd)
+>>> +{
+>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>> +    u32 type;
+>>> +
+>>> +    type =  hci_readl(ufs, HCI_UTRL_NEXUS_TYPE);
+>>> +
+>>> +    if (cmd)
+>>> +        hci_writel(ufs, type | (1 << tag), HCI_UTRL_NEXUS_TYPE);
+>>> +    else
+>>> +        hci_writel(ufs, type & ~(1 << tag), HCI_UTRL_NEXUS_TYPE);
+>>> +}
+>>> +
+>>> +static void exynos_ufs_specify_nexus_t_tm_req(struct ufs_hba *hba,
+>>> +                        int tag, u8 func)
+>>> +{
+>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>> +    u32 type;
+>>> +
+>>> +    type =  hci_readl(ufs, HCI_UTMRL_NEXUS_TYPE);
+>>> +
+>>> +    switch (func) {
+>>> +    case UFS_ABORT_TASK:
+>>> +    case UFS_QUERY_TASK:
+>>> +        hci_writel(ufs, type | (1 << tag), HCI_UTMRL_NEXUS_TYPE);
+>>> +        break;
+>>> +    case UFS_ABORT_TASK_SET:
+>>> +    case UFS_CLEAR_TASK_SET:
+>>> +    case UFS_LOGICAL_RESET:
+>>> +    case UFS_QUERY_TASK_SET:
+>>> +        hci_writel(ufs, type & ~(1 << tag), HCI_UTMRL_NEXUS_TYPE);
+>>> +        break;
+>>> +    }
+>>> +}
+>>> +
+>>> +static void exynos_ufs_phy_init(struct exynos_ufs *ufs)
+>>> +{
+>>> +    struct ufs_hba *hba = ufs->hba;
+>>> +    struct exynos_ufs_phy_info *phy_info = phy_get_drvdata(ufs->phy);
+>>> +    struct exynos_ufs_phy_specific_ops *phy_ops =
+>>> +                    phy_info->phy_specific_ops;
+>>> +
+>>> +    if (ufs->avail_ln_rx == 0 || ufs->avail_ln_tx == 0) {
+>>> +        ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILRXDATALANES),
+>>> +            &ufs->avail_ln_rx);
+>>> +        ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILTXDATALANES),
+>>> +            &ufs->avail_ln_tx);
+>>> +        WARN(ufs->avail_ln_rx != ufs->avail_ln_tx,
+>>> +            "available data lane is not equal(rx:%d, tx:%d)\n",
+>>> +            ufs->avail_ln_rx, ufs->avail_ln_tx);
+>>> +    }
+>>> +
+>>> +    phy_ops->set_lane_cnt(ufs->phy, ufs->avail_ln_rx);
+>
+> can't bus_width attribute in phy core be reused for this?
+>
+I will take a look on it.
 
-Thanks,
+>>> +    phy_ops->calibrate_phy(ufs->phy, CFG_PRE_INIT, PWR_MODE_ANY);
+>
+> Why can't calibrate PHY be directly done in phy_init?
+>
+This is just one instance, need to calibrate PHY when the ufs pwr mode changes.
 
-Jonathan
-> ---
->  .../devicetree/bindings/iio/adc/palmas-gpadc.txt   | 48 ++++++++++++++++++++
->  drivers/iio/adc/palmas_gpadc.c                     | 52 +++++++++++++++++++---
->  2 files changed, 95 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt b/Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-> new file mode 100644
-> index 0000000..a6de996
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/palmas-gpadc.txt
-> @@ -0,0 +1,48 @@
-> +* Palmas general purpose ADC IP block devicetree bindings
-> +
-> +Channels list:
-> +	0 battery type
-> +	1 battery temp NTC (optional current source)
-> +	2 GP
-> +	3 temp (with ext. diode, optional current source)
-> +	4 GP
-> +	5 GP
-> +	6 VBAT_SENSE
-> +	7 VCC_SENSE
-> +	8 Backup Battery voltage
-> +	9 external charger (VCHG)
-> +	10 VBUS
-> +	11 DC-DC current probe (how does this work?)
-> +	12 internal die temp
-> +	13 internal die temp
-> +	14 USB ID pin voltage
-> +	15 test network
-> +
-> +Required properties:
-> +- compatible : Must be "ti,palmas-gpadc".
-> +- #io-channel-cells: Should be set to <1>.
-> +
-> +Optional sub-nodes:
-> +ti,channel0-current-microamp: Channel 0 current in uA.
-> +	Values are rounded to derive 0uA, 5uA, 15uA, 20uA.
-> +ti,channel3-current-microamp: Channel 3 current in uA.
-> +	Valid are rounded to derive 0uA, 10uA, 400uA, 800uA.
-Values
+> Thanks
+> Kishon
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-> +ti,enable-extended-delay: Enable extended delay.
-> +
-> +Example:
-> +
-> +pmic {
-> +	compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
-> +	...
-> +	gpadc {
-> +		compatible = "ti,palmas-gpadc";
-> +		interrupts = <18 0
-> +			      16 0
-> +			      17 0>;
-> +		#io-channel-cells = <1>;
-> +		ti,channel0-current-microamp = <5>;
-> +		ti,channel3-current-microamp = <10>;
-> +		};
-> +	};
-> +	...
-> +};
-> diff --git a/drivers/iio/adc/palmas_gpadc.c b/drivers/iio/adc/palmas_gpadc.c
-> index 71763c5..f42eb8a 100644
-> --- a/drivers/iio/adc/palmas_gpadc.c
-> +++ b/drivers/iio/adc/palmas_gpadc.c
-> @@ -21,6 +21,8 @@
->  #include <linux/pm.h>
->  #include <linux/mfd/palmas.h>
->  #include <linux/completion.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/machine.h>
->  #include <linux/iio/driver.h>
-> @@ -460,6 +462,34 @@ static const struct iio_chan_spec palmas_gpadc_iio_channel[] = {
->  	PALMAS_ADC_CHAN_IIO(IN15, IIO_VOLTAGE, IIO_CHAN_INFO_PROCESSED),
->  };
->  
-> +static int palmas_gpadc_get_adc_dt_data(struct platform_device *pdev,
-> +	struct palmas_gpadc_platform_data **gpadc_pdata)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct palmas_gpadc_platform_data *gp_data;
-> +	int ret;
-> +	u32 pval;
-> +
-> +	gp_data = devm_kzalloc(&pdev->dev, sizeof(*gp_data), GFP_KERNEL);
-> +	if (!gp_data)
-> +		return -ENOMEM;
-> +
-> +	ret = of_property_read_u32(np, "ti,channel0-current-microamp", &pval);
-> +	if (!ret)
-> +		gp_data->ch0_current = pval;
-> +
-> +	ret = of_property_read_u32(np, "ti,channel3-current-microamp", &pval);
-> +	if (!ret)
-> +		gp_data->ch3_current = pval;
-> +
-> +	gp_data->extended_delay = of_property_read_bool(np,
-> +					"ti,enable-extended-delay");
-> +
-> +	*gpadc_pdata = gp_data;
-> +
-> +	return 0;
-> +}
-> +
->  static int palmas_gpadc_probe(struct platform_device *pdev)
->  {
->  	struct palmas_gpadc *adc;
-> @@ -469,12 +499,17 @@ static int palmas_gpadc_probe(struct platform_device *pdev)
->  	int ret, i;
->  
->  	pdata = dev_get_platdata(pdev->dev.parent);
-> -	if (!pdata || !pdata->gpadc_pdata) {
-> -		dev_err(&pdev->dev, "No platform data\n");
-> -		return -ENODEV;
-> -	}
->  
-> -	gpadc_pdata = pdata->gpadc_pdata;
-> +	if (pdata && pdata->gpadc_pdata)
-> +		gpadc_pdata = pdata->gpadc_pdata;
-> +
-> +	if (!gpadc_pdata && pdev->dev.of_node) {
-> +		ret = palmas_gpadc_get_adc_dt_data(pdev, &gpadc_pdata);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +	if (!gpadc_pdata)
-> +		return -EINVAL;
->  
->  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc));
->  	if (!indio_dev) {
-> @@ -790,12 +825,19 @@ static const struct dev_pm_ops palmas_pm_ops = {
->  				palmas_gpadc_resume)
->  };
->  
-> +static const struct of_device_id of_palmas_gpadc_match_tbl[] = {
-> +	{ .compatible = "ti,palmas-gpadc", },
-> +	{ /* end */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, of_palmas_gpadc_match_tbl);
-> +
->  static struct platform_driver palmas_gpadc_driver = {
->  	.probe = palmas_gpadc_probe,
->  	.remove = palmas_gpadc_remove,
->  	.driver = {
->  		.name = MOD_NAME,
->  		.pm = &palmas_pm_ops,
-> +		.of_match_table = of_palmas_gpadc_match_tbl,
->  	},
->  };
->  
-> 
+
+
+-- 
+Regards,
+Alim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
