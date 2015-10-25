@@ -1,57 +1,61 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: rockchip: Add the OTP gpio pinctrl
-Date: Sun, 25 Oct 2015 08:55:03 +0100
-Message-ID: <2741625.HAsG2fX6yg@diego>
-References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com> <1445599528-18825-4-git-send-email-wxt@rock-chips.com> <CAD=FV=WBCD8WsXV2mAGUD6y=BFScbFc9U3XA7jAB-rqOLp4qGA@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH-v5 RESEND 2/5] i2c: pxa: enable/disable i2c module across
+ msg xfer
+Date: Sun, 25 Oct 2015 09:21:53 +0100
+Message-ID: <20151025082152.GA2159@katana>
+References: <1440395978-9065-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440395978-9065-3-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150911185312.GA1516@katana>
+ <55F655FC.8070308@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=WBCD8WsXV2mAGUD6y=BFScbFc9U3XA7jAB-rqOLp4qGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F655FC.8070308@linaro.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, robert.jarzmik@free.fr, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Yi Zhang <yizhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 23. Oktober 2015, 08:25:08 schrieb Doug Anderson:
-> On Fri, Oct 23, 2015 at 4:25 AM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > Add the "init" anf "sleep" pinctrl as the OTP gpio state.
-> > We need the OTP pin is gpio state before resetting the TSADC controller,
-> > since the tshut polarity will generate a high signal.
-> > 
-> > "init" pinctrl property is defined by Doug's Patch[0].
-> > 
-> > Patch[0]:
-> > https://patchwork.kernel.org/patch/7454311/
-> > 
-> > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> > 
-> > Changes in v4: None
-> > 
-> > Changes in v3:
-> >   - Add the "sleep" pinctrl as the gpio state in PATCH[3/3]
-> > 
-> > Changes in v2:
-> >   - Add some commits for more obvious in PATCH[2/2]
-> > 
-> > Changes in v1:
-> >   - As the Doug comments, drop the thermal driver patchs since
-> >   
-> >     we can with pinctrl changing to work.
-> >   
-> >   - As the Doug's patch to add the 'init' property.
-> >  
-> >  arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> I realized that the subject of this patch should probably contain the
-> word rk3288, but I presume Heiko would rather add that himself than
-> for you to spin this again.  ;)
 
-yep :-) ... no need to respin for such an easy change.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> >>Enable i2c module/unit before transmission and disable when it
+> >>finishes.
+>=20
+> >Can't you use Runtime PM for that?
+> >
+>=20
+> I haven't tried it though, I can give a try and check.
+
+It should work. Other I2C drivers are doing exactly that.
+
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWLJEgAAoJEBQN5MwUoCm2xzQP/3kuJFMjCz2ZDBCWmyLMNEca
+5nSgm+4n1DDpxTul9evge93aBkFo//mzMXJNjAj9bdFMsPc91wXxMsvktqEMPX0Y
+uPw+Y4njbxEvOg8QN+jINGrlbZUulRblxQ/ttdv5OI2mK4oN1KuVZzcB/nk9Illc
+02bg3e7KSYUXv/LMgmKzdORPR5NsgQaOKlssIc5iRxNDlaHTru0EoTY08i/kAmzT
+AZ7HlwJDGwWmoL1ifLuRYzvhRFXfBl7QQSVdPdMoL0If+6ungBlX7lNrpxXstEJh
+8aALsHJjTDxEiVkANTrSw28CGRRD6fkbgH3UILiqU6unoOA5A33YbBQzwJdNg6h6
+f4mxu4VIvZw/r37Mwppo7FQawEXTCCymUKt7ekNre2MV1bjYW0umdL64G96Tzsej
+ZLwSIRcf6IJQmz96Uz+fA/exiyUh8HSr+0i/V9dPsYb4hAVrNKO9J4/LdUS7D1GU
+d9gAE3T4Azk4PS0LTH4IARkpfX9Tet39m86fJoycnCI0ghpB4S/dYo3ked5Xu/79
+S4IyaEsXyRPEAaOlGDcGyhSKEwAEEEeeH9qlELJZCz+yRM7kGBNtxaOaDNFPVxKJ
+sdzZlVFXR+ZL53/ieMm7xs7+wETRxzNT8YCtn0utBTA0jfXKPCrydP7esLQNj4h1
+RrB6banOtcDQzO4DqXpJ
+=sKAD
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
