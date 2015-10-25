@@ -1,41 +1,24 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [linux-nfc] [PATCH 18/30] nfc: st-nci: Add support for
- proprietary commands for factory tests
-Date: Sun, 25 Oct 2015 20:31:51 +0100
-Message-ID: <20151025193151.GA5987@zurbaran.home>
-References: <1445377701-8353-1-git-send-email-christophe-h.ricard@st.com>
- <1445377701-8353-19-git-send-email-christophe-h.ricard@st.com>
- <20151024064835.GD23609@zurbaran.home>
- <562B7737.6000106@gmail.com>
- <20151025171748.GH23609@zurbaran.home>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH 1/2] iio: adc: mcp320x: Deprecated compatible strings
+ with no vendor prefix
+Date: Sun, 25 Oct 2015 14:34:44 -0500
+Message-ID: <20151025193444.GA29072@deathstar>
+References: <1444827279-23163-1-git-send-email-javier@osg.samsung.com>
+ <1444827279-23163-2-git-send-email-javier@osg.samsung.com>
+ <20151014152726.GA29846@deathstar>
+ <562CCCD5.4030307@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151025171748.GH23609-nKCvNrh56OoJmsy6czSMtA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <562CCCD5.4030307@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, Andrea Galbusera <gizero@gmail.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?S=F8ren?= Andersen <san@rosetechnology.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 25, 2015 at 06:17:48PM +0100, Samuel Ortiz wrote:
-> > >Please rename that file to vendor_cmds.c.
-> > >I pushed a change to rename st-nci_se.c to se.c already, to keep the
-> > >file names consistent there.
-> > I think your latest change introduced a build break :(. The log
-> > message mention also MFC instead of NFC ;).
-> > 
-> > "In file included from drivers/nfc/st-nci/ndlc.c:23:0:
-> > drivers/nfc/st-nci/st-nci.h:22:23: fatal error: st-nci_se.h: No such
-> > file or directory
-> > #include "st-nci_se.h""
-> > I will send a fix in the v2 ;).
-> Sorry about that. I'll fix it up.
-Should be fixed now.
+On Sun, Oct 25, 2015 at 12:36:37PM +0000, Jonathan Cameron wrote:
+> Small point, Michael. Please add such acks below the the Author sign off.
+> Otherwise sometimes I miss them!  Added it now for this one.
 
-Cheers,
-Samuel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay sorry about the misplacement.
