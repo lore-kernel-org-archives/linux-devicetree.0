@@ -1,52 +1,42 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v2 16/35] nfc: st21nfca: Keep st21nfca_gates unchanged in load_session
-Date: Sun, 25 Oct 2015 22:54:31 +0100
-Message-ID: <1445810090-18403-17-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 09/35] nfc: nci: Add a call to nci_hci_clear_all_pipes at HCI initial activation.
+Date: Sun, 25 Oct 2015 22:54:24 +0100
+Message-ID: <1445810090-18403-10-git-send-email-christophe-h.ricard@st.com>
 References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We need to keep initial st_nci_gates values in order for
-nfc_hci_dev_connect_gates to create and open pipe when necessary.
+When session_id is filled to ff, the pipe configuration is probably
+incorrect.
 
-For example after a firmware update CLF pipes are cleared. Changing pipe
-values in st21nfca_gates was causing nfc_hci_dev_connect_gates not using
-accurate pipes value.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/nfc/nci/hci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
-index 819a94a..b4451f8 100644
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -190,14 +190,14 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
- 		if (j < ARRAY_SIZE(st21nfca_gates) &&
- 			st21nfca_gates[j].gate == info->dst_gate_id &&
- 			ST21NFCA_DM_IS_PIPE_OPEN(info->pipe_state)) {
--			st21nfca_gates[j].pipe = pipe_info[2];
-+			hdev->init_data.gates[j].pipe = pipe_info[2];
- 
- 			hdev->gate2pipe[st21nfca_gates[j].gate] =
--							st21nfca_gates[j].pipe;
--			hdev->pipes[st21nfca_gates[j].pipe].gate =
--							st21nfca_gates[j].gate;
--			hdev->pipes[st21nfca_gates[j].pipe].dest_host =
--							info->src_host_id;
-+						pipe_info[2];
-+			hdev->pipes[pipe_info[2]].gate =
-+						st21nfca_gates[j].gate;
-+			hdev->pipes[pipe_info[2]].dest_host =
-+						info->src_host_id;
- 		}
- 		kfree_skb(skb_pipe_info);
- 	}
+diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
+index 43d7931..a937bc6 100644
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -701,6 +701,10 @@ int nci_hci_dev_session_init(struct nci_dev *ndev)
+ 		/* Restore gate<->pipe table from some proprietary location. */
+ 		r = ndev->ops->hci_load_session(ndev);
+ 	} else {
++		r = nci_hci_clear_all_pipes(ndev);
++		if (r < 0)
++			goto exit;
++
+ 		r = nci_hci_dev_connect_gates(ndev,
+ 					      ndev->hci_dev->init_data.gate_count,
+ 					      ndev->hci_dev->init_data.gates);
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
