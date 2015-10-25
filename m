@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 29/35] nfc: st-nci: Add few code style fixes
-Date: Sun, 25 Oct 2015 22:54:44 +0100
-Message-ID: <1445810090-18403-30-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 26/35] nfc: st-nci: Fix host_list verification after secure element activation
+Date: Sun, 25 Oct 2015 22:54:41 +0100
+Message-ID: <1445810090-18403-27-git-send-email-christophe-h.ricard@st.com>
 References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,55 +10,40 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add some few code style fixes.
+A secure element can be activated in different order. The host_list is
+updated keeping a fixed order: <terminal_host_id><uicc_id><ese_id>.
 
 Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st-nci/i2c.c | 2 +-
- drivers/nfc/st-nci/se.c  | 2 +-
- net/nfc/nci/hci.c        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/nfc/st-nci/se.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
-index 172cbc3..2a96f1a 100644
---- a/drivers/nfc/st-nci/i2c.c
-+++ b/drivers/nfc/st-nci/i2c.c
-@@ -32,7 +32,7 @@
- #define DRIVER_DESC "NCI NFC driver for ST_NCI"
- 
- /* ndlc header */
--#define ST_NCI_FRAME_HEADROOM	1
-+#define ST_NCI_FRAME_HEADROOM 1
- #define ST_NCI_FRAME_TAILROOM 0
- 
- #define ST_NCI_I2C_MIN_SIZE 4   /* PCB(1) + NCI Packet header(3) */
 diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index 1cc24b6..dbab722 100644
+index 3059baa..1cc24b6 100644
 --- a/drivers/nfc/st-nci/se.c
 +++ b/drivers/nfc/st-nci/se.c
-@@ -62,7 +62,7 @@ struct st_nci_pipe_info {
+@@ -423,7 +423,7 @@ static int st_nci_control_se(struct nci_dev *ndev, u8 se_idx,
+ 			     u8 state)
+ {
+ 	struct st_nci_info *info = nci_get_drvdata(ndev);
+-	int r;
++	int r, i;
+ 	struct sk_buff *sk_host_list;
+ 	u8 host_id;
  
- #define ST_NCI_EVT_SE_HARD_RESET		0x20
- #define ST_NCI_EVT_TRANSMIT_DATA		0x10
--#define ST_NCI_EVT_WTX_REQUEST		0x11
-+#define ST_NCI_EVT_WTX_REQUEST			0x11
- #define ST_NCI_EVT_SE_SOFT_RESET		0x11
- #define ST_NCI_EVT_SE_END_OF_APDU_TRANSFER	0x21
- #define ST_NCI_EVT_HOT_PLUG			0x03
-diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
-index 1d6aa5d..984d451 100644
---- a/net/nfc/nci/hci.c
-+++ b/net/nfc/nci/hci.c
-@@ -405,7 +405,7 @@ static void nci_hci_hcp_message_rx(struct nci_dev *ndev, u8 pipe,
- 		break;
- 	}
+@@ -470,7 +470,10 @@ static int st_nci_control_se(struct nci_dev *ndev, u8 se_idx,
+ 	if (r != NCI_HCI_ANY_OK)
+ 		return r;
  
--	nci_req_complete(ndev, 0);
-+	nci_req_complete(ndev, NCI_STATUS_OK);
- }
- 
- static void nci_hci_msg_rx_work(struct work_struct *work)
+-	host_id = sk_host_list->data[sk_host_list->len - 1];
++	for (i = 0; i < sk_host_list->len &&
++		sk_host_list->data[i] != se_idx; i++)
++		;
++	host_id = sk_host_list->data[i];
+ 	kfree_skb(sk_host_list);
+ 	if (state == ST_NCI_SE_MODE_ON && host_id == se_idx)
+ 		return se_idx;
 -- 
 2.1.4
 
