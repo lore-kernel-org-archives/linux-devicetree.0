@@ -1,54 +1,46 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v2 20/35] nfc: st21nfca: Change st21nfca_gates offset when looking for a pipe in the table
-Date: Sun, 25 Oct 2015 22:54:35 +0100
-Message-ID: <1445810090-18403-21-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 23/35] nfc: netlink: Add missing NFC_ATTR comments
+Date: Sun, 25 Oct 2015 22:54:38 +0100
+Message-ID: <1445810090-18403-24-git-send-email-christophe-h.ricard@st.com>
 References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It is useless to start from index 0 when looking for a gate because only
-dynamic pipes are retrieved with ST21NFCA_DM_GETINFO(ST21NFCA_DM_GETINFO_PIPE_LIST).
+NFC_CMD_ACTIVATE_TARGET and NFC_ATTR_SE_PARAMS comments are missing.
 
-The first dynamic pipe is present at index 3.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/core.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/uapi/linux/nfc.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
-index b4451f8..814d8ff4 100644
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -85,12 +85,13 @@ static DECLARE_BITMAP(dev_mask, ST21NFCA_NUM_DEVICES);
- 
- static struct nfc_hci_gate st21nfca_gates[] = {
- 	{NFC_HCI_ADMIN_GATE, NFC_HCI_ADMIN_PIPE},
-+	{NFC_HCI_LINK_MGMT_GATE, NFC_HCI_LINK_MGMT_PIPE},
-+	{ST21NFCA_DEVICE_MGNT_GATE, ST21NFCA_DEVICE_MGNT_PIPE},
-+
- 	{NFC_HCI_LOOPBACK_GATE, NFC_HCI_INVALID_PIPE},
- 	{NFC_HCI_ID_MGMT_GATE, NFC_HCI_INVALID_PIPE},
--	{NFC_HCI_LINK_MGMT_GATE, NFC_HCI_LINK_MGMT_PIPE},
- 	{NFC_HCI_RF_READER_B_GATE, NFC_HCI_INVALID_PIPE},
- 	{NFC_HCI_RF_READER_A_GATE, NFC_HCI_INVALID_PIPE},
--	{ST21NFCA_DEVICE_MGNT_GATE, ST21NFCA_DEVICE_MGNT_PIPE},
- 	{ST21NFCA_RF_READER_F_GATE, NFC_HCI_INVALID_PIPE},
- 	{ST21NFCA_RF_READER_14443_3_A_GATE, NFC_HCI_INVALID_PIPE},
- 	{ST21NFCA_RF_READER_ISO15693_GATE, NFC_HCI_INVALID_PIPE},
-@@ -183,7 +184,7 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
- 			continue;
- 		}
- 
--		for (j = 0; (j < ARRAY_SIZE(st21nfca_gates)) &&
-+		for (j = 3; (j < ARRAY_SIZE(st21nfca_gates)) &&
- 			(st21nfca_gates[j].gate != info->dst_gate_id) ; j++)
- 			;
- 
+diff --git a/include/uapi/linux/nfc.h b/include/uapi/linux/nfc.h
+index dd3f753..399f39f 100644
+--- a/include/uapi/linux/nfc.h
++++ b/include/uapi/linux/nfc.h
+@@ -86,6 +86,7 @@
+  *	for this event is the application ID (AID).
+  * @NFC_CMD_GET_SE: Dump all discovered secure elements from an NFC controller.
+  * @NFC_CMD_SE_IO: Send/Receive APDUs to/from the selected secure element.
++ * @NFC_CMD_ACTIVATE_TARGET: Request NFC controller to reactivate target.
+  * @NFC_CMD_VENDOR: Vendor specific command, to be implemented directly
+  *	from the driver in order to support hardware specific operations.
+  */
+@@ -156,6 +157,7 @@ enum nfc_commands {
+  * @NFC_ATTR_APDU: Secure element APDU
+  * @NFC_ATTR_TARGET_ISO15693_DSFID: ISO 15693 Data Storage Format Identifier
+  * @NFC_ATTR_TARGET_ISO15693_UID: ISO 15693 Unique Identifier
++ * @NFC_ATTR_SE_PARAMS: Parameters data from an evt_transaction
+  * @NFC_ATTR_VENDOR_ID: NFC manufacturer unique ID, typically an OUI
+  * @NFC_ATTR_VENDOR_SUBCMD: Vendor specific sub command
+  * @NFC_ATTR_VENDOR_DATA: Vendor specific data, to be optionally passed
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
