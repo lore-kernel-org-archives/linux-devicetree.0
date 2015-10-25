@@ -1,50 +1,64 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 18/35] nfc: st-nci: Add support for NCI_HCI_IDENTITY_MGMT_GATE
-Date: Sun, 25 Oct 2015 22:54:33 +0100
-Message-ID: <1445810090-18403-19-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 29/35] nfc: st-nci: Add few code style fixes
+Date: Sun, 25 Oct 2015 22:54:44 +0100
+Message-ID: <1445810090-18403-30-git-send-email-christophe-h.ricard@st.com>
 References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445810090-18403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-NCI_HCI_IDENTITY_MGMT_GATE might be useful to get information for example
-about hardware or firmware version.
+Add some few code style fixes.
 
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st-nci/se.c    | 3 +++
- include/net/nfc/nci_core.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/nfc/st-nci/i2c.c | 2 +-
+ drivers/nfc/st-nci/se.c  | 2 +-
+ net/nfc/nci/hci.c        | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
+index 172cbc3..2a96f1a 100644
+--- a/drivers/nfc/st-nci/i2c.c
++++ b/drivers/nfc/st-nci/i2c.c
+@@ -32,7 +32,7 @@
+ #define DRIVER_DESC "NCI NFC driver for ST_NCI"
+ 
+ /* ndlc header */
+-#define ST_NCI_FRAME_HEADROOM	1
++#define ST_NCI_FRAME_HEADROOM 1
+ #define ST_NCI_FRAME_TAILROOM 0
+ 
+ #define ST_NCI_I2C_MIN_SIZE 4   /* PCB(1) + NCI Packet header(3) */
 diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index 11e49a5..5d1747d 100644
+index 1cc24b6..dbab722 100644
 --- a/drivers/nfc/st-nci/se.c
 +++ b/drivers/nfc/st-nci/se.c
-@@ -112,6 +112,9 @@ static struct nci_hci_gate st_nci_gates[] = {
- 	{ST_NCI_DEVICE_MGNT_GATE, ST_NCI_DEVICE_MGNT_PIPE,
- 					ST_NCI_HOST_CONTROLLER_ID},
+@@ -62,7 +62,7 @@ struct st_nci_pipe_info {
  
-+	{NCI_HCI_IDENTITY_MGMT_GATE, NCI_HCI_INVALID_PIPE,
-+					ST_NCI_HOST_CONTROLLER_ID},
-+
- 	/* Secure element pipes are created by secure element host */
- 	{ST_NCI_CONNECTIVITY_GATE, NCI_HCI_DO_NOT_OPEN_PIPE,
- 					ST_NCI_HOST_CONTROLLER_ID},
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index b2f2e04..377f3de 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -125,6 +125,7 @@ struct nci_conn_info {
+ #define ST_NCI_EVT_SE_HARD_RESET		0x20
+ #define ST_NCI_EVT_TRANSMIT_DATA		0x10
+-#define ST_NCI_EVT_WTX_REQUEST		0x11
++#define ST_NCI_EVT_WTX_REQUEST			0x11
+ #define ST_NCI_EVT_SE_SOFT_RESET		0x11
+ #define ST_NCI_EVT_SE_END_OF_APDU_TRANSFER	0x21
+ #define ST_NCI_EVT_HOT_PLUG			0x03
+diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
+index 1d6aa5d..984d451 100644
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -405,7 +405,7 @@ static void nci_hci_hcp_message_rx(struct nci_dev *ndev, u8 pipe,
+ 		break;
+ 	}
  
- /* Gates */
- #define NCI_HCI_ADMIN_GATE         0x00
-+#define NCI_HCI_IDENTITY_MGMT_GATE 0x05
- #define NCI_HCI_LINK_MGMT_GATE     0x06
+-	nci_req_complete(ndev, 0);
++	nci_req_complete(ndev, NCI_STATUS_OK);
+ }
  
- /* Pipes */
+ static void nci_hci_msg_rx_work(struct work_struct *work)
 -- 
 2.1.4
 
