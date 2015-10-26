@@ -1,156 +1,621 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800 Ethernet controller
-Date: Mon, 26 Oct 2015 12:05:21 +0000
-Message-ID: <yw1x1tchg7i6.fsf@unicorn.mansr.com>
-References: <1445522558-5808-1-git-send-email-mans@mansr.com>
-	<1445522558-5808-2-git-send-email-mans@mansr.com>
-	<562A23B9.3090208@sigmadesigns.com>
-	<yw1xio5xg0rq.fsf@unicorn.mansr.com>
-	<562DF394.3030500@sigmadesigns.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] EDAC: Add ARM64 EDAC
+Date: Mon, 26 Oct 2015 12:46:17 +0000
+Message-ID: <20151026124616.GB9740@leverpostej>
+References: <1445460097-10260-1-git-send-email-brijeshkumar.singh@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <562DF394.3030500-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org> (Marc Gonzalez's message of
-	"Mon, 26 Oct 2015 10:34:12 +0100")
+Content-Disposition: inline
+In-Reply-To: <1445460097-10260-1-git-send-email-brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
-Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Frias <sebastian_frias-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thibaud Cornic <thibaud_cornic-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+To: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org> writes:
+On Wed, Oct 21, 2015 at 03:41:37PM -0500, Brijesh Singh wrote:
+> Add support for Cortex A57 and A53 EDAC driver.
+> 
+> Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
+> CC: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> CC: pawel.moll-5wv7dgnIgG8@public.gmane.org
+> CC: mark.rutland-5wv7dgnIgG8@public.gmane.org
+> CC: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+> CC: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+> CC: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org
+> CC: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org
+> CC: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+> CC: andre.przywara-5wv7dgnIgG8@public.gmane.org
+> CC: arnd-r2nGTMty4D4@public.gmane.org
+> CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> 
+> v2:
+> * convert into generic arm64 edac driver
+> * remove AMD specific references from dt binding
+> * remove poll_msec property from dt binding
+> * add poll_msec as a module param, default is 100ms
+> * update copyright text
+> * define macro mnemonics for L1 and L2 RAMID
+> * check L2 error per-cluster instead of per core
+> * update function names
+> * use get_online_cpus() and put_online_cpus() to make L1 and L2 register 
+>   read hotplug-safe
+> * add error check in probe routine
+> 
+>  .../devicetree/bindings/edac/armv8-edac.txt        |  15 +
+>  drivers/edac/Kconfig                               |   6 +
+>  drivers/edac/Makefile                              |   1 +
+>  drivers/edac/cortex_arm64_edac.c                   | 457 +++++++++++++++++++++
+>  4 files changed, 479 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/armv8-edac.txt
+>  create mode 100644 drivers/edac/cortex_arm64_edac.c
+> 
+> diff --git a/Documentation/devicetree/bindings/edac/armv8-edac.txt b/Documentation/devicetree/bindings/edac/armv8-edac.txt
+> new file mode 100644
+> index 0000000..dfd128f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/armv8-edac.txt
+> @@ -0,0 +1,15 @@
+> +* ARMv8 L1/L2 cache error reporting
+> +
+> +On ARMv8, CPU Memory Error Syndrome Register and L2 Memory Error Syndrome
+> +Register can be used for checking L1 and L2 memory errors.
+> +
+> +The following section describes the ARMv8 EDAC DT node binding.
+> +
 
-> On 23/10/2015 15:41, M=E5ns Rullg=E5rd wrote:
->
->> Marc Gonzalez wrote:
->>=20
->>> On 22/10/2015 16:02, Mans Rullgard wrote:
->>>
->>>> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
->>>> using the "aurora,nb8800" compatible string.  When used in Sigma
->>>> Designs chips a few additional control registers are available.
->>>> This variant is indicated by the "sigma,smp8640-ethernet" compatib=
-le
->>>> string.
->>>
->>> I've been meaning to ask a noob question to the devicetree group
->>> about how names for compatible strings are chosen.
->>>
->>> Sigma Designs has two active SoC families, Tango3 (which consists o=
-f
->>> about a dozen MIPS-based SoCs, typically named SMP86xx) and Tango4
->>> (a few ARM-based SoCs, typically named SMP87xx). I should note that
->>> there is no SMP8640 SoC AFAIK, rather SMP864x is a Tango3 sub-famil=
-y
->>> (I could locate 42,43,44,45,46).
->
-> Just to make things a bit more confusing, I learned that Sigma made
-> one MIPS-based Tango4 SoC...
+To counter my original point, I now believe that the MIDR alone is
+woefully insufficient to detect if we can use this feature. That needs
+to be described explicitly to us (e.g. via DT), or the feature needs to
+be abstracted entirely (e.g. using APEI).
 
-That explains the presence of tango4 mentions in a Sigma MIPS kernel
-tree I found.  Do you know what it was called?
+More on that below.
 
->>> AFAIK, all our SoCs are using the same Aurora NB8800 Ethernet MAC,
->>> along with the extra features. I find it odd to use a specific SoC
->>> model to refer to this device, instead of a more generic name.
->>> (It's weird having to mention smp8640 in the tango4 DT.)
->>=20
->> I picked 8640 since all 8640 or higher chips are compatible (863x ch=
-ips
->> (tango2) are not).  Some of the later versions have additional extra
->> features, but they all work with the basic driver.
->
-> According to my branch's FAEs, the first Tango3 was SMP8644.
+> +Required properties:
+> +- compatible: Should be "arm,armv8-edac"
+> +
+> +Example:
+> +	edac {
+> +		compatible = "arm,armv8-edac";
+> +	};
 
-I don't know which was first out the door, but judging by marketing
-materials, 8642, 8644, and 8646 were available around the same time.
-All of these also have an odd-numbered variant (8643 etc) without
-Macrovision features.
+As I mentioned previously, this is _not_ an ARMv8 feature. It's not a
+Cortex-A series feature (nor a Cortex series feature).
 
-> I showed the DT to a colleague, and his reaction was: "Don't use
-> smp8640, it will confuse other engineers, Sigma didn't make a 8640
-> SoC."
->
-> http://www.qobuz.com/info/IMG/pdf/SMP8643.pdf
->
-> Would you be willing to change the compatible string to
-> "sigma,smp8644-foo" or "sigma,smp864x-foo" ?
->
-> If it's not possible, I suppose I can add comments in the DT, to clea=
-r
-> the potential confusion for Sigma engineers.
+This is an IMPLEMENTATION DEFINED feature. If we need compatible
+strings, we need one for each particular implementation, as we have for
+the IMPLEMENTATION DEFINED PMU bindings (e.g. "arm,cortex-a57-pmu"). For
+ACPI I expect vendors to implement APEI.
 
-My intent was certainly not to confuse.  Sigma product brochures talk
-about the "SMP8640 series," so I figured that would be a good way of
-referring to them as a group.  See e.g. this PDF, now gone from the
-main sigmadesigns.com site:
-http://wayback.archive.org/web/20150101024010/http://www.sigmadesigns.c=
-om/uploads/documents/selection_guide.pdf
+We also need to consider:
 
->> There also appear to be some differences (bug fixes?) between 8643 a=
-nd
->> 8759 (the ones I have) not documented anywhere.
->
-> Suppose you identify these differences, and you make the appropriate
-> changes to the driver. What compatible string would you use to refer
-> to the new features? I used "sigma,tango4-ethernet" but IIUC it must
-> be more specific, such as the first Tango4 chip to implement these
-> changes (I guess that would be the SMP8734).
+* big.LITTLE and/or multi-cluster
+  - Describe _which_ CPUs have the feature
+  - Describe the affinity of any interrupts
+  - Do we need to describe cluster topology (i.e. which CPUs are in the
+    same cluster)?
 
-There are differences even within the tango3 family.  The SMP867x chips
-have features not present on the earlier ones.  The tango3 and tango4
-codenames are too unspecific to be of use here.  It's better to use
-exact chip designations.
+* Virtualization
+  - HCR_EL2.TIDCP will trap access to this feature, and hypervisors will
+    have to set this to prevent guests from corrupting the HW state. As
+    far as I am aware, KVM and/or Xen will likely kill the guest in this
+    case (e.g. by injecting an undefined instruction abort).
 
-> So I should write something like this in my DT?
->
->   eth0: ethernet@26000 {
->     compatible =3D "sigma,smp8734-ethernet", "sigma,smp8640-ethernet"=
-, "aurora,nb8800";
->
-> Hmmm, you mention this below, but you used "sigma,smp8759-ethernet".
-> What about earlier chips?
+* Interaction with firmware
+  - When/do we handle interrupts?
+  - When is it valid to write back and clear an error? We should not do
+    this behind the back of any firmware that owns the interface.
 
-OK, how about this scheme then:
+* Future CPU revisions.
+  - The feature is IMPLEMENTATION DEFINED, and has no discoverability
+    mechanism. We have no guarantee that future revisions of the CPUs
+    currently supporting the feature will continue to support the
+    feature and/or have a compatible interface. Handling this is
+    painful.
 
-- Device trees list the exact chip, the chip family, the oldest
-  compatible family, and finally the basic "aurora,nb8800".  For the
-  SMP8759 that would look like this:
-  "sigma,smp8759-ethernet", "sigma,smp87xx-ethernet", "sigma,smp864x-et=
-hernet",
-    "aurora,nb8800"
+We shy from using IMPLEMENTATION DEFINED features because of issues like
+these. Ideally, this would all be left to firmware, and handled with a
+generic interface like APEI.
 
-- Drivers match against whatever they need to in order to safely
-  identify features.  If the driver finds a match for e.g.
-  "sigma,smp864x-ethernet" it is allowed to make use of any features
-  present in all chips of that family (even if the actual chip is a
-  later one, the DT says it's compatible).  If a specific chip is found
-  to need a bug workaround or whatever, the driver can enable that by
-  matching on the exact string.
+Thanks,
+Mark.
 
-This approach means that if the driver is updated to support newer
-features, no change is needed to the devicetree, and if a new chip show=
-s
-up, say a hypothetical smp8764, a driver with support for the smp87xx
-family will automatically recognise it without changes.  Unfortunately
-the 863x (tango2) chips are not compatible with 864x and later, so it's
-not safe to use a catch-all smp86xx.
-
-Speaking more generally about device trees, for chip families like this=
-,
-it can be a good solution to have all the common parts in, say,
-smp87xx.dtsi which is included by chip-specific files, i.e. smp8734.dts=
-i
-and smp8759.dtsi, with overrides and additions as necessary.  These
-files can then be included by the actual board files such as
-smp8759-vantage.dts which can apply further tweaks and add nodes for
-off-chip peripherals.
-
---=20
-M=E5ns Rullg=E5rd
-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
+> +
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index ef25000..dd7c195 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -390,4 +390,10 @@ config EDAC_XGENE
+>  	  Support for error detection and correction on the
+>  	  APM X-Gene family of SOCs.
+>  
+> +config EDAC_CORTEX_ARM64
+> +	tristate "ARM Cortex A57/A53"
+> +	depends on EDAC_MM_EDAC && ARM64
+> +	help
+> +	  Support for error detection and correction on the
+> +	  ARM Cortex A57 and A53.
+>  endif # EDAC
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index ae3c5f3..ac01660 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -68,3 +68,4 @@ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
+>  obj-$(CONFIG_EDAC_ALTERA_MC)		+= altera_edac.o
+>  obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
+>  obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
+> +obj-$(CONFIG_EDAC_CORTEX_ARM64)		+= cortex_arm64_edac.o
+> diff --git a/drivers/edac/cortex_arm64_edac.c b/drivers/edac/cortex_arm64_edac.c
+> new file mode 100644
+> index 0000000..c37bb94
+> --- /dev/null
+> +++ b/drivers/edac/cortex_arm64_edac.c
+> @@ -0,0 +1,457 @@
+> +/*
+> + * Cortex ARM64 EDAC
+> + *
+> + * Copyright (c) 2015, Advanced Micro Devices
+> + * Author: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "edac_core.h"
+> +
+> +#define EDAC_MOD_STR             "cortex_arm64_edac"
+> +
+> +#define A57_CPUMERRSR_EL1_INDEX(x)   ((x) & 0x1ffff)
+> +#define A57_CPUMERRSR_EL1_BANK(x)    (((x) >> 18) & 0x1f)
+> +#define A57_CPUMERRSR_EL1_RAMID(x)   (((x) >> 24) & 0x7f)
+> +#define A57_CPUMERRSR_EL1_VALID(x)   ((x) & (1 << 31))
+> +#define A57_CPUMERRSR_EL1_REPEAT(x)  (((x) >> 32) & 0x7f)
+> +#define A57_CPUMERRSR_EL1_OTHER(x)   (((x) >> 40) & 0xff)
+> +#define A57_CPUMERRSR_EL1_FATAL(x)   ((x) & (1UL << 63))
+> +#define A57_L1_I_TAG_RAM	     0x00
+> +#define A57_L1_I_DATA_RAM	     0x01
+> +#define A57_L1_D_TAG_RAM	     0x08
+> +#define A57_L1_D_DATA_RAM	     0x09
+> +#define A57_L1_TLB_RAM		     0x18
+> +
+> +#define A57_L2MERRSR_EL1_INDEX(x)    ((x) & 0x1ffff)
+> +#define A57_L2MERRSR_EL1_CPUID(x)    (((x) >> 18) & 0xf)
+> +#define A57_L2MERRSR_EL1_RAMID(x)    (((x) >> 24) & 0x7f)
+> +#define A57_L2MERRSR_EL1_VALID(x)    ((x) & (1 << 31))
+> +#define A57_L2MERRSR_EL1_REPEAT(x)   (((x) >> 32) & 0xff)
+> +#define A57_L2MERRSR_EL1_OTHER(x)    (((x) >> 40) & 0xff)
+> +#define A57_L2MERRSR_EL1_FATAL(x)    ((x) & (1UL << 63))
+> +#define A57_L2_TAG_RAM		     0x10
+> +#define A57_L2_DATA_RAM		     0x11
+> +#define A57_L2_SNOOP_TAG_RAM	     0x12
+> +#define A57_L2_DIRTY_RAM	     0x14
+> +#define A57_L2_INCLUSION_PF_RAM      0x18
+> +
+> +#define A53_CPUMERRSR_EL1_ADDR(x)    ((x) & 0xfff)
+> +#define A53_CPUMERRSR_EL1_CPUID(x)   (((x) >> 18) & 0x07)
+> +#define A53_CPUMERRSR_EL1_RAMID(x)   (((x) >> 24) & 0x7f)
+> +#define A53_CPUMERRSR_EL1_VALID(x)   ((x) & (1 << 31))
+> +#define A53_CPUMERRSR_EL1_REPEAT(x)  (((x) >> 32) & 0xff)
+> +#define A53_CPUMERRSR_EL1_OTHER(x)   (((x) >> 40) & 0xff)
+> +#define A53_CPUMERRSR_EL1_FATAL(x)   ((x) & (1UL << 63))
+> +#define A53_L1_I_TAG_RAM	     0x00
+> +#define A53_L1_I_DATA_RAM	     0x01
+> +#define A53_L1_D_TAG_RAM	     0x08
+> +#define A53_L1_D_DATA_RAM	     0x09
+> +#define A53_L1_D_DIRT_RAM	     0x0A
+> +#define A53_L1_TLB_RAM		     0x18
+> +
+> +#define A53_L2MERRSR_EL1_INDEX(x)    (((x) >> 3) & 0x3fff)
+> +#define A53_L2MERRSR_EL1_CPUID(x)    (((x) >> 18) & 0x0f)
+> +#define A53_L2MERRSR_EL1_RAMID(x)    (((x) >> 24) & 0x7f)
+> +#define A53_L2MERRSR_EL1_VALID(x)    ((x) & (1 << 31))
+> +#define A53_L2MERRSR_EL1_REPEAT(x)   (((x) >> 32) & 0xff)
+> +#define A53_L2MERRSR_EL1_OTHER(x)    (((x) >> 40) & 0xff)
+> +#define A53_L2MERRSR_EL1_FATAL(x)    ((x) & (1UL << 63))
+> +#define A53_L2_TAG_RAM		     0x10
+> +#define A53_L2_DATA_RAM		     0x11
+> +#define A53_L2_SNOOP_RAM	     0x12
+> +
+> +#define L1_CACHE		     0
+> +#define L2_CACHE		     1
+> +
+> +int poll_msec = 100;
+> +
+> +struct cortex_arm64_edac {
+> +	struct edac_device_ctl_info *edac_ctl;
+> +};
+> +
+> +static inline u64 read_cpumerrsr_el1(void)
+> +{
+> +	u64 val;
+> +
+> +	asm volatile("mrs %0, s3_1_c15_c2_2" : "=r" (val));
+> +	return val;
+> +}
+> +
+> +static inline void write_cpumerrsr_el1(u64 val)
+> +{
+> +	asm volatile("msr s3_1_c15_c2_2, %0" :: "r" (val));
+> +}
+> +
+> +static inline u64 read_l2merrsr_el1(void)
+> +{
+> +	u64 val;
+> +
+> +	asm volatile("mrs %0, s3_1_c15_c2_3" : "=r" (val));
+> +	return val;
+> +}
+> +
+> +static inline void write_l2merrsr_el1(u64 val)
+> +{
+> +	asm volatile("msr s3_1_c15_c2_3, %0" :: "r" (val));
+> +}
+> +
+> +static void a53_parse_l2merrsr(struct edac_device_ctl_info *edac_ctl)
+> +{
+> +	int fatal;
+> +	int repeat_err, other_err;
+> +	u64 val = read_l2merrsr_el1();
+> +
+> +	if (!A53_L2MERRSR_EL1_VALID(val))
+> +		return;
+> +
+> +	fatal = A53_L2MERRSR_EL1_FATAL(val);
+> +	repeat_err = A53_L2MERRSR_EL1_REPEAT(val);
+> +	other_err = A53_L2MERRSR_EL1_OTHER(val);
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR,
+> +		    "A53 CPU%d L2 %s error detected!\n", smp_processor_id(),
+> +		    fatal ? "fatal" : "non-fatal");
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2MERRSR_EL1=%#llx\n", val);
+> +
+> +	switch (A53_L2MERRSR_EL1_RAMID(val)) {
+> +	case A53_L2_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Tag RAM\n");
+> +		break;
+> +	case A53_L2_DATA_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Data RAM\n");
+> +		break;
+> +	case A53_L2_SNOOP_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Snoop filter RAM\n");
+> +		break;
+> +	default:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
+> +		break;
+> +	}
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
+> +		    repeat_err);
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
+> +		    other_err);
+> +	if (fatal)
+> +		edac_device_handle_ue(edac_ctl, smp_processor_id(), L2_CACHE,
+> +				      edac_ctl->name);
+> +	else
+> +		edac_device_handle_ce(edac_ctl, smp_processor_id(), L2_CACHE,
+> +				      edac_ctl->name);
+> +	write_l2merrsr_el1(0);
+> +}
+> +
+> +static void a57_parse_l2merrsr(struct edac_device_ctl_info *edac_ctl)
+> +{
+> +	int fatal;
+> +	int repeat_err, other_err;
+> +	u64 val = read_l2merrsr_el1();
+> +
+> +	if (!A57_L2MERRSR_EL1_VALID(val))
+> +		return;
+> +
+> +	fatal = A57_L2MERRSR_EL1_FATAL(val);
+> +	repeat_err = A57_L2MERRSR_EL1_REPEAT(val);
+> +	other_err = A57_L2MERRSR_EL1_OTHER(val);
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR,
+> +		    "A57 CPU%d L2 %s error detected!\n", smp_processor_id(),
+> +		    fatal ? "fatal" : "non-fatal");
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2MERRSR_EL1=%#llx\n", val);
+> +
+> +	switch (A57_L2MERRSR_EL1_RAMID(val)) {
+> +	case A57_L2_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Tag RAM\n");
+> +		break;
+> +	case A57_L2_DATA_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Data RAM\n");
+> +		break;
+> +	case A57_L2_SNOOP_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Snoop tag RAM\n");
+> +		break;
+> +	case A57_L2_DIRTY_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 Dirty RAM\n");
+> +		break;
+> +	case A57_L2_INCLUSION_PF_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 inclusion PF RAM\n");
+> +		break;
+> +	default:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
+> +		break;
+> +	}
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
+> +		    repeat_err);
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
+> +		    other_err);
+> +	if (fatal)
+> +		edac_device_handle_ue(edac_ctl, smp_processor_id(), L2_CACHE,
+> +				      edac_ctl->name);
+> +	else
+> +		edac_device_handle_ce(edac_ctl, smp_processor_id(), L2_CACHE,
+> +				      edac_ctl->name);
+> +	write_l2merrsr_el1(0);
+> +}
+> +
+> +static void a57_parse_cpumerrsr(struct edac_device_ctl_info *edac_ctl)
+> +{
+> +	int fatal;
+> +	int repeat_err, other_err;
+> +	u64 val = read_cpumerrsr_el1();
+> +
+> +	if (!A57_CPUMERRSR_EL1_VALID(val))
+> +		return;
+> +
+> +	fatal = A57_CPUMERRSR_EL1_FATAL(val);
+> +	repeat_err = A57_CPUMERRSR_EL1_REPEAT(val);
+> +	other_err = A57_CPUMERRSR_EL1_OTHER(val);
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR,
+> +		    "CPU%d L1 %s error detected!\n", smp_processor_id(),
+> +		    fatal ? "fatal" : "non-fatal");
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "CPUMERRSR_EL1=%#llx\n", val);
+> +
+> +	switch (A57_CPUMERRSR_EL1_RAMID(val)) {
+> +	case A57_L1_I_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Tag RAM\n");
+> +		break;
+> +	case A57_L1_I_DATA_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Data RAM\n");
+> +		break;
+> +	case A57_L1_D_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Tag RAM\n");
+> +		break;
+> +	case A57_L1_D_DATA_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Data RAM\n");
+> +		break;
+> +	case A57_L1_TLB_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 TLB RAM\n");
+> +		break;
+> +	default:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
+> +		break;
+> +	}
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
+> +		    repeat_err);
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
+> +		    other_err);
+> +
+> +	if (fatal)
+> +		edac_device_handle_ue(edac_ctl, smp_processor_id(), L1_CACHE,
+> +				      edac_ctl->name);
+> +	else
+> +		edac_device_handle_ce(edac_ctl, smp_processor_id(), L1_CACHE,
+> +				      edac_ctl->name);
+> +	write_cpumerrsr_el1(0);
+> +}
+> +
+> +static void a53_parse_cpumerrsr(struct edac_device_ctl_info *edac_ctl)
+> +{
+> +	int fatal;
+> +	int repeat_err, other_err;
+> +	u64 val = read_cpumerrsr_el1();
+> +
+> +	if (!A53_CPUMERRSR_EL1_VALID(val))
+> +		return;
+> +
+> +	fatal = A53_CPUMERRSR_EL1_FATAL(val);
+> +	repeat_err = A53_CPUMERRSR_EL1_REPEAT(val);
+> +	other_err = A53_CPUMERRSR_EL1_OTHER(val);
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR,
+> +		    "A53 CPU%d L1 %s error detected!\n", smp_processor_id(),
+> +		    fatal ? "fatal" : "non-fatal");
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "CPUMERRSR_EL1=%#llx\n", val);
+> +
+> +	switch (A53_CPUMERRSR_EL1_RAMID(val)) {
+> +	case A53_L1_I_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Tag RAM\n");
+> +		break;
+> +	case A53_L1_I_DATA_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-I Data RAM\n");
+> +		break;
+> +	case A53_L1_D_TAG_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Tag RAM\n");
+> +		break;
+> +	case A53_L1_D_DATA_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L1-D Data RAM\n");
+> +		break;
+> +	case A53_L1_TLB_RAM:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "L2 TLB RAM\n");
+> +		break;
+> +	default:
+> +		edac_printk(KERN_CRIT, EDAC_MOD_STR, "unknown RAMID\n");
+> +		break;
+> +	}
+> +
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Repeated error count=%d",
+> +		    repeat_err);
+> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "Other error count=%d\n",
+> +		    other_err);
+> +
+> +	if (fatal)
+> +		edac_device_handle_ue(edac_ctl, smp_processor_id(), L1_CACHE,
+> +				      edac_ctl->name);
+> +	else
+> +		edac_device_handle_ce(edac_ctl, smp_processor_id(), L1_CACHE,
+> +				      edac_ctl->name);
+> +	write_cpumerrsr_el1(0);
+> +}
+> +
+> +static void parse_cpumerrsr(void *args)
+> +{
+> +	struct edac_device_ctl_info *edac_ctl = args;
+> +	int partnum = read_cpuid_part_number();
+> +
+> +	switch (partnum) {
+> +	case ARM_CPU_PART_CORTEX_A57:
+> +		a57_parse_cpumerrsr(edac_ctl);
+> +		break;
+> +	case ARM_CPU_PART_CORTEX_A53:
+> +		a53_parse_cpumerrsr(edac_ctl);
+> +		break;
+> +	}
+> +}
+> +
+> +static void parse_l2merrsr(void *args)
+> +{
+> +	struct edac_device_ctl_info *edac_ctl = args;
+> +	int partnum = read_cpuid_part_number();
+> +
+> +	switch (partnum) {
+> +	case ARM_CPU_PART_CORTEX_A57:
+> +		a57_parse_l2merrsr(edac_ctl);
+> +		break;
+> +	case ARM_CPU_PART_CORTEX_A53:
+> +		a53_parse_l2merrsr(edac_ctl);
+> +		break;
+> +	}
+> +}
+> +
+> +static void arm64_monitor_cache_errors(struct edac_device_ctl_info *edev_ctl)
+> +{
+> +	int cpu;
+> +	struct cpumask cluster_mask, old_mask;
+> +
+> +	cpumask_clear(&cluster_mask);
+> +	cpumask_clear(&old_mask);
+> +
+> +	get_online_cpus();
+> +	for_each_online_cpu(cpu) {
+> +		smp_call_function_single(cpu, parse_cpumerrsr, edev_ctl, 0);
+> +		cpumask_copy(&cluster_mask, topology_core_cpumask(cpu));
+> +		if (cpumask_equal(&cluster_mask, &old_mask))
+> +			continue;
+> +		cpumask_copy(&old_mask, &cluster_mask);
+> +		smp_call_function_any(&cluster_mask, parse_l2merrsr,
+> +				      edev_ctl, 0);
+> +	}
+> +	put_online_cpus();
+> +}
+> +
+> +static int cortex_arm64_edac_probe(struct platform_device *pdev)
+> +{
+> +	int rc;
+> +	struct cortex_arm64_edac *drv;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
+> +	if (!drv)
+> +		return -ENOMEM;
+> +
+> +	drv->edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
+> +						   num_possible_cpus(), "L", 2,
+> +						   1, NULL, 0,
+> +						   edac_device_alloc_index());
+> +	if (IS_ERR(drv->edac_ctl))
+> +		return -ENOMEM;
+> +
+> +	drv->edac_ctl->poll_msec = poll_msec;
+> +	drv->edac_ctl->edac_check = arm64_monitor_cache_errors;
+> +	drv->edac_ctl->dev = dev;
+> +	drv->edac_ctl->mod_name = dev_name(dev);
+> +	drv->edac_ctl->dev_name = dev_name(dev);
+> +	drv->edac_ctl->ctl_name = "cpu_err";
+> +	drv->edac_ctl->panic_on_ue = 1;
+> +	platform_set_drvdata(pdev, drv);
+> +
+> +	rc = edac_device_add_device(drv->edac_ctl);
+> +	if (rc)
+> +		goto edac_alloc_failed;
+> +
+> +	return 0;
+> +
+> +edac_alloc_failed:
+> +	edac_device_free_ctl_info(drv->edac_ctl);
+> +	return rc;
+> +}
+> +
+> +static int cortex_arm64_edac_remove(struct platform_device *pdev)
+> +{
+> +	struct cortex_arm64_edac *drv = dev_get_drvdata(&pdev->dev);
+> +	struct edac_device_ctl_info *edac_ctl = drv->edac_ctl;
+> +
+> +	edac_device_del_device(edac_ctl->dev);
+> +	edac_device_free_ctl_info(edac_ctl);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cortex_arm64_edac_of_match[] = {
+> +	{ .compatible = "arm,armv8-edac" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
+> +
+> +static struct platform_driver cortex_arm64_edac_driver = {
+> +	.probe = cortex_arm64_edac_probe,
+> +	.remove = cortex_arm64_edac_remove,
+> +	.driver = {
+> +		.name = "arm64-edac",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = cortex_arm64_edac_of_match,
+> +	},
+> +};
+> +
+> +static int __init cortex_arm64_edac_init(void)
+> +{
+> +	int rc;
+> +
+> +	/* Only POLL mode is supported so far */
+> +	edac_op_state = EDAC_OPSTATE_POLL;
+> +
+> +	rc = platform_driver_register(&cortex_arm64_edac_driver);
+> +	if (rc) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_STR, "failed to register\n");
+> +		return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +module_init(cortex_arm64_edac_init);
+> +
+> +static void __exit cortex_arm64_edac_exit(void)
+> +{
+> +	platform_driver_unregister(&cortex_arm64_edac_driver);
+> +}
+> +module_exit(cortex_arm64_edac_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>");
+> +MODULE_DESCRIPTION("Cortex A57 and A53 EDAC driver");
+> +module_param(poll_msec, int, 0444);
+> +MODULE_PARM_DESC(poll_msec, "EDAC monitor poll interval in msec");
+> -- 
+> 1.9.1
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
