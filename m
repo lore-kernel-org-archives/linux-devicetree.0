@@ -1,20 +1,22 @@
 From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v12 4/8] PCI: designware: Add ARM64 support
-Date: Mon, 26 Oct 2015 19:35:46 +0800
-Message-ID: <1445859350-26375-5-git-send-email-wangzhou1@hisilicon.com>
+Subject: [PATCH v12 5/8] PCI: designware: Remove *_mod_base
+Date: Mon, 26 Oct 2015 19:35:47 +0800
+Message-ID: <1445859350-26375-6-git-send-email-wangzhou1@hisilicon.com>
 References: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-pci-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com
 Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
-function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
-move related operations to dw_pcie_host_init.
+This patch reverts commit f4c55c5a3f7f ("PCI: designware: Program ATU with
+untranslated address") based on 1/8 in this series. we delete *_mod_base in
+pcie-designware. This was discussed in [1]
+
+[1] http://www.spinics.net/lists/arm-kernel/msg436779.html
 
 Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
@@ -24,213 +26,174 @@ Tested-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 Tested-by: Minghuan Lian <Minghuan.Lian@freescale.com>
 Acked-by: Pratyush Anand <pratyush.anand@gmail.com>
 ---
- drivers/pci/host/pcie-designware.c | 127 +++++++++++--------------------------
- 1 file changed, 38 insertions(+), 89 deletions(-)
+ drivers/pci/host/pci-dra7xx.c      |  8 ++++----
+ drivers/pci/host/pcie-designware.c | 38 +++++++++-----------------------------
+ drivers/pci/host/pcie-designware.h |  4 ----
+ 3 files changed, 13 insertions(+), 37 deletions(-)
 
+diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
+index 0b4847a..8c36880 100644
+--- a/drivers/pci/host/pci-dra7xx.c
++++ b/drivers/pci/host/pci-dra7xx.c
+@@ -153,10 +153,10 @@ static void dra7xx_pcie_host_init(struct pcie_port *pp)
+ {
+ 	dw_pcie_setup_rc(pp);
+ 
+-	pp->io_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
+-	pp->mem_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
+-	pp->cfg0_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
+-	pp->cfg1_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->io_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->mem_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->cfg0_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->cfg1_base &= DRA7XX_CPU_TO_BUS_ADDR;
+ 
+ 	dra7xx_pcie_establish_link(pp);
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
 diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index b914424..0af1432 100644
+index 0af1432..1615deb 100644
 --- a/drivers/pci/host/pcie-designware.c
 +++ b/drivers/pci/host/pcie-designware.c
-@@ -69,16 +69,7 @@
- #define PCIE_ATU_FUNC(x)		(((x) & 0x7) << 16)
- #define PCIE_ATU_UPPER_TARGET		0x91C
- 
--static struct hw_pci dw_pci;
--
--static unsigned long global_io_offset;
--
--static inline struct pcie_port *sys_to_pcie(struct pci_sys_data *sys)
--{
--	BUG_ON(!sys->private_data);
--
--	return sys->private_data;
--}
-+static struct pci_ops dw_pcie_ops;
- 
- int dw_pcie_cfg_read(void __iomem *addr, int where, int size, u32 *val)
- {
-@@ -255,7 +246,7 @@ static void dw_pcie_msi_set_irq(struct pcie_port *pp, int irq)
- static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
- {
- 	int irq, pos0, i;
--	struct pcie_port *pp = sys_to_pcie(msi_desc_to_pci_sysdata(desc));
-+	struct pcie_port *pp = (struct pcie_port *) msi_desc_to_pci_sysdata(desc);
- 
- 	pos0 = bitmap_find_free_region(pp->msi_irq_in_use, MAX_MSI_IRQS,
- 				       order_base_2(no_irqs));
-@@ -298,7 +289,7 @@ static int dw_msi_setup_irq(struct msi_controller *chip, struct pci_dev *pdev,
- {
- 	int irq, pos;
- 	struct msi_msg msg;
--	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
-+	struct pcie_port *pp = pdev->bus->sysdata;
- 
- 	if (desc->msi_attrib.is_msix)
- 		return -EINVAL;
-@@ -327,7 +318,7 @@ static void dw_msi_teardown_irq(struct msi_controller *chip, unsigned int irq)
- {
- 	struct irq_data *data = irq_get_irq_data(irq);
- 	struct msi_desc *msi = irq_data_get_msi_desc(data);
--	struct pcie_port *pp = sys_to_pcie(msi_desc_to_pci_sysdata(msi));
-+	struct pcie_port *pp = (struct pcie_port *) msi_desc_to_pci_sysdata(msi);
- 
- 	clear_irq_range(pp, irq, 1, data->hwirq);
- }
-@@ -362,6 +353,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- {
- 	struct device_node *np = pp->dev->of_node;
+@@ -355,26 +355,17 @@ int dw_pcie_host_init(struct pcie_port *pp)
  	struct platform_device *pdev = to_platform_device(pp->dev);
-+	struct pci_bus *bus, *child;
+ 	struct pci_bus *bus, *child;
  	struct resource *cfg_res;
- 	u32 val, ns;
- 	const __be32 *addrp;
-@@ -399,12 +391,12 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			pp->io->name = "I/O";
- 			pp->io_size = resource_size(pp->io);
- 			pp->io_bus_addr = pp->io->start - win->offset;
--			pp->io->start = max_t(resource_size_t, PCIBIOS_MIN_IO,
--					      pp->io_bus_addr +
--					      global_io_offset);
--			pp->io->end = min_t(resource_size_t, IO_SPACE_LIMIT,
--					    pp->io_bus_addr + pp->io_size +
--					    global_io_offset - 1);
-+			ret = pci_remap_iospace(pp->io, pp->io_base);
-+			if (ret) {
-+				dev_warn(pp->dev, "error %d: failed to map resource %pR\n",
-+					 ret, pp->io);
-+				continue;
-+			}
- 			pp->io_base = pp->io->start;
+-	u32 val, ns;
+-	const __be32 *addrp;
+-	int i, index, ret;
++	u32 val;
++	int i, ret;
+ 	LIST_HEAD(res);
+ 	struct resource_entry *win;
  
- 			/* Find the untranslated IO space address */
-@@ -508,15 +500,35 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+-	ns = of_n_size_cells(np);
+-
+ 	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+ 	if (cfg_res) {
+ 		pp->cfg0_size = resource_size(cfg_res)/2;
+ 		pp->cfg1_size = resource_size(cfg_res)/2;
+ 		pp->cfg0_base = cfg_res->start;
+ 		pp->cfg1_base = cfg_res->start + pp->cfg0_size;
+-
+-		/* Find the untranslated configuration space address */
+-		index = of_property_match_string(np, "reg-names", "config");
+-		addrp = of_get_address(np, index, NULL, NULL);
+-		pp->cfg0_mod_base = of_read_number(addrp, ns);
+-		pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
+ 	} else if (!pp->va_cfg0_base) {
+ 		dev_err(pp->dev, "missing *config* reg space\n");
+ 	}
+@@ -397,19 +388,12 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 					 ret, pp->io);
+ 				continue;
+ 			}
+-			pp->io_base = pp->io->start;
+-
+-			/* Find the untranslated IO space address */
+-			pp->io_mod_base = pp->io->start;;
+ 			break;
+ 		case IORESOURCE_MEM:
+ 			pp->mem = win->res;
+ 			pp->mem->name = "MEM";
+ 			pp->mem_size = resource_size(pp->mem);
+ 			pp->mem_bus_addr = pp->mem->start - win->offset;
+-
+-			/* Find the untranslated MEM space address */
+-			pp->mem_mod_base = pp->mem->start;
+ 			break;
+ 		case 0:
+ 			pp->cfg = win->res;
+@@ -417,10 +401,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->cfg1_size = resource_size(pp->cfg)/2;
+ 			pp->cfg0_base = pp->cfg->start;
+ 			pp->cfg1_base = pp->cfg->start + pp->cfg0_size;
+-
+-			/* Find the untranslated configuration space address */
+-			pp->cfg0_mod_base = pp->cfg->start;
+-			pp->cfg1_mod_base = pp->cfg0_mod_base + pp->cfg0_size;
+ 			break;
+ 		case IORESOURCE_BUS:
+ 			pp->busn = win->res;
+@@ -488,7 +468,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
  
--#ifdef CONFIG_PCI_MSI
--	dw_pcie_msi_chip.dev = pp->dev;
-+	pp->root_bus_nr = pp->busn->start;
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		bus = pci_scan_root_bus_msi(pp->dev, pp->root_bus_nr,
-+					    &dw_pcie_ops, pp, &res,
-+					    &dw_pcie_msi_chip);
-+		dw_pcie_msi_chip.dev = pp->dev;
-+	} else
-+		bus = pci_scan_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
-+					pp, &res);
-+	if (!bus)
-+		return -ENOMEM;
-+
-+	if (pp->ops->scan_bus)
-+		pp->ops->scan_bus(pp);
-+
-+#ifdef CONFIG_ARM
-+	/* support old dtbs that incorrectly describe IRQs */
-+	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
- #endif
+ 	if (!pp->ops->rd_other_conf)
+ 		dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX1,
+-					  PCIE_ATU_TYPE_MEM, pp->mem_mod_base,
++					  PCIE_ATU_TYPE_MEM, pp->mem_base,
+ 					  pp->mem_bus_addr, pp->mem_size);
  
--	dw_pci.nr_controllers = 1;
--	dw_pci.private_data = (void **)&pp;
-+	if (!pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_size_bridges(bus);
-+		pci_bus_assign_resources(bus);
+ 	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+@@ -546,12 +526,12 @@ static int dw_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
  
--	pci_common_init_dev(pp->dev, &dw_pci);
-+		list_for_each_entry(child, &bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
+ 	if (bus->parent->number == pp->root_bus_nr) {
+ 		type = PCIE_ATU_TYPE_CFG0;
+-		cpu_addr = pp->cfg0_mod_base;
++		cpu_addr = pp->cfg0_base;
+ 		cfg_size = pp->cfg0_size;
+ 		va_cfg_base = pp->va_cfg0_base;
+ 	} else {
+ 		type = PCIE_ATU_TYPE_CFG1;
+-		cpu_addr = pp->cfg1_mod_base;
++		cpu_addr = pp->cfg1_base;
+ 		cfg_size = pp->cfg1_size;
+ 		va_cfg_base = pp->va_cfg1_base;
+ 	}
+@@ -561,7 +541,7 @@ static int dw_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				  busdev, cfg_size);
+ 	ret = dw_pcie_cfg_read(va_cfg_base + address, where, size, val);
+ 	dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX0,
+-				  PCIE_ATU_TYPE_IO, pp->io_mod_base,
++				  PCIE_ATU_TYPE_IO, pp->io_base,
+ 				  pp->io_bus_addr, pp->io_size);
  
-+	pci_bus_add_devices(bus);
- 	return 0;
- }
+ 	return ret;
+@@ -581,12 +561,12 @@ static int dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
  
-@@ -616,7 +628,7 @@ static int dw_pcie_valid_config(struct pcie_port *pp,
- static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- 			int size, u32 *val)
- {
--	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-+	struct pcie_port *pp = bus->sysdata;
- 	int ret;
+ 	if (bus->parent->number == pp->root_bus_nr) {
+ 		type = PCIE_ATU_TYPE_CFG0;
+-		cpu_addr = pp->cfg0_mod_base;
++		cpu_addr = pp->cfg0_base;
+ 		cfg_size = pp->cfg0_size;
+ 		va_cfg_base = pp->va_cfg0_base;
+ 	} else {
+ 		type = PCIE_ATU_TYPE_CFG1;
+-		cpu_addr = pp->cfg1_mod_base;
++		cpu_addr = pp->cfg1_base;
+ 		cfg_size = pp->cfg1_size;
+ 		va_cfg_base = pp->va_cfg1_base;
+ 	}
+@@ -596,7 +576,7 @@ static int dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				  busdev, cfg_size);
+ 	ret = dw_pcie_cfg_write(va_cfg_base + address, where, size, val);
+ 	dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX0,
+-				  PCIE_ATU_TYPE_IO, pp->io_mod_base,
++				  PCIE_ATU_TYPE_IO, pp->io_base,
+ 				  pp->io_bus_addr, pp->io_size);
  
- 	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0) {
-@@ -640,7 +652,7 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
- static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
- 			int where, int size, u32 val)
- {
--	struct pcie_port *pp = sys_to_pcie(bus->sysdata);
-+	struct pcie_port *pp = bus->sysdata;
- 	int ret;
- 
- 	if (dw_pcie_valid_config(pp, bus, PCI_SLOT(devfn)) == 0)
-@@ -664,69 +676,6 @@ static struct pci_ops dw_pcie_ops = {
- 	.write = dw_pcie_wr_conf,
- };
- 
--static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
--{
--	struct pcie_port *pp;
--
--	pp = sys_to_pcie(sys);
--
--	if (global_io_offset < SZ_1M && pp->io_size > 0) {
--		sys->io_offset = global_io_offset - pp->io_bus_addr;
--		pci_ioremap_io(global_io_offset, pp->io_base);
--		global_io_offset += SZ_64K;
--		pci_add_resource_offset(&sys->resources, pp->io,
--					sys->io_offset);
--	}
--
--	sys->mem_offset = pp->mem->start - pp->mem_bus_addr;
--	pci_add_resource_offset(&sys->resources, pp->mem, sys->mem_offset);
--	pci_add_resource(&sys->resources, pp->busn);
--
--	return 1;
--}
--
--static struct pci_bus *dw_pcie_scan_bus(int nr, struct pci_sys_data *sys)
--{
--	struct pci_bus *bus;
--	struct pcie_port *pp = sys_to_pcie(sys);
--
--	pp->root_bus_nr = sys->busnr;
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		bus = pci_scan_root_bus_msi(pp->dev, sys->busnr, &dw_pcie_ops,
--					    sys, &sys->resources,
--					    &dw_pcie_msi_chip);
--	else
--		bus = pci_scan_root_bus(pp->dev, sys->busnr, &dw_pcie_ops,
--					sys, &sys->resources);
--
--	if (!bus)
--		return NULL;
--
--	if (bus && pp->ops->scan_bus)
--		pp->ops->scan_bus(pp);
--
--	return bus;
--}
--
--static int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	struct pcie_port *pp = sys_to_pcie(dev->bus->sysdata);
--	int irq;
--
--	irq = of_irq_parse_and_map_pci(dev, slot, pin);
--	if (!irq)
--		irq = pp->irq;
--
--	return irq;
--}
--
--static struct hw_pci dw_pci = {
--	.setup		= dw_pcie_setup,
--	.scan		= dw_pcie_scan_bus,
--	.map_irq	= dw_pcie_map_irq,
--};
--
- void dw_pcie_setup_rc(struct pcie_port *pp)
- {
- 	u32 val;
+ 	return ret;
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index 41d137c..264c969 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -27,19 +27,15 @@ struct pcie_port {
+ 	u8			root_bus_nr;
+ 	void __iomem		*dbi_base;
+ 	u64			cfg0_base;
+-	u64			cfg0_mod_base;
+ 	void __iomem		*va_cfg0_base;
+ 	u32			cfg0_size;
+ 	u64			cfg1_base;
+-	u64			cfg1_mod_base;
+ 	void __iomem		*va_cfg1_base;
+ 	u32			cfg1_size;
+-	u64			io_mod_base;
+ 	resource_size_t		io_base;
+ 	phys_addr_t		io_bus_addr;
+ 	u32			io_size;
+ 	u64			mem_base;
+-	u64			mem_mod_base;
+ 	phys_addr_t		mem_bus_addr;
+ 	u32			mem_size;
+ 	struct resource		*cfg;
 -- 
 1.9.1
