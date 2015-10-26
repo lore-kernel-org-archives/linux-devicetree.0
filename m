@@ -1,73 +1,48 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 08/35] nfc: nci: add nci_hci_clear_all_pipes functions
-Date: Mon, 26 Oct 2015 07:49:48 +0100
-Message-ID: <1445842215-28403-9-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [PATCH v3 26/35] nfc: st-nci: Fix host_list verification after secure element activation
+Date: Mon, 26 Oct 2015 07:50:06 +0100
+Message-ID: <1445842215-28403-27-git-send-email-christophe-h.ricard@st.com>
 References: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-nci_hci_clear_all_pipes might be use full in some cases for example after
-a firmware update.
+A secure element can be activated in different order. The host_list is
+updated keeping a fixed order: <terminal_host_id><uicc_id><ese_id>.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- include/net/nfc/nci_core.h |  1 +
- net/nfc/nci/hci.c          | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ drivers/nfc/st-nci/se.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index d0d0f1e..b2f2e04 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -305,6 +305,7 @@ int nci_hci_set_param(struct nci_dev *ndev, u8 gate, u8 idx,
- 		      const u8 *param, size_t param_len);
- int nci_hci_get_param(struct nci_dev *ndev, u8 gate, u8 idx,
- 		      struct sk_buff **skb);
-+int nci_hci_clear_all_pipes(struct nci_dev *ndev);
- int nci_hci_dev_session_init(struct nci_dev *ndev);
- 
- static inline struct sk_buff *nci_skb_alloc(struct nci_dev *ndev,
-diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
-index abe0200..43d7931 100644
---- a/net/nfc/nci/hci.c
-+++ b/net/nfc/nci/hci.c
-@@ -70,6 +70,7 @@ struct nci_hcp_packet {
- #define NCI_HCI_ANY_SET_PARAMETER  0x01
- #define NCI_HCI_ANY_GET_PARAMETER  0x02
- #define NCI_HCI_ANY_CLOSE_PIPE     0x04
-+#define NCI_HCI_ADM_CLEAR_ALL_PIPE 0x14
- 
- #define NCI_HFP_NO_CHAINING        0x80
- 
-@@ -265,6 +266,20 @@ int nci_hci_send_cmd(struct nci_dev *ndev, u8 gate, u8 cmd,
- }
- EXPORT_SYMBOL(nci_hci_send_cmd);
- 
-+int nci_hci_clear_all_pipes(struct nci_dev *ndev)
-+{
-+	int r;
-+
-+	r = nci_hci_send_cmd(ndev, NCI_HCI_ADMIN_GATE,
-+			     NCI_HCI_ADM_CLEAR_ALL_PIPE, NULL, 0, NULL);
-+	if (r < 0)
-+		return r;
-+
-+	nci_hci_reset_pipes(ndev->hci_dev);
-+	return r;
-+}
-+EXPORT_SYMBOL(nci_hci_clear_all_pipes);
-+
- static void nci_hci_event_received(struct nci_dev *ndev, u8 pipe,
- 				   u8 event, struct sk_buff *skb)
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index 3059baa..1cc24b6 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -423,7 +423,7 @@ static int st_nci_control_se(struct nci_dev *ndev, u8 se_idx,
+ 			     u8 state)
  {
+ 	struct st_nci_info *info = nci_get_drvdata(ndev);
+-	int r;
++	int r, i;
+ 	struct sk_buff *sk_host_list;
+ 	u8 host_id;
+ 
+@@ -470,7 +470,10 @@ static int st_nci_control_se(struct nci_dev *ndev, u8 se_idx,
+ 	if (r != NCI_HCI_ANY_OK)
+ 		return r;
+ 
+-	host_id = sk_host_list->data[sk_host_list->len - 1];
++	for (i = 0; i < sk_host_list->len &&
++		sk_host_list->data[i] != se_idx; i++)
++		;
++	host_id = sk_host_list->data[i];
+ 	kfree_skb(sk_host_list);
+ 	if (state == ST_NCI_SE_MODE_ON && host_id == se_idx)
+ 		return se_idx;
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
