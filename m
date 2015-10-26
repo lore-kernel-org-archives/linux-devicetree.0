@@ -1,85 +1,91 @@
-From: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] arm64/arm, numa, dt: adding numa dt binding
- implementation for arm64 platforms
-Date: Mon, 26 Oct 2015 15:20:34 +0800
-Message-ID: <CACVXFVO5QGu9z1C49Wos_A5MpPafABL+WDidiHp3S2v1xUsRZw@mail.gmail.com>
-References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1445337931-11344-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ@mail.gmail.com>
-	<CAFpQJXX8VXX+gTBn-+7MepSAOzbOuc-yWJe4f=B7MH_Nj7FsKw@mail.gmail.com>
-	<CACVXFVPoZqjFeqK7=M7wK0JQ0iS9tYoN8BHsYMc25OL-4j=e1g@mail.gmail.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v11 1/6] PCI: designware: move calculation of bus addresses
+ to DRA7xx
+Date: Mon, 26 Oct 2015 15:27:14 +0800
+Message-ID: <562DD5D2.9000705@hisilicon.com>
+References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com> <1444991021-109306-2-git-send-email-wangzhou1@hisilicon.com> <20151021221524.GM1583@localhost> <EE11001F9E5DDD47B7634E2F8A612F2E16274DCC@lhreml503-mbs> <20151022163534.GB21237@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACVXFVPoZqjFeqK7=M7wK0JQ0iS9tYoN8BHsYMc25OL-4j=e1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151022163534.GB21237@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "gabriel.fernandez@linaro.org" <gabriel.fernandez@linaro.org>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetre>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 12:53 PM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> On Mon, Oct 26, 2015 at 11:50 AM, Ganapatrao Kulkarni
-> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Oct 26, 2015 at 7:14 AM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->>> On Tue, Oct 20, 2015 at 6:45 PM, Ganapatrao Kulkarni
->>> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
->>>> Adding numa dt binding support for arm64 based platforms.
->>>> dt node parsing for numa topology is done using device property
->>>> proximity and device node distance-map.
->>>>
->>>> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->>>> ---
->>>>  arch/arm64/Kconfig            |  10 ++
->>>>  arch/arm64/include/asm/numa.h |  10 ++
->>>>  arch/arm64/kernel/Makefile    |   1 +
->>>>  arch/arm64/kernel/of_numa.c   | 221 ++++++++++++++++++++++++++++++++++++++++++
->>>>  arch/arm64/kernel/smp.c       |   1 +
->>>>  arch/arm64/mm/numa.c          |  10 +-
->>>>  6 files changed, 252 insertions(+), 1 deletion(-)
->>>>  create mode 100644 arch/arm64/kernel/of_numa.c
->>>>
->>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->>>> index 0f9cdc7..6cf8d20 100644
->>>> --- a/arch/arm64/Kconfig
->>>> +++ b/arch/arm64/Kconfig
->>>> @@ -426,6 +426,16 @@ config NUMA
->>>>           local memory controller of the CPU and add some more
->>>>           NUMA awareness to the kernel.
->>>>
->>>> +config OF_NUMA
->>>> +       bool "Device Tree NUMA support"
->>>> +       depends on NUMA
->>>> +       depends on OF
->>>> +       default y
->>>> +       help
->>>> +         Enable Device Tree NUMA support.
->>>> +         This enables the numa mapping of cpu, memory, io and
->>>> +         inter node distances using dt bindings.
+On 2015/10/23 0:35, Bjorn Helgaas wrote:
+> Hi Gabriele,
+> 
+> On Thu, Oct 22, 2015 at 07:21:41AM +0000, Gabriele Paoloni wrote:
+>>> -----Original Message-----
+>>> From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> 
+>>>>  #define	PCIECTRL_DRA7XX_CONF_PHY_CS			0x010C
+>>>>  #define	LINK_UP						BIT(16)
+>>>> +#define	CPU_TO_BUS_ADDR					0x0FFFFFFF
 >>>
->>> Enabling the above config option can cause numa_init() warning in
->>> numa-less arm64 system, please see the following report:
->> this is taken care. which version are you using?
+>>> "CPU_TO_BUS_ADDR" is a very generic name.  Since you do have DRA7XX in
+>>> other #defines and static symbols in this file, maybe it could be DRA7XX to
+>>> make it obvious that it only applies here?
+>>
+>> Ok will change to DRA7XX_CPU_TO_BUS_ADRR in v12
+>> ..
+> 
+>>>> +	if (pp->io_mod_base)
+>>>> +		pp->io_mod_base &= CPU_TO_BUS_ADDR;
+>>>
+>>> These are equivalent to
+>>>
+>>>   pp->io_mod_base &= CPU_TO_BUS_ADDR;
+>>>
+>>> (You don't need to test whether they're zero first.)
+>>
+>> Yes agreed, will change in v12
+>> ...
+> 
+>>>>  	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+>>>> @@ -415,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>  			pp->io_base = range.cpu_addr;
+>>>>
+>>>>  			/* Find the untranslated IO space address */
+>>>> -			pp->io_mod_base = of_read_number(parser.range -
+>>>> -							 parser.np + na, ns);
+>>>> +			pp->io_mod_base = range.cpu_addr;
+>>>
+>>> So apparently
+>>>
+>>>   "of_read_number() == range.cpu_addr & CPU_TO_BUS_ADDR" on DRA7xx
+>>>   "of_read_number() == range.cpu_addr" everywhere else?
+>>
+>> Yes correct
+>>
+>>> Is that right?  Is that a valid assumption, i.e., are we assuming
+>>> anything about DTs in the field that we shouldn't?
+>>
+>> Before I wrote a patch that was generic to accommodate intermediate level
+>> of translation between PCI_addr -> BUS_addr -> CPU_addr
+>>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/360922.html
+>>
+>> After discussion we agreed to solve it with a bitmask rather than adding
+>> a field to of_pci_range to make it generic.
+>> The bitmask only applies to DRA7xx
+> 
+> I haven't gotten all the way through this series yet, but don't bother with
+> a v12 just for these minor changes.  I can easily fix them up when applying
+> it.
+> 
+> Bjorn
 >
-> V5.
 
-The issue persists on V6 too, so looks V7 is needed.
+Hi Gabriele and Bjorn,
 
->
->>
->>>
->>>           https://bugs.launchpad.net/bugs/1509221
->>>
->>> Thanks,
->>
->> Thanks
->> Ganapat
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry for late, I am preparing v12 patchset and I will fix above problems together
+with other patches.
+
+Many thanks,
+Zhou
+
+> .
+> 
