@@ -1,39 +1,115 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v12 8/8] MAINTAINERS: Add pcie-hisi maintainer
-Date: Mon, 26 Oct 2015 19:35:50 +0800
-Message-ID: <1445859350-26375-9-git-send-email-wangzhou1@hisilicon.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v12 1/8] PCI: designware: move calculation of bus addresses to DRA7xx
+Date: Mon, 26 Oct 2015 19:35:43 +0800
+Message-ID: <1445859350-26375-2-git-send-email-wangzhou1@hisilicon.com>
 References: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445859350-26375-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+From: gabriele paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7ba7ab7..944a229 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8047,6 +8047,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/xgene-pci-msi.txt
- F:	drivers/pci/host/pci-xgene-msi.c
+Commit f4c55c5a3f7f ("PCI: designware: Program ATU with untranslated
+address") added the calculation of PCI BUS addresses in designware,
+storing them in new fields added in "struct pcie_port". This
+calculation is done for every designware user even if is only
+applicable to DRA7xx.
+This patch moves the calculation of the bus addresses to the DRA7xx
+driver and is needed to allow the rework of designware to use
+the new DT parsing API.
+
+Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Acked-by: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/pci/host/pci-dra7xx.c      |  7 +++++++
+ drivers/pci/host/pcie-designware.c | 15 ++++-----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
+index 199e29a..0b4847a 100644
+--- a/drivers/pci/host/pci-dra7xx.c
++++ b/drivers/pci/host/pci-dra7xx.c
+@@ -62,6 +62,7 @@
  
-+PCIE DRIVER FOR HISILICON
-+M:	Zhou Wang <wangzhou1@hisilicon.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-+F:	drivers/pci/host/pcie-hisi.c
+ #define	PCIECTRL_DRA7XX_CONF_PHY_CS			0x010C
+ #define	LINK_UP						BIT(16)
++#define	DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
+ 
+ struct dra7xx_pcie {
+ 	void __iomem		*base;
+@@ -151,6 +152,12 @@ static void dra7xx_pcie_enable_interrupts(struct pcie_port *pp)
+ static void dra7xx_pcie_host_init(struct pcie_port *pp)
+ {
+ 	dw_pcie_setup_rc(pp);
 +
- PCMCIA SUBSYSTEM
- P:	Linux PCMCIA Team
- L:	linux-pcmcia@lists.infradead.org
++	pp->io_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->mem_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->cfg0_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
++	pp->cfg1_mod_base &= DRA7XX_CPU_TO_BUS_ADDR;
++
+ 	dra7xx_pcie_establish_link(pp);
+ 	if (IS_ENABLED(CONFIG_PCI_MSI))
+ 		dw_pcie_msi_init(pp);
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index 52aa6e3..75338a6 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -365,14 +365,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	struct of_pci_range range;
+ 	struct of_pci_range_parser parser;
+ 	struct resource *cfg_res;
+-	u32 val, na, ns;
++	u32 val, ns;
+ 	const __be32 *addrp;
+ 	int i, index, ret;
+ 
+-	/* Find the address cell size and the number of cells in order to get
+-	 * the untranslated address.
+-	 */
+-	of_property_read_u32(np, "#address-cells", &na);
+ 	ns = of_n_size_cells(np);
+ 
+ 	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+@@ -415,8 +411,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->io_base = range.cpu_addr;
+ 
+ 			/* Find the untranslated IO space address */
+-			pp->io_mod_base = of_read_number(parser.range -
+-							 parser.np + na, ns);
++			pp->io_mod_base = range.cpu_addr;
+ 		}
+ 		if (restype == IORESOURCE_MEM) {
+ 			of_pci_range_to_resource(&range, np, &pp->mem);
+@@ -425,8 +420,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->mem_bus_addr = range.pci_addr;
+ 
+ 			/* Find the untranslated MEM space address */
+-			pp->mem_mod_base = of_read_number(parser.range -
+-							  parser.np + na, ns);
++			pp->mem_mod_base = range.cpu_addr;
+ 		}
+ 		if (restype == 0) {
+ 			of_pci_range_to_resource(&range, np, &pp->cfg);
+@@ -436,8 +430,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
+ 
+ 			/* Find the untranslated configuration space address */
+-			pp->cfg0_mod_base = of_read_number(parser.range -
+-							   parser.np + na, ns);
++			pp->cfg0_mod_base = range.cpu_addr;
+ 			pp->cfg1_mod_base = pp->cfg0_mod_base +
+ 					    pp->cfg0_size;
+ 		}
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
