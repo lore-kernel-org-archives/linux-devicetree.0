@@ -1,61 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/2] i2c: uniphier: add two I2C controller drivers for
- UniPhier SoC platform
-Date: Mon, 26 Oct 2015 10:47:32 +0000
-Message-ID: <20151026104732.GG597@x1>
-References: <1445597520-6299-1-git-send-email-yamada.masahiro@socionext.com>
- <20151026081746.GC597@x1>
- <CAK7LNATVmVi=4ugv0MgoCUzusphNeAXTC_K-PsXDiTLoCkV4-Q@mail.gmail.com>
- <CAMuHMdXLMRji80Ma9hbUJg_PChS1s2JaGy00L3M3rmyOnYKqHQ@mail.gmail.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [GIT PULL] On-demand device probing
+Date: Mon, 26 Oct 2015 03:51:38 -0700
+Message-ID: <20151026105138.20687.13546@quantum>
+References: <20151018192931.GY14956@sirena.org.uk> <562A5602.7000208@sonymobile.com>
+ <CAL_JsqLNSM=+j2r9HPcbSzsZrgnGEY3=kv21EXxisKwP5+57ag@mail.gmail.com>
+ <24100858.2KIS8Y2npV@vostro.rjw.lan> <20151024220648.GR29919@sirena.org.uk>
+ <CAJZ5v0hPVu7AL8zBdU4Kb7+MVfYv0mTa43RhnCyyPR+RKDbhLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXLMRji80Ma9hbUJg_PChS1s2JaGy00L3M3rmyOnYKqHQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Linux I2C <linux-i2c@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, James Hogan <james.hogan@imgtec.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Ray Jui <rjui@broadcom.com>, Tejun Heo <tj@kernel.org>, Andrew Bresticker <abrestic@chromium.org>, Scott Branden <sbranden@broadcom.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xudong Chen <xudong.chen@mediatek.com>, Mauro
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAJZ5v0hPVu7AL8zBdU4Kb7+MVfYv0mTa43RhnCyyPR+RKDbhLA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tim Bird <tim.bird@sonymobile.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Russell King <linux@arm.linux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, =?utf-8?q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbary>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Oct 2015, Geert Uytterhoeven wrote:
-> On Mon, Oct 26, 2015 at 9:27 AM, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > 2015-10-26 17:17 GMT+09:00 Lee Jones <lee.jones@linaro.org>:
-> >>> This series adds two I2C controller drivers.
-> >>> (they are completely different IPs.)
-> >>>
-> >>> The first one is a very simple FIFO-less I2C controller,
-> >>> which is used on some older UniPhier SoCs.
-> >>>
-> >>> The other one is higher-performance I2C controller with TX/RX FIF=
-O,
-> >>> used on newer UniPhier SoCs.
-> >>
-> >> And you have sent this to me because ... ?
+Quoting Rafael J. Wysocki (2015-10-25 06:54:39)
+> On Sun, Oct 25, 2015 at 12:06 AM, Mark Brown <broonie@kernel.org> wrote:
+> > On Sat, Oct 24, 2015 at 04:17:12PM +0200, Rafael J. Wysocki wrote:
 > >
+> >> Well, I'm not quite sure why exactly everyone is so focused on probing here.
 > >
-> > No special reason.
+> > Probe deferral is really noisy even if it's working fine on a given
+> > system so it's constantly being highlighted to people in a way that
+> > other issues aren't if you're not directly having problems.
 > >
-> >
-> > I sent this series to linux-i2c@vger.kernel.org.
-> >
-> > I guess you were automatically CC'ed by scripts/get_maintainer.pl.
-> >
-> > Using get_maintainer.pl is a normal process when sending patches, I=
- think.
->=20
-> Please use common sense. It doesn't make much sense to CC everybody w=
-ho
-> ever made a minor edit to an affected file.
->=20
-> If checkpatch comes up with more than 5 names, this should ring a bel=
-l.
+> > There's also the understanding people had that the order things get
+> > bound changes the ordering for some of the other cases (perhaps it's a
+> > good idea to do that, it seems likely to be sensible?).
+> 
+> But it really doesn't do that.  Also making it do so doesn't help much
+> in the cases where things can happen asynchronously (system
+> suspend/resume, runtime PM).
+> 
+> If, instead, there was a way to specify a functional dependency at the
+> device registration time, it might be used to change the order of
+> everything relevant, including probe.  That should help to reduce the
+> noise you're referring to.
 
-+1
+Taking it a step further, if functional dependencies were understood at
+link-time then we could optimize link order as well. There are probably
+lots of optimizations if we only made the effort to understand these
+dependencies earlier.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Constructing the device/resource dependency graph before the device ever
+boots sounds interesting to me.
+
+Regards,
+Mike
+
+> 
+> If the dependency could only be discovered at the probe time, the
+> order of things might be changed in response to letting the driver
+> core know about it rather than "just in case", which should be more
+> efficient.
+> 
+> Thanks,
+> Rafael
