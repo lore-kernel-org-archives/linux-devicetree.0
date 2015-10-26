@@ -1,71 +1,200 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v11 3/6] PCI: designware: Add ARM64 support
-Date: Mon, 26 Oct 2015 15:37:29 +0800
-Message-ID: <562DD839.8050504@hisilicon.com>
-References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com> <1444991021-109306-4-git-send-email-wangzhou1@hisilicon.com> <20151022182853.GC21237@localhost>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] extcon: gpio: Add the support for Device tree bindings
+Date: Mon, 26 Oct 2015 16:55:21 +0900
+Message-ID: <562DDC69.7000604@samsung.com>
+References: <1445402226-3912-1-git-send-email-cw00.choi@samsung.com>
+ <CAL_JsqJczcqbNuT50aKK6RZMidJE0X=XQy8o5pe9V6qtKWkoNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151022182853.GC21237@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAL_JsqJczcqbNuT50aKK6RZMidJE0X=XQy8o5pe9V6qtKWkoNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/10/23 2:28, Bjorn Helgaas wrote:
-> Hi Zhou,
-> 
-> On Fri, Oct 16, 2015 at 06:23:38PM +0800, Zhou Wang wrote:
->> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
->> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
->> move related operations to dw_pcie_host_init.
+Hi Rob,
+
+=46irst of all, thanks for your review.
+
+On 2015=EB=85=84 10=EC=9B=94 22=EC=9D=BC 07:35, Rob Herring wrote:
+> On Tue, Oct 20, 2015 at 11:37 PM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org=
+> wrote:
+>> This patch adds the support for Device tree bindings of extcon-gpio =
+driver.
+>> The extcon-gpio device tree node must include the both 'extcon-id' a=
+nd
+>> 'extcon-gpio' property.
+>=20
+> I think this is too tied to the Linux driver. Instead, think about
+> what the connector contains. I think you should define a usb connecto=
+r
+> node and compatible (e.g. usb-connector or usb-ab-connector). This
+
+The Extcon framework support the various external connector.
+You mean that extcon-gpio.c should have the separate compatible
+for each external connector?
+
+=46or example,
+static const struct of_device_id gpio_extcon_of_match[] =3D {
+	{
+		.compatible =3D "extcon-usb",	/* USB connector */
+		.data =3D EXTCON_USB_DATA,
+	}, {
+		.compatible =3D "extcon-chg-sdp",	/* SDP charger connector */
+		.data =3D EXTCON_CHG_SDP_DATA,
+	}, {
+		.compatible =3D "extcon-chg-dcp",	/* DCP charger connector */
+		.data =3D EXTCON_CHG_DCP_DATA,
+	}, {
+		.compatible =3D "extcon-jack-microphone", /* Microphone jack connecto=
+r */
+		.data =3D EXTCON_JACK_MICROPHONE_DATA,
+	}, {
+		.compatible =3D "extcon-disp-hdmi", /* HDMI connector*/
+		.data =3D EXTCON_DISP_HDMI_DATA,
+	},
+	......
+
+};
+
+static struct platform_driver extcon_gpio_driver =3D {
+	.probe	=3D gpio_extcon_probe,
+	.remove	=3D gpio_extcon_remove,
+	.driver	=3D {
+		.name =3D "extcon-gpio",
+		.of_match_table =3D gpio_extcon_of_match,
+	},
+};
+
+> probably needs to distinguish the connector type as well especially
+> with TypeC coming.
+
+You're right. Currently Extcon framework don't support the setting of c=
+onnector type
+(e.g., USB Type A, Type B, Mini-A, Type-C ...)
+I'm planing to add the extcon core API to support the connector type.
+
+>=20
 >>
->> This patch also try to use of_pci_get_host_bridge_resources for ARM32 and ARM64
->> according to the suggestion for Gabriele[1]
+>> For exmaple:
+>>         usb_cable: extcon-gpio-0 {
+>>                 compatible =3D "extcon-gpio";
+>>                 extcon-id =3D <EXTCON_USB>;
+>>                 extcon-gpio =3D <&gpio6 1 GPIO_ACTIVE_HIGH>;
+>=20
+> This tied to a Vbus detect circuit?
+>=20
+> So "vbus-detect-gpios" in the connector node.
+
+If extcon-gpio.c driver support the multiple comaptible for each extern=
+al connector,
+this driver will support the separate property name for gpio to get it =
+from devicetree.
+
+>=20
+> For host side (or OTG host mode), you may also need a vbus-supply
+> regulator property. OTG will also need an id-gpios for ID pin.
+
+There is already drivers/extcon/extcon-usb-gpio.c driver for USB with G=
+PIO.
+[1] https://lkml.org/lkml/2015/2/2/187
+
+>=20
+>>         }
 >>
->> This patch reverts commit f4c55c5a3f7f ("PCI: designware: Program ATU with
->> untranslated address") based on 1/6 in this series. we delete *_mod_base in
->> pcie-designware. This was discussed in [2]
+>>         ta_cable: extcon-gpio-1 {
+>=20
+> This is all the same connector as above?
+>=20
+>>                 compatible =3D "extcon-gpio";
+>>                 extcon-id =3D <EXTCON_CHG_USB_DCP>;
+>>                 extcon-gpio =3D <&gpio3 2 GPIO_ACTIVE_LOW>;
+>=20
+> This is just detecting D+ and D- are both pulled high?
+
+The extcon-gpio.c might be used to detect the external connector by usi=
+ng only GPIO
+which has not correlation to both D+  and D-. This GPIO pin is just use=
+d to detect
+the state whether external connector is attached or detached.
+
+>=20
+> So "dcp-detect-gpios" in the connector node.
+
+ditto.
+
+>=20
+>>                 debounce-ms =3D <50>;     /* 50 millisecond */
+>>                 wakeup-source;
+>=20
+> wakeup-source implies an interrupt as I read Sudeep's series. Either
+> gpios need to be allowed or these need to be defined as interrupts.
+
+You are right. I'm going to consider it and modify this driver with mor=
+e proper method.
+
+>=20
+>>         }
 >>
->> I have compiled the driver with multi_v7_defconfig. However, I don't have
->> ARM32 PCIe related board to do test. It will be appreciated if someone could
->> help to test it.
-> 
-> There's a lot going on this patch.  Can you split it up at all?  For
-> example, maybe:
->
+>>         &dwc3_usb {
+>>                 extcon =3D <&usb_cable>;
+>>         };
+>>
+>>         &charger {
+>>                 extcon =3D <&ta_cable>;
+>=20
+> Not sure what to do with this. Both can point to a single connector
+> node I think.
 
-Hi Bjorn,
+There are both extcon provider driver and client driver.
 
-No problem, I will split this patch to three patches.
+The extcon provider driver provide client driver to get whether cable s=
+tate is attached
+or detached. And then client driver is waiting the notification from ex=
+tcon provider driver.
+Before waiting the notification from extcon providier driver, the clien=
+t driver should get
+the instance of specific extcon provider driver to register the notifie=
+r chain.
 
->   - Revert f4c55c5a3f7f (and move to right after the related [1/6]
->     patch
-> 
->   - Switch to using of_pci_get_host_bridge_resources()
-> 
->   - Replacing the call of pci_common_init_dev() with equivalent code in
->     pcie-designware.c.  This one in particular needs to be easy to review.
->     It's not clear to me that this new code is equivalent.  For example,
->     pci_common_init_dev() calls pcie_bus_configure_settings(), but I don't
->     see that in your new code.
+When getting the instance of specific extcon provider in device tree,
+the client driver use the extcon_get_edev_by_phandle() function which
+parses the phandle name of 'extcon'.
 
-I will add pcie_bus_configure_settings in v12.
+The latest Linux kernel includes the example[1][2] in arch/arm/boot/dts=
+/omap5-cm-t54.dts
 
-Thanks,
-Zhou
+[1] http://www.spinics.net/lists/linux-omap/msg105074.html
+- ARM: dts: sbc-t54: add support for sbc-t54 with cm-t54
+[2] ARM: dts: cm-t54: setup omap_dwc3
+- http://www.spinics.net/lists/linux-omap/msg111174.html
 
->
-> You already have acks and tested-by, so I assume you probably did all the
-> right things, but it will help me out a lot if you can break it into
-> bite-sized pieces.  It's always better to make patches too small rather
-> than too large, because it's trivial to squash them back together if
-> needed.  I think we're going to have some conflicts between this and other
-> pcie-designware.c changes, and small patches will also make those easier to
-> resolve.
-> 
-> Bjorn
-> 
-> .
-> 
+=46or example=20
+&i2c1 {
+	......
+	palmas: palmas@48 {
+		extcon_usb3: palmas_usb {
+			compatible =3D "ti,plamas-usb-vid";
+			ti,enable-vbus-detection;
+			ti,enable-id-detection;
+			ti,wakeup;
+		};
+		......
+	};
+	......
+};
+
+&usb3 {
+	extcon =3D <&extcon_usb3>;
+	vbus-supply =3D <...>;
+};
+
+Regards,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
