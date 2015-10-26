@@ -1,133 +1,201 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: mfd: s2mps11: add documentation for
- s2mps15 PMIC
-Date: Mon, 26 Oct 2015 11:09:24 +0000
-Message-ID: <20151026110924.GI597@x1>
-References: <1445855803-26973-1-git-send-email-alim.akhtar@samsung.com>
- <1445855803-26973-2-git-send-email-alim.akhtar@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] power: qcom_smbb: Add otg regulator for control of vbus
+Date: Mon, 26 Oct 2015 11:17:50 +0000
+Message-ID: <20151026111555.GA9740@leverpostej>
+References: <1445548337-14612-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1445855803-26973-2-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: broonie@kernel.org, k.kozlowski@samsung.com, mturquette@baylibre.com, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
+In-Reply-To: <1445548337-14612-1-git-send-email-tim.bird@sonymobile.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tim Bird <tim.bird@sonymobile.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sre@kernel.org, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, tbird20d@gmail.com, bjorn.andersson@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Oct 2015, Alim Akhtar wrote:
-
-> From: Thomas Abraham <thomas.ab@samsung.com>
->=20
-> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 dev=
-ice
-> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regul=
-ators.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+On Thu, Oct 22, 2015 at 02:12:17PM -0700, Tim Bird wrote:
+> Add a regulator to control the OTG chargepath switch.  The OTG
+> switch gets its power from pm8941_5vs1, and that should be expressed
+> as an usb_otg_in-supply property in the DT node for the charger driver.
+> The regulator name is "otg".  This is used by USB code to control VBUS
+> direction.
+> 
+> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
 > ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |   23 +++++++++++=
-+++-------
->  1 file changed, 15 insertions(+), 8 deletions(-)
+>  .../devicetree/bindings/power_supply/qcom_smbb.txt | 20 ++++++
+>  drivers/power/qcom_smbb.c                          | 74 ++++++++++++++++++++++
+>  2 files changed, 94 insertions(+)
 
-Nothing to controversial here.
+What tree is this based on? I couldn't spot this in origin/master.
 
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+> diff --git a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
+> index 65b88fa..dc0f91d 100644
+> --- a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
+> +++ b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
+> @@ -105,6 +105,23 @@ PROPERTIES
+>                 regulation must be done externally to fully comply with
+>                 the JEITA safety guidelines if this flag is set.
+>  
+> +- usb_otg_in-supply:
+> +  Usage: optional
+> +  Value type: <phandle>
+> +  Description: Reference to the regulator supplying power to the USB_OTG_IN
+> +               pin.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mps11.txt
-> index 890f0b0e1643..c0427c9d0886 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
-> =20
-> -* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current =
-Regulator
-> +* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
-> =20
->  The Samsung S2MPS11 is a multi-function device which includes voltag=
-e and
->  current regulators, RTC, charger controller and other sub-blocks. It=
- is
-> @@ -7,8 +7,12 @@ interfaced to the host controller using an I2C inter=
-face. Each sub-block is
->  addressed by the host system using different I2C slave addresses.
-> =20
->  Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-p=
-mic"
-> -	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
-> +- compatible: Should be one of the following
-> +	- "samsung,s2mps11-pmic"
-> +	- "samsung,s2mps13-pmic"
-> +	- "samsung,s2mps14-pmic"
-> +	- "samsung,s2mps15-pmic"
-> +	- "samsung,s2mpu02-pmic".
->  - reg: Specifies the I2C slave address of the pmic block. It should =
-be 0x66.
-> =20
->  Optional properties:
-> @@ -24,7 +28,7 @@ Optional properties:
->    unwanted buck warm reset (setting buck voltages to default values)=
-=2E
-> =20
->  Optional nodes:
-> -- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffe=
-red 32.768
-> +- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/=
-BT) buffered 32.768
->    KHz outputs, so to register these as clocks with common clock fram=
-ework
->    instantiate a sub-node named "clocks". It uses the common clock bi=
-nding
->    documented in :
-> @@ -37,12 +41,13 @@ Optional nodes:
->      the clock which they consume.
->      Clock               ID           Devices
->      ----------------------------------------------------------
-> -    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S5M8767
-> -    32KhzCP		1            S2MPS11, S2MPS13, S5M8767
-> -    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S5M8767
-> +    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M876=
-7
-> +    32KhzCP		1            S2MPS11, S2MPS13, S2MPS15, S5M8767
-> +    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M876=
-7
-> =20
->    - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2=
-mps13-clk",
-> -		"samsung,s2mps14-clk", "samsung,s5m8767-clk"
-> +		"samsung,s2mps14-clk", "samsung,s2mps15-clk",
-> +		"samsung,s5m8767-clk"
-> =20
->  - regulators: The regulators of s2mps11 that have to be instantiated=
- should be
->  included in a sub-node named 'regulators'. Regulator nodes included =
-in this
-> @@ -90,6 +95,7 @@ as per the datasheet of s2mps11.
->  			- S2MPS11: 1 to 38
->  			- S2MPS13: 1 to 40
->  			- S2MPS14: 1 to 25
-> +			- S2MPS15: 1 to 27
->  			- S2MPU02: 1 to 28
->  		  - Example: LDO1, LDO2, LDO28
->  	- BUCKn
-> @@ -97,6 +103,7 @@ as per the datasheet of s2mps11.
->  			- S2MPS11: 1 to 10
->  			- S2MPS13: 1 to 10
->  			- S2MPS14: 1 to 5
-> +			- S2MPS15: 1 to 10
->  			- S2MPU02: 1 to 7
->  		  - Example: BUCK1, BUCK2, BUCK9
-> =20
+s/_/-/ in property names, please.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> +
+> +child nodes:
+> +- otg:
+> +  Usage: optional
+> +  Description: This node is used to define a regulator which is used by
+> +               other parts of the system to control the direction of VBUS
+> +               voltage - specifically: whether to supply voltage to VBUS for
+> +               host mode operation of the OTG port. The driver registers a
+> +               regulator with this name, which can be looked up by string.
+> +               Alternatively, you can add a DT label, which can then be
+> +               referenced by phandle.
+> +
+
+We shouldn't specify the behaviours of the driver/linux here, just the
+hardware.
+
+I'm a little confused by how this is used, but I suspect that'll be
+cleared up when I see the rest of the binding that this is based on.
+
+Thanks,
+Mark.
+
+>  EXAMPLE
+>  charger@1000 {
+>         compatible = "qcom,pm8941-charger";
+> @@ -128,4 +145,7 @@ charger@1000 {
+>  
+>         qcom,fast-charge-current-limit = <1000000>;
+>         qcom,dc-charge-current-limit = <1000000>;
+> +       usb_otg_in-supply = <&pm8941_5vs1>;
+> +
+> +       otg {};
+>  };
+> diff --git a/drivers/power/qcom_smbb.c b/drivers/power/qcom_smbb.c
+> index 0dabfe8..fa2983a 100644
+> --- a/drivers/power/qcom_smbb.c
+> +++ b/drivers/power/qcom_smbb.c
+> @@ -34,6 +34,9 @@
+>  #include <linux/power_supply.h>
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+>  
+>  #define SMBB_CHG_VMAX		0x040
+>  #define SMBB_CHG_VSAFE		0x041
+> @@ -71,6 +74,8 @@
+>  #define BTC_CTRL_HOT_EXT_N	BIT(0)
+>  
+>  #define SMBB_USB_IMAX		0x344
+> +#define SMBB_USB_OTG_CTL	0x348
+> +#define OTG_CTL_EN		BIT(0)
+>  #define SMBB_USB_ENUM_TIMER_STOP 0x34e
+>  #define ENUM_TIMER_STOP		BIT(0)
+>  #define SMBB_USB_SEC_ACCESS	0x3d0
+> @@ -123,6 +128,9 @@ struct smbb_charger {
+>  	struct power_supply *dc_psy;
+>  	struct power_supply *bat_psy;
+>  	struct regmap *regmap;
+> +
+> +	struct regulator_desc otg_rdesc;
+> +	struct regulator_dev *otg_reg;
+>  };
+>  
+>  static int smbb_vbat_weak_fn(unsigned int index)
+> @@ -778,12 +786,56 @@ static const struct power_supply_desc dc_psy_desc = {
+>  	.property_is_writeable = smbb_charger_writable_property,
+>  };
+>  
+> +static int smbb_chg_otg_enable(struct regulator_dev *rdev)
+> +{
+> +	struct smbb_charger *chg = rdev_get_drvdata(rdev);
+> +	int rc;
+> +
+> +	rc = regmap_update_bits(chg->regmap, chg->addr + SMBB_USB_OTG_CTL,
+> +				OTG_CTL_EN, OTG_CTL_EN);
+> +	if (rc)
+> +		dev_err(chg->dev, "failed to update OTG_CTL\n");
+> +	return rc;
+> +}
+> +
+> +static int smbb_chg_otg_disable(struct regulator_dev *rdev)
+> +{
+> +	struct smbb_charger *chg = rdev_get_drvdata(rdev);
+> +	int rc;
+> +
+> +	rc = regmap_update_bits(chg->regmap, chg->addr + SMBB_USB_OTG_CTL,
+> +				OTG_CTL_EN, 0);
+> +	if (rc)
+> +		dev_err(chg->dev, "failed to update OTG_CTL\n");
+> +	return rc;
+> +}
+> +
+> +static int smbb_chg_otg_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	struct smbb_charger *chg = rdev_get_drvdata(rdev);
+> +	unsigned int value = 0;
+> +	int rc;
+> +
+> +	rc = regmap_read(chg->regmap, chg->addr + SMBB_USB_OTG_CTL, &value);
+> +	if (rc)
+> +		dev_err(chg->dev, "failed to read OTG_CTL\n");
+> +
+> +	return !!(value & OTG_CTL_EN);
+> +}
+> +
+> +static struct regulator_ops smbb_chg_otg_ops = {
+> +	.enable = smbb_chg_otg_enable,
+> +	.disable = smbb_chg_otg_disable,
+> +	.is_enabled = smbb_chg_otg_is_enabled,
+> +};
+> +
+>  static int smbb_charger_probe(struct platform_device *pdev)
+>  {
+>  	struct power_supply_config bat_cfg = {};
+>  	struct power_supply_config usb_cfg = {};
+>  	struct power_supply_config dc_cfg = {};
+>  	struct smbb_charger *chg;
+> +	struct regulator_config config = { };
+>  	int rc, i;
+>  
+>  	chg = devm_kzalloc(&pdev->dev, sizeof(*chg), GFP_KERNEL);
+> @@ -884,6 +936,28 @@ static int smbb_charger_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * otg regulator is used to control VBUS voltage direction
+> +	 * when USB switches between host and gadget mode
+> +	 */
+> +	chg->otg_rdesc.id = -1;
+> +	chg->otg_rdesc.name = "otg";
+> +	chg->otg_rdesc.ops = &smbb_chg_otg_ops;
+> +	chg->otg_rdesc.owner = THIS_MODULE;
+> +	chg->otg_rdesc.type = REGULATOR_VOLTAGE;
+> +	chg->otg_rdesc.supply_name = "usb_otg_in";
+> +	chg->otg_rdesc.fixed_uV = 5000000;
+> +	chg->otg_rdesc.n_voltages = 1;
+> +	chg->otg_rdesc.of_match = "otg";
+> +
+> +	config.dev = &pdev->dev;
+> +	config.driver_data = chg;
+> +
+> +	chg->otg_reg = devm_regulator_register(&pdev->dev, &chg->otg_rdesc,
+> +					       &config);
+> +	if (IS_ERR(chg->otg_reg))
+> +		return PTR_ERR(chg->otg_reg);
+> +
+>  	chg->jeita_ext_temp = of_property_read_bool(pdev->dev.of_node,
+>  			"qcom,jeita-extended-temp-range");
+>  
+> -- 
+> 1.8.2.2
+> 
