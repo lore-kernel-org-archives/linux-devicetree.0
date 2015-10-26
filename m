@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 33/35] nfc: st-nci: Make sure irq is not already active when powering the device
-Date: Mon, 26 Oct 2015 07:50:13 +0100
-Message-ID: <1445842215-28403-34-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v3 32/35] nfc: st21nfca: Add error messages when an unexpected HCI event occurs
+Date: Mon, 26 Oct 2015 07:50:12 +0100
+Message-ID: <1445842215-28403-33-git-send-email-christophe-h.ricard@st.com>
 References: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,99 +10,63 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Upon some conditions (timing, CLF errors, platform errors...), the irq might
-be already active when powering the device.
-
-Add irq_active variable as a guard to avoid kernel warning message
+Potentially an unexpected HCI event may occur because of a firmware bug.
+It could be transparent for the user but at least log this.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st-nci/i2c.c | 8 +++++++-
- drivers/nfc/st-nci/spi.c | 8 +++++++-
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ drivers/nfc/st21nfca/core.c | 2 ++
+ drivers/nfc/st21nfca/dep.c  | 1 +
+ drivers/nfc/st21nfca/se.c   | 4 ++++
+ 3 files changed, 7 insertions(+)
 
-diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
-index 2a96f1a..25e5042 100644
---- a/drivers/nfc/st-nci/i2c.c
-+++ b/drivers/nfc/st-nci/i2c.c
-@@ -50,6 +50,8 @@ struct st_nci_i2c_phy {
- 	struct i2c_client *i2c_dev;
- 	struct llt_ndlc *ndlc;
- 
-+	bool irq_active;
-+
- 	unsigned int gpio_reset;
- 	unsigned int irq_polarity;
- 
-@@ -72,8 +74,10 @@ static int st_nci_i2c_enable(void *phy_id)
- 	gpio_set_value(phy->gpio_reset, 1);
- 	usleep_range(80000, 85000);
- 
--	if (phy->ndlc->powered == 0)
-+	if (phy->ndlc->powered == 0 && phy->irq_active == 0) {
- 		enable_irq(phy->i2c_dev->irq);
-+		phy->irq_active = true;
-+	}
- 
+diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
+index d36e290..dd8b150 100644
+--- a/drivers/nfc/st21nfca/core.c
++++ b/drivers/nfc/st21nfca/core.c
+@@ -893,6 +893,8 @@ static int st21nfca_admin_event_received(struct nfc_hci_dev *hdev, u8 event,
+ 			}
+ 		}
+ 	break;
++	default:
++		nfc_err(&hdev->ndev->dev, "Unexpected event on admin gate\n");
+ 	}
+ 	kfree_skb(skb);
  	return 0;
- }
-@@ -83,6 +87,7 @@ static void st_nci_i2c_disable(void *phy_id)
- 	struct st_nci_i2c_phy *phy = phy_id;
- 
- 	disable_irq_nosync(phy->i2c_dev->irq);
-+	phy->irq_active = false;
- }
- 
- /*
-@@ -342,6 +347,7 @@ static int st_nci_i2c_probe(struct i2c_client *client,
- 		return r;
+diff --git a/drivers/nfc/st21nfca/dep.c b/drivers/nfc/st21nfca/dep.c
+index c011712..798a32b 100644
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -435,6 +435,7 @@ int st21nfca_dep_event_received(struct nfc_hci_dev *hdev,
+ 			return r;
+ 		return 0;
+ 	default:
++		nfc_err(&hdev->ndev->dev, "Unexpected event on card f gate\n");
+ 		return 1;
+ 	}
+ 	kfree_skb(skb);
+diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
+index e04f603..c79d99b 100644
+--- a/drivers/nfc/st21nfca/se.c
++++ b/drivers/nfc/st21nfca/se.c
+@@ -344,6 +344,7 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+ 		r = nfc_se_transaction(hdev->ndev, host, transaction);
+ 		break;
+ 	default:
++		nfc_err(&hdev->ndev->dev, "Unexpected event on connectivity gate\n");
+ 		return 1;
+ 	}
+ 	kfree_skb(skb);
+@@ -375,6 +376,9 @@ int st21nfca_apdu_reader_event_received(struct nfc_hci_dev *hdev,
+ 		mod_timer(&info->se_info.bwi_timer, jiffies +
+ 				msecs_to_jiffies(info->se_info.wt_timeout));
+ 		break;
++	default:
++		nfc_err(&hdev->ndev->dev, "Unexpected event on apdu reader gate\n");
++		return 1;
  	}
  
-+	phy->irq_active = true;
- 	r = devm_request_threaded_irq(&client->dev, client->irq, NULL,
- 				st_nci_irq_thread_fn,
- 				phy->irq_polarity | IRQF_ONESHOT,
-diff --git a/drivers/nfc/st-nci/spi.c b/drivers/nfc/st-nci/spi.c
-index 8897203..bf6643c 100644
---- a/drivers/nfc/st-nci/spi.c
-+++ b/drivers/nfc/st-nci/spi.c
-@@ -51,6 +51,8 @@ struct st_nci_spi_phy {
- 	struct spi_device *spi_dev;
- 	struct llt_ndlc *ndlc;
- 
-+	bool irq_active;
-+
- 	unsigned int gpio_reset;
- 	unsigned int irq_polarity;
- 
-@@ -73,8 +75,10 @@ static int st_nci_spi_enable(void *phy_id)
- 	gpio_set_value(phy->gpio_reset, 1);
- 	usleep_range(80000, 85000);
- 
--	if (phy->ndlc->powered == 0)
-+	if (phy->ndlc->powered == 0 && phy->irq_active == 0) {
- 		enable_irq(phy->spi_dev->irq);
-+		phy->irq_active = true;
-+	}
- 
- 	return 0;
- }
-@@ -84,6 +88,7 @@ static void st_nci_spi_disable(void *phy_id)
- 	struct st_nci_spi_phy *phy = phy_id;
- 
- 	disable_irq_nosync(phy->spi_dev->irq);
-+	phy->irq_active = false;
- }
- 
- /*
-@@ -358,6 +363,7 @@ static int st_nci_spi_probe(struct spi_device *dev)
- 		return r;
- 	}
- 
-+	phy->irq_active = true;
- 	r = devm_request_threaded_irq(&dev->dev, dev->irq, NULL,
- 				st_nci_irq_thread_fn,
- 				phy->irq_polarity | IRQF_ONESHOT,
+ exit:
 -- 
 2.1.4
 
