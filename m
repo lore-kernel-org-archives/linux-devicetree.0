@@ -1,37 +1,57 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3] ARM: STi: Add DT defines for co-processor reset lines
-Date: Mon, 26 Oct 2015 10:56:07 +0000
-Message-ID: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 3/3] reset: sti: Provide ops .status() call-back
+Date: Mon, 26 Oct 2015 10:56:09 +0000
+Message-ID: <1445856969-19424-3-git-send-email-lee.jones@linaro.org>
+References: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- include/dt-bindings/reset-controller/stih407-resets.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/reset/sti/reset-syscfg.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/include/dt-bindings/reset-controller/stih407-resets.h
-index 02d4328..4ab3a1c 100644
---- a/include/dt-bindings/reset-controller/stih407-resets.h
-+++ b/include/dt-bindings/reset-controller/stih407-resets.h
-@@ -52,6 +52,10 @@
- #define STIH407_KEYSCAN_SOFTRESET	26
- #define STIH407_USB2_PORT0_SOFTRESET	27
- #define STIH407_USB2_PORT1_SOFTRESET	28
-+#define STIH407_ST231_AUD_SOFTRESET	29
-+#define STIH407_ST231_DMU_SOFTRESET	30
-+#define STIH407_ST231_GP0_SOFTRESET	31
-+#define STIH407_ST231_GP1_SOFTRESET	32
+diff --git a/drivers/reset/sti/reset-syscfg.c b/drivers/reset/sti/reset-syscfg.c
+index a145cc0..4453412 100644
+--- a/drivers/reset/sti/reset-syscfg.c
++++ b/drivers/reset/sti/reset-syscfg.c
+@@ -110,10 +110,33 @@ static int syscfg_reset_dev(struct reset_controller_dev *rcdev,
+ 	return syscfg_reset_deassert(rcdev, idx);
+ }
  
- /* Picophy reset defines */
- #define STIH407_PICOPHY0_RESET		0
++static int syscfg_reset_status(struct reset_controller_dev *rcdev,
++			      unsigned long idx)
++{
++       struct syscfg_reset_controller *rst = to_syscfg_reset_controller(rcdev);
++       const struct syscfg_reset_channel *ch;
++       u32 ret_val = 0;
++       int err;
++
++       if (idx >= rcdev->nr_resets)
++	       return -EINVAL;
++
++       ch = &rst->channels[idx];
++       if (ch->ack)
++	       err = regmap_field_read(ch->ack, &ret_val);
++       else
++	       err = regmap_field_read(ch->reset, &ret_val);
++       if (err)
++	       return err;
++
++       return rst->active_low ? !ret_val : !!ret_val;
++}
++
+ static struct reset_control_ops syscfg_reset_ops = {
+ 	.reset    = syscfg_reset_dev,
+ 	.assert   = syscfg_reset_assert,
+ 	.deassert = syscfg_reset_deassert,
++	.status   = syscfg_reset_status,
+ };
+ 
+ static int syscfg_reset_controller_register(struct device *dev,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
