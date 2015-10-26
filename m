@@ -1,62 +1,78 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
- mt8135
-Date: Mon, 26 Oct 2015 19:40:10 +0800
-Message-ID: <1445859610.26723.4.camel@mtksdaap41>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	 <1445843717.23888.1.camel@mtksdaap41>
-	 <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] regulator: arizona: Add regulator specific
+ device tree binding document
+Date: Mon, 26 Oct 2015 11:28:20 +0000
+Message-ID: <20151026112820.GI10520@ck-lbox>
+References: <1444916828-8965-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1444916828-8965-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151022124449.GH8232@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151022124449.GH8232-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
-
-On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
-> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
-> >> Hello,
-> >>
-> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
-> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
-> >> > properties to workaround this.
-> >> >
-> >> > This also set cpu enable-method to enable SMP.
-> >> >
-> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> >>
-> >> kernelci.org started detecting new boot failures for the mt8135-evb in
-> >> the arm-soc tree[1], and the boot failures were bisected down to this
-> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
-> >> dts: mt8135: enable basic SMP bringup for mt8135)
-> >>
-> >> Maybe this new SMP support requires updating the firmware on the board
-> >> as well?  If so, the changelog should've been a bit more explicit
-> >> about firmware dependencies.
-> >
-> > Kevin,
-> >
-> > Thanks for testing.
-> >
-> > No, it doesn't need new firmware. Will test to see what's going wrong.
+On Thu, Oct 22, 2015 at 01:44:49PM +0100, Mark Brown wrote:
+> On Thu, Oct 15, 2015 at 02:47:07PM +0100, Charles Keepax wrote:
 > 
-> Thanks for following up.  I'll be glad to test any patches if you have
-> anything you'd like me to test.
+> > +This document lists regulator specific bindings, see the primary binding
+> > +document:
+> > +  ../mfd/arizona.txt
+> > +
+> > +Required properties:
+> > +
+> > +  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+> > +    as covered in regulator.txt
+> > +
+> > +  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
+> > +    wm5110, wm8280, wm8998, wm1814)
+> > +
+> > +  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
+> > +    wm5110, wm8280, wm8998, wm1814)
+> > +
+> > +  - SPKVDD-supply : Speaker driver power supply (wm8997)
+> > +
+> 
+> I'd expect these to be on the MFD since they're (with the exception of
+> AVDD which supplies the regulators IIRC) not part of the regulator
+> component of the device and are core for bringing it online.
 
-You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
-crash" (https://lkml.org/lkml/2015/8/24/803)
+Yeah, fair enough I will move those back into the MFD part.
 
-Daniel Lezcano already applied this patch in his tree for 4.4.
-(https://git.linaro.org/people/daniel.lezcano/linux.git)
+> 
+> > +Optional properties:
+> > +  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
+> > +
+> > +Optional subnodes:
+> > +  - ldo1 : Initial data for the LDO1 regulator, as covered in
+> > +    Documentation/devicetree/bindings/regulator/regulator.txt
+> > +  - micvdd : Initial data for the MICVDD regulator, as covered in
+> > +    Documentation/devicetree/bindings/regulator/regulator.txt
+> 
+> These are the properties for the regulator itself.
+> 
+> > +++ b/MAINTAINERS
+> > @@ -11381,6 +11381,7 @@ W:	http://opensource.wolfsonmicro.com/content/linux-drivers-wolfson-devices
+> >  S:	Supported
+> >  F:	Documentation/hwmon/wm83??
+> >  F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> > +F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+> >  F:	arch/arm/mach-s3c64xx/mach-crag6410*
+> >  F:	drivers/clk/clk-wm83*.c
+> >  F:	drivers/extcon/extcon-arizona.c
+> 
+> I'd suggest moving this to a separate patch which adds all the new files
+> together to make it easier to merge things.
 
-Eddie
-Thanks
+Yeah no problem with making that a seperate patch.
+
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
