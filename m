@@ -1,62 +1,58 @@
-From: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] arm64/arm, numa, dt: adding numa dt binding
- implementation for arm64 platforms
-Date: Mon, 26 Oct 2015 09:44:31 +0800
-Message-ID: <CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ@mail.gmail.com>
-References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1445337931-11344-4-git-send-email-gkulkarni@caviumnetworks.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 2/3] ARM: dts: sun8i: Add Allwinner A83T dtsi
+Date: Mon, 26 Oct 2015 10:21:40 +0800
+Message-ID: <CAGb2v65J-meF6AGR9Btjvr5DZtKoeYMi3Hj_e0-N95Z=O1vKHg@mail.gmail.com>
+References: <1445557577-27383-1-git-send-email-vishnupatekar0510@gmail.com> <1445557577-27383-3-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445337931-11344-4-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1445557577-27383-3-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 6:45 PM, Ganapatrao Kulkarni
-<gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> Adding numa dt binding support for arm64 based platforms.
-> dt node parsing for numa topology is done using device property
-> proximity and device node distance-map.
+On Fri, Oct 23, 2015 at 7:46 AM, Vishnu Patekar
+<vishnupatekar0510@gmail.com> wrote:
+> Allwinner A83T is new octa-core cortex-a7 SOC.
+> This adds the basic dtsi, the clocks differs from
+> earlier sun8i SOCs.
 >
-> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
 > ---
->  arch/arm64/Kconfig            |  10 ++
->  arch/arm64/include/asm/numa.h |  10 ++
->  arch/arm64/kernel/Makefile    |   1 +
->  arch/arm64/kernel/of_numa.c   | 221 ++++++++++++++++++++++++++++++++++++++++++
->  arch/arm64/kernel/smp.c       |   1 +
->  arch/arm64/mm/numa.c          |  10 +-
->  6 files changed, 252 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/kernel/of_numa.c
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 247 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 247 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-a83t.dtsi
 >
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 0f9cdc7..6cf8d20 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -426,6 +426,16 @@ config NUMA
->           local memory controller of the CPU and add some more
->           NUMA awareness to the kernel.
->
-> +config OF_NUMA
-> +       bool "Device Tree NUMA support"
-> +       depends on NUMA
-> +       depends on OF
-> +       default y
-> +       help
-> +         Enable Device Tree NUMA support.
-> +         This enables the numa mapping of cpu, memory, io and
-> +         inter node distances using dt bindings.
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> new file mode 100644
+> index 0000000..e85995f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -0,0 +1,247 @@
+> +               cpu@100 {
+> +                       compatible = "arm,cortex-a7";
+> +                       device_type = "cpu";
+> +                       reg = <4>;
+> +               };
+> +
+> +               cpu@101 {
+> +                       compatible = "arm,cortex-a7";
+> +                       device_type = "cpu";
+> +                       reg = <5>;
+> +               };
+> +               cpu@102 {
+> +                       compatible = "arm,cortex-a7";
+> +                       device_type = "cpu";
+> +                       reg = <6>;
+> +               };
+> +
+> +               cpu@103 {
+> +                       compatible = "arm,cortex-a7";
+> +                       device_type = "cpu";
+> +                       reg = <7>;
+> +               };
 
-Enabling the above config option can cause numa_init() warning in
-numa-less arm64 system, please see the following report:
+The reg values are still wrong for the second cluster.
 
-          https://bugs.launchpad.net/bugs/1509221
-
-Thanks,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
