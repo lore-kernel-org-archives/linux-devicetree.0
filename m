@@ -1,54 +1,112 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v3 14/35] nfc: st21nfca: Open NFC_HCI_LINK_MGMT_PIPE
-Date: Mon, 26 Oct 2015 07:49:54 +0100
-Message-ID: <1445842215-28403-15-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 33/35] nfc: st-nci: Make sure irq is not already active when powering the device
+Date: Mon, 26 Oct 2015 07:50:13 +0100
+Message-ID: <1445842215-28403-34-git-send-email-christophe-h.ricard@st.com>
 References: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-NFC_HCI_LINK_MGMT_PIPE was never open in nfc_hci_load_session.
+Upon some conditions (timing, CLF errors, platform errors...), the irq might
+be already active when powering the device.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Add irq_active variable as a guard to avoid kernel warning message
+
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/core.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/nfc/st-nci/i2c.c | 8 +++++++-
+ drivers/nfc/st-nci/spi.c | 8 +++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
-index 67d1c27..819a94a 100644
---- a/drivers/nfc/st21nfca/core.c
-+++ b/drivers/nfc/st21nfca/core.c
-@@ -203,22 +203,13 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
+diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
+index 2a96f1a..25e5042 100644
+--- a/drivers/nfc/st-nci/i2c.c
++++ b/drivers/nfc/st-nci/i2c.c
+@@ -50,6 +50,8 @@ struct st_nci_i2c_phy {
+ 	struct i2c_client *i2c_dev;
+ 	struct llt_ndlc *ndlc;
+ 
++	bool irq_active;
++
+ 	unsigned int gpio_reset;
+ 	unsigned int irq_polarity;
+ 
+@@ -72,8 +74,10 @@ static int st_nci_i2c_enable(void *phy_id)
+ 	gpio_set_value(phy->gpio_reset, 1);
+ 	usleep_range(80000, 85000);
+ 
+-	if (phy->ndlc->powered == 0)
++	if (phy->ndlc->powered == 0 && phy->irq_active == 0) {
+ 		enable_irq(phy->i2c_dev->irq);
++		phy->irq_active = true;
++	}
+ 
+ 	return 0;
+ }
+@@ -83,6 +87,7 @@ static void st_nci_i2c_disable(void *phy_id)
+ 	struct st_nci_i2c_phy *phy = phy_id;
+ 
+ 	disable_irq_nosync(phy->i2c_dev->irq);
++	phy->irq_active = false;
+ }
+ 
+ /*
+@@ -342,6 +347,7 @@ static int st_nci_i2c_probe(struct i2c_client *client,
+ 		return r;
  	}
  
- 	/*
--	 * 3 gates have a well known pipe ID.
--	 * They will never appear in the pipe list
-+	 * 3 gates have a well known pipe ID. Only NFC_HCI_LINK_MGMT_GATE
-+	 * is not yet open at this stage.
- 	 */
--	if (skb_pipe_list->len + 3 < ARRAY_SIZE(st21nfca_gates)) {
--		for (i = skb_pipe_list->len + 3;
--				i < ARRAY_SIZE(st21nfca_gates) - 2; i++) {
--			r = nfc_hci_connect_gate(hdev,
--					NFC_HCI_HOST_CONTROLLER_ID,
--					st21nfca_gates[i].gate,
--					st21nfca_gates[i].pipe);
--			if (r < 0)
--				goto free_list;
--		}
--	}
-+	r = nfc_hci_connect_gate(hdev, NFC_HCI_HOST_CONTROLLER_ID,
-+				 NFC_HCI_LINK_MGMT_GATE,
-+				 NFC_HCI_LINK_MGMT_PIPE);
++	phy->irq_active = true;
+ 	r = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+ 				st_nci_irq_thread_fn,
+ 				phy->irq_polarity | IRQF_ONESHOT,
+diff --git a/drivers/nfc/st-nci/spi.c b/drivers/nfc/st-nci/spi.c
+index 8897203..bf6643c 100644
+--- a/drivers/nfc/st-nci/spi.c
++++ b/drivers/nfc/st-nci/spi.c
+@@ -51,6 +51,8 @@ struct st_nci_spi_phy {
+ 	struct spi_device *spi_dev;
+ 	struct llt_ndlc *ndlc;
  
--free_list:
- 	kfree_skb(skb_pipe_list);
- 	return r;
++	bool irq_active;
++
+ 	unsigned int gpio_reset;
+ 	unsigned int irq_polarity;
+ 
+@@ -73,8 +75,10 @@ static int st_nci_spi_enable(void *phy_id)
+ 	gpio_set_value(phy->gpio_reset, 1);
+ 	usleep_range(80000, 85000);
+ 
+-	if (phy->ndlc->powered == 0)
++	if (phy->ndlc->powered == 0 && phy->irq_active == 0) {
+ 		enable_irq(phy->spi_dev->irq);
++		phy->irq_active = true;
++	}
+ 
+ 	return 0;
  }
+@@ -84,6 +88,7 @@ static void st_nci_spi_disable(void *phy_id)
+ 	struct st_nci_spi_phy *phy = phy_id;
+ 
+ 	disable_irq_nosync(phy->spi_dev->irq);
++	phy->irq_active = false;
+ }
+ 
+ /*
+@@ -358,6 +363,7 @@ static int st_nci_spi_probe(struct spi_device *dev)
+ 		return r;
+ 	}
+ 
++	phy->irq_active = true;
+ 	r = devm_request_threaded_irq(&dev->dev, dev->irq, NULL,
+ 				st_nci_irq_thread_fn,
+ 				phy->irq_polarity | IRQF_ONESHOT,
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
