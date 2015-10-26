@@ -1,477 +1,94 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v2] regulator, dt: add dt support for tps6502x regulator
-Date: Mon, 26 Oct 2015 09:46:14 +0100
-Message-ID: <1445849174-3446-1-git-send-email-hs@denx.de>
+From: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH v6 3/4] arm64/arm, numa, dt: adding numa dt binding
+ implementation for arm64 platforms
+Date: Mon, 26 Oct 2015 17:00:54 +0800
+Message-ID: <CACVXFVO=WuC01-B6Dxdi6CxT=B0kDJXG4VFsYxyEarfQwPaVqQ@mail.gmail.com>
+References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1445337931-11344-4-git-send-email-gkulkarni@caviumnetworks.com>
+	<CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ@mail.gmail.com>
+	<CAFpQJXX8VXX+gTBn-+7MepSAOzbOuc-yWJe4f=B7MH_Nj7FsKw@mail.gmail.com>
+	<CACVXFVPoZqjFeqK7=M7wK0JQ0iS9tYoN8BHsYMc25OL-4j=e1g@mail.gmail.com>
+	<CACVXFVO5QGu9z1C49Wos_A5MpPafABL+WDidiHp3S2v1xUsRZw@mail.gmail.com>
+	<CAFpQJXXN-xixG2k7JJuJeCbLkGmR4RKX3heEeaOCpWBVNL4Mog@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXXN-xixG2k7JJuJeCbLkGmR4RKX3heEeaOCpWBVNL4Mog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-add DT support for the tps6502x regulators.
+On Mon, Oct 26, 2015 at 4:24 PM, Ganapatrao Kulkarni
+<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Oct 26, 2015 at 12:50 PM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>> On Mon, Oct 26, 2015 at 12:53 PM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>>> On Mon, Oct 26, 2015 at 11:50 AM, Ganapatrao Kulkarni
+>>> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Mon, Oct 26, 2015 at 7:14 AM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>>>>> On Tue, Oct 20, 2015 at 6:45 PM, Ganapatrao Kulkarni
+>>>>> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+>>>>>> Adding numa dt binding support for arm64 based platforms.
+>>>>>> dt node parsing for numa topology is done using device property
+>>>>>> proximity and device node distance-map.
+>>>>>>
+>>>>>> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>>>>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>>>>>> ---
+>>>>>>  arch/arm64/Kconfig            |  10 ++
+>>>>>>  arch/arm64/include/asm/numa.h |  10 ++
+>>>>>>  arch/arm64/kernel/Makefile    |   1 +
+>>>>>>  arch/arm64/kernel/of_numa.c   | 221 ++++++++++++++++++++++++++++++++++++++++++
+>>>>>>  arch/arm64/kernel/smp.c       |   1 +
+>>>>>>  arch/arm64/mm/numa.c          |  10 +-
+>>>>>>  6 files changed, 252 insertions(+), 1 deletion(-)
+>>>>>>  create mode 100644 arch/arm64/kernel/of_numa.c
+>>>>>>
+>>>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>>>> index 0f9cdc7..6cf8d20 100644
+>>>>>> --- a/arch/arm64/Kconfig
+>>>>>> +++ b/arch/arm64/Kconfig
+>>>>>> @@ -426,6 +426,16 @@ config NUMA
+>>>>>>           local memory controller of the CPU and add some more
+>>>>>>           NUMA awareness to the kernel.
+>>>>>>
+>>>>>> +config OF_NUMA
+>>>>>> +       bool "Device Tree NUMA support"
+>>>>>> +       depends on NUMA
+>>>>>> +       depends on OF
+>>>>>> +       default y
+>>>>>> +       help
+>>>>>> +         Enable Device Tree NUMA support.
+>>>>>> +         This enables the numa mapping of cpu, memory, io and
+>>>>>> +         inter node distances using dt bindings.
+>>>>>
+>>>>> Enabling the above config option can cause numa_init() warning in
+>>>>> numa-less arm64 system, please see the following report:
+>>>> this is taken care. which version are you using?
+>>>
+>>> V5.
+>>
+>> The issue persists on V6 too, so looks V7 is needed.
+> can you please share the boot log with v6.
+> you can send to me only.
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
----
+http://kernel.ubuntu.com/~ming/bugs/1509221/4.3-rc7-numa.dmesg
 
-Changes in v2:
-- add comment from kbuild test robot
-  - tps6502x_parse_dt_data() can be static
-- add comment from Mark Brown:
-  - remove arch/arm/boot/dts/tps65023.dtsi
-  - do not use "regulator-compatible"
-
- .../devicetree/bindings/regulator/tps6502x.txt     |  58 ++++
- drivers/regulator/tps65023-regulator.c             | 326 +++++++++++++++------
- 2 files changed, 287 insertions(+), 97 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/tps6502x.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/tps6502x.txt b/Documentation/devicetree/bindings/regulator/tps6502x.txt
-new file mode 100644
-index 0000000..39f47e1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/tps6502x.txt
-@@ -0,0 +1,58 @@
-+TPS6502x family of regulators
-+
-+Required properties:
-+- compatible: "ti,tps65020", "ti,tps65021" or "ti,tps65023"
-+- reg: I2C slave address
-+- regulators: list of regulators provided by this controller, must be named
-+  after their hardware counterparts: dcdc[1-3] and ldo[1-2]
-+- regulators: This is the list of child nodes that specify the regulator
-+  initialization data for defined regulators. Not all regulators for the given
-+  device need to be present. The definition for each of these nodes is defined
-+  using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+Each regulator is defined using the standard binding for regulators.
-+
-+Example:
-+
-+	tps: tps@48 {
-+		compatible = "ti,tps65023";
-+
-+		regulators {
-+			vdcdc1_reg: regulator@0 {
-+				reg = <0>;
-+				regulator-name = "vdd_core";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+			vdcdc2_reg: regulator@1 {
-+				reg = <1>;
-+				regulator-name = "vddshv";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			vdcdc3_reg: regulator@2 {
-+				reg = <2>;
-+				regulator-name = "vdds";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+			vldo1_reg: regulator@3 {
-+				reg = <3>;
-+				regulator-name = "vdda1p8v_usbphy";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+			vldo2_reg: regulator@4 {
-+				reg = <4>;
-+				regulator-name = "vdda3p3v_usbphy";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-diff --git a/drivers/regulator/tps65023-regulator.c b/drivers/regulator/tps65023-regulator.c
-index 5cc19b4..769b140 100644
---- a/drivers/regulator/tps65023-regulator.c
-+++ b/drivers/regulator/tps65023-regulator.c
-@@ -25,6 +25,10 @@
- #include <linux/i2c.h>
- #include <linux/slab.h>
- #include <linux/regmap.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/regulator/of_regulator.h>
- 
- /* Register definitions */
- #define	TPS65023_REG_VERSION		0
-@@ -140,8 +144,15 @@ struct tps_pmic {
- 	u8 core_regulator;
- };
- 
-+enum tps6502x_id {
-+	TPS65020,
-+	TPS65021,
-+	TPS65023,
-+};
-+
- /* Struct passed as driver data */
- struct tps_driver_data {
-+	enum tps6502x_id id;
- 	const struct tps_info *info;
- 	u8 core_regulator;
- };
-@@ -199,103 +210,6 @@ static const struct regmap_config tps65023_regmap_config = {
- 	.val_bits = 8,
- };
- 
--static int tps_65023_probe(struct i2c_client *client,
--				     const struct i2c_device_id *id)
--{
--	const struct tps_driver_data *drv_data = (void *)id->driver_data;
--	const struct tps_info *info = drv_data->info;
--	struct regulator_config config = { };
--	struct regulator_init_data *init_data;
--	struct regulator_dev *rdev;
--	struct tps_pmic *tps;
--	int i;
--	int error;
--
--	/**
--	 * init_data points to array of regulator_init structures
--	 * coming from the board-evm file.
--	 */
--	init_data = dev_get_platdata(&client->dev);
--	if (!init_data)
--		return -EIO;
--
--	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
--	if (!tps)
--		return -ENOMEM;
--
--	tps->regmap = devm_regmap_init_i2c(client, &tps65023_regmap_config);
--	if (IS_ERR(tps->regmap)) {
--		error = PTR_ERR(tps->regmap);
--		dev_err(&client->dev, "Failed to allocate register map: %d\n",
--			error);
--		return error;
--	}
--
--	/* common for all regulators */
--	tps->core_regulator = drv_data->core_regulator;
--
--	for (i = 0; i < TPS65023_NUM_REGULATOR; i++, info++, init_data++) {
--		/* Store regulator specific information */
--		tps->info[i] = info;
--
--		tps->desc[i].name = info->name;
--		tps->desc[i].id = i;
--		tps->desc[i].n_voltages = info->table_len;
--		tps->desc[i].volt_table = info->table;
--		tps->desc[i].ops = (i > TPS65023_DCDC_3 ?
--					&tps65023_ldo_ops : &tps65023_dcdc_ops);
--		tps->desc[i].type = REGULATOR_VOLTAGE;
--		tps->desc[i].owner = THIS_MODULE;
--
--		tps->desc[i].enable_reg = TPS65023_REG_REG_CTRL;
--		switch (i) {
--		case TPS65023_LDO_1:
--			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
--			tps->desc[i].vsel_mask = 0x07;
--			tps->desc[i].enable_mask = 1 << 1;
--			break;
--		case TPS65023_LDO_2:
--			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
--			tps->desc[i].vsel_mask = 0x70;
--			tps->desc[i].enable_mask = 1 << 2;
--			break;
--		default: /* DCDCx */
--			tps->desc[i].enable_mask =
--					1 << (TPS65023_NUM_REGULATOR - i);
--			tps->desc[i].vsel_reg = TPS65023_REG_DEF_CORE;
--			tps->desc[i].vsel_mask = info->table_len - 1;
--			tps->desc[i].apply_reg = TPS65023_REG_CON_CTRL2;
--			tps->desc[i].apply_bit = TPS65023_REG_CTRL2_GO;
--		}
--
--		config.dev = &client->dev;
--		config.init_data = init_data;
--		config.driver_data = tps;
--		config.regmap = tps->regmap;
--
--		/* Register the regulators */
--		rdev = devm_regulator_register(&client->dev, &tps->desc[i],
--					       &config);
--		if (IS_ERR(rdev)) {
--			dev_err(&client->dev, "failed to register %s\n",
--				id->name);
--			return PTR_ERR(rdev);
--		}
--
--		/* Save regulator for cleanup */
--		tps->rdev[i] = rdev;
--	}
--
--	i2c_set_clientdata(client, tps);
--
--	/* Enable setting output voltage by I2C */
--	regmap_update_bits(tps->regmap, TPS65023_REG_CON_CTRL2,
--					TPS65023_REG_CTRL2_CORE_ADJ,
--					TPS65023_REG_CTRL2_CORE_ADJ);
--
--	return 0;
--}
--
- static const struct tps_info tps65020_regs[] = {
- 	{
- 		.name = "VDCDC1",
-@@ -381,16 +295,19 @@ static const struct tps_info tps65023_regs[] = {
- };
- 
- static struct tps_driver_data tps65020_drv_data = {
-+	.id = TPS65020,
- 	.info = tps65020_regs,
- 	.core_regulator = TPS65023_DCDC_3,
- };
- 
- static struct tps_driver_data tps65021_drv_data = {
-+	.id = TPS65021,
- 	.info = tps65021_regs,
- 	.core_regulator = TPS65023_DCDC_3,
- };
- 
- static struct tps_driver_data tps65023_drv_data = {
-+	.id = TPS65023,
- 	.info = tps65023_regs,
- 	.core_regulator = TPS65023_DCDC_1,
- };
-@@ -407,9 +324,224 @@ static const struct i2c_device_id tps_65023_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, tps_65023_id);
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id tps6502x_of_match[] = {
-+	 { .compatible = "ti,tps65023", .data = (void *)&tps65023_drv_data},
-+	 { .compatible = "ti,tps65021", .data = (void *)&tps65021_drv_data},
-+	 { .compatible = "ti,tps65020", .data = (void *)&tps65020_drv_data},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tps6502x_of_match);
-+#endif
-+
-+#if defined(CONFIG_OF)
-+static struct of_regulator_match tps65020_matches[] = {
-+	{ .name = "vdcdc1",	.driver_data = (void *) &tps65020_regs[0] },
-+	{ .name = "vdcdc2",	.driver_data = (void *) &tps65020_regs[1] },
-+	{ .name = "vdcdc3",	.driver_data = (void *) &tps65020_regs[2] },
-+	{ .name = "ldo1",	.driver_data = (void *) &tps65020_regs[3] },
-+	{ .name = "ldo2",	.driver_data = (void *) &tps65020_regs[4] },
-+};
-+
-+static struct of_regulator_match tps65021_matches[] = {
-+	{ .name = "vdcdc1",	.driver_data = (void *) &tps65021_regs[0] },
-+	{ .name = "vdcdc2",	.driver_data = (void *) &tps65021_regs[1] },
-+	{ .name = "vdcdc3",	.driver_data = (void *) &tps65021_regs[2] },
-+	{ .name = "ldo1",	.driver_data = (void *) &tps65021_regs[3] },
-+	{ .name = "ldo2",	.driver_data = (void *) &tps65021_regs[4] },
-+};
-+
-+static struct of_regulator_match tps65023_matches[] = {
-+	{ .name = "vdcdc1",	.driver_data = (void *) &tps65023_regs[0] },
-+	{ .name = "vdcdc2",	.driver_data = (void *) &tps65023_regs[1] },
-+	{ .name = "vdcdc3",	.driver_data = (void *) &tps65023_regs[2] },
-+	{ .name = "ldo1",	.driver_data = (void *) &tps65023_regs[3] },
-+	{ .name = "ldo2",	.driver_data = (void *) &tps65023_regs[4] },
-+};
-+
-+static struct regulator_init_data
-+*tps6502x_parse_dt_data(struct device *dev,
-+			  const struct tps_driver_data *drv_data,
-+			  struct of_regulator_match **tps6502x_reg_matches)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct regulator_init_data *init_data;
-+	struct device_node *regulators;
-+	struct of_regulator_match *matches;
-+	int i, count, ret;
-+
-+	init_data = devm_kzalloc(dev, TPS65023_NUM_REGULATOR *
-+				 sizeof(struct regulator_init_data),
-+				 GFP_KERNEL);
-+	if (!init_data)
-+		return NULL;
-+
-+	regulators = of_get_child_by_name(np, "regulators");
-+	if (!regulators) {
-+		dev_err(dev, "regulator node not found\n");
-+		return NULL;
-+	}
-+
-+	switch (drv_data->id) {
-+	case TPS65020:
-+		count = ARRAY_SIZE(tps65020_matches);
-+		matches = tps65020_matches;
-+		break;
-+	case TPS65021:
-+		count = ARRAY_SIZE(tps65021_matches);
-+		matches = tps65021_matches;
-+		break;
-+	case TPS65023:
-+		count = ARRAY_SIZE(tps65023_matches);
-+		matches = tps65023_matches;
-+		break;
-+	default:
-+		of_node_put(regulators);
-+		dev_err(dev, "Invalid tps chip version\n");
-+		return NULL;
-+	}
-+
-+	ret = of_regulator_match(dev, regulators, matches, count);
-+	of_node_put(regulators);
-+	if (ret < 0) {
-+		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
-+		return NULL;
-+	}
-+
-+	*tps6502x_reg_matches = matches;
-+
-+	for (i = 0; i < count; i++) {
-+		if (!matches[i].of_node)
-+			continue;
-+
-+		memcpy(&init_data[i], matches[i].init_data,
-+		       sizeof(struct regulator_init_data));
-+	}
-+
-+	return init_data;
-+}
-+#else
-+static struct regulator_init_data
-+*tps6502x_parse_dt_data(struct device *dev,
-+			  const struct tps_driver_data *drv_data,
-+			  struct of_regulator_match **tps6502x_reg_matches)
-+{
-+	*tps6502x_reg_matches = NULL;
-+	return NULL;
-+}
-+
-+#endif
-+
-+static int tps_65023_probe(struct i2c_client *client,
-+				     const struct i2c_device_id *id)
-+{
-+	const struct tps_driver_data *drv_data = (void *)id->driver_data;
-+	const struct tps_info *info = drv_data->info;
-+	struct regulator_config config = { };
-+	struct regulator_init_data *init_data;
-+	struct regulator_dev *rdev;
-+	struct of_regulator_match *tps6502x_reg_matches = NULL;
-+	struct tps_pmic *tps;
-+	int i;
-+	int error;
-+
-+	if (client->dev.of_node) {
-+		init_data = tps6502x_parse_dt_data(&client->dev, drv_data,
-+						     &tps6502x_reg_matches);
-+	} else {
-+		/**
-+		 * init_data points to array of regulator_init structures
-+		 * coming from the board-evm file.
-+		 */
-+		init_data = dev_get_platdata(&client->dev);
-+	}
-+	if (!init_data)
-+		return -EIO;
-+
-+	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
-+	if (!tps)
-+		return -ENOMEM;
-+
-+	tps->regmap = devm_regmap_init_i2c(client, &tps65023_regmap_config);
-+	if (IS_ERR(tps->regmap)) {
-+		error = PTR_ERR(tps->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	/* common for all regulators */
-+	tps->core_regulator = drv_data->core_regulator;
-+
-+	for (i = 0; i < TPS65023_NUM_REGULATOR; i++, info++, init_data++) {
-+		/* Store regulator specific information */
-+		tps->info[i] = info;
-+
-+		tps->desc[i].name = info->name;
-+		tps->desc[i].id = i;
-+		tps->desc[i].n_voltages = info->table_len;
-+		tps->desc[i].volt_table = info->table;
-+		tps->desc[i].ops = (i > TPS65023_DCDC_3 ?
-+					&tps65023_ldo_ops : &tps65023_dcdc_ops);
-+		tps->desc[i].type = REGULATOR_VOLTAGE;
-+		tps->desc[i].owner = THIS_MODULE;
-+
-+		tps->desc[i].enable_reg = TPS65023_REG_REG_CTRL;
-+		switch (i) {
-+		case TPS65023_LDO_1:
-+			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
-+			tps->desc[i].vsel_mask = 0x07;
-+			tps->desc[i].enable_mask = 1 << 1;
-+			break;
-+		case TPS65023_LDO_2:
-+			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
-+			tps->desc[i].vsel_mask = 0x70;
-+			tps->desc[i].enable_mask = 1 << 2;
-+			break;
-+		default: /* DCDCx */
-+			tps->desc[i].enable_mask =
-+					1 << (TPS65023_NUM_REGULATOR - i);
-+			tps->desc[i].vsel_reg = TPS65023_REG_DEF_CORE;
-+			tps->desc[i].vsel_mask = info->table_len - 1;
-+			tps->desc[i].apply_reg = TPS65023_REG_CON_CTRL2;
-+			tps->desc[i].apply_bit = TPS65023_REG_CTRL2_GO;
-+		}
-+
-+		config.dev = &client->dev;
-+		config.init_data = init_data;
-+		config.driver_data = tps;
-+		config.regmap = tps->regmap;
-+		if (tps6502x_reg_matches)
-+			config.of_node = tps6502x_reg_matches[i].of_node;
-+
-+		/* Register the regulators */
-+		rdev = devm_regulator_register(&client->dev, &tps->desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&client->dev, "failed to register %s\n",
-+				id->name);
-+			return PTR_ERR(rdev);
-+		}
-+
-+		/* Save regulator for cleanup */
-+		tps->rdev[i] = rdev;
-+	}
-+
-+	i2c_set_clientdata(client, tps);
-+
-+	/* Enable setting output voltage by I2C */
-+	regmap_update_bits(tps->regmap, TPS65023_REG_CON_CTRL2,
-+					TPS65023_REG_CTRL2_CORE_ADJ,
-+					TPS65023_REG_CTRL2_CORE_ADJ);
-+
-+	return 0;
-+}
-+
- static struct i2c_driver tps_65023_i2c_driver = {
- 	.driver = {
- 		.name = "tps65023",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(tps6502x_of_match),
- 	},
- 	.probe = tps_65023_probe,
- 	.id_table = tps_65023_id,
--- 
-2.1.0
-
+>>
+>>>
+>>>>
+>>>>>
+>>>>>           https://bugs.launchpad.net/bugs/1509221
+>>>>>
+>>>>> Thanks,
+>>>>
+>>>> Thanks
+>>>> Ganapat
+>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
