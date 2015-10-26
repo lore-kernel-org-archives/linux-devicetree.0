@@ -1,53 +1,79 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 7/8] ARM: dts: enable smp for rk3036
-Date: Mon, 26 Oct 2015 12:33:44 +0800
-Message-ID: <1445834024-6672-1-git-send-email-zhengxing@rock-chips.com>
-References: <1445833539-6484-1-git-send-email-zhengxing@rock-chips.com>
+From: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH v6 3/4] arm64/arm, numa, dt: adding numa dt binding
+ implementation for arm64 platforms
+Date: Mon, 26 Oct 2015 12:53:10 +0800
+Message-ID: <CACVXFVPoZqjFeqK7=M7wK0JQ0iS9tYoN8BHsYMc25OL-4j=e1g@mail.gmail.com>
+References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1445337931-11344-4-git-send-email-gkulkarni@caviumnetworks.com>
+	<CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ@mail.gmail.com>
+	<CAFpQJXX8VXX+gTBn-+7MepSAOzbOuc-yWJe4f=B7MH_Nj7FsKw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445833539-6484-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAFpQJXX8VXX+gTBn-+7MepSAOzbOuc-yWJe4f=B7MH_Nj7FsKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-Enable smp for rk3036, and add the smp sram name for adapting.
+On Mon, Oct 26, 2015 at 11:50 AM, Ganapatrao Kulkarni
+<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Oct 26, 2015 at 7:14 AM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+>> On Tue, Oct 20, 2015 at 6:45 PM, Ganapatrao Kulkarni
+>> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+>>> Adding numa dt binding support for arm64 based platforms.
+>>> dt node parsing for numa topology is done using device property
+>>> proximity and device node distance-map.
+>>>
+>>> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  arch/arm64/Kconfig            |  10 ++
+>>>  arch/arm64/include/asm/numa.h |  10 ++
+>>>  arch/arm64/kernel/Makefile    |   1 +
+>>>  arch/arm64/kernel/of_numa.c   | 221 ++++++++++++++++++++++++++++++++++++++++++
+>>>  arch/arm64/kernel/smp.c       |   1 +
+>>>  arch/arm64/mm/numa.c          |  10 +-
+>>>  6 files changed, 252 insertions(+), 1 deletion(-)
+>>>  create mode 100644 arch/arm64/kernel/of_numa.c
+>>>
+>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>> index 0f9cdc7..6cf8d20 100644
+>>> --- a/arch/arm64/Kconfig
+>>> +++ b/arch/arm64/Kconfig
+>>> @@ -426,6 +426,16 @@ config NUMA
+>>>           local memory controller of the CPU and add some more
+>>>           NUMA awareness to the kernel.
+>>>
+>>> +config OF_NUMA
+>>> +       bool "Device Tree NUMA support"
+>>> +       depends on NUMA
+>>> +       depends on OF
+>>> +       default y
+>>> +       help
+>>> +         Enable Device Tree NUMA support.
+>>> +         This enables the numa mapping of cpu, memory, io and
+>>> +         inter node distances using dt bindings.
+>>
+>> Enabling the above config option can cause numa_init() warning in
+>> numa-less arm64 system, please see the following report:
+> this is taken care. which version are you using?
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
+V5.
 
-Changes in v5: None
-
- arch/arm/boot/dts/rk3036.dtsi |    5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 8f3a069..61352be 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -72,6 +72,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "rockchip,rk3036-smp";
- 
- 		cpu0: cpu@f00 {
- 			device_type = "cpu";
-@@ -146,6 +147,10 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0 0x10080000 0x2000>;
-+		smp-sram@0 {
-+			compatible = "rockchip,rk3066-smp-sram";
-+			reg = <0x00 0x10>;
-+		};
- 	};
- 
- 	cru: clock-controller@20000000 {
--- 
-1.7.9.5
-
-
+>
+>>
+>>           https://bugs.launchpad.net/bugs/1509221
+>>
+>> Thanks,
+>
+> Thanks
+> Ganapat
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
