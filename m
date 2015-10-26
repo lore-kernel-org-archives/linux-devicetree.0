@@ -1,89 +1,67 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] arm64/arm, numa, dt: adding numa dt binding
- implementation for arm64 platforms
-Date: Mon, 26 Oct 2015 13:54:36 +0530
-Message-ID: <CAFpQJXXN-xixG2k7JJuJeCbLkGmR4RKX3heEeaOCpWBVNL4Mog@mail.gmail.com>
-References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1445337931-11344-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ@mail.gmail.com>
-	<CAFpQJXX8VXX+gTBn-+7MepSAOzbOuc-yWJe4f=B7MH_Nj7FsKw@mail.gmail.com>
-	<CACVXFVPoZqjFeqK7=M7wK0JQ0iS9tYoN8BHsYMc25OL-4j=e1g@mail.gmail.com>
-	<CACVXFVO5QGu9z1C49Wos_A5MpPafABL+WDidiHp3S2v1xUsRZw@mail.gmail.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v11 4/6] PCI: hisi: Add PCIe host support for HiSilicon
+ SoC Hip05
+Date: Mon, 26 Oct 2015 16:24:34 +0800
+Message-ID: <562DE342.2000104@hisilicon.com>
+References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com> <1444991021-109306-5-git-send-email-wangzhou1@hisilicon.com> <20151022184622.GD21237@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACVXFVO5QGu9z1C49Wos_A5MpPafABL+WDidiHp3S2v1xUsRZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151022184622.GD21237@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 12:50 PM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> On Mon, Oct 26, 2015 at 12:53 PM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->> On Mon, Oct 26, 2015 at 11:50 AM, Ganapatrao Kulkarni
->> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Mon, Oct 26, 2015 at 7:14 AM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
->>>> On Tue, Oct 20, 2015 at 6:45 PM, Ganapatrao Kulkarni
->>>> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
->>>>> Adding numa dt binding support for arm64 based platforms.
->>>>> dt node parsing for numa topology is done using device property
->>>>> proximity and device node distance-map.
->>>>>
->>>>> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->>>>> ---
->>>>>  arch/arm64/Kconfig            |  10 ++
->>>>>  arch/arm64/include/asm/numa.h |  10 ++
->>>>>  arch/arm64/kernel/Makefile    |   1 +
->>>>>  arch/arm64/kernel/of_numa.c   | 221 ++++++++++++++++++++++++++++++++++++++++++
->>>>>  arch/arm64/kernel/smp.c       |   1 +
->>>>>  arch/arm64/mm/numa.c          |  10 +-
->>>>>  6 files changed, 252 insertions(+), 1 deletion(-)
->>>>>  create mode 100644 arch/arm64/kernel/of_numa.c
->>>>>
->>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->>>>> index 0f9cdc7..6cf8d20 100644
->>>>> --- a/arch/arm64/Kconfig
->>>>> +++ b/arch/arm64/Kconfig
->>>>> @@ -426,6 +426,16 @@ config NUMA
->>>>>           local memory controller of the CPU and add some more
->>>>>           NUMA awareness to the kernel.
->>>>>
->>>>> +config OF_NUMA
->>>>> +       bool "Device Tree NUMA support"
->>>>> +       depends on NUMA
->>>>> +       depends on OF
->>>>> +       default y
->>>>> +       help
->>>>> +         Enable Device Tree NUMA support.
->>>>> +         This enables the numa mapping of cpu, memory, io and
->>>>> +         inter node distances using dt bindings.
->>>>
->>>> Enabling the above config option can cause numa_init() warning in
->>>> numa-less arm64 system, please see the following report:
->>> this is taken care. which version are you using?
->>
->> V5.
+On 2015/10/23 2:46, Bjorn Helgaas wrote:
+> Hi Zhou,
+> 
+> This looks pretty good to me; just a mask question and add a printk.
+> 
+> On Fri, Oct 16, 2015 at 06:23:39PM +0800, Zhou Wang wrote:
+>> This patch adds PCIe host support for HiSilicon SoC Hip05.
+>> ...
+> 
+>> +#define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
+>> +#define PCIE_LTSSM_LINKUP_STATE                         0x11
+>> +#define PCIE_LTSSM_STATE_MASK                           0x3F
+> 
+> Fabio unified some of this; see
+>   https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=pci/host-designware&id=4788fe6ebf4594c9a95b620cbff05147c8504823
+>   https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=pci/host-designware&id=b09464f77dd252a782da1f4e9925c1dbce4540ac
+> 
+> So the question is, why do you use a 6-bit (0x3f) LTSSM_STATE_MASK?
+> We think we can use a 5-bit mask (0x1f) for all the other
+> DesignWare-based systems.
+
+Hi Bjorn,
+
+LTSSM_STATE_MASK indicates the status of LTSSM, it should be 6-bit
+in Hip05 PCIe host. I checked Designware hardware manual, its
+LTSSM current state is 6-bit too(smlh_ltssm_state).
+
+> 
+>> +/* Hip05 PCIe host only supports 32-bit config access */
+> 
+> Thanks for the comment asserting that Hip05 only supports 32-bit
+> config access.  I assume you confirmed that with the hardware
+> designers.  As far as I can tell, this *is* a hardware defect, and at
+> the minimum, I want a printk at driver probe-time so a dmesg log will
+> have a clue that read/modify/write on config space might do the wrong
+> thing.
 >
-> The issue persists on V6 too, so looks V7 is needed.
-can you please share the boot log with v6.
-you can send to me only.
->
->>
->>>
->>>>
->>>>           https://bugs.launchpad.net/bugs/1509221
->>>>
->>>> Thanks,
->>>
->>> Thanks
->>> Ganapat
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Yes, I had checked this with hardware guys. Will add a print during probe-time.
+
+Many thanks,
+Zhou
+
+>> +static int hisi_pcie_cfg_read(struct pcie_port *pp, int where, int size,
+>> +			      u32 *val)
+>> ...
+> 
+> Bjorn
+> 
+> .
+> 
