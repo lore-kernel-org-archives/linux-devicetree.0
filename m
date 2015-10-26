@@ -1,75 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm: Test for CONFIG_USE_OF to handle the USE_OF=n/OF=y case
-Date: Sun, 25 Oct 2015 19:45:08 -0500
-Message-ID: <CAL_JsqKHozy_fKHuTokQobKHjF6Vay_mzYvP1TCU_sBjTrewBA@mail.gmail.com>
-References: <1445786759-22005-1-git-send-email-geert@linux-m68k.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Mon, 26 Oct 2015 09:56:50 +0900
+Message-ID: <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445786759-22005-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tyler Baker <tyler.baker@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 25, 2015 at 10:25 AM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Until commit 0166dc11be911213 ("of: make CONFIG_OF user selectable"),
-> CONFIG_OF=y implied CONFIG_USE_OF=y on ARM, as the former could solely
-> be enabled by being selected by the latter.
+Hello,
 
-Arnd sent a similar fix[1] which I prefer.
+On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> Add arch timer node to enable arch-timer support. MT8135 firmware
+> doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> properties to workaround this.
+>
+> This also set cpu enable-method to enable SMP.
+>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-> However, if the user now manually enables CONFIG_OF=y while
-> CONFIG_USE_OF=n:
->
->     arch/arm/kernel/devtree.c: In function 'setup_machine_fdt':
->     arch/arm/kernel/devtree.c:215:2: error: implicit declaration of function 'early_init_dt_verify' [-Werror=implicit-function-declaration]
->       if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys)))
->       ^
->     arch/arm/kernel/devtree.c:218:2: error: implicit declaration of function 'of_flat_dt_match_machine' [-Werror=implicit-function-declaration]
->       mdesc = of_flat_dt_match_machine(mdesc_best, arch_get_next_mach);
->       ^
->     arch/arm/kernel/devtree.c:218:8: warning: assignment makes pointer from integer without a cast
->       mdesc = of_flat_dt_match_machine(mdesc_best, arch_get_next_mach);
->             ^
->     arch/arm/kernel/devtree.c:228:3: error: implicit declaration of function 'of_get_flat_dt_root' [-Werror=implicit-function-declaration]
->        dt_root = of_get_flat_dt_root();
->        ^
->     arch/arm/kernel/devtree.c:229:3: error: implicit declaration of function 'of_get_flat_dt_prop' [-Werror=implicit-function-declaration]
->        prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
->        ^
->     arch/arm/kernel/devtree.c:229:8: warning: assignment makes pointer from integer without a cast
->        prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
->             ^
->     arch/arm/kernel/devtree.c:244:2: error: implicit declaration of function 'early_init_dt_scan_nodes' [-Werror=implicit-function-declaration]
->       early_init_dt_scan_nodes();
->       ^
->
-> and
->
->     arch/arm/kernel/built-in.o: In function `setup_arch':
->     arch/arm/kernel/setup.c:940: undefined reference to `setup_machine_fdt'
->     arch/arm/kernel/setup.c:979: undefined reference to `arm_dt_init_cpu_maps'
->
-> Replace tests for CONFIG_OF by tests for CONFIG_USE_OF where appropriate
-> to fix this.
->
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> ---
-> Cfr. http://kisskb.ellerman.id.au/kisskb/buildresult/12531538/
->
-> I only fixed the particular issue with the randconfig from the build
-> above.  Are there more tests for CONFIG_OF that should be converted to
-> CONFIG_USE_OF?
+kernelci.org started detecting new boot failures for the mt8135-evb in
+the arm-soc tree[1], and the boot failures were bisected down to this
+patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+dts: mt8135: enable basic SMP bringup for mt8135)
 
-I'd rather move toward removing USE_OF and having arches select if
-they use EARLY_FLATTREE.
+Maybe this new SMP support requires updating the firmware on the board
+as well?  If so, the changelog should've been a bit more explicit
+about firmware dependencies.
 
-Rob
+Kevin
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/376484.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] http://kernelci.org/boot/mt8135-evbp1/job/arm-soc/kernel/v4.3-rc5-795-ga4b616012d2e/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=562b1cf959b5149e07111471
