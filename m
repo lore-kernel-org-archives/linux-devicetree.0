@@ -1,149 +1,62 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: [PATCH_V3 2/4] MIPS: dt: xilfpga: Add xilfpga device tree files.
-Date: Mon, 26 Oct 2015 11:30:55 +0000
-Message-ID: <1445859057-47665-3-git-send-email-Zubair.Kakakhel@imgtec.com>
-References: <1445859057-47665-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Mon, 26 Oct 2015 19:40:10 +0800
+Message-ID: <1445859610.26723.4.camel@mtksdaap41>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	 <1445843717.23888.1.camel@mtksdaap41>
+	 <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445859057-47665-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+In-Reply-To: <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ralf@linux-mips.org, robh+dt@kernel.org
-Cc: Zubair.Kakakhel@imgtec.com, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree files for the MIPSfpga platform.
+Hi Kevin,
 
-See Documentation/devicetree/bindings/mips/img/xilfpga.txt
-for details about MIPSfpga
+On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
+> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
+> >> Hello,
+> >>
+> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
+> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> >> > properties to workaround this.
+> >> >
+> >> > This also set cpu enable-method to enable SMP.
+> >> >
+> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> >>
+> >> kernelci.org started detecting new boot failures for the mt8135-evb in
+> >> the arm-soc tree[1], and the boot failures were bisected down to this
+> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+> >> dts: mt8135: enable basic SMP bringup for mt8135)
+> >>
+> >> Maybe this new SMP support requires updating the firmware on the board
+> >> as well?  If so, the changelog should've been a bit more explicit
+> >> about firmware dependencies.
+> >
+> > Kevin,
+> >
+> > Thanks for testing.
+> >
+> > No, it doesn't need new firmware. Will test to see what's going wrong.
+> 
+> Thanks for following up.  I'll be glad to test any patches if you have
+> anything you'd like me to test.
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
+crash" (https://lkml.org/lkml/2015/8/24/803)
 
----
-V2 -> V3
+Daniel Lezcano already applied this patch in his tree for 4.4.
+(https://git.linaro.org/people/daniel.lezcano/linux.git)
 
-no change
-
-V1 -> V2
-Reformatted git log for 80 column
-Added nexys4ddr compatible
-Fixed some whitespace
-Removed a redundant status okay
----
- arch/mips/boot/dts/Makefile                |  1 +
- arch/mips/boot/dts/xilfpga/Makefile        |  9 ++++++
- arch/mips/boot/dts/xilfpga/microAptiv.dtsi | 21 ++++++++++++++
- arch/mips/boot/dts/xilfpga/nexys4ddr.dts   | 46 ++++++++++++++++++++++++++++++
- 4 files changed, 77 insertions(+)
- create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
- create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
- create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 778a340..0571ef7 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -6,6 +6,7 @@ dts-dirs	+= mti
- dts-dirs	+= netlogic
- dts-dirs	+= qca
- dts-dirs	+= ralink
-+dts-dirs	+= xilfpga
- 
- obj-y		:= $(addsuffix /, $(dts-dirs))
- 
-diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xilfpga/Makefile
-new file mode 100644
-index 0000000..913a752
---- /dev/null
-+++ b/arch/mips/boot/dts/xilfpga/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+= nexys4ddr.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files	:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/xilfpga/microAptiv.dtsi b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
-new file mode 100644
-index 0000000..81d518e
---- /dev/null
-+++ b/arch/mips/boot/dts/xilfpga/microAptiv.dtsi
-@@ -0,0 +1,21 @@
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "img,xilfpga";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mips,m14Kc";
-+			clocks	= <&ext>;
-+			reg = <0>;
-+		};
-+	};
-+
-+	ext: ext {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+};
-diff --git a/arch/mips/boot/dts/xilfpga/nexys4ddr.dts b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-new file mode 100644
-index 0000000..686ebd1
---- /dev/null
-+++ b/arch/mips/boot/dts/xilfpga/nexys4ddr.dts
-@@ -0,0 +1,46 @@
-+/dts-v1/;
-+
-+#include "microAptiv.dtsi"
-+
-+/ {
-+	compatible = "digilent,nexys4ddr";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+	cpuintc: interrupt-controller@0 {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	axi_gpio: gpio@10600000 {
-+		#gpio-cells = <1>;
-+		compatible = "xlnx,xps-gpio-1.00.a";
-+		gpio-controller;
-+		reg = <0x10600000 0x10000>;
-+		xlnx,all-inputs = <0x0>;
-+		xlnx,dout-default = <0x0>;
-+		xlnx,gpio-width = <0x16>;
-+		xlnx,interrupt-present = <0x0>;
-+		xlnx,is-dual = <0x0>;
-+		xlnx,tri-default = <0xffffffff>;
-+	} ;
-+
-+	axi_uart16550: serial@10400000 {
-+		compatible = "ns16550a";
-+		reg = <0x10400000 0x10000>;
-+
-+		reg-shift = <2>;
-+		reg-offset = <0x1000>;
-+
-+		clocks	= <&ext>;
-+	};
-+};
-+
-+&ext {
-+	clock-frequency = <50000000>;
-+};
--- 
-1.9.1
+Eddie
+Thanks
