@@ -1,88 +1,42 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH v3 1/2] devicetree: add binding for Aurora VLSI NB8800 Ethernet controller
-Date: Mon, 26 Oct 2015 21:40:53 +0000
-Message-ID: <yw1xd1w1e2ai.fsf@unicorn.mansr.com>
-References: <1445895295-16778-1-git-send-email-mans@mansr.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH 04/14] devicetree: Add hardware rng entry to
+ qcom-apq8064.dtsi
+Date: Mon, 26 Oct 2015 14:46:56 -0700
+Message-ID: <20151026214656.GZ24668@usrtlx11787.corpusers.net>
+References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1442579472-20102-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445895295-16778-1-git-send-email-mans@mansr.com> (Mans
-	Rullgard's message of "Mon, 26 Oct 2015 21:34:54 +0000")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, slash.tmp@free.fr, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442579472-20102-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=46orgot to CC netdev.
+On Fri 18 Sep 05:31 PDT 2015, Srinivas Kandagatla wrote:
 
-Mans Rullgard <mans@mansr.com> writes:
+> From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Add devicetree data to add support for hw_rng support
+> to the apq8064 dts.
+> 
+> Tested on the Nexus7 (2013).
+> 
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-> This adds a binding for the Aurora VLSI NB8800 Ethernet controller
-> using the "aurora,nb8800" compatible string.  When used in Sigma
-> Designs chips a few additional features are available.  These variant=
-s
-> are indicated by a "sigma,<chip>-ethernet" compatible string.
->
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
-> Changes:
-> - added phy child node
-> ---
->  .../devicetree/bindings/net/aurora,nb8800.txt      | 37 ++++++++++++=
-++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/aurora,nb88=
-00.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/aurora,nb8800.txt =
-b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> new file mode 100644
-> index 0000000..df12ff1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/aurora,nb8800.txt
-> @@ -0,0 +1,37 @@
-> +* Aurora VLSI AU-NB8800 Ethernet controller
-> +
-> +Required properties:
-> +- compatible: Should be "sigma,<chip>-ethernet", "aurora,nb8800"
-> +- reg: Should be MMIO address space of the device
-> +- interrupts: Should contain the interrupt specifier for the device
-> +- interrupt-parent: Should be a phandle for the interrupt controller
-> +- clocks: Should be a phandle for the clock for the device
-> +- #address-cells: Should be <1>
-> +- #size-cells: Should be <0>
-> +
-> +Common properties described in ethernet.txt:
-> +- local-mac-address
-> +- mac-address
-> +- phy-handle
-> +- phy-mode
-> +
-> +The attached PHY should be specified in a child node as per phy.txt.
-> +
-> +Example:
-> +
-> +ethernet@26000 {
-> +	compatible =3D "sigma,smp8642-ethernet", "aurora,nb8800";
-> +	reg =3D <0x26000 0x800>;
-> +	interrupts =3D <38>;
-> +	clocks =3D <&sys_clk>;
-> +	max-speed =3D <1000>;
-> +	phy-connection-type =3D "rgmii";
-> +	phy-handle =3D <&eth0_phy>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +
-> +	eth0_phy: ethernet-phy@1 {
-> +		compatible =3D "ethernet-phy-ieee802.3-c22";
-> +		reg =3D <1>;
-> +	};
-> +};
-> --=20
-> 2.6.2
->
+Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
---=20
-M=E5ns Rullg=E5rd
-mans@mansr.com
+> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
