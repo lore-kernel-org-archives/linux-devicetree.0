@@ -1,47 +1,82 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 2/3] arm64: dts: qcom: Make msm8916-mtp compatible string
- compliant
-Date: Mon, 26 Oct 2015 14:25:11 -0700
-Message-ID: <1445894712-14350-3-git-send-email-sboyd@codeaurora.org>
-References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+From: Olliver Schinagl <o.schinagl@ultimaker.com>
+Subject: [PATCH 01/10] pwm: lpc18xx_pwm: use pwm_set_chip_data
+Date: Mon, 26 Oct 2015 22:32:32 +0100
+Message-ID: <1445895161-2317-2-git-send-email-o.schinagl@ultimaker.com>
+References: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Olliver Schinagl <oliver+list@schinagl.nl>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This compatible string isn't compliant with the format for
-subtypes. Replace it with a compliant compatible type.
+From: Olliver Schinagl <oliver@schinagl.nl>
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+The lpc18xx driver currently manipulates the pwm_device struct directly
+rather then using the pwm_set_chip_data. While the current method may
+save a clock cycle or two, it is more obvious that data is set to the
+chip pointer (especially since it is only a single int holding struct.
+
+Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
 ---
- arch/arm64/boot/dts/qcom/msm8916-mtp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-lpc18xx-sct.c | 11 +++++++----
+ drivers/pwm/pwm-sun4i.c       | 11 +++++++++++
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-index fced77f0fd3a..b0a064d3806b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-@@ -17,6 +17,6 @@
+diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+index 9163085..0ab59f1 100644
+--- a/drivers/pwm/pwm-lpc18xx-sct.c
++++ b/drivers/pwm/pwm-lpc18xx-sct.c
+@@ -408,14 +408,17 @@ static int lpc18xx_pwm_probe(struct platform_device *pdev)
+ 	}
  
- / {
- 	model = "Qualcomm Technologies, Inc. MSM 8916 MTP";
--	compatible = "qcom,msm8916-mtp", "qcom,msm8916-mtp-smb1360",
-+	compatible = "qcom,msm8916-mtp", "qcom,msm8916-mtp/1",
- 			"qcom,msm8916", "qcom,mtp";
- };
+ 	for (i = 0; i < lpc18xx_pwm->chip.npwm; i++) {
++		struct lpc18xx_pwm_data *lpc18xx_data;
++
+ 		pwm = &lpc18xx_pwm->chip.pwms[i];
+-		pwm->chip_data = devm_kzalloc(lpc18xx_pwm->dev,
+-					      sizeof(struct lpc18xx_pwm_data),
+-					      GFP_KERNEL);
+-		if (!pwm->chip_data) {
++		lpc18xx_data = devm_kzalloc(lpc18xx_pwm->dev,
++					    sizeof(struct lpc18xx_pwm_data),
++					    GFP_KERNEL);
++		if (!lpc18xx_data) {
+ 			ret = -ENOMEM;
+ 			goto remove_pwmchip;
+ 		}
++		pwm_set_chip_data(pwm, lpc18xx_data);
+ 	}
+ 
+ 	platform_set_drvdata(pdev, lpc18xx_pwm);
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index cd9dde5..5ec4e8e 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+@@ -244,6 +245,16 @@ static void sun4i_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	spin_lock(&sun4i_pwm->ctrl_lock);
+ 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+ 	val &= ~BIT_CH(PWM_EN, pwm->hwpwm);
++	sun4i_pwm_writel(sun4i_pwm, val, PWM_CTRL_REG);
++	spin_unlock(&sun4i_pwm->ctrl_lock);
++
++	/* Allow for the PWM hardware to finish its last toggle. The pulse
++	 * may have just started and thus we should wait a full period.
++	 */
++	ndelay(pwm_get_period(pwm));
++
++	spin_lock(&sun4i_pwm->ctrl_lock);
++	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+ 	val &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+ 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CTRL_REG);
+ 	spin_unlock(&sun4i_pwm->ctrl_lock);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.6.1
