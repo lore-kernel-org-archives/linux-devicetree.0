@@ -1,42 +1,58 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH 04/14] devicetree: Add hardware rng entry to
- qcom-apq8064.dtsi
-Date: Mon, 26 Oct 2015 14:46:56 -0700
-Message-ID: <20151026214656.GZ24668@usrtlx11787.corpusers.net>
-References: <1442579371-19822-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1442579472-20102-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH 01/10] pwm: lpc18xx_pwm: use pwm_set_chip_data
+Date: Mon, 26 Oct 2015 18:58:18 -0300
+Message-ID: <CAAEAJfD=Lvqx-4_SHJyhg9Q1T_CKhLaGYs+X_ttoVf_zh_Yvkg@mail.gmail.com>
+References: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com>
+	<1445895161-2317-2-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442579472-20102-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1445895161-2317-2-git-send-email-o.schinagl@ultimaker.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Olliver Schinagl <o.schinagl@ultimaker.com>
+Cc: Olliver Schinagl <oliver@schinagl.nl>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Olliver Schinagl <oliver+list@schinagl.nl>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 18 Sep 05:31 PDT 2015, Srinivas Kandagatla wrote:
+(+ Ariel)
 
-> From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Add devicetree data to add support for hw_rng support
-> to the apq8064 dts.
-> 
-> Tested on the Nexus7 (2013).
-> 
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Hi Oliver,
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Not sure why there's some many people in Cc for such a silly change.
+I guess you are using get_maintainers.pl on the entire patchset and get
+this rather long list.
 
-> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+IMO, the value of submitting patches as part of a larger series is to b=
+e able to
+push patches that need to be applied in some given order, or otherwise
+have some kind of logical relationship between them.
 
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, this is not the case: it's just a very small change and has
+no relation to the rest of the patches in the series.
+I think a simple standalone patch would be better here.
+
+Also, get_maintainer.pl is just a hint, and not meant to be used as-is.
+In particular, you are missing the driver's author.
+
+On 26 October 2015 at 18:32, Olliver Schinagl <o.schinagl@ultimaker.com=
+> wrote:
+> From: Olliver Schinagl <oliver@schinagl.nl>
+>
+> The lpc18xx driver currently manipulates the pwm_device struct direct=
+ly
+> rather then using the pwm_set_chip_data. While the current method may
+> save a clock cycle or two, it is more obvious that data is set to the
+> chip pointer (especially since it is only a single int holding struct=
+=2E
+>
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> ---
+>  drivers/pwm/pwm-lpc18xx-sct.c | 11 +++++++----
+>  drivers/pwm/pwm-sun4i.c       | 11 +++++++++++
+>  2 files changed, 18 insertions(+), 4 deletions(-)
+>
+
+=2E..and this diffstat is obviously fishy.
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
