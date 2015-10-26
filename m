@@ -1,102 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Mon, 26 Oct 2015 04:25:51 +0200
-Message-ID: <1577230.N3FJlP7ehB@avalon>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be> <20151024011003.GE19782@codeaurora.org> <CAMuHMdUyu6w0LAoH78H2+VHczrWwozDKMX2j8_A4V=jgz0snwA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 04/22] of: add function to allow probing a device from
+ a OF node
+Date: Mon, 26 Oct 2015 03:48:44 +0100
+Message-ID: <CAJZ5v0hdO-Qd+yMsv6fvc5+kLBPV9fiy77WC_aRjF=qmb2tQJQ@mail.gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
+	<10119606.2TraDKGPVy@vostro.rjw.lan>
+	<CAAObsKCAX4DQGydQoYjJEYKTOEqpVozXdHnqXWdNYVkLsg7BVg@mail.gmail.com>
+	<8510008.IC14Fu2Aos@vostro.rjw.lan>
+	<562BE562.8090704@kernel.org>
+	<20151026001301.GT29919@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUyu6w0LAoH78H2+VHczrWwozDKMX2j8_A4V=jgz0snwA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151026001301.GT29919-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Mon, Oct 26, 2015 at 1:13 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Oct 24, 2015 at 03:09:06PM -0500, Rob Herring wrote:
+>
+>> Let's get agreement on the flow and structure and how to address other
+>> issues like suspend, then we can worry about whether this needs to be
+>> abstracted from subsystems. We can discuss more this week at KS.
+>
+> Should we try to schedule an ad-hoc session today (Monday) for those of
+> us who are here to talk this over?
 
-On Saturday 24 October 2015 19:34:03 Geert Uytterhoeven wrote:
-> On Sat, Oct 24, 2015 at 3:10 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > On 10/22, Geert Uytterhoeven wrote:
-> >> On Tue, Oct 20, 2015 at 3:07 PM, Geert Uytterhoeven wrote:
-> >>> On Tue, Oct 20, 2015 at 3:00 PM, Michael Turquette wrote:
-> >>>> Quoting Geert Uytterhoeven (2015-10-20 05:31:12)
-> >>>>> On Tue, Oct 20, 2015 at 2:24 PM, Michael Turquette wrote:
-> >>>> The bindings should go in for 4.4, but if the driver is slated for 4.5
-> >>>> then can you investigate this some more? Stephen and I are on a
-> >>>> mission to have _real_ clk drivers.
-> >>> 
-> >>> Sure, I'll have a deeper look.
-> >> 
-> >> And so I did (on r8a7791/koelsch).
-> >> 
-> >> As I want to have as much clock data/code __init as possible (think
-> >> multi-platform kernels --- pinmux data is a disaster here), I have to use
-> >> platform_driver_probe().
+I won't mind doing that, what about after the Linus+Dirk session?
 
-That sounds like an __init issue, doesn't it ? The CPG driver will always be 
-builtin and probed during the init process, what's preventing us from using 
-normal driver probing ?
-
-> >>   - Calling platform_driver_probe() from core_initcall() or
-> >>     postcore_initcall() is too early, as the platform device for the CPG
-> >>     hasn't been created yet. Hence the CPG Clock Domain isn't registered,
-> >>     and all devices fail to probe as they can't be attached to their
-> >>     Clock Domain.
-> >>     
-> >>       -> This is where the -ENOENT came from (I incorrectly assumed it
-> >>          came from the clock code; sorry for that), and it's converted
-> >>          into -EPROBE_DEFER by genpd_dev_pm_attach().
-> >>   
-> >>   - Calling platform_driver_probe() from arch_initcall() is too late, as
-> >>     the IRQC is initialized first (it's located before the CPG in .dtsi).
-> >>     Hence the IRQC can't find it's Clock Domain, and its probe is
-> >>     deferred. IRQC will be reprobed later, but in the mean time the
-> >>     Ethernet PHY can't find its IRQ, as the of_mdio code uses
-> >>     irq_of_parse_and_map(), which plainly ignores EPROBE_DEFER :-(
-> >>     Nevertheless, Ethernet works...
-> >>   
-> >>   - Using subsys_initcall() and later causes even more probe deferral.
-> >> 
-> >> So that's why I went with CLK_OF_DECLARE() again...
-> > 
-> > Understandable for the few clocks that are used by the interrupt
-> > controller, but for the other clocks, could those be registered
-> > from a real platform device driver probe path? I've been
-> 
-> In this particular case, that would be the IRQC module clocks and its
-> parent, the CP clock, which is derived directly from the external crystal.
-> 
-> If we ever have to do this for the GIC, that's gonna be several more
-> clocks (INTC-SYS / ZS / PLL1 / MAIN / external crystal).
-> 
-> > considering making some API that lets devices associate with the
-> > clocks that the file had to register with CLK_OF_DECLARE(). The
-> > driver would have to be builtin then (no modules) but otherwise
-> > we would be able to benefit from the device driver model for most
-> > other clocks.
-> 
-> To be honest, that still feels like a hack to me.
-> 
-> I hope dependencies and probe order, and obscure drivers not handling
-> deferred probe correctly, will be solved later sooner or later,
-> so hacks like that are no longer needed.
-> 
-> For new SoCs like r8a7795 we can probably just make it a real platform
-> driver, and make sure the irqc node is located after the cpg node in the
-> .dtsi.
-
-That's another hack :-) We really shouldn't depend on DT nodes order.
-
-I'm all for getting rid of CLK_OF_DECLARE
-
-> Upon second thought, that may even be feasible for existing SoCs, as
-> they would need a DTS update to make use of the new bindings/driver anyway,
-> so the irqc node can be moved at the same time. Backwards compatibility
-> through the old bindings/drivers would keep on using CLK_OF_DECLARE().
-
--- 
-Regards,
-
-Laurent Pinchart
-
+Thanks,
+Rafael
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
