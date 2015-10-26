@@ -1,478 +1,79 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH v3] regulator, dt: add dt support for tps6502x regulator
-Date: Mon, 26 Oct 2015 12:25:17 +0100
-Message-ID: <1445858717-12707-1-git-send-email-hs@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH_V3 0/4] MIPS: Add Xilfpga platform
+Date: Mon, 26 Oct 2015 11:30:53 +0000
+Message-ID: <1445859057-47665-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add DT support for the tps6502x regulators.
+Hi,
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
----
+This series is based on v4.3-rc7.
 
-Changes in v3:
-- fold kbuild patch:
-  regulator, dt: fix platform_no_drv_owner.cocci warnings
-  into this patch
-  No need to set .owner here. The core will do it.
+Adds support for the Imagination University Program MIPSfpga platform.
 
-Changes in v2:
-- add comment from kbuild test robot
-  - tps6502x_parse_dt_data() can be static
-- add comment from Mark Brown:
-  - remove arch/arm/boot/dts/tps65023.dtsi
-  - do not use "regulator-compatible"
+See the first dt-bindings patch for details about the platform.
 
- .../devicetree/bindings/regulator/tps6502x.txt     |  58 ++++
- drivers/regulator/tps65023-regulator.c             | 325 +++++++++++++++------
- 2 files changed, 286 insertions(+), 97 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/tps6502x.txt
+These patches allow the kernel to boot with UART and gpio support.
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps6502x.txt b/Documentation/devicetree/bindings/regulator/tps6502x.txt
-new file mode 100644
-index 0000000..39f47e1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/tps6502x.txt
-@@ -0,0 +1,58 @@
-+TPS6502x family of regulators
-+
-+Required properties:
-+- compatible: "ti,tps65020", "ti,tps65021" or "ti,tps65023"
-+- reg: I2C slave address
-+- regulators: list of regulators provided by this controller, must be named
-+  after their hardware counterparts: dcdc[1-3] and ldo[1-2]
-+- regulators: This is the list of child nodes that specify the regulator
-+  initialization data for defined regulators. Not all regulators for the given
-+  device need to be present. The definition for each of these nodes is defined
-+  using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+Each regulator is defined using the standard binding for regulators.
-+
-+Example:
-+
-+	tps: tps@48 {
-+		compatible = "ti,tps65023";
-+
-+		regulators {
-+			vdcdc1_reg: regulator@0 {
-+				reg = <0>;
-+				regulator-name = "vdd_core";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+			vdcdc2_reg: regulator@1 {
-+				reg = <1>;
-+				regulator-name = "vddshv";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			vdcdc3_reg: regulator@2 {
-+				reg = <2>;
-+				regulator-name = "vdds";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+			vldo1_reg: regulator@3 {
-+				reg = <3>;
-+				regulator-name = "vdda1p8v_usbphy";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+			vldo2_reg: regulator@4 {
-+				reg = <4>;
-+				regulator-name = "vdda3p3v_usbphy";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-diff --git a/drivers/regulator/tps65023-regulator.c b/drivers/regulator/tps65023-regulator.c
-index 5cc19b4..7662e43 100644
---- a/drivers/regulator/tps65023-regulator.c
-+++ b/drivers/regulator/tps65023-regulator.c
-@@ -25,6 +25,10 @@
- #include <linux/i2c.h>
- #include <linux/slab.h>
- #include <linux/regmap.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/regulator/of_regulator.h>
- 
- /* Register definitions */
- #define	TPS65023_REG_VERSION		0
-@@ -140,8 +144,15 @@ struct tps_pmic {
- 	u8 core_regulator;
- };
- 
-+enum tps6502x_id {
-+	TPS65020,
-+	TPS65021,
-+	TPS65023,
-+};
-+
- /* Struct passed as driver data */
- struct tps_driver_data {
-+	enum tps6502x_id id;
- 	const struct tps_info *info;
- 	u8 core_regulator;
- };
-@@ -199,103 +210,6 @@ static const struct regmap_config tps65023_regmap_config = {
- 	.val_bits = 8,
- };
- 
--static int tps_65023_probe(struct i2c_client *client,
--				     const struct i2c_device_id *id)
--{
--	const struct tps_driver_data *drv_data = (void *)id->driver_data;
--	const struct tps_info *info = drv_data->info;
--	struct regulator_config config = { };
--	struct regulator_init_data *init_data;
--	struct regulator_dev *rdev;
--	struct tps_pmic *tps;
--	int i;
--	int error;
--
--	/**
--	 * init_data points to array of regulator_init structures
--	 * coming from the board-evm file.
--	 */
--	init_data = dev_get_platdata(&client->dev);
--	if (!init_data)
--		return -EIO;
--
--	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
--	if (!tps)
--		return -ENOMEM;
--
--	tps->regmap = devm_regmap_init_i2c(client, &tps65023_regmap_config);
--	if (IS_ERR(tps->regmap)) {
--		error = PTR_ERR(tps->regmap);
--		dev_err(&client->dev, "Failed to allocate register map: %d\n",
--			error);
--		return error;
--	}
--
--	/* common for all regulators */
--	tps->core_regulator = drv_data->core_regulator;
--
--	for (i = 0; i < TPS65023_NUM_REGULATOR; i++, info++, init_data++) {
--		/* Store regulator specific information */
--		tps->info[i] = info;
--
--		tps->desc[i].name = info->name;
--		tps->desc[i].id = i;
--		tps->desc[i].n_voltages = info->table_len;
--		tps->desc[i].volt_table = info->table;
--		tps->desc[i].ops = (i > TPS65023_DCDC_3 ?
--					&tps65023_ldo_ops : &tps65023_dcdc_ops);
--		tps->desc[i].type = REGULATOR_VOLTAGE;
--		tps->desc[i].owner = THIS_MODULE;
--
--		tps->desc[i].enable_reg = TPS65023_REG_REG_CTRL;
--		switch (i) {
--		case TPS65023_LDO_1:
--			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
--			tps->desc[i].vsel_mask = 0x07;
--			tps->desc[i].enable_mask = 1 << 1;
--			break;
--		case TPS65023_LDO_2:
--			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
--			tps->desc[i].vsel_mask = 0x70;
--			tps->desc[i].enable_mask = 1 << 2;
--			break;
--		default: /* DCDCx */
--			tps->desc[i].enable_mask =
--					1 << (TPS65023_NUM_REGULATOR - i);
--			tps->desc[i].vsel_reg = TPS65023_REG_DEF_CORE;
--			tps->desc[i].vsel_mask = info->table_len - 1;
--			tps->desc[i].apply_reg = TPS65023_REG_CON_CTRL2;
--			tps->desc[i].apply_bit = TPS65023_REG_CTRL2_GO;
--		}
--
--		config.dev = &client->dev;
--		config.init_data = init_data;
--		config.driver_data = tps;
--		config.regmap = tps->regmap;
--
--		/* Register the regulators */
--		rdev = devm_regulator_register(&client->dev, &tps->desc[i],
--					       &config);
--		if (IS_ERR(rdev)) {
--			dev_err(&client->dev, "failed to register %s\n",
--				id->name);
--			return PTR_ERR(rdev);
--		}
--
--		/* Save regulator for cleanup */
--		tps->rdev[i] = rdev;
--	}
--
--	i2c_set_clientdata(client, tps);
--
--	/* Enable setting output voltage by I2C */
--	regmap_update_bits(tps->regmap, TPS65023_REG_CON_CTRL2,
--					TPS65023_REG_CTRL2_CORE_ADJ,
--					TPS65023_REG_CTRL2_CORE_ADJ);
--
--	return 0;
--}
--
- static const struct tps_info tps65020_regs[] = {
- 	{
- 		.name = "VDCDC1",
-@@ -381,16 +295,19 @@ static const struct tps_info tps65023_regs[] = {
- };
- 
- static struct tps_driver_data tps65020_drv_data = {
-+	.id = TPS65020,
- 	.info = tps65020_regs,
- 	.core_regulator = TPS65023_DCDC_3,
- };
- 
- static struct tps_driver_data tps65021_drv_data = {
-+	.id = TPS65021,
- 	.info = tps65021_regs,
- 	.core_regulator = TPS65023_DCDC_3,
- };
- 
- static struct tps_driver_data tps65023_drv_data = {
-+	.id = TPS65023,
- 	.info = tps65023_regs,
- 	.core_regulator = TPS65023_DCDC_1,
- };
-@@ -407,9 +324,223 @@ static const struct i2c_device_id tps_65023_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, tps_65023_id);
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id tps6502x_of_match[] = {
-+	 { .compatible = "ti,tps65023", .data = (void *)&tps65023_drv_data},
-+	 { .compatible = "ti,tps65021", .data = (void *)&tps65021_drv_data},
-+	 { .compatible = "ti,tps65020", .data = (void *)&tps65020_drv_data},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tps6502x_of_match);
-+#endif
-+
-+#if defined(CONFIG_OF)
-+static struct of_regulator_match tps65020_matches[] = {
-+	{ .name = "vdcdc1",	.driver_data = (void *) &tps65020_regs[0] },
-+	{ .name = "vdcdc2",	.driver_data = (void *) &tps65020_regs[1] },
-+	{ .name = "vdcdc3",	.driver_data = (void *) &tps65020_regs[2] },
-+	{ .name = "ldo1",	.driver_data = (void *) &tps65020_regs[3] },
-+	{ .name = "ldo2",	.driver_data = (void *) &tps65020_regs[4] },
-+};
-+
-+static struct of_regulator_match tps65021_matches[] = {
-+	{ .name = "vdcdc1",	.driver_data = (void *) &tps65021_regs[0] },
-+	{ .name = "vdcdc2",	.driver_data = (void *) &tps65021_regs[1] },
-+	{ .name = "vdcdc3",	.driver_data = (void *) &tps65021_regs[2] },
-+	{ .name = "ldo1",	.driver_data = (void *) &tps65021_regs[3] },
-+	{ .name = "ldo2",	.driver_data = (void *) &tps65021_regs[4] },
-+};
-+
-+static struct of_regulator_match tps65023_matches[] = {
-+	{ .name = "vdcdc1",	.driver_data = (void *) &tps65023_regs[0] },
-+	{ .name = "vdcdc2",	.driver_data = (void *) &tps65023_regs[1] },
-+	{ .name = "vdcdc3",	.driver_data = (void *) &tps65023_regs[2] },
-+	{ .name = "ldo1",	.driver_data = (void *) &tps65023_regs[3] },
-+	{ .name = "ldo2",	.driver_data = (void *) &tps65023_regs[4] },
-+};
-+
-+static struct regulator_init_data
-+*tps6502x_parse_dt_data(struct device *dev,
-+			  const struct tps_driver_data *drv_data,
-+			  struct of_regulator_match **tps6502x_reg_matches)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct regulator_init_data *init_data;
-+	struct device_node *regulators;
-+	struct of_regulator_match *matches;
-+	int i, count, ret;
-+
-+	init_data = devm_kzalloc(dev, TPS65023_NUM_REGULATOR *
-+				 sizeof(struct regulator_init_data),
-+				 GFP_KERNEL);
-+	if (!init_data)
-+		return NULL;
-+
-+	regulators = of_get_child_by_name(np, "regulators");
-+	if (!regulators) {
-+		dev_err(dev, "regulator node not found\n");
-+		return NULL;
-+	}
-+
-+	switch (drv_data->id) {
-+	case TPS65020:
-+		count = ARRAY_SIZE(tps65020_matches);
-+		matches = tps65020_matches;
-+		break;
-+	case TPS65021:
-+		count = ARRAY_SIZE(tps65021_matches);
-+		matches = tps65021_matches;
-+		break;
-+	case TPS65023:
-+		count = ARRAY_SIZE(tps65023_matches);
-+		matches = tps65023_matches;
-+		break;
-+	default:
-+		of_node_put(regulators);
-+		dev_err(dev, "Invalid tps chip version\n");
-+		return NULL;
-+	}
-+
-+	ret = of_regulator_match(dev, regulators, matches, count);
-+	of_node_put(regulators);
-+	if (ret < 0) {
-+		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
-+		return NULL;
-+	}
-+
-+	*tps6502x_reg_matches = matches;
-+
-+	for (i = 0; i < count; i++) {
-+		if (!matches[i].of_node)
-+			continue;
-+
-+		memcpy(&init_data[i], matches[i].init_data,
-+		       sizeof(struct regulator_init_data));
-+	}
-+
-+	return init_data;
-+}
-+#else
-+static struct regulator_init_data
-+*tps6502x_parse_dt_data(struct device *dev,
-+			  const struct tps_driver_data *drv_data,
-+			  struct of_regulator_match **tps6502x_reg_matches)
-+{
-+	*tps6502x_reg_matches = NULL;
-+	return NULL;
-+}
-+
-+#endif
-+
-+static int tps_65023_probe(struct i2c_client *client,
-+				     const struct i2c_device_id *id)
-+{
-+	const struct tps_driver_data *drv_data = (void *)id->driver_data;
-+	const struct tps_info *info = drv_data->info;
-+	struct regulator_config config = { };
-+	struct regulator_init_data *init_data;
-+	struct regulator_dev *rdev;
-+	struct of_regulator_match *tps6502x_reg_matches = NULL;
-+	struct tps_pmic *tps;
-+	int i;
-+	int error;
-+
-+	if (client->dev.of_node) {
-+		init_data = tps6502x_parse_dt_data(&client->dev, drv_data,
-+						     &tps6502x_reg_matches);
-+	} else {
-+		/**
-+		 * init_data points to array of regulator_init structures
-+		 * coming from the board-evm file.
-+		 */
-+		init_data = dev_get_platdata(&client->dev);
-+	}
-+	if (!init_data)
-+		return -EIO;
-+
-+	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
-+	if (!tps)
-+		return -ENOMEM;
-+
-+	tps->regmap = devm_regmap_init_i2c(client, &tps65023_regmap_config);
-+	if (IS_ERR(tps->regmap)) {
-+		error = PTR_ERR(tps->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	/* common for all regulators */
-+	tps->core_regulator = drv_data->core_regulator;
-+
-+	for (i = 0; i < TPS65023_NUM_REGULATOR; i++, info++, init_data++) {
-+		/* Store regulator specific information */
-+		tps->info[i] = info;
-+
-+		tps->desc[i].name = info->name;
-+		tps->desc[i].id = i;
-+		tps->desc[i].n_voltages = info->table_len;
-+		tps->desc[i].volt_table = info->table;
-+		tps->desc[i].ops = (i > TPS65023_DCDC_3 ?
-+					&tps65023_ldo_ops : &tps65023_dcdc_ops);
-+		tps->desc[i].type = REGULATOR_VOLTAGE;
-+		tps->desc[i].owner = THIS_MODULE;
-+
-+		tps->desc[i].enable_reg = TPS65023_REG_REG_CTRL;
-+		switch (i) {
-+		case TPS65023_LDO_1:
-+			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
-+			tps->desc[i].vsel_mask = 0x07;
-+			tps->desc[i].enable_mask = 1 << 1;
-+			break;
-+		case TPS65023_LDO_2:
-+			tps->desc[i].vsel_reg = TPS65023_REG_LDO_CTRL;
-+			tps->desc[i].vsel_mask = 0x70;
-+			tps->desc[i].enable_mask = 1 << 2;
-+			break;
-+		default: /* DCDCx */
-+			tps->desc[i].enable_mask =
-+					1 << (TPS65023_NUM_REGULATOR - i);
-+			tps->desc[i].vsel_reg = TPS65023_REG_DEF_CORE;
-+			tps->desc[i].vsel_mask = info->table_len - 1;
-+			tps->desc[i].apply_reg = TPS65023_REG_CON_CTRL2;
-+			tps->desc[i].apply_bit = TPS65023_REG_CTRL2_GO;
-+		}
-+
-+		config.dev = &client->dev;
-+		config.init_data = init_data;
-+		config.driver_data = tps;
-+		config.regmap = tps->regmap;
-+		if (tps6502x_reg_matches)
-+			config.of_node = tps6502x_reg_matches[i].of_node;
-+
-+		/* Register the regulators */
-+		rdev = devm_regulator_register(&client->dev, &tps->desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&client->dev, "failed to register %s\n",
-+				id->name);
-+			return PTR_ERR(rdev);
-+		}
-+
-+		/* Save regulator for cleanup */
-+		tps->rdev[i] = rdev;
-+	}
-+
-+	i2c_set_clientdata(client, tps);
-+
-+	/* Enable setting output voltage by I2C */
-+	regmap_update_bits(tps->regmap, TPS65023_REG_CON_CTRL2,
-+					TPS65023_REG_CTRL2_CORE_ADJ,
-+					TPS65023_REG_CTRL2_CORE_ADJ);
-+
-+	return 0;
-+}
-+
- static struct i2c_driver tps_65023_i2c_driver = {
- 	.driver = {
- 		.name = "tps65023",
-+		.of_match_table = of_match_ptr(tps6502x_of_match),
- 	},
- 	.probe = tps_65023_probe,
- 	.id_table = tps_65023_id,
+Acks from DT (patch 1/4) welcome.
+
+Regards,
+ZubairLK
+
+V2 -> V3
+Minor typos/nitpicks.
+Removed redundant header.
+Individual patches have changelogs.
+
+V1 -> V2
+Nothing major functional.
+Mostly cleanup. Individual patches have changelogs.
+Removed the gpio patch from this series as Linus Walleij applied it.
+
+Zubair Lutfullah Kakakhel (4):
+  dt-bindings: MIPS: Document xilfpga bindings and boot style
+  MIPS: dt: xilfpga: Add xilfpga device tree files.
+  MIPS: xilfpga: Add mipsfpga platform code
+  MIPS: Add xilfpga defconfig
+
+ .../devicetree/bindings/mips/img/xilfpga.txt       | 83 ++++++++++++++++++++++
+ arch/mips/Kbuild.platforms                         |  1 +
+ arch/mips/Kconfig                                  | 23 ++++++
+ arch/mips/boot/dts/Makefile                        |  1 +
+ arch/mips/boot/dts/xilfpga/Makefile                |  9 +++
+ arch/mips/boot/dts/xilfpga/microAptiv.dtsi         | 21 ++++++
+ arch/mips/boot/dts/xilfpga/nexys4ddr.dts           | 46 ++++++++++++
+ arch/mips/configs/xilfpga_defconfig                | 40 +++++++++++
+ arch/mips/include/asm/mach-xilfpga/irq.h           | 18 +++++
+ arch/mips/xilfpga/Kconfig                          |  9 +++
+ arch/mips/xilfpga/Makefile                         |  7 ++
+ arch/mips/xilfpga/Platform                         |  3 +
+ arch/mips/xilfpga/init.c                           | 57 +++++++++++++++
+ arch/mips/xilfpga/intc.c                           | 25 +++++++
+ arch/mips/xilfpga/time.c                           | 41 +++++++++++
+ 15 files changed, 384 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/img/xilfpga.txt
+ create mode 100644 arch/mips/boot/dts/xilfpga/Makefile
+ create mode 100644 arch/mips/boot/dts/xilfpga/microAptiv.dtsi
+ create mode 100644 arch/mips/boot/dts/xilfpga/nexys4ddr.dts
+ create mode 100644 arch/mips/configs/xilfpga_defconfig
+ create mode 100644 arch/mips/include/asm/mach-xilfpga/irq.h
+ create mode 100644 arch/mips/xilfpga/Kconfig
+ create mode 100644 arch/mips/xilfpga/Makefile
+ create mode 100644 arch/mips/xilfpga/Platform
+ create mode 100644 arch/mips/xilfpga/init.c
+ create mode 100644 arch/mips/xilfpga/intc.c
+ create mode 100644 arch/mips/xilfpga/time.c
+
 -- 
-2.1.0
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
