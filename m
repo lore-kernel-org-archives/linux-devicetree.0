@@ -1,51 +1,65 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v6 04/22] of: add function to allow probing a device from
- a OF node
-Date: Mon, 26 Oct 2015 09:16:48 +0100
-Message-ID: <CAMuHMdW=sT9uLbZkwdYF9Yd3ENaAoQ0=qQLfr-Ow6pz11DiU0A@mail.gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
-	<1442844182-27787-5-git-send-email-tomeu.vizoso@collabora.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/2] i2c: uniphier: add two I2C controller drivers for
+ UniPhier SoC platform
+Date: Mon, 26 Oct 2015 08:17:46 +0000
+Message-ID: <20151026081746.GC597@x1>
+References: <1445597520-6299-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442844182-27787-5-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445597520-6299-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-i2c@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, James Hogan <james.hogan@imgtec.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Ray Jui <rjui@broadcom.com>, Tejun Heo <tj@kernel.org>, Andrew Bresticker <abrestic@chromium.org>, Scott Branden <sbranden@broadcom.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Xudong Chen <xudong.chen@mediatek.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Wolfram
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 21, 2015 at 4:02 PM, Tomeu Vizoso
-<tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-> Walks the OF tree up and finds the closest ancestor that has a struct
-> device associated with it, probing it if isn't bound to a driver yet.
->
-> The above should ensure that the dependency represented by the passed OF
-> node is available, because probing a device should cause its descendants
-> to be probed as well (when they get registered).
->
-> Subsystems can use this when looking up resources for drivers, to reduce
-> the chances of deferred probes because of the probing order of devices.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> This series adds two I2C controller drivers.
+> (they are completely different IPs.)
+>=20
+> The first one is a very simple FIFO-less I2C controller,
+> which is used on some older UniPhier SoCs.
+>=20
+> The other one is higher-performance I2C controller with TX/RX FIFO,
+> used on newer UniPhier SoCs.
 
-Don't know to which response I should post this comment, so I'm responding
-to the original email.
+And you have sent this to me because ... ?
 
-Some subsystems already do this.
-If you call e.g. syscon_regmap_lookup_by_phandle(), it will call
-of_syscon_register() if the syscon device pointed to hasn't been registered yet.
+> Changes in v2:
+>   - Delete if-block after platform_get_resource()
+>   - Add I2C_FUNC_SMBUS_EMUL to functionality
+>   - Add bindings document
+>   - Add entry to MAINTAINERS
+>   - Delete if-block after platform_get_resource()
+>   - Add I2C_FUNC_SMBUS_EMUL to functionality
+>   - Add bindings document
+>   - Fix a typo in a comment block
+>=20
+> Masahiro Yamada (2):
+>   i2c: uniphier: add UniPhier FIFO-less I2C driver
+>   i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver
+>=20
+>  .../devicetree/bindings/i2c/i2c-uniphier-f.txt     |  25 +
+>  .../devicetree/bindings/i2c/i2c-uniphier.txt       |  25 +
+>  MAINTAINERS                                        |   1 +
+>  drivers/i2c/busses/Kconfig                         |  16 +
+>  drivers/i2c/busses/Makefile                        |   2 +
+>  drivers/i2c/busses/i2c-uniphier-f.c                | 584 +++++++++++=
+++++++++++
+>  drivers/i2c/busses/i2c-uniphier.c                  | 441 +++++++++++=
++++++
+>  7 files changed, 1094 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphie=
+r-f.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphie=
+r.txt
+>  create mode 100644 drivers/i2c/busses/i2c-uniphier-f.c
+>  create mode 100644 drivers/i2c/busses/i2c-uniphier.c
+>=20
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
