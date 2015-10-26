@@ -1,68 +1,74 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] arm64/arm, numa, dt: adding numa dt binding
- implementation for arm64 platforms
-Date: Mon, 26 Oct 2015 09:20:24 +0530
-Message-ID: <CAFpQJXX8VXX+gTBn-+7MepSAOzbOuc-yWJe4f=B7MH_Nj7FsKw@mail.gmail.com>
-References: <1445337931-11344-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1445337931-11344-4-git-send-email-gkulkarni@caviumnetworks.com>
-	<CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] ARM: uniphier: add outer cache support and rework
+ SMP operations
+Date: Mon, 26 Oct 2015 13:16:50 +0900
+Message-ID: <CAK7LNASA-fmS943We9ncXUNQTa17s85OPmnWEdcY0yxTpW9hTA@mail.gmail.com>
+References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com>
+	<6239461.UGe6XP3dfB@wuerfel>
+	<5275814.I392BfIEUH@wuerfel>
+	<CAK7LNATgK0OQbu_9J7DjUfDA_dKSCkCS4Kqw6vXD+=5oxkw4ig@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACVXFVMiZs_g3qw99-PhxLiX5oLe8_z5cOAfJZ_4-09jN2koCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAK7LNATgK0OQbu_9J7DjUfDA_dKSCkCS4Kqw6vXD+=5oxkw4ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robert
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Ru tland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Jungseung Lee <js07.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Nathan Lynch <nathan_lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxi
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 7:14 AM, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
-> On Tue, Oct 20, 2015 at 6:45 PM, Ganapatrao Kulkarni
-> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
->> Adding numa dt binding support for arm64 based platforms.
->> dt node parsing for numa topology is done using device property
->> proximity and device node distance-map.
->>
->> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> ---
->>  arch/arm64/Kconfig            |  10 ++
->>  arch/arm64/include/asm/numa.h |  10 ++
->>  arch/arm64/kernel/Makefile    |   1 +
->>  arch/arm64/kernel/of_numa.c   | 221 ++++++++++++++++++++++++++++++++++++++++++
->>  arch/arm64/kernel/smp.c       |   1 +
->>  arch/arm64/mm/numa.c          |  10 +-
->>  6 files changed, 252 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm64/kernel/of_numa.c
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 0f9cdc7..6cf8d20 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -426,6 +426,16 @@ config NUMA
->>           local memory controller of the CPU and add some more
->>           NUMA awareness to the kernel.
->>
->> +config OF_NUMA
->> +       bool "Device Tree NUMA support"
->> +       depends on NUMA
->> +       depends on OF
->> +       default y
->> +       help
->> +         Enable Device Tree NUMA support.
->> +         This enables the numa mapping of cpu, memory, io and
->> +         inter node distances using dt bindings.
->
-> Enabling the above config option can cause numa_init() warning in
-> numa-less arm64 system, please see the following report:
-this is taken care. which version are you using?
+Hi Arnd,
 
->
->           https://bugs.launchpad.net/bugs/1509221
->
-> Thanks,
 
-Thanks
-Ganapat
+2015-10-10 15:59 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> Hi Arnd,
+>
+>
+> 2015-10-06 15:22 GMT+01:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>> On Tuesday 06 October 2015 16:20:23 Arnd Bergmann wrote:
+>>> On Friday 18 September 2015 13:37:31 Masahiro Yamada wrote:
+>>> > Hi Olof,
+>>> >
+>>> > Now Linux 4.3-rc1 is out, so I am back to this.
+>>> >
+>>> > 1/3: add outer cache support
+>>> > 2/3: rework SMP operations
+>>> > 3/3: add device tree nodes
+>>> >
+>>> > Because 2/3 highly depends on 1/3, I hope whole of this series
+>>> > is applied through ARM-SOC tree.
+>>>
+>>> Sorry for the long delay here. Is this the latest version of these
+>>> patches?
+>>>
+>>> Did Russell King review the first patch?
+>>> Is he ok with merging this through arm-soc?
+>>>
+>>
+>> I found an answer to the first question, as I see you posted
+>> v5 of the patchset in the meantime.
+>
+>
+> Yes, v5 is my latest version.
+>
+>
+> For the second question, Russell gave me some comments on the 1/3
+> and I answered.
+>
+> He mentioned nothing about merging the whole series thru arm-soc.
+> (At least, he was not opposed to it, I guess)
+>
+
+Is it difficult to apply this series for the next merge window?
+V5 is the latest.
+No comment, but not applied.
+
+Is there anything I can do but wait?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
