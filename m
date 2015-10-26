@@ -1,57 +1,47 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 3/3] reset: sti: Provide ops .status() call-back
-Date: Mon, 26 Oct 2015 10:56:09 +0000
-Message-ID: <1445856969-19424-3-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/3] reset: sti: Add support for resetting co-processors
+Date: Mon, 26 Oct 2015 10:56:08 +0000
+Message-ID: <1445856969-19424-2-git-send-email-lee.jones@linaro.org>
 References: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, Lee Jones <lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445856969-19424-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/reset/sti/reset-syscfg.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/reset/sti/reset-stih407.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/reset/sti/reset-syscfg.c b/drivers/reset/sti/reset-syscfg.c
-index a145cc0..4453412 100644
---- a/drivers/reset/sti/reset-syscfg.c
-+++ b/drivers/reset/sti/reset-syscfg.c
-@@ -110,10 +110,33 @@ static int syscfg_reset_dev(struct reset_controller_dev *rcdev,
- 	return syscfg_reset_deassert(rcdev, idx);
- }
- 
-+static int syscfg_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long idx)
-+{
-+       struct syscfg_reset_controller *rst = to_syscfg_reset_controller(rcdev);
-+       const struct syscfg_reset_channel *ch;
-+       u32 ret_val = 0;
-+       int err;
-+
-+       if (idx >= rcdev->nr_resets)
-+	       return -EINVAL;
-+
-+       ch = &rst->channels[idx];
-+       if (ch->ack)
-+	       err = regmap_field_read(ch->ack, &ret_val);
-+       else
-+	       err = regmap_field_read(ch->reset, &ret_val);
-+       if (err)
-+	       return err;
-+
-+       return rst->active_low ? !ret_val : !!ret_val;
-+}
-+
- static struct reset_control_ops syscfg_reset_ops = {
- 	.reset    = syscfg_reset_dev,
- 	.assert   = syscfg_reset_assert,
- 	.deassert = syscfg_reset_deassert,
-+	.status   = syscfg_reset_status,
+diff --git a/drivers/reset/sti/reset-stih407.c b/drivers/reset/sti/reset-stih407.c
+index d83db5d7..5c2d68a 100644
+--- a/drivers/reset/sti/reset-stih407.c
++++ b/drivers/reset/sti/reset-stih407.c
+@@ -52,6 +52,7 @@ static const struct syscfg_reset_channel_data stih407_powerdowns[] = {
  };
  
- static int syscfg_reset_controller_register(struct device *dev,
+ /* Reset Generator control 0/1 */
++#define SYSCFG_5128     0x200
+ #define SYSCFG_5131	0x20c
+ #define SYSCFG_5132	0x210
+ 
+@@ -96,6 +97,10 @@ static const struct syscfg_reset_channel_data stih407_softresets[] = {
+ 	[STIH407_ERAM_HVA_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 1),
+ 	[STIH407_LPM_SOFTRESET] = STIH407_SRST_SBC(SYSCFG_4002, 2),
+ 	[STIH407_KEYSCAN_SOFTRESET] = STIH407_SRST_LPM(LPM_SYSCFG_1, 8),
++	[STIH407_ST231_AUD_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 26),
++	[STIH407_ST231_DMU_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 27),
++	[STIH407_ST231_GP0_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 28),
++	[STIH407_ST231_GP1_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5128, 2),
+ };
+ 
+ /* PicoPHY reset/control */
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
