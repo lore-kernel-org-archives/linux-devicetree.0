@@ -1,62 +1,71 @@
 From: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 0/9] Marvell NFC drivers for i2c and spi
-Date: Mon, 26 Oct 2015 10:27:36 +0100
-Message-ID: <1445851665-2497-1-git-send-email-cuissard@marvell.com>
+Subject: [PATCH v4 2/9] NFC: NCI: export nci_send_frame and nci_send_cmd function
+Date: Mon, 26 Oct 2015 10:27:38 +0100
+Message-ID: <1445851665-2497-3-git-send-email-cuissard@marvell.com>
+References: <1445851665-2497-1-git-send-email-cuissard@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445851665-2497-1-git-send-email-cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Export nci_send_frame and nci_send_cmd symbols to allow drivers
+to use it. This is needed for example if NCI is used during
+firmware download phase.
 
-Please find patches that enable Marvell NFC controlled over i2c
-and spi. This patchset includes also firmware download support and
-few enhancements.
+Signed-off-by: Vincent Cuissard <cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ include/net/nfc/nci_core.h | 1 +
+ net/nfc/nci/core.c         | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-v4: keep backward compatibility in device tree for UART driver.
-
-Br,
-
-Vincent Cuissard (9):
-  NFC: nfcmrvl: remove unneeded version defines
-  NFC: NCI: export nci_send_frame and nci_send_cmd function
-  NFC: nfcmrvl: add firmware download support
-  NFC: nfcmrvl: configure head/tail room values per low level drivers
-  NFC: nfcmrvl: add i2c driver
-  NFC: NCI: move generic spi driver to a module
-  NFC: NCI: allow spi driver to choose transfer clock
-  NFC: nfcmrvl: add spi driver
-  NFC: nfcmrvl: update device tree bindings for Marvell NFC
-
- .../devicetree/bindings/net/nfc/nfcmrvl.txt        |  61 ++-
- drivers/nfc/nfcmrvl/Kconfig                        |  22 +
- drivers/nfc/nfcmrvl/Makefile                       |   8 +-
- drivers/nfc/nfcmrvl/fw_dnld.c                      | 551 +++++++++++++++++++++
- drivers/nfc/nfcmrvl/fw_dnld.h                      |  98 ++++
- drivers/nfc/nfcmrvl/i2c.c                          | 291 +++++++++++
- drivers/nfc/nfcmrvl/main.c                         |  75 ++-
- drivers/nfc/nfcmrvl/nfcmrvl.h                      |  23 +-
- drivers/nfc/nfcmrvl/spi.c                          | 226 +++++++++
- drivers/nfc/nfcmrvl/uart.c                         |  26 +-
- drivers/nfc/nfcmrvl/usb.c                          |  10 +-
- include/linux/platform_data/nfcmrvl.h              |   8 +
- include/net/nfc/nci.h                              |   1 +
- include/net/nfc/nci_core.h                         |   5 +
- net/nfc/nci/Kconfig                                |   2 +-
- net/nfc/nci/Makefile                               |   3 +-
- net/nfc/nci/core.c                                 |   4 +-
- net/nfc/nci/spi.c                                  |  11 +-
- 18 files changed, 1384 insertions(+), 41 deletions(-)
- create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.c
- create mode 100644 drivers/nfc/nfcmrvl/fw_dnld.h
- create mode 100644 drivers/nfc/nfcmrvl/i2c.c
- create mode 100644 drivers/nfc/nfcmrvl/spi.c
-
---
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index d0d0f1e..f0bb5e7 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -282,6 +282,7 @@ int nci_core_reset(struct nci_dev *ndev);
+ int nci_core_init(struct nci_dev *ndev);
+ 
+ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
++int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb);
+ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+ 
+ int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 0909720..f4204f3 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1178,7 +1178,7 @@ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb)
+ }
+ EXPORT_SYMBOL(nci_recv_frame);
+ 
+-static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
++int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
+ {
+ 	pr_debug("len %d\n", skb->len);
+ 
+@@ -1196,6 +1196,7 @@ static int nci_send_frame(struct nci_dev *ndev, struct sk_buff *skb)
+ 
+ 	return ndev->ops->send(ndev, skb);
+ }
++EXPORT_SYMBOL(nci_send_frame);
+ 
+ /* Send NCI command */
+ int nci_send_cmd(struct nci_dev *ndev, __u16 opcode, __u8 plen, void *payload)
+@@ -1227,6 +1228,7 @@ int nci_send_cmd(struct nci_dev *ndev, __u16 opcode, __u8 plen, void *payload)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(nci_send_cmd);
+ 
+ /* Proprietary commands API */
+ static struct nci_prop_ops *prop_cmd_lookup(struct nci_dev *ndev,
+-- 
 2.2.0.33.gc18b867
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
