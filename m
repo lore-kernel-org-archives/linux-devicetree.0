@@ -1,47 +1,166 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH 03/10] ata: ahci_brcmstb: add support 40nm platforms
-Date: Mon, 26 Oct 2015 10:47:27 -0700
-Message-ID: <20151026174727.GZ13239@google.com>
-References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
- <1445564663-66824-4-git-send-email-jaedon.shin@gmail.com>
- <20151023212558.GS13239@google.com>
- <DE776F55-6D75-4AD7-B3AA-52E45C9D99C0@gmail.com>
+From: Pramod Kumar <pramodku@broadcom.com>
+Subject: RE: [PATCH 05/11] dt-binding: Add ngpios property to GPIO
+ controller node
+Date: Mon, 26 Oct 2015 18:06:24 +0000
+Message-ID: <0C803592FC378B4E83922050AB46442A2AD729D4@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
+ <3735458.2h6HCQhAOs@avalon>
+ <CAL_Jsq+Va0ZnvNoqKWocFYE4_DD-A+2sQaLswy5_eO2ZHn+3Kw@mail.gmail.com>
+ <2123166.E4KEJx3AQ2@avalon> <562A5B75.7010804@broadcom.com>
+ <0C803592FC378B4E83922050AB46442A2AD728F0@SJEXCHMB10.corp.ad.broadcom.com>
+ <562E5F00.1010403@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DE776F55-6D75-4AD7-B3AA-52E45C9D99C0@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jaedon Shin <jaedon.shin@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-ide@vger.kernel.org, Linux MIPS Mailing List <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <562E5F00.1010403@broadcom.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaedon,
+Hi Ray,
 
-On Sat, Oct 24, 2015 at 01:50:54PM +0900, Jaedon Shin wrote:
-> On Oct 24, 2015, at 6:25 AM, Brian Norris <computersforpeace@gmail.com> wrote:
-> > On Fri, Oct 23, 2015 at 10:44:16AM +0900, Jaedon Shin wrote:
-> > So, your patch gets phy control 1 correct for both ports, but it doesn't
-> > get phy control 2 correct. (Or at least, even if my guess at the 40nm
-> > layout is wrong, your patch makes "port 0, phy control 2" collide with
-> > "port 1, phy control 1", which is most certainly a bug.)
-> > 
-> > Are you sure you're testing this properly? Did you try using both ports
-> > at the same time? And please, apply the same scrutiny to the PHY driver.
-> > (e.g., did you test SSC? did you test both ports?)
-> > 
-> > Brian
-> > 
+> -----Original Message-----
+> From: Ray Jui [mailto:rjui@broadcom.com]
+> Sent: 26 October 2015 22:43
+> To: Pramod Kumar; Laurent Pinchart; Rob Herring
+> Cc: Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Scott Branden; Russell
+> King; Linus Walleij; linux-gpio@vger.kernel.org; bcm-kernel-feedback-list; Jason
+> Uy; Masahiro Yamada; Thomas Gleixner; devicetree@vger.kernel.org; linux-
+> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Jonas Gorski
+> Subject: Re: [PATCH 05/11] dt-binding: Add ngpios property to GPIO controller
+> node
 > 
-> You are right. This must be changed. 
+> Hi Pramod,
 > 
-> I found the 28nm chipsets have four phy interface control registers. But, 
-> the the 40nm chipsets have only three registers. I did not testing with 
-> two ports at the same time. It seems we should check more.
+> On 10/26/2015 10:08 AM, Pramod Kumar wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Ray Jui [mailto:rjui@broadcom.com]
+> >> Sent: 23 October 2015 21:38
+> >> To: Laurent Pinchart; Rob Herring
+> >> Cc: Pramod Kumar; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala;
+> >> Scott Branden; Russell King; Linus Walleij;
+> >> linux-gpio@vger.kernel.org; bcm-kernel- feedback-list; Jason Uy;
+> >> Masahiro Yamada; Thomas Gleixner; devicetree@vger.kernel.org;
+> >> linux-arm-kernel@lists.infradead.org; linux- kernel@vger.kernel.org;
+> >> Jonas Gorski
+> >> Subject: Re: [PATCH 05/11] dt-binding: Add ngpios property to GPIO
+> >> controller node
+> >>
+> >>
+> >>
+> >> On 10/23/2015 6:02 AM, Laurent Pinchart wrote:
+> >>> Hi Rob,
+> >>>
+> >>> On Friday 23 October 2015 06:51:28 Rob Herring wrote:
+> >>>> On Fri, Oct 23, 2015 at 4:08 AM, Laurent Pinchart wrote:
+> >>>>> On Thursday 22 October 2015 18:41:05 Rob Herring wrote:
+> >>>>>> On Thu, Oct 22, 2015 at 1:52 PM, Ray Jui wrote:
+> >>>>>>> On 10/22/2015 11:43 AM, Rob Herring wrote:
+> >>>>>>>> On Mon, Oct 19, 2015 at 12:43 AM, Pramod Kumar wrote:
+> >>>>>>>>> Add ngpios property to the gpio controller's DT node so that
+> >>>>>>>>> controller driver extracts total number of gpio lines present
+> >>>>>>>>> in controller from DT and removes dependency on driver.
+> >>>>>>>>>
+> >>>>>>>>> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+> >>>>>>>>> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> >>>>>>>>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> >>>>>>>>> ---
+> >>>>>>>>>
+> >>>>>>>>>    Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+> | 5
+> >>>>>>>>>    +++
+> >>>>>>>>>    1 file changed, 5 insertions(+)
+> >>>>>>>>>
+> >>>>>>>>> diff --git
+> >>>>>>>>> a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.t
+> >>>>>>>>> xt
+> >>>>>>>>> b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.t
+> >>>>>>>>> xt
+> >>>>>>>>> index f92b833..655a8d7 100644
+> >>>>>>>>> ---
+> >>>>>>>>> a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.t
+> >>>>>>>>> xt
+> >>>>>>>>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gp
+> >>>>>>>>> +++ io
+> >>>>>>>>> +++ .txt
+> >>>>>>>>>
+> >>>>>>>>> @@ -10,6 +10,9 @@ Required properties:
+> >>>>>>>>>         Define the base and range of the I/O address space that
+> >>>>>>>>>         contains
+> >>>>>>>>>
+> >>>>>>>>> the Cygnus
+> >>>>>>>>>
+> >>>>>>>>>     GPIO/PINCONF controller registers
+> >>>>>>>>>
+> >>>>>>>>> +- ngpios:
+> >>>>>>>> +    Total number of GPIOs the controller provides
+> >>>>>>>>
+> >>>>>>>> This must be optional for compatibility and the driver needs to
+> >>>>>>>> handle it not present.
+> >>>>>>>
+> >>>>>>> You meant to be compatible with existing Cygnus devices, correct?
+> >>>>>>>
+> >>>>>>> Just to clarify, here you suggest we still leave the existing
+> >>>>>>> hard coded ngpios in the driver, in order to be compatible with
+> >>>>>>> all existing Cygnus devices (while the Cygnus device tree
+> >>>>>>> changes to use ngpio is still being merged and through different
+> >>>>>>> maintainer), and have all new iProc SoCs switch to use ngpios from
+> device tree, right?
+> >>>>>>
+> >>>>>> Yes, an existing dtb should continue to work with a new kernel.
+> >>>>>> You can add the DT property to the older devices too and then
+> >>>>>> eventually remove the hard coded values some time in the future.
+> >>>>>> That could be immediately (don't care about compatibility at
+> >>>>>> all), a couple of kernel cycles, never... It all depends on users
+> >>>>>> of the impacted platforms.
+> >>>>>
+> >>>>> But shouldn't the property still be documented as required to
+> >>>>> ensure that new DTs always include it ?
+> >>>>
+> >>>> Good point. If the intent is to eventually remove it from the
+> >>>> driver, then yes. We probably need "required for new designs" as a
+> >>>> category or maybe "recommended"? The wording is not so important
+> >>>> here, but I'm thinking about as we try to standardize the naming.
+> >>>
+> >>> Required for new designs sounds better than recommended. Or maybe
+> >>> something like "Required (optional for backward compatibility)".
+> >>>
+> >>
+> >> Yes, it should be phrased as "required for new designs" because all
+> >> new iProc SoCs using this GPIO driver need to have this in DT.
+> >>
+> >> Thanks,
+> >>
+> >> Ray
+> >
+> > Thanks for providing feedback. I'll make sure to use this property under phrase
+> " required for new designs " in next patch set.
+> >
+> > Regards,
+> > Pramod
+> >
+> 
+> To confirm, is your plan:
+> 
+> 1) Continue to support hardcoded ngpios in the driver for the current SoC Cygnus
+> 2) Proceed with Cygnus DTS changes to switch to DT based ngpios configuration
+> 3) Modify the document to make DT ngpios a required property for all new SoCs
+> including NSP, NS2, and etc.
+> 
+> ?
+> 
+> Thanks,
+> 
+> Ray
 
-OK. So you don't just need more testing, you need to make sure the code
-actually matches the documentation at all. If there are only 3 PHY
-control registers for 40nm, then this driver (as patched by you) doesn't
-make any sense. It will need a much different patch than what you gave.
+Ok. This patch-set is to make this driver more generic so that all future SoCs , as you mentioned like NS2, NSP, Stingray, could use it.  Since This Cygnus is in very very early stage and No customer is using it so we can afford it to address ngpio from DT and remove Cygnus hard coded values immediately from this patch. Otherwise we will see the same issue with "gpios-ranges" property and this will be highly inter-dependent as well.   
 
-Brian
+Regards,
+Pramod
+
+
