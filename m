@@ -1,81 +1,68 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 1/3] leds: rt5033: Add DT binding for RT5033
-Date: Mon, 26 Oct 2015 11:11:19 +0100
-Message-ID: <562DFC47.6050904@samsung.com>
-References: <1445579285-6866-1-git-send-email-ingi2.kim@samsung.com>
- <1445579285-6866-2-git-send-email-ingi2.kim@samsung.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: add document of mediatek efuse driver
+Date: Mon, 26 Oct 2015 11:23:44 +0100
+Message-ID: <20151026102344.GD25308@pengutronix.de>
+References: <1444984751-4572-1-git-send-email-andrew-ct.chen@mediatek.com>
+ <1444984751-4572-2-git-send-email-andrew-ct.chen@mediatek.com>
+ <562DF8BE.4060205@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1445579285-6866-2-git-send-email-ingi2.kim@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <562DF8BE.4060205-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ingi,
+On Mon, Oct 26, 2015 at 09:56:14AM +0000, Srinivas Kandagatla wrote:
+> 
+> 
+> On 16/10/15 09:39, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> >From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >
+> >Add Mediatek MT8173 EFUSE Devicetree binding file
+> >
+> >Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Looks good to me, minor comment below.
+> 
+> Will queue this for v4.5 once v4.4-rc1 is released.
+> 
+> 
+> >---
+> >  .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 ++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+> >
+> >diff --git a/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+> >new file mode 100644
+> >index 0000000..92edc3d
+> >--- /dev/null
+> >+++ b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+> >@@ -0,0 +1,36 @@
+> >+= Mediatek MTK-EFUSE device tree bindings =
+> >+
+> >+This binding is intended to represent MTK-EFUSE which is found in most Mediatek SOCs.
+> >+
+> >+Required properties:
+> >+- compatible: should be "mediatek,mt8173-efuse" or "mediatek,mt8135-efuse"
+> 
+> Can we make the compatible more generic for mediatek socs? Like
+> "mediatek,efuse"  Or are they different in each SOC?
 
-On 10/23/2015 07:48 AM, Ingi Kim wrote:
-> This patch adds the device tree bindings for RT5033 flash LEDs.
->
-> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->   .../devicetree/bindings/leds/leds-rt5033.txt       | 38 ++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-rt5033.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-rt5033.txt b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
-> new file mode 100644
-> index 0000000..2ef7bdc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
-> @@ -0,0 +1,38 @@
-> +* Richtek Technology Corporation - RT5033 Flash LED Driver
-> +
-> +The RT5033 Flash LED Circuit is designed for one or two LEDs driving
+While we can add an additional "mediatek,efuse" compatible we should
+always add the most specific compatible first. Otherwise we cannot
+differentiate between SoCs later without changing the device tree.
 
-These bindings don't say how to handle two LEDs case.
-
-> +for torch and strobe applications, it provides an I2C software command
-> +to trigger the torch and strobe operation.
-> +
-> +Required properties:
-> +- compatible : Must be "richtek,rt5033-led".
-> +
-> +A discrete LED element connected to the device must be represented by a child
-> +node - see Documentation/devicetree/bindings/leds/common.txt.
-> +
-> +Required properties of the LED child node:
-> +  See Documentation/devicetree/bindings/leds/common.txt
-> +- led-max-microamp : Minimum Threshold for Timer protection
-> +  is defined internally (Maximum 200mA).
-> +- flash-max-microamp : Flash LED maximum current
-> +- flash-max-timeout-us : Flash LED maximum timeout
-> +
-> +Optional properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +rt5033 {
-> +	compatible = "richtek,rt5033";
-> +
-> +	led {
-> +		compatible = "richtek,rt5033-led";
-> +
-> +		flash-led {
-> +			label = "rt5033-flash";
-> +			led-max-microamp = <200000>;
-> +			flash-max-microamp = <800000>;
-> +			flash-max-timeout-us = <1216000>;
-> +		};
-> +	};
-> +}
->
-
+Sascha
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
