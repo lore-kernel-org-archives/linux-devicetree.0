@@ -1,63 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Mon, 26 Oct 2015 09:03:44 +0100
-Message-ID: <CAMuHMdU-TpPcdi_H6bwAxipv8rtC7Njos_49hsEmJCcSCHR_Pw@mail.gmail.com>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-	<20151024011003.GE19782@codeaurora.org>
-	<CAMuHMdUyu6w0LAoH78H2+VHczrWwozDKMX2j8_A4V=jgz0snwA@mail.gmail.com>
-	<1577230.N3FJlP7ehB@avalon>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Mon, 26 Oct 2015 17:06:20 +0900
+Message-ID: <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	<1445843717.23888.1.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1577230.N3FJlP7ehB@avalon>
-Sender: linux-clk-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445843717.23888.1.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Mon, Oct 26, 2015 at 3:25 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Saturday 24 October 2015 19:34:03 Geert Uytterhoeven wrote:
->> On Sat, Oct 24, 2015 at 3:10 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> > On 10/22, Geert Uytterhoeven wrote:
->> >> As I want to have as much clock data/code __init as possible (think
->> >> multi-platform kernels --- pinmux data is a disaster here), I have to use
->> >> platform_driver_probe().
+On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
+>> Hello,
+>>
+>> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> > Add arch timer node to enable arch-timer support. MT8135 firmware
+>> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+>> > properties to workaround this.
+>> >
+>> > This also set cpu enable-method to enable SMP.
+>> >
+>> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>> kernelci.org started detecting new boot failures for the mt8135-evb in
+>> the arm-soc tree[1], and the boot failures were bisected down to this
+>> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+>> dts: mt8135: enable basic SMP bringup for mt8135)
+>>
+>> Maybe this new SMP support requires updating the firmware on the board
+>> as well?  If so, the changelog should've been a bit more explicit
+>> about firmware dependencies.
 >
-> That sounds like an __init issue, doesn't it ? The CPG driver will always be
-> builtin and probed during the init process, what's preventing us from using
-> normal driver probing ?
-
-When using platform_driver_register(), the tables cannot be __init, as that
-would cause a section type mismatch. Remember, the driver core handles
-platform devices appearing later, so .probe() should continue to be available.
-
-Note: in theory it should be possible to compile the CPG/MSSR driver as a
-module, and have the module in your initramfs. But I don't think anyone
-really wants to do that?
-
->> For new SoCs like r8a7795 we can probably just make it a real platform
->> driver, and make sure the irqc node is located after the cpg node in the
->> .dtsi.
+> Kevin,
 >
-> That's another hack :-) We really shouldn't depend on DT nodes order.
+> Thanks for testing.
+>
+> No, it doesn't need new firmware. Will test to see what's going wrong.
 
-I agree. But if there's an unfixed bug somewhere else, we cannot introduce
-regressions (for already supported SoCs).
+Thanks for following up.  I'll be glad to test any patches if you have
+anything you'd like me to test.
 
-> I'm all for getting rid of CLK_OF_DECLARE
-
-Me too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Kevin
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
