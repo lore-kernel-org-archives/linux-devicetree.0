@@ -1,67 +1,48 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v11 4/6] PCI: hisi: Add PCIe host support for HiSilicon
- SoC Hip05
-Date: Mon, 26 Oct 2015 16:24:34 +0800
-Message-ID: <562DE342.2000104@hisilicon.com>
-References: <1444991021-109306-1-git-send-email-wangzhou1@hisilicon.com> <1444991021-109306-5-git-send-email-wangzhou1@hisilicon.com> <20151022184622.GD21237@localhost>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 0/2] i2c: uniphier: add two I2C controller drivers for
+ UniPhier SoC platform
+Date: Mon, 26 Oct 2015 17:27:22 +0900
+Message-ID: <CAK7LNATVmVi=4ugv0MgoCUzusphNeAXTC_K-PsXDiTLoCkV4-Q@mail.gmail.com>
+References: <1445597520-6299-1-git-send-email-yamada.masahiro@socionext.com>
+	<20151026081746.GC597@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151022184622.GD21237@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151026081746.GC597@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-i2c@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, James Hogan <james.hogan@imgtec.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Ray Jui <rjui@broadcom.com>, Tejun Heo <tj@kernel.org>, Andrew Bresticker <abrestic@chromium.org>, Scott Branden <sbranden@broadcom.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Xudong Chen <xudong.chen@mediatek.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Wolfram
 List-Id: devicetree@vger.kernel.org
 
-On 2015/10/23 2:46, Bjorn Helgaas wrote:
-> Hi Zhou,
-> 
-> This looks pretty good to me; just a mask question and add a printk.
-> 
-> On Fri, Oct 16, 2015 at 06:23:39PM +0800, Zhou Wang wrote:
->> This patch adds PCIe host support for HiSilicon SoC Hip05.
->> ...
-> 
->> +#define PCIE_SUBCTRL_SYS_STATE4_REG                     0x6818
->> +#define PCIE_LTSSM_LINKUP_STATE                         0x11
->> +#define PCIE_LTSSM_STATE_MASK                           0x3F
-> 
-> Fabio unified some of this; see
->   https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=pci/host-designware&id=4788fe6ebf4594c9a95b620cbff05147c8504823
->   https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=pci/host-designware&id=b09464f77dd252a782da1f4e9925c1dbce4540ac
-> 
-> So the question is, why do you use a 6-bit (0x3f) LTSSM_STATE_MASK?
-> We think we can use a 5-bit mask (0x1f) for all the other
-> DesignWare-based systems.
+Hi Lee,
 
-Hi Bjorn,
 
-LTSSM_STATE_MASK indicates the status of LTSSM, it should be 6-bit
-in Hip05 PCIe host. I checked Designware hardware manual, its
-LTSSM current state is 6-bit too(smlh_ltssm_state).
-
-> 
->> +/* Hip05 PCIe host only supports 32-bit config access */
-> 
-> Thanks for the comment asserting that Hip05 only supports 32-bit
-> config access.  I assume you confirmed that with the hardware
-> designers.  As far as I can tell, this *is* a hardware defect, and at
-> the minimum, I want a printk at driver probe-time so a dmesg log will
-> have a clue that read/modify/write on config space might do the wrong
-> thing.
+2015-10-26 17:17 GMT+09:00 Lee Jones <lee.jones@linaro.org>:
+>> This series adds two I2C controller drivers.
+>> (they are completely different IPs.)
+>>
+>> The first one is a very simple FIFO-less I2C controller,
+>> which is used on some older UniPhier SoCs.
+>>
+>> The other one is higher-performance I2C controller with TX/RX FIFO,
+>> used on newer UniPhier SoCs.
 >
+> And you have sent this to me because ... ?
 
-Yes, I had checked this with hardware guys. Will add a print during probe-time.
 
-Many thanks,
-Zhou
+No special reason.
 
->> +static int hisi_pcie_cfg_read(struct pcie_port *pp, int where, int size,
->> +			      u32 *val)
->> ...
-> 
-> Bjorn
-> 
-> .
-> 
+
+I sent this series to linux-i2c@vger.kernel.org.
+
+I guess you were automatically CC'ed by scripts/get_maintainer.pl.
+
+Using get_maintainer.pl is a normal process when sending patches, I think.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
