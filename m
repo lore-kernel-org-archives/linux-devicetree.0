@@ -1,80 +1,43 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 08/13 v2] clk: add ARM syscon ICST device tree bindings
-Date: Mon, 26 Oct 2015 14:33:47 +0100
-Message-ID: <1445866427-14002-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 6/9] pinctrl: Add IRQ support to STM32 gpios
+Date: Mon, 26 Oct 2015 14:35:42 +0100
+Message-ID: <CACRpkdbQcF8-hR7BP88i5GOrY8QNfxy21ANLgxuaHabzcvrKVA@mail.gmail.com>
+References: <1445102638-11575-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102638-11575-7-git-send-email-mcoquelin.stm32@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1445102638-11575-7-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the ARM Syscon ICST
-oscillators, which is a register-level interface to the
-Integrated Device Technology (IDT) ICS525 and ICS307
-serially programmable oscillators.
+On Sat, Oct 17, 2015 at 7:23 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
 
-Cc: devicetree@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Spelling fixes.
+> This patch adds IRQ support to STM32 gpios.
+>
+> The EXTI controller has 16 lines dedicated to GPIOs.
+> EXTI line n can be connected to only line n of one of the GPIO ports, for
+> example EXTI0 can be connected to either PA0, or PB0, or PC0...
+> This port selection is done by specifying the port number into System
+> Config registers.
+>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-I'm looking for an ACK from the CLK maintainers to take this
-through the ARM SoC tree once the series stabilize.
----
- .../devicetree/bindings/clock/arm-syscon-icst.txt  | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+(...)
+> +static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct stm32_pinctrl *pctl = dev_get_drvdata(chip->dev);
+> +       struct stm32_gpio_bank *bank = gpio_chip_to_bank(chip);
+> +       unsigned int virq;
 
-diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-new file mode 100644
-index 000000000000..8b7177cecb36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-@@ -0,0 +1,40 @@
-+ARM System Controller ICST clocks
-+
-+The ICS525 and ICS307 oscillators are produced by Integrated Devices
-+Technology (IDT). ARM integrated these oscillators deeply into their
-+reference designs by adding special control registers that manage such
-+oscillators to their system controllers.
-+
-+The ARM system controller contains logic to serialize and initialize
-+an ICST clock request after a write to the 32 bit register at an offset
-+into the system controller. Furthermore, to even be able to alter one of
-+these frequencies, the system controller must first be unlocked by
-+writing a special token to another offset in the system controller.
-+
-+The ICST oscillator must be provided inside a system controller node.
-+
-+Required properties:
-+- lock-offset: the offset address into the system controller where the
-+  unlocking register is located
-+- vco-offset: the offset address into the system controller where the
-+  ICST control register is located (even 32 bit address)
-+- compatible: must be one of "arm,syscon-icst525" or "arm,syscon-icst307"
-+- #clock-cells: must be <0>
-+- clocks: parent clock, since the ICST needs a parent clock to derive its
-+  frequency from, this attribute is compulsory.
-+
-+Example:
-+
-+syscon: syscon@10000000 {
-+	compatible = "syscon";
-+	reg = <0x10000000 0x1000>;
-+
-+	oscclk0: osc0@0c {
-+		compatible = "arm,syscon-icst307";
-+		#clock-cells = <0>;
-+		lock-offset = <0x20>;
-+		vco-offset = <0x0c>;
-+		clocks = <&xtal24mhz>;
-+	};
-+	(...)
-+};
--- 
-2.4.3
+I don't like when these IRQs are called "virtual" (virq), becuase all
+Linux IRQs are equally virtual. It's just coincidence that sometimes
+the Linux IRQ and the hardware IRQ is the same.
 
+Just name it "irq".
+
+Yours,
+Linus Walleij
