@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v3 34/35] nfc: st-nci: remove duplicated skb dump
-Date: Mon, 26 Oct 2015 07:50:14 +0100
-Message-ID: <1445842215-28403-35-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v3 14/35] nfc: st21nfca: Open NFC_HCI_LINK_MGMT_PIPE
+Date: Mon, 26 Oct 2015 07:49:54 +0100
+Message-ID: <1445842215-28403-15-git-send-email-christophe-h.ricard@st.com>
 References: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
@@ -10,87 +10,45 @@ To: sameo@linux.intel.com
 Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove SPI_DUMP_SKB and I2C_DUMP_SKB as skb is already dumped in ndlc
-layer.
+NFC_HCI_LINK_MGMT_PIPE was never open in nfc_hci_load_session.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- drivers/nfc/st-nci/i2c.c | 11 -----------
- drivers/nfc/st-nci/spi.c | 11 -----------
- 2 files changed, 22 deletions(-)
+ drivers/nfc/st21nfca/core.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
-index 25e5042..15e3ce2 100644
---- a/drivers/nfc/st-nci/i2c.c
-+++ b/drivers/nfc/st-nci/i2c.c
-@@ -58,13 +58,6 @@ struct st_nci_i2c_phy {
- 	struct st_nci_se_status se_status;
- };
+diff --git a/drivers/nfc/st21nfca/core.c b/drivers/nfc/st21nfca/core.c
+index 67d1c27..819a94a 100644
+--- a/drivers/nfc/st21nfca/core.c
++++ b/drivers/nfc/st21nfca/core.c
+@@ -203,22 +203,13 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
+ 	}
  
--#define I2C_DUMP_SKB(info, skb)					\
--do {								\
--	pr_debug("%s:\n", info);				\
--	print_hex_dump(KERN_DEBUG, "i2c: ", DUMP_PREFIX_OFFSET,	\
--		       16, 1, (skb)->data, (skb)->len, 0);	\
--} while (0)
--
- static int st_nci_i2c_enable(void *phy_id)
- {
- 	struct st_nci_i2c_phy *phy = phy_id;
-@@ -101,8 +94,6 @@ static int st_nci_i2c_write(void *phy_id, struct sk_buff *skb)
- 	struct st_nci_i2c_phy *phy = phy_id;
- 	struct i2c_client *client = phy->i2c_dev;
+ 	/*
+-	 * 3 gates have a well known pipe ID.
+-	 * They will never appear in the pipe list
++	 * 3 gates have a well known pipe ID. Only NFC_HCI_LINK_MGMT_GATE
++	 * is not yet open at this stage.
+ 	 */
+-	if (skb_pipe_list->len + 3 < ARRAY_SIZE(st21nfca_gates)) {
+-		for (i = skb_pipe_list->len + 3;
+-				i < ARRAY_SIZE(st21nfca_gates) - 2; i++) {
+-			r = nfc_hci_connect_gate(hdev,
+-					NFC_HCI_HOST_CONTROLLER_ID,
+-					st21nfca_gates[i].gate,
+-					st21nfca_gates[i].pipe);
+-			if (r < 0)
+-				goto free_list;
+-		}
+-	}
++	r = nfc_hci_connect_gate(hdev, NFC_HCI_HOST_CONTROLLER_ID,
++				 NFC_HCI_LINK_MGMT_GATE,
++				 NFC_HCI_LINK_MGMT_PIPE);
  
--	I2C_DUMP_SKB("st_nci_i2c_write", skb);
--
- 	if (phy->ndlc->hard_fault != 0)
- 		return phy->ndlc->hard_fault;
- 
-@@ -173,8 +164,6 @@ static int st_nci_i2c_read(struct st_nci_i2c_phy *phy,
- 	skb_put(*skb, len);
- 	memcpy((*skb)->data + ST_NCI_I2C_MIN_SIZE, buf, len);
- 
--	I2C_DUMP_SKB("i2c frame read", *skb);
--
- 	return 0;
+-free_list:
+ 	kfree_skb(skb_pipe_list);
+ 	return r;
  }
- 
-diff --git a/drivers/nfc/st-nci/spi.c b/drivers/nfc/st-nci/spi.c
-index bf6643c..cf7ad81 100644
---- a/drivers/nfc/st-nci/spi.c
-+++ b/drivers/nfc/st-nci/spi.c
-@@ -59,13 +59,6 @@ struct st_nci_spi_phy {
- 	struct st_nci_se_status se_status;
- };
- 
--#define SPI_DUMP_SKB(info, skb)					\
--do {								\
--	pr_debug("%s:\n", info);				\
--	print_hex_dump(KERN_DEBUG, "spi: ", DUMP_PREFIX_OFFSET,	\
--		       16, 1, (skb)->data, (skb)->len, 0);	\
--} while (0)
--
- static int st_nci_spi_enable(void *phy_id)
- {
- 	struct st_nci_spi_phy *phy = phy_id;
-@@ -110,8 +103,6 @@ static int st_nci_spi_write(void *phy_id, struct sk_buff *skb)
- 		.len = skb->len,
- 	};
- 
--	SPI_DUMP_SKB("st_nci_spi_write", skb);
--
- 	if (phy->ndlc->hard_fault != 0)
- 		return phy->ndlc->hard_fault;
- 
-@@ -188,8 +179,6 @@ static int st_nci_spi_read(struct st_nci_spi_phy *phy,
- 	skb_put(*skb, len);
- 	memcpy((*skb)->data + ST_NCI_SPI_MIN_SIZE, buf, len);
- 
--	SPI_DUMP_SKB("spi frame read", *skb);
--
- 	return 0;
- }
- 
 -- 
 2.1.4
