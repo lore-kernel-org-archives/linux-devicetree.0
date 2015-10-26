@@ -1,49 +1,73 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v3 15/35] nfc: st-nci: Keep st_nci_gates unchanged in load_session
-Date: Mon, 26 Oct 2015 07:49:55 +0100
-Message-ID: <1445842215-28403-16-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 08/35] nfc: nci: add nci_hci_clear_all_pipes functions
+Date: Mon, 26 Oct 2015 07:49:48 +0100
+Message-ID: <1445842215-28403-9-git-send-email-christophe-h.ricard@st.com>
 References: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We need to keep initial st_nci_gates values in order for
-nci_hci_dev_connect_gates to create and open pipe when necessary.
+nci_hci_clear_all_pipes might be use full in some cases for example after
+a firmware update.
 
-For example after a firmware update CLF pipes are cleared. Changing pipe
-values in st_nci_gates was causing nci_hci_dev_connect_gates not using
-accurate pipes value.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st-nci/se.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/net/nfc/nci_core.h |  1 +
+ net/nfc/nci/hci.c          | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index 3522165..df2dc54 100644
---- a/drivers/nfc/st-nci/se.c
-+++ b/drivers/nfc/st-nci/se.c
-@@ -232,13 +232,13 @@ int st_nci_hci_load_session(struct nci_dev *ndev)
- 		if (j < ARRAY_SIZE(st_nci_gates) &&
- 		    st_nci_gates[j].gate == dm_pipe_info->dst_gate_id &&
- 		    ST_NCI_DM_IS_PIPE_OPEN(dm_pipe_info->pipe_state)) {
--			st_nci_gates[j].pipe = pipe_info[2];
-+			ndev->hci_dev->init_data.gates[j].pipe = pipe_info[2];
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index d0d0f1e..b2f2e04 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -305,6 +305,7 @@ int nci_hci_set_param(struct nci_dev *ndev, u8 gate, u8 idx,
+ 		      const u8 *param, size_t param_len);
+ int nci_hci_get_param(struct nci_dev *ndev, u8 gate, u8 idx,
+ 		      struct sk_buff **skb);
++int nci_hci_clear_all_pipes(struct nci_dev *ndev);
+ int nci_hci_dev_session_init(struct nci_dev *ndev);
  
- 			ndev->hci_dev->gate2pipe[st_nci_gates[j].gate] =
--						st_nci_gates[j].pipe;
--			ndev->hci_dev->pipes[st_nci_gates[j].pipe].gate =
-+						pipe_info[2];
-+			ndev->hci_dev->pipes[pipe_info[2]].gate =
- 						st_nci_gates[j].gate;
--			ndev->hci_dev->pipes[st_nci_gates[j].pipe].host =
-+			ndev->hci_dev->pipes[pipe_info[2]].host =
- 						dm_pipe_info->src_host_id;
- 		}
- 		kfree_skb(skb_pipe_info);
+ static inline struct sk_buff *nci_skb_alloc(struct nci_dev *ndev,
+diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
+index abe0200..43d7931 100644
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -70,6 +70,7 @@ struct nci_hcp_packet {
+ #define NCI_HCI_ANY_SET_PARAMETER  0x01
+ #define NCI_HCI_ANY_GET_PARAMETER  0x02
+ #define NCI_HCI_ANY_CLOSE_PIPE     0x04
++#define NCI_HCI_ADM_CLEAR_ALL_PIPE 0x14
+ 
+ #define NCI_HFP_NO_CHAINING        0x80
+ 
+@@ -265,6 +266,20 @@ int nci_hci_send_cmd(struct nci_dev *ndev, u8 gate, u8 cmd,
+ }
+ EXPORT_SYMBOL(nci_hci_send_cmd);
+ 
++int nci_hci_clear_all_pipes(struct nci_dev *ndev)
++{
++	int r;
++
++	r = nci_hci_send_cmd(ndev, NCI_HCI_ADMIN_GATE,
++			     NCI_HCI_ADM_CLEAR_ALL_PIPE, NULL, 0, NULL);
++	if (r < 0)
++		return r;
++
++	nci_hci_reset_pipes(ndev->hci_dev);
++	return r;
++}
++EXPORT_SYMBOL(nci_hci_clear_all_pipes);
++
+ static void nci_hci_event_received(struct nci_dev *ndev, u8 pipe,
+ 				   u8 event, struct sk_buff *skb)
+ {
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
