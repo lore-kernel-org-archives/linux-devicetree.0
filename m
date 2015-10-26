@@ -1,75 +1,47 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [RESEND PATCH v2] backlight: pm8941-wled: Add default-brightness property
-Date: Mon, 26 Oct 2015 10:45:08 -0700
-Message-ID: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH 03/10] ata: ahci_brcmstb: add support 40nm platforms
+Date: Mon, 26 Oct 2015 10:47:27 -0700
+Message-ID: <20151026174727.GZ13239@google.com>
+References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
+ <1445564663-66824-4-git-send-email-jaedon.shin@gmail.com>
+ <20151023212558.GS13239@google.com>
+ <DE776F55-6D75-4AD7-B3AA-52E45C9D99C0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DE776F55-6D75-4AD7-B3AA-52E45C9D99C0@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-ide@vger.kernel.org, Linux MIPS Mailing List <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Default the brightness to 2048 and add possibility to override this in
-device tree.
+Hi Jaedon,
 
-Suggested-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
+On Sat, Oct 24, 2015 at 01:50:54PM +0900, Jaedon Shin wrote:
+> On Oct 24, 2015, at 6:25 AM, Brian Norris <computersforpeace@gmail.com> wrote:
+> > On Fri, Oct 23, 2015 at 10:44:16AM +0900, Jaedon Shin wrote:
+> > So, your patch gets phy control 1 correct for both ports, but it doesn't
+> > get phy control 2 correct. (Or at least, even if my guess at the 40nm
+> > layout is wrong, your patch makes "port 0, phy control 2" collide with
+> > "port 1, phy control 1", which is most certainly a bug.)
+> > 
+> > Are you sure you're testing this properly? Did you try using both ports
+> > at the same time? And please, apply the same scrutiny to the PHY driver.
+> > (e.g., did you test SSC? did you test both ports?)
+> > 
+> > Brian
+> > 
+> 
+> You are right. This must be changed. 
+> 
+> I found the 28nm chipsets have four phy interface control registers. But, 
+> the the 40nm chipsets have only three registers. I did not testing with 
+> two ports at the same time. It seems we should check more.
 
-Resend of v2, with updated backlight dt binding location.
+OK. So you don't just need more testing, you need to make sure the code
+actually matches the documentation at all. If there are only 3 PHY
+control registers for 40nm, then this driver (as patched by you) doesn't
+make any sense. It will need a much different patch than what you gave.
 
- Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt | 2 ++
- drivers/video/backlight/pm8941-wled.c                            | 8 ++++++++
- 2 files changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-index 424f8444a6cd..e5b294dafc58 100644
---- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-+++ b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-@@ -5,6 +5,8 @@ Required properties:
- - reg: slave address
- 
- Optional properties:
-+- default-brightness: brightness value on boot, value from: 0-4095
-+	default: 2048
- - label: The name of the backlight device
- - qcom,cs-out: bool; enable current sink output
- - qcom,cabc: bool; enable content adaptive backlight control
-diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
-index c704c3236034..e1298147bcbb 100644
---- a/drivers/video/backlight/pm8941-wled.c
-+++ b/drivers/video/backlight/pm8941-wled.c
-@@ -17,6 +17,9 @@
- #include <linux/of_device.h>
- #include <linux/regmap.h>
- 
-+/* From DT binding */
-+#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
-+
- #define PM8941_WLED_REG_VAL_BASE		0x40
- #define  PM8941_WLED_REG_VAL_MAX		0xFFF
- 
-@@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
- 	struct backlight_device *bl;
- 	struct pm8941_wled *wled;
- 	struct regmap *regmap;
-+	u32 val;
- 	int rc;
- 
- 	regmap = dev_get_regmap(pdev->dev.parent, NULL);
-@@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	val = PM8941_WLED_DEFAULT_BRIGHTNESS;
-+	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
-+
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
-+	props.brightness = val;
- 	props.max_brightness = PM8941_WLED_REG_VAL_MAX;
- 	bl = devm_backlight_device_register(&pdev->dev, wled->name,
- 					    &pdev->dev, wled,
--- 
-2.4.2
+Brian
