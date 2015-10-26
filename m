@@ -1,46 +1,23 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH net-next v2 2/2] Documentation: dts: xgene: Add TX/RX delay field
-Date: Mon, 26 Oct 2015 15:25:16 -0700
-Message-ID: <1445898316-21372-3-git-send-email-isubramanian@apm.com>
-References: <1445898316-21372-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1445898316-21372-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, f.fainelli@gmail.com, Iyappan Subramanian <isubramanian@apm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4] Tegra: DT: add device tree binding doc for QSPI
+Date: Mon, 26 Oct 2015 17:02:53 -0600
+Message-ID: <562EB11D.5040706@wwwdotorg.org>
+References: <1445898140-3561-1-git-send-email-twarren@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445898140-3561-1-git-send-email-twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, tomcwarren3959-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, yelin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
----
- Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On 10/26/2015 04:22 PM, Tom Warren wrote:
+> This patch adds the device tree binding doc for the Tegra
+> QSPI controller on Tegra210.
 
-diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-index f55aa28..078060a 100644
---- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-+++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-@@ -37,6 +37,14 @@ Required properties for ethernet interfaces that have external PHY:
- 
- Optional properties:
- - status: Should be "ok" or "disabled" for enabled/disabled. Default is "ok".
-+- tx-delay: Delay value for RGMII bridge TX clock.
-+	    Valid values are between 0 to 7, that maps to
-+	    417, 717, 1020, 1321, 1611, 1913, 2215, 2514 ps
-+	    Default value is 4, which corresponds to 1611 ps
-+- rx-delay: Delay value for RGMII bridge RX clock.
-+	    Valid values are between 0 to 7, that maps to
-+	    273, 589, 899, 1222, 1480, 1806, 2147, 2464 ps
-+	    Default value is 2, which corresponds to 899 ps
- 
- Example:
- 	menetclk: menetclk {
-@@ -72,5 +80,7 @@ Example:
- 
- /* Board-specific peripheral configurations */
- &menet {
-+	tx-delay = <4>;
-+	rx-delay = <2>;
-         status = "ok";
- };
--- 
-1.9.1
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+(I assume if others approve the binding, Thierry will take it through 
+the Tegra tree)
