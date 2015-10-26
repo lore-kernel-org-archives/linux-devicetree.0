@@ -1,125 +1,38 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 08/32] scsi: hisi_sas: add hisi_sas_remove
-Date: Mon, 26 Oct 2015 22:14:39 +0800
-Message-ID: <1445868903-183817-9-git-send-email-john.garry@huawei.com>
-References: <1445868903-183817-1-git-send-email-john.garry@huawei.com>
+From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800
+ Ethernet controller
+Date: Mon, 26 Oct 2015 15:05:02 +0100
+Message-ID: <562E330E.1060509@sigmadesigns.com>
+References: <1445522558-5808-1-git-send-email-mans@mansr.com>
+ <1445522558-5808-2-git-send-email-mans@mansr.com>
+ <562A23B9.3090208@sigmadesigns.com> <yw1xio5xg0rq.fsf@unicorn.mansr.com>
+ <562DF394.3030500@sigmadesigns.com> <yw1x1tchg7i6.fsf@unicorn.mansr.com>
+ <562E2A61.2080306@sigmadesigns.com> <yw1xsi4xenwd.fsf@unicorn.mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445868903-183817-1-git-send-email-john.garry@huawei.com>
+In-Reply-To: <yw1xsi4xenwd.fsf@unicorn.mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: JBottomley@odin.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, john.garry2@mail.dcu.ie, hare@suse.de, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, John Garry <john.garry@huawei.com>
+To: Mans Rullgard <mans@mansr.com>
+Cc: DT <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Sebastian Frias <sebastian_frias@sigmadesigns.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-This patch also includes relevant memory/pool
-free'ing and sas/scsi host removal
+On 26/10/2015 14:54, M=E5ns Rullg=E5rd wrote:
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c | 75 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
+> Let's try something else:
+>=20
+> Device trees list the exact chip, the oldest chip with the same
+> features, and the oldest compatible chip.  From the sound of things,
+> that means the smp8759 should use "sigma,smp8759-ethernet",
+> "sigma,smp8910-ethernet", "sigma,smp8642-ethernet", "aurora,nb8800".
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index e03a62b..4dd2866 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -128,6 +128,63 @@ err_out:
- 	return -ENOMEM;
- }
- 
-+static void hisi_sas_free(struct hisi_hba *hisi_hba)
-+{
-+	int i, s;
-+	struct device *dev = &hisi_hba->pdev->dev;
-+
-+	for (i = 0; i < hisi_hba->queue_count; i++) {
-+		s = sizeof(struct hisi_sas_cmd_hdr) * HISI_SAS_QUEUE_SLOTS;
-+		if (hisi_hba->cmd_hdr[i])
-+			dma_free_coherent(dev, s,
-+					  hisi_hba->cmd_hdr[i],
-+					  hisi_hba->cmd_hdr_dma[i]);
-+
-+		s = hisi_hba->hw->complete_hdr_size * HISI_SAS_QUEUE_SLOTS;
-+		if (hisi_hba->complete_hdr[i])
-+			dma_free_coherent(dev, s,
-+					  hisi_hba->complete_hdr[i],
-+					  hisi_hba->complete_hdr_dma[i]);
-+	}
-+
-+	if (hisi_hba->status_buffer_pool)
-+		dma_pool_destroy(hisi_hba->status_buffer_pool);
-+
-+	if (hisi_hba->command_table_pool)
-+		dma_pool_destroy(hisi_hba->command_table_pool);
-+
-+	s = HISI_SAS_MAX_ITCT_ENTRIES * sizeof(struct hisi_sas_itct);
-+	if (hisi_hba->itct)
-+		dma_free_coherent(dev, s,
-+				  hisi_hba->itct, hisi_hba->itct_dma);
-+
-+	s = HISI_SAS_COMMAND_ENTRIES * sizeof(struct hisi_sas_iost);
-+	if (hisi_hba->iost)
-+		dma_free_coherent(dev, s,
-+				  hisi_hba->iost, hisi_hba->iost_dma);
-+
-+	s = HISI_SAS_COMMAND_ENTRIES * sizeof(struct hisi_sas_breakpoint);
-+	if (hisi_hba->breakpoint)
-+		dma_free_coherent(dev, s,
-+				  hisi_hba->breakpoint,
-+				  hisi_hba->breakpoint_dma);
-+
-+	if (hisi_hba->sge_page_pool)
-+		dma_pool_destroy(hisi_hba->sge_page_pool);
-+
-+	s = sizeof(struct hisi_sas_initial_fis) * HISI_SAS_MAX_PHYS;
-+	if (hisi_hba->initial_fis)
-+		dma_free_coherent(dev, s,
-+				  hisi_hba->initial_fis,
-+				  hisi_hba->initial_fis_dma);
-+
-+	s = HISI_SAS_COMMAND_ENTRIES * sizeof(struct hisi_sas_breakpoint) * 2;
-+	if (hisi_hba->sata_breakpoint)
-+		dma_free_coherent(dev, s,
-+				  hisi_hba->sata_breakpoint,
-+				  hisi_hba->sata_breakpoint_dma);
-+
-+}
- 
- static struct Scsi_Host *hisi_sas_shost_alloc(struct platform_device *pdev,
- 					      const struct hisi_sas_hw *hw)
-@@ -183,8 +240,10 @@ static struct Scsi_Host *hisi_sas_shost_alloc(struct platform_device *pdev,
- 	if (IS_ERR(hisi_hba->ctrl))
- 		goto err_out;
- 
--	if (hisi_sas_alloc(hisi_hba, shost))
-+	if (hisi_sas_alloc(hisi_hba, shost)) {
-+		hisi_sas_free(hisi_hba);
- 		goto err_out;
-+	}
- 
- 	return shost;
- err_out:
-@@ -265,6 +324,20 @@ err_out_ha:
- }
- EXPORT_SYMBOL_GPL(hisi_sas_probe);
- 
-+int hisi_sas_remove(struct platform_device *pdev)
-+{
-+	struct sas_ha_struct *sha = platform_get_drvdata(pdev);
-+	struct hisi_hba *hisi_hba = (struct hisi_hba *)sha->lldd_ha;
-+
-+	sas_unregister_ha(sha);
-+	sas_remove_host(sha->core.shost);
-+	scsi_remove_host(sha->core.shost);
-+
-+	hisi_sas_free(hisi_hba);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(hisi_sas_remove);
-+
- static __init int hisi_sas_init(void)
- {
- 	pr_info("hisi_sas: driver version %s\n", DRV_VERSION);
--- 
-1.9.1
+(I want to make sure I didn't misunderstand.) In my hypothetical
+example where something changed in 8756 and up...
+
+for a 8734 DT, I would specify: smp8734, smp8910, smp8642, nb8800
+for a 8758 DT, I would specify: smp8758, smp8756, smp8642, nb8800
+
+Is that correct? If yes, that works for me.
+
+Regards.
