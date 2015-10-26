@@ -1,68 +1,59 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: add document of mediatek efuse driver
-Date: Mon, 26 Oct 2015 11:23:44 +0100
-Message-ID: <20151026102344.GD25308@pengutronix.de>
-References: <1444984751-4572-1-git-send-email-andrew-ct.chen@mediatek.com>
- <1444984751-4572-2-git-send-email-andrew-ct.chen@mediatek.com>
- <562DF8BE.4060205@linaro.org>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH v4] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Mon, 26 Oct 2015 10:26:38 +0000
+Message-ID: <8520D5D51A55D047800579B09414719801692D8E@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1445066538-24638-1-git-send-email-bharatku@xilinx.com>
+ <5705956.6YyKSO4LdH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <562DF8BE.4060205-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5705956.6YyKSO4LdH@wuerfel>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 09:56:14AM +0000, Srinivas Kandagatla wrote:
+> > +       device_type = "pci";
+> > +       interrupt-parent = <&gic>;
+> > +       interrupts = < 0 118 4
+> > +                      0 116 4
+> > +                      0 115 4          // MSI_1 [63...32]
+> > +                      0 114 4 >;       // MSI_0 [31...0]
 > 
+> Better write these as tuples:
 > 
-> On 16/10/15 09:39, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> >From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> >Add Mediatek MT8173 EFUSE Devicetree binding file
-> >
-> >Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 	interrupts = <0 118 4>, <0 116 4>, <0 115 4>, <0 114 4>;
 > 
-> Looks good to me, minor comment below.
+> And maybe reverse the order? It looks that might be what the soc
+> integration person had in mind.
 > 
-> Will queue this for v4.5 once v4.4-rc1 is released.
+> Also, what is interrupt <0 117 4>? Is that connected here as well?
+> Better list it as well then, even if you don't use it.
 > 
-> 
-> >---
-> >  .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 ++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
-> >
-> >diff --git a/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
-> >new file mode 100644
-> >index 0000000..92edc3d
-> >--- /dev/null
-> >+++ b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
-> >@@ -0,0 +1,36 @@
-> >+= Mediatek MTK-EFUSE device tree bindings =
-> >+
-> >+This binding is intended to represent MTK-EFUSE which is found in most Mediatek SOCs.
-> >+
-> >+Required properties:
-> >+- compatible: should be "mediatek,mt8173-efuse" or "mediatek,mt8135-efuse"
-> 
-> Can we make the compatible more generic for mediatek socs? Like
-> "mediatek,efuse"  Or are they different in each SOC?
+We have it but not using it, we will list it.
 
-While we can add an additional "mediatek,efuse" compatible we should
-always add the most specific compatible first. Otherwise we cannot
-differentiate between SoCs later without changing the device tree.
+> > +       interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> > +       interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1
+> > +                        0x0 0x0 0x0 0x2 &pcie_intc 0x2
+> > +                        0x0 0x0 0x0 0x3 &pcie_intc 0x3
+> > +                        0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
+> 
+> > +       msi-parent = <&nwl_pcie>;
+> > +       reg = <0x0 0xfd0e0000 0x1000
+> > +              0x0 0xfd480000 0x1000
+> > +              0x0 0xE0000000 0x1000000>;
+> 
+> Same grouping for reg and interrupt-map as above for interrupts.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Grouping reg and interrupt-map as tuples will make lengthy line and reduces readability, is it compulsory ?
+> 
+> > +       reg-names = "breg", "pcireg", "cfg";
+> > +       ranges = <0x02000000 0x00000000 0xE1000000 0x00000000
+> > + 0xE1000000 0 0x0F000000>;
+> 
+> No I/O space or prefetcheable memory?
+> 
+> 	Arnd
