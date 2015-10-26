@@ -1,266 +1,53 @@
-From: erin.lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: mediatek: add MT2701 basic support
-Date: Mon, 26 Oct 2015 15:10:38 +0800
-Message-ID: <1445843438.3133.5.camel@mtksdaap41>
-References: <1445322871-14134-1-git-send-email-erin.lo@mediatek.com>
- <1445322871-14134-3-git-send-email-erin.lo@mediatek.com>
- <562A1070.8070505@gmail.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Mon, 26 Oct 2015 15:15:17 +0800
+Message-ID: <1445843717.23888.1.camel@mtksdaap41>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <562A1070.8070505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-10-23 at 12:48 +0200, Matthias Brugger wrote:
+On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
+> Hello,
 > 
-> On 20/10/15 08:34, Erin Lo wrote:
-> > This adds basic chip support for Mediatek 2701.
+> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Add arch timer node to enable arch-timer support. MT8135 firmware
+> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> > properties to workaround this.
 > >
-> > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   arch/arm/boot/dts/Makefile        |   1 +
-> >   arch/arm/boot/dts/mt2701-evb.dts  |  29 ++++++++
-> >   arch/arm/boot/dts/mt2701.dtsi     | 146 ++++++++++++++++++++++++++++++++++++++
-> >   arch/arm/mach-mediatek/mediatek.c |   1 +
-> >   4 files changed, 177 insertions(+)
-> >   create mode 100644 arch/arm/boot/dts/mt2701-evb.dts
-> >   create mode 100644 arch/arm/boot/dts/mt2701.dtsi
+> > This also set cpu enable-method to enable SMP.
 > >
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 233159d..aec787e 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -732,6 +732,7 @@ dtb-$(CONFIG_MACH_DOVE) += \
-> >   	dove-dove-db.dtb \
-> >   	dove-sbc-a510.dtb
-> >   dtb-$(CONFIG_ARCH_MEDIATEK) += \
-> > +	mt2701-evb.dtb \
-> >   	mt6580-evbp1.dtb \
-> >   	mt6589-aquaris5.dtb \
-> >   	mt6592-evb.dtb \
-> > diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> > new file mode 100644
-> > index 0000000..082ca88
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> > @@ -0,0 +1,29 @@
-> > +/*
-> > + * Copyright (c) 2015 MediaTek Inc.
-> > + * Author: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "mt2701.dtsi"
-> > +
-> > +/ {
-> > +	model = "MediaTek MT2701 evaluation board";
-> > +	compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
-> > +
-> > +	memory {
-> > +		reg = <0 0x80000000 0 0x40000000>;
-> > +	};
-> > +};
-> > +
-> > +&uart0 {
-> > +	status = "okay";
-> > +};
-> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> > new file mode 100644
-> > index 0000000..69f240f
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> > @@ -0,0 +1,146 @@
-> > +/*
-> > + * Copyright (c) 2015 MediaTek Inc.
-> > + * Author: Erin.Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include "skeleton64.dtsi"
-> > +
-> > +/ {
-> > +	compatible = "mediatek,mt2701";
-> > +	interrupt-parent = <&sysirq>;
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a7";
-> > +			reg = <0x0>;
-> > +		};
-> > +		cpu@1 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a7";
-> > +			reg = <0x1>;
-> > +		};
-> > +		cpu@2 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a7";
-> > +			reg = <0x2>;
-> > +		};
-> > +		cpu@3 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a7";
-> > +			reg = <0x3>;
-> > +		};
-> > +	};
-> > +
-> > +	system_clk: dummy13m {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <13000000>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	rtc_clk: dummy32k {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <32000>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	uart_clk: dummy26m {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <26000000>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv7-timer";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> > +	};
-> > +
-> > +	watchdog: watchdog@10007000 {
-> > +		compatible = "mediatek,mt2701-wdt",
-> > +			     "mediatek,mt6589-wdt";
-> > +		reg = <0 0x10007000 0 0x100>;
-> > +	};
-> > +
-> > +	timer: timer@10008000 {
-> > +		compatible = "mediatek,mt2701-timer",
-> > +			     "mediatek,mt6577-timer";
-> > +		reg = <0x10008000 0x80>;
+> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> I suppose reg should look like this:
-> reg = <0 0x10008000 0 0x80>;
+> kernelci.org started detecting new boot failures for the mt8135-evb in
+> the arm-soc tree[1], and the boot failures were bisected down to this
+> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+> dts: mt8135: enable basic SMP bringup for mt8135)
 > 
-> I fixed it and pushed the patch to v4.4-next/dts
-> Please let me know if this is not working, I have no hardware to test it.
-> 
+> Maybe this new SMP support requires updating the firmware on the board
+> as well?  If so, the changelog should've been a bit more explicit
+> about firmware dependencies.
 
-It works fine.
-Thanks you.
+Kevin,
 
-Regards,
--Erin
+Thanks for testing.
 
-> > +		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&system_clk>, <&rtc_clk>;
-> > +		clock-names = "system-clk", "rtc-clk";
-> > +	};
-> > +
-> > +	sysirq: interrupt-controller@10200100 {
-> > +		compatible = "mediatek,mt2701-sysirq",
-> > +			     "mediatek,mt6577-sysirq";
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-parent = <&gic>;
-> > +		reg = <0 0x10200100 0 0x1c>;
-> > +	};
-> > +
-> > +	gic: interrupt-controller@10211000 {
-> > +		compatible = "arm,cortex-a7-gic";
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-parent = <&gic>;
-> > +		reg = <0 0x10211000 0 0x1000>,
-> > +		      <0 0x10212000 0 0x1000>,
-> > +		      <0 0x10214000 0 0x2000>,
-> > +		      <0 0x10216000 0 0x2000>;
-> > +	};
-> > +
-> > +	uart0: serial@11002000 {
-> > +		compatible = "mediatek,mt2701-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11002000 0 0x400>;
-> > +		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	uart1: serial@11003000 {
-> > +		compatible = "mediatek,mt2701-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11003000 0 0x400>;
-> > +		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	uart2: serial@11004000 {
-> > +		compatible = "mediatek,mt2701-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11004000 0 0x400>;
-> > +		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	uart3: serial@11005000 {
-> > +		compatible = "mediatek,mt2701-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11005000 0 0x400>;
-> > +		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> > +		status = "disabled";
-> > +	};
-> > +};
-> > diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-> > index a954900..1b98f7a 100644
-> > --- a/arch/arm/mach-mediatek/mediatek.c
-> > +++ b/arch/arm/mach-mediatek/mediatek.c
-> > @@ -18,6 +18,7 @@
-> >   #include <asm/mach/arch.h>
-> >
-> >   static const char * const mediatek_board_dt_compat[] = {
-> > +	"mediatek,mt2701",
-> >   	"mediatek,mt6589",
-> >   	"mediatek,mt6592",
-> >   	"mediatek,mt8127",
-> >
+No, it doesn't need new firmware. Will test to see what's going wrong.
+
+
+Joe.C
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
