@@ -1,82 +1,132 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH 2/3] devicetree: add binding for Aurora VLSI NB8800 Ethernet controller
-Date: Mon, 26 Oct 2015 13:54:10 +0000
-Message-ID: <yw1xsi4xenwd.fsf@unicorn.mansr.com>
-References: <1445522558-5808-1-git-send-email-mans@mansr.com>
-	<1445522558-5808-2-git-send-email-mans@mansr.com>
-	<562A23B9.3090208@sigmadesigns.com>
-	<yw1xio5xg0rq.fsf@unicorn.mansr.com>
-	<562DF394.3030500@sigmadesigns.com>
-	<yw1x1tchg7i6.fsf@unicorn.mansr.com>
-	<562E2A61.2080306@sigmadesigns.com>
+From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 05/32] scsi: hisi_sas: scan device tree
+Date: Mon, 26 Oct 2015 22:14:36 +0800
+Message-ID: <1445868903-183817-6-git-send-email-john.garry@huawei.com>
+References: <1445868903-183817-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <562E2A61.2080306@sigmadesigns.com> (Marc Gonzalez's message of
-	"Mon, 26 Oct 2015 14:28:01 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Cc: DT <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Sebastian Frias <sebastian_frias@sigmadesigns.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Mason <slash.tmp@free.fr>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445868903-183817-1-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Marc Gonzalez <marc_gonzalez@sigmadesigns.com> writes:
+Scan the device tree for all properties. Also
+do this:
+- do ioremap for SAS registers
+- allocate memory for interrupt names
 
->>> So I should write something like this in my DT?
->>>
->>>   eth0: ethernet@26000 {
->>>     compatible =3D "sigma,smp8734-ethernet", "sigma,smp8640-etherne=
-t", "aurora,nb8800";
->>>
->>> Hmmm, you mention this below, but you used "sigma,smp8759-ethernet"=
-=2E
->>> What about earlier chips?
->>=20
->> OK, how about this scheme then:
->>=20
->> - Device trees list the exact chip, the chip family, the oldest
->>   compatible family, and finally the basic "aurora,nb8800".  For the
->>   SMP8759 that would look like this:
->>   "sigma,smp8759-ethernet", "sigma,smp87xx-ethernet", "sigma,smp864x=
--ethernet",
->>     "aurora,nb8800"
->
-> AFAICT, the list of tango4 chips is (in chronological order)
->
-> 8910, 8734, 8756, 8758, 8759
->
-> The problem I see is that Sigma already has plans for non-tango4
-> 87xx SoCs (two in fact: 8760 and 8762, as far as I've heard).
-> (What a mess.)
->
-> I would think the "chip family" needs to use the code-name like
-> tango3 or tango4 (for lack of a better discriminant).
->
-> Also, (purely hypothetical) suppose something changed in 8756 and up.
-> How would the 8758 pick up the improvement, but not the 8734?
->
-> I'm also confused, because I thought I read somewhere not to use
-> wildcards in compatible strings... <Looking> It was there:
-> http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_=
-Property
-> (Sorry, some of this stuff is a bit hard for me to grok.)
+Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/scsi/hisi_sas/hisi_sas.h      |  9 +++++++++
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 38 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 46 insertions(+), 1 deletion(-)
 
-Right, and you just illustrated why wildcards are bad.  Sorry for the
-confusion.  I should have known better than to look at existing
-bindings.  Let's drop that idea.
+diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
+index 6f57fd1..ace4254 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas.h
++++ b/drivers/scsi/hisi_sas/hisi_sas.h
+@@ -28,6 +28,9 @@
+ #define HISI_SAS_MAX_DEVICES HISI_SAS_MAX_ITCT_ENTRIES
+ #define HISI_SAS_COMMAND_ENTRIES 8192
+ 
++#define HISI_SAS_NAME_LEN 32
++#define HISI_SAS_CTRL_REG_CNT 5
++
+ struct hisi_sas_phy {
+ 	struct asd_sas_phy	sas_phy;
+ };
+@@ -44,6 +47,9 @@ struct hisi_hba {
+ 	struct sas_ha_struct *p;
+ 
+ 	struct platform_device *pdev;
++	void __iomem *regs;
++	struct regmap *ctrl;
++	u32 ctrl_reg[HISI_SAS_CTRL_REG_CNT];
+ 	u8 sas_addr[SAS_ADDR_SIZE];
+ 
+ 	int n_phy;
+@@ -53,6 +59,9 @@ struct hisi_hba {
+ 	struct Scsi_Host *shost;
+ 	struct hisi_sas_phy phy[HISI_SAS_MAX_PHYS];
+ 	struct hisi_sas_port port[HISI_SAS_MAX_PHYS];
++
++	int	queue_count;
++	char	*int_names;
+ 	const struct hisi_sas_hw *hw;	/* Low level hw interface */
+ };
+ 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 7555307..91f6504 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -40,9 +40,13 @@ static struct sas_domain_function_template hisi_sas_transport_ops = {
+ static struct Scsi_Host *hisi_sas_shost_alloc(struct platform_device *pdev,
+ 					      const struct hisi_sas_hw *hw)
+ {
++	int num;
++	struct resource *res;
+ 	struct Scsi_Host *shost;
+ 	struct hisi_hba *hisi_hba;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = pdev->dev.of_node;
++	struct property *sas_addr_prop;
+ 
+ 	shost = scsi_host_alloc(&hisi_sas_sht, sizeof(*hisi_hba));
+ 	if (!shost)
+@@ -54,6 +58,39 @@ static struct Scsi_Host *hisi_sas_shost_alloc(struct platform_device *pdev,
+ 	hisi_hba->shost = shost;
+ 	SHOST_TO_SAS_HA(shost) = &hisi_hba->sha;
+ 
++	sas_addr_prop = of_find_property(np, "sas-addr", NULL);
++	if (!sas_addr_prop || (sas_addr_prop->length != SAS_ADDR_SIZE))
++		goto err_out;
++	memcpy(hisi_hba->sas_addr, sas_addr_prop->value, SAS_ADDR_SIZE);
++
++	if (of_property_read_u32_array(np, "ctrl-reg",
++				       (u32 *) &hisi_hba->ctrl_reg,
++				       HISI_SAS_CTRL_REG_CNT))
++		goto err_out;
++
++	if (of_property_read_u32(np, "phy-count", &hisi_hba->n_phy))
++		goto err_out;
++
++	if (of_property_read_u32(np, "queue-count", &hisi_hba->queue_count))
++		goto err_out;
++
++	num = of_irq_count(np);
++	hisi_hba->int_names = devm_kcalloc(dev, num,
++					   HISI_SAS_NAME_LEN,
++					   GFP_KERNEL);
++	if (!hisi_hba->int_names)
++		goto err_out;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hisi_hba->regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(hisi_hba->regs))
++		goto err_out;
++
++	hisi_hba->ctrl = syscon_regmap_lookup_by_phandle(
++				np, "hisilicon,sas-syscon");
++	if (IS_ERR(hisi_hba->ctrl))
++		goto err_out;
++
+ 	return shost;
+ err_out:
+ 	dev_err(dev, "shost alloc failed\n");
+@@ -80,7 +117,6 @@ int hisi_sas_probe(struct platform_device *pdev,
+ 	sha = SHOST_TO_SAS_HA(shost);
+ 	hisi_hba = shost_priv(shost);
+ 	platform_set_drvdata(pdev, sha);
+-	hisi_hba->n_phy = HISI_SAS_MAX_PHYS;
+ 	phy_nr = port_nr = hisi_hba->n_phy;
+ 
+ 	arr_phy = devm_kcalloc(dev, phy_nr, sizeof(void *), GFP_KERNEL);
+-- 
+1.9.1
 
-Let's try something else:
-
-Device trees list the exact chip, the oldest chip with the same
-features, and the oldest compatible chip.  From the sound of things,
-that means the smp8759 should use "sigma,smp8759-ethernet",
-"sigma,smp8910-ethernet", "sigma,smp8642-ethernet", "aurora,nb8800".
-
-> Finally, I think what you decide to do can also be done for the
-> interrupt controller, right?
-
-Sure, the same scheme should be used for all on-chip devices.
-
---=20
-M=E5ns Rullg=E5rd
-mans@mansr.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
