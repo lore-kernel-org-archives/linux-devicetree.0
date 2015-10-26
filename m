@@ -1,329 +1,209 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 08/10] pwm: core: add pulse feature to the PWM framework
-Date: Tue, 27 Oct 2015 06:09:06 +0800
-Message-ID: <201510270659.cBuJC07i%fengguang.wu@intel.com>
-References: <1445895161-2317-9-git-send-email-o.schinagl@ultimaker.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 0/2] Common SerDes driver for TI's Keystone Platforms
+Date: Mon, 26 Oct 2015 18:09:08 -0400
+Message-ID: <562EA484.7050509@ti.com>
+References: <1445432201-16007-1-git-send-email-w-kwok2@ti.com> <56295B9E.9030201@ti.com> <CAPw-ZTk1vJA3YSwLHBNMYP0t5k2tW0HTKse+37rL8izWN33y-w@mail.gmail.com> <3702663.07h6YO0UjY@wuerfel> <20151023144631.GZ32532@n2100.arm.linux.org.uk> <562A81F8.1060608@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="bp/iNruPH9dso1Pn"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445895161-2317-9-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>
-Cc: kbuild-all@01.org, Olliver Schinagl <oliver@schinagl.nl>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Olliver Schinagl <oliver+list@schinagl.nl>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <562A81F8.1060608@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: Loc Ho <lho@apm.com>, WingMan Kwok <w-kwok2@ti.com>, Rob Herring <robh+dt@kernel.org>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, rogerq@ti.com, bhelgaas@google.com, ssantosh@kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Russell,
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10/23/2015 02:52 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Friday 23 October 2015 08:16 PM, Russell King - ARM Linux wrote:
+>> On Fri, Oct 23, 2015 at 11:17:06AM +0200, Arnd Bergmann wrote:
+>>> On Thursday 22 October 2015 15:27:05 Loc Ho wrote:
+>>>>>
+>>>>> phy-xgene.c
+>>>>> -----------
+>>>>>
+---CUT-------------------------------------------------------------------
+>>>>
+>>>> Let me comment on this APM X-Gene driver. This driver is dead and
+>>>> won't be supported in near or foreseeable future. And someday, it will
+>>>> be ripped out. Based on experience, this solution (having PHY driver
+>>>> in Linux) can't be supported across boards and etc as it is just too
+>>>> much maintenance. And therefore, we followed Arnd B guidance and move
+>>>> all this into the boot loader. From Linux or OS perspective, it only
+>>>> cares about the interface in which its interface with. This is just
+>>>> your reference and may be this will help you as well.
+>>>
+>>> This depends a lot on the use case. If the chip is only used on server
+>>> parts that have a real firmware and you can deliver bug fixes for the
+>>> firmware if necessary, it's always best to do as much of the setup as
+>>> possible there, and let Linux see a simplified view of the hardware.
+>>>
+>>> However, for embedded systems that tend to ship with a minimal binary
+>>> bootloader and no way to update that as an end-user, we rely on Linux
+>>> to know about all the hardware that requires some form of setup, which
+>>> is why we have all sorts of drivers and frameworks in the kernel that
+>>> a server can easily ignore.
+>>>
+>>> While keystone can show up in servers that won't use this driver, my
+>>> impression is that its main market is actually in embedded space.
+>>
+>> That's an interesting point of view - especially as you can't make the
+>> argument that Marvell Armada chips would ever be anything but the
+>> embedded space, but we're so far getting away with having the serdes
+>> setup in u-boot - and even Marvell's BSP doesn't have it in the kernel.
+>>
+>> The real question here is:
+>>
+>>    Why would we want to statically setup serdes links in the kernel
+>>    according to the DTB, rather than having the boot loader set them up?
+>
+> Lot of PHYs have HW configure the parameters with default values so the
+> driver really doesn't have to touch them (like programming the equalizer
+> and the various digital mode configuration and analog mode
+> configuration). Then the SW just has to take care of clock programming
+> and powering on/off the PHY.
+>
+> Some platforms require the controller core be in reset before powering
+> on the PHY, so we can't have all the configurations done in bootloader
+> for all the platforms.
+>
+> The problem w.r.t code size starts when the drivers starts to configure
+> the analog and digital components inside the PHY (like equalizer,
+> attenuation etc..).
+>
 
-Hi Olliver,
+Agree. There are also calibration required on the receive side for 10G 
+and SRIO that adds to the code size. SRIO is currently not supported, 
+but expected to be supported in the future. For 10G, and SRIO, it is 
+expected that user may need to tune the coefficients on a per board 
+basis and hence we can't afford to have the driver in the boot loader.
 
-[auto build test WARNING on pwm/for-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+> While performing all these configurations in bootloader will help reduce
+> the code size, as Arnd pointed out, it'll cause problems if the PHY
+> loses the contents after a suspend/resume cycle.
+>>
 
-url:    https://github.com/0day-ci/linux/commits/Olliver-Schinagl/pwm-lpc18xx_pwm-use-pwm_set_chip_data/20151027-053853
-config: avr32-atstk1006_defconfig (attached as .config)
-reproduce:
-        wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        make.cross ARCH=avr32 
+Agree.
 
-All warnings (new ones prefixed by >>):
+>> For the most part, the choice between the serdes modes is fairly static,
+>> depending on the board wiring.  You wouldn't ever want to configure a
+>> mini-PCIe socket for gigabit ethernet.
+>>
+This is true for most of the serdes except 10G. 10G would require 
+reconfiguration of the SerDes if it has to work in 1G mode. You wouldn't 
+want to power cycle the board in case user wants to plug in a 1G link. 
+We plan to add 10G support based on this serdes patch and also need to 
+handle 1G mode on 10G as well in the future.
 
->> drivers/pwm/pwm-atmel.c:278: warning: initialization from incompatible pointer type
+10G also has another mode to use a firmware that handles auto 
+negotiation. User may use different firmware as well and has to be taken 
+care of in the driver. How do we support this if this has to be in boot 
+loader?
 
-vim +278 drivers/pwm/pwm-atmel.c
+>> However, there are cases when you would want to change it, and I'm
+>> aware of these cases:
+>>
+>> * Serdes routed to a mini-PCIe socket, which is compatible with mSATA.
+>>    There's an argument here to allow the serdes link to be switched at
+>>    runtime between PCIe and mSATA.  However, the card type can't be
+>>    detected at run time, so this would have to be a manual configuration
+>>    change by the user.
+>>
+>>    Since mini-PCIe is not hot-pluggable, this configuration isn't
+>>    something that could be changed without powering the system down.
+>>
+>> * Serdes routed to a SFP cage, where the serdes link is configured
+>>    for gigabit (or faster for SFP+) ethernet.  For gigabit only, serdes
+>>    is configured in either 1000base-X or Cisco SGMII mode (SGMII is a
+>>    non-802.3 modification to 1000base-X) depending on the type of
+>>    transceiver plugged in.
+>>
+>>    Arguably, there's a third option here, which is SATA as well -  I'm
+>>    aware of one non-standard SFP module on the market which provides a
+>>    SATA connector, but this is highly non-standard, is not covered by
+>>    the SFP specifications, so such a switch to this mode would have to
+>>    be done manually.
+>>
+>> The difference between 1000base-X vs SGMII is to do with the generation
+>> and interpretation of a 16-bit configuration word passed across the
+>> link.  Otherwise, the two are identical - and so far I've seen the
+>> configuration word mode is determined by the ethernet block rather than
+>> the serdes block.
+>>
+>> My argument would be that even in the case of the last paragraph,
+>> normal use for serdes reconfiguration would be a power cycle, even in
+>> the embedded environment.
+>>
+>> Now, that all said, it looks to me like TI's serdes implementation can't
+>> be switched between different modes - it's statically configured to
+>> whatever the DTB says it should be.
+>>
 
-472ac3dc Alexandre Belloni 2015-05-25  262  	mutex_lock(&atmel_pwm->isr_lock);
-472ac3dc Alexandre Belloni 2015-05-25  263  	atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR);
-472ac3dc Alexandre Belloni 2015-05-25  264  
-472ac3dc Alexandre Belloni 2015-05-25  265  	while (!(atmel_pwm->updated_pwms & (1 << pwm->hwpwm)) &&
-472ac3dc Alexandre Belloni 2015-05-25  266  	       time_before(jiffies, timeout)) {
-472ac3dc Alexandre Belloni 2015-05-25  267  		usleep_range(10, 100);
-472ac3dc Alexandre Belloni 2015-05-25  268  		atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR);
-472ac3dc Alexandre Belloni 2015-05-25  269  	}
-32b16d46 Bo Shen           2013-12-13  270  
-472ac3dc Alexandre Belloni 2015-05-25  271  	mutex_unlock(&atmel_pwm->isr_lock);
-32b16d46 Bo Shen           2013-12-13  272  	atmel_pwm_writel(atmel_pwm, PWM_DIS, 1 << pwm->hwpwm);
-32b16d46 Bo Shen           2013-12-13  273  
-32b16d46 Bo Shen           2013-12-13  274  	clk_disable(atmel_pwm->clk);
-32b16d46 Bo Shen           2013-12-13  275  }
-32b16d46 Bo Shen           2013-12-13  276  
-32b16d46 Bo Shen           2013-12-13  277  static const struct pwm_ops atmel_pwm_ops = {
-32b16d46 Bo Shen           2013-12-13 @278  	.config = atmel_pwm_config,
-32b16d46 Bo Shen           2013-12-13  279  	.set_polarity = atmel_pwm_set_polarity,
-32b16d46 Bo Shen           2013-12-13  280  	.enable = atmel_pwm_enable,
-32b16d46 Bo Shen           2013-12-13  281  	.disable = atmel_pwm_disable,
-32b16d46 Bo Shen           2013-12-13  282  	.owner = THIS_MODULE,
-32b16d46 Bo Shen           2013-12-13  283  };
-32b16d46 Bo Shen           2013-12-13  284  
-32b16d46 Bo Shen           2013-12-13  285  struct atmel_pwm_data {
-32b16d46 Bo Shen           2013-12-13  286  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
+For 10G and SRIO, there are coefficients (tx-coeff in DTS) that needs to 
+be tuned on a per board basis. How would you do that if this has to be 
+added to boot loader? Not scalable as boot loader has to be different 
+for different boards
 
-:::::: The code at line 278 was first introduced by commit
-:::::: 32b16d46e4154d6f9d9c1d5dd35f64cdf08b7aea pwm: atmel-pwm: Add Atmel PWM controller driver
+>> So, this brings up the obvious question: why do we need to support
+>> serdes configuration in the kernel rather than statically in the boot
+>> loader according to the board setup?
+>>
 
-:::::: TO: Bo Shen <voice.shen@atmel.com>
-:::::: CC: Thierry Reding <thierry.reding@gmail.com>
+The cases described above makes it clear we need a Linux driver for 
+these SerDes.
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>> Specifically on this patch series, I think that if we're going to have
+>> code doing serdes configuration in the kernel, we need to come up with
+>> a common set of DT properties for it, rather than having everyone doing
+>> their own thing.
 
---bp/iNruPH9dso1Pn
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+Not sure if there are standard configuration across various SERDES 
+hardware provided by different vendors that we can identify. Some of the 
+common are probably num-lanes, phy-mode etc. Do you know who can help us 
+find these?
 
-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
-XPLiJT2XrKOtvES/RTE0Bv4fFuNqm03RAAA=
+I'd also like to see the code shrink in size - it
+>> doesn't do anything beyond configuring the hardware for the settings
+>> that DTB tells it to, so why it has to be 2.5k lines I've no idea.
+>>
 
---bp/iNruPH9dso1Pn--
+Kishon has described the reason above.
+
+>> There's some specific comments I have about it using readl/writel, and
+>> its wrapping of those, which IMHO it shouldn't be doing,
+
+Are you referring to below code?
+
++static inline u32 kserdes_readl(void __iomem *base, u32 offset)
++{
++	return readl(base + offset);
++}
++
++static inline void kserdes_writel(void __iomem *base, u32 offset, u32 
+value)
++{
++	writel(value, base + offset);
++}
+
+Any reason why you don't like these in the driver code?
+
+  and the horrid
+>> for loops (what's wrong with the standard Linux way of defining a
+>> for_each_xxx() operator and leaving the body at the callsite?)
+>
+
+Will add for_each_xxx() in the next version.
+
+Thanks
+
+Murali & Wingman
+
+> +1
+>
+> Thanks
+> Kishon
+>
+>
