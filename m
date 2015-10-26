@@ -1,48 +1,54 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH v3 26/35] nfc: st-nci: Fix host_list verification after secure element activation
-Date: Mon, 26 Oct 2015 07:50:06 +0100
-Message-ID: <1445842215-28403-27-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 18/35] nfc: st-nci: Add support for NCI_HCI_IDENTITY_MGMT_GATE
+Date: Mon, 26 Oct 2015 07:49:58 +0100
+Message-ID: <1445842215-28403-19-git-send-email-christophe-h.ricard@st.com>
 References: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445842215-28403-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A secure element can be activated in different order. The host_list is
-updated keeping a fixed order: <terminal_host_id><uicc_id><ese_id>.
+NCI_HCI_IDENTITY_MGMT_GATE might be useful to get information for example
+about hardware or firmware version.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st-nci/se.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/nfc/st-nci/se.c    | 3 +++
+ include/net/nfc/nci_core.h | 1 +
+ 2 files changed, 4 insertions(+)
 
 diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
-index 3059baa..1cc24b6 100644
+index 11e49a5..5d1747d 100644
 --- a/drivers/nfc/st-nci/se.c
 +++ b/drivers/nfc/st-nci/se.c
-@@ -423,7 +423,7 @@ static int st_nci_control_se(struct nci_dev *ndev, u8 se_idx,
- 			     u8 state)
- {
- 	struct st_nci_info *info = nci_get_drvdata(ndev);
--	int r;
-+	int r, i;
- 	struct sk_buff *sk_host_list;
- 	u8 host_id;
+@@ -112,6 +112,9 @@ static struct nci_hci_gate st_nci_gates[] = {
+ 	{ST_NCI_DEVICE_MGNT_GATE, ST_NCI_DEVICE_MGNT_PIPE,
+ 					ST_NCI_HOST_CONTROLLER_ID},
  
-@@ -470,7 +470,10 @@ static int st_nci_control_se(struct nci_dev *ndev, u8 se_idx,
- 	if (r != NCI_HCI_ANY_OK)
- 		return r;
++	{NCI_HCI_IDENTITY_MGMT_GATE, NCI_HCI_INVALID_PIPE,
++					ST_NCI_HOST_CONTROLLER_ID},
++
+ 	/* Secure element pipes are created by secure element host */
+ 	{ST_NCI_CONNECTIVITY_GATE, NCI_HCI_DO_NOT_OPEN_PIPE,
+ 					ST_NCI_HOST_CONTROLLER_ID},
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index b2f2e04..377f3de 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -125,6 +125,7 @@ struct nci_conn_info {
  
--	host_id = sk_host_list->data[sk_host_list->len - 1];
-+	for (i = 0; i < sk_host_list->len &&
-+		sk_host_list->data[i] != se_idx; i++)
-+		;
-+	host_id = sk_host_list->data[i];
- 	kfree_skb(sk_host_list);
- 	if (state == ST_NCI_SE_MODE_ON && host_id == se_idx)
- 		return se_idx;
+ /* Gates */
+ #define NCI_HCI_ADMIN_GATE         0x00
++#define NCI_HCI_IDENTITY_MGMT_GATE 0x05
+ #define NCI_HCI_LINK_MGMT_GATE     0x06
+ 
+ /* Pipes */
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
