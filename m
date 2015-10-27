@@ -1,42 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 07/11] pinctrl: use ngpios propety from DT
-Date: Tue, 27 Oct 2015 10:51:57 +0100
-Message-ID: <CACRpkdY1GDs6ypqCiY3iiv3DkfnHchnY+bWPoCqU=_sgn9f5vQ@mail.gmail.com>
-References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
-	<1445233398-27129-8-git-send-email-pramodku@broadcom.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 00/10] Add tune support of Mediatek MMC driver
+Date: Tue, 27 Oct 2015 10:54:04 +0100
+Message-ID: <CAPDyKFprx7UcZ6OypGZfEC_nLOd02bAFMdmxrOcig0ANVKGRwA@mail.gmail.com>
+References: <1445927070-5102-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1445233398-27129-8-git-send-email-pramodku@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Pramod Kumar <pramodku@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1445927070-5102-1-git-send-email-chaotian.jing@mediatek.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Barry Song <baohua@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Lars-Peter Clausen <lars@metafoo.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Howard Chen <ibanezchen@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Kristina Martsenko <kristina.martsenko@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembe>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 19, 2015 at 7:43 AM, Pramod Kumar <pramodku@broadcom.com> wrote:
-
-> Since identical hardware is used in several instances and all pins
-> are not routed to pinctrl hence getting total number of gpios from
-> DT make more sense hence stop using total number of gpios pins from
-> drivers and extract it from DT.
+On 27 October 2015 at 07:24, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> Change in v3:
+> Fix checkpatch errors and warnings for patch 8
+> Split patch 9, make DT parts enabling hw reset separately
 >
-> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> Change in v2:
+> Drop the 400mhz and use assigned-clock-parents to instead
+> Split the original tune patch to several independent patches
+> Re-write the mmc_send_tuning()
+> Fix GPD checksum error
+> Move the HS400 setting to ops->prepare_hs400_tuning()
+> Modify SD driving settings
+>
+> Change in v1:
+> Add DT bindings for eMMC hardware reset
+> Add pinctrl of data strobe pin for HS400 mode
+> Modify eMMC driving settings
+> Add 400mhz source clock for HS400 mode
+> Add eMMC HS200/HS400 mode support
+> Add SD SDR50/SDR104 mode support
+> Add implement of tune function with CMD19/CMD21
+>
+> Chaotian Jing (10):
+>   mmc: core: Add DT bindings for eMMC hardware reset support
+>   mmc: dt-bindings: update Mediatek MMC bindings
+>   mmc: mediatek: make cmd_ints_mask to const
+>   mmc: mediatek: change the argument "ddr" to "timing"
+>   mmc: mediatek: fix got GPD checksum error interrupt when data transfer
+>   mmc: mediatek: add implement of ops->hw_reset()
+>   arm64: dts: mediatek: add eMMC hw reset support
+>   mmc: mmc: extend the mmc_send_tuning()
+>   mmc: mediatek: add HS400 support
+>   arm64: dts: mediatek: add HS200/HS400/SDR50/SDR104 support
+>
+>  Documentation/devicetree/bindings/mmc/mmc.txt    |   1 +
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |  11 +-
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts      |  27 +-
+>  drivers/mmc/core/host.c                          |   2 +
+>  drivers/mmc/core/mmc_ops.c                       |   8 +-
+>  drivers/mmc/host/dw_mmc-exynos.c                 |   4 +-
+>  drivers/mmc/host/dw_mmc.c                        |   2 +-
+>  drivers/mmc/host/dw_mmc.h                        |   2 +-
+>  drivers/mmc/host/mtk-sd.c                        | 304 ++++++++++++++++++++---
+>  drivers/mmc/host/sdhci-esdhc-imx.c               |   6 +-
+>  drivers/mmc/host/sdhci-msm.c                     |   2 +-
+>  drivers/mmc/host/sdhci-sirf.c                    |   2 +-
+>  include/linux/mmc/core.h                         |   2 +-
+>  13 files changed, 322 insertions(+), 51 deletions(-)
+>
+> --
+> 1.8.1.1.dirty
+>
 
-This patch is wrong.
+Chaotian,
 
-Keep this per-compatible code, and only overrid the ngpios
-if and only if:
+I have applied this except the ARM patches (patch7 and patch10) as I
+think those should go via ARM SoC (unless I get acks for them).
 
-- The ngpios is set in the DT node
-- The ngpios in the DT node is *smaller* than the hardware
-  defined number of GPIOs.
+Regarding patch8, it didn't apply since it needed a re-base. This time
+it was trivial to fix, so I decided to pick it up anyway.
 
-ngpios is for restricting the number of available lines due to
-routing etc, not to define what the hardware has, because the
-hardware most certainly have all the lines, it's just that you're
-not using all of them.
+Future wise I also advise you to significantly trim the cc/to list
+when posting patches. Likely what happens when that many people are
+requested for input, is that *none* cares. :-)
 
-Yours,
-Linus Walleij
+Thanks and kind regards!
+Uffe
