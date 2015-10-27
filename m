@@ -1,58 +1,102 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v9 0/9] Goodix touchscreen enhancements
-Date: Tue, 27 Oct 2015 09:15:22 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F105F46@irsmsx105.ger.corp.intel.com>
-References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
- <1445871989.31107.4.camel@hadess.net>
- <20151026182112.GA1800@excalibur.cnev.de>
+From: andrew-ct chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: add document of mediatek efuse driver
+Date: Tue, 27 Oct 2015 17:27:55 +0800
+Message-ID: <1445938075.22398.3.camel@mtksdaap41>
+References: <1444984751-4572-1-git-send-email-andrew-ct.chen@mediatek.com>
+	 <1444984751-4572-2-git-send-email-andrew-ct.chen@mediatek.com>
+	 <562DF8BE.4060205@linaro.org> <20151026102344.GD25308@pengutronix.de>
+	 <562E0698.1000503@linaro.org> <1445923938.15900.15.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20151026182112.GA1800@excalibur.cnev.de>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Karsten Merker <merker@debian.org>, Bastien Nocera <hadess@hadess.net>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445923938.15900.15.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2Fyc3RlbiBNZXJrZXIg
-W21haWx0bzptZXJrZXJAZGViaWFuLm9yZ10NCj4gU2VudDogMjYgT2N0b2JlciwgMjAxNSAyMDoy
-MQ0KPiBUbzogQmFzdGllbiBOb2NlcmE7IFRpcmRlYSwgSXJpbmENCj4gQ2M6IERtaXRyeSBUb3Jv
-a2hvdjsgQWxla3NlaSBNYW1saW47IEthcnN0ZW4gTWVya2VyOyBsaW51eC1pbnB1dEB2Z2VyLmtl
-cm5lbC5vcmc7IE1hcmsgUnV0bGFuZDsgUHVyZGlsYSwgT2N0YXZpYW47IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHY5IDAvOV0gR29vZGl4IHRvdWNoc2NyZWVuIGVuaGFuY2VtZW50cw0KPiAN
-Cj4gT24gTW9uLCBPY3QgMjYsIDIwMTUgYXQgMDQ6MDY6MjlQTSArMDEwMCwgQmFzdGllbiBOb2Nl
-cmEgd3JvdGU6DQo+ID4gT24gTW9uLCAyMDE1LTEwLTEyIGF0IDE4OjI0ICswMzAwLCBJcmluYSBU
-aXJkZWEgd3JvdGU6DQo+IA0KPiA+ID4gdjkgb25seSBhZGRzIEdQSU9MSUIgZGVwZW5kZW5jeSBp
-biBLY29uZmlnIGZvciBwYXRjaCAyOg0KPiA+ID4gIklucHV0OiBnb29kaXggLSByZXNldCBkZXZp
-Y2UgYXQgaW5pdCIuIFRoZXJlIGFyZSBubyBvdGhlciBjb2RlDQo+ID4gPiBjaGFuZ2VzIGZyb20g
-djguDQo+ID4gPg0KPiA+ID4gVGhhbmtzIGZvciB0ZXN0aW5nIHRoZXNlIGNoYW5nZXMsIEJhc3Rp
-ZW4gYW5kIEFsZWtzZWkhDQo+ID4gPg0KPiA+ID4gS2Fyc3RlbiwgdGhlcmUgaXMgbm8gbmVlZCB0
-byByZWJhc2UgeW91ciBzZXJpZXMgb24gdG9wIG9mIHY5Lg0KPiA+DQo+ID4gQXJlIHdlIHdhaXRp
-bmcgb24gYW55dGhpbmcgZWxzZSBiZWZvcmUgbWVyZ2luZyB0aGlzPyBJJ2QgbGlrZSBpdCB0byBi
-ZQ0KPiA+IHNjaGVkdWxlZCB0byBiZSBtZXJnZWQgc28gSSBjYW4gc3RhcnQgZm9jdXNpbmcgb24g
-dGhlIHN1YnNlcXVlbnQgYW5kDQo+ID4gZGVwZW5kZW50IHBhdGNoZXMgZm9yIHRoYXQgc2FtZSBk
-cml2ZXIuDQo+IA0KPiBIZWxsbywNCj4gDQo+IEFGQUlDUyB0aGVyZSBpcyBvbmUgb3BlbiBwb2lu
-dCAoY2YuDQo+IGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtaW5wdXQvbXNnNDE1
-NjcuaHRtbCkgd2hpY2gNCj4gSXJpbmEgd2FudGVkIHRvIGFkZHJlc3MgaW4gYSB2MTAgb2YgdGhl
-IHBhdGNoc2V0IChjZi4NCj4gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1pbnB1
-dC9tc2c0MTY0Mi5odG1sKS4NCj4gDQo+IElyaW5hLCBob3cgYXJlIHlvdXIgcGxhbnMgcmVnYXJk
-aW5nIHRoZSB2MTA/IEl0IHdvdWxkIGJlIHJlYWxseQ0KPiBuaWNlIGlmIHRoZSBwYXRjaGVzIGNv
-dWxkIGdvIGludG8ga2VybmVsIDQuNCwgYnV0IHRoZSBtZXJnZQ0KPiB3aW5kb3cgb3BlbnMgb24g
-dGhlIGNvbWluZyB3ZWVrZW5kLCBzbyB0aGVyZSBpcyBub3QgbXVjaCB0aW1lDQo+IGxlZnQuDQoN
-CkkgY2FuIHNlbmQgdjEwIHdpdGggdGhlIGNoYW5nZSBtZW50aW9uZWQgYWJvdmUgYnkgdGhlIGVu
-ZCBvZiB0aGlzIHdlZWsuDQoNCkhvd2V2ZXIsIGFzIERtaXRyeSBhbHJlYWR5IG1lbnRpb25lZCwg
-dGhlcmUgaXMgYW5vdGhlciBpc3N1ZSB3aXRoDQp0aGUgZ3BpbyBBQ1BJIGxheWVyIHRoYXQgaXMg
-YmxvY2tpbmcgdGhlIGVudGlyZSBwYXRjaHNldC4NCg0KPiANCj4gQmFzdGllbiwgZGlkIHlvdSBo
-YXZlIHRpbWUgdG8gbG9vayBhdCB2MyBvZiB0aGUgYXhpcw0KPiBzd2FwcGluZy9pbnZlcnNpb24g
-c2V0Pw0KPiAoaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1pbnB1dC9tc2c0MTYy
-OC5odG1sKQ0KPiBZb3UgaGFkIGFja2VkIHYyLCBidXQgSSBoYWQgdG8gZG8gc29tZSBzbWFsbCBj
-aGFuZ2VzIHRvIGFkZHJlc3MNCj4gSXJpbmEncyByZXZpZXcgY29tbWVudHMgYWZ0ZXIgeW91IGhh
-ZCBhY2tlZCBpdCwgc28gSSBkaWRuJ3Qgd2FudA0KPiB0byBjYXJyeSB5b3VyICJhY2tlZC1ieSIg
-b24gdG8gdjMgd2l0aG91dCBhbiBvayBmcm9tIHlvdS4NCj4gDQo+IFJlZ2FyZHMsDQo+IEthcnN0
-ZW4NCj4gLS0NCj4gR2VtLiBQYXIuIDI4IEFicy4gNCBCdW5kZXNkYXRlbnNjaHV0emdlc2V0eiB3
-aWRlcnNwcmVjaGUgaWNoIGRlciBOdXR6dW5nDQo+IHNvd2llIGRlciBXZWl0ZXJnYWJlIG1laW5l
-ciBwZXJzb25lbmJlem9nZW5lbiBEYXRlbiBmw7xyIFp3ZWNrZSBkZXINCj4gV2VyYnVuZyBzb3dp
-ZSBkZXIgTWFya3QtIG9kZXIgTWVpbnVuZ3Nmb3JzY2h1bmcuDQo=
+On Tue, 2015-10-27 at 13:32 +0800, andrew-ct chen wrote:
+> On Mon, 2015-10-26 at 10:55 +0000, Srinivas Kandagatla wrote:
+> >=20
+> > On 26/10/15 10:23, Sascha Hauer wrote:
+> > > On Mon, Oct 26, 2015 at 09:56:14AM +0000, Srinivas Kandagatla wro=
+te:
+> > >>
+> > >>
+> > >> On 16/10/15 09:39, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > >>> From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >>>
+> > >>> Add Mediatek MT8173 EFUSE Devicetree binding file
+> > >>>
+> > >>> Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >>
+> > >> Looks good to me, minor comment below.
+> > >>
+> > >> Will queue this for v4.5 once v4.4-rc1 is released.
+> > >>
+> > >>
+> > >>> ---
+> > >>>   .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 +++++=
++++++++++++++++++
+> > >>>   1 file changed, 36 insertions(+)
+> > >>>   create mode 100644 Documentation/devicetree/bindings/nvmem/mt=
+k-efuse.txt
+> > >>>
+> > >>> diff --git a/Documentation/devicetree/bindings/nvmem/mtk-efuse.=
+txt b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+> > >>> new file mode 100644
+> > >>> index 0000000..92edc3d
+> > >>> --- /dev/null
+> > >>> +++ b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+> > >>> @@ -0,0 +1,36 @@
+> > >>> +=3D Mediatek MTK-EFUSE device tree bindings =3D
+> > >>> +
+> > >>> +This binding is intended to represent MTK-EFUSE which is found=
+ in most Mediatek SOCs.
+> > >>> +
+> > >>> +Required properties:
+> > >>> +- compatible: should be "mediatek,mt8173-efuse" or "mediatek,m=
+t8135-efuse"
+> > >>
+> > >> Can we make the compatible more generic for mediatek socs? Like
+> > >> "mediatek,efuse"  Or are they different in each SOC?
+> > >
+> > > While we can add an additional "mediatek,efuse" compatible we sho=
+uld
+> > > always add the most specific compatible first. Otherwise we canno=
+t
+> > > differentiate between SoCs later without changing the device tree=
+=2E
+> > Yes, that=E2=80=99s correct.
+> >=20
+> > AFAIK, Ideally the driver should have more generic compatible strin=
+g=20
+> > unless there is any SOC specific thing, and DT can still use the or=
+der=20
+> > of specific, generic compatible strings. If not we would end up add=
+ing=20
+> > compatible strings into the driver for every new SOC.
+>=20
+> We will modify for generic compatible string like "mediatek,efuse" an=
+d
+> rebase it to v4.4-rc1.
+
+=46or more clearly, we will modify the compatible string to
+"mediatek,mt8173-efuse" and "mediatek,efuse".
+
+>=20
+> >=20
+> > --srini
+> >=20
+> > >
+> > > Sascha
+> > >
+>=20
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
