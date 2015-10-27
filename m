@@ -1,105 +1,55 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 10/17] phy: Add driver for rockchip Display Port PHY
-Date: Tue, 27 Oct 2015 22:23:22 +0100
-Message-ID: <2304066.jCpsGbPbCP@phil>
-References: <1445599415-30856-1-git-send-email-ykk@rock-chips.com> <1445655964-15237-1-git-send-email-ykk@rock-chips.com> <1445655964-15237-5-git-send-email-ykk@rock-chips.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 03/22] of/platform: Point to struct device from device node
+Date: Tue, 27 Oct 2015 16:24:48 -0500
+Message-ID: <CAL_JsqJxqJc=0tDDCxx-2rGLLUVE50u+P3CrvptBCkskHdV2tg@mail.gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1806288.pmhamH8mKQ@vostro.rjw.lan> <CAAObsKBjNZMhKn2bUMmQO8Lvrqfucnf9dXqmbfQ2DbAc6_GvcQ@mail.gmail.com>
+ <3956941.s3nuWak5tq@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445655964-15237-5-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel@li
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3956941.s3nuWak5tq@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 24. Oktober 2015, 11:06:04 schrieb Yakir Yang:
-> Add phy driver for the Rockchip DisplayPort PHY module. This
-> is required to get DisplayPort working in Rockchip SoCs.
-> 
-> Tested-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+On Tue, Oct 27, 2015 at 10:43 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Tuesday, October 27, 2015 03:48:40 PM Tomeu Vizoso wrote:
+>> On 24 October 2015 at 15:57, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> [...]
+>
+>> >
+>> > Well, once that has happened, your new device pointer in the given device_node
+>> > becomes useless.  Why exactly is that fine?
+>>
+>> Why do you think it's useless? It's the device that was registered
+>> from that device_node. The other one just happens to want to point to
+>> the same device_node for whatever other reason, but I don't see how is
+>> that relevant.
+>
+> It is useless as a reverse mapping from OF nodes to devices.  It tells us
+> which device pointing to the given device node has been found first, but
+> that's just it.
+>
+> You can't say whether or not it is special in any way with respect to the
+> other devices hanging out of the same OF node unless you have some additional
+> information on how those devices are related to each other.
 
-> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
-> new file mode 100644
-> index 0000000..4af19af
-> --- /dev/null
-> +++ b/drivers/phy/phy-rockchip-dp.c
-> @@ -0,0 +1,153 @@
-> +/*
-> + * Rockchip DP PHY driver
-> + *
-> + * Copyright (C) 2015 FuZhou Rockchip Co., Ltd.
-> + * Author: Yakir Yang <ykk@@rock-chips.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clk.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define GRF_SOC_CON12                   0x0274
-> +#define GRF_EDP_REF_CLK_SEL_INTER	BIT(4)
-> +#define GRF_EDP_PHY_SIDDQ_WRITE_EN      BIT(21)
-> +#define GRF_EDP_PHY_SIDDQ_ON            0
-> +#define GRF_EDP_PHY_SIDDQ_OFF           BIT(5)
+As Tomeu says this struct device is the one created from scanning the
+DT. There should never be more than one. Now some drivers create sub
+devices and maybe they set the DT node on the child devices, but that
+is wrong. Doing that would also break the current code:
 
-mixed spacers (tabs and spaces), please use either tabs if you want to
-align stuff or a single space.
+struct platform_device *of_find_device_by_node(struct device_node *np)
+{
+        struct device *dev;
 
-Also you're mixing the handling here, for SIDDQ you're defining both the
-actual bit as well as the write-enable bit, but for CLK_SEL_INTR you're
-hard-coding the 16-bit shift down in the code.
+        dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+        return dev ? to_platform_device(dev) : NULL;
+}
 
-You could also just use/copy the HIWORD_MASK macro we use for example
-in the clock controller.
+I can't think of any other possible cases.
 
-
-> +
-> +struct rockchip_dp_phy {
-> +	struct device  *dev;
-> +	struct regmap  *grf;
-> +	struct clk     *phy_24m;
-> +};
-> +
-> +static int rockchip_set_phy_state(struct phy *phy, bool enable)
-> +{
-> +	struct rockchip_dp_phy *dp = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	if (enable) {
-> +		ret = regmap_write(dp->grf, GRF_SOC_CON12,
-> +				   GRF_EDP_PHY_SIDDQ_WRITE_EN |
-> +				   GRF_EDP_PHY_SIDDQ_ON);
-> +		if (ret < 0) {
-> +			dev_err(dp->dev, "Can't enable PHY power %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		ret = clk_prepare_enable(dp->phy_24m);
-> +
-
-unnecessary empty line after clk_prepare_enable
-
-
-with these things fixed,
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-
-Cheers,
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
