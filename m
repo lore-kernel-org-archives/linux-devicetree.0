@@ -1,415 +1,199 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH v12 3/6] fpga: add simple-fpga-bus
-Date: Tue, 27 Oct 2015 17:09:12 -0500
-Message-ID: <1445983755-24007-4-git-send-email-atull@opensource.altera.com>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v12 0/8] PCI: hisi: Add PCIe host support for HiSilicon
+ SoC Hip05
+Date: Tue, 27 Oct 2015 17:32:57 -0500
+Message-ID: <20151027223257.GA3786@localhost>
+References: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, jingoohan1@gmail.com, pratyush.anand@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, james.morse@arm.com, Liviu.Dudau@arm.com, jason@lakedaemon.net, robh@kernel.org, gabriel.fernandez@linaro.org, Minghuan.Lian@freescale.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
+Hi Zhou,
 
-The Simple FPGA bus uses the FPGA Manager Framework and the
-FPGA Bridge Framework to provide a manufactorer-agnostic
-interface for reprogramming FPGAs that is Device Tree
-Overlays-based.
+On Mon, Oct 26, 2015 at 07:35:42PM +0800, Zhou Wang wrote:
+> This patchset adds PCIe host support for HiSilicon SoC Hip05. The PCIe hosts
+> use PCIe IP core from Synopsys, So this driver is based on designware PCIe driver.
+> 
+> Hip05 is an ARMv8 architecture SoC. It should be able to use ARM64 PCIe API in
+> designware PCIe driver. So this patch also adds ARM64 support for designware
+> pcie.
+> 
+> This patchset is based on v4.3-rc1.
 
-When a Device Tree Overlay containing a Simple FPGA Bus is
-applied, the Simple FPGA Bus will be probed and will:
- * Disable the FPGA bridges specified in the overlay
- * Reprogram a specified FPGA with a specified image file
- * Enable the specified FPGA bridges
- * Populate the child devices
+OK, this is pretty close to being ready to go.  But the patch ordering is
+more complicated than it needs to be.  You have:
 
-Removing the Device Tree Overlay is also supported.
+  PCI: designware: move calculation of bus addresses to DRA7xx
+  ARM/PCI: remove align_resource in pci_sys_data
+  PCI: designware: Replace DT PCI ranges parse with of_pci_get_host_bridge_resources
+  PCI: designware: Add ARM64 support
+  PCI: designware: Remove *_mod_base
+  PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+  Documentation: DT: Add HiSilicon PCIe host binding
+  MAINTAINERS: Add pcie-hisi maintainer
 
-This supports fpga use where hardware blocks on a fpga will
-need drivers.
+But you should have this:
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
-v9:  initial version (this patch added during rest of patchset's v9)
-v10: request deferral if fpga mgr or bridges not available yet
-     cleanup as fpga manager core goes into the real kernel
-     Don't assume bridges are disabled before programming FPGA
-     Don't hang onto reference for fpga manager
-     Move to staging/simple-fpga-bus
-v11: No change in this patch for v11 of the patch set
-v12: Moved out of staging.
-     Use fpga bridges framework.
----
- drivers/fpga/Kconfig           |    7 +
- drivers/fpga/Makefile          |    3 +
- drivers/fpga/simple-fpga-bus.c |  327 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 337 insertions(+)
- create mode 100644 drivers/fpga/simple-fpga-bus.c
+  PCI: designware: Move calculation of bus addresses to DRA7xx
+  PCI: designware: Remove *_mod_base
+  PCI: designware: Replace DT PCI ranges parse with of_pci_get_host_bridge_resources
+  ARM/PCI: remove align_resource in pci_sys_data
+  PCI: designware: Add ARM64 support
+  PCI: hisi: Add HiSilicon SoC Hip05 driver
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 348e1dea..e8f5453 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -13,6 +13,13 @@ config FPGA
- 
- if FPGA
- 
-+config SIMPLE_FPGA_BUS
-+       bool "Simple FPGA Bus"
-+       depends on OF
-+       help
-+         Simple FPGA Bus allows loading FPGA images under control of
-+	 Device Tree.
-+
- config FPGA_MGR_SOCFPGA
- 	tristate "Altera SOCFPGA FPGA Manager"
- 	depends on ARCH_SOCFPGA
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index bf0c0d2..0385622 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -8,3 +8,6 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
- # FPGA Manager Drivers
- obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
-+
-+# High Level Interfaces
-+obj-$(CONFIG_SIMPLE_FPGA_BUS)		+= simple-fpga-bus.o
-diff --git a/drivers/fpga/simple-fpga-bus.c b/drivers/fpga/simple-fpga-bus.c
-new file mode 100644
-index 0000000..6318cf1
---- /dev/null
-+++ b/drivers/fpga/simple-fpga-bus.c
-@@ -0,0 +1,327 @@
-+/*
-+ * Simple FPGA Bus
-+ *
-+ *  Copyright (C) 2013-2015 Altera Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+
-+/**
-+ * struct simple_fpga_bus - simple fpga bus private data
-+ * @dev:	device from pdev
-+ * @bridges:	FPGA bridges associated with this bus
-+ * @num_bridges: size of the bridges array
-+ */
-+struct simple_fpga_bus {
-+	struct device *dev;
-+	struct fpga_bridge **bridges;
-+	int num_bridges;
-+};
-+
-+/**
-+ * simple_fpga_bus_get_mgr - get associated fpga manager
-+ * @priv: simple fpga bus private data
-+ * pointer to fpga manager in priv->mgr on success
-+ *
-+ * Given a simple fpga bus, get a reference to its the fpga manager specified
-+ * by its "fpga-mgr" device tree property.
-+ *
-+ * Return: 0 if the fpga manager is not specified.
-+ *         pointer to struct fpga_manager if successful.
-+ *         Negative error code otherwise.
-+ */
-+static struct fpga_manager *simple_fpga_bus_get_mgr(
-+					struct simple_fpga_bus *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *mgr_node;
-+
-+	/*
-+	 * Return 0 (not an error) if fpga manager is not specified.
-+	 * This supports the case where fpga was already configured.
-+	 */
-+	mgr_node = of_parse_phandle(np, "fpga-mgr", 0);
-+	if (!mgr_node) {
-+		dev_dbg(dev, "could not find fpga-mgr DT property\n");
-+		return 0;
-+	}
-+
-+	return of_fpga_mgr_get(mgr_node);
-+}
-+
-+/**
-+ * simple_fpga_bus_load_image - load an fpga image under device tree control
-+ * @priv: simple fpga bus private data
-+ *
-+ * Given a simple fpga bus, load the fpga image specified in its device
-+ * tree node.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_load_image(struct simple_fpga_bus *priv,
-+				      struct fpga_manager *mgr)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	u32 flags = 0;
-+	const char *path;
-+
-+	if (of_property_read_bool(np, "partial-reconfig"))
-+		flags |= FPGA_MGR_PARTIAL_RECONFIG;
-+
-+	/* If firmware image is specified in the DT, load it */
-+	if (!of_property_read_string(np, "fpga-firmware", &path))
-+		return fpga_mgr_firmware_load(mgr, flags, path);
-+
-+	/*
-+	 * Here we can add other methods of getting ahold of a fpga image
-+	 * specified in the device tree and programming it.
-+	 */
-+
-+	dev_dbg(dev, "No FPGA image to load.\n");
-+
-+	/* Status is that we have a fpga manager but no image specified. */
-+	return -EINVAL;
-+}
-+
-+/**
-+ * simple_fpga_bus_bridge_enable - enable the fpga bridges
-+ * @priv: simple fpga bus private data
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_bridge_enable(struct simple_fpga_bus *priv)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < priv->num_bridges; i++) {
-+		ret = fpga_bridge_enable(priv->bridges[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_bridge_disable - disable the bridges
-+ * @priv: simple fpga bus private data
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_bridge_disable(struct simple_fpga_bus *priv)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < priv->num_bridges; i++) {
-+		ret = fpga_bridge_disable(priv->bridges[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_get_bridges - get references for fpga bridges
-+ * @priv: simple fpga bus private data
-+ *
-+ * Given a simple fpga bus, get references for its associated fpga bridges.
-+ * These are pointed to by "fpga-bridges" device tree property.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_get_bridges(struct simple_fpga_bus *priv)
-+{
-+	struct device *dev = priv->dev;
-+	struct device_node *np = dev->of_node;
-+	struct of_phandle_args out_args;
-+	struct fpga_bridge *bridge, **bridges;
-+	int i, num_bridges, ret;
-+
-+	num_bridges = of_count_phandle_with_args(np, "fpga-bridges", NULL);
-+	if (!num_bridges) {
-+		dev_info(dev, "No fpga bridges found\n");
-+		return -EINVAL;
-+	}
-+
-+	bridges = kcalloc(num_bridges, sizeof(*bridge), GFP_KERNEL);
-+	if (!bridges)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_bridges; i++) {
-+		ret = of_parse_phandle_with_args(np, "fpga-bridges", NULL, i,
-+						 &out_args);
-+		if (ret)
-+			goto err_free_bridges;
-+
-+		bridge = of_fpga_bridge_get(out_args.np);
-+		if (!bridge) {
-+			dev_err(dev, "No fpga bridge found for phandle\n");
-+			goto err_free_bridges;
-+		}
-+
-+		dev_info(dev, "Found bridge: %s\n", dev_name(&bridge->dev));
-+
-+		bridges[i] = bridge;
-+	}
-+
-+	priv->bridges = bridges;
-+	priv->num_bridges = num_bridges;
-+
-+	return 0;
-+
-+err_free_bridges:
-+	while (i)
-+		fpga_bridge_put(bridges[--i]);
-+
-+	kfree(bridges);
-+	return -EINVAL;
-+}
-+
-+/**
-+ * simple_fpga_bus_put_bridges - release references for the fpga bridges
-+ * @priv: simple fpga bus private data
-+ */
-+static void simple_fpga_bus_put_bridges(struct simple_fpga_bus *priv)
-+{
-+	int i;
-+
-+	for (i = 0; i < priv->num_bridges; i++)
-+		fpga_bridge_put(priv->bridges[i]);
-+
-+	kfree(priv->bridges);
-+	priv->num_bridges = 0;
-+}
-+
-+/**
-+ * simple_fpga_bus_probe - Probe function for simple fpga bus.
-+ * @pdev: platform device
-+ *
-+ * Do the necessary steps to program the FPGA and enable associated bridges.
-+ * Then populate the device tree below this bus to get drivers probed for the
-+ * hardware that is on the FPGA.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+static int simple_fpga_bus_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct simple_fpga_bus *priv;
-+	struct fpga_manager *mgr;
-+	int ret;
-+
-+	pr_err("%s line %d\n", __func__, __LINE__);
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	/*
-+	 * If simple_fpga_bus_get_mgr returns a negative error, the fpga
-+	 * manager may not have probed yet.
-+	 */
-+	mgr = simple_fpga_bus_get_mgr(priv);
-+	if (IS_ERR(mgr))
-+		return -EPROBE_DEFER;
-+
-+	if (mgr) {
-+		ret = simple_fpga_bus_get_bridges(priv);
-+		if (ret) {
-+			ret = -EPROBE_DEFER;
-+			goto err_release_mgr;
-+		}
-+
-+		ret = simple_fpga_bus_bridge_disable(priv);
-+		if (ret)
-+			goto err_release_br;
-+
-+		ret = simple_fpga_bus_load_image(priv, mgr);
-+		if (ret)
-+			goto err_release_br;
-+
-+		ret = simple_fpga_bus_bridge_enable(priv);
-+		if (ret)
-+			goto err_release_br;
-+
-+		fpga_mgr_put(mgr);
-+	}
-+
-+	of_platform_populate(np, of_default_bus_match_table, NULL, dev);
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+
-+err_release_br:
-+	simple_fpga_bus_put_bridges(priv);
-+err_release_mgr:
-+	fpga_mgr_put(mgr);
-+
-+	return ret;
-+}
-+
-+static int simple_fpga_bus_remove(struct platform_device *pdev)
-+{
-+	struct simple_fpga_bus *priv = platform_get_drvdata(pdev);
-+
-+	simple_fpga_bus_bridge_disable(priv);
-+	simple_fpga_bus_put_bridges(priv);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id simple_fpga_bus_of_match[] = {
-+	{ .compatible = "simple-fpga-bus", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, simple_fpga_bus_of_match);
-+
-+static struct platform_driver simple_fpga_bus_driver = {
-+	.probe = simple_fpga_bus_probe,
-+	.remove = simple_fpga_bus_remove,
-+	.driver = {
-+		.name	= "simple-fpga-bus",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(simple_fpga_bus_of_match),
-+	},
-+};
-+
-+static int __init simple_fpga_bus_init(void)
-+{
-+	return platform_driver_register(&simple_fpga_bus_driver);
-+}
-+
-+static void __exit simple_fpga_bus_exit(void)
-+{
-+	platform_driver_unregister(&simple_fpga_bus_driver);
-+}
-+
-+module_init(simple_fpga_bus_init);
-+module_exit(simple_fpga_bus_exit);
-+
-+MODULE_DESCRIPTION("Simple FPGA Bus");
-+MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+In other words,
+
+  - capitalize the subject lines correctly (follow previous practice),
+  - do all the bus address patches together,
+  - then the ARM sysdata tweak,
+  - then add ARM64 support,
+  - then add HiSilicon,
+  - and merge the hisi driver, DT update, and maintainer update into one
+    patch since they're all one package.
+
+If you do them out of order, the changes get tangled up and it makes them
+harder to backport and harder to revert individually.
+
+Bjorn
+
+> Change from v11:
+> - Split 3/6 in v11 to 3/8, 4/8, 5/8 in v12.
+> - Add print in pcie-hisi.c to indicate read/write hardware defect.
+> - Modify macro in 1/8 pointed by Bjorn.
+> 
+> Change from v10:
+> - Remove MSI related setting and VMID/ASID table setting, they will be
+>   implemented in BIOS.
+> - Use module_platform_driver to init pcie-hisi.c
+> - Add necessary comments.
+> 
+> Change from v9:
+> - Use syscon to get subctrl base address.
+> - 5/6 is based on [PATCH v3 0/2] arm64: Support Hisilicon Hip05-D02 board
+>   from Ding Tianhong
+> - Add hisi_pcie_cfg_read in pcie-hisi.c to match
+>   [PATCH v6 0/3] PCI: designware: change dw_pcie_cfg_write() and dw_pcie_cfg_read()
+>   from Gabriele.
+> 
+> Change from v8:
+> - Rebase on v4.3-rc1.
+> - Add Tested-by from Gabriel and Minghuan.
+> - Remove ITS domain parsing in msi_host_init in pcie-hisi.c, no need this as PCI
+>   core does related job. Add ITS base address parsing in msi_host_init.
+> - Change vmid/asid table configuration, previous configuration was wrong.
+> - Add wr_own_conf callback in pcie-hisi.c.
+> - Use subsys_initcall to init hisi PCIe.
+> 
+> Change from v7:
+> - Remove pp->root_bus_nr = 0 in dra7xx, exynos, imx6, keystone, layerscape,
+>   spear13xx. Pass pp->busn->start to pci_create_root_bus as root bus number.
+> - Remove bus-range parsing in pcie-hisi.c.
+> 
+> Change from v6:
+> - Add Pratyush's Acked-by for 1/6 and 2/6.
+> - Add James' Tested-by for 3/6.
+> 
+> Change from v5:
+> - Merge 1/6 in this series, discussion about this can be found in [1]
+> 
+> Change from v4:
+> - Change the author of 1/5 to Gabriele.
+> - Modify problems in 3/5 pointed by Bjorn.
+> - Modify spelling problems in 4/5.
+> 
+> Change from v3:
+> - Change 1/5 to what Gabriele suggested.
+> - Use win->__res.start to get *_mod_base in 2/5, this fix a bug in v3 series.
+> 
+> Change from v2:
+> - Move struct pci_dev *dev and struct pci_sys_data *sys in
+>   pcibios_align_resource in 1/5.
+> - Add Gabriele's codes in 2/5 which delete unnecessary information parse and
+>   use of_pci_get_host_bridge_resources for both ARM32 and ARM64.
+> - Add maintainer patch 5/5.
+> 
+> Change from RFC v1:
+> - Add 1/4 patch by Arnd which removes align_resource callback in ARM
+>   pcibios_align_resource.
+> - Change head file in pcie-designware from asm/hardirq.h to linux/hardirq.h.
+> - Set pp->root_bus_nr = 0 in dra7xx, exynos, imx6, keystone, layerscape,
+>   spear13xx.
+> - Remove unnecessary parentheses of some macros in pcie-hisi.
+> - Use macro to replace some magic values.
+> - Merge two loops together and add some comments about it in context_config
+>   function in pcie-hisi.
+> - Modify some value of items in pcie node example in binding document. 
+> 
+> Change from RFC:
+> - delete dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+>   merge related operations into dw_pcie_host_init.
+> 
+> Link of v11:
+> - https://lkml.org/lkml/2015/10/16/228
+> Link of v10:
+> - http://www.spinics.net/lists/linux-pci/msg45490.html
+> Link of v9:
+> - http://www.spinics.net/lists/linux-pci/msg44545.html
+> Link of v8:
+> - http://www.spinics.net/lists/linux-pci/msg44192.html
+> Link of v7:
+> - http://www.spinics.net/lists/devicetree/msg90690.html
+> Link of v6:
+> - http://www.spinics.net/lists/linux-pci/msg43669.html
+> Link of v5:
+> - http://www.spinics.net/lists/devicetree/msg87959.html
+> Link of v4:
+> - http://www.spinics.net/lists/arm-kernel/msg433050.html
+> Link of v3:
+> - http://www.spinics.net/lists/linux-pci/msg42539.html
+> Link of v2:
+> - http://www.spinics.net/lists/linux-pci/msg41844.html
+> Link of RFC v1:
+> - http://www.spinics.net/lists/linux-pci/msg41305.html
+> Link of RFC:
+> - http://www.spinics.net/lists/linux-pci/msg40434.html
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/359741.html
+> 
+> Zhou Wang (6):
+>   PCI: designware: Replace DT PCI ranges parse with of_pci_get_host_bridge_resources
+>   PCI: designware: Add ARM64 support
+>   PCI: designware: Remove *_mod_base
+>   PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+>   Documentation: DT: Add HiSilicon PCIe host binding
+>   MAINTAINERS: Add pcie-hisi maintainer
+> 
+> gabriele paoloni (2):
+>   PCI: designware: move calculation of bus addresses to DRA7xx
+>   ARM/PCI: remove align_resource in pci_sys_data
+> 
+>  .../bindings/arm/hisilicon/hisilicon.txt           |  17 ++
+>  .../devicetree/bindings/pci/hisilicon-pcie.txt     |  44 ++++
+>  MAINTAINERS                                        |   7 +
+>  arch/arm/include/asm/mach/pci.h                    |   6 -
+>  arch/arm/kernel/bios32.c                           |  12 +-
+>  drivers/pci/host/Kconfig                           |   8 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pci-dra7xx.c                      |   7 +
+>  drivers/pci/host/pci-keystone-dw.c                 |   2 +-
+>  drivers/pci/host/pcie-designware.c                 | 248 +++++++--------------
+>  drivers/pci/host/pcie-designware.h                 |  14 +-
+>  drivers/pci/host/pcie-hisi.c                       | 198 ++++++++++++++++
+>  12 files changed, 377 insertions(+), 187 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-hisi.c
+> 
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
