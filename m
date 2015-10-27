@@ -1,92 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 08/13 v2] clk: add ARM syscon ICST device tree bindings
-Date: Tue, 27 Oct 2015 03:04:46 -0500
-Message-ID: <CAL_JsqJoGXQ88p2mbUKKN7QcKdu-DgB20xc9NiPCuEvtcRdzLA@mail.gmail.com>
-References: <1445866427-14002-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/3] dt-bindings: rockchip-mailbox: Add mailbox
+ controller document on Rockchip SoCs
+Date: Tue, 27 Oct 2015 03:10:59 -0500
+Message-ID: <CAL_JsqLhLsJCAVqFnnjDG1SGyU6Wd2SvXZUoocF4tLcLrVSX0w@mail.gmail.com>
+References: <1445931106-683-1-git-send-email-wxt@rock-chips.com> <1445931106-683-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1445866427-14002-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445931106-683-2-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Jassi Brar <jassisinghbrar@gmail.com>, frank.wang@rock-chips.com, linux-rockchip@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 8:33 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> This adds the device tree bindings for the ARM Syscon ICST
-> oscillators, which is a register-level interface to the
-> Integrated Device Technology (IDT) ICS525 and ICS307
-> serially programmable oscillators.
+On Tue, Oct 27, 2015 at 2:31 AM, Caesar Wang <wxt@rock-chips.com> wrote:
+> This add the necessary binding documentation for mailbox
+> found on RK3368 SoC.
 >
-> Cc: devicetree@vger.kernel.org
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> ---
+>
+> Changes in v1:
+> - PATCH[1/3] doc:
+> - As the Rob Herring comments, s/share/shared/ and specify the value of #mbox-cells.
+> - Move the shared memory in mailbox, let's move the property the client
+>   driver in the future.
 
 Acked-by: Rob Herring <robh@kernel.org>
 
-> ---
-> ChangeLog v1->v2:
-> - Spelling fixes.
 >
-> I'm looking for an ACK from the CLK maintainers to take this
-> through the ARM SoC tree once the series stabilize.
-> ---
->  .../devicetree/bindings/clock/arm-syscon-icst.txt  | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+>  .../bindings/mailbox/rockchip-mailbox.txt          | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
 >
-> diff --git a/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
+> diff --git a/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
 > new file mode 100644
-> index 000000000000..8b7177cecb36
+> index 0000000..b6bb84a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/arm-syscon-icst.txt
-> @@ -0,0 +1,40 @@
-> +ARM System Controller ICST clocks
+> +++ b/Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+> @@ -0,0 +1,32 @@
+> +Rockchip mailbox
 > +
-> +The ICS525 and ICS307 oscillators are produced by Integrated Devices
-> +Technology (IDT). ARM integrated these oscillators deeply into their
-> +reference designs by adding special control registers that manage such
-> +oscillators to their system controllers.
+> +The Rockchip mailbox is used by the Rockchip CPU cores to communicate
+> +requests to MCU processor.
 > +
-> +The ARM system controller contains logic to serialize and initialize
-> +an ICST clock request after a write to the 32 bit register at an offset
-> +into the system controller. Furthermore, to even be able to alter one of
-> +these frequencies, the system controller must first be unlocked by
-> +writing a special token to another offset in the system controller.
-> +
-> +The ICST oscillator must be provided inside a system controller node.
+> +Refer to ./mailbox.txt for generic information about mailbox device-tree
+> +bindings.
 > +
 > +Required properties:
-> +- lock-offset: the offset address into the system controller where the
-> +  unlocking register is located
-> +- vco-offset: the offset address into the system controller where the
-> +  ICST control register is located (even 32 bit address)
-> +- compatible: must be one of "arm,syscon-icst525" or "arm,syscon-icst307"
-> +- #clock-cells: must be <0>
-> +- clocks: parent clock, since the ICST needs a parent clock to derive its
-> +  frequency from, this attribute is compulsory.
+> +
+> + - compatible: should be one of the following.
+> +   - "rockchip,rk3368-mbox" for rk3368
+> + - reg: physical base address of the controller and length of memory mapped
+> +       region.
+> + - interrupts: The interrupt number to the cpu. The interrupt specifier format
+> +       depends on the interrupt controller.
+> + - #mbox-cells: Common mailbox binding property to identify the number
+> +       of cells required for the mailbox specifier. Should be 1
 > +
 > +Example:
+> +--------
 > +
-> +syscon: syscon@10000000 {
-> +       compatible = "syscon";
-> +       reg = <0x10000000 0x1000>;
-> +
-> +       oscclk0: osc0@0c {
-> +               compatible = "arm,syscon-icst307";
-> +               #clock-cells = <0>;
-> +               lock-offset = <0x20>;
-> +               vco-offset = <0x0c>;
-> +               clocks = <&xtal24mhz>;
-> +       };
-> +       (...)
+> +/* RK3368 */
+> +mbox: mbox@ff6b0000 {
+> +       compatible = "rockchip,rk3368-mailbox";
+> +       reg = <0x0 0xff6b0000 0x0 0x1000>,
+> +       interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                    <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+> +       #mbox-cells = <1>;
 > +};
 > --
-> 2.4.3
+> 1.9.1
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
