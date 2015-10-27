@@ -1,55 +1,54 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: watchdog: add binding for Sigma Designs
- SMP8642 watchdog
-Date: Tue, 27 Oct 2015 15:22:49 -0500
-Message-ID: <CAL_Jsq+MYfNCwN1WE6DXGjEsDO1nAX+8S5+dY58Na2Vpge_eBQ@mail.gmail.com>
-References: <1445970861-19832-1-git-send-email-mans@mansr.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 8/9] ARM: dts: Add leds support to STM32F429 Discovery board
+Date: Tue, 27 Oct 2015 21:31:52 +0100
+Message-ID: <CALszF6Bo3x4jWnvDc=28s=517YJrv2=3BuuYmxjqP4ciF17fcQ@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-9-git-send-email-mcoquelin.stm32@gmail.com>
+	<CACRpkdYjq9XqKM4imYsaa_HBopS7uFnbb6gf=hRZHGC4baafAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445970861-19832-1-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYjq9XqKM4imYsaa_HBopS7uFnbb6gf=hRZHGC4baafAg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 1:34 PM, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> wrote:
-> This adds a binding for the watchdog in Sigma Designs SMP8642 and
-> similar devices.
+2015-10-26 14:41 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Sat, Oct 17, 2015 at 7:23 PM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
 >
-> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> (...)
+>> +       leds {
+>> +               compatible = "gpio-leds";
+>> +               red {
+>> +                       gpios = <&gpiog 14 0>;
+>> +               };
+>> +               green {
+>> +                       gpios = <&gpiog 13 0>;
+>> +               };
+>
+> I suggest you add labels to these LEDs.
+>
+> label = "red-LED"
+> label = "green-LED"
+>
+> This make things so much easier in sysfs.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I'm not sure to understand where it makes things easier in sysfs.
+This is the sysfs path for the red led:
+/sys/class/leds/red/
 
-> ---
->  .../devicetree/bindings/watchdog/sigma,8642-wdt.txt        | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/sigma,8642-wdt.txt
+Indeed, if label is not present, it gets the node name.
+
 >
-> diff --git a/Documentation/devicetree/bindings/watchdog/sigma,8642-wdt.txt b/Documentation/devicetree/bindings/watchdog/sigma,8642-wdt.txt
-> new file mode 100644
-> index 0000000..31fef37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/sigma,8642-wdt.txt
-> @@ -0,0 +1,14 @@
-> +Sigma Designs SMP86xx watchdog
-> +
-> +Required properties:
-> +- compatible: Should be "sigma,smp8642-wdt"
-> +- reg: Specifies the physical address region
-> +- clocks: Should be a phandle to the clock
-> +
-> +Example:
-> +
-> +watchdog@1fd00 {
-> +       compatible = "sigma,smp8642-wdt";
-> +       reg = <0x1fd00 8>;
-> +       clocks = <&xtal_in_clk>;
-> +};
-> --
-> 2.6.2
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Usually people also want to add a default linux,trigger to these,
+> like linux,default-trigger = "heartbeat"; but whatever you prefer.
+
+Makes sense, I will add default trigger in next version.
+
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thanks!
+Maxime
