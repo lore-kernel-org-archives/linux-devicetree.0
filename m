@@ -1,46 +1,92 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/3] clk: Broadcom BCM63138 support
-Date: Tue, 27 Oct 2015 16:56:14 -0700
-Message-ID: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v3 2/3] clk: bcm: Add BCM63138 clock support
+Date: Tue, 27 Oct 2015 16:56:16 -0700
+Message-ID: <1445990177-27474-3-git-send-email-f.fainelli@gmail.com>
+References: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+BCM63138 has a simple clocking domain which is primarily the ARMPLL
+clocking complex, from which the ARM (CPU), APB and AXI clocks would be
+derived from.
 
-This patch series adds support for the Broadcom BCM63138 DSL SoCs
-clocking framework.
+Since the ARMPLL controller is entirely compatible with the iProc ARM
+PLL, we just initialize it without additional parameters.
 
-Since the HW is identical to the one found in Broadcom iProc SoCs, but the
-integration is different (obviously), there is still a new compatible string
-introduced just in case we happen to find issues in the future.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v3:
 
-This applies on top of clk/next as of
-679c51cffc3b316bd89ecc91ef92603dd6d4fc68 ("clk: Add stubs for of_clk_*() APIs when CONFIG_OF=n")
+- made default depend on ARCH_BCM_63XX per Stephen Boyd's comment
 
-Since there is an obvious dependency between patch 2 and 3, we can either
-merge this through the Clock tree or via a future arm-soc pull requests
-for Broadcom SoCs.
+Changes in v2:
+- added COMPILE_TEST per Scott Branden's comment
 
-Florian Fainelli (3):
-  clk: iproc: Extend binding to cover BCM63138
-  clk: bcm: Add BCM63138 clock support
-  ARM: dts: BCM63xx: Add ARMPLL device tree nodes
-
- .../bindings/clock/brcm,iproc-clocks.txt           |  5 +++
- arch/arm/boot/dts/bcm63138.dtsi                    | 39 ++++++++++++++++------
- drivers/clk/bcm/Kconfig                            | 10 ++++++
- drivers/clk/bcm/Makefile                           |  1 +
- drivers/clk/bcm/clk-bcm63xx.c                      | 22 ++++++++++++
- 5 files changed, 67 insertions(+), 10 deletions(-)
+ drivers/clk/bcm/Kconfig       | 10 ++++++++++
+ drivers/clk/bcm/Makefile      |  1 +
+ drivers/clk/bcm/clk-bcm63xx.c | 22 ++++++++++++++++++++++
+ 3 files changed, 33 insertions(+)
  create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
 
+diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+index 85260fb96b36..f2878459199a 100644
+--- a/drivers/clk/bcm/Kconfig
++++ b/drivers/clk/bcm/Kconfig
+@@ -1,3 +1,13 @@
++config CLK_BCM_63XX
++	bool "Broadcom BCM63xx clock support"
++	depends on ARCH_BCM_63XX || COMPILE_TEST
++	depends on COMMON_CLK
++	select COMMON_CLK_IPROC
++	default ARCH_BCM_63XX
++	help
++	  Enable common clock framework support for Broadcom BCM63xx DSL SoCs
++	  based on the ARM architecture
++
+ config CLK_BCM_KONA
+ 	bool "Broadcom Kona CCU clock support"
+ 	depends on ARCH_BCM_MOBILE || COMPILE_TEST
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index 3fc95060d875..247c26750d8b 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -1,3 +1,4 @@
++obj-$(CONFIG_CLK_BCM_63XX)	+= clk-bcm63xx.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
+diff --git a/drivers/clk/bcm/clk-bcm63xx.c b/drivers/clk/bcm/clk-bcm63xx.c
+new file mode 100644
+index 000000000000..fbc17ae5ff2b
+--- /dev/null
++++ b/drivers/clk/bcm/clk-bcm63xx.c
+@@ -0,0 +1,22 @@
++/*
++ * Copyright (C) 2015 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/init.h>
++#include <linux/clk-provider.h>
++#include <linux/of.h>
++#include "clk-iproc.h"
++
++static void __init bcm63138_armpll_init(struct device_node *node)
++{
++	iproc_armpll_setup(node);
++}
++CLK_OF_DECLARE(bcm63138_armpll, "brcm,bcm63138-armpll", bcm63138_armpll_init);
 -- 
 2.1.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
