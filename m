@@ -1,53 +1,84 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Tue, 27 Oct 2015 09:23:19 -0500
-Message-ID: <562F88D7.6030505@ti.com>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
- <20151022164724.GZ8232@sirena.org.uk> <562A2C2F.1020808@ti.com>
- <20151023231822.GQ29919@sirena.org.uk> <562ACCCC.503@ti.com>
- <20151024221457.GS29919@sirena.org.uk> <562D3F77.5040205@ti.com>
- <20151026004320.GU29919@sirena.org.uk> <562E4B1D.4060205@ti.com>
- <20151027001608.GJ28319@sirena.org.uk>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v12 0/6] Altera PCIe host controller driver with MSI
+ support
+Date: Tue, 27 Oct 2015 09:26:44 -0500
+Message-ID: <20151027142644.GA8660@localhost>
+References: <1445596035-27733-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151027001608.GJ28319-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445596035-27733-1-git-send-email-lftan@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/26/2015 07:16 PM, Mark Brown wrote:
-> On Mon, Oct 26, 2015 at 10:47:41AM -0500, Andrew F. Davis wrote:
->> On 10/25/2015 07:43 PM, Mark Brown wrote:
->
->>>> .of_compatible = "mediatek,mt6397-regulator",
->
->>> This is in the MFD, this is not used in actual systems.
->
->> Not sure what you mean by "actual systems", it looks like these
->> use it?:
->
->> arch/arm/boot/dts/mt8135-evbp1.dts
->> arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->
-> To repeat: the regulator driver does not register a compatible string
-> for the device for device model probing.
->
->> I understand this, I thought we are talking about compatible strings in
->> the regulator sub-node, not how the core instantiates the sub-driver.
->
-> No, this exactly about how the device model devices are instantiated.
->
+Hi Ley,
 
-Ahh, I see, this makes more sense then, I'll re-spin this matching on
-platform name.
+On Fri, Oct 23, 2015 at 06:27:09PM +0800, Ley Foon Tan wrote:
+> This is the 12th version of patch set to add support for Altera PCIe host
+> controller with MSI feature on Altera FPGA device families. This patchset
+> mainly resovle the comments from Bjorn.
+> 
+> 
+> This patchset is based on v4.3-rc6.
+> 
+> v11->v12 changes:
+> - pcie-altera: use DECLARE_PCI_FIXUP_EARLY for pcie retrain fixup
+> - pcie-altera: move pcie_bus_configure_settings before pci_bus_add_devices
+> - pcie-altera: add %d for irq bit in dev_err()
+> - pcie-altera: prevent enumeration of root complex resources in config accessors
+> - Documentation: add Acked-by from Rob Herring
+> 
+> History:
+> -------
+> [v1]: https://lkml.org/lkml/2015/7/28/395
+> [v2]: https://lkml.org/lkml/2015/7/31/267
+> [v3]: http://www.kernelhub.org/?msg=811940&p=2
+> [v4]: https://lkml.org/lkml/2015/8/17/141
+> [v5]: https://lkml.org/lkml/2015/8/25/238
+> [v6]: https://lkml.org/lkml/2015/9/1/177
+> [v7]: https://lkml.org/lkml/2015/9/20/193
+> [v8]: http://www.kernelhub.org/?msg=853553&p=2
+> [v9]: https://lkml.org/lkml/2015/10/13/998
+> [v10]: https://lkml.org/lkml/2015/10/19/139
+> [v11]: https://lkml.org/lkml/2015/10/22/206
+> 
+> 
+> Ley Foon Tan (6):
+>   arm: add msi.h to Kbuild
+>   pci: add Altera PCI vendor ID
+>   pci:host: Add Altera PCIe host controller driver
+>   pci: altera: Add Altera PCIe MSI driver
+>   Documentation: dt-bindings: pci: altera pcie device tree binding
+>   MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+> 
+>  .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
+>  .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+>  MAINTAINERS                                        |  16 +
+>  arch/arm/include/asm/Kbuild                        |   1 +
+>  drivers/pci/host/Kconfig                           |  16 +
+>  drivers/pci/host/Makefile                          |   2 +
+>  drivers/pci/host/pcie-altera-msi.c                 | 314 +++++++++++
+>  drivers/pci/host/pcie-altera.c                     | 580 +++++++++++++++++++++
+>  include/linux/pci_ids.h                            |   2 +
+>  9 files changed, 1008 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
+>  create mode 100644 drivers/pci/host/pcie-altera.c
 
-Apologies about all this noise. :)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I applied these to pci/host-altera for v4.4, thanks!
+
+I squashed these into three patches:
+
+  - add msi.h to Kbuild
+  - add Altera host driver (including DT binding and MAINTAINERS update)
+  - add Altera MSI driver (including DT binding and MAINTAINERS update)
+
+Since the convention is to add PCI ID #defines only when they are used in
+multiple places, I replaced PCI_VENDOR_ID_ALTERA with 0x1172 in the single
+place it is used.
+
+Bjorn
