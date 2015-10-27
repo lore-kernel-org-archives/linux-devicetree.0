@@ -1,45 +1,42 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] mtd: ofpart: update devicetree binding
- specification
-Date: Tue, 27 Oct 2015 15:50:00 -0700
-Message-ID: <20151027225000.GA64073@google.com>
-References: <cover.1439911625.git.hramrach@gmail.com>
- <e47db0c8eeaeb11353bcb2f4dcd138e813c3ecd7.1439911625.git.hramrach@gmail.com>
- <20151011200402.GE3696@localhost>
- <CAL_JsqJ4Ha7R92=6xkwYXZjpEprjWoVxyXM6cG=yykVoTMH-vw@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 03/19] rtc: opal: enable support for the stardard
+ "wakeup-source" property
+Date: Tue, 27 Oct 2015 23:53:04 +0100
+Message-ID: <20151027225304.GI22331@piout.net>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+ <1445422216-29375-4-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ4Ha7R92=6xkwYXZjpEprjWoVxyXM6cG=yykVoTMH-vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1445422216-29375-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review.
-
-On Mon, Oct 26, 2015 at 11:35:24PM -0500, Rob Herring wrote:
-> On Sun, Oct 11, 2015 at 3:04 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi DT maintainers,
-> >
-> > It's a bit hypocritical of me, since I've been a slow reviewer as well,
-> > but... can we get some review on this one? Usually, I'm comfortable
-> > taking driver DT bindings without your review, but this one is a bit
-> > more generic and is more far-reaching than the average driver.
+On 21/10/2015 at 11:10:00 +0100, Sudeep Holla wrote :
+> Though the opal rtc driver should and will continue to support the legacy
+> "has-tpo" property to enable RTC as the wakeup source, we need to add
+> support for the new standard property "wakeup-source"
 > 
-> Sorry, missed this one. This would be a good one to send to
-> devicetree-spec to BTW.
+> This patch adds support for "wakeup-source" property in addition to the
+> existing "has-tpo" property.
+> 
+> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/rtc/rtc-opal.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+Applied, thanks.
 
-I'm not very familiar with that list. With the intention of getting into
-an ePAPR (or similar) spec? Or just for additional review? If the
-former, would you suggest codifying both the old and the new, or just
-the new?
-
-Brian
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
