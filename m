@@ -1,12 +1,12 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 6/6] ARM: dts: sun8i: Add Orange Pi Plus support
-Date: Tue, 27 Oct 2015 17:50:26 +0100
-Message-ID: <1445964626-6484-7-git-send-email-jenskuske@gmail.com>
+Subject: [PATCH v4 2/6] clk: sunxi: Add H3 clocks support
+Date: Tue, 27 Oct 2015 17:50:22 +0100
+Message-ID: <1445964626-6484-3-git-send-email-jenskuske@gmail.com>
 References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBB2WWX2YQKGQEKWQWVTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBZGWX2YQKGQEH2BORFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1445964626-6484-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,115 +19,217 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Orange Pi Plus is a SBC based on the Allwinner H3 SoC
-with 8GB eMMC, multiple USB ports through a USB hub chip, SATA through
-a USB-SATA bridge, one uSD slot, a 10/100/1000M ethernet port,
-WiFi, HDMI, headphone jack, IR receiver, a microphone, a CSI connector
-and a 40-pin GPIO header.
+The H3 clock control unit is similar to the those of other sun8i family
+members like the A23.
+
+It adds a new bus gates clock similar to the simple gates, but with a
+different parent clock for each single gate.
+Some of the gates use the new AHB2 clock as parent, whose clock source
+is muxable between AHB1 and PLL6/2. The documentation isn't totally clear
+about which devices belong to AHB2 now, especially USB EHIC/OHIC, so it
+is mostly based on Allwinner kernel source code.
 
 Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                   |  3 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 77 ++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+ Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
+ drivers/clk/sunxi/Makefile                        |   1 +
+ drivers/clk/sunxi/clk-sun8i-bus-gates.c           | 111 ++++++++++++++++++++++
+ drivers/clk/sunxi/clk-sunxi.c                     |   9 +-
+ 4 files changed, 122 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/sunxi/clk-sun8i-bus-gates.c
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 78ade1a..476658d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -645,7 +645,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a33-ga10h-v1.1.dtb \
- 	sun8i-a33-ippo-q8h-v1.2.dtb \
- 	sun8i-a33-q8-tablet.dtb \
--	sun8i-a33-sinlinx-sina33.dtb
-+	sun8i-a33-sinlinx-sina33.dtb \
-+	sun8i-h3-orangepi-plus.dtb
- dtb-$(CONFIG_MACH_SUN9I) += \
- 	sun9i-a80-optimus.dtb \
- 	sun9i-a80-cubieboard4.dtb
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 8a47b77..d303dec 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -28,6 +28,7 @@ Required properties:
+ 	"allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
+ 	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
+ 	"allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
++	"allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
+ 	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
+ 	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+ 	"allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
+@@ -55,6 +56,7 @@ Required properties:
+ 	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
+ 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+ 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
++	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
+ 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+ 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+ 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
+diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+index cb4c299..f520af6 100644
+--- a/drivers/clk/sunxi/Makefile
++++ b/drivers/clk/sunxi/Makefile
+@@ -10,6 +10,7 @@ obj-y += clk-a10-pll2.o
+ obj-y += clk-a20-gmac.o
+ obj-y += clk-mod0.o
+ obj-y += clk-simple-gates.o
++obj-y += clk-sun8i-bus-gates.o
+ obj-y += clk-sun8i-mbus.o
+ obj-y += clk-sun9i-core.o
+ obj-y += clk-sun9i-mmc.o
+diff --git a/drivers/clk/sunxi/clk-sun8i-bus-gates.c b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
 new file mode 100644
-index 0000000..e67df59
+index 0000000..ad605fa
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -0,0 +1,77 @@
++++ b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
+@@ -0,0 +1,111 @@
 +/*
 + * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
++ * Based on clk-simple-gates.c, which is:
++ * Copyright 2015 Maxime Ripard
 + *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
++ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 + *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-common-regulators.dtsi"
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
++static DEFINE_SPINLOCK(gates_lock);
 +
-+/ {
-+	model = "Xunlong Orange Pi Plus";
-+	compatible = "xunlong,orangepi-plus", "allwinner,sun8i-h3";
++static void __init sun8i_h3_bus_gates_init(struct device_node *node)
++{
++	const char *clocks[] = { "ahb1", "ahb2", "apb1", "apb2" };
++	enum { AHB1, AHB2, APB1, APB2 } clk_parent;
++	struct clk_onecell_data *clk_data;
++	const char *clk_name;
++	struct property *prop;
++	struct resource res;
++	void __iomem *clk_reg;
++	void __iomem *reg;
++	const __be32 *p;
++	int number, i;
++	u8 clk_bit;
++	u32 index;
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
++	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
++	if (IS_ERR(reg))
++		return;
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++	for (i = 0; i < ARRAY_SIZE(clocks); i++) {
++		index = of_property_match_string(node, "clock-names", clocks[i]);
++		if (index < 0)
++			return;
++
++		clocks[i] = of_clk_get_parent_name(node, index);
++	}
++
++	clk_data = kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
++	if (!clk_data)
++		goto err_unmap;
++
++	number = of_property_count_u32_elems(node, "clock-indices");
++	of_property_read_u32_index(node, "clock-indices", number - 1, &number);
++
++	clk_data->clks = kcalloc(number + 1, sizeof(struct clk *), GFP_KERNEL);
++	if (!clk_data->clks)
++		goto err_free_data;
++
++	i = 0;
++	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
++		of_property_read_string_index(node, "clock-output-names",
++					      i, &clk_name);
++
++		if (index == 17 || (index >= 29 && index <= 31))
++			clk_parent = AHB2;
++		else if (index <= 63 || index >= 128)
++			clk_parent = AHB1;
++		else if (index >= 64 && index <= 95)
++			clk_parent = APB1;
++		else if (index >= 96 && index <= 127)
++			clk_parent = APB2;
++
++		clk_reg = reg + 4 * (index / 32);
++		clk_bit = index % 32;
++
++		clk_data->clks[index] = clk_register_gate(NULL, clk_name,
++							  clocks[clk_parent], 0,
++							  clk_reg,
++							  clk_bit,
++							  0, &gates_lock);
++		i++;
++
++		if (IS_ERR(clk_data->clks[index])) {
++			WARN_ON(true);
++			continue;
++		}
++	}
++
++	clk_data->clk_num = number + 1;
++	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
++
++	return;
++
++err_free_data:
++	kfree(clk_data);
++err_unmap:
++	iounmap(reg);
++	of_address_to_resource(node, 0, &res);
++	release_mem_region(res.start, resource_size(&res));
++}
++
++CLK_OF_DECLARE(sun8i_h3_bus_gates, "allwinner,sun8i-h3-bus-gates-clk",
++	       sun8i_h3_bus_gates_init);
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 270de42..6293c65 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -769,6 +769,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
+ 	.shift = 12,
+ };
+ 
++static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
++	.shift = 0,
 +};
 +
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
+ static void __init sunxi_mux_clk_setup(struct device_node *node,
+ 				       struct mux_data *data)
+ {
+@@ -945,10 +949,11 @@ static const struct divs_data pll6_divs_data __initconst = {
+ 
+ static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
+ 	.factors = &sun6i_a31_pll6_data,
+-	.ndivs = 2,
++	.ndivs = 3,
+ 	.div = {
+ 		{ .fixed = 2 }, /* normal output */
+ 		{ .self = 1 }, /* base factor clock, 2x */
++		{ .fixed = 4 }, /* divided output, /2 */
+ 	}
+ };
+ 
+@@ -1146,6 +1151,7 @@ static const struct of_device_id clk_divs_match[] __initconst = {
+ static const struct of_device_id clk_mux_match[] __initconst = {
+ 	{.compatible = "allwinner,sun4i-a10-cpu-clk", .data = &sun4i_cpu_mux_data,},
+ 	{.compatible = "allwinner,sun6i-a31-ahb1-mux-clk", .data = &sun6i_a31_ahb1_mux_data,},
++	{.compatible = "allwinner,sun8i-h3-ahb2-clk", .data = &sun8i_h3_ahb2_mux_data,},
+ 	{}
+ };
+ 
+@@ -1228,6 +1234,7 @@ CLK_OF_DECLARE(sun6i_a31_clk_init, "allwinner,sun6i-a31", sun6i_init_clocks);
+ CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
+ CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
+ CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
++CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
+ 
+ static void __init sun9i_init_clocks(struct device_node *node)
+ {
 -- 
 2.6.2
