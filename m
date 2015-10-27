@@ -1,79 +1,60 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] regulator, dt: add dt support for tps6502x regulator
-Date: Tue, 27 Oct 2015 16:26:19 +0900
-Message-ID: <20151027072619.GT28319@sirena.org.uk>
-References: <1445858717-12707-1-git-send-email-hs@denx.de>
- <20151027021250.GR28319@sirena.org.uk>
- <562F184D.8000907@denx.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fqIB0bRxfTYxTb/F"
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v1 0/3] mailbox: rockchip: Add mailbox driver for Rockchip platform
+Date: Tue, 27 Oct 2015 15:31:43 +0800
+Message-ID: <1445931106-683-1-git-send-email-wxt@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <562F184D.8000907-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Mailbox is used by the Rockchip CPU cores to communicate
+requests to MCU processor.
 
---fqIB0bRxfTYxTb/F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This driver is found on RK3368 SoCs.
 
-On Tue, Oct 27, 2015 at 07:23:09AM +0100, Heiko Schocher wrote:
-> Am 27.10.2015 um 03:12 schrieb Mark Brown:
+The Mailbox module is a simple APB peripheral that allows both
+the Cortex-A53 MCU system to communicate by writing operation to
+generate interrupt.
+The registers are accessible by both CPU via APB interface.
 
-> >Please use subject lines matching the style for the subsystem.
+Tested on RK3368 SDK board.
 
-> Would be "regulator: tps6520x:" correct?
 
-Yes.
+Changes in v1:
+- PATCH[1/3] doc:
+- As the Rob Herring comments, s/share/shared/ and specify the value of #mbox-cells.
+- Move the shared memory in mailbox, let's move the property the client
+  driver in the future.
+- PATCH[2/3] driver:
+- The commit: %s/@/(num order).
+- Add the module authors to instead of the notes.
+- Add the COMPILE_TEST to auto compile test in Kconfig.
+- Let the chan_to_idx() trys to instead of rockchip_mbox_chan.idx.
+- Let's enable/disable the interrupt in startup/shutdown.
+- Move the share memory and tx buf into the client drivers.
+- PATCH[3/3] dts:
+- fix "processormZ"--> "processor",the miss-fingerboard.
+- Remove the shared memory in mailbox controller dtsi.
 
-> >>+	regulators = of_get_child_by_name(np, "regulators");
-> >>+	if (!regulators) {
-> >>+		dev_err(dev, "regulator node not found\n");
-> >>+		return NULL;
-> >>+	}
+Caesar Wang (3):
+  dt-bindings: rockchip-mailbox: Add mailbox controller document on
+    Rockchip SoCs
+  mailbox: rockchip: Add Rockchip mailbox driver
+  ARM64: dts: rk3368: Add mailbox device nodes
 
-> >Please use the generic support for locating the DT information for
-> >regulators using regulators_node and of_match in the regulator_desc
-> >rather than open coding this.
+ .../bindings/mailbox/rockchip-mailbox.txt          |  32 +++
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  12 +
+ drivers/mailbox/Kconfig                            |   9 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/rockchip-mailbox.c                 | 286 +++++++++++++++++++++
+ 5 files changed, 341 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/rockchip-mailbox.txt
+ create mode 100644 drivers/mailbox/rockchip-mailbox.c
 
-> Hmm.. could you point me to a correct example? Seems I overlook sth.
+-- 
+1.9.1
 
-$ grep -l regulators_node drivers/regulator/*.c
-drivers/regulator/88pm800.c
-drivers/regulator/axp20x-regulator.c
-drivers/regulator/da9062-regulator.c
-drivers/regulator/isl9305.c
-drivers/regulator/max14577.c
-drivers/regulator/max77686.c
-drivers/regulator/max77693.c
-drivers/regulator/max77802.c
-drivers/regulator/mt6311-regulator.c
-drivers/regulator/of_regulator.c
-drivers/regulator/rn5t618-regulator.c
-drivers/regulator/rt5033-regulator.c
-drivers/regulator/sky81452-regulator.c
-drivers/regulator/tps65217-regulator.c
-
---fqIB0bRxfTYxTb/F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWLycYAAoJECTWi3JdVIfQoRQH/2CYAyZzzlMXtAPp7O98aTVK
-9e+8OAoC4dLOBxQPzE0Qr74WqEiRSMIIJ2MIKJC7nIKxZRgPKnBVdMMuCB1He41C
-8OLMCqQZnT7lsikfssEoCNJ8OCamR206HnVXNCUQWktPg+a4AnLaNHLDbnTmf6lG
-oKHdNFJW50Q9B7/1kWfQMo06r3Byc7+sTt5oFaprrgsV+aPTAiOc91MVgExkLZSY
-UA0Atay1Uw9NKYWBE9XGmCyjO51jhKzWeQUp8rK5LbJ/oqTQ4LYt/2kl0mibQfkb
-JuS4Jwul1uTezWDOMh3UN5+O/GADE0jErNxUI2iGWZKad1yTAym+GsvyBkOPDA4=
-=FwsK
------END PGP SIGNATURE-----
-
---fqIB0bRxfTYxTb/F--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
