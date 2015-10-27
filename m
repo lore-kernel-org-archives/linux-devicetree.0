@@ -1,45 +1,88 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] ARM: sunxi: Introduce Allwinner H3 support
-Date: Tue, 27 Oct 2015 19:04:05 +0100
-Message-ID: <20151027190405.ce1dd36f952269e0c23e4b52@free.fr>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
+From: Stuart Yoder <stuart.yoder@freescale.com>
+Subject: RE: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A
+ SoC
+Date: Tue, 27 Oct 2015 18:25:04 +0000
+Message-ID: <CY1PR0301MB07480A8EC25BB6987883AE5687220@CY1PR0301MB0748.namprd03.prod.outlook.com>
+References: <1445650280-9966-1-git-send-email-German.Rivera@freescale.com>
+ <20151027163441.GK3091@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBGHZX2YQKGQEM765IKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445964626-6484-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151027163441.GK3091@leverpostej>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sharma Bhupesh <bhupesh.sharma@freescale.com>, Li Leo <LeoLi@freescale.com>, Jose Rivera <German.Rivera@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Oct 2015 17:50:20 +0100
-Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+I think that comment "Currently supported enable-method is psci v0.2" is a statement of
+intent, not what is available currently.   And the only plan I am aware of is PSCI
+with UEFI based firmware.
 
-> Changes since v3:
-> - add a clock driver specific to the bus gates instead of listing parents=
- in
->   the DTSI
-> - skip the holes in the reset controller with of_xlate()
+U-boot is a key firmware platform for us and has no PSCI implementation available.
 
-Hi, Maxime, there we are :(. The H3 description is hardcoded and the
-next SoCs will ask for more and more code. I wonder what is the use of
-a DT...
+So, we need this.  The device tree simply describes the hardware that is
+there and that's what this patch exposes.
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+If down the road all firmware provides a PSCI based reset interface then
+we will naturally use that.  But we need something in the meantime to
+let us reboot the system.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Stuart
+
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: Tuesday, October 27, 2015 11:35 AM
+> To: Rivera Jose-B46482
+> Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Sharma Bhupesh-B45370; Yoder Stuart-B08248; Li Yang-Leo-R58472
+> Subject: Re: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
+> 
+> On Fri, Oct 23, 2015 at 08:31:20PM -0500, J. German Rivera wrote:
+> > Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
+> > the ARM-generic reboot mechanism for this SoC. This mechanism
+> > is enabled through CONFIG_POWER_RESET_SYSCON.
+> 
+> Per the comments in arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi, the
+> platform has PSCI 0.2+, and therefore already has system reset
+> functionality.
+> 
+> Given that, why is this necessary?
+> 
+> Thanks,
+> Mark.
+> 
+> > Signed-off-by: J. German Rivera <German.Rivera@freescale.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi b/arch/arm64/boot/dts/freescale/fsl-
+> ls2085a.dtsi
+> > index e281ceb..6f82163 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+> > @@ -131,6 +131,18 @@
+> >  		interrupts = <1 9 0x4>;
+> >  	};
+> >
+> > +	rst_ccsr: rstccsr@1E60000 {
+> > +	        compatible = "syscon";
+> > +		reg = <0x0 0x1E60000 0x0 0x10000>;
+> > +	};
+> > +
+> > +	reboot@65024000 {
+> > +		compatible ="syscon-reboot";
+> > +		regmap = <&rst_ccsr>;
+> > +		offset = <0x0>;
+> > +		mask = <0x2>;
+> > +	};
+> > +
+> >  	timer {
+> >  		compatible = "arm,armv8-timer";
+> >  		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
+> > --
+> > 2.3.3
+> >
