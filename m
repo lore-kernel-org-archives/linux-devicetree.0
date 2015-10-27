@@ -1,59 +1,46 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 2/5] mtd: mtdpart: Do not fail mtd probe when parsing
- partitions fails.
-Date: Mon, 26 Oct 2015 18:44:48 -0700
-Message-ID: <20151027014448.GN13239@google.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] mtd: ofpart: document the lock flag.
+Date: Mon, 26 Oct 2015 18:47:05 -0700
+Message-ID: <20151027014705.GO13239@google.com>
 References: <cover.1439911625.git.hramrach@gmail.com>
- <97366073dfe93b478f24e2fc30ca818326906e0a.1439911625.git.hramrach@gmail.com>
- <20151011200347.GD3696@localhost>
+ <83fbf31ad895446837f8e01f77a1ff7c63d62251.1439911625.git.hramrach@gmail.com>
+ <20151011200412.GF3696@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151011200347.GD3696@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+In-Reply-To: <20151011200412.GF3696@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 11, 2015 at 01:03:47PM -0700, Brian Norris wrote:
-> All in all, I think my suggestions would look something like the
-> following alternative patch. I haven't tested it yet.
+On Sun, Oct 11, 2015 at 01:04:12PM -0700, Brian Norris wrote:
+> On Tue, Aug 18, 2015 at 03:34:08PM -0000, Michal Suchanek wrote:
+> > The lock flag of ofpart is undocumented. Add to binding doc.
 > 
-> Brian
+> Good catch. There are a lot of small corners of very old code that never
+> really got reviewed properly, I expect...
 > 
-> (git-format-patch pasted below)
+> (And the flag looks very odd. Why exactly is it in the partitions?)
 > 
-> From 53b60f31a2a0f2a7e8220a4aff47457248bccbcf Mon Sep 17 00:00:00 2001
-> From: Brian Norris <computersforpeace@gmail.com>
-> Date: Sun, 11 Oct 2015 10:25:23 -0700
-> Subject: [PATCH] mtd: mtdpart: Do not fail mtd probe when parsing partitions
->  fails.
+> And now that I'm looking further...does this flag even *do* anything?
+> AFAICT, it doesn't set the master device flags -- only the partition
+> flags. But MTD drivers currently never see the partition flags -- they
+> only see the master struct mtd_info. I think the only way anyone could
+> observe the effect of this flag is to read the MTD flags from sysfs. And
+> that's pretty useless.
 > 
-> Due to wrong assumption in ofpart ofpart fails on Exynos on SPI chips
-> with no partitions because the subnode containing controller data
-> confuses the ofpart parser.
-> 
-> Thus compiling in ofpart support automatically fails probing any SPI NOR
-> flash without partitions on Exynos.
-> 
-> Compiling in a partitioning scheme should not cause probe of otherwise
-> valid device to fail.
-> 
-> Instead, let's do the following:
->  * try parsers until one succeeds
->  * if no parser succeeds, report the first error we saw
->  * even in the failure case, allow MTD to probe, with fallback
->    partitions or no partitions at all -- the master device will still be
->    registered
-> 
-> Issue report and comments initially by Michal Suchanek.
-> 
-> Reported-by: Michal Suchanek <hramrach@gmail.com>
-> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> ---
->  drivers/mtd/mtdcore.c |  6 ++++--
->  drivers/mtd/mtdpart.c | 14 ++++++++++----
->  2 files changed, 14 insertions(+), 6 deletions(-)
+> If my understanding is correct, then I'd rather completely remove the
+> code that "handles" this flag, rather than codify it in the docs.
 
-Tested, and applied this version to l2-mtd.git
+I've tested and confirmed: this only sets the flags for the partition
+(*NOT* for the master device), so the only visible effect of this
+property is to change sysfs flags. I'll send out a patch to kill this
+property entirely.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
