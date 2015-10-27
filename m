@@ -1,87 +1,87 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 07/10] pwm: gpio: Add a generic gpio based PWM driver
-Date: Tue, 27 Oct 2015 02:42:48 -0500
-Message-ID: <CAL_Jsq+98bBt5-+Of-u6jCdGBiZfMvL=P=mMpvWT26qnPFMz5A@mail.gmail.com>
-References: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com> <1445895161-2317-8-git-send-email-o.schinagl@ultimaker.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v2] backlight: pm8941-wled: Add default-brightness property
+Date: Tue, 27 Oct 2015 02:45:30 -0500
+Message-ID: <CAL_JsqLJE13F77r9x3-9wLgwJx1AqK8EDdnPoQL3a5anR-Y11w@mail.gmail.com>
+References: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1445895161-2317-8-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>
-Cc: Olliver Schinagl <oliver@schinagl.nl>, Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Olliver Schinagl <oliver+list@schinagl.nl>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445881508-18025-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 4:32 PM, Olliver Schinagl
-<o.schinagl@ultimaker.com> wrote:
-> From: Olliver Schinagl <oliver@schinagl.nl>
+On Mon, Oct 26, 2015 at 12:45 PM, Bjorn Andersson
+<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> Default the brightness to 2048 and add possibility to override this in
+> device tree.
 >
-> This patch adds a bit-banging gpio PWM driver. It makes use of hrtimers,
-> to allow nano-second resolution, though it obviously strongly depends on
-> the switching speed of the gpio pins, hrtimer and system load.
->
-> Each pwm node can have 1 or more "pwm-gpio" entries, which will be
-> treated as pwm's as part of a pwm chip.
->
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Suggested-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-gpio.txt |  18 ++
->  MAINTAINERS                                        |   5 +
->  drivers/pwm/Kconfig                                |  15 ++
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-gpio.c                             | 253 +++++++++++++++++++++
->  5 files changed, 292 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.txt
->  create mode 100644 drivers/pwm/pwm-gpio.c
 >
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-gpio.txt b/Documentation/devicetree/bindings/pwm/pwm-gpio.txt
-> new file mode 100644
-> index 0000000..336f61f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-gpio.txt
-> @@ -0,0 +1,18 @@
-> +Generic GPIO bit-banged PWM driver
-> +
-> +Required properties:
-> +  - compatible: should be "pwm-gpio"
-> +  - #pwm-cells: should be 3, see pwm.txt in this directory for a general
-> +    description of the cells format.
-> +  - pwm-gpios: one or more gpios describing the used gpio, see the gpio
-> +    bindings for the used gpio driver.
+> Resend of v2, with updated backlight dt binding location.
 
-I'm not sure there is really much advantage to having multiple gpios
-per node. It would simplify the driver a bit not to, but I don't feel
-strongly either way.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +
-> +Example:
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +       pwm: pwm@0 {
-
-Unit address should be associated with a reg property, so drop it.
-
-> +               compatible = "pwm-gpio";
-> +               #pwm-cells = 3;
-> +               pwm-gpios = <&pio 7 1 GPIO_ACTIVE_LOW>;
-> +               pwm-gpios = <&pio 7 2 GPIO_ACTIVE_LOW>;
-
-This would not actually compile. You can't have 2 properties of the same name.
-
-> +       };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7ba7ab7..0ae7fbf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4555,6 +4555,11 @@ F:       drivers/i2c/muxes/i2c-mux-gpio.c
->  F:     include/linux/i2c-mux-gpio.h
->  F:     Documentation/i2c/muxes/i2c-mux-gpio
 >
-> +GENERIC GPIO PWM DRIVER
-> +M:     Olliver Schinagl <oliver@schinagl.nl>
-> +S:     Maintained
-> +F:     drivers/pwm/pwm-gpio.c
-
-Can you add the binding doc too.
-
-Rob
+>  Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt | 2 ++
+>  drivers/video/backlight/pm8941-wled.c                            | 8 ++++++++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+> index 424f8444a6cd..e5b294dafc58 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+> @@ -5,6 +5,8 @@ Required properties:
+>  - reg: slave address
+>
+>  Optional properties:
+> +- default-brightness: brightness value on boot, value from: 0-4095
+> +       default: 2048
+>  - label: The name of the backlight device
+>  - qcom,cs-out: bool; enable current sink output
+>  - qcom,cabc: bool; enable content adaptive backlight control
+> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
+> index c704c3236034..e1298147bcbb 100644
+> --- a/drivers/video/backlight/pm8941-wled.c
+> +++ b/drivers/video/backlight/pm8941-wled.c
+> @@ -17,6 +17,9 @@
+>  #include <linux/of_device.h>
+>  #include <linux/regmap.h>
+>
+> +/* From DT binding */
+> +#define PM8941_WLED_DEFAULT_BRIGHTNESS         2048
+> +
+>  #define PM8941_WLED_REG_VAL_BASE               0x40
+>  #define  PM8941_WLED_REG_VAL_MAX               0xFFF
+>
+> @@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+>         struct backlight_device *bl;
+>         struct pm8941_wled *wled;
+>         struct regmap *regmap;
+> +       u32 val;
+>         int rc;
+>
+>         regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> @@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+>         if (rc)
+>                 return rc;
+>
+> +       val = PM8941_WLED_DEFAULT_BRIGHTNESS;
+> +       of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
+> +
+>         memset(&props, 0, sizeof(struct backlight_properties));
+>         props.type = BACKLIGHT_RAW;
+> +       props.brightness = val;
+>         props.max_brightness = PM8941_WLED_REG_VAL_MAX;
+>         bl = devm_backlight_device_register(&pdev->dev, wled->name,
+>                                             &pdev->dev, wled,
+> --
+> 2.4.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
