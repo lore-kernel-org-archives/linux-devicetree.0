@@ -1,13 +1,12 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/6] clk: sunxi: Let divs clocks read the
- base factor clock name from devicetree
-Date: Tue, 27 Oct 2015 17:50:21 +0100
-Message-ID: <1445964626-6484-2-git-send-email-jenskuske@gmail.com>
+Subject: [PATCH v4 4/6] reset: sunxi: Add Allwinner H3 bus resets
+Date: Tue, 27 Oct 2015 17:50:24 +0100
+Message-ID: <1445964626-6484-5-git-send-email-jenskuske@gmail.com>
 References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBYWWX2YQKGQETM3G5GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBZ6WX2YQKGQEUOV6DKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1445964626-6484-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,102 +19,95 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the sunxi clock driver gets the name for the base factor clock
-of divs clocks from the name field in factors_data. This prevents reusing
-of the factor clock for clocks with same properties, but different name.
-
-This commit makes the divs setup function try to get a name from
-clock-output-names in the devicetree. It also removes the name field where
-possible and merges the sun4i PLL5 and PLL6 clocks.
+The H3 bus resets have some holes between the registers, so we add
+an of_xlate() function to skip them according to the datasheet.
 
 Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clk/sunxi/clk-sunxi.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |  1 +
+ drivers/reset/reset-sunxi.c                        | 30 +++++++++++++++++++---
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 9c79af0c..270de42 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -704,21 +704,12 @@ static const struct factors_data sun4i_pll5_data __initconst = {
- 	.enable = 31,
- 	.table = &sun4i_pll5_config,
- 	.getter = sun4i_get_pll5_factors,
--	.name = "pll5",
--};
--
--static const struct factors_data sun4i_pll6_data __initconst = {
--	.enable = 31,
--	.table = &sun4i_pll5_config,
--	.getter = sun4i_get_pll5_factors,
--	.name = "pll6",
+diff --git a/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+index c8f7757..e11f023 100644
+--- a/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
++++ b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+@@ -8,6 +8,7 @@ Required properties:
+ - compatible: Should be one of the following:
+   "allwinner,sun6i-a31-ahb1-reset"
+   "allwinner,sun6i-a31-clock-reset"
++  "allwinner,sun8i-h3-bus-reset"
+ - reg: should be register base and length as documented in the
+   datasheet
+ - #reset-cells: 1, see below
+diff --git a/drivers/reset/reset-sunxi.c b/drivers/reset/reset-sunxi.c
+index 3d95c87..c91e146 100644
+--- a/drivers/reset/reset-sunxi.c
++++ b/drivers/reset/reset-sunxi.c
+@@ -75,7 +75,9 @@ static struct reset_control_ops sunxi_reset_ops = {
+ 	.deassert	= sunxi_reset_deassert,
  };
  
- static const struct factors_data sun6i_a31_pll6_data __initconst = {
- 	.enable = 31,
- 	.table = &sun6i_a31_pll6_config,
- 	.getter = sun6i_a31_get_pll6_factors,
--	.name = "pll6x2",
+-static int sunxi_reset_init(struct device_node *np)
++static int sunxi_reset_init(struct device_node *np,
++			    int (*of_xlate)(struct reset_controller_dev *rcdev,
++				    const struct of_phandle_args *reset_spec))
+ {
+ 	struct sunxi_reset_data *data;
+ 	struct resource res;
+@@ -108,6 +110,7 @@ static int sunxi_reset_init(struct device_node *np)
+ 	data->rcdev.nr_resets = size * 32;
+ 	data->rcdev.ops = &sunxi_reset_ops;
+ 	data->rcdev.of_node = np;
++	data->rcdev.of_xlate = of_xlate;
+ 	reset_controller_register(&data->rcdev);
+ 
+ 	return 0;
+@@ -117,6 +120,21 @@ err_alloc:
+ 	return ret;
  };
  
- static const struct factors_data sun5i_a13_ahb_data __initconst = {
-@@ -902,6 +893,7 @@ struct gates_data {
- 
- #define SUNXI_DIVS_MAX_QTY	4
- #define SUNXI_DIVISOR_WIDTH	2
-+#define SUNXI_DIVS_BASE_NAME_MAX_LEN	8
- 
- struct divs_data {
- 	const struct factors_data *factors; /* data for the factor clock */
-@@ -941,7 +933,7 @@ static const struct divs_data pll5_divs_data __initconst = {
++static int sun8i_h3_bus_reset_xlate(struct reset_controller_dev *rcdev,
++				    const struct of_phandle_args *reset_spec)
++{
++	unsigned int index = reset_spec->args[0];
++
++	if (index < 96)
++		return index;
++	else if (index < 128)
++		return index + 32;
++	else if (index < 160)
++		return index + 64;
++	else
++		return -EINVAL;
++}
++
+ /*
+  * These are the reset controller we need to initialize early on in
+  * our system, before we can even think of using a regular device
+@@ -124,15 +142,21 @@ err_alloc:
+  */
+ static const struct of_device_id sunxi_early_reset_dt_ids[] __initdata = {
+ 	{ .compatible = "allwinner,sun6i-a31-ahb1-reset", },
++	{ .compatible = "allwinner,sun8i-h3-bus-reset", .data = sun8i_h3_bus_reset_xlate, },
+ 	{ /* sentinel */ },
  };
  
- static const struct divs_data pll6_divs_data __initconst = {
--	.factors = &sun4i_pll6_data,
-+	.factors = &sun4i_pll5_data,
- 	.ndivs = 4,
- 	.div = {
- 		{ .shift = 0, .table = pll6_sata_tbl, .gate = 14 }, /* M, SATA */
-@@ -983,6 +975,8 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
- 	struct clk_gate *gate = NULL;
- 	struct clk_fixed_factor *fix_factor;
- 	struct clk_divider *divider;
-+	struct factors_data factors = *data->factors;
-+	char base_name[SUNXI_DIVS_BASE_NAME_MAX_LEN];
- 	void __iomem *reg;
- 	int ndivs = SUNXI_DIVS_MAX_QTY, i = 0;
- 	int flags, clkflags;
-@@ -991,8 +985,30 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
- 	if (data->ndivs)
- 		ndivs = data->ndivs;
+ void __init sun6i_reset_init(void)
+ {
+ 	struct device_node *np;
++	const struct of_device_id *match;
++	int (*of_xlate)(struct reset_controller_dev *rcdev,
++			const struct of_phandle_args *reset_spec);
  
-+	/* Try to find a name for base factor clock */
-+	for (i = 0; i < ndivs; i++) {
-+		if (data->div[i].self) {
-+			of_property_read_string_index(node, "clock-output-names",
-+						      i, &factors.name);
-+			break;
-+		}
+-	for_each_matching_node(np, sunxi_early_reset_dt_ids)
+-		sunxi_reset_init(np);
++	for_each_matching_node_and_match(np, sunxi_early_reset_dt_ids, &match) {
++		of_xlate = match->data;
++		sunxi_reset_init(np, of_xlate);
 +	}
-+	/* If we don't have a .self clk use the first output-name up to '_' */
-+	if (factors.name == NULL) {
-+		of_property_read_string_index(node, "clock-output-names",
-+						      0, &clk_name);
-+
-+		for (i = 0; i < SUNXI_DIVS_BASE_NAME_MAX_LEN - 1 &&
-+						clk_name[i] != '_' &&
-+						clk_name[i] != '\0'; i++)
-+			base_name[i] = clk_name[i];
-+
-+		base_name[i] = '\0';
-+		factors.name = base_name;
-+	}
-+
- 	/* Set up factor clock that we will be dividing */
--	pclk = sunxi_factors_clk_setup(node, data->factors);
-+	pclk = sunxi_factors_clk_setup(node, &factors);
- 	parent = __clk_get_name(pclk);
+ }
  
- 	reg = of_iomap(node, 0);
+ /*
 -- 
 2.6.2
