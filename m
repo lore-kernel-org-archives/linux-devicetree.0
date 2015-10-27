@@ -1,40 +1,38 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 04/19] rtc: isl12057: enable support for the standard
- "wakeup-source" property
-Date: Tue, 27 Oct 2015 23:53:15 +0100
-Message-ID: <20151027225315.GJ22331@piout.net>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
- <1445422216-29375-5-git-send-email-sudeep.holla@arm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: porter: add CAN0 DT support
+Date: Wed, 28 Oct 2015 01:56:53 +0300
+Message-ID: <56300135.703@cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+ <5706086.RKBCVZugI4@wasted.cogentembedded.com>
+ <20151027224142.GB21745@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445422216-29375-5-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151027224142.GB21745@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/10/2015 at 11:10:01 +0100, Sudeep Holla wrote :
-> Though the isl12057 rtc driver should and will continue to support the
-> legacy "isil,irq2-can-wakeup-machine" property to enable RTC as the
-> wakeup source, we need to add support for the new standard property
-> "wakeup-source".
-> 
-> This patch adds support for "wakeup-source" property in addition to the
-> existing "isil,irq2-can-wakeup-machine" property.
-> 
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> Cc: rtc-linux@googlegroups.com
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/rtc/rtc-isl12057.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-Applied, thanks.
+On 10/28/2015 01:41 AM, Simon Horman wrote:
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>> Define the Porter board dependent part of the CAN0 device node.
+>>
+>> This patch is  analogous to the commit 457acc4a6ce8 (ARM: shmobile:
+>> henninger: add CAN0 DT support) as there are no differences between the
+>> boards in this respect.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> Thanks, I have queued this up for v4.5 after updating the changelog
+> as per checkpatch.pl's insight:
+>
+> ERROR: Please use git commit description style 'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit 457acc4a6ce8 ("ARM: shmobile: henninger: add CAN0 DT support")'
+> #8:
+> This patch is  analogous to the commit 457acc4a6ce8 (ARM: shmobile:
+
+    Oops, sorry, forgot to update the patch description.
+
+MBR, Sergei
+
