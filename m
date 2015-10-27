@@ -1,58 +1,79 @@
-From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH v5 2/2] iio: ti-ads8688: Add DT binding documentation
-Date: Tue, 27 Oct 2015 10:01:48 +0100
-Message-ID: <1445936508-9272-2-git-send-email-sean.nyekjaer@prevas.dk>
-References: <1445936508-9272-1-git-send-email-sean.nyekjaer@prevas.dk>
+From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v9 0/9] Goodix touchscreen enhancements
+Date: Tue, 27 Oct 2015 09:13:03 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F105F1F@irsmsx105.ger.corp.intel.com>
+References: <1444663477-30062-1-git-send-email-irina.tirdea@intel.com>
+ <1445871989.31107.4.camel@hadess.net>
+ <20151026182112.GA1800@excalibur.cnev.de> <20151026233248.GB26171@dtor-pixel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445936508-9272-1-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151026233248.GB26171@dtor-pixel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding binding documentation for Texas Instruments ADS8688 ADC.
 
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
----
-Changes since v2:
-- Moved vref-supply to Optional properties
 
- .../devicetree/bindings/iio/adc/ti-ads8688.txt       | 20 ++++++++++++=
-++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads868=
-8.txt
+> -----Original Message-----
+> From: Dmitry Torokhov [mailto:dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: 27 October, 2015 1:33
+> To: Karsten Merker
+> Cc: Bastien Nocera; Tirdea, Irina; Aleksei Mamlin; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Purdila, Octavian; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH v9 0/9] Goodix touchscreen enhancements
+> 
+> On Mon, Oct 26, 2015 at 07:21:12PM +0100, Karsten Merker wrote:
+> > On Mon, Oct 26, 2015 at 04:06:29PM +0100, Bastien Nocera wrote:
+> > > On Mon, 2015-10-12 at 18:24 +0300, Irina Tirdea wrote:
+> >
+> > > > v9 only adds GPIOLIB dependency in Kconfig for patch 2:
+> > > > "Input: goodix - reset device at init". There are no other code
+> > > > changes from v8.
+> > > >
+> > > > Thanks for testing these changes, Bastien and Aleksei!
+> > > >
+> > > > Karsten, there is no need to rebase your series on top of v9.
+> > >
+> > > Are we waiting on anything else before merging this? I'd like it to be
+> > > scheduled to be merged so I can start focusing on the subsequent and
+> > > dependent patches for that same driver.
+> >
+> > Hello,
+> >
+> > AFAICS there is one open point (cf.
+> > http://www.spinics.net/lists/linux-input/msg41567.html) which
+> > Irina wanted to address in a v10 of the patchset (cf.
+> > http://www.spinics.net/lists/linux-input/msg41642.html).
+> 
+> There is also the whole thing about insane handling of named gpios in
+> ACPI layer, which stops me from merging the reset code since these gpios
+> should be marked as optional and we should stop ignoring errors coming
+> from gpiolib.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt b=
-/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
-new file mode 100644
-index 0000000..a02337d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
-@@ -0,0 +1,20 @@
-+* Texas Instruments' ADS8684 and ADS8688 ADC chip
-+
-+Required properties:
-+ - compatible: Should be "ti,ads8684" or "ti,ads8688"
-+ - reg: spi chip select number for the device
-+
-+Recommended properties:
-+ - spi-max-frequency: Definition as per
-+		Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional properties:
-+ - vref-supply: The regulator supply for ADC reference voltage
-+
-+Example:
-+adc@0 {
-+	compatible =3D "ti,ads8688";
-+	reg =3D <0>;
-+	vref-supply =3D <&vdd_supply>;
-+	spi-max-frequency =3D <1000000>;
-+};
---=20
-2.6.2
+The ACPI layer change is quite complex, since it includes changing the drivers
+that use the gpio API before removing the fallback to indexed ACPI.
+Not sure that will not also break current drivers that already count on this
+fallback. Unfortunately, I do not have the time right now to get involved in
+fixing the ACPI core myself.
+
+Dmitry, is there anything I can do in the driver to get these patches merged?
+I could go back to using indexed gpios and add an additional property
+to specify if irq can be used as output or not (as suggested in one of the
+previous reviews).
+
+Thanks,
+Irina
+
+> 
+> Thanks.
+> 
+> --
+> Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
