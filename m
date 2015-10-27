@@ -1,119 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 3/3] ARM: dts: BCM63xx: Add ARMPLL device tree nodes
-Date: Mon, 26 Oct 2015 20:53:17 -0700
-Message-ID: <1445917997-3629-4-git-send-email-f.fainelli@gmail.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v2 0/3] clk: Broadcom BCM63138 support
+Date: Mon, 26 Oct 2015 21:25:14 -0700
+Message-ID: <562EFCAA.9010100@broadcom.com>
 References: <1445917997-3629-1-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1445917997-3629-1-git-send-email-f.fainelli@gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-clk@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Add the ARM PLL controller which comes standard with the Cortex-A9 found
-on the BCM63138 SoCs. This is the same controller as the one found in
-the Broadcom iProc architecture, however, we have a separate compatible
-string to indicate the integration difference.
 
-While at it, properly rename references to the 50Mhz clock which is in
-fact a crystal/oscillator and updates references to it.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-No changes in v2
+On 10/26/2015 8:53 PM, Florian Fainelli wrote:
+> Hi all,
+>
+> This patch series adds support for the Broadcom BCM63138 DSL SoCs
+> clocking framework.
+>
+> Since the HW is identical to the one found in Broadcom iProc SoCs, but the
+> integration is different (obviously), there is still a new compatible string
+> introduced just in case we happen to find issues in the future.
+>
+> This applies on top of clk/next as of
+> 679c51cffc3b316bd89ecc91ef92603dd6d4fc68 ("clk: Add stubs for of_clk_*() APIs when CONFIG_OF=n")
+>
+> Since there is an obvious dependency between patch 2 and 3, we can either
+> merge this through the Clock tree or via a future arm-soc pull requests
+> for Broadcom SoCs.
+>
+> Florian Fainelli (3):
+>    clk: iproc: Extend binding to cover BCM63138
+>    clk: bcm: Add BCM63138 clock support
+>    ARM: dts: BCM63xx: Add ARMPLL device tree nodes
+>
+>   .../bindings/clock/brcm,iproc-clocks.txt           |  5 +++
+>   arch/arm/boot/dts/bcm63138.dtsi                    | 39 ++++++++++++++++------
+>   drivers/clk/bcm/Kconfig                            | 10 ++++++
+>   drivers/clk/bcm/Makefile                           |  1 +
+>   drivers/clk/bcm/clk-bcm63xx.c                      | 22 ++++++++++++
+>   5 files changed, 67 insertions(+), 10 deletions(-)
+>   create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
+>
 
- arch/arm/boot/dts/bcm63138.dtsi | 39 +++++++++++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 10 deletions(-)
+The entire patch set looks good to me.
 
-diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-index 34cd64051250..c146325eebdb 100644
---- a/arch/arm/boot/dts/bcm63138.dtsi
-+++ b/arch/arm/boot/dts/bcm63138.dtsi
-@@ -43,17 +43,29 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		arm_timer_clk: arm_timer_clk {
-+		osc: oscillator {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
--			clock-frequency = <500000000>;
-+			clock-frequency = <50000000>;
-+			clock-output-names = "periph";
- 		};
- 
--		periph_clk: periph_clk {
-+		/* peripheral clock for system timer */
-+		axi_clk: axi_clk {
- 			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <50000000>;
--			clock-output-names = "periph";
-+			compatible = "fixed-factor-clock";
-+			clocks = <&armpll>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
-+
-+		/* APB bus clock */
-+		apb_clk: apb_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&armpll>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
- 		};
- 	};
- 
-@@ -93,14 +105,14 @@
- 			compatible = "arm,cortex-a9-global-timer";
- 			reg = <0x1e200 0x20>;
- 			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&arm_timer_clk>;
-+			clocks = <&axi_clk>;
- 		};
- 
- 		local_timer: local-timer@1e600 {
- 			compatible = "arm,cortex-a9-twd-timer";
- 			reg = <0x1e600 0x20>;
- 			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&arm_timer_clk>;
-+			clocks = <&axi_clk>;
- 		};
- 
- 		twd_watchdog: watchdog@1e620 {
-@@ -109,6 +121,13 @@
- 			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		armpll: armpll {
-+			#clock-cells = <0>;
-+			compatible = "brcm,bcm63138-armpll";
-+			clocks = <&osc>;
-+			reg = <0x20000 0xf00>;
-+		};
-+
- 		pmb0: reset-controller@4800c0 {
- 			compatible = "brcm,bcm63138-pmb";
- 			reg = <0x4800c0 0x10>;
-@@ -138,7 +157,7 @@
- 			compatible = "brcm,bcm6345-uart";
- 			reg = <0x600 0x1b>;
- 			interrupts = <GIC_SPI 32 0>;
--			clocks = <&periph_clk>;
-+			clocks = <&osc>;
- 			clock-names = "periph";
- 			status = "disabled";
- 		};
-@@ -147,7 +166,7 @@
- 			compatible = "brcm,bcm6345-uart";
- 			reg = <0x620 0x1b>;
- 			interrupts = <GIC_SPI 33 0>;
--			clocks = <&periph_clk>;
-+			clocks = <&osc>;
- 			clock-names = "periph";
- 			status = "disabled";
- 		};
--- 
-2.1.0
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+
+Thanks,
+
+Ray
+
 
