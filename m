@@ -1,35 +1,34 @@
-From: Stuart Yoder <stuart.yoder@freescale.com>
-Subject: RE: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A
  SoC
-Date: Tue, 27 Oct 2015 16:31:16 +0000
-Message-ID: <CY1PR0301MB07483CD5D8B23940A49816B687220@CY1PR0301MB0748.namprd03.prod.outlook.com>
+Date: Tue, 27 Oct 2015 16:34:41 +0000
+Message-ID: <20151027163441.GK3091@leverpostej>
 References: <1445650280-9966-1-git-send-email-German.Rivera@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445650280-9966-1-git-send-email-German.Rivera@freescale.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Sharma Bhupesh <bhupesh.sharma@freescale.com>, Li Leo <LeoLi@freescale.com>, Jose Rivera <German.Rivera@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445650280-9966-1-git-send-email-German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: J. German Rivera [mailto:German.Rivera@freescale.com]
-> Sent: Friday, October 23, 2015 8:31 PM
-> To: robh+dt@kernel.org; mark.rutland@arm.com; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Cc: Sharma Bhupesh-B45370; Yoder Stuart-B08248; Li Yang-Leo-R58472; Rivera Jose-B46482
-> Subject: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
-> 
+On Fri, Oct 23, 2015 at 08:31:20PM -0500, J. German Rivera wrote:
 > Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
 > the ARM-generic reboot mechanism for this SoC. This mechanism
 > is enabled through CONFIG_POWER_RESET_SYSCON.
-> 
-> Signed-off-by: J. German Rivera <German.Rivera@freescale.com>
+
+Per the comments in arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi, the
+platform has PSCI 0.2+, and therefore already has system reset
+functionality.
+
+Given that, why is this necessary?
+
+Thanks,
+Mark.
+
+> Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
 >  arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 12 ++++++++++++
 >  1 file changed, 12 insertions(+)
@@ -41,7 +40,7 @@ List-Id: devicetree@vger.kernel.org
 > @@ -131,6 +131,18 @@
 >  		interrupts = <1 9 0x4>;
 >  	};
-> 
+>  
 > +	rst_ccsr: rstccsr@1E60000 {
 > +	        compatible = "syscon";
 > +		reg = <0x0 0x1E60000 0x0 0x10000>;
@@ -54,23 +53,13 @@ List-Id: devicetree@vger.kernel.org
 > +		mask = <0x2>;
 > +	};
 > +
-
-Drop the unit address "65024000", since you have no "reg" property.
-
-The ePAPR explicitly says: "If the node has no reg property, the
-@ and unit-address must be omitted and the node-name alone differentiates
-the node from other nodes at the same level in the tree.
-
-Also, other examples in the kernel just use plain "reboot" as
-the name:
-
-arch/arm/boot/dts/hisi-x5hd2.dtsi
-arch/arm/boot/dts/vfxxx.dtsi
-arch/mips/boot/dts/brcm/bcm6328.dtsi
-
-Also, Bhupesh's LS2080A DTS updates were just accepte4d, and the device tree
-name is no longer fsl-ls2085a.dtsi.  You need to rebase on top of
-those changes.
-
-Thanks,
-Stuart
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+>  		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
+> -- 
+> 2.3.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
