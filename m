@@ -1,101 +1,37 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [v2 03/10] ata: ahci_brcmstb: add quick for broken phy
-Date: Tue, 27 Oct 2015 08:54:17 -0700
-Message-ID: <562F9E29.3060806@gmail.com>
-References: <1445928491-7320-1-git-send-email-jaedon.shin@gmail.com> <1445928491-7320-4-git-send-email-jaedon.shin@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] DT binding: gpio-zynq: Document interrupt-controller
+Date: Tue, 27 Oct 2015 17:03:29 +0100
+Message-ID: <CACRpkdan7oFcTWSF-fE-BiOsk4Pji7DgimfMji_eb3RGjdA4RQ@mail.gmail.com>
+References: <1445617532-10228-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1445928491-7320-4-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jaedon Shin <jaedon.shin@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445617532-10228-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/10/15 23:48, Jaedon Shin wrote:
-> Add quick for broken phy. The ARM-based 28nm chipsets have four phy
-> interface control registers and each port has two registers. But, The
-> MIPS-based 40nm chipsets have three. and there are no information and
-> documentation. The legacy version of broadcom's strict-ahci based
-> initial code did not control these registers.
+On Fri, Oct 23, 2015 at 6:25 PM, Soren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
 
-Qualifying this of a broken PHY is a misnomer, this is more about the
-fact that the PHY control registers have a different layout and behavior
-on 40nm vs 28nm chips, but more importantly, do not require any kind of
-configuration.
+> HW and driver support the GPIO as interrupt-controller. Document that in
+> the DT binding.
+>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 
-> 
-> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
-> ---
->  Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt |  1 +
->  drivers/ata/ahci_brcmstb.c                                  | 10 ++++++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt b/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
-> index 488a383ce202..0f0925d58188 100644
-> --- a/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
-> +++ b/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
-> @@ -12,6 +12,7 @@ Required properties:
->  
->  Optional properties:
->  - brcm,broken-ncq    : if present, NCQ is unusable
-> +- brcm,broken-phy    : if present, to control phy interface is unusable
+Patch subject augmented and applied.
 
-Same comment as in patch 1, this is something that can be known based on
-the compatible string, and the name of the property is misleading.
+> +- interrupt-controller : Marks the device node as an interrupt controller.
+> +- #interrupt-cells     : Should be 2.  The first cell is the GPIO number.
+> +                         The second cell bits[3:0] is used to specify trigger type and level flags:
+> +                             1 = low-to-high edge triggered.
+> +                             2 = high-to-low edge triggered.
+> +                             4 = active high level-sensitive.
+> +                             8 = active low level-sensitive.
 
->  
->  Also see ahci-platform.txt.
->  
-> diff --git a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
-> index e53962cb48ee..c61303f7c7dc 100644
-> --- a/drivers/ata/ahci_brcmstb.c
-> +++ b/drivers/ata/ahci_brcmstb.c
-> @@ -71,6 +71,7 @@
->  
->  enum brcm_ahci_quicks {
->  	BRCM_AHCI_QUICK_NONCQ		= BIT(0),
-> +	BRCM_AHCI_QUICK_NOPHY		= BIT(1),
+If these can be or:ed together, e.g 3 = both edges, that needs to be
+documented. If they can't the current patch is fine I guess.
 
-I would use something like BRCM_AHCI_SKIP_PHY_ENABLE or something like
-that to illustrate what this really is about.
-
->  };
->  
->  struct brcm_ahci_priv {
-> @@ -119,6 +120,9 @@ static void brcm_sata_phy_enable(struct brcm_ahci_priv *priv, int port)
->  	void __iomem *p;
->  	u32 reg;
->  
-> +	if (priv->quicks & BRCM_AHCI_QUICK_NOPHY)
-> +		return;
-> +
->  	/* clear PHY_DEFAULT_POWER_STATE */
->  	p = phyctrl + SATA_TOP_CTRL_PHY_CTRL_1;
->  	reg = brcm_sata_readreg(p);
-> @@ -148,6 +152,9 @@ static void brcm_sata_phy_disable(struct brcm_ahci_priv *priv, int port)
->  	void __iomem *p;
->  	u32 reg;
->  
-> +	if (priv->quicks & BRCM_AHCI_QUICK_NOPHY)
-> +		return;
-> +
->  	/* power-off the PHY digital logic */
->  	p = phyctrl + SATA_TOP_CTRL_PHY_CTRL_2;
->  	reg = brcm_sata_readreg(p);
-> @@ -297,6 +304,9 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  	if (of_property_read_bool(dev->of_node, "brcm,broken-ncq"))
->  		priv->quicks |= BRCM_AHCI_QUICK_NONCQ;
->  
-> +	if (of_property_read_bool(dev->of_node, "brcm,broken-phy"))
-> +		priv->quicks |= BRCM_AHCI_QUICK_NOPHY;
-> +
->  	brcm_sata_init(priv);
->  	brcm_sata_quick(pdev, priv);
->  
-> 
-
-
--- 
-Florian
+Yours,
+Linus Walleij
