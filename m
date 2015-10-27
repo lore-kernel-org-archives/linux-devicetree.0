@@ -1,38 +1,53 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: OMAP2+: dts: cm-t335: add support for network
- device
-Date: Tue, 27 Oct 2015 18:44:56 +0530
-Message-ID: <562F78D0.5010507@ti.com>
-References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
- <1445948100-16446-6-git-send-email-uri.mashiach@compulab.co.il>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 4/6] memory: mediatek: Add SMI driver
+Date: Tue, 27 Oct 2015 13:24:34 +0000
+Message-ID: <562F7B12.7030201@arm.com>
+References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
+ <1444357388-30257-5-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445948100-16446-6-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <1444357388-30257-5-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, igor.grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 October 2015 05:44 PM, Uri Mashiach wrote:
-> From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> 
-> Add pinmux configurations for RGMII1 based CPSW Ethernet pins and
-> MDIO pins:
->  - default configuration required for module in active state,
->  - sleep configuration required for module in inactive state.
-> Add mac node with single slave device. Add nodes for davinci_mdio and
-> cpsw_emac0.
-> 
-> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+On 09/10/15 03:23, Yong Wu wrote:
+[...]
+> +static int mtk_smi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mtk_smi_data *smidata;
+> +	int ret;
+> +
+> +	if (!dev->pm_domain)
+> +		return -EPROBE_DEFER;
+> +
+> +	smidata = devm_kzalloc(dev, sizeof(*smidata), GFP_KERNEL);
+> +	if (!smidata)
+> +		return -ENOMEM;
+> +
+> +	smidata->clk_apb = devm_clk_get(dev, "apb");
+> +	if (IS_ERR(smidata->clk_apb))
+> +		return PTR_ERR(smidata->clk_apb);
+> +
+> +	smidata->clk_smi = devm_clk_get(dev, "smi");
+> +	if (IS_ERR(smidata->clk_smi))
+> +		return PTR_ERR(smidata->clk_smi);
+> +
+> +	pm_runtime_enable(dev);
+> +	dev_set_drvdata(dev, smidata);
+> +	return ret;
 
-Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+ret is used uninitialised here, but you might as well just "return 0;" 
+and get rid of the variable entirely.
 
-Regards
-Mugunthan V N
+> +}
+
+Robin.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
