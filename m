@@ -1,72 +1,80 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Tue, 27 Oct 2015 09:16:08 +0900
-Message-ID: <20151027001608.GJ28319@sirena.org.uk>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
- <20151022164724.GZ8232@sirena.org.uk>
- <562A2C2F.1020808@ti.com>
- <20151023231822.GQ29919@sirena.org.uk>
- <562ACCCC.503@ti.com>
- <20151024221457.GS29919@sirena.org.uk>
- <562D3F77.5040205@ti.com>
- <20151026004320.GU29919@sirena.org.uk>
- <562E4B1D.4060205@ti.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3 0/3] ARM: uniphier: add outer cache support and rework
+ SMP operations
+Date: Tue, 27 Oct 2015 09:22:37 +0900
+Message-ID: <20151027002237.GA20409@localhost>
+References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com>
+ <6239461.UGe6XP3dfB@wuerfel>
+ <5275814.I392BfIEUH@wuerfel>
+ <CAK7LNATgK0OQbu_9J7DjUfDA_dKSCkCS4Kqw6vXD+=5oxkw4ig@mail.gmail.com>
+ <CAK7LNASA-fmS943We9ncXUNQTa17s85OPmnWEdcY0yxTpW9hTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6lCXDTVICvIQMz0h"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <562E4B1D.4060205-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAK7LNASA-fmS943We9ncXUNQTa17s85OPmnWEdcY0yxTpW9hTA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Ru tland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Jungseung Lee <js07.lee@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, arm@kernel.org, Jiri Slaby <jslaby@suse.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Nathan Lynch <nathan_lynch@mentor.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David S. Mill
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 26, 2015 at 01:16:50PM +0900, Masahiro Yamada wrote:
+> Hi Arnd,
+> 
+> 
+> 2015-10-10 15:59 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> > Hi Arnd,
+> >
+> >
+> > 2015-10-06 15:22 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
+> >> On Tuesday 06 October 2015 16:20:23 Arnd Bergmann wrote:
+> >>> On Friday 18 September 2015 13:37:31 Masahiro Yamada wrote:
+> >>> > Hi Olof,
+> >>> >
+> >>> > Now Linux 4.3-rc1 is out, so I am back to this.
+> >>> >
+> >>> > 1/3: add outer cache support
+> >>> > 2/3: rework SMP operations
+> >>> > 3/3: add device tree nodes
+> >>> >
+> >>> > Because 2/3 highly depends on 1/3, I hope whole of this series
+> >>> > is applied through ARM-SOC tree.
+> >>>
+> >>> Sorry for the long delay here. Is this the latest version of these
+> >>> patches?
+> >>>
+> >>> Did Russell King review the first patch?
+> >>> Is he ok with merging this through arm-soc?
+> >>>
+> >>
+> >> I found an answer to the first question, as I see you posted
+> >> v5 of the patchset in the meantime.
+> >
+> >
+> > Yes, v5 is my latest version.
+> >
+> >
+> > For the second question, Russell gave me some comments on the 1/3
+> > and I answered.
+> >
+> > He mentioned nothing about merging the whole series thru arm-soc.
+> > (At least, he was not opposed to it, I guess)
+> >
+> 
+> Is it difficult to apply this series for the next merge window?
+> V5 is the latest.
+> No comment, but not applied.
+> 
+> Is there anything I can do but wait?
 
---6lCXDTVICvIQMz0h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looks like this one has fallen between the cracks, so sorry about that.
 
-On Mon, Oct 26, 2015 at 10:47:41AM -0500, Andrew F. Davis wrote:
-> On 10/25/2015 07:43 PM, Mark Brown wrote:
+I checked in with Russell, and we'll pick this up for now even if it might
+need some minor fixups down the road -- it seems good enough to go in.
 
-> >>.of_compatible = "mediatek,mt6397-regulator",
+Applied v5 of all 3 patches, first two to next/soc, last to next/dt.
 
-> >This is in the MFD, this is not used in actual systems.
 
-> Not sure what you mean by "actual systems", it looks like these
-> use it?:
+Thanks, and apologies for the delay,
 
-> arch/arm/boot/dts/mt8135-evbp1.dts
-> arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-
-To repeat: the regulator driver does not register a compatible string
-for the device for device model probing.
-
-> I understand this, I thought we are talking about compatible strings in
-> the regulator sub-node, not how the core instantiates the sub-driver.
-
-No, this exactly about how the device model devices are instantiated.
-
---6lCXDTVICvIQMz0h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWLsJHAAoJECTWi3JdVIfQfMsH+QEmDoUieeLnFtOsfzaDde6H
-6l9DgqVcGQXGrHkmZzxZ7gGXHfhNityaFRvuuFox6hrROf7MnPozQtD3WYM3Irpk
-XM24Ucms04mOi502qu/k1K6sr8Zy+FdnrNyVYBFeKI+IinT2PrfW6lCL97SkBM6M
-YtTlLNgPO0gnqYiFoSWxOhtubjISOr97ZimYr0eVf8QSsYKPckGSyY5m02IX5geE
-SttAS6UIsgv8hKLSfcl9xVQsCryeniTh25kr6q6RvVMBtVAM/epMs0SS2EhfIgJ6
-0ac1fSbNe2YgFx28d/jQv2qyCVb76rEJ82HVemttZDek34MSm9qlimoBnIUwBGE=
-=lNrx
------END PGP SIGNATURE-----
-
---6lCXDTVICvIQMz0h--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Olof
