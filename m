@@ -1,58 +1,123 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: porter: add CAN0 DT support
-Date: Wed, 28 Oct 2015 00:03:22 +0300
-Message-ID: <5706086.RKBCVZugI4@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv7 1/3] ARM: dts: Add Altera L2 Cache and OCRAM EDAC entries
+Date: Tue, 27 Oct 2015 15:58:03 -0500
+Message-ID: <1445979483-8035-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the Porter board dependent part of the CAN0 device node.
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-This patch is  analogous to the commit 457acc4a6ce8 (ARM: shmobile:
-henninger: add CAN0 DT support) as there are no differences between the
-boards in this respect.
+Adding the device tree entries and bindings needed to support
+the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+an earlier patch to declare and setup On-chip RAM properly.
+http://www.spinics.net/lists/devicetree/msg51117.html
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
-This patch is against 'renesas-devel-20151026-v4.3-rc7' tag of Simon Horman's
-'renesas.git' repo.
+v7: No Change
+v6: Change to nested EDAC device nodes based on community
+    feedback. Remove L2 syscon. Use consolidated binding.
+v3-5: No Change
+v2: Remove OCRAM declaration and reference prior patch.
+---
+ .../bindings/arm/altera/socfpga-edac.txt           | 46 ++++++++++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     | 20 ++++++++++
+ 2 files changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
 
- arch/arm/boot/dts/r8a7791-porter.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -134,6 +134,11 @@
- 		renesas,groups = "vin0_data8", "vin0_clk";
- 		renesas,function = "vin0";
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+new file mode 100644
+index 0000000..4bf32e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+@@ -0,0 +1,46 @@
++Altera SoCFPGA Error Detection and Correction [EDAC]
 +
-+	can0_pins: can0 {
-+		renesas,groups = "can0_data";
-+		renesas,function = "can0";
++Required Properties:
++- compatible : Should be "altr,edac"
++- #address-cells: must be 1
++- #size-cells: must be 1
++- ranges : standard definition, should translate from local addresses
++
++Subcomponents:
++
++L2 Cache ECC
++Required Properties:
++- compatible : Should be "altr,l2-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
++
++On Chip RAM ECC
++Required Properties:
++- compatible : Should be "altr,ocram-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- iram : phandle to On-Chip RAM definition.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
++
++Example:
++
++	soc_ecc {
++		compatible = "altr,edac";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		l2edac@ffd08140 {
++			compatible = "altr,l2-edac";
++			reg = <0xffd08140 0x4>;
++			interrupts = <0 36 1>, <0 37 1>;
++		};
++
++		ocramedac@ffd08144 {
++			compatible = "altr,ocram-edac";
++			reg = <0xffd08144 0x4>;
++			iram = <&ocram>;
++			interrupts = <0 178 1>, <0 179 1>;
++		};
 +	};
- };
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 314e589..7cfec22 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -660,6 +660,26 @@
+ 			interrupts = <0 39 4>;
+ 		};
  
- &scif0 {
-@@ -288,3 +293,10 @@
- &pciec {
- 	status = "okay";
- };
++		soc_ecc {
++			compatible = "altr,edac";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
 +
-+&can0 {
-+	pinctrl-0 = <&can0_pins>;
-+	pinctrl-names = "default";
++			l2edac@ffd08140 {
++				compatible = "altr,l2-edac";
++				reg = <0xffd08140 0x4>;
++				interrupts = <0 36 1>, <0 37 1>;
++			};
 +
-+	status = "okay";
-+};
++			ocramedac@ffd08144 {
++				compatible = "altr,ocram-edac";
++				reg = <0xffd08144 0x4>;
++				iram = <&ocram>;
++				interrupts = <0 178 1>, <0 179 1>;
++			};
++		};
++
+ 		L2: l2-cache@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
+-- 
+2.4.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
