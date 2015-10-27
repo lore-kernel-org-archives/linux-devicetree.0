@@ -1,80 +1,35 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3 0/3] ARM: uniphier: add outer cache support and rework
- SMP operations
-Date: Tue, 27 Oct 2015 09:22:37 +0900
-Message-ID: <20151027002237.GA20409@localhost>
-References: <1442551054-2116-1-git-send-email-yamada.masahiro@socionext.com>
- <6239461.UGe6XP3dfB@wuerfel>
- <5275814.I392BfIEUH@wuerfel>
- <CAK7LNATgK0OQbu_9J7DjUfDA_dKSCkCS4Kqw6vXD+=5oxkw4ig@mail.gmail.com>
- <CAK7LNASA-fmS943We9ncXUNQTa17s85OPmnWEdcY0yxTpW9hTA@mail.gmail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-boneblack: Use pinctrl constants and
+ AM33XX_IOPAD macro
+Date: Tue, 27 Oct 2015 09:24:44 +0900
+Message-ID: <CABxcv==KtL_XBd7pKMipU+BUjX7dOFTXA59vh+_No5eiXCKXJw@mail.gmail.com>
+References: <1445706313-14761-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASA-fmS943We9ncXUNQTa17s85OPmnWEdcY0yxTpW9hTA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Ru tland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Jungseung Lee <js07.lee@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, arm@kernel.org, Jiri Slaby <jslaby@suse.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Nathan Lynch <nathan_lynch@mentor.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David S. Mill
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445706313-14761-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 01:16:50PM +0900, Masahiro Yamada wrote:
-> Hi Arnd,
-> 
-> 
-> 2015-10-10 15:59 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> > Hi Arnd,
-> >
-> >
-> > 2015-10-06 15:22 GMT+01:00 Arnd Bergmann <arnd@arndb.de>:
-> >> On Tuesday 06 October 2015 16:20:23 Arnd Bergmann wrote:
-> >>> On Friday 18 September 2015 13:37:31 Masahiro Yamada wrote:
-> >>> > Hi Olof,
-> >>> >
-> >>> > Now Linux 4.3-rc1 is out, so I am back to this.
-> >>> >
-> >>> > 1/3: add outer cache support
-> >>> > 2/3: rework SMP operations
-> >>> > 3/3: add device tree nodes
-> >>> >
-> >>> > Because 2/3 highly depends on 1/3, I hope whole of this series
-> >>> > is applied through ARM-SOC tree.
-> >>>
-> >>> Sorry for the long delay here. Is this the latest version of these
-> >>> patches?
-> >>>
-> >>> Did Russell King review the first patch?
-> >>> Is he ok with merging this through arm-soc?
-> >>>
-> >>
-> >> I found an answer to the first question, as I see you posted
-> >> v5 of the patchset in the meantime.
-> >
-> >
-> > Yes, v5 is my latest version.
-> >
-> >
-> > For the second question, Russell gave me some comments on the 1/3
-> > and I answered.
-> >
-> > He mentioned nothing about merging the whole series thru arm-soc.
-> > (At least, he was not opposed to it, I guess)
-> >
-> 
-> Is it difficult to apply this series for the next merge window?
-> V5 is the latest.
-> No comment, but not applied.
-> 
-> Is there anything I can do but wait?
+Hello Andrew,
 
-Looks like this one has fallen between the cracks, so sorry about that.
+On Sun, Oct 25, 2015 at 2:05 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> Using constants for pinctrl allows better readability and removes
+> redundancy with comments. AM33XX_IOPAD allows us to use part of the
+> pinctrl physical address as in the TRM instead of an offset.
+>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> ---
 
-I checked in with Russell, and we'll pick this up for now even if it might
-need some minor fixups down the road -- it seems good enough to go in.
+I haven't verified the values against the TRM, but assuming there are correct:
 
-Applied v5 of all 3 patches, first two to next/soc, last to next/dt.
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-
-Thanks, and apologies for the delay,
-
--Olof
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
