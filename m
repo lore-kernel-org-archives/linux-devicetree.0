@@ -1,7 +1,7 @@
 From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 3/4] ARM: imx_v6_v7_defconfig: add TS-4800 watchdog
-Date: Tue, 27 Oct 2015 16:33:40 -0400
-Message-ID: <1445978021-13961-4-git-send-email-damien.riegel@savoirfairelinux.com>
+Subject: [PATCH 1/4] of: add vendor prefix for Technologic Systems
+Date: Tue, 27 Oct 2015 16:33:38 -0400
+Message-ID: <1445978021-13961-2-git-send-email-damien.riegel@savoirfairelinux.com>
 References: <1445978021-13961-1-git-send-email-damien.riegel@savoirfairelinux.com>
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1445978021-13961-1-git-send-email-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
@@ -12,21 +12,21 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index b47863d..6bb3a50 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -190,6 +190,7 @@ CONFIG_THERMAL=y
- CONFIG_CPU_THERMAL=y
- CONFIG_IMX_THERMAL=y
- CONFIG_WATCHDOG=y
-+CONFIG_TS4800_WATCHDOG=y
- CONFIG_IMX2_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_MC13XXX_SPI=y
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d444757..68aad78a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -211,6 +211,7 @@ toshiba	Toshiba Corporation
+ toumaz	Toumaz
+ tplink	TP-LINK Technologies Co., Ltd.
+ truly	Truly Semiconductors Limited
++ts	Technologic Systems
+ usi	Universal Scientific Industrial Co., Ltd.
+ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
 -- 
 2.5.0
 
