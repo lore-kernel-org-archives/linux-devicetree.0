@@ -1,44 +1,61 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 8/9] ARM: dts: Add leds support to STM32F429 Discovery
- board
-Date: Tue, 27 Oct 2015 22:52:52 +0100
-Message-ID: <562FF234.9010403@suse.de>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
- <1445102604-11502-9-git-send-email-mcoquelin.stm32@gmail.com>
- <CACRpkdYjq9XqKM4imYsaa_HBopS7uFnbb6gf=hRZHGC4baafAg@mail.gmail.com>
- <CALszF6Bo3x4jWnvDc=28s=517YJrv2=3BuuYmxjqP4ciF17fcQ@mail.gmail.com>
- <562FEE85.3010204@suse.de>
- <CACRpkdaQWm7Jz7Zj-amqx3EHVYi_-GvNxyQs9c8ht2WjGjAphg@mail.gmail.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v12 0/6] simple fpga bus and fpga bridge framework
+Date: Tue, 27 Oct 2015 17:09:09 -0500
+Message-ID: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdaQWm7Jz7Zj-amqx3EHVYi_-GvNxyQs9c8ht2WjGjAphg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Bruno Herrera <bruherrera@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjcuMTAuMjAxNSB1bSAyMjo0NiBzY2hyaWViIExpbnVzIFdhbGxlaWo6Cj4gSGVhcnRiZWF0
-IGlzIGF3ZXNvbWUuCgpZZXMsIGl0J3MgYXdlc29tZSBmb3IgdGVzdGluZywgYnV0IG5vdCBmb3Ig
-YSAuZHRzIGZpbGUgdGhhdCBlbmRzIHVwIGluIGEKZGlzdHJvIChub3QgdGhlIGNhc2UgaGVyZSwg
-b2YgY291cnNlKSBhbmQga2VlcHMgYmxpbmtpbmcgb24gdGhlIGRlc2suCgpJZiBzb21lb25lIHdh
-bnRzIExFRHMgdG8gYmxpbmssIHRoZXkgY2FuIHNldCB0aGF0IHZpYSBzeXNmcyBvciBieQptb2Rp
-ZnlpbmcgdGhlaXIgLmR0cyBsb2NhbGx5LgoKc3VueGkgY2hvc2UgdG8ga2VlcCBMRURzIG9mZiBt
-eSBkZWZhdWx0LiBGb3IgcWNvbSB3ZSBoYWQgYSBzaW1pbGFyCmRpc2N1c3Npb24gc29tZSB3ZWVr
-cyBhZ28uIEkgZG9uJ3QgcmVndWxhcmx5IHJlYWQgTGludXggcGF0Y2hlcywgc28gZmVlbApmcmVl
-IHRvIHNraW0gdGhlIGFyY2hpdmVzIHlvdXJzZWxmLgoKQ2hlZXJzLApBbmRyZWFzCgotLSAKU1VT
-RSBMaW51eCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdlcm1hbnkKR0Y6
-IEZlbGl4IEltZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbjsgSFJCIDIx
-Mjg0IChBRyBOw7xybmJlcmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Alan Tull <atull@opensource.altera.com>
+
+The Simple FPGA Bus provides a manufacturer-agnostic interface
+for reprogramming FPGAs using Device Tree Overlays.  It uses the
+FPGA Bridge Framework and the upstreamed FPGA Manager Framework.
+
+When a Device Tree Overlay is applied, the Simple FPGA Bus will
+use information the overlay to:
+ * Disable FPGA bridges
+ * Reprogram the FPGA
+ * Enable FPGA bridges
+ * Populate the child devices
+
+Simple FPGA Bus was originally submitted with the FPGA Manager
+Framework which was accepted upstream.  This version uses the
+FPGA Bridge Framework to provide methods to enable/bridges.
+
+Alan Tull (6):
+  fpga: add usage documentation for simple fpga bus
+  fpga: add bindings document for simple fpga bus
+  fpga: add simple-fpga-bus
+  fpga: add fpga bridge framework
+  ARM: socfpga: add bindings document for fpga bridge drivers
+  ARM: socfpga: fpga bridge driver support
+
+ .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   18 ++
+ .../bindings/fpga/altera-hps2fpga-bridge.txt       |   36 +++
+ .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 +++++
+ Documentation/fpga/simple-fpga-bus.txt             |   58 ++++
+ drivers/fpga/Kconfig                               |   21 ++
+ drivers/fpga/Makefile                              |    7 +
+ drivers/fpga/altera-fpga2sdram.c                   |  185 +++++++++++
+ drivers/fpga/altera-hps2fpga.c                     |  234 ++++++++++++++
+ drivers/fpga/fpga-bridge.c                         |  242 +++++++++++++++
+ drivers/fpga/simple-fpga-bus.c                     |  327 ++++++++++++++++++++
+ include/linux/fpga/fpga-bridge.h                   |   49 +++
+ 11 files changed, 1258 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+ create mode 100644 Documentation/fpga/simple-fpga-bus.txt
+ create mode 100644 drivers/fpga/altera-fpga2sdram.c
+ create mode 100644 drivers/fpga/altera-hps2fpga.c
+ create mode 100644 drivers/fpga/fpga-bridge.c
+ create mode 100644 drivers/fpga/simple-fpga-bus.c
+ create mode 100644 include/linux/fpga/fpga-bridge.h
+
+-- 
+1.7.9.5
