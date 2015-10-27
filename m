@@ -1,63 +1,83 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A
- SoC
-Date: Tue, 27 Oct 2015 16:34:41 +0000
-Message-ID: <20151027163441.GK3091@leverpostej>
-References: <1445650280-9966-1-git-send-email-German.Rivera@freescale.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v2 02/10] ata: ahci_brcmstb: add support MIPS-based platforms
+Date: Tue, 27 Oct 2015 09:35:03 -0700
+Message-ID: <20151027163503.GR13239@google.com>
+References: <1445928491-7320-1-git-send-email-jaedon.shin@gmail.com>
+ <1445928491-7320-3-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445650280-9966-1-git-send-email-German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1445928491-7320-3-git-send-email-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dragan Stancevic <dragan.stancevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 08:31:20PM -0500, J. German Rivera wrote:
-> Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
-> the ARM-generic reboot mechanism for this SoC. This mechanism
-> is enabled through CONFIG_POWER_RESET_SYSCON.
-
-Per the comments in arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi, the
-platform has PSCI 0.2+, and therefore already has system reset
-functionality.
-
-Given that, why is this necessary?
-
-Thanks,
-Mark.
-
-> Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+On Tue, Oct 27, 2015 at 03:48:03PM +0900, Jaedon Shin wrote:
+> The BCM7xxx ARM-based and MIPS-based platforms share a similar hardware
+> block for AHCI SATA3.
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
-> index e281ceb..6f82163 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
-> @@ -131,6 +131,18 @@
->  		interrupts = <1 9 0x4>;
->  	};
+> The BCM7425 is flagship chipset of 40nm class. Other MIPS-based 40nm
+> chipsets has same hardware block. so the compatible string may be use
+> brcm,bcm7425-ahci.
+> 
+> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt | 4 ++--
+>  drivers/ata/Kconfig                                         | 2 +-
+>  drivers/ata/ahci_brcmstb.c                                  | 1 +
+>  3 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt b/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
+> index 4650c0aff6b3..488a383ce202 100644
+> --- a/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
+> +++ b/Documentation/devicetree/bindings/ata/brcm,sata-brcmstb.txt
+> @@ -4,8 +4,8 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
+>  Each SATA controller should have its own node.
 >  
-> +	rst_ccsr: rstccsr@1E60000 {
-> +	        compatible = "syscon";
-> +		reg = <0x0 0x1E60000 0x0 0x10000>;
-> +	};
-> +
-> +	reboot@65024000 {
-> +		compatible ="syscon-reboot";
-> +		regmap = <&rst_ccsr>;
-> +		offset = <0x0>;
-> +		mask = <0x2>;
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv8-timer";
->  		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
+>  Required properties:
+> -- compatible         : compatible list, may contain "brcm,bcm7445-ahci" and/or
+> -                       "brcm,sata3-ahci"
+> +- compatible         : compatible list, may contain "brcm,bcm7445-ahci" or
+> +                       "brcm,bcm7425-ahci" or "brcm,sata3-ahci"
+
+If you're going to spin this series anyway, you might as well turn this
+into a list, with one compatible string per line. That way it's easier
+to expand if needed.
+
+Brian
+
+>  - reg                : register mappings for AHCI and SATA_TOP_CTRL
+>  - reg-names          : "ahci" and "top-ctrl"
+>  - interrupts         : interrupt mapping for SATA IRQ
+> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+> index 15e40ee62a94..8f535a88a0c7 100644
+> --- a/drivers/ata/Kconfig
+> +++ b/drivers/ata/Kconfig
+> @@ -100,7 +100,7 @@ config SATA_AHCI_PLATFORM
+>  
+>  config AHCI_BRCMSTB
+>  	tristate "Broadcom STB AHCI SATA support"
+> -	depends on ARCH_BRCMSTB
+> +	depends on ARCH_BRCMSTB || BMIPS_GENERIC
+>  	help
+>  	  This option enables support for the AHCI SATA3 controller found on
+>  	  STB SoC's.
+> diff --git a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
+> index a2df76698adb..e53962cb48ee 100644
+> --- a/drivers/ata/ahci_brcmstb.c
+> +++ b/drivers/ata/ahci_brcmstb.c
+> @@ -343,6 +343,7 @@ static int brcm_ahci_remove(struct platform_device *pdev)
+>  
+>  static const struct of_device_id ahci_of_match[] = {
+>  	{.compatible = "brcm,bcm7445-ahci"},
+> +	{.compatible = "brcm,bcm7425-ahci"},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ahci_of_match);
 > -- 
-> 2.3.3
+> 2.6.2
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
