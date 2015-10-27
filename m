@@ -1,226 +1,172 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] devicetree: mfd: Add binding for the TI LM3533
-Date: Tue, 27 Oct 2015 02:57:20 -0500
-Message-ID: <CAL_JsqLcmCeAmRCSUhpfYKrzkcU4uu3uYrgtqUto-aEEQ-O+6g@mail.gmail.com>
-References: <1445796586-28683-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 18/27] mtd: nand: omap2: Implement NAND ready using
+ gpiolib
+Date: Tue, 27 Oct 2015 10:03:02 +0200
+Message-ID: <562F2FB6.7050806@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <1442588029-13769-19-git-send-email-rogerq@ti.com>
+ <20151026204900.GI13239@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445796586-28683-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <20151026204900.GI13239-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 25, 2015 at 1:09 PM, Bjorn Andersson
-<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> Add the binding for the Texas Instruments LM3533 lighting power
-> solution.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/lm3533.txt | 183 +++++++++++++++++++++++
->  1 file changed, 183 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
-> new file mode 100644
-> index 000000000000..3cc41695a544
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
-> @@ -0,0 +1,183 @@
-> +Texas Instruments LM3533 binding
-> +
-> +This binding describes the Texas Instruments LM3533, a lighting power solution
-> +for smartphone handsets. The common properties are described directly in the
-> +node, while each individual component are described in an optional subnode.
-> +
-> +- compatible:
-> +       Usage: required
-> +       Value type: <stringlist>
-> +       Definition: must be:
-> +                   "ti,lm3533"
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: i2c address of the LM3533 chip
-> +
-> +- ti,hwen-gpios:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: reference to gpio pin connected to the HWEN input; as
-> +                   specified in "gpio/gpio.txt"
-> +
-> +- ti,als-supply:
-> +       Usage: optional
-> +       Value type: <prop-encoded-array>
-> +       Definition: reference to regulator powering the V_als input; as
-> +                   specified in "regulator/regulator.txt"
-> +
-> +- ti,boost-freq:
+On 26/10/15 22:49, Brian Norris wrote:
+> + others
+> 
+> A few comments below.
+> 
+> On Fri, Sep 18, 2015 at 05:53:40PM +0300, Roger Quadros wrote:
+>> The GPMC WAIT pin status are now available over gpiolib.
+>> Update the omap_dev_ready() function to use gpio instead of
+>> directly accessing GPMC register space.
+>>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  drivers/mtd/nand/omap2.c                     | 29 +++++++++++++++++-----------
+>>  include/linux/platform_data/mtd-nand-omap2.h |  2 +-
+>>  2 files changed, 19 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>> index 228f498..d0f2620 100644
+>> --- a/drivers/mtd/nand/omap2.c
+>> +++ b/drivers/mtd/nand/omap2.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/dmaengine.h>
+>>  #include <linux/dma-mapping.h>
+>>  #include <linux/delay.h>
+>> +#include <linux/gpio/consumer.h>
+>>  #include <linux/module.h>
+>>  #include <linux/interrupt.h>
+>>  #include <linux/jiffies.h>
+>> @@ -184,6 +185,8 @@ struct omap_nand_info {
+>>  	/* fields specific for BCHx_HW ECC scheme */
+>>  	struct device			*elm_dev;
+>>  	struct device_node		*of_node;
+>> +	/* NAND ready gpio */
+>> +	struct gpio_desc		*ready_gpiod;
+>>  };
+>>  
+>>  /**
+>> @@ -1047,22 +1050,17 @@ static int omap_wait(struct mtd_info *mtd, struct nand_chip *chip)
+>>  }
+>>  
+>>  /**
+>> - * omap_dev_ready - calls the platform specific dev_ready function
+>> + * omap_dev_ready - checks the NAND Ready GPIO line
+>>   * @mtd: MTD device structure
+>> + *
+>> + * Returns true if ready and false if busy.
+>>   */
+>>  static int omap_dev_ready(struct mtd_info *mtd)
+>>  {
+>> -	unsigned int val = 0;
+>>  	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
+>>  							mtd);
+>>  
+>> -	val = readl(info->reg.gpmc_status);
+>> -
+>> -	if ((val & 0x100) == 0x100) {
+>> -		return 1;
+>> -	} else {
+>> -		return 0;
+>> -	}
+>> +	return gpiod_get_value(info->ready_gpiod);
+>>  }
+>>  
+>>  /**
+>> @@ -1782,7 +1780,9 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>  		info->reg = pdata->reg;
+>>  		info->of_node = pdata->of_node;
+>>  		info->ecc_opt = pdata->ecc_opt;
+>> -		info->dev_ready	= pdata->dev_ready;
+>> +		if (pdata->dev_ready)
+>> +			dev_info(&pdev->dev, "pdata->dev_ready is deprecated\n");
+>> +
+>>  		info->xfer_type = pdata->xfer_type;
+>>  		info->devsize = pdata->devsize;
+>>  		info->elm_of_node = pdata->elm_of_node;
+>> @@ -1815,6 +1815,13 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>  	nand_chip->IO_ADDR_W = nand_chip->IO_ADDR_R;
+>>  	nand_chip->cmd_ctrl  = omap_hwcontrol;
+>>  
+>> +	info->ready_gpiod = devm_gpiod_get_optional(&pdev->dev, "ready",
+>> +						    GPIOD_IN);
+> 
+> Others have been looking at using GPIOs for the ready/busy pin too. At a
+> minimum, we need an updated DT binding doc for this, since I see you're
+> adding this via device tree in a later patch (I don't see any DT binding
+> patch for this; but I could just be overlooking it). It'd also be great
+> if this support was moved to nand_dt_init() so other platforms can
+> benefit, but I won't require that.
+> 
+> Also, previous [0] proposers had suggested 'rb-gpios', not 'ready-gpio'
+> (the hardware docs typically call it 'rb' for ready/busy, FWIW). I don't
+> really care, but the name should be going into a doc, so we can choose
+> the same one everywhere.
+> 
+> EDIT: looks like the discussion was partly here [1] and it seems we're
+> landing on "rb-gpios" in the latest version [2]. Can we stick with that?
 
-Append "-hz".
+Why should it be "rb-gpios" and not "rb-gpio"?
+I don't think there are multiple gpios for r/b# function.
 
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: switch-frequency of the boost converter, must be either:
-> +                   500000 or 1000000
-> +
-> +- ti,boost-ovp:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: over voltage protection limit, must be one of: 16, 24, 32
-> +                   or 40
-> +
-> +- #address-cells:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: must be 1
-> +
-> +- #size-cells:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: must be 0
-> +
-> += ALS SUBNODE
-> +The als subnode must be named "als", it carries the als related properties.
-> +
-> +- ti,als-resistance:
-> +       Usage: required (unless ti,pwm-mode is specified)
-> +       Value type: <u32>
-> +       Definition: specifies the resistor value (R_als), in Ohm. Valid values
-> +                   ranges from 200kOhm to 1574Ohm.
+cheers,
+-roger
 
-So append "-kohm"?
-
-> +
-> +- ti,pwm-mode:
-> +       Usage: optional
-> +       Value type: <empty>
-> +       Definition: specifies, if present, that the als should operate in pwm
-> +                   mode - rather than analog mode
-> +
-> += BACKLIGHT NODES
-> +Backlight subnodes must be named "backlight", they carry the backlight related
-> +properties.
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies which of the two backlights this node corresponds
-> +                   to
-> +
-> +- default-brightness:
-> +       Usage: optional
-> +       Value type: <32>
-> +       Definition: specifies the default brightness for the backlight, in
-> +                   units of brightness [0-255]
-> +
-> +- label:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: specifies a name of this backlight
-> +
-> +- led-max-microamp:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies the max current for this backlight, in uA, as
-> +                   described in "leds/common.txt"
-> +
-> +- ti,pwm-zones:
-> +       Usage: optional
-> +       Value type: <u32 list>
-> +       Definition: lists the ALS zones to be PWM controlled for this backlight,
-> +                   the values in the list are in the range [0 - 4]
-> +
-> += LED NODES
-> +LED subnodes must be named "led", they carry the LED related properties.
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies which of the four LEDs this node corresponds to
-> +
-> +- linux,default-trigger:
-> +       Usage: optional
-> +       Value type: <string>
-> +       Definition: specifies the default trigger for the LED, as described in
-> +                   "leds/common.txt"
-> +
-> +- label:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: specifies a name of this LED, as described in
-> +                   "leds/common.txt"
-> +
-> +- led-max-microamp:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies the max current for this LED, in uA, as described
-> +                   in "leds/common.txt"
-> +
-> +- ti,pwm-zones:
-> +       Usage: optional
-> +       Value type: <u32 list>
-> +       Definition: lists the ALS zones to be PWM controlled for this LED, the
-> +                   values in the list are in the range [0 - 4]
-> +
-> += EXAMPLE
-> +
-> +i2c@12460000 {
-> +       compatible = "qcom,i2c-qup-v1.1.1";
-> +       ...
-> +
-> +       lm3533@36 {
-> +               compatible = "ti,lm3533";
-> +               reg = <0x36>;
-> +
-> +               ti,hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
-> +               ti,als-supply = <&pm8921_l11>;
-> +
-> +               ti,boost-freq = <500000>;
-> +               ti,boost-ovp = <24>;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               als {
-> +                       ti,als-resistance = <200000>;
-> +               };
-> +
-> +               backlight@0 {
-> +                       reg = <0>;
-> +                       label = "backlight";
-> +
-> +                       led-max-microamp = <20200>;
-> +               };
-> +
-> +               led@0 {
-> +                       reg = <0>;
-> +                       label = "red";
-> +
-> +                       led-max-microamp = <5000>;
-> +               };
-> +
-> +               led@1 {
-> +                       reg = <1>;
-> +                       label = "green";
-> +
-> +                       led-max-microamp = <5000>;
-> +               };
-> +
-> +               led@2 {
-> +                       reg = <2>;
-> +                       label = "blue";
-> +
-> +                       led-max-microamp = <5000>;
-> +               };
-> +       };
-> +
-> --
-> 2.4.2
->
+> 
+> Regards,
+> Brian
+> 
+> [0] "Previous" may be subject to debate, as both series have been going
+>     for several revisions.
+> [1] http://patchwork.ozlabs.org/patch/515327/
+> [2] http://patchwork.ozlabs.org/patch/526819/
+> 
+>> +	if (IS_ERR(info->ready_gpiod)) {
+>> +		dev_err(dev, "failed to get ready gpio\n");
+>> +		return PTR_ERR(info->ready_gpiod);
+>> +	}
+>> +
+>>  	/*
+>>  	 * If RDY/BSY line is connected to OMAP then use the omap ready
+>>  	 * function and the generic nand_wait function which reads the status
+>> @@ -1822,7 +1829,7 @@ static int omap_nand_probe(struct platform_device *pdev)
+>>  	 * chip delay which is slightly more than tR (AC Timing) of the NAND
+>>  	 * device and read status register until you get a failure or success
+>>  	 */
+>> -	if (info->dev_ready) {
+>> +	if (info->ready_gpiod) {
+>>  		nand_chip->dev_ready = omap_dev_ready;
+>>  		nand_chip->chip_delay = 0;
+>>  	} else {
+>> diff --git a/include/linux/platform_data/mtd-nand-omap2.h b/include/linux/platform_data/mtd-nand-omap2.h
+>> index ff27e5a..19e509d 100644
+>> --- a/include/linux/platform_data/mtd-nand-omap2.h
+>> +++ b/include/linux/platform_data/mtd-nand-omap2.h
+>> @@ -70,7 +70,6 @@ struct omap_nand_platform_data {
+>>  	int			cs;
+>>  	struct mtd_partition	*parts;
+>>  	int			nr_parts;
+>> -	bool			dev_ready;
+>>  	bool			flash_bbt;
+>>  	enum nand_io		xfer_type;
+>>  	int			devsize;
+>> @@ -81,5 +80,6 @@ struct omap_nand_platform_data {
+>>  	/* deprecated */
+>>  	struct gpmc_nand_regs	reg;
+>>  	struct device_node	*of_node;
+>> +	bool			dev_ready;
+>>  };
+>>  #endif
+>> -- 
+>> 2.1.4
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
