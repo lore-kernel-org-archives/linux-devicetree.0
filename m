@@ -1,85 +1,64 @@
 From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2] backlight: pm8941-wled: Add default-brightness property
-Date: Tue, 27 Oct 2015 02:45:30 -0500
-Message-ID: <CAL_JsqLJE13F77r9x3-9wLgwJx1AqK8EDdnPoQL3a5anR-Y11w@mail.gmail.com>
-References: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v2 1/4] DT: nvmem: Add NXP LPC18xx EEPROM memory binding documentation
+Date: Tue, 27 Oct 2015 02:49:00 -0500
+Message-ID: <CAL_Jsq+_2qDbp8v7yGsAOFGVxpKSisomnFyLwYkD3oMz2go0Hw@mail.gmail.com>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar> <1445275946-32653-2-git-send-email-ariel@vanguardiasur.com.ar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445881508-18025-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <1445275946-32653-2-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 12:45 PM, Bjorn Andersson
-<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> Default the brightness to 2048 and add possibility to override this in
-> device tree.
+On Mon, Oct 19, 2015 at 12:32 PM, Ariel D'Alessandro
+<ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+> Add the devicetree binding document for NXP LPC18xx EEPROM memory.
 >
-> Suggested-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->
-> Resend of v2, with updated backlight dt binding location.
+> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+> ---
+>  .../devicetree/bindings/nvmem/lpc1857-eeprom.txt   | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
 >
->  Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt | 2 ++
->  drivers/video/backlight/pm8941-wled.c                            | 8 ++++++++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-> index 424f8444a6cd..e5b294dafc58 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
-> @@ -5,6 +5,8 @@ Required properties:
->  - reg: slave address
->
->  Optional properties:
-> +- default-brightness: brightness value on boot, value from: 0-4095
-> +       default: 2048
->  - label: The name of the backlight device
->  - qcom,cs-out: bool; enable current sink output
->  - qcom,cabc: bool; enable content adaptive backlight control
-> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
-> index c704c3236034..e1298147bcbb 100644
-> --- a/drivers/video/backlight/pm8941-wled.c
-> +++ b/drivers/video/backlight/pm8941-wled.c
-> @@ -17,6 +17,9 @@
->  #include <linux/of_device.h>
->  #include <linux/regmap.h>
->
-> +/* From DT binding */
-> +#define PM8941_WLED_DEFAULT_BRIGHTNESS         2048
+> diff --git a/Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt b/Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
+> new file mode 100644
+> index 0000000..01cde0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
+> @@ -0,0 +1,26 @@
+> +* NXP LPC18xx EEPROM memory NVMEM driver
 > +
->  #define PM8941_WLED_REG_VAL_BASE               0x40
->  #define  PM8941_WLED_REG_VAL_MAX               0xFFF
->
-> @@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         struct backlight_device *bl;
->         struct pm8941_wled *wled;
->         struct regmap *regmap;
-> +       u32 val;
->         int rc;
->
->         regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> @@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_device *pdev)
->         if (rc)
->                 return rc;
->
-> +       val = PM8941_WLED_DEFAULT_BRIGHTNESS;
-> +       of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
+> +Required properties:
+> +  - compatible: Should be "nxp,lpc1857-eeprom"
+> +  - reg: Must contain an entry with the physical base address and length
+> +    for each entry in reg-names.
+> +  - reg-names: Must include the following entries.
+> +    - reg: EEPROM registers.
+> +    - mem: EEPROM address space.
+> +  - clocks: Must contain an entry for each entry in clock-names.
+> +  - clock-names: Must include the following entries.
+> +    - eeprom: EEPROM operating clock.
+> +  - interrupts: Should contain EEPROM interrupt.
 > +
->         memset(&props, 0, sizeof(struct backlight_properties));
->         props.type = BACKLIGHT_RAW;
-> +       props.brightness = val;
->         props.max_brightness = PM8941_WLED_REG_VAL_MAX;
->         bl = devm_backlight_device_register(&pdev->dev, wled->name,
->                                             &pdev->dev, wled,
+> +Example:
+> +
+> +  eeprom: eeprom@4000e000 {
+> +    compatible = "nxp,lpc1857-eeprom";
+> +    reg = <0x4000e000 0x1000>,
+> +          <0x20040000 0x4000>;
+> +    reg-names = "reg", "mem";
+> +    clocks = <&ccu1 CLK_CPU_EEPROM>;
+> +    clock-names = "eeprom";
+> +    resets = <&rgu 27>;
+> +    interrupts = <4>;
+> +  };
 > --
-> 2.4.2
+> 2.6.1
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
