@@ -1,39 +1,89 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 03/22] of/platform: Point to struct device from device node
-Date: Tue, 27 Oct 2015 16:43:53 +0100
-Message-ID: <3956941.s3nuWak5tq@vostro.rjw.lan>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com> <1806288.pmhamH8mKQ@vostro.rjw.lan> <CAAObsKBjNZMhKn2bUMmQO8Lvrqfucnf9dXqmbfQ2DbAc6_GvcQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [v2 01/10] ata: ahci_brcmstb: add quick for broken ncq
+Date: Tue, 27 Oct 2015 08:46:26 -0700
+Message-ID: <562F9C52.8060609@gmail.com>
+References: <1445928491-7320-1-git-send-email-jaedon.shin@gmail.com> <1445928491-7320-2-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKBjNZMhKn2bUMmQO8Lvrqfucnf9dXqmbfQ2DbAc6_GvcQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1445928491-7320-2-git-send-email-jaedon.shin@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Jaedon Shin <jaedon.shin@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, October 27, 2015 03:48:40 PM Tomeu Vizoso wrote:
-> On 24 October 2015 at 15:57, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On 26/10/15 23:48, Jaedon Shin wrote:
+> Add quick for bronken ncq. The chipsets (eg. BCM7439A0, BCM7445A0 and
+> BCM7445B0) need a workaround disabling NCQ. and it may need the
+> MIPS-based set-top box platforms.
 
-[...]
+None of these chips are production chips, so at this point, disabling
+NCQ should be done based on the compatible string we probed the driver
+with, not using a specific property.
 
-> >
-> > Well, once that has happened, your new device pointer in the given device_node
-> > becomes useless.  Why exactly is that fine?
+There are more comments below
+
 > 
-> Why do you think it's useless? It's the device that was registered
-> from that device_node. The other one just happens to want to point to
-> the same device_node for whatever other reason, but I don't see how is
-> that relevant.
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
 
-It is useless as a reverse mapping from OF nodes to devices.  It tells us
-which device pointing to the given device node has been found first, but
-that's just it.
+[snip]
 
-You can't say whether or not it is special in any way with respect to the
-other devices hanging out of the same OF node unless you have some additional
-information on how those devices are related to each other.
+>  
+> +static void brcm_sata_quick(struct platform_device *pdev,
+> +			    struct brcm_ahci_priv *priv)
+> +{
+> +	void __iomem *ahci;
+> +	struct resource *res;
+> +	u32 reg;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ahci");
+> +	ahci = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ahci))
+> +		return;
+> +
+> +	if (priv->quicks & BRCM_AHCI_QUICK_NONCQ) {
+> +		reg  = readl(priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL);
+> +		reg |= OVERRIDE_HWINIT;
+> +		writel(reg, priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL);
+> +
+> +		/* Clear out the NCQ bit so the AHCI driver will not issue
+> +		 * FPDMA/NCQ commands.
+> +		 */
+> +		reg = readl(ahci + HOST_CAP);
+> +		reg &= ~HOST_CAP_NCQ;
+> +		writel(reg, ahci + HOST_CAP);
+> +
+> +		reg = readl(priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL);
+> +		reg &= ~OVERRIDE_HWINIT;
+> +		writel(reg, priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL);
+> +	}
 
-Thanks,
-Rafael
+In the original BSP, the NCQ disabling occurs prior to initializing the
+SATA controller endianess. We would want to keep doing that in the same
+order, and use brcm_sata_readreg() and brcm_sata_writereg() which take
+care of doing these accesses in the native endianess of the system.
+
+Reference is here:
+
+https://github.com/Broadcom/stblinux-3.3/blob/master/linux/drivers/brcmstb/bchip.c#L254
+
+> +
+> +	devm_iounmap(&pdev->dev, ahci);
+> +	devm_release_mem_region(&pdev->dev, res->start, resource_size(res));
+> +}
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  static int brcm_ahci_suspend(struct device *dev)
+>  {
+> @@ -256,7 +294,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->top_ctrl))
+>  		return PTR_ERR(priv->top_ctrl);
+>  
+> +	if (of_property_read_bool(dev->of_node, "brcm,broken-ncq"))
+> +		priv->quicks |= BRCM_AHCI_QUICK_NONCQ;
+> +
+>  	brcm_sata_init(priv);
+> +	brcm_sata_quick(pdev, priv);
+Florian
