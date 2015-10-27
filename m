@@ -1,11 +1,13 @@
 From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/6] ARM: sunxi: Introduce Allwinner H3 support
-Date: Tue, 27 Oct 2015 17:50:20 +0100
-Message-ID: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+Subject: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Tue, 27 Oct 2015 17:50:25 +0100
+Message-ID: <1445964626-6484-6-git-send-email-jenskuske@gmail.com>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
 Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCC5XIE2SIHBBYOWX2YQKGQEKSZBIGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBB2OWX2YQKGQEYRFJWHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1445964626-6484-1-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -17,93 +19,502 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The Allwinner H3 is a home entertainment system oriented SoC with
+four Cortex-A7 cores and a Mali-400MP2 GPU.
 
-This is v4 of my patch series introducing basic kernel support for Allwinner's
-H3 SoC. It mainly adds basic clocks, resets and pinctrl. It also adds
-interrupts, timers, watchdog, RTC, dmaengine, MMC and UARTs, which are mostly
-compatible to those in earlier SoCs like A23 and A31, and can simply be reused.
-
-These patches are based on the sunxi-next branch from
-git://github.com/linux-sunxi/linux-sunxi.git
-
-
-Patch 1 improves the sunxi divs clock to read the name of the base factor clock
-from devicetree instead of hardcoding it, which allows us to reuse sun6i-pll6
-for our pll8.
-
-Patch 2 adds support for the basic clocks.
-
-Patch 3 adds the pin sets for the H3 main PIO.
-
-Patch 4 adds the H3 reset controller
-
-Patch 5 adds the DTSI for the H3.
-
-Patch 6 adds a DTS for the Orange Pi Plus SBC, which these patches
-were developed and tested with.
-
-
-Changes since v3:
-- add a clock driver specific to the bus gates instead of listing parents in
-  the DTSI
-- skip the holes in the reset controller with of_xlate()
-
-Changes since v2:
-- add mbus clock
-- add Maxime's suggestion to take the substring up to the first "_" as name
-  for the divs base clock
-- use A31 pll6 for H3 pll6
-- use a clock similar to the new simple gates for H3 bus gates
-- drop the pinctrl-as-module patch since pinctrl and gpio don't seem to be
-  ready for removable drivers
-- documentation and machine support are merged already
-  
-Changes since v1:
-- Update sunxi README in Documentation
-- Add the multiple parents gates and use them for bus-gates instead of
-  ahb1, ahb2, apb1 and apb2 gates
-- Merge the pll8 clock with sun6i pll6
-- Merge the ahb12, apb1 and apb2 resets to bus-resets with own compatible
-- Add sun6i_timer_init to sun8i machine
-- Remove the single SoC names from machine definition, its sun8i family
-- Make the pinctrl driver tristate and put its Kconfig entry in the right order
-- Rename pinctrl "scr" to "sim" and clock "sim" to "scr" to match user manual
-- Remove the address paragraph from GPL in dts and dtsi
-- Some style cleanup and line wrapping in dtsi
-- Add ARM architected timers
-- dmaengine isn't included anymore, it is merged already
-
-Best Regards,
-Jens
-
-Jens Kuske (6):
-  clk: sunxi: Let divs clocks read the base factor clock name from
-    devicetree
-  clk: sunxi: Add H3 clocks support
-  pinctrl: sunxi: Add H3 PIO controller support
-  reset: sunxi: Add Allwinner H3 bus resets
-  ARM: dts: sunxi: Add Allwinner H3 DTSI
-  ARM: dts: sun8i: Add Orange Pi Plus support
-
- Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
- .../bindings/reset/allwinner,sunxi-clock-reset.txt |   1 +
- arch/arm/boot/dts/Makefile                         |   3 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  77 +++
- arch/arm/boot/dts/sun8i-h3.dtsi                    | 482 +++++++++++++++++++
- drivers/clk/sunxi/Makefile                         |   1 +
- drivers/clk/sunxi/clk-sun8i-bus-gates.c            | 111 +++++
- drivers/clk/sunxi/clk-sunxi.c                      |  47 +-
- drivers/pinctrl/sunxi/Kconfig                      |   4 +
- drivers/pinctrl/sunxi/Makefile                     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 516 +++++++++++++++++++++
- drivers/reset/reset-sunxi.c                        |  30 +-
- 13 files changed, 1260 insertions(+), 16 deletions(-)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 482 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 482 insertions(+)
  create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
- create mode 100644 drivers/clk/sunxi/clk-sun8i-bus-gates.c
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
 
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+new file mode 100644
+index 0000000..c18b5f7
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -0,0 +1,482 @@
++/*
++ * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "skeleton.dtsi"
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <1>;
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <2>;
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <3>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <24000000>;
++		arm,cpu-registers-not-fw-configured;
++	};
++
++	memory {
++		reg = <0x40000000 0x80000000>;
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		osc24M: osc24M_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-output-names = "osc24M";
++		};
++
++		osc32k: osc32k_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
++			clock-output-names = "osc32k";
++		};
++
++		pll1: clk@01c20000 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-a23-pll1-clk";
++			reg = <0x01c20000 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll1";
++		};
++
++		/* dummy clock until actually implemented */
++		pll5: pll5_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <0>;
++			clock-output-names = "pll5";
++		};
++
++		pll6: clk@01c20028 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun6i-a31-pll6-clk";
++			reg = <0x01c20028 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll6", "pll6x2", "pll6d2";
++		};
++
++		pll8: clk@01c20044 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun6i-a31-pll6-clk";
++			reg = <0x01c20044 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll8", "pll8x2";
++		};
++
++		cpu: cpu_clk@01c20050 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-cpu-clk";
++			reg = <0x01c20050 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
++			clock-output-names = "cpu";
++		};
++
++		axi: axi_clk@01c20050 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-axi-clk";
++			reg = <0x01c20050 0x4>;
++			clocks = <&cpu>;
++			clock-output-names = "axi";
++		};
++
++		ahb1: ahb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun6i-a31-ahb1-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
++			clock-output-names = "ahb1";
++		};
++
++		ahb2: ahb2_clk@01c2005c {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-h3-ahb2-clk";
++			reg = <0x01c2005c 0x4>;
++			clocks = <&ahb1>, <&pll6 2>;
++			clock-output-names = "ahb2";
++		};
++
++		apb1: apb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb0-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&ahb1>;
++			clock-output-names = "apb1";
++		};
++
++		apb2: apb2_clk@01c20058 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb1-clk";
++			reg = <0x01c20058 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
++			clock-output-names = "apb2";
++		};
++
++		bus_gates: clk@01c20060 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-h3-bus-gates-clk";
++			reg = <0x01c20060 0x14>;
++			clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
++			clock-names = "ahb1", "ahb2", "apb1", "apb2";
++			clock-indices = <5>, <6>, <8>,
++					<9>, <10>, <13>,
++					<14>, <17>, <18>,
++					<19>, <20>,
++					<21>, <23>,
++					<24>, <25>,
++					<26>, <27>,
++					<28>, <29>,
++					<30>, <31>, <32>,
++					<35>, <36>, <37>,
++					<40>, <41>, <43>,
++					<44>, <52>, <53>,
++					<54>, <64>,
++					<65>, <69>, <72>,
++					<76>, <77>, <78>,
++					<96>, <97>, <98>,
++					<112>, <113>,
++					<114>, <115>, <116>,
++					<128>, <135>;
++			clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
++					"ahb1_mmc1", "ahb1_mmc2", "ahb1_nand",
++					"ahb1_sdram", "ahb2_gmac", "ahb1_ts",
++					"ahb1_hstimer", "ahb1_spi0",
++					"ahb1_spi1", "ahb1_otg",
++					"ahb1_otg_ehci0", "ahb1_ehic1",
++					"ahb1_ehic2", "ahb1_ehic3",
++					"ahb1_otg_ohci0", "ahb2_ohic1",
++					"ahb2_ohic2", "ahb2_ohic3", "ahb1_ve",
++					"ahb1_lcd0", "ahb1_lcd1", "ahb1_deint",
++					"ahb1_csi", "ahb1_tve", "ahb1_hdmi",
++					"ahb1_de", "ahb1_gpu", "ahb1_msgbox",
++					"ahb1_spinlock", "apb1_codec",
++					"apb1_spdif", "apb1_pio", "apb1_ths",
++					"apb1_i2s0", "apb1_i2s1", "apb1_i2s2",
++					"apb2_i2c0", "apb2_i2c1", "apb2_i2c2",
++					"apb2_uart0", "apb2_uart1",
++					"apb2_uart2", "apb2_uart3", "apb2_scr",
++					"ahb1_ephy", "ahb1_dbg";
++		};
++
++		mmc0_clk: clk@01c20088 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-mmc-clk";
++			reg = <0x01c20088 0x4>;
++			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
++			clock-output-names = "mmc0",
++					     "mmc0_output",
++					     "mmc0_sample";
++		};
++
++		mmc1_clk: clk@01c2008c {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-mmc-clk";
++			reg = <0x01c2008c 0x4>;
++			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
++			clock-output-names = "mmc1",
++					     "mmc1_output",
++					     "mmc1_sample";
++		};
++
++		mmc2_clk: clk@01c20090 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-mmc-clk";
++			reg = <0x01c20090 0x4>;
++			clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
++			clock-output-names = "mmc2",
++					     "mmc2_output",
++					     "mmc2_sample";
++		};
++
++		mbus_clk: clk@01c2015c {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-a23-mbus-clk";
++			reg = <0x01c2015c 0x4>;
++			clocks = <&osc24M>, <&pll6 1>, <&pll5>;
++			clock-output-names = "mbus";
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		dma: dma-controller@01c02000 {
++			compatible = "allwinner,sun8i-h3-dma";
++			reg = <0x01c02000 0x1000>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 6>;
++			resets = <&bus_rst 6>;
++			#dma-cells = <1>;
++		};
++
++		mmc0: mmc@01c0f000 {
++			compatible = "allwinner,sun5i-a13-mmc";
++			reg = <0x01c0f000 0x1000>;
++			clocks = <&bus_gates 8>,
++				 <&mmc0_clk 0>,
++				 <&mmc0_clk 1>,
++				 <&mmc0_clk 2>;
++			clock-names = "ahb",
++				      "mmc",
++				      "output",
++				      "sample";
++			resets = <&bus_rst 8>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc1: mmc@01c10000 {
++			compatible = "allwinner,sun5i-a13-mmc";
++			reg = <0x01c10000 0x1000>;
++			clocks = <&bus_gates 9>,
++				 <&mmc1_clk 0>,
++				 <&mmc1_clk 1>,
++				 <&mmc1_clk 2>;
++			clock-names = "ahb",
++				      "mmc",
++				      "output",
++				      "sample";
++			resets = <&bus_rst 9>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc2: mmc@01c11000 {
++			compatible = "allwinner,sun5i-a13-mmc";
++			reg = <0x01c11000 0x1000>;
++			clocks = <&bus_gates 10>,
++				 <&mmc2_clk 0>,
++				 <&mmc2_clk 1>,
++				 <&mmc2_clk 2>;
++			clock-names = "ahb",
++				      "mmc",
++				      "output",
++				      "sample";
++			resets = <&bus_rst 10>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		pio: pinctrl@01c20800 {
++			compatible = "allwinner,sun8i-h3-pinctrl";
++			reg = <0x01c20800 0x400>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 69>;
++			gpio-controller;
++			#gpio-cells = <3>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			uart0_pins_a: uart0@0 {
++				allwinner,pins = "PA4", "PA5";
++				allwinner,function = "uart0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc0_pins_a: mmc0@0 {
++				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
++						 "PF4", "PF5";
++				allwinner,function = "mmc0";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			mmc0_cd_pin: mmc0_cd_pin@0 {
++				allwinner,pins = "PF6";
++				allwinner,function = "gpio_in";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++			};
++
++			mmc1_pins_a: mmc1@0 {
++				allwinner,pins = "PG0", "PG1", "PG2", "PG3",
++						 "PG4", "PG5";
++				allwinner,function = "mmc1";
++				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++		};
++
++		bus_rst: reset@01c202c0 {
++			#reset-cells = <1>;
++			compatible = "allwinner,sun8i-h3-bus-reset";
++			reg = <0x01c202c0 0x1c>;
++		};
++
++		timer@01c20c00 {
++			compatible = "allwinner,sun4i-a10-timer";
++			reg = <0x01c20c00 0xa0>;
++			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&osc24M>;
++		};
++
++		wdt0: watchdog@01c20ca0 {
++			compatible = "allwinner,sun6i-a31-wdt";
++			reg = <0x01c20ca0 0x20>;
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		uart0: serial@01c28000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28000 0x400>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 112>;
++			resets = <&bus_rst 144>;
++			dmas = <&dma 6>, <&dma 6>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		uart1: serial@01c28400 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28400 0x400>;
++			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 113>;
++			resets = <&bus_rst 145>;
++			dmas = <&dma 7>, <&dma 7>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		uart2: serial@01c28800 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28800 0x400>;
++			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 114>;
++			resets = <&bus_rst 146>;
++			dmas = <&dma 8>, <&dma 8>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		uart3: serial@01c28c00 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x01c28c00 0x400>;
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&bus_gates 115>;
++			resets = <&bus_rst 147>;
++			dmas = <&dma 9>, <&dma 9>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		gic: interrupt-controller@01c81000 {
++			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
++			reg = <0x01c81000 0x1000>,
++			      <0x01c82000 0x1000>,
++			      <0x01c84000 0x2000>,
++			      <0x01c86000 0x2000>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++		};
++
++		rtc: rtc@01f00000 {
++			compatible = "allwinner,sun6i-a31-rtc";
++			reg = <0x01f00000 0x54>;
++			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++};
 -- 
 2.6.2
