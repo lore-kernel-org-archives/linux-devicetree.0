@@ -1,73 +1,114 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3] EDAC: Add ARM64 EDAC
-Date: Tue, 27 Oct 2015 12:08:32 -0700
-Message-ID: <20151027190832.GN19782@codeaurora.org>
-References: <1445966985-5777-1-git-send-email-brijeshkumar.singh@amd.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v12 7/8] Documentation: DT: Add HiSilicon PCIe host binding
+Date: Tue, 27 Oct 2015 14:19:40 -0500
+Message-ID: <CAL_JsqKamKx8vVVv7qVZ8oyjXLem93B9dnJAxvvoRWd3XEc=7Q@mail.gmail.com>
+References: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com> <1445859350-26375-8-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445966985-5777-1-git-send-email-brijeshkumar.singh@amd.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, devicetree@vger.kernel.org, guohanjun@huawei.com, andre.przywara@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1445859350-26375-8-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand Thakur <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, James Morse <james.morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Jason Cooper <jason@lakedaemon.net>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Minghuan Lian <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisi>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27, Brijesh Singh wrote:
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index ef25000..84507b5 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -390,4 +390,12 @@ config EDAC_XGENE
->  	  Support for error detection and correction on the
->  	  APM X-Gene family of SOCs.
->  
-> +config EDAC_CORTEX_ARM64
-> +	tristate "ARM Cortex A57/A53"
-> +	depends on EDAC_MM_EDAC && ARM64
-> +	default n
+On Mon, Oct 26, 2015 at 6:35 AM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
+> This patch adds related DTS binding document for HiSilicon PCIe host driver.
+>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 
-n is the default so this can be removed.
+Acked-by: Rob Herring <robh@kernel.org>
 
-> +	help
-> +	  Support for error detection and correction on the
-> +	  ARM Cortex A57 and A53.
+> ---
+>  .../bindings/arm/hisilicon/hisilicon.txt           | 17 +++++++++
+>  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 44 ++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index 3504dca..6ac7c00 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -171,6 +171,23 @@ Example:
+>         };
+>
+>  -----------------------------------------------------------------------
+> +Hisilicon HiP05 PCIe-SAS system controller
 > +
->  endif # EDAC
-> diff --git a/drivers/edac/cortex_arm64_edac.c b/drivers/edac/cortex_arm64_edac.c
+> +Required properties:
+> +- compatible : "hisilicon,pcie-sas-subctrl", "syscon";
+> +- reg : Register address and size
+> +
+> +The HiP05 PCIe-SAS system controller is shared by PCIe and SAS controllers in
+> +HiP05 Soc to implement some basic configurations.
+> +
+> +Example:
+> +       /* for HiP05 PCIe-SAS system */
+> +       pcie_sas: system_controller@0xb0000000 {
+> +               compatible = "hisilicon,pcie-sas-subctrl", "syscon";
+> +               reg = <0xb0000000 0x10000>;
+> +       };
+> +
+> +-----------------------------------------------------------------------
+>  Hisilicon CPU controller
+>
+>  Required properties:
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
 > new file mode 100644
-> index 0000000..7c936b66
+> index 0000000..17c6ed9
 > --- /dev/null
-> +++ b/drivers/edac/cortex_arm64_edac.c
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> @@ -0,0 +1,44 @@
+> +HiSilicon PCIe host bridge DT description
 > +
-> +static struct platform_driver cortex_arm64_edac_driver = {
-> +	.probe = cortex_arm64_edac_probe,
-> +	.remove = cortex_arm64_edac_remove,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +		.owner = THIS_MODULE,
-
-This line can be removed. THIS_MODULE is assigned by
-platform_driver_register().
-
-> +		.of_match_table = cortex_arm64_edac_of_match,
-> +	},
-> +};
+> +HiSilicon PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
 > +
-> +static int __init cortex_arm64_edac_init(void)
-> +{
-> +	return platform_driver_register(&cortex_arm64_edac_driver);
-> +}
-> +module_init(cortex_arm64_edac_init);
+> +Additional properties are described here:
 > +
-> +static void __exit cortex_arm64_edac_exit(void)
-> +{
-> +	platform_driver_unregister(&cortex_arm64_edac_driver);
-> +}
-> +module_exit(cortex_arm64_edac_exit);
+> +Required properties:
+> +- compatible: Should contain "hisilicon,hip05-pcie".
+> +- reg: Should contain rc_dbi, config registers location and length.
+> +- reg-names: Must include the following entries:
+> +  "rc_dbi": controller configuration registers;
+> +  "config": PCIe configuration space registers.
+> +- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
+> +- port-id: Should be 0, 1, 2 or 3.
 
-This can be module_platform_driver(cortex_arm64_edac_driver) now.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +
+> +Optional properties:
+> +- status: Either "ok" or "disabled".
+> +- dma-coherent: Present if DMA operations are coherent.
+> +
+> +Example:
+> +       pcie@0xb0080000 {
+> +               compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
+> +               reg = <0 0xb0080000 0 0x10000>, <0x220 0x00000000 0 0x2000>;
+> +               reg-names = "rc_dbi", "config";
+> +               bus-range = <0  15>;
+> +               msi-parent = <&its_pcie>;
+> +               #address-cells = <3>;
+> +               #size-cells = <2>;
+> +               device_type = "pci";
+> +               dma-coherent;
+> +               ranges = <0x82000000 0 0x00000000 0x220 0x00000000 0 0x10000000>;
+> +               num-lanes = <8>;
+> +               port-id = <1>;
+> +               #interrupts-cells = <1>;
+> +               interrupts-map-mask = <0xf800 0 0 7>;
+> +               interrupts-map = <0x0 0 0 1 &mbigen_pcie 1 10
+> +                                 0x0 0 0 2 &mbigen_pcie 2 11
+> +                                 0x0 0 0 3 &mbigen_pcie 3 12
+> +                                 0x0 0 0 4 &mbigen_pcie 4 13>;
+> +               status = "ok";
+> +       };
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
