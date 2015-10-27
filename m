@@ -1,38 +1,36 @@
-From: Saurabh Sengar <saurabh.truth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] drivers: of: removing assignment of 0 to static variable
-Date: Tue, 27 Oct 2015 09:12:01 +0530
-Message-ID: <1445917321-5225-1-git-send-email-saurabh.truth@gmail.com>
-References: <saurabh.truth@gmail.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 00/35] Few fixes and st21nfca/st-nci vendor_cmds
+ support
+Date: Tue, 27 Oct 2015 04:48:31 +0100
+Message-ID: <20151027034831.GA16135@zurbaran.home>
+References: <1445810090-18403-1-git-send-email-christophe-h.ricard@st.com>
+ <20151026060133.GA24619@zurbaran.home>
+ <562DCB2D.3090503@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <saurabh.truth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <562DCB2D.3090503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Saurabh Sengar <saurabh.truth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-no need to initialise static variable with 0, hence correcting it.
+Hi Christophe,
 
-Signed-off-by: Saurabh Sengar <saurabh.truth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/fdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Oct 26, 2015 at 07:41:49AM +0100, Christophe Ricard wrote:
+> Hi Samuel,
+> 
+> I believe there was an issue when you applied my last series.
+> drivers/nfc/st-nci/vendor_cmds.c is not present and this introduce a
+> build fix already reported by kbuild robot.
+I add to manually install the st-nci vendor commands patch and forgot to
+git add vendor_cmds.c...
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 6e82bc42..63699dd 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -184,7 +184,7 @@ static void * unflatten_dt_node(const void *blob,
- 	struct property *pp, **prev_pp = NULL;
- 	const char *pathp;
- 	unsigned int l, allocl;
--	static int depth = 0;
-+	static int depth;
- 	int old_depth;
- 	int offset;
- 	int has_name = 0;
--- 
-1.9.1
+This should be all fixed now.
 
+Cheers,
+Samuel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
