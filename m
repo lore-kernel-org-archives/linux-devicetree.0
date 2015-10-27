@@ -1,225 +1,41 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/3] devicetree: mfd: Add binding for the TI LM3533
-Date: Tue, 27 Oct 2015 14:21:10 -0500
-Message-ID: <CAL_JsqLUEpzvMbL8EGs1tNB+sqYWnpBsKXTfG9zdXdB2pFZ=PQ@mail.gmail.com>
-References: <1445796586-28683-1-git-send-email-bjorn.andersson@sonymobile.com> <1445963373-27790-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: Re: Re: [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3 support
+Date: Tue, 27 Oct 2015 20:24:22 +0100
+Message-ID: <87d1w09kt5.fsf@dell.be.48ers.dk>
+References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com>
+	<5627E515.6050505@redhat.com> <562894FE.3040702@gmail.com>
+	<5628A302.1080908@redhat.com>
+Reply-To: jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445963373-27790-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Johan Hovold <jhovold@gmail.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBDKONJFYSUEBB2M6X6YQKGQETZOFFLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <5628A302.1080908-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> (Hans de Goede's message of "Thu,
+	22 Oct 2015 10:49:06 +0200")
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?utf-8?Q?L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Reinder
+ E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, zhao_steven-Y9sIeH5OGRo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 11:29 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> Add the binding for the Texas Instruments LM3533 lighting power
-> solution.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>>>>> "Hans" == Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hi,
 
-> ---
->
-> Changes since v1:
-> - Added unit to boost-freq and als-resistance (as the frequency now comes with
->   a unit specifier I changed it to be expressed in kHz)
->
->  Documentation/devicetree/bindings/mfd/lm3533.txt | 183 +++++++++++++++++++++++
->  1 file changed, 183 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
-> new file mode 100644
-> index 000000000000..399df39ec7e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
-> @@ -0,0 +1,183 @@
-> +Texas Instruments LM3533 binding
-> +
-> +This binding describes the Texas Instruments LM3533, a lighting power solution
-> +for smartphone handsets. The common properties are described directly in the
-> +node, while each individual component are described in an optional subnode.
-> +
-> +- compatible:
-> +       Usage: required
-> +       Value type: <stringlist>
-> +       Definition: must be:
-> +                   "ti,lm3533"
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: i2c address of the LM3533 chip
-> +
-> +- ti,hwen-gpios:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: reference to gpio pin connected to the HWEN input; as
-> +                   specified in "gpio/gpio.txt"
-> +
-> +- ti,als-supply:
-> +       Usage: optional
-> +       Value type: <prop-encoded-array>
-> +       Definition: reference to regulator powering the V_als input; as
-> +                   specified in "regulator/regulator.txt"
-> +
-> +- ti,boost-freq-khz:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: switch-frequency of the boost converter, must be either:
-> +                   500 or 1000
-> +
-> +- ti,boost-ovp:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: over voltage protection limit, must be one of: 16, 24, 32
-> +                   or 40
-> +
-> +- #address-cells:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: must be 1
-> +
-> +- #size-cells:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: must be 0
-> +
-> += ALS SUBNODE
-> +The als subnode must be named "als", it carries the als related properties.
-> +
-> +- ti,als-resistance-ohm:
-> +       Usage: required (unless ti,pwm-mode is specified)
-> +       Value type: <u32>
-> +       Definition: specifies the resistor value (R_als), in Ohm. Valid values
-> +                   ranges from 200kOhm to 1574Ohm.
-> +
-> +- ti,pwm-mode:
-> +       Usage: optional
-> +       Value type: <empty>
-> +       Definition: specifies, if present, that the als should operate in pwm
-> +                   mode - rather than analog mode
-> +
-> += BACKLIGHT NODES
-> +Backlight subnodes must be named "backlight", they carry the backlight related
-> +properties.
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies which of the two backlights this node corresponds
-> +                   to
-> +
-> +- default-brightness:
-> +       Usage: optional
-> +       Value type: <32>
-> +       Definition: specifies the default brightness for the backlight, in
-> +                   units of brightness [0-255]
-> +
-> +- label:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: specifies a name of this backlight
-> +
-> +- led-max-microamp:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies the max current for this backlight, in uA, as
-> +                   described in "leds/common.txt"
-> +
-> +- ti,pwm-zones:
-> +       Usage: optional
-> +       Value type: <u32 list>
-> +       Definition: lists the ALS zones to be PWM controlled for this backlight,
-> +                   the values in the list are in the range [0 - 4]
-> +
-> += LED NODES
-> +LED subnodes must be named "led", they carry the LED related properties.
-> +
-> +- reg:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies which of the four LEDs this node corresponds to
-> +
-> +- linux,default-trigger:
-> +       Usage: optional
-> +       Value type: <string>
-> +       Definition: specifies the default trigger for the LED, as described in
-> +                   "leds/common.txt"
-> +
-> +- label:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: specifies a name of this LED, as described in
-> +                   "leds/common.txt"
-> +
-> +- led-max-microamp:
-> +       Usage: required
-> +       Value type: <u32>
-> +       Definition: specifies the max current for this LED, in uA, as described
-> +                   in "leds/common.txt"
-> +
-> +- ti,pwm-zones:
-> +       Usage: optional
-> +       Value type: <u32 list>
-> +       Definition: lists the ALS zones to be PWM controlled for this LED, the
-> +                   values in the list are in the range [0 - 4]
-> +
-> += EXAMPLE
-> +
-> +i2c@12460000 {
-> +       compatible = "qcom,i2c-qup-v1.1.1";
-> +       ...
-> +
-> +       lm3533@36 {
-> +               compatible = "ti,lm3533";
-> +               reg = <0x36>;
-> +
-> +               ti,hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
-> +               ti,als-supply = <&pm8921_l11>;
-> +
-> +               ti,boost-freq = <500000>;
-> +               ti,boost-ovp = <24>;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               als {
-> +                       ti,als-resistance = <200000>;
-> +               };
-> +
-> +               backlight@0 {
-> +                       reg = <0>;
-> +                       label = "backlight";
-> +
-> +                       led-max-microamp = <20200>;
-> +               };
-> +
-> +               led@0 {
-> +                       reg = <0>;
-> +                       label = "red";
-> +
-> +                       led-max-microamp = <5000>;
-> +               };
-> +
-> +               led@1 {
-> +                       reg = <1>;
-> +                       label = "green";
-> +
-> +                       led-max-microamp = <5000>;
-> +               };
-> +
-> +               led@2 {
-> +                       reg = <2>;
-> +                       label = "blue";
-> +
-> +                       led-max-microamp = <5000>;
-> +               };
-> +       };
-> +
-> --
-> 2.4.2
->
+ > 2) I see no pmic code in there. I know these boards do not use an axp pmic,
+ > but according to my info at least the Orange Pi 2 (which I have) uses a
+ > sy8106a pmic, it is not entirely clear to me yet if this one needs any
+ > init though, I've mailed the Orange Pi people about this.
+
+Did you hear back from them? I haven't been able to find any datasheet
+describing the i2c interface, but the orange pi pc schematics has a note
+that Vout is defined by the Ru1 / Ru2 resistors, so it sounds like i2c
+configuration isn't critical to get something running.
+
+-- 
+Bye, Peter Korsgaard
