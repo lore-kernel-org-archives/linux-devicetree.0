@@ -1,45 +1,51 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] mtd: ofpart: document the lock flag.
-Date: Mon, 26 Oct 2015 18:47:05 -0700
-Message-ID: <20151027014705.GO13239@google.com>
-References: <cover.1439911625.git.hramrach@gmail.com>
- <83fbf31ad895446837f8e01f77a1ff7c63d62251.1439911625.git.hramrach@gmail.com>
- <20151011200412.GF3696@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH] mtd: ofpart: drop undocumented, nonfunctional 'lock' property
+Date: Mon, 26 Oct 2015 18:56:06 -0700
+Message-ID: <1445910966-11415-1-git-send-email-computersforpeace@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151011200412.GF3696@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 11, 2015 at 01:04:12PM -0700, Brian Norris wrote:
-> On Tue, Aug 18, 2015 at 03:34:08PM -0000, Michal Suchanek wrote:
-> > The lock flag of ofpart is undocumented. Add to binding doc.
-> 
-> Good catch. There are a lot of small corners of very old code that never
-> really got reviewed properly, I expect...
-> 
-> (And the flag looks very odd. Why exactly is it in the partitions?)
-> 
-> And now that I'm looking further...does this flag even *do* anything?
-> AFAICT, it doesn't set the master device flags -- only the partition
-> flags. But MTD drivers currently never see the partition flags -- they
-> only see the master struct mtd_info. I think the only way anyone could
-> observe the effect of this flag is to read the MTD flags from sysfs. And
-> that's pretty useless.
-> 
-> If my understanding is correct, then I'd rather completely remove the
-> code that "handles" this flag, rather than codify it in the docs.
+The 'lock' property of a partition does nothing, because it effectively
+only sets the flags for the partition device, not the master device. And
+no MTD driver checks for MTD_POWERUP_LOCK in the partition device, only
+the master device.
 
-I've tested and confirmed: this only sets the flags for the partition
-(*NOT* for the master device), so the only visible effect of this
-property is to change sysfs flags. I'll send out a patch to kill this
-property entirely.
+Michal noticed that this flag was undocumented, but rather than document
+a non-functioning DT property, let's just kill it, since obviously no
+one cared about it.
 
-Brian
+Note that this logic does not apply to all MTD flags (e.g., the
+"read-only" flags above the "lock" one), since certain flags *do* get
+checked in the partition, at least in some cases (particularly, when
+checking file permissions in mtdchar.c, but notably *not* in the core
+APIs like mtd_write()).
+
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/ofpart.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+index aa26c32e1bc2..6bab6b5863e5 100644
+--- a/drivers/mtd/ofpart.c
++++ b/drivers/mtd/ofpart.c
+@@ -86,9 +86,6 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+ 		if (of_get_property(pp, "read-only", &len))
+ 			(*pparts)[i].mask_flags |= MTD_WRITEABLE;
+ 
+-		if (of_get_property(pp, "lock", &len))
+-			(*pparts)[i].mask_flags |= MTD_POWERUP_LOCK;
+-
+ 		i++;
+ 	}
+ 
+-- 
+2.6.0.rc2.230.g3dd15c0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
