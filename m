@@ -1,51 +1,166 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] mtd: ofpart: drop undocumented, nonfunctional 'lock' property
-Date: Mon, 26 Oct 2015 18:56:06 -0700
-Message-ID: <1445910966-11415-1-git-send-email-computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 3/5] mtd: ofpart: update devicetree binding
+ specification
+Date: Mon, 26 Oct 2015 19:01:44 -0700
+Message-ID: <20151027020144.GP13239@google.com>
+References: <cover.1439911625.git.hramrach@gmail.com>
+ <e47db0c8eeaeb11353bcb2f4dcd138e813c3ecd7.1439911625.git.hramrach@gmail.com>
+ <20151011200402.GE3696@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151011200402.GE3696@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The 'lock' property of a partition does nothing, because it effectively
-only sets the flags for the partition device, not the master device. And
-no MTD driver checks for MTD_POWERUP_LOCK in the partition device, only
-the master device.
+On Sun, Oct 11, 2015 at 01:04:02PM -0700, Brian Norris wrote:
+> Hi DT maintainers,
 
-Michal noticed that this flag was undocumented, but rather than document
-a non-functioning DT property, let's just kill it, since obviously no
-one cared about it.
+Last call: I'd like a reviewer that
+(1) does DT reviews somewhat regularly and
+(2) is not me.
 
-Note that this logic does not apply to all MTD flags (e.g., the
-"read-only" flags above the "lock" one), since certain flags *do* get
-checked in the partition, at least in some cases (particularly, when
-checking file permissions in mtdchar.c, but notably *not* in the core
-APIs like mtd_write()).
+If I can't get one soon, I'll take this for 4.4.
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/mtd/ofpart.c | 3 ---
- 1 file changed, 3 deletions(-)
+Thanks,
+Brian
 
-diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-index aa26c32e1bc2..6bab6b5863e5 100644
---- a/drivers/mtd/ofpart.c
-+++ b/drivers/mtd/ofpart.c
-@@ -86,9 +86,6 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 		if (of_get_property(pp, "read-only", &len))
- 			(*pparts)[i].mask_flags |= MTD_WRITEABLE;
- 
--		if (of_get_property(pp, "lock", &len))
--			(*pparts)[i].mask_flags |= MTD_POWERUP_LOCK;
--
- 		i++;
- 	}
- 
--- 
-2.6.0.rc2.230.g3dd15c0
-
+> It's a bit hypocritical of me, since I've been a slow reviewer as well,
+> but... can we get some review on this one? Usually, I'm comfortable
+> taking driver DT bindings without your review, but this one is a bit
+> more generic and is more far-reaching than the average driver.
+> 
+> I'm not a big fan of this change, and I don't quite understand why the
+> bus driver (the SPI bus, which is a level up from the SPI device / MTD
+> node) can specify its grandchildren (see spi-samsung.txt). But given the
+> constraints, I think Michal's solution is OK. And I do agree that MTD's
+> ofpart should be bit more specific.
+> 
+> Anyway, a quick look and an Ack/Nak would be appreciated.
+> 
+> Thanks,
+> Brian
+> 
+> On Tue, Aug 18, 2015 at 03:34:08PM -0000, Michal Suchanek wrote:
+> > To avoid conflict with other drivers using subnodes of the mtd device
+> > create only one ofpart-specific node rather than any number of
+> > arbitrary partition subnodes.
+> > 
+> > Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> > v3:
+> > 
+> >  - rename DT node ofpart -> partitions
+> > ---
+> >  .../devicetree/bindings/mtd/partition.txt          | 68 +++++++++++++---------
+> >  1 file changed, 40 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+> > index 8e5557d..8c2aff7 100644
+> > --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> > @@ -4,10 +4,16 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
+> >  on platforms which have strong conventions about which portions of a flash are
+> >  used for what purposes, but which don't use an on-flash partition table such
+> >  as RedBoot.
+> > +
+> > +The partition table should be partitions subnode of the mtd node. Partitions are
+> > +defined in subnodes of the partitions node.
+> > +
+> > +For backwards compatibility partitions as direct subnodes of the mtd device are
+> > +supported. This use is discouraged.
+> >  NOTE: if the sub-node has a compatible string, then it is not a partition.
+> >  
+> > -#address-cells & #size-cells must both be present in the mtd device. There are
+> > -two valid values for both:
+> > +#address-cells & #size-cells must both be present in the partitions subnode of the
+> > +mtd device. There are two valid values for both:
+> >  <1>: for partitions that require a single 32-bit cell to represent their
+> >       size/address (aka the value is below 4 GiB)
+> >  <2>: for partitions that require two 32-bit cells to represent their
+> > @@ -28,44 +34,50 @@ Examples:
+> >  
+> >  
+> >  flash@0 {
+> > -	#address-cells = <1>;
+> > -	#size-cells = <1>;
+> > +	partitions {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> >  
+> > -	partition@0 {
+> > -		label = "u-boot";
+> > -		reg = <0x0000000 0x100000>;
+> > -		read-only;
+> > -	};
+> > +		partition@0 {
+> > +			label = "u-boot";
+> > +			reg = <0x0000000 0x100000>;
+> > +			read-only;
+> > +		};
+> >  
+> > -	uimage@100000 {
+> > -		reg = <0x0100000 0x200000>;
+> > +		uimage@100000 {
+> > +			reg = <0x0100000 0x200000>;
+> > +		};
+> >  	};
+> >  };
+> >  
+> >  flash@1 {
+> > -	#address-cells = <1>;
+> > -	#size-cells = <2>;
+> > +	partitions {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <2>;
+> >  
+> > -	/* a 4 GiB partition */
+> > -	partition@0 {
+> > -		label = "filesystem";
+> > -		reg = <0x00000000 0x1 0x00000000>;
+> > +		/* a 4 GiB partition */
+> > +		partition@0 {
+> > +			label = "filesystem";
+> > +			reg = <0x00000000 0x1 0x00000000>;
+> > +		};
+> >  	};
+> >  };
+> >  
+> >  flash@2 {
+> > -	#address-cells = <2>;
+> > -	#size-cells = <2>;
+> > +	partitions {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> >  
+> > -	/* an 8 GiB partition */
+> > -	partition@0 {
+> > -		label = "filesystem #1";
+> > -		reg = <0x0 0x00000000 0x2 0x00000000>;
+> > -	};
+> > +		/* an 8 GiB partition */
+> > +		partition@0 {
+> > +			label = "filesystem #1";
+> > +			reg = <0x0 0x00000000 0x2 0x00000000>;
+> > +		};
+> >  
+> > -	/* a 4 GiB partition */
+> > -	partition@200000000 {
+> > -		label = "filesystem #2";
+> > -		reg = <0x2 0x00000000 0x1 0x00000000>;
+> > +		/* a 4 GiB partition */
+> > +		partition@200000000 {
+> > +			label = "filesystem #2";
+> > +			reg = <0x2 0x00000000 0x1 0x00000000>;
+> > +		};
+> >  	};
+> >  };
+> > -- 
+> > 2.1.4
+> > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
