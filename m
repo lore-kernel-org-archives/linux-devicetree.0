@@ -1,73 +1,36 @@
-From: Mihail Tommonen <patapovich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH 0/6] ARM: sunxi: Introduce Allwinner H3 support
-Date: Tue, 27 Oct 2015 14:34:06 -0700 (PDT)
-Message-ID: <7bdb2797-4fc0-4bed-aa6b-23b359b8091f@googlegroups.com>
-References: <1445444007-4260-1-git-send-email-jenskuske@gmail.com>
- <5627E515.6050505@redhat.com> <562894FE.3040702@gmail.com>
- <5628A302.1080908@redhat.com>
- <87d1w09kt5.fsf@dell.be.48ers.dk>
-Reply-To: patapovich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 8/9] ARM: dts: Add leds support to STM32F429 Discovery
+ board
+Date: Tue, 27 Oct 2015 22:37:09 +0100
+Message-ID: <562FEE85.3010204@suse.de>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1445102604-11502-9-git-send-email-mcoquelin.stm32@gmail.com>
+ <CACRpkdYjq9XqKM4imYsaa_HBopS7uFnbb6gf=hRZHGC4baafAg@mail.gmail.com>
+ <CALszF6Bo3x4jWnvDc=28s=517YJrv2=3BuuYmxjqP4ciF17fcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_6946_1939811173.1445981646531"
-Return-path: <linux-sunxi+bncBDA2VVHOVYPRBT63X6YQKGQEB33UHEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <87d1w09kt5.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, zhao_steven-Y9sIeH5OGRo@public.gmane.org, peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALszF6Bo3x4jWnvDc=28s=517YJrv2=3BuuYmxjqP4ciF17fcQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_6946_1939811173.1445981646531
-Content-Type: multipart/alternative;
-	boundary="----=_Part_6947_1183966123.1445981646531"
+Am 27.10.2015 um 21:31 schrieb Maxime Coquelin:
+> 2015-10-26 14:41 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
+>> Usually people also want to add a default linux,trigger to these,
+>> like linux,default-trigger =3D "heartbeat"; but whatever you prefer.
+>=20
+> Makes sense, I will add default trigger in next version.
 
-------=_Part_6947_1183966123.1445981646531
-Content-Type: text/plain; charset=UTF-8
+Previously, consensus seemed to be not to use heartbeat as default, but
+rather off or on.
 
-I have a feeling that sy8106a could be related to Silergy other pmics. 
-Maybe something custom made, with special voltage, i2c address etc.
+Regards,
+Andreas
 
-http://lists.infradead.org/pipermail/linux-rockchip/2014-September/000249.html
-
--Miskab
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
-------=_Part_6947_1183966123.1445981646531
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">I have a feeling that sy8106a could be related to=C2=A0<fo=
-nt color=3D"#000000"><span style=3D"white-space: pre-wrap;">Silergy other p=
-mics. Maybe something custom made, with special voltage, i2c address etc.</=
-span></font><div><span style=3D"color: rgb(0, 0, 0); white-space: pre-wrap;=
-"><br></span></div><div><font color=3D"#000000"><span style=3D"white-space:=
- pre-wrap;">http://lists.infradead.org/pipermail/linux-rockchip/2014-Septem=
-ber/000249.html</span></font><br></div><div><font color=3D"#000000"><span s=
-tyle=3D"white-space: pre-wrap;"><br></span></font></div><div><font color=3D=
-"#000000"><span style=3D"white-space: pre-wrap;">-Miskab</span></font></div=
-></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
-------=_Part_6947_1183966123.1445981646531--
-
-------=_Part_6946_1939811173.1445981646531--
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
