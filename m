@@ -1,95 +1,219 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
-Date: Tue, 27 Oct 2015 16:22:57 +0000
-Message-ID: <20151027162257.GJ3091@leverpostej>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
- <1445961999-9506-2-git-send-email-fu.wei@linaro.org>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH v2 1/3] devicetree: mfd: Add binding for the TI LM3533
+Date: Tue, 27 Oct 2015 09:29:31 -0700
+Message-ID: <1445963373-27790-1-git-send-email-bjorn.andersson@sonymobile.com>
+References: <1445796586-28683-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445961999-9506-2-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445796586-28683-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 12:06:35AM +0800, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> The sbsa-gwdt.txt documentation in devicetree/bindings/watchdog is for
-> introducing SBSA(Server Base System Architecture) Generic Watchdog
-> device node info into FDT.
-> 
-> Also add sbsa-gwdt introduction in watchdog-parameters.txt
-> 
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/watchdog/sbsa-gwdt.txt     | 46 ++++++++++++++++++++++
->  Documentation/watchdog/watchdog-parameters.txt     |  6 +++
->  2 files changed, 52 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
-> new file mode 100644
-> index 0000000..ad8e99a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
-> @@ -0,0 +1,46 @@
-> +* SBSA (Server Base System Architecture) Generic Watchdog
-> +
-> +The SBSA Generic Watchdog Timer is used to force a reset of the system
-> +after two stages of timeout have elapsed.  A detailed definition of the
-> +watchdog timer can be found in the ARM document: ARM-DEN-0029 - Server
-> +Base System Architecture (SBSA)
-> +
-> +Required properties:
-> +- compatible: Should at least contain "arm,sbsa-gwdt".
-> +
-> +- reg: Each entry specifies the base physical 64-bit address of a register
-> +  frame and the 64-bit length of that frame; currently, two frames must be
+Add the binding for the Texas Instruments LM3533 lighting power
+solution.
 
-Remove "64-bit" here. This depends on #address-cells and #size-cells, as
-usual.
+Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+---
 
-> +  defined, in this order:
-> +  1: Watchdog control frame
-> +  2: Refresh frame.
-> +
-> +- interrupts: At least one interrupt must be defined that will be used as
-> +  the WS0 interrupt.  A WS1 interrupt definition can be provided, but is
-> +  optional.  The interrupts must be defined in this order:
-> +  1: WS0 interrupt
-> +  2: WS1 interrupt
+Changes since v1:
+- Added unit to boost-freq and als-resistance (as the frequency now comes with
+  a unit specifier I changed it to be expressed in kHz)
 
-Why is WS1 optional?
+ Documentation/devicetree/bindings/mfd/lm3533.txt | 183 +++++++++++++++++++++++
+ 1 file changed, 183 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
 
-> +Optional properties
-> +- timeout-sec: To use a timeout value that is different from the driver
-> +  default values, use this property. 
-
-Either define a default value, or don't state anything about the
-behaviour when this is not present.
-
->    If used, at least one timeout value
-> +  (in seconds) must be provided.  A second optional timeout value (in
-> +  seconds) may also be provided and will be used as the pre-timeout value,
-> +  if it is given.
-> +
-> +  There are two possible sources for driver default timeout values:
-> +  (1) the driver contains hard-coded default values, or
-> +  (2) module parameters can be given when the module is loaded
-> +
-> +  If timeout/pretimeout values are provided when the module loads, they
-> +  will take priority.  Second priority will be the timeout-sec from DTB,
-> +  and third the hard-coded driver values.
-
-The last two paragraphs should go. They describe Linux behaviour rather
-than the binding.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
+new file mode 100644
+index 000000000000..399df39ec7e7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
+@@ -0,0 +1,183 @@
++Texas Instruments LM3533 binding
++
++This binding describes the Texas Instruments LM3533, a lighting power solution
++for smartphone handsets. The common properties are described directly in the
++node, while each individual component are described in an optional subnode.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be:
++		    "ti,lm3533"
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: i2c address of the LM3533 chip
++
++- ti,hwen-gpios:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to gpio pin connected to the HWEN input; as
++		    specified in "gpio/gpio.txt"
++
++- ti,als-supply:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: reference to regulator powering the V_als input; as
++		    specified in "regulator/regulator.txt"
++
++- ti,boost-freq-khz:
++	Usage: required
++	Value type: <u32>
++	Definition: switch-frequency of the boost converter, must be either:
++		    500 or 1000
++
++- ti,boost-ovp:
++	Usage: required
++	Value type: <u32>
++	Definition: over voltage protection limit, must be one of: 16, 24, 32
++		    or 40
++
++- #address-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1
++
++- #size-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 0
++
++= ALS SUBNODE
++The als subnode must be named "als", it carries the als related properties.
++
++- ti,als-resistance-ohm:
++	Usage: required (unless ti,pwm-mode is specified)
++	Value type: <u32>
++	Definition: specifies the resistor value (R_als), in Ohm. Valid values
++		    ranges from 200kOhm to 1574Ohm.
++
++- ti,pwm-mode:
++	Usage: optional
++	Value type: <empty>
++	Definition: specifies, if present, that the als should operate in pwm
++		    mode - rather than analog mode
++
++= BACKLIGHT NODES
++Backlight subnodes must be named "backlight", they carry the backlight related
++properties.
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies which of the two backlights this node corresponds
++		    to
++
++- default-brightness:
++	Usage: optional
++	Value type: <32>
++	Definition: specifies the default brightness for the backlight, in
++		    units of brightness [0-255]
++
++- label:
++	Usage: required
++	Value type: <string>
++	Definition: specifies a name of this backlight
++
++- led-max-microamp:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies the max current for this backlight, in uA, as
++		    described in "leds/common.txt"
++
++- ti,pwm-zones:
++	Usage: optional
++	Value type: <u32 list>
++	Definition: lists the ALS zones to be PWM controlled for this backlight,
++		    the values in the list are in the range [0 - 4]
++
++= LED NODES
++LED subnodes must be named "led", they carry the LED related properties.
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies which of the four LEDs this node corresponds to
++
++- linux,default-trigger:
++	Usage: optional
++	Value type: <string>
++	Definition: specifies the default trigger for the LED, as described in
++		    "leds/common.txt"
++
++- label:
++	Usage: required
++	Value type: <string>
++	Definition: specifies a name of this LED, as described in
++		    "leds/common.txt"
++
++- led-max-microamp:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies the max current for this LED, in uA, as described
++		    in "leds/common.txt"
++
++- ti,pwm-zones:
++	Usage: optional
++	Value type: <u32 list>
++	Definition: lists the ALS zones to be PWM controlled for this LED, the
++		    values in the list are in the range [0 - 4]
++
++= EXAMPLE
++
++i2c@12460000 {
++	compatible = "qcom,i2c-qup-v1.1.1";
++	...
++
++	lm3533@36 {
++		compatible = "ti,lm3533";
++		reg = <0x36>;
++
++		ti,hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
++		ti,als-supply = <&pm8921_l11>;
++
++		ti,boost-freq = <500000>;
++		ti,boost-ovp = <24>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		als {
++			ti,als-resistance = <200000>;
++		};
++
++		backlight@0 {
++			reg = <0>;
++			label = "backlight";
++
++			led-max-microamp = <20200>;
++		};
++
++		led@0 {
++			reg = <0>;
++			label = "red";
++
++			led-max-microamp = <5000>;
++		};
++
++		led@1 {
++			reg = <1>;
++			label = "green";
++
++			led-max-microamp = <5000>;
++		};
++
++		led@2 {
++			reg = <2>;
++			label = "blue";
++
++			led-max-microamp = <5000>;
++		};
++	};
++
+-- 
+2.4.2
