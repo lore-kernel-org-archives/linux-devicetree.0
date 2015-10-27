@@ -1,73 +1,67 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 02/32] devicetree: bindings: scsi: HiSi SAS
-Date: Tue, 27 Oct 2015 14:39:39 +0000
-Message-ID: <20151027143939.GG3091@leverpostej>
-References: <1445868903-183817-1-git-send-email-john.garry@huawei.com>
- <1445868903-183817-3-git-send-email-john.garry@huawei.com>
- <20151026144523.GB12277@leverpostej>
- <562F777B.6020407@huawei.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v6 04/22] of: add function to allow probing a device from
+ a OF node
+Date: Tue, 27 Oct 2015 15:46:07 +0100
+Message-ID: <CAAObsKCSzBNESu5WGAWPz5Uh41NYaPXkWtBPtL7SVu4NAs6ebw@mail.gmail.com>
+References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1442844182-27787-5-git-send-email-tomeu.vizoso@collabora.com> <CAMuHMdW=sT9uLbZkwdYF9Yd3ENaAoQ0=qQLfr-Ow6pz11DiU0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <562F777B.6020407@huawei.com>
+In-Reply-To: <CAMuHMdW=sT9uLbZkwdYF9Yd3ENaAoQ0=qQLfr-Ow6pz11DiU0A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: JBottomley@odin.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, john.garry2@mail.dcu.ie, hare@suse.de, xuwei5@hisilicon.com, zhangfei.gao@linaro.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 01:09:15PM +0000, John Garry wrote:
-> On 26/10/2015 14:45, Mark Rutland wrote:
-> >On Mon, Oct 26, 2015 at 10:14:33PM +0800, John Garry wrote:
-> >>Add devicetree bindings for HiSilicon SAS driver.
-> >>
-> >>Signed-off-by: John Garry <john.garry@huawei.com>
-> >>---
-> >>  .../devicetree/bindings/scsi/hisilicon-sas.txt     | 70 ++++++++++++++++++++++
-> >>  1 file changed, 70 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> >>new file mode 100644
-> >>index 0000000..d1e7b2a
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> >>@@ -0,0 +1,70 @@
-> >>+* HiSilicon SAS controller
-> >>+
-> >>+The HiSilicon SAS controller supports SAS/SATA.
-> >>+
-> >>+Main node required properties:
-> >>+  - compatible : value should be as follows:
-> >>+	(a) "hisilicon,sas-controller-v1" for v1 of HiSilicon SAS controller IP
-> >>+  - reg : Address and length of the SAS register
-> >>+  - hisilicon,sas-syscon: phandle of syscon used for sas control
-> >>+  - ctrl-reg : offset to the following SAS control registers (in order):
-> >>+		- reset assert
-> >>+		- clock disable
-> >>+		- reset status
-> >>+		- reset de-assert
-> >>+		- clock enable
-> >
-> >This needs a better name, and it should probably be split up into
-> >several properties.
-> >
-> >However, it sounds like the syscon is actually a clock+reset
-> >controller, and should be modelled as such. It's not actually a part of
-> >the SAS controller as such.
-> 
-> The syscon block is a general subsystem control block, and it is not
-> specifically only for controlling reset and enabling clocks (other
-> functions include serdes control, for example). It is also shared
-> with other peripherals.
-> 
-> So we can remove the ctrl-reg property (since it is not part of the
-> SAS controller), and add the relevant syscon register offsets to the
-> "hisilicon,sas-syscon" property, like this:
-> hisilicon,sas-syscon = <&sas_ctrl0 0xa60 0x33c 0x5a30 0xa64 0x338>;
-> 
-> Ok?
+On 26 October 2015 at 09:16, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Mon, Sep 21, 2015 at 4:02 PM, Tomeu Vizoso
+> <tomeu.vizoso@collabora.com> wrote:
+>> Walks the OF tree up and finds the closest ancestor that has a struct
+>> device associated with it, probing it if isn't bound to a driver yet.
+>>
+>> The above should ensure that the dependency represented by the passed OF
+>> node is available, because probing a device should cause its descendants
+>> to be probed as well (when they get registered).
+>>
+>> Subsystems can use this when looking up resources for drivers, to reduce
+>> the chances of deferred probes because of the probing order of devices.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>
+> Don't know to which response I should post this comment, so I'm responding
+> to the original email.
+>
+> Some subsystems already do this.
+> If you call e.g. syscon_regmap_lookup_by_phandle(), it will call
+> of_syscon_register() if the syscon device pointed to hasn't been registered yet.
 
-It would be better to have each offset in a separate property.
+Hi Geert,
 
-Mark.
+I think I prefer if devices are registered as early as possible and
+then only probed on-demand, as registration is very much
+device-specific but probing is the same for all devices.
+
+But I think in general we should be doing more things on demand and
+depending less on the order in which we mass initialize stuff
+(devices, classes, drivers, etc).
+
+Regards,
+
+Tomeu
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
