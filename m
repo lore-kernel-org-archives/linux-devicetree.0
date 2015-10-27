@@ -1,32 +1,58 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] Documentation: ad5592r: Added devicetree bindings documentation
-Date: Tue, 27 Oct 2015 17:15:56 +0100
-Message-ID: <CACRpkdZgjp_scGX=VA-qSiQMGH_ib2ZOo-5HgZCbQWOXfw=7eQ@mail.gmail.com>
-References: <1444729080-9937-1-git-send-email-paul.cercueil@analog.com>
-	<562CD9BD.6030206@kernel.org>
-	<CACRpkdatEhs34y3D5evo-_rmG=pPb9LcdNWE+3zgnGqbZFh9hQ@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v3 2/4] regulator: arizona: Add regulator specific device tree binding document
+Date: Tue, 27 Oct 2015 16:01:57 +0000
+Message-ID: <1445961719-1020-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1445961719-1020-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdatEhs34y3D5evo-_rmG=pPb9LcdNWE+3zgnGqbZFh9hQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Michael Hennerich <Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Antonio Fiol <antonio-ZGO+nOAM/nI@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445961719-1020-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 5:13 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Subsystem specific bindings for the Arizona devices are being factored
+out of the MFD binding document into separate documents for each
+subsystem. This patch adds a binding document that covers the existing
+regulator specific bindings.
 
-> There are other problems though, but I comment on these
-> separately.
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
 
-Was wrong about that. I think this can go in like this.
+Changes since v2:
+ - Moved the core regulators back into the MFD component
+ - Moved the maintainer updates into a separate patch
 
-Later, this device may fork off a GPIO chip as well, but
-we will deal with that whenever we run into it.
+Thanks,
+Charles
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/regulator/arizona-regulator.txt       |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+new file mode 100644
+index 0000000..443564d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+@@ -0,0 +1,17 @@
++Cirrus Logic Arizona class audio SoCs
++
++These devices are audio SoCs with extensive digital capabilities and a range
++of analogue I/O.
++
++This document lists regulator specific bindings, see the primary binding
++document:
++  ../mfd/arizona.txt
++
++Optional properties:
++  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
++
++Optional subnodes:
++  - ldo1 : Initial data for the LDO1 regulator, as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt
++  - micvdd : Initial data for the MICVDD regulator, as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt
+-- 
+1.7.2.5
