@@ -1,145 +1,63 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v3 18/27] mtd: nand: omap2: Implement NAND ready using
  gpiolib
-Date: Tue, 27 Oct 2015 09:28:32 +0100
-Message-ID: <20151027092832.4d7bb114@bbrezillon>
+Date: Tue, 27 Oct 2015 10:43:40 +0200
+Message-ID: <562F393C.1030701@ti.com>
 References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
-	<1442588029-13769-19-git-send-email-rogerq@ti.com>
-	<20151026204900.GI13239@google.com>
+ <1442588029-13769-19-git-send-email-rogerq@ti.com>
+ <20151026204900.GI13239@google.com> <562F2FB6.7050806@ti.com>
+ <20151027091235.03dba8c5@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151026204900.GI13239@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Roger Quadros <rogerq@ti.com>, tony@atomide.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>, Harvey Hunt <harvey.hunt@imgtec.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151027091235.03dba8c5@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Boris,
 
-On Mon, 26 Oct 2015 13:49:00 -0700
-Brian Norris <computersforpeace@gmail.com> wrote:
-
-> + others
+On 27/10/15 10:12, Boris Brezillon wrote:
+> Hi Roger,
 > 
-> A few comments below.
+> On Tue, 27 Oct 2015 10:03:02 +0200
+> Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
 > 
-> On Fri, Sep 18, 2015 at 05:53:40PM +0300, Roger Quadros wrote:
-> > The GPMC WAIT pin status are now available over gpiolib.
-> > Update the omap_dev_ready() function to use gpio instead of
-> > directly accessing GPMC register space.
-> > 
-> > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > ---
-> >  drivers/mtd/nand/omap2.c                     | 29 +++++++++++++++++-----------
-> >  include/linux/platform_data/mtd-nand-omap2.h |  2 +-
-> >  2 files changed, 19 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> > index 228f498..d0f2620 100644
-> > --- a/drivers/mtd/nand/omap2.c
-> > +++ b/drivers/mtd/nand/omap2.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/dmaengine.h>
-> >  #include <linux/dma-mapping.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/module.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/jiffies.h>
-> > @@ -184,6 +185,8 @@ struct omap_nand_info {
-> >  	/* fields specific for BCHx_HW ECC scheme */
-> >  	struct device			*elm_dev;
-> >  	struct device_node		*of_node;
-> > +	/* NAND ready gpio */
-> > +	struct gpio_desc		*ready_gpiod;
-> >  };
-> >  
-> >  /**
-> > @@ -1047,22 +1050,17 @@ static int omap_wait(struct mtd_info *mtd, struct nand_chip *chip)
-> >  }
-> >  
-> >  /**
-> > - * omap_dev_ready - calls the platform specific dev_ready function
-> > + * omap_dev_ready - checks the NAND Ready GPIO line
-> >   * @mtd: MTD device structure
-> > + *
-> > + * Returns true if ready and false if busy.
-> >   */
-> >  static int omap_dev_ready(struct mtd_info *mtd)
-> >  {
-> > -	unsigned int val = 0;
-> >  	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
-> >  							mtd);
-> >  
-> > -	val = readl(info->reg.gpmc_status);
-> > -
-> > -	if ((val & 0x100) == 0x100) {
-> > -		return 1;
-> > -	} else {
-> > -		return 0;
-> > -	}
-> > +	return gpiod_get_value(info->ready_gpiod);
-> >  }
-> >  
-> >  /**
-> > @@ -1782,7 +1780,9 @@ static int omap_nand_probe(struct platform_device *pdev)
-> >  		info->reg = pdata->reg;
-> >  		info->of_node = pdata->of_node;
-> >  		info->ecc_opt = pdata->ecc_opt;
-> > -		info->dev_ready	= pdata->dev_ready;
-> > +		if (pdata->dev_ready)
-> > +			dev_info(&pdev->dev, "pdata->dev_ready is deprecated\n");
-> > +
-> >  		info->xfer_type = pdata->xfer_type;
-> >  		info->devsize = pdata->devsize;
-> >  		info->elm_of_node = pdata->elm_of_node;
-> > @@ -1815,6 +1815,13 @@ static int omap_nand_probe(struct platform_device *pdev)
-> >  	nand_chip->IO_ADDR_W = nand_chip->IO_ADDR_R;
-> >  	nand_chip->cmd_ctrl  = omap_hwcontrol;
-> >  
-> > +	info->ready_gpiod = devm_gpiod_get_optional(&pdev->dev, "ready",
-> > +						    GPIOD_IN);
+>> On 26/10/15 22:49, Brian Norris wrote:
+>>>
+>>> Others have been looking at using GPIOs for the ready/busy pin too. At a
+>>> minimum, we need an updated DT binding doc for this, since I see you're
+>>> adding this via device tree in a later patch (I don't see any DT binding
+>>> patch for this; but I could just be overlooking it). It'd also be great
+>>> if this support was moved to nand_dt_init() so other platforms can
+>>> benefit, but I won't require that.
+>>>
+>>> Also, previous [0] proposers had suggested 'rb-gpios', not 'ready-gpio'
+>>> (the hardware docs typically call it 'rb' for ready/busy, FWIW). I don't
+>>> really care, but the name should be going into a doc, so we can choose
+>>> the same one everywhere.
+>>>
+>>> EDIT: looks like the discussion was partly here [1] and it seems we're
+>>> landing on "rb-gpios" in the latest version [2]. Can we stick with that?
+>>
+>> Why should it be "rb-gpios" and not "rb-gpio"?
+>> I don't think there are multiple gpios for r/b# function.
 > 
-> Others have been looking at using GPIOs for the ready/busy pin too. At a
-> minimum, we need an updated DT binding doc for this, since I see you're
-> adding this via device tree in a later patch (I don't see any DT binding
-> patch for this; but I could just be overlooking it). It'd also be great
-> if this support was moved to nand_dt_init() so other platforms can
-> benefit, but I won't require that.
+> Because it's supposed to be a generic binding, and some NAND chips
+> embed several dies, thus exposing several CS and RB pins, hence the
+> rb-gpios name.
+> Also, as described here [1], the convention is to name your property
+> <name>-gpios even if you only need one gpio.
 
-Actually I started to work on a generic solution parsing the DT and
-creating CS, WP and RB gpios when they are provided, but I think it's a
-bit more complicated than just moving the rb-gpios parsing into
-nand_dt_init().
-First you'll need something to store your gpio_desc pointers, which
-means you'll have to allocate a table of gpio_desc pointers (or a table
-of struct embedding a gpio_desc pointer).
-The other blocking point is that when nand_scan_ident() is called, the
-caller is supposed to have filled the ->dev_ready() or ->waitfunc()
-fields, and to choose how to implement it he may need to know
-which kind of RB handler should be used (this is the case in the sunxi
-driver, where the user can either use a GPIO or native R/B pin directly
-connected to the controller).
+Makes sense now. Thanks for the explanation.
+I'll update this patch to use rb-gpios and update the binding doc as well.
 
-All this makes me think that maybe nand_dt_init() should be called
-separately or in a different helper (nand_init() ?) taking care of the
-basic nand_chip initializations/allocations without interacting with
-the NAND itself.
-
-Another solution would be to add an ->init() function to nand_chip
-and call it after the generic initialization has been done (but before
-NAND chip detection). This way the NAND controller driver could adapt
-some fields and parse controller specific properties.
-
-What do you think?
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
