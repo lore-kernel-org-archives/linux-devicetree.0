@@ -1,32 +1,61 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH 00/10] add support SATA for BMIPS_GENERIC
-Date: Tue, 27 Oct 2015 11:21:42 +0100
-Message-ID: <20151027102142.GD17243@linux-mips.org>
-References: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8173 PSCI-1.0 support
+Date: Tue, 27 Oct 2015 11:52:27 +0100
+Message-ID: <562F576B.2050108@gmail.com>
+References: <1440727919-34719-1-git-send-email-fan.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Received: from localhost.localdomain ([127.0.0.1]:34464 "EHLO linux-mips.org"
-        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
-        id S27011523AbbJ0KVshiAee (ORCPT <rfc822;devicetree@vger.kernel.org>
-        + 1 other); Tue, 27 Oct 2015 11:21:48 +0100
-Content-Disposition: inline
-In-Reply-To: <1445564663-66824-1-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jaedon Shin <jaedon.shin@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-ide@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440727919-34719-1-git-send-email-fan.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: fan.chen@mediatek.com, Mark Rutland <mark.rutland@arm.com>
+Cc: srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Howard Chen <howard.chen@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 10:44:13AM +0900, Jaedon Shin wrote:
 
-> Ralf,
-> I request you to drop already submitted patches for NAND device nodes.
-> It is merge conflicts with this patches.
-> http://patchwork.linux-mips.org/patch/10577/
-> http://patchwork.linux-mips.org/patch/10578/
-> http://patchwork.linux-mips.org/patch/10579/
-> http://patchwork.linux-mips.org/patch/10580/
 
-Done - but you can drop patches you have submitted from patchwork yourself.
+On 28/08/15 04:11, fan.chen@mediatek.com wrote:
+> From: Fan Chen <fan.chen@mediatek.com>
+>
+> This patch adds psci comatible properties to support all mandatory
+> functions of PSCI-1.0, PSCI-0.2 and PSCI-0.1, and system suspend
+> can be supported in PSCI-1.0.
+>
+> Signed-off-by: Fan Chen <fan.chen@mediatek.com>
+> ---
 
-  Ralf
+Applied to v4.4-next/arm64
+
+Thanks,
+Matthias
+
+> Because PSCI-1.0 patches hadn't landed on mainline, this patch is
+> based on three patch sets below:
+> [0] http://www.spinics.net/lists/arm-kernel/msg425793.html
+>      PSCI: system suspend support
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git
+>      psci/unification
+> [2] http://www.spinics.net/lists/devicetree/msg82017.html
+>      [PATCH 0/6] drivers: firmware: psci: add basic v1.0 support
+>
+> Before they are merged in, this patch still works fine with psci-0.2
+> support in current mainline.
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index d18ee42..b9b4205 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -95,7 +95,7 @@
+>   	};
+>
+>   	psci {
+> -		compatible = "arm,psci";
+> +		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+>   		method = "smc";
+>   		cpu_suspend   = <0x84000001>;
+>   		cpu_off	      = <0x84000002>;
+>
