@@ -1,88 +1,93 @@
-From: Stuart Yoder <stuart.yoder@freescale.com>
-Subject: RE: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A
- SoC
-Date: Tue, 27 Oct 2015 18:25:04 +0000
-Message-ID: <CY1PR0301MB07480A8EC25BB6987883AE5687220@CY1PR0301MB0748.namprd03.prod.outlook.com>
-References: <1445650280-9966-1-git-send-email-German.Rivera@freescale.com>
- <20151027163441.GK3091@leverpostej>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: ofpart: drop undocumented, nonfunctional 'lock'
+ property
+Date: Tue, 27 Oct 2015 11:32:44 -0700
+Message-ID: <20151027183244.GU13239@google.com>
+References: <1445910966-11415-1-git-send-email-computersforpeace@gmail.com>
+ <20151027071106.GI25308@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151027163441.GK3091@leverpostej>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sharma Bhupesh <bhupesh.sharma@freescale.com>, Li Leo <LeoLi@freescale.com>, Jose Rivera <German.Rivera@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151027071106.GI25308-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I think that comment "Currently supported enable-method is psci v0.2" is a statement of
-intent, not what is available currently.   And the only plan I am aware of is PSCI
-with UEFI based firmware.
+Hi Sascha,
 
-U-boot is a key firmware platform for us and has no PSCI implementation available.
+On Tue, Oct 27, 2015 at 08:11:06AM +0100, Sascha Hauer wrote:
+> On Mon, Oct 26, 2015 at 06:56:06PM -0700, Brian Norris wrote:
+> > The 'lock' property of a partition does nothing, because it effectively
+> > only sets the flags for the partition device, not the master device. And
+> > no MTD driver checks for MTD_POWERUP_LOCK in the partition device, only
+> > the master device.
+> 
+> This is not true. The flag gets checked in add_mtd_device:
+> 
+> 	/* Some chips always power up locked. Unlock them now */
+> 	if ((mtd->flags & MTD_WRITEABLE) && (mtd->flags & MTD_POWERUP_LOCK)) {
+> 		error = mtd_unlock(mtd, 0, mtd->size);
+> 		...
+> 	}
+> 
+> add_mtd_device() is called either for the master mtd device or for each
+> partition (if there are partitions). The flow is like that:
+> 
+> - Some flash devices come up locked from power on. Drivers for these
+>   devices set the MTD_POWERUP_LOCK flag (cfi_cmdset_0001.c,
+>   cfi_cmdset_0002.c)
+> - The partitions inherit the flags from the master device, but not the
+>   ones set in mask_flags:
+> 
+> 	ofpart.c:
+> 
+> 	if (of_get_property(pp, "lock", &len))
+> 		(*pparts)[i].mask_flags |= MTD_POWERUP_LOCK;
+> 
+> 	mtdpart.c:
+> 
+> 	slave->mtd.flags = master->flags & ~part->mask_flags;
+> 
+> - So if the lock property is not set then the MTD_POWERUP_LOCK flag is
+>   still set in add_mtd_device() for the partition and the corresponding
+>   partition is not unlocked. Otherwise the partition is unlocked.
 
-So, we need this.  The device tree simply describes the hardware that is
-there and that's what this patch exposes.
+Wow, you're absolutely correct, and I'm not sure how I overlooked that.
+So I guess this patch [1] should be rewritten to be clearer, and the
+$subject patch dropped.
 
-If down the road all firmware provides a PSCI based reset interface then
-we will naturally use that.  But we need something in the meantime to
-let us reboot the system.
+> So how I see it the mechanism is still functional, except that it's
+> broken when the recently introduced option MTD_PARTITIONED_MASTER is
+> set. When it's set then add_mtd_device() is called for the master device
+> aswell and the whole device gets unlocked. When the partitions are
+> registered later then it makes no difference whether they are unlocked
+> or not, they are already unlocked anyway.
 
-Thanks,
-Stuart
+It's also broken for overlapping partitions. Similarly to some previous
+proposals for per-partition ECC handling for NAND, I think.
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland@arm.com]
-> Sent: Tuesday, October 27, 2015 11:35 AM
-> To: Rivera Jose-B46482
-> Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Sharma Bhupesh-B45370; Yoder Stuart-B08248; Li Yang-Leo-R58472
-> Subject: Re: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
-> 
-> On Fri, Oct 23, 2015 at 08:31:20PM -0500, J. German Rivera wrote:
-> > Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
-> > the ARM-generic reboot mechanism for this SoC. This mechanism
-> > is enabled through CONFIG_POWER_RESET_SYSCON.
-> 
-> Per the comments in arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi, the
-> platform has PSCI 0.2+, and therefore already has system reset
-> functionality.
-> 
-> Given that, why is this necessary?
-> 
-> Thanks,
-> Mark.
-> 
-> > Signed-off-by: J. German Rivera <German.Rivera@freescale.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi b/arch/arm64/boot/dts/freescale/fsl-
-> ls2085a.dtsi
-> > index e281ceb..6f82163 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
-> > @@ -131,6 +131,18 @@
-> >  		interrupts = <1 9 0x4>;
-> >  	};
-> >
-> > +	rst_ccsr: rstccsr@1E60000 {
-> > +	        compatible = "syscon";
-> > +		reg = <0x0 0x1E60000 0x0 0x10000>;
-> > +	};
-> > +
-> > +	reboot@65024000 {
-> > +		compatible ="syscon-reboot";
-> > +		regmap = <&rst_ccsr>;
-> > +		offset = <0x0>;
-> > +		mask = <0x2>;
-> > +	};
-> > +
-> >  	timer {
-> >  		compatible = "arm,armv8-timer";
-> >  		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
-> > --
-> > 2.3.3
-> >
+When first looking at this property (and not understanding how exactly
+it worked), I was wondering why there's a per-partition property but not
+a per-device property. It seems that if there were a whole device
+property, then one could use 'lock' for the whole device (and then
+provide partition(s) which do not have the 'lock' property) in order to
+get this behavior on PARTITIONED_MASTER.
+
+I guess if one is really interested in fixing 'lock' for
+PARTITIONED_MASTER, and we don't want to introduce DT "ABI" changes, we
+can just have any partition that has the 'lock' flag mask the
+POWERUP_LOCK flag in its parent (master) device. That seems like a
+reasonable request.
+
+(It also still seems reasonable to support the 'lock' flag in the parent
+device, in case someone is not using ofpart.)
+
+Brian
+
+[1] http://patchwork.ozlabs.org/patch/508356/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
