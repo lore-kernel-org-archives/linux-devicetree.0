@@ -1,72 +1,66 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] mtd: ofpart: drop undocumented, nonfunctional 'lock'
- property
-Date: Tue, 27 Oct 2015 08:11:06 +0100
-Message-ID: <20151027071106.GI25308@pengutronix.de>
-References: <1445910966-11415-1-git-send-email-computersforpeace@gmail.com>
+From: Olliver Schinagl <o.schinagl@ultimaker.com>
+Subject: Re: [PATCH 01/10] pwm: lpc18xx_pwm: use pwm_set_chip_data
+Date: Tue, 27 Oct 2015 08:22:30 +0100
+Message-ID: <9D291167-A7CA-4954-AE33-A3ECC3A52FF2@ultimaker.com>
+References: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com> <1445895161-2317-2-git-send-email-o.schinagl@ultimaker.com> <CAAEAJfD=Lvqx-4_SHJyhg9Q1T_CKhLaGYs+X_ttoVf_zh_Yvkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445910966-11415-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAAEAJfD=Lvqx-4_SHJyhg9Q1T_CKhLaGYs+X_ttoVf_zh_Yvkg@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Olliver Schinagl <oliver+list@schinagl.nl>, linux-pwm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hey Ezequiel,
 
-On Mon, Oct 26, 2015 at 06:56:06PM -0700, Brian Norris wrote:
-> The 'lock' property of a partition does nothing, because it effectively
-> only sets the flags for the partition device, not the master device. And
-> no MTD driver checks for MTD_POWERUP_LOCK in the partition device, only
-> the master device.
+On October 26, 2015 10:58:18 PM CET, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar> wrote:
+>(+ Ariel)
+>
+>Hi Oliver,
+>
+>Not sure why there's some many people in Cc for such a silly change.
+>I guess you are using get_maintainers.pl on the entire patchset and get
+>this rather long list.
+>
+I did indeed use the script and for v2 i'll split it up in several patches. The grouping that made sense to me was it was all pwm related. I'll do better next time. Sorry.
 
-This is not true. The flag gets checked in add_mtd_device:
+>IMO, the value of submitting patches as part of a larger series is to
+>be able to
+>push patches that need to be applied in some given order, or otherwise
+>have some kind of logical relationship between them.
+>
+>However, this is not the case: it's just a very small change and has
+>no relation to the rest of the patches in the series.
+>I think a simple standalone patch would be better here.
+>
+>Also, get_maintainer.pl is just a hint, and not meant to be used as-is.
+>In particular, you are missing the driver's author.
+>
+>On 26 October 2015 at 18:32, Olliver Schinagl
+><o.schinagl@ultimaker.com> wrote:
+>> From: Olliver Schinagl <oliver@schinagl.nl>
+>>
+>> The lpc18xx driver currently manipulates the pwm_device struct
+>directly
+>> rather then using the pwm_set_chip_data. While the current method may
+>> save a clock cycle or two, it is more obvious that data is set to the
+>> chip pointer (especially since it is only a single int holding
+>struct.
+>>
+>> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+>> ---
+>>  drivers/pwm/pwm-lpc18xx-sct.c | 11 +++++++----
+>>  drivers/pwm/pwm-sun4i.c       | 11 +++++++++++
+>>  2 files changed, 18 insertions(+), 4 deletions(-)
+>>
+>
+>...and this diffstat is obviously fishy.
+It does.indeed, somehow i.must have accidentally merged two patches, stupid me. This.will also be addressed in the v2.
 
-	/* Some chips always power up locked. Unlock them now */
-	if ((mtd->flags & MTD_WRITEABLE) && (mtd->flags & MTD_POWERUP_LOCK)) {
-		error = mtd_unlock(mtd, 0, mtd->size);
-		...
-	}
-
-add_mtd_device() is called either for the master mtd device or for each
-partition (if there are partitions). The flow is like that:
-
-- Some flash devices come up locked from power on. Drivers for these
-  devices set the MTD_POWERUP_LOCK flag (cfi_cmdset_0001.c,
-  cfi_cmdset_0002.c)
-- The partitions inherit the flags from the master device, but not the
-  ones set in mask_flags:
-
-	ofpart.c:
-
-	if (of_get_property(pp, "lock", &len))
-		(*pparts)[i].mask_flags |= MTD_POWERUP_LOCK;
-
-	mtdpart.c:
-
-	slave->mtd.flags = master->flags & ~part->mask_flags;
-
-- So if the lock property is not set then the MTD_POWERUP_LOCK flag is
-  still set in add_mtd_device() for the partition and the corresponding
-  partition is not unlocked. Otherwise the partition is unlocked.
-
-So how I see it the mechanism is still functional, except that it's
-broken when the recently introduced option MTD_PARTITIONED_MASTER is
-set. When it's set then add_mtd_device() is called for the master device
-aswell and the whole device gets unlocked. When the partitions are
-registered later then it makes no difference whether they are unlocked
-or not, they are already unlocked anyway.
-
-Sascha
+Olliver
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
