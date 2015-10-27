@@ -1,40 +1,59 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host" port
-Date: Mon, 26 Oct 2015 18:43:00 -0700
-Message-ID: <CAD=FV=VKhBheVVBFT9DRDgd32o54RV8Er8sKqCHUvZm3ChnBRA@mail.gmail.com>
-References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
-	<562B9F5F.1080800@kernel.org>
-	<CAD=FV=VgYU8sZfSkbNbbOFpb-nt=Yy9NjybxADBnAiQXfasDpw@mail.gmail.com>
-	<CAL_JsqLtYrzvreV68V5S0wFJNAR6JusnqZrLjsJwT6yXgrQKHg@mail.gmail.com>
-	<CAD=FV=UfdEN4MzAwZLWDTQ4qMakhchpr063U1e3uk6R96wScJw@mail.gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 2/5] mtd: mtdpart: Do not fail mtd probe when parsing
+ partitions fails.
+Date: Mon, 26 Oct 2015 18:44:48 -0700
+Message-ID: <20151027014448.GN13239@google.com>
+References: <cover.1439911625.git.hramrach@gmail.com>
+ <97366073dfe93b478f24e2fc30ca818326906e0a.1439911625.git.hramrach@gmail.com>
+ <20151011200347.GD3696@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=UfdEN4MzAwZLWDTQ4qMakhchpr063U1e3uk6R96wScJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Herrero, Gregory" <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151011200347.GD3696@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, Oct 11, 2015 at 01:03:47PM -0700, Brian Norris wrote:
+> All in all, I think my suggestions would look something like the
+> following alternative patch. I haven't tested it yet.
+> 
+> Brian
+> 
+> (git-format-patch pasted below)
+> 
+> From 53b60f31a2a0f2a7e8220a4aff47457248bccbcf Mon Sep 17 00:00:00 2001
+> From: Brian Norris <computersforpeace@gmail.com>
+> Date: Sun, 11 Oct 2015 10:25:23 -0700
+> Subject: [PATCH] mtd: mtdpart: Do not fail mtd probe when parsing partitions
+>  fails.
+> 
+> Due to wrong assumption in ofpart ofpart fails on Exynos on SPI chips
+> with no partitions because the subnode containing controller data
+> confuses the ofpart parser.
+> 
+> Thus compiling in ofpart support automatically fails probing any SPI NOR
+> flash without partitions on Exynos.
+> 
+> Compiling in a partitioning scheme should not cause probe of otherwise
+> valid device to fail.
+> 
+> Instead, let's do the following:
+>  * try parsers until one succeeds
+>  * if no parser succeeds, report the first error we saw
+>  * even in the failure case, allow MTD to probe, with fallback
+>    partitions or no partitions at all -- the master device will still be
+>    registered
+> 
+> Issue report and comments initially by Michal Suchanek.
+> 
+> Reported-by: Michal Suchanek <hramrach@gmail.com>
+> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> ---
+>  drivers/mtd/mtdcore.c |  6 ++++--
+>  drivers/mtd/mtdpart.c | 14 ++++++++++----
+>  2 files changed, 14 insertions(+), 6 deletions(-)
 
-On Mon, Oct 26, 2015 at 4:49 PM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> One note: the "full" PHY reset is actually not in the register map of
-> the PHY.  It is amazingly enough in the CRU (clock reset unit).  So if
-> we actually exposed the "full" reset through the PHY framework, the
-> PHY would then turn around and pass it off to the reset framework,
-> which is how the full PHY reset is exposed from the CRU.
-
-Interestingly enough, it looks like there's a reasonable chance that
-we won't be able to use the PHY port reset.  We might have to go back
-to the full PHY reset (though it causes de-enumeration and
-re-enumeration) for safety, since there might be some side effects of
-the "phy port reset".
-
-Probably shouldn't land this series until we can figure that out.
-...but in that case we still have the question of how we should export
-it.  It would certainly be easy to keep using the reset framework...
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested, and applied this version to l2-mtd.git
