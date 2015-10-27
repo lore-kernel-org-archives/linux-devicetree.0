@@ -1,126 +1,72 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 0/4] Patches to fix remote wakeup on rk3288 dwc2 "host" port
-Date: Mon, 26 Oct 2015 16:49:52 -0700
-Message-ID: <CAD=FV=UfdEN4MzAwZLWDTQ4qMakhchpr063U1e3uk6R96wScJw@mail.gmail.com>
-References: <1445624891-31680-1-git-send-email-dianders@chromium.org>
-	<562B9F5F.1080800@kernel.org>
-	<CAD=FV=VgYU8sZfSkbNbbOFpb-nt=Yy9NjybxADBnAiQXfasDpw@mail.gmail.com>
-	<CAL_JsqLtYrzvreV68V5S0wFJNAR6JusnqZrLjsJwT6yXgrQKHg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Tue, 27 Oct 2015 09:16:08 +0900
+Message-ID: <20151027001608.GJ28319@sirena.org.uk>
+References: <1443731874-21362-1-git-send-email-afd@ti.com>
+ <1443731874-21362-5-git-send-email-afd@ti.com>
+ <20151022164724.GZ8232@sirena.org.uk>
+ <562A2C2F.1020808@ti.com>
+ <20151023231822.GQ29919@sirena.org.uk>
+ <562ACCCC.503@ti.com>
+ <20151024221457.GS29919@sirena.org.uk>
+ <562D3F77.5040205@ti.com>
+ <20151026004320.GU29919@sirena.org.uk>
+ <562E4B1D.4060205@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLtYrzvreV68V5S0wFJNAR6JusnqZrLjsJwT6yXgrQKHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Herrero, Gregory" <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6lCXDTVICvIQMz0h"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <562E4B1D.4060205-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob,
 
-On Mon, Oct 26, 2015 at 4:05 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> A DT reset controller seems like a bit of an overkill here. I think this
->>> would be much more simple if we just add a phy reset hook to the phy
->>> subsystem.
->>
->> Adding a reset hook in the PHY subsystem does seem like a reasonable
->> idea to me.  I was considering it in an earlier version of this series
->> that actually used a reset of the PHY to the fix the stuck dwc2.
->>
->> ...but I think that even if the phy subsystem had a reset hook it
->> wouldn't be the ideal solution here.  When we assert the PHY "port
->> reset" we're not actually fully resetting the PHY.  We're instead
->> doing some sort of a more minor "state machine" reset in the PHY.
->> This appears better (in my case) than resetting the whole PHY because
->> it doesn't force a de-enumeration / re-enumeration.  Exposing this
->> more minor reset as a PHY reset seems wrong to me.  ...and it also
->> precludes us later also exposing the more full reset through the PHY
->> framework if that later becomes useful.
->
-> Doesn't creating a binding also have similar possibility? Maybe an
-> "attach host" or re-init hook would be more appropriate. I'm sure
-> there are other such cases where the host and phy need more tight
-> coupling. I recently had a similar case where there was an interleaved
-> sequence of phy and host register writes. I managed rework things and
-> avoid changing the phy interface, but there will certainly be cases
-> where we can't.
->
-> Changing function names in the kernel is easy. Changing the binding
-> later not so much. Also as we're looking toward dependency handling,
-> this creates a circular dependency. We'll probably have to deal with
-> those anyway, but here it seems a bit pointless. We already have a
-> connection between the host and phy defined. Let's use that and not
-> define another.
+--6lCXDTVICvIQMz0h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm probably not understanding what you're proposing.  I was imagining
-that you were proposing adding into "include/linux/phy/phy.h" a
-definition like:
+On Mon, Oct 26, 2015 at 10:47:41AM -0500, Andrew F. Davis wrote:
+> On 10/25/2015 07:43 PM, Mark Brown wrote:
 
-  int phy_reset(struct phy *phy);
+> >>.of_compatible = "mediatek,mt6397-regulator",
 
-If that existed in the PHY interface, it wouldn't be enough for me
-since the "reset" that I'm doing isn't a full reset (and there does
-exist another, fuller PHY reset on this SoC).  So if we wanted to use
-the PHY interface, I'd need either:
+> >This is in the MFD, this is not used in actual systems.
 
-  int phy_reset(struct phy *phy, int reset_id);
-...or...
-  int phy_reset(struct phy *phy, const char *reset_id);
+> Not sure what you mean by "actual systems", it looks like these
+> use it?:
 
-I was expecting that to stay generic you'd somehow need to add a
-mapping of these resets into the device tree because a given USB
-controller may have different PHYs on different boards and the same
-PHY might be used with more than one USB controller.  If you don't add
-some type of mapping in the device tree then in _some_ type of include
-file you'd need something like:
+> arch/arm/boot/dts/mt8135-evbp1.dts
+> arch/arm64/boot/dts/mediatek/mt8173-evb.dts
 
-#define DWC2_RESET_ID_PHY_PORT_RESET  1
-#define DWC2_RESET_ID_PHY_FULL_RESET  2
-...or...
-#define DWC2_RESET_ID_PHY_PORT_RESET  "phy_port_reset"
-#define DWC2_RESET_ID_PHY_FULL_RESET  "phy_full_reset"
+To repeat: the regulator driver does not register a compatible string
+for the device for device model probing.
 
-...presumably you'd expect that to be in a dwc2 header file, to be
-included by the "rk3288 USB PHY"?  ...but, oddly enough, the "rk3288
-USB PHY" is not specific to dwc2, so having it include a dwc2 header
-file is pretty odd.  Specifically on rk3288 there are 3 instances of
-the same PHY.  One is hooked up to the dwc2 "OTG" port.  One is hooked
-up to the dwc2 "host" port (which doesn't have device functionality
-and also has the need for this strange reset quirk).  One is hooked up
-to an EHCI port (using the generic EHCI driver).
+> I understand this, I thought we are talking about compatible strings in
+> the regulator sub-node, not how the core instantiates the sub-driver.
 
-...so, while I could add a dwc2 specific include into the rk3288 PHY
-driver, I'd need to somehow figure out which of the PHYs it applied
-to.  For instance, maybe we later find that we need to activate this
-reset for the EHCI port.  Now we'll need to include both headers.
-...and hopefully there aren't name / number conflicts.
+No, this exactly about how the device model devices are instantiated.
 
-One note: the "full" PHY reset is actually not in the register map of
-the PHY.  It is amazingly enough in the CRU (clock reset unit).  So if
-we actually exposed the "full" reset through the PHY framework, the
-PHY would then turn around and pass it off to the reset framework,
-which is how the full PHY reset is exposed from the CRU.
+--6lCXDTVICvIQMz0h
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
->> ...we could, of course, re-invent the reset framework (with string or
->> integral IDs so we can assert different types of resets) within the
->> PHY framework.  That doesn't seem ideal to me, but if that's what
->> others want to do then I guess it would be OK...
->
-> I think that should already be possible as you can have multiple
-> cells. Of course, you have to plan for that with your cell values.
+iQEcBAEBCAAGBQJWLsJHAAoJECTWi3JdVIfQfMsH+QEmDoUieeLnFtOsfzaDde6H
+6l9DgqVcGQXGrHkmZzxZ7gGXHfhNityaFRvuuFox6hrROf7MnPozQtD3WYM3Irpk
+XM24Ucms04mOi502qu/k1K6sr8Zy+FdnrNyVYBFeKI+IinT2PrfW6lCL97SkBM6M
+YtTlLNgPO0gnqYiFoSWxOhtubjISOr97ZimYr0eVf8QSsYKPckGSyY5m02IX5geE
+SttAS6UIsgv8hKLSfcl9xVQsCryeniTh25kr6q6RvVMBtVAM/epMs0SS2EhfIgJ6
+0ac1fSbNe2YgFx28d/jQv2qyCVb76rEJ82HVemttZDek34MSm9qlimoBnIUwBGE=
+=lNrx
+-----END PGP SIGNATURE-----
 
-I didn't understand this comment.
-
-
-Basically: to summarize, I think that we have a reset framework that
-handles this beautifully and gets all the corner cases down.  Adding a
-second link to the PHY seems totally reasonable to me because I could
-totally imagine that this reset could be implemented in a totally
-different place in some SoCs.  It happens to be in the PHY in my
-particular case, but it need not be on all SoCs.
-
--Doug
+--6lCXDTVICvIQMz0h--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
