@@ -1,74 +1,86 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 3/6] fpga: add simple-fpga-bus
-Date: Wed, 28 Oct 2015 12:41:33 -0500
-Message-ID: <alpine.DEB.2.02.1510281237470.9125@linuxheads99>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-4-git-send-email-atull@opensource.altera.com> <20151028100714.GB7779@jcartwri.amer.corp.natinst.com> <CAAtXAHcaSZaKhYtVFbUEuO+boMh_PgUaOGVtjO_5MDkpcLcmWA@mail.gmail.com>
- <20151028161859.GJ8245@jcartwri.amer.corp.natinst.com> <CAAtXAHdry3_A9ow-w5KQg80ECyaAuSGVit9ygcM7Ffc9yiysMA@mail.gmail.com> <alpine.DEB.2.02.1510281151480.28209@linuxheads99>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC v4 05/11] dt-bindings: drm/mediatek: Add Mediatek HDMI dts
+ binding
+Date: Wed, 28 Oct 2015 18:50:23 +0100
+Message-ID: <1446054623.7190.5.camel@pengutronix.de>
+References: <1445026333-17013-1-git-send-email-p.zabel@pengutronix.de>
+	 <1445026333-17013-6-git-send-email-p.zabel@pengutronix.de>
+	 <CAL_JsqJkhbvTSMzyKb=3d3301VLRmuAf-UchWyf236c3VOdiQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1510281151480.28209@linuxheads99>
-Sender: linux-doc-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJkhbvTSMzyKb=3d3301VLRmuAf-UchWyf236c3VOdiQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, atull wrote:
+Hi Rob,
 
-> On Wed, 28 Oct 2015, Moritz Fischer wrote:
+thank you for the comments.
+
+Am Freitag, den 23.10.2015, 07:29 -0500 schrieb Rob Herring:
+[...]
+> > +Mediatek HDMI Encoder
+> > +=====================
+> > +
+> > +The Mediatek HDMI encoder can generate HDMI 1.4a or MHL 2.0 signals from
+> > +its parallel input.
 > 
-> > On Wed, Oct 28, 2015 at 9:18 AM, Josh Cartwright <joshc@ni.com> wrote:
-> > > On Wed, Oct 28, 2015 at 08:37:51AM -0700, Moritz Fischer wrote:
-> > >> On Wed, Oct 28, 2015 at 3:07 AM, Josh Cartwright <joshc@ni.com> wrote:
-> > >> > On Tue, Oct 27, 2015 at 05:09:12PM -0500, atull@opensource.altera.com wrote:
-> > >> >> From: Alan Tull <atull@opensource.altera.com>
-> > >> >>
-> > >> >> The Simple FPGA bus uses the FPGA Manager Framework and the
-> > >> >> FPGA Bridge Framework to provide a manufactorer-agnostic
-> > >> >> interface for reprogramming FPGAs that is Device Tree
-> > >> >> Overlays-based.
-> > >> >
-> > >> > Do you intend the "simple-fpga-bus" to be used on Zynq as well?  The
-> > >> > whole concept of the socfpga's "FPGA Bridge" doesn't map to the Zynq at
-> > >> > all, from what I can tell.
-> > >>
-> > >> For Zynq the zynq-fpga driver takes care of the level shifters on full
-> > >> reconfiguration,
-> > >> and doesn't for partial reconfiguration. Now depending on which parts
-> > >> of the fabric
-> > >> are partial reconfigured (say AXI masters), one might run into issues
-> > >> with a setup like that.
-> > >>
-> > >> My first plan was to counter that by using zynq-reset to hold the
-> > >> reset high during
-> > >> reconfiguration of that part of the FPGA.
-> > >>
-> > >> I'm happy to rethink that part and maybe redo the level shifters and
-> > >> resets together in a bridge
-> > >> driver under devicetree control gives finer grained control.
-> > >
-> > > There is already a framework which is used to describe and manipulate
-> > > level shifting/other IO properties, and that is pinctrl, and if we
-> > > wanted to use an appropriate abstraction, I think pinctrl would be the
-> > > best bet.
-> > 
-> > Alright, I'll investigate that. Again, for the non-partial reconfig
-> > case I'm happy
-> > with the behavior as implemented, for the partial reconfig I just
-> > haven't run into
-> > issues with not dealing with the level shifters.
+> How do you know whether it is HDMI or MHL on a given board? You should
+> have a connector node perhaps.
+
+Sounds sensible. I haven't really thought about MHL, my test board has a
+slimport bridge. For HDMI we already have the "hdmi-connector"
+compatible. I suppose for MHL we'd have to add a new "usb-connector"?
+
+> > +
+> > +Required properties:
+> > +- compatible: Should be "mediatek,<chip>-hdmi".
+> > +- reg: Physical base address and length of the controller's registers
+> > +- interrupts: The interrupt signal from the function block.
+> > +- clocks: device clocks
+> > +  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> > +- clock-names: must contain "pixel", "pll", "bclk", and "spdif".
+> > +- mediatek,cec: phandle link to the HDMI CEC node.
 > 
-> Are you suggesting pinctrl instead of introducing a FPGA Bridge Framework?
-> If it fits, that's great.  Steffen is urging us to include reconfiguring
-> width of the bridge so I'm trying to figure how and if that all fits in
-> here.
+> Do you have more than 1 CEC block? If not, just find the compatible
+> node with of_find_compatible_node.
+
+MT8173 only has one CEC block, so I will drop this property again.
+
+> > +- ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
 > 
+> This really should be part of a connector node as I2C bus goes to the
+> connector, not the HDMI block.
 
-Hi Josh,
+So I should add that as an optional property to the hdmi-connector
+binding. I'll have to check how DDC is handled for MHL.
 
-I don't think pinctrl is a good match here or even could be made to do
-what we need here.  Simple FPGA Bus needs, at minimum, an API to call
-to enable/disable data through a bridge to protect the processor bus
-from spurious data while the FPGA is being programmed.
+[...]
+> > +HDMI PHY
+> > +========
+> > +
+> > +The HDMI PHY serializes the HDMI encoder's three channel 10-bit parallel
+> > +output and drives the HDMI pads.
+> > +
+> > +Required properties:
+[...]
+> > +
+> > +Optional properties:
+> > +- ibias: TX DRV bias current for <1.65Gbps, defaults to 0xa
+> > +- ibias_up: TX DRV bias current for >1.65Gbps, defaults to 0x1c
+> 
+> prefix with "mediatek,"
 
-Alan
+Will do.
+
+regards
+Philipp
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
