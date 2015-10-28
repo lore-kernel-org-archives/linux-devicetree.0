@@ -1,169 +1,142 @@
 From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
+Subject: Re: [PATCH v12 1/6] fpga: add usage documentation for simple fpga
  bus
-Date: Wed, 28 Oct 2015 09:53:14 -0500
-Message-ID: <alpine.DEB.2.02.1510280948530.30289@linuxheads99>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <20151028090014.GG1166@pengutronix.de>
+Date: Wed, 28 Oct 2015 09:59:15 -0500
+Message-ID: <alpine.DEB.2.02.1510280957550.30289@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-2-git-send-email-atull@opensource.altera.com> <CAAtXAHce3OVfZt5MCTdJ8bTEjP0QWTE1y5C9SOMSH1+YWsWLYg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151028090014.GG1166@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHce3OVfZt5MCTdJ8bTEjP0QWTE1y5C9SOMSH1+YWsWLYg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Josh Cartwright <joshc@ni.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
+On Wed, 28 Oct 2015, Moritz Fischer wrote:
 
-> Hi!
+Hi Moritz!
+
+> Hi Alan,
 > 
-> On Tue, Oct 27, 2015 at 05:09:11PM -0500, atull@opensource.altera.com wrote:
+> great docs! Couple of nits inline below
+> 
+> On Tue, Oct 27, 2015 at 3:09 PM,  <atull@opensource.altera.com> wrote:
 > > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > New bindings document for simple fpga bus.
-> > 
+> >
+> > Add a document spelling out usage of the simple fpga bus.
+> >
 > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
 > > ---
-> > v9:  initial version added to this patchset
+> > v9:  Initial version of this patch in patchset
 > > v10: s/fpga/FPGA/g
-> >      replace DT overlay example with slightly more complicated example
+> >      improve formatting
+> >      some rewriting
 > >      move to staging/simple-fpga-bus
 > > v11: No change in this patch for v11 of the patch set
-> > v12: Moved out of staging.
-> >      Changed to use FPGA bridges framework instead of resets
-> >      for bridges.
+> > v12: Moved out of staging
+> >      Small changes due to using FPGA bridge framework and not
+> >      representing the bridges as resets.
 > > ---
-> >  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
-> >  1 file changed, 81 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> >  Documentation/fpga/simple-fpga-bus.txt |   58 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/fpga/simple-fpga-bus.txt
+> >
+> > diff --git a/Documentation/fpga/simple-fpga-bus.txt b/Documentation/fpga/simple-fpga-bus.txt
 > > new file mode 100644
-> > index 0000000..2e742f7
+> > index 0000000..bd43478
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> > @@ -0,0 +1,81 @@
+> > +++ b/Documentation/fpga/simple-fpga-bus.txt
+> > @@ -0,0 +1,58 @@
 > > +Simple FPGA Bus
-> > +===============
 > > +
-> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-> > +before populating the devices below its node.  All this happens when a device
-> > +tree overlay is added to the live tree.  This document describes that device
-> > +tree overlay.
+> > +Alan Tull 2015
 > > +
+> > +Overview
+> > +========
+> > +
+> > +The simple FPGA bus adds device tree overlay support for FPGA's.  Loading a
 > 
-> This is not really true, is it?
-> The driver should work without applying the overlay, e.g. the bootloader
-> might have already done it.
+> FPGAs
+
+D'oh!
+
+> > +DT overlay will result in the FPGA getting an image loaded, its bridges will
+> 
+> I'd prefer 'will result in the FPGA being programmed with an image'
+
+OK
+
+> 
+> > +be released, and the DT populated for nodes below the simple-fpga-bus.  This
+> > +results in drivers getting probed for the hardware that just got added.  This
+> > +is intended to support the FPGA usage where the FPGA has hardware that
+> > +requires drivers.  Removing the overlay will result in the drivers getting
+> > +removed and the bridges being disabled.
+> > +
+> > +The simple FPGA bus will need to disable and enable bridges that will only
+> > +affect the child devices that are below the bus.  If partial reconfiguration
+> > +is to be done, then bridges will need to be added within the FPGA design to
+> > +protect the rest of the bus when one part of the FPGA design is being
+> > +reconfigured.
+> > +
+> > +
+> > +Sequence
+> > +========
+> > +
+> > +Load the DT overlay.  One way to do that from user space is to use Pantelis'
+> > +DT-Overlay configfs interface.
+> > +
+> > +This causes the simple FPGA bus go be probed and will do the following:
+> 
+> I think you mean *to* be probed
+
+Yes
+
+> > + 1. Disable the FPGA bridges.
+> > + 2. Call the FPGA manager core to program the FPGA.
+> > + 3. Release the FPGA bridges.
+> > + 4. Call of_platform_populate resulting in device drivers getting probed.
+> > +
+> > +
+> > +Requirements
+> > +============
+> > +
+> > + 1. An FPGA image that has a hardware block or blocks that use drivers that are
+> > +    supported in the kernel.
+> > + 2. A device tree overlay (example is in the simple-fpga-bus bindings document).
+> > + 3. A FPGA manager driver supporting writing the FPGA.
+> > + 4. FPGA bridge drivers.
+> > +
+> > +The DT overlay includes bindings (documented in bindings/simple-fpga-bus.txt)
+> > +that specify:
+> > + * Which FPGA manager to use.
+> > + * Which image file to load.
+> > + * Flags indicating whether this this image is for full reconfiguration or
+> > +   partial.
+> > + * A list of FPGA bridges.
+> > + * Child nodes specifying the devices that will be added with appropriate
+> > +   compatible strings, etc.
+> > +
+> > +Since this code uses the firmware interface to get the image and DT overlay,
+> > +they currently have to be files on the file system.  It doesn't have to be that
+> > +way forever as DT bindings could be added to point to other sources for the
+> > +image.
+> 
+> Having this will be really useful, but I agree this can be a follow up patch.
+> > --
+> > 1.7.9.5
+> >
+> 
+> I'll take a closer look but feel free to add a:
+> 
+> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
+> 
+> Cheers,
+> 
+> Moritz
 > 
 
-Yes it's true.  I'm not clear what you are saying.  If the bootloader has
-programmed the FPGA, the overlay can leave out the optional properties
-and the FPGA won't get reprogrammed; the child devices will still get
-added and probed.  So this handles both the case where you want to reprogram
-the FPGA under Linux and where the FPGA was programmed by a bootloader.
-
-I'll fix the minor nits you are pointing out below.  Thanks for the feedback.
+Thanks for the review, I'll fix the nits.
 
 Alan
-
-> > +Required properties:
-> > +- compatible : should contain "simple-fpga-bus"
-> > +- #address-cells, #size-cells, ranges: must be present to handle address space
-> > +  mapping for children.
-> > +
-> > +Optional properties:
-> > +- fpga-mgr : should contain a phandle to a FPGA manager.
-> > +- fpga-firmware : should contain the name of a FPGA image file located on the
-> > +  firmware search path.
-> > +- partial-reconfig : boolean property should be defined if partial
-> > +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
-> > +  is done.
-> > +- fpga-bridges : should contain a list of bridges that the bus will disable
-> > +  before   programming the FPGA and then enable after the FPGA has been
->            ^^^                                                            ???
-> 
-> > +
-> > +Example:
-> > +
-> > +/dts-v1/;
-> > +/plugin/;
-> > +/ {
-> > +	fragment@0 {
-> > +		target-path="/soc";
-> > +		__overlay__ {
-> > +			#address-cells = <1>;
-> > +	                #size-cells = <1>;
-> > +
-> > +			bridge@0xff200000 {
->                                ^^
-> 
-> > +				compatible = "simple-fpga-bus";
-> > +				reg = <0xc0000000 0x20000000>,
-> > +				      <0xff200000 0x00200000>;
-> > +				reg-names = "axi_h2f", "axi_h2f_lw";
-> > +
-> > +				#address-cells = <0x2>;
-> > +				#size-cells = <0x1>;
-> > +
-> > +				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
-> > +					 <0x00000001 0x00020000 0xff220000 0x00000008>,
-> > +					 <0x00000001 0x00010040 0xff210040 0x00000020>;
-> > +
-> > +				clocks = <0x2 0x2>;
-> > +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
-> > +
-> > +				fpga-mgr = <&hps_0_fpgamgr>;
-> > +				fpga-firmware = "soc_system.rbf";
-> > +
-> > +				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
-> > +
-> > +				onchip_memory2_0: memory@0x000000000 {
->                                                          ^^
-> 
-> > +					device_type = "memory";
-> > +					compatible = "ALTR,onchipmem-15.1";
-> > +					reg = <0x00000000 0x00000000 0x00010000>;
-> > +				};
-> > +
-> > +				jtag_uart: serial@0x100020000 {
->                                                   ^^
-> 
-> > +					compatible = "altr,juart-15.1", "altr,juart-1.0";
-> > +					reg = <0x00000001 0x00020000 0x00000008>;
-> > +					interrupt-parent = <&intc>;
-> > +					interrupts = <0 42 4>;
-> > +				};
-> > +
-> > +				led_pio: gpio@0x100010040 {
->                                               ^^
-> 
-> No 0x, please.
-> 
-> > +					compatible = "altr,pio-15.1", "altr,pio-1.0";
-> > +					reg = <0x00000001 0x00010040 0x00000020>;
-> > +					altr,gpio-bank-width = <4>;
-> > +					resetvalue = <0>;
-> > +					#gpio-cells = <2>;
-> > +					gpio-controller;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > +
-> 
-> Regards,
-> Steffen
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
