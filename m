@@ -1,151 +1,64 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga bus
-Date: Wed, 28 Oct 2015 10:00:14 +0100
-Message-ID: <20151028090014.GG1166@pengutronix.de>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
- <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] MAINTAINERS: Add binding docs for Cirrus
+ Logic/Wolfson Arizona devices
+Date: Wed, 28 Oct 2015 09:01:05 +0000
+Message-ID: <20151028090105.GI5828@x1>
+References: <1445961719-1020-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1445961719-1020-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
+In-Reply-To: <1445961719-1020-4-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Tue, 27 Oct 2015, Charles Keepax wrote:
 
-On Tue, Oct 27, 2015 at 05:09:11PM -0500, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> New bindings document for simple fpga bus.
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Add device tree binding documentation for the Arizona drivers
+> to the MAINTAINERS file.
+>=20
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
-> v9:  initial version added to this patchset
-> v10: s/fpga/FPGA/g
->      replace DT overlay example with slightly more complicated example
->      move to staging/simple-fpga-bus
-> v11: No change in this patch for v11 of the patch set
-> v12: Moved out of staging.
->      Changed to use FPGA bridges framework instead of resets
->      for bridges.
-> ---
->  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> new file mode 100644
-> index 0000000..2e742f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> @@ -0,0 +1,81 @@
-> +Simple FPGA Bus
-> +===============
-> +
-> +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-> +before populating the devices below its node.  All this happens when a device
-> +tree overlay is added to the live tree.  This document describes that device
-> +tree overlay.
-> +
+>=20
+> Changes since v2:
+>  - Moved all the maintainer updates into this patch
+>=20
+> Thanks,
+> Charles
+>=20
+>  MAINTAINERS |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0658fec..4dc45de 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11392,6 +11392,9 @@ T:	git https://github.com/CirrusLogic/linux-d=
+rivers.git
+>  W:	https://github.com/CirrusLogic/linux-drivers/wiki
+>  S:	Supported
+>  F:	Documentation/hwmon/wm83??
+> +F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+> +F:	Documentation/devicetree/bindings/mfd/arizona.txt
 
-This is not really true, is it?
-The driver should work without applying the overlay, e.g. the bootloader
-might have already done it.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> +Required properties:
-> +- compatible : should contain "simple-fpga-bus"
-> +- #address-cells, #size-cells, ranges: must be present to handle address space
-> +  mapping for children.
-> +
-> +Optional properties:
-> +- fpga-mgr : should contain a phandle to a FPGA manager.
-> +- fpga-firmware : should contain the name of a FPGA image file located on the
-> +  firmware search path.
-> +- partial-reconfig : boolean property should be defined if partial
-> +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
-> +  is done.
-> +- fpga-bridges : should contain a list of bridges that the bus will disable
-> +  before   programming the FPGA and then enable after the FPGA has been
-           ^^^                                                            ???
+>  F:	arch/arm/mach-s3c64xx/mach-crag6410*
+>  F:	drivers/clk/clk-wm83*.c
+>  F:	drivers/extcon/extcon-arizona.c
 
-> +
-> +Example:
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +/ {
-> +	fragment@0 {
-> +		target-path="/soc";
-> +		__overlay__ {
-> +			#address-cells = <1>;
-> +	                #size-cells = <1>;
-> +
-> +			bridge@0xff200000 {
-                               ^^
-
-> +				compatible = "simple-fpga-bus";
-> +				reg = <0xc0000000 0x20000000>,
-> +				      <0xff200000 0x00200000>;
-> +				reg-names = "axi_h2f", "axi_h2f_lw";
-> +
-> +				#address-cells = <0x2>;
-> +				#size-cells = <0x1>;
-> +
-> +				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
-> +					 <0x00000001 0x00020000 0xff220000 0x00000008>,
-> +					 <0x00000001 0x00010040 0xff210040 0x00000020>;
-> +
-> +				clocks = <0x2 0x2>;
-> +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
-> +
-> +				fpga-mgr = <&hps_0_fpgamgr>;
-> +				fpga-firmware = "soc_system.rbf";
-> +
-> +				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
-> +
-> +				onchip_memory2_0: memory@0x000000000 {
-                                                         ^^
-
-> +					device_type = "memory";
-> +					compatible = "ALTR,onchipmem-15.1";
-> +					reg = <0x00000000 0x00000000 0x00010000>;
-> +				};
-> +
-> +				jtag_uart: serial@0x100020000 {
-                                                  ^^
-
-> +					compatible = "altr,juart-15.1", "altr,juart-1.0";
-> +					reg = <0x00000001 0x00020000 0x00000008>;
-> +					interrupt-parent = <&intc>;
-> +					interrupts = <0 42 4>;
-> +				};
-> +
-> +				led_pio: gpio@0x100010040 {
-                                              ^^
-
-No 0x, please.
-
-> +					compatible = "altr,pio-15.1", "altr,pio-1.0";
-> +					reg = <0x00000001 0x00010040 0x00000020>;
-> +					altr,gpio-bank-width = <4>;
-> +					resetvalue = <0>;
-> +					#gpio-cells = <2>;
-> +					gpio-controller;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
