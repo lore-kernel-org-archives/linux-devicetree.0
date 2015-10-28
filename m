@@ -1,47 +1,75 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v12 3/6] fpga: add simple-fpga-bus
-Date: Wed, 28 Oct 2015 08:37:51 -0700
-Message-ID: <CAAtXAHcaSZaKhYtVFbUEuO+boMh_PgUaOGVtjO_5MDkpcLcmWA@mail.gmail.com>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
-	<1445983755-24007-4-git-send-email-atull@opensource.altera.com>
-	<20151028100714.GB7779@jcartwri.amer.corp.natinst.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 4/6] fpga: add fpga bridge framework
+Date: Wed, 28 Oct 2015 10:31:32 -0500
+Message-ID: <alpine.DEB.2.02.1510281021460.30289@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-5-git-send-email-atull@opensource.altera.com> <20151028095027.GK1166@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20151028100714.GB7779@jcartwri.amer.corp.natinst.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>
-Cc: Alan Tull <atull@opensource.altera.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151028095027.GK1166@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 3:07 AM, Josh Cartwright <joshc@ni.com> wrote:
-> On Tue, Oct 27, 2015 at 05:09:12PM -0500, atull@opensource.altera.com wrote:
->> From: Alan Tull <atull@opensource.altera.com>
->>
->> The Simple FPGA bus uses the FPGA Manager Framework and the
->> FPGA Bridge Framework to provide a manufactorer-agnostic
->> interface for reprogramming FPGAs that is Device Tree
->> Overlays-based.
->
-> Do you intend the "simple-fpga-bus" to be used on Zynq as well?  The
-> whole concept of the socfpga's "FPGA Bridge" doesn't map to the Zynq at
-> all, from what I can tell.
+On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
 
-For Zynq the zynq-fpga driver takes care of the level shifters on full
-reconfiguration,
-and doesn't for partial reconfiguration. Now depending on which parts
-of the fabric
-are partial reconfigured (say AXI masters), one might run into issues
-with a setup like that.
+> > +int fpga_bridge_enable(struct fpga_bridge *bridge)
+> > +{
+> > +	pr_err("%s %s\n", __func__, dev_name(&bridge->dev));
+> 
+> Please clean this...
+> 
+> > +
+> > +	return bridge->br_ops->enable_set(bridge, 1);
+> > +}
+> > +EXPORT_SYMBOL_GPL(fpga_bridge_enable);
+> > +
+> > +/**
+> > + * fpga_bridge_disable
+> > + * @bridge: fpga bridge
+> > + *
+> > + * Disable transactions on the bridge
+> > + *
+> > + * Return: 0 for success, error code otherwise.
+> > + */
+> > +int fpga_bridge_disable(struct fpga_bridge *bridge)
+> > +{
+> > +	pr_err("%s %s\n", __func__, dev_name(&bridge->dev));
+> 
+> and this up.
+> 
 
-My first plan was to counter that by using zynq-reset to hold the
-reset high during
-reconfiguration of that part of the FPGA.
+OK
 
-I'm happy to rethink that part and maybe redo the level shifters and
-resets together in a bridge
-driver under devicetree control gives finer grained control.
+> > +void fpga_bridge_unregister(struct device *dev)
+> > +{
+> > +	struct fpga_bridge *bridge = dev_get_drvdata(dev);
+> > +
+> > +	dev_info(&bridge->dev, "%s : %s\n", __func__, bridge->name);
+> 
+> Is this necessary information?
 
-Cheers,
+I can remove it.
 
-Moritz
+> > +static int __init fpga_bridge_dev_init(void)
+> > +{
+> > +	pr_info("FPGA bridge framework driver\n");
+> 
+> Dito.
+> IMHO unnecessary log spam. Maybe change this to dbg?
+
+Sure.
+
+> > --- /dev/null
+> > +++ b/include/linux/fpga/fpga-bridge.h
+> > @@ -0,0 +1,49 @@
+> > +#include <linux/cdev.h>
+> 
+> You don't seem to use this.
+
+Correct.  I'll take it out.
+
+Thanks for the review!
+
+Alan
