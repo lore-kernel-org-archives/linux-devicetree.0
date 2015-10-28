@@ -1,52 +1,169 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: fix error checking for earlycon address
-Date: Wed, 28 Oct 2015 10:56:22 -0400
-Message-ID: <5630E216.908@hurleysoftware.com>
-References: <1445600840-26749-1-git-send-email-yamada.masahiro@socionext.com>
- <562A32EA.20808@hurleysoftware.com>
- <CAL_JsqK6UJxvGt3_y5T+VMxpr7G=PCmQ_Nx0QW-EfeTHOCDMKQ@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
+ bus
+Date: Wed, 28 Oct 2015 09:53:14 -0500
+Message-ID: <alpine.DEB.2.02.1510280948530.30289@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <20151028090014.GG1166@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqK6UJxvGt3_y5T+VMxpr7G=PCmQ_Nx0QW-EfeTHOCDMKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151028090014.GG1166@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2015 04:46 PM, Rob Herring wrote:
-> On Fri, Oct 23, 2015 at 8:15 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
->> Hi Masahiro,
->>
->> On 10/23/2015 07:47 AM, Masahiro Yamada wrote:
->>> fdt_translate_address() returns OF_BAD_ADDR on error.  It is defined as
->>> a u64 value, so the variable "addr" should be defined as u64 as well.
->>
->> Good catch.
->>
->> I would prefer if fdt_translate_address() returned resource_size_t (which
->> is the proper type for handling addresses as integers) and that type
->> was propagated through early_init_dt_scan_chosen_serial => of_setup_earlycon.
+On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
+
+> Hi!
 > 
-> That can be problematic in the DT code. The size of resource_size_t
-> can vary on 32-bit as it is based on phys_addr_t which in turn is
-> based on CONFIG_LPAE setting. However, the address sizes in DT are
-> fixed and may be 64-bit. So we stick with u64 in the DT code.
+> On Tue, Oct 27, 2015 at 05:09:11PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > New bindings document for simple fpga bus.
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> > v9:  initial version added to this patchset
+> > v10: s/fpga/FPGA/g
+> >      replace DT overlay example with slightly more complicated example
+> >      move to staging/simple-fpga-bus
+> > v11: No change in this patch for v11 of the patch set
+> > v12: Moved out of staging.
+> >      Changed to use FPGA bridges framework instead of resets
+> >      for bridges.
+> > ---
+> >  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > new file mode 100644
+> > index 0000000..2e742f7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > @@ -0,0 +1,81 @@
+> > +Simple FPGA Bus
+> > +===============
+> > +
+> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> > +before populating the devices below its node.  All this happens when a device
+> > +tree overlay is added to the live tree.  This document describes that device
+> > +tree overlay.
+> > +
+> 
+> This is not really true, is it?
+> The driver should work without applying the overlay, e.g. the bootloader
+> might have already done it.
+> 
 
-I think I see your point about fdt_translate_address(); you want it to
-mirror of_translate_address(), yes?  If so, then I have no objection
-to this patch and will mark it reviewed.
+Yes it's true.  I'm not clear what you are saying.  If the bootloader has
+programmed the FPGA, the overlay can leave out the optional properties
+and the FPGA won't get reprogrammed; the child devices will still get
+added and probed.  So this handles both the case where you want to reprogram
+the FPGA under Linux and where the FPGA was programmed by a bootloader.
 
-But the u64 value from fdt_translate_address() should be preserved
-at least to the ioremap()/set_fixmap() in earlycon_map() .
-I could roll that change into my earlycon series that moves
-fdt_translate_address() into of_setup_earlycon(), thus preserving
-the u64 value until it's assigned to a phys_addr_t.
+I'll fix the minor nits you are pointing out below.  Thanks for the feedback.
 
-Regards,
-Peter Hurley
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan
+
+> > +Required properties:
+> > +- compatible : should contain "simple-fpga-bus"
+> > +- #address-cells, #size-cells, ranges: must be present to handle address space
+> > +  mapping for children.
+> > +
+> > +Optional properties:
+> > +- fpga-mgr : should contain a phandle to a FPGA manager.
+> > +- fpga-firmware : should contain the name of a FPGA image file located on the
+> > +  firmware search path.
+> > +- partial-reconfig : boolean property should be defined if partial
+> > +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> > +  is done.
+> > +- fpga-bridges : should contain a list of bridges that the bus will disable
+> > +  before   programming the FPGA and then enable after the FPGA has been
+>            ^^^                                                            ???
+> 
+> > +
+> > +Example:
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +/ {
+> > +	fragment@0 {
+> > +		target-path="/soc";
+> > +		__overlay__ {
+> > +			#address-cells = <1>;
+> > +	                #size-cells = <1>;
+> > +
+> > +			bridge@0xff200000 {
+>                                ^^
+> 
+> > +				compatible = "simple-fpga-bus";
+> > +				reg = <0xc0000000 0x20000000>,
+> > +				      <0xff200000 0x00200000>;
+> > +				reg-names = "axi_h2f", "axi_h2f_lw";
+> > +
+> > +				#address-cells = <0x2>;
+> > +				#size-cells = <0x1>;
+> > +
+> > +				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
+> > +					 <0x00000001 0x00020000 0xff220000 0x00000008>,
+> > +					 <0x00000001 0x00010040 0xff210040 0x00000020>;
+> > +
+> > +				clocks = <0x2 0x2>;
+> > +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
+> > +
+> > +				fpga-mgr = <&hps_0_fpgamgr>;
+> > +				fpga-firmware = "soc_system.rbf";
+> > +
+> > +				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
+> > +
+> > +				onchip_memory2_0: memory@0x000000000 {
+>                                                          ^^
+> 
+> > +					device_type = "memory";
+> > +					compatible = "ALTR,onchipmem-15.1";
+> > +					reg = <0x00000000 0x00000000 0x00010000>;
+> > +				};
+> > +
+> > +				jtag_uart: serial@0x100020000 {
+>                                                   ^^
+> 
+> > +					compatible = "altr,juart-15.1", "altr,juart-1.0";
+> > +					reg = <0x00000001 0x00020000 0x00000008>;
+> > +					interrupt-parent = <&intc>;
+> > +					interrupts = <0 42 4>;
+> > +				};
+> > +
+> > +				led_pio: gpio@0x100010040 {
+>                                               ^^
+> 
+> No 0x, please.
+> 
+> > +					compatible = "altr,pio-15.1", "altr,pio-1.0";
+> > +					reg = <0x00000001 0x00010040 0x00000020>;
+> > +					altr,gpio-bank-width = <4>;
+> > +					resetvalue = <0>;
+> > +					#gpio-cells = <2>;
+> > +					gpio-controller;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> 
+> Regards,
+> Steffen
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
