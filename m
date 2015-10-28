@@ -1,101 +1,151 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v8 14/17] drm: bridge: analogix/dp: add max link rate and lane count limit for RK3288
-Date: Wed, 28 Oct 2015 16:56:01 +0800
-Message-ID: <1446022561-16870-1-git-send-email-ykk@rock-chips.com>
-References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga bus
+Date: Wed, 28 Oct 2015 10:00:14 +0100
+Message-ID: <20151028090014.GG1166@pengutronix.de>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
+ <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
-Cc: Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-There are some IP limit on rk3288 that only support 4 physical lanes
-of 2.7/1.6 Gbps/lane, so seprate them out by device_type flag.
+Hi!
 
-Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
-- Seprate the link-rate and lane-count limit out with the device_type
-  flag. (Thierry)
+On Tue, Oct 27, 2015 at 05:09:11PM -0500, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> New bindings document for simple fpga bus.
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+> v9:  initial version added to this patchset
+> v10: s/fpga/FPGA/g
+>      replace DT overlay example with slightly more complicated example
+>      move to staging/simple-fpga-bus
+> v11: No change in this patch for v11 of the patch set
+> v12: Moved out of staging.
+>      Changed to use FPGA bridges framework instead of resets
+>      for bridges.
+> ---
+>  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> new file mode 100644
+> index 0000000..2e742f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> @@ -0,0 +1,81 @@
+> +Simple FPGA Bus
+> +===============
+> +
+> +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> +before populating the devices below its node.  All this happens when a device
+> +tree overlay is added to the live tree.  This document describes that device
+> +tree overlay.
+> +
 
-Changes in v3: None
-Changes in v2: None
+This is not really true, is it?
+The driver should work without applying the overlay, e.g. the bootloader
+might have already done it.
 
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 33 ++++++++++++++--------
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  4 +--
- 2 files changed, 23 insertions(+), 14 deletions(-)
+> +Required properties:
+> +- compatible : should contain "simple-fpga-bus"
+> +- #address-cells, #size-cells, ranges: must be present to handle address space
+> +  mapping for children.
+> +
+> +Optional properties:
+> +- fpga-mgr : should contain a phandle to a FPGA manager.
+> +- fpga-firmware : should contain the name of a FPGA image file located on the
+> +  firmware search path.
+> +- partial-reconfig : boolean property should be defined if partial
+> +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> +  is done.
+> +- fpga-bridges : should contain a list of bridges that the bus will disable
+> +  before   programming the FPGA and then enable after the FPGA has been
+           ^^^                                                            ???
 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index 6307060..563ffb1d 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -890,8 +890,8 @@ static void analogix_dp_commit(struct analogix_dp_device *dp)
- 		return;
- 	}
- 
--	ret = analogix_dp_set_link_train(dp, dp->video_info.lane_count,
--					 dp->video_info.link_rate);
-+	ret = analogix_dp_set_link_train(dp, dp->video_info.max_lane_count,
-+					 dp->video_info.max_link_rate);
- 	if (ret) {
- 		dev_err(dp->dev, "unable to do link train\n");
- 		return;
-@@ -1156,16 +1156,25 @@ static int analogix_dp_dt_parse_pdata(struct analogix_dp_device *dp)
- 	struct device_node *dp_node = dp->dev->of_node;
- 	struct video_info *video_info = &dp->video_info;
- 
--	if (of_property_read_u32(dp_node, "samsung,link-rate",
--				 &video_info->link_rate)) {
--		dev_err(dp->dev, "failed to get link-rate\n");
--		return -EINVAL;
--	}
--
--	if (of_property_read_u32(dp_node, "samsung,lane-count",
--				 &video_info->lane_count)) {
--		dev_err(dp->dev, "failed to get lane-count\n");
--		return -EINVAL;
-+	switch (dp->plat_data && dp->plat_data->dev_type) {
-+	case RK3288_DP:
-+		/*
-+		 * Like Rk3288 DisplayPort TRM indicate that "Main link
-+		 * containing 4 physical lanes of 2.7/1.62 Gbps/lane".
-+		 */
-+		video_info->max_link_rate = 0x0A;
-+		video_info->max_lane_count = 0x04;
-+		break;
-+	case EXYNOS_DP:
-+		/*
-+		 * NOTE: those property parseing code is used for
-+		 * providing backward compatibility for samsung platform.
-+		 */
-+		of_property_read_u32(dp_node, "samsung,link-rate",
-+				     &video_info->max_link_rate);
-+		of_property_read_u32(dp_node, "samsung,lane-count",
-+				     &video_info->max_lane_count);
-+		break;
- 	}
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-index e37cef6..e6f8243 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-@@ -129,8 +129,8 @@ struct video_info {
- 	enum color_coefficient ycbcr_coeff;
- 	enum color_depth color_depth;
- 
--	enum link_rate_type link_rate;
--	enum link_lane_count_type lane_count;
-+	enum link_rate_type max_link_rate;
-+	enum link_lane_count_type max_lane_count;
- };
- 
- struct link_train {
+> +
+> +Example:
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +	fragment@0 {
+> +		target-path="/soc";
+> +		__overlay__ {
+> +			#address-cells = <1>;
+> +	                #size-cells = <1>;
+> +
+> +			bridge@0xff200000 {
+                               ^^
+
+> +				compatible = "simple-fpga-bus";
+> +				reg = <0xc0000000 0x20000000>,
+> +				      <0xff200000 0x00200000>;
+> +				reg-names = "axi_h2f", "axi_h2f_lw";
+> +
+> +				#address-cells = <0x2>;
+> +				#size-cells = <0x1>;
+> +
+> +				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
+> +					 <0x00000001 0x00020000 0xff220000 0x00000008>,
+> +					 <0x00000001 0x00010040 0xff210040 0x00000020>;
+> +
+> +				clocks = <0x2 0x2>;
+> +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
+> +
+> +				fpga-mgr = <&hps_0_fpgamgr>;
+> +				fpga-firmware = "soc_system.rbf";
+> +
+> +				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
+> +
+> +				onchip_memory2_0: memory@0x000000000 {
+                                                         ^^
+
+> +					device_type = "memory";
+> +					compatible = "ALTR,onchipmem-15.1";
+> +					reg = <0x00000000 0x00000000 0x00010000>;
+> +				};
+> +
+> +				jtag_uart: serial@0x100020000 {
+                                                  ^^
+
+> +					compatible = "altr,juart-15.1", "altr,juart-1.0";
+> +					reg = <0x00000001 0x00020000 0x00000008>;
+> +					interrupt-parent = <&intc>;
+> +					interrupts = <0 42 4>;
+> +				};
+> +
+> +				led_pio: gpio@0x100010040 {
+                                              ^^
+
+No 0x, please.
+
+> +					compatible = "altr,pio-15.1", "altr,pio-1.0";
+> +					reg = <0x00000001 0x00010040 0x00000020>;
+> +					altr,gpio-bank-width = <4>;
+> +					resetvalue = <0>;
+> +					#gpio-cells = <2>;
+> +					gpio-controller;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+
+Regards,
+Steffen
+
 -- 
-1.9.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
