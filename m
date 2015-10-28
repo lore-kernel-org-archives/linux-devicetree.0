@@ -1,91 +1,130 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga bus
-Date: Wed, 28 Oct 2015 18:40:27 -0500
-Message-ID: <CAL_JsqK2twfWzCKucuSLrsD2rL3=ReUXt3uPdFcsf8B0Tg42Lg@mail.gmail.com>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: BCM63xx: Add ARMPLL device tree nodes
+Date: Wed, 28 Oct 2015 16:40:40 -0700
+Message-ID: <56315CF8.8070904@gmail.com>
+References: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com> <1445990177-27474-4-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, delicious.quinoa@gmail.com, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445990177-27474-4-git-send-email-f.fainelli@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-clk@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 5:09 PM,  <atull@opensource.altera.com> wrote:
-> From: Alan Tull <atull@opensource.altera.com>
->
-> New bindings document for simple fpga bus.
->
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+On 27/10/15 16:56, Florian Fainelli wrote:
+> Add the ARM PLL controller which comes standard with the Cortex-A9 found
+> on the BCM63138 SoCs. This is the same controller as the one found in
+> the Broadcom iProc architecture, however, we have a separate compatible
+> string to indicate the integration difference.
+> 
+> While at it, properly rename references to the 50Mhz clock which is in
+> fact a crystal/oscillator and updates references to it.
+
+The periph_clk is actually the correct one, and is different from the
+oscillator, I will resubmit these patches shortly to better match the
+chip clocking.
+
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> v9:  initial version added to this patchset
-> v10: s/fpga/FPGA/g
->      replace DT overlay example with slightly more complicated example
->      move to staging/simple-fpga-bus
-> v11: No change in this patch for v11 of the patch set
-> v12: Moved out of staging.
->      Changed to use FPGA bridges framework instead of resets
->      for bridges.
-> ---
->  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
->
-> diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> new file mode 100644
-> index 0000000..2e742f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> @@ -0,0 +1,81 @@
-> +Simple FPGA Bus
-> +===============
+> No changes in v2 or v3
+> 
+>  arch/arm/boot/dts/bcm63138.dtsi | 39 +++++++++++++++++++++++++++++----------
+>  1 file changed, 29 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
+> index 34cd64051250..c146325eebdb 100644
+> --- a/arch/arm/boot/dts/bcm63138.dtsi
+> +++ b/arch/arm/boot/dts/bcm63138.dtsi
+> @@ -43,17 +43,29 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  
+> -		arm_timer_clk: arm_timer_clk {
+> +		osc: oscillator {
+>  			#clock-cells = <0>;
+>  			compatible = "fixed-clock";
+> -			clock-frequency = <500000000>;
+> +			clock-frequency = <50000000>;
+> +			clock-output-names = "periph";
+>  		};
+>  
+> -		periph_clk: periph_clk {
+> +		/* peripheral clock for system timer */
+> +		axi_clk: axi_clk {
+>  			#clock-cells = <0>;
+> -			compatible = "fixed-clock";
+> -			clock-frequency = <50000000>;
+> -			clock-output-names = "periph";
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&armpll>;
+> +			clock-div = <2>;
+> +			clock-mult = <1>;
+> +		};
 > +
-> +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-> +before populating the devices below its node.  All this happens when a device
-> +tree overlay is added to the live tree.  This document describes that device
-> +tree overlay.
+> +		/* APB bus clock */
+> +		apb_clk: apb_clk {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-factor-clock";
+> +			clocks = <&armpll>;
+> +			clock-div = <4>;
+> +			clock-mult = <1>;
+>  		};
+>  	};
+>  
+> @@ -93,14 +105,14 @@
+>  			compatible = "arm,cortex-a9-global-timer";
+>  			reg = <0x1e200 0x20>;
+>  			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&arm_timer_clk>;
+> +			clocks = <&axi_clk>;
+>  		};
+>  
+>  		local_timer: local-timer@1e600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+>  			reg = <0x1e600 0x20>;
+>  			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&arm_timer_clk>;
+> +			clocks = <&axi_clk>;
+>  		};
+>  
+>  		twd_watchdog: watchdog@1e620 {
+> @@ -109,6 +121,13 @@
+>  			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  
+> +		armpll: armpll {
+> +			#clock-cells = <0>;
+> +			compatible = "brcm,bcm63138-armpll";
+> +			clocks = <&osc>;
+> +			reg = <0x20000 0xf00>;
+> +		};
 > +
-> +Required properties:
-> +- compatible : should contain "simple-fpga-bus"
-> +- #address-cells, #size-cells, ranges: must be present to handle address space
-> +  mapping for children.
-> +
-> +Optional properties:
-> +- fpga-mgr : should contain a phandle to a FPGA manager.
-> +- fpga-firmware : should contain the name of a FPGA image file located on the
-> +  firmware search path.
+>  		pmb0: reset-controller@4800c0 {
+>  			compatible = "brcm,bcm63138-pmb";
+>  			reg = <0x4800c0 0x10>;
+> @@ -138,7 +157,7 @@
+>  			compatible = "brcm,bcm6345-uart";
+>  			reg = <0x600 0x1b>;
+>  			interrupts = <GIC_SPI 32 0>;
+> -			clocks = <&periph_clk>;
+> +			clocks = <&osc>;
+>  			clock-names = "periph";
+>  			status = "disabled";
+>  		};
+> @@ -147,7 +166,7 @@
+>  			compatible = "brcm,bcm6345-uart";
+>  			reg = <0x620 0x1b>;
+>  			interrupts = <GIC_SPI 33 0>;
+> -			clocks = <&periph_clk>;
+> +			clocks = <&osc>;
+>  			clock-names = "periph";
+>  			status = "disabled";
+>  		};
+> 
 
-Putting firmware filename in DT has come up in other cases recently[1]
-and we concluded it should not be in the DT. Maybe the conclusion
-would be different here, and if so we should have a common property
-here.
 
-> +- partial-reconfig : boolean property should be defined if partial
-> +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
-> +  is done.
-> +- fpga-bridges : should contain a list of bridges that the bus will disable
-> +  before   programming the FPGA and then enable after the FPGA has been
-> +
-> +Example:
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +/ {
-> +       fragment@0 {
-> +               target-path="/soc";
-> +               __overlay__ {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +
-> +                       bridge@0xff200000 {
-> +                               compatible = "simple-fpga-bus";
-> +                               reg = <0xc0000000 0x20000000>,
-> +                                     <0xff200000 0x00200000>;
-
-You have registers for the bus, so therefore it is not simple. I think
-the bus or bridge needs a specific compatible
-
-Rob
-
-[1] http://www.spinics.net/lists/devicetree/msg92462.html
+-- 
+Florian
