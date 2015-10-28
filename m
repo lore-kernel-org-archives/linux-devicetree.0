@@ -1,102 +1,141 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 3/6] fpga: add simple-fpga-bus
-Date: Wed, 28 Oct 2015 13:22:33 -0500
-Message-ID: <alpine.DEB.2.02.1510281313340.32338@linuxheads99>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-4-git-send-email-atull@opensource.altera.com> <20151028100714.GB7779@jcartwri.amer.corp.natinst.com> <CAAtXAHcaSZaKhYtVFbUEuO+boMh_PgUaOGVtjO_5MDkpcLcmWA@mail.gmail.com>
- <20151028161859.GJ8245@jcartwri.amer.corp.natinst.com> <CAAtXAHdry3_A9ow-w5KQg80ECyaAuSGVit9ygcM7Ffc9yiysMA@mail.gmail.com> <alpine.DEB.2.02.1510281151480.28209@linuxheads99> <20151028175916.GK8245@jcartwri.amer.corp.natinst.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for NS2
+Date: Wed, 28 Oct 2015 11:55:47 -0700
+Message-ID: <56311A33.1090303@gmail.com>
+References: <1445577373-21252-1-git-send-email-anup.patel@broadcom.com> <1445577373-21252-3-git-send-email-anup.patel@broadcom.com> <20151028001920.GY13239@google.com> <563015FC.9040006@broadcom.com> <20151028003935.GZ13239@google.com> <56301B00.1020301@broadcom.com> <39063E8F96E11742B35A201CC5D095B7AFFB81@SJEXCHMB10.corp.ad.broadcom.com> <5630F2E2.8060508@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151028175916.GK8245@jcartwri.amer.corp.natinst.com>
+In-Reply-To: <5630F2E2.8060508@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+To: Ray Jui <rjui@broadcom.com>, Anup Patel <anup.patel@broadcom.com>, Brian Norris <computersforpeace@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Linux MTD <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, Josh Cartwright wrote:
-
-> On Wed, Oct 28, 2015 at 12:03:41PM -0500, atull wrote:
-> > On Wed, 28 Oct 2015, Moritz Fischer wrote:
-> > 
-> > > On Wed, Oct 28, 2015 at 9:18 AM, Josh Cartwright <joshc@ni.com> wrote:
-> > > > On Wed, Oct 28, 2015 at 08:37:51AM -0700, Moritz Fischer wrote:
-> > > >> On Wed, Oct 28, 2015 at 3:07 AM, Josh Cartwright <joshc@ni.com> wrote:
-> > > >> > On Tue, Oct 27, 2015 at 05:09:12PM -0500, atull@opensource.altera.com wrote:
-> > > >> >> From: Alan Tull <atull@opensource.altera.com>
-> > > >> >>
-> > > >> >> The Simple FPGA bus uses the FPGA Manager Framework and the
-> > > >> >> FPGA Bridge Framework to provide a manufactorer-agnostic
-> > > >> >> interface for reprogramming FPGAs that is Device Tree
-> > > >> >> Overlays-based.
-> > > >> >
-> > > >> > Do you intend the "simple-fpga-bus" to be used on Zynq as well?  The
-> > > >> > whole concept of the socfpga's "FPGA Bridge" doesn't map to the Zynq at
-> > > >> > all, from what I can tell.
-> > > >>
-> > > >> For Zynq the zynq-fpga driver takes care of the level shifters on full
-> > > >> reconfiguration,
-> > > >> and doesn't for partial reconfiguration. Now depending on which parts
-> > > >> of the fabric
-> > > >> are partial reconfigured (say AXI masters), one might run into issues
-> > > >> with a setup like that.
-> > > >>
-> > > >> My first plan was to counter that by using zynq-reset to hold the
-> > > >> reset high during
-> > > >> reconfiguration of that part of the FPGA.
-> > > >>
-> > > >> I'm happy to rethink that part and maybe redo the level shifters and
-> > > >> resets together in a bridge
-> > > >> driver under devicetree control gives finer grained control.
-> > > >
-> > > > There is already a framework which is used to describe and manipulate
-> > > > level shifting/other IO properties, and that is pinctrl, and if we
-> > > > wanted to use an appropriate abstraction, I think pinctrl would be the
-> > > > best bet.
-> > > 
-> > > Alright, I'll investigate that. Again, for the non-partial reconfig
-> > > case I'm happy
-> > > with the behavior as implemented, for the partial reconfig I just
-> > > haven't run into
-> > > issues with not dealing with the level shifters.
-> > 
-> > Are you suggesting pinctrl instead of introducing a FPGA Bridge Framework?
+On 28/10/15 09:08, Ray Jui wrote:
 > 
-> I'm suggesting that for the set of operations/configuration states that
-> need to be managed _for the Zynq[1]_ during reprogramming, I think
-> pinctrl might be a good fit.
-
-Hi Josh,
-
-OK, thanks for the clarification.  Communication is hard :)
-
 > 
-> But the pinctrl state activation would happen in the context of the zynq
-> fpga_mgr_ops write
+> On 10/28/2015 2:06 AM, Anup Patel wrote:
+>>
+>>
+>>> -----Original Message-----
+>>> From: Ray Jui [mailto:rjui@broadcom.com]
+>>> Sent: 28 October 2015 06:17
+>>> To: Brian Norris
+>>> Cc: Anup Patel; David Woodhouse; Linux MTD; Rob Herring; Pawel Moll;
+>>> Mark
+>>> Rutland; Catalin Marinas; Will Deacon; Sudeep Holla; Ian Campbell;
+>>> Kumar Gala;
+>>> Scott Branden; Florian Fainelli; Pramod Kumar; Vikram Prakash; Sandeep
+>>> Tripathy; Linux ARM Kernel; Device Tree; Linux Kernel;
+>>> bcm-kernel-feedback-list
+>>> Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for
+>>> NS2
+>>>
+>>>
+>>>
+>>> On 10/27/2015 5:39 PM, Brian Norris wrote:
+>>>> On Tue, Oct 27, 2015 at 05:25:32PM -0700, Ray Jui wrote:
+>>>>> On 10/27/2015 5:19 PM, Brian Norris wrote:
+>>>>>> On Fri, Oct 23, 2015 at 10:46:13AM +0530, Anup Patel wrote:
+>>>>>>> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi
+>>>>>>> b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+>>>>>>> index f603277..9610822 100644
+>>>>>>> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+>>>>>>> @@ -212,5 +212,19 @@
+>>>>>>>                compatible = "brcm,iproc-rng200";
+>>>>>>>                reg = <0x66220000 0x28>;
+>>>>>>>            };
+>>>>>>> +
+>>>>>>> +        nand: nand@66460000 {
+>>>>>>> +            compatible = "brcm,nand-iproc", "brcm,brcmnand-
+>>> v6.1";
+>>>>>>
+>>>>>> Technically, the binding says you should also have "brcm,brcmnand"
+>>>>>> as a last resort. Otherwise (for the NAND parts):
+>>>>>>
+>>>>>
+>>>>> I believe Anup was seeing issues when both "brcm,nand-iproc" and
+>>>>> "brcm,brcmnand" are present.
+>>>>>
+>>>>> Note "brcm,nand-iproc" invokes 'iproc_nand_probe', which calls
+>>>>> 'brcmnand_probe' in the end.
+>>>>>
+>>>>> "brcm,brcmnand" invokes 'brcmstb_nand_probe', which also calls
+>>>>> 'brcmstb_probe', but without all the prep configuration required for
+>>>>> "brcm,nand-iproc".
+>>>>
+>>>> Ah, I forgot about that problem. That seems like an OF infrastructure
+>>>> issue that could be fixed. We could lump these drivers back together,
+>>>> and make sure that "brcm,nand-iproc" gets the priority in the
+>>>> of_device_id list.
+>>>>
+>>>> Or we could just relax the DT binding.
+>>>>
+>>>> But wait, wouldn't cygnus already have that problem? You're using the
+>>>> binding I suggested in arch/arm/boot/dts/bcm-cygnus.dtsi.
+>>>
+>>> Interestingly, we do not see this problem with Cygnus or NSP, but
+>>> only on NS2
+>>> (arm64 based). There may be a difference between how OF devices are
+>>> instantiated between arm and arm64?
+>>
+>> Alternately, it could be also about order in-which platform drivers
+>> are matched
+>> for newly created OF device.
+>>
+>>>
+>>>>
+>>>> Oh, and I see we hacked this one in drivers/mtd/nand/brcmnand/Makefile:
+>>>>
+>>>>     # link order matters; don't link the more generic brcmstb_nand.o
+>>>> before the
+>>>>     # more specific iproc_nand.o, for instance
+>>>
+>>> Yes, I see that too (after sending out my previous email, :)). Maybe
+>>> Anup can help to elaborate on the problem. I'm now getting a bit
+>>> confused on how the problem can surface on NS2.
+>>
+>> I think for a newly created OF devices the Linux device driver
+>> framework will
+>> match the platform drivers in the order in which they are registered
+>> by module
+>> init functions. Now the order of module init function calls will be
+>> based how
+>> the .initcall section is formed by linker and order in which objects
+>> are linked.
+>>
 > 
-> I do not think it's a good fit for the socfpga, or for the lower level
-> fpga drivers _in general_.  Nor do I think that the FPGA Bridge
-> framework, as written, is a good fit for fpgas in general.
-
-OK so about that last sentence...
-
-For full reconfiguration, we could control the hardware bridges from the
-FPGA Manager and that would be fine, because the area affected by the bridge
-is the whole area, which is what the FPGA Manager will reprogram.
-
-For partial reconfiguration, we can have one FPGA Manager programming
-several PR areas.  Each PR area will need its own bridge within the
-FPGA.  It no longer makes sense to control bridges from the manager.
-So Xilinx may need this yet, for PR.
-
-And again, if you don't need it, you won't have to deal with it.  I'll make
-it so that the simple fpga bus works fine with the fpga bridges compiled out
-even.
-
-Alan
-
+> Yes, what you said is my understanding as well, but then here is the
+> mystery. This is the link order in brcmnand/Makefile:
 > 
->   Josh
+> 1 # link order matters; don't link the more generic brcmstb_nand.o
+> before the
+> 2 # more specific iproc_nand.o, for instance
+> 3 obj-$(CONFIG_MTD_NAND_BRCMNAND) += iproc_nand.o
+> 4 obj-$(CONFIG_MTD_NAND_BRCMNAND) += bcm63138_nand.o
+> 5 obj-$(CONFIG_MTD_NAND_BRCMNAND) += brcmstb_nand.o
+> 6 obj-$(CONFIG_MTD_NAND_BRCMNAND) += brcmnand.o
 > 
-> [1]: Speaking only of the Zynq 7000-series, I don't know anything about
->      the fancy new Zynq MPSoC :)
+> Based on the order above, probe from iproc_nand should always be called
+> first if a matching compatible string is found. If so, then why having
+> both compatible strings "brcm,brcmnand" and "brcm,nand-iproc" causes
+> issues for NS2 (I remember it broke smoketest in the past when you
+> submitted the change)? I'm not saying we should have "brcm,brcmnand" for
+> iProc devices, but I don't get why it would cause any issue.
 > 
+> Does the order of the compatible string matter when they are assigned to
+> the same 'compatible' property like this?
+> 
+> compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1",    "brcm,brcmnand";
+
+It is possible that by the time this was designed and tested, and the
+baseline you are now using, there have been changes in how probing is
+done and resolved. I have not been able to pin point which commit would
+be responsible for that, but it would not surprise me that something
+changed in that area, especially with all the on-going on-demand probing
+business happening.
+-- 
+Florian
