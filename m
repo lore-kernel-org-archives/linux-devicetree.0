@@ -1,101 +1,57 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH v12 0/6] Altera PCIe host controller driver with MSI support
-Date: Wed, 28 Oct 2015 14:25:11 +0800
-Message-ID: <CAFiDJ59wOUj-Mr3cyqQEz+P=8AkmRoy7XzUCmM33_e03Y2G_ZQ@mail.gmail.com>
-References: <1445596035-27733-1-git-send-email-lftan@altera.com>
-	<20151027142644.GA8660@localhost>
-	<CAFiDJ5_vCqh=uKkF2E_BQkJUv692r3yr26bBj8boK2DY_Dj+gA@mail.gmail.com>
-	<CAErSpo5okE86k846hs28s4jvL59hmm+4az-dDsymzNayPCPCzw@mail.gmail.com>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ARM: dts: Add leds support to STM32F429 Discovery
+ board
+Date: Wed, 28 Oct 2015 08:09:23 +0000
+Message-ID: <563082B3.8040301@linaro.org>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1445102604-11502-9-git-send-email-mcoquelin.stm32@gmail.com>
+ <CACRpkdYjq9XqKM4imYsaa_HBopS7uFnbb6gf=hRZHGC4baafAg@mail.gmail.com>
+ <CALszF6Bo3x4jWnvDc=28s=517YJrv2=3BuuYmxjqP4ciF17fcQ@mail.gmail.com>
+ <562FEE85.3010204@suse.de>
+ <CACRpkdaQWm7Jz7Zj-amqx3EHVYi_-GvNxyQs9c8ht2WjGjAphg@mail.gmail.com>
+ <562FF234.9010403@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo5okE86k846hs28s4jvL59hmm+4az-dDsymzNayPCPCzw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562FF234.9010403-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 9:02 AM, Bjorn Helgaas <bhelgaas@google.com> wrote:
-> On Tue, Oct 27, 2015 at 7:56 PM, Ley Foon Tan <lftan@altera.com> wrote:
->> On Tue, Oct 27, 2015 at 10:26 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->>> Hi Ley,
->>>
->>> On Fri, Oct 23, 2015 at 06:27:09PM +0800, Ley Foon Tan wrote:
->>>> This is the 12th version of patch set to add support for Altera PCIe host
->>>> controller with MSI feature on Altera FPGA device families. This patchset
->>>> mainly resovle the comments from Bjorn.
->>>>
->>>>
->>>> This patchset is based on v4.3-rc6.
->>>>
->>>> v11->v12 changes:
->>>> - pcie-altera: use DECLARE_PCI_FIXUP_EARLY for pcie retrain fixup
->>>> - pcie-altera: move pcie_bus_configure_settings before pci_bus_add_devices
->>>> - pcie-altera: add %d for irq bit in dev_err()
->>>> - pcie-altera: prevent enumeration of root complex resources in config accessors
->>>> - Documentation: add Acked-by from Rob Herring
->>>>
->>>> History:
->>>> -------
->>>> [v1]: https://lkml.org/lkml/2015/7/28/395
->>>> [v2]: https://lkml.org/lkml/2015/7/31/267
->>>> [v3]: http://www.kernelhub.org/?msg=811940&p=2
->>>> [v4]: https://lkml.org/lkml/2015/8/17/141
->>>> [v5]: https://lkml.org/lkml/2015/8/25/238
->>>> [v6]: https://lkml.org/lkml/2015/9/1/177
->>>> [v7]: https://lkml.org/lkml/2015/9/20/193
->>>> [v8]: http://www.kernelhub.org/?msg=853553&p=2
->>>> [v9]: https://lkml.org/lkml/2015/10/13/998
->>>> [v10]: https://lkml.org/lkml/2015/10/19/139
->>>> [v11]: https://lkml.org/lkml/2015/10/22/206
->>>>
->>>>
->>>> Ley Foon Tan (6):
->>>>   arm: add msi.h to Kbuild
->>>>   pci: add Altera PCI vendor ID
->>>>   pci:host: Add Altera PCIe host controller driver
->>>>   pci: altera: Add Altera PCIe MSI driver
->>>>   Documentation: dt-bindings: pci: altera pcie device tree binding
->>>>   MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
->>>>
->>>>  .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
->>>>  .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
->>>>  MAINTAINERS                                        |  16 +
->>>>  arch/arm/include/asm/Kbuild                        |   1 +
->>>>  drivers/pci/host/Kconfig                           |  16 +
->>>>  drivers/pci/host/Makefile                          |   2 +
->>>>  drivers/pci/host/pcie-altera-msi.c                 | 314 +++++++++++
->>>>  drivers/pci/host/pcie-altera.c                     | 580 +++++++++++++++++++++
->>>>  include/linux/pci_ids.h                            |   2 +
->>>>  9 files changed, 1008 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
->>>>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
->>>>  create mode 100644 drivers/pci/host/pcie-altera.c
->>>
->>> I applied these to pci/host-altera for v4.4, thanks!
->>>
->>> I squashed these into three patches:
->>>
->>>   - add msi.h to Kbuild
->>>   - add Altera host driver (including DT binding and MAINTAINERS update)
->>>   - add Altera MSI driver (including DT binding and MAINTAINERS update)
->>>
->>> Since the convention is to add PCI ID #defines only when they are used in
->>> multiple places, I replaced PCI_VENDOR_ID_ALTERA with 0x1172 in the single
->>> place it is used.
->> Hi Bjorn
->>
->> Thanks for applied these.
->>
->> By the way, I can't see pci/host-altera branch in your pci.git tree
->> yet. It takes some time to appear there?
+On 27/10/15 21:52, Andreas F=C3=A4rber wrote:
+> Am 27.10.2015 um 22:46 schrieb Linus Walleij:
+>> Heartbeat is awesome.
 >
-> Sorry, I forgot to push it.  It should be there now!
+> Yes, it's awesome for testing, but not for a .dts file that ends up i=
+n a
+> distro (not the case here, of course) and keeps blinking on the desk.
 >
-Yes, saw it now. It will merge to 'next' branch eventually?
+> If someone wants LEDs to blink, they can set that via sysfs or by
+> modifying their .dts locally.
+>
+> sunxi chose to keep LEDs off my default. For qcom we had a similar
+> discussion some weeks ago. I don't regularly read Linux patches, so f=
+eel
+> free to skim the archives yourself.
 
-Thanks!
+Among the existing DTS files there is pretty significant use of=20
+heartbeat although its not absolute.
 
-Regards
-Ley Foon
+There are 119 files that set a default-trigger, of these 91 (~75%)=20
+include a line to configure a heartbeat.
+
+Personally I'd be very happy with heartbeat by default on STM32... I've=
+=20
+seldom worked on a board without a default-enabled heartbeat so they=20
+make me feel comfortable. ;-)
+
+
+Daniel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
