@@ -1,64 +1,225 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Wed, 28 Oct 2015 17:17:42 +0900
-Message-ID: <20151028081742.GC28319@sirena.org.uk>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
- <20151016002243.GA23912@codeaurora.org>
- <20151016060227.GS19018@linux>
- <20151016191658.GA16437@codeaurora.org>
- <20151017041055.GZ19018@linux>
- <20151022163942.GX8232@sirena.org.uk>
- <20151027081917.GD5505@ubuntu>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S96ff6o5osL9bGCL"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151027081917.GD5505@ubuntu>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v8 01/17] drm: exynos: dp: convert to drm bridge mode
+Date: Wed, 28 Oct 2015 16:19:05 +0800
+Message-ID: <1446020345-7388-1-git-send-email-ykk@rock-chips.com>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
+Cc: Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+In order to move exynos dp code to bridge directory,
+we need to convert driver drm bridge mode first. As
+dp driver already have a ptn3460 bridge, so we need
+to move ptn bridge to the next bridge of dp bridge.
 
---S96ff6o5osL9bGCL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+Changes in v8: None
+Changes in v7: None
+Changes in v6:
+- Fix the wrong code in previous series, and test on Samsung snow Chromebook
+  successfully, here are the detail changes:
+=============>
+-       if (!dp->panel && !dp->bridge) {
++       if (!dp->panel && !dp->ptn_bridge) {
+                ret = exynos_dp_dt_parse_panel(dp);
+                if (ret)
+=============>
++       encoder->bridge = bridge;
+	bridge->driver_private = dp;
+        bridge->encoder = encoder;
+        bridge->funcs = &exynos_dp_bridge_funcs;
+        ret = drm_bridge_attach(drm_dev, bridge);
 
-On Tue, Oct 27, 2015 at 01:49:17PM +0530, Viresh Kumar wrote:
-> On 23-10-15, 01:39, Mark Brown wrote:
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2:
+- Keep author name list no changed (Jingoo)
 
-> > I'm not sure that's
-> > a place we want to end up just yet, I think it's safer to just have a
-> > little bit of code in the kernel that glues things together in the cases
-> > where this is needed. =20
+ drivers/gpu/drm/exynos/exynos_dp_core.c | 103 ++++++++++++++++++++++++--------
+ drivers/gpu/drm/exynos/exynos_dp_core.h |   1 +
+ 2 files changed, 78 insertions(+), 26 deletions(-)
 
-> So you are effectively saying that we shouldn't go ahead with multi
-> regulator support in OPP library, right?
-
-Well, I think things like libraries for getting the data tables out of
-DT are fine but I'm not convinced that trying to avoid having any device
-specific code at all is sufficiently clear yet - as far as I know we're
-mostly looking at a fairly small subset of devices still and with things
-like sequencing in the mix it's a bit worrying to me to be putting it
-all into an ABI intended to be used with no knowledge of the platform.
-
---S96ff6o5osL9bGCL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWMISiAAoJECTWi3JdVIfQYcgH/24LlU6dseeEMz1AU74SyTd0
-QH5nNaaFyOv6MnH7NErBywc30bX4GhrfeG1H9QdDpKzm39f/wzOS+lsQmGLI0eYp
-R3RMeyg8ejtuMbz9KWAv0hZnXJWYm+dytYxyCobBXeQUeNFg/DeCXsIiW1jXzt2n
-0iQzL6XDzWFEnHk33ITwuQDCcDDYMprrI/RF5lV8ay0Cp9pXu1wQNr1xYvOKs68i
-ZlZEn3cAvMAIO2O19wf80HyUpjWAi6BhkQjKwKfhb+RejytPIMZZavvHKdq8ipb3
-f10eBRlo+AOc+mh6OtrGo6kypQ1WNPVlxrF7sDbXjJO2ygcW2l8ypeqnRnGQ9b4=
-=/J5O
------END PGP SIGNATURE-----
-
---S96ff6o5osL9bGCL--
+diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
+index 124fb9a..aedd074 100644
+--- a/drivers/gpu/drm/exynos/exynos_dp_core.c
++++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
+@@ -1009,9 +1009,9 @@ static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
+ {
+ 	int ret;
+ 
+-	encoder->bridge = dp->bridge;
+-	dp->bridge->encoder = encoder;
+-	ret = drm_bridge_attach(encoder->dev, dp->bridge);
++	encoder->bridge->next = dp->ptn_bridge;
++	dp->ptn_bridge->encoder = encoder;
++	ret = drm_bridge_attach(encoder->dev, dp->ptn_bridge);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to attach bridge to drm\n");
+ 		return ret;
+@@ -1020,14 +1020,15 @@ static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
+ 	return 0;
+ }
+ 
+-static int exynos_dp_create_connector(struct drm_encoder *encoder)
++static int exynos_dp_bridge_attach(struct drm_bridge *bridge)
+ {
+-	struct exynos_dp_device *dp = encoder_to_dp(encoder);
++	struct exynos_dp_device *dp = bridge->driver_private;
++	struct drm_encoder *encoder = &dp->encoder;
+ 	struct drm_connector *connector = &dp->connector;
+ 	int ret;
+ 
+ 	/* Pre-empt DP connector creation if there's a bridge */
+-	if (dp->bridge) {
++	if (dp->ptn_bridge) {
+ 		ret = exynos_drm_attach_lcd_bridge(dp, encoder);
+ 		if (!ret)
+ 			return 0;
+@@ -1052,22 +1053,9 @@ static int exynos_dp_create_connector(struct drm_encoder *encoder)
+ 	return ret;
+ }
+ 
+-static bool exynos_dp_mode_fixup(struct drm_encoder *encoder,
+-				 const struct drm_display_mode *mode,
+-				 struct drm_display_mode *adjusted_mode)
+-{
+-	return true;
+-}
+-
+-static void exynos_dp_mode_set(struct drm_encoder *encoder,
+-			       struct drm_display_mode *mode,
+-			       struct drm_display_mode *adjusted_mode)
+-{
+-}
+-
+-static void exynos_dp_enable(struct drm_encoder *encoder)
++static void exynos_dp_bridge_enable(struct drm_bridge *bridge)
+ {
+-	struct exynos_dp_device *dp = encoder_to_dp(encoder);
++	struct exynos_dp_device *dp = bridge->driver_private;
+ 	struct exynos_drm_crtc *crtc = dp_to_crtc(dp);
+ 
+ 	if (dp->dpms_mode == DRM_MODE_DPMS_ON)
+@@ -1092,9 +1080,9 @@ static void exynos_dp_enable(struct drm_encoder *encoder)
+ 	dp->dpms_mode = DRM_MODE_DPMS_ON;
+ }
+ 
+-static void exynos_dp_disable(struct drm_encoder *encoder)
++static void exynos_dp_bridge_disable(struct drm_bridge *bridge)
+ {
+-	struct exynos_dp_device *dp = encoder_to_dp(encoder);
++	struct exynos_dp_device *dp = bridge->driver_private;
+ 	struct exynos_drm_crtc *crtc = dp_to_crtc(dp);
+ 
+ 	if (dp->dpms_mode != DRM_MODE_DPMS_ON)
+@@ -1123,6 +1111,69 @@ static void exynos_dp_disable(struct drm_encoder *encoder)
+ 	dp->dpms_mode = DRM_MODE_DPMS_OFF;
+ }
+ 
++static void exynos_dp_bridge_nop(struct drm_bridge *bridge)
++{
++	/* do nothing */
++}
++
++static const struct drm_bridge_funcs exynos_dp_bridge_funcs = {
++	.enable = exynos_dp_bridge_enable,
++	.disable = exynos_dp_bridge_disable,
++	.pre_enable = exynos_dp_bridge_nop,
++	.post_disable = exynos_dp_bridge_nop,
++	.attach = exynos_dp_bridge_attach,
++};
++
++static int exynos_dp_create_connector(struct drm_encoder *encoder)
++{
++	struct exynos_dp_device *dp = encoder_to_dp(encoder);
++	struct drm_device *drm_dev = dp->drm_dev;
++	struct drm_bridge *bridge;
++	int ret;
++
++	bridge = devm_kzalloc(drm_dev->dev, sizeof(*bridge), GFP_KERNEL);
++	if (!bridge) {
++		DRM_ERROR("failed to allocate for drm bridge\n");
++		return -ENOMEM;
++	}
++
++	dp->bridge = bridge;
++
++	encoder->bridge = bridge;
++	bridge->driver_private = dp;
++	bridge->encoder = encoder;
++	bridge->funcs = &exynos_dp_bridge_funcs;
++
++	ret = drm_bridge_attach(drm_dev, bridge);
++	if (ret) {
++		DRM_ERROR("failed to attach drm bridge\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static bool exynos_dp_mode_fixup(struct drm_encoder *encoder,
++				 const struct drm_display_mode *mode,
++				 struct drm_display_mode *adjusted_mode)
++{
++	return true;
++}
++
++static void exynos_dp_mode_set(struct drm_encoder *encoder,
++			       struct drm_display_mode *mode,
++			       struct drm_display_mode *adjusted_mode)
++{
++}
++
++static void exynos_dp_enable(struct drm_encoder *encoder)
++{
++}
++
++static void exynos_dp_disable(struct drm_encoder *encoder)
++{
++}
++
+ static struct drm_encoder_helper_funcs exynos_dp_encoder_helper_funcs = {
+ 	.mode_fixup = exynos_dp_mode_fixup,
+ 	.mode_set = exynos_dp_mode_set,
+@@ -1238,7 +1289,7 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
+ 		}
+ 	}
+ 
+-	if (!dp->panel && !dp->bridge) {
++	if (!dp->panel && !dp->ptn_bridge) {
+ 		ret = exynos_dp_dt_parse_panel(dp);
+ 		if (ret)
+ 			return ret;
+@@ -1365,9 +1416,9 @@ static int exynos_dp_probe(struct platform_device *pdev)
+ 	if (endpoint) {
+ 		bridge_node = of_graph_get_remote_port_parent(endpoint);
+ 		if (bridge_node) {
+-			dp->bridge = of_drm_find_bridge(bridge_node);
++			dp->ptn_bridge = of_drm_find_bridge(bridge_node);
+ 			of_node_put(bridge_node);
+-			if (!dp->bridge)
++			if (!dp->ptn_bridge)
+ 				return -EPROBE_DEFER;
+ 		} else
+ 			return -EPROBE_DEFER;
+diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.h b/drivers/gpu/drm/exynos/exynos_dp_core.h
+index e413b6f..66eec4b 100644
+--- a/drivers/gpu/drm/exynos/exynos_dp_core.h
++++ b/drivers/gpu/drm/exynos/exynos_dp_core.h
+@@ -153,6 +153,7 @@ struct exynos_dp_device {
+ 	struct drm_connector	connector;
+ 	struct drm_panel	*panel;
+ 	struct drm_bridge	*bridge;
++	struct drm_bridge	*ptn_bridge;
+ 	struct clk		*clock;
+ 	unsigned int		irq;
+ 	void __iomem		*reg_base;
+-- 
+1.9.1
