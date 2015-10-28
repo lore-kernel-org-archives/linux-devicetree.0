@@ -1,562 +1,199 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 6/6] ARM: socfpga: fpga bridge driver support
-Date: Wed, 28 Oct 2015 06:51:49 -0600
-Message-ID: <alpine.DEB.2.10.1510280645200.2865@atull-730U3E-740U3E>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-7-git-send-email-atull@opensource.altera.com> <20151028101309.GL1166@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 11/11] scsi: ufs-exynos: add UFS host support for
+ Exynos SoCs
+Date: Wed, 28 Oct 2015 18:23:49 +0530
+Message-ID: <5630C55D.80800@ti.com>
+References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
+ <1444827351-24128-12-git-send-email-alim.akhtar@samsung.com>
+ <561F18C5.10406@samsung.com> <562A4FE3.9080200@ti.com>
+ <CAGOxZ51cFDvvSKN+=nNnHD=P756r74edUX5XrkvrHv+NXU_NTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20151028101309.GL1166@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ51cFDvvSKN+=nNnHD=P756r74edUX5XrkvrHv+NXU_NTw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, "amit.daniel@samsung.com" <amit.daniel@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
+Hi,
 
-> On Tue, Oct 27, 2015 at 05:09:15PM -0500, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > Supports Altera SOCFPGA bridges:
-> >  * fpga2sdram
-> >  * fpga2hps
-> >  * hps2fpga
-> >  * lwhps2fpga
-> > 
-> > Allows enabling/disabling the bridges through the FPGA
-> > Bridge Framework API functions.
-> > 
-> > The fpga2sdram driver only supports enabling and disabling
-> > of the ports that been configured early on.  This is due to
-> > a hardware limitation where the read, write, and command
-> > ports on the fpga2sdram bridge can only be reconfigured
-> > while there are no transactions to the sdram, i.e. when
-> > running out of OCRAM before the kernel boots.
-> > 
-> > Device tree property 'init-val' configures the driver to
-> > enable or disable the bridge during probe.  If the property
-> > does not exist, the driver will leave the bridge in its
-> > current state.
-> > 
-> > Signed-off-by: Alan Tull <dinguyen@opensource.altera.com>
-> > Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> > Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
-> > ---
-> > v2:  Use resets instead of directly writing reset registers
-> > v12: Bump version to align with simple-fpga-bus version
-> >      Get rid of the sysfs interface
-> >      fpga2sdram: get configuration stored in handoff register
-> > ---
-> >  drivers/fpga/Kconfig             |    7 ++
-> >  drivers/fpga/Makefile            |    1 +
-> >  drivers/fpga/altera-fpga2sdram.c |  185 ++++++++++++++++++++++++++++++
-> >  drivers/fpga/altera-hps2fpga.c   |  234 ++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 427 insertions(+)
-> >  create mode 100644 drivers/fpga/altera-fpga2sdram.c
-> >  create mode 100644 drivers/fpga/altera-hps2fpga.c
-> > 
-> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> > index 143072b..004b83a 100644
-> > --- a/drivers/fpga/Kconfig
-> > +++ b/drivers/fpga/Kconfig
-> > @@ -39,6 +39,13 @@ config FPGA_BRIDGE
-> >           Say Y here if you want to support bridges connected between host
-> >  	 processors and FPGAs or between FPGAs.
-> >  
-> > +config SOCFPGA_FPGA_BRIDGE
-> > +	bool "Altera SoCFPGA FPGA Bridges"
-> > +	depends on ARCH_SOCFPGA && FPGA_BRIDGE
-> > +	help
-> > +	  Say Y to enable drivers for FPGA bridges for Altera SOCFPGA
-> > +	  devices.
-> > +
-> >  endif # FPGA
-> >  
-> >  endmenu
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> > index 9302662..cc01db3 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -11,6 +11,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
-> >  
-> >  # FPGA Bridge Drivers
-> >  obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-> > +obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
-> >  
-> >  # High Level Interfaces
-> >  obj-$(CONFIG_SIMPLE_FPGA_BUS)		+= simple-fpga-bus.o
-> > diff --git a/drivers/fpga/altera-fpga2sdram.c b/drivers/fpga/altera-fpga2sdram.c
-> > new file mode 100644
-> > index 0000000..ee56903
-> > --- /dev/null
-> > +++ b/drivers/fpga/altera-fpga2sdram.c
-> > @@ -0,0 +1,185 @@
-> > +/*
-> > + * FPGA to SDRAM Bridge Driver for Altera SoCFPGA Devices
-> > + *
-> > + *  Copyright (C) 2013-2015 Altera Corporation, All Rights Reserved.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +/*
-> > + * This driver manages a bridge between an FPGA and the SDRAM used by the ARM
-> > + * host processor system (HPS).
-> > + *
-> > + * The bridge contains 4 read ports, 4 write ports, and 6 command ports.
-> > + * Reconfiguring these ports requires that no SDRAM transactions occur during
-> > + * reconfiguration.  The code reconfiguring the ports cannot run out of SDRAM
-> > + * nor can the FPGA access the SDRAM during reconfiguration.  This driver does
-> > + * not support reconfiguring the ports.  The ports are configured by code
-> > + * running out of on chip ram before Linux is started and the configuration
-> > + * is passed in a handoff register in the system manager.
-> > + *
-> > + * This driver supports enabling and disabling of the configured ports, which
-> > + * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-> > + * uses the same port configuration.  Bridges must be disabled before
-> > + * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-> > + */
-> > +
-> > +#include <linux/fpga/fpga-bridge.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#define ALT_SDR_CTL_FPGAPORTRST_OFST		0x80
-> > +#define ALT_SDR_CTL_FPGAPORTRST_PORTRSTN_MSK	0x00003fff
-> > +#define ALT_SDR_CTL_FPGAPORTRST_RD_SHIFT	0
-> > +#define ALT_SDR_CTL_FPGAPORTRST_WR_SHIFT	4
-> > +#define ALT_SDR_CTL_FPGAPORTRST_CTRL_SHIFT	8
-> > +
-> > +#define SYSMGR_ISWGRP_HANDOFF3          (0x8C)
-> > +#define ISWGRP_HANDOFF_FPGA2SDR         SYSMGR_ISWGRP_HANDOFF3
-> > +
-> > +#define F2S_BRIDGE_NAME "fpga2sdram"
-> > +
-> > +struct alt_fpga2sdram_data {
-> > +	struct device *dev;
-> > +	struct regmap *sdrctl;
-> > +	int mask;
-> > +};
-> > +
-> > +static int alt_fpga2sdram_enable_show(struct fpga_bridge *bridge)
-> > +{
-> > +	struct alt_fpga2sdram_data *priv = bridge->priv;
-> > +	int value;
-> > +
-> > +	regmap_read(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST, &value);
-> > +
-> > +	return (value & priv->mask) == priv->mask;
-> > +}
-> > +
-> > +static inline int _alt_fpga2sdram_enable_set(struct alt_fpga2sdram_data *priv,
-> > +					      bool enable)
-> > +{
-> > +	return regmap_update_bits(priv->sdrctl, ALT_SDR_CTL_FPGAPORTRST_OFST,
-> > +				  priv->mask, enable ? priv->mask : 0);
-> > +}
-> > +
-> > +static int alt_fpga2sdram_enable_set(struct fpga_bridge *bridge, bool enable)
-> > +{
-> > +	return _alt_fpga2sdram_enable_set(bridge->priv, enable);
-> > +}
-> > +
-> > +struct prop_map {
-> > +	char *prop_name;
-> > +	uint32_t *prop_value;
-> > +	uint32_t prop_max;
-> > +};
-> > +
-> > +struct fpga_bridge_ops altera_fpga2sdram_br_ops = {
-> > +	.enable_set = alt_fpga2sdram_enable_set,
-> > +	.enable_show = alt_fpga2sdram_enable_show,
-> > +};
-> > +
-> > +static const struct of_device_id altera_fpga_of_match[] = {
-> > +	{ .compatible = "altr,socfpga-fpga2sdram-bridge" },
-> > +	{},
-> > +};
-> > +
-> > +static int alt_fpga_bridge_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct alt_fpga2sdram_data *priv;
-> > +	uint32_t init_val;
-> > +	struct regmap *sysmgr;
-> > +	int ret = 0;
-> > +
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->dev = dev;
-> > +
-> > +	priv->sdrctl = syscon_regmap_lookup_by_compatible("altr,sdr-ctl");
-> > +	if (IS_ERR(priv->sdrctl)) {
-> > +		dev_err(dev, "regmap for altr,sdr-ctl lookup failed.\n");
-> > +		return PTR_ERR(priv->sdrctl);
-> > +	}
-> > +
-> > +	sysmgr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
-> > +	if (IS_ERR(priv->sdrctl)) {
-> > +		dev_err(dev, "regmap for altr,sys-mgr lookup failed.\n");
-> > +		return PTR_ERR(sysmgr);
-> > +	}
-> > +
-> > +	/* Get f2s bridge configuration saved in handoff register */
-> > +	regmap_read(sysmgr, SYSMGR_ISWGRP_HANDOFF3, &priv->mask);
-> > +
-> > +	ret = fpga_bridge_register(dev, F2S_BRIDGE_NAME,
-> > +				   &altera_fpga2sdram_br_ops, priv);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	dev_info(dev, "driver initialized with handoff %08x\n", priv->mask);
+On Sunday 25 October 2015 05:34 PM, Alim Akhtar wrote:
+> Hi Kishon
+> Thanks again for you review.
 > 
-> Hm, what does this do? All I can get from the documentation is, that this
-> is a general purpose register and has nothing to do with this particular bridge.
-> 
+> On Fri, Oct 23, 2015 at 8:48 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi,
+>>
+>> On Thursday 15 October 2015 08:38 AM, Alim Akhtar wrote:
+>>> +CCing kishon Vijay,
+>>>
+>>> On 10/14/2015 06:25 PM, Alim Akhtar wrote:
+>>>> From: Seungwon Jeon <essuuj@gmail.com>
+>>>>
+>>>> This patch introduces Exynos UFS host controller driver,
+>>>> which mainly handles vendor-specific operations including
+>>>> link startup, power mode change and hibernation/unhibernation.
+>>>>
+>>>> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+>>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>>> ---
+>>>>   drivers/scsi/ufs/Kconfig         |   12 +
+>>>>   drivers/scsi/ufs/Makefile        |    1 +
+>>>>   drivers/scsi/ufs/ufs-exynos-hw.c |  131 ++++
+>>>>   drivers/scsi/ufs/ufs-exynos-hw.h |   43 ++
+>>>>   drivers/scsi/ufs/ufs-exynos.c    | 1317
+>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>   drivers/scsi/ufs/ufs-exynos.h    |  247 +++++++
+>>>>   drivers/scsi/ufs/ufshci.h        |   26 +-
+>>>>   drivers/scsi/ufs/unipro.h        |   47 ++
+>>>>   8 files changed, 1823 insertions(+), 1 deletion(-)
+>>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+>>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+>>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+>>>>   create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+>>>>
+>> .
+>> .
+>> <snip>
+>> .
+>> .
+>>>> diff --git a/drivers/scsi/ufs/ufs-exynos-hw.c
+>>>> b/drivers/scsi/ufs/ufs-exynos-hw.c
+>>>> new file mode 100644
+>>>> index 000000000000..be6c61541a8f
+>>>> --- /dev/null
+>>>> +++ b/drivers/scsi/ufs/ufs-exynos-hw.c
+>>>> @@ -0,0 +1,131 @@
+>> .
+>> .
+>> <snip>
+>> .
+>> .
+>>>> +
+>>>> +#define PWR_MODE_STR_LEN    64
+>>>> +static int exynos_ufs_post_pwr_mode(struct ufs_hba *hba,
+>>>> +                struct ufs_pa_layer_attr *pwr_max,
+>>>> +                struct ufs_pa_layer_attr *pwr_req)
+>>>> +{
+>>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>>> +    struct exynos_ufs_phy_info *phy_info = phy_get_drvdata(ufs->phy);
+>>
+>> This is abusing the interface. phy_get_drvdata is meant to be used only
+>> by the PHY driver.
+>>>> +    struct exynos_ufs_phy_specific_ops *phy_ops =
+>>>> +                    phy_info->phy_specific_ops;
+>>
+>> I'm really not happy about having platform specific ops for PHY. We have
+>> to see if existing PHY ops can be used for this or in worst case add new
+>> PHY ops.
+> Well you said you like the controller driver to use only PHY ops[1], I
+> am sorry If I misunderstood that point, can you please help me to
+> understand that?
 
-It's described at the top of the file.  This bridge has to be configured before
-the kernel boots, and this is a way of passing that configuration.
+I meant PHY generic ops and not PHY ops.
+> [1]-> https://lkml.org/lkml/2015/9/18/29
+> 
+>>>> +    struct uic_pwr_mode *pwr = &ufs->pwr_act;
+>>>> +    char pwr_str[PWR_MODE_STR_LEN] = "";
+>>>> +    int ret = 0;
+>>>> +
+>>>> +    if (ufs->drv_data->post_pwr_change)
+>>>> +        ufs->drv_data->post_pwr_change(ufs, pwr);
+>>>> +
+>>>> +    if (IS_UFS_PWR_MODE_HS(pwr->mode)) {
+>>>> +        switch (pwr->hs_series) {
+>>>> +        case PA_HS_MODE_A:
+>>>> +        case PA_HS_MODE_B:
+>>>> +            phy_ops->calibrate_phy(ufs->phy, CFG_POST_PWR_HS,
+>>>> +                PWR_MODE_HS(pwr->gear, pwr->hs_series));
+>>>> +            break;
+>>>> +        }
+>>>> +
+>>>> +        ret = phy_ops->wait_for_lock_acq(ufs->phy);
+>>>> +        snprintf(pwr_str, sizeof(pwr_str), "Fast%s series_%s G_%d L_%d",
+>>>> +            pwr->mode == FASTAUTO_MODE ? "_Auto" : "",
+>>>> +            pwr->hs_series == PA_HS_MODE_A ? "A" : "B",
+>>>> +            pwr->gear, pwr->lane);
+>>>> +    } else if (IS_UFS_PWR_MODE_PWM(pwr->mode)) {
+>>>> +        snprintf(pwr_str, sizeof(pwr_str), "Slow%s G_%d L_%d",
+>>>> +            pwr->mode == SLOWAUTO_MODE ? "_Auto" : "",
+>>>> +            pwr->gear, pwr->lane);
+>>>> +    }
+>>>> +
+>>>> +    dev_info(hba->dev, "Power mode change %d : %s\n", ret, pwr_str);
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static void exynos_ufs_specify_nexus_t_xfer_req(struct ufs_hba *hba,
+>>>> +                        int tag, struct scsi_cmnd *cmd)
+>>>> +{
+>>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>>> +    u32 type;
+>>>> +
+>>>> +    type =  hci_readl(ufs, HCI_UTRL_NEXUS_TYPE);
+>>>> +
+>>>> +    if (cmd)
+>>>> +        hci_writel(ufs, type | (1 << tag), HCI_UTRL_NEXUS_TYPE);
+>>>> +    else
+>>>> +        hci_writel(ufs, type & ~(1 << tag), HCI_UTRL_NEXUS_TYPE);
+>>>> +}
+>>>> +
+>>>> +static void exynos_ufs_specify_nexus_t_tm_req(struct ufs_hba *hba,
+>>>> +                        int tag, u8 func)
+>>>> +{
+>>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>>> +    u32 type;
+>>>> +
+>>>> +    type =  hci_readl(ufs, HCI_UTMRL_NEXUS_TYPE);
+>>>> +
+>>>> +    switch (func) {
+>>>> +    case UFS_ABORT_TASK:
+>>>> +    case UFS_QUERY_TASK:
+>>>> +        hci_writel(ufs, type | (1 << tag), HCI_UTMRL_NEXUS_TYPE);
+>>>> +        break;
+>>>> +    case UFS_ABORT_TASK_SET:
+>>>> +    case UFS_CLEAR_TASK_SET:
+>>>> +    case UFS_LOGICAL_RESET:
+>>>> +    case UFS_QUERY_TASK_SET:
+>>>> +        hci_writel(ufs, type & ~(1 << tag), HCI_UTMRL_NEXUS_TYPE);
+>>>> +        break;
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +static void exynos_ufs_phy_init(struct exynos_ufs *ufs)
+>>>> +{
+>>>> +    struct ufs_hba *hba = ufs->hba;
+>>>> +    struct exynos_ufs_phy_info *phy_info = phy_get_drvdata(ufs->phy);
+>>>> +    struct exynos_ufs_phy_specific_ops *phy_ops =
+>>>> +                    phy_info->phy_specific_ops;
+>>>> +
+>>>> +    if (ufs->avail_ln_rx == 0 || ufs->avail_ln_tx == 0) {
+>>>> +        ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILRXDATALANES),
+>>>> +            &ufs->avail_ln_rx);
+>>>> +        ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILTXDATALANES),
+>>>> +            &ufs->avail_ln_tx);
+>>>> +        WARN(ufs->avail_ln_rx != ufs->avail_ln_tx,
+>>>> +            "available data lane is not equal(rx:%d, tx:%d)\n",
+>>>> +            ufs->avail_ln_rx, ufs->avail_ln_tx);
+>>>> +    }
+>>>> +
+>>>> +    phy_ops->set_lane_cnt(ufs->phy, ufs->avail_ln_rx);
+>>
+>> can't bus_width attribute in phy core be reused for this?
+>>
+> I will take a look on it.
+> 
+>>>> +    phy_ops->calibrate_phy(ufs->phy, CFG_PRE_INIT, PWR_MODE_ANY);
+>>
+>> Why can't calibrate PHY be directly done in phy_init?
+>>
+> This is just one instance, need to calibrate PHY when the ufs pwr mode changes.
 
-> > +
-> > +	if (!of_property_read_u32(dev->of_node, "init-val", &init_val)) {
-> > +		if (init_val > 1) {
-> > +			dev_warn(dev, "invalid init-val %u > 1\n", init_val);
-> > +		} else {
-> > +			dev_info(dev, "%s bridge\n",
-> > +				(init_val ? "enabling" : "disabling"));
-> > +			ret = _alt_fpga2sdram_enable_set(priv, init_val);
-> > +			if (ret) {
-> > +				fpga_bridge_unregister(&pdev->dev);
-> > +				return ret;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int alt_fpga_bridge_remove(struct platform_device *pdev)
-> > +{
-> > +	fpga_bridge_unregister(&pdev->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
-> > +
-> > +static struct platform_driver altera_fpga_driver = {
-> > +	.remove = alt_fpga_bridge_remove,
-> > +	.driver = {
-> > +		.name	= "altera_fpga2sdram_bridge",
-> > +		.of_match_table = of_match_ptr(altera_fpga_of_match),
-> > +	},
-> > +};
-> > +
-> > +static int __init alt_fpga_bridge_init(void)
-> > +{
-> > +	return platform_driver_probe(&altera_fpga_driver,
-> > +				     alt_fpga_bridge_probe);
-> > +}
-> > +
-> > +static void __exit alt_fpga_bridge_exit(void)
-> > +{
-> > +	platform_driver_unregister(&altera_fpga_driver);
-> > +}
-> > +
-> > +module_init(alt_fpga_bridge_init);
-> > +module_exit(alt_fpga_bridge_exit);
-> > +
-> > +MODULE_DESCRIPTION("Altera SoCFPGA FPGA to SDRAM Bridge");
-> > +MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/drivers/fpga/altera-hps2fpga.c b/drivers/fpga/altera-hps2fpga.c
-> > new file mode 100644
-> > index 0000000..3ec6394
-> > --- /dev/null
-> > +++ b/drivers/fpga/altera-hps2fpga.c
-> > @@ -0,0 +1,234 @@
-> > +/*
-> > + * FPGA to/from HPS Bridge Driver for Altera SoCFPGA Devices
-> > + *
-> > + *  Copyright (C) 2013-2015 Altera Corporation, All Rights Reserved.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +/*
-> > + * This driver manages bridges on a Altera SOCFPGA between the ARM host
-> > + * processor system (HPS) and the embedded FPGA.
-> > + *
-> > + * This driver supports enabling and disabling of the configured ports, which
-> > + * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-> > + * uses the same port configuration.  Bridges must be disabled before
-> > + * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/fpga/fpga-bridge.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +
-> > +#define SOCFPGA_RSTMGR_BRGMODRST		0x1c
-> > +#define ALT_RSTMGR_BRGMODRST_H2F_MSK		0x00000001
-> > +#define ALT_RSTMGR_BRGMODRST_LWH2F_MSK		0x00000002
-> > +#define ALT_RSTMGR_BRGMODRST_F2H_MSK		0x00000004
-> > +
-> > +#define ALT_L3_REMAP_OFST			0x0
-> > +#define ALT_L3_REMAP_MPUZERO_MSK		0x00000001
-> > +#define ALT_L3_REMAP_H2F_MSK			0x00000008
-> > +#define ALT_L3_REMAP_LWH2F_MSK			0x00000010
-> > +
-> > +#define HPS2FPGA_BRIDGE_NAME			"hps2fpga"
-> > +#define LWHPS2FPGA_BRIDGE_NAME			"lwhps2fpga"
-> > +#define FPGA2HPS_BRIDGE_NAME			"fpga2hps"
-> > +
-> > +struct altera_hps2fpga_data {
-> This name and the alt_hps2fpga_xxx functions are confusing, as you have
-> one bridge of this name but use it for all the bridges.
+Then maybe we should check when the power mode changes and see if it
+makes sense to calibrate PHY in other generic PHY ops like phy_power_on
+etc..
 
-I think it's OK.
-
-> 
-> > +	const char *name;
-> > +	struct reset_control *bridge_reset;
-> > +	struct regmap *l3reg;
-> > +	/* The L3 REMAP register is write only, so keep a cached value. */
-> > +	unsigned int l3_remap_value;
-> > +	unsigned int reset_mask;
-> > +	unsigned int remap_mask;
-> > +	struct clk *clk;
-> > +};
-> > +
-> > +static int alt_hps2fpga_enable_show(struct fpga_bridge *bridge)
-> > +{
-> > +	struct altera_hps2fpga_data *priv = bridge->priv;
-> > +
-> > +	return reset_control_status(priv->bridge_reset);
-> > +}
-> > +
-> > +static int _alt_hps2fpga_enable_set(struct altera_hps2fpga_data *priv,
-> > +				    bool enable)
-> > +{
-> > +	int ret;
-> > +
-> > +	/* bring bridge out of reset */
-> > +	if (enable)
-> > +		ret = reset_control_deassert(priv->bridge_reset);
-> > +	else
-> > +		ret = reset_control_assert(priv->bridge_reset);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Allow bridge to be visible to L3 masters or not */
-> > +	if (priv->remap_mask) {
-> > +		priv->l3_remap_value |= ALT_L3_REMAP_MPUZERO_MSK;
-> 
-> Why do you remap the On-chip RAM here. This doesn't belong in this
-> driver.
-
-We have to when we enable or disable.
-
-> 
-> > +
-> > +		if (enable)
-> > +			priv->l3_remap_value |= priv->remap_mask;
-> > +		else
-> > +			priv->l3_remap_value &= ~priv->remap_mask;
-> > +
-> > +		ret = regmap_write(priv->l3reg, ALT_L3_REMAP_OFST,
-> > +				   priv->l3_remap_value);
-> 
-> regmap_update_bits? Otherwise you will overwrite the other bridges
-> settings.
-
-This works.  This is a write-only register.
-
-> 
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int alt_hps2fpga_enable_set(struct fpga_bridge *bridge, bool enable)
-> > +{
-> > +	return _alt_hps2fpga_enable_set(bridge->priv, enable);
-> > +}
-> > +
-> > +struct fpga_bridge_ops altera_hps2fpga_br_ops = {
-> > +	.enable_set = alt_hps2fpga_enable_set,
-> > +	.enable_show = alt_hps2fpga_enable_show,
-> > +};
-> > +
-> > +static struct altera_hps2fpga_data hps2fpga_data  = {
-> > +	.name = HPS2FPGA_BRIDGE_NAME,
-> > +	.reset_mask = ALT_RSTMGR_BRGMODRST_H2F_MSK,
-> > +	.remap_mask = ALT_L3_REMAP_H2F_MSK,
-> > +};
-> > +
-> > +static struct altera_hps2fpga_data lwhps2fpga_data  = {
-> > +	.name = LWHPS2FPGA_BRIDGE_NAME,
-> > +	.reset_mask = ALT_RSTMGR_BRGMODRST_LWH2F_MSK,
-> > +	.remap_mask = ALT_L3_REMAP_LWH2F_MSK,
-> > +};
-> > +
-> > +static struct altera_hps2fpga_data fpga2hps_data  = {
-> > +	.name = FPGA2HPS_BRIDGE_NAME,
-> > +	.reset_mask = ALT_RSTMGR_BRGMODRST_F2H_MSK,
-> > +};
-> > +
-> > +static const struct of_device_id altera_fpga_of_match[] = {
-> > +	{ .compatible = "altr,socfpga-hps2fpga-bridge",
-> > +	  .data = &hps2fpga_data },
-> > +	{ .compatible = "altr,socfpga-lwhps2fpga-bridge",
-> > +	  .data = &lwhps2fpga_data },
-> > +	{ .compatible = "altr,socfpga-fpga2hps-bridge",
-> > +	  .data = &fpga2hps_data },
-> > +	{},
-> > +};
-> > +
-> > +static int alt_fpga_bridge_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct altera_hps2fpga_data *priv;
-> > +	const struct of_device_id *of_id;
-> > +	uint32_t init_val;
-> > +	int ret;
-> > +
-> > +	of_id = of_match_device(altera_fpga_of_match, dev);
-> > +	priv = (struct altera_hps2fpga_data *)of_id->data;
-> > +	WARN_ON(!priv);
-> 
-> Why don't you just return here if you have a NULL pointer?
-
-Actually we don't need that WARN_ON.  I can take it out.
-
-> 
-> > +
-> > +	priv->bridge_reset = devm_reset_control_get(dev, priv->name);
-> > +	if (IS_ERR(priv->bridge_reset)) {
-> > +		dev_err(dev, "Could not get %s reset control!\n", priv->name);
-> > +		return PTR_ERR(priv->bridge_reset);
-> > +	}
-> > +
-> > +	priv->l3reg = syscon_regmap_lookup_by_compatible("altr,l3regs");
-> > +	if (IS_ERR(priv->l3reg)) {
-> > +		dev_err(dev, "regmap for altr,l3regs lookup failed.\n");
-> > +		return PTR_ERR(priv->l3reg);
-> > +	}
-> > +
-> > +	priv->clk = of_clk_get(dev->of_node, 0);
-> > +	if (IS_ERR(priv->clk)) {
-> > +		dev_err(dev, "no clock specified\n");
-> > +		return PTR_ERR(priv->clk);
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(priv->clk);
-> > +	if (ret) {
-> > +		dev_err(dev, "could not enable clock\n");
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	ret = fpga_bridge_register(dev, priv->name, &altera_hps2fpga_br_ops,
-> > +				  priv);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!of_property_read_u32(dev->of_node, "init-val", &init_val)) {
-> > +		if (init_val > 1) {
-> > +			dev_warn(dev, "invalid init-val %u > 1\n", init_val);
-> > +		} else {
-> > +			dev_info(dev, "%s bridge\n",
-> > +				(init_val ? "enabling" : "disabling"));
-> > +
-> > +			ret = _alt_hps2fpga_enable_set(priv, init_val);
-> > +			if (ret) {
-> > +				fpga_bridge_unregister(&pdev->dev);
-> > +				return ret;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int alt_fpga_bridge_remove(struct platform_device *pdev)
-> > +{
-> > +	struct fpga_bridge *bridge = platform_get_drvdata(pdev);
-> > +	struct altera_hps2fpga_data *priv = bridge->priv;
-> > +
-> > +	fpga_bridge_unregister(&pdev->dev);
-> > +
-> > +	clk_disable_unprepare(priv->clk);
-> > +	clk_put(priv->clk);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +MODULE_DEVICE_TABLE(of, altera_fpga_of_match);
-> > +
-> > +static struct platform_driver altera_fpga_driver = {
-> > +	.remove = alt_fpga_bridge_remove,
-> > +	.driver = {
-> > +		.name	= "altera_hps2fpga_bridge",
-> > +		.of_match_table = of_match_ptr(altera_fpga_of_match),
-> > +	},
-> > +};
-> > +
-> > +static int __init alt_fpga_bridge_init(void)
-> > +{
-> > +	return platform_driver_probe(&altera_fpga_driver,
-> > +				     alt_fpga_bridge_probe);
-> > +}
-> > +
-> > +static void __exit alt_fpga_bridge_exit(void)
-> > +{
-> > +	platform_driver_unregister(&altera_fpga_driver);
-> > +}
-> > +
-> > +module_init(alt_fpga_bridge_init);
-> > +module_exit(alt_fpga_bridge_exit);
-> > +
-> > +MODULE_DESCRIPTION("Altera SoCFPGA HPS to FPGA Bridge");
-> > +MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-> > +MODULE_LICENSE("GPL v2");
-> 
-> Regards,
-> Steffen
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+Thanks
+Kishon
