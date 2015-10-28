@@ -1,213 +1,42 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] EDAC: Add ARM64 EDAC
-Date: Wed, 28 Oct 2015 16:40:53 +0000
-Message-ID: <20151028164053.GG25451@leverpostej>
-References: <1446048829-3359-1-git-send-email-brijeshkumar.singh@amd.com>
+From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 2/4] watchdog: ts4800: add new driver for TS-4800 watchdog
+Date: Wed, 28 Oct 2015 12:52:51 -0400
+Message-ID: <20151028165251.GA5948@localhost>
+References: <1445978021-13961-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1445978021-13961-3-git-send-email-damien.riegel@savoirfairelinux.com>
+ <CADhT+wdWcYMQ_ZPhcGOye3oP=6N+Yos+sbqV20E5x5Hmfm8ycw@mail.gmail.com>
+ <20151027215135.GA4676@localhost>
+ <20151028020501.GA1548@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446048829-3359-1-git-send-email-brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
+In-Reply-To: <20151028020501.GA1548-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Oct 27, 2015 at 07:05:01PM -0700, Guenter Roeck wrote:
+> In general, naming a driver for the first chip it supports is not
+> problematic. Making it too generic is, on the other side, problematic.
+> What are you going to do if ts4900 (or ts4801) implements a different
+> watchdog ?
 
-On Wed, Oct 28, 2015 at 11:13:49AM -0500, Brijesh Singh wrote:
-> Add support for Cortex A57 and A53 EDAC driver.
-> 
-> Signed-off-by: Brijesh Singh <brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org>
-> CC: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> CC: pawel.moll-5wv7dgnIgG8@public.gmane.org
-> CC: mark.rutland-5wv7dgnIgG8@public.gmane.org
-> CC: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
-> CC: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-> CC: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org
-> CC: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org
-> CC: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> CC: guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> CC: andre.przywara-5wv7dgnIgG8@public.gmane.org
-> CC: arnd-r2nGTMty4D4@public.gmane.org
-> CC: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-> CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> CC: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Tested error reporting via rasdeamon on AMD seattle platform.
-> 
-> v4:
-> * remove THIS_MODULE assignment from platform_driver
-> * use module_platform_driver(), remove module_init() and module_exit()
-> * remove default n from Kconfig
-> 
-> v3:
-> * change DT binding compatibilty string to 'cortex-a57-edac'
-> * remove A57/A53 prefix from register bit definition
-> * unify A57 and A53 L1/L2 error parsing functions
-> * use mc trace event function to report the error
-> * update Kconfig default to 'n'
-> 
-> v2:
-> * convert into generic arm64 edac driver
-> * remove AMD specific references from dt binding
-> * remove poll_msec property from dt binding
-> * add poll_msec as a module param, default is 100ms
-> * update copyright text
-> * define macro mnemonics for L1 and L2 RAMID
-> * check L2 error per-cluster instead of per core
-> * update function names
-> * use get_online_cpus() and put_online_cpus() to make L1 and L2 register 
->   read hotplug-safe
-> * add error check in probe routine
-> 
->  .../devicetree/bindings/edac/cortex-arm64-edac.txt |  15 +
->  drivers/edac/Kconfig                               |   7 +
->  drivers/edac/Makefile                              |   1 +
->  drivers/edac/cortex_arm64_edac.c                   | 336 +++++++++++++++++++++
->  4 files changed, 359 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
->  create mode 100644 drivers/edac/cortex_arm64_edac.c
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt b/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
-> new file mode 100644
-> index 0000000..552f0c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
-> @@ -0,0 +1,15 @@
-> +* ARM Cortex A57 and A53 L1/L2 cache error reporting
-> +
-> +CPU Memory Error Syndrome and L2 Memory Error Syndrome registers can be used
-> +for checking L1 and L2 memory errors.
-> +
-> +The following section describes the Cortex A57/A53 EDAC DT node binding.
-> +
-> +Required properties:
-> +- compatible: Should be "arm,cortex-a57-edac" or "arm,cortex-a53-edac"
-> +
-> +Example:
-> +	edac {
-> +		compatible = "arm,cortex-a57-edac";
-> +	};
-> +
+Okay, I will keep the current name.
 
-This is insufficient for big.LITTLE, no interrupt is possible, and we
-haven't defined the rules for accessing the registers (e.g. whether
-write backs are permitted).
+I noticed that other boards might have their feed register at different
+offsets from syscon base. For instance, feed register is at offset 0x6
+on TS-4720 and offset 0xE on TS-4800 (syscon registers are 16-bit wide).
+So I need to address that as well (it is related to the next point).
 
-Please see my prior comments [1] on those points.
+Currently, the driver maps all syscon registers even if it uses only one
+of them. I was thinking about adding a "syscon" node and define the
+watchdog as a child of it, but the syscon driver set
+syscon_regmap_config.val_bits to 32. Do I have to create a new driver if
+I want to use val_bits = 16, or is there another way ?
 
-If we're going to use this feature directly within the kernel, we need
-to consider the envelope of possible implementations rather than your
-use-case alone.
-
-> +static void parse_cpumerrsr(void *arg)
-> +{
-> +	int cpu, partnum, way;
-> +	unsigned int index = 0;
-> +	u64 val = read_cpumerrsr_el1();
-> +	int repeat_err, other_err;
-> +
-> +	/* we do not support fatal error handling so far */
-> +	if (CPUMERRSR_EL1_FATAL(val))
-> +		return;
-
-Silently ignoring fatal errors doesn't seem good.
-
-Shouldn't this be checked after the valid bit?
-
-> +	/* check if we have valid error before continuing */
-> +	if (!CPUMERRSR_EL1_VALID(val))
-> +		return;
-> +
-> +	cpu = smp_processor_id();
-> +	partnum = read_cpuid_part_number();
-> +	repeat_err = CPUMERRSR_EL1_REPEAT(val);
-> +	other_err = CPUMERRSR_EL1_OTHER(val);
-> +
-> +	/* way/bank and index address bit ranges are different between
-> +	 * A57 and A53 */
-> +	if (partnum == ARM_CPU_PART_CORTEX_A57) {
-> +		index = CPUMERRSR_EL1_INDEX(val, 0x1ffff);
-> +		way = CPUMERRSR_EL1_BANK_WAY(val, 0x1f);
-> +	} else {
-> +		index = CPUMERRSR_EL1_INDEX(val, 0xfff);
-> +		way = CPUMERRSR_EL1_BANK_WAY(val, 0x7);
-> +	}
-
-Can the bit ranges not be determined at probe time rather than reading
-the MIDR repeatedly?
-
-> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "CPU%d L1 error detected!\n", cpu);
-> +	edac_printk(KERN_CRIT, EDAC_MOD_STR, "index=%#x, RAMID=", index);
-> +
-> +	switch (CPUMERRSR_EL1_RAMID(val)) {
-> +	case L1_I_TAG_RAM:
-> +		pr_cont("'L1-I Tag RAM' (way %d)", way);
-> +		break;
-> +	case L1_I_DATA_RAM:
-> +		pr_cont("'L1-I Data RAM' (bank %d)", way);
-> +		break;
-> +	case L1_D_TAG_RAM:
-> +		pr_cont("'L1-D Tag RAM' (way %d)", way);
-> +		break;
-> +	case L1_D_DATA_RAM:
-> +		pr_cont("'L1-D Data RAM' (bank %d)", way);
-> +		break;
-> +	case L1_D_DIRTY_RAM:
-> +		pr_cont("'L1 Dirty RAM'");
-> +		break;
-> +	case TLB_RAM:
-> +		pr_cont("'TLB RAM'");
-> +		break;
-> +	default:
-> +		pr_cont("'unknown'");
-> +		break;
-> +	}
-> +
-> +	pr_cont(", repeat=%d, other=%d (CPUMERRSR_EL1=%#llx)\n", repeat_err,
-> +		other_err, val);
-> +
-> +	trace_mc_event(HW_EVENT_ERR_CORRECTED, "L1 non-fatal error",
-> +		       "", repeat_err, 0, 0, 0, -1, index, 0, 0, DRV_NAME);
-> +	write_cpumerrsr_el1(0);
-> +}
-
-The comments above also apply to parse_l2merrsr.
-
-> +static void cortex_arm64_edac_check(struct edac_device_ctl_info *edac_ctl)
-> +{
-> +	int cpu;
-> +	struct cpumask cluster_mask, old_mask;
-> +
-> +	cpumask_clear(&cluster_mask);
-> +	cpumask_clear(&old_mask);
-> +
-> +	get_online_cpus();
-> +	for_each_online_cpu(cpu) {
-> +		/* Check CPU L1 error */
-> +		smp_call_function_single(cpu, parse_cpumerrsr, NULL, 0);
-> +		cpumask_copy(&cluster_mask, topology_core_cpumask(cpu));
-> +		if (cpumask_equal(&cluster_mask, &old_mask))
-> +			continue;
-> +		cpumask_copy(&old_mask, &cluster_mask);
-> +		/* Check CPU L2 error */
-> +		smp_call_function_any(&cluster_mask, parse_l2merrsr, NULL, 0);
-> +	}
-
-I don't think the use of old_mask is sufficient here, given the mapping
-of logical to physical ID is arbitrary. For example, we could have CPUs
-0,5,6,7 in one cluster, and CPUs 1,2,3,4 in another, and in that case
-we'd check the first cluster twice.
-
-This also is wrong for big.LITTLE; we can't necessarily check on every
-CPU.
-
-Thanks,
-Mark.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/380942.html
+Damien
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
