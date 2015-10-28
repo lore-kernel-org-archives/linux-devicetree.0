@@ -1,87 +1,29 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v7 11/17] Documentation: phy: add document for rockchip dp
- phy
-Date: Wed, 28 Oct 2015 10:26:58 +0800
-Message-ID: <56303272.6060001@rock-chips.com>
-References: <1445599415-30856-1-git-send-email-ykk@rock-chips.com>
- <1445656003-15300-1-git-send-email-ykk@rock-chips.com>
- <5298205.Ylro4gBPnU@phil>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH RESEND v2 net-next] net: hisilicon: updates HNS config
+ and documents
+Date: Tue, 27 Oct 2015 20:20:41 -0700 (PDT)
+Message-ID: <20151027.202041.613033307041357854.davem@davemloft.net>
+References: <1445944594-244149-1-git-send-email-huangdaode@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5298205.Ylro4gBPnU@phil>
+In-Reply-To: <1445944594-244149-1-git-send-email-huangdaode@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, joe@perches.com, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chip>
+To: huangdaode@hisilicon.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, liguozhu@hisilicon.com, Yisen.Zhuang@huawei.com, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, lipeng321@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2015 07:08 AM, Heiko Stuebner wrote:
-> Am Samstag, 24. Oktober 2015, 11:06:37 schrieb Yakir Yang:
->> Add dt binding documentation for rockchip display port PHY.
->>
->> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->> ---
->> Changes in v7: None
->> Changes in v6: None
->> Changes in v5:
->> - Split binding doc's from driver changes. (Rob)
->> - Update the rockchip,grf explain in document, and correct the clock required
->>    elemets in document. (Rob & Heiko)
->>
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>   .../devicetree/bindings/phy/rockchip-dp-phy.txt    | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
->> new file mode 100644
->> index 0000000..505194e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
->> @@ -0,0 +1,22 @@
->> +Rockchip Soc Seroes Display Port PHY
->> +------------------------------------
->> +
->> +Required properties:
->> +- compatible : should be one of the following supported values:
->> +	 - "rockchip.rk3288-dp-phy"
->> +- clocks: from common clock binding: handle to dp clock.
->> +	of memory mapped region.
->> +- clock-names: from common clock binding:
->> +	Required elements: "24m"
->> +- rockchip,grf: phandle to the syscon managing the "general register files"
->> +- #phy-cells : from the generic PHY bindings, must be 0;
->> +
->> +Example:
->> +
->> +edp_phy: edp-phy@ff770274 {
-> one small thing, I found while playing more ... the node should not have
-> an address, as it also does not have register property. So just name it
-> 	edp_phy: edp-phy {
-> 		...
-> 	};
->
-> There is only one anyway on the rk3288.
->
-> With that change the Reviewed-by still applies :-)
+From: huangdaode <huangdaode@hisilicon.com>
+Date: Tue, 27 Oct 2015 19:16:34 +0800
 
-Okay,
+> From: yankejian <yankejian@huawei.com>
+> 
+> updates the bindings documents and dtsi file according to the review
+> comments[https://lkml.org/lkml/2015/9/21/670] from Rob Herring <robh@kernel.org>
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: yankejian <yankejian@huawei.com>
+> Signed-off-by: huangdaode <huangdaode@hisilicon.com>
 
-- Yakir
-
->
->> +	compatible = "rockchip,rk3288-dp-phy";
->> +	rockchip,grf = <&grf>;
->> +	clocks = <&cru SCLK_EDP_24M>;
->> +	clock-names = "24m";
->> +	#phy-cells = <0>;
->> +};
->>
->
->
->
+Applied, thanks.
