@@ -1,8 +1,8 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Subject: Re: [RFC v4 02/11] drm/mediatek: Add DRM Driver for Mediatek SoC
  MT8173.
-Date: Wed, 28 Oct 2015 18:13:49 +0100
-Message-ID: <1446052429.12590.112.camel@pengutronix.de>
+Date: Wed, 28 Oct 2015 18:14:41 +0100
+Message-ID: <1446052481.7190.0.camel@pengutronix.de>
 References: <1445026333-17013-1-git-send-email-p.zabel@pengutronix.de>
  <1445026333-17013-3-git-send-email-p.zabel@pengutronix.de>
  <20151019085644.GO13786@phenom.ffwll.local>
@@ -126,9 +126,9 @@ IChzdGF0ZS0+ZmIpCj4gPiArCQlkcm1fZnJhbWVidWZmZXJfcmVmZXJlbmNlKHN0YXRlLT5mYik7
 Cj4gPiArCXBsYW5lLT5mYiA9IHN0YXRlLT5mYjsKPiAKPiBUaGVyZSBzaG91bGRuJ3QgYmUgYW55
 IG5lZWQgdG8gcmVmY291bnQgZnJhbWVidWZmZXJzIHlvdXJzZWxmLiBJZiB0aGF0J3MKPiB0aGUg
 Y2FzZSB0aGVuIHRoZXJlJ3MgYSBidWcgaW4gdGhlIGRybSBjb3JlL2hlbHBlcnMuCgpJIHdhcyBz
-dGlsbCB1c2luZyBwbGFuZS0+ZmIgaW4gbXRrX2RybV9jcnRjX3BsYW5lX2NvbmZpZy4gSSdsbCBj
-aGVjayBpZgpzd2l0Y2hpbmcgdG8gcGxhbmUtPnN0YXRlLT5mYiB0aGVyZSB3aWxsIGFsbG93IG1l
-IHRvIGRyb3AgdGhpcy4KCnRoYW5rcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+dGlsbCB1c2luZyBwbGFuZS0+ZmIgaW4gbXRrX2RybV9jcnRjX3BsYW5lX2NvbmZpZy4gU3dpdGNo
+aW5nIHRvCnBsYW5lLT5zdGF0ZS0+ZmIgdGhlcmUgc2hvdWxkIGFsbG93IG1lIHRvIGRyb3AgdGhp
+cy4KCnRoYW5rcwpQaGlsaXBwCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
