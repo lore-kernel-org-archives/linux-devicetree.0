@@ -1,42 +1,62 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] reset: sunxi: Add Allwinner H3 bus resets
-Date: Wed, 28 Oct 2015 12:42:35 +0100
-Message-ID: <1446032555.12590.34.camel@pengutronix.de>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
-	 <1445964626-6484-5-git-send-email-jenskuske@gmail.com>
-Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH 07/11] pinctrl: use ngpios propety from DT
+Date: Wed, 28 Oct 2015 11:52:49 +0000
+Message-ID: <0C803592FC378B4E83922050AB46442A2AD742F0@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
+	<1445233398-27129-8-git-send-email-pramodku@broadcom.com>
+ <CACRpkdY1GDs6ypqCiY3iiv3DkfnHchnY+bWPoCqU=_sgn9f5vQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDUKXHHSSIJBBOXJYKYQKGQEVLLOIGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445964626-6484-5-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdY1GDs6ypqCiY3iiv3DkfnHchnY+bWPoCqU=_sgn9f5vQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jason Uy <jasonuy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jens,
-
-Am Dienstag, den 27.10.2015, 17:50 +0100 schrieb Jens Kuske:
-[...]
-> --- a/drivers/reset/reset-sunxi.c
-> +++ b/drivers/reset/reset-sunxi.c
-> @@ -75,7 +75,9 @@ static struct reset_control_ops sunxi_reset_ops = {
->  	.deassert	= sunxi_reset_deassert,
->  };
->  
-> -static int sunxi_reset_init(struct device_node *np)
-> +static int sunxi_reset_init(struct device_node *np,
-> +			    int (*of_xlate)(struct reset_controller_dev *rcdev,
-> +				    const struct of_phandle_args *reset_spec))
-
-I'd add a tab to the indentation and drop the of_xlate parameter names.
-If you agree to this change, I'll fix it up when I apply it.
-
-best regards
-Philipp
+SGkgTGludXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMg
+V2FsbGVpaiBbbWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMjcgT2N0
+b2JlciAyMDE1IDE1OjIyDQo+IFRvOiBQcmFtb2QgS3VtYXINCj4gQ2M6IFJvYiBIZXJyaW5nOyBQ
+YXdlbCBNb2xsOyBNYXJrIFJ1dGxhbmQ7IElhbiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgUmF5IEp1
+aTsNCj4gU2NvdHQgQnJhbmRlbjsgUnVzc2VsbCBLaW5nOyBsaW51eC1ncGlvQHZnZXIua2VybmVs
+Lm9yZzsgYmNtLWtlcm5lbC1mZWVkYmFjay0NCj4gbGlzdDsgSmFzb24gVXk7IE1hc2FoaXJvIFlh
+bWFkYTsgVGhvbWFzIEdsZWl4bmVyOyBMYXVyZW50IFBpbmNoYXJ0Ow0KPiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51
+eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgSm9uYXMgR29yc2tpDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggMDcvMTFdIHBpbmN0cmw6IHVzZSBuZ3Bpb3MgcHJvcGV0eSBmcm9tIERUDQo+IA0K
+PiBPbiBNb24sIE9jdCAxOSwgMjAxNSBhdCA3OjQzIEFNLCBQcmFtb2QgS3VtYXIgPHByYW1vZGt1
+QGJyb2FkY29tLmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IFNpbmNlIGlkZW50aWNhbCBoYXJkd2Fy
+ZSBpcyB1c2VkIGluIHNldmVyYWwgaW5zdGFuY2VzIGFuZCBhbGwgcGlucyBhcmUNCj4gPiBub3Qg
+cm91dGVkIHRvIHBpbmN0cmwgaGVuY2UgZ2V0dGluZyB0b3RhbCBudW1iZXIgb2YgZ3Bpb3MgZnJv
+bSBEVCBtYWtlDQo+ID4gbW9yZSBzZW5zZSBoZW5jZSBzdG9wIHVzaW5nIHRvdGFsIG51bWJlciBv
+ZiBncGlvcyBwaW5zIGZyb20gZHJpdmVycw0KPiA+IGFuZCBleHRyYWN0IGl0IGZyb20gRFQuDQo+
+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQcmFtb2QgS3VtYXIgPHByYW1vZGt1QGJyb2FkY29tLmNv
+bT4NCj4gPiBSZXZpZXdlZC1ieTogUmF5IEp1aSA8cmp1aUBicm9hZGNvbS5jb20+DQo+ID4gUmV2
+aWV3ZWQtYnk6IFNjb3R0IEJyYW5kZW4gPHNicmFuZGVuQGJyb2FkY29tLmNvbT4NCj4gDQo+IFRo
+aXMgcGF0Y2ggaXMgd3JvbmcuDQo+IA0KPiBLZWVwIHRoaXMgcGVyLWNvbXBhdGlibGUgY29kZSwg
+YW5kIG9ubHkgb3ZlcnJpZCB0aGUgbmdwaW9zIGlmIGFuZCBvbmx5IGlmOg0KPiANCj4gLSBUaGUg
+bmdwaW9zIGlzIHNldCBpbiB0aGUgRFQgbm9kZQ0KPiAtIFRoZSBuZ3Bpb3MgaW4gdGhlIERUIG5v
+ZGUgaXMgKnNtYWxsZXIqIHRoYW4gdGhlIGhhcmR3YXJlDQo+ICAgZGVmaW5lZCBudW1iZXIgb2Yg
+R1BJT3MuDQo+IA0KPiBuZ3Bpb3MgaXMgZm9yIHJlc3RyaWN0aW5nIHRoZSBudW1iZXIgb2YgYXZh
+aWxhYmxlIGxpbmVzIGR1ZSB0byByb3V0aW5nIGV0Yywgbm90IHRvDQo+IGRlZmluZSB3aGF0IHRo
+ZSBoYXJkd2FyZSBoYXMsIGJlY2F1c2UgdGhlIGhhcmR3YXJlIG1vc3QgY2VydGFpbmx5IGhhdmUg
+YWxsIHRoZQ0KPiBsaW5lcywgaXQncyBqdXN0IHRoYXQgeW91J3JlIG5vdCB1c2luZyBhbGwgb2Yg
+dGhlbS4NCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQoNCkkgZGlzY3Vzc2VkIHdpdGgg
+QVNJQyB0ZWFtIHJlZ2FyZGluZyB0aGlzIGlQcm9jIEdQSU8gYmxvY2suIFRoZXkgdXNlIGEgbGli
+cmFyeSB0byBjcmVhdGUgdGhlIEdQSU9zIGJsb2NrIHdoZXJlICJ0b3RhbCBudW1iZXIgb2YgR1BJ
+TyBwaW5zKCBsZXQgc2F5IE4pIGluIEdQSU8gYmxvY2siIGlzIHVzZWQgYXMgYW4gcGFyYW1ldGVy
+LiANCkxpYnJhcnkgdXNlcyBhIGNvbnN0cnVjdCBmb3IgKmEqIEdQSU8gcGluLiBUaGlzIGdldHMg
+aW5zdGFudGlhdGVkIE4gdGltZXMgdG8gY3JlYXRlIGEgY29tcGxldGUgR1BJTyBibG9jayB3aXRo
+IE4gcGlucy4NCg0KQWxsIGlQcm9jIGJhc2VkIFNvQ3MgdXNlcyB0aGlzIGxpYnJhcnkuIFNvIEkn
+bSBub3Qgc3VyZSB3aGV0aGVyIGF0dGFjaGluZyAidG90YWwgbnVtYmVyIG9mIEdQSU9zIHBpbnMi
+IHRvIGNvbXBhdGlibGUtc3RyaW5nIG1ha2Ugc2Vuc2UgaW4gdGhpcyBjYXNlLiANCkkgcGVyc29u
+YWxseSBmZWVsIHRoYXQgcGFzc2luZyB0aGlzIG51bWJlciBmcm9tIHRoZSBEVCBtYWtlcyBtb3Jl
+IHNlbnNlIGhlcmUuIEFueSBpUHJvYyBiYXNlZCBmdXR1cmUgYXMgd2VsbCBhcyBjdXJyZW50IFNv
+Q3Mgd291bGQgYmUgYWJsZSB0byB1c2UgdGhpcyBkcml2ZXIgd2l0aG91dCBhbnkgY2hhbmdlLg0K
+DQpQbGVhc2UgYWR2aXNlIHVzIGluIHRoaXMgY2FzZS4NCg0KUmVnYXJkcywNClByYW1vZA0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
