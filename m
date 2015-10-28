@@ -1,119 +1,96 @@
-From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 1/2] usb: doc: Add bindings for ULPI platform driver
-Date: Wed, 28 Oct 2015 11:55:07 +0000
-Message-ID: <F1B223389110CE49B4CF055ABA2E5D3D78CA6D47@XAP-PVEXMBX02.xlnx.xilinx.com>
-References: <1443012841-13673-1-git-send-email-sbhatta@xilinx.com>
- <20150924091034.GB27847@shlinux2>
- <F1B223389110CE49B4CF055ABA2E5D3D78C9BCBF@XAP-PVEXMBX02.xlnx.xilinx.com>
- <CAL_JsqK-aAY+DAwt0YH-mbBo+a9c7WPrBwJJoy3=FkT6ZX2A5w@mail.gmail.com>
- <20150930161803.GI32625@saruman.tx.rr.com>
- <CAGnW=Bb0pdv7i1N=WqZoQLDUpuGw=Xq=cM5ir2Ow25pUDYtvEA@mail.gmail.com>
- <561A74E6.9050406@ti.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Wed, 28 Oct 2015 07:32:28 -0500
+Message-ID: <20151028123228.GA30510@localhost>
+References: <1445871386-2377-1-git-send-email-bharatku@xilinx.com>
+ <20151027234032.GA7238@localhost>
+ <8520D5D51A55D047800579B0941471980169316D@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <561A74E6.9050406-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8520D5D51A55D047800579B0941471980169316D@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.or
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9uLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEtpc2hv
-biBWaWpheSBBYnJhaGFtIEkgW21haWx0bzpraXNob25AdGkuY29tXQ0KPiBTZW50OiBTdW5kYXks
-IE9jdG9iZXIgMTEsIDIwMTUgODoxMSBQTQ0KPiBUbzogUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVy
-aTsgYmFsYmlAdGkuY29tDQo+IENjOiBSb2IgSGVycmluZzsgU3ViYmFyYXlhIFN1bmRlZXAgQmhh
-dHRhOyBQZXRlciBDaGVuOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZ3JlZ2toQGxp
-bnV4Zm91bmRhdGlvbi5vcmc7IGxpbnV4LQ0KPiB1c2JAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIDEvMl0gdXNiOiBkb2M6IEFkZCBiaW5k
-aW5ncyBmb3IgVUxQSSBwbGF0Zm9ybSBkcml2ZXINCj4gDQo+IEhpLA0KPiANCj4gT24gU3VuZGF5
-IDExIE9jdG9iZXIgMjAxNSAwNDo0NSBQTSwgcHVubmFpYWggY2hvdWRhcnkga2FsbHVyaSB3cm90
-ZToNCj4gPiBPbiBXZWQsIFNlcCAzMCwgMjAxNSBhdCA5OjQ4IFBNLCBGZWxpcGUgQmFsYmkgPGJh
-bGJpQHRpLmNvbT4gd3JvdGU6DQo+ID4+IE9uIFRodSwgU2VwIDI0LCAyMDE1IGF0IDExOjE4OjAx
-QU0gLTA1MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+Pj4gT24gVGh1LCBTZXAgMjQsIDIwMTUg
-YXQgNDoyNiBBTSwgU3ViYmFyYXlhIFN1bmRlZXAgQmhhdHRhDQo+ID4+PiA8c3ViYmFyYXlhLnN1
-bmRlZXAuYmhhdHRhQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+Pj4+IEhpIFBldGVyLA0KPiA+Pj4+
-DQo+ID4+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+IEZyb206IFBldGVy
-IENoZW4gW21haWx0bzpwZXRlci5jaGVuQGZyZWVzY2FsZS5jb21dDQo+ID4+Pj4+IFNlbnQ6IFRo
-dXJzZGF5LCBTZXB0ZW1iZXIgMjQsIDIwMTUgMjo0MSBQTQ0KPiA+Pj4+PiBUbzogU3ViYmFyYXlh
-IFN1bmRlZXAgQmhhdHRhDQo+ID4+Pj4+IENjOiBiYWxiaUB0aS5jb207IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBraXNob25AdGkuY29tOw0KPiA+Pj4+PiBncmVna2hAbGludXhmb3VuZGF0
-aW9uLm9yZzsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+ID4+Pj4+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IFB1bm5haWFoIENob3VkYXJ5IEthbGx1cmk7IFN1YmJhcmF5YQ0K
-PiA+Pj4+PiBTdW5kZWVwIEJoYXR0YTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+ID4+Pj4+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIDEvMl0gdXNiOiBkb2M6IEFkZCBi
-aW5kaW5ncyBmb3IgVUxQSQ0KPiA+Pj4+PiBwbGF0Zm9ybSBkcml2ZXINCj4gPj4+Pj4NCj4gPj4+
-Pj4gT24gV2VkLCBTZXAgMjMsIDIwMTUgYXQgMDY6MjQ6MDFQTSArMDUzMCwgU3ViYmFyYXlhIFN1
-bmRlZXANCj4gQmhhdHRhDQo+ID4+Pj4+IHdyb3RlOg0KPiA+Pj4+Pj4gVGhpcyBwYXRjaCBhZGRz
-IGJpbmRpbmcgZG9jIGluZm8gZm9yIGdlbmVyaWMgVUxQSSBQSFlzIHBsYXRmb3JtDQo+ID4+Pj4+
-PiBkcml2ZXIuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogU3ViYmFyYXlhIFN1
-bmRlZXAgQmhhdHRhIDxzYmhhdHRhQHhpbGlueC5jb20+DQo+ID4+Pj4+PiAtLS0NCj4gPj4+Pj4+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdWxwaS1wbGF0Zm9ybS1waHkudHh0ICB8ICAg
-MzQNCj4gPj4+Pj4gKysrKysrKysrKysrKysrKysrKysNCj4gPj4+Pj4+ICAxIGZpbGVzIGNoYW5n
-ZWQsIDM0IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZQ0KPiA+Pj4+
-Pj4gMTAwNjQ0DQo+ID4+Pj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNi
-L3VscGktcGxhdGZvcm0tcGh5LnR4dA0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IGRpZmYgLS1naXQNCj4g
-Pj4+Pj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91bHBpLXBsYXRm
-b3JtLXBoeS50eHQNCj4gPj4+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3VzYi91bHBpLXBsYXRmb3JtLXBoeS50eHQNCj4gPj4+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-DQo+ID4+Pj4+PiBpbmRleCAwMDAwMDAwLi43YjhjYmI0DQo+ID4+Pj4+PiAtLS0gL2Rldi9udWxs
-DQo+ID4+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3Vs
-cGktcGxhdGZvcm0tcGh5LnR4dA0KPiA+Pj4+Pj4gQEAgLTAsMCArMSwzNCBAQA0KPiA+Pj4+Pj4g
-K1BsYXRmb3JtIGRyaXZlciBmb3IgZ2VuZXJpYyBVTFBJIFBIWXMNCj4gPj4+Pj4+ICsNCj4gPj4+
-Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+Pj4+Pj4gKy0gY29tcGF0aWJsZSAgICAgICAg
-ICAgICAgIDogU2hvdWxkIGJlICJ1bHBpLXBoeSINCj4gPj4+Pj4+ICstIHJlZyAgICAgICAgICAg
-ICAgICAgICAgICA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgVVNCDQo+
-ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgY29udHJvbGxlciByZWdpc3RlcnMgbWFwIHRv
-IHdoaWNoIHRoaXMgUEhZDQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgaXMgY29ubmVj
-dGVkLg0KPiA+Pj4+Pj4gKy0gdmlldy1wb3J0ICAgICAgICAgICAgICAgIDogU2hvdWxkIGNvbnRh
-aW4gdmlld3BvcnQgcmVnaXN0ZXIgb2Zmc2V0IG9mIHRoZQ0KPiA+Pj4+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgIFVTQiBjb250cm9sbGVyIHRvIHdoaWNoIHRoaXMgUEhZIGlzDQo+ID4+Pj4+PiAr
-Y29ubmVjdGVkIE9wdGlvbmFsDQo+ID4+Pj4+PiArcHJvcGVydGllczoNCj4gPj4+Pj4+ICstIGRy
-di12YnVzICAgICAgICAgOiByZXF1aXJlZCBpZiB0dXJuaW5nIFZCVVMgb24vb2ZmIGhhcyB0byBi
-ZSBkcml2ZW4NCj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBieSB3cml0aW5nIHRvIFBI
-WS4gVGhpcyBmZWF0dXJlIGRlcGVuZHMgb24gYm9hcmQNCj4gPj4+Pj4+ICsgICAgICAgICAgICAg
-ICAgICAgICBkZXNpZ24uDQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiArRXhhbXBsZToNCj4gPj4+Pj4+
-ICtCZWxvdyBleGFtcGxlIHNob3dzIHRoZSBQSFkgYmluZGluZyBmb3IgQ2hpcGlkZWEgVVNCIGNv
-bnRyb2xsZXINCj4gPj4+Pj4+ICt3aGljaCBoYXMgdWxwaSB2aWV3cG9ydCByZWdpc3RlciBhdCAw
-eDAxNzANCj4gPj4+Pj4+ICsNCj4gPj4+Pj4+ICsgICAgICAgICAgIHVzYl9waHkwOiBwaHkwIHsN
-Cj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ1bHBpLXBoeSI7DQo+
-ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGUwMDAyMDAwIDB4MTAwMD47DQo+
-ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgIHZpZXctcG9ydCA9IDwweDAxNzA+Ow0KPiA+Pj4+
-Pj4gKyAgICAgICAgICAgICAgICAgICBkcnYtdmJ1czsNCj4gPj4+Pj4+ICsgICAgICAgICAgIH07
-DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiArICAgICAgICAgICB1c2IwOiB1c2JAZTAwMDIwMDAgew0K
-PiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiY2hpcGlkZWEs
-dXNiMiI7DQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVu
-dCA9IDwmaW50Yz47DQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0
-cyA9IDwwIDIxIDQ+Ow0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDww
-eGUwMDAyMDAwIDB4MTAwMD47DQo+ID4+Pj4+DQo+ID4+Pj4+IEFsdGhvdWdoIGp1c3QgY2FsbCBk
-ZXZtX2lvcmVtYXAgdHdpY2UgZm9yIHRoZSBzYW1lIHJlZ2lzdGVyIHJlZ2lvbg0KPiA+Pj4+PiBk
-b2VzIG5vdCBjYXVzZSBhbnkgZXJyb3JzLCBJIGFtIG5vdCBzdXJlIGlmIGl0IHdpbGwgaGFzIG90
-aGVyDQo+ID4+Pj4+IHBvdGVudGlhbCBwcm9ibGVtcy4gQ2M6IGFybSBsaXN0Lg0KPiA+Pj4+DQo+
-ID4+Pj4gWWVzIFBldGVyIEkgd2FzIGFsc28gaW4gZG91YnQgdG8gY2FsbCBkZXZtX2lvcmVtYXAg
-dHdpY2UgZm9yIHNhbWUgcmVnaXN0ZXINCj4gcmVnaW9uLg0KPiA+Pj4+IGRldm1faW9yZW1hcF9y
-ZXNvdXJjZSBjb21wbGFpbmVkIGhlbmNlIG1vZGlmaWVkIHRvIGRldm1faW9yZW1hcC4NCj4gPj4+
-PiBUaGFua3MgZm9yIGFkZGluZyBhcm0tbGlzdC4NCj4gPj4+DQo+ID4+PiBEb24ndCBwdXQgb3Zl
-cmxhcHBpbmcgcmVzb3VyY2VzIGluIHRoZSBEVC4gSGF2aW5nIDIgZHJpdmVycw0KPiA+Pj4gYWNj
-ZXNzaW5nIHRoZSBzYW1lIHJlZ2lzdGVycyBpcyBub3QgYSBjbGVhbiBvciBzYWZlIGRlc2lnbi4N
-Cj4gPj4NCj4gPj4gdGhhbmtzLCBzYXZlcyBtZSB0aGUgdHJvdWJsZSBvZiBzYXlpbmcgdGhlIHNh
-bWUgdGhpbmcuDQo+ID4+DQo+ID4+IEJvdHRvbSBsaW5lLCBpZiBkZXZtX2lvcmVtYXBfcmVzb3Vy
-Y2UoKSBmYWlscywgeW91J3JlIHdyb25nLiBKdXN0IGZpeA0KPiA+PiB5b3VyIGRyaXZlciBhbmQg
-bW92ZSBvbi4NCj4gPg0KPiA+IEFueSBzdWdnZXN0aW9ucyBvbiBob3cgdG8gbW92ZSBmdXJ0aGVy
-Pw0KPiA+IENoaXBpZGVhIGNvbnRyb2xsZXIgcHJvdmlkZXMgdWxwaSB2aWV3IHBvcnQgcmVnaXN0
-ZXIgZm9yIGFjY2Vzc2luZyB0aGUNCj4gPiB1c2IgcGh5IHJlZ2lzdGVycy4gTm93IHdlIHdhbnQg
-dG8gYWRkIG5ldyBkcml2ZXIgZm9yIHVscGkgcGh5DQo+ID4gY29uZmlndXJhdGlvbiBhbmQgdGhh
-dCBvYnZpb3VzbHkgaXQgbmVlZCBvZiB1bHBpIHZpZXcgcG9ydCByZWdpc3Rlcg0KPiA+IGFjY2Vz
-cy4gU28sIHNoYXJpbmcgdGhlIHJlZ2lzdGVyIHNwYWNlIGJldHdlZW4gdGhlc2UgdHdvIGRyaXZl
-cnMgaXMgbmVjZXNzYXJ5DQo+IGhlcmUuDQo+IA0KPiBXaHkgbm90IHByb2dyYW0gVUxQSSB0aGUg
-c2FtZSB3YXkgYXMgRFdDMyBkb2VzPw0KDQpTb3JyeSBmb3IgZGVsYXkgaW4gcmVzcG9uc2UsIGJh
-Y2sgZnJvbSBsb25nIHZhY2F0aW9uLg0KQ2FuIHdlIGNhbGwgZ2VuZXJpYyBQSFkgcGh5LT5wb3dl
-cl9vbiBhbmQgcG93ZXJfb2ZmIGZ1bmN0aW9ucyB0byBkbyBzaW1pbGFyIGZ1bmN0aW9uIGFzIHVz
-YjJfcGh5LT5zZXRfdmJ1cz8NCkkgYXNzdW1lIGl0IGlzIHRvIHBvd2VyIG9uIHdob2xlIFBIWSBj
-aGlwIGJ1dCBub3QgdG8gZW5hYmxlIDVWIG9uIFZCVVMgbGluZS4NCg0KDQpUaGFua3MsDQpTdW5k
-ZWVwDQo+IA0KPiBUaGFua3MNCj4gS2lzaG9uDQo=
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Oct 28, 2015 at 10:17:22AM +0000, Bharat Kumar Gogada wrote:
+> > On Mon, Oct 26, 2015 at 08:26:26PM +0530, Bharat Kumar Gogada wrote:
+> > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> 
+> > > +
+> > > +	while ((status = nwl_bridge_readl(pcie, MSGF_MSI_STATUS_LO)) !=
+> > 0) {
+> > > +		for_each_set_bit(bit, &status, 32) {
+> > > +			nwl_bridge_writel(pcie, 1 << bit,
+> > MSGF_MSI_STATUS_LO);
+> > > +			virq = irq_find_mapping(msi->dev_domain, bit);
+> > > +			if (virq)
+> > > +				generic_handle_irq(virq);
+> > > +		}
+> > > +	}
+> > > +
+> > > +	chained_irq_exit(chip, desc);
+> > > +}
+> > 
+> > These are basically identical.  Can you factor them out somehow to avoid
+> > repeating the code?
+> 
+> Is it okay if irq_set_chained_handler_and_data being invoked with two different interrupt numbers, but pointing to 
+> same interrupt handler?
+
+Yes, that should be fine.
+
+> > > +
+> > > +	pcie->legacy_irq_domain =
+> > irq_domain_add_linear(legacy_intc_node, 4,
+> > > +
+> > 	&legacy_domain_ops,
+> > > +							pcie);
+> > > +
+> > > +	if (!pcie->legacy_irq_domain) {
+> > > +		dev_err(pcie->dev, "failed to create IRQ domain\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +#ifdef CONFIG_PCI_MSI
+> > > +	msi->dev_domain = irq_domain_add_linear(NULL,
+> > INT_PCI_MSI_NR,
+> > > +					&dev_msi_domain_ops, pcie);
+> > > +	if (!msi->dev_domain) {
+> > > +		dev_err(pcie->dev, "failed to create dev IRQ domain\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +	msi->msi_chip.domain = pci_msi_create_irq_domain(node,
+> > > +
+> > 	&nwl_msi_domain_info,
+> > > +							msi->dev_domain);
+> > > +	if (!msi->msi_chip.domain) {
+> > > +		dev_err(pcie->dev, "failed to create msi IRQ domain\n");
+> > > +		irq_domain_remove(msi->dev_domain);
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +#endif
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus
+> > > +*bus) {
+> > 
+> > It looks strange to have all the "#ifdef CONFIG_PCI_MSI" above, and here
+> > we have this long MSI-related function without any ifdefs around it.  Seems
+> > like this should be ifdef'ed also?  What about nwl_pcie_msi_handler_high(),
+> > nwl_pcie_msi_handler_low(), nwl_compose_msi_msg(),
+> > nwl_msi_set_affinity(), etc.?
+> > 
+> In probe I'm invoking "nwl_pcie_enable_msi" using "if (IS_ENABLED(CONFIG_PCI_MSI)) " check, since this is at run time 
+> I haven't kept above mentioned functions under #ifdef CONFIG_PCI_MSI.
+> The above MSI domain allocation was under ifdef, since if driver was compiled for legacy some of the MSI hierarchy API's and structures aren't available.
+
+OK.  It *looks* strange, but maybe it's the best we can do.  I'm not
+enamored of IS_ENABLED() thing yet; I guess I just haven't
+internalized the combination compile-time and run-time behavior.
+
+Bjorn
