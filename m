@@ -1,110 +1,127 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for NS2
-Date: Tue, 27 Oct 2015 17:19:20 -0700
-Message-ID: <20151028001920.GY13239@google.com>
-References: <1445577373-21252-1-git-send-email-anup.patel@broadcom.com>
- <1445577373-21252-3-git-send-email-anup.patel@broadcom.com>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12 1/6] fpga: add usage documentation for simple fpga bus
+Date: Tue, 27 Oct 2015 17:23:41 -0700
+Message-ID: <CAAtXAHce3OVfZt5MCTdJ8bTEjP0QWTE1y5C9SOMSH1+YWsWLYg@mail.gmail.com>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
+	<1445983755-24007-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445577373-21252-3-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1445983755-24007-2-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 23, 2015 at 10:46:13AM +0530, Anup Patel wrote:
-> The NAND controller on NS2 SoC is compatible with existing
-> BRCM IPROC NAND driver so let's enable it in NS2 DT and
-> NS2 SVK DT.
-> 
-> This patch also fixes use of node labels in ns2-svk.dts.
-> 
-> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi Alan,
+
+great docs! Couple of nits inline below
+
+On Tue, Oct 27, 2015 at 3:09 PM,  <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>
+> Add a document spelling out usage of the simple fpga bus.
+>
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 30 ++++++++++++++++++++----------
->  arch/arm64/boot/dts/broadcom/ns2.dtsi    | 14 ++++++++++++++
->  2 files changed, 34 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> index e5950d5..6bb3d4d 100644
-> --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> @@ -50,18 +50,28 @@
->  		device_type = "memory";
->  		reg = <0x000000000 0x80000000 0x00000000 0x40000000>;
->  	};
-> +};
->  
-> -	soc: soc {
-> -		i2c0: i2c@66080000 {
-> -			status = "ok";
-> -		};
-> +&i2c0 {
-> +	status = "ok";
-> +};
->  
-> -		i2c1: i2c@660b0000 {
-> -			status = "ok";
-> -		};
-> +&i2c1 {
-> +	status = "ok";
-> +};
+> v9:  Initial version of this patch in patchset
+> v10: s/fpga/FPGA/g
+>      improve formatting
+>      some rewriting
+>      move to staging/simple-fpga-bus
+> v11: No change in this patch for v11 of the patch set
+> v12: Moved out of staging
+>      Small changes due to using FPGA bridge framework and not
+>      representing the bridges as resets.
+> ---
+>  Documentation/fpga/simple-fpga-bus.txt |   58 ++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/fpga/simple-fpga-bus.txt
+>
+> diff --git a/Documentation/fpga/simple-fpga-bus.txt b/Documentation/fpga/simple-fpga-bus.txt
+> new file mode 100644
+> index 0000000..bd43478
+> --- /dev/null
+> +++ b/Documentation/fpga/simple-fpga-bus.txt
+> @@ -0,0 +1,58 @@
+> +Simple FPGA Bus
 > +
-> +&uart3 {
-> +	status = "ok";
-> +};
->  
-> -		uart3: serial@66130000 {
-> -			status = "ok";
-> -		};
-> +&nand {
-> +	nandcs@0 {
-> +		compatible = "brcm,nandcs";
-> +		reg = <0>;
-> +		nand-ecc-mode = "hw";
-> +		nand-ecc-strength = <8>;
-> +		nand-ecc-step-size = <512>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-> index f603277..9610822 100644
-> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-> @@ -212,5 +212,19 @@
->  			compatible = "brcm,iproc-rng200";
->  			reg = <0x66220000 0x28>;
->  		};
+> +Alan Tull 2015
 > +
-> +		nand: nand@66460000 {
-> +			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
+> +Overview
+> +========
+> +
+> +The simple FPGA bus adds device tree overlay support for FPGA's.  Loading a
 
-Technically, the binding says you should also have "brcm,brcmnand" as a
-last resort. Otherwise (for the NAND parts):
+FPGAs
+> +DT overlay will result in the FPGA getting an image loaded, its bridges will
 
-Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+I'd prefer 'will result in the FPGA being programmed with an image'
 
-> +			reg = <0x66460000 0x600>,
-> +			      <0x67015408 0x600>,
-> +			      <0x66460f00 0x20>;
-> +			reg-names = "nand", "iproc-idm", "iproc-ext";
-> +			interrupts = <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>;
+> +be released, and the DT populated for nodes below the simple-fpga-bus.  This
+> +results in drivers getting probed for the hardware that just got added.  This
+> +is intended to support the FPGA usage where the FPGA has hardware that
+> +requires drivers.  Removing the overlay will result in the drivers getting
+> +removed and the bridges being disabled.
 > +
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+> +The simple FPGA bus will need to disable and enable bridges that will only
+> +affect the child devices that are below the bus.  If partial reconfiguration
+> +is to be done, then bridges will need to be added within the FPGA design to
+> +protect the rest of the bus when one part of the FPGA design is being
+> +reconfigured.
 > +
-> +			brcm,nand-has-wp;
-> +		};
->  	};
->  };
-> -- 
-> 1.9.1
-> 
+> +
+> +Sequence
+> +========
+> +
+> +Load the DT overlay.  One way to do that from user space is to use Pantelis'
+> +DT-Overlay configfs interface.
+> +
+> +This causes the simple FPGA bus go be probed and will do the following:
+
+I think you mean *to* be probed
+> + 1. Disable the FPGA bridges.
+> + 2. Call the FPGA manager core to program the FPGA.
+> + 3. Release the FPGA bridges.
+> + 4. Call of_platform_populate resulting in device drivers getting probed.
+> +
+> +
+> +Requirements
+> +============
+> +
+> + 1. An FPGA image that has a hardware block or blocks that use drivers that are
+> +    supported in the kernel.
+> + 2. A device tree overlay (example is in the simple-fpga-bus bindings document).
+> + 3. A FPGA manager driver supporting writing the FPGA.
+> + 4. FPGA bridge drivers.
+> +
+> +The DT overlay includes bindings (documented in bindings/simple-fpga-bus.txt)
+> +that specify:
+> + * Which FPGA manager to use.
+> + * Which image file to load.
+> + * Flags indicating whether this this image is for full reconfiguration or
+> +   partial.
+> + * A list of FPGA bridges.
+> + * Child nodes specifying the devices that will be added with appropriate
+> +   compatible strings, etc.
+> +
+> +Since this code uses the firmware interface to get the image and DT overlay,
+> +they currently have to be files on the file system.  It doesn't have to be that
+> +way forever as DT bindings could be added to point to other sources for the
+> +image.
+
+Having this will be really useful, but I agree this can be a follow up patch.
+> --
+> 1.7.9.5
+>
+
+I'll take a closer look but feel free to add a:
+
+Reviewed-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+
+Cheers,
+
+Moritz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
