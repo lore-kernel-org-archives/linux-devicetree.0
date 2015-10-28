@@ -1,52 +1,57 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
- bus
-Date: Wed, 28 Oct 2015 10:34:46 -0500
-Message-ID: <alpine.DEB.2.02.1510281032490.30289@linuxheads99>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <20151028090014.GG1166@pengutronix.de> <alpine.DEB.2.02.1510280948530.30289@linuxheads99>
- <CAAtXAHfRSTXauX2N40aWFDU+sXU0oHmJmUhnm6B8DZ8tb5-1Pw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 0/2] thermal: mediatek: Add cpu power cooling model
+Date: Wed, 28 Oct 2015 21:14:49 +0530
+Message-ID: <20151028154449.GH3716@ubuntu>
+References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHfRSTXauX2N40aWFDU+sXU0oHmJmUhnm6B8DZ8tb5-1Pw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Greg KH <gregkh@linuxfoundation.org>, Josh Cartwright <joshc@ni.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dawei Chien <dawei.chien@mediatek.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, Moritz Fischer wrote:
-
-> On Wed, Oct 28, 2015 at 7:53 AM, atull <atull@opensource.altera.com> wrote:
+On 22-10-15, 20:02, Dawei Chien wrote:
+> Use Intelligent Power Allocation (IPA) technical to add static/dynamic power model for binding CPU thermal zone.
+> The power allocator governor allocates power budget to control CPU temperature.
 > 
-> >> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-> >> > +before populating the devices below its node.  All this happens when a device
-> >> > +tree overlay is added to the live tree.  This document describes that device
-> >> > +tree overlay.
-> >> > +
-> >>
-> >> This is not really true, is it?
-> >> The driver should work without applying the overlay, e.g. the bootloader
-> >> might have already done it.
-> >>
-> >
-> > Yes it's true.  I'm not clear what you are saying.  If the bootloader has
-> > programmed the FPGA, the overlay can leave out the optional properties
-> > and the FPGA won't get reprogrammed; the child devices will still get
-> > added and probed.  So this handles both the case where you want to reprogram
-> > the FPGA under Linux and where the FPGA was programmed by a bootloader.
+> Power Allocator governor is able to keep SOC temperature within a defined temperature range to avoid SOC overheat and keep it's performance. mt8173-cpufreq.c need to register its' own power model with power allocator thermal governor, so that power allocator governor can allocates suitable power budget to control CPU temperature.
 > 
-> I think what he means is that the document explicitly calls out the overlay,
-> when in theory it also works without an overlay. While being the most 'natural'
-> use-case, it is not the only one ;-)
+> PATCH1 is base on
+> https://patchwork.kernel.org/patch/7034601/
 > 
-> Moritz
+> PATCH2 is base on Sascha's thermal driver V9
+> https://patchwork.kernel.org/patch/7249821/
+> https://patchwork.kernel.org/patch/7249861/
+> https://patchwork.kernel.org/patch/7249891/
 > 
+> Change since V1:
+> include mt8171.h and sort header file for mt8173.dtsi
+> 
+> Change since V2:
+> Move dynamic/static power model in device tree
+> 
+> Dawei.Chien (2):
+>   thermal: mediatek: Add cpu power cooling model.
+>   arm64: dts: mt8173: Add thermal zone node for mt8173.
 
-Yes, I can just take out the two sentences that refer to overlays and just 
-leave:
+Sorry for being extremely late in reviewing this stuff. You are
+already on v3 and I haven't reviewed it once. Mostly due to bad timing
+of my holidays and other work pressure.
 
-A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-before populating the devices below its node.
+Now, there are few things that I feel are not properly addressed here,
+and I may be wrong:
+- Where are the bindings for static-power-points and
+  dynamic-power-coefficient. Sorry I failed to see them in this or
+  other series you mentioned.
+- Even then, why should we be adding another table into DT for
+  voltage/power ? And not reuse and extend the opp-v2 stuff which is
+  already mainlined now.
+- There are few issues with the code as well, but I want to see where
+  the bindings should go first. And then only discuss the code
+  further.
 
-Alan
-
+-- 
+viresh
