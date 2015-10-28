@@ -1,118 +1,106 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v12 5/6] ARM: socfpga: add bindings document for fpga
- bridge drivers
-Date: Wed, 28 Oct 2015 10:29:07 +0100
-Message-ID: <20151028092907.GH1166@pengutronix.de>
+Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga bus
+Date: Wed, 28 Oct 2015 10:40:02 +0100
+Message-ID: <20151028094002.GI1166@pengutronix.de>
 References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
- <1445983755-24007-6-git-send-email-atull@opensource.altera.com>
+ <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1445983755-24007-6-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1445983755-24007-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: atull@opensource.altera.com
-Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Tue, Oct 27, 2015 at 05:09:14PM -0500, atull@opensource.altera.com wrote:
+On Tue, Oct 27, 2015 at 05:09:11PM -0500, atull@opensource.altera.com wrote:
 > From: Alan Tull <atull@opensource.altera.com>
 > 
-> Add bindings documentation for Altera SOCFPGA bridges:
->  * fpga2sdram
->  * fpga2hps
->  * hps2fpga
->  * lwhps2fpga
+> New bindings document for simple fpga bus.
 > 
-> Signed-off-by: Alan Tull <dinguyen@opensource.altera.com>
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 > ---
-> v2:  separate into 2 documents for the 2 drivers
-> v12: bump version to line up with simple-fpga-bus version
->      remove Linux specific notes such as references to sysfs
->      move non-DT specific documentation elsewhere
->      remove bindings that would have been used to pass configuration
->      clean up formatting
+> v9:  initial version added to this patchset
+> v10: s/fpga/FPGA/g
+>      replace DT overlay example with slightly more complicated example
+>      move to staging/simple-fpga-bus
+> v11: No change in this patch for v11 of the patch set
+> v12: Moved out of staging.
+>      Changed to use FPGA bridges framework instead of resets
+>      for bridges.
 > ---
->  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   18 ++++++++++
->  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   36 ++++++++++++++++++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+>  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
 > new file mode 100644
-> index 0000000..11eb5b7
+> index 0000000..2e742f7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
-> @@ -0,0 +1,18 @@
-> +Altera FPGA To SDRAM Bridge Driver
+> +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> @@ -0,0 +1,81 @@
+> +Simple FPGA Bus
+> +===============
+> +
+> +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> +before populating the devices below its node.  All this happens when a device
+> +tree overlay is added to the live tree.  This document describes that device
+> +tree overlay.
 > +
 > +Required properties:
-> +- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
+> +- compatible : should contain "simple-fpga-bus"
+> +- #address-cells, #size-cells, ranges: must be present to handle address space
+> +  mapping for children.
 > +
 > +Optional properties:
-> +- label			: User-readable name for this bridge.
-> +			  Default is br<device#>
-> +- init-val		: 0 if driver should disable bridge at startup
-> +			  1 if driver should enable bridge at startup
-> +			  Default is to leave bridge in current state.
-
-I know, that there are bindings, that configure via devicetree, but AFAIK
-this is not okay.
-
+> +- fpga-mgr : should contain a phandle to a FPGA manager.
+> +- fpga-firmware : should contain the name of a FPGA image file located on the
+> +  firmware search path.
+> +- partial-reconfig : boolean property should be defined if partial
+> +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> +  is done.
+> +- fpga-bridges : should contain a list of bridges that the bus will disable
+> +  before   programming the FPGA and then enable after the FPGA has been
 > +
 > +Example:
-> +	fpga2sdram_br: fpgabridge@3 {
-> +		compatible = "altr,socfpga-fpga2sdram-bridge";
-> +		label = "fpga2sdram";
-> +		init-val = <0>;
-> +	};
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-> new file mode 100644
-> index 0000000..eb52f3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-> @@ -0,0 +1,36 @@
-> +Altera FPGA/HPS Bridge Driver
 > +
-> +Required properties:
-> +- compatible	: Should contain one of:
-> +		  "altr,socfpga-hps2fpga-bridge",
-> +		  "altr,socfpga-lwhps2fpga-bridge", or
-> +		  "altr,socfpga-fpga2hps-bridge"
-> +- clocks	: Clocks used by this module.
+> +/dts-v1/;
+> +/plugin/;
+> +/ {
+> +	fragment@0 {
+> +		target-path="/soc";
+> +		__overlay__ {
+> +			#address-cells = <1>;
+> +	                #size-cells = <1>;
 > +
-> +Optional properties:
-> +- label		: User-readable name for this bridge.
-> +		  Default is br<device#>
-> +- init-val	: 0 if driver should disable bridge at startup.
-> +		  1 if driver should enable bridge at startup.
-> +		  Default is to leave bridge in its current state.
+> +			bridge@0xff200000 {
+> +				compatible = "simple-fpga-bus";
+> +				reg = <0xc0000000 0x20000000>,
+> +				      <0xff200000 0x00200000>;
+> +				reg-names = "axi_h2f", "axi_h2f_lw";
 > +
-> +Example:
-> +	hps_fpgabridge0: fpgabridge@0 {
-> +		compatible = "altr,socfpga-hps2fpga-bridge";
-> +		label = "hps2fpga";
-> +		clocks = <&l4_main_clk>;
-> +		init-val = <1>;
-> +	};
+> +				#address-cells = <0x2>;
+> +				#size-cells = <0x1>;
 > +
-> +	hps_fpgabridge1: fpgabridge@1 {
-> +		compatible = "altr,socfpga-lwhps2fpga-bridge";
-> +		label = "lwhps2fpga";
-> +		clocks = <&l4_main_clk>;
-> +		init-val = <0>;
-> +	};
+> +				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
+> +					 <0x00000001 0x00020000 0xff220000 0x00000008>,
+> +					 <0x00000001 0x00010040 0xff210040 0x00000020>;
 > +
-> +	hps_fpgabridge2: fpgabridge@2 {
-> +		compatible = "altr,socfpga-fpga2hps-bridge";
-> +		label = "fpga2hps";
-> +		clocks = <&l4_main_clk>;
-> +	};
+> +				clocks = <0x2 0x2>;
+> +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
+> +
+> +				fpga-mgr = <&hps_0_fpgamgr>;
+> +				fpga-firmware = "soc_system.rbf";
+> +
+> +				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
+
+At least for Socfpga the HPS2FPGA and FPGA2HPS bridges can be configured to have
+a bus width of 32, 64, 128 depending on the bitstream. How does this fit into here?
+For DMA over this bus this is an interesting property to know, isn't it?
+I guess something like "<&hps_fpgabridge0 64>" could be a possible solution, but
+what is with the GPV registers of the bridges? Do they depend on the bitstream
+loaded? Then this would get really messy I guess as it not a generic property.
 
 -- 
 Pengutronix e.K.                           |                             |
