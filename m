@@ -1,141 +1,70 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for NS2
-Date: Wed, 28 Oct 2015 11:55:47 -0700
-Message-ID: <56311A33.1090303@gmail.com>
-References: <1445577373-21252-1-git-send-email-anup.patel@broadcom.com> <1445577373-21252-3-git-send-email-anup.patel@broadcom.com> <20151028001920.GY13239@google.com> <563015FC.9040006@broadcom.com> <20151028003935.GZ13239@google.com> <56301B00.1020301@broadcom.com> <39063E8F96E11742B35A201CC5D095B7AFFB81@SJEXCHMB10.corp.ad.broadcom.com> <5630F2E2.8060508@broadcom.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [PATCH 3/3] ARM: BCM: Add SMP support for Broadcom NSP
+Date: Wed, 28 Oct 2015 20:10:47 +0100
+Message-ID: <56311DB7.5000905@hauke-m.de>
+References: <1444844820-24290-1-git-send-email-kapilh@broadcom.com> <1444844820-24290-4-git-send-email-kapilh@broadcom.com> <561ED691.8080407@hauke-m.de> <561FD005.3040900@broadcom.com> <562016A9.7050208@hauke-m.de> <20151015211703.GQ32089@broadcom.com> <5630DA81.4030301@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5630F2E2.8060508@broadcom.com>
+In-Reply-To: <5630DA81.4030301@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>, Anup Patel <anup.patel@broadcom.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Linux MTD <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+To: Kapil Hali <kapilh@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/10/15 09:08, Ray Jui wrote:
+On 10/28/2015 03:24 PM, Kapil Hali wrote:
 > 
 > 
-> On 10/28/2015 2:06 AM, Anup Patel wrote:
->>
->>
->>> -----Original Message-----
->>> From: Ray Jui [mailto:rjui@broadcom.com]
->>> Sent: 28 October 2015 06:17
->>> To: Brian Norris
->>> Cc: Anup Patel; David Woodhouse; Linux MTD; Rob Herring; Pawel Moll;
->>> Mark
->>> Rutland; Catalin Marinas; Will Deacon; Sudeep Holla; Ian Campbell;
->>> Kumar Gala;
->>> Scott Branden; Florian Fainelli; Pramod Kumar; Vikram Prakash; Sandeep
->>> Tripathy; Linux ARM Kernel; Device Tree; Linux Kernel;
->>> bcm-kernel-feedback-list
->>> Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for
->>> NS2
->>>
->>>
->>>
->>> On 10/27/2015 5:39 PM, Brian Norris wrote:
->>>> On Tue, Oct 27, 2015 at 05:25:32PM -0700, Ray Jui wrote:
->>>>> On 10/27/2015 5:19 PM, Brian Norris wrote:
->>>>>> On Fri, Oct 23, 2015 at 10:46:13AM +0530, Anup Patel wrote:
->>>>>>> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>>>>>> b/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>>>>>> index f603277..9610822 100644
->>>>>>> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>>>>>> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>>>>>> @@ -212,5 +212,19 @@
->>>>>>>                compatible = "brcm,iproc-rng200";
->>>>>>>                reg = <0x66220000 0x28>;
->>>>>>>            };
->>>>>>> +
->>>>>>> +        nand: nand@66460000 {
->>>>>>> +            compatible = "brcm,nand-iproc", "brcm,brcmnand-
->>> v6.1";
->>>>>>
->>>>>> Technically, the binding says you should also have "brcm,brcmnand"
->>>>>> as a last resort. Otherwise (for the NAND parts):
->>>>>>
+> On 10/16/2015 2:47 AM, Jon Mason wrote:
+>> On Thu, Oct 15, 2015 at 11:12:09PM +0200, Hauke Mehrtens wrote:
+>>> On 10/15/2015 06:10 PM, Kapil Hali wrote:
+>>>>
+>>>>
+>>>> On 10/15/2015 3:56 AM, Hauke Mehrtens wrote:
+>>>>> On 10/14/2015 07:47 PM, Kapil Hali wrote:
+>>>>>> Add SMP support for Broadcom's Northstar Plus SoC,
+>>>>>> cpu enable method and pen_release procedures. This
+>>>>>> changes also consolidates iProc family's - BCM NSP
+>>>>>> and BCM Kona, SMP handling in a common file.
 >>>>>
->>>>> I believe Anup was seeing issues when both "brcm,nand-iproc" and
->>>>> "brcm,brcmnand" are present.
+>>>>> This will probably also work on normal Northstar CPUs without changes.
 >>>>>
->>>>> Note "brcm,nand-iproc" invokes 'iproc_nand_probe', which calls
->>>>> 'brcmnand_probe' in the end.
->>>>>
->>>>> "brcm,brcmnand" invokes 'brcmstb_nand_probe', which also calls
->>>>> 'brcmstb_probe', but without all the prep configuration required for
->>>>> "brcm,nand-iproc".
->>>>
->>>> Ah, I forgot about that problem. That seems like an OF infrastructure
->>>> issue that could be fixed. We could lump these drivers back together,
->>>> and make sure that "brcm,nand-iproc" gets the priority in the
->>>> of_device_id list.
->>>>
->>>> Or we could just relax the DT binding.
->>>>
->>>> But wait, wouldn't cygnus already have that problem? You're using the
->>>> binding I suggested in arch/arm/boot/dts/bcm-cygnus.dtsi.
+>>>> I think, it should work for most of the variants of Northstar family, 
+>>>> except for those which have a BOOTROM bug.
 >>>
->>> Interestingly, we do not see this problem with Cygnus or NSP, but
->>> only on NS2
->>> (arm64 based). There may be a difference between how OF devices are
->>> instantiated between arm and arm64?
+>>> Which SoC are affected by this BOOTROM bug?
 >>
->> Alternately, it could be also about order in-which platform drivers
->> are matched
->> for newly created OF device.
+>> 53012 is the one I am seeing.  Not seeing it on 4708 (and assuming it is
+>> not present on 4709).  Internally, we do the ugly bug workaround on
+>> all Northstar SoCs.  The workaround is not acceptable upstream, so I
+>> am not pushing it. :)
 >>
->>>
->>>>
->>>> Oh, and I see we hacked this one in drivers/mtd/nand/brcmnand/Makefile:
->>>>
->>>>     # link order matters; don't link the more generic brcmstb_nand.o
->>>> before the
->>>>     # more specific iproc_nand.o, for instance
->>>
->>> Yes, I see that too (after sending out my previous email, :)). Maybe
->>> Anup can help to elaborate on the problem. I'm now getting a bit
->>> confused on how the problem can surface on NS2.
->>
->> I think for a newly created OF devices the Linux device driver
->> framework will
->> match the platform drivers in the order in which they are registered
->> by module
->> init functions. Now the order of module init function calls will be
->> based how
->> the .initcall section is formed by linker and order in which objects
->> are linked.
+>> Thanks,
+>> Jon
 >>
 > 
-> Yes, what you said is my understanding as well, but then here is the
-> mystery. This is the link order in brcmnand/Makefile:
+> Hi Hauke,
 > 
-> 1 # link order matters; don't link the more generic brcmstb_nand.o
-> before the
-> 2 # more specific iproc_nand.o, for instance
-> 3 obj-$(CONFIG_MTD_NAND_BRCMNAND) += iproc_nand.o
-> 4 obj-$(CONFIG_MTD_NAND_BRCMNAND) += bcm63138_nand.o
-> 5 obj-$(CONFIG_MTD_NAND_BRCMNAND) += brcmstb_nand.o
-> 6 obj-$(CONFIG_MTD_NAND_BRCMNAND) += brcmnand.o
+> Now that you have tested Jon's patch which is based on my changes for
+> SMP, shall I take his changes and add it on top of my changes and resend?
+> Also, do I consider your Acked-by and Tested-by for the change?
 > 
-> Based on the order above, probe from iproc_nand should always be called
-> first if a matching compatible string is found. If so, then why having
-> both compatible strings "brcm,brcmnand" and "brcm,nand-iproc" causes
-> issues for NS2 (I remember it broke smoketest in the past when you
-> submitted the change)? I'm not saying we should have "brcm,brcmnand" for
-> iProc devices, but I don't get why it would cause any issue.
+> Thanks,
+> Kapil
 > 
-> Does the order of the compatible string matter when they are assigned to
-> the same 'compatible' property like this?
-> 
-> compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1",    "brcm,brcmnand";
 
-It is possible that by the time this was designed and tested, and the
-baseline you are now using, there have been changes in how probing is
-done and resolved. I have not been able to pin point which commit would
-be responsible for that, but it would not surprise me that something
-changed in that area, especially with all the on-going on-demand probing
-business happening.
--- 
-Florian
+Hi Kapil,
+
+I tested this on Northstar 1.
+
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
+
+I think Florian has to take the patches and you should hurry up because
+the merge window probably opens on Monday.
+
+You can send all patches again with the bcm501x patch or just that one,
+I assume there are no changes needed for the other patches?
+
+Hauke
