@@ -1,96 +1,57 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 28 Oct 2015 07:32:28 -0500
-Message-ID: <20151028123228.GA30510@localhost>
-References: <1445871386-2377-1-git-send-email-bharatku@xilinx.com>
- <20151027234032.GA7238@localhost>
- <8520D5D51A55D047800579B0941471980169316D@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 3/6] fpga: add simple-fpga-bus
+Date: Wed, 28 Oct 2015 06:41:04 -0600
+Message-ID: <alpine.DEB.2.10.1510280621470.2865@atull-730U3E-740U3E>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-4-git-send-email-atull@opensource.altera.com> <20151028100714.GB7779@jcartwri.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8520D5D51A55D047800579B0941471980169316D@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.or
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20151028100714.GB7779@jcartwri.amer.corp.natinst.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Josh Cartwright <joshc@ni.com>
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 10:17:22AM +0000, Bharat Kumar Gogada wrote:
-> > On Mon, Oct 26, 2015 at 08:26:26PM +0530, Bharat Kumar Gogada wrote:
-> > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+On Wed, 28 Oct 2015, Josh Cartwright wrote:
+
+> On Tue, Oct 27, 2015 at 05:09:12PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > The Simple FPGA bus uses the FPGA Manager Framework and the
+> > FPGA Bridge Framework to provide a manufactorer-agnostic
+> > interface for reprogramming FPGAs that is Device Tree
+> > Overlays-based.
 > 
-> > > +
-> > > +	while ((status = nwl_bridge_readl(pcie, MSGF_MSI_STATUS_LO)) !=
-> > 0) {
-> > > +		for_each_set_bit(bit, &status, 32) {
-> > > +			nwl_bridge_writel(pcie, 1 << bit,
-> > MSGF_MSI_STATUS_LO);
-> > > +			virq = irq_find_mapping(msi->dev_domain, bit);
-> > > +			if (virq)
-> > > +				generic_handle_irq(virq);
-> > > +		}
-> > > +	}
-> > > +
-> > > +	chained_irq_exit(chip, desc);
-> > > +}
-> > 
-> > These are basically identical.  Can you factor them out somehow to avoid
-> > repeating the code?
+> Do you intend the "simple-fpga-bus" to be used on Zynq as well?
+
+Yes
+
+>  The
+> whole concept of the socfpga's "FPGA Bridge" doesn't map to the Zynq at
+> all, from what I can tell.
+
+I want to make this useful for all of us.  I'll make some minor changes so
+the simple fpga bus will not exit when it encounters an overlay that doesn't
+specify any bridges.
+
+Zynq doesn't have bridges to disable during reconfiguration?  I guess
+that's handled automatically in hardware somehow?
+
 > 
-> Is it okay if irq_set_chained_handler_and_data being invoked with two different interrupt numbers, but pointing to 
-> same interrupt handler?
+> Therefore, I would have expected the FPGA Bridge drivers to sit under
+> the fpga-socfpga driver, and not be a first class feature of the
+> kernels' FPGA manager subsystem.
 
-Yes, that should be fine.
+I need some way for simple FPGA bus to be able to configure bridges during
+the reconfiguration cycle.  That will have to hook into the simple fpga bus,
+even if not everybody uses it.  I'll submit minor changes that make it
+convenient to either have bridges if you need them or leave them out if
+you don't.
 
-> > > +
-> > > +	pcie->legacy_irq_domain =
-> > irq_domain_add_linear(legacy_intc_node, 4,
-> > > +
-> > 	&legacy_domain_ops,
-> > > +							pcie);
-> > > +
-> > > +	if (!pcie->legacy_irq_domain) {
-> > > +		dev_err(pcie->dev, "failed to create IRQ domain\n");
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +
-> > > +#ifdef CONFIG_PCI_MSI
-> > > +	msi->dev_domain = irq_domain_add_linear(NULL,
-> > INT_PCI_MSI_NR,
-> > > +					&dev_msi_domain_ops, pcie);
-> > > +	if (!msi->dev_domain) {
-> > > +		dev_err(pcie->dev, "failed to create dev IRQ domain\n");
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +	msi->msi_chip.domain = pci_msi_create_irq_domain(node,
-> > > +
-> > 	&nwl_msi_domain_info,
-> > > +							msi->dev_domain);
-> > > +	if (!msi->msi_chip.domain) {
-> > > +		dev_err(pcie->dev, "failed to create msi IRQ domain\n");
-> > > +		irq_domain_remove(msi->dev_domain);
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +#endif
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus
-> > > +*bus) {
-> > 
-> > It looks strange to have all the "#ifdef CONFIG_PCI_MSI" above, and here
-> > we have this long MSI-related function without any ifdefs around it.  Seems
-> > like this should be ifdef'ed also?  What about nwl_pcie_msi_handler_high(),
-> > nwl_pcie_msi_handler_low(), nwl_compose_msi_msg(),
-> > nwl_msi_set_affinity(), etc.?
-> > 
-> In probe I'm invoking "nwl_pcie_enable_msi" using "if (IS_ENABLED(CONFIG_PCI_MSI)) " check, since this is at run time 
-> I haven't kept above mentioned functions under #ifdef CONFIG_PCI_MSI.
-> The above MSI domain allocation was under ifdef, since if driver was compiled for legacy some of the MSI hierarchy API's and structures aren't available.
+Alan
 
-OK.  It *looks* strange, but maybe it's the best we can do.  I'm not
-enamored of IS_ENABLED() thing yet; I guess I just haven't
-internalized the combination compile-time and run-time behavior.
+> 
+>   Josh
+> 
 
-Bjorn
+
