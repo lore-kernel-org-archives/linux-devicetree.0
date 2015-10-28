@@ -1,67 +1,49 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for NS2
-Date: Tue, 27 Oct 2015 17:39:35 -0700
-Message-ID: <20151028003935.GZ13239@google.com>
-References: <1445577373-21252-1-git-send-email-anup.patel@broadcom.com>
- <1445577373-21252-3-git-send-email-anup.patel@broadcom.com>
- <20151028001920.GY13239@google.com>
- <563015FC.9040006@broadcom.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 3/5] mtd: ofpart: update devicetree binding specification
+Date: Tue, 27 Oct 2015 19:45:57 -0500
+Message-ID: <CAL_JsqKz63fqfDAwLv8u0dJL1eBxKd-41k7LgU96ku4Ke=383A@mail.gmail.com>
+References: <cover.1439911625.git.hramrach@gmail.com> <e47db0c8eeaeb11353bcb2f4dcd138e813c3ecd7.1439911625.git.hramrach@gmail.com>
+ <20151011200402.GE3696@localhost> <CAL_JsqJ4Ha7R92=6xkwYXZjpEprjWoVxyXM6cG=yykVoTMH-vw@mail.gmail.com>
+ <20151027225000.GA64073@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <563015FC.9040006-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151027225000.GA64073@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Michal Suchanek <hramrach@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 05:25:32PM -0700, Ray Jui wrote:
-> On 10/27/2015 5:19 PM, Brian Norris wrote:
-> >On Fri, Oct 23, 2015 at 10:46:13AM +0530, Anup Patel wrote:
-> >>diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-> >>index f603277..9610822 100644
-> >>--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-> >>+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-> >>@@ -212,5 +212,19 @@
-> >>  			compatible = "brcm,iproc-rng200";
-> >>  			reg = <0x66220000 0x28>;
-> >>  		};
-> >>+
-> >>+		nand: nand@66460000 {
-> >>+			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
-> >
-> >Technically, the binding says you should also have "brcm,brcmnand" as a
-> >last resort. Otherwise (for the NAND parts):
-> >
-> 
-> I believe Anup was seeing issues when both "brcm,nand-iproc" and
-> "brcm,brcmnand" are present.
-> 
-> Note "brcm,nand-iproc" invokes 'iproc_nand_probe', which calls
-> 'brcmnand_probe' in the end.
-> 
-> "brcm,brcmnand" invokes 'brcmstb_nand_probe', which also calls
-> 'brcmstb_probe', but without all the prep configuration required for
-> "brcm,nand-iproc".
+On Tue, Oct 27, 2015 at 5:50 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> Hi Rob,
+>
+> Thanks for the review.
+>
+> On Mon, Oct 26, 2015 at 11:35:24PM -0500, Rob Herring wrote:
+>> On Sun, Oct 11, 2015 at 3:04 PM, Brian Norris
+>> <computersforpeace@gmail.com> wrote:
+>> > Hi DT maintainers,
+>> >
+>> > It's a bit hypocritical of me, since I've been a slow reviewer as well,
+>> > but... can we get some review on this one? Usually, I'm comfortable
+>> > taking driver DT bindings without your review, but this one is a bit
+>> > more generic and is more far-reaching than the average driver.
+>>
+>> Sorry, missed this one. This would be a good one to send to
+>> devicetree-spec to BTW.
+>
+> I'm not very familiar with that list. With the intention of getting into
+> an ePAPR (or similar) spec? Or just for additional review? If the
+> former, would you suggest codifying both the old and the new, or just
+> the new?
 
-Ah, I forgot about that problem. That seems like an OF infrastructure
-issue that could be fixed. We could lump these drivers back together,
-and make sure that "brcm,nand-iproc" gets the priority in the
-of_device_id list.
+I would say it is for anything not driver specific. It was created to
+separate out the driver binding firehose from the common bindings and
+get more non-Linux participation on those. Perhaps it was poorly
+named. I want to improve the split in docs so the appropriate list is
+used.
 
-Or we could just relax the DT binding.
+Sending to both devicetree and devicetree-spec is fine.
 
-But wait, wouldn't cygnus already have that problem? You're using the
-binding I suggested in arch/arm/boot/dts/bcm-cygnus.dtsi.
-
-Oh, and I see we hacked this one in drivers/mtd/nand/brcmnand/Makefile:
-
-  # link order matters; don't link the more generic brcmstb_nand.o before the
-  # more specific iproc_nand.o, for instance
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
