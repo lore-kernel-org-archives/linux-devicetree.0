@@ -1,130 +1,65 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: BCM63xx: Add ARMPLL device tree nodes
-Date: Wed, 28 Oct 2015 16:40:40 -0700
-Message-ID: <56315CF8.8070904@gmail.com>
-References: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com> <1445990177-27474-4-git-send-email-f.fainelli@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH V2 02/10] ASoC: img: Add driver for I2S
+ input controller
+Date: Thu, 29 Oct 2015 08:43:34 +0900
+Message-ID: <20151028234334.GF28319@sirena.org.uk>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1444653637-14711-3-git-send-email-Damien.Horsley@imgtec.com>
+ <20151019174732.GG32054@sirena.org.uk>
+ <56293472.7000401@imgtec.com>
+ <20151023225723.GO29919@sirena.org.uk>
+ <562F824F.9070407@imgtec.com>
+ <20151028010443.GX28319@sirena.org.uk>
+ <56313B9C.8030502@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1445990177-27474-4-git-send-email-f.fainelli@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-clk@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="b/1LfoxmgmdMg2Yp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56313B9C.8030502@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: alsa-devel@alsa-project.org, James Hartley <James.Hartley@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/10/15 16:56, Florian Fainelli wrote:
-> Add the ARM PLL controller which comes standard with the Cortex-A9 found
-> on the BCM63138 SoCs. This is the same controller as the one found in
-> the Broadcom iProc architecture, however, we have a separate compatible
-> string to indicate the integration difference.
-> 
-> While at it, properly rename references to the 50Mhz clock which is in
-> fact a crystal/oscillator and updates references to it.
 
-The periph_clk is actually the correct one, and is different from the
-oscillator, I will resubmit these patches shortly to better match the
-chip clocking.
+--b/1LfoxmgmdMg2Yp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
-> No changes in v2 or v3
-> 
->  arch/arm/boot/dts/bcm63138.dtsi | 39 +++++++++++++++++++++++++++++----------
->  1 file changed, 29 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-> index 34cd64051250..c146325eebdb 100644
-> --- a/arch/arm/boot/dts/bcm63138.dtsi
-> +++ b/arch/arm/boot/dts/bcm63138.dtsi
-> @@ -43,17 +43,29 @@
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->  
-> -		arm_timer_clk: arm_timer_clk {
-> +		osc: oscillator {
->  			#clock-cells = <0>;
->  			compatible = "fixed-clock";
-> -			clock-frequency = <500000000>;
-> +			clock-frequency = <50000000>;
-> +			clock-output-names = "periph";
->  		};
->  
-> -		periph_clk: periph_clk {
-> +		/* peripheral clock for system timer */
-> +		axi_clk: axi_clk {
->  			#clock-cells = <0>;
-> -			compatible = "fixed-clock";
-> -			clock-frequency = <50000000>;
-> -			clock-output-names = "periph";
-> +			compatible = "fixed-factor-clock";
-> +			clocks = <&armpll>;
-> +			clock-div = <2>;
-> +			clock-mult = <1>;
-> +		};
-> +
-> +		/* APB bus clock */
-> +		apb_clk: apb_clk {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-factor-clock";
-> +			clocks = <&armpll>;
-> +			clock-div = <4>;
-> +			clock-mult = <1>;
->  		};
->  	};
->  
-> @@ -93,14 +105,14 @@
->  			compatible = "arm,cortex-a9-global-timer";
->  			reg = <0x1e200 0x20>;
->  			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&arm_timer_clk>;
-> +			clocks = <&axi_clk>;
->  		};
->  
->  		local_timer: local-timer@1e600 {
->  			compatible = "arm,cortex-a9-twd-timer";
->  			reg = <0x1e600 0x20>;
->  			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&arm_timer_clk>;
-> +			clocks = <&axi_clk>;
->  		};
->  
->  		twd_watchdog: watchdog@1e620 {
-> @@ -109,6 +121,13 @@
->  			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		armpll: armpll {
-> +			#clock-cells = <0>;
-> +			compatible = "brcm,bcm63138-armpll";
-> +			clocks = <&osc>;
-> +			reg = <0x20000 0xf00>;
-> +		};
-> +
->  		pmb0: reset-controller@4800c0 {
->  			compatible = "brcm,bcm63138-pmb";
->  			reg = <0x4800c0 0x10>;
-> @@ -138,7 +157,7 @@
->  			compatible = "brcm,bcm6345-uart";
->  			reg = <0x600 0x1b>;
->  			interrupts = <GIC_SPI 32 0>;
-> -			clocks = <&periph_clk>;
-> +			clocks = <&osc>;
->  			clock-names = "periph";
->  			status = "disabled";
->  		};
-> @@ -147,7 +166,7 @@
->  			compatible = "brcm,bcm6345-uart";
->  			reg = <0x620 0x1b>;
->  			interrupts = <GIC_SPI 33 0>;
-> -			clocks = <&periph_clk>;
-> +			clocks = <&osc>;
->  			clock-names = "periph";
->  			status = "disabled";
->  		};
-> 
+On Wed, Oct 28, 2015 at 09:18:20PM +0000, Damien Horsley wrote:
+> On 28/10/15 01:04, Mark Brown wrote:
 
+> >> I think it also makes sense to keep the blocks consistent with each
+> >> other. The spdif (out and in), and parallel out, all flush automatically
+> >> when stopped, and the fifo for the i2s out block is cleared when the
+> >> reset is asserted.
 
--- 
-Florian
+> > This seems like an issue that got missed in the other drivers then.  I'd
+> > expect the trigger operation to be a minimal operation which starts and
+> > stops the data transfer, not doing anything else.
+
+> The spdif out, spdif in, and parallel out blocks auto-flush whenever
+> they are stopped. It is not possible for software to prevent this behavior.
+
+Oh, so this isn't the drivers doing this?  In that case it's fine for
+them to do that, if it's what the hardware does it's what the hardware
+does.  It sounded like you were saying that there was similar code in
+the other drivers.
+
+--b/1LfoxmgmdMg2Yp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWMV2mAAoJECTWi3JdVIfQPaUH/jOiapc4JkMTkvvv9ZM+Tm/M
+lD+MciI97+XqrGEN52Tw+7PgxmFrNo4QKCph0q7P4mkdR+HoOi9vhaX6w5NikQUC
+YE1USNDZZyugIBvKmFHF3dUB7rTEFUd6VLF0KaiIN4cAbxXauJMWYo/9zt2UzeeS
+PdsrhYycJXSemHRvBItRXe3o5ID/Lar9gZJeFKUdOAHrBB4F0Xfsnj+JO8c1u3OV
+xlivtWavyqB3KhtRMIPey20bmgAUp7TKynmsi8XdvsD59dIAuhO9y9/F4S0t1uuI
+Ka92rmG2RxGfGjbW/p5xwUuPuxrON3adP9MhjKWbo2mYZ+0tuzMAolyMuKh1iiY=
+=g61v
+-----END PGP SIGNATURE-----
+
+--b/1LfoxmgmdMg2Yp--
