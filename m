@@ -1,104 +1,83 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 0/6] Altera PCIe host controller driver with MSI
- support
-Date: Tue, 27 Oct 2015 20:02:33 -0500
-Message-ID: <CAErSpo5okE86k846hs28s4jvL59hmm+4az-dDsymzNayPCPCzw@mail.gmail.com>
-References: <1445596035-27733-1-git-send-email-lftan@altera.com>
- <20151027142644.GA8660@localhost>
- <CAFiDJ5_vCqh=uKkF2E_BQkJUv692r3yr26bBj8boK2DY_Dj+gA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 02/10] ASoC: img: Add driver for I2S
+ input controller
+Date: Wed, 28 Oct 2015 10:04:43 +0900
+Message-ID: <20151028010443.GX28319@sirena.org.uk>
+References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
+ <1444653637-14711-3-git-send-email-Damien.Horsley@imgtec.com>
+ <20151019174732.GG32054@sirena.org.uk>
+ <56293472.7000401@imgtec.com>
+ <20151023225723.GO29919@sirena.org.uk>
+ <562F824F.9070407@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFiDJ5_vCqh=uKkF2E_BQkJUv692r3yr26bBj8boK2DY_Dj+gA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0509053987684889000=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <562F824F.9070407@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <James.Hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 7:56 PM, Ley Foon Tan <lftan@altera.com> wrote:
-> On Tue, Oct 27, 2015 at 10:26 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> Hi Ley,
->>
->> On Fri, Oct 23, 2015 at 06:27:09PM +0800, Ley Foon Tan wrote:
->>> This is the 12th version of patch set to add support for Altera PCIe host
->>> controller with MSI feature on Altera FPGA device families. This patchset
->>> mainly resovle the comments from Bjorn.
->>>
->>>
->>> This patchset is based on v4.3-rc6.
->>>
->>> v11->v12 changes:
->>> - pcie-altera: use DECLARE_PCI_FIXUP_EARLY for pcie retrain fixup
->>> - pcie-altera: move pcie_bus_configure_settings before pci_bus_add_devices
->>> - pcie-altera: add %d for irq bit in dev_err()
->>> - pcie-altera: prevent enumeration of root complex resources in config accessors
->>> - Documentation: add Acked-by from Rob Herring
->>>
->>> History:
->>> -------
->>> [v1]: https://lkml.org/lkml/2015/7/28/395
->>> [v2]: https://lkml.org/lkml/2015/7/31/267
->>> [v3]: http://www.kernelhub.org/?msg=811940&p=2
->>> [v4]: https://lkml.org/lkml/2015/8/17/141
->>> [v5]: https://lkml.org/lkml/2015/8/25/238
->>> [v6]: https://lkml.org/lkml/2015/9/1/177
->>> [v7]: https://lkml.org/lkml/2015/9/20/193
->>> [v8]: http://www.kernelhub.org/?msg=853553&p=2
->>> [v9]: https://lkml.org/lkml/2015/10/13/998
->>> [v10]: https://lkml.org/lkml/2015/10/19/139
->>> [v11]: https://lkml.org/lkml/2015/10/22/206
->>>
->>>
->>> Ley Foon Tan (6):
->>>   arm: add msi.h to Kbuild
->>>   pci: add Altera PCI vendor ID
->>>   pci:host: Add Altera PCIe host controller driver
->>>   pci: altera: Add Altera PCIe MSI driver
->>>   Documentation: dt-bindings: pci: altera pcie device tree binding
->>>   MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
->>>
->>>  .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
->>>  .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
->>>  MAINTAINERS                                        |  16 +
->>>  arch/arm/include/asm/Kbuild                        |   1 +
->>>  drivers/pci/host/Kconfig                           |  16 +
->>>  drivers/pci/host/Makefile                          |   2 +
->>>  drivers/pci/host/pcie-altera-msi.c                 | 314 +++++++++++
->>>  drivers/pci/host/pcie-altera.c                     | 580 +++++++++++++++++++++
->>>  include/linux/pci_ids.h                            |   2 +
->>>  9 files changed, 1008 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
->>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
->>>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
->>>  create mode 100644 drivers/pci/host/pcie-altera.c
->>
->> I applied these to pci/host-altera for v4.4, thanks!
->>
->> I squashed these into three patches:
->>
->>   - add msi.h to Kbuild
->>   - add Altera host driver (including DT binding and MAINTAINERS update)
->>   - add Altera MSI driver (including DT binding and MAINTAINERS update)
->>
->> Since the convention is to add PCI ID #defines only when they are used in
->> multiple places, I replaced PCI_VENDOR_ID_ALTERA with 0x1172 in the single
->> place it is used.
-> Hi Bjorn
->
-> Thanks for applied these.
->
-> By the way, I can't see pci/host-altera branch in your pci.git tree
-> yet. It takes some time to appear there?
 
-Sorry, I forgot to push it.  It should be there now!
+--===============0509053987684889000==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="E5HUUwS3R9LcK7+r"
+Content-Disposition: inline
 
-Bjorn
+
+--E5HUUwS3R9LcK7+r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Oct 27, 2015 at 01:55:27PM +0000, Damien Horsley wrote:
+> On 23/10/15 23:57, Mark Brown wrote:
+
+> > Shouldn't we be doing that flush on stream close instead?  If nothing
+> > else the flush is going to discard a bit of data if the stream is just
+> > paused.
+
+> The FIFOs are only 8 frames in size, so I am not sure there is an
+> issue with these frames being lost.
+
+> I think it also makes sense to keep the blocks consistent with each
+> other. The spdif (out and in), and parallel out, all flush automatically
+> when stopped, and the fifo for the i2s out block is cleared when the
+> reset is asserted.
+
+This seems like an issue that got missed in the other drivers then.  I'd
+expect the trigger operation to be a minimal operation which starts and
+stops the data transfer, not doing anything else.
+
+--E5HUUwS3R9LcK7+r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWMB8qAAoJECTWi3JdVIfQjyoH/AqvualpliASdv2dh3haXToA
+dQ6tFIHMTCqNlWn0e4zljQmfOfhP8Ub8/NH/JOir2TQCgQD47TxUaqzoSr5V+JDc
+uCFBj4PQsHzXEVypazrwQMEvCwcnTxAksZGDzjU34TtRHiDQaw/s7Lc6QqE7mba/
+I3hc4a4LYJrUdjie+UM+j6SopxBQ4htpXDUpCUvBWLyq6wjuv8hBmXDlgV9uu2ex
+oXtXNG2rKAGCYwgcsSlaw4yrza/78+noh+HkvEPna6gtkfTovd1oervQXss/XUtc
+nEjI+k2syIEvNYK5vtICfmzYuAVuAfWOKKPq9gX0omQE/tiEb7/E4KZd9RBkeH0=
+=kOxG
+-----END PGP SIGNATURE-----
+
+--E5HUUwS3R9LcK7+r--
+
+--===============0509053987684889000==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0509053987684889000==--
