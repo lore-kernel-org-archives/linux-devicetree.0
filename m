@@ -1,112 +1,52 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
-Date: Wed, 28 Oct 2015 15:40:31 +0100
-Message-ID: <CAAObsKDR6pTEDK-G+jw+cr9MD-XoZqU8niqvDFHqFM0ve-+Smw@mail.gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
- <1445406845.701.55.camel@freescale.com> <CAL_JsqLhZmc8cEC+tFJ25KLe0bQZsWmrRWGBMQake9VN6OjvdQ@mail.gmail.com>
- <1445467912.701.90.camel@freescale.com> <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com>
- <1445549230.701.116.camel@freescale.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] of/fdt: fix error checking for earlycon address
+Date: Wed, 28 Oct 2015 10:56:22 -0400
+Message-ID: <5630E216.908@hurleysoftware.com>
+References: <1445600840-26749-1-git-send-email-yamada.masahiro@socionext.com>
+ <562A32EA.20808@hurleysoftware.com>
+ <CAL_JsqK6UJxvGt3_y5T+VMxpr7G=PCmQ_Nx0QW-EfeTHOCDMKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445549230.701.116.camel@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hu Mingkai-B21284 <Mingkai.Hu@freescale.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqK6UJxvGt3_y5T+VMxpr7G=PCmQ_Nx0QW-EfeTHOCDMKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 October 2015 at 23:27, Scott Wood <scottwood@freescale.com> wrote:
-> On Thu, 2015-10-22 at 15:04 +0200, Tomeu Vizoso wrote:
->> On 22 October 2015 at 00:51, Scott Wood <scottwood@freescale.com> wrote:
->> > On Wed, 2015-10-21 at 08:44 -0500, Rob Herring wrote:
->> > > On Wed, Oct 21, 2015 at 12:54 AM, Scott Wood <scottwood@freescale.com>
->> > > wrote:
->> > > > On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
->> > > > > Instead of trying to match and probe platform and AMBA devices right
->> > > > > after each is registered, delay their probes until
->> > > > > device_initcall_sync.
->> > > > >
->> > > > > This means that devices will start probing once all built-in drivers
->> > > > > have registered, and after all platform and AMBA devices from the DT
->> > > > > have been registered already.
->> > > > >
->> > > > > This allows us to prevent deferred probes by probing dependencies on
->> > > > > demand.
->> > > > >
->> > > > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->> > > > > ---
->> > > > >
->> > > > > Changes in v4:
->> > > > > - Also defer probes of AMBA devices registered from the DT as they
->> > > > > can
->> > > > >   also request resources.
->> > > > >
->> > > > >  drivers/of/platform.c | 11 ++++++++---
->> > > > >  1 file changed, 8 insertions(+), 3 deletions(-)
->> > > >
->> > > > This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF
->> > > > platform
->> > > > device, and it must be probed before pcibios_init() which is a
->> > > > subsys_initcall(), or else the PCI bus never gets scanned.
->> > >
->> > > Thanks for the report. This is probably getting dropped, but it could
->> > > be disabled for PPC.
->> >
->> > I don't think that adding another arbitrary arch difference would be the
->> > right solution.
+On 10/27/2015 04:46 PM, Rob Herring wrote:
+> On Fri, Oct 23, 2015 at 8:15 AM, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org> wrote:
+>> Hi Masahiro,
 >>
->> I think Rob meant temporarily disable it while things get fixed. At
->> least,
->
-> So, what is the permanent fix for the swiotlb issue (or more generally, the
-> inability to have a late_initcall that runs after non-module, non-hotplug
-> platform devices have been probed)?
+>> On 10/23/2015 07:47 AM, Masahiro Yamada wrote:
+>>> fdt_translate_address() returns OF_BAD_ADDR on error.  It is defined as
+>>> a u64 value, so the variable "addr" should be defined as u64 as well.
+>>
+>> Good catch.
+>>
+>> I would prefer if fdt_translate_address() returned resource_size_t (which
+>> is the proper type for handling addresses as integers) and that type
+>> was propagated through early_init_dt_scan_chosen_serial => of_setup_earlycon.
+> 
+> That can be problematic in the DT code. The size of resource_size_t
+> can vary on 32-bit as it is based on phys_addr_t which in turn is
+> based on CONFIG_LPAE setting. However, the address sizes in DT are
+> fixed and may be 64-bit. So we stick with u64 in the DT code.
 
-If the code in pcibios_init() depends on the PCI bus device having
-probed, then I would recommend making that dependency explicit by
-calling of_device_probe() on the OF node of the PCI controller when
-looking it up.
+I think I see your point about fdt_translate_address(); you want it to
+mirror of_translate_address(), yes?  If so, then I have no objection
+to this patch and will mark it reviewed.
 
->> I don't see any reason why PPC wouldn't benefit from this
->> series.
->
-> It's not clear to me what the benefit of this is at all, much less for PPC.
-> What is the fundamental problem with deferred probes?  In the cover letter
-> you say this change saves 2.3 seconds, but where is that time being consumed?
->  Are the drivers taking too long in their probe function trying to initialize
-> and then deferring, rather than checking for dependencies up front?  Or are
-> there really so many devices and such a pessimal ordering that most of the
-> time is spent iterating through and reordering the list, with each defer
-> happening quickly?
-
-The problem is that a device that defers its probe is currently sent
-to the back of the queue, and that's undesired in some use cases in
-which there's a device that should be up as soon as possible during
-boot (and boot takes a long time). So the goal is to change the order
-in which devices with dependencies end up probing.
-
-> Even if something different does need to be done at this level, forcing all
-> OF platform devices to be probed at the late_initcall level seems quite
-> intrusive.  You limited it to OF because people complained that other things
-> will break.  Things still broke.  Surely there's a better way to address the
-> problem.  Can't the delay be requested by drivers that might otherwise need
-> to defer (which could be done incrementally, focusing on the worst
-> performance problems), rather than enabling it for everything?
-
-Yes, given the amount of breakage that's a sensible option. But in any
-case and even if this series is most likely to be dropped, I recommend
-to make explicit as many implicit dependencies as possible.
+But the u64 value from fdt_translate_address() should be preserved
+at least to the ioremap()/set_fixmap() in earlycon_map() .
+I could roll that change into my earlycon series that moves
+fdt_translate_address() into of_setup_earlycon(), thus preserving
+the u64 value until it's assigned to a phys_addr_t.
 
 Regards,
-
-Tomeu
-
-> -Scott
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Peter Hurley
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
