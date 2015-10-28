@@ -1,70 +1,135 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH 3/3] ARM: BCM: Add SMP support for Broadcom NSP
-Date: Wed, 28 Oct 2015 20:10:47 +0100
-Message-ID: <56311DB7.5000905@hauke-m.de>
-References: <1444844820-24290-1-git-send-email-kapilh@broadcom.com> <1444844820-24290-4-git-send-email-kapilh@broadcom.com> <561ED691.8080407@hauke-m.de> <561FD005.3040900@broadcom.com> <562016A9.7050208@hauke-m.de> <20151015211703.GQ32089@broadcom.com> <5630DA81.4030301@broadcom.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
+ bus
+Date: Wed, 28 Oct 2015 14:45:34 -0500
+Message-ID: <alpine.DEB.2.02.1510281413000.21816@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <20151028094002.GI1166@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5630DA81.4030301@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kapil Hali <kapilh@broadcom.com>, Jon Mason <jonmason@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20151028094002.GI1166@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/28/2015 03:24 PM, Kapil Hali wrote:
-> 
-> 
-> On 10/16/2015 2:47 AM, Jon Mason wrote:
->> On Thu, Oct 15, 2015 at 11:12:09PM +0200, Hauke Mehrtens wrote:
->>> On 10/15/2015 06:10 PM, Kapil Hali wrote:
->>>>
->>>>
->>>> On 10/15/2015 3:56 AM, Hauke Mehrtens wrote:
->>>>> On 10/14/2015 07:47 PM, Kapil Hali wrote:
->>>>>> Add SMP support for Broadcom's Northstar Plus SoC,
->>>>>> cpu enable method and pen_release procedures. This
->>>>>> changes also consolidates iProc family's - BCM NSP
->>>>>> and BCM Kona, SMP handling in a common file.
->>>>>
->>>>> This will probably also work on normal Northstar CPUs without changes.
->>>>>
->>>> I think, it should work for most of the variants of Northstar family, 
->>>> except for those which have a BOOTROM bug.
->>>
->>> Which SoC are affected by this BOOTROM bug?
->>
->> 53012 is the one I am seeing.  Not seeing it on 4708 (and assuming it is
->> not present on 4709).  Internally, we do the ugly bug workaround on
->> all Northstar SoCs.  The workaround is not acceptable upstream, so I
->> am not pushing it. :)
->>
->> Thanks,
->> Jon
->>
-> 
-> Hi Hauke,
-> 
-> Now that you have tested Jon's patch which is based on my changes for
-> SMP, shall I take his changes and add it on top of my changes and resend?
-> Also, do I consider your Acked-by and Tested-by for the change?
-> 
-> Thanks,
-> Kapil
-> 
+On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
 
-Hi Kapil,
+> On Tue, Oct 27, 2015 at 05:09:11PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > New bindings document for simple fpga bus.
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> > v9:  initial version added to this patchset
+> > v10: s/fpga/FPGA/g
+> >      replace DT overlay example with slightly more complicated example
+> >      move to staging/simple-fpga-bus
+> > v11: No change in this patch for v11 of the patch set
+> > v12: Moved out of staging.
+> >      Changed to use FPGA bridges framework instead of resets
+> >      for bridges.
+> > ---
+> >  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > new file mode 100644
+> > index 0000000..2e742f7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > @@ -0,0 +1,81 @@
+> > +Simple FPGA Bus
+> > +===============
+> > +
+> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> > +before populating the devices below its node.  All this happens when a device
+> > +tree overlay is added to the live tree.  This document describes that device
+> > +tree overlay.
+> > +
+> > +Required properties:
+> > +- compatible : should contain "simple-fpga-bus"
+> > +- #address-cells, #size-cells, ranges: must be present to handle address space
+> > +  mapping for children.
+> > +
+> > +Optional properties:
+> > +- fpga-mgr : should contain a phandle to a FPGA manager.
+> > +- fpga-firmware : should contain the name of a FPGA image file located on the
+> > +  firmware search path.
+> > +- partial-reconfig : boolean property should be defined if partial
+> > +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> > +  is done.
+> > +- fpga-bridges : should contain a list of bridges that the bus will disable
+> > +  before   programming the FPGA and then enable after the FPGA has been
+> > +
+> > +Example:
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +/ {
+> > +	fragment@0 {
+> > +		target-path="/soc";
+> > +		__overlay__ {
+> > +			#address-cells = <1>;
+> > +	                #size-cells = <1>;
+> > +
+> > +			bridge@0xff200000 {
+> > +				compatible = "simple-fpga-bus";
+> > +				reg = <0xc0000000 0x20000000>,
+> > +				      <0xff200000 0x00200000>;
+> > +				reg-names = "axi_h2f", "axi_h2f_lw";
+> > +
+> > +				#address-cells = <0x2>;
+> > +				#size-cells = <0x1>;
+> > +
+> > +				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
+> > +					 <0x00000001 0x00020000 0xff220000 0x00000008>,
+> > +					 <0x00000001 0x00010040 0xff210040 0x00000020>;
+> > +
+> > +				clocks = <0x2 0x2>;
+> > +				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
+> > +
+> > +				fpga-mgr = <&hps_0_fpgamgr>;
+> > +				fpga-firmware = "soc_system.rbf";
+> > +
+> > +				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
+> 
+> At least for Socfpga the HPS2FPGA and FPGA2HPS bridges can be configured to have
+> a bus width of 32, 64, 128 depending on the bitstream. How does this fit into here?
+> For DMA over this bus this is an interesting property to know, isn't it?
 
-I tested this on Northstar 1.
+It's interesting if you want to change bridge width.
 
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
+Most of the time I think people are not going to want or even be able to change
+the width of their bridges dynamically.
 
-I think Florian has to take the patches and you should hurry up because
-the merge window probably opens on Monday.
+> I guess something like "<&hps_fpgabridge0 64>" could be a possible solution,
 
-You can send all patches again with the bcm501x patch or just that one,
-I assume there are no changes needed for the other patches?
+Yes that does seem possible and easy to implement on the level of the simple
+fpga bus and fpga bridge framework.  Each low level FPGA Bridge driver would
+have #bridge-cells = <1> to support having a parameter.  Specifying
+#bridge-cells = <0> would bring back to the current behaviour of no parameter.
+A parameter could be added to struct fpga_bridge so that when the simple fpga
+bus enables the bridge, it could pass the parameter back to the fpga bridge
+driver.  All without changing any parameters of the functions.  Thanks for the
+suggestion!
 
-Hauke
+> but
+> what is with the GPV registers of the bridges? Do they depend on the bitstream
+> loaded? Then this would get really messy I guess as it not a generic property.
+
+Not all low level drivers will be able to support this.  Those that can't support
+this won't have to.  But it is a possibility without adding much code to the bridge
+framework.
+
+Alan
+
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
