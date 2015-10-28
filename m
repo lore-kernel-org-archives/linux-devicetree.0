@@ -1,135 +1,72 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: Which is better to specify console, "console= " or "stdout-path"
- ?
-Date: Wed, 28 Oct 2015 12:00:01 -0400
-Message-ID: <5630F101.1080803@hurleysoftware.com>
-References: <CAK7LNAS9uBJ1cVmGBKae3W0tk8Siu1yeXOaeN6Kz11cksMqtsg@mail.gmail.com>
- <562753A6.3070107@arm.com> <56278911.9050704@hurleysoftware.com>
- <CAK7LNAQ_+_9K-y7bmpdGwcH2u4uqJhJhON1Ew4OvzSSa-amyvw@mail.gmail.com>
- <5627BCBC.5040701@hurleysoftware.com>
- <CAK7LNASqjd_Xf53WKa=Ogesf80HQzEoKEyVtw-BMh7JF=jq+xQ@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 5/6] ARM: socfpga: add bindings document for fpga
+ bridge drivers
+Date: Wed, 28 Oct 2015 10:53:17 -0500
+Message-ID: <alpine.DEB.2.02.1510281046500.30289@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-6-git-send-email-atull@opensource.altera.com> <20151028092907.GH1166@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNASqjd_Xf53WKa=Ogesf80HQzEoKEyVtw-BMh7JF=jq+xQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151028092907.GH1166@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
 
-On 10/22/2015 12:20 AM, Masahiro Yamada wrote:
-> 2015-10-22 1:26 GMT+09:00 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>:
->> On 10/21/2015 11:38 AM, Masahiro Yamada wrote:
->>> 2015-10-21 21:46 GMT+09:00 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>:
->>>> On 10/21/2015 04:58 AM, Sudeep Holla wrote:
->>>>> On 21/10/15 06:09, Masahiro Yamada wrote:
->>>>>> I think there exist two ways to specify the console port and baudrate.
->>>>>>
->>>>>>
->>>>>> [1] Specify console in bootargs
->>>>>>
->>>>>>    chosen {
->>>>>>          bootargs = "console=ttyS0,115200";
->>>>>>    };
->>>>>>
->>>>>>
->>>>>> [2] Specify stdout-path
->>>>>>
->>>>>>     chosen {
->>>>>>           stdout-path = "serial0:115200n8";
->>>>>
->>>>> This will work for even early/boot console, so this is better than
->>>>> option [1]
->>>>
->>>> Be aware that options specified via /chosen/stdout-path are
->>>> currently ignored by earlycon. There were some hiccups getting the
->>>> initial support upstream; when 4.4 hits mainline, I'll resubmit
->>>> my series that implements the of_serial i/o properties and
->>>> options passthrough to earlycon setup.
->>>
->>>
->>> As I said in another thread ("serial: earlycon: allow to specify
->>> uartclk in earlycon kernel-parameter"),
->>> stdout-path can pass dev->baud, but not port->uartclk.
->>
->> That's true but I'm not seeing in that thread where you wrote that?
+> Hi!
 > 
-> Sorry, I made you confused.  I was talking about the kernel parameter (console=)
-> in the thread.
+> On Tue, Oct 27, 2015 at 05:09:14PM -0500, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> > 
+> > Add bindings documentation for Altera SOCFPGA bridges:
+> >  * fpga2sdram
+> >  * fpga2hps
+> >  * hps2fpga
+> >  * lwhps2fpga
+> > 
+> > Signed-off-by: Alan Tull <dinguyen@opensource.altera.com>
+> > Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+> > Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+> > ---
+> > v2:  separate into 2 documents for the 2 drivers
+> > v12: bump version to line up with simple-fpga-bus version
+> >      remove Linux specific notes such as references to sysfs
+> >      move non-DT specific documentation elsewhere
+> >      remove bindings that would have been used to pass configuration
+> >      clean up formatting
+> > ---
+> >  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   18 ++++++++++
+> >  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   36 ++++++++++++++++++++
+> >  2 files changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> > new file mode 100644
+> > index 0000000..11eb5b7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> > @@ -0,0 +1,18 @@
+> > +Altera FPGA To SDRAM Bridge Driver
+> > +
+> > +Required properties:
+> > +- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
+> > +
+> > +Optional properties:
+> > +- label			: User-readable name for this bridge.
+> > +			  Default is br<device#>
+> > +- init-val		: 0 if driver should disable bridge at startup
+> > +			  1 if driver should enable bridge at startup
+> > +			  Default is to leave bridge in current state.
 > 
->> My replies there were specific to uartclk on the kernel command line,
->> which isn't necessary if the bootloader has already initialized the
->> uart.
->>
->>> It is usually specified "clocks" phandle, but
->>> clk is not ready at the point of earlycon.
->>>
->>> It seems impossible to set up the baudrate even if the options are passed.
->>
->> It's difficult to understand what you're trying to do when I can't
->> see the code you're referring to.  For example, I only recently
->> understood that you're talking about a earlycon implementation
->> that you're working on and not the 8250 earlycon itself.
-> 
-> Sorry again for making you confused.
-> 
-> I was talking both.
-> 
-> Now I am tackling on some ARM board porting.
-> 
-> 
-> The board has a pure 8250 family device (compatible = "ns16550a") on it.
-> 
-> In addition, there exist 8250-variant IPs inside the SoC.
-> (this is similar to 8250, but slightly different.
-> drivers/tty/serial/8250/8250_uniphier.c)
-> 
-> 
-> What I want to do is:
->   [1] To use  drivers/tty/serial/8250/8250_early.c  for the on-board ns16550a.
->   [2] To implement my own EARLYCON_DECLARE() in
-> drivers/tty/serial/8250/8250_uniphier.c
-> 
-> 
-> 
->> If you look at other non-8250 earlycons, you'll see they all ignore
->> the baud rate, on the assumption the bootloader already set it up.
-> 
-> OK, I will do so for [2].
-> 
-> 
->> The 8250 earlycon is a little different because legacy platforms
->> do not initialize the uart.
-> 
-> 
-> Make sense.
-> 
-> For legacy platforms, earlycon initializes the uart,
-> assuming the hard-coded "port->uartclk = BASE_BAUD * 16"
-> is the value.
-> 
-> 
-> For embedded boards such as ARM, the boot-loader should initialize the UART
-> and the earlycon should preserve it because port->uartclk varies from
-> board to board.
-> (For example, the ns16550a on my board expects   BASE_BAUD is 1228000,
-> but it does not match the one in include/asm-generic/serial.h )
+> I know, that there are bindings, that configure via devicetree, but AFAIK
+> this is not okay.
 
-I want to clarify one point: if you have a configuration for which the
-earlycon uart is not initialized by the bootloader (or boot prom), then
-we can add a way for the ASoC init to set BASE_BAUD. This was done for
-the ARC arch, but I would like to use this as a last resort for the ARM
-arch.
+Yes there is configuration in the DT. I attended a presentation at ELC in 
+Dublin 3 weeks ago - Frank Rowand on "Solving Device Tree Issues."  He said in 
+addition to non-probable hardware information, it was a "dirty secret" that DT
+includes configuration information and some policy.
 
-An example configuration I can envision that would require this solution
-is u-boot's so-called 'falcon mode' without devicetree (or boot prom).
-
-Regards,
-Peter Hurley
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan
