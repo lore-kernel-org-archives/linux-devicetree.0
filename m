@@ -1,92 +1,143 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 2/3] clk: bcm: Add BCM63138 clock support
-Date: Tue, 27 Oct 2015 16:56:16 -0700
-Message-ID: <1445990177-27474-3-git-send-email-f.fainelli@gmail.com>
-References: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1445990177-27474-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 1/2] mtd: brcmnand: Force 8bit mode before doing
+ nand_scan_ident()
+Date: Tue, 27 Oct 2015 17:14:43 -0700
+Message-ID: <20151028001443.GX13239@google.com>
+References: <1445577373-21252-1-git-send-email-anup.patel@broadcom.com>
+ <1445577373-21252-2-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445577373-21252-2-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Linux MTD <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-BCM63138 has a simple clocking domain which is primarily the ARMPLL
-clocking complex, from which the ARM (CPU), APB and AXI clocks would be
-derived from.
+On Fri, Oct 23, 2015 at 10:46:12AM +0530, Anup Patel wrote:
+> Just like other NAND controllers, the NAND READID command only works
+> in 8bit mode for all versions of BRCMNAND controller.
+> 
+> This patch forces 8bit mode for each NAND CS in brcmnand_init_cs()
+> before doing nand_scan_ident() to ensure that BRCMNAND controller
+> is in 8bit mode when NAND READID command is issued.
+> 
+> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>  drivers/mtd/nand/brcmnand/brcmnand.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+> index 4cba03d..0be8ef9 100644
+> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> @@ -1888,6 +1888,7 @@ static int brcmnand_init_cs(struct brcmnand_host *host)
+>  	struct mtd_info *mtd;
+>  	struct nand_chip *chip;
+>  	int ret;
+> +	u16 cfg_offs;
+>  	struct mtd_part_parser_data ppdata = { .of_node = dn };
+>  
+>  	ret = of_property_read_u32(dn, "reg", &host->cs);
+> @@ -1930,6 +1931,14 @@ static int brcmnand_init_cs(struct brcmnand_host *host)
+>  
+>  	chip->controller = &ctrl->controller;
+>  
+> +	/*
+> +	 * The bootloader might have configured 16bit mode but
+> +	 * NAND READID command only works in 8bit mode. We force
+> +	 * 8bit mode here to ensure that NAND READID commands works.
+> +	 */
+> +	cfg_offs = brcmnand_cs_offset(ctrl, host->cs, BRCMNAND_CS_CFG);
+> +	nand_writereg(ctrl, cfg_offs, nand_readreg(ctrl, cfg_offs) & ~BIT(23));
 
-Since the ARMPLL controller is entirely compatible with the iProc ARM
-PLL, we just initialize it without additional parameters.
+Can we get a new enum for cfg bits? Unfortunately, I never managed that
+in brcmnand_set_cfg(); just magic numbers :( But I'd like to stop that
+if we're going to have to touch these bits outside of
+brcmnand_set_cfg().
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> +
+>  	if (nand_scan_ident(mtd, 1, NULL))
+>  		return -ENXIO;
+>  
+
+How about the following, as a preparatory patch? Only compile tested.
+
+>From c5423a86dbfa33b550d2b170bda3c12ecf4d5313 Mon Sep 17 00:00:00 2001
+From: Brian Norris <computersforpeace@gmail.com>
+Date: Tue, 27 Oct 2015 17:12:13 -0700
+Subject: [PATCH] mtd: brcmnand: factor out CFG and CFG_EXT bitfields
+
+These used magic numbers. Shame on me.
+
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Cc: Anup Patel <anup.patel@broadcom.com>
 ---
-Changes in v3:
+ drivers/mtd/nand/brcmnand/brcmnand.c | 38 +++++++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 7 deletions(-)
 
-- made default depend on ARCH_BCM_63XX per Stephen Boyd's comment
-
-Changes in v2:
-- added COMPILE_TEST per Scott Branden's comment
-
- drivers/clk/bcm/Kconfig       | 10 ++++++++++
- drivers/clk/bcm/Makefile      |  1 +
- drivers/clk/bcm/clk-bcm63xx.c | 22 ++++++++++++++++++++++
- 3 files changed, 33 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
-
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index 85260fb96b36..f2878459199a 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -1,3 +1,13 @@
-+config CLK_BCM_63XX
-+	bool "Broadcom BCM63xx clock support"
-+	depends on ARCH_BCM_63XX || COMPILE_TEST
-+	depends on COMMON_CLK
-+	select COMMON_CLK_IPROC
-+	default ARCH_BCM_63XX
-+	help
-+	  Enable common clock framework support for Broadcom BCM63xx DSL SoCs
-+	  based on the ARM architecture
-+
- config CLK_BCM_KONA
- 	bool "Broadcom Kona CCU clock support"
- 	depends on ARCH_BCM_MOBILE || COMPILE_TEST
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 3fc95060d875..247c26750d8b 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -1,3 +1,4 @@
-+obj-$(CONFIG_CLK_BCM_63XX)	+= clk-bcm63xx.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
-diff --git a/drivers/clk/bcm/clk-bcm63xx.c b/drivers/clk/bcm/clk-bcm63xx.c
-new file mode 100644
-index 000000000000..fbc17ae5ff2b
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm63xx.c
-@@ -0,0 +1,22 @@
+diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+index d694d876631e..c93fbc3869ee 100644
+--- a/drivers/mtd/nand/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+@@ -344,6 +344,28 @@ static const u8 brcmnand_cs_offsets_cs0[] = {
+ 	[BRCMNAND_CS_TIMING2]		= 0x14,
+ };
+ 
 +/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * Bitfields for the CFG and CFG_EXT registers. Pre-v7.1 controllers only had
++ * one config register, but once the bitfields overflowed, newer controllers
++ * (v7.1 and newer) added a CFG_EXT register and shuffled a few fields around.
 + */
-+#include <linux/init.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include "clk-iproc.h"
++enum {
++	CFG_BLK_ADR_BYTES_SHIFT		= 8,
++	CFG_COL_ADR_BYTES_SHIFT		= 12,
++	CFG_FUL_ADR_BYTES_SHIFT		= 16,
++	CFG_BUS_WIDTH_SHIFT		= 23,
++	CFG_BUS_WIDTH			= BIT(CFG_BUS_WIDTH_SHIFT),
++	CFG_DEVICE_SIZE_SHIFT		= 24,
 +
-+static void __init bcm63138_armpll_init(struct device_node *node)
-+{
-+	iproc_armpll_setup(node);
-+}
-+CLK_OF_DECLARE(bcm63138_armpll, "brcm,bcm63138-armpll", bcm63138_armpll_init);
++	/* Only for pre-v7.1 (with no CFG_EXT register) */
++	CFG_PAGE_SIZE_SHIFT		= 20,
++	CFG_BLK_SIZE_SHIFT		= 28,
++
++	/* Only for v7.1+ (with CFG_EXT register) */
++	CFG_EXT_PAGE_SIZE_SHIFT		= 0,
++	CFG_EXT_BLK_SIZE_SHIFT		= 4,
++};
++
+ /* BRCMNAND_INTFC_STATUS */
+ enum {
+ 	INTFC_FLASH_STATUS		= GENMASK(7, 0),
+@@ -1710,17 +1732,19 @@ static int brcmnand_set_cfg(struct brcmnand_host *host,
+ 	}
+ 	device_size = fls64(cfg->device_size) - fls64(BRCMNAND_MIN_DEVSIZE);
+ 
+-	tmp = (cfg->blk_adr_bytes << 8) |
+-		(cfg->col_adr_bytes << 12) |
+-		(cfg->ful_adr_bytes << 16) |
+-		(!!(cfg->device_width == 16) << 23) |
+-		(device_size << 24);
++	tmp = (cfg->blk_adr_bytes << CFG_BLK_ADR_BYTES_SHIFT) |
++		(cfg->col_adr_bytes << CFG_BLK_ADR_BYTES_SHIFT) |
++		(cfg->ful_adr_bytes << CFG_FUL_ADR_BYTES_SHIFT) |
++		(!!(cfg->device_width == 16) << CFG_BUS_WIDTH_SHIFT) |
++		(device_size << CFG_DEVICE_SIZE_SHIFT);
+ 	if (cfg_offs == cfg_ext_offs) {
+-		tmp |= (page_size << 20) | (block_size << 28);
++		tmp |= (page_size << CFG_PAGE_SIZE_SHIFT) |
++		       (block_size << CFG_BLK_SIZE_SHIFT);
+ 		nand_writereg(ctrl, cfg_offs, tmp);
+ 	} else {
+ 		nand_writereg(ctrl, cfg_offs, tmp);
+-		tmp = page_size | (block_size << 4);
++		tmp = (page_size << CFG_EXT_PAGE_SIZE_SHIFT) |
++		      (block_size << CFG_EXT_BLK_SIZE_SHIFT);
+ 		nand_writereg(ctrl, cfg_ext_offs, tmp);
+ 	}
+ 
 -- 
-2.1.0
-
+2.6.0.rc2.230.g3dd15c0
