@@ -1,29 +1,36 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH RESEND v2 net-next] net: hisilicon: updates HNS config
- and documents
-Date: Tue, 27 Oct 2015 20:20:41 -0700 (PDT)
-Message-ID: <20151027.202041.613033307041357854.davem@davemloft.net>
-References: <1445944594-244149-1-git-send-email-huangdaode@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] of: simplify arch_find_n_match_cpu_physical_id() function
+Date: Wed, 28 Oct 2015 12:05:27 +0900
+Message-ID: <1446001527-6700-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445944594-244149-1-git-send-email-huangdaode@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: huangdaode@hisilicon.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, liguozhu@hisilicon.com, Yisen.Zhuang@huawei.com, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, lipeng321@huawei.com
+To: devicetree@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: huangdaode <huangdaode@hisilicon.com>
-Date: Tue, 27 Oct 2015 19:16:34 +0800
+This commit does not change the function behavior.
 
-> From: yankejian <yankejian@huawei.com>
-> 
-> updates the bindings documents and dtsi file according to the review
-> comments[https://lkml.org/lkml/2015/9/21/670] from Rob Herring <robh@kernel.org>
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: yankejian <yankejian@huawei.com>
-> Signed-off-by: huangdaode <huangdaode@hisilicon.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Applied, thanks.
+ drivers/of/base.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 8b5a187..017dd94 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -375,10 +375,7 @@ bool __weak arch_find_n_match_cpu_physical_id(struct device_node *cpun,
+ 					   cpu, thread))
+ 		return true;
+ 
+-	if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
+-		return true;
+-
+-	return false;
++	return __of_find_n_match_cpu_property(cpun, "reg", cpu, thread);
+ }
+ 
+ /**
+-- 
+1.9.1
