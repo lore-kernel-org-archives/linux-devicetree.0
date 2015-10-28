@@ -1,43 +1,95 @@
-From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 2/4] watchdog: ts4800: add new driver for TS-4800 watchdog
-Date: Wed, 28 Oct 2015 12:52:51 -0400
-Message-ID: <20151028165251.GA5948@localhost>
-References: <1445978021-13961-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1445978021-13961-3-git-send-email-damien.riegel@savoirfairelinux.com>
- <CADhT+wdWcYMQ_ZPhcGOye3oP=6N+Yos+sbqV20E5x5Hmfm8ycw@mail.gmail.com>
- <20151027215135.GA4676@localhost>
- <20151028020501.GA1548@roeck-us.net>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 3/6] fpga: add simple-fpga-bus
+Date: Wed, 28 Oct 2015 12:03:41 -0500
+Message-ID: <alpine.DEB.2.02.1510281151480.28209@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-4-git-send-email-atull@opensource.altera.com> <20151028100714.GB7779@jcartwri.amer.corp.natinst.com> <CAAtXAHcaSZaKhYtVFbUEuO+boMh_PgUaOGVtjO_5MDkpcLcmWA@mail.gmail.com>
+ <20151028161859.GJ8245@jcartwri.amer.corp.natinst.com> <CAAtXAHdry3_A9ow-w5KQg80ECyaAuSGVit9ygcM7Ffc9yiysMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151028020501.GA1548-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHdry3_A9ow-w5KQg80ECyaAuSGVit9ygcM7Ffc9yiysMA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 27, 2015 at 07:05:01PM -0700, Guenter Roeck wrote:
-> In general, naming a driver for the first chip it supports is not
-> problematic. Making it too generic is, on the other side, problematic.
-> What are you going to do if ts4900 (or ts4801) implements a different
-> watchdog ?
+On Wed, 28 Oct 2015, Moritz Fischer wrote:
 
-Okay, I will keep the current name.
+> On Wed, Oct 28, 2015 at 9:18 AM, Josh Cartwright <joshc@ni.com> wrote:
+> > On Wed, Oct 28, 2015 at 08:37:51AM -0700, Moritz Fischer wrote:
+> >> On Wed, Oct 28, 2015 at 3:07 AM, Josh Cartwright <joshc@ni.com> wrote:
+> >> > On Tue, Oct 27, 2015 at 05:09:12PM -0500, atull@opensource.altera.com wrote:
+> >> >> From: Alan Tull <atull@opensource.altera.com>
+> >> >>
+> >> >> The Simple FPGA bus uses the FPGA Manager Framework and the
+> >> >> FPGA Bridge Framework to provide a manufactorer-agnostic
+> >> >> interface for reprogramming FPGAs that is Device Tree
+> >> >> Overlays-based.
+> >> >
+> >> > Do you intend the "simple-fpga-bus" to be used on Zynq as well?  The
+> >> > whole concept of the socfpga's "FPGA Bridge" doesn't map to the Zynq at
+> >> > all, from what I can tell.
+> >>
+> >> For Zynq the zynq-fpga driver takes care of the level shifters on full
+> >> reconfiguration,
+> >> and doesn't for partial reconfiguration. Now depending on which parts
+> >> of the fabric
+> >> are partial reconfigured (say AXI masters), one might run into issues
+> >> with a setup like that.
+> >>
+> >> My first plan was to counter that by using zynq-reset to hold the
+> >> reset high during
+> >> reconfiguration of that part of the FPGA.
+> >>
+> >> I'm happy to rethink that part and maybe redo the level shifters and
+> >> resets together in a bridge
+> >> driver under devicetree control gives finer grained control.
+> >
+> > There is already a framework which is used to describe and manipulate
+> > level shifting/other IO properties, and that is pinctrl, and if we
+> > wanted to use an appropriate abstraction, I think pinctrl would be the
+> > best bet.
+> 
+> Alright, I'll investigate that. Again, for the non-partial reconfig
+> case I'm happy
+> with the behavior as implemented, for the partial reconfig I just
+> haven't run into
+> issues with not dealing with the level shifters.
 
-I noticed that other boards might have their feed register at different
-offsets from syscon base. For instance, feed register is at offset 0x6
-on TS-4720 and offset 0xE on TS-4800 (syscon registers are 16-bit wide).
-So I need to address that as well (it is related to the next point).
+Are you suggesting pinctrl instead of introducing a FPGA Bridge Framework?
+If it fits, that's great.  Steffen is urging us to include reconfiguring
+width of the bridge so I'm trying to figure how and if that all fits in
+here.
 
-Currently, the driver maps all syscon registers even if it uses only one
-of them. I was thinking about adding a "syscon" node and define the
-watchdog as a child of it, but the syscon driver set
-syscon_regmap_config.val_bits to 32. Do I have to create a new driver if
-I want to use val_bits = 16, or is there another way ?
+> 
+> > Implementing the FPGA Bridge interface in the Zynq driver because it's
+> > what the core expects is just backwards.  It's an abstraction inversion.
+> 
+> Yeah, you're probably right.
 
-Damien
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry I wasn't clear earlier, but I am going to change simple FPGA bus
+to be OK with the "fpga-bridges" property being left out.  The change is
+to do that should just be for simple_fpga_bus_get_bridges() to return 0
+if it doesn't find any bridges.  The FPGA can still get programmed and
+the child devices get populated.  All the other FPGA bridge-related
+function calls (simple_fpga_bus_bridge_enable/disable and
+simple_fpga_bus_put_bridges) won't have any effect when
+simple_fpga_bus_get_bridges leaves num_bridges==0 and bridges==NULL.
+
+So if you don't need bridges, you can leave that out (once I've fixed
+that).
+
+Actually if you want to use simple fpga bus with FPGA bridges compiled out,
+I could even have the fpga bridge APIs become empty functions.
+
+Alan
+
+> 
+> Thanks,
+> 
+> Moritz
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
