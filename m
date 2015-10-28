@@ -1,75 +1,68 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 4/6] fpga: add fpga bridge framework
-Date: Wed, 28 Oct 2015 10:31:32 -0500
-Message-ID: <alpine.DEB.2.02.1510281021460.30289@linuxheads99>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-5-git-send-email-atull@opensource.altera.com> <20151028095027.GK1166@pengutronix.de>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: mt8173: Add thermal zone node for
+ mt8173.
+Date: Wed, 28 Oct 2015 21:09:44 +0530
+Message-ID: <20151028153944.GG3716@ubuntu>
+References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
+ <1445515359-8587-3-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151028095027.GK1166@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <1445515359-8587-3-git-send-email-dawei.chien@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
+To: Dawei Chien <dawei.chien@mediatek.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, Steffen Trumtrar wrote:
-
-> > +int fpga_bridge_enable(struct fpga_bridge *bridge)
-> > +{
-> > +	pr_err("%s %s\n", __func__, dev_name(&bridge->dev));
+On 22-10-15, 20:02, Dawei Chien wrote:
+> Add thermal zone node to mt8173.dtsi.
 > 
-> Please clean this...
+> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> ---
+> This patch is base on
+> https://patchwork.kernel.org/patch/7249821/
+> https://patchwork.kernel.org/patch/7249861/
+> https://patchwork.kernel.org/patch/7249891/
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   90 ++++++++++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
 > 
-> > +
-> > +	return bridge->br_ops->enable_set(bridge, 1);
-> > +}
-> > +EXPORT_SYMBOL_GPL(fpga_bridge_enable);
-> > +
-> > +/**
-> > + * fpga_bridge_disable
-> > + * @bridge: fpga bridge
-> > + *
-> > + * Disable transactions on the bridge
-> > + *
-> > + * Return: 0 for success, error code otherwise.
-> > + */
-> > +int fpga_bridge_disable(struct fpga_bridge *bridge)
-> > +{
-> > +	pr_err("%s %s\n", __func__, dev_name(&bridge->dev));
-> 
-> and this up.
-> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 3b18f37..eaf12bf 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -16,6 +16,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/power/mt8173-power.h>
+>  #include <dt-bindings/reset-controller/mt8173-resets.h>
+> +#include <dt-bindings/thermal/mt8173.h>
+>  #include "mt8173-pinfunc.h"
+>  
+>  / {
+> @@ -54,6 +55,18 @@
+>  			reg = <0x000>;
+>  			enable-method = "psci";
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			static-power-points = <
+> +				859000  43
+> +				908000  52
+> +				983000  86
+> +				1009000 123
+> +				1028000 138
+> +				1083000 172
+> +				1110900 180
+> +				1125000 192
 
-OK
+What's the unit of power here? Is this power accurate? Or just a
+number representing the power ?
 
-> > +void fpga_bridge_unregister(struct device *dev)
-> > +{
-> > +	struct fpga_bridge *bridge = dev_get_drvdata(dev);
-> > +
-> > +	dev_info(&bridge->dev, "%s : %s\n", __func__, bridge->name);
-> 
-> Is this necessary information?
+> +			>;
+> +			dynamic-power-coefficient = <263>;
+> +			#cooling-cells = <2>;
+>  		};
 
-I can remove it.
+@Rob: Looks like another good candidate for the OPP-v2 table? Power.
 
-> > +static int __init fpga_bridge_dev_init(void)
-> > +{
-> > +	pr_info("FPGA bridge framework driver\n");
-> 
-> Dito.
-> IMHO unnecessary log spam. Maybe change this to dbg?
-
-Sure.
-
-> > --- /dev/null
-> > +++ b/include/linux/fpga/fpga-bridge.h
-> > @@ -0,0 +1,49 @@
-> > +#include <linux/cdev.h>
-> 
-> You don't seem to use this.
-
-Correct.  I'll take it out.
-
-Thanks for the review!
-
-Alan
+-- 
+viresh
