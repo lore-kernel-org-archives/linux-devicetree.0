@@ -1,76 +1,121 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/4] extcon: arizona: Add extcon specific device tree
- binding document
-Date: Wed, 28 Oct 2015 09:19:09 +0000
-Message-ID: <20151028091909.GN5828@x1>
-References: <1445961719-1020-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v12 5/6] ARM: socfpga: add bindings document for fpga
+ bridge drivers
+Date: Wed, 28 Oct 2015 10:29:07 +0100
+Message-ID: <20151028092907.GH1166@pengutronix.de>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com>
+ <1445983755-24007-6-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1445961719-1020-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+In-Reply-To: <1445983755-24007-6-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: broonie@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, monstr@monstr.eu, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Oct 2015, Charles Keepax wrote:
+Hi!
 
-> Subsystem specific bindings for the Arizona devices are being factore=
-d
-> out of the MFD binding document into separate documents for each
-> subsystem. This patch adds a binding document that covers the existin=
-g
-> extcon specific bindings.
->=20
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+On Tue, Oct 27, 2015 at 05:09:14PM -0500, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Add bindings documentation for Altera SOCFPGA bridges:
+>  * fpga2sdram
+>  * fpga2hps
+>  * hps2fpga
+>  * lwhps2fpga
+> 
+> Signed-off-by: Alan Tull <dinguyen@opensource.altera.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+> Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
 > ---
->=20
-> Changes since v2:
->  - Moved the maintainer updates into a separate patch
->=20
-> Thanks,
-> Charles
->=20
->  .../devicetree/bindings/extcon/extcon-arizona.txt  |   15 ++++++++++=
-+++++
->  1 files changed, 15 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-a=
-rizona.txt
-
-Replied on Chanwoo's request.
-
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.=
-txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> v2:  separate into 2 documents for the 2 drivers
+> v12: bump version to line up with simple-fpga-bus version
+>      remove Linux specific notes such as references to sysfs
+>      move non-DT specific documentation elsewhere
+>      remove bindings that would have been used to pass configuration
+>      clean up formatting
+> ---
+>  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   18 ++++++++++
+>  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   36 ++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
 > new file mode 100644
-> index 0000000..e1705fa
+> index 0000000..11eb5b7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> @@ -0,0 +1,15 @@
-> +Cirrus Logic Arizona class audio SoCs
+> +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> @@ -0,0 +1,18 @@
+> +Altera FPGA To SDRAM Bridge Driver
 > +
-> +These devices are audio SoCs with extensive digital capabilities and=
- a range
-> +of analogue I/O.
-> +
-> +This document lists Extcon specific bindings, see the primary bindin=
-g document:
-> +  ../mfd/arizona.txt
+> +Required properties:
+> +- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
 > +
 > +Optional properties:
-> +
-> +  - wlf,hpdet-channel : Headphone detection channel.
-> +    ARIZONA_ACCDET_MODE_HPL or 1 - Headphone detect mode is set to H=
-PDETL
-> +    ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to H=
-PDETR
-> +    If this node is not mentioned or if the value is unknown, then
-> +    headphone detection mode is set to HPDETL.
+> +- label			: User-readable name for this bridge.
+> +			  Default is br<device#>
+> +- init-val		: 0 if driver should disable bridge at startup
+> +			  1 if driver should enable bridge at startup
+> +			  Default is to leave bridge in current state.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I know, that there are bindings, that configure via devicetree, but AFAIK
+this is not okay.
+
+> +
+> +Example:
+> +	fpga2sdram_br: fpgabridge@3 {
+> +		compatible = "altr,socfpga-fpga2sdram-bridge";
+> +		label = "fpga2sdram";
+> +		init-val = <0>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> new file mode 100644
+> index 0000000..eb52f3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> @@ -0,0 +1,36 @@
+> +Altera FPGA/HPS Bridge Driver
+> +
+> +Required properties:
+> +- compatible	: Should contain one of:
+> +		  "altr,socfpga-hps2fpga-bridge",
+> +		  "altr,socfpga-lwhps2fpga-bridge", or
+> +		  "altr,socfpga-fpga2hps-bridge"
+> +- clocks	: Clocks used by this module.
+> +
+> +Optional properties:
+> +- label		: User-readable name for this bridge.
+> +		  Default is br<device#>
+> +- init-val	: 0 if driver should disable bridge at startup.
+> +		  1 if driver should enable bridge at startup.
+> +		  Default is to leave bridge in its current state.
+> +
+> +Example:
+> +	hps_fpgabridge0: fpgabridge@0 {
+> +		compatible = "altr,socfpga-hps2fpga-bridge";
+> +		label = "hps2fpga";
+> +		clocks = <&l4_main_clk>;
+> +		init-val = <1>;
+> +	};
+> +
+> +	hps_fpgabridge1: fpgabridge@1 {
+> +		compatible = "altr,socfpga-lwhps2fpga-bridge";
+> +		label = "lwhps2fpga";
+> +		clocks = <&l4_main_clk>;
+> +		init-val = <0>;
+> +	};
+> +
+> +	hps_fpgabridge2: fpgabridge@2 {
+> +		compatible = "altr,socfpga-fpga2hps-bridge";
+> +		label = "fpga2hps";
+> +		clocks = <&l4_main_clk>;
+> +	};
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
