@@ -1,48 +1,51 @@
-From: Pramod Kumar <pramodku@broadcom.com>
-Subject: RE: [PATCH 05/11] dt-binding: Add ngpios property to GPIO
- controller node
-Date: Wed, 28 Oct 2015 05:14:34 +0000
-Message-ID: <0C803592FC378B4E83922050AB46442A2AD73E7A@SJEXCHMB10.corp.ad.broadcom.com>
-References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
-	<1445233398-27129-6-git-send-email-pramodku@broadcom.com>
- <CACRpkdZRmJTF9_yzVJx_vPKH6M6PivcrPiLD7xMEs5HDvsLw7g@mail.gmail.com>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH v2] Input: tsc2005 - Add support for tsc2004
+Date: Wed, 28 Oct 2015 00:23:34 -0500
+Message-ID: <20151028052334.GA6393@deathstar>
+References: <201510280724.dKfeR76E%fengguang.wu@intel.com>
+ <1445991421-29938-1-git-send-email-mwelling@ieee.org>
+ <20151028015141.GA11237@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZRmJTF9_yzVJx_vPKH6M6PivcrPiLD7xMEs5HDvsLw7g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151028015141.GA11237@localhost>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGludXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMg
-V2FsbGVpaiBbbWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMjcgT2N0
-b2JlciAyMDE1IDE1OjExDQo+IFRvOiBQcmFtb2QgS3VtYXINCj4gQ2M6IFJvYiBIZXJyaW5nOyBQ
-YXdlbCBNb2xsOyBNYXJrIFJ1dGxhbmQ7IElhbiBDYW1wYmVsbDsgS3VtYXIgR2FsYTsgUmF5IEp1
-aTsNCj4gU2NvdHQgQnJhbmRlbjsgUnVzc2VsbCBLaW5nOyBsaW51eC1ncGlvQHZnZXIua2VybmVs
-Lm9yZzsgYmNtLWtlcm5lbC1mZWVkYmFjay0NCj4gbGlzdDsgSmFzb24gVXk7IE1hc2FoaXJvIFlh
-bWFkYTsgVGhvbWFzIEdsZWl4bmVyOyBMYXVyZW50IFBpbmNoYXJ0Ow0KPiBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51
-eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgSm9uYXMgR29yc2tpDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMDUvMTFdIGR0LWJpbmRpbmc6IEFkZCBuZ3Bpb3MgcHJvcGVydHkgdG8gR1BJTyBj
-b250cm9sbGVyDQo+IG5vZGUNCj4gDQo+IE9uIE1vbiwgT2N0IDE5LCAyMDE1IGF0IDc6NDMgQU0s
-IFByYW1vZCBLdW1hciA8cHJhbW9ka3VAYnJvYWRjb20uY29tPg0KPiB3cm90ZToNCj4gDQo+ID4g
-QWRkIG5ncGlvcyBwcm9wZXJ0eSB0byB0aGUgZ3BpbyBjb250cm9sbGVyJ3MgRFQgbm9kZSBzbyB0
-aGF0DQo+ID4gY29udHJvbGxlciBkcml2ZXIgZXh0cmFjdHMgdG90YWwgbnVtYmVyIG9mIGdwaW8g
-bGluZXMgcHJlc2VudCBpbg0KPiA+IGNvbnRyb2xsZXIgZnJvbSBEVCBhbmQgcmVtb3ZlcyBkZXBl
-bmRlbmN5IG9uIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFByYW1vZCBLdW1hciA8
-cHJhbW9ka3VAYnJvYWRjb20uY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSYXkgSnVpIDxyanVpQGJy
-b2FkY29tLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogU2NvdHQgQnJhbmRlbiA8c2JyYW5kZW5AYnJv
-YWRjb20uY29tPg0KPiAoLi4uKQ0KPiA+ICstIG5ncGlvczoNCj4gPiArICAgIFRvdGFsIG51bWJl
-ciBvZiBHUElPcyB0aGUgY29udHJvbGxlciBwcm92aWRlcw0KPiANCj4gVGhpcyBkZXNjcmlwdGlv
-biBpcyB3cm9uZy4gVGhlIG51bWJlciBvZiBHUElPcyB0aGUgY29udHJvbGxlciAqcHJvdmlkZXMq
-IGlzIHRvDQo+IGJlIGRldGVybWluZWQgYnkgdGhlIGNvbXBhdGlibGUtc3RyaW5nLg0KPiANCj4g
-bmdwaW9zIGlzIHVzZWQgdG8gcmVzdHJpY3QgdGhlIG51bWJlciBvZiBsaW5lcyAqdXNlZCogb3Ig
-KnJvdXRlZCogZnJvbSB0aGUNCj4gbnVtYmVyICphdmFpbGFibGUqLiAoSSBob3BlIHRoYXQgaXMg
-d2hhdCB0aGUgY29kZSBkb2VzIGFzIHdlbGwuKSBTdWNoIGFzIGlmIDEyDQo+IEdQSU9zIGFyZSB1
-c2VkIG9mIHRoZSAzMiBhdmFpbGFibGUgb24gMzJiaXRzIGluIGEgcmVnaXN0ZXIuDQo+IA0KPiBV
-cGRhdGUgdGhpcyBkZXNjcmlwdGlvbiB0byBzYXkgd2hhdCBpdCByZWFsbHkgbWVhbnMuDQo+IA0K
-PiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KDQpUaGFua3MgZm9yIHJldmlld2luZyAuIFdpbGwg
-dXBkYXRlIHRoZSBkZXNjcmlwdGlvbi4NCg0KUmVnYXJkcywNClByYW1vZA0K
+On Tue, Oct 27, 2015 at 06:51:41PM -0700, Dmitry Torokhov wrote:
+> Hi Michael,
+> On Tue, Oct 27, 2015 at 07:17:01PM -0500, Michael Welling wrote:
+> > Adds support for the i2c based tsc2004. Support was added to the tsc2005 driver
+> > due to the similarity of the devices.
+> > 
+> > Signed-off-by: Michael Welling <mwelling@ieee.org>
+> > ---
+> > v2: Fixes Kconfig based on report for 0-day build bot.
+> > 
+> >  .../bindings/input/touchscreen/tsc2004.txt         |  38 ++++
+> >  drivers/input/touchscreen/Kconfig                  |   7 +-
+> >  drivers/input/touchscreen/tsc2005.c                | 206 ++++++++++++++++-----
+> 
+> Could we maybe split the code into core, spi and i2c drivers instead of
+> keeping everything together and rely on #ifdefs?
+>
+Dmitry,
+
+So then we have three files?
+Perhaps:
+drivers/input/touchscreen/tsc2004.c
+drivers/input/touchscreen/tsc2005.c
+drivers/input/touchscreen/tsc200x-core.c
+
+Please ellaborate exactly how you want things to be structured and named so
+that I don't waste time in revision.
+
+It appears that I can't make the build bot happy the way it is.
+ 
+> Thanks!
+> 
+> -- 
+> Dmitry
