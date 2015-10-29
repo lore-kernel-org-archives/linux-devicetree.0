@@ -1,2580 +1,1292 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v6 5/6] tee: add OP-TEE driver
-Date: Thu, 29 Oct 2015 09:21:27 +0100
-Message-ID: <1446106888-8983-6-git-send-email-jens.wiklander@linaro.org>
-References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
+From: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+Subject: [PATCH 2/2] power: Add support for TI BQ24261 charger
+Date: Thu, 29 Oct 2015 22:07:05 +0530
+Message-ID: <1446136625-20845-3-git-send-email-ramakrishna.pallala@intel.com>
+References: <1446136625-20845-1-git-send-email-ramakrishna.pallala@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
+In-Reply-To: <1446136625-20845-1-git-send-email-ramakrishna.pallala@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>
-Cc: valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Jens Wiklander <jens.wiklander@linaro.org>
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+Cc: Pallala Ramakrishna <ramakrishna.pallala@intel.com>, Jenny Tc <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds a OP-TEE driver which also can be compiled as a loadable module.
+Add new charger driver support for TI BQ24261 charger IC.
 
-* Targets ARM and ARM64
-* Supports using reserved memory from OP-TEE as shared memory
-* Probes OP-TEE version using SMCs
-* Accepts requests on privileged and unprivileged device
-* Uses OPTEE message protocol version 2 to communicate with secure world
+TI BQ24261 charger driver relies on extcon notifications to get the
+charger cable type and based on that it will set the charging parameters.
 
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Signed-off-by: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+Signed-off-by: Jenny TC <jenny.tc@intel.com>
 ---
- MAINTAINERS                       |   5 +
- drivers/tee/Kconfig               |  10 +
- drivers/tee/Makefile              |   1 +
- drivers/tee/optee/Kconfig         |   8 +
- drivers/tee/optee/Makefile        |   5 +
- drivers/tee/optee/call.c          | 400 ++++++++++++++++++++++++++++++
- drivers/tee/optee/core.c          | 502 ++++++++++++++++++++++++++++++++++++++
- drivers/tee/optee/optee_msg.h     | 423 ++++++++++++++++++++++++++++++++
- drivers/tee/optee/optee_private.h | 146 +++++++++++
- drivers/tee/optee/optee_smc.h     | 418 +++++++++++++++++++++++++++++++
- drivers/tee/optee/rpc.c           | 322 ++++++++++++++++++++++++
- drivers/tee/optee/supp.c          | 212 ++++++++++++++++
- 12 files changed, 2452 insertions(+)
- create mode 100644 drivers/tee/optee/Kconfig
- create mode 100644 drivers/tee/optee/Makefile
- create mode 100644 drivers/tee/optee/call.c
- create mode 100644 drivers/tee/optee/core.c
- create mode 100644 drivers/tee/optee/optee_msg.h
- create mode 100644 drivers/tee/optee/optee_private.h
- create mode 100644 drivers/tee/optee/optee_smc.h
- create mode 100644 drivers/tee/optee/rpc.c
- create mode 100644 drivers/tee/optee/supp.c
+ drivers/power/Kconfig                 |    6 +
+ drivers/power/Makefile                |    1 +
+ drivers/power/bq24261_charger.c       | 1195 +++++++++++++++++++++++++++++++++
+ include/linux/power/bq24261_charger.h |   26 +
+ 4 files changed, 1228 insertions(+)
+ create mode 100644 drivers/power/bq24261_charger.c
+ create mode 100644 include/linux/power/bq24261_charger.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 93b1dd8..e9be205 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7777,6 +7777,11 @@ F:	arch/*/oprofile/
- F:	drivers/oprofile/
- F:	include/linux/oprofile.h
- 
-+OP-TEE DRIVER
-+M:	Jens Wiklander <jens.wiklander@linaro.org>
-+S:	Maintained
-+F:	drivers/tee/optee/
-+
- ORACLE CLUSTER FILESYSTEM 2 (OCFS2)
- M:	Mark Fasheh <mfasheh@suse.com>
- M:	Joel Becker <jlbec@evilplan.org>
-diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
-index 64a8cd7..b269276 100644
---- a/drivers/tee/Kconfig
-+++ b/drivers/tee/Kconfig
-@@ -6,3 +6,13 @@ config TEE
+diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+index cb0ae66..d817dd9 100644
+--- a/drivers/power/Kconfig
++++ b/drivers/power/Kconfig
+@@ -408,6 +408,12 @@ config CHARGER_BQ24190
  	help
- 	  This implements a generic interface towards a Trusted Execution
- 	  Environment (TEE).
-+
-+if TEE
-+
-+menu "TEE drivers"
-+
-+source "drivers/tee/optee/Kconfig"
-+
-+endmenu
-+
-+endif
-diff --git a/drivers/tee/Makefile b/drivers/tee/Makefile
-index 60d2dab..53f3c76 100644
---- a/drivers/tee/Makefile
-+++ b/drivers/tee/Makefile
-@@ -1,3 +1,4 @@
- obj-y += tee.o
- obj-y += tee_shm.o
- obj-y += tee_shm_pool.o
-+obj-$(CONFIG_OPTEE) += optee/
-diff --git a/drivers/tee/optee/Kconfig b/drivers/tee/optee/Kconfig
-new file mode 100644
-index 0000000..b550b18
---- /dev/null
-+++ b/drivers/tee/optee/Kconfig
-@@ -0,0 +1,8 @@
-+# OP-TEE Trusted Execution Environment Configuration
-+config OPTEE
-+	tristate "OP-TEE"
-+	default n
-+	depends on HAVE_SMCCC
+ 	  Say Y to enable support for the TI BQ24190 battery charger.
+ 
++config CHARGER_BQ24261
++	tristate "TI BQ24261 charger driver"
++	depends on I2C && EXTCON
 +	help
-+	  This implements the OP-TEE Trusted Execution Environment (TEE)
-+	  driver.
-diff --git a/drivers/tee/optee/Makefile b/drivers/tee/optee/Makefile
++	  Say Y here to enable support for TI BQ24261 battery charger.
++
+ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+diff --git a/drivers/power/Makefile b/drivers/power/Makefile
+index b0e1bf1..f59d8bd 100644
+--- a/drivers/power/Makefile
++++ b/drivers/power/Makefile
+@@ -61,6 +61,7 @@ obj-$(CONFIG_CHARGER_MAX8998)	+= max8998_charger.o
+ obj-$(CONFIG_CHARGER_QCOM_SMBB)	+= qcom_smbb.o
+ obj-$(CONFIG_CHARGER_BQ2415X)	+= bq2415x_charger.o
+ obj-$(CONFIG_CHARGER_BQ24190)	+= bq24190_charger.o
++obj-$(CONFIG_CHARGER_BQ24261)	+= bq24261_charger.o
+ obj-$(CONFIG_CHARGER_BQ24257)	+= bq24257_charger.o
+ obj-$(CONFIG_CHARGER_BQ24735)	+= bq24735-charger.o
+ obj-$(CONFIG_CHARGER_BQ25890)	+= bq25890_charger.o
+diff --git a/drivers/power/bq24261_charger.c b/drivers/power/bq24261_charger.c
 new file mode 100644
-index 0000000..92fe578
+index 0000000..04b5752
 --- /dev/null
-+++ b/drivers/tee/optee/Makefile
-@@ -0,0 +1,5 @@
-+obj-$(CONFIG_OPTEE) += optee.o
-+optee-objs += core.o
-+optee-objs += call.o
-+optee-objs += rpc.o
-+optee-objs += supp.o
-diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
-new file mode 100644
-index 0000000..fa15748
---- /dev/null
-+++ b/drivers/tee/optee/call.c
-@@ -0,0 +1,400 @@
++++ b/drivers/power/bq24261_charger.c
+@@ -0,0 +1,1195 @@
 +/*
-+ * Copyright (c) 2015, Linaro Limited
++ * bq24261_charger.c - BQ24261 Charger driver
 + *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
++ * Copyright (C) 2014 Intel Corporation
++ * Author:	Jenny TC <jenny.tc@intel.com>
++ *		Ramakrishna Pallala <ramakrishna.pallala@intel.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
 + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
-+ *
 + */
-+#include <linux/types.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/device.h>
-+#include <linux/tee_drv.h>
-+#include <linux/arm-smccc.h>
-+#include "optee_private.h"
-+#include "optee_smc.h"
 +
-+struct optee_call_waiter {
-+	struct list_head list_node;
-+	struct completion c;
-+	bool completed;
++#include <linux/version.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/slab.h>
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/power_supply.h>
++#include <linux/extcon.h>
++#include <linux/io.h>
++#include <linux/sched.h>
++#include <linux/delay.h>
++#include <linux/acpi.h>
++#include <linux/power/bq24261_charger.h>
++
++#define DEV_NAME "bq24261-charger"
++
++#define EXCEPTION_MONITOR_DELAY		(60 * HZ)
++#define WDT_RESET_DELAY			(15 * HZ)
++
++/* BQ24261 registers */
++#define BQ24261_STAT_CTRL0_ADDR		0x00
++#define BQ24261_CTRL_ADDR		0x01
++#define BQ24261_BATT_VOL_CTRL_ADDR	0x02
++#define BQ24261_VENDOR_REV_ADDR		0x03
++#define BQ24261_TERM_FCC_ADDR		0x04
++#define BQ24261_VINDPM_STAT_ADDR	0x05
++#define BQ24261_ST_NTC_MON_ADDR		0x06
++
++#define BQ24261_RESET_ENABLE		BIT(7)
++
++#define BQ24261_FAULT_MASK		GENMASK(2, 0)
++#define BQ24261_VOVP			0x01
++#define BQ24261_LOW_SUPPLY		0x02
++#define BQ24261_THERMAL_SHUTDOWN	0x03
++#define BQ24261_BATT_TEMP_FAULT		0x04
++#define BQ24261_TIMER_FAULT		0x05
++#define BQ24261_BATT_OVP		0x06
++#define BQ24261_NO_BATTERY		0x07
++#define BQ24261_STAT_MASK		(0x03 << 4)
++#define BQ24261_STAT_READY		0x00
++#define BQ24261_STAT_CHRG_PRGRSS	(0x01 << 4)
++#define BQ24261_STAT_CHRG_DONE		(0x02 << 4)
++#define BQ24261_STAT_FAULT		(0x03 << 4)
++#define BQ24261_BOOST_MASK		BIT(6)
++#define BQ24261_ENABLE_BOOST		BIT(6)
++#define BQ24261_TMR_RST_MASK		(0x01 << 7)
++#define BQ24261_TMR_RST			(0x01 << 7)
++
++#define BQ24261_CE_MASK			BIT(1)
++#define BQ24261_CE_DISABLE		BIT(1)
++
++#define BQ24261_HiZ_MASK		BIT(0)
++#define BQ24261_HiZ_ENABLE		BIT(0)
++
++#define BQ24261_ICHRG_MASK		GENMASK(7, 3)
++
++#define BQ24261_ITERM_MASK		GENMASK(2, 0)
++#define BQ24261_MIN_ITERM		50 /* 50 mA */
++#define BQ24261_MAX_ITERM		300 /* 300 mA */
++
++#define BQ24261_VBREG_MASK		GENMASK(7, 2)
++#define BQ24261_VBREG_MIN_CV		3500
++#define BQ24261_VBREG_MAX_CV		4440
++#define BQ24261_VBREG_CV_DIV		20
++#define BQ24261_VBREG_CV_BIT_POS	2
++
++#define BQ24261_INLMT_MASK		GENMASK(6, 4)
++#define BQ24261_INLMT_100		0x00
++#define BQ24261_INLMT_150		(0x01 << 4)
++#define BQ24261_INLMT_500		(0x02 << 4)
++#define BQ24261_INLMT_900		(0x03 << 4)
++#define BQ24261_INLMT_1500		(0x04 << 4)
++#define BQ24261_INLMT_2000		(0x05 << 4)
++#define BQ24261_INLMT_2500		(0x06 << 4)
++
++#define BQ24261_TE_MASK			BIT(2)
++#define BQ24261_TE_ENABLE		BIT(2)
++#define BQ24261_STAT_ENABLE_MASK	BIT(3)
++#define BQ24261_STAT_ENABLE		BIT(3)
++
++#define BQ24261_VENDOR_MASK		GENMASK(7, 5)
++#define BQ24261_PART_MASK		GENMASK(4, 3)
++#define BQ24261_REV_MASK		(0x07)
++#define VENDOR_BQ2426X			(0x02 << 5)
++#define REV_BQ24261			(0x06)
++
++#define BQ24261_TS_MASK			BIT(3)
++#define BQ24261_TS_ENABLED		BIT(3)
++#define BQ24261_BOOST_ILIM_MASK		BIT(4)
++#define BQ24261_BOOST_ILIM_500ma	(0x0)
++#define BQ24261_BOOST_ILIM_1A		BIT(4)
++#define BQ24261_VINDPM_OFF_MASK		BIT(0)
++#define BQ24261_VINDPM_OFF_5V		(0x0)
++#define BQ24261_VINDPM_OFF_12V		BIT(0)
++
++#define BQ24261_SAFETY_TIMER_MASK	GENMASK(6, 5)
++#define BQ24261_SAFETY_TIMER_40MIN	0x00
++#define BQ24261_SAFETY_TIMER_6HR	(0x01 << 5)
++#define BQ24261_SAFETY_TIMER_9HR	(0x02 << 5)
++#define BQ24261_SAFETY_TIMER_DISABLED	(0x03 << 5)
++
++/* Settings for Voltage / DPPM Register (05) */
++#define BQ24261_VBATT_LEVEL1		3700000
++#define BQ24261_VBATT_LEVEL2		3960000
++#define BQ24261_VINDPM_MASK		GENMASK(2, 0)
++#define BQ24261_VINDPM_320MV		(0x01 << 2)
++#define BQ24261_VINDPM_160MV		(0x01 << 1)
++#define BQ24261_VINDPM_80MV		(0x01 << 0)
++#define BQ24261_CD_STATUS_MASK		(0x01 << 3)
++#define BQ24261_DPM_EN_MASK		(0x01 << 4)
++#define BQ24261_DPM_EN_FORCE		(0x01 << 4)
++#define BQ24261_LOW_CHG_MASK		(0x01 << 5)
++#define BQ24261_LOW_CHG_EN		(0x01 << 5)
++#define BQ24261_LOW_CHG_DIS		(~BQ24261_LOW_CHG_EN)
++#define BQ24261_DPM_STAT_MASK		(0x01 << 6)
++#define BQ24261_MINSYS_STAT_MASK	(0x01 << 7)
++
++#define BQ24261_MIN_CC			500	/* 500mA */
++#define BQ24261_MAX_CC			3000	/* 3A */
++#define BQ24261_DEF_CC			1300	/* 1300mA */
++#define BQ24261_MAX_CV			4350	/*4350mV */
++#define BQ24261_DEF_CV			4350	/* 4350mV */
++#define BQ24261_DEF_ITERM		128	/* 128mA */
++#define BQ24261_MIN_TEMP		0	/* 0 degC */
++#define BQ24261_MAX_TEMP		60	/* 60 DegC */
++
++#define ILIM_100MA			100	/* 100mA */
++#define ILIM_500MA			500	/* 500mA */
++#define ILIM_900MA			900	/* 900mA */
++#define ILIM_1500MA			1500	/* 1500mA */
++#define ILIM_2000MA			2000	/* 2000mA */
++#define ILIM_2500MA			2500	/* 2500mA */
++#define ILIM_3000MA			3000	/* 3000mA */
++
++static unsigned int dis_sysfs_write;
++module_param(dis_sysfs_write, int, 0644);
++MODULE_PARM_DESC(dis_sysfs_write,
++	"Disable sysfs write on charge current and voltage");
++
++u16 bq24261_inlmt[][2] = {
++	{100, BQ24261_INLMT_100},
++	{150, BQ24261_INLMT_150},
++	{500, BQ24261_INLMT_500},
++	{900, BQ24261_INLMT_900},
++	{1500, BQ24261_INLMT_1500},
++	{2000, BQ24261_INLMT_2000},
++	{2500, BQ24261_INLMT_2500},
 +};
 +
-+static void optee_cq_wait_init(struct optee_call_queue *cq,
-+			struct optee_call_waiter *w)
++
++enum bq24261_status {
++	BQ24261_CHRGR_STAT_UNKNOWN,
++	BQ24261_CHRGR_STAT_READY,
++	BQ24261_CHRGR_STAT_CHARGING,
++	BQ24261_CHRGR_STAT_FULL,
++	BQ24261_CHRGR_STAT_FAULT,
++};
++
++enum bq2426x_model {
++	BQ2426X = 0,
++	BQ24260,
++	BQ24261,
++};
++
++struct bq24261_charger {
++	struct i2c_client *client;
++	struct bq24261_platform_data *pdata;
++	struct power_supply *psy_usb;
++	struct delayed_work fault_mon_work;
++	struct mutex lock;
++	enum bq2426x_model model;
++	struct delayed_work wdt_work;
++	struct work_struct irq_work;
++	struct list_head irq_queue;
++
++	/* extcon charger cables */
++	struct {
++		struct work_struct work;
++		struct notifier_block nb;
++		struct extcon_specific_cable_nb sdp;
++		struct extcon_specific_cable_nb cdp;
++		struct extcon_specific_cable_nb dcp;
++		struct extcon_specific_cable_nb otg;
++		enum power_supply_type chg_type;
++		bool boost;
++		bool connected;
++	} cable;
++
++	bool online;
++	bool present;
++	int chg_health;
++	enum bq24261_status chg_status;
++	int cc;
++	int cv;
++	int inlmt;
++	int max_cc;
++	int max_cv;
++	int iterm;
++	int max_temp;
++	int min_temp;
++	bool is_charging_enabled;
++};
++
++static inline int bq24261_read_reg(struct i2c_client *client, u8 reg)
 +{
-+	mutex_lock(&cq->mutex);
-+	/*
-+	 * We add ourselves to the queue, but we don't wait. This
-+	 * guarentees that we don't lose a completion if secure world
-+	 * returns busy and another thread just exited and try to complete
-+	 * someone.
-+	 */
-+	w->completed = false;
-+	init_completion(&w->c);
-+	list_add_tail(&w->list_node, &cq->waiters);
-+	mutex_unlock(&cq->mutex);
-+}
++	int ret;
 +
-+static void optee_cq_wait_for_completion(struct optee_call_queue *cq,
-+			struct optee_call_waiter *w)
-+{
-+	wait_for_completion(&w->c);
-+
-+	mutex_lock(&cq->mutex);
-+
-+	/* Move to end of list to get out of the way for other waiters */
-+	list_del(&w->list_node);
-+	w->completed = false;
-+	reinit_completion(&w->c);
-+	list_add_tail(&w->list_node, &cq->waiters);
-+
-+	mutex_unlock(&cq->mutex);
-+}
-+
-+static void optee_cq_complete_one(struct optee_call_queue *cq)
-+{
-+	struct optee_call_waiter *w;
-+
-+	list_for_each_entry(w, &cq->waiters, list_node) {
-+		if (!w->completed) {
-+			complete(&w->c);
-+			w->completed = true;
-+			break;
-+		}
-+	}
-+}
-+
-+static void optee_cq_wait_final(struct optee_call_queue *cq,
-+			struct optee_call_waiter *w)
-+{
-+	mutex_lock(&cq->mutex);
-+
-+	/* Get out of the list */
-+	list_del(&w->list_node);
-+
-+	optee_cq_complete_one(cq);
-+	/*
-+	 * If we're completed we've got a completion that some other task
-+	 * could have used instead.
-+	 */
-+	if (w->completed)
-+		optee_cq_complete_one(cq);
-+
-+	mutex_unlock(&cq->mutex);
-+}
-+
-+/* Requires the filpstate mutex to be held */
-+static struct optee_session *find_session(struct optee_context_data *ctxdata,
-+			u32 session_id)
-+{
-+	struct optee_session *sess;
-+
-+	list_for_each_entry(sess, &ctxdata->sess_list, list_node)
-+		if (sess->session_id == session_id)
-+			return sess;
-+	return NULL;
-+}
-+
-+u32 optee_do_call_with_arg(struct tee_context *ctx, phys_addr_t parg)
-+{
-+	struct optee *optee = tee_get_drvdata(ctx->teedev);
-+	struct optee_call_waiter w;
-+	struct optee_rpc_param param = { };
-+	u32 ret;
-+
-+	param.a0 = OPTEE_SMC_CALL_WITH_ARG;
-+	reg_pair_from_64(&param.a1, &param.a2, parg);
-+	/* Initialize waiter */
-+	optee_cq_wait_init(&optee->call_queue, &w);
-+	while (true) {
-+		struct smccc_res res;
-+
-+		optee->invoke_fn(param.a0, param.a1, param.a2, param.a3,
-+				 param.a4, param.a5, param.a6, param.a7,
-+				 &res);
-+
-+		if (res.a0 == OPTEE_SMC_RETURN_ETHREAD_LIMIT) {
-+			/*
-+			 * Out of threads in secure world, wait for a thread
-+			 * become available.
-+			 */
-+			optee_cq_wait_for_completion(&optee->call_queue, &w);
-+		} else if (OPTEE_SMC_RETURN_IS_RPC(res.a0)) {
-+			param.a0 = res.a0;
-+			param.a1 = res.a1;
-+			param.a2 = res.a2;
-+			param.a3 = res.a3;
-+			optee_handle_rpc(ctx, &param);
-+		} else {
-+			ret = res.a0;
-+			break;
-+		}
-+	}
-+	/*
-+	 * We're done with our thread in secure world, if there's any
-+	 * thread waiters wake up one.
-+	 */
-+	optee_cq_wait_final(&optee->call_queue, &w);
++	ret = i2c_smbus_read_byte_data(client, reg);
++	if (ret < 0)
++		dev_err(&client->dev,
++			"error(%d) in reading reg %d\n", ret, reg);
 +	return ret;
 +}
 +
-+static struct tee_shm *get_msg_arg(struct tee_context *ctx, size_t num_params,
-+			struct optee_msg_arg **msg_arg, phys_addr_t *msg_parg)
++static inline int bq24261_write_reg(struct i2c_client *client, u8 reg, u8 data)
 +{
-+	int rc;
-+	struct tee_shm *shm;
-+	struct optee_msg_arg *ma;
++	int ret;
 +
-+	shm = tee_shm_alloc(ctx->teedev, OPTEE_MSG_GET_ARG_SIZE(num_params),
-+			    TEE_SHM_MAPPED);
-+	if (IS_ERR(shm))
-+		return shm;
-+	ma = tee_shm_get_va(shm, 0);
-+	if (IS_ERR(ma)) {
-+		rc = PTR_ERR(ma);
-+		goto out;
-+	}
-+	rc = tee_shm_get_pa(shm, 0, msg_parg);
-+	if (rc)
-+		goto out;
-+
-+	memset(ma, 0, OPTEE_MSG_GET_ARG_SIZE(num_params));
-+	ma->num_params = num_params;
-+	*msg_arg = ma;
-+out:
-+	if (rc) {
-+		tee_shm_free(shm);
-+		return ERR_PTR(rc);
-+	}
-+	return shm;
++	ret = i2c_smbus_write_byte_data(client, reg, data);
++	if (ret < 0)
++		dev_err(&client->dev,
++			"error(%d) in writing %d to reg %d\n", ret, data, reg);
++	return ret;
 +}
 +
-+int optee_open_session(struct tee_context *ctx,
-+			struct tee_ioctl_open_session_arg *arg,
-+			struct tee_param *param)
++static inline int bq24261_update_reg(struct i2c_client *client, u8 reg,
++					  u8 mask, u8 val)
 +{
-+	struct optee_context_data *ctxdata = ctx->data;
-+	int rc;
-+	struct tee_shm *shm;
-+	struct optee_msg_arg *msg_arg;
-+	phys_addr_t msg_parg;
-+	struct optee_msg_param *msg_param;
-+	struct optee_session *sess = NULL;
++	int ret;
 +
-+	/* +2 for the meta parameters added below */
-+	shm = get_msg_arg(ctx, arg->num_params + 2, &msg_arg, &msg_parg);
-+	if (IS_ERR(shm))
-+		return PTR_ERR(shm);
++	ret = bq24261_read_reg(client, reg);
++	if (ret < 0)
++		return ret;
 +
-+	msg_arg->cmd = OPTEE_MSG_CMD_OPEN_SESSION;
-+	msg_arg->cancel_id = arg->cancel_id;
-+	msg_param = OPTEE_MSG_GET_PARAMS(msg_arg);
++	ret = (ret & ~mask) | (mask & val);
++	return bq24261_write_reg(client, reg, ret);
++}
++
++static void lookup_regval(u16 tbl[][2], size_t size, u16 in_val, u8 *out_val)
++{
++	int i;
++
++	for (i = 1; i < size; ++i) {
++		if (in_val < tbl[i][0])
++			break;
++	}
++
++	*out_val = (u8) tbl[i - 1][1];
++}
++
++void bq24261_cc_to_reg(int cc, u8 *reg_val)
++{
++	/*
++	 * Ichrg bits are B3-B7
++	 * Icharge = 500mA + IchrgCode * 100mA
++	 */
++	cc = clamp_t(int, cc, BQ24261_MIN_CC, BQ24261_MAX_CC);
++	cc = cc - BQ24261_MIN_CC;
++	*reg_val = (cc / 100) << 3;
++}
++
++void bq24261_cv_to_reg(int cv, u8 *reg_val)
++{
++	int val;
++
++	val = clamp_t(int, cv, BQ24261_VBREG_MIN_CV, BQ24261_VBREG_MAX_CV);
++	*reg_val = (((val - BQ24261_VBREG_MIN_CV) / BQ24261_VBREG_CV_DIV)
++			<< BQ24261_VBREG_CV_BIT_POS);
++}
++
++void bq24261_inlmt_to_reg(int inlmt, u8 *regval)
++{
++	return lookup_regval(bq24261_inlmt, ARRAY_SIZE(bq24261_inlmt),
++			     inlmt, regval);
++}
++
++static inline void bq24261_iterm_to_reg(int iterm, u8 *regval)
++{
++	/*
++	 * Iterm bits are B0-B2
++	 * Icharge = 50mA + ItermCode * 50mA
++	 */
++	iterm = clamp_t(int, iterm, BQ24261_MIN_ITERM,  BQ24261_MAX_ITERM);
++	iterm = iterm - BQ24261_MIN_ITERM;
++	*regval =  iterm / 50;
++}
++
++static inline int bq24261_init_timers(struct bq24261_charger *chip)
++{
++	u8 reg_val;
++	int ret;
++
++	reg_val = BQ24261_SAFETY_TIMER_9HR;
++
++	if (chip->pdata->thermal_sensing)
++		reg_val |= BQ24261_TS_ENABLED;
++
++	ret = bq24261_update_reg(chip->client, BQ24261_ST_NTC_MON_ADDR,
++			BQ24261_TS_MASK | BQ24261_SAFETY_TIMER_MASK |
++			BQ24261_BOOST_ILIM_MASK, reg_val);
++
++	return ret;
++}
++
++static inline int bq24261_reset_wdt_timer(struct bq24261_charger *chip)
++{
++	u8 mask = BQ24261_TMR_RST_MASK, val = BQ24261_TMR_RST;
++
++	if (chip->cable.boost) {
++		mask |= BQ24261_BOOST_MASK;
++		val |= BQ24261_ENABLE_BOOST;
++	}
++
++	return bq24261_update_reg(chip->client, BQ24261_STAT_CTRL0_ADDR,
++							mask, val);
++}
++
++static inline int bq24261_set_cc(struct bq24261_charger *chip, int cc_mA)
++{
++	u8 reg_val;
++	int ret;
++
++	dev_dbg(&chip->client->dev, "%s=%d\n", __func__, cc_mA);
++
++	if (cc_mA && (cc_mA < BQ24261_MIN_CC)) {
++		dev_dbg(&chip->client->dev, "Set LOW_CHG bit\n");
++		reg_val = BQ24261_LOW_CHG_EN;
++		ret = bq24261_update_reg(chip->client,
++				BQ24261_VINDPM_STAT_ADDR,
++				BQ24261_LOW_CHG_MASK, reg_val);
++		return ret;
++	}
++
++	reg_val = BQ24261_LOW_CHG_DIS;
++	ret = bq24261_update_reg(chip->client, BQ24261_VINDPM_STAT_ADDR,
++					BQ24261_LOW_CHG_MASK, reg_val);
++
++	bq24261_cc_to_reg(cc_mA, &reg_val);
++
++	return bq24261_update_reg(chip->client, BQ24261_TERM_FCC_ADDR,
++			BQ24261_ICHRG_MASK, reg_val);
++}
++
++static inline int bq24261_set_cv(struct bq24261_charger *chip, int cv_mV)
++{
++	u8 reg_val;
++
++	dev_dbg(&chip->client->dev, "%s=%d\n", __func__, cv_mV);
++
++	bq24261_cv_to_reg(cv_mV, &reg_val);
++
++	return bq24261_update_reg(chip->client, BQ24261_BATT_VOL_CTRL_ADDR,
++				       BQ24261_VBREG_MASK, reg_val);
++}
++
++static inline int bq24261_set_inlmt(struct bq24261_charger *chip, int inlmt)
++{
++	u8 reg_val;
++
++	dev_dbg(&chip->client->dev, "%s=%d\n", __func__, inlmt);
++
++	bq24261_inlmt_to_reg(inlmt, &reg_val);
 +
 +	/*
-+	 * Initialize and add the meta parameters needed when opening a
-+	 * session.
++	 * Don't enable reset bit. Setting this
++	 * bit will reset all the registers
 +	 */
-+	msg_param[0].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT |
-+			    OPTEE_MSG_ATTR_META;
-+	msg_param[1].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT |
-+			    OPTEE_MSG_ATTR_META;
-+	memcpy(&msg_param[0].u.value, arg->uuid, sizeof(arg->uuid));
-+	memcpy(&msg_param[1].u.value, arg->uuid, sizeof(arg->clnt_uuid));
-+	msg_param[1].u.value.c = arg->clnt_login;
++	reg_val &= ~BQ24261_RESET_ENABLE;
 +
-+	rc = optee_to_msg_param(msg_param + 2, arg->num_params, param);
-+	if (rc)
-+		goto out;
++	return bq24261_update_reg(chip->client, BQ24261_CTRL_ADDR,
++		       BQ24261_RESET_ENABLE | BQ24261_INLMT_MASK, reg_val);
 +
-+	sess = kzalloc(sizeof(struct optee_session), GFP_KERNEL);
-+	if (!sess) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
++}
 +
-+	if (optee_do_call_with_arg(ctx, msg_parg)) {
-+		msg_arg->ret = TEEC_ERROR_COMMUNICATION;
-+		msg_arg->ret_origin = TEEC_ORIGIN_COMMS;
-+	}
++static inline int bq24261_set_iterm(struct bq24261_charger *chip, int iterm)
++{
++	u8 reg_val;
 +
-+	if (msg_arg->ret == TEEC_SUCCESS) {
-+		/* A new session has been created, add it to the list. */
-+		sess->session_id = msg_arg->session;
-+		mutex_lock(&ctxdata->mutex);
-+		list_add(&sess->list_node, &ctxdata->sess_list);
-+		mutex_unlock(&ctxdata->mutex);
-+		sess = NULL;
-+	}
++	bq24261_iterm_to_reg(iterm, &reg_val);
 +
-+	if (optee_from_msg_param(param, arg->num_params, msg_param + 2)) {
-+		arg->ret = TEEC_ERROR_COMMUNICATION;
-+		arg->ret_origin = TEEC_ORIGIN_COMMS;
-+		/* Close session again to avoid leakage */
-+		optee_close_session(ctx, msg_arg->session);
++	return bq24261_update_reg(chip->client, BQ24261_TERM_FCC_ADDR,
++				       BQ24261_ITERM_MASK, reg_val);
++}
++
++static inline int bq24261_enable_charging(struct bq24261_charger *chip,
++								bool enable)
++{
++	int ret;
++	u8 reg_val;
++
++	if (enable) {
++		reg_val = (~BQ24261_CE_DISABLE & BQ24261_CE_MASK);
++		reg_val |= BQ24261_TE_ENABLE;
 +	} else {
-+		arg->session = msg_arg->session;
-+		arg->ret = msg_arg->ret;
-+		arg->ret_origin = msg_arg->ret_origin;
++		reg_val = BQ24261_CE_DISABLE;
 +	}
-+out:
-+	kfree(sess);
-+	tee_shm_free(shm);
-+	return rc;
++
++	reg_val |=  BQ24261_STAT_ENABLE;
++
++	/*
++	 * Don't enable reset bit. Setting this
++	 * bit will reset all the registers
++	 */
++	reg_val &= ~BQ24261_RESET_ENABLE;
++
++	ret = bq24261_update_reg(chip->client, BQ24261_CTRL_ADDR,
++		       BQ24261_STAT_ENABLE_MASK | BQ24261_RESET_ENABLE |
++				BQ24261_CE_MASK | BQ24261_TE_MASK,
++					reg_val);
++	if (ret || !enable)
++		return ret;
++
++	/* Set termination current */
++	ret = bq24261_set_iterm(chip, chip->iterm);
++	if (ret < 0)
++		dev_err(&chip->client->dev, "failed to set iTerm(%d)\n", ret);
++
++	/* Start WDT and Safety timers */
++	ret = bq24261_init_timers(chip);
++	if (ret)
++		dev_err(&chip->client->dev, "failed to set timers(%d)\n", ret);
++
++	return ret;
 +}
 +
-+int optee_close_session(struct tee_context *ctx, u32 session)
++static inline int bq24261_enable_charger(struct bq24261_charger *chip,
++								int enable)
 +{
-+	struct optee_context_data *ctxdata = ctx->data;
-+	struct tee_shm *shm;
-+	struct optee_msg_arg *msg_arg;
-+	phys_addr_t msg_parg;
-+	struct optee_session *sess;
++	u8 reg_val;
++	int ret;
 +
-+	/* Check that the session is valid and remove it from the list */
-+	mutex_lock(&ctxdata->mutex);
-+	sess = find_session(ctxdata, session);
-+	if (sess)
-+		list_del(&sess->list_node);
-+	mutex_unlock(&ctxdata->mutex);
-+	if (!sess)
++	reg_val = enable ? (~BQ24261_HiZ_ENABLE & BQ24261_HiZ_MASK) :
++			BQ24261_HiZ_ENABLE;
++
++	/*
++	 * Don't enable reset bit. Setting this
++	 * bit will reset all the registers/
++	 */
++	reg_val &= ~BQ24261_RESET_ENABLE;
++
++	ret = bq24261_update_reg(chip->client, BQ24261_CTRL_ADDR,
++		       BQ24261_HiZ_MASK | BQ24261_RESET_ENABLE, reg_val);
++	if (ret)
++		return ret;
++
++	return bq24261_reset_wdt_timer(chip);
++}
++
++static void bq24261_handle_health(struct bq24261_charger *chip, u8 stat_reg)
++{
++	struct i2c_client *client = chip->client;
++	bool fault_worker = false;
++
++	switch (stat_reg & BQ24261_FAULT_MASK) {
++	case BQ24261_VOVP:
++		chip->chg_health = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
++		fault_worker = true;
++		dev_err(&client->dev, "Charger Over Voltage Fault\n");
++		break;
++	case BQ24261_LOW_SUPPLY:
++		chip->chg_health = POWER_SUPPLY_HEALTH_DEAD;
++		fault_worker = true;
++		dev_err(&client->dev, "Charger Low Supply Fault\n");
++		break;
++	case BQ24261_THERMAL_SHUTDOWN:
++		chip->chg_health = POWER_SUPPLY_HEALTH_OVERHEAT;
++		dev_err(&client->dev, "Charger Thermal Fault\n");
++		break;
++	case BQ24261_BATT_TEMP_FAULT:
++		dev_err(&client->dev, "Battery Temperature Fault\n");
++		break;
++	case BQ24261_TIMER_FAULT:
++		chip->chg_health = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
++		dev_err(&client->dev, "Charger Timer Fault\n");
++		break;
++	case BQ24261_BATT_OVP:
++		chip->chg_health = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
++		dev_err(&client->dev, "Battery Over Voltage Fault\n");
++		break;
++	case BQ24261_NO_BATTERY:
++		dev_err(&client->dev, "No Battery Connected\n");
++		break;
++	default:
++		chip->chg_health = POWER_SUPPLY_HEALTH_GOOD;
++	}
++
++	if (fault_worker)
++		schedule_delayed_work(&chip->fault_mon_work,
++					EXCEPTION_MONITOR_DELAY);
++}
++
++static void bq24261_handle_status(struct bq24261_charger *chip, u8 stat_reg)
++{
++	struct i2c_client *client = chip->client;
++
++	switch (stat_reg & BQ24261_STAT_MASK) {
++	case BQ24261_STAT_READY:
++		chip->chg_status = BQ24261_CHRGR_STAT_READY;
++		dev_info(&client->dev, "Charger Status: Ready\n");
++		break;
++	case BQ24261_STAT_CHRG_PRGRSS:
++		chip->chg_status = BQ24261_CHRGR_STAT_CHARGING;
++		dev_info(&client->dev, "Charger Status: Charge Progress\n");
++		break;
++	case BQ24261_STAT_CHRG_DONE:
++		chip->chg_status = BQ24261_CHRGR_STAT_FULL;
++		dev_info(&client->dev, "Charger Status: Charge Done\n");
++		break;
++	case BQ24261_STAT_FAULT:
++		chip->chg_status = BQ24261_CHRGR_STAT_FAULT;
++		dev_warn(&client->dev, "Charger Status: Fault\n");
++		break;
++	default:
++		dev_info(&client->dev, "Invalid\n");
++	}
++}
++
++static int bq24261_get_charger_health(struct bq24261_charger *chip)
++{
++	if (!chip->present)
++		return POWER_SUPPLY_HEALTH_UNKNOWN;
++
++	return chip->chg_health;
++}
++
++static int bq24261_get_charging_status(struct bq24261_charger *chip)
++{
++	int status;
++
++	if (!chip->present)
++		return POWER_SUPPLY_STATUS_DISCHARGING;
++
++	switch (chip->chg_status) {
++	case BQ24261_CHRGR_STAT_READY:
++		status = POWER_SUPPLY_STATUS_DISCHARGING;
++		break;
++	case BQ24261_CHRGR_STAT_CHARGING:
++		status = POWER_SUPPLY_STATUS_CHARGING;
++		break;
++	case BQ24261_CHRGR_STAT_FULL:
++		status = POWER_SUPPLY_STATUS_FULL;
++		break;
++	case BQ24261_CHRGR_STAT_FAULT:
++		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
++		break;
++	default:
++		status = POWER_SUPPLY_STATUS_DISCHARGING;
++	}
++
++	return status;
++}
++
++static int bq24261_usb_get_property(struct power_supply *psy,
++		enum power_supply_property psp, union power_supply_propval *val)
++{
++	struct bq24261_charger *chip = power_supply_get_drvdata(psy);
++
++	mutex_lock(&chip->lock);
++	switch (psp) {
++	case POWER_SUPPLY_PROP_PRESENT:
++		val->intval = chip->present;
++		break;
++	case POWER_SUPPLY_PROP_ONLINE:
++		val->intval = chip->online;
++		break;
++	case POWER_SUPPLY_PROP_HEALTH:
++		val->intval = bq24261_get_charger_health(chip);
++		break;
++	case POWER_SUPPLY_PROP_STATUS:
++		val->intval = bq24261_get_charging_status(chip);
++		break;
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX:
++		val->intval = chip->pdata->max_cc * 1000;
++		break;
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
++		val->intval = chip->pdata->max_cv * 1000;
++		break;
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
++		val->intval = chip->cc * 1000;
++		break;
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
++		val->intval = chip->cv * 1000;
++		break;
++	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
++		val->intval = chip->inlmt * 1000;
++		break;
++	case POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT:
++		val->intval = chip->iterm * 1000;
++		break;
++	case POWER_SUPPLY_PROP_TEMP_MAX:
++		val->intval = chip->pdata->max_temp * 10;
++		break;
++	case POWER_SUPPLY_PROP_TEMP_MIN:
++		val->intval = chip->pdata->min_temp * 10;
++		break;
++	default:
++		mutex_unlock(&chip->lock);
 +		return -EINVAL;
-+	kfree(sess);
++	}
++	mutex_unlock(&chip->lock);
 +
-+	shm = get_msg_arg(ctx, 0, &msg_arg, &msg_parg);
-+	if (IS_ERR(shm))
-+		return PTR_ERR(shm);
-+
-+	msg_arg->cmd = OPTEE_MSG_CMD_CLOSE_SESSION;
-+	msg_arg->session = session;
-+	optee_do_call_with_arg(ctx, msg_parg);
-+
-+	tee_shm_free(shm);
 +	return 0;
 +}
 +
-+int optee_invoke_func(struct tee_context *ctx, struct tee_ioctl_invoke_arg *arg,
-+			struct tee_param *param)
++static int bq24261_usb_set_property(struct power_supply *psy,
++	enum power_supply_property psp, const union power_supply_propval *val)
 +{
-+	struct optee_context_data *ctxdata = ctx->data;
-+	struct tee_shm *shm;
-+	struct optee_msg_arg *msg_arg;
-+	phys_addr_t msg_parg;
-+	struct optee_msg_param *msg_param;
-+	struct optee_session *sess;
-+	int rc;
++	struct bq24261_charger *chip = power_supply_get_drvdata(psy);
++	int intval, ret = 0;
 +
-+	/* Check that the session is valid */
-+	mutex_lock(&ctxdata->mutex);
-+	sess = find_session(ctxdata, arg->session);
-+	mutex_unlock(&ctxdata->mutex);
-+	if (!sess)
-+		return -EINVAL;
-+
-+	shm = get_msg_arg(ctx, arg->num_params, &msg_arg, &msg_parg);
-+	if (IS_ERR(shm))
-+		return PTR_ERR(shm);
-+	msg_arg->cmd = OPTEE_MSG_CMD_INVOKE_COMMAND;
-+	msg_arg->func = arg->func;
-+	msg_arg->session = arg->session;
-+	msg_arg->cancel_id = arg->cancel_id;
-+	msg_param = OPTEE_MSG_GET_PARAMS(msg_arg);
-+
-+	rc = optee_to_msg_param(msg_param, arg->num_params, param);
-+	if (rc)
-+		goto out;
-+
-+	if (optee_do_call_with_arg(ctx, msg_parg)) {
-+		msg_arg->ret = TEEC_ERROR_COMMUNICATION;
-+		msg_arg->ret_origin = TEEC_ORIGIN_COMMS;
-+	}
-+
-+	if (optee_from_msg_param(param, arg->num_params, msg_param)) {
-+		msg_arg->ret = TEEC_ERROR_COMMUNICATION;
-+		msg_arg->ret_origin = TEEC_ORIGIN_COMMS;
-+	}
-+
-+	arg->ret = msg_arg->ret;
-+	arg->ret_origin = msg_arg->ret_origin;
-+out:
-+	tee_shm_free(shm);
-+	return rc;
-+}
-+
-+int optee_cancel_req(struct tee_context *ctx, u32 cancel_id, u32 session)
-+{
-+	struct optee_context_data *ctxdata = ctx->data;
-+	struct tee_shm *shm;
-+	struct optee_msg_arg *msg_arg;
-+	phys_addr_t msg_parg;
-+	struct optee_session *sess;
-+
-+	/* Check that the session is valid */
-+	mutex_lock(&ctxdata->mutex);
-+	sess = find_session(ctxdata, session);
-+	mutex_unlock(&ctxdata->mutex);
-+	if (!sess)
-+		return -EINVAL;
-+
-+	shm = get_msg_arg(ctx, 0, &msg_arg, &msg_parg);
-+	if (IS_ERR(shm))
-+		return PTR_ERR(shm);
-+
-+	msg_arg->cmd = OPTEE_MSG_CMD_CANCEL;
-+	msg_arg->session = session;
-+	msg_arg->cancel_id = cancel_id;
-+	optee_do_call_with_arg(ctx, msg_parg);
-+
-+	tee_shm_free(shm);
-+	return 0;
-+}
-+
-+void optee_enable_shm_cache(struct optee *optee)
-+{
-+	struct optee_call_waiter w;
-+
-+	/* We need to retry until secure world isn't busy. */
-+	optee_cq_wait_init(&optee->call_queue, &w);
-+	while (true) {
-+		struct smccc_res res;
-+
-+		optee->invoke_fn(OPTEE_SMC_ENABLE_SHM_CACHE, 0, 0, 0, 0, 0, 0,
-+				 0, &res);
-+		if (res.a0 == OPTEE_SMC_RETURN_OK)
++	mutex_lock(&chip->lock);
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
++		/* convert uA to mA */
++		intval = val->intval / 1000;
++		if (intval > chip->max_cc) {
++			ret = -EINVAL;
 +			break;
-+		optee_cq_wait_for_completion(&optee->call_queue, &w);
-+	}
-+	optee_cq_wait_final(&optee->call_queue, &w);
-+}
-+
-+void optee_disable_shm_cache(struct optee *optee)
-+{
-+	struct optee_call_waiter w;
-+
-+	/* We need to retry until secure world isn't busy. */
-+	optee_cq_wait_init(&optee->call_queue, &w);
-+	while (true) {
-+		struct smccc_res res;
-+
-+		optee->invoke_fn(OPTEE_SMC_DISABLE_SHM_CACHE, 0, 0, 0, 0, 0, 0,
-+				 0, &res);
-+		if (res.a0 == OPTEE_SMC_RETURN_ENOTAVAIL)
-+			break; /* All shm's freed */
-+		if (res.a0 == OPTEE_SMC_RETURN_OK) {
-+			struct tee_shm *shm;
-+
-+			shm = reg_pair_to_ptr(res.a1, res.a2);
-+			tee_shm_free(shm);
-+		} else
-+			optee_cq_wait_for_completion(&optee->call_queue, &w);
-+	}
-+	optee_cq_wait_final(&optee->call_queue, &w);
-+}
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-new file mode 100644
-index 0000000..c7dd7ee
---- /dev/null
-+++ b/drivers/tee/optee/core.c
-@@ -0,0 +1,502 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/types.h>
-+#include <linux/string.h>
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/tee_drv.h>
-+#include "optee_private.h"
-+#include "optee_smc.h"
-+
-+#define DRIVER_NAME "optee"
-+
-+#define OPTEE_SHM_NUM_PRIV_PAGES	1
-+
-+int optee_from_msg_param(struct tee_param *params, size_t num_params,
-+			const struct optee_msg_param *msg_params)
-+{
-+	int rc;
-+	size_t n;
-+	struct tee_shm *shm;
-+	phys_addr_t pa;
-+
-+	for (n = 0; n < num_params; n++) {
-+		struct tee_param *p = params + n;
-+		const struct optee_msg_param *mp = msg_params + n;
-+		u32 attr = mp->attr & OPTEE_MSG_ATTR_TYPE_MASK;
-+
-+		switch (attr) {
-+		case OPTEE_MSG_ATTR_TYPE_NONE:
-+			p->attr = TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
-+			memset(&p->u, 0, sizeof(p->u));
-+			break;
-+		case OPTEE_MSG_ATTR_TYPE_VALUE_INPUT:
-+		case OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT:
-+		case OPTEE_MSG_ATTR_TYPE_VALUE_INOUT:
-+			p->attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT +
-+				  attr - OPTEE_MSG_ATTR_TYPE_VALUE_INPUT;
-+			p->u.value.a = mp->u.value.a;
-+			p->u.value.b = mp->u.value.b;
-+			p->u.value.c = mp->u.value.c;
-+			break;
-+		case OPTEE_MSG_ATTR_TYPE_TMEM_INPUT:
-+		case OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT:
-+		case OPTEE_MSG_ATTR_TYPE_TMEM_INOUT:
-+			p->attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT +
-+				  attr - OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
-+			p->u.memref.size = mp->u.tmem.size;
-+			shm = (struct tee_shm *)(unsigned long)
-+				mp->u.tmem.shm_ref;
-+			if (!shm) {
-+				p->u.memref.shm_offs = 0;
-+				p->u.memref.shm = NULL;
-+				break;
-+			}
-+			rc = tee_shm_get_pa(shm, 0, &pa);
-+			if (rc)
-+				return rc;
-+			p->u.memref.shm_offs = pa - mp->u.tmem.buf_ptr;
-+			p->u.memref.shm = shm;
-+
-+			/* Check that the memref is covered by the shm object */
-+			if (p->u.memref.size) {
-+				size_t o = p->u.memref.shm_offs +
-+					   p->u.memref.size - 1;
-+
-+				rc = tee_shm_get_pa(shm, o, NULL);
-+				if (rc)
-+					return rc;
-+			}
-+			break;
-+		default:
-+			return -EINVAL;
 +		}
-+	}
-+	return 0;
-+}
 +
-+int optee_to_msg_param(struct optee_msg_param *msg_params, size_t num_params,
-+			const struct tee_param *params)
-+{
-+	int rc;
-+	size_t n;
-+	phys_addr_t pa;
-+
-+	for (n = 0; n < num_params; n++) {
-+		const struct tee_param *p = params + n;
-+		struct optee_msg_param *mp = msg_params + n;
-+
-+		switch (p->attr) {
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-+			mp->attr = TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
-+			memset(&mp->u, 0, sizeof(mp->u));
++		ret = bq24261_set_cc(chip, intval);
++		if (!ret)
++			chip->cc = intval;
++		break;
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
++		/* convert uA to mV */
++		intval = val->intval / 1000;
++		if (intval > chip->max_cv) {
++			ret = -EINVAL;
 +			break;
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-+			mp->attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT + p->attr -
-+				   TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-+			mp->u.value.a = p->u.value.a;
-+			mp->u.value.b = p->u.value.b;
-+			mp->u.value.c = p->u.value.c;
-+			break;
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-+			mp->attr = OPTEE_MSG_ATTR_TYPE_TMEM_INPUT +
-+				   p->attr -
-+				   TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT;
-+			mp->u.tmem.shm_ref = (unsigned long)p->u.memref.shm;
-+			mp->u.tmem.size = p->u.memref.size;
-+			if (!p->u.memref.shm) {
-+				mp->u.tmem.buf_ptr = 0;
-+				break;
-+			}
-+			rc = tee_shm_get_pa(p->u.memref.shm,
-+					    p->u.memref.shm_offs, &pa);
-+			if (rc)
-+				return rc;
-+			mp->u.tmem.buf_ptr = pa;
-+			mp->attr |= OPTEE_MSG_ATTR_CACHE_PREDEFINED <<
-+					OPTEE_MSG_ATTR_CACHE_SHIFT;
-+			break;
-+		default:
-+			return -EINVAL;
 +		}
++
++		ret = bq24261_set_cv(chip, intval);
++		if (!ret)
++			chip->cv = intval;
++		break;
++	default:
++		ret = -EINVAL;
 +	}
++	mutex_unlock(&chip->lock);
++
++	return ret;
++}
++
++static int bq24261_property_is_writeable(struct power_supply *psy,
++		enum power_supply_property psp)
++{
++	int ret;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
++	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
++		ret = 1;
++		break;
++	default:
++		ret = 0;
++	}
++
++	return ret;
++}
++
++static enum power_supply_property bq24261_usb_props[] = {
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_ONLINE,
++	POWER_SUPPLY_PROP_TYPE,
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
++	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
++	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
++	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
++	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
++	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
++	POWER_SUPPLY_PROP_TEMP_MAX,
++	POWER_SUPPLY_PROP_TEMP_MIN,
++};
++
++static char *bq24261_charger_supplied_to[] = {
++	"main-battery",
++};
++
++static struct power_supply_desc bq24261_charger_desc = {
++	.name			= DEV_NAME,
++	.type			= POWER_SUPPLY_TYPE_USB,
++	.properties		= bq24261_usb_props,
++	.num_properties		= ARRAY_SIZE(bq24261_usb_props),
++	.get_property		= bq24261_usb_get_property,
++};
++
++static void bq24261_wdt_reset_worker(struct work_struct *work)
++{
++
++	struct bq24261_charger *chip = container_of(work,
++			    struct bq24261_charger, wdt_work.work);
++	int ret;
++
++	ret = bq24261_reset_wdt_timer(chip);
++	if (ret)
++		dev_err(&chip->client->dev, "WDT timer reset error(%d)\n", ret);
++
++	schedule_delayed_work(&chip->wdt_work, WDT_RESET_DELAY);
++}
++
++static void bq24261_irq_worker(struct work_struct *work)
++{
++	struct bq24261_charger *chip =
++	    container_of(work, struct bq24261_charger, irq_work);
++	int ret;
++
++	/*
++	 * Lock to ensure that interrupt register readings are done
++	 * and processed sequentially. The interrupt Fault registers
++	 * are read on clear and without sequential processing double
++	 * fault interrupts or fault recovery cannot be handlled propely
++	 */
++
++	mutex_lock(&chip->lock);
++
++	ret = bq24261_read_reg(chip->client, BQ24261_STAT_CTRL0_ADDR);
++	if (ret < 0) {
++		dev_err(&chip->client->dev,
++			"Error (%d) in reading BQ24261_STAT_CTRL0_ADDR\n", ret);
++		goto irq_out;
++	}
++
++	if (!chip->cable.boost) {
++		bq24261_handle_status(chip, ret);
++		bq24261_handle_health(chip, ret);
++		power_supply_changed(chip->psy_usb);
++	}
++
++irq_out:
++	mutex_unlock(&chip->lock);
++}
++
++static irqreturn_t bq24261_thread_handler(int id, void *data)
++{
++	struct bq24261_charger *chip = (struct bq24261_charger *)data;
++
++	queue_work(system_highpri_wq, &chip->irq_work);
++	return IRQ_HANDLED;
++}
++
++static void bq24261_fault_mon_work(struct work_struct *work)
++{
++	struct bq24261_charger *chip = container_of(work,
++			struct bq24261_charger, fault_mon_work.work);
++	int ret;
++
++	if ((chip->chg_health == POWER_SUPPLY_HEALTH_OVERVOLTAGE) ||
++		(chip->chg_health == POWER_SUPPLY_HEALTH_DEAD)) {
++
++		mutex_lock(&chip->lock);
++		ret = bq24261_read_reg(chip->client, BQ24261_STAT_CTRL0_ADDR);
++		if (ret < 0) {
++			dev_err(&chip->client->dev,
++				"Status register read failed(%d)\n", ret);
++			goto fault_mon_out;
++		}
++
++		if ((ret & BQ24261_STAT_MASK) == BQ24261_STAT_READY) {
++			dev_info(&chip->client->dev,
++					"Charger fault recovered\n");
++			bq24261_handle_status(chip, ret);
++			bq24261_handle_health(chip, ret);
++			power_supply_changed(chip->psy_usb);
++		}
++fault_mon_out:
++		mutex_unlock(&chip->lock);
++	}
++}
++
++static void bq24261_boost_control(struct bq24261_charger *chip, bool enable)
++{
++	int ret;
++
++	if (enable)
++		ret = bq24261_write_reg(chip->client, BQ24261_STAT_CTRL0_ADDR,
++				BQ24261_TMR_RST | BQ24261_ENABLE_BOOST);
++	else
++		ret = bq24261_write_reg(chip->client,
++						BQ24261_STAT_CTRL0_ADDR, 0x0);
++
++	if (ret < 0)
++		dev_err(&chip->client->dev,
++			"stat cntl0 reg access error(%d)\n", ret);
++}
++
++static void bq24261_extcon_event_work(struct work_struct *work)
++{
++	struct bq24261_charger *chip =
++			container_of(work, struct bq24261_charger, cable.work);
++	int ret, current_limit = 0;
++	bool old_connected = chip->cable.connected;
++
++	/* Determine cable/charger type */
++	if (extcon_get_cable_state(chip->cable.sdp.edev,
++					"SLOW-CHARGER") > 0) {
++		chip->cable.connected = true;
++		current_limit = ILIM_500MA;
++		chip->cable.chg_type = POWER_SUPPLY_TYPE_USB;
++		dev_dbg(&chip->client->dev, "USB SDP charger is connected");
++	} else if (extcon_get_cable_state(chip->cable.cdp.edev,
++					"CHARGE-DOWNSTREAM") > 0) {
++		chip->cable.connected = true;
++		current_limit = ILIM_1500MA;
++		chip->cable.chg_type = POWER_SUPPLY_TYPE_USB_CDP;
++		dev_dbg(&chip->client->dev, "USB CDP charger is connected");
++	} else if (extcon_get_cable_state(chip->cable.dcp.edev,
++					"FAST-CHARGER") > 0) {
++		chip->cable.connected = true;
++		current_limit = ILIM_1500MA;
++		chip->cable.chg_type = POWER_SUPPLY_TYPE_USB_DCP;
++		dev_dbg(&chip->client->dev, "USB DCP charger is connected");
++	} else if (extcon_get_cable_state(chip->cable.otg.edev,
++					"USB-Host") > 0) {
++		chip->cable.boost = true;
++		chip->cable.connected = true;
++		dev_dbg(&chip->client->dev, "USB-Host cable is connected");
++	} else {
++		if (old_connected)
++			dev_dbg(&chip->client->dev, "USB Cable disconnected");
++		chip->cable.connected = false;
++		chip->cable.boost = false;
++		chip->cable.chg_type = POWER_SUPPLY_TYPE_USB;
++	}
++
++	/* Cable status changed */
++	if (old_connected == chip->cable.connected)
++		return;
++
++	mutex_lock(&chip->lock);
++	if (chip->cable.connected && !chip->cable.boost) {
++		chip->inlmt = current_limit;
++		/* Set up charging */
++		ret = bq24261_set_cc(chip, chip->cc);
++		if (ret < 0)
++			dev_err(&chip->client->dev, "set CC failed(%d)", ret);
++		ret = bq24261_set_cv(chip, chip->cv);
++		if (ret < 0)
++			dev_err(&chip->client->dev, "set CV failed(%d)", ret);
++		ret = bq24261_set_inlmt(chip, chip->inlmt);
++		if (ret < 0)
++			dev_err(&chip->client->dev, "set ILIM failed(%d)", ret);
++		ret = bq24261_enable_charger(chip, true);
++		if (ret < 0)
++			dev_err(&chip->client->dev,
++					"enable charger failed(%d)", ret);
++		ret = bq24261_enable_charging(chip, true);
++		if (ret < 0)
++			dev_err(&chip->client->dev,
++					"enable charging failed(%d)", ret);
++
++		chip->is_charging_enabled = true;
++		chip->present = true;
++		chip->online = true;
++		schedule_delayed_work(&chip->wdt_work, 0);
++	} else if (chip->cable.connected && chip->cable.boost) {
++		/* Enable VBUS for Host Mode */
++		bq24261_boost_control(chip, true);
++		schedule_delayed_work(&chip->wdt_work, 0);
++	} else {
++		dev_info(&chip->client->dev, "Cable disconnect event\n");
++		cancel_delayed_work_sync(&chip->wdt_work);
++		cancel_delayed_work_sync(&chip->fault_mon_work);
++		bq24261_boost_control(chip, false);
++		ret = bq24261_enable_charging(chip, false);
++		if (ret < 0)
++			dev_err(&chip->client->dev,
++					"charger disable failed(%d)", ret);
++
++		chip->is_charging_enabled = false;
++		chip->present = false;
++		chip->online = false;
++		chip->inlmt = 0;
++	}
++	bq24261_charger_desc.type = chip->cable.chg_type;
++	mutex_unlock(&chip->lock);
++	power_supply_changed(chip->psy_usb);
++}
++
++static int bq24261_handle_extcon_events(struct notifier_block *nb,
++				   unsigned long event, void *param)
++{
++	struct bq24261_charger *chip =
++		container_of(nb, struct bq24261_charger, cable.nb);
++
++	dev_dbg(&chip->client->dev, "external connector event(%ld)\n", event);
++
++	schedule_work(&chip->cable.work);
++	return NOTIFY_OK;
++}
++
++static int bq24261_extcon_register(struct bq24261_charger *chip)
++{
++	int ret;
++
++	INIT_WORK(&chip->cable.work, bq24261_extcon_event_work);
++	chip->cable.nb.notifier_call = bq24261_handle_extcon_events;
++
++	ret = extcon_register_interest(&chip->cable.sdp, NULL,
++				"SLOW-CHARGER", &chip->cable.nb);
++	if (ret < 0) {
++		dev_warn(&chip->client->dev,
++				"extcon SDP registration failed(%d)\n", ret);
++		goto sdp_reg_failed;
++	}
++
++	ret = extcon_register_interest(&chip->cable.cdp, NULL,
++				"CHARGE-DOWNSTREAM", &chip->cable.nb);
++	if (ret < 0) {
++		dev_warn(&chip->client->dev,
++				"extcon CDP registration failed(%d)\n", ret);
++		goto cdp_reg_failed;
++	}
++
++	ret = extcon_register_interest(&chip->cable.dcp, NULL,
++				"FAST-CHARGER", &chip->cable.nb);
++	if (ret < 0) {
++		dev_warn(&chip->client->dev,
++				"extcon DCP registration failed(%d)\n", ret);
++		goto dcp_reg_failed;
++	}
++
++	ret = extcon_register_interest(&chip->cable.otg, NULL,
++				"USB-Host", &chip->cable.nb);
++	if (ret < 0) {
++		dev_warn(&chip->client->dev,
++			"extcon USB-Host registration failed(%d)\n", ret);
++		goto otg_reg_failed;
++	}
++
++	return 0;
++
++otg_reg_failed:
++	extcon_unregister_interest(&chip->cable.dcp);
++dcp_reg_failed:
++	extcon_unregister_interest(&chip->cable.cdp);
++cdp_reg_failed:
++	extcon_unregister_interest(&chip->cable.sdp);
++sdp_reg_failed:
++	return -EPROBE_DEFER;
++}
++
++static void bq24261_of_pdata(struct bq24261_charger *chip)
++{
++	static struct bq24261_platform_data pdata;
++	struct device *dev = &chip->client->dev;
++	int ret, val;
++
++	ret = device_property_read_u32(dev,
++				"ti,charge-current", &val);
++	if (ret < 0)
++		goto of_err;
++	pdata.def_cc = val / 1000;
++
++	ret = device_property_read_u32(dev,
++				"ti,battery-regulation-voltage", &val);
++	if (ret < 0)
++		goto of_err;
++	pdata.def_cv = val / 1000;
++
++	ret = device_property_read_u32(dev,
++				"ti,termination-current", &val);
++	if (ret < 0)
++		goto of_err;
++	pdata.iterm = val / 1000;
++
++	/* get optional parameters */
++	ret = device_property_read_u32(dev,
++				"ti,max-charge-current", &val);
++	if (ret < 0)
++		pdata.max_cc = BQ24261_MAX_CC;
++	else
++		pdata.max_cc = val / 1000;
++
++	ret = device_property_read_u32(dev,
++				"ti,max-charge-voltage", &val);
++	if (ret < 0)
++		pdata.max_cc = BQ24261_MAX_CV;
++	else
++		pdata.max_cv = val / 1000;
++
++	ret = device_property_read_u32(dev,
++				"ti,min-charge-temperature", &val);
++	if (ret < 0)
++		pdata.min_temp = BQ24261_MIN_TEMP;
++	else
++		pdata.min_temp = val;
++
++	ret = device_property_read_u32(dev,
++				"ti,max-charge-temperature", &val);
++	if (ret < 0)
++		pdata.max_temp = BQ24261_MAX_TEMP;
++	else
++		pdata.max_temp = val;
++
++	ret = device_property_read_u32(dev,
++				"ti,thermal-sensing", &val);
++	if (ret < 0)
++		pdata.thermal_sensing = 0;
++	else
++		pdata.thermal_sensing = val;
++
++	chip->pdata = &pdata;
++
++	return;
++of_err:
++	dev_err(dev, "error in getting DT property(%d)\n", ret);
++}
++
++static int bq24261_get_model(struct i2c_client *client,
++			enum bq2426x_model *model)
++{
++	int ret;
++
++	ret = bq24261_read_reg(client, BQ24261_VENDOR_REV_ADDR);
++	if (ret < 0)
++		return ret;
++
++	*model = BQ24261;
++
 +	return 0;
 +}
 +
-+static void optee_get_version(struct tee_device *teedev,
-+			struct tee_ioctl_version_data *vers)
++static int bq24261_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
 +{
-+	struct tee_ioctl_version_data v = {
-+		.impl_id = TEE_IMPL_ID_OPTEE,
-+		.impl_caps = TEE_OPTEE_CAP_TZ,
-+		.gen_caps = TEE_GEN_CAP_GP,
-+	};
-+	*vers = v;
-+}
++	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
++	struct power_supply_config charger_cfg = {};
++	struct bq24261_charger *chip;
++	int ret;
++	enum bq2426x_model model;
 +
-+static int optee_open(struct tee_context *ctx)
-+{
-+	struct optee_context_data *ctxdata;
++	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
++		dev_err(&client->dev,
++			"I2C adapter %s doesn'tsupport BYTE DATA transfer\n",
++			adapter->name);
++		return -EIO;
++	}
 +
-+	ctxdata = kzalloc(sizeof(*ctxdata), GFP_KERNEL);
-+	if (!ctxdata)
++	ret = bq24261_get_model(client, &model);
++	if (ret < 0) {
++		dev_err(&client->dev, "chip detection error (%d)\n", ret);
++		return -ENODEV;
++	}
++
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
 +		return -ENOMEM;
 +
-+	mutex_init(&ctxdata->mutex);
-+	INIT_LIST_HEAD(&ctxdata->sess_list);
-+
-+	ctx->data = ctxdata;
-+	return 0;
-+}
-+
-+static void optee_release(struct tee_context *ctx)
-+{
-+	struct optee_context_data *ctxdata = ctx->data;
-+	struct tee_shm *shm;
-+	struct optee_msg_arg *arg = NULL;
-+	phys_addr_t parg;
-+
-+	if (!ctxdata)
-+		return;
-+
-+	shm = tee_shm_alloc(ctx->teedev, sizeof(struct optee_msg_arg),
-+			    TEE_SHM_MAPPED);
-+	if (!IS_ERR(shm)) {
-+		arg = tee_shm_get_va(shm, 0);
-+		/*
-+		 * If va2pa fails for some reason, we can't call
-+		 * optee_close_session(), only free the memory. Secure OS
-+		 * will leak sessions and finally refuse more session, but
-+		 * we will at least let normal world reclaim its memory.
-+		 */
-+		if (!IS_ERR(arg))
-+			tee_shm_va2pa(shm, arg, &parg);
-+	}
-+
-+	while (true) {
-+		struct optee_session *sess;
-+
-+		sess = list_first_entry_or_null(&ctxdata->sess_list,
-+						struct optee_session,
-+						list_node);
-+		if (!sess)
-+			break;
-+		list_del(&sess->list_node);
-+		if (!IS_ERR_OR_NULL(arg)) {
-+			memset(arg, 0, sizeof(*arg));
-+			arg->cmd = OPTEE_MSG_CMD_CLOSE_SESSION;
-+			arg->session = sess->session_id;
-+			optee_do_call_with_arg(ctx, parg);
-+		}
-+		kfree(sess);
-+	}
-+	kfree(ctxdata);
-+
-+	if (!IS_ERR(shm))
-+		tee_shm_free(shm);
-+
-+	ctx->data = NULL;
-+}
-+
-+static struct tee_driver_ops optee_ops = {
-+	.get_version = optee_get_version,
-+	.open = optee_open,
-+	.release = optee_release,
-+	.open_session = optee_open_session,
-+	.close_session = optee_close_session,
-+	.invoke_func = optee_invoke_func,
-+	.cancel_req = optee_cancel_req,
-+};
-+
-+static struct tee_desc optee_desc = {
-+	.name = DRIVER_NAME "-clnt",
-+	.ops = &optee_ops,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct tee_driver_ops optee_supp_ops = {
-+	.get_version = optee_get_version,
-+	.open = optee_open,
-+	.release = optee_release,
-+	.supp_recv = optee_supp_recv,
-+	.supp_send = optee_supp_send,
-+};
-+
-+static struct tee_desc optee_supp_desc = {
-+	.name = DRIVER_NAME "-supp",
-+	.ops = &optee_supp_ops,
-+	.owner = THIS_MODULE,
-+	.flags = TEE_DESC_PRIVILEGED,
-+};
-+
-+static bool optee_msg_api_uid_is_optee_api(optee_invoke_fn *invoke_fn)
-+{
-+	struct smccc_res res;
-+
-+	invoke_fn(OPTEE_SMC_CALLS_UID, 0, 0, 0, 0, 0, 0, 0, &res);
-+
-+	if (res.a0 == OPTEE_MSG_UID_0 && res.a1 == OPTEE_MSG_UID_1 &&
-+	    res.a2 == OPTEE_MSG_UID_2 && res.a3 == OPTEE_MSG_UID_3)
-+		return true;
-+	return false;
-+}
-+
-+static bool optee_msg_api_revision_is_compatible(optee_invoke_fn *invoke_fn)
-+{
-+	struct smccc_res res;
-+
-+	invoke_fn(OPTEE_SMC_CALLS_REVISION, 0, 0, 0, 0, 0, 0, 0, &res);
-+
-+	if (res.a0 == OPTEE_MSG_REVISION_MAJOR &&
-+	    (int)res.a1 >= OPTEE_MSG_REVISION_MINOR)
-+		return true;
-+	return false;
-+}
-+
-+static bool optee_msg_exchange_capabilities(optee_invoke_fn *invoke_fn,
-+			u32 *sec_caps)
-+{
-+	struct smccc_res res;
-+	u32 a1 = 0;
-+
-+	/*
-+	 * TODO This isn't enough to tell if it's UP system (from kernel
-+	 * point of view) or not, is_smp() returns the the information
-+	 * needed, but can't be called directly from here.
-+	 */
-+#ifndef CONFIG_SMP
-+	a1 |= OPTEE_SMC_NSEC_CAP_UNIPROCESSOR;
-+#endif
-+
-+	invoke_fn(OPTEE_SMC_EXCHANGE_CAPABILITIES, a1, 0, 0, 0, 0, 0, 0, &res);
-+
-+	if (res.a0 != OPTEE_SMC_RETURN_OK)
-+		return false;
-+
-+	*sec_caps = res.a1;
-+	return true;
-+}
-+
-+static struct tee_shm_pool *optee_config_shm_ioremap(struct device *dev,
-+			optee_invoke_fn *invoke_fn,
-+			void __iomem **ioremaped_shm)
-+{
-+	struct smccc_res res;
-+	struct tee_shm_pool *pool;
-+	unsigned long vaddr;
-+	phys_addr_t paddr;
-+	size_t size;
-+	phys_addr_t begin;
-+	phys_addr_t end;
-+	void __iomem *va;
-+	struct tee_shm_pool_mem_info priv_info;
-+	struct tee_shm_pool_mem_info dmabuf_info;
-+
-+	invoke_fn(OPTEE_SMC_GET_SHM_CONFIG, 0, 0, 0, 0, 0, 0, 0, &res);
-+	if (res.a0 != OPTEE_SMC_RETURN_OK) {
-+		dev_info(dev, "shm service not available\n");
-+		return ERR_PTR(-ENOENT);
-+	}
-+
-+	if (res.a3 != OPTEE_SMC_SHM_CACHED) {
-+		dev_err(dev, "only normal cached shared memory supported\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	begin = roundup(res.a1, PAGE_SIZE);
-+	end = rounddown(res.a1 + res.a2, PAGE_SIZE);
-+	paddr = begin;
-+	size = end - begin;
-+
-+	if (size < 2 * OPTEE_SHM_NUM_PRIV_PAGES * PAGE_SIZE) {
-+		dev_err(dev, "too small shared memory area\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	va = ioremap_cache(paddr, size);
-+	if (!va) {
-+		dev_err(dev, "shared memory ioremap failed\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+	vaddr = (unsigned long)va;
-+
-+	priv_info.vaddr = vaddr;
-+	priv_info.paddr = paddr;
-+	priv_info.size = OPTEE_SHM_NUM_PRIV_PAGES * PAGE_SIZE;
-+	dmabuf_info.vaddr = vaddr + OPTEE_SHM_NUM_PRIV_PAGES * PAGE_SIZE;
-+	dmabuf_info.paddr = paddr + OPTEE_SHM_NUM_PRIV_PAGES * PAGE_SIZE;
-+	dmabuf_info.size = size - OPTEE_SHM_NUM_PRIV_PAGES * PAGE_SIZE;
-+
-+	pool = tee_shm_pool_alloc_res_mem(dev, &priv_info, &dmabuf_info);
-+	if (IS_ERR(pool))
-+		iounmap(va);
++	chip->client = client;
++	if (client->dev.platform_data)
++		chip->pdata = client->dev.platform_data;
++	else if (id->driver_data)
++		chip->pdata = (struct bq24261_platform_data *)id->driver_data;
 +	else
-+		*ioremaped_shm = va;
-+	return pool;
-+}
++		bq24261_of_pdata(chip);
 +
-+static int get_invoke_func(struct device *dev, optee_invoke_fn **invoke_fn)
-+{
-+	struct device_node *np = dev->of_node;
-+	const char *method;
-+
-+	dev_info(dev, "probing for conduit method from DT.\n");
-+
-+	if (of_property_read_string(np, "method", &method)) {
-+		dev_warn(dev, "missing \"method\" property\n");
-+		return -ENXIO;
++	if (!chip->pdata) {
++		dev_err(&client->dev, "platform data not found");
++		return -ENODEV;
 +	}
 +
-+	if (!strcmp("hvc", method)) {
-+		*invoke_fn = smccc_hvc;
-+	} else if (!strcmp("smc", method)) {
-+		*invoke_fn = smccc_smc;
-+	} else {
-+		dev_warn(dev, "invalid \"method\" property: %s\n", method);
-+		return -EINVAL;
++	i2c_set_clientdata(client, chip);
++	mutex_init(&chip->lock);
++	chip->model = model;
++
++	/* Initialize charger parameters */
++	chip->cc = chip->pdata->def_cc;
++	chip->cv = chip->pdata->def_cv;
++	chip->iterm = chip->pdata->iterm;
++	chip->chg_status = BQ24261_CHRGR_STAT_UNKNOWN;
++	chip->chg_health = POWER_SUPPLY_HEALTH_UNKNOWN;
++
++	charger_cfg.drv_data = chip;
++	charger_cfg.supplied_to = bq24261_charger_supplied_to;
++	charger_cfg.num_supplicants = ARRAY_SIZE(bq24261_charger_supplied_to);
++	if (!dis_sysfs_write) {
++		bq24261_charger_desc.set_property = bq24261_usb_set_property;
++		bq24261_charger_desc.property_is_writeable =
++						bq24261_property_is_writeable;
 +	}
-+	return 0;
-+}
-+
-+static int optee_probe(struct platform_device *pdev)
-+{
-+	optee_invoke_fn *invoke_fn;
-+	struct tee_shm_pool *pool;
-+	struct optee *optee = NULL;
-+	void __iomem *ioremaped_shm = NULL;
-+	struct tee_device *teedev;
-+	u32 sec_caps;
-+	int rc;
-+
-+	rc = get_invoke_func(&pdev->dev, &invoke_fn);
-+	if (rc)
-+		return rc;
-+
-+	if (!optee_msg_api_uid_is_optee_api(invoke_fn) ||
-+	    !optee_msg_api_revision_is_compatible(invoke_fn) ||
-+	    !optee_msg_exchange_capabilities(invoke_fn, &sec_caps))
-+		return -EINVAL;
-+
-+	/*
-+	 * We have no other option for shared memory, if secure world
-+	 * doesn't have any reserved memory we can use we can't continue.
-+	 */
-+	if (!(sec_caps & OPTEE_SMC_SEC_CAP_HAVE_RESERVERED_SHM))
-+		return -EINVAL;
-+
-+	pool = optee_config_shm_ioremap(&pdev->dev, invoke_fn, &ioremaped_shm);
-+	if (IS_ERR(pool))
-+		return PTR_ERR(pool);
-+
-+	optee = devm_kzalloc(&pdev->dev, sizeof(*optee), GFP_KERNEL);
-+	if (!optee) {
-+		rc = -ENOMEM;
-+		goto err;
++	chip->psy_usb = power_supply_register(&client->dev,
++				&bq24261_charger_desc, &charger_cfg);
++	if (IS_ERR(chip->psy_usb)) {
++		dev_err(&client->dev, "power supply registration failed(%d)\n",
++							IS_ERR(chip->psy_usb));
++		return IS_ERR(chip->psy_usb);
 +	}
 +
-+	optee->dev = &pdev->dev;
-+	optee->invoke_fn = invoke_fn;
-+
-+	teedev = tee_device_alloc(&optee_desc, &pdev->dev, pool, optee);
-+	if (IS_ERR(teedev)) {
-+		rc = PTR_ERR(teedev);
-+		goto err;
-+	}
-+	optee->teedev = teedev;
-+
-+	teedev = tee_device_alloc(&optee_supp_desc, &pdev->dev, pool, optee);
-+	if (IS_ERR(teedev)) {
-+		rc = PTR_ERR(teedev);
-+		goto err;
-+	}
-+	optee->supp_teedev = teedev;
-+
-+	rc = tee_device_register(optee->teedev);
-+	if (rc)
-+		goto err;
-+
-+	rc = tee_device_register(optee->supp_teedev);
-+	if (rc)
-+		goto err;
-+
-+	mutex_init(&optee->call_queue.mutex);
-+	INIT_LIST_HEAD(&optee->call_queue.waiters);
-+	optee_wait_queue_init(&optee->wait_queue);
-+	optee_supp_init(&optee->supp);
-+	optee->ioremaped_shm = ioremaped_shm;
-+	optee->pool = pool;
-+
-+	platform_set_drvdata(pdev, optee);
-+
-+	optee_enable_shm_cache(optee);
-+
-+	dev_info(&pdev->dev, "initialized driver\n");
-+	return 0;
-+err:
-+	tee_device_unregister(optee->teedev);
-+	tee_device_unregister(optee->supp_teedev);
-+	if (pool)
-+		tee_shm_pool_free(pool);
-+	if (ioremaped_shm)
-+		iounmap(optee->ioremaped_shm);
-+	return rc;
-+}
-+
-+static int optee_remove(struct platform_device *pdev)
-+{
-+	struct optee *optee = platform_get_drvdata(pdev);
-+
-+	optee_disable_shm_cache(optee);
-+
-+	tee_device_unregister(optee->teedev);
-+	tee_device_unregister(optee->supp_teedev);
-+	tee_shm_pool_free(optee->pool);
-+	if (optee->ioremaped_shm)
-+		iounmap(optee->ioremaped_shm);
-+	optee_wait_queue_exit(&optee->wait_queue);
-+	optee_supp_uninit(&optee->supp);
-+	mutex_destroy(&optee->call_queue.mutex);
-+	return 0;
-+}
-+
-+static const struct of_device_id optee_match[] = {
-+	{ .compatible = "optee,optee-tz" },
-+	{},
-+};
-+
-+static struct platform_driver optee_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.of_match_table = optee_match,
-+	},
-+	.probe = optee_probe,
-+	.remove = optee_remove,
-+};
-+
-+module_platform_driver(optee_driver);
-+
-+MODULE_AUTHOR("Linaro");
-+MODULE_DESCRIPTION("OP-TEE driver");
-+MODULE_SUPPORTED_DEVICE("");
-+MODULE_VERSION("1.0");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
-new file mode 100644
-index 0000000..58db178
---- /dev/null
-+++ b/drivers/tee/optee/optee_msg.h
-@@ -0,0 +1,423 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ * All rights reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *
-+ * 1. Redistributions of source code must retain the above copyright notice,
-+ * this list of conditions and the following disclaimer.
-+ *
-+ * 2. Redistributions in binary form must reproduce the above copyright notice,
-+ * this list of conditions and the following disclaimer in the documentation
-+ * and/or other materials provided with the distribution.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-+ * POSSIBILITY OF SUCH DAMAGE.
-+ */
-+#ifndef _OPTEE_MSG_H
-+#define _OPTEE_MSG_H
-+
-+#include <linux/types.h>
-+
-+/*
-+ * This file defines the OP-TEE message protocol used to communicate
-+ * with an instance of OP-TEE running in secure world.
-+ *
-+ * This file is divided into three sections.
-+ * 1. Formatting of messages.
-+ * 2. Requests from normal world
-+ * 3. Requests from secure world, Remote Procedure Call (RPC), handled by
-+ *    tee-supplicant.
-+ */
-+
-+/*****************************************************************************
-+ * Part 1 - formatting of messages
-+ *****************************************************************************/
-+
-+#define OPTEE_MSG_ATTR_TYPE_NONE		0x0
-+#define OPTEE_MSG_ATTR_TYPE_VALUE_INPUT		0x1
-+#define OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT	0x2
-+#define OPTEE_MSG_ATTR_TYPE_VALUE_INOUT		0x3
-+#define OPTEE_MSG_ATTR_TYPE_RMEM_INPUT		0x5
-+#define OPTEE_MSG_ATTR_TYPE_RMEM_OUTPUT		0x6
-+#define OPTEE_MSG_ATTR_TYPE_RMEM_INOUT		0x7
-+#define OPTEE_MSG_ATTR_TYPE_TMEM_INPUT		0x9
-+#define OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT		0xa
-+#define OPTEE_MSG_ATTR_TYPE_TMEM_INOUT		0xb
-+
-+#define OPTEE_MSG_ATTR_TYPE_MASK		0xff
-+
-+/*
-+ * Meta parameter to be absorbed by the Secure OS and not passed
-+ * to the Trusted Application.
-+ *
-+ * Currently only used with OPTEE_MSG_CMD_OPEN_SESSION.
-+ */
-+#define OPTEE_MSG_ATTR_META			(1 << 8)
-+
-+/*
-+ * The temporary shared memory object is not physically contigous and this
-+ * temp memref is followed by another fragment until the last temp memref
-+ * that doesn't have this bit set.
-+ */
-+#define OPTEE_MSG_ATTR_FRAGMENT			(1 << 9)
-+
-+/*
-+ * Memory attributes for caching passed with temp memrefs. The actual value
-+ * used is defined outside the message protocol with the exception of
-+ * OPTEE_MSG_ATTR_CACHE_PREDEFINED which means the attributes already
-+ * defined for the memory range should be used. If optee_smc.h is used as
-+ * bearer of this protocol OPTEE_SMC_SHM_* is used for values.
-+ */
-+#define OPTEE_MSG_ATTR_CACHE_SHIFT		16
-+#define OPTEE_MSG_ATTR_CACHE_MASK		0x7
-+#define OPTEE_MSG_ATTR_CACHE_PREDEFINED		0
-+
-+/*
-+ * Same values as TEE_LOGIN_* from TEE Internal API
-+ */
-+#define OPTEE_MSG_LOGIN_PUBLIC			0x00000000
-+#define OPTEE_MSG_LOGIN_USER			0x00000001
-+#define OPTEE_MSG_LOGIN_GROUP			0x00000002
-+#define OPTEE_MSG_LOGIN_APPLICATION		0x00000004
-+#define OPTEE_MSG_LOGIN_APPLICATION_USER	0x00000005
-+#define OPTEE_MSG_LOGIN_APPLICATION_GROUP	0x00000006
-+
-+/**
-+ * struct optee_msg_param_tmem - temporary memory reference
-+ * @buf_ptr:	Address of the buffer
-+ * @size:	Size of the buffer
-+ * @shm_ref:	Temporary shared memory reference, pointer to a struct tee_shm
-+ *
-+ * Secure and normal world communicates pointers as physical address
-+ * instead of the virtual address. This is because secure and normal world
-+ * have completely independent memory mapping. Normal world can even have a
-+ * hypervisor which need to translate the guest physical address (AKA IPA
-+ * in ARM documentation) to a real physical address before passing the
-+ * structure to secure world.
-+ */
-+struct optee_msg_param_tmem {
-+	u64 buf_ptr;
-+	u64 size;
-+	u64 shm_ref;
-+};
-+
-+/**
-+ * struct optee_msg_param_rmem - registered memory reference
-+ * @offs:	Offset into shared memory reference
-+ * @size:	Size of the buffer
-+ * @shm_ref:	Shared memory reference, pointer to a struct tee_shm
-+ */
-+struct optee_msg_param_rmem {
-+	u64 offs;
-+	u64 size;
-+	u64 shm_ref;
-+};
-+
-+/**
-+ * struct optee_msg_param_value - values
-+ * @a: first value
-+ * @b: second value
-+ * @c: third value
-+ */
-+struct optee_msg_param_value {
-+	u64 a;
-+	u64 b;
-+	u64 c;
-+};
-+
-+/**
-+ * struct optee_msg_param - parameter
-+ * @attr: attributes
-+ * @memref: a memory reference
-+ * @value: a value
-+ *
-+ * @attr & OPTEE_MSG_ATTR_TYPE_MASK indicates if tmem, rmem or value is used in
-+ * the union. OPTEE_MSG_ATTR_TYPE_VALUE_* indicates value,
-+ * OPTEE_MSG_ATTR_TYPE_TMEM_* indicates tmem and
-+ * OPTEE_MSG_ATTR_TYPE_RMEM_* indicates rmem.
-+ * OPTEE_MSG_ATTR_TYPE_NONE indicates that none of the members are used.
-+ */
-+struct optee_msg_param {
-+	u64 attr;
-+	union {
-+		struct optee_msg_param_tmem tmem;
-+		struct optee_msg_param_rmem rmem;
-+		struct optee_msg_param_value value;
-+	} u;
-+};
-+
-+/**
-+ * struct optee_msg_arg - call argument
-+ * @cmd: Command, one of OPTEE_MSG_CMD_* or OPTEE_MSG_RPC_CMD_*
-+ * @func: Trusted Application function, specific to the Trusted Application,
-+ *	     used if cmd == OPTEE_MSG_CMD_INVOKE_COMMAND
-+ * @session: In parameter for all OPTEE_MSG_CMD_* except
-+ *	     OPTEE_MSG_CMD_OPEN_SESSION where it's an output parameter instead
-+ * @cancel_id: Cancellation id, a unique value to identify this request
-+ * @ret: return value
-+ * @ret_origin: origin of the return value
-+ * @num_params: number of parameters supplied to the OS Command
-+ * @params: the parameters supplied to the OS Command
-+ *
-+ * All normal calls to Trusted OS uses this struct. If cmd requires further
-+ * information than what these field holds it can be passed as a parameter
-+ * tagged as meta (setting the OPTEE_MSG_ATTR_META bit in corresponding
-+ * attrs field). All parameters tagged as meta has to come first.
-+ *
-+ * Temp memref parameters can be fragmented if supported by the Trusted OS
-+ * (when optee_smc.h is bearer of this protocol this is indicated with
-+ * OPTEE_SMC_SEC_CAP_UNREGISTERED_SHM). If a logical memref parameter is
-+ * fragmented then has all but the last fragment the
-+ * OPTEE_MSG_ATTR_FRAGMENT bit set in attrs. Even if a memref is fragmented
-+ * it will still be presented as a single logical memref to the Trusted
-+ * Application.
-+ */
-+struct optee_msg_arg {
-+	u32 cmd;
-+	u32 func;
-+	u32 session;
-+	u32 cancel_id;
-+	u32 pad;
-+	u32 ret;
-+	u32 ret_origin;
-+	u32 num_params;
-+
-+	/*
-+	 * this struct is 8 byte aligned since the 'struct optee_msg_param'
-+	 * which follows requires 8 byte alignment.
-+	 *
-+	 * Commented out element used to visualize the layout dynamic part
-+	 * of the struct. This field is not available at all if
-+	 * num_params == 0.
-+	 *
-+	 * params is accessed through the macro OPTEE_MSG_GET_PARAMS
-+	 *
-+	 * struct optee_msg_param params[num_params];
-+	 */
-+} __aligned(8);
-+
-+/**
-+ * OPTEE_MSG_GET_PARAMS - return pointer to struct optee_msg_param *
-+ *
-+ * @x: Pointer to a struct optee_msg_arg
-+ *
-+ * Returns a pointer to the params[] inside a struct optee_msg_arg.
-+ */
-+#define OPTEE_MSG_GET_PARAMS(x) \
-+	(struct optee_msg_param *)(((struct optee_msg_arg *)(x)) + 1)
-+
-+/**
-+ * OPTEE_MSG_GET_ARG_SIZE - return size of struct optee_msg_arg
-+ *
-+ * @num_params: Number of parameters embedded in the struct optee_msg_arg
-+ *
-+ * Returns the size of the struct optee_msg_arg together with the number
-+ * of embedded parameters.
-+ */
-+#define OPTEE_MSG_GET_ARG_SIZE(num_params) \
-+	(sizeof(struct optee_msg_arg) + \
-+	 sizeof(struct optee_msg_param) * (num_params))
-+
-+/*****************************************************************************
-+ * Part 2 - requests from normal world
-+ *****************************************************************************/
-+
-+/*
-+ * Return the following UID if using API specified in this file without
-+ * further extentions:
-+ * 384fb3e0-e7f8-11e3-af63-0002a5d5c51b.
-+ * Represented in 4 32-bit words in OPTEE_MSG_UID_0, OPTEE_MSG_UID_1,
-+ * OPTEE_MSG_UID_2, OPTEE_MSG_UID_3.
-+ */
-+#define OPTEE_MSG_UID_0			0x384fb3e0
-+#define OPTEE_MSG_UID_1			0xe7f811e3
-+#define OPTEE_MSG_UID_2			0xaf630002
-+#define OPTEE_MSG_UID_3			0xa5d5c51b
-+#define OPTEE_MSG_FUNCID_CALLS_UID	0xFF01
-+
-+/*
-+ * Returns 2.0 if using API specified in this file without further
-+ * extentions. Represented in 2 32-bit words in OPTEE_MSG_REVISION_MAJOR
-+ * and OPTEE_MSG_REVISION_MINOR
-+ */
-+#define OPTEE_MSG_REVISION_MAJOR	2
-+#define OPTEE_MSG_REVISION_MINOR	0
-+#define OPTEE_MSG_FUNCID_CALLS_REVISION	0xFF03
-+
-+/*
-+ * Get UUID of Trusted OS.
-+ *
-+ * Used by non-secure world to figure out which Trusted OS is installed.
-+ * Note that returned UUID is the UUID of the Trusted OS, not of the API.
-+ *
-+ * Returns UUID in 4 32-bit words in the same way as
-+ * OPTEE_MSG_FUNCID_CALLS_UID described above.
-+ */
-+#define OPTEE_MSG_OS_OPTEE_UUID_0	0x486178e0
-+#define OPTEE_MSG_OS_OPTEE_UUID_1	0xe7f811e3
-+#define OPTEE_MSG_OS_OPTEE_UUID_2	0xbc5e0002
-+#define OPTEE_MSG_OS_OPTEE_UUID_3	0xa5d5c51b
-+#define OPTEE_MSG_FUNCID_GET_OS_UUID	0x0000
-+
-+/*
-+ * Get revision of Trusted OS.
-+ *
-+ * Used by non-secure world to figure out which version of the Trusted OS
-+ * is installed. Note that the returned revision is the revision of the
-+ * Trusted OS, not of the API.
-+ *
-+ * Returns revision in 2 32-bit words in the same way as
-+ * OPTEE_MSG_CALLS_REVISION described above.
-+ */
-+#define OPTEE_MSG_OS_OPTEE_REVISION_MAJOR	1
-+#define OPTEE_MSG_OS_OPTEE_REVISION_MINOR	0
-+#define OPTEE_MSG_FUNCID_GET_OS_REVISION	0x0001
-+
-+/*
-+ * Do a secure call with struct optee_msg_arg as argument
-+ * The OPTEE_MSG_CMD_* below defines what goes in struct optee_msg_arg::cmd
-+ *
-+ * OPTEE_MSG_CMD_OPEN_SESSION opens a session to a Trusted Application.
-+ * The first two parameters are tagged as meta, holding two value
-+ * parameters to pass the following information:
-+ * param[0].u.value.a-b uuid of Trusted Application
-+ * param[1].u.value.a-b uuid of Client
-+ * param[1].u.value.c Login class of client OPTEE_MSG_LOGIN_*
-+ *
-+ * OPTEE_MSG_CMD_INVOKE_COMMAND invokes a command a previously opened
-+ * session to a Trusted Application.  struct optee_msg_arg::func is Trusted
-+ * Application function, specific to the Trusted Application.
-+ *
-+ * OPTEE_MSG_CMD_CLOSE_SESSION closes a previously opened session to
-+ * Trusted Application.
-+ *
-+ * OPTEE_MSG_CMD_CANCEL cancels a currently invoked command.
-+ *
-+ * OPTEE_MSG_CMD_REGISTER_SHM registers a shared memory reference. The
-+ * information is passed as:
-+ * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_TMEM_INPUT
-+ *					[| OPTEE_MSG_ATTR_FRAGMENT]
-+ * [in] param[0].u.tmem.buf_ptr		physical address (of first fragment)
-+ * [in] param[0].u.tmem.size		size (of first fragment)
-+ * [in] param[0].u.tmem.shm_ref		holds shared memory reference
-+ * ...
-+ * The shared memory can optionally be fragmented, temp memrefs can follow
-+ * each other with all but the last with the OPTEE_MSG_ATTR_FRAGMENT bit set.
-+ *
-+ * OPTEE_MSG_CMD_UNREGISTER_SHM unregisteres a previously registered shared
-+ * memory reference. The information is passed as:
-+ * [in] param[0].attr			OPTEE_MSG_ATTR_TYPE_RMEM_INPUT
-+ * [in] param[0].u.rmem.shm_ref		holds shared memory reference
-+ * [in] param[0].u.rmem.offs		0
-+ * [in] param[0].u.rmem.size		0
-+ */
-+#define OPTEE_MSG_CMD_OPEN_SESSION	0
-+#define OPTEE_MSG_CMD_INVOKE_COMMAND	1
-+#define OPTEE_MSG_CMD_CLOSE_SESSION	2
-+#define OPTEE_MSG_CMD_CANCEL		3
-+#define OPTEE_MSG_CMD_REGISTER_SHM	4
-+#define OPTEE_MSG_CMD_UNREGISTER_SHM	5
-+#define OPTEE_MSG_FUNCID_CALL_WITH_ARG	0x0004
-+
-+/*****************************************************************************
-+ * Part 3 - Requests from secure world, RPC
-+ *****************************************************************************/
-+
-+/*
-+ * All RPC is done with a struct optee_msg_arg as bearer of information,
-+ * struct optee_msg_arg::arg holds values defined by OPTEE_MSG_RPC_CMD_* below
-+ *
-+ * RPC communication with tee-supplicant is reversed compared to normal
-+ * client communication desribed above. The supplicant receives requests
-+ * and sends responses.
-+ */
-+
-+/*
-+ * Load a TA into memory, defined in tee-supplicant
-+ */
-+#define OPTEE_MSG_RPC_CMD_LOAD_TA	0
-+
-+/*
-+ * Reserved
-+ */
-+#define OPTEE_MSG_RPC_CMD_RPMB		1
-+
-+/*
-+ * File system access, defined in tee-supplicant
-+ */
-+#define OPTEE_MSG_RPC_CMD_FS		2
-+
-+/*
-+ * Get time
-+ *
-+ * Returns number of seconds and nano seconds since the Epoch,
-+ * 1970-01-01 00:00:00 +0000 (UTC).
-+ *
-+ * [out] param[0].u.value.a	Number of seconds
-+ * [out] param[0].u.value.b	Number of nano seconds.
-+ */
-+#define OPTEE_MSG_RPC_CMD_GET_TIME	3
-+
-+/*
-+ * Wait queue primitive, helper for secure world to implement a wait queue
-+ *
-+ * Waiting on a key
-+ * [in] param[0].u.value.a OPTEE_MSG_RPC_WAIT_QUEUE_SLEEP
-+ * [in] param[0].u.value.b wait key
-+ *
-+ * Waking up a key
-+ * [in] param[0].u.value.a OPTEE_MSG_RPC_WAIT_QUEUE_WAKEUP
-+ * [in] param[0].u.value.b wakeup key
-+ */
-+#define OPTEE_MSG_RPC_CMD_WAIT_QUEUE	4
-+#define OPTEE_MSG_RPC_WAIT_QUEUE_SLEEP	0
-+#define OPTEE_MSG_RPC_WAIT_QUEUE_WAKEUP	1
-+
-+/*
-+ * Suspend execution
-+ *
-+ * [in] param[0].value	.a number of milliseconds to suspend
-+ */
-+#define OPTEE_MSG_RPC_CMD_SUSPEND	5
-+
-+/*
-+ * Allocate a piece of shared memory
-+ *
-+ * Shared memory can optionally be fragmented, to support that additional
-+ * spare param entries are allocated to make room for eventual fragments.
-+ * The spare param entries has .attr = OPTEE_MSG_ATTR_TYPE_NONE when
-+ * unused. All returned temp memrefs except the last should have the
-+ * OPTEE_MSG_ATTR_FRAGMENT bit set in the attr field.
-+ *
-+ * [in]  param[0].u.value.a		type of memory one of
-+ *					OPTEE_MSG_RPC_SHM_TYPE_* below
-+ * [in]  param[0].u.value.b		requested size
-+ * [in]  param[0].u.value.c		required alignment
-+ *
-+ * [out] param[0].u.tmem.buf_ptr	physical address (of first fragment)
-+ * [out] param[0].u.tmem.size		size (of first fragment)
-+ * [out] param[0].u.tmem.shm_ref	shared memory reference
-+ * ...
-+ * [out] param[n].u.tmem.buf_ptr	physical address
-+ * [out] param[n].u.tmem.size		size
-+ * [out] param[n].u.tmem.shm_ref	shared memory reference (same value
-+ *					as in param[n-1].u.tmem.shm_ref)
-+ */
-+#define OPTEE_MSG_RPC_CMD_SHM_ALLOC	6
-+/* Memory that can be shared with a non-secure user space application */
-+#define OPTEE_MSG_RPC_SHM_TYPE_APPL	0
-+/* Memory only shared with non-secure kernel */
-+#define OPTEE_MSG_RPC_SHM_TYPE_KERNEL	1
-+
-+#endif /* _OPTEE_MSG_H */
-diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-new file mode 100644
-index 0000000..50488e5
---- /dev/null
-+++ b/drivers/tee/optee/optee_private.h
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#ifndef OPTEE_PRIVATE_H
-+#define OPTEE_PRIVATE_H
-+
-+#include <linux/types.h>
-+#include <linux/semaphore.h>
-+#include <linux/tee_drv.h>
-+#include "optee_msg.h"
-+#include <linux/arm-smccc.h>
-+
-+#define OPTEE_MAX_ARG_SIZE	1024
-+
-+/* Some Global Platform error codes used in this driver */
-+#define TEEC_SUCCESS			0x00000000
-+#define TEEC_ERROR_BAD_PARAMETERS	0xFFFF0006
-+#define TEEC_ERROR_COMMUNICATION	0xFFFF000E
-+#define TEEC_ERROR_OUT_OF_MEMORY	0xFFFF000C
-+
-+#define TEEC_ORIGIN_COMMS		0x00000002
-+
-+typedef void (optee_invoke_fn)(unsigned long, unsigned long, unsigned long,
-+				unsigned long, unsigned long, unsigned long,
-+				unsigned long, unsigned long,
-+				struct smccc_res *);
-+
-+struct optee_call_queue {
-+	struct mutex mutex;
-+	struct list_head waiters;
-+};
-+
-+struct optee_wait_queue {
-+	struct mutex mu;
-+	struct list_head db;
-+};
-+
-+struct optee_supp {
-+	u32 func;
-+	u32 ret;
-+	size_t num_params;
-+	struct tee_param *param;
-+
-+	bool req_posted;
-+	bool supp_next_send;
-+	struct mutex thrd_mutex;
-+	struct mutex supp_mutex;
-+	struct completion data_to_supp;
-+	struct completion data_from_supp;
-+};
-+
-+struct optee {
-+	struct tee_device *supp_teedev;
-+	struct tee_device *teedev;
-+	struct device *dev;
-+	optee_invoke_fn *invoke_fn;
-+	struct optee_call_queue call_queue;
-+	struct optee_wait_queue wait_queue;
-+	struct optee_supp supp;
-+	struct tee_shm_pool *pool;
-+	void __iomem *ioremaped_shm;
-+};
-+
-+struct optee_session {
-+	struct list_head list_node;
-+	u32 session_id;
-+};
-+
-+struct optee_context_data {
-+	struct mutex mutex;
-+	struct list_head sess_list;
-+};
-+
-+struct optee_rpc_param {
-+	u32	a0;
-+	u32	a1;
-+	u32	a2;
-+	u32	a3;
-+	u32	a4;
-+	u32	a5;
-+	u32	a6;
-+	u32	a7;
-+};
-+
-+void optee_handle_rpc(struct tee_context *ctx, struct optee_rpc_param *param);
-+
-+void optee_wait_queue_init(struct optee_wait_queue *wq);
-+void optee_wait_queue_exit(struct optee_wait_queue *wq);
-+
-+u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
-+			struct tee_param *param);
-+
-+int optee_supp_read(struct tee_context *ctx, void __user *buf, size_t len);
-+int optee_supp_write(struct tee_context *ctx, void __user *buf, size_t len);
-+void optee_supp_init(struct optee_supp *supp);
-+void optee_supp_uninit(struct optee_supp *supp);
-+
-+int optee_supp_recv(struct tee_context *ctx, u32 *func, u32 *num_params,
-+			struct tee_param *param);
-+int optee_supp_send(struct tee_context *ctx, u32 ret, u32 num_params,
-+			struct tee_param *param);
-+
-+u32 optee_do_call_with_arg(struct tee_context *ctx, phys_addr_t parg);
-+int optee_open_session(struct tee_context *ctx,
-+			struct tee_ioctl_open_session_arg *arg,
-+			struct tee_param *param);
-+int optee_close_session(struct tee_context *ctx, u32 session);
-+int optee_invoke_func(struct tee_context *ctx, struct tee_ioctl_invoke_arg *arg,
-+			struct tee_param *param);
-+int optee_cancel_req(struct tee_context *ctx, u32 cancel_id, u32 session);
-+
-+void optee_enable_shm_cache(struct optee *optee);
-+void optee_disable_shm_cache(struct optee *optee);
-+
-+int optee_from_msg_param(struct tee_param *params, size_t num_params,
-+			const struct optee_msg_param *msg_params);
-+int optee_to_msg_param(struct optee_msg_param *msg_params, size_t num_params,
-+			const struct tee_param *params);
-+
-+/*
-+ * Small helpers
-+ */
-+
-+static inline void *reg_pair_to_ptr(u32 reg0, u32 reg1)
-+{
-+	return (void *)(unsigned long)(((u64)reg0 << 32) | reg1);
-+}
-+
-+static inline void reg_pair_from_64(u32 *reg0, u32 *reg1, u64 val)
-+{
-+	*reg0 = val >> 32;
-+	*reg1 = val;
-+}
-+
-+#endif /*OPTEE_PRIVATE_H*/
-diff --git a/drivers/tee/optee/optee_smc.h b/drivers/tee/optee/optee_smc.h
-new file mode 100644
-index 0000000..bad2d8e
---- /dev/null
-+++ b/drivers/tee/optee/optee_smc.h
-@@ -0,0 +1,418 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ * All rights reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *
-+ * 1. Redistributions of source code must retain the above copyright notice,
-+ * this list of conditions and the following disclaimer.
-+ *
-+ * 2. Redistributions in binary form must reproduce the above copyright notice,
-+ * this list of conditions and the following disclaimer in the documentation
-+ * and/or other materials provided with the distribution.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-+ * POSSIBILITY OF SUCH DAMAGE.
-+ */
-+#ifndef OPTEE_SMC_H
-+#define OPTEE_SMC_H
-+
-+#include <linux/arm-smccc.h>
-+
-+#define OPTEE_SMC_STD_CALL_VAL(func_num) \
-+	SMCCC_CALL_VAL(SMCCC_SMC_32, SMCCC_STD_CALL, \
-+			   SMCCC_OWNER_TRUSTED_OS, (func_num))
-+#define OPTEE_SMC_FAST_CALL_VAL(func_num) \
-+	SMCCC_CALL_VAL(SMCCC_SMC_32, SMCCC_FAST_CALL, \
-+			   SMCCC_OWNER_TRUSTED_OS, (func_num))
-+
-+/*
-+ * Function specified by SMC Calling convention.
-+ */
-+#define OPTEE_SMC_FUNCID_CALLS_COUNT	0xFF00
-+#define OPTEE_SMC_CALLS_COUNT \
-+	SMCCC_CALL_VAL(SMCCC_SMC_32, OPTEE_SMC_FAST_CALL, \
-+			   SMCCC_OWNER_TRUSTED_OS_END, \
-+			   OPTEE_SMC_FUNCID_CALLS_COUNT)
-+
-+/*
-+ * Normal cached memory (write-back), shareable for SMP systems and not
-+ * shareable for UP systems.
-+ */
-+#define OPTEE_SMC_SHM_CACHED		1
-+
-+/*
-+ * a0..a7 is used as register names in the descriptions below, on arm32
-+ * that translates to r0..r7 and on arm64 to w0..w7. In both cases it's
-+ * 32-bit registers.
-+ */
-+
-+/*
-+ * Function specified by SMC Calling convention
-+ *
-+ * Return one of the following UIDs if using API specified in this file
-+ * without further extentions:
-+ * 65cb6b93-af0c-4617-8ed6-644a8d1140f8
-+ * see also OPTEE_SMC_UID_* in optee_msg.h
-+ */
-+#define OPTEE_SMC_FUNCID_CALLS_UID OPTEE_MSG_FUNCID_CALLS_UID
-+#define OPTEE_SMC_CALLS_UID \
-+	SMCCC_CALL_VAL(SMCCC_SMC_32, SMCCC_FAST_CALL, \
-+		       SMCCC_OWNER_TRUSTED_OS_END, \
-+		       OPTEE_SMC_FUNCID_CALLS_UID)
-+
-+/*
-+ * Function specified by SMC Calling convention
-+ *
-+ * Returns 2.0 if using API specified in this file without further extentions.
-+ * see also OPTEE_MSG_REVISION_* in optee_msg.h
-+ */
-+#define OPTEE_SMC_FUNCID_CALLS_REVISION OPTEE_MSG_FUNCID_CALLS_REVISION
-+#define OPTEE_SMC_CALLS_REVISION \
-+	SMCCC_CALL_VAL(SMCCC_SMC_32, SMCCC_FAST_CALL, \
-+		       SMCCC_OWNER_TRUSTED_OS_END, \
-+		       OPTEE_SMC_FUNCID_CALLS_REVISION)
-+
-+/*
-+ * Get UUID of Trusted OS.
-+ *
-+ * Used by non-secure world to figure out which Trusted OS is installed.
-+ * Note that returned UUID is the UUID of the Trusted OS, not of the API.
-+ *
-+ * Returns UUID in a0-4 in the same way as OPTEE_SMC_CALLS_UID
-+ * described above.
-+ */
-+#define OPTEE_SMC_FUNCID_GET_OS_UUID OPTEE_MSG_FUNCID_GET_OS_UUID
-+#define OPTEE_SMC_CALL_GET_OS_UUID \
-+	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_OS_UUID)
-+
-+/*
-+ * Get revision of Trusted OS.
-+ *
-+ * Used by non-secure world to figure out which version of the Trusted OS
-+ * is installed. Note that the returned revision is the revision of the
-+ * Trusted OS, not of the API.
-+ *
-+ * Returns revision in a0-1 in the same way as OPTEE_SMC_CALLS_REVISION
-+ * described above.
-+ */
-+#define OPTEE_SMC_FUNCID_GET_OS_REVISION OPTEE_MSG_FUNCID_GET_OS_REVISION
-+#define OPTEE_SMC_CALL_GET_OS_REVISION \
-+	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_OS_REVISION)
-+
-+/*
-+ * Call with struct optee_msg_arg as argument
-+ *
-+ * Call register usage:
-+ * a0	SMC Function ID, OPTEE_SMC*CALL_WITH_ARG
-+ * a1	Upper 32bit of a 64bit physical pointer to a struct optee_msg_arg
-+ * a2	Lower 32bit of a 64bit physical pointer to a struct optee_msg_arg
-+ * a3	Cache settings, not used if physical pointer is in a predefined shared
-+ *	memory area else per OPTEE_SMC_SHM_*
-+ * a4-6	Not used
-+ * a7	Hypervisor Client ID register
-+ *
-+ * Normal return register usage:
-+ * a0	Return value, OPTEE_SMC_RETURN_*
-+ * a1-3	Not used
-+ * a4-7	Preserved
-+ *
-+ * OPTEE_SMC_RETURN_ETHREAD_LIMIT return register usage:
-+ * a0	Return value, OPTEE_SMC_RETURN_ETHREAD_LIMIT
-+ * a1-3	Preserved
-+ * a4-7	Preserved
-+ *
-+ * RPC return register usage:
-+ * a0	Return value, OPTEE_SMC_RETURN_IS_RPC(val)
-+ * a1-2	RPC parameters
-+ * a3-7	Resume information, must be preserved
-+ *
-+ * Possible return values:
-+ * OPTEE_SMC_RETURN_UNKNOWN_FUNCTION	Trusted OS does not recognize this
-+ *					function.
-+ * OPTEE_SMC_RETURN_OK			Call completed, result updated in
-+ *					the previously supplied struct
-+ *					optee_msg_arg.
-+ * OPTEE_SMC_RETURN_ETHREAD_LIMIT	Number of Trusted OS threads exceeded,
-+ *					try again later.
-+ * OPTEE_SMC_RETURN_EBADADDR		Bad physcial pointer to struct
-+ *					optee_msg_arg.
-+ * OPTEE_SMC_RETURN_EBADCMD		Bad/unknown cmd in struct optee_msg_arg
-+ * OPTEE_SMC_RETURN_IS_RPC()		Call suspended by RPC call to normal
-+ *					world.
-+ */
-+#define OPTEE_SMC_FUNCID_CALL_WITH_ARG OPTEE_MSG_FUNCID_CALL_WITH_ARG
-+#define OPTEE_SMC_CALL_WITH_ARG \
-+	OPTEE_SMC_STD_CALL_VAL(OPTEE_SMC_FUNCID_CALL_WITH_ARG)
-+
-+/*
-+ * Get Shared Memory Config
-+ *
-+ * Returns the Secure/Non-secure shared memory config.
-+ *
-+ * Call register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_GET_SHM_CONFIG
-+ * a1-6	Not used
-+ * a7	Hypervisor Client ID register
-+ *
-+ * Have config return register usage:
-+ * a0	OPTEE_SMC_RETURN_OK
-+ * a1	Physical address of start of SHM
-+ * a2	Size of of SHM
-+ * a3	Cache settings of memory, as defined by the
-+ *	OPTEE_SMC_SHM_* values above
-+ * a4-7	Preserved
-+ *
-+ * Not available register usage:
-+ * a0	OPTEE_SMC_RETURN_ENOTAVAIL
-+ * a1-3 Not used
-+ * a4-7	Preserved
-+ */
-+#define OPTEE_SMC_FUNCID_GET_SHM_CONFIG	7
-+#define OPTEE_SMC_GET_SHM_CONFIG \
-+	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_SHM_CONFIG)
-+
-+/*
-+ * Exchanges capabilities between normal world and secure world
-+ *
-+ * Call register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_EXCHANGE_CAPABILITIES
-+ * a1	bitfield of normal world capabilities OPTEE_SMC_NSEC_CAP_*
-+ * a2-6	Not used
-+ * a7	Hypervisor Client ID register
-+ *
-+ * Normal return register usage:
-+ * a0	OPTEE_SMC_RETURN_OK
-+ * a1	bitfield of secure world capabilities OPTEE_SMC_SEC_CAP_*
-+ * a2-7	Preserved
-+ *
-+ * Error return register usage:
-+ * a0	OPTEE_SMC_RETURN_ENOTAVAIL, can't use the capabilities from normal world
-+ * a1	bitfield of secure world capabilities OPTEE_SMC_SEC_CAP_*
-+ * a2-7 Preserved
-+ */
-+/* Normal world works as a uniprocessor system */
-+#define OPTEE_SMC_NSEC_CAP_UNIPROCESSOR		(1 << 0)
-+/* Secure world has reserved shared memory for normal world to use */
-+#define OPTEE_SMC_SEC_CAP_HAVE_RESERVERED_SHM	(1 << 0)
-+/* Secure world can communicate via previously unregistered shared memory */
-+#define OPTEE_SMC_SEC_CAP_UNREGISTERED_SHM	(1 << 1)
-+#define OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES	9
-+#define OPTEE_SMC_EXCHANGE_CAPABILITIES \
-+	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES)
-+
-+/*
-+ * Disable and empties cache of shared memory objects
-+ *
-+ * Secure world can cache frequently used shared memory objects, for
-+ * example objects used as RPC arguments. When secure world is idle this
-+ * function returns one shared memory reference to free. To disable the
-+ * cache and free all cached objects this function has to be called until
-+ * it returns OPTEE_SMC_RETURN_ENOTAVAIL.
-+ *
-+ * Call register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_DISABLE_SHM_CACHE
-+ * a1-6	Not used
-+ * a7	Hypervisor Client ID register
-+ *
-+ * Normal return register usage:
-+ * a0	OPTEE_SMC_RETURN_OK
-+ * a1	Upper 32bit of a 64bit Shared memory cookie
-+ * a2	Lower 32bit of a 64bit Shared memory cookie
-+ * a3-7	Preserved
-+ *
-+ * Cache empty return register usage:
-+ * a0	OPTEE_SMC_RETURN_ENOTAVAIL
-+ * a1-7	Preserved
-+ *
-+ * Not idle return register usage:
-+ * a0	OPTEE_SMC_RETURN_EBUSY
-+ * a1-7	Preserved
-+ */
-+#define OPTEE_SMC_FUNCID_DISABLE_SHM_CACHE	10
-+#define OPTEE_SMC_DISABLE_SHM_CACHE \
-+	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_DISABLE_SHM_CACHE)
-+
-+
-+/*
-+ * Enable cache of shared memory objects
-+ *
-+ * Secure world can cache frequently used shared memory objects, for
-+ * example objects used as RPC arguments. When secure world is idle this
-+ * function returns OPTEE_SMC_RETURN_OK and the cache is enabled. If
-+ * secure world isn't idle OPTEE_SMC_RETURN_EBUSY is returned.
-+ *
-+ * Call register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_ENABLE_SHM_CACHE
-+ * a1-6	Not used
-+ * a7	Hypervisor Client ID register
-+ *
-+ * Normal return register usage:
-+ * a0	OPTEE_SMC_RETURN_OK
-+ * a1-7	Preserved
-+ *
-+ * Not idle return register usage:
-+ * a0	OPTEE_SMC_RETURN_EBUSY
-+ * a1-7	Preserved
-+ */
-+#define OPTEE_SMC_FUNCID_ENABLE_SHM_CACHE	11
-+#define OPTEE_SMC_ENABLE_SHM_CACHE \
-+	OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_ENABLE_SHM_CACHE)
-+
-+/*
-+ * Resume from RPC (for example after processing an IRQ)
-+ *
-+ * Call register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_CALL_RETURN_FROM_RPC
-+ * a1-3	Value of a1-3 when OPTEE_SMC_CALL_WITH_ARG returned
-+ *	OPTEE_SMC_RETURN_RPC in a0
-+ *
-+ * Return register usage is the same as for OPTEE_SMC_*CALL_WITH_ARG above.
-+ *
-+ * Possible return values
-+ * OPTEE_SMC_RETURN_UNKNOWN_FUNCTION	Trusted OS does not recognize this
-+ *					function.
-+ * OPTEE_SMC_RETURN_OK			Original call completed, result
-+ *					updated in the previously supplied.
-+ *					struct optee_msg_arg
-+ * OPTEE_SMC_RETURN_RPC			Call suspended by RPC call to normal
-+ *					world.
-+ * OPTEE_SMC_RETURN_ERESUME		Resume failed, the opaque resume
-+ *					information was corrupt.
-+ */
-+#define OPTEE_SMC_FUNCID_RETURN_FROM_RPC	3
-+#define OPTEE_SMC_CALL_RETURN_FROM_RPC \
-+	OPTEE_SMC_STD_CALL_VAL(OPTEE_SMC_FUNCID_RETURN_FROM_RPC)
-+
-+#define OPTEE_SMC_RETURN_RPC_PREFIX_MASK	0xFFFF0000
-+#define OPTEE_SMC_RETURN_RPC_PREFIX		0xFFFF0000
-+#define OPTEE_SMC_RETURN_RPC_FUNC_MASK		0x0000FFFF
-+
-+#define OPTEE_SMC_RETURN_GET_RPC_FUNC(ret) \
-+	((ret) & OPTEE_SMC_RETURN_RPC_FUNC_MASK)
-+
-+#define OPTEE_SMC_RPC_VAL(func)		((func) | OPTEE_SMC_RETURN_RPC_PREFIX)
-+
-+/*
-+ * Allocate memory for RPC parameter passing. The memory is used to hold a
-+ * struct optee_msg_arg.
-+ *
-+ * "Call" register usage:
-+ * a0	This value, OPTEE_SMC_RETURN_RPC_ALLOC
-+ * a1	Size in bytes of required argument memory
-+ * a2	Not used
-+ * a3	Resume information, must be preserved
-+ * a4-5	Not used
-+ * a6-7	Resume information, must be preserved
-+ *
-+ * "Return" register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_CALL_RETURN_FROM_RPC.
-+ * a1	Upper 32bits of 64bit physical pointer to allocated
-+ *	memory, (a1 == 0 && a2 == 0) if size was 0 or if memory can't
-+ *	be allocated.
-+ * a2	Lower 32bits of 64bit physical pointer to allocated
-+ *	memory, (a1 == 0 && a2 == 0) if size was 0 or if memory can't
-+ *	be allocated
-+ * a3	Preserved
-+ * a4	Upper 32bits of 64bit Shared memory cookie used when freeing
-+ *	the memory or doing an RPC
-+ * a5	Lower 32bits of 64bit Shared memory cookie used when freeing
-+ *	the memory or doing an RPC
-+ * a6-7	Preserved
-+ */
-+#define OPTEE_SMC_RPC_FUNC_ALLOC	0
-+#define OPTEE_SMC_RETURN_RPC_ALLOC \
-+	OPTEE_SMC_RPC_VAL(OPTEE_SMC_RPC_FUNC_ALLOC)
-+
-+/*
-+ * Free memory previously allocated by OPTEE_SMC_RETURN_RPC_ALLOC
-+ *
-+ * "Call" register usage:
-+ * a0	This value, OPTEE_SMC_RETURN_RPC_FREE_ARG
-+ * a1	Upper 32bits of 64bit shared memory cookie belonging to this
-+ *	argument memory
-+ * a2	Lower 32bits of 64bit shared memory cookie belonging to this
-+ *	argument memory
-+ * a3-7	Resume information, must be preserved
-+ *
-+ * "Return" register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_CALL_RETURN_FROM_RPC.
-+ * a1-2	Not used
-+ * a3-7	Preserved
-+ */
-+#define OPTEE_SMC_RPC_FUNC_FREE		2
-+#define OPTEE_SMC_RETURN_RPC_FREE \
-+	OPTEE_SMC_RPC_VAL(OPTEE_SMC_RPC_FUNC_FREE)
-+
-+/*
-+ * Deliver an IRQ in normal world.
-+ *
-+ * "Call" register usage:
-+ * a0	OPTEE_SMC_RETURN_RPC_IRQ
-+ * a1-7	Resume information, must be preserved
-+ *
-+ * "Return" register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_CALL_RETURN_FROM_RPC.
-+ * a1-7	Preserved
-+ */
-+#define OPTEE_SMC_RPC_FUNC_IRQ		4
-+#define OPTEE_SMC_RETURN_RPC_IRQ \
-+	OPTEE_SMC_RPC_VAL(OPTEE_SMC_RPC_FUNC_IRQ)
-+
-+/*
-+ * Do an RPC request. The supplied struct optee_msg_arg tells which
-+ * request to do and the parameters for the request. The following fields
-+ * are used (the rest are unused):
-+ * - cmd		the Request ID
-+ * - ret		return value of the request, filled in by normal world
-+ * - num_params		number of parameters for the request
-+ * - params		the parameters
-+ * - param_attrs	attributes of the parameters
-+ *
-+ * "Call" register usage:
-+ * a0	OPTEE_SMC_RETURN_RPC_CMD
-+ * a1	Upper 32bit of a 64bit Shared memory cookie holding a
-+ *	struct optee_msg_arg, must be preserved, only the data should
-+ *	be updated
-+ * a2	Lower 32bit of a 64bit Shared memory cookie holding a
-+ *	struct optee_msg_arg, must be preserved, only the data should
-+ *	be updated
-+ * a3-7	Resume information, must be preserved
-+ *
-+ * "Return" register usage:
-+ * a0	SMC Function ID, OPTEE_SMC_CALL_RETURN_FROM_RPC.
-+ * a1-2	Not used
-+ * a3-7	Preserved
-+ */
-+#define OPTEE_SMC_RPC_FUNC_CMD		5
-+#define OPTEE_SMC_RETURN_RPC_CMD \
-+	OPTEE_SMC_RPC_VAL(OPTEE_SMC_RPC_FUNC_CMD)
-+
-+/* Returned in a0 */
-+#define OPTEE_SMC_RETURN_UNKNOWN_FUNCTION 0xFFFFFFFF
-+
-+/* Returned in a0 only from Trusted OS functions */
-+#define OPTEE_SMC_RETURN_OK		0x0
-+#define OPTEE_SMC_RETURN_ETHREAD_LIMIT	0x1
-+#define OPTEE_SMC_RETURN_EBUSY		0x2
-+#define OPTEE_SMC_RETURN_ERESUME	0x3
-+#define OPTEE_SMC_RETURN_EBADADDR	0x4
-+#define OPTEE_SMC_RETURN_EBADCMD	0x5
-+#define OPTEE_SMC_RETURN_ENOMEM		0x6
-+#define OPTEE_SMC_RETURN_ENOTAVAIL	0x7
-+#define OPTEE_SMC_RETURN_IS_RPC(ret) \
-+	(((ret) != OPTEE_SMC_RETURN_UNKNOWN_FUNCTION) && \
-+	((((ret) & OPTEE_SMC_RETURN_RPC_PREFIX_MASK) == \
-+		OPTEE_SMC_RETURN_RPC_PREFIX)))
-+
-+#endif /* OPTEE_SMC_H */
-diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
-new file mode 100644
-index 0000000..05716e9
---- /dev/null
-+++ b/drivers/tee/optee/rpc.c
-@@ -0,0 +1,322 @@
-+
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/sched.h>
-+#include <linux/tee_drv.h>
-+#include "optee_private.h"
-+#include "optee_smc.h"
-+
-+struct wq_entry {
-+	struct list_head link;
-+	struct completion c;
-+	u32 key;
-+};
-+
-+void optee_wait_queue_init(struct optee_wait_queue *priv)
-+{
-+	mutex_init(&priv->mu);
-+	INIT_LIST_HEAD(&priv->db);
-+}
-+
-+void optee_wait_queue_exit(struct optee_wait_queue *priv)
-+{
-+	mutex_destroy(&priv->mu);
-+}
-+
-+static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
-+{
-+	struct optee_msg_param *params;
-+	struct timespec64 ts;
-+
-+	if (arg->num_params != 1)
-+		goto bad;
-+	params = OPTEE_MSG_GET_PARAMS(arg);
-+	if ((params->attr & OPTEE_MSG_ATTR_TYPE_MASK) !=
-+			OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT)
-+		goto bad;
-+
-+	getnstimeofday64(&ts);
-+	params->u.value.a = ts.tv_sec;
-+	params->u.value.b = ts.tv_nsec;
-+
-+	arg->ret = TEEC_SUCCESS;
-+	return;
-+bad:
-+	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+}
-+
-+static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
-+{
-+	struct wq_entry *w;
-+
-+	mutex_lock(&wq->mu);
-+
-+	list_for_each_entry(w, &wq->db, link)
-+		if (w->key == key)
-+			goto out;
-+
-+	w = kmalloc(sizeof(struct wq_entry), GFP_KERNEL);
-+	if (w) {
-+		init_completion(&w->c);
-+		w->key = key;
-+		list_add_tail(&w->link, &wq->db);
-+	}
-+out:
-+	mutex_unlock(&wq->mu);
-+	return w;
-+}
-+
-+static void wq_sleep(struct optee_wait_queue *wq, u32 key)
-+{
-+	struct wq_entry *w = wq_entry_get(wq, key);
-+
-+	if (w) {
-+		wait_for_completion(&w->c);
-+		mutex_lock(&wq->mu);
-+		list_del(&w->link);
-+		mutex_unlock(&wq->mu);
-+		kfree(w);
-+	}
-+}
-+
-+static void wq_wakeup(struct optee_wait_queue *wq, u32 key)
-+{
-+	struct wq_entry *w = wq_entry_get(wq, key);
-+
-+	if (w)
-+		complete(&w->c);
-+}
-+
-+static void handle_rpc_func_cmd_wq(struct optee *optee,
-+			struct optee_msg_arg *arg)
-+{
-+	struct optee_msg_param *params;
-+
-+	if (arg->num_params != 1)
-+		goto bad;
-+
-+	params = OPTEE_MSG_GET_PARAMS(arg);
-+	if ((params->attr & OPTEE_MSG_ATTR_TYPE_MASK) !=
-+			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT)
-+		goto bad;
-+
-+	switch (params->u.value.a) {
-+	case OPTEE_MSG_RPC_WAIT_QUEUE_SLEEP:
-+		wq_sleep(&optee->wait_queue, params->u.value.b);
-+		break;
-+	case OPTEE_MSG_RPC_WAIT_QUEUE_WAKEUP:
-+		wq_wakeup(&optee->wait_queue, params->u.value.b);
-+		break;
-+	default:
-+		goto bad;
-+	}
-+
-+	arg->ret = TEEC_SUCCESS;
-+	return;
-+bad:
-+	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+}
-+
-+static void handle_rpc_func_cmd_wait(struct optee_msg_arg *arg)
-+{
-+	struct optee_msg_param *params;
-+	u32 msec_to_wait;
-+
-+	if (arg->num_params != 1)
-+		goto bad;
-+
-+	params = OPTEE_MSG_GET_PARAMS(arg);
-+	if ((params->attr & OPTEE_MSG_ATTR_TYPE_MASK) !=
-+			OPTEE_MSG_ATTR_TYPE_VALUE_INPUT)
-+		goto bad;
-+
-+	msec_to_wait = params->u.value.a;
-+
-+	/* set task's state to interruptible sleep */
-+	set_current_state(TASK_INTERRUPTIBLE);
-+
-+	/* take a nap */
-+	schedule_timeout(msecs_to_jiffies(msec_to_wait));
-+
-+	arg->ret = TEEC_SUCCESS;
-+	return;
-+bad:
-+	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+}
-+
-+static void handle_rpc_supp_cmd(struct tee_context *ctx,
-+			struct optee_msg_arg *arg)
-+{
-+	struct tee_param *params;
-+	struct optee_msg_param *msg_params = OPTEE_MSG_GET_PARAMS(arg);
-+
-+	arg->ret_origin = TEEC_ORIGIN_COMMS;
-+
-+	params = kmalloc_array(arg->num_params, sizeof(struct tee_param),
-+			       GFP_KERNEL);
-+	if (!params) {
-+		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
-+		return;
-+	}
-+
-+	if (optee_from_msg_param(params, arg->num_params, msg_params)) {
-+		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+		goto out;
-+	}
-+
-+	arg->ret = optee_supp_thrd_req(ctx, arg->cmd, arg->num_params, params);
-+
-+	if (optee_to_msg_param(msg_params, arg->num_params, params))
-+		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+out:
-+	kfree(params);
-+}
-+
-+static void handle_rpc_func_cmd_shm_alloc(struct tee_context *ctx,
-+			struct optee_msg_arg *arg)
-+{
-+	struct tee_device *teedev = ctx->teedev;
-+	struct optee_msg_param *params = OPTEE_MSG_GET_PARAMS(arg);
-+	phys_addr_t pa;
-+	struct tee_shm *shm;
-+	u32 flags;
-+	size_t sz;
-+	size_t n;
-+
-+	arg->ret_origin = TEEC_ORIGIN_COMMS;
-+
-+	if (!arg->num_params ||
-+	    params->attr != OPTEE_MSG_ATTR_TYPE_VALUE_INPUT) {
-+		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+		return;
-+	}
-+
-+	for (n = 1; n < arg->num_params; n++) {
-+		if (params[n].attr != OPTEE_MSG_ATTR_TYPE_NONE) {
-+			arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+			return;
++	INIT_DELAYED_WORK(&chip->wdt_work, bq24261_wdt_reset_worker);
++	INIT_DELAYED_WORK(&chip->fault_mon_work, bq24261_fault_mon_work);
++
++	ret = bq24261_extcon_register(chip);
++	if (ret < 0)
++		goto extcon_reg_failed;
++
++	if (chip->client->irq) {
++		ret = devm_request_threaded_irq(&client->dev, chip->client->irq,
++					NULL, bq24261_thread_handler,
++					IRQF_SHARED | IRQF_NO_SUSPEND,
++					DEV_NAME, chip);
++		if (ret) {
++			dev_err(&client->dev,
++				"irq request failed (%d)\n", ret);
++			goto irq_reg_failed;
 +		}
++		INIT_WORK(&chip->irq_work, bq24261_irq_worker);
 +	}
 +
-+	flags = TEE_SHM_MAPPED;
-+	switch (params->u.value.a) {
-+	case OPTEE_MSG_RPC_SHM_TYPE_APPL:
-+		flags |= TEE_SHM_DMA_BUF;
-+		break;
-+	case OPTEE_MSG_RPC_SHM_TYPE_KERNEL:
-+		break;
-+	default:
-+		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+		return;
-+	}
-+	sz = params->u.value.b;
-+	/* TODO pass alignment */
-+	shm = tee_shm_alloc(teedev, params->u.value.b, flags);
-+	if (IS_ERR(shm)) {
-+		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
-+		return;
-+	}
++	/* Check for charger connected boot case */
++	schedule_work(&chip->cable.work);
 +
-+	if (tee_shm_get_pa(shm, 0, &pa)) {
-+		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+		goto bad;
-+	}
++	return 0;
 +
-+	params[0].attr = OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT;
-+	params[0].u.tmem.buf_ptr = pa;
-+	params[0].u.tmem.size = sz;
-+	params[0].u.tmem.shm_ref = (unsigned long)shm;
-+	arg->ret = TEEC_SUCCESS;
-+	return;
-+bad:
-+	tee_shm_free(shm);
-+}
-+
-+static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
-+			struct tee_shm *shm)
-+{
-+	struct optee_msg_arg *arg;
-+
-+	arg = tee_shm_get_va(shm, 0);
-+	if (IS_ERR(arg)) {
-+		dev_err(optee->dev, "%s: tee_shm_get_va %p failed\n",
-+			__func__, shm);
-+		return;
-+	}
-+
-+	switch (arg->cmd) {
-+	case OPTEE_MSG_RPC_CMD_GET_TIME:
-+		handle_rpc_func_cmd_get_time(arg);
-+		break;
-+	case OPTEE_MSG_RPC_CMD_WAIT_QUEUE:
-+		handle_rpc_func_cmd_wq(optee, arg);
-+		break;
-+	case OPTEE_MSG_RPC_CMD_SUSPEND:
-+		handle_rpc_func_cmd_wait(arg);
-+		break;
-+	case OPTEE_MSG_RPC_CMD_SHM_ALLOC:
-+		handle_rpc_func_cmd_shm_alloc(ctx, arg);
-+		break;
-+	default:
-+		handle_rpc_supp_cmd(ctx, arg);
-+	}
-+}
-+
-+void optee_handle_rpc(struct tee_context *ctx, struct optee_rpc_param *param)
-+{
-+	struct tee_device *teedev = ctx->teedev;
-+	struct optee *optee = tee_get_drvdata(teedev);
-+	struct tee_shm *shm;
-+	phys_addr_t pa;
-+
-+	switch (OPTEE_SMC_RETURN_GET_RPC_FUNC(param->a0)) {
-+	case OPTEE_SMC_RPC_FUNC_ALLOC:
-+		shm = tee_shm_alloc(teedev, param->a1, TEE_SHM_MAPPED);
-+		if (!IS_ERR(shm) && !tee_shm_get_pa(shm, 0, &pa)) {
-+			reg_pair_from_64(&param->a1, &param->a2, pa);
-+			reg_pair_from_64(&param->a4, &param->a5,
-+					 (unsigned long)shm);
-+		} else {
-+			param->a1 = 0;
-+			param->a2 = 0;
-+			param->a4 = 0;
-+			param->a5 = 0;
-+		}
-+		break;
-+	case OPTEE_SMC_RPC_FUNC_FREE:
-+		shm = reg_pair_to_ptr(param->a1, param->a2);
-+		tee_shm_free(shm);
-+		break;
-+	case OPTEE_SMC_RPC_FUNC_IRQ:
-+		/*
-+		 * An IRQ was raised while secure world was executing,
-+		 * since all IRQs a handled in Linux a dummy RPC is
-+		 * performed to let Linux take the IRQ through the normal
-+		 * vector.
-+		 */
-+		break;
-+	case OPTEE_SMC_RPC_FUNC_CMD:
-+		shm = reg_pair_to_ptr(param->a1, param->a2);
-+		handle_rpc_func_cmd(ctx, optee, shm);
-+		break;
-+	default:
-+		dev_warn(optee->dev, "Unknown RPC func 0x%x\n",
-+			 (u32)OPTEE_SMC_RETURN_GET_RPC_FUNC(param->a0));
-+		break;
-+	}
-+
-+	param->a0 = OPTEE_SMC_CALL_RETURN_FROM_RPC;
-+}
-diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
-new file mode 100644
-index 0000000..b6478b6
---- /dev/null
-+++ b/drivers/tee/optee/supp.c
-@@ -0,0 +1,212 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include "optee_private.h"
-+
-+void optee_supp_init(struct optee_supp *supp)
-+{
-+	memset(supp, 0, sizeof(*supp));
-+	mutex_init(&supp->thrd_mutex);
-+	mutex_init(&supp->supp_mutex);
-+	init_completion(&supp->data_to_supp);
-+	init_completion(&supp->data_from_supp);
-+}
-+
-+void optee_supp_uninit(struct optee_supp *supp)
-+{
-+	mutex_destroy(&supp->thrd_mutex);
-+	mutex_destroy(&supp->supp_mutex);
-+}
-+
-+u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
-+			struct tee_param *param)
-+{
-+	struct optee *optee = tee_get_drvdata(ctx->teedev);
-+	struct optee_supp *supp = &optee->supp;
-+	u32 ret;
-+
-+	/*
-+	 * Other threads blocks here until we've copied our answer from
-+	 * supplicant.
-+	 */
-+	mutex_lock(&supp->thrd_mutex);
-+
-+	/*
-+	 * We have exclusive access now since the supplicant at this
-+	 * point is either doing a
-+	 * wait_for_completion_interruptible(data_to_supp) or is in
-+	 * userspace still about to do the ioctl() to enter
-+	 * optee_supp_read() below.
-+	 */
-+
-+	supp->func = func;
-+	supp->num_params = num_params;
-+	supp->param = param;
-+	supp->req_posted = true;
-+
-+	/* Let supplicant get the data */
-+	complete(&supp->data_to_supp);
-+
-+	/*
-+	 * Wait for supplicant to process and return result, once we've
-+	 * returned from wait_for_completion(data_from_supp) we have
-+	 * exclusive access again.
-+	 */
-+	wait_for_completion(&supp->data_from_supp);
-+
-+	ret = supp->ret;
-+	supp->param = NULL;
-+	supp->req_posted = false;
-+
-+	/* We're done, let someone else talk to the supplicant now. */
-+	mutex_unlock(&supp->thrd_mutex);
-+
++irq_reg_failed:
++	extcon_unregister_interest(&chip->cable.sdp);
++	extcon_unregister_interest(&chip->cable.cdp);
++	extcon_unregister_interest(&chip->cable.dcp);
++	extcon_unregister_interest(&chip->cable.otg);
++extcon_reg_failed:
++	power_supply_unregister(chip->psy_usb);
 +	return ret;
 +}
 +
-+int optee_supp_recv(struct tee_context *ctx, u32 *func, u32 *num_params,
-+		struct tee_param *param)
++static int bq24261_remove(struct i2c_client *client)
 +{
-+	struct tee_device *teedev = ctx->teedev;
-+	struct optee *optee = tee_get_drvdata(teedev);
-+	struct optee_supp *supp = &optee->supp;
-+	int rc;
++	struct bq24261_charger *chip = i2c_get_clientdata(client);
 +
-+	/*
-+	 * In case two supplicants or two threads in one supplicant is
-+	 * calling this function simultaneously we need to protect the
-+	 * data with a mutex which we'll release before returning.
-+	 */
-+	mutex_lock(&supp->supp_mutex);
-+
-+	if (supp->supp_next_send) {
-+		/*
-+		 * optee_supp_recv() has been called again without
-+		 * a optee_supp_send() in between. Supplicant has
-+		 * probably been restarted before it was able to
-+		 * write back last result. Abort last request and
-+		 * wait for a new.
-+		 */
-+		if (supp->req_posted) {
-+			supp->ret = TEEC_ERROR_COMMUNICATION;
-+			supp->supp_next_send = false;
-+			complete(&supp->data_from_supp);
-+		}
-+	}
-+
-+	/*
-+	 * This is where supplicant will be hanging most of the
-+	 * time, let's make this interruptable so we can easily
-+	 * restart supplicant if needed.
-+	 */
-+	if (wait_for_completion_interruptible(&supp->data_to_supp)) {
-+		rc = -ERESTARTSYS;
-+		goto out;
-+	}
-+
-+	/* We have exlusive access to the data */
-+
-+	if (*num_params < supp->num_params) {
-+		/*
-+		 * Not enough room for parameters, tell supplicant
-+		 * it failed and abort last request.
-+		 */
-+		supp->ret = TEEC_ERROR_COMMUNICATION;
-+		rc = -EINVAL;
-+		complete(&supp->data_from_supp);
-+		goto out;
-+	}
-+
-+	*func = supp->func;
-+	*num_params = supp->num_params;
-+	memcpy(param, supp->param,
-+	       sizeof(struct tee_param) * supp->num_params);
-+
-+	/* Allow optee_supp_send() below to do its work */
-+	supp->supp_next_send = true;
-+
-+	rc = 0;
-+out:
-+	mutex_unlock(&supp->supp_mutex);
-+	return rc;
++	flush_scheduled_work();
++	extcon_unregister_interest(&chip->cable.sdp);
++	extcon_unregister_interest(&chip->cable.cdp);
++	extcon_unregister_interest(&chip->cable.dcp);
++	extcon_unregister_interest(&chip->cable.otg);
++	power_supply_unregister(chip->psy_usb);
++	return 0;
 +}
 +
-+int optee_supp_send(struct tee_context *ctx, u32 ret, u32 num_params,
-+			struct tee_param *param)
-+{
-+	struct tee_device *teedev = ctx->teedev;
-+	struct optee *optee = tee_get_drvdata(teedev);
-+	struct optee_supp *supp = &optee->supp;
-+	size_t n;
-+	int rc = 0;
++static const struct i2c_device_id bq24261_id[] = {
++	{"bq24261", 0},
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, bq24261_id);
 +
-+	/*
-+	 * We still have exclusive access to the data since that's how we
-+	 * left it when returning from optee_supp_read().
-+	 */
++static const struct acpi_device_id bq24261_acpi_match[] = {
++	{"TBQ24261", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, bq24261_acpi_match);
 +
-+	/* See comment on mutex in optee_supp_read() above */
-+	mutex_lock(&supp->supp_mutex);
++static const struct of_device_id bq24261_of_match[] = {
++	{ .compatible = "ti,bq24261", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, bq24261_of_match);
 +
-+	if (!supp->supp_next_send) {
-+		/*
-+		 * Something strange is going on, supplicant shouldn't
-+		 * enter optee_supp_send() in this state
-+		 */
-+		rc = -ENOENT;
-+		goto out;
-+	}
++static struct i2c_driver bq24261_driver = {
++	.driver = {
++		.name = DEV_NAME,
++		.acpi_match_table = ACPI_PTR(bq24261_acpi_match),
++		.of_match_table = of_match_ptr(bq24261_of_match),
++	},
++	.probe = bq24261_probe,
++	.remove = bq24261_remove,
++	.id_table = bq24261_id,
++};
 +
-+	if (num_params != supp->num_params) {
-+		/*
-+		 * Something is wrong, let supplicant restart. Next call to
-+		 * optee_supp_recv() will give an error to the requesting
-+		 * thread and release it.
-+		 */
-+		rc = -EINVAL;
-+		goto out;
-+	}
++module_i2c_driver(bq24261_driver);
 +
-+	/* Update out and in/out parameters */
-+	for (n = 0; n < num_params; n++) {
-+		struct tee_param *p = supp->param + n;
++MODULE_AUTHOR("Jenny TC <jenny.tc@intel.com>");
++MODULE_AUTHOR("Ramakrishna Pallala <ramakrishna.pallala@intel.com>");
++MODULE_DESCRIPTION("BQ24261 Charger Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/power/bq24261_charger.h b/include/linux/power/bq24261_charger.h
+new file mode 100644
+index 0000000..6c7d96e
+--- /dev/null
++++ b/include/linux/power/bq24261_charger.h
+@@ -0,0 +1,26 @@
++/*
++ * bq24261_charger.h: platform data structure for bq24261 driver
++ *
++ * Copyright (C) 2014 Intel Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ */
 +
-+		switch (p->attr) {
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-+			p->u.value.a = param[n].u.value.a;
-+			p->u.value.b = param[n].u.value.b;
-+			p->u.value.c = param[n].u.value.c;
-+			break;
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-+		case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-+			p->u.memref.size = param[n].u.memref.size;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+	supp->ret = ret;
++#ifndef __BQ24261_CHARGER_H__
++#define __BQ24261_CHARGER_H__
 +
-+	/* Allow optee_supp_recv() above to do its work */
-+	supp->supp_next_send = false;
++struct bq24261_platform_data {
++	int def_cc;	/* in mA */
++	int def_cv;	/* in mV */
++	int iterm;	/* in mA */
++	int max_cc;	/* in mA */
++	int max_cv;	/* in mV */
++	int min_temp;	/* in DegC */
++	int max_temp;	/* in DegC */
++	int thermal_sensing;
++};
 +
-+	/* Let the requesting thread continue */
-+	complete(&supp->data_from_supp);
-+out:
-+	mutex_unlock(&supp->supp_mutex);
-+	return rc;
-+}
++#endif
 -- 
-1.9.1
+1.7.9.5
