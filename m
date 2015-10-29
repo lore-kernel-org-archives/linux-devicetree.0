@@ -1,63 +1,45 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Setup ethernet0 alias for u-boot
-Date: Thu, 29 Oct 2015 21:52:50 +0100
-Message-ID: <1895461.b5NitQ7UFH@phil>
-References: <1446151497-29833-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V7 1/3] Documentation: DT: Add entry for Freescale LS1043a-RDB board
+Date: Thu, 29 Oct 2015 16:12:04 -0500
+Message-ID: <1446153126-6219-2-git-send-email-leoli@freescale.com>
+References: <1446153126-6219-1-git-send-email-leoli@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446151497-29833-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+In-Reply-To: <1446153126-6219-1-git-send-email-leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+From: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Am Donnerstag, 29. Oktober 2015, 21:44:57 schrieb Sjoerd Simons:
-> Add an ethernet0 alias for the wired network card and an all 0 default
-> mac address so that u-boot can find the device-node and fill in the
-> mac address.
-> 
-> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> ---
-> 
->  arch/arm/boot/dts/rk3288-rock2-square.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-> index 0ef065d..a029ebf 100644
-> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-> @@ -45,6 +45,10 @@
->  	model = "Radxa Rock 2 Square";
->  	compatible = "radxa,rock2-square", "rockchip,rk3288";
->  
-> +	aliases {
-> +		ethernet0 = &gmac;
-> +	};
-> +
+Signed-off-by: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+v2-v7: no change
 
-wouldn't it make more sense to have this in the rk3288.dtsi, so to keep
-every board from having to add this alias?
+ Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 34c88b0..752a685 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -131,6 +131,10 @@ Example:
+ Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
+ ----------------------------------------------------------------
+ 
++LS1043A ARMv8 based RDB Board
++Required root node properties:
++    - compatible = "fsl,ls1043a-rdb", "fsl,ls1043a";
++
+ LS2080A ARMv8 based Simulator model
+ Required root node properties:
+     - compatible = "fsl,ls2080a-simu", "fsl,ls2080a";
+-- 
+2.3.3
 
->  	chosen {
->  		stdout-path = "serial2:115200n8";
->  	};
-> @@ -130,6 +134,8 @@
->  };
->  
->  &gmac {
-> +	/* To be filled in by U-Boot */
-> +	mac-address = [00 00 00 00 00 00];
->  	status = "ok";
->  };
-
-I guess the same applies for the mac placeholder.
-
-Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
