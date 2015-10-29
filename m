@@ -1,119 +1,79 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 1/3] dmaengine: ti-dma-crossbar: dra7: Use bitops instead of
- idr
-Date: Thu, 29 Oct 2015 10:28:49 +0200
-Message-ID: <1446107331-30041-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1446107331-30041-1-git-send-email-peter.ujfalusi@ti.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v8 06/17] dt-bindings: add document for analogix display port driver
+Date: Thu, 29 Oct 2015 09:40:37 +0100
+Message-ID: <1689999.2MgYqJktlx@phil>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com> <103292898.nCEg51kmfI@phil> <56317275.90508@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1446107331-30041-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: vinod.koul@intel.com, nsekhar@ti.com
-Cc: devicetree@vger.kernel.org, tony@atomide.com, r.schwebel@pengutronix.de, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56317275.90508-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
-The use of idr was nice, but it was a bit heavy and we did not need the
-features it provides. Using simple bitmap to track allocated DMA channels
-is adequate here and it will be easier to add support for reserving
-channels later on.
+Am Donnerstag, 29. Oktober 2015, 09:12:21 schrieb Yakir Yang:
+> Hi Heiko,
+> 
+> On 10/29/2015 04:02 AM, Heiko Stuebner wrote:
+> > Hi Yakir,
+> >
+> > Am Mittwoch, 28. Oktober 2015, 16:26:33 schrieb Yakir Yang:
+> >> diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
+> >> index 7a3a9cd..9905081 100644
+> >> --- a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
+> >> +++ b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
+> >> @@ -31,45 +31,31 @@ Required properties for dp-controller:
+> >>   		from general PHY binding: the phandle for the PHY device.
+> >>   	-phy-names:
+> >>   		from general PHY binding: Should be "dp".
+> >> -	-samsung,color-space:
+> >> -		input video data format.
+> >> -			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
+> >> -	-samsung,dynamic-range:
+> >> -		dynamic range for input video data.
+> >> -			VESA = 0, CEA = 1
+> >> -	-samsung,ycbcr-coeff:
+> >> -		YCbCr co-efficients for input video.
+> >> -			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
+> >> -	-samsung,color-depth:
+> >> -		number of bits per colour component.
+> >> -			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
+> >> -	-samsung,link-rate:
+> >> -		link rate supported by the panel.
+> >> -			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
+> >> -	-samsung,lane-count:
+> >> -		number of lanes supported by the panel.
+> >> -			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
+> >> -	- display-timings: timings for the connected panel as described by
+> >> -		Documentation/devicetree/bindings/video/display-timing.txt
+> > 											^^ display/display-timings.txt
+> > otherwise this patch does not apply.
+> 
+> I thought I have deleted this old path of "display-timing.txt", and 
+> changed it to
+> 
+> -		Documentation/devicetree/bindings/video/display-timing.txt
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti-dma-crossbar.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+in the changes I got from Rob Hering's dt-branch [0] the path in the file
+is already display/display-timing.txt so applying a change with video/...
+in it fails. Anyway, as this will probably only make it in after the merge-
+window, we can see how this ends up before anyway :-) .
 
-diff --git a/drivers/dma/ti-dma-crossbar.c b/drivers/dma/ti-dma-crossbar.c
-index a415edbe61b1..5fe1909d4ec4 100644
---- a/drivers/dma/ti-dma-crossbar.c
-+++ b/drivers/dma/ti-dma-crossbar.c
-@@ -12,7 +12,6 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/io.h>
--#include <linux/idr.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_dma.h>
-@@ -198,7 +197,8 @@ struct ti_dra7_xbar_data {
- 	void __iomem *iomem;
- 
- 	struct dma_router dmarouter;
--	struct idr map_idr;
-+	struct mutex mutex;
-+	unsigned long *dma_inuse;
- 
- 	u16 safe_val; /* Value to rest the crossbar lines */
- 	u32 xbar_requests; /* number of DMA requests connected to XBAR */
-@@ -225,7 +225,9 @@ static void ti_dra7_xbar_free(struct device *dev, void *route_data)
- 		map->xbar_in, map->xbar_out);
- 
- 	ti_dra7_xbar_write(xbar->iomem, map->xbar_out, xbar->safe_val);
--	idr_remove(&xbar->map_idr, map->xbar_out);
-+	mutex_lock(&xbar->mutex);
-+	clear_bit(map->xbar_out, xbar->dma_inuse);
-+	mutex_unlock(&xbar->mutex);
- 	kfree(map);
- }
- 
-@@ -255,8 +257,17 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	map->xbar_out = idr_alloc(&xbar->map_idr, NULL, 0, xbar->dma_requests,
--				  GFP_KERNEL);
-+	mutex_lock(&xbar->mutex);
-+	map->xbar_out = find_next_zero_bit(xbar->dma_inuse, xbar->dma_requests,
-+					   0);
-+	mutex_unlock(&xbar->mutex);
-+	if (map->xbar_out) {
-+		dev_err(&pdev->dev, "Run out of free DMA requests\n");
-+		kfree(map);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	set_bit(map->xbar_out, xbar->dma_inuse);
-+
- 	map->xbar_in = (u16)dma_spec->args[0];
- 
- 	dma_spec->args[0] = map->xbar_out + xbar->dma_offset;
-@@ -299,8 +310,6 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
- 	if (!xbar)
- 		return -ENOMEM;
- 
--	idr_init(&xbar->map_idr);
--
- 	dma_node = of_parse_phandle(node, "dma-masters", 0);
- 	if (!dma_node) {
- 		dev_err(&pdev->dev, "Can't get DMA master node\n");
-@@ -322,6 +331,12 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
- 	}
- 	of_node_put(dma_node);
- 
-+	xbar->dma_inuse = devm_kcalloc(&pdev->dev,
-+				       BITS_TO_LONGS(xbar->dma_requests),
-+				       sizeof(unsigned long), GFP_KERNEL);
-+	if (!xbar->dma_inuse)
-+		return -ENOMEM;
-+
- 	if (of_property_read_u32(node, "dma-requests", &xbar->xbar_requests)) {
- 		dev_info(&pdev->dev,
- 			 "Missing XBAR input information, using %u.\n",
-@@ -343,6 +358,7 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
- 	xbar->dmarouter.route_free = ti_dra7_xbar_free;
- 	xbar->dma_offset = (u32)match->data;
- 
-+	mutex_init(&xbar->mutex);
- 	platform_set_drvdata(pdev, xbar);
- 
- 	/* Reset the crossbar */
--- 
-2.6.1
+> 
+> +		Documentation/devicetree/bindings/display/panel/display-timing.txt
+> 
+> And the real path of "display-timing.txt" in linux-next [tag 20151022] 
+> do under
+> the "display/panel/", those change should be right.
+
+
+Heiko
+
+[0] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=efdbd7345f8836f7495f3ac6ee237d86cb3bb6b0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
