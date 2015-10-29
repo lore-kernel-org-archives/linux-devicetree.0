@@ -1,56 +1,53 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] arm: dts: lpc32xx: updates to LPC32xx SoC and
- boards
-Date: Fri, 30 Oct 2015 00:06:38 +0200
-Message-ID: <5632986E.6090703@mleia.com>
-References: <1445117757-8073-1-git-send-email-vz@mleia.com> <3973745.SoYxz6UFdV@wuerfel>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3] Input: tsc2005 - Add support for tsc2004
+Date: Thu, 29 Oct 2015 15:23:31 -0700
+Message-ID: <20151029222331.GA1419@localhost>
+References: <1446077554-19684-1-git-send-email-mwelling@ieee.org>
+ <201510291514.OprNyiZf%fengguang.wu@intel.com>
+ <20151029142237.GA11531@qwerty.qwertyembedded>
+ <4152426.STHOuGxqsW@wuerfel>
+ <20151029215353.GA10355@deathstar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3973745.SoYxz6UFdV@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151029215353.GA10355@deathstar>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On 21.10.2015 17:45, Arnd Bergmann wrote:
-> On Sunday 18 October 2015 00:35:49 Vladimir Zapolskiy wrote:
->> The change improves description of NXP LPC32xx hardware, among
->> important changes it adds standard timers and external memory
->> controller nodes, splits PWM device node into two,
->>
->> Changes from v1 to v2:
->> - removed v1 2/5 "arm: dts: lpc32xx: fix improper usage of ranges property"
->> - v1 4/5 "arm: dts: lpc32xx: remove unneeded cell settings from cpus"
->>   is replaced by v2 3/8 "arm: dts: lpc32xx: add reg property to cpu device node"
->> - new change, sets physical memory offset for EA3250 and PHY3250 v5/8
->> - new change, added EMC device node v2 6/8
->> - new change, added standard timer nodes v2 7/8
->> - new change, grouped USB subdevices together v2 8/8
+On Thu, Oct 29, 2015 at 04:53:53PM -0500, Michael Welling wrote:
+> On Thu, Oct 29, 2015 at 10:46:20PM +0100, Arnd Bergmann wrote:
+> > On Thursday 29 October 2015 09:22:37 Michael Welling wrote:
+> > > > 
+> > > > All errors (new ones prefixed by >>):
+> > > > 
+> > > >    drivers/built-in.o: In function `tsc2005_cmd':
+> > > > >> tsc200x-core.c:(.text+0x2ae07f): undefined reference to `i2c_smbus_write_byte'
+> > > 
+> > > Argh!
+> > > 
+> > > How do I fix this one?
+> > > 
+> > 
+> > Move all the I2C specific code into the tsc2004.c file and remove the
+> > #ifdef. The problem is that tsc200x-core.c is used as built-in when
+> > TOUCHSCREEN_TSC2005=y and I2C=m, so it can't call functions that are
+> > defined in i2c-core.c.
 > 
-> Looks ok to me. Who should pick them up? I haven't seen pull requests from
-> Roland in a while. If he's still interested in the port, I think it would be
-> best if he could create a branch here.
+> How would I call the function from the core then?
 
-I still don't see a reply from Roland, if possible please apply the
-patches to arm-soc this time.
+You can pass a cmd function from the transport module into core module
+and store and use it.
 
-> If not, we can pick them up directly this time into arm-soc, but then we
-> should find a new maintainer.
-> 
+However, you have regmap in the driver core already. Mark, is it
+possible to have regmap API also allow doing raw underlying protocol
+transfer so that consumers could issue command requests without needing
+to know if they need to do it over i2c or spi or whatever. Or we need a
+notion of command registers in regmap...
 
-I have some interest in LPC32xx SoC, I know the SoC very well (authored
-LPC32xx support in U-boot) and there are more patches in my queue, if
-there is no objection from anyone, I would be happy to become a
-maintainer of the platform.
+Thanks.
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
