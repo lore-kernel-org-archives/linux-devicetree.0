@@ -1,107 +1,85 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 0/6] Altera PCIe host controller driver with MSI
- support
-Date: Thu, 29 Oct 2015 18:22:38 -0500
-Message-ID: <20151029232238.GB11994@localhost>
-References: <1445596035-27733-1-git-send-email-lftan@altera.com>
- <20151027142644.GA8660@localhost>
- <CAFiDJ5_vCqh=uKkF2E_BQkJUv692r3yr26bBj8boK2DY_Dj+gA@mail.gmail.com>
- <CAErSpo5okE86k846hs28s4jvL59hmm+4az-dDsymzNayPCPCzw@mail.gmail.com>
- <CAFiDJ59wOUj-Mr3cyqQEz+P=8AkmRoy7XzUCmM33_e03Y2G_ZQ@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Thu, 29 Oct 2015 16:38:00 -0700
+Message-ID: <20151029233800.GB19782@codeaurora.org>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+ <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+ <55F72C97.2030306@kernel.org>
+ <20151016002243.GA23912@codeaurora.org>
+ <20151016060227.GS19018@linux>
+ <20151016191658.GA16437@codeaurora.org>
+ <20151017041055.GZ19018@linux>
+ <20151022163942.GX8232@sirena.org.uk>
+ <20151027081917.GD5505@ubuntu>
+ <20151028081742.GC28319@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFiDJ59wOUj-Mr3cyqQEz+P=8AkmRoy7XzUCmM33_e03Y2G_ZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20151028081742.GC28319-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 02:25:11PM +0800, Ley Foon Tan wrote:
-> On Wed, Oct 28, 2015 at 9:02 AM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> > On Tue, Oct 27, 2015 at 7:56 PM, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
-> >> On Tue, Oct 27, 2015 at 10:26 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >>> Hi Ley,
-> >>>
-> >>> On Fri, Oct 23, 2015 at 06:27:09PM +0800, Ley Foon Tan wrote:
-> >>>> This is the 12th version of patch set to add support for Altera PCIe host
-> >>>> controller with MSI feature on Altera FPGA device families. This patchset
-> >>>> mainly resovle the comments from Bjorn.
-> >>>>
-> >>>>
-> >>>> This patchset is based on v4.3-rc6.
-> >>>>
-> >>>> v11->v12 changes:
-> >>>> - pcie-altera: use DECLARE_PCI_FIXUP_EARLY for pcie retrain fixup
-> >>>> - pcie-altera: move pcie_bus_configure_settings before pci_bus_add_devices
-> >>>> - pcie-altera: add %d for irq bit in dev_err()
-> >>>> - pcie-altera: prevent enumeration of root complex resources in config accessors
-> >>>> - Documentation: add Acked-by from Rob Herring
-> >>>>
-> >>>> History:
-> >>>> -------
-> >>>> [v1]: https://lkml.org/lkml/2015/7/28/395
-> >>>> [v2]: https://lkml.org/lkml/2015/7/31/267
-> >>>> [v3]: http://www.kernelhub.org/?msg=811940&p=2
-> >>>> [v4]: https://lkml.org/lkml/2015/8/17/141
-> >>>> [v5]: https://lkml.org/lkml/2015/8/25/238
-> >>>> [v6]: https://lkml.org/lkml/2015/9/1/177
-> >>>> [v7]: https://lkml.org/lkml/2015/9/20/193
-> >>>> [v8]: http://www.kernelhub.org/?msg=853553&p=2
-> >>>> [v9]: https://lkml.org/lkml/2015/10/13/998
-> >>>> [v10]: https://lkml.org/lkml/2015/10/19/139
-> >>>> [v11]: https://lkml.org/lkml/2015/10/22/206
-> >>>>
-> >>>>
-> >>>> Ley Foon Tan (6):
-> >>>>   arm: add msi.h to Kbuild
-> >>>>   pci: add Altera PCI vendor ID
-> >>>>   pci:host: Add Altera PCIe host controller driver
-> >>>>   pci: altera: Add Altera PCIe MSI driver
-> >>>>   Documentation: dt-bindings: pci: altera pcie device tree binding
-> >>>>   MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
-> >>>>
-> >>>>  .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
-> >>>>  .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
-> >>>>  MAINTAINERS                                        |  16 +
-> >>>>  arch/arm/include/asm/Kbuild                        |   1 +
-> >>>>  drivers/pci/host/Kconfig                           |  16 +
-> >>>>  drivers/pci/host/Makefile                          |   2 +
-> >>>>  drivers/pci/host/pcie-altera-msi.c                 | 314 +++++++++++
-> >>>>  drivers/pci/host/pcie-altera.c                     | 580 +++++++++++++++++++++
-> >>>>  include/linux/pci_ids.h                            |   2 +
-> >>>>  9 files changed, 1008 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> >>>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
-> >>>>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
-> >>>>  create mode 100644 drivers/pci/host/pcie-altera.c
-> >>>
-> >>> I applied these to pci/host-altera for v4.4, thanks!
-> >>>
-> >>> I squashed these into three patches:
-> >>>
-> >>>   - add msi.h to Kbuild
-> >>>   - add Altera host driver (including DT binding and MAINTAINERS update)
-> >>>   - add Altera MSI driver (including DT binding and MAINTAINERS update)
-> >>>
-> >>> Since the convention is to add PCI ID #defines only when they are used in
-> >>> multiple places, I replaced PCI_VENDOR_ID_ALTERA with 0x1172 in the single
-> >>> place it is used.
-> >> Hi Bjorn
-> >>
-> >> Thanks for applied these.
-> >>
-> >> By the way, I can't see pci/host-altera branch in your pci.git tree
-> >> yet. It takes some time to appear there?
-> >
-> > Sorry, I forgot to push it.  It should be there now!
-> >
-> Yes, saw it now. It will merge to 'next' branch eventually?
+On 10/28, Mark Brown wrote:
+> On Tue, Oct 27, 2015 at 01:49:17PM +0530, Viresh Kumar wrote:
+> > On 23-10-15, 01:39, Mark Brown wrote:
+> 
+> > > I'm not sure that's
+> > > a place we want to end up just yet, I think it's safer to just have a
+> > > little bit of code in the kernel that glues things together in the cases
+> > > where this is needed.  
+> 
+> > So you are effectively saying that we shouldn't go ahead with multi
+> > regulator support in OPP library, right?
+> 
+> Well, I think things like libraries for getting the data tables out of
+> DT are fine but I'm not convinced that trying to avoid having any device
+> specific code at all is sufficiently clear yet - as far as I know we're
+> mostly looking at a fairly small subset of devices still and with things
+> like sequencing in the mix it's a bit worrying to me to be putting it
+> all into an ABI intended to be used with no knowledge of the platform.
 
-Yep, I just merged it to 'next' and pushed it.
+Agreed. Looking at the current oppv2 binding I'm confused how it
+even works. It shows cpu-supply = <&phandle1>, <&phandle2>, etc.
+which doesn't work with the regulator bindings design. It seems
+that Viresh figured that out when implementing support for
+multiple regulators, so the binding was changed to put names in
+the opp tables and then use that to get regulators in the opp
+core. Urgh.
 
-Bjorn
+I think I understand the goal here though. The goal is to move
+all the clk_get()/regulator_get() and clock and regulator API
+interactions into the OPP framework so that we can say "go to OPP
+at index 4" from the cpufreq core and the OPP framework takes
+care of actually doing the transition. Given that doing such a
+transition could be very machine specific, we probably ought to
+make the OPP framework flexible enough to let us decide how to do
+that.
+
+Perhaps we need to expand on the compatible string in the opp
+node to have compatible = "vendor,cool-transition",
+"operating-points-v2"? Then we can plug in vendor specific
+drivers that handle the frequency/voltage transition and they'll
+know that the fourth column in the voltage entry corresponds to
+this particular device's foo-supply and in what order to change
+voltages. A generic driver could exist for the simple case of one
+regulator and one clock that matches on "operating-points-v2".
+
+Or we can avoid doing any clk_get()/regulator_get() stuff inside
+the OPP framework, and let OPP consumers tell the OPP framework
+about each clock and regulator it wants the framework to manage
+on the consumer's behalf. It could even tell the framework which
+regulator corresponds to which voltage column and in what order
+to change the voltages so that the OPP framework doesn't need to
+know these device specific details. Then the consumer can still
+say go to OPP level 4 and that all works without introducing some
+new DT ABI.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
