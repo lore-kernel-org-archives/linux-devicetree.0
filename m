@@ -1,48 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
-Date: Thu, 29 Oct 2015 15:03:51 +0100
-Message-ID: <CAMuHMdX1AeBJdF1RBeByHKPVonXmdZiE-ZumphR2RLmJ+4wUzg@mail.gmail.com>
-References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
-	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
-	<20151020122448.20687.11926@quantum>
-	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
-	<20151020130004.20687.91058@quantum>
-	<CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
-	<CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH v3] Input: tsc2005 - Add support for tsc2004
+Date: Thu, 29 Oct 2015 09:22:37 -0500
+Message-ID: <20151029142237.GA11531@qwerty.qwertyembedded>
+References: <1446077554-19684-1-git-send-email-mwelling@ieee.org>
+ <201510291514.OprNyiZf%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201510291514.OprNyiZf%fengguang.wu@intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 2:58 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->   - Calling platform_driver_probe() from arch_initcall() is too late, as the
->     IRQC is initialized first (it's located before the CPG in .dtsi).
->     Hence the IRQC can't find it's Clock Domain, and its probe is deferred.
->     IRQC will be reprobed later, but in the mean time the Ethernet PHY can't
->     find its IRQ, as the of_mdio code uses irq_of_parse_and_map(), which
->     plainly ignores EPROBE_DEFER :-(
->     Nevertheless, Ethernet works...
+On Thu, Oct 29, 2015 at 03:25:34PM +0800, kbuild test robot wrote:
+> Hi Michael,
+> 
+> [auto build test ERROR on input/next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Michael-Welling/Input-tsc2005-Add-support-for-tsc2004/20151029-081504
+> config: x86_64-randconfig-s1-10291412 (attached as .config)
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/built-in.o: In function `tsc2005_cmd':
+> >> tsc200x-core.c:(.text+0x2ae07f): undefined reference to `i2c_smbus_write_byte'
 
-To correct myself: renesas-irqc is initialized first because it uses
-postcore_initcall().
+Argh!
 
-The of_mdio issue on R-Car Gen2 boards can be worked around by changing that
-to device_initcall(). That would cause a few more probe deferrals on R-Mobile
-APE6 (r8a73a4), where IRQC is not only the external interrupt controller,
-but also the parent interrupt controller of the PFC/GPIO combo.
+How do I fix this one?
 
-Gr{oetje,eeting}s,
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
