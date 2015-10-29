@@ -1,119 +1,130 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
-Date: Thu, 29 Oct 2015 11:06:18 -0500
-Message-ID: <1446134778.701.374.camel@freescale.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
-	 <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
-	 <1445406845.701.55.camel@freescale.com>
-	 <CAL_JsqLhZmc8cEC+tFJ25KLe0bQZsWmrRWGBMQake9VN6OjvdQ@mail.gmail.com>
-	 <1445467912.701.90.camel@freescale.com>
-	 <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com>
-	 <1445549230.701.116.camel@freescale.com>
-	 <CAAObsKDR6pTEDK-G+jw+cr9MD-XoZqU8niqvDFHqFM0ve-+Smw@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
+ bus
+Date: Thu, 29 Oct 2015 11:02:37 -0500
+Message-ID: <alpine.DEB.2.02.1510291026020.17743@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <CAL_JsqK2twfWzCKucuSLrsD2rL3=ReUXt3uPdFcsf8B0Tg42Lg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKDR6pTEDK-G+jw+cr9MD-XoZqU8niqvDFHqFM0ve-+Smw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hu Mingkai-B21284 <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK2twfWzCKucuSLrsD2rL3=ReUXt3uPdFcsf8B0Tg42Lg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, delicious.quinoa@gmail.com, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-10-28 at 15:40 +0100, Tomeu Vizoso wrote:
-> On 22 October 2015 at 23:27, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > On Thu, 2015-10-22 at 15:04 +0200, Tomeu Vizoso wrote:
-> > > On 22 October 2015 at 00:51, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > > On Wed, 2015-10-21 at 08:44 -0500, Rob Herring wrote:
-> > > > > On Wed, Oct 21, 2015 at 12:54 AM, Scott Wood <
-> > > > > scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > > wrote:
-> > > > > > On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
-> > > > > > > Instead of trying to match and probe platform and AMBA devices 
-> > > > > > > right
-> > > > > > > after each is registered, delay their probes until
-> > > > > > > device_initcall_sync.
-> > > > > > > 
-> > > > > > > This means that devices will start probing once all built-in 
-> > > > > > > drivers
-> > > > > > > have registered, and after all platform and AMBA devices from 
-> > > > > > > the DT
-> > > > > > > have been registered already.
-> > > > > > > 
-> > > > > > > This allows us to prevent deferred probes by probing 
-> > > > > > > dependencies on
-> > > > > > > demand.
-> > > > > > > 
-> > > > > > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > > > > > > ---
-> > > > > > > 
-> > > > > > > Changes in v4:
-> > > > > > > - Also defer probes of AMBA devices registered from the DT as 
-> > > > > > > they
-> > > > > > > can
-> > > > > > >   also request resources.
-> > > > > > > 
-> > > > > > >  drivers/of/platform.c | 11 ++++++++---
-> > > > > > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > > > > > 
-> > > > > > This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF
-> > > > > > platform
-> > > > > > device, and it must be probed before pcibios_init() which is a
-> > > > > > subsys_initcall(), or else the PCI bus never gets scanned.
-> > > > > 
-> > > > > Thanks for the report. This is probably getting dropped, but it 
-> > > > > could
-> > > > > be disabled for PPC.
-> > > > 
-> > > > I don't think that adding another arbitrary arch difference would be 
-> > > > the
-> > > > right solution.
-> > > 
-> > > I think Rob meant temporarily disable it while things get fixed. At
-> > > least,
-> > 
-> > So, what is the permanent fix for the swiotlb issue (or more generally, 
-> > the
-> > inability to have a late_initcall that runs after non-module, non-hotplug
-> > platform devices have been probed)?
+On Wed, 28 Oct 2015, Rob Herring wrote:
+
+> On Tue, Oct 27, 2015 at 5:09 PM,  <atull@opensource.altera.com> wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> >
+> > New bindings document for simple fpga bus.
+> >
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> > v9:  initial version added to this patchset
+> > v10: s/fpga/FPGA/g
+> >      replace DT overlay example with slightly more complicated example
+> >      move to staging/simple-fpga-bus
+> > v11: No change in this patch for v11 of the patch set
+> > v12: Moved out of staging.
+> >      Changed to use FPGA bridges framework instead of resets
+> >      for bridges.
+> > ---
+> >  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > new file mode 100644
+> > index 0000000..2e742f7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> > @@ -0,0 +1,81 @@
+> > +Simple FPGA Bus
+> > +===============
+> > +
+> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> > +before populating the devices below its node.  All this happens when a device
+> > +tree overlay is added to the live tree.  This document describes that device
+> > +tree overlay.
+> > +
+> > +Required properties:
+> > +- compatible : should contain "simple-fpga-bus"
+> > +- #address-cells, #size-cells, ranges: must be present to handle address space
+> > +  mapping for children.
+> > +
+> > +Optional properties:
+> > +- fpga-mgr : should contain a phandle to a FPGA manager.
+> > +- fpga-firmware : should contain the name of a FPGA image file located on the
+> > +  firmware search path.
 > 
-> If the code in pcibios_init() depends on the PCI bus device having
-> probed, then I would recommend making that dependency explicit by
-> calling of_device_probe() on the OF node of the PCI controller when
-> looking it up.
+> Putting firmware filename in DT has come up in other cases recently[1]
+> and we concluded it should not be in the DT. Maybe the conclusion
+> would be different here, and if so we should have a common property
+> here.
 
-"when looking it up"?  pcibios_init() doesn't do anything with the OF node or 
-know any details about the particular PCI bus host implementation.
+Interesting discussion.
 
-> > > I don't see any reason why PPC wouldn't benefit from this
-> > > series.
-> > 
-> > It's not clear to me what the benefit of this is at all, much less for 
-> > PPC.
-> > What is the fundamental problem with deferred probes?  In the cover letter
-> > you say this change saves 2.3 seconds, but where is that time being 
-> > consumed?
-> >  Are the drivers taking too long in their probe function trying to 
-> > initialize
-> > and then deferring, rather than checking for dependencies up front?  Or 
-> > are
-> > there really so many devices and such a pessimal ordering that most of the
-> > time is spent iterating through and reordering the list, with each defer
-> > happening quickly?
+One FPGA image will almost always have multiple hardware devices in it.
+The device blocks will be reused in various combinations in different
+FPGA images.  So hardwiring the image name in some specific driver won't
+be possible.  Also many of the devices that could appear on a FPGA also
+could appear in normal hardware.  Same driver for both cases, just
+different address.
+
+I won't have control of the name of the firmware file.  It will be something
+that makes sense to a FPGA hardware guy so translating the node name to an
+image name would be brittle.
+
+Renaming this as a generic property "firmware-name" or "firmware" would be
+an improvement on what I proposed.
+
+If it is acceptible to have this in the DT, it means FPGA hardware development
+workflow does not require a kernel rebuild.  The DT can collect together the
+image name, the bridges to the FPGA (or to that area of the FPGA), and a list
+of the devices/drivers in that image.
+
 > 
-> The problem is that a device that defers its probe is currently sent
-> to the back of the queue, and that's undesired in some use cases in
-> which there's a device that should be up as soon as possible during
-> boot (and boot takes a long time). So the goal is to change the order
-> in which devices with dependencies end up probing.
+> > +- partial-reconfig : boolean property should be defined if partial
+> > +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> > +  is done.
+> > +- fpga-bridges : should contain a list of bridges that the bus will disable
+> > +  before   programming the FPGA and then enable after the FPGA has been
+> > +
+> > +Example:
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +/ {
+> > +       fragment@0 {
+> > +               target-path="/soc";
+> > +               __overlay__ {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +
+> > +                       bridge@0xff200000 {
+> > +                               compatible = "simple-fpga-bus";
+> > +                               reg = <0xc0000000 0x20000000>,
+> > +                                     <0xff200000 0x00200000>;
+> 
+> You have registers for the bus, so therefore it is not simple. I think
+> the bus or bridge needs a specific compatible
+> 
 
-That doesn't answer my question about where the time is being spent.  Did you 
-profile?
+The reg here is cruft from device tree generation.  I don't use it and will
+clean it out.  After I've done that, does that become simple again?
 
--Scott
+What I need in a bus is:
+ - Handles 'ranges'
+ - Controls enabling/disabling bridges and programs the FPGA
+ - Populates the child devices (and there will probably be many)
 
+This raises another issue: each area of the FPGA is likely to have multiple
+bridges. That's why I had a list of phandles to bridges rather than
+different bus for each type of bridge.  Is that acceptible-ish?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rob
+> 
+> [1] http://www.spinics.net/lists/devicetree/msg92462.html
+> 
