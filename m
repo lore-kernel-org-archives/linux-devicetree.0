@@ -1,141 +1,100 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH v4 3/4] drivers: exynos-srom: Add support for bank configuration
-Date: Thu, 29 Oct 2015 15:42:19 +0300
-Message-ID: <4312ee676afb81377610ae05d0373ebd3b51ddde.1446122247.git.p.fedin@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <cover.1446122247.git.p.fedin@samsung.com>
-In-reply-to: <cover.1446122247.git.p.fedin@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3] mtd: create a partition type device tree binding
+Date: Thu, 29 Oct 2015 13:52:30 +0100
+Message-ID: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement handling properties in subnodes and adding child devices to the
-system. Child devices will not be added if configuration fails.
+The Linux code in drivers/mtd/maps/physmap_of.c will optionally
+look for the linux,part-probe binding for hints on a partition type to
+look for in the MTD. It was added in commit 9d5da3a9b849
+"mtd: extend physmap_of to let the device tree specify the parition probe"
 
-Since the driver now does more than suspend-resume support, dependency on
-CONFIG_PM is removed.
+This solution is too Linux-specific and depend on some
+Linux kernel-internal naming conventions. We need a proper
+way of describing partition types that follow the pattern set by
+other device tree bindings.
 
-Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
+Create a "partition-type" binding for this, and add "my" bindings
+for "arm,arm-flash-structure" as a starter for others to follow.
+A follow-on patch adds support to the Linux kernel to handle this
+binding, with some infrastructure for others to use it too.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Reported-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/mach-exynos/Kconfig      |  2 +-
- drivers/soc/samsung/Kconfig       |  2 +-
- drivers/soc/samsung/exynos-srom.c | 58 +++++++++++++++++++++++++++++++++++++--
- 3 files changed, 58 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/mtd/mtd-physmap.txt        |  2 ++
+ .../devicetree/bindings/mtd/partition.txt          | 35 +++++++++++++++++++---
+ 2 files changed, 33 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 83c85f5..c22dc42 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -16,7 +16,7 @@ menuconfig ARCH_EXYNOS
- 	select ARM_GIC
- 	select COMMON_CLK_SAMSUNG
- 	select EXYNOS_THERMAL
--	select EXYNOS_SROM if PM
-+	select EXYNOS_SROM
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_S3C2410_I2C if I2C
- 	select HAVE_S3C2410_WATCHDOG if WATCHDOG
-diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-index 2833b5b..ea4bc2a 100644
---- a/drivers/soc/samsung/Kconfig
-+++ b/drivers/soc/samsung/Kconfig
-@@ -8,6 +8,6 @@ config SOC_SAMSUNG
+diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+index 4a0a48bf4ecb..863560bdbb19 100644
+--- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
++++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+@@ -23,6 +23,8 @@ file systems on embedded devices.
+    unaligned accesses as implemented in the JFFS2 code via memcpy().
+    By defining "no-unaligned-direct-access", the flash will not be
+    exposed directly to the MTD users (e.g. JFFS2) any more.
++ - partition-type : a flash partition type to expect and probe for
++   on this device. See "partition.txt" for available partition types.
+  - linux,mtd-name: allow to specify the mtd name for retro capability with
+    physmap-flash drivers as boot loader pass the mtd partition via the old
+    device name physmap-flash.
+diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+index 8e5557da1955..85d45764a4b3 100644
+--- a/Documentation/devicetree/bindings/mtd/partition.txt
++++ b/Documentation/devicetree/bindings/mtd/partition.txt
+@@ -1,9 +1,36 @@
+ Representing flash partitions in devicetree
  
- config EXYNOS_SROM
- 	bool
--	depends on ARM && ARCH_EXYNOS && PM
-+	depends on ARM && ARCH_EXYNOS
+-Partitions can be represented by sub-nodes of an mtd device. This can be used
+-on platforms which have strong conventions about which portions of a flash are
+-used for what purposes, but which don't use an on-flash partition table such
+-as RedBoot.
++On-device partition types:
++
++It is possible for some drivers to indicate an on-device partition type, i.e.
++partition tables, footers or other binary pattern in the flash used to
++define how the flash is partitioned. This can be done in the device tree node
++of an MTD device by specifying partition-type = "foo"; This tells the operating
++system to look for the partition type indicated.
++
++Required properties:
++- partition-type : the type of partition. Only one type can be specified.
++  Valid types are:
++  "arm,arm-flash-structure" (also called AFS)
++
++Example:
++
++flash0@40000000 {
++	/* 2 * 32MiB NOR Flash memory */
++	compatible = "arm,vexpress-flash", "cfi-flash";
++	partition-type = "arm,arm-flash-structure";
++	reg = <0x40000000 0x04000000>;
++	bank-width = <4>;
++};
++
++
++Device Tree specified partitions:
++
++If there is no specified on-device binary format, partitions can be
++represented by sub-nodes of an mtd device. This can be used on platforms which
++have strong conventions about which portions of a flash are used for what
++purposes.
++
+ NOTE: if the sub-node has a compatible string, then it is not a partition.
  
- endmenu
-diff --git a/drivers/soc/samsung/exynos-srom.c b/drivers/soc/samsung/exynos-srom.c
-index 57a232d..68e894f 100644
---- a/drivers/soc/samsung/exynos-srom.c
-+++ b/drivers/soc/samsung/exynos-srom.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
-@@ -67,11 +68,48 @@ static struct exynos_srom_reg_dump *exynos_srom_alloc_reg_dump(
- 	return rd;
- }
- 
-+static int decode_sromc(struct exynos_srom *srom, struct device_node *np)
-+{
-+	u32 bank, width;
-+	u32 timing[7];
-+	u32 cs, bw;
-+
-+	if (of_property_read_u32(np, "samsung,srom-bank", &bank))
-+		return -EINVAL;
-+	if (of_property_read_u32(np, "samsung,srom-data-width", &width))
-+		width = 1;
-+	if (of_property_read_u32_array(np, "samsung,srom-timing", timing,
-+				       ARRAY_SIZE(timing)))
-+		return -EINVAL;
-+
-+	bank *= 4; /* Convert bank into shift/offset */
-+
-+	cs = 1 << EXYNOS_SROM_BW__BYTEENABLE__SHIFT;
-+	if (width == 2)
-+		cs |= 1 << EXYNOS_SROM_BW__DATAWIDTH__SHIFT;
-+
-+	bw = __raw_readl(srom->reg_base + EXYNOS_SROM_BW);
-+	bw = (bw & ~(EXYNOS_SROM_BW__CS_MASK << bank)) | (cs << bank);
-+	__raw_writel(bw, srom->reg_base + EXYNOS_SROM_BW);
-+
-+	__raw_writel((timing[0] << EXYNOS_SROM_BCX__PMC__SHIFT) |
-+		    (timing[1] << EXYNOS_SROM_BCX__TACP__SHIFT) |
-+		    (timing[2] << EXYNOS_SROM_BCX__TCAH__SHIFT) |
-+		    (timing[3] << EXYNOS_SROM_BCX__TCOH__SHIFT) |
-+		    (timing[4] << EXYNOS_SROM_BCX__TACC__SHIFT) |
-+		    (timing[5] << EXYNOS_SROM_BCX__TCOS__SHIFT) |
-+		    (timing[6] << EXYNOS_SROM_BCX__TACS__SHIFT),
-+		    srom->reg_base + EXYNOS_SROM_BC0 + bank);
-+
-+	return 0;
-+}
-+
- static int exynos_srom_probe(struct platform_device *pdev)
- {
--	struct device_node *np;
-+	struct device_node *np, *child;
- 	struct exynos_srom *srom;
- 	struct device *dev = &pdev->dev;
-+	bool error = false;
- 
- 	np = dev->of_node;
- 	if (!np) {
-@@ -100,7 +138,23 @@ static int exynos_srom_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
--	return 0;
-+	for_each_child_of_node(np, child) {
-+		if (decode_sromc(srom, child)) {
-+			dev_err(dev,
-+				"Could not decode bank configuration for %s\n",
-+				child->name);
-+			error = true;
-+		}
-+	}
-+
-+	/*
-+	 * If any bank failed to configure, we still provide suspend/resume,
-+	 * but do not probe child devices
-+	 */
-+	if (error)
-+		return 0;
-+
-+	return of_platform_populate(np, NULL, NULL, dev);
- }
- 
- static int exynos_srom_remove(struct platform_device *pdev)
+ #address-cells & #size-cells must both be present in the mtd device. There are
 -- 
-2.4.4
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
