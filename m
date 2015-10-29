@@ -1,68 +1,74 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 19/19] ARM: dts: zynq: replace gpio-key,wakeup with
- wakeup-source property
-Date: Thu, 29 Oct 2015 09:56:59 +0100
-Message-ID: <5631DF5B.5040208@xilinx.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
- <1445422216-29375-20-git-send-email-sudeep.holla@arm.com>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Thu, 29 Oct 2015 02:12:45 -0700
+Message-ID: <7hlhamjawi.fsf@deeprootsystems.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	<1445843717.23888.1.camel@mtksdaap41>
+	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	<1445859610.26723.4.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445422216-29375-20-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1445859610.26723.4.camel@mtksdaap41> (Eddie Huang's message of
+	"Mon, 26 Oct 2015 19:40:10 +0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/21/2015 12:10 PM, Sudeep Holla wrote:
-> Though the keyboard driver for GPIO buttons(gpio-keys) will continue =
-to
-> check for/support the legacy "gpio-key,wakeup" boolean property to
-> enable gpio buttons as wakeup source, "wakeup-source" is the new
-> standard binding.
->=20
-> This patch replaces the legacy "gpio-key,wakeup" with the unified
-> "wakeup-source" property in order to avoid any futher copy-paste
-> duplication.
->=20
-> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: "S=C3=B6ren Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/zynq-zc702.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zyn=
-q-zc702.dts
-> index 5df8f81f4217..cb64209bca08 100644
-> --- a/arch/arm/boot/dts/zynq-zc702.dts
-> +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> @@ -43,14 +43,14 @@
->  			label =3D "sw14";
->  			gpios =3D <&gpio0 12 0>;
->  			linux,code =3D <108>; /* down */
-> -			gpio-key,wakeup;
-> +			wakeup-source;
->  			autorepeat;
->  		};
->  		sw13 {
->  			label =3D "sw13";
->  			gpios =3D <&gpio0 14 0>;
->  			linux,code =3D <103>; /* up */
-> -			gpio-key,wakeup;
-> +			wakeup-source;
->  			autorepeat;
->  		};
->  	};
->=20
+Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
 
-Applied to zynq/dt.
+> Hi Kevin,
+>
+> On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
+>> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
+>> >> Hello,
+>> >>
+>> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
+>> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+>> >> > properties to workaround this.
+>> >> >
+>> >> > This also set cpu enable-method to enable SMP.
+>> >> >
+>> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> >>
+>> >> kernelci.org started detecting new boot failures for the mt8135-evb in
+>> >> the arm-soc tree[1], and the boot failures were bisected down to this
+>> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+>> >> dts: mt8135: enable basic SMP bringup for mt8135)
+>> >>
+>> >> Maybe this new SMP support requires updating the firmware on the board
+>> >> as well?  If so, the changelog should've been a bit more explicit
+>> >> about firmware dependencies.
+>> >
+>> > Kevin,
+>> >
+>> > Thanks for testing.
+>> >
+>> > No, it doesn't need new firmware. Will test to see what's going wrong.
+>> 
+>> Thanks for following up.  I'll be glad to test any patches if you have
+>> anything you'd like me to test.
+>
+> You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
+> crash" (https://lkml.org/lkml/2015/8/24/803)
+>
+> Daniel Lezcano already applied this patch in his tree for 4.4.
+> (https://git.linaro.org/people/daniel.lezcano/linux.git)
+>
 
-Thanks,
-Michal
+Thanks for letting us know.
+
+In the future, these kinds of cross-tree dependencies are important to
+mention in the cover letter of  the pull request so we can setup
+dependency branches and keep arm-soc/for-next building and booting.
+
+Kevin
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
