@@ -1,113 +1,108 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 22/22] of/platform: Defer probes of registered devices
-Date: Wed, 28 Oct 2015 23:17:54 -0500
-Message-ID: <CAL_JsqKrRMtapB9D-WnUgB67S+m09LhcNDUx_Uh7aXzphQUc+Q@mail.gmail.com>
-References: <1442844182-27787-1-git-send-email-tomeu.vizoso@collabora.com>
- <1442844182-27787-23-git-send-email-tomeu.vizoso@collabora.com>
- <1445406845.701.55.camel@freescale.com> <CAL_JsqLhZmc8cEC+tFJ25KLe0bQZsWmrRWGBMQake9VN6OjvdQ@mail.gmail.com>
- <1445467912.701.90.camel@freescale.com> <CAAObsKAfufBe_SycibUN3ZsE3fOkBfUjZRx1SWEMwVtM6t7inQ@mail.gmail.com>
- <1445549230.701.116.camel@freescale.com> <CAAObsKDR6pTEDK-G+jw+cr9MD-XoZqU8niqvDFHqFM0ve-+Smw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] rpi: add support to enable usb power domain
+Date: Wed, 28 Oct 2015 22:32:37 -0600
+Message-ID: <5631A165.3050304@wwwdotorg.org>
+References: <1446064810-5064-1-git-send-email-alex.aring@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKDR6pTEDK-G+jw+cr9MD-XoZqU8niqvDFHqFM0ve-+Smw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Scott Wood <scottwood@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hu Mingkai-B21284 <Mingkai.Hu@freescale.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446064810-5064-1-git-send-email-alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 9:40 AM, Tomeu Vizoso
-<tomeu.vizoso@collabora.com> wrote:
-> On 22 October 2015 at 23:27, Scott Wood <scottwood@freescale.com> wrote:
->> On Thu, 2015-10-22 at 15:04 +0200, Tomeu Vizoso wrote:
->>> On 22 October 2015 at 00:51, Scott Wood <scottwood@freescale.com> wrote:
->>> > On Wed, 2015-10-21 at 08:44 -0500, Rob Herring wrote:
->>> > > On Wed, Oct 21, 2015 at 12:54 AM, Scott Wood <scottwood@freescale.com>
->>> > > wrote:
->>> > > > On Mon, 2015-09-21 at 16:03 +0200, Tomeu Vizoso wrote:
->>> > > > > Instead of trying to match and probe platform and AMBA devices right
->>> > > > > after each is registered, delay their probes until
->>> > > > > device_initcall_sync.
->>> > > > >
->>> > > > > This means that devices will start probing once all built-in drivers
->>> > > > > have registered, and after all platform and AMBA devices from the DT
->>> > > > > have been registered already.
->>> > > > >
->>> > > > > This allows us to prevent deferred probes by probing dependencies on
->>> > > > > demand.
->>> > > > >
->>> > > > > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>> > > > > ---
->>> > > > >
->>> > > > > Changes in v4:
->>> > > > > - Also defer probes of AMBA devices registered from the DT as they
->>> > > > > can
->>> > > > >   also request resources.
->>> > > > >
->>> > > > >  drivers/of/platform.c | 11 ++++++++---
->>> > > > >  1 file changed, 8 insertions(+), 3 deletions(-)
->>> > > >
->>> > > > This breaks arch/powerpc/sysdev/fsl_pci.c.  The PCI bus is an OF
->>> > > > platform
->>> > > > device, and it must be probed before pcibios_init() which is a
->>> > > > subsys_initcall(), or else the PCI bus never gets scanned.
->>> > >
->>> > > Thanks for the report. This is probably getting dropped, but it could
->>> > > be disabled for PPC.
->>> >
->>> > I don't think that adding another arbitrary arch difference would be the
->>> > right solution.
->>>
->>> I think Rob meant temporarily disable it while things get fixed. At
->>> least,
->>
->> So, what is the permanent fix for the swiotlb issue (or more generally, the
->> inability to have a late_initcall that runs after non-module, non-hotplug
->> platform devices have been probed)?
->
-> If the code in pcibios_init() depends on the PCI bus device having
-> probed, then I would recommend making that dependency explicit by
-> calling of_device_probe() on the OF node of the PCI controller when
-> looking it up.
->
->>> I don't see any reason why PPC wouldn't benefit from this
->>> series.
->>
->> It's not clear to me what the benefit of this is at all, much less for PPC.
->> What is the fundamental problem with deferred probes?  In the cover letter
->> you say this change saves 2.3 seconds, but where is that time being consumed?
->>  Are the drivers taking too long in their probe function trying to initialize
->> and then deferring, rather than checking for dependencies up front?  Or are
->> there really so many devices and such a pessimal ordering that most of the
->> time is spent iterating through and reordering the list, with each defer
->> happening quickly?
->
-> The problem is that a device that defers its probe is currently sent
-> to the back of the queue, and that's undesired in some use cases in
-> which there's a device that should be up as soon as possible during
-> boot (and boot takes a long time). So the goal is to change the order
-> in which devices with dependencies end up probing.
->
->> Even if something different does need to be done at this level, forcing all
->> OF platform devices to be probed at the late_initcall level seems quite
->> intrusive.  You limited it to OF because people complained that other things
->> will break.  Things still broke.  Surely there's a better way to address the
->> problem.  Can't the delay be requested by drivers that might otherwise need
->> to defer (which could be done incrementally, focusing on the worst
->> performance problems), rather than enabling it for everything?
->
-> Yes, given the amount of breakage that's a sensible option. But in any
-> case and even if this series is most likely to be dropped, I recommend
-> to make explicit as many implicit dependencies as possible.
+On 10/28/2015 02:40 PM, Alexander Aring wrote:
+> This patch adds support for RPi several Power Domains and enable support
+> to enable the USB Power Domain when it's not enabled before.
+> 
+> This patch based on Eric Anholt's patch to support Power Domains. He had
+> an issue about -EPROBE_DEFER inside the power domain subsystem, this
+> issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
+> if we fail to init or turn-on domain").
 
-It is dropped for now, but I expect much of this to still integrate
-with Rafael's proposal. However, it will need to be opt-in it seems.
-That is somewhat unfortunate because things like async probe are
-opt-in and seem to rarely get used. As to how we can make it opt-in, I
-think we can make of_platform_populate() callable multiple times at
-the root level. This will allow a platform to skip calling it and then
-a late call to it can register the devices after drivers have
-registered. This late call will then be a nop for platforms that don't
-opt-in and call of_platform_populate themselves.
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
 
-Rob
+>  firmware {
+>  	compatible = "raspberrypi,bcm2835-firmware";
+>  	mboxes = <&mailbox>;
+> +	#power-domain-cells = <1>;
+> +};
+
+I would have expected a separate DT node for the power domains driver
+that referenced the firmware node by phandle. I believe that's why the
+firmware node exports mailboxes to other drivers. If the firmware driver
+was going to implement all the features directly, it wouldn't need to
+act as a mailbox provider, since all the mailbox programming would be
+internal.
+
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+
+> +#define RPI_POWER_DOMAIN(_domain, _name)			\
+> +	[_domain] =						\
+> +	{							\
+
+I'd expect { wrapped onto the previous line.
+
+> +static int raspberrypi_firmware_set_power(struct rpi_firmware *fw,
+> +					  u32 domain, bool on)
+
+> +	packet.on = on;
+> +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_SET_POWER_STATE, &packet,
+> +				    sizeof(packet));
+> +	if (!ret && !packet.on)
+> +		ret = -EINVAL;
+
+The error is only reported for power off requests?
+
+> +/* Asks the firmware to if power is on for a specific power domain. */
+> +static int raspberrypi_firmware_power_is_on(struct rpi_firmware *fw,
+> +					    u32 domain)
+
+> +	packet.domain = domain;
+> +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_GET_POWER_STATE, &packet,
+> +				    sizeof(packet));
+> +	if (ret < 0)
+> +		return ret;
+
+Hmm. If rpi_firmware_property() returns <0 on error, I'm confused what
+the test I commented on above is intended to do.
+
+> +/*
+> + * IMPORTANT: be sure this array has no entries which are not specified
+> + * between others by RPI_POWER_DOMAIN, otherwise mapping between
+> + * generic_pm_domain array doesn't work anymore.
+> + */
+
+"has no entries which are not specified between others by
+RPI_POWER_DOMAIN" might be better phrased as "is contiguous" or
+"contains only contiguous entries".
+
+> @@ -208,15 +312,44 @@ static int rpi_firmware_probe(struct platform_device *pdev)
+
+> +	for (i = 0; i < num_domains; i++) {
+> +		bool is_off;
+> +
+> +		rpi_power_domains[i].fw = fw;
+> +		power_domains[i] = &rpi_power_domains[i].base;
+> +
+> +		/* get the initial state */
+> +		ret = raspberrypi_firmware_power_is_on(fw, i);
+> +		if (ret < 0)
+> +			goto mbox;
+
+The label name "mbox" doesn't give a clue that it's an error handler.
+"free_mbox" might be better.
+
+> +mbox:
+> +	mbox_free_channel(fw->chan);
+> +	return ret;
+>  }
+
+Does the pm_genpd_init() call for all the power domains need to be
+undone at all?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
