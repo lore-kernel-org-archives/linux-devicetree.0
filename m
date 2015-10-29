@@ -1,105 +1,78 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH 3/3] ARM64: zynqmp: DT: Add interrupt-controller property
- to GPIO
-Date: Thu, 29 Oct 2015 17:37:40 +0100
-Message-ID: <56324B54.9000607@monstr.eu>
-References: <1445617532-10228-1-git-send-email-soren.brinkmann@xilinx.com>
- <1445617532-10228-3-git-send-email-soren.brinkmann@xilinx.com>
-Reply-To: monstr@monstr.eu
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] ARM: dts: Add SROMc to Exynos 5410
+Date: Thu, 29 Oct 2015 22:58:16 +0530
+Message-ID: <CAGcde9EXfe0amqoTOwgKi-Y6=4mRcEbZrA=as-BxzfMv3ntAhQ@mail.gmail.com>
+References: <cover.1446122247.git.p.fedin@samsung.com> <eafa355058ff500a72ff2e3408ab635954467a76.1446122247.git.p.fedin@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8419831019698149823=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445617532-10228-3-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <eafa355058ff500a72ff2e3408ab635954467a76.1446122247.git.p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8419831019698149823==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="ADT3o35XgVgetxBnXPHq6SqcdP3lsiXNm"
+Hi Pavel,
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ADT3o35XgVgetxBnXPHq6SqcdP3lsiXNm
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 10/23/2015 06:25 PM, Soren Brinkmann wrote:
-> GPIO can be used as interrupt-controller. Add the missing properties to=
-
-> the GPIO node.
->=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+On 29 October 2015 at 18:12, Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This machine uses own SoC device tree file, add missing part.
+>
+> Signed-off-by: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/d=
-ts/xilinx/zynqmp.dtsi
-> index 857eda5c7217..200fb588d0f5 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -133,6 +133,8 @@
->  			clocks =3D <&misc_clk>;
->  			interrupt-parent =3D <&gic>;
->  			interrupts =3D <0 16 4>;
-> +			interrupt-controller;
-> +			#interrupt-cells =3D <2>;
->  			reg =3D <0x0 0xff0a0000 0x1000>;
->  		};
-> =20
->=20
+>  arch/arm/boot/dts/exynos5410.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+> index 4603356..da6a8fa0e 100644
+> --- a/arch/arm/boot/dts/exynos5410.dtsi
+> +++ b/arch/arm/boot/dts/exynos5410.dtsi
+> @@ -101,6 +101,15 @@
+>                         reg = <0x10000000 0x100>;
+>                 };
+>
+> +               sromc: sromc@12250000 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +
 
-Applied.
+We do not need to specify these three properties as they are already
+present in parent node "soc".
+
+> +                       compatible = "samsung,exynos-srom";
+> +                       reg = <0x12250000 0x14>;
+> +               };
+> +
+>                 pmu_system_controller: system-controller@10040000 {
+>                         compatible = "samsung,exynos5410-pmu", "syscon";
+>                         reg = <0x10040000 0x5000>;
+> @@ -133,6 +142,12 @@
+>                                                 <10 &gic 0 130 0>,
+>                                                 <11 &gic 0 131 0>;
+>                         };
+> +
+> +                       arch_timer {
+> +                               compatible = "arm,armv7-timer";
+> +                               clock-frequency = <24000000>;
+> +                       };
+> +
+
+This change should not be part of this patch.
 
 Thanks,
-Michal
+Pankaj Dubey
 
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---ADT3o35XgVgetxBnXPHq6SqcdP3lsiXNm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.14 (GNU/Linux)
-
-iEYEARECAAYFAlYyS1cACgkQykllyylKDCFMLQCeIjUq0Dqz+WvlAx7mWB0XnCHn
-GR0Ani1mwDjDIyM1TPRuHzD9eo3yrFy5
-=BFeq
------END PGP SIGNATURE-----
-
---ADT3o35XgVgetxBnXPHq6SqcdP3lsiXNm--
-
-
---===============8419831019698149823==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8419831019698149823==--
+>                 };
+>
+>                 sysram@02020000 {
+> --
+> 2.4.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
