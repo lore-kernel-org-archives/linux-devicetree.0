@@ -1,55 +1,77 @@
-From: Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH V2 02/10] ASoC: img: Add driver for I2S input
- controller
-Date: Thu, 29 Oct 2015 15:42:59 +0000
-Message-ID: <56323E83.5010605@imgtec.com>
-References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
- <1444653637-14711-3-git-send-email-Damien.Horsley@imgtec.com>
- <20151019174732.GG32054@sirena.org.uk> <56293472.7000401@imgtec.com>
- <20151023225723.GO29919@sirena.org.uk> <562F824F.9070407@imgtec.com>
- <20151028010443.GX28319@sirena.org.uk> <56313B9C.8030502@imgtec.com>
- <20151028234334.GF28319@sirena.org.uk>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 2/3] mtd: mtk-nor: mtk serial flash controller driver
+Date: Thu, 29 Oct 2015 09:03:31 -0700
+Message-ID: <20151029160331.GA12954@localhost>
+References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
+ <1444729160-26433-3-git-send-email-bayi.cheng@mediatek.com>
+ <20151016073959.GB28158@localhost>
+ <1445178035.4832.23.camel@mhfsdcap03>
+ <20151029015237.GE13239@google.com>
+ <1446089334.25711.10.camel@mhfsdcap03>
+ <1446126991.25711.23.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151028234334.GF28319-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446126991.25711.23.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "bayi.cheng" <bayi.cheng@mediatek.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 28/10/15 23:43, Mark Brown wrote:
-> On Wed, Oct 28, 2015 at 09:18:20PM +0000, Damien Horsley wrote:
->> On 28/10/15 01:04, Mark Brown wrote:
-> 
->>>> I think it also makes sense to keep the blocks consistent with each
->>>> other. The spdif (out and in), and parallel out, all flush automatically
->>>> when stopped, and the fifo for the i2s out block is cleared when the
->>>> reset is asserted.
-> 
->>> This seems like an issue that got missed in the other drivers then.  I'd
->>> expect the trigger operation to be a minimal operation which starts and
->>> stops the data transfer, not doing anything else.
-> 
->> The spdif out, spdif in, and parallel out blocks auto-flush whenever
->> they are stopped. It is not possible for software to prevent this behavior.
-> 
-> Oh, so this isn't the drivers doing this?  In that case it's fine for
-> them to do that, if it's what the hardware does it's what the hardware
-> does.  It sounded like you were saying that there was similar code in
-> the other drivers.
-> 
+On Thu, Oct 29, 2015 at 09:56:31PM +0800, bayi.cheng wrote:
+> On Thu, 2015-10-29 at 11:28 +0800, bayi.cheng wrote:
+> > On Wed, 2015-10-28 at 18:52 -0700, Brian Norris wrote:
+> > > On Sun, Oct 18, 2015 at 10:20:35PM +0800, bayi.cheng wrote:
+> > > > On Fri, 2015-10-16 at 00:39 -0700, Brian Norris wrote:
+> > > > > On Tue, Oct 13, 2015 at 05:39:19PM +0800, Bayi Cheng wrote:
 
-For the I2S In, there is another issue with flushing on stream close. If
-the stream is stopped, then reconfigured to use a larger number of
-channels (without the stream being closed), then the per-channel fifos
-will become inconsistent with each other. The new channels will have no
-samples in their FIFOs, while the others may contain samples from the
-previous stream.
+> > > > > > +	/* mtk nor controller doesn't supoort SPINOR_OP_RDCR */
+> > > > > > +	switch (opcode) {
+> > > > > > +	case SPINOR_OP_RDID:
+> > > > > > +		/* read JEDEC ID need 4 bytes commands */
+> > > > > > +		ret = mt8173_nor_set_cmd(mt8173_nor, 0, 32, SPINOR_OP_RDID);
+> > > > > > +		if (ret < 0)
+> > > > > > +			return ret;
+> > > > > > +
+> > > > > > +		/* mtk nor flash controller only support 3 bytes IDs */
+> > > > > 
+> > > > > Are you absolutely sure of this? That would be highly unfortunate, but
+> > > > > I also don't believe it's true.
+> > > > > 
+> > > > Yes, for this issue I have asked our designer of nor flash controller,
+> > > > unfortunately, it is true, and I have tried to read more IDs, but our
+> > > > controller just accept 3 IDs from nor flash, and our next generation IC
+> > > > may solve this problem.
+> > > 
+> > > How exactly did you try? Did you do what I suggested above? Are the
+> > > "shift registers" not all actually functional?
+> > > 
+> > Hi Brian, For this problem, I have asked our nor controller designer to
+> > double confirm again, and he promise to do some simulation testes, On
+> > the other hand, I have got some Spansion nor flash which has 5 IDs, and
+> > after our designer make sure our controller can support 5 or 6 IDs, then
+> > I will rework a special platform with S25FL256SA. If we have any
+> > progress, I will inform you immediately!  Thanks!!
+> > 
+> Hi Brian, Thanks very much for your perseverance!!
+> Actually, You idea is correct, and our designer has completed some
+> simulation test on spansion nor flash witch has more than 3 IDs, and the
+> results has prove that we can support to read 5 IDs. I also double
 
-Would hw_params be the correct place to flush instead?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Awesome!
+
+> confirmed with spansion nor flash. The only pity is that our nor
+> controller can't support 6 IDs, we just support 5 IDs.
+
+That's not quite as awesome. But that's still much more workable than
+only 3 bytes. Perhaps we'll want a way to communicate that to the
+spi-nor layer, so it doesn't think it can match a full 6 bytes?
+
+> I will submit my changes to V6 version. Thanks again!!
+
+OK, but let me take another look at v5 and send you comments on that one
+first.
+
+Regards,
+Brian
