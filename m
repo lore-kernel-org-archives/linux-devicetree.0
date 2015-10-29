@@ -1,90 +1,127 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Thu, 29 Oct 2015 11:27:05 +0900
-Message-ID: <563183F9.6020806@samsung.com>
-References: <cover.1446018918.git.p.fedin@samsung.com>
- <046d990092dc85cf50db9082fc894d93a3ece7c0.1446018918.git.p.fedin@samsung.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v12 7/8] Documentation: DT: Add HiSilicon PCIe host binding
+Date: Thu, 29 Oct 2015 10:27:05 +0800
+Message-ID: <563183F9.1010809@hisilicon.com>
+References: <1445859350-26375-1-git-send-email-wangzhou1@hisilicon.com> <1445859350-26375-8-git-send-email-wangzhou1@hisilicon.com> <CAL_JsqKamKx8vVVv7qVZ8oyjXLem93B9dnJAxvvoRWd3XEc=7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <046d990092dc85cf50db9082fc894d93a3ece7c0.1446018918.git.p.fedin@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKamKx8vVVv7qVZ8oyjXLem93B9dnJAxvvoRWd3XEc=7Q@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand Thakur <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, James Morse <james.morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Jason Cooper <jason@lakedaemon.net>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Minghuan Lian <Minghuan.Lian@freescale.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@>
 List-Id: devicetree@vger.kernel.org
 
-On 28.10.2015 16:57, Pavel Fedin wrote:
-> Add documentation for new properties, allowing bank configuration.
+On 2015/10/28 3:19, Rob Herring wrote:
+> On Mon, Oct 26, 2015 at 6:35 AM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
+>> This patch adds related DTS binding document for HiSilicon PCIe host driver.
+>>
+>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 > 
-> Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
-> ---
->  .../bindings/arm/samsung/exynos-srom.txt           | 24 +++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
+> Acked-by: Rob Herring <robh@kernel.org>
+>
 
-You missed here a lot of potential Cc. Please use get_maintainer.pl
-script. It *must* be sent to devicetree list.
+Thanks for your review.
+Zhou
 
-Please send it also to DeviceTree maintainers because you are adding
-quite generic names for bindings so they may have interesting thoughts
-on this.
-
-LKML list is also missing.
-
+>> ---
+>>  .../bindings/arm/hisilicon/hisilicon.txt           | 17 +++++++++
+>>  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 44 ++++++++++++++++++++++
+>>  2 files changed, 61 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>> index 3504dca..6ac7c00 100644
+>> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+>> @@ -171,6 +171,23 @@ Example:
+>>         };
+>>
+>>  -----------------------------------------------------------------------
+>> +Hisilicon HiP05 PCIe-SAS system controller
+>> +
+>> +Required properties:
+>> +- compatible : "hisilicon,pcie-sas-subctrl", "syscon";
+>> +- reg : Register address and size
+>> +
+>> +The HiP05 PCIe-SAS system controller is shared by PCIe and SAS controllers in
+>> +HiP05 Soc to implement some basic configurations.
+>> +
+>> +Example:
+>> +       /* for HiP05 PCIe-SAS system */
+>> +       pcie_sas: system_controller@0xb0000000 {
+>> +               compatible = "hisilicon,pcie-sas-subctrl", "syscon";
+>> +               reg = <0xb0000000 0x10000>;
+>> +       };
+>> +
+>> +-----------------------------------------------------------------------
+>>  Hisilicon CPU controller
+>>
+>>  Required properties:
+>> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>> new file mode 100644
+>> index 0000000..17c6ed9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>> @@ -0,0 +1,44 @@
+>> +HiSilicon PCIe host bridge DT description
+>> +
+>> +HiSilicon PCIe host controller is based on Designware PCI core.
+>> +It shares common functions with PCIe Designware core driver and inherits
+>> +common properties defined in
+>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+>> +
+>> +Additional properties are described here:
+>> +
+>> +Required properties:
+>> +- compatible: Should contain "hisilicon,hip05-pcie".
+>> +- reg: Should contain rc_dbi, config registers location and length.
+>> +- reg-names: Must include the following entries:
+>> +  "rc_dbi": controller configuration registers;
+>> +  "config": PCIe configuration space registers.
+>> +- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
+>> +- port-id: Should be 0, 1, 2 or 3.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> index 33886d5..9e4a40b 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> @@ -5,8 +5,30 @@ Required properties:
->  
->  - reg: offset and length of the register set
->  
-> -Example:
-> +Bank configurations can be defined in optional subnodes. Each subnode
-> +describes one bank and contains the following:
-> +
-> +Required properties:
-> +- bank : bank number (0 - 3)
-
-I wonder whether this should be maybe "reg"?
-
-> +
-> +- srom-timing : array of 7 integers: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs
-
-Missing "pmc"? Where is the seventh?
-
-This looks vendor specific, so prefix with "samsung,exynos-".
-
-> +
-> +Optional properties:
-> +- width : data width in bytes (1 or 2). If omitted, default of 1 is used.
-
-This is not bank-width? So data-width? Any vendor prefix here? How
-generic is this?
-
-These are first things which came to my mind. Maybe DT maintainers will
-come with something more...
-
-Best regards,
-Krzysztof
-
-> +
-> +Example: basic definition, no banks are configured
-> +	sromc@12570000 {
-> +		compatible = "samsung,exynos-srom";
-> +		reg = <0x12570000 0x10>;
-> +	};
-> +
-> +Example: SROMc with bank3 configuration
->  	sromc@12570000 {
->  		compatible = "samsung,exynos-srom";
->  		reg = <0x12570000 0x10>;
-> +		bank@3 {
-> +			bank = <3>;
-> +			width = <2>;
-> +			srom-timing = <1 9 12 1 9 1 1>;
-> +		};
->  	};
+> 
+>> +
+>> +Optional properties:
+>> +- status: Either "ok" or "disabled".
+>> +- dma-coherent: Present if DMA operations are coherent.
+>> +
+>> +Example:
+>> +       pcie@0xb0080000 {
+>> +               compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
+>> +               reg = <0 0xb0080000 0 0x10000>, <0x220 0x00000000 0 0x2000>;
+>> +               reg-names = "rc_dbi", "config";
+>> +               bus-range = <0  15>;
+>> +               msi-parent = <&its_pcie>;
+>> +               #address-cells = <3>;
+>> +               #size-cells = <2>;
+>> +               device_type = "pci";
+>> +               dma-coherent;
+>> +               ranges = <0x82000000 0 0x00000000 0x220 0x00000000 0 0x10000000>;
+>> +               num-lanes = <8>;
+>> +               port-id = <1>;
+>> +               #interrupts-cells = <1>;
+>> +               interrupts-map-mask = <0xf800 0 0 7>;
+>> +               interrupts-map = <0x0 0 0 1 &mbigen_pcie 1 10
+>> +                                 0x0 0 0 2 &mbigen_pcie 2 11
+>> +                                 0x0 0 0 3 &mbigen_pcie 3 12
+>> +                                 0x0 0 0 4 &mbigen_pcie 4 13>;
+>> +               status = "ok";
+>> +       };
+>> --
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
 > 
