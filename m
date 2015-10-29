@@ -1,45 +1,63 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: arm: Fixed typo in socfpga fpga mgr example
-Date: Thu, 29 Oct 2015 13:47:21 -0700
-Message-ID: <CAAtXAHcaz4tZNzGuD6CKkBcrFujSA=47jd_C61YTYqCCaTdQqw@mail.gmail.com>
-References: <1446151622-7306-1-git-send-email-moritz.fischer@ettus.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Setup ethernet0 alias for u-boot
+Date: Thu, 29 Oct 2015 21:52:50 +0100
+Message-ID: <1895461.b5NitQ7UFH@phil>
+References: <1446151497-29833-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446151622-7306-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1446151497-29833-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 29, 2015 at 1:47 PM, Moritz Fischer
-<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
-> Addresses should not be prefixed contain '0x' in nodes.
->
-> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Hi Sjoerd,
+
+Am Donnerstag, 29. Oktober 2015, 21:44:57 schrieb Sjoerd Simons:
+> Add an ethernet0 alias for the wired network card and an all 0 default
+> mac address so that u-boot can find the device-node and fill in the
+> mac address.
+> 
+> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt
-> index 9b027a6..823f3d6 100644
-> --- a/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt
-> +++ b/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt
-> @@ -9,7 +9,7 @@ Required properties:
->
->  Example:
->
-> -       hps_0_fpgamgr: fpgamgr@0xff706000 {
-> +       hps_0_fpgamgr: fpgamgr@0ff706000 {
+> 
+>  arch/arm/boot/dts/rk3288-rock2-square.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> index 0ef065d..a029ebf 100644
+> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> @@ -45,6 +45,10 @@
+>  	model = "Radxa Rock 2 Square";
+>  	compatible = "radxa,rock2-square", "rockchip,rk3288";
+>  
+> +	aliases {
+> +		ethernet0 = &gmac;
+> +	};
+> +
 
-*grrr* ... should've been fpgamgr@ff706000 obviously ...
+wouldn't it make more sense to have this in the rk3288.dtsi, so to keep
+every board from having to add this alias?
 
->                 compatible = "altr,socfpga-fpga-mgr";
->                 reg = <0xFF706000 0x1000
->                        0xFFB90000 0x1000>;
-> --
-> 2.6.2
->
+
+>  	chosen {
+>  		stdout-path = "serial2:115200n8";
+>  	};
+> @@ -130,6 +134,8 @@
+>  };
+>  
+>  &gmac {
+> +	/* To be filled in by U-Boot */
+> +	mac-address = [00 00 00 00 00 00];
+>  	status = "ok";
+>  };
+
+I guess the same applies for the mac placeholder.
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
