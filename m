@@ -1,101 +1,48 @@
-From: Peter Maydell <peter.maydell@linaro.org>
-Subject: [PATCH] Documentation: dt: Add bindings for Secure-only devices
-Date: Thu, 29 Oct 2015 14:01:43 +0000
-Message-ID: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 5/5] [RFC] clk: shmobile: r8a7795: Add new CPG/MSSR driver
+Date: Thu, 29 Oct 2015 15:03:51 +0100
+Message-ID: <CAMuHMdX1AeBJdF1RBeByHKPVonXmdZiE-ZumphR2RLmJ+4wUzg@mail.gmail.com>
+References: <1444999760-15750-1-git-send-email-geert+renesas@glider.be>
+	<1444999760-15750-6-git-send-email-geert+renesas@glider.be>
+	<20151020122448.20687.11926@quantum>
+	<CAMuHMdUT=fZKCOCdkn+=grZ0wYATghQhmbX-Y6WJ9+ViZ0cidA@mail.gmail.com>
+	<20151020130004.20687.91058@quantum>
+	<CAMuHMdU8TqCpOskWXGPvwrejfEWSw8Fu4FjkWAKyTc0f_MuWzw@mail.gmail.com>
+	<CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdW4wo0VR2GKeeXhcqwzDF7udkXapFF9fGfEQuh_vSsyoQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <damm+renesas@opensource.se>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The existing device tree bindings assume that we are only trying to
-describe a single address space with a device tree (for ARM, either
-the Normal or the Secure world). Some uses for device tree need to
-describe both Normal and Secure worlds in a single device tree. Add
-documentation of how to do this, by adding extra properties which
-describe when a device appears differently in the two worlds or when
-it only appears in one of them.
+On Thu, Oct 22, 2015 at 2:58 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>   - Calling platform_driver_probe() from arch_initcall() is too late, as the
+>     IRQC is initialized first (it's located before the CPG in .dtsi).
+>     Hence the IRQC can't find it's Clock Domain, and its probe is deferred.
+>     IRQC will be reprobed later, but in the mean time the Ethernet PHY can't
+>     find its IRQ, as the of_mdio code uses irq_of_parse_and_map(), which
+>     plainly ignores EPROBE_DEFER :-(
+>     Nevertheless, Ethernet works...
 
-The binding describes the general principles for adding new
-properties describing the secure world, but for now we only need a
-single new property, "secure-status", which can be used to annotate
-devices to indicate that they are only visible in one of the two
-worlds.
+To correct myself: renesas-irqc is initialized first because it uses
+postcore_initcall().
 
-The primary expected use of this binding is for a virtual machine
-like QEMU to describe the VM layout to a TrustZone aware firmware
-(which would then use the secure-only devices itself, and pass the DT
-on to a kernel running in the non-secure world, which ignores the
-secure-only devices and uses the rest).
+The of_mdio issue on R-Car Gen2 boards can be worked around by changing that
+to device_initcall(). That would cause a few more probe deferrals on R-Mobile
+APE6 (r8a73a4), where IRQC is not only the external interrupt controller,
+but also the parent interrupt controller of the PFC/GPIO combo.
 
-Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
----
-This binding doesn't affect the kernel itself, but the kernel
-Documentation/ tree is the de-facto current place where all DT
-bindings are documented, so Grant suggested this was the right
-place to send a doc patch.
+Gr{oetje,eeting}s,
 
- Documentation/devicetree/bindings/arm/secure.txt | 41 ++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
+                        Geert
 
-diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
-new file mode 100644
-index 0000000..4129fba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/secure.txt
-@@ -0,0 +1,41 @@
-+* ARM Secure world bindings
-+
-+ARM CPUs with TrustZone support have two distinct address spaces,
-+"Normal" and "Secure". Most devicetree consumers (including the Linux
-+kernel) are not TrustZone aware and run entirely in either the Normal
-+world or the Secure world. However some devicetree consumers are
-+TrustZone aware and need to be able to determine whether devices are
-+visible only in the Secure address space, only in the Normal address
-+space, or visible in both. (One example of that situation would be a
-+virtual machine which boots Secure firmware and wants to tell the
-+firmware about the layout of the machine via devicetree.)
-+
-+The general principle of the naming scheme for Secure world bindings
-+is that any property that needs a different value in the Secure world
-+can be supported by prefixing the property name with "secure-". So for
-+instance "secure-reg" would override "reg". If there is no "secure-"
-+property then the Secure world value is the same as specified for the
-+Normal world by the non-prefixed property. However, only the
-+properties listed below may validly have "secure-" versions; this list
-+will be enlarged on a case-by-case basis.
-+
-+Defining the bindings in this way means that a device tree which has
-+been annotated to indicate the presence of Secure-only devices can
-+still be processed unmodified by existing Non-secure software (and in
-+particular by the kernel).
-+
-+Note that it is still valid for bindings intended for purely Secure
-+world consumers (like kernels that run entirely in Secure) to simply
-+describe the view of Secure world using the standard bindings. These
-+secure- bindings only need to be used where both the Secure and Normal
-+world views need to be described in a single device tree.
-+
-+Valid Secure world properties:
-+
-+- secure-status : specifies whether the device is present and usable
-+  in the secure world. The combination of this with "status" allows
-+  the various possible combinations of device visibility to be
-+  specified:
-+   status = "okay";                             // visible in S and NS
-+   status = "disabled"; secure-status = "okay"; // S-only
-+   status = "okay"; secure-status = "disabled"; // NS-only
--- 
-1.9.1
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
