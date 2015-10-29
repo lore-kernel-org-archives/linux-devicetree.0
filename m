@@ -1,100 +1,120 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/3] mtd: create a partition type device tree binding
-Date: Thu, 29 Oct 2015 13:52:30 +0100
-Message-ID: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/3] gpio: xgene: add support to configure GPIO line as
+ input, output or external IRQ pin
+Date: Thu, 29 Oct 2015 14:28:55 +0100
+Message-ID: <CACRpkdbWKmRKXL=+57KQVYYRc79tgGwCi=7p4LSBwFgUwgz-gw@mail.gmail.com>
+References: <1445842175-11446-1-git-send-email-yvo@apm.com>
+	<1445842175-11446-2-git-send-email-yvo@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1445842175-11446-2-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Linux code in drivers/mtd/maps/physmap_of.c will optionally
-look for the linux,part-probe binding for hints on a partition type to
-look for in the MTD. It was added in commit 9d5da3a9b849
-"mtd: extend physmap_of to let the device tree specify the parition probe"
+On Mon, Oct 26, 2015 at 7:49 AM, Y Vo <yvo@apm.com> wrote:
 
-This solution is too Linux-specific and depend on some
-Linux kernel-internal naming conventions. We need a proper
-way of describing partition types that follow the pattern set by
-other device tree bindings.
+> Add support to configure GPIO line as input, output or external IRQ pin.
+>
+> Signed-off-by: Y Vo <yvo@apm.com>
 
-Create a "partition-type" binding for this, and add "my" bindings
-for "arm,arm-flash-structure" as a starter for others to follow.
-A follow-on patch adds support to the Linux kernel to handle this
-binding, with some infrastructure for others to use it too.
+As I will say again, this description is too terse, add lots of information
+on how IRQs work on this controller please. I get confused.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Reported-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/mtd/mtd-physmap.txt        |  2 ++
- .../devicetree/bindings/mtd/partition.txt          | 35 +++++++++++++++++++---
- 2 files changed, 33 insertions(+), 4 deletions(-)
+(...)
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 4a0a48bf4ecb..863560bdbb19 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -23,6 +23,8 @@ file systems on embedded devices.
-    unaligned accesses as implemented in the JFFS2 code via memcpy().
-    By defining "no-unaligned-direct-access", the flash will not be
-    exposed directly to the MTD users (e.g. JFFS2) any more.
-+ - partition-type : a flash partition type to expect and probe for
-+   on this device. See "partition.txt" for available partition types.
-  - linux,mtd-name: allow to specify the mtd name for retro capability with
-    physmap-flash drivers as boot loader pass the mtd partition via the old
-    device name physmap-flash.
-diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-index 8e5557da1955..85d45764a4b3 100644
---- a/Documentation/devicetree/bindings/mtd/partition.txt
-+++ b/Documentation/devicetree/bindings/mtd/partition.txt
-@@ -1,9 +1,36 @@
- Representing flash partitions in devicetree
- 
--Partitions can be represented by sub-nodes of an mtd device. This can be used
--on platforms which have strong conventions about which portions of a flash are
--used for what purposes, but which don't use an on-flash partition table such
--as RedBoot.
-+On-device partition types:
-+
-+It is possible for some drivers to indicate an on-device partition type, i.e.
-+partition tables, footers or other binary pattern in the flash used to
-+define how the flash is partitioned. This can be done in the device tree node
-+of an MTD device by specifying partition-type = "foo"; This tells the operating
-+system to look for the partition type indicated.
-+
-+Required properties:
-+- partition-type : the type of partition. Only one type can be specified.
-+  Valid types are:
-+  "arm,arm-flash-structure" (also called AFS)
-+
-+Example:
-+
-+flash0@40000000 {
-+	/* 2 * 32MiB NOR Flash memory */
-+	compatible = "arm,vexpress-flash", "cfi-flash";
-+	partition-type = "arm,arm-flash-structure";
-+	reg = <0x40000000 0x04000000>;
-+	bank-width = <4>;
-+};
-+
-+
-+Device Tree specified partitions:
-+
-+If there is no specified on-device binary format, partitions can be
-+represented by sub-nodes of an mtd device. This can be used on platforms which
-+have strong conventions about which portions of a flash are used for what
-+purposes.
-+
- NOTE: if the sub-node has a compatible string, then it is not a partition.
- 
- #address-cells & #size-cells must both be present in the mtd device. There are
--- 
-2.4.3
+> +#define XGENE_GPIO8_HWIRQ              0x48
+> +#define XGENE_GPIO8_IDX                        8
+(...)
+> +#define XGENE_HWIRQ_TO_GPIO(hwirq)     ((hwirq) + XGENE_GPIO8_IDX)
+> +#define XGENE_GPIO_TO_HWIRQ(gpio)      ((gpio) - XGENE_GPIO8_IDX)
+> +#define GIC_IRQ_TO_GPIO_IRQ(hwirq)     ((hwirq) - XGENE_GPIO8_HWIRQ)
+> +#define GPIO_IRQ_TO_GIC_IRQ(hwirq)     ((hwirq) + XGENE_GPIO8_HWIRQ)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm a bit uneasy about this, maybe I just don't get it.
+
+What is this indexing into "GIC IRQ" that is starting to happen
+here?
+
+The GIC (if that is drivers/irqchip/irq-gic.c) has a totally dynamic IRQ
+translation and the Linux IRQs it is using may change. I am worried
+that there is some reliance here on Linux IRQ having certain numbers
+because there is certainly no ABI like that.
+
+Is this 0x48 really an index into the *hardware* offset in the GIC?
+
+And if it is: why are we not getting this hardware information from the
+device tree like all other interrupt numbers and offsets?
+
+I'm worried about this.
+
+> -       u32 *irq;
+> +       void __iomem *regs;
+> +       struct irq_domain *gic_domain;
+> +       struct irq_domain *irq_domain;
+
+And there is some secondary gic_domain here, which is confusing
+since the GIC does have an IRQ domain too.
+
+I think I want a clear explanation to how this GPIO controller interacts
+with the GIC, and I want it to be part of the patch, as comments in the
+code and in the commit message (which is way too small for a complex
+patch like this).
+
+Otherwise I have no chance to understand what is really going on here.
+
+> +static int xgene_gpio_sb_irq_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +       int hwirq = d->hwirq;
+> +       int gpio = XGENE_HWIRQ_TO_GPIO(hwirq);
+> +       struct xgene_gpio_sb *priv = irq_data_get_irq_chip_data(d);
+> +       int lvl_type;
+> +       int ret;
+> +
+> +       switch (type & IRQ_TYPE_SENSE_MASK) {
+> +       case IRQ_TYPE_EDGE_RISING:
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               lvl_type = GPIO_INT_LVL_LEVEL_HIGH;
+> +               break;
+> +       case IRQ_TYPE_EDGE_FALLING:
+> +       case IRQ_TYPE_LEVEL_LOW:
+> +               lvl_type = GPIO_INT_LVL_LEVEL_LOW;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret = gpiochip_lock_as_irq(&priv->bgc.gc, gpio);
+> +       if (ret) {
+> +               dev_err(priv->bgc.gc.dev,
+> +               "Unable to configure XGene GPIO standby pin %d as IRQ\n",
+> +                                                               gpio);
+> +               return ret;
+> +       }
+> +
+> +       if ((gpio >= XGENE_GPIO8_IDX) &&
+> +                       (hwirq < XGENE_MAX_GPIO_DS_IRQ)) {
+> +               xgene_gpio_set_bit(&priv->bgc, priv->regs + MPA_GPIO_SEL_LO,
+> +                               gpio * 2, 1);
+> +               xgene_gpio_set_bit(&priv->bgc, priv->regs + MPA_GPIO_INT_LVL,
+> +                               hwirq, lvl_type);
+> +       }
+> +       if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
+> +               irq_set_handler_locked(d, handle_edge_irq);
+> +       else
+> +               irq_set_handler_locked(d, handle_level_irq);
+> +
+> +       return 0;
+> +}
+
+If you are assigning hadle_edge_irq() your irqchip *must* have an
+.irq_ack() callback that acknowledges the IRQs as they come in.
+
+This makes me suspect that you haven't really tested edge
+interrupts, because if you did, the kernel would crash as it
+is unconditionally calling the .irq_ack() from handle_level_irq().
+
+Yours,
+Linus Walleij
