@@ -1,130 +1,127 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
- bus
-Date: Thu, 29 Oct 2015 11:02:37 -0500
-Message-ID: <alpine.DEB.2.02.1510291026020.17743@linuxheads99>
-References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <CAL_JsqK2twfWzCKucuSLrsD2rL3=ReUXt3uPdFcsf8B0Tg42Lg@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
+Date: Thu, 29 Oct 2015 09:29:08 -0700
+Message-ID: <20151029162908.GA13275@localhost>
+References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK2twfWzCKucuSLrsD2rL3=ReUXt3uPdFcsf8B0Tg42Lg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, delicious.quinoa@gmail.com, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446123152-22666-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Oct 2015, Rob Herring wrote:
++ devicetree-spec and others, since other non-driver-specific MTD
+partitioning stuff has gotten directed there [1], and this binding
+should probably get promoted in short order to the core mtdpart.c
+partitioning
 
-> On Tue, Oct 27, 2015 at 5:09 PM,  <atull@opensource.altera.com> wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> >
-> > New bindings document for simple fpga bus.
-> >
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > ---
-> > v9:  initial version added to this patchset
-> > v10: s/fpga/FPGA/g
-> >      replace DT overlay example with slightly more complicated example
-> >      move to staging/simple-fpga-bus
-> > v11: No change in this patch for v11 of the patch set
-> > v12: Moved out of staging.
-> >      Changed to use FPGA bridges framework instead of resets
-> >      for bridges.
-> > ---
-> >  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
-> >  1 file changed, 81 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> > new file mode 100644
-> > index 0000000..2e742f7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
-> > @@ -0,0 +1,81 @@
-> > +Simple FPGA Bus
-> > +===============
-> > +
-> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-> > +before populating the devices below its node.  All this happens when a device
-> > +tree overlay is added to the live tree.  This document describes that device
-> > +tree overlay.
-> > +
-> > +Required properties:
-> > +- compatible : should contain "simple-fpga-bus"
-> > +- #address-cells, #size-cells, ranges: must be present to handle address space
-> > +  mapping for children.
-> > +
-> > +Optional properties:
-> > +- fpga-mgr : should contain a phandle to a FPGA manager.
-> > +- fpga-firmware : should contain the name of a FPGA image file located on the
-> > +  firmware search path.
+On Thu, Oct 29, 2015 at 01:52:30PM +0100, Linus Walleij wrote:
+> The Linux code in drivers/mtd/maps/physmap_of.c will optionally
+> look for the linux,part-probe binding for hints on a partition type to
+> look for in the MTD. It was added in commit 9d5da3a9b849
+> "mtd: extend physmap_of to let the device tree specify the parition probe"
 > 
-> Putting firmware filename in DT has come up in other cases recently[1]
-> and we concluded it should not be in the DT. Maybe the conclusion
-> would be different here, and if so we should have a common property
-> here.
-
-Interesting discussion.
-
-One FPGA image will almost always have multiple hardware devices in it.
-The device blocks will be reused in various combinations in different
-FPGA images.  So hardwiring the image name in some specific driver won't
-be possible.  Also many of the devices that could appear on a FPGA also
-could appear in normal hardware.  Same driver for both cases, just
-different address.
-
-I won't have control of the name of the firmware file.  It will be something
-that makes sense to a FPGA hardware guy so translating the node name to an
-image name would be brittle.
-
-Renaming this as a generic property "firmware-name" or "firmware" would be
-an improvement on what I proposed.
-
-If it is acceptible to have this in the DT, it means FPGA hardware development
-workflow does not require a kernel rebuild.  The DT can collect together the
-image name, the bridges to the FPGA (or to that area of the FPGA), and a list
-of the devices/drivers in that image.
-
+> This solution is too Linux-specific and depend on some
+> Linux kernel-internal naming conventions. We need a proper
+> way of describing partition types that follow the pattern set by
+> other device tree bindings.
 > 
-> > +- partial-reconfig : boolean property should be defined if partial
-> > +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
-> > +  is done.
-> > +- fpga-bridges : should contain a list of bridges that the bus will disable
-> > +  before   programming the FPGA and then enable after the FPGA has been
-> > +
-> > +Example:
-> > +
-> > +/dts-v1/;
-> > +/plugin/;
-> > +/ {
-> > +       fragment@0 {
-> > +               target-path="/soc";
-> > +               __overlay__ {
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +
-> > +                       bridge@0xff200000 {
-> > +                               compatible = "simple-fpga-bus";
-> > +                               reg = <0xc0000000 0x20000000>,
-> > +                                     <0xff200000 0x00200000>;
+> Create a "partition-type" binding for this, and add "my" bindings
+> for "arm,arm-flash-structure" as a starter for others to follow.
+> A follow-on patch adds support to the Linux kernel to handle this
+> binding, with some infrastructure for others to use it too.
+
+Overall, I like this. And thanks for expanding the explanation of DT
+partitions vs. parsers. It'd be good if we make parsers like this easier
+to integrate, so we see less hard-coded partitions in device tree.
+
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Reported-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/mtd-physmap.txt        |  2 ++
+>  .../devicetree/bindings/mtd/partition.txt          | 35 +++++++++++++++++++---
+>  2 files changed, 33 insertions(+), 4 deletions(-)
 > 
-> You have registers for the bus, so therefore it is not simple. I think
-> the bus or bridge needs a specific compatible
-> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> index 4a0a48bf4ecb..863560bdbb19 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> +++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> @@ -23,6 +23,8 @@ file systems on embedded devices.
+>     unaligned accesses as implemented in the JFFS2 code via memcpy().
+>     By defining "no-unaligned-direct-access", the flash will not be
+>     exposed directly to the MTD users (e.g. JFFS2) any more.
+> + - partition-type : a flash partition type to expect and probe for
+> +   on this device. See "partition.txt" for available partition types.
+>   - linux,mtd-name: allow to specify the mtd name for retro capability with
+>     physmap-flash drivers as boot loader pass the mtd partition via the old
+>     device name physmap-flash.
+> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+> index 8e5557da1955..85d45764a4b3 100644
+> --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> @@ -1,9 +1,36 @@
+>  Representing flash partitions in devicetree
+>  
+> -Partitions can be represented by sub-nodes of an mtd device. This can be used
+> -on platforms which have strong conventions about which portions of a flash are
+> -used for what purposes, but which don't use an on-flash partition table such
+> -as RedBoot.
+> +On-device partition types:
+> +
+> +It is possible for some drivers to indicate an on-device partition type, i.e.
+> +partition tables, footers or other binary pattern in the flash used to
+> +define how the flash is partitioned. This can be done in the device tree node
+> +of an MTD device by specifying partition-type = "foo"; This tells the operating
+> +system to look for the partition type indicated.
+> +
+> +Required properties:
+> +- partition-type : the type of partition. Only one type can be specified.
 
-The reg here is cruft from device tree generation.  I don't use it and will
-clean it out.  After I've done that, does that become simple again?
+You're supporting this as a list property (for future expansion,
+presumably), so I can only assume the "only one type" is referring to
+the number of different parsers available currently, not the behavior of
+the property itself? This should probably be worded differently if
+that's the intention. Like, "a list of partition types ... ordered by
+priority .... We currently support the following: (list only the AFS
+type)" (fill in the blanks how you'd like).
 
-What I need in a bus is:
- - Handles 'ranges'
- - Controls enabling/disabling bridges and programs the FPGA
- - Populates the child devices (and there will probably be many)
+Also, this patch will conflict with [1]. I'll probably take [1] soon, so
+one of us will have to rebase this.
 
-This raises another issue: each area of the FPGA is likely to have multiple
-bridges. That's why I had a list of phandles to bridges rather than
-different bus for each type of bridge.  Is that acceptible-ish?
+Brian
 
-> Rob
-> 
-> [1] http://www.spinics.net/lists/devicetree/msg92462.html
+[1] http://thread.gmane.org/gmane.comp.devicetree.spec/191
+
+> +  Valid types are:
+> +  "arm,arm-flash-structure" (also called AFS)
+> +
+> +Example:
+> +
+> +flash0@40000000 {
+> +	/* 2 * 32MiB NOR Flash memory */
+> +	compatible = "arm,vexpress-flash", "cfi-flash";
+> +	partition-type = "arm,arm-flash-structure";
+> +	reg = <0x40000000 0x04000000>;
+> +	bank-width = <4>;
+> +};
+> +
+> +
+> +Device Tree specified partitions:
+> +
+> +If there is no specified on-device binary format, partitions can be
+> +represented by sub-nodes of an mtd device. This can be used on platforms which
+> +have strong conventions about which portions of a flash are used for what
+> +purposes.
+> +
+>  NOTE: if the sub-node has a compatible string, then it is not a partition.
+>  
+>  #address-cells & #size-cells must both be present in the mtd device. There are
+> -- 
+> 2.4.3
 > 
