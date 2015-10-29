@@ -1,242 +1,107 @@
-From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: imx: Add support for Advantech/GE Bx50v3
-Date: Thu, 29 Oct 2015 19:16:44 -0400
-Message-ID: <1446160607-16053-4-git-send-email-akshay.bhat@timesys.com>
-References: <1446160607-16053-1-git-send-email-akshay.bhat@timesys.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 0/6] Altera PCIe host controller driver with MSI
+ support
+Date: Thu, 29 Oct 2015 18:22:38 -0500
+Message-ID: <20151029232238.GB11994@localhost>
+References: <1445596035-27733-1-git-send-email-lftan@altera.com>
+ <20151027142644.GA8660@localhost>
+ <CAFiDJ5_vCqh=uKkF2E_BQkJUv692r3yr26bBj8boK2DY_Dj+gA@mail.gmail.com>
+ <CAErSpo5okE86k846hs28s4jvL59hmm+4az-dDsymzNayPCPCzw@mail.gmail.com>
+ <CAFiDJ59wOUj-Mr3cyqQEz+P=8AkmRoy7XzUCmM33_e03Y2G_ZQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446160607-16053-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFiDJ59wOUj-Mr3cyqQEz+P=8AkmRoy7XzUCmM33_e03Y2G_ZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, peter.stretz-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+On Wed, Oct 28, 2015 at 02:25:11PM +0800, Ley Foon Tan wrote:
+> On Wed, Oct 28, 2015 at 9:02 AM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> > On Tue, Oct 27, 2015 at 7:56 PM, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
+> >> On Tue, Oct 27, 2015 at 10:26 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >>> Hi Ley,
+> >>>
+> >>> On Fri, Oct 23, 2015 at 06:27:09PM +0800, Ley Foon Tan wrote:
+> >>>> This is the 12th version of patch set to add support for Altera PCIe host
+> >>>> controller with MSI feature on Altera FPGA device families. This patchset
+> >>>> mainly resovle the comments from Bjorn.
+> >>>>
+> >>>>
+> >>>> This patchset is based on v4.3-rc6.
+> >>>>
+> >>>> v11->v12 changes:
+> >>>> - pcie-altera: use DECLARE_PCI_FIXUP_EARLY for pcie retrain fixup
+> >>>> - pcie-altera: move pcie_bus_configure_settings before pci_bus_add_devices
+> >>>> - pcie-altera: add %d for irq bit in dev_err()
+> >>>> - pcie-altera: prevent enumeration of root complex resources in config accessors
+> >>>> - Documentation: add Acked-by from Rob Herring
+> >>>>
+> >>>> History:
+> >>>> -------
+> >>>> [v1]: https://lkml.org/lkml/2015/7/28/395
+> >>>> [v2]: https://lkml.org/lkml/2015/7/31/267
+> >>>> [v3]: http://www.kernelhub.org/?msg=811940&p=2
+> >>>> [v4]: https://lkml.org/lkml/2015/8/17/141
+> >>>> [v5]: https://lkml.org/lkml/2015/8/25/238
+> >>>> [v6]: https://lkml.org/lkml/2015/9/1/177
+> >>>> [v7]: https://lkml.org/lkml/2015/9/20/193
+> >>>> [v8]: http://www.kernelhub.org/?msg=853553&p=2
+> >>>> [v9]: https://lkml.org/lkml/2015/10/13/998
+> >>>> [v10]: https://lkml.org/lkml/2015/10/19/139
+> >>>> [v11]: https://lkml.org/lkml/2015/10/22/206
+> >>>>
+> >>>>
+> >>>> Ley Foon Tan (6):
+> >>>>   arm: add msi.h to Kbuild
+> >>>>   pci: add Altera PCI vendor ID
+> >>>>   pci:host: Add Altera PCIe host controller driver
+> >>>>   pci: altera: Add Altera PCIe MSI driver
+> >>>>   Documentation: dt-bindings: pci: altera pcie device tree binding
+> >>>>   MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+> >>>>
+> >>>>  .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
+> >>>>  .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+> >>>>  MAINTAINERS                                        |  16 +
+> >>>>  arch/arm/include/asm/Kbuild                        |   1 +
+> >>>>  drivers/pci/host/Kconfig                           |  16 +
+> >>>>  drivers/pci/host/Makefile                          |   2 +
+> >>>>  drivers/pci/host/pcie-altera-msi.c                 | 314 +++++++++++
+> >>>>  drivers/pci/host/pcie-altera.c                     | 580 +++++++++++++++++++++
+> >>>>  include/linux/pci_ids.h                            |   2 +
+> >>>>  9 files changed, 1008 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+> >>>>  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+> >>>>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
+> >>>>  create mode 100644 drivers/pci/host/pcie-altera.c
+> >>>
+> >>> I applied these to pci/host-altera for v4.4, thanks!
+> >>>
+> >>> I squashed these into three patches:
+> >>>
+> >>>   - add msi.h to Kbuild
+> >>>   - add Altera host driver (including DT binding and MAINTAINERS update)
+> >>>   - add Altera MSI driver (including DT binding and MAINTAINERS update)
+> >>>
+> >>> Since the convention is to add PCI ID #defines only when they are used in
+> >>> multiple places, I replaced PCI_VENDOR_ID_ALTERA with 0x1172 in the single
+> >>> place it is used.
+> >> Hi Bjorn
+> >>
+> >> Thanks for applied these.
+> >>
+> >> By the way, I can't see pci/host-altera branch in your pci.git tree
+> >> yet. It takes some time to appear there?
+> >
+> > Sorry, I forgot to push it.  It should be there now!
+> >
+> Yes, saw it now. It will merge to 'next' branch eventually?
 
-Advantech has 3 carrier boards (B450v3, B650v3, B850v3) which use
-the Advantech BA-16 module (based on iMX6D). This file has the
-devicetree entries that are common to all 3 boards.
+Yep, I just merged it to 'next' and pushed it.
 
-Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 206 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 206 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
-
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-new file mode 100644
-index 0000000..e9d97ee
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -0,0 +1,206 @@
-+/*
-+ * Copyright 2015 Timesys Corporation.
-+ * Copyright 2015 GE Healthcare.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include "imx6q-ba16.dtsi"
-+
-+/ {
-+	regulators {
-+		/* regulator for wl18xx on sdhc4 */
-+		wl18xx_vmmc: regulator@6 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "vwl1807";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&pca9539 3 GPIO_ACTIVE_HIGH>;
-+			startup-delay-us = <70000>;
-+			enable-active-high;
-+		};
-+
-+		reg_wlan: regulator@7 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "3P3V_wlan";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio6 14 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "fsl,imx6q-ba16-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "imx6q-ba16-sgtl5000";
-+		ssi-controller = <&ssi1>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"LINE_IN", "Line In Jack",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <4>;
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		mclk: clock@0 {
-+			compatible = "fixed-clock";
-+			reg = <0>;
-+			#clock-cells = <0>;
-+			clock-frequency = <22000000>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	pca9547: mux@70 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mux_i2c3: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0>;
-+
-+			ads7830: ads7830@48 {
-+				compatible = "ti,ads7830";
-+				reg = <0x48>;
-+			};
-+		};
-+
-+		mux_i2c4: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x1>;
-+
-+			eeprom: eeprom@50 {
-+				compatible = "atmel,24c08";
-+				reg = <0x50>;
-+			};
-+
-+			mpl3115: mpl3115@60 {
-+				compatible = "fsl,mpl3115";
-+				reg = <0x60>;
-+			};
-+		};
-+
-+		mux_i2c5: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+		};
-+
-+		mux_i2c6: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			codec: sgtl5000@0a {
-+				compatible = "fsl,sgtl5000";
-+				reg = <0x0a>;
-+				clocks = <&mclk>;
-+				VDDA-supply = <&reg_1p8v>;
-+				VDDIO-supply = <&reg_3p3v>;
-+			};
-+		};
-+
-+		mux_i2c7: i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x4>;
-+
-+			pca9539: pca9539@74 {
-+				compatible = "nxp,pca9539";
-+				reg = <0x74>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				interrupt-parent = <&gpio2>;
-+				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+			};
-+		};
-+
-+		mux_i2c8: i2c@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x5>;
-+
-+			igb@49 {
-+				compatible = "intel,igb";
-+				reg = <0x49>;
-+			};
-+
-+			igb@61 {
-+				compatible = "intel,igb";
-+				reg = <0x61>;
-+			};
-+		};
-+
-+		mux_i2c9: i2c@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x6>;
-+		};
-+
-+		mux_i2c10: i2c@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x7>;
-+		};
-+	};
-+};
-+
-+
-+&usdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <4>;
-+	vmmc-supply = <&wl18xx_vmmc>;
-+	no-1-8-v;
-+	non-removable;
-+	enable-sdio-wakeup;
-+	keep-power-in-suspend;
-+	cap-power-off-card;
-+	max-frequency = <25000000>;
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@0 {
-+		compatible = "ti,wl1837";
-+		reg = <2>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
-+		tcxo-clock-frequency = <26000000>;
-+	};
-+};
-+
-+&ecspi5 {
-+	fsl,spi-num-chipselects = <1>;
-+	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi5>;
-+	status = "okay";
-+
-+	m25_eeprom: m25p80@0 {
-+		compatible = "atmel,at25";
-+		spi-max-frequency = <20000000>;
-+		size = <0x8000>;
-+		pagesize = <64>;
-+		reg = <0>;
-+		address-width = <16>;
-+	};
-+};
--- 
-2.6.2
-
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
