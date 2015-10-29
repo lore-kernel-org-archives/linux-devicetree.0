@@ -1,33 +1,29 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3] Input: tsc2005 - Add support for tsc2004
-Date: Thu, 29 Oct 2015 22:46:20 +0100
-Message-ID: <4152426.STHOuGxqsW@wuerfel>
-References: <1446077554-19684-1-git-send-email-mwelling@ieee.org> <201510291514.OprNyiZf%fengguang.wu@intel.com> <20151029142237.GA11531@qwerty.qwertyembedded>
+Subject: Re: [PATCH v2] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
+Date: Thu, 29 Oct 2015 22:49:12 +0100
+Message-ID: <3919319.0f6zV1T7g0@wuerfel>
+References: <1446066584-3738-1-git-send-email-German.Rivera@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20151029142237.GA11531@qwerty.qwertyembedded>
-Sender: linux-input-owner@vger.kernel.org
-To: Michael Welling <mwelling@ieee.org>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446066584-3738-1-git-send-email-German.Rivera@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "J. German Rivera" <German.Rivera@freescale.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bhupesh.sharma@freescale.com, leoli@freescale.com, stuart.yoder@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 29 October 2015 09:22:37 Michael Welling wrote:
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    drivers/built-in.o: In function `tsc2005_cmd':
-> > >> tsc200x-core.c:(.text+0x2ae07f): undefined reference to `i2c_smbus_write_byte'
-> 
-> Argh!
-> 
-> How do I fix this one?
+On Wednesday 28 October 2015 16:09:44 J. German Rivera wrote:
+> +       rst_ccsr: rstccsr@1E60000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0x1E60000 0x0 0x10000>;
+> +       };
+> +
 > 
 
-Move all the I2C specific code into the tsc2004.c file and remove the
-#ifdef. The problem is that tsc200x-core.c is used as built-in when
-TOUCHSCREEN_TSC2005=y and I2C=m, so it can't call functions that are
-defined in i2c-core.c.
+What does 'rstccsr' stand for? Is this by chance a reset controller?
+
+If so, we probably want a real driver for it rather than just a
+syscon.
 
 	Arnd
