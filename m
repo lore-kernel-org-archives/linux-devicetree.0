@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 10/19] drm: sun4i: Add RGB output
-Date: Fri, 30 Oct 2015 15:20:56 +0100
-Message-ID: <1446214865-3972-11-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 11/19] drm: sun4i: Add composite output
+Date: Fri, 30 Oct 2015 15:20:57 +0100
+Message-ID: <1446214865-3972-12-git-send-email-maxime.ripard@free-electrons.com>
 References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBC72ZWYQKGQEM76TS4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDH2ZWYQKGQEZITJXKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1446214865-3972-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,77 +19,79 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-One of the A10 display pipeline possible output is an RGB interface to
-drive LCD panels directly. This is done through the first channel of the
-TCON that will output our video signals directly.
+Some Allwinner SoCs have an IP called the TV encoder that is used to output
+composite and VGA signals. In such a case, we need to use the second TCON
+channel.
+
+Add support for that TV encoder.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/Makefile    |   2 +
- drivers/gpu/drm/sun4i/sun4i_drv.c |   9 +-
- drivers/gpu/drm/sun4i/sun4i_rgb.c | 243 ++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_rgb.h |  18 +++
- 4 files changed, 271 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_rgb.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_rgb.h
+ drivers/gpu/drm/sun4i/Makefile    |   1 +
+ drivers/gpu/drm/sun4i/sun4i_drv.c |  10 +-
+ drivers/gpu/drm/sun4i/sun4i_tv.c  | 532 ++++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tv.h  |  18 ++
+ 4 files changed, 560 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.h
 
 diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
-index bc2df12beb42..4d230b658a05 100644
+index 4d230b658a05..fc0dc8be82d9 100644
 --- a/drivers/gpu/drm/sun4i/Makefile
 +++ b/drivers/gpu/drm/sun4i/Makefile
-@@ -5,4 +5,6 @@ sun4i-drm-y += sun4i_framebuffer.o
- sun4i-drm-y += sun4i_layer.o
+@@ -6,5 +6,6 @@ sun4i-drm-y += sun4i_layer.o
  sun4i-drm-y += sun4i_tcon.o
  
-+sun4i-drm-y += sun4i_rgb.o
-+
+ sun4i-drm-y += sun4i_rgb.o
++sun4i-drm-y += sun4i_tv.o
+ 
  obj-$(CONFIG_DRM_SUN4I)		+= sun4i-drm.o
 diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index fc26f3903f52..f2c9c8a2eb75 100644
+index f2c9c8a2eb75..3cf7a9e89afa 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -20,6 +20,7 @@
- #include "sun4i_drv.h"
- #include "sun4i_framebuffer.h"
+@@ -22,6 +22,7 @@
  #include "sun4i_layer.h"
-+#include "sun4i_rgb.h"
+ #include "sun4i_rgb.h"
  #include "sun4i_tcon.h"
++#include "sun4i_tv.h"
  
  static void sun4i_drv_preclose(struct drm_device *drm,
-@@ -127,13 +128,18 @@ static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
+ 			       struct drm_file *file_priv)
+@@ -134,12 +135,18 @@ static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
+ 		goto err_free_crtc;
  	}
  
- 	/* Create our outputs */
-+	ret = sun4i_rgb_init(drm);
++	ret = sun4i_tv_init(drm);
 +	if (ret) {
 +		dev_err(drm->dev, "Couldn't create our RGB output\n");
-+		goto err_free_crtc;
++		goto err_free_rgb;
 +	}
- 
++
  	/* Create our framebuffer */
  	drv->fbdev = sun4i_framebuffer_init(drm);
  	if (IS_ERR(drv->fbdev)) {
  		dev_err(drm->dev, "Couldn't create our framebuffer\n");
  		ret = PTR_ERR(drv->fbdev);
--		goto err_free_crtc;
-+		goto err_free_rgb;
+-		goto err_free_rgb;
++		goto err_free_tv;
  	}
  
  	/* Enable connectors polling */
-@@ -141,6 +147,7 @@ static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
+@@ -147,6 +154,7 @@ static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
  
  	return 0;
  
-+err_free_rgb:
++err_free_tv:
+ err_free_rgb:
  err_free_crtc:
  err_free_layers:
- err_free_tcon:
-diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
 new file mode 100644
-index 000000000000..426b16b26aec
+index 000000000000..dc55e340410c
 --- /dev/null
-+++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-@@ -0,0 +1,243 @@
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+@@ -0,0 +1,532 @@
 +/*
 + * Copyright (C) 2015 Free Electrons
 + * Copyright (C) 2015 NextThing Co
@@ -103,241 +105,530 @@ index 000000000000..426b16b26aec
 + */
 +
 +#include <linux/clk.h>
++#include <linux/of_address.h>
++#include <linux/regmap.h>
 +
 +#include <drm/drmP.h>
 +#include <drm/drm_atomic_helper.h>
 +#include <drm/drm_crtc_helper.h>
 +#include <drm/drm_panel.h>
 +
++#include "sun4i_backend.h"
 +#include "sun4i_drv.h"
 +#include "sun4i_tcon.h"
 +
-+struct sun4i_rgb {
-+	struct drm_connector	connector;
-+	struct drm_encoder	encoder;
-+	struct drm_panel	*panel;
++#define SUN4I_TVE_EN_REG		0x000
++#define SUN4I_TVE_EN_DAC_MAP_MASK		GENMASK(19, 4)
++#define SUN4I_TVE_EN_DAC_MAP(dac, out)		(((out) & 0xf) << (dac + 1) * 4)
++#define SUN4I_TVE_EN_ENABLE			BIT(0)
 +
-+	struct sun4i_drv	*drv;
++#define SUN4I_TVE_CFG0_REG		0x004
++#define SUN4I_TVE_CFG0_DAC_CONTROL_54M		BIT(26)
++#define SUN4I_TVE_CFG0_CORE_DATAPATH_54M	BIT(25)
++#define SUN4I_TVE_CFG0_CORE_CONTROL_54M		BIT(24)
++#define SUN4I_TVE_CFG0_YC_EN			BIT(17)
++#define SUN4I_TVE_CFG0_COMP_EN			BIT(16)
++#define SUN4I_TVE_CFG0_RES(x)			((x) & 0xf)
++#define SUN4I_TVE_CFG0_RES_480i			SUN4I_TVE_CFG0_RES(0)
++#define SUN4I_TVE_CFG0_RES_576i			SUN4I_TVE_CFG0_RES(1)
 +
-+	bool			enabled;
++#define SUN4I_TVE_DAC0_REG		0x008
++#define SUN4I_TVE_DAC0_CLOCK_INVERT		BIT(24)
++#define SUN4I_TVE_DAC0_LUMA(x)			(((x) & 3) << 20)
++#define SUN4I_TVE_DAC0_LUMA_0_4			SUN4I_TVE_DAC0_LUMA(3)
++#define SUN4I_TVE_DAC0_CHROMA(x)		(((x) & 3) << 18)
++#define SUN4I_TVE_DAC0_CHROMA_0_75		SUN4I_TVE_DAC0_CHROMA(3)
++#define SUN4I_TVE_DAC0_INTERNAL_DAC(x)		(((x) & 3) << 16)
++#define SUN4I_TVE_DAC0_INTERNAL_DAC_37_5_OHMS	SUN4I_TVE_DAC0_INTERNAL_DAC(3)
++#define SUN4I_TVE_DAC0_DAC_EN(dac)		BIT(dac)
++
++#define SUN4I_TVE_NOTCH_REG		0x00c
++#define SUN4I_TVE_NOTCH_DAC0_TO_DAC_DLY(dac, x)	((4 - (x)) << (dac * 3))
++
++#define SUN4I_TVE_CHROMA_FREQ_REG	0x010
++
++#define SUN4I_TVE_PORCH_REG		0x014
++#define SUN4I_TVE_PORCH_BACK(x)			((x) << 16)
++#define SUN4I_TVE_PORCH_FRONT(x)		(x)
++
++#define SUN4I_TVE_LINE_REG		0x01c
++#define SUN4I_TVE_LINE_FIRST(x)			((x) << 16)
++#define SUN4I_TVE_LINE_NUMBER(x)		(x)
++
++#define SUN4I_TVE_LEVEL_REG		0x020
++#define SUN4I_TVE_LEVEL_BLANK(x)		((x) << 16)
++#define SUN4I_TVE_LEVEL_BLACK(x)		(x)
++
++#define SUN4I_TVE_DAC1_REG		0x024
++#define SUN4I_TVE_DAC1_AMPLITUDE(dac, x)	((x) << (dac * 8))
++
++#define SUN4I_TVE_DETECT_STA_REG	0x038
++#define SUN4I_TVE_DETECT_STA_DAC(dac)		BIT((dac * 8))
++#define SUN4I_TVE_DETECT_STA_UNCONNECTED		0
++#define SUN4I_TVE_DETECT_STA_CONNECTED			1
++#define SUN4I_TVE_DETECT_STA_GROUND			2
++
++#define SUN4I_TVE_CB_CR_LVL_REG		0x10c
++#define SUN4I_TVE_CB_CR_LVL_CR_BURST(x)		((x) << 8)
++#define SUN4I_TVE_CB_CR_LVL_CB_BURST(x)		(x)
++
++#define SUN4I_TVE_TINT_BURST_PHASE_REG	0x110
++#define SUN4I_TVE_TINT_BURST_PHASE_CHROMA(x)	(x)
++
++#define SUN4I_TVE_BURST_WIDTH_REG	0x114
++#define SUN4I_TVE_BURST_WIDTH_BREEZEWAY(x)	((x) << 16)
++#define SUN4I_TVE_BURST_WIDTH_BURST_WIDTH(x)	((x) << 8)
++#define SUN4I_TVE_BURST_WIDTH_HSYNC_WIDTH(x)	(x)
++
++#define SUN4I_TVE_CB_CR_GAIN_REG	0x118
++#define SUN4I_TVE_CB_CR_GAIN_CR(x)		((x) << 8)
++#define SUN4I_TVE_CB_CR_GAIN_CB(x)		(x)
++
++#define SUN4I_TVE_SYNC_VBI_REG		0x11c
++#define SUN4I_TVE_SYNC_VBI_SYNC(x)		((x) << 16)
++#define SUN4I_TVE_SYNC_VBI_VBLANK(x)		(x)
++
++#define SUN4I_TVE_ACTIVE_LINE_REG	0x124
++#define SUN4I_TVE_ACTIVE_LINE(x)		(x)
++
++#define SUN4I_TVE_CHROMA_REG		0x128
++#define SUN4I_TVE_CHROMA_COMP_GAIN(x)		((x) & 3)
++#define SUN4I_TVE_CHROMA_COMP_GAIN_50		SUN4I_TVE_CHROMA_COMP_GAIN(2)
++
++#define SUN4I_TVE_12C_REG		0x12c
++#define SUN4I_TVE_12C_NOTCH_WIDTH_WIDE		BIT(8)
++#define SUN4I_TVE_12C_COMP_YUV_EN		BIT(0)
++
++#define SUN4I_TVE_RESYNC_REG		0x130
++#define SUN4I_TVE_RESYNC_FIELD			BIT(31)
++#define SUN4I_TVE_RESYNC_LINE(x)		((x) << 16)
++#define SUN4I_TVE_RESYNC_PIXEL(x)		(x)
++
++#define SUN4I_TVE_SLAVE_REG		0x134
++
++#define SUN4I_TVE_WSS_DATA2_REG		0x244
++
++struct color_gains {
++	u16	cb;
++	u16	cr;
 +};
 +
-+static inline struct sun4i_rgb *
-+drm_connector_to_sun4i_rgb(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct sun4i_rgb,
-+			    connector);
-+}
++struct burst_levels {
++	u16	cb;
++	u16	cr;
++};
 +
-+static inline struct sun4i_rgb *
-+drm_encoder_to_sun4i_rgb(struct drm_encoder *encoder)
++struct video_levels {
++	u16	black;
++	u16	blank;
++};
++
++struct resync_parameters {
++	bool	field;
++	u16	line;
++	u16	pixel;
++};
++
++struct tv_mode {
++	char		*name;
++
++	u32		mode;
++	u32		chroma_freq;
++	u16		back_porch;
++	u16		front_porch;
++	u16		line_number;
++	u16		vblank_level;
++
++	u32		hdisplay;
++	u16		hfront_porch;
++	u16		hsync_len;
++	u16		hback_porch;
++
++	u32		vdisplay;
++	u16		vfront_porch;
++	u16		vsync_len;
++	u16		vback_porch;
++
++	bool		yc_en;
++	bool		dac3_en;
++	bool		dac_bit25_en;
++
++	struct color_gains		*color_gains;
++	struct burst_levels		*burst_levels;
++	struct video_levels		*video_levels;
++	struct resync_parameters	*resync_params;
++};
++
++struct sun4i_tv {
++	struct drm_connector	connector;
++	struct drm_encoder	encoder;
++
++	struct clk		*clk;
++	struct regmap		*regs;
++
++	struct sun4i_drv	*drv;
++};
++
++struct tv_mode tv_modes[] = {
++};
++
++static inline struct sun4i_tv *
++drm_encoder_to_sun4i_tv(struct drm_encoder *encoder)
 +{
-+	return container_of(encoder, struct sun4i_rgb,
++	return container_of(encoder, struct sun4i_tv,
 +			    encoder);
 +}
 +
-+static int sun4i_rgb_get_modes(struct drm_connector *connector)
++static inline struct sun4i_tv *
++drm_connector_to_sun4i_tv(struct drm_connector *connector)
 +{
-+	struct sun4i_rgb *rgb =
-+		drm_connector_to_sun4i_rgb(connector);
-+
-+	return rgb->panel->funcs->get_modes(rgb->panel);
++	return container_of(connector, struct sun4i_tv,
++			    connector);
 +}
 +
-+static int sun4i_rgb_mode_valid(struct drm_connector *connector,
-+				struct drm_display_mode *mode)
++/*
++ * FIXME: If only the drm_display_mode private field was usable, this
++ * could go away...
++ *
++ * So far, it doesn't seem to be preserved when the mode is passed by
++ * to mode_set for some reason.
++ */
++static struct tv_mode *sun4i_tv_find_tv_by_mode(struct drm_display_mode *mode)
 +{
-+	DRM_DEBUG_DRIVER("Validating modes...\n");
++	int i;
 +
-+	if ((mode->hsync_start < 1) || (mode->hsync_start > 0x3ff) ||
-+	    (mode->htotal < 1) || (mode->htotal > 0xfff))
-+		return MODE_H_ILLEGAL;
++	for (i = 0; i < ARRAY_SIZE(tv_modes); i++) {
++		struct tv_mode *tv_mode = &tv_modes[i];
 +
-+	DRM_DEBUG_DRIVER("Horizontal parameters OK\n");
++		if (!strcmp(mode->name, tv_mode->name))
++			return tv_mode;
++	}
 +
-+	if ((mode->vsync_start < 1) || (mode->vsync_start > 0x3ff) ||
-+	    (mode->vtotal < 1) || (mode->vtotal > 0xfff))
-+		return MODE_V_ILLEGAL;
++	return NULL;
++}
 +
-+	DRM_DEBUG_DRIVER("Vertical parameters OK\n");
++static int sun4i_tv_atomic_check(struct drm_encoder *encoder,
++				 struct drm_crtc_state *crtc_state,
++				 struct drm_connector_state *conn_state)
++{
++	return 0;
++}
 +
++static void sun4i_tv_disable(struct drm_encoder *encoder)
++{
++	struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
++	struct sun4i_drv *drv = tv->drv;
++	struct sun4i_tcon *tcon = drv->tcon;
++
++	DRM_DEBUG_DRIVER("Disabling the TV Output\n");
++
++	sun4i_tcon_disable_channel(tcon, 1);
++
++	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
++			   SUN4I_TVE_EN_ENABLE,
++			   0);
++}
++
++static void sun4i_tv_enable(struct drm_encoder *encoder)
++{
++	struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
++	struct sun4i_drv *drv = tv->drv;
++	struct sun4i_tcon *tcon = drv->tcon;
++
++	DRM_DEBUG_DRIVER("Enabling the TV Output\n");
++
++	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
++			   SUN4I_TVE_EN_ENABLE,
++			   SUN4I_TVE_EN_ENABLE);
++
++	sun4i_tcon_enable_channel(tcon, 1);
++}
++
++static void sun4i_tv_mode_set(struct drm_encoder *encoder,
++			      struct drm_display_mode *mode,
++			      struct drm_display_mode *adjusted_mode)
++{
++	struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
++	struct sun4i_drv *drv = tv->drv;
++	struct sun4i_tcon *tcon = drv->tcon;
++	struct tv_mode *tv_mode = sun4i_tv_find_tv_by_mode(mode);
++
++	sun4i_backend_apply_color_correction(drv->backend);
++	sun4i_tcon1_mode_set(tcon, mode);
++
++	/* Enable and map the DAC to the output */
++	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
++			   SUN4I_TVE_EN_DAC_MAP_MASK,
++			   SUN4I_TVE_EN_DAC_MAP(0, 1) |
++			   SUN4I_TVE_EN_DAC_MAP(1, 2) |
++			   SUN4I_TVE_EN_DAC_MAP(2, 3) |
++			   SUN4I_TVE_EN_DAC_MAP(3, 4));
++
++	/* Set PAL settings */
++	regmap_write(tv->regs, SUN4I_TVE_CFG0_REG,
++		     tv_mode->mode |
++		     (tv_mode->yc_en ? SUN4I_TVE_CFG0_YC_EN : 0) |
++		     SUN4I_TVE_CFG0_COMP_EN |
++		     SUN4I_TVE_CFG0_DAC_CONTROL_54M |
++		     SUN4I_TVE_CFG0_CORE_DATAPATH_54M |
++		     SUN4I_TVE_CFG0_CORE_CONTROL_54M);
++
++	/* Configure the DAC for a composite output */
++	regmap_write(tv->regs, SUN4I_TVE_DAC0_REG,
++		     SUN4I_TVE_DAC0_DAC_EN(0) |
++		     (tv_mode->dac3_en ? SUN4I_TVE_DAC0_DAC_EN(3) : 0) |
++		     SUN4I_TVE_DAC0_INTERNAL_DAC_37_5_OHMS |
++		     SUN4I_TVE_DAC0_CHROMA_0_75 |
++		     SUN4I_TVE_DAC0_LUMA_0_4 |
++		     SUN4I_TVE_DAC0_CLOCK_INVERT |
++		     (tv_mode->dac_bit25_en ? BIT(25) : 0) |
++		     BIT(30));
++
++	/* Configure the sample delay between DAC0 and the other DAC */
++	regmap_write(tv->regs, SUN4I_TVE_NOTCH_REG,
++		     SUN4I_TVE_NOTCH_DAC0_TO_DAC_DLY(1, 0) |
++		     SUN4I_TVE_NOTCH_DAC0_TO_DAC_DLY(2, 0));
++
++	regmap_write(tv->regs, SUN4I_TVE_CHROMA_FREQ_REG,
++		     tv_mode->chroma_freq);
++
++	/* Set the front and back porch */
++	regmap_write(tv->regs, SUN4I_TVE_PORCH_REG,
++		     SUN4I_TVE_PORCH_BACK(tv_mode->back_porch) |
++		     SUN4I_TVE_PORCH_FRONT(tv_mode->front_porch));
++
++	/* Set the lines setup */
++	regmap_write(tv->regs, SUN4I_TVE_LINE_REG,
++		     SUN4I_TVE_LINE_FIRST(22) |
++		     SUN4I_TVE_LINE_NUMBER(tv_mode->line_number));
++
++	regmap_write(tv->regs, SUN4I_TVE_LEVEL_REG,
++		     SUN4I_TVE_LEVEL_BLANK(tv_mode->video_levels->blank) |
++		     SUN4I_TVE_LEVEL_BLACK(tv_mode->video_levels->black));
++
++	regmap_write(tv->regs, SUN4I_TVE_DAC1_REG,
++		     SUN4I_TVE_DAC1_AMPLITUDE(0, 0x18) |
++		     SUN4I_TVE_DAC1_AMPLITUDE(1, 0x18) |
++		     SUN4I_TVE_DAC1_AMPLITUDE(2, 0x18) |
++		     SUN4I_TVE_DAC1_AMPLITUDE(3, 0x18));
++
++	regmap_write(tv->regs, SUN4I_TVE_CB_CR_LVL_REG,
++		     SUN4I_TVE_CB_CR_LVL_CB_BURST(tv_mode->burst_levels->cb) |
++		     SUN4I_TVE_CB_CR_LVL_CR_BURST(tv_mode->burst_levels->cr));
++
++	/* Set burst width for a composite output */
++	regmap_write(tv->regs, SUN4I_TVE_BURST_WIDTH_REG,
++		     SUN4I_TVE_BURST_WIDTH_HSYNC_WIDTH(126) |
++		     SUN4I_TVE_BURST_WIDTH_BURST_WIDTH(68) |
++		     SUN4I_TVE_BURST_WIDTH_BREEZEWAY(22));
++
++	regmap_write(tv->regs, SUN4I_TVE_CB_CR_GAIN_REG,
++		     SUN4I_TVE_CB_CR_GAIN_CB(tv_mode->color_gains->cb) |
++		     SUN4I_TVE_CB_CR_GAIN_CR(tv_mode->color_gains->cr));
++
++	regmap_write(tv->regs, SUN4I_TVE_SYNC_VBI_REG,
++		     SUN4I_TVE_SYNC_VBI_SYNC(0x10) |
++		     SUN4I_TVE_SYNC_VBI_VBLANK(tv_mode->vblank_level));
++
++	regmap_write(tv->regs, SUN4I_TVE_ACTIVE_LINE_REG,
++		     SUN4I_TVE_ACTIVE_LINE(1440));
++
++	/* Set composite chroma gain to 50 % */
++	regmap_write(tv->regs, SUN4I_TVE_CHROMA_REG,
++		     SUN4I_TVE_CHROMA_COMP_GAIN_50);
++
++	regmap_write(tv->regs, SUN4I_TVE_12C_REG,
++		     SUN4I_TVE_12C_COMP_YUV_EN |
++		     SUN4I_TVE_12C_NOTCH_WIDTH_WIDE);
++
++	regmap_write(tv->regs, SUN4I_TVE_RESYNC_REG,
++		     SUN4I_TVE_RESYNC_PIXEL(tv_mode->resync_params->pixel) |
++		     SUN4I_TVE_RESYNC_LINE(tv_mode->resync_params->line) |
++		     (tv_mode->resync_params->field ?
++		      SUN4I_TVE_RESYNC_FIELD : 0));
++
++	regmap_write(tv->regs, SUN4I_TVE_SLAVE_REG, 0);
++
++	clk_set_rate(tcon->sclk1, mode->crtc_clock * 1000);
++}
++
++static struct drm_encoder_helper_funcs sun4i_tv_helper_funcs = {
++	.atomic_check	= sun4i_tv_atomic_check,
++	.disable	= sun4i_tv_disable,
++	.enable		= sun4i_tv_enable,
++	.mode_set	= sun4i_tv_mode_set,
++};
++
++static void sun4i_tv_destroy(struct drm_encoder *encoder)
++{
++	drm_encoder_cleanup(encoder);
++}
++
++static struct drm_encoder_funcs sun4i_tv_funcs = {
++	.destroy	= sun4i_tv_destroy,
++};
++
++static struct regmap_config sun4i_tv_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= SUN4I_TVE_WSS_DATA2_REG,
++	.name		= "tv-encoder",
++};
++
++static int sun4i_tv_comp_get_modes(struct drm_connector *connector)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(tv_modes); i++) {
++		struct drm_display_mode *mode = drm_mode_create(connector->dev);
++		struct tv_mode *tv_mode = &tv_modes[i];
++
++		DRM_DEBUG_DRIVER("Creating mode %s\n", tv_mode->name);
++
++		strcpy(mode->name, tv_mode->name);
++		mode->type = DRM_MODE_TYPE_DRIVER;
++		mode->clock = 13500;
++		mode->flags = DRM_MODE_FLAG_INTERLACE;
++
++		mode->hdisplay = tv_mode->hdisplay;
++		mode->hsync_start = mode->hdisplay + tv_mode->hfront_porch;
++		mode->hsync_end = mode->hsync_start + tv_mode->hsync_len;
++		mode->htotal = mode->hsync_end  + tv_mode->hback_porch;
++
++		mode->vdisplay = tv_mode->vdisplay;
++		mode->vsync_start = mode->vdisplay + tv_mode->vfront_porch;
++		mode->vsync_end = mode->vsync_start + tv_mode->vsync_len;
++		mode->vtotal = mode->vsync_end  + tv_mode->vback_porch;
++
++		drm_mode_probed_add(connector, mode);
++	}
++
++	return i;
++}
++
++static int sun4i_tv_comp_mode_valid(struct drm_connector *connector,
++				    struct drm_display_mode *mode)
++{
++	/* TODO */
 +	return MODE_OK;
 +}
 +
 +static struct drm_encoder *
-+sun4i_rgb_best_encoder(struct drm_connector *connector)
++sun4i_tv_comp_best_encoder(struct drm_connector *connector)
 +{
-+	struct sun4i_rgb *rgb =
-+		drm_connector_to_sun4i_rgb(connector);
++	struct sun4i_tv *tv = drm_connector_to_sun4i_tv(connector);
 +
-+	return &rgb->encoder;
++	return &tv->encoder;
 +}
 +
-+static struct drm_connector_helper_funcs sun4i_rgb_con_helper_funcs = {
-+	.get_modes	= sun4i_rgb_get_modes,
-+	.mode_valid	= sun4i_rgb_mode_valid,
-+	.best_encoder	= sun4i_rgb_best_encoder,
++static struct drm_connector_helper_funcs sun4i_tv_comp_connector_helper_funcs = {
++	.get_modes	= sun4i_tv_comp_get_modes,
++	.mode_valid	= sun4i_tv_comp_mode_valid,
++	.best_encoder	= sun4i_tv_comp_best_encoder,
 +};
 +
 +static enum drm_connector_status
-+sun4i_rgb_connector_detect(struct drm_connector *connector, bool force)
++sun4i_tv_comp_connector_detect(struct drm_connector *connector, bool force)
 +{
 +	return connector_status_connected;
 +}
 +
 +static void
-+sun4i_rgb_connector_destroy(struct drm_connector *connector)
++sun4i_tv_comp_connector_destroy(struct drm_connector *connector)
 +{
-+	struct sun4i_rgb *rgb = drm_connector_to_sun4i_rgb(connector);
-+
-+	drm_panel_detach(rgb->panel);
 +	drm_connector_cleanup(connector);
 +}
 +
-+static struct drm_connector_funcs sun4i_rgb_con_funcs = {
++static struct drm_connector_funcs sun4i_tv_comp_connector_funcs = {
 +	.dpms			= drm_atomic_helper_connector_dpms,
-+	.detect			= sun4i_rgb_connector_detect,
++	.detect			= sun4i_tv_comp_connector_detect,
 +	.fill_modes		= drm_helper_probe_single_connector_modes,
-+	.destroy		= sun4i_rgb_connector_destroy,
++	.destroy		= sun4i_tv_comp_connector_destroy,
 +	.reset			= drm_atomic_helper_connector_reset,
 +	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
 +	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
 +};
 +
-+static void sun4i_rgb_encoder_enable(struct drm_encoder *encoder)
-+{
-+	struct sun4i_rgb *rgb = drm_encoder_to_sun4i_rgb(encoder);
-+	struct sun4i_drv *drv = rgb->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	if (rgb->enabled)
-+		return;
-+
-+	DRM_DEBUG_DRIVER("Enabling RGB output\n");
-+
-+	drm_panel_enable(rgb->panel);
-+	sun4i_tcon_enable_channel(tcon, 0);
-+
-+	rgb->enabled = true;
-+}
-+
-+static void sun4i_rgb_encoder_disable(struct drm_encoder *encoder)
-+{
-+	struct sun4i_rgb *rgb = drm_encoder_to_sun4i_rgb(encoder);
-+	struct sun4i_drv *drv = rgb->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	if (!rgb->enabled)
-+		return;
-+
-+	DRM_DEBUG_DRIVER("Disabling RGB output\n");
-+
-+	sun4i_tcon_disable_channel(tcon, 0);
-+	drm_panel_disable(rgb->panel);
-+
-+	rgb->enabled = false;
-+}
-+
-+static bool sun4i_rgb_encoder_mode_fixup(struct drm_encoder *encoder,
-+					 const struct drm_display_mode *mode,
-+					 struct drm_display_mode *adjusted)
-+{
-+	return true;
-+}
-+
-+static void sun4i_rgb_encoder_mode_set(struct drm_encoder *encoder,
-+				       struct drm_display_mode *mode,
-+				       struct drm_display_mode *adjusted_mode)
-+{
-+	struct sun4i_rgb *rgb = drm_encoder_to_sun4i_rgb(encoder);
-+	struct sun4i_drv *drv = rgb->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	sun4i_tcon0_mode_set(tcon, mode);
-+
-+	clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-+}
-+
-+static struct drm_encoder_helper_funcs sun4i_rgb_enc_helper_funcs = {
-+	.mode_fixup	= sun4i_rgb_encoder_mode_fixup,
-+	.mode_set	= sun4i_rgb_encoder_mode_set,
-+	.disable	= sun4i_rgb_encoder_disable,
-+	.enable		= sun4i_rgb_encoder_enable,
-+};
-+
-+static void sun4i_rgb_enc_destroy(struct drm_encoder *encoder)
-+{
-+	drm_encoder_cleanup(encoder);
-+}
-+
-+static struct drm_encoder_funcs sun4i_rgb_enc_funcs = {
-+	.destroy	= sun4i_rgb_enc_destroy,
-+};
-+
-+int sun4i_rgb_init(struct drm_device *drm)
++int sun4i_tv_init(struct drm_device *drm)
 +{
 +	struct sun4i_drv *drv = drm->dev_private;
-+	struct sun4i_rgb *rgb;
 +	struct device_node *np;
++	struct sun4i_tv *tv;
++	struct resource res;
++	void __iomem *regs;
 +	int ret;
 +
-+	rgb = devm_kzalloc(drm->dev, sizeof(*rgb), GFP_KERNEL);
-+	if (!rgb)
++	tv = devm_kzalloc(drm->dev, sizeof(*tv), GFP_KERNEL);
++	if (!tv)
 +		return -ENOMEM;
-+	rgb->drv = drv;
++	tv->drv = drv;
 +
-+	np = of_parse_phandle(drm->dev->of_node, "allwinner,panel", 0);
++	np = of_parse_phandle(drm->dev->of_node, "allwinner,tv-encoder", 0);
 +	if (!np) {
-+		dev_err(drm->dev, "Couldn't find our panel DT node\n");
++		dev_err(drm->dev, "Couldn't find the TV encoder node\n");
 +		return -ENODEV;
 +	}
 +
-+	rgb->panel = of_drm_find_panel(np);
-+	if (!rgb->panel) {
-+		dev_err(drm->dev, "Couldn't find our panel\n");
-+		return -EPROBE_DEFER;
++	ret = of_address_to_resource(np, 0, &res);
++	regs = devm_ioremap_resource(drm->dev, &res);
++	if (IS_ERR(regs)) {
++		dev_err(drm->dev, "Couldn't map the TV encoder registers\n");
++		return PTR_ERR(regs);
 +	}
 +
-+	drm_encoder_helper_add(&rgb->encoder,
-+			       &sun4i_rgb_enc_helper_funcs);
++	tv->regs = devm_regmap_init_mmio(drm->dev, regs,
++					  &sun4i_tv_regmap_config);
++	if (IS_ERR(tv->regs)) {
++		dev_err(drm->dev, "Couldn't create the TV encoder regmap\n");
++		return PTR_ERR(tv->regs);
++	}
++
++	tv->clk = of_clk_get(np, 0);
++	if (IS_ERR(tv->clk)) {
++		dev_err(drm->dev, "Couldn't get the TV encoder clock\n");
++		return PTR_ERR(tv->clk);
++	}
++	clk_prepare_enable(tv->clk);
++
++	drm_encoder_helper_add(&tv->encoder,
++			       &sun4i_tv_helper_funcs);
 +	ret = drm_encoder_init(drm,
-+			       &rgb->encoder,
-+			       &sun4i_rgb_enc_funcs,
-+			       DRM_MODE_ENCODER_NONE);
++			       &tv->encoder,
++			       &sun4i_tv_funcs,
++			       DRM_MODE_ENCODER_TVDAC);
 +	if (ret) {
-+		dev_err(drm->dev, "Couldn't initialise the rgb encoder\n");
-+		goto err_out;
++		dev_err(drm->dev, "Couldn't initialise the TV encoder\n");
++		return ret;
 +	}
 +
-+	/* The RGB encoder can only work with the TCON channel 0 */
-+	rgb->encoder.possible_crtcs = BIT(0);
++	tv->encoder.possible_crtcs = BIT(0);
 +
-+	drm_connector_helper_add(&rgb->connector,
-+				 &sun4i_rgb_con_helper_funcs);
-+	ret = drm_connector_init(drm, &rgb->connector,
-+				 &sun4i_rgb_con_funcs,
-+				 DRM_MODE_CONNECTOR_Unknown);
++	drm_connector_helper_add(&tv->connector,
++				 &sun4i_tv_comp_connector_helper_funcs);
++	ret = drm_connector_init(drm, &tv->connector,
++				 &sun4i_tv_comp_connector_funcs,
++				 DRM_MODE_CONNECTOR_Composite);
 +	if (ret) {
-+		dev_err(drm->dev, "Couldn't initialise the rgb connector\n");
++		dev_err(drm->dev,
++			"Couldn't initialise the Composite connector\n");
 +		goto err_cleanup_connector;
 +	}
++	tv->connector.interlace_allowed = true;
 +
-+	drm_mode_connector_attach_encoder(&rgb->connector, &rgb->encoder);
-+
-+	drm_panel_attach(rgb->panel, &rgb->connector);
++	drm_mode_connector_attach_encoder(&tv->connector, &tv->encoder);
 +
 +	return 0;
 +
 +err_cleanup_connector:
-+	drm_encoder_cleanup(&rgb->encoder);
-+err_out:
++	drm_encoder_cleanup(&tv->encoder);
 +	return ret;
 +}
-diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.h b/drivers/gpu/drm/sun4i/sun4i_rgb.h
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.h b/drivers/gpu/drm/sun4i/sun4i_tv.h
 new file mode 100644
-index 000000000000..7c4da4c8acdd
+index 000000000000..7e39f3581bf9
 --- /dev/null
-+++ b/drivers/gpu/drm/sun4i/sun4i_rgb.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.h
 @@ -0,0 +1,18 @@
 +/*
 + * Copyright (C) 2015 Free Electrons
@@ -351,11 +642,11 @@ index 000000000000..7c4da4c8acdd
 + * the License, or (at your option) any later version.
 + */
 +
-+#ifndef _SUN4I_RGB_H_
-+#define _SUN4I_RGB_H_
++#ifndef _SUN4I_TV_H_
++#define _SUN4I_TV_H_
 +
-+int sun4i_rgb_init(struct drm_device *drm);
++int sun4i_tv_init(struct drm_device *drm);
 +
-+#endif /* _SUN4I_RGB_H_ */
++#endif /* _SUN4I_TV_H_ */
 -- 
 2.6.2
