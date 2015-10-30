@@ -1,67 +1,48 @@
-From: "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
-Date: Fri, 30 Oct 2015 15:04:58 -0500
-Message-ID: <1446235498-4093-1-git-send-email-German.Rivera@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] mtd: ofpart: document the lock flag.
+Date: Fri, 30 Oct 2015 13:34:00 -0700
+Message-ID: <1446237240-10695-1-git-send-email-computersforpeace@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
-the ARM-generic reboot mechanism for this SoC. This mechanism
-is enabled through CONFIG_POWER_RESET_SYSCON.
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+The lock flag of ofpart is undocumented. Add to binding doc.
+
+Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
-CHANGE HISTORY:
+It seems my reasoning here [1] was wrong (thanks Sascha!). This is a rewrite of
+Michal's binding doc from [2].
 
-Changes in v2:
-- Addressed comment form Stuart Yoder:
-  * Removed "@<address>" from reboot node
+Note that this property is still broken for the CONFIG_MTD_PARTITIONED_MASTER=y
+case.
 
-Changes in v3:
-- Addressed comment form Stuart Yoder:
-  * Expose only the reset register
+[1] http://lists.infradead.org/pipermail/linux-mtd/2015-October/062822.html
+[2] http://lists.infradead.org/pipermail/linux-mtd/2015-August/061155.html
 
-Changes in v4:
-- Addressed comment from Arnd Bergmann:
-  * Changed compatible string to be more specific
-  * Changed node name to 'syscon' instead of 'rstcr'
-  * Changed address to lower case hex
-- Addressed comment form Stuart Yoder:
-  * Rebase on top of branch arm-soc/for-next
+ Documentation/devicetree/bindings/mtd/partition.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index e81cd48..a790a90 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -153,6 +153,18 @@
- 		};
- 	};
-
-+	rstcr: syscon@1e60000 {
-+		compatible = "fsl,ls2085a-rstcr", "syscon";
-+		reg = <0x0 0x1e60000 0x0 0x4>;
-+	};
-+
-+	reboot {
-+		compatible ="syscon-reboot";
-+		regmap = <&rstcr>;
-+		offset = <0x0>;
-+		mask = <0x2>;
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
---
-2.3.3
+diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+index 8e5557da1955..a7d4d35550e3 100644
+--- a/Documentation/devicetree/bindings/mtd/partition.txt
++++ b/Documentation/devicetree/bindings/mtd/partition.txt
+@@ -23,6 +23,8 @@ Optional properties:
+   partition should only be mounted read-only. This is usually used for flash
+   partitions containing early-boot firmware images or data which should not be
+   clobbered.
++- lock : Do not unlock the partition at initialization time (not supported on
++  all devices)
+ 
+ Examples:
+ 
+-- 
+2.6.0.rc2.230.g3dd15c0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
