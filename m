@@ -1,58 +1,39 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
-Date: Fri, 30 Oct 2015 10:51:45 -0700
-Message-ID: <20151030175145.GF13239@google.com>
-References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
- <20151029162908.GA13275@localhost>
- <CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg@mail.gmail.com>
+From: Edward Cragg <edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: meson: Add status LED for Odroid-C1
+Date: Fri, 30 Oct 2015 17:55:24 +0000
+Message-ID: <20151030175524.GD21307@codethink.co.uk>
+References: <1444401430-4396-1-git-send-email-edward.cragg@codethink.co.uk>
+ <1444401430-4396-2-git-send-email-edward.cragg@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <1444401430-4396-2-git-send-email-edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Edward Cragg <edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 03:00:57PM +0100, Linus Walleij wrote:
-> On Thu, Oct 29, 2015 at 5:29 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, Oct 09, 2015 at 03:37:10PM +0100, Edward Cragg wrote:
+> Add the blue status LED to the Hardkernel Odroid C1 board DTS.
+> This is the only programmable LED on the board.
 > 
-> >> +Required properties:
-> >> +- partition-type : the type of partition. Only one type can be specified.
-> >
-> > You're supporting this as a list property (for future expansion,
-> > presumably), so I can only assume the "only one type" is referring to
-> > the number of different parsers available currently, not the behavior of
-> > the property itself?
+> Signed-off-by: Edward Cragg <edward.cragg-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/meson8b-odroidc1.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> I was thinking that it would not be a list actually.
-> 
-> The reason being that if you're anyways going to the trouble of
-> specifying exactly what partition type is going to be used, you're
-> not really interested in specifying a few different ones, you know
-> exactly what type it is going to be.
 
-OK, that makes sense. I think it's still *possible* that a board might
-have the option of more than one partition parser, and so they might
-just include both in the DTS, but that seems unlikely and so it makes
-sense not to (over)engineer for it before it's needed. Anyway, your
-binding can easily be expanded in the future if needed.
+Hi, has anyone had a chance to have a look at this yet?
 
-> But if you think it needs to be a list, I'll specify that, no big
-> deal. I'll also try to get the Linux code to handle a list then.
+I originally forgot to add that this patch is dependent on:
 
-No, I think your proposal is OK then. It's possible there is some room
-for clarification in the binding, since I was confused, but that could
-mostly be attributed to my pre-existing assumptions, not a fault of the
-text.
+[PATCH v2 0/4] Add support for Amlogic Meson8b and couple of boards
 
-> > Also, this patch will conflict with [1]. I'll probably take [1] soon, so
-> > one of us will have to rebase this.
-> 
-> Sure I'll rebase on whatever you say.
+which has already been accepted.
 
-OK, I'll let you know.
-
-Brian
+Ed
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
