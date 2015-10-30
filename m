@@ -1,7 +1,7 @@
 From: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH 3/4] ARM: dts: rockchip: Add Crypto drivers for rk3288
-Date: Fri, 30 Oct 2015 16:22:48 +0800
-Message-ID: <1446193369-4453-4-git-send-email-zain.wang@rock-chips.com>
+Subject: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings documentation
+Date: Fri, 30 Oct 2015 16:22:49 +0800
+Message-ID: <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
 References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,21 +21,36 @@ To: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@p
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add Crypto drivers for rk3288 including crypto controller and dma clk.
+Add DT bindings documentation for the rk3288 crypto drivers.
 
 Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../devicetree/bindings/crypto/rk-crypto.txt       | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6a79c9c..1706706 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -170,6 +170,22 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+new file mode 100644
+index 0000000..1e50768
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+@@ -0,0 +1,31 @@
++Rockchip Electronics And Security Accelerator
++
++Required properties:
++- compatible: should be "rockchip,crypto"
++- reg: base physical address of the engine and length of memory mapped
++       region.
++- interrupts: interrupt number
++- clocks: clock specifiers
++- clock-names: "aclk_crypto" used to clock data
++			   "hclk_crypto" used to clock data
++			   "srst_crypto" used to clock crypto accelerator
++			   "apb_pclk"    used to clock dma
++-status: Enable
++
++Examples:
++
 +	crypto: cypto-controller@ff8a0000 {
 +		compatible = "rockchip,crypto";
 +		reg = <0xff8a0000 0x4000>;
@@ -51,9 +66,5 @@ index 6a79c9c..1706706 100644
 +				  "apb_pclk";
 +		status = "okay";
 +	};
-+
- 	reserved-memory {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
 -- 
 1.9.1
