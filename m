@@ -1,52 +1,45 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 30 Oct 2015 19:01:06 +0000
-Message-ID: <20151030190106.GC30791@leverpostej>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
- <20151030150025.GF31073@leverpostej>
- <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
- <5633B207.5030505@codeaurora.org>
- <CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
- <20151030182537.GB30791@leverpostej>
- <CAHp75Vd-z22XJboxQ=CMxDQ9UaTatbCmpAPLO0jPM0FwJadBOg@mail.gmail.com>
- <5633BB66.3070505@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
+Date: Fri, 30 Oct 2015 19:05:14 +0000
+Message-ID: <20151030190514.GD30791@leverpostej>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-2-git-send-email-fu.wei@linaro.org>
+ <20151027162257.GJ3091@leverpostej>
+ <CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug@mail.gmail.com>
+ <CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
+ <CADyBb7sPqsoQdYBUpHY2HvZ+iT7ABa9NoCX7Jax1NKugYOy1zQ@mail.gmail.com>
+ <5633BCA4.1050400@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5633BB66.3070505-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <5633BCA4.1050400@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Fu Wei <fu.wei@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 02:48:06PM -0400, Sinan Kaya wrote:
-> >>>>It was decided by
-> >>>>Linaro that CSRT will not be supported for ARM64.
-
-> See this.
+On Fri, Oct 30, 2015 at 01:53:24PM -0500, Timur Tabi wrote:
+> On 10/30/2015 01:35 PM, Fu Wei wrote:
+> >>I think maybe Mark was asking why WS1 is optional, not the WS1
+> >My answer is for "why WS1 is optional"!
+> >
+> >>>interrupt.  Maybe you can reword the documentation to make is clear
+> >>>that
+> >I didn't say : "only the*interrupt*  for WS1 is optional."
 > 
-> https://wiki.linaro.org/LEG/Engineering/Kernel/ACPI/TablePriorities
+> WS1 itself is not optional.  The spec says that WS0 and WS1 are
+> separate events, and doesn't saying anything about either being
+> optional.  The *interrupt* for WS1, however, is optional.
 
-The CSRT is listed under "Want", not "Never" or "Don't Care", so Linaro
-have certainly not said that CSRT will not be supported. If anything,
-they have stated that the table should be supported.
+This is a moot point. The distintion between the signal and the
+interrupt doens't matter here.
 
-I suspect that the rationale for it not being "Critical" or "Must" is
-that it's possible to use contemporary systems without DMA engines, but
-we will need support at some point in future.
+I was only asking why the interrupt was optional, and it seems per the
+spec it's expected to be handed to an agent at a higher exception level.
 
-I also note that there are Linaro patches adding supoprt for DBG2 [1] ,
-which is listed as "Never". So the page may be out of date...
-
-Leif, Al?
-
-[1] https://lkml.org/lkml/2015/9/8/287
+That implies that the OS should only care about WS0, assuming that I've
+understood correctly.
 
 Thanks,
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
