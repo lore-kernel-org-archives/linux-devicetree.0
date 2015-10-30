@@ -1,64 +1,63 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 09/19] drm: sun4i: Add DT bindings documentation
-Date: Fri, 30 Oct 2015 18:37:38 +0100
-Message-ID: <20151030173738.GD17183@ulmo.nvidia.com>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-10-git-send-email-maxime.ripard@free-electrons.com>
- <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ@mail.gmail.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
+Date: Fri, 30 Oct 2015 12:46:28 -0500
+Message-ID: <CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+	<1445961999-9506-2-git-send-email-fu.wei@linaro.org>
+	<20151027162257.GJ3091@leverpostej>
+	<CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DiL7RhKs8rK9YGuF"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 27, 2015 at 11:10 PM, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> Why is WS1 optional?
+>
+> According to the description of WS1 in SBSA 2.3 (5.2 Watchdog Operation) page 21
+> -----------------
+> The signal is fed to a higher agent as an interrupt or reset for it to
+> take executive action.
+> ----------------
+>
+> So WS1 maybe a interrupt.
+>
+> In a real Hardware,  WS1 hooks to a  reset signal pin of BMC, if this
+> pin is triggered, BMC will do a real warm reset.
+> In this case, WS1 is a reset, Linux doesn't need to deal with that.
+>
+> For now , I haven't found a hardware use WS1 as  interrupt.
+> In <ARM v8-A Foundation Platform User Guide> 3.2 Interrupt maps  Page 22
+> Table 3-3 Shared peripheral interrupt assignments
+> IRQ ID       SPI offset      Device
+> 60               28              EL2 Generic Watchdog WS1
+>
+> But I don't have further info about it.
+>
+> Anyway,  because this signal could be interrupt or reset, Linux don't
+> need know this signal sometimes.
+> So I think it should be optional in binding info.
+>
+> Do I miss something? Any suggestion ? Please correct me, thanks.
 
---DiL7RhKs8rK9YGuF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think maybe Mark was asking why WS1 is optional, not the WS1
+interrupt.  Maybe you can reword the documentation to make is clear
+that only the *interrupt* for WS1 is optional.
 
-On Fri, Oct 30, 2015 at 11:40:03AM -0500, Rob Herring wrote:
-> On Fri, Oct 30, 2015 at 9:20 AM, Maxime Ripard
-[...]
-> > +Optional properties:
-> > +  - allwinner,tv-encoder: phandle to the TV Encoder in our pipeline
-> > +  - allwinner,panel: phandle to the panel used in our RGB interface
->=20
-> Use of-graph please.
+However, the ACPI table only allows for one interrupt, and it's not
+clear whether that's the WS0 or WS1 interrupt.  So if both WS0 and WS1
+generate an interrupt, how does the driver handle that?
 
-Why? Panels are a really simple resource and a simple phandle is fully
-capable of describing the relationship.
-
-Thierry
-
---DiL7RhKs8rK9YGuF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWM6rhAAoJEN0jrNd/PrOhe5MP/Rz/SQpr6XBAaweD0OTh1bj8
-2u3x4pyBd4Z73GS/nVzflQjZf4B6AqwkvV/Nrrr9E2pdo91uacdfL3uW6n7tLIIM
-y0rkDnx5YNTkkM8CM9X4wiziYGuJ0oSxTauw1nH2TEpYf0pFzfrDI16u5mJT0/vS
-oL+4Iv5kt1F1/Fnk7ttAioEpvhhz9nMuTqzAI7cajq34CN9s6w2J1pizWQokxJI/
-w719JEPIL6Qu8d4cx5N7J7XBaP9giBjSvCsR+ShobF35N5hO1U/JoCGnwZaw81H1
-W/vl3xiQwn9PZKZk/fiUguHrfFSXcdLmEFCXn6l9Rxr0lTWmkArF+XfDj/g+BrKB
-4Y65KTvHLaUWEPL0Zyt/us6rZGoULSV73wZYLmBttkSgDDdVWeTx9R9llsU5CwJG
-pHdSf/WF4lZ5KKQw+H/ajFly+jxQLi34mCugaNkWJZ1jmLVE/XVRyXe4GeeuS8rO
-31EprNW6EViDFL2VDqo2R2Pu5XKyEcYHuRzBXCSCuZe1FdNkbtoESq+HnqbhF911
-Ni5aTra90uAE3cO15w15sLfKxdIadnI7WpgbTGEG+CfVVY3Fra/hNE9hdMTlwTNb
-hNodQv+gnrjmCeYaiJPyg4lWXqEqqeOOd40POR9L7RGeyvXRDYiB/q0S4l2eIRKj
-LP2c5ial8yO7oeFJx4MP
-=RgVR
------END PGP SIGNATURE-----
-
---DiL7RhKs8rK9YGuF--
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
