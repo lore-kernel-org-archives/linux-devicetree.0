@@ -1,33 +1,65 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v4 0/3] NAND support for Broadcom NS2 SoC
-Date: Fri, 30 Oct 2015 06:57:32 +0000
-Message-ID: <39063E8F96E11742B35A201CC5D095B7B02194@SJEXCHMB10.corp.ad.broadcom.com>
-References: <1446185938-17520-1-git-send-email-anup.patel@broadcom.com>
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: RE: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Fri, 30 Oct 2015 09:58:03 +0300
+Message-ID: <00a101d112e0$537a18e0$fa6e4aa0$@samsung.com>
+References: <cover.1446122247.git.p.fedin@samsung.com>
+ <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
+ <56330E6E.50003@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446185938-17520-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56330E6E.50003@samsung.com>
+Content-language: ru
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+ Hello!
 
-Please disregard this patchset.
+> > Add documentation for new subnode properties, allowing bank configuration.
+> > Based on u-boot implementation, but heavily reworked.
+> 
+> Please, carefully look at:
+> Documentation/devicetree/bindings/net/gpmc-eth.txt
+> Documentation/devicetree/bindings/bus/ti-gpmc.txt
 
-There is an accidental typo in patch2.
+ Thank you very much. Indeed, this looks very similar. By the way, should i document smsc over sromc in the same manner, writing
+devicetree/bindings/net/sromc-eth.txt?
 
-We should use ~CFG_BUS_WIDTH instead of CFG_BUS_WIDTH
-in patch2. I will quickly send v5 patchset to fix this.
+ This is a short reply for now, i'll make longer one (or just a new version) after studying these existing bindings and trying to
+apply them.
 
-Sorry, for the noise.
+ Pankaj:
 
-Regards,
-Anup
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +&sromc {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&srom_ctl>, <&srom_ebi>;
+> > +
+> > +       ethernet@07000000 {
+> > +               compatible = "smsc,lan9115";
+> > +               reg = <0x07000000 0x10000>;
+> > +               phy-mode = "mii";
+> > +               interrupt-parent = <&gpx0>;
+> > +               interrupts = <5 8>;
+> > +               reg-io-width = <2>;
+> > +               smsc,irq-push-pull;
+> > +               smsc,force-internal-phy;
+> > +
+> > +               samsung,srom-bank = <3>;
+> > +               samsung,srom-data-width = <2>;
+> > +               samsung,srom-timing = <1 9 12 1 9 1 1>;
+> 
+> I think this is not correct. We can't change binding of "smsc,lan9115"
+> which is already documented here [1]. These samsung specific srom
+> properties should be in srom node or its subnode, but not in this way.
+
+ So, if you look at gpmc-eth.txt, you'll see that this approach is perfectly valid (this is a reply to another msg, just don't want
+to post one more single-line reply).
+
+Kind regards,
+Pavel Fedin
+Expert Engineer
+Samsung Electronics Research center Russia
