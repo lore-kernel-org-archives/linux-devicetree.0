@@ -1,76 +1,43 @@
-From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: Re: [v3 00/10] add support SATA for BMIPS_GENERIC
-Date: Fri, 30 Oct 2015 22:56:36 +0900
-Message-ID: <673D3A37-DE97-4136-BDCE-3DF803405F59@gmail.com>
-References: <1446212339-1210-1-git-send-email-jaedon.shin@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1446212339-1210-1-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
+Date: Fri, 30 Oct 2015 15:00:57 +0100
+Message-ID: <CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg@mail.gmail.com>
+References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
+	<20151029162908.GA13275@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151029162908.GA13275@localhost>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Thu, Oct 29, 2015 at 5:29 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Please discard this patch series. These have fault properties.
+>> +Required properties:
+>> +- partition-type : the type of partition. Only one type can be specified.
+>
+> You're supporting this as a list property (for future expansion,
+> presumably), so I can only assume the "only one type" is referring to
+> the number of different parsers available currently, not the behavior of
+> the property itself?
 
-Sorry, for the noise.
+I was thinking that it would not be a list actually.
 
-I will soon send v4 version again.
+The reason being that if you're anyways going to the trouble of
+specifying exactly what partition type is going to be used, you're
+not really interested in specifying a few different ones, you know
+exactly what type it is going to be.
 
---
-Jaedon
+But if you think it needs to be a list, I'll specify that, no big
+deal. I'll also try to get the Linux code to handle a list then.
 
-> On Oct 30, 2015, at 10:38 PM, Jaedon Shin <jaedon.shin@gmail.com> wrote:
-> 
-> Hi all,
-> 
-> This patch series add support SATA for BMIPS_GENERIC.
-> 
-> Changes in v3:
-> - fix typo quirk instead of quick
-> - disable NCQ before initialzing SATA controller endianness
-> - fix misnomer controlling phy interface
-> - remove brcm,broken-ncq and brcm,broken-phy properties from devicetree
-> - use compatible string for quirks
-> - use list for compatible strings
-> - add "Acked-by:" tags
-> 
-> Changes in v2:
-> - adds quirk for ncq
-> - adds quirk for phy interface control
-> - remove unused definitions in ahci_brcmstb
-> - combines compatible string
-> 
-> Jaedon Shin (10):
->  ata: ahci_brcmstb: add support MIPS-based platforms
->  ata: ahci_brcmstb: add quirk for broken ncq
->  ata: ahci_brcmstb: add quirk for different phy
->  ata: ahci_brcmstb: remove unused definitions
->  phy: phy_brcmstb_sata: remove duplicate definitions
->  phy: phy_brcmstb_sata: add data for phy version
->  phy: phy_brcmstb_sata: add support MIPS-based platforms
->  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
->  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7346
->  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7362
-> 
-> .../devicetree/bindings/ata/brcm,sata-brcmstb.txt  |  4 +-
-> .../bindings/phy/brcm,brcmstb-sata-phy.txt         |  1 +
-> arch/mips/boot/dts/brcm/bcm7346.dtsi               | 42 ++++++++++++++++
-> arch/mips/boot/dts/brcm/bcm7362.dtsi               | 42 ++++++++++++++++
-> arch/mips/boot/dts/brcm/bcm7425.dtsi               | 42 ++++++++++++++++
-> arch/mips/boot/dts/brcm/bcm97346dbsmb.dts          |  8 +++
-> arch/mips/boot/dts/brcm/bcm97362svmb.dts           |  8 +++
-> drivers/ata/Kconfig                                |  2 +-
-> drivers/ata/ahci_brcmstb.c                         | 58 +++++++++++++++++++++-
-> drivers/phy/Kconfig                                |  4 +-
-> drivers/phy/phy-brcmstb-sata.c                     | 47 ++++++++++++++----
-> 11 files changed, 242 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 2.6.2
-> 
+> Also, this patch will conflict with [1]. I'll probably take [1] soon, so
+> one of us will have to rebase this.
 
+Sure I'll rebase on whatever you say.
+
+Yours,
+Linus Walleij
