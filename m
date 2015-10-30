@@ -1,73 +1,81 @@
-From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: [v4 08/10] MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
-Date: Fri, 30 Oct 2015 23:01:22 +0900
-Message-ID: <1446213684-2625-9-git-send-email-jaedon.shin@gmail.com>
-References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings
+ documentation
+Date: Fri, 30 Oct 2015 14:03:34 +0000
+Message-ID: <20151030140334.GB31073@leverpostej>
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+ <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446193369-4453-5-git-send-email-zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add AHCI and PHY device nodes to MIPS-based BCM7425 set-top box
-platform.
+On Fri, Oct 30, 2015 at 04:22:49PM +0800, Zain Wang wrote:
+> Add DT bindings documentation for the rk3288 crypto drivers.
+> 
+> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/crypto/rk-crypto.txt       | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+> new file mode 100644
+> index 0000000..1e50768
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+> @@ -0,0 +1,31 @@
+> +Rockchip Electronics And Security Accelerator
+> +
+> +Required properties:
+> +- compatible: should be "rockchip,crypto"
 
-Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
----
- arch/mips/boot/dts/brcm/bcm7425.dtsi | 40 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Choose a more specific name. Rockchip could easily come up with another
+crypto accelerator later.
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-index 5b660b617ead..47d7bbb20dfd 100644
---- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-@@ -221,5 +221,45 @@
- 			interrupts = <73>;
- 			status = "disabled";
- 		};
-+
-+		sata: sata@181000 {
-+			compatible = "brcm,bcm7425-ahci", "brcm,sata3-ahci";
-+			reg-names = "ahci", "top-ctrl";
-+			reg = <0x181000 0xa9c>, <0x180020 0x1c>;
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <40>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			sata0: sata-port@0 {
-+				reg = <0>;
-+				phys = <&sata_phy0>;
-+			};
-+
-+			sata1: sata-port@1 {
-+				reg = <1>;
-+				phys = <&sata_phy1>;
-+			};
-+		};
-+
-+		sata_phy: sata-phy@1800000 {
-+			compatible = "brcm,bcm7425-sata-phy", "brcm,phy-sata3";
-+			reg = <0x180100 0x0eff>;
-+			reg-names = "phy";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			sata_phy0: sata-phy@0 {
-+				reg = <0>;
-+				#phy-cells = <0>;
-+			};
-+
-+			sata_phy1: sata-phy@1 {
-+				reg = <1>;
-+				#phy-cells = <0>;
-+			};
-+		};
- 	};
- };
--- 
-2.6.2
+> +- reg: base physical address of the engine and length of memory mapped
+> +       region.
+> +- interrupts: interrupt number
+> +- clocks: clock specifiers
+> +- clock-names: "aclk_crypto" used to clock data
+> +			   "hclk_crypto" used to clock data
+> +			   "srst_crypto" used to clock crypto accelerator
+> +			   "apb_pclk"    used to clock dma
+> +-status: Enable
 
+No need to mention the status property.
+
+Thanks,
+Mark.
+
+> +
+> +Examples:
+> +
+> +	crypto: cypto-controller@ff8a0000 {
+> +		compatible = "rockchip,crypto";
+> +		reg = <0xff8a0000 0x4000>;
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru ACLK_CRYPTO>,
+> +			 <&cru HCLK_CRYPTO>,
+> +			 <&cru SRST_CRYPTO>,
+> +			 <&cru ACLK_DMAC1>;
+> +
+> +		clock-names = "aclk_crypto",
+> +			      "hclk_crypto",
+> +			      "srst_crypto",
+> +				  "apb_pclk";
+> +		status = "okay";
+> +	};
+> -- 
+> 1.9.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
