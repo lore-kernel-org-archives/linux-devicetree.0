@@ -1,138 +1,55 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] clk: sunxi: Let divs clocks read the
- base factor clock name from devicetree
-Date: Fri, 30 Oct 2015 15:46:29 +0800
-Message-ID: <CAGb2v670cXEPcUFLtsCMFD+s6zUSt+wQg553QXCQHtDtRh9Xmg@mail.gmail.com>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com> <1445964626-6484-2-git-send-email-jenskuske@gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/3] dmaengine: ti-dma-crossbar: channel reserving and edma3-tpcc support
+Date: Fri, 30 Oct 2015 10:00:35 +0200
+Message-ID: <1446192038-11158-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3GAZSYQKGQEOJY4BHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445964626-6484-2-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 12:50 AM, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Currently, the sunxi clock driver gets the name for the base factor clock
-> of divs clocks from the name field in factors_data. This prevents reusing
-> of the factor clock for clocks with same properties, but different name.
->
-> This commit makes the divs setup function try to get a name from
-> clock-output-names in the devicetree. It also removes the name field where
-> possible and merges the sun4i PLL5 and PLL6 clocks.
+Hi,
 
-This patch actually removes all static declarations of the name field,
-which is a good thing!
+Changes since v1:
+- Fixed issue introduced by the bitops patch: wrong error check, also switch to
+  use find_first_zero_bit() instead of find_next_zero_bit()
 
->
-> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/clk/sunxi/clk-sunxi.c | 38 +++++++++++++++++++++++++++-----------
->  1 file changed, 27 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index 9c79af0c..270de42 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -704,21 +704,12 @@ static const struct factors_data sun4i_pll5_data __initconst = {
->         .enable = 31,
->         .table = &sun4i_pll5_config,
->         .getter = sun4i_get_pll5_factors,
-> -       .name = "pll5",
-> -};
-> -
-> -static const struct factors_data sun4i_pll6_data __initconst = {
-> -       .enable = 31,
-> -       .table = &sun4i_pll5_config,
-> -       .getter = sun4i_get_pll5_factors,
-> -       .name = "pll6",
->  };
->
->  static const struct factors_data sun6i_a31_pll6_data __initconst = {
->         .enable = 31,
->         .table = &sun6i_a31_pll6_config,
->         .getter = sun6i_a31_get_pll6_factors,
-> -       .name = "pll6x2",
->  };
->
->  static const struct factors_data sun5i_a13_ahb_data __initconst = {
-> @@ -902,6 +893,7 @@ struct gates_data {
->
->  #define SUNXI_DIVS_MAX_QTY     4
->  #define SUNXI_DIVISOR_WIDTH    2
-> +#define SUNXI_DIVS_BASE_NAME_MAX_LEN   8
->
->  struct divs_data {
->         const struct factors_data *factors; /* data for the factor clock */
-> @@ -941,7 +933,7 @@ static const struct divs_data pll5_divs_data __initconst = {
->  };
->
->  static const struct divs_data pll6_divs_data __initconst = {
-> -       .factors = &sun4i_pll6_data,
-> +       .factors = &sun4i_pll5_data,
->         .ndivs = 4,
->         .div = {
->                 { .shift = 0, .table = pll6_sata_tbl, .gate = 14 }, /* M, SATA */
-> @@ -983,6 +975,8 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
->         struct clk_gate *gate = NULL;
->         struct clk_fixed_factor *fix_factor;
->         struct clk_divider *divider;
-> +       struct factors_data factors = *data->factors;
-> +       char base_name[SUNXI_DIVS_BASE_NAME_MAX_LEN];
->         void __iomem *reg;
->         int ndivs = SUNXI_DIVS_MAX_QTY, i = 0;
->         int flags, clkflags;
-> @@ -991,8 +985,30 @@ static void __init sunxi_divs_clk_setup(struct device_node *node,
->         if (data->ndivs)
->                 ndivs = data->ndivs;
->
-> +       /* Try to find a name for base factor clock */
-> +       for (i = 0; i < ndivs; i++) {
-> +               if (data->div[i].self) {
-> +                       of_property_read_string_index(node, "clock-output-names",
-> +                                                     i, &factors.name);
-> +                       break;
-> +               }
-> +       }
-> +       /* If we don't have a .self clk use the first output-name up to '_' */
+Cover letter:
 
-This actually only works for the sun4i divs clocks. sun6i-a31-pll6 uses a
-different naming convention. sun4i-a10-pll2 uses yet another, though that's
-not a divs clock. Maybe we should work on unifying them. Maxime?
+This series depends on the eDMA work I have done, which has been now applied:
+https://lkml.org/lkml/2015/10/16/64
 
-Other than these 2 bits of information, this patch looks good.
+DRA7 family of chips have both sDMA and eDMA. Currently only sDMA can be used
+becasue the old driver stack for eDMA did not allowed integration w/o hacks.
 
+Due to the nature of eDMA the crossbar needs to know which eDMA events it can
+use to map incoming events towards the eDMA. In eDMA a channel is wired to be
+used with one specific event. For example eDMA event 14 can only be handled by
+eDMA channel 14.
+The eDMA itself can be shared by different processors in the system (ARM, DSP,
+etc) and since ARM/Linux is the master we need to know which channels are used
+by other cores. Also we need to mask out channels used for memcpy from the
+events we use for HW triggers.
 
-Regards
-ChenYu
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr
+  dmaengine: ti-dma-crossbar: dra7: Support for reserving DMA event
+    ranges
+  dmaengine: ti-dma-crossbar: dra7: Support for eDMA with new bindings
 
-> +       if (factors.name == NULL) {
-> +               of_property_read_string_index(node, "clock-output-names",
-> +                                                     0, &clk_name);
-> +
-> +               for (i = 0; i < SUNXI_DIVS_BASE_NAME_MAX_LEN - 1 &&
-> +                                               clk_name[i] != '_' &&
-> +                                               clk_name[i] != '\0'; i++)
-> +                       base_name[i] = clk_name[i];
-> +
-> +               base_name[i] = '\0';
-> +               factors.name = base_name;
-> +       }
-> +
->         /* Set up factor clock that we will be dividing */
-> -       pclk = sunxi_factors_clk_setup(node, data->factors);
-> +       pclk = sunxi_factors_clk_setup(node, &factors);
->         parent = __clk_get_name(pclk);
->
->         reg = of_iomap(node, 0);
-> --
-> 2.6.2
->
+ .../devicetree/bindings/dma/ti-dma-crossbar.txt    |  6 ++
+ drivers/dma/ti-dma-crossbar.c                      | 81 +++++++++++++++++++---
+ 2 files changed, 76 insertions(+), 11 deletions(-)
+
+-- 
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
