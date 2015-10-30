@@ -1,50 +1,34 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] mtd: ofpart: document the lock flag.
-Date: Fri, 30 Oct 2015 13:34:00 -0700
-Message-ID: <1446237240-10695-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
+Date: Fri, 30 Oct 2015 15:37:40 -0500
+Message-ID: <5633D514.4060102@codeaurora.org>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-2-git-send-email-fu.wei@linaro.org>
+ <20151027162257.GJ3091@leverpostej>
+ <CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug@mail.gmail.com>
+ <CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
+ <CADyBb7sPqsoQdYBUpHY2HvZ+iT7ABa9NoCX7Jax1NKugYOy1zQ@mail.gmail.com>
+ <5633BCA4.1050400@codeaurora.org> <20151030190514.GD30791@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20151030190514.GD30791@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Fu Wei <fu.wei@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 10/30/2015 02:05 PM, Mark Rutland wrote:
+> I was only asking why the interrupt was optional, and it seems per the
+> spec it's expected to be handed to an agent at a higher exception level.
+>
+> That implies that the OS should only care about WS0, assuming that I've
+> understood correctly.
 
-The lock flag of ofpart is undocumented. Add to binding doc.
+Yes, this my understand as well.  Apologies if I didn't get that across.
 
-Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-It seems my reasoning here [1] was wrong (thanks Sascha!). This is a rewrite of
-Michal's binding doc from [2].
-
-Note that this property is still broken for the CONFIG_MTD_PARTITIONED_MASTER=y
-case.
-
-[1] http://lists.infradead.org/pipermail/linux-mtd/2015-October/062822.html
-[2] http://lists.infradead.org/pipermail/linux-mtd/2015-August/061155.html
-
- Documentation/devicetree/bindings/mtd/partition.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-index 8e5557da1955..a7d4d35550e3 100644
---- a/Documentation/devicetree/bindings/mtd/partition.txt
-+++ b/Documentation/devicetree/bindings/mtd/partition.txt
-@@ -23,6 +23,8 @@ Optional properties:
-   partition should only be mounted read-only. This is usually used for flash
-   partitions containing early-boot firmware images or data which should not be
-   clobbered.
-+- lock : Do not unlock the partition at initialization time (not supported on
-+  all devices)
- 
- Examples:
- 
 -- 
-2.6.0.rc2.230.g3dd15c0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
