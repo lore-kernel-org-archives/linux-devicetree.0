@@ -1,60 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH v2 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding documentation
-Date: Fri, 30 Oct 2015 15:34:29 -0700
-Message-ID: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
+Date: Fri, 30 Oct 2015 17:36:45 -0500
+Message-ID: <5633F0FD.7060506@codeaurora.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <5741892.rRLhcI7KQG@wuerfel> <5633E442.3010003@codeaurora.org>
+ <4552697.VhjWnxQoIo@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Werner Johansson <werner.johansson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4552697.VhjWnxQoIo@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Werner Johansson <werner.johansson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On 10/30/2015 05:28 PM, Arnd Bergmann wrote:
+>>> > >Why ENODEV? Could you make this handle restarted system calls?
+>> >
+>> >This is the self test code. It gets called from probe. If there is a
+>> >problem with the device or system configuration, I don't want to enable
+>> >this device. I can certainly return a different error code though.
+>> >What's a good code?
+> I see. probe() is not restartable, so it cannot be -ERESTARTSYS.
+>
+> Maybe better use wait_event_timeout and not handle the signals then.
+> It will eventually time out if something goes wrong.
 
-Signed-off-by: Werner Johansson <werner.johansson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
----
+What about -EPROBE_DEFER?  Isn't that "restartable"?  Granted, it's only 
+supposed to be used if the driver is dependent on another driver to 
+probe, so I'm not sure it applies here.  If the self-test fails, then it 
+is possible that it could succeed later?
 
-Change since v1:
-- Dropped -vid suffix from compatible
-
- .../bindings/display/panel/sharp,ls043t1le01.txt   | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ls043t1le01.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ls043t1le01.txt b/Documentation/devicetree/bindings/display/panel/sharp,ls043t1le01.txt
-new file mode 100644
-index 000000000000..b3d4e073930a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,ls043t1le01.txt
-@@ -0,0 +1,22 @@
-+Sharp Microelectronics 4.3" qHD TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "sharp,ls043t1le01-qhd"
-+- reg: DSI virtual channel of the peripheral
-+- power-supply: phandle of the regulator that provides the supply voltage
-+
-+Optional properties:
-+- backlight: phandle of the backlight device attached to the panel
-+- reset-gpios: a GPIO spec for the reset pin
-+
-+Example:
-+
-+	mdss_dsi@fd922800 {
-+		panel@0 {
-+			compatible = "sharp,ls043t1le01-qhd";
-+			reg = <0>;
-+			avdd-supply = <&pm8941_l22>;
-+			backlight = <&pm8941_wled>;
-+			reset-gpios = <&pm8941_gpios 19 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
 -- 
-2.4.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
