@@ -1,64 +1,195 @@
-From: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2] arm64: dts: Added syscon-reboot node for FSL's LS2085A
- SoC
-Date: Fri, 30 Oct 2015 16:34:26 +0000
-Message-ID: <CY1PR0301MB07483E9D229314891961B6AD872F0@CY1PR0301MB0748.namprd03.prod.outlook.com>
-References: <1446066584-3738-1-git-send-email-German.Rivera@freescale.com>
- <3919319.0f6zV1T7g0@wuerfel>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/19] drm: sun4i: Add DT bindings documentation
+Date: Fri, 30 Oct 2015 11:40:03 -0500
+Message-ID: <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ@mail.gmail.com>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-10-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3919319.0f6zV1T7g0@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Jose Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446214865-3972-10-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Wynter Woods <wynter@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 30, 2015 at 9:20 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> The display pipeline of the Allwinner A10 is involving several loosely
+> coupled components.
+>
+> Add a documentation for the bindings.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  .../devicetree/bindings/drm/sunxi/sun4i-drm.txt    | 122 +++++++++++++++++++++
 
+bindings/display/sunxi/ please.
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> Sent: Thursday, October 29, 2015 4:49 PM
-> To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Rivera Jose-B46482; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Sharma Bhupesh-B45370; Li Yang-Leo-R58472; Yoder Stuart-B08248
-> Subject: Re: [PATCH v2] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
-> 
-> On Wednesday 28 October 2015 16:09:44 J. German Rivera wrote:
-> > +       rst_ccsr: rstccsr@1E60000 {
-> > +               compatible = "syscon";
-> > +               reg = <0x0 0x1E60000 0x0 0x10000>;
-> > +       };
-> > +
-> >
-> 
-> What does 'rstccsr' stand for? Is this by chance a reset controller?
+>  1 file changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/drm/sunxi/sun4i-drm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/drm/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/drm/sunxi/sun4i-drm.txt
+> new file mode 100644
+> index 000000000000..dbdccef787b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/drm/sunxi/sun4i-drm.txt
+> @@ -0,0 +1,122 @@
+> +Allwinner A10 Display Pipeline
+> +==============================
+> +
+> +The Allwinner A10 Display pipeline is composed of several components
+> +that are going to be documented below:
+> +
+> +TV Encoder
+> +----------
+> +
+> +The TV Encoder supports the composite and VGA output. It is one end of
+> +the pipeline.
+> +
+> +Required properties:
+> + - compatible: value should be "allwinner,sun4i-a10-tv-encoder".
+> + - reg: base address and size of memory-mapped region
+> + - clocks: the clocks driving the TV encoder
+> +
+> +TCON
+> +----
+> +
+> +The TCON acts as a CRTC and encoder for RGB / LVDS interfaces.
 
-It is a region of some miscellaneous registers, some related to reset.
- 
-> If so, we probably want a real driver for it rather than just a
-> syscon.
+Lets not carry DRMs old CRTC name into DT bindings. Just say "display
+controller."
 
-There is not other stuff in this region that to be exposed,
-and so we really don't need a real driver.
+> +
+> +Required properties:
+> + - compatible: value should be "allwinner,sun4i-a10-tcon".
+> + - reg: base address and size of memory-mapped region
+> + - interrupts: interrupt associated to this IP
+> + - clocks: phandles to the clocks feeding the TCON. Three are needed:
+> +   - 'ahb': the interface clocks
+> +   - 'tcon-ch0': The clock driving the TCON channel 0
+> +   - 'tcon-ch1': The clock driving the TCON channel 0
+> +
+> + - clock-names: the clock names mentionned above
 
-My suggestion is to perhaps make that more explicit in the proposed
-device tree node, by making the reg size "4" and naming it
-as per the register name
+typo
 
-       rstcr: rstcr@1E60000 {
-               compatible = "syscon";
-               reg = <0x0 0x1E60000 0x0 0x4>;
-       };
+> + - clock-output-names: Name of the pixel clock created
+> +
+> +
+> +Display Engine Backend
+> +----------------------
+> +
+> +The display engine backend exposes layers and sprites to the
+> +system. It's split into two components, the frontend and backend, the
+> +frontend doing formats conversion, scaling, deinterlacing, while the
+> +backend actually manages the layers.
+> +
+> +Required properties:
+> +  - compatible: value must be one of:
+> +    * allwinner,sun5i-a13-display-engine
+> +
+> +  - reg: base address and size of the memory-mapped region. Two are needed:
+> +    * backend0: registers of the display engine backend
+> +    * frontend0: registers of the display engine frontend
 
-The intent is really just to expose a single reset register
-and use syscon-reboot until PSCI is available.
+Why the zeros? I think they should be dropped.
 
-Thanks,
-Stuart
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +  - reg_names: the region names mentionned above.
+
+typo
+
+> +
+> +  - interrupts: frontend interrupt phandle
+> +
+> +  - clocks: phandles to the clocks feeding the frontend and backend
+> +    * backend0-bus: the backend interface clock
+> +    * backend0-mod: the backend module clock
+> +    * backend0-ram: the backend DRAM clock
+> +    * frontend0-bus: the frontend interface clock
+> +    * frontend0-mod: the frontend module clock
+> +    * frontend0-ram: the frontend DRAM clock
+
+Same comment on zeros.
+
+> +  - clock-names: the clock names mentionned above
+
+typo
+
+> +
+> +  - resets: phandles to the reset controllers. Two are needed:
+> +    * backend0: backend reset controller
+> +    * frontend0: frontend reset controller
+> +  - reset-names: the reset names mentionned above
+
+typo. At least you are consistent (unlike English grammar rules). ;)
+
+> +
+> +  - allwinner,tcon: phandle to the TCON in our pipeline
+
+Use of-graph or just let the relationship live in the driver. If there
+is only 1 instance of the blocks, the latter is fine.
+
+> +
+> +Optional properties:
+> +  - allwinner,tv-encoder: phandle to the TV Encoder in our pipeline
+> +  - allwinner,panel: phandle to the panel used in our RGB interface
+
+Use of-graph please.
+
+> +
+> +Example:
+> +
+> +panel: panel {
+> +       compatible = "olimex,lcd-olinuxino-43-ts";
+> +};
+> +
+> +tve: encoder@01c0a000 {
+> +       compatible = "allwinner,sun4i-a10-tv-encoder";
+> +       reg = <0x01c0a000 0x1000>;
+> +       clocks = <&ahb_gates 34>;
+> +};
+> +
+> +tcon: lcd-controller@01c0c000 {
+> +       compatible = "allwinner,sun4i-a10-tcon";
+> +       reg = <0x01c0c000 0x1000>;
+> +       interrupts = <44>;
+> +       clocks = <&ahb_gates 36>,
+> +                <&tcon_ch0_clk>,
+> +                <&tcon_ch1_clk>;
+> +       clock-names = "ahb",
+> +                     "tcon-ch0",
+> +                     "tcon-ch1";
+> +       clock-output-names = "tcon-pixel-clock";
+> +};
+> +
+> +de: display-engine@01e00000 {
+> +       compatible = "allwinner,sun5i-a13-display-engine";
+> +       reg = <0x01e00000 0x20000>,
+> +             <0x01e60000 0x10000>;
+> +       reg-names = "frontend0",
+> +                   "backend0";
+> +       interrupts = <47>;
+> +       interrupt-names = "engine0";
+> +       clocks = <&ahb_gates 46>, <&de_fe_clk>,
+> +                <&dram_gates 25>, <&ahb_gates 44>,
+> +                <&de_be_clk>, <&dram_gates 26>;
+> +       clock-names = "frontend0-bus", "frontend0-mod",
+> +                     "frontend0-ram", "backend0-bus",
+> +                     "backend0-mod", "backend0-ram";
+> +       resets = <&de_fe_clk>,
+> +                <&de_be_clk>;
+> +       reset-names = "frontend0",
+> +                     "backend0";
+> +
+> +       allwinner,tcon = <&tcon>;
+> +       allwinner,tv-encoder = <&tve>;
+> +       allwinner,panel = <&panel>;
+> +};
+> --
+> 2.6.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
