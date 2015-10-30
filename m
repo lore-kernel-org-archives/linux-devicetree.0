@@ -1,70 +1,102 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: Add BRCM IPROC NAND DT node for NS2
-Date: Fri, 30 Oct 2015 11:49:07 -0700
-Message-ID: <20151030184907.GH13239@google.com>
-References: <1445577373-21252-1-git-send-email-anup.patel@broadcom.com>
- <1445577373-21252-3-git-send-email-anup.patel@broadcom.com>
- <20151028001920.GY13239@google.com>
- <563015FC.9040006@broadcom.com>
- <20151028003935.GZ13239@google.com>
- <56301B00.1020301@broadcom.com>
- <39063E8F96E11742B35A201CC5D095B7AFFB81@SJEXCHMB10.corp.ad.broadcom.com>
- <5630F2E2.8060508@broadcom.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v2] backlight: pm8941-wled: Add default-brightness
+ property
+Date: Fri, 30 Oct 2015 18:49:03 +0000
+Message-ID: <20151030184903.GK4058@x1>
+References: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5630F2E2.8060508-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 09:08:02AM -0700, Ray Jui wrote:
-> On 10/28/2015 2:06 AM, Anup Patel wrote:
-> >
-> >I think for a newly created OF devices the Linux device driver framework will
-> >match the platform drivers in the order in which they are registered by module
-> >init functions. Now the order of module init function calls will be based how
-> >the .initcall section is formed by linker and order in which objects are linked.
-> >
-> 
-> Yes, what you said is my understanding as well, but then here is the
-> mystery. This is the link order in brcmnand/Makefile:
-> 
-> 1 # link order matters; don't link the more generic brcmstb_nand.o
-> before the
-> 2 # more specific iproc_nand.o, for instance
-> 3 obj-$(CONFIG_MTD_NAND_BRCMNAND) += iproc_nand.o
-> 4 obj-$(CONFIG_MTD_NAND_BRCMNAND) += bcm63138_nand.o
-> 5 obj-$(CONFIG_MTD_NAND_BRCMNAND) += brcmstb_nand.o
-> 6 obj-$(CONFIG_MTD_NAND_BRCMNAND) += brcmnand.o
-> 
-> Based on the order above, probe from iproc_nand should always be
-> called first if a matching compatible string is found. If so, then
-> why having both compatible strings "brcm,brcmnand" and
-> "brcm,nand-iproc" causes issues for NS2 (I remember it broke
-> smoketest in the past when you submitted the change)? I'm not saying
-> we should have "brcm,brcmnand" for iProc devices, but I don't get
-> why it would cause any issue.
+On Mon, 26 Oct 2015, Bjorn Andersson wrote:
 
-FWIW, the above hack doesn't do anything if these are built as modules,
-AFAICT. So I guess udev's (or similar) module rules would be another
-point of failure here? Not that any of us probably care too much about
-this driver as a module, but just throwing it out there...
+> Default the brightness to 2048 and add possibility to override this i=
+n
+> device tree.
+>=20
+> Suggested-by: Rob Clark <robdclark@gmail.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>=20
+> Resend of v2, with updated backlight dt binding location.
+>=20
+>  Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt | 2=
+ ++
 
-I have a feeling we'll have to solve this locally, by avoiding having
-"independent" drivers handling similar compatible properties, as I
-expect (despite our expectation that compatible ordering should matter)
-this problem will not be solved any time soon in the generic
-infrastructure.
+In future please submit documentation as a separate patch.
 
-Or we can just use a hack (as Anup is doing) to leave off the
-"brcm,brcmnand" compatibility property. Unless someone has brilliant
-ideas, I guess we go with Anup's hack for now.
+>  drivers/video/backlight/pm8941-wled.c                            | 8=
+ ++++++++
+>  2 files changed, 10 insertions(+)
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied with Rob's Ack.
+
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-=
+wled.txt b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled=
+=2Etxt
+> index 424f8444a6cd..e5b294dafc58 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.tx=
+t
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.tx=
+t
+> @@ -5,6 +5,8 @@ Required properties:
+>  - reg: slave address
+> =20
+>  Optional properties:
+> +- default-brightness: brightness value on boot, value from: 0-4095
+> +	default: 2048
+>  - label: The name of the backlight device
+>  - qcom,cs-out: bool; enable current sink output
+>  - qcom,cabc: bool; enable content adaptive backlight control
+> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/ba=
+cklight/pm8941-wled.c
+> index c704c3236034..e1298147bcbb 100644
+> --- a/drivers/video/backlight/pm8941-wled.c
+> +++ b/drivers/video/backlight/pm8941-wled.c
+> @@ -17,6 +17,9 @@
+>  #include <linux/of_device.h>
+>  #include <linux/regmap.h>
+> =20
+> +/* From DT binding */
+> +#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
+> +
+>  #define PM8941_WLED_REG_VAL_BASE		0x40
+>  #define  PM8941_WLED_REG_VAL_MAX		0xFFF
+> =20
+> @@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_devi=
+ce *pdev)
+>  	struct backlight_device *bl;
+>  	struct pm8941_wled *wled;
+>  	struct regmap *regmap;
+> +	u32 val;
+>  	int rc;
+> =20
+>  	regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> @@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_dev=
+ice *pdev)
+>  	if (rc)
+>  		return rc;
+> =20
+> +	val =3D PM8941_WLED_DEFAULT_BRIGHTNESS;
+> +	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val)=
+;
+> +
+>  	memset(&props, 0, sizeof(struct backlight_properties));
+>  	props.type =3D BACKLIGHT_RAW;
+> +	props.brightness =3D val;
+>  	props.max_brightness =3D PM8941_WLED_REG_VAL_MAX;
+>  	bl =3D devm_backlight_device_register(&pdev->dev, wled->name,
+>  					    &pdev->dev, wled,
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
