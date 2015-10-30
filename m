@@ -1,63 +1,86 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/3] mtd: brcmnand: Force 8bit mode before doing nand_scan_ident()
-Date: Fri, 30 Oct 2015 12:29:20 +0530
-Message-ID: <1446188361-15146-3-git-send-email-anup.patel@broadcom.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v5 1/3] mtd: brcmnand: factor out CFG and CFG_EXT bitfields
+Date: Fri, 30 Oct 2015 12:29:19 +0530
+Message-ID: <1446188361-15146-2-git-send-email-anup.patel@broadcom.com>
 References: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446188361-15146-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Linux MTD <linux-mtd@lists.infradead.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Just like other NAND controllers, the NAND READID command only works
-in 8bit mode for all versions of BRCMNAND controller.
+From: Brian Norris <computersforpeace@gmail.com>
 
-This patch forces 8bit mode for each NAND CS in brcmnand_init_cs()
-before doing nand_scan_ident() to ensure that BRCMNAND controller
-is in 8bit mode when NAND READID command is issued.
+Use enum instead of magic numbers for CFG and CFG_EXT bitfields.
 
-Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Tested-by: Anup Patel <anup.patel@broadcom.com>
 ---
- drivers/mtd/nand/brcmnand/brcmnand.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mtd/nand/brcmnand/brcmnand.c | 38 +++++++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-index dda96fa..b410527 100644
+index 4cba03d..dda96fa 100644
 --- a/drivers/mtd/nand/brcmnand/brcmnand.c
 +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-@@ -1912,6 +1912,7 @@ static int brcmnand_init_cs(struct brcmnand_host *host)
- 	struct mtd_info *mtd;
- 	struct nand_chip *chip;
- 	int ret;
-+	u16 cfg_offs;
- 	struct mtd_part_parser_data ppdata = { .of_node = dn };
+@@ -344,6 +344,28 @@ static const u8 brcmnand_cs_offsets_cs0[] = {
+ 	[BRCMNAND_CS_TIMING2]		= 0x14,
+ };
  
- 	ret = of_property_read_u32(dn, "reg", &host->cs);
-@@ -1954,6 +1955,15 @@ static int brcmnand_init_cs(struct brcmnand_host *host)
- 
- 	chip->controller = &ctrl->controller;
- 
-+	/*
-+	 * The bootloader might have configured 16bit mode but
-+	 * NAND READID command only works in 8bit mode. We force
-+	 * 8bit mode here to ensure that NAND READID commands works.
-+	 */
-+	cfg_offs = brcmnand_cs_offset(ctrl, host->cs, BRCMNAND_CS_CFG);
-+	nand_writereg(ctrl, cfg_offs,
-+		      nand_readreg(ctrl, cfg_offs) & ~CFG_BUS_WIDTH);
++/*
++ * Bitfields for the CFG and CFG_EXT registers. Pre-v7.1 controllers only had
++ * one config register, but once the bitfields overflowed, newer controllers
++ * (v7.1 and newer) added a CFG_EXT register and shuffled a few fields around.
++ */
++enum {
++	CFG_BLK_ADR_BYTES_SHIFT		= 8,
++	CFG_COL_ADR_BYTES_SHIFT		= 12,
++	CFG_FUL_ADR_BYTES_SHIFT		= 16,
++	CFG_BUS_WIDTH_SHIFT		= 23,
++	CFG_BUS_WIDTH			= BIT(CFG_BUS_WIDTH_SHIFT),
++	CFG_DEVICE_SIZE_SHIFT		= 24,
 +
- 	if (nand_scan_ident(mtd, 1, NULL))
- 		return -ENXIO;
++	/* Only for pre-v7.1 (with no CFG_EXT register) */
++	CFG_PAGE_SIZE_SHIFT		= 20,
++	CFG_BLK_SIZE_SHIFT		= 28,
++
++	/* Only for v7.1+ (with CFG_EXT register) */
++	CFG_EXT_PAGE_SIZE_SHIFT		= 0,
++	CFG_EXT_BLK_SIZE_SHIFT		= 4,
++};
++
+ /* BRCMNAND_INTFC_STATUS */
+ enum {
+ 	INTFC_FLASH_STATUS		= GENMASK(7, 0),
+@@ -1720,17 +1742,19 @@ static int brcmnand_set_cfg(struct brcmnand_host *host,
+ 	}
+ 	device_size = fls64(cfg->device_size) - fls64(BRCMNAND_MIN_DEVSIZE);
+ 
+-	tmp = (cfg->blk_adr_bytes << 8) |
+-		(cfg->col_adr_bytes << 12) |
+-		(cfg->ful_adr_bytes << 16) |
+-		(!!(cfg->device_width == 16) << 23) |
+-		(device_size << 24);
++	tmp = (cfg->blk_adr_bytes << CFG_BLK_ADR_BYTES_SHIFT) |
++		(cfg->col_adr_bytes << CFG_COL_ADR_BYTES_SHIFT) |
++		(cfg->ful_adr_bytes << CFG_FUL_ADR_BYTES_SHIFT) |
++		(!!(cfg->device_width == 16) << CFG_BUS_WIDTH_SHIFT) |
++		(device_size << CFG_DEVICE_SIZE_SHIFT);
+ 	if (cfg_offs == cfg_ext_offs) {
+-		tmp |= (page_size << 20) | (block_size << 28);
++		tmp |= (page_size << CFG_PAGE_SIZE_SHIFT) |
++		       (block_size << CFG_BLK_SIZE_SHIFT);
+ 		nand_writereg(ctrl, cfg_offs, tmp);
+ 	} else {
+ 		nand_writereg(ctrl, cfg_offs, tmp);
+-		tmp = page_size | (block_size << 4);
++		tmp = (page_size << CFG_EXT_PAGE_SIZE_SHIFT) |
++		      (block_size << CFG_EXT_BLK_SIZE_SHIFT);
+ 		nand_writereg(ctrl, cfg_ext_offs, tmp);
+ 	}
  
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
