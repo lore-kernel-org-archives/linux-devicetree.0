@@ -1,132 +1,60 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
-Date: Fri, 30 Oct 2015 11:34:42 +0100
-Message-ID: <20151030113442.1ad381f9103aa052f929d4a9@free.fr>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
-	<1445964626-6484-6-git-send-email-jenskuske@gmail.com>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3] Input: tsc2005 - Add support for tsc2004
+Date: Fri, 30 Oct 2015 11:40:04 +0100
+Message-ID: <5143701.zqn4HuBlp3@wuerfel>
+References: <1446077554-19684-1-git-send-email-mwelling@ieee.org> <20151030003905.GL28319@sirena.org.uk> <20151030010151.GA4196@qwerty.qwertyembedded>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBRUPZWYQKGQEMUSLA6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445964626-6484-6-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151030010151.GA4196-hEWAmvUofr51knWWc6b7UDvvZPQxeRhI@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Oct 2015 17:50:25 +0100
-Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Thursday 29 October 2015 20:01:51 Michael Welling wrote:
+> On Fri, Oct 30, 2015 at 09:39:05AM +0900, Mark Brown wrote:
+> > On Thu, Oct 29, 2015 at 03:23:31PM -0700, Dmitry Torokhov wrote:
+> > 
+> > > However, you have regmap in the driver core already. Mark, is it
+> > > possible to have regmap API also allow doing raw underlying protocol
+> > > transfer so that consumers could issue command requests without needing
+> > > to know if they need to do it over i2c or spi or whatever. Or we need a
+> > > notion of command registers in regmap...
+> > 
+> > I don't think it's a good idea to break the encapsulation of the regmap
+> > and export the raw I/O functionality directly, there seem to be more bad
+> > ways of using that than good.  The driver must at some point know what
+> > bus it is dealing with and be able to manage this itself.
+> > 
+> > I don't know what "command registers" are.
+> 
+> With this device, if the MSB of the first byte of the transaction is 1 then
+> a convertor command is encoded in that byte instead of a register address.
+> 
+> So here is my plan:
+> - Add a function pointer for tsc2005_cmd in the struct tsc2005
+> - Put the spi and i2c tsc2005_cmd versions in their respective drivers
+> - Pass the cmd functions to the core via tsc200x_probe
+> 
+> Any objections?
 
-> The Allwinner H3 is a home entertainment system oriented SoC with
-> four Cortex-A7 cores and a Mali-400MP2 GPU.
->=20
-> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 482 ++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 482 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3=
-.dtsi
-> new file mode 100644
-> index 0000000..c18b5f7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-	[snip]
-> +	soc {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges;
-> +
-> +		dma: dma-controller@01c02000 {
-> +			compatible =3D "allwinner,sun8i-h3-dma";
-> +			reg =3D <0x01c02000 0x1000>;
-> +			interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&bus_gates 6>;
-> +			resets =3D <&bus_rst 6>;
-> +			#dma-cells =3D <1>;
-> +		};
-	[snip]
-> +
-> +		bus_rst: reset@01c202c0 {
-> +			#reset-cells =3D <1>;
-> +			compatible =3D "allwinner,sun8i-h3-bus-reset";
-> +			reg =3D <0x01c202c0 0x1c>;
-> +		};
-> +
-	[snip]
-> +		uart0: serial@01c28000 {
-> +			compatible =3D "snps,dw-apb-uart";
-> +			reg =3D <0x01c28000 0x400>;
-> +			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg-shift =3D <2>;
-> +			reg-io-width =3D <4>;
-> +			clocks =3D <&bus_gates 112>;
-> +			resets =3D <&bus_rst 144>;
-> +			dmas =3D <&dma 6>, <&dma 6>;
-> +			dma-names =3D "rx", "tx";
-> +			status =3D "disabled";
-> +		};
+Sounds good. If you end up needing more than one function pointer,
+better pass a 'const' pointer to a structure of function pointers that
+you can declare statically in the driver.
 
-The reset definitions would be clearer with declarations as the other
-Allwinner SoCs and without driver hack:
+> Other review suggestions before I code the revision?
+> Am I doing too much with a single patch?
 
-soc {
-	compatible =3D "simple-bus";
-	#address-cells =3D <1>;
-	#size-cells =3D <1>;
-	ranges;
+Yes.
 
-		dma: dma-controller@01c02000 {
-		compatible =3D "allwinner,sun8i-h3-dma";
-		reg =3D <0x01c02000 0x1000>;
-		interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-		clocks =3D <&bus_gates 6>;
-		resets =3D <&rst_reg0 6>;
-		#dma-cells =3D <1>;
-	};
-    ...
-	rst_reg0: reset@01c202c0 {
-		#reset-cells =3D <1>;
-		compatible =3D "allwinner,sun6i-a31-clock-reset";
-		reg =3D <0x01c202c0 0x04>;
-	};
-	...
- 	rst_reg4: reset@01c202d8 {
-		#reset-cells =3D <1>;
-		compatible =3D "allwinner,sun6i-a31-clock-reset";
-		reg =3D <0x01c202d8 0x04>;
-	};
-   ...
-	uart0: serial@01c28000 {
-		compatible =3D "snps,dw-apb-uart";
-		reg =3D <0x01c28000 0x400>;
-		interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-		reg-shift =3D <2>;
-		reg-io-width =3D <4>;
-		clocks =3D <&bus_gates 112>;
-		resets =3D <&rst_reg4 16>;
-		dmas =3D <&dma 6>, <&dma 6>;
-		dma-names =3D "rx", "tx";
-		status =3D "disabled";
-	};
+Please split out the DT binding changes into a separate patch, and
+start with one patch that just moves the common parts out of the SPI
+driver before you add the new driver.
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
