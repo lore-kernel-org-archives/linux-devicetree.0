@@ -1,85 +1,90 @@
-From: Peter Maydell <peter.maydell@linaro.org>
-Subject: Re: [PATCH] Documentation: dt: Add bindings for Secure-only devices
-Date: Fri, 30 Oct 2015 20:07:34 +0000
-Message-ID: <CAFEAcA8qgFFhrmXePtO_xQx=YEHK8dSA-1SacR5NsQWSNTwj-w@mail.gmail.com>
-References: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org> <CAL_JsqJz+w2SYEBLVGdZNS6J1tmt5VWV0q1G_Z2rgFfch6J=2A@mail.gmail.com>
+From: Al Stone <al.stone@linaro.org>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Fri, 30 Oct 2015 14:08:03 -0600
+Message-ID: <5633CE23.7060303@linaro.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <20151030150025.GF31073@leverpostej>
+ <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
+ <5633B207.5030505@codeaurora.org>
+ <CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
+ <20151030182537.GB30791@leverpostej>
+ <CAHp75Vd-z22XJboxQ=CMxDQ9UaTatbCmpAPLO0jPM0FwJadBOg@mail.gmail.com>
+ <5633BB66.3070505@codeaurora.org> <20151030190106.GC30791@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJz+w2SYEBLVGdZNS6J1tmt5VWV0q1G_Z2rgFfch6J=2A@mail.gmail.com>
+In-Reply-To: <20151030190106.GC30791@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>
+To: Mark Rutland <mark.rutland@arm.com>, Sinan Kaya <okaya@codeaurora.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, dmaengine <dmaengine@vger.kernel.org>, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, leif.lindholm@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 October 2015 at 18:28, Rob Herring <robh+dt@kernel.org> wrote:
-> On Thu, Oct 29, 2015 at 9:01 AM, Peter Maydell <peter.maydell@linaro.org> wrote:
->> +Valid Secure world properties:
->> +
->> +- secure-status : specifies whether the device is present and usable
->> +  in the secure world. The combination of this with "status" allows
->> +  the various possible combinations of device visibility to be
->> +  specified:
->> +   status = "okay";                             // visible in S and NS
->
-> I assume neither property present or both okay also mean the same.
->
-> status = "okay"; secure-status = "okay";
->
-> We should be explicit.
+On 10/30/2015 01:01 PM, Mark Rutland wrote:
+> On Fri, Oct 30, 2015 at 02:48:06PM -0400, Sinan Kaya wrote:
+>>>>>> It was decided by
+>>>>>> Linaro that CSRT will not be supported for ARM64.
 
-Yes; status defaults to "okay" (presumably this is listed in
-the overal DT binding spec somewhere), and secure-status
-defaults to "same as status, which might in turn be defaulted".
-We can list the complete set of options (neither present,
-both 'okay', status not present but secure-status present, etc),
-though it gets a bit long-winded, especially if we later add
-more secure- properties (they'd all have to have verbiage about
-"if not present, same as non-prefixed property; if both not
-present, both take the default the non-prefixed property takes
-if it's not present; if prefixed property not present, it
-defaults to same as non-prefixed property", which we already
-say in the introductory section). Still, for just status it
-would be easy enough to add a couple of lines:
+Hrm.  I personally decided we didn't have to worry about using the CSRT
+(specifically, let's wait until someone has a need for it), but I know
+of no decision to *not* support it.  Please cite a source for that claim.
 
-+    status = "okay"; secure-status = "okay"; // ditto
-+    secure-status = "okay";                  // ditto
-+    // neither explicitly defined: ditto
+>> See this.
+>>
+>> https://wiki.linaro.org/LEG/Engineering/Kernel/ACPI/TablePriorities
+> 
+> The CSRT is listed under "Want", not "Never" or "Don't Care", so Linaro
+> have certainly not said that CSRT will not be supported. If anything,
+> they have stated that the table should be supported.
 
-(Do you want the full set of 9 options you get from multiplying
-out "okay" vs "disabled" vs not-set for each property?)
+"Want" means interesting, and probably useful, but no clear indication that
+anyone actually needs it.  At one point, we thought we might use the CSRT
+for describing DMA, but it turns out we have not needed to.
 
->> +   status = "disabled"; secure-status = "okay"; // S-only
->> +   status = "okay"; secure-status = "disabled"; // NS-only
->
-> In HKG when we discussed this, 'status = "secure"' was the proposal.
-> That would be simpler:
->
-> S world can use "okay" or "secure"
-> NS world can use "okay" or no property.
->
-> That leaves out the case of disabled in S and enabled for NS. We could
-> want that for s/w reasons, but can we have h/w like that?
+However, let's make sure we're saying the same thing: the CSRT table is
+properly defined in the kernel include/acpi/actbl2.h file so one can read
+such a table and use it if they so choose.  Nothing that we have done at
+Linaro in the arm64 part of the kernel relies on any of the content from
+the CSRT, nor does it preclude someone relying on that content.  So, the
+CSRT is defined, and is usable, but is just not being used -- by Linaro --
+at present.
 
-It's perfectly possible to design hardware like that (though
-I can't think of a reason to do so offhand). I think it's the desire
-to be able to describe all the possible valid h/w combinations
-that brought us to this secure- prefix design. Plus it
-extends nicely to cover other possibilities as we need it;
-for instance "device A is at S-0x10000 but NS-0x20000" can be
-done by specifying a device like:
-   status = "okay";
-   secure-status = "okay";
-   reg = < 0x20000 0x1000 >;
-   secure-regs = < 0x10000 0x1000 >;
-(apologies if I've messed the syntax up there).
+If that needs to change, let me know; no one has asked us to use the CSRT
+for a DMA engine, and we have not been provided any hardware that requires
+it.
 
-Just going for 'status=secure' would deal with the immediate
-requirement, but my preference is for a description that
-lets us describe all the possible configurations, not just
-the ones we think are common, and secure-* is a neat way
-of doing that (IIRC it was Grant's suggestion; speaking of
-whom, I just noticed I forgot to cc him on the original patch).
+> I suspect that the rationale for it not being "Critical" or "Must" is
+> that it's possible to use contemporary systems without DMA engines, but
+> we will need support at some point in future.
 
-thanks
--- PMM
+Essentially correct.  We (Linaro ACPI team) would be glad to work on it,
+if needed.  We just need to know that someone wants it, and we need to
+have some way to test it (i.e., aka "hardware").
+
+> I also note that there are Linaro patches adding supoprt for DBG2 [1] ,
+> which is listed as "Never". So the page may be out of date...
+
+Sadly, it is indeed out of date, but it is on my TODO list.  The DBG2
+table was originally listed as "Never" only because of the licensing;
+this has since changed and is now usable for consoles, so it got worked
+on and implemented.
+
+> Leif, Al?
+> 
+> [1] https://lkml.org/lkml/2015/9/8/287
+> 
+> Thanks,
+> Mark.
+> 
+
+
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Linaro Enterprise Group
+al.stone@linaro.org
+-----------------------------------
