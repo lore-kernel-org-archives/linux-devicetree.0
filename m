@@ -1,45 +1,100 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
-Date: Fri, 30 Oct 2015 19:05:14 +0000
-Message-ID: <20151030190514.GD30791@leverpostej>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
- <1445961999-9506-2-git-send-email-fu.wei@linaro.org>
- <20151027162257.GJ3091@leverpostej>
- <CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug@mail.gmail.com>
- <CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
- <CADyBb7sPqsoQdYBUpHY2HvZ+iT7ABa9NoCX7Jax1NKugYOy1zQ@mail.gmail.com>
- <5633BCA4.1050400@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/5] Documentation: tps65912: Add DT bindings for the
+ TPS65912 PMIC
+Date: Fri, 30 Oct 2015 19:06:23 +0000
+Message-ID: <20151030190622.GN4058@x1>
+References: <1446161922-8755-1-git-send-email-afd@ti.com>
+ <1446161922-8755-2-git-send-email-afd@ti.com>
+ <20151030171006.GZ4058@x1>
+ <5633B078.7080209@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5633BCA4.1050400@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Fu Wei <fu.wei@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Rob Herring <robherring2@gmail.com>
+In-Reply-To: <5633B078.7080209@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 01:53:24PM -0500, Timur Tabi wrote:
-> On 10/30/2015 01:35 PM, Fu Wei wrote:
-> >>I think maybe Mark was asking why WS1 is optional, not the WS1
-> >My answer is for "why WS1 is optional"!
+On Fri, 30 Oct 2015, Andrew F. Davis wrote:
+
+> On 10/30/2015 12:10 PM, Lee Jones wrote:
+> >On Thu, 29 Oct 2015, Andrew F. Davis wrote:
 > >
-> >>>interrupt.  Maybe you can reword the documentation to make is clear
-> >>>that
-> >I didn't say : "only the*interrupt*  for WS1 is optional."
-> 
-> WS1 itself is not optional.  The spec says that WS0 and WS1 are
-> separate events, and doesn't saying anything about either being
-> optional.  The *interrupt* for WS1, however, is optional.
+> >>The TPS65912 PMIC contains several regulators and a GPIO controller=
+=2E
+> >>Add bindings for the TPS65912 PMIC.
+> >>
+> >>Signed-off-by: Andrew F. Davis <afd@ti.com>
+> >>---
+> >>  .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
+> >
+> >Why have you dropped Linus' Review-by?
+> >
+>=20
+> Strange, I thought I made a change to this. Well this brings up a que=
+stion,
+> how much change can we have before we are supposed to drop Reviewed/A=
+cked-by?
 
-This is a moot point. The distintion between the signal and the
-interrupt doens't matter here.
+Common sense call I'm afraid. ;)
 
-I was only asking why the interrupt was optional, and it seems per the
-spec it's expected to be handed to an agent at a higher exception level.
+[...]
 
-That implies that the OS should only care about WS0, assuming that I've
-understood correctly.
+> >>+     the second cell is used to specify flags.
+> >>+     See include/dt-bindings/gpio/gpio.h for possible values.
+> >
+> >This is a Linuxisum and shouldn't really live in here.
+> >
+> >I think it would be better to document them in ../gpio/gpio.txt and
+> >reference that instead.
+> >
+>=20
+> Looks like that is already in ../gpio/gpio.txt:57
 
-Thanks,
-Mark.
+There is a mention of GPIO_ACTIVE_HIGH, as it's used in an example.
+However GPIO_ACTIVE_LOW is missing.  I think both could do with
+documenting properly, then you can refer to them from here.
+
+[...]
+
+> >>+Required properties:
+> >>+ - compatible : Should be "ti,tps65912".
+> >>+ - reg : Slave address or chip select number (I2C / SPI).
+> >>+ - interrupt-parent : The parent interrupt controller.
+> >>+ - interrupts : The interrupt line the device is connected to.
+> >>+ - interrupt-controller : Marks the device node as an interrupt co=
+ntroller.
+> >>+ - #interrupt-cells: The number of cells to describe an IRQ, this =
+should be 2.
+> >>+     The first cell is the IRQ number.
+> >>+     The second cell is the flags, encoded as the trigger masks fr=
+om
+> >>+     ../interrupt-controller/interrupts.txt
+> >
+> >Nit: We *normally* treat these as bullet-points and not place
+> >full-stops on them:
+> >
+> >$ git grep "compatible" -- Documentation/devicetree/bindings/ | grep=
+ -v "\.$" | wc -l
+> >5227
+> >$ git grep "compatible.*\.$" -- Documentation/devicetree/bindings/ |=
+ wc -l
+> >486
+> >
+>=20
+> What about for multi-sentence descriptions, we need the middle full-s=
+tops, then to not
+> have one on the end seems kinda odd looking.
+
+That's the way I usually do it -- doesn't look too bad. ;)
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
