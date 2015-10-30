@@ -1,99 +1,55 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 30 Oct 2015 15:00:25 +0000
-Message-ID: <20151030150025.GF31073@leverpostej>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 19/19] ARM: sun5i: chip: Enable the TV Encoder
+Date: Fri, 30 Oct 2015 23:20:41 +0800
+Message-ID: <CAGb2v66vjp=5GtGD-0i3OOw-wK3H4bogfvPoNzuwYvY8vt4fMQ@mail.gmail.com>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-20-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446174501-8870-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1446214865-3972-20-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel@lists.freedesktop.org, linux-sunxi <linux-sunxi@googlegroups.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Wynter Woods <wynter@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 29, 2015 at 11:08:12PM -0400, Sinan Kaya wrote:
-> The Qualcomm Technologies HIDMA device has been designed
-> to support virtualization technology. The driver has been
-> divided into two to follow the hardware design. The management
-> driver is executed in hypervisor context and is the main
-> managment for all channels provided by the device. The
-> channel driver is exected in the guest OS context.
-> 
-> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Fri, Oct 30, 2015 at 10:21 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> The TV encoder is used to drive VGA and composite display.
+>
+> Enable it on the CHIP
+
+The commit message does not match the contents. Missing a patch? :)
+
+ChenYu
+
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > ---
->  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  42 +
->  drivers/dma/Kconfig                                |  11 +
->  drivers/dma/Makefile                               |   1 +
->  drivers/dma/qcom_hidma_mgmt.c                      | 868 +++++++++++++++++++++
->  4 files changed, 922 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
->  create mode 100644 drivers/dma/qcom_hidma_mgmt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> new file mode 100644
-> index 0000000..81674ab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> @@ -0,0 +1,42 @@
-> +Qualcomm Technologies HIDMA Management interface
+>  arch/arm/boot/dts/sun5i-r8.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun5i-r8.dtsi b/arch/arm/boot/dts/sun5i-r8.dtsi
+> index d69df3a73cbf..e39c903da864 100644
+> --- a/arch/arm/boot/dts/sun5i-r8.dtsi
+> +++ b/arch/arm/boot/dts/sun5i-r8.dtsi
+> @@ -86,4 +86,16 @@
+>                                              "ahb_mali400";
+>                 };
+>         };
 > +
-> +Required properties:
-> +- compatible: must contain "qcom,hidma_mgmt"
-
-s/_/-/ in property names and compatible strings.
-
-Per your rationale for splitting the device nodes, surely the
-relationship between the two needs to be described?
-
-The GIC has a similar split, yet we use a single node, with the
-hypervisor portions being optional.
-
-What if there were multiple instances?
-
-> +- reg: Address range for DMA device
-> +- interrupts: Should contain the one interrupt shared by all channels
-> +- nr-channels: Number of channels supported by this DMA controller.
-> +- max-write: Maximum write burst in bytes. A memcpy requested is
-> +  fragmented to multiples of this amount.
-> +- max-read: Maximum read burst in bytes. A memcpy request is
-> +  fragmented to multiples of this amount.
-
-Thse would be better named as max-read-burst-bytes and
-min-read-burst-bytes.
-
-> +- max-wxactions: Maximum write transactions to perform in a burst
-> +- max-rdactions: Maximum read transactions to perform in a burst
-
-max-{write,read}-transactions
-
-> +- max-memset-limit: Maximum memset limit
-
-I have no idea what this is meant to mean.
-
-> +- ch-priority-#n: Priority of the channel
-> +- ch-weight-#n: Round robin weight of the channel
-
-These need better descriptions. They sound like configuration options.
-
-[...]
-
-> +#if IS_ENABLED(CONFIG_ACPI)
-> +static const struct acpi_device_id qcom_hidma_mgmt_acpi_ids[] = {
-> +	{"QCOM8060"},
-> +	{},
+> +       soc@01c00000 {
+> +               tve: encoder@01c0a000 {
+> +                       compatible = "allwinner,sun4i-a10-tv-encoder";
+> +                       reg = <0x01c0a000 0x1000>;
+> +                       clocks = <&ahb_gates 34>;
+> +               };
+> +       };
 > +};
-> +#endif
-
-How do DMA engines work with ACPI?
-
-How are client relationships defined?
-
-THanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +&de {
+> +       allwinner,tv-encoder = <&tve>;
+>  };
+> --
+> 2.6.2
+>
