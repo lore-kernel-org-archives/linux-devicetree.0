@@ -1,165 +1,101 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: Re: [PATCH v3] Input: tsc2005 - Add support for tsc2004
-Date: Thu, 29 Oct 2015 21:08:45 -0500
-Message-ID: <20151030020845.GA6599@qwerty.qwertyembedded>
-References: <1446077554-19684-1-git-send-email-mwelling@ieee.org>
- <20151030014522.GA14178@localhost>
+From: bayi.cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] mtd: mtk-nor: mtk serial flash controller driver
+Date: Fri, 30 Oct 2015 10:12:39 +0800
+Message-ID: <1446171159.25711.36.camel@mhfsdcap03>
+References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
+ <1444729160-26433-3-git-send-email-bayi.cheng@mediatek.com>
+ <20151016073959.GB28158@localhost> <1445178035.4832.23.camel@mhfsdcap03>
+ <20151029015237.GE13239@google.com> <1446089334.25711.10.camel@mhfsdcap03>
+ <1446126991.25711.23.camel@mhfsdcap03> <20151029160331.GA12954@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151030014522.GA14178@localhost>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20151029160331.GA12954@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dmitry,
+On Thu, 2015-10-29 at 09:03 -0700, Brian Norris wrote:
+> On Thu, Oct 29, 2015 at 09:56:31PM +0800, bayi.cheng wrote:
+> > On Thu, 2015-10-29 at 11:28 +0800, bayi.cheng wrote:
+> > > On Wed, 2015-10-28 at 18:52 -0700, Brian Norris wrote:
+> > > > On Sun, Oct 18, 2015 at 10:20:35PM +0800, bayi.cheng wrote:
+> > > > > On Fri, 2015-10-16 at 00:39 -0700, Brian Norris wrote:
+> > > > > > On Tue, Oct 13, 2015 at 05:39:19PM +0800, Bayi Cheng wrote:
+> 
+> > > > > > > +	/* mtk nor controller doesn't supoort SPINOR_OP_RDCR */
+> > > > > > > +	switch (opcode) {
+> > > > > > > +	case SPINOR_OP_RDID:
+> > > > > > > +		/* read JEDEC ID need 4 bytes commands */
+> > > > > > > +		ret = mt8173_nor_set_cmd(mt8173_nor, 0, 32, SPINOR_OP_RDID);
+> > > > > > > +		if (ret < 0)
+> > > > > > > +			return ret;
+> > > > > > > +
+> > > > > > > +		/* mtk nor flash controller only support 3 bytes IDs */
+> > > > > > 
+> > > > > > Are you absolutely sure of this? That would be highly unfortunate, but
+> > > > > > I also don't believe it's true.
+> > > > > > 
+> > > > > Yes, for this issue I have asked our designer of nor flash controller,
+> > > > > unfortunately, it is true, and I have tried to read more IDs, but our
+> > > > > controller just accept 3 IDs from nor flash, and our next generation IC
+> > > > > may solve this problem.
+> > > > 
+> > > > How exactly did you try? Did you do what I suggested above? Are the
+> > > > "shift registers" not all actually functional?
+> > > > 
+> > > Hi Brian, For this problem, I have asked our nor controller designer to
+> > > double confirm again, and he promise to do some simulation testes, On
+> > > the other hand, I have got some Spansion nor flash which has 5 IDs, and
+> > > after our designer make sure our controller can support 5 or 6 IDs, then
+> > > I will rework a special platform with S25FL256SA. If we have any
+> > > progress, I will inform you immediately!  Thanks!!
+> > > 
+> > Hi Brian, Thanks very much for your perseverance!!
+> > Actually, You idea is correct, and our designer has completed some
+> > simulation test on spansion nor flash witch has more than 3 IDs, and the
+> > results has prove that we can support to read 5 IDs. I also double
+> 
+> Awesome!
+> 
+> > confirmed with spansion nor flash. The only pity is that our nor
+> > controller can't support 6 IDs, we just support 5 IDs.
+> 
+> That's not quite as awesome. But that's still much more workable than
+> only 3 bytes. Perhaps we'll want a way to communicate that to the
+> spi-nor layer, so it doesn't think it can match a full 6 bytes?
+> 
+Hi Brian,  The current station is as follows.
 
-On Thu, Oct 29, 2015 at 06:45:22PM -0700, Dmitry Torokhov wrote:
-> Hi Michael,
-> 
-> On Wed, Oct 28, 2015 at 07:12:34PM -0500, Michael Welling wrote:
-> > Adds support for the i2c based tsc2004.
-> > 
-> > Due to the overlapping functionality of the tsc2004 and tsc2005
-> > the common code was moved to a core driver (tsc200x-core).
-> > 
-> > Signed-off-by: Michael Welling <mwelling@ieee.org>
-> 
-> In addition to what has been discussed in the other email:
-> 
-> > ---
-> > v3: Splits the tsc2004 and tsc2005 into separate drivers with
-> > with common routines in tsc200x-core.
-> > v2: Fixes Kconfig based on report for 0-day build bot.
-> >  .../bindings/input/touchscreen/tsc2004.txt         |  38 +
-> 
-> Can we please combine tsc2004.txt and tsc2005.txt?
+1: put 0x9F to MTK_NOR_PRGDATA5_REG, and five 0x0 to
+MTK_NOR_PRGDATA4_REG ~ MTK_NOR_PRGDATA0_REG, then set (1 + 5) * 8 
+to MTK_NOR_CNT_REG, for this way, we can read five IDs.
 
-Sure.
+2: put 0x9F to MTK_NOR_PRGDATA5_REG, and five 0x0 to
+MTK_NOR_PRGDATA4_REG ~ MTK_NOR_PRGDATA0_REG, then set (1 + 5 + 1) * 8
+to MTK_NOR_CNT_REG, for this way, we can read six IDs.
+In this case, nor flash IDs can be read from MTK_NOR_SHREG5_REG to
+MTK_NOR_SHREG0_REG . Thanks!
 
+> > I will submit my changes to V6 version. Thanks again!!
 > 
-> >  
-> > +config TOUCHSCREEN_TSC200X
-> > +	tristate
+> OK, but let me take another look at v5 and send you comments on that one
+> first.
 > 
-> Let's call it TOUCHSCREEN_TSC200X_CORE.
-
-Okay.
-
+> Regards,
+> Brian
 > 
-> > --- /dev/null
-> > +++ b/drivers/input/touchscreen/tsc2004.c
-> > @@ -0,0 +1,73 @@
-> > +/*
-> > + * TSC2004 touchscreen driver
-> > + *
-> > + * Copyright (C) 2015 EMAC Inc.
-> > + * Copyright (C) 2015 QWERTY Embedded Design
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> > + * GNU General Public License for more details.
-> > + *
-> 
-> Please drop this empty line in the comment.
->
-
-No problem.
- 
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/input.h>
-> > +#include <linux/pm.h>
-> > +#include <linux/of.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/regmap.h>
-> > +#include "tsc200x-core.h"
-> > +
-> > +static int tsc2004_probe(struct i2c_client *i2c,
-> > +			 const struct i2c_device_id *id)
-> > +
-> > +{
-> > +	return tsc200x_probe(&i2c->dev, i2c->irq, BUS_I2C,
-> > +			     devm_regmap_init_i2c(i2c,
-> > +						  &tsc2005_regmap_config));
-> > +}
-> > +
-> > +static int tsc2004_remove(struct i2c_client *i2c)
-> > +{
-> > +	return tsc200x_remove(&i2c->dev);
-> > +}
-> > +
-> > +static const struct i2c_device_id tsc2004_idtable[] = {
-> > +	{ "tsc2004", 0 },
-> > +	{ }
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(i2c, tsc2004_idtable);
-> > +
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id tsc2004_of_match[] = {
-> > +	{ .compatible = "ti,tsc2004" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, tsc2004_of_match);
-> > +#endif
-> > +
-> > +static SIMPLE_DEV_PM_OPS(tsc2004_pm_ops, tsc200x_suspend, tsc200x_resume);
-> 
-> Hmm, maybe you should export tsc200x_pm_ops instead of individual
-> functions.
-> 
-> > +
-> > +int __maybe_unused tsc200x_suspend(struct device *dev)
-> > +{
-> > +	struct tsc2005 *ts = dev_get_drvdata(dev);
-> > +
-> > +	mutex_lock(&ts->mutex);
-> > +
-> > +	if (!ts->suspended && ts->opened)
-> > +		__tsc2005_disable(ts);
-> > +
-> > +	ts->suspended = true;
-> > +
-> > +	mutex_unlock(&ts->mutex);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(tsc200x_suspend);
-> 
-> __maybe_unused does not make sense here - the symbol is exported and
-> therefore is always used. If you export the pm_ops stucture then you can
-> keep functions as __maybe_unused.
-> 
-> BTW, can you generate the patch with -M to let git do the rename
-> detection - it will be easier to see what changed in the core.
-
-Okay.
-
-Here is somthing that I just saw. The tsc2005_cmd function uses a pointer to
-struct tsc2005 as a paramter. So the struct needs to moved into the 
-tsc200x-core.h. Should all of the defines be moved there too?
-
-Also the old platform data is in a SPI specific include directory.
-Do we want to move this?
-
-Also should I change all of the names of the core functions, variables, structs,
-and defines to tsc200x for consistency including the driver struct/defines/etc?
-
-Regards,
-
-Michael
-> 
-> Thanks!
-> 
-> -- 
-> Dmitry
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
