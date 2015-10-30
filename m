@@ -1,98 +1,96 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v4 3/3] arm64: dts: Add BRCM IPROC NAND DT node for NS2
-Date: Fri, 30 Oct 2015 11:48:58 +0530
-Message-ID: <1446185938-17520-4-git-send-email-anup.patel@broadcom.com>
-References: <1446185938-17520-1-git-send-email-anup.patel@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add documentation for
+ s2mps15 PMIC
+Date: Fri, 30 Oct 2015 11:55:31 +0530
+Message-ID: <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
+References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446185938-17520-1-git-send-email-anup.patel@broadcom.com>
+In-reply-to: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Linux MTD <linux-mtd@lists.infradead.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Anup Patel <anup.patel@broadcom.com>
+To: lee.jones@linaro.org, broonie@kernel.org
+Cc: k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The NAND controller on NS2 SoC is compatible with existing
-BRCM IPROC NAND driver so let's enable it in NS2 DT and
-NS2 SVK DT.
+From: Thomas Abraham <thomas.ab@samsung.com>
 
-This patch also fixes use of node labels in ns2-svk.dts.
+Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 device
+is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regulators.
+This also supports RTC and three 32.768KHz clock outputs.
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Reviewed-by: Brian Norris <computersforpeace@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 ---
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 30 ++++++++++++++++++++----------
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 14 ++++++++++++++
- 2 files changed, 34 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index e5950d5..6bb3d4d 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -50,18 +50,28 @@
- 		device_type = "memory";
- 		reg = <0x000000000 0x80000000 0x00000000 0x40000000>;
- 	};
-+};
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index 890f0b0e1643..4c0543ceec25 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -1,5 +1,5 @@
  
--	soc: soc {
--		i2c0: i2c@66080000 {
--			status = "ok";
--		};
-+&i2c0 {
-+	status = "ok";
-+};
+-* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current Regulator
++* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
  
--		i2c1: i2c@660b0000 {
--			status = "ok";
--		};
-+&i2c1 {
-+	status = "ok";
-+};
-+
-+&uart3 {
-+	status = "ok";
-+};
+ The Samsung S2MPS11 is a multi-function device which includes voltage and
+ current regulators, RTC, charger controller and other sub-blocks. It is
+@@ -7,8 +7,12 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+ addressed by the host system using different I2C slave addresses.
  
--		uart3: serial@66130000 {
--			status = "ok";
--		};
-+&nand {
-+	nandcs@0 {
-+		compatible = "brcm,nandcs";
-+		reg = <0>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <8>;
-+		nand-ecc-step-size = <512>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index f603277..9610822 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -212,5 +212,19 @@
- 			compatible = "brcm,iproc-rng200";
- 			reg = <0x66220000 0x28>;
- 		};
-+
-+		nand: nand@66460000 {
-+			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
-+			reg = <0x66460000 0x600>,
-+			      <0x67015408 0x600>,
-+			      <0x66460f00 0x20>;
-+			reg-names = "nand", "iproc-idm", "iproc-ext";
-+			interrupts = <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			brcm,nand-has-wp;
-+		};
- 	};
- };
+ Required properties:
+-- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-pmic"
+-	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
++- compatible: Should be one of the following
++	- "samsung,s2mps11-pmic"
++	- "samsung,s2mps13-pmic"
++	- "samsung,s2mps14-pmic"
++	- "samsung,s2mps15-pmic"
++	- "samsung,s2mpu02-pmic".
+ - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+@@ -24,7 +28,7 @@ Optional properties:
+   unwanted buck warm reset (setting buck voltages to default values).
+ 
+ Optional nodes:
+-- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffered 32.768
++- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/BT) buffered 32.768
+   KHz outputs, so to register these as clocks with common clock framework
+   instantiate a sub-node named "clocks". It uses the common clock binding
+   documented in :
+@@ -37,12 +41,13 @@ Optional nodes:
+     the clock which they consume.
+     Clock               ID           Devices
+     ----------------------------------------------------------
+-    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S5M8767
+-    32KhzCP		1            S2MPS11, S2MPS13, S5M8767
+-    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S5M8767
++    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M8767
++    32KhzCP		1            S2MPS11, S2MPS13, S2MPS15, S5M8767
++    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M8767
+ 
+   - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps13-clk",
+ 		"samsung,s2mps14-clk", "samsung,s5m8767-clk"
++    The s2msp15 uses the same compatible as s2mps13, as both provides similar clocks.
+ 
+ - regulators: The regulators of s2mps11 that have to be instantiated should be
+ included in a sub-node named 'regulators'. Regulator nodes included in this
+@@ -90,6 +95,7 @@ as per the datasheet of s2mps11.
+ 			- S2MPS11: 1 to 38
+ 			- S2MPS13: 1 to 40
+ 			- S2MPS14: 1 to 25
++			- S2MPS15: 1 to 27
+ 			- S2MPU02: 1 to 28
+ 		  - Example: LDO1, LDO2, LDO28
+ 	- BUCKn
+@@ -97,6 +103,7 @@ as per the datasheet of s2mps11.
+ 			- S2MPS11: 1 to 10
+ 			- S2MPS13: 1 to 10
+ 			- S2MPS14: 1 to 5
++			- S2MPS15: 1 to 10
+ 			- S2MPU02: 1 to 7
+ 		  - Example: BUCK1, BUCK2, BUCK9
+ 
 -- 
-1.9.1
+1.7.10.4
