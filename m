@@ -1,90 +1,33 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v5 1/5] Documentation: tps65912: Add DT bindings for the
- TPS65912 PMIC
-Date: Fri, 30 Oct 2015 14:21:02 -0500
-Message-ID: <5633C31E.5030408@ti.com>
-References: <1446161922-8755-1-git-send-email-afd@ti.com>
- <1446161922-8755-2-git-send-email-afd@ti.com> <20151030171006.GZ4058@x1>
- <5633B078.7080209@ti.com> <20151030190622.GN4058@x1>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] NAND support for Broadcom NS2 SoC
+Date: Fri, 30 Oct 2015 12:31:52 -0700
+Message-ID: <20151030193152.GI13239@google.com>
+References: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151030190622.GN4058@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446188361-15146-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod KUMAR <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2015 02:06 PM, Lee Jones wrote:
-> On Fri, 30 Oct 2015, Andrew F. Davis wrote:
->
->> On 10/30/2015 12:10 PM, Lee Jones wrote:
->>> On Thu, 29 Oct 2015, Andrew F. Davis wrote:
->>>
->>>> The TPS65912 PMIC contains several regulators and a GPIO controller.
->>>> Add bindings for the TPS65912 PMIC.
->>>>
->>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
->>>> ---
->>>>   .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
->>>
->>> Why have you dropped Linus' Review-by?
->>>
->>
->> Strange, I thought I made a change to this. Well this brings up a question,
->> how much change can we have before we are supposed to drop Reviewed/Acked-by?
->
-> Common sense call I'm afraid. ;)
->
-> [...]
->
->>>> +     the second cell is used to specify flags.
->>>> +     See include/dt-bindings/gpio/gpio.h for possible values.
->>>
->>> This is a Linuxisum and shouldn't really live in here.
->>>
->>> I think it would be better to document them in ../gpio/gpio.txt and
->>> reference that instead.
->>>
->>
->> Looks like that is already in ../gpio/gpio.txt:57
->
-> There is a mention of GPIO_ACTIVE_HIGH, as it's used in an example.
-> However GPIO_ACTIVE_LOW is missing.  I think both could do with
-> documenting properly, then you can refer to them from here.
->
+On Fri, Oct 30, 2015 at 12:29:18PM +0530, Anup Patel wrote:
+> We enable NAND support for Broadcom NS2 SoC by reusing existing
+> BRCMNAND driver.
+> 
+> This patchset applies on-top of "arm64: Simple additions to
+> NS2 DT" v1 patchset and is available in ns2_nand_v5 branch of
+> https://github.com/Broadcom/arm64-linux.git.
+> 
+> The patchset is tested on NS2 SVK.
 
-I mean the lines above the example, they say to use the macros
-defined in include/dt-bindings/gpio/gpio.h whenever possible,
-that's really all I would say.
+Applied patches 1 and 2. My "Reviewed-by" on patch 3 stands.
 
-> [...]
->
->>>> +Required properties:
->>>> + - compatible : Should be "ti,tps65912".
->>>> + - reg : Slave address or chip select number (I2C / SPI).
->>>> + - interrupt-parent : The parent interrupt controller.
->>>> + - interrupts : The interrupt line the device is connected to.
->>>> + - interrupt-controller : Marks the device node as an interrupt controller.
->>>> + - #interrupt-cells: The number of cells to describe an IRQ, this should be 2.
->>>> +     The first cell is the IRQ number.
->>>> +     The second cell is the flags, encoded as the trigger masks from
->>>> +     ../interrupt-controller/interrupts.txt
->>>
->>> Nit: We *normally* treat these as bullet-points and not place
->>> full-stops on them:
->>>
->>> $ git grep "compatible" -- Documentation/devicetree/bindings/ | grep -v "\.$" | wc -l
->>> 5227
->>> $ git grep "compatible.*\.$" -- Documentation/devicetree/bindings/ | wc -l
->>> 486
->>>
->>
->> What about for multi-sentence descriptions, we need the middle full-stops, then to not
->> have one on the end seems kinda odd looking.
->
-> That's the way I usually do it -- doesn't look too bad. ;)
->
-> [...]
->
+Thanks,
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
