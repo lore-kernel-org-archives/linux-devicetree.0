@@ -1,57 +1,76 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 27/32] scsi: hisi_sas: add smp protocol support
-Date: Fri, 30 Oct 2015 14:53:51 +0100
-Message-ID: <3976707.At0tktvfqn@wuerfel>
-References: <1445868903-183817-1-git-send-email-john.garry@huawei.com> <1445868903-183817-28-git-send-email-john.garry@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445868903-183817-28-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Subject: Re: [v3 00/10] add support SATA for BMIPS_GENERIC
+Date: Fri, 30 Oct 2015 22:56:36 +0900
+Message-ID: <673D3A37-DE97-4136-BDCE-3DF803405F59@gmail.com>
+References: <1446212339-1210-1-git-send-email-jaedon.shin@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1446212339-1210-1-git-send-email-jaedon.shin@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 26 October 2015 22:14:58 John Garry wrote:
+Hi all,
 
-> +       /*
-> +       * DMA-map SMP request, response buffers
-> +       */
-> +       /* req */
-> +       sg_req = &task->smp_task.smp_req;
-> +       elem = dma_map_sg(dev, sg_req, 1, DMA_TO_DEVICE);
-> +       if (!elem)
-> +               return -ENOMEM;
-> +       req_len = sg_dma_len(sg_req);
-> +       req_dma_addr = sg_dma_address(sg_req);
+Please discard this patch series. These have fault properties.
 
-If you only use the first element, could you just use dma_map_single()?
+Sorry, for the noise.
 
-> +       hdr->cmd_table_addr_lo = cpu_to_le32(lower_32_bits(req_dma_addr));
-> +       hdr->cmd_table_addr_hi = cpu_to_le32(upper_32_bits(req_dma_addr));
-> +
-> +       hdr->sts_buffer_addr_lo =
-> +                       cpu_to_le32(lower_32_bits(slot->status_buffer_dma));
-> +       hdr->sts_buffer_addr_hi =
-> +                       cpu_to_le32(upper_32_bits(slot->status_buffer_dma));
-> +
+I will soon send v4 version again.
+
+--
+Jaedon
+
+> On Oct 30, 2015, at 10:38 PM, Jaedon Shin <jaedon.shin@gmail.com> wrote:
+> 
+> Hi all,
+> 
+> This patch series add support SATA for BMIPS_GENERIC.
+> 
+> Changes in v3:
+> - fix typo quirk instead of quick
+> - disable NCQ before initialzing SATA controller endianness
+> - fix misnomer controlling phy interface
+> - remove brcm,broken-ncq and brcm,broken-phy properties from devicetree
+> - use compatible string for quirks
+> - use list for compatible strings
+> - add "Acked-by:" tags
+> 
+> Changes in v2:
+> - adds quirk for ncq
+> - adds quirk for phy interface control
+> - remove unused definitions in ahci_brcmstb
+> - combines compatible string
+> 
+> Jaedon Shin (10):
+>  ata: ahci_brcmstb: add support MIPS-based platforms
+>  ata: ahci_brcmstb: add quirk for broken ncq
+>  ata: ahci_brcmstb: add quirk for different phy
+>  ata: ahci_brcmstb: remove unused definitions
+>  phy: phy_brcmstb_sata: remove duplicate definitions
+>  phy: phy_brcmstb_sata: add data for phy version
+>  phy: phy_brcmstb_sata: add support MIPS-based platforms
+>  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
+>  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7346
+>  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7362
+> 
+> .../devicetree/bindings/ata/brcm,sata-brcmstb.txt  |  4 +-
+> .../bindings/phy/brcm,brcmstb-sata-phy.txt         |  1 +
+> arch/mips/boot/dts/brcm/bcm7346.dtsi               | 42 ++++++++++++++++
+> arch/mips/boot/dts/brcm/bcm7362.dtsi               | 42 ++++++++++++++++
+> arch/mips/boot/dts/brcm/bcm7425.dtsi               | 42 ++++++++++++++++
+> arch/mips/boot/dts/brcm/bcm97346dbsmb.dts          |  8 +++
+> arch/mips/boot/dts/brcm/bcm97362svmb.dts           |  8 +++
+> drivers/ata/Kconfig                                |  2 +-
+> drivers/ata/ahci_brcmstb.c                         | 58 +++++++++++++++++++++-
+> drivers/phy/Kconfig                                |  4 +-
+> drivers/phy/phy-brcmstb-sata.c                     | 47 ++++++++++++++----
+> 11 files changed, 242 insertions(+), 16 deletions(-)
+> 
+> -- 
+> 2.6.2
 > 
 
-I see these a lot in your code. Could you replace this wit
-
-	hdr->cmd_table_addr = cpu_to_le64(req_dma_addr);
-
-and so on? That would be much more readable. Or are the two __le32 variables
-swapped? If so, you could add a small helper function like
-
-static inline __le64 cpu_to_le64_wordswapped(u64 val)
-{
-	return cpu_to_le64(val >> 32 | val << 32);
-}
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
