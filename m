@@ -1,74 +1,116 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 27/32] scsi: hisi_sas: add smp protocol support
-Date: Fri, 30 Oct 2015 16:22:53 +0000
-Message-ID: <5633995D.20607@huawei.com>
-References: <1445868903-183817-1-git-send-email-john.garry@huawei.com>
- <1445868903-183817-28-git-send-email-john.garry@huawei.com>
- <3976707.At0tktvfqn@wuerfel>
+From: Brijesh Singh <brijeshkumar.singh@amd.com>
+Subject: Re: [PATCH v4] EDAC: Add ARM64 EDAC
+Date: Fri, 30 Oct 2015 11:26:58 -0500
+Message-ID: <56339A52.8060701@amd.com>
+References: <1446048829-3359-1-git-send-email-brijeshkumar.singh@amd.com>
+ <20151028164053.GG25451@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3976707.At0tktvfqn@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151028164053.GG25451@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: brijeshkumar.singh@amd.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, devicetree@vger.kernel.org, guohanjun@huawei.com, andre.przywara@arm.com, arnd@arndb.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/10/2015 13:53, Arnd Bergmann wrote:
-> On Monday 26 October 2015 22:14:58 John Garry wrote:
->
->> +       /*
->> +       * DMA-map SMP request, response buffers
->> +       */
->> +       /* req */
->> +       sg_req = &task->smp_task.smp_req;
->> +       elem = dma_map_sg(dev, sg_req, 1, DMA_TO_DEVICE);
->> +       if (!elem)
->> +               return -ENOMEM;
->> +       req_len = sg_dma_len(sg_req);
->> +       req_dma_addr = sg_dma_address(sg_req);
->
-> If you only use the first element, could you just use dma_map_single()?
->
+Hi Mark,
 
-Can do. Actually sg_req seems only ever has one element:
-expander.c, smp_execute_task()
-sg_init_one(&task->smp_task.smp_req, req, req_size);
-
->> +       hdr->cmd_table_addr_lo = cpu_to_le32(lower_32_bits(req_dma_addr));
->> +       hdr->cmd_table_addr_hi = cpu_to_le32(upper_32_bits(req_dma_addr));
 >> +
->> +       hdr->sts_buffer_addr_lo =
->> +                       cpu_to_le32(lower_32_bits(slot->status_buffer_dma));
->> +       hdr->sts_buffer_addr_hi =
->> +                       cpu_to_le32(upper_32_bits(slot->status_buffer_dma));
+>> +Required properties:
+>> +- compatible: Should be "arm,cortex-a57-edac" or "arm,cortex-a53-edac"
 >> +
->>
->
-> I see these a lot in your code. Could you replace this wit
->
-> 	hdr->cmd_table_addr = cpu_to_le64(req_dma_addr);
->
-This seems reasonable. They are not swapped.
-
-> and so on? That would be much more readable. Or are the two __le32 variables
-> swapped? If so, you could add a small helper function like
->
-> static inline __le64 cpu_to_le64_wordswapped(u64 val)
-> {
-> 	return cpu_to_le64(val >> 32 | val << 32);
-> }
->
-> 	Arnd
->
-> .
+>> +Example:
+>> +	edac {
+>> +		compatible = "arm,cortex-a57-edac";
+>> +	};
+>> +
+> 
+> This is insufficient for big.LITTLE, no interrupt is possible, and we
+> haven't defined the rules for accessing the registers (e.g. whether
+> write backs are permitted).
+> 
+> Please see my prior comments [1] on those points.
+> 
+> If we're going to use this feature directly within the kernel, we need
+> to consider the envelope of possible implementations rather than your
+> use-case alone.
 >
 
-cheers
+I have looked at possibility of pushing correctable error logging in the
+firmware; but given current hardware limitation it seems like OS is the best
+place to implement it. Let me summaries the issues we are running into:
+
+* Correctable errors does not generate any interrupt:
+  If we have to implement error parsing inside the firmware then work need
+  to be split between OS and firmware. Maybe OS can call SMC instruction to 
+  dial into firmware and then firmware can check error syndrome registers; 
+  if it finds correctable error then build HEST table. This method will introduce
+  performance issue because it require OS executing SMC every 100ms or so to just
+  poll for correctable error. If you have any other recommendation then please share it.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> * Interaction with firmware
+> - When/do we handle interrupts?
+
+We can a properties in dt bindings:
+
+1) "num-interrupts = 1" - number of interrupt count. One interrupts per cluster
+    e.g if you have 4 cluster then num-interrupts=4.
+2) interrupts = <0, 92, 0> <0, 94, 0> <0, 96, 0> <0, 98, 0>  // interrupt mapping
+
+If num-interrupts = 0, then firmware handles interrupts. Optionally we can use HEST FIRMWARE-FIRST
+bit, if bit is set then firmware is handling the interrupt otherwise use DT information.
+
+>
+>  - When is it valid to write back and clear an error? We should not do
+>    this behind the back of any firmware that owns the interface.
+
+As per A57 TRM is concerned you are right both the correctable and uncorrectable 
+error needs to clear VALID bit in L1/L2 syndrome registers. So yes we need to define
+a rule for accessing the registers. I can think of two possible approach here:
+
+1) add "error-syndrome-reg-write-access=1" property in dt.
+   * if '1' then OS has exclusive write backs access to error syndrome register
+   * if '0' then OS will not clear the valid bit on fatal error
+
+  The handler looks like this:
+
+  parse_error_syndrome () {
+   val = read_cpumerrsr
+
+   if (!IS_VALID(val))
+     return
+
+   /* log the error details */
+
+   /* if fatal error and OS does not have exclusive write back access */
+   if (IS_FATAL(val) && !error-syndrom-reg-write-access)
+     return; 
+
+   val = ~(1UL << 31); /* clear valid bit */
+  }
+
+2) Use HEST FIRMWARE-FIRST bit field, if the bit is set then OS should not clear
+   the valid bit on fatal error and similarly if bit is clear then OS clears the VALID bit.
+
+Since firmware will never handle the correctable error hence its always safe to clear
+the VALID bit on non-fatal error. If you have any other suggestions then please share it.
+
+I am not pushing my use-case only; I am trying to work through current hardware
+limitation and still support all the possibilities. I am open to hear your suggestions.
+I am also not well versed on big.LITTILE CPU, so you may need to point me on right 
+direction as we progress. My testing is limited to Cortex A57.
+
+> 
+> I don't think the use of old_mask is sufficient here, given the mapping
+> of logical to physical ID is arbitrary. For example, we could have CPUs
+> 0,5,6,7 in one cluster, and CPUs 1,2,3,4 in another, and in that case
+> we'd check the first cluster twice.
+> 
+
+Noted. I should use physical ID instead of logical mapping.
+
+> This also is wrong for big.LITTLE; we can't necessarily check on every
+> CPU.
+> 
