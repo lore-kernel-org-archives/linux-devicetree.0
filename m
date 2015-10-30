@@ -1,7 +1,7 @@
 From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: [v4 10/10] MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7362
-Date: Fri, 30 Oct 2015 23:01:24 +0900
-Message-ID: <1446213684-2625-11-git-send-email-jaedon.shin@gmail.com>
+Subject: [v4 08/10] MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
+Date: Fri, 30 Oct 2015 23:01:22 +0900
+Message-ID: <1446213684-2625-9-git-send-email-jaedon.shin@gmail.com>
 References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
 Return-path: <linux-ide-owner@vger.kernel.org>
 In-Reply-To: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
@@ -10,21 +10,20 @@ To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gma
 Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add AHCI and PHY device nodes to MIPS-based BCM7362 set-top box
+Add AHCI and PHY device nodes to MIPS-based BCM7425 set-top box
 platform.
 
 Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 ---
- arch/mips/boot/dts/brcm/bcm7362.dtsi     | 40 ++++++++++++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm97362svmb.dts |  8 +++++++
- 2 files changed, 48 insertions(+)
+ arch/mips/boot/dts/brcm/bcm7425.dtsi | 40 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7362.dtsi b/arch/mips/boot/dts/brcm/bcm7362.dtsi
-index 6e65db86fc61..40c1a38af07b 100644
---- a/arch/mips/boot/dts/brcm/bcm7362.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7362.dtsi
-@@ -189,5 +189,45 @@
- 			interrupts = <66>;
+diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
+index 5b660b617ead..47d7bbb20dfd 100644
+--- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
+@@ -221,5 +221,45 @@
+ 			interrupts = <73>;
  			status = "disabled";
  		};
 +
@@ -33,7 +32,7 @@ index 6e65db86fc61..40c1a38af07b 100644
 +			reg-names = "ahci", "top-ctrl";
 +			reg = <0x181000 0xa9c>, <0x180020 0x1c>;
 +			interrupt-parent = <&periph_intc>;
-+			interrupts = <86>;
++			interrupts = <40>;
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			status = "disabled";
@@ -69,22 +68,6 @@ index 6e65db86fc61..40c1a38af07b 100644
 +		};
  	};
  };
-diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-index 739c2ef5663b..ef9a69b79bc4 100644
---- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-@@ -40,3 +40,11 @@
- &ohci0 {
- 	status = "okay";
- };
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&sata_phy {
-+	status = "okay";
-+};
 -- 
 2.6.2
 
