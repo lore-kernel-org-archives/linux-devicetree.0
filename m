@@ -1,92 +1,103 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Fri, 30 Oct 2015 11:15:18 -0700
-Message-ID: <20151030181518.GG13239@google.com>
-References: <1445866839-31063-1-git-send-email-bayi.cheng@mediatek.com>
- <1445866839-31063-3-git-send-email-bayi.cheng@mediatek.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Fri, 30 Oct 2015 18:18:16 +0000
+Message-ID: <20151030181816.GA30791@leverpostej>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <20151030150025.GF31073@leverpostej>
+ <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
+ <5633B207.5030505@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1445866839-31063-3-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+In-Reply-To: <5633B207.5030505@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, dmaengine <dmaengine@vger.kernel.org>, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bayi,
+On Fri, Oct 30, 2015 at 02:08:07PM -0400, Sinan Kaya wrote:
+> 
+> 
+> On 10/30/2015 1:59 PM, Andy Shevchenko wrote:
+> >On Fri, Oct 30, 2015 at 5:00 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >>On Thu, Oct 29, 2015 at 11:08:12PM -0400, Sinan Kaya wrote:
+> >>>The Qualcomm Technologies HIDMA device has been designed
+> >>>to support virtualization technology. The driver has been
+> >>>divided into two to follow the hardware design. The management
+> >>>driver is executed in hypervisor context and is the main
+> >>>managment for all channels provided by the device. The
+> >>>channel driver is exected in the guest OS context.
+> >>>
+> >
+> >>>+#if IS_ENABLED(CONFIG_ACPI)
+> >>>+static const struct acpi_device_id qcom_hidma_mgmt_acpi_ids[] = {
+> >>>+     {"QCOM8060"},
+> >>>+     {},
+> >>>+};
+> >>>+#endif
+> >>
+> >>How do DMA engines work with ACPI?
+> >>
+> >>How are client relationships defined?
+> >
+> >The ACPI tables DSDT and CSRT (more info here:
+> >http://www.acpi.info/links.htm) defines properties.
+> >
+> >DSDT:
+> >  per DMAC: the resources
+> >  per client: FixedDMA descriptor that contains channel / request line pair.
+> >
+> >CSRT:
+> >  necessary table to map which DMAC provides which request line, thus
+> >request line numbering are global on platform.
+> >
+> >When DMAC driver is probed in the running system it should call as
+> >well registration function from acpi-dma.c.
+> >
+> >All clients when use new DMA slave API gets channel automatically
+> >based on their FixedDMA property.
+> >
+> >So, above is how it should be done. Didn't actually checked what this
+> >driver does.
+> >
+> I was going to reply to all the questions in one pass but let me
+> handle piece by piece.
+> 
+> Here are some facts.
+> - This hardware supports memcpy and memset only.
+> - Memset feature was removed from the kernel sometime around 3.14.
+> So no memset support in this driver either.
+> - The hardware does not support DMA slave support
 
-In reviewing your updated instructions on how to read 6 bytes of ID, I
-have one more question about how the PRGDATA and SHREG registers are
-supposed to work.
+This point is what I'd missed when reviewing. Apologies for that.
 
-On Mon, Oct 26, 2015 at 09:40:38PM +0800, Bayi Cheng wrote:
-[...]
-> +static void mt8173_nor_set_read_mode(struct mt8173_nor *mt8173_nor)
-> +{
-> +	struct spi_nor *nor = &mt8173_nor->nor;
-> +
-> +	writeb(nor->read_opcode, mt8173_nor->base + MTK_NOR_PRGDATA3_REG);
+> - The goal is to provide an interface to DMA engine framework for
+> memcpy optimization so that the rest of the kernel drivers and
+> applications make use of the hardware.
+> 
+> CSRT is an Intel specific ACPI table for slave devices. It was
+> decided by Linaro that CSRT will not be supported for ARM64.
+> 
+> There were some discussions in ACPI forums to define a similar table
+> for ARM64 but we are not there today and this hardware does not
+> support slave interface.
 
-So far, I've generalized your code to say that except for a few commands
-that are treated specially by your controller, all other opcodes are
-queued up in the program/shift register this:
+Ok. Thanks for the info!
 
-(1) total number of bits to send/receive goes in the COUNT register (so
-    far, as many as 7*8=56?)
-(2) opcode is written to PRGDATA5
-(3) other "transmit" data (like addresses), if any, are placed on PRGDATA4..0
-(4) command is sent (execute_cmd())
-(5) data is read back in SHREG{X..0}, if needed
+> ACPI enumeration is just like any other platform device. The driver
+> gets looked up by a QCOM specific HID and the driver gets probed
+> with the rest of the arguments in DSM object similar to device-tree
+> attributes. The code uses device functions so the driver is not
+> aware of where the parameters are coming from.
 
-However, I see that
+Ok.
 
-(a) here in mt8173_nor_set_read_mode(), you use only PRGDATA3 (i.e.,
-this is different than step (2) above). Why is that different? Is this
-just a quirk of the read mode, which is different than the other
-arbitrary opcodes (like READ ID)?
+So far the properties look device-internal, so I'm ok with thoses
+properties being uniform and parsed in the manner that they are, though
+I'm worried about the way the device description is split over two
+nodes.
 
-(b) it's really unclear how to determine 'X' in step (5). It seems like
-it might just be the number of bytes minus 1, since the first byte
-aligns with the "opcode" cycle. But I'm not really sure, since in one
-case (the 'default' in mt8173_nor_read_reg()) you seemingly randomly
-chose to read *only* from SHREG2. That looks wrong to me, but I don't
-actually know, because your SoC is very unclear.
-
-My patch at the end of this [1] tries to encapsulate (1)-(5) as best as
-I could, but it's really missing out on the answer to (b).
-
-Anyway, I'd really appreciate a good answer to these questions. We
-really need to get this stuff right, so your driver can handle NOR flash
-opcodes as generically as possible. Right now, your driver mostly looks
-like a series of cobbled together switch/case statements to handle the
-couple of opcodes you've tested.
-
-Regard,
-Brian
-
-[1] http://lists.infradead.org/pipermail/linux-mtd/2015-October/062919.html
-
-> +	switch (nor->flash_read) {
-> +	case SPI_NOR_FAST:
-> +		writeb(MTK_NOR_FAST_READ, mt8173_nor->base +
-> +		       MTK_NOR_CFG1_REG);
-> +		break;
-> +	case SPI_NOR_DUAL:
-> +		writeb(MTK_NOR_DUAL_READ_EN, mt8173_nor->base +
-> +		       MTK_NOR_DUAL_REG);
-> +		break;
-> +	case SPI_NOR_QUAD:
-> +		writeb(MTK_NOR_QUAD_READ_EN, mt8173_nor->base +
-> +		       MTK_NOR_DUAL_REG);
-> +		break;
-> +	default:
-> +		writeb(MTK_NOR_DUAL_DISABLE, mt8173_nor->base +
-> +		       MTK_NOR_DUAL_REG);
-> +		break;
-> +	}
-> +}
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
