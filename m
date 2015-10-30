@@ -1,98 +1,74 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v5 3/3] arm64: dts: Add BRCM IPROC NAND DT node for NS2
-Date: Fri, 30 Oct 2015 12:29:21 +0530
-Message-ID: <1446188361-15146-4-git-send-email-anup.patel@broadcom.com>
-References: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] dmaengine: ti-dma-crossbar: channel reserving and
+ edma3-tcc support
+Date: Fri, 30 Oct 2015 09:20:37 +0200
+Message-ID: <56331A45.6020201@ti.com>
+References: <1446107331-30041-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Linux MTD <linux-mtd@lists.infradead.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Anup Patel <anup.patel@broadcom.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446107331-30041-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The NAND controller on NS2 SoC is compatible with existing
-BRCM IPROC NAND driver so let's enable it in NS2 DT and
-NS2 SVK DT.
+Vinod,
 
-This patch also fixes use of node labels in ns2-svk.dts.
+On 10/29/2015 10:28 AM, Peter Ujfalusi wrote:
+> Hi,
+>=20
+> This series depends on the eDMA work I have done, which has been now =
+applied:
+> https://lkml.org/lkml/2015/10/16/64
+>=20
+> DRA7 family of chips have both sDMA and eDMA. Currently only sDMA can=
+ be used
+> becasue the old driver stack for eDMA did not allowed integration w/o=
+ hacks.
+>=20
+> Due to the nature of eDMA the crossbar needs to know which eDMA event=
+s it can
+> use to map incoming events towards the eDMA. In eDMA a channel is wir=
+ed to be
+> used with one specific event. For example eDMA event 14 can only be h=
+andled by
+> eDMA channel 14.
+> The eDMA itself can be shared by different processors in the system (=
+ARM, DSP,
+> etc) and since ARM/Linux is the master we need to know which channels=
+ are used
+> by other cores. Also we need to mask out channels used for memcpy fro=
+m the
+> events we use for HW triggers.
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Reviewed-by: Brian Norris <computersforpeace@gmail.com>
----
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 30 ++++++++++++++++++++----------
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 14 ++++++++++++++
- 2 files changed, 34 insertions(+), 10 deletions(-)
+Please ignore this series, I have found some issue with it and I just s=
+tarted
+to debug it. Will post V2 as soon as I found the problem.
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index e5950d5..6bb3d4d 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -50,18 +50,28 @@
- 		device_type = "memory";
- 		reg = <0x000000000 0x80000000 0x00000000 0x40000000>;
- 	};
-+};
- 
--	soc: soc {
--		i2c0: i2c@66080000 {
--			status = "ok";
--		};
-+&i2c0 {
-+	status = "ok";
-+};
- 
--		i2c1: i2c@660b0000 {
--			status = "ok";
--		};
-+&i2c1 {
-+	status = "ok";
-+};
-+
-+&uart3 {
-+	status = "ok";
-+};
- 
--		uart3: serial@66130000 {
--			status = "ok";
--		};
-+&nand {
-+	nandcs@0 {
-+		compatible = "brcm,nandcs";
-+		reg = <0>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <8>;
-+		nand-ecc-step-size = <512>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index f603277..9610822 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -212,5 +212,19 @@
- 			compatible = "brcm,iproc-rng200";
- 			reg = <0x66220000 0x28>;
- 		};
-+
-+		nand: nand@66460000 {
-+			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
-+			reg = <0x66460000 0x600>,
-+			      <0x67015408 0x600>,
-+			      <0x66460f00 0x20>;
-+			reg-names = "nand", "iproc-idm", "iproc-ext";
-+			interrupts = <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			brcm,nand-has-wp;
-+		};
- 	};
- };
--- 
-1.9.1
+>=20
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (3):
+>   dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr
+>   dmaengine: ti-dma-crossbar: dra7: Support for reserving DMA event
+>     ranges
+>   dmaengine: ti-dma-crossbar: dra7: Support for eDMA with new binding=
+s
+>=20
+>  .../devicetree/bindings/dma/ti-dma-crossbar.txt    |  6 ++
+>  drivers/dma/ti-dma-crossbar.c                      | 81 ++++++++++++=
++++++++---
+>  2 files changed, 76 insertions(+), 11 deletions(-)
+>=20
+
+
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
