@@ -1,114 +1,160 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] Documentation: dt: Add bindings for Secure-only devices
-Date: Fri, 30 Oct 2015 13:28:39 -0500
-Message-ID: <CAL_JsqJz+w2SYEBLVGdZNS6J1tmt5VWV0q1G_Z2rgFfch6J=2A@mail.gmail.com>
-References: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] mfd: arizona: Support Cirrus Logic CS47L24 and
+ WM1831
+Date: Fri, 30 Oct 2015 18:29:41 +0000
+Message-ID: <20151030182941.GI4058@x1>
+References: <1445264027-7357-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1445264027-7357-2-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Maydell <peter.maydell@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445264027-7357-2-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: linus.walleij@linaro.org, broonie@kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 29, 2015 at 9:01 AM, Peter Maydell <peter.maydell@linaro.org> wrote:
-> The existing device tree bindings assume that we are only trying to
-> describe a single address space with a device tree (for ARM, either
-> the Normal or the Secure world). Some uses for device tree need to
-> describe both Normal and Secure worlds in a single device tree. Add
-> documentation of how to do this, by adding extra properties which
-> describe when a device appears differently in the two worlds or when
-> it only appears in one of them.
->
-> The binding describes the general principles for adding new
-> properties describing the secure world, but for now we only need a
-> single new property, "secure-status", which can be used to annotate
-> devices to indicate that they are only visible in one of the two
-> worlds.
->
-> The primary expected use of this binding is for a virtual machine
-> like QEMU to describe the VM layout to a TrustZone aware firmware
-> (which would then use the secure-only devices itself, and pass the DT
-> on to a kernel running in the non-secure world, which ignores the
-> secure-only devices and uses the rest).
->
-> Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
+On Mon, 19 Oct 2015, Richard Fitzgerald wrote:
+
+> This patch adds the regmap configuration tables and
+> core MFD handling for the CS47L24 and WM1831 codecs.
+>=20
+> Note that compared to the other Arizona codecs, these devices
+> do not have an LDO1 or micsupp regulators, extcon driver, or
+> the DCVDD isolation control.
+>=20
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
 > ---
-> This binding doesn't affect the kernel itself, but the kernel
-> Documentation/ tree is the de-facto current place where all DT
-> bindings are documented, so Grant suggested this was the right
-> place to send a doc patch.
->
->  Documentation/devicetree/bindings/arm/secure.txt | 41 ++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+>  Documentation/devicetree/bindings/mfd/arizona.txt |    4 +-
+
+Separate patch please.
+
+>  drivers/mfd/Kconfig                               |   19 +-
+>  drivers/mfd/Makefile                              |    3 +
+>  drivers/mfd/arizona-core.c                        |   74 +-
+>  drivers/mfd/arizona-irq.c                         |   40 +-
+>  drivers/mfd/arizona-spi.c                         |    7 +
+>  drivers/mfd/arizona.h                             |    4 +
+>  drivers/mfd/cs47l24-tables.c                      | 1629 +++++++++++=
+++++++++++
+>  include/linux/mfd/arizona/core.h                  |    3 +
+>  9 files changed, 1757 insertions(+), 26 deletions(-)
+>  create mode 100644 drivers/mfd/cs47l24-tables.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
+mentation/devicetree/bindings/mfd/arizona.txt
+> index a8fee60..73f28fa 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -1,4 +1,4 @@
+> -Wolfson Arizona class audio SoCs
+> +Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
+> =20
+>  These devices are audio SoCs with extensive digital capabilites and =
+a range
+>  of analogue I/O.
+> @@ -12,6 +12,8 @@ Required properties:
+>          "wlf,wm8997"
+>          "wlf,wm8998"
+>          "wlf,wm1814"
+> +        "wlf,wm1831"
+> +        "cirrus,cs47l24"
+> =20
+>    - reg : I2C slave address when connected using I2C, chip select nu=
+mber when
+>      using SPI.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 4d92df6..d25bbb3 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1370,24 +1370,24 @@ config MFD_ARIZONA
+>  	bool
+> =20
+>  config MFD_ARIZONA_I2C
+> -	tristate "Wolfson Microelectronics Arizona platform with I2C"
+> +	tristate "Cirrus Logic/Wolfson Microelectronics Arizona platform wi=
+th I2C"
+>  	select MFD_ARIZONA
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+>  	depends on I2C
+>  	help
+> -	  Support for the Wolfson Microelectronics Arizona platform audio S=
+oC
+> -	  core functionality controlled via I2C.
+> +	  Support for the Cirrus Logic/Wolfson Microelectronics Arizona pla=
+tform
+> +	  audio SoC core functionality controlled via I2C.
+> =20
+>  config MFD_ARIZONA_SPI
+> -	tristate "Wolfson Microelectronics Arizona platform with SPI"
+> +	tristate "Cirrus Logic/Wolfson Microelectronics Arizona platform wi=
+th SPI"
+>  	select MFD_ARIZONA
+>  	select MFD_CORE
+>  	select REGMAP_SPI
+>  	depends on SPI_MASTER
+>  	help
+> -	  Support for the Wolfson Microelectronics Arizona platform audio S=
+oC
+> -	  core functionality controlled via I2C.
+> +	  Support for the Cirrus Logic/Wolfson Microelectronics Arizona pla=
+tform
+> +	  audio SoC core functionality controlled via I2C.
+> =20
+>  config MFD_WM5102
+>  	bool "Wolfson Microelectronics WM5102"
+> @@ -1414,6 +1414,13 @@ config MFD_WM8998
+>  	help
+>  	  Support for Wolfson Microelectronics WM8998 low power audio SoC
+> =20
+> +config MFD_CS47L24
+> +	bool "Cirrus Logic CS47L24 and WM1831"
+> +	depends on MFD_ARIZONA
+> +	help
+> +	  Support for Cirrus Logic CS47L24 and WM1831 low power audio SoC
+> +
+> +
+
+Superflous '\n'.
+
+[...]
+
+> diff --git a/drivers/mfd/cs47l24-tables.c b/drivers/mfd/cs47l24-table=
+s.c
 > new file mode 100644
-> index 0000000..4129fba
+> index 0000000..f877586
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/secure.txt
-> @@ -0,0 +1,41 @@
-> +* ARM Secure world bindings
-> +
-> +ARM CPUs with TrustZone support have two distinct address spaces,
-> +"Normal" and "Secure". Most devicetree consumers (including the Linux
-> +kernel) are not TrustZone aware and run entirely in either the Normal
-> +world or the Secure world. However some devicetree consumers are
-> +TrustZone aware and need to be able to determine whether devices are
-> +visible only in the Secure address space, only in the Normal address
-> +space, or visible in both. (One example of that situation would be a
-> +virtual machine which boots Secure firmware and wants to tell the
-> +firmware about the layout of the machine via devicetree.)
-> +
-> +The general principle of the naming scheme for Secure world bindings
-> +is that any property that needs a different value in the Secure world
-> +can be supported by prefixing the property name with "secure-". So for
-> +instance "secure-reg" would override "reg". If there is no "secure-"
-> +property then the Secure world value is the same as specified for the
-> +Normal world by the non-prefixed property. However, only the
-> +properties listed below may validly have "secure-" versions; this list
-> +will be enlarged on a case-by-case basis.
+> +++ b/drivers/mfd/cs47l24-tables.c
+> @@ -0,0 +1,1629 @@
+> +/*
+> + * cs47l24-tables.c  --  data tables for CS47L24 codec
 
-Certainly having lots of properties prefixed this way is not what I
-would like to see.
+Please remove this filename.
 
-> +Defining the bindings in this way means that a device tree which has
-> +been annotated to indicate the presence of Secure-only devices can
-> +still be processed unmodified by existing Non-secure software (and in
-> +particular by the kernel).
-> +
-> +Note that it is still valid for bindings intended for purely Secure
-> +world consumers (like kernels that run entirely in Secure) to simply
-> +describe the view of Secure world using the standard bindings. These
-> +secure- bindings only need to be used where both the Secure and Normal
-> +world views need to be described in a single device tree.
-> +
-> +Valid Secure world properties:
-> +
-> +- secure-status : specifies whether the device is present and usable
-> +  in the secure world. The combination of this with "status" allows
-> +  the various possible combinations of device visibility to be
-> +  specified:
-> +   status = "okay";                             // visible in S and NS
+They have a habit of becoming unaligned.
 
-I assume neither property present or both okay also mean the same.
+> + * Copyright 2015 Cirrus Logic, Inc.
+> + *
+> + * Author: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
 
-status = "okay"; secure-status = "okay";
+[...]
 
-We should be explicit.
-
-> +   status = "disabled"; secure-status = "okay"; // S-only
-> +   status = "okay"; secure-status = "disabled"; // NS-only
-
-In HKG when we discussed this, 'status = "secure"' was the proposal.
-That would be simpler:
-
-S world can use "okay" or "secure"
-NS world can use "okay" or no property.
-
-That leaves out the case of disabled in S and enabled for NS. We could
-want that for s/w reasons, but can we have h/w like that?
-
-Rob
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
