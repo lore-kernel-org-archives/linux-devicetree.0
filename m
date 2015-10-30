@@ -1,42 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] clk: sunxi: Add H3 clocks support
-Date: Fri, 30 Oct 2015 09:28:55 +0100
-Message-ID: <3751073.AWmm18dvKK@wuerfel>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com> <1445964626-6484-3-git-send-email-jenskuske@gmail.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v9 6/8] scsi: ufs: make the UFS variant a platform device
+Date: Fri, 30 Oct 2015 09:30:52 +0100
+Message-ID: <56332ABC.9060400@suse.de>
+References: <1446030951-2431-1-git-send-email-ygardi@codeaurora.org>
+ <1446030951-2431-7-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBUOUZSYQKGQEW4XOHAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445964626-6484-3-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446030951-2431-7-git-send-email-ygardi@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yaniv Gardi <ygardi@codeaurora.org>, robherring2@gmail.com, James.Bottomley@HansenPartnership.com, pebolle@tiscali.nl, hch@infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, gbroner@codeaurora.org, draviv@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 October 2015 17:50:22 Jens Kuske wrote:
-> +               of_property_read_string_index(node, "clock-output-names",
-> +                                             i, &clk_name);
-> +
-> +               if (index == 17 || (index >= 29 && index <= 31))
-> +                       clk_parent = AHB2;
-> +               else if (index <= 63 || index >= 128)
-> +                       clk_parent = AHB1;
-> +               else if (index >= 64 && index <= 95)
-> +                       clk_parent = APB1;
-> +               else if (index >= 96 && index <= 127)
-> +                       clk_parent = APB2;
-> +
-> +               clk_reg = reg + 4 * (index / 32);
-> 
+On 10/28/2015 12:15 PM, Yaniv Gardi wrote:
+> This change turns the UFS variant (SCSI_UFS_QCOM) into a UFS
+> a platform device.
+> In order to do so a few additional changes are required:
+> 1. The ufshcd-pltfrm is no longer serves as a platform device.
+>    Now it only serves as a group of platform APIs such as PM APIs
+>    (runtime suspend/resume, system suspend/resume etc), parsers of
+>    clocks, regulators and pm_levels from DT.
+> 2. What used to be the old platform "probe" is now "only"
+>    a pltfrm_init() routine, that does exactly the same, but only
+>    being called by the new probe function of the UFS variant.
+>=20
+> Reviewed-by: Rob Herring <robherring2@gmail.com>
+> Reviewed-by: Gilad Broner <gbroner@codeaurora.org>
+> Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
+>=20
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Same as for the reset driver, this probably means you should have one
-cell to indicate which bus it is for, and another cell for the
-index.
+Cheers,
 
-	Arnd
+Hannes
+--=20
+Dr. Hannes Reinecke		      zSeries & Storage
+hare@suse.de			      +49 911 74053 688
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg
+GF: J. Hawn, J. Guild, F. Imend=F6rffer, HRB 16746 (AG N=FCrnberg)
