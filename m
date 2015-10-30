@@ -1,102 +1,45 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v2] backlight: pm8941-wled: Add default-brightness
- property
-Date: Fri, 30 Oct 2015 18:49:03 +0000
-Message-ID: <20151030184903.GK4058@x1>
-References: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
+Date: Fri, 30 Oct 2015 13:53:24 -0500
+Message-ID: <5633BCA4.1050400@codeaurora.org>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-2-git-send-email-fu.wei@linaro.org>
+ <20151027162257.GJ3091@leverpostej>
+ <CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug@mail.gmail.com>
+ <CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
+ <CADyBb7sPqsoQdYBUpHY2HvZ+iT7ABa9NoCX7Jax1NKugYOy1zQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445881508-18025-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADyBb7sPqsoQdYBUpHY2HvZ+iT7ABa9NoCX7Jax1NKugYOy1zQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Oct 2015, Bjorn Andersson wrote:
+On 10/30/2015 01:35 PM, Fu Wei wrote:
+>> I think maybe Mark was asking why WS1 is optional, not the WS1
+> My answer is for "why WS1 is optional"!
+>
+>> >interrupt.  Maybe you can reword the documentation to make is clear
+>> >that
+> I didn't say : "only the*interrupt*  for WS1 is optional."
 
-> Default the brightness to 2048 and add possibility to override this i=
-n
-> device tree.
->=20
-> Suggested-by: Rob Clark <robdclark@gmail.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->=20
-> Resend of v2, with updated backlight dt binding location.
->=20
->  Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt | 2=
- ++
+WS1 itself is not optional.  The spec says that WS0 and WS1 are separate 
+events, and doesn't saying anything about either being optional.  The 
+*interrupt* for WS1, however, is optional.
 
-In future please submit documentation as a separate patch.
+Besides, what does the driver do with the WS1 interrupt?  If it's 
+specified in the device tree, it appears to be ignored by the driver. 
+And the ACPI table only allows for specifying ONE interrupt.  So how 
+would the driver register a handler for WS1 on an ACPI system?
 
->  drivers/video/backlight/pm8941-wled.c                            | 8=
- ++++++++
->  2 files changed, 10 insertions(+)
-
-Applied with Rob's Ack.
-
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-=
-wled.txt b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled=
-=2Etxt
-> index 424f8444a6cd..e5b294dafc58 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.tx=
-t
-> +++ b/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.tx=
-t
-> @@ -5,6 +5,8 @@ Required properties:
->  - reg: slave address
-> =20
->  Optional properties:
-> +- default-brightness: brightness value on boot, value from: 0-4095
-> +	default: 2048
->  - label: The name of the backlight device
->  - qcom,cs-out: bool; enable current sink output
->  - qcom,cabc: bool; enable content adaptive backlight control
-> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/ba=
-cklight/pm8941-wled.c
-> index c704c3236034..e1298147bcbb 100644
-> --- a/drivers/video/backlight/pm8941-wled.c
-> +++ b/drivers/video/backlight/pm8941-wled.c
-> @@ -17,6 +17,9 @@
->  #include <linux/of_device.h>
->  #include <linux/regmap.h>
-> =20
-> +/* From DT binding */
-> +#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
-> +
->  #define PM8941_WLED_REG_VAL_BASE		0x40
->  #define  PM8941_WLED_REG_VAL_MAX		0xFFF
-> =20
-> @@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_devi=
-ce *pdev)
->  	struct backlight_device *bl;
->  	struct pm8941_wled *wled;
->  	struct regmap *regmap;
-> +	u32 val;
->  	int rc;
-> =20
->  	regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> @@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_dev=
-ice *pdev)
->  	if (rc)
->  		return rc;
-> =20
-> +	val =3D PM8941_WLED_DEFAULT_BRIGHTNESS;
-> +	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val)=
-;
-> +
->  	memset(&props, 0, sizeof(struct backlight_properties));
->  	props.type =3D BACKLIGHT_RAW;
-> +	props.brightness =3D val;
->  	props.max_brightness =3D PM8941_WLED_REG_VAL_MAX;
->  	bl =3D devm_backlight_device_register(&pdev->dev, wled->name,
->  					    &pdev->dev, wled,
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
