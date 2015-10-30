@@ -1,82 +1,327 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/6] Documentation: tps65086: Add DT bindings for the TPS65086 PMIC
-Date: Fri, 30 Oct 2015 17:41:39 -0500
-Message-ID: <1446244904-29315-2-git-send-email-afd@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v2 5/6] regulator: tps65086: Add regulator driver for the TPS65086 PMIC
+Date: Fri, 30 Oct 2015 17:41:43 -0500
+Message-ID: <1446244904-29315-6-git-send-email-afd@ti.com>
 References: <1446244904-29315-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446244904-29315-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446244904-29315-1-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The TPS65086 PMIC contains several regulators and a GPO controller.
-Add bindings for the TPS65086 PMIC.
+Add support for TPS65086 PMIC regulators.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+The regulators set consists of 3 Step-down Controllers, 3 Step-down
+Converters, 3 LDOs, 3 Load Switches, and a Sink and Source LDO. The
+output voltages are configurable and are meant to supply power to a
+SoC and/or other components.
+
+Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- Documentation/devicetree/bindings/mfd/tps65086.txt | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
+ drivers/regulator/Kconfig              |   7 +
+ drivers/regulator/Makefile             |   1 +
+ drivers/regulator/tps65086-regulator.c | 260 +++++++++++++++++++++++++++++++++
+ 3 files changed, 268 insertions(+)
+ create mode 100644 drivers/regulator/tps65086-regulator.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 64bccff..24237cf 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -680,6 +680,13 @@ config REGULATOR_TPS6507X
+ 	  three step-down converters and two general-purpose LDO voltage regulators.
+ 	  It supports TI's software based Class-2 SmartReflex implementation.
+ 
++config REGULATOR_TPS65086
++	tristate "TI TPS65086 Power regulators"
++	depends on MFD_TPS65086
++	help
++	  This driver provides support for the voltage regulators on
++	  TI TPS65086 PMICs.
++
+ config REGULATOR_TPS65090
+ 	tristate "TI TPS65090 Power regulator"
+ 	depends on MFD_TPS65090
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 0f81749..945d8ec 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -85,6 +85,7 @@ obj-$(CONFIG_REGULATOR_TPS6105X) += tps6105x-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS62360) += tps62360-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65023) += tps65023-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS6507X) += tps6507x-regulator.o
++obj-$(CONFIG_REGULATOR_TPS65086) += tps65086-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65090) += tps65090-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65217) += tps65217-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65218) += tps65218-regulator.o
+diff --git a/drivers/regulator/tps65086-regulator.c b/drivers/regulator/tps65086-regulator.c
 new file mode 100644
-index 0000000..2fd5394
+index 0000000..f6d34c1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
-@@ -0,0 +1,46 @@
-+* TPS65086 Power Management Integrated Circuit bindings
++++ b/drivers/regulator/tps65086-regulator.c
+@@ -0,0 +1,260 @@
++/*
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Author: Andrew F. Davis <afd@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether expressed or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License version 2 for more details.
++ *
++ * Based on the TPS65912 driver
++ */
 +
-+Required properties:
-+ - compatible		: Should be "ti,tps65086".
-+ - reg			: I2C slave address.
-+ - interrupt-parent	: Phandle to he parent interrupt controller.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: Marks the device node as an interrupt controller.
-+ - #interrupt-cells	: The number of cells to describe an IRQ, this
-+			    should be 2. The first cell is the IRQ number,
-+			    the second cell is the flags, encoded as the trigger
-+			    masks from <dt-bindings/interrupt-controller/irq.h>.
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
 +
-+Additional nodes defined in:
-+ - Regulators	: ../regulator/tps65086-regulator.txt
-+ - GPIO		: ../gpio/gpio-tps65086.txt
++#include <linux/mfd/tps65086.h>
 +
-+Example:
++enum tps65086_regulators { BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, LDOA1,
++	LDOA2, LDOA3, SWA1, SWB1, SWB2, VTT };
 +
-+	pmic: tps65086@5e {
-+		compatible = "ti,tps65086";
-+		reg = <0x5e>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++#define TPS65086_REGULATOR(_name, _id, _nv, _vr, _vm, _er, _em, _lr, _dr, _dm)\
++	[_id] = {							\
++		.desc = {						\
++			.name			= _name,		\
++			.id			= _id,			\
++			.ops			= &reg_ops,		\
++			.n_voltages		= _nv,			\
++			.type			= REGULATOR_VOLTAGE,	\
++			.owner			= THIS_MODULE,		\
++			.vsel_reg		= _vr,			\
++			.vsel_mask		= _vm,			\
++			.enable_reg		= _er,			\
++			.enable_mask		= _em,			\
++			.volt_table		= NULL,			\
++			.linear_ranges		= _lr,			\
++			.n_linear_ranges	= ARRAY_SIZE(_lr),	\
++		},							\
++		.decay_reg = _dr,					\
++		.decay_mask = _dm,					\
++	}
 +
-+		regulators {
-+			compatible = "ti,tps65086-regulator";
++#define TPS65086_SWITCH(_name, _id, _er, _em)				\
++	[_id] = {							\
++		.desc = {						\
++			.name			= _name,		\
++			.id			= _id,			\
++			.ops			= &switch_ops,		\
++			.type			= REGULATOR_VOLTAGE,	\
++			.owner			= THIS_MODULE,		\
++			.enable_reg		= _er,			\
++			.enable_mask		= _em,			\
++		},							\
++	}
 +
-+			buck1 {
-+				regulator-name = "vcc1";
-+				regulator-min-microvolt = <1600000>;
-+				regulator-max-microvolt = <1600000>;
-+				regulator-boot-on;
-+				ti,regulator-decay;
-+				ti,regulator-step-size-25mv;
-+			};
-+		};
++struct tps65086_regulator {
++	struct regulator_desc desc;
++	unsigned int decay_reg;
++	unsigned int decay_mask;
++};
 +
-+		gpio4: gpio {
-+			compatible = "ti,tps65086-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+	};
++static const struct regulator_linear_range tps65086_buck126_10mv_ranges[] = {
++	REGULATOR_LINEAR_RANGE(0, 0x0, 0x0, 0),
++	REGULATOR_LINEAR_RANGE(410000, 0x1, 0x7F, 10000),
++};
++
++static const struct regulator_linear_range tps65086_buck126_25mv_ranges[] = {
++	REGULATOR_LINEAR_RANGE(0, 0x0, 0x0, 0),
++	REGULATOR_LINEAR_RANGE(1000000, 0x1, 0x18, 0),
++	REGULATOR_LINEAR_RANGE(1025000, 0x19, 0x7F, 25000),
++};
++
++static const struct regulator_linear_range tps65086_buck345_ranges[] = {
++	REGULATOR_LINEAR_RANGE(0, 0x0, 0x0, 0),
++	REGULATOR_LINEAR_RANGE(425000, 0x1, 0x7F, 25000),
++};
++
++static const struct regulator_linear_range tps65086_ldoa1_ranges[] = {
++	REGULATOR_LINEAR_RANGE(1350000, 0x0, 0x0, 0),
++	REGULATOR_LINEAR_RANGE(1500000, 0x1, 0x7, 100000),
++	REGULATOR_LINEAR_RANGE(2300000, 0x8, 0xA, 100000),
++	REGULATOR_LINEAR_RANGE(2700000, 0xB, 0xD, 150000),
++	REGULATOR_LINEAR_RANGE(3300000, 0xE, 0xE, 0),
++};
++
++static const struct regulator_linear_range tps65086_ldoa23_ranges[] = {
++	REGULATOR_LINEAR_RANGE(700000, 0x0, 0xD, 50000),
++	REGULATOR_LINEAR_RANGE(1400000, 0xE, 0xF, 100000),
++};
++
++/* Operations permitted on regulators */
++static struct regulator_ops reg_ops = {
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= regulator_is_enabled_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.map_voltage		= regulator_map_voltage_linear_range,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.list_voltage		= regulator_list_voltage_linear_range,
++};
++
++/* Operations permitted on load switches */
++static struct regulator_ops switch_ops = {
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= regulator_is_enabled_regmap,
++};
++
++static struct tps65086_regulator regulators[] = {
++	TPS65086_REGULATOR("BUCK1", BUCK1, 0x80, TPS65086_BUCK1CTRL,
++			   BUCK_VID_MASK, TPS65086_BUCK123CTRL, BIT(0),
++			   tps65086_buck126_10mv_ranges, TPS65086_BUCK1CTRL,
++			   BIT(0)),
++	TPS65086_REGULATOR("BUCK2", BUCK2, 0x80, TPS65086_BUCK2CTRL,
++			   BUCK_VID_MASK, TPS65086_BUCK123CTRL, BIT(1),
++			   tps65086_buck126_10mv_ranges, TPS65086_BUCK2CTRL,
++			   BIT(0)),
++	TPS65086_REGULATOR("BUCK3", BUCK3, 0x80, TPS65086_BUCK3VID,
++			   BUCK_VID_MASK, TPS65086_BUCK123CTRL, BIT(2),
++			   tps65086_buck345_ranges, TPS65086_BUCK3DECAY,
++			   BIT(0)),
++	TPS65086_REGULATOR("BUCK4", BUCK4, 0x80, TPS65086_BUCK4VID,
++			   BUCK_VID_MASK, TPS65086_BUCK4CTRL, BIT(0),
++			   tps65086_buck345_ranges, TPS65086_BUCK4VID,
++			   BIT(0)),
++	TPS65086_REGULATOR("BUCK5", BUCK5, 0x80, TPS65086_BUCK5VID,
++			   BUCK_VID_MASK, TPS65086_BUCK5CTRL, BIT(0),
++			   tps65086_buck345_ranges, TPS65086_BUCK5CTRL,
++			   BIT(0)),
++	TPS65086_REGULATOR("BUCK6", BUCK6, 0x80, TPS65086_BUCK6VID,
++			   BUCK_VID_MASK, TPS65086_BUCK6CTRL, BIT(0),
++			   tps65086_buck126_10mv_ranges, TPS65086_BUCK6CTRL,
++			   BIT(0)),
++	TPS65086_REGULATOR("LDOA1", LDOA1, 0xF, TPS65086_LDOA1CTRL,
++			   VDOA1_VID_MASK, TPS65086_LDOA1CTRL, BIT(0),
++			   tps65086_ldoa1_ranges, 0, 0),
++	TPS65086_REGULATOR("LDOA2", LDOA2, 0x10, TPS65086_LDOA2VID,
++			   VDOA23_VID_MASK, TPS65086_LDOA2CTRL, BIT(0),
++			   tps65086_ldoa23_ranges, 0, 0),
++	TPS65086_REGULATOR("LDOA3", LDOA3, 0x10, TPS65086_LDOA3VID,
++			   VDOA23_VID_MASK, TPS65086_LDOA3CTRL, BIT(0),
++			   tps65086_ldoa23_ranges, 0, 0),
++	TPS65086_SWITCH("SWA1", SWA1, TPS65086_SWVTT_EN, BIT(5)),
++	TPS65086_SWITCH("SWB1", SWB1, TPS65086_SWVTT_EN, BIT(6)),
++	TPS65086_SWITCH("SWB2", SWB2, TPS65086_SWVTT_EN, BIT(7)),
++	TPS65086_SWITCH("VTT", VTT, TPS65086_SWVTT_EN, BIT(4)),
++};
++
++static struct of_regulator_match tps65086_matches[] = {
++	{ .name = "buck1", .driver_data = &regulators[BUCK1], },
++	{ .name = "buck2", .driver_data = &regulators[BUCK2], },
++	{ .name = "buck3", .driver_data = &regulators[BUCK3], },
++	{ .name = "buck4", .driver_data = &regulators[BUCK4], },
++	{ .name = "buck5", .driver_data = &regulators[BUCK5], },
++	{ .name = "buck6", .driver_data = &regulators[BUCK6], },
++	{ .name = "ldoa1", .driver_data = &regulators[LDOA1], },
++	{ .name = "ldoa2", .driver_data = &regulators[LDOA2], },
++	{ .name = "ldoa3", .driver_data = &regulators[LDOA3], },
++	{ .name = "swa1", .driver_data = &regulators[SWA1], },
++	{ .name = "swb1", .driver_data = &regulators[SWB1], },
++	{ .name = "swb2", .driver_data = &regulators[SWB2], },
++	{ .name = "vtt", .driver_data = &regulators[VTT], },
++};
++
++static inline bool has_25mv_mode(int id)
++{
++	switch (id) {
++	case BUCK1:
++	case BUCK2:
++	case BUCK6:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static int tps65086_regulator_probe(struct platform_device *pdev)
++{
++	struct tps65086 *tps = dev_get_drvdata(pdev->dev.parent);
++	struct regulator_config config = { };
++	struct regulator_dev *rdev;
++	struct tps65086_regulator *regulator;
++
++	int i, ret;
++
++	platform_set_drvdata(pdev, tps);
++
++	config.dev = &pdev->dev;
++	config.driver_data = tps;
++	config.regmap = tps->regmap;
++
++	ret = of_regulator_match(&pdev->dev, pdev->dev.of_node,
++				 tps65086_matches,
++				 ARRAY_SIZE(tps65086_matches));
++	if (ret < 0) {
++		dev_err(tps->dev, "Error parsing regulator init data\n");
++		return ret;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(tps65086_matches); i++) {
++		config.init_data = tps65086_matches[i].init_data;
++		config.of_node = tps65086_matches[i].of_node;
++		regulator = tps65086_matches[i].driver_data;
++
++		/* Check for 25mV step mode */
++		if (has_25mv_mode(regulator->desc.id) &&
++				of_property_read_bool(config.of_node, "ti,regulator-step-size-25mv")) {
++			regulator->desc.linear_ranges = tps65086_buck126_25mv_ranges;
++			regulator->desc.n_linear_ranges = ARRAY_SIZE(tps65086_buck126_25mv_ranges);
++		}
++
++		/* Check for decay mode */
++		if (i <= BUCK6 && of_property_read_bool(config.of_node, "ti,regulator-decay")) {
++			ret = regmap_write_bits(tps->regmap,
++						regulator->decay_reg,
++						regulator->decay_mask,
++						regulator->decay_mask);
++			if (ret < 0) {
++				dev_err(tps->dev, "Error setting decay\n");
++				return ret;
++			}
++		}
++
++		rdev = devm_regulator_register(&pdev->dev, &regulator->desc,
++					       &config);
++		if (IS_ERR(rdev)) {
++			dev_err(tps->dev, "failed to register %s regulator\n",
++				pdev->name);
++			return PTR_ERR(rdev);
++		}
++	}
++
++	return 0;
++}
++
++static const struct platform_device_id tps65086_regulator_id_table[] = {
++	{ "tps65912-regulator", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(platform, tps65086_regulator_id_table);
++
++static struct platform_driver tps65086_regulator_driver = {
++	.driver = {
++		.name = "tps65086-regulator",
++	},
++	.probe = tps65086_regulator_probe,
++	.id_table = tps65086_regulator_id_table,
++};
++module_platform_driver(tps65086_regulator_driver);
++
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("TPS65086 Regulator driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
