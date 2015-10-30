@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v2 6/6] gpio: tps65086: Add GPIO driver for the TPS65086 PMIC
-Date: Fri, 30 Oct 2015 17:41:44 -0500
-Message-ID: <1446244904-29315-7-git-send-email-afd@ti.com>
+Subject: [PATCH v2 4/6] mfd: tps65086: Add driver for the TPS65086 PMIC
+Date: Fri, 30 Oct 2015 17:41:42 -0500
+Message-ID: <1446244904-29315-5-git-send-email-afd@ti.com>
 References: <1446244904-29315-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,54 +12,66 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the TPS65086 PMIC GPOs.
+Add support for the TPS65912 device. It provides communication
+through I2C and contains the following components:
 
-TPS65086 has four configurable GPOs that can be used for several
-purposes.
+ - Regulators
+ - Load switches
+ - GPO controller
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- drivers/gpio/Kconfig         |   6 +++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-tps65086.c | 115 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 122 insertions(+)
- create mode 100644 drivers/gpio/gpio-tps65086.c
+ drivers/mfd/Kconfig          |  14 ++++
+ drivers/mfd/Makefile         |   1 +
+ drivers/mfd/tps65086.c       | 157 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/tps65086.h | 120 +++++++++++++++++++++++++++++++++
+ 4 files changed, 292 insertions(+)
+ create mode 100644 drivers/mfd/tps65086.c
+ create mode 100644 include/linux/mfd/tps65086.h
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b4fc9e4..ccb7e0d 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -824,6 +824,12 @@ config GPIO_TIMBERDALE
- 	---help---
- 	Add support for the GPIO IP in the timberdale FPGA.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 99d6367..b46ee3b9 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1093,6 +1093,20 @@ config TPS6507X
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called tps6507x.
  
-+config GPIO_TPS65086
-+	tristate "TI TPS65086 GPO"
-+	depends on MFD_TPS65086
++config MFD_TPS65086
++	tristate "TI TPS65086 Power Management Integrated Chips (PMICs)"
++	select REGMAP
++	select REGMAP_IRQ
++	select REGMAP_I2C
++	depends on I2C
++	depends on OF || COMPILE_TEST
 +	help
-+	  This driver supports the GPO on TI TPS65086x PMICs.
++	  If you say yes here you get support for the TPS65086 series of
++	  Power Management chips.
++	  This driver provides common support for accessing the device,
++	  additional drivers must be enabled in order to use the
++	  functionality of the device.
 +
- config GPIO_TPS6586X
- 	bool "TPS6586X GPIO"
- 	depends on MFD_TPS6586X
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index f79a7c4..2611c7e 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -94,6 +94,7 @@ obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
- obj-$(CONFIG_ARCH_TEGRA)	+= gpio-tegra.o
- obj-$(CONFIG_GPIO_TIMBERDALE)	+= gpio-timberdale.o
- obj-$(CONFIG_GPIO_PALMAS)	+= gpio-palmas.o
-+obj-$(CONFIG_GPIO_TPS65086)	+= gpio-tps65086.o
- obj-$(CONFIG_GPIO_TPS6586X)	+= gpio-tps6586x.o
- obj-$(CONFIG_GPIO_TPS65910)	+= gpio-tps65910.o
- obj-$(CONFIG_GPIO_TPS65912)	+= gpio-tps65912.o
-diff --git a/drivers/gpio/gpio-tps65086.c b/drivers/gpio/gpio-tps65086.c
+ config TPS65911_COMPARATOR
+ 	tristate
+ 
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index a59e3fc..7adb902 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_MFD_WM8994)	+= wm8994-core.o wm8994-irq.o wm8994-regmap.o
+ obj-$(CONFIG_TPS6105X)		+= tps6105x.o
+ obj-$(CONFIG_TPS65010)		+= tps65010.o
+ obj-$(CONFIG_TPS6507X)		+= tps6507x.o
++obj-$(CONFIG_MFD_TPS65086)	+= tps65086.o
+ obj-$(CONFIG_MFD_TPS65217)	+= tps65217.o
+ obj-$(CONFIG_MFD_TPS65218)	+= tps65218.o
+ obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
+diff --git a/drivers/mfd/tps65086.c b/drivers/mfd/tps65086.c
 new file mode 100644
-index 0000000..ef7a418
+index 0000000..d6f8bb8
 --- /dev/null
-+++ b/drivers/gpio/gpio-tps65086.c
-@@ -0,0 +1,115 @@
++++ b/drivers/mfd/tps65086.c
+@@ -0,0 +1,157 @@
 +/*
 + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
 + *
@@ -77,103 +89,271 @@ index 0000000..ef7a418
 + * Based on the TPS65912 driver
 + */
 +
-+#include <linux/gpio.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/core.h>
 +#include <linux/module.h>
 +#include <linux/of_device.h>
-+#include <linux/platform_device.h>
 +
 +#include <linux/mfd/tps65086.h>
 +
-+struct tps65086_gpio {
-+	struct gpio_chip gpio_chip;
++static const struct mfd_cell tps65086_cells[] = {
++	{
++		.name = "tps65086-regulator",
++		.of_compatible = "ti,tps65086-regulator",
++	},
++	{
++		.name = "tps65912-gpio",
++		.of_compatible = "ti,tps65086-gpio",
++	},
++};
++
++static const struct regmap_range tps65086_yes_ranges[] = {
++	regmap_reg_range(TPS65086_IRQ, TPS65086_IRQ),
++	regmap_reg_range(TPS65086_PMICSTAT, TPS65086_SHUTDNSRC),
++	regmap_reg_range(TPS65086_GPOCTRL, TPS65086_GPOCTRL),
++	regmap_reg_range(TPS65086_PG_STATUS1, TPS65086_OC_STATUS),
++};
++
++static const struct regmap_access_table tps65086_volatile_table = {
++	.yes_ranges = tps65086_yes_ranges,
++	.n_yes_ranges = ARRAY_SIZE(tps65086_yes_ranges),
++};
++
++static const struct regmap_config tps65086_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.cache_type = REGCACHE_RBTREE,
++	.volatile_table = &tps65086_volatile_table,
++};
++
++static const struct regmap_irq tps65086_irqs[] = {
++	REGMAP_IRQ_REG(TPS65086_IRQ_DIETEMP, 0, TPS65086_IRQ_DIETEMP_MASK),
++	REGMAP_IRQ_REG(TPS65086_IRQ_SHUTDN, 0, TPS65086_IRQ_SHUTDN_MASK),
++	REGMAP_IRQ_REG(TPS65086_IRQ_FAULT, 0, TPS65086_IRQ_FAULT_MASK),
++};
++
++static struct regmap_irq_chip tps65086_irq_chip = {
++	.name = "tps65086",
++	.status_base = TPS65086_IRQ,
++	.mask_base = TPS65086_IRQ_MASK,
++	.ack_base = TPS65086_IRQ,
++	.init_ack_masked = true,
++	.num_regs = 1,
++	.irqs = tps65086_irqs,
++	.num_irqs = ARRAY_SIZE(tps65086_irqs),
++};
++
++static const struct of_device_id tps65086_of_match_table[] = {
++	{ .compatible = "ti,tps65086", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, tps65086_of_match_table);
++
++static int tps65086_probe(struct i2c_client *client,
++			  const struct i2c_device_id *ids)
++{
 +	struct tps65086 *tps;
-+};
-+
-+static inline struct tps65086_gpio *to_tps65086_gpio(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct tps65086_gpio, gpio_chip);
-+}
-+
-+static int tps65086_gpio_get(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct tps65086_gpio *gpio = to_tps65086_gpio(gc);
-+	int ret, val;
-+
-+	ret = regmap_read(gpio->tps->regmap, TPS65086_GPOCTRL, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return val & BIT(4 + offset);
-+}
-+
-+static void tps65086_gpio_set(struct gpio_chip *gc, unsigned offset,
-+			      int value)
-+{
-+	struct tps65086_gpio *gpio = to_tps65086_gpio(gc);
-+
-+	regmap_update_bits(gpio->tps->regmap, TPS65086_GPOCTRL,
-+			   BIT(4 + offset), value ? BIT(4 + offset) : 0);
-+}
-+
-+static struct gpio_chip template_chip = {
-+	.label			= "tps65086-gpio",
-+	.owner			= THIS_MODULE,
-+	.get			= tps65086_gpio_get,
-+	.set			= tps65086_gpio_set,
-+	.can_sleep		= true,
-+	.ngpio			= 4,
-+	.base			= -1,
-+};
-+
-+static int tps65086_gpio_probe(struct platform_device *pdev)
-+{
-+	struct tps65086_gpio *gpio;
++	unsigned int version;
 +	int ret;
 +
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
++	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
++	if (!tps)
 +		return -ENOMEM;
 +
-+	gpio->tps = dev_get_drvdata(pdev->dev.parent);
-+	gpio->gpio_chip = template_chip;
-+	ret = gpiochip_add(&gpio->gpio_chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++	i2c_set_clientdata(client, tps);
++	tps->dev = &client->dev;
++	tps->irq = client->irq;
++
++	tps->regmap = devm_regmap_init_i2c(client, &tps65086_regmap_config);
++	if (IS_ERR(tps->regmap)) {
++		dev_err(tps->dev, "Failed to initialize register map\n");
++		return PTR_ERR(tps->regmap);
++	}
++
++	ret = regmap_read(tps->regmap, TPS65086_DEVICEID, &version);
++	if (ret) {
++		dev_err(tps->dev, "Failed to read revision register\n");
 +		return ret;
 +	}
 +
-+	platform_set_drvdata(pdev, gpio);
++	dev_info(tps->dev, "Device: TPS65086%01lX, OTP: %c, Rev: %ld\n",
++		 (version & TPS65086_DEVICEID_PART_MASK),
++		 (char)((version & TPS65086_DEVICEID_OTP_MASK) >> 4) + 'A',
++		 (version & TPS65086_DEVICEID_REV_MASK) >> 6);
++
++	ret = regmap_add_irq_chip(tps->regmap, tps->irq, IRQF_ONESHOT, 0,
++				  &tps65086_irq_chip, &tps->irq_data);
++	if (ret) {
++		dev_err(tps->dev, "Failed to register IRQ chip\n");
++		return ret;
++	}
++
++	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65086_cells,
++			      ARRAY_SIZE(tps65086_cells), NULL, 0,
++			      regmap_irq_get_domain(tps->irq_data));
++	if (ret) {
++		regmap_del_irq_chip(tps->irq, tps->irq_data);
++		return ret;
++	}
 +
 +	return 0;
 +}
 +
-+static int tps65086_gpio_remove(struct platform_device *pdev)
++static int tps65086_remove(struct i2c_client *client)
 +{
-+	struct tps65086_gpio *gpio = platform_get_drvdata(pdev);
++	struct tps65086 *tps = i2c_get_clientdata(client);
 +
-+	gpiochip_remove(&gpio->gpio_chip);
++	regmap_del_irq_chip(tps->irq, tps->irq_data);
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id tps65086_gpio_id_table[] = {
-+	{ "tps65912-regulator", },
++static const struct i2c_device_id tps65086_id_table[] = {
++	{ "tps65086", 0 },
 +	{ /* sentinel */ }
 +};
-+MODULE_DEVICE_TABLE(platform, tps65086_gpio_id_table);
++MODULE_DEVICE_TABLE(i2c, tps65086_id_table);
 +
-+static struct platform_driver tps65086_gpio_driver = {
-+	.driver = {
-+		.name = "tps65086-gpio",
++static struct i2c_driver tps65086_driver = {
++	.driver		= {
++		.name	= "tps65086",
++		.of_match_table = tps65086_of_match_table,
 +	},
-+	.probe = tps65086_gpio_probe,
-+	.remove = tps65086_gpio_remove,
-+	.id_table = tps65086_gpio_id_table,
++	.probe		= tps65086_probe,
++	.remove		= tps65086_remove,
++	.id_table       = tps65086_id_table,
 +};
-+module_platform_driver(tps65086_gpio_driver);
++module_i2c_driver(tps65086_driver);
 +
 +MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_DESCRIPTION("TPS65086 GPIO driver");
++MODULE_DESCRIPTION("TPS65086 PMIC Driver");
 +MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/tps65086.h b/include/linux/mfd/tps65086.h
+new file mode 100644
+index 0000000..2a9e9dd
+--- /dev/null
++++ b/include/linux/mfd/tps65086.h
+@@ -0,0 +1,120 @@
++/*
++ * TI TPS65086x
++ *
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Author: Andrew F. Davis <afd@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether expressed or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License version 2 for more details.
++ *
++ * Based on the TPS65912 driver
++ */
++
++#ifndef __LINUX_MFD_TPS65086_H
++#define __LINUX_MFD_TPS65086_H
++
++#include <linux/device.h>
++#include <linux/regmap.h>
++
++/* List of registers for TPS65086 */
++#define TPS65086_DEVICEID		0x01
++#define TPS65086_IRQ			0x02
++#define TPS65086_IRQ_MASK		0x03
++#define TPS65086_PMICSTAT		0x04
++#define TPS65086_SHUTDNSRC		0x05
++#define TPS65086_BUCK1CTRL		0x20
++#define TPS65086_BUCK2CTRL		0x21
++#define TPS65086_BUCK3DECAY		0x22
++#define TPS65086_BUCK3VID		0x23
++#define TPS65086_BUCK3SLPCTRL		0x24
++#define TPS65086_BUCK4CTRL		0x25
++#define TPS65086_BUCK5CTRL		0x26
++#define TPS65086_BUCK6CTRL		0x27
++#define TPS65086_LDOA2CTRL		0x28
++#define TPS65086_LDOA3CTRL		0x29
++#define TPS65086_DISCHCTRL1		0x40
++#define TPS65086_DISCHCTRL2		0x41
++#define TPS65086_DISCHCTRL3		0x42
++#define TPS65086_PG_DELAY1		0x43
++#define TPS65086_FORCESHUTDN		0x91
++#define TPS65086_BUCK1SLPCTRL		0x92
++#define TPS65086_BUCK2SLPCTRL		0x93
++#define TPS65086_BUCK4VID		0x94
++#define TPS65086_BUCK4SLPVID		0x95
++#define TPS65086_BUCK5VID		0x96
++#define TPS65086_BUCK5SLPVID		0x97
++#define TPS65086_BUCK6VID		0x98
++#define TPS65086_BUCK6SLPVID		0x99
++#define TPS65086_LDOA2VID		0x9A
++#define TPS65086_LDOA3VID		0x9B
++#define TPS65086_BUCK123CTRL		0x9C
++#define TPS65086_PG_DELAY2		0x9D
++#define TPS65086_PIN_EN_MASK1		0x9E
++#define TPS65086_PIN_EN_MASK2		0x9F
++#define TPS65086_SWVTT_EN		0x9F
++#define TPS65086_PIN_EN_OVR1		0xA0
++#define TPS65086_PIN_EN_OVR2		0xA1
++#define TPS65086_GPOCTRL		0xA1
++#define TPS65086_PWR_FAULT_MASK1	0xA2
++#define TPS65086_PWR_FAULT_MASK2	0xA3
++#define TPS65086_GPO1PG_CTRL1		0xA4
++#define TPS65086_GPO1PG_CTRL2		0xA5
++#define TPS65086_GPO4PG_CTRL1		0xA6
++#define TPS65086_GPO4PG_CTRL2		0xA7
++#define TPS65086_GPO2PG_CTRL1		0xA8
++#define TPS65086_GPO2PG_CTRL2		0xA9
++#define TPS65086_GPO3PG_CTRL1		0xAA
++#define TPS65086_GPO3PG_CTRL2		0xAB
++#define TPS65086_LDOA1CTRL		0xAE
++#define TPS65086_PG_STATUS1		0xB0
++#define TPS65086_PG_STATUS2		0xB1
++#define TPS65086_PWR_FAULT_STATUS1	0xB2
++#define TPS65086_PWR_FAULT_STATUS2	0xB3
++#define TPS65086_TEMPCRIT		0xB4
++#define TPS65086_TEMPHOT		0xB5
++#define TPS65086_OC_STATUS		0xB6
++
++/* IRQ Register field definitions */
++#define TPS65086_IRQ_DIETEMP_MASK	BIT(0)
++#define TPS65086_IRQ_SHUTDN_MASK	BIT(3)
++#define TPS65086_IRQ_FAULT_MASK		BIT(7)
++
++/* DEVICEID Register field definitions */
++#define TPS65086_DEVICEID_PART_MASK	GENMASK(3, 0)
++#define TPS65086_DEVICEID_OTP_MASK	GENMASK(5, 4)
++#define TPS65086_DEVICEID_REV_MASK	GENMASK(7, 6)
++
++/* VID Masks */
++#define BUCK_VID_MASK			GENMASK(7, 1)
++#define VDOA1_VID_MASK			GENMASK(4, 1)
++#define VDOA23_VID_MASK			GENMASK(3, 0)
++
++/* Define the TPS65086 IRQ numbers */
++enum tps65086_irqs {
++	TPS65086_IRQ_DIETEMP,
++	TPS65086_IRQ_SHUTDN,
++	TPS65086_IRQ_FAULT,
++};
++
++/*
++ * struct tps65086 - state holder for the tps65086 driver
++ *
++ * Device data may be used to access the TPS65086 chip
++ */
++struct tps65086 {
++	struct device *dev;
++	struct regmap *regmap;
++
++	/* IRQ Data */
++	int irq;
++	struct regmap_irq_chip_data *irq_data;
++};
++
++#endif /*  __LINUX_MFD_TPS65086_H */
 -- 
 1.9.1
