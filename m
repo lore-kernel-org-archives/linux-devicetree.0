@@ -1,141 +1,133 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4] EDAC: Add ARM64 EDAC
-Date: Fri, 30 Oct 2015 17:06:06 +0000
-Message-ID: <20151030170605.GI31073@leverpostej>
-References: <1446048829-3359-1-git-send-email-brijeshkumar.singh@amd.com>
- <20151028164053.GG25451@leverpostej>
- <56339A52.8060701@amd.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/5] Documentation: tps65912: Add DT bindings for the
+ TPS65912 PMIC
+Date: Fri, 30 Oct 2015 17:10:06 +0000
+Message-ID: <20151030171006.GZ4058@x1>
+References: <1446161922-8755-1-git-send-email-afd@ti.com>
+ <1446161922-8755-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56339A52.8060701@amd.com>
+In-Reply-To: <1446161922-8755-2-git-send-email-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, devicetree@vger.kernel.org, guohanjun@huawei.com, andre.przywara@arm.com, arnd@arndb.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 11:26:58AM -0500, Brijesh Singh wrote:
-> Hi Mark,
-> 
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "arm,cortex-a57-edac" or "arm,cortex-a53-edac"
-> >> +
-> >> +Example:
-> >> +	edac {
-> >> +		compatible = "arm,cortex-a57-edac";
-> >> +	};
-> >> +
-> > 
-> > This is insufficient for big.LITTLE, no interrupt is possible, and we
-> > haven't defined the rules for accessing the registers (e.g. whether
-> > write backs are permitted).
-> > 
-> > Please see my prior comments [1] on those points.
-> > 
-> > If we're going to use this feature directly within the kernel, we need
-> > to consider the envelope of possible implementations rather than your
-> > use-case alone.
-> >
-> 
-> I have looked at possibility of pushing correctable error logging in the
-> firmware; but given current hardware limitation it seems like OS is the best
-> place to implement it. Let me summaries the issues we are running into:
-> 
-> * Correctable errors does not generate any interrupt:
->   If we have to implement error parsing inside the firmware then work need
->   to be split between OS and firmware. Maybe OS can call SMC instruction to 
->   dial into firmware and then firmware can check error syndrome registers; 
->   if it finds correctable error then build HEST table. This method will introduce
->   performance issue because it require OS executing SMC every 100ms or so to just
->   poll for correctable error. If you have any other recommendation then please share it.
+On Thu, 29 Oct 2015, Andrew F. Davis wrote:
 
-I agree that this is a problem, and is an unfortunate hardware
-limitation.
+> The TPS65912 PMIC contains several regulators and a GPIO controller.
+> Add bindings for the TPS65912 PMIC.
+>=20
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
 
-I am still wary of making use of IMPLEMENTATION DEFINED features like
-this in the kernel.
+Why have you dropped Linus' Review-by?
 
-> > * Interaction with firmware
-> > - When/do we handle interrupts?
-> 
-> We can a properties in dt bindings:
-> 
-> 1) "num-interrupts = 1" - number of interrupt count. One interrupts per cluster
->     e.g if you have 4 cluster then num-interrupts=4.
-> 2) interrupts = <0, 92, 0> <0, 94, 0> <0, 96, 0> <0, 98, 0>  // interrupt mapping
-> 
-> If num-interrupts = 0, then firmware handles interrupts. Optionally we can use HEST FIRMWARE-FIRST
-> bit, if bit is set then firmware is handling the interrupt otherwise use DT information.
+>  Documentation/devicetree/bindings/mfd/tps65912.txt | 51 ++++++++++++=
+++++++++++
+>  .../bindings/regulator/tps65912-regulator.txt      | 28 ++++++++++++
+>  3 files changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65=
+912.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.tx=
+t
+>  create mode 100644 Documentation/devicetree/bindings/regulator/tps65=
+912-regulator.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt=
+ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+> new file mode 100644
+> index 0000000..0c5c05c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+> @@ -0,0 +1,16 @@
+> +* TPS65912 GPIO Controller bindings
+> +
+> +Required properties:
+> + - compatible : Should be "ti,tps65912-gpio".
+> + - gpio-controller : Marks the device node as a GPIO Controller.
+> + - #gpio-cells : Should be two.  The first cell is the pin number an=
+d
 
-You won't have the HEST and DT information at the same time, given that
-at runtime the kernel uses one of ACPI or DT.
+You should add a (See: ../gpio/gpio.txt) here I think.
 
-This also doesn't define the affinity of interrupts (i.e. which
-cluster/CPU does each interrupt get generated by), which is the more
-important part.
+> +     the second cell is used to specify flags.
+> +     See include/dt-bindings/gpio/gpio.h for possible values.
 
-> >  - When is it valid to write back and clear an error? We should not do
-> >    this behind the back of any firmware that owns the interface.
-> 
-> As per A57 TRM is concerned you are right both the correctable and uncorrectable 
-> error needs to clear VALID bit in L1/L2 syndrome registers. So yes we need to define
-> a rule for accessing the registers. I can think of two possible approach here:
-> 
-> 1) add "error-syndrome-reg-write-access=1" property in dt.
->    * if '1' then OS has exclusive write backs access to error syndrome register
->    * if '0' then OS will not clear the valid bit on fatal error
+This is a Linuxisum and shouldn't really live in here.
 
-What about correctable errors? What if someone wants to poll that in FW
-(no matter how horrible that may be for performance)? What if a future
-CPU revision adds an optional interrupt for that?
+I think it would be better to document them in ../gpio/gpio.txt and
+reference that instead.
 
->   The handler looks like this:
-> 
->   parse_error_syndrome () {
->    val = read_cpumerrsr
-> 
->    if (!IS_VALID(val))
->      return
-> 
->    /* log the error details */
-> 
->    /* if fatal error and OS does not have exclusive write back access */
->    if (IS_FATAL(val) && !error-syndrom-reg-write-access)
->      return; 
-> 
->    val = ~(1UL << 31); /* clear valid bit */
->   }
+> +Example:
+> +
+> +	gpio4: tps65912_gpio {
 
-Ok.
+Device names don't belong in node names.
 
-> 2) Use HEST FIRMWARE-FIRST bit field, if the bit is set then OS should not clear
->    the valid bit on fatal error and similarly if bit is clear then OS clears the VALID bit.
-> 
-> Since firmware will never handle the correctable error hence its always safe to clear
-> the VALID bit on non-fatal error. If you have any other suggestions then please share it.
+Just "gpio" will do.
 
-As above, I don't think this is true in general.
+> +		compatible =3D "ti,tps65912-gpio";
+> +		gpio-controller;
+> +		#gpio-cells =3D <2>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Doc=
+umentation/devicetree/bindings/mfd/tps65912.txt
+> new file mode 100644
+> index 0000000..da5804a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+> @@ -0,0 +1,51 @@
+> +* TPS65912 Power Management Integrated Circuit bindings
+> +
+> +Required properties:
+> + - compatible : Should be "ti,tps65912".
+> + - reg : Slave address or chip select number (I2C / SPI).
+> + - interrupt-parent : The parent interrupt controller.
+> + - interrupts : The interrupt line the device is connected to.
+> + - interrupt-controller : Marks the device node as an interrupt cont=
+roller.
+> + - #interrupt-cells: The number of cells to describe an IRQ, this sh=
+ould be 2.
+> +     The first cell is the IRQ number.
+> +     The second cell is the flags, encoded as the trigger masks from
+> +     ../interrupt-controller/interrupts.txt
 
-> I am not pushing my use-case only; I am trying to work through current hardware
-> limitation and still support all the possibilities. I am open to hear your suggestions.
-> I am also not well versed on big.LITTILE CPU, so you may need to point me on right 
-> direction as we progress. My testing is limited to Cortex A57.
+Nit: We *normally* treat these as bullet-points and not place
+full-stops on them:
 
-The important thing to consider is that an arbitrary subset of CPUs may
-have this feature, while another arbitrary subset may not.
+$ git grep "compatible" -- Documentation/devicetree/bindings/ | grep -v=
+ "\.$" | wc -l
+5227
+$ git grep "compatible.*\.$" -- Documentation/devicetree/bindings/ | wc=
+ -l
+486
 
-> > I don't think the use of old_mask is sufficient here, given the mapping
-> > of logical to physical ID is arbitrary. For example, we could have CPUs
-> > 0,5,6,7 in one cluster, and CPUs 1,2,3,4 in another, and in that case
-> > we'd check the first cluster twice.
-> > 
-> 
-> Noted. I should use physical ID instead of logical mapping.
+=2E.. and I *personally* think it's easier to read the document if it's
+formatted as follows:
 
-Or you could simply keep a mask of CPUs whose clusters have already been
-checked...
+- compatible			: Should be "ti,tps65912".
+- reg				: Slave address or chip select number (I2C / SPI).
+- interrupt-parent		: The parent interrupt controller.
+- interrupts			: The interrupt line the device is connected to.
+- interrupt-controller		: Marks the device node as an interrupt control=
+ler.
+- #interrupt-cells		: The number of cells to describe an IRQ, this shou=
+ld be 2.
+					The first cell is the IRQ number.
+					The second cell is the flags, encoded as the trigger masks from
+					../interrupt-controller/interrupts.txt
 
-Thanks,
-Mark.
+=2E.. I hope you agree.
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
