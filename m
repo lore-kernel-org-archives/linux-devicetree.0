@@ -1,77 +1,61 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc configuration
-Date: Fri, 30 Oct 2015 12:15:40 -0500
-Message-ID: <CAL_JsqKhyB7d+HQ08241-za-7vHbU49TiWJHM2vrp6jVVh4h=A@mail.gmail.com>
-References: <cover.1446122247.git.p.fedin@samsung.com> <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
- <56330E6E.50003@samsung.com> <00a101d112e0$537a18e0$fa6e4aa0$@samsung.com> <56331ADB.1070602@samsung.com>
+From: "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
+Date: Fri, 30 Oct 2015 12:08:12 -0500
+Message-ID: <1446224892-29407-1-git-send-email-German.Rivera@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56331ADB.1070602@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Pavel Fedin <p.fedin@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 2:23 AM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> On 30.10.2015 15:58, Pavel Fedin wrote:
->>  Hello!
->>
->>>> Add documentation for new subnode properties, allowing bank configuration.
->>>> Based on u-boot implementation, but heavily reworked.
->>>
->>> Please, carefully look at:
->>> Documentation/devicetree/bindings/net/gpmc-eth.txt
->>> Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>
->>  Thank you very much. Indeed, this looks very similar. By the way, should i document smsc over sromc in the same manner, writing
->> devicetree/bindings/net/sromc-eth.txt?
->>
->>  This is a short reply for now, i'll make longer one (or just a new version) after studying these existing bindings and trying to
->> apply them.
->
-> Existing SROMC bindings document is small so one document for everything
-> should be sufficient. This can be always split if new type of devices
-> will be using SROMC (BTW, do you know of any other devices using SROMC
-> on Exynos?).
->
->>
->>  Pankaj:
->>
->>>> +&sromc {
->>>> +       pinctrl-names = "default";
->>>> +       pinctrl-0 = <&srom_ctl>, <&srom_ebi>;
->>>> +
->>>> +       ethernet@07000000 {
->>>> +               compatible = "smsc,lan9115";
->>>> +               reg = <0x07000000 0x10000>;
->>>> +               phy-mode = "mii";
->>>> +               interrupt-parent = <&gpx0>;
->>>> +               interrupts = <5 8>;
->>>> +               reg-io-width = <2>;
->>>> +               smsc,irq-push-pull;
->>>> +               smsc,force-internal-phy;
->>>> +
->>>> +               samsung,srom-bank = <3>;
->>>> +               samsung,srom-data-width = <2>;
->>>> +               samsung,srom-timing = <1 9 12 1 9 1 1>;
->>>
->>> I think this is not correct. We can't change binding of "smsc,lan9115"
->>> which is already documented here [1]. These samsung specific srom
->>> properties should be in srom node or its subnode, but not in this way.
->>
->>  So, if you look at gpmc-eth.txt, you'll see that this approach is perfectly valid (this is a reply to another msg, just don't want
->> to post one more single-line reply).
->
->
-> Yes, the binding of smsc,lan9115 is not changed.
->
-> Putting srom properties in separate bank node would be good also but
-> then some mapping (connection) between ethernet and bank should be added
-> probably...
+Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
+the ARM-generic reboot mechanism for this SoC. This mechanism
+is enabled through CONFIG_POWER_RESET_SYSCON.
 
-Is this to get some data needed by the ethernet from the ROM? We have
-the nvmem binding to support that.
+Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+CHANGE HISTORY:
 
-Rob
+Changes in v2:
+- Addressed comment form Stuart Yoder:
+  * Removed "@<address>" from reboot node
+
+Changes in v3:
+- Addressed comment form Stuart Yoder:
+  * Expose only the reset register
+
+ arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+index e281ceb..5e3d894 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+@@ -131,6 +131,18 @@
+ 		interrupts = <1 9 0x4>;
+ 	};
+
++	rstcr: rstcr@1E60000 {
++		compatible = "syscon";
++		reg = <0x0 0x1E60000 0x0 0x4>;
++	};
++
++	reboot {
++		compatible ="syscon-reboot";
++		regmap = <&rstcr>;
++		offset = <0x0>;
++		mask = <0x2>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
+--
+2.3.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
