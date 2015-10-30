@@ -1,64 +1,46 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH V2 02/10] ASoC: img: Add driver for I2S
- input controller
-Date: Fri, 30 Oct 2015 10:20:20 +0900
-Message-ID: <20151030012020.GO28319@sirena.org.uk>
-References: <1444653637-14711-1-git-send-email-Damien.Horsley@imgtec.com>
- <1444653637-14711-3-git-send-email-Damien.Horsley@imgtec.com>
- <20151019174732.GG32054@sirena.org.uk>
- <56293472.7000401@imgtec.com>
- <20151023225723.GO29919@sirena.org.uk>
- <562F824F.9070407@imgtec.com>
- <20151028010443.GX28319@sirena.org.uk>
- <56313B9C.8030502@imgtec.com>
- <20151028234334.GF28319@sirena.org.uk>
- <56323E83.5010605@imgtec.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4cokgWgqjr3t8EL1"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56323E83.5010605-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v4 1/3] clk: iproc: Extend binding to cover BCM63138
+Date: Thu, 29 Oct 2015 18:23:17 -0700
+Message-ID: <1446168199-5959-2-git-send-email-f.fainelli@gmail.com>
+References: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+Broadcom BCM63138 DSL SoCs have the same ARMPLL clocking infrastructure
+as the Cygnus and iProc chips, add a dedicated compatible string and
+document that the ARMPLL node is a valid node for this chip.
 
---4cokgWgqjr3t8EL1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+No changes in v4
 
-On Thu, Oct 29, 2015 at 03:42:59PM +0000, Damien Horsley wrote:
+Changes in v3:
 
-> For the I2S In, there is another issue with flushing on stream close. If
-> the stream is stopped, then reconfigured to use a larger number of
-> channels (without the stream being closed), then the per-channel fifos
-> will become inconsistent with each other. The new channels will have no
-> samples in their FIFOs, while the others may contain samples from the
-> previous stream.
+- added Rob's Acked-by tag
 
-> Would hw_params be the correct place to flush instead?
+No changes in v2
 
-Yes, you could flush there (or in both places for that matter).
+ Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---4cokgWgqjr3t8EL1
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+index ede65a55e21b..0b35e71b39e8 100644
+--- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+@@ -208,3 +208,8 @@ These clock IDs are defined in:
+     ch3_unused	lcpll_ports	4	BCM_NS2_LCPLL_PORTS_CH3_UNUSED
+     ch4_unused	lcpll_ports	5	BCM_NS2_LCPLL_PORTS_CH4_UNUSED
+     ch5_unused	lcpll_ports	6	BCM_NS2_LCPLL_PORTS_CH5_UNUSED
++
++BCM63138
++--------
++PLL and leaf clock compatible strings for BCM63138 are:
++    "brcm,bcm63138-armpll"
+-- 
+2.1.0
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWMsXTAAoJECTWi3JdVIfQScQIAIUUol1l/hftAmRCj1o4rstl
-VfdYytoikfmuGsLzQ1NtQ+KohYWRM20kRErAqwtt3DWSxyLmLUCbXuRyapy3v+f6
-YpWhUlsXD7NSRSW5d5vomPWm0uSQn3CwbgiVcWncf0WOdox31LjHjg+uB5GJGCFL
-8+gdsSRrKrYj3uZ4C7SoVFrLX5NFP/mEmiLeVm+TJFus9PI8JBMPVc84x1EJVtQL
-0Sp1/8E5CZddDmsSqJYFySTNDNCX2BC57yuxeG1dVKkiVls3/oSEA6YGJj8Ciw4V
-0PtBLDVcQgobnN6CVQER1Fv1K6Sc/rvw/Y5tyM0wxy9IkFYRdodWhxsRZF6nx/c=
-=db4Y
------END PGP SIGNATURE-----
-
---4cokgWgqjr3t8EL1--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
