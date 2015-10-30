@@ -1,153 +1,132 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RFC v4 02/11] drm/mediatek: Add DRM Driver for Mediatek SoC
- MT8173.
-Date: Fri, 30 Oct 2015 11:32:47 +0100
-Message-ID: <20151030103247.GV16848@phenom.ffwll.local>
-References: <1445026333-17013-1-git-send-email-p.zabel@pengutronix.de>
- <1445026333-17013-3-git-send-email-p.zabel@pengutronix.de>
- <20151019085644.GO13786@phenom.ffwll.local>
- <1446052429.12590.112.camel@pengutronix.de>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Fri, 30 Oct 2015 11:34:42 +0100
+Message-ID: <20151030113442.1ad381f9103aa052f929d4a9@free.fr>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+	<1445964626-6484-6-git-send-email-jenskuske@gmail.com>
+Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1446052429.12590.112.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBRUPZWYQKGQEMUSLA6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1445964626-6484-6-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMjgsIDIwMTUgYXQgMDY6MTM6NDlQTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
-cm90ZToKPiBIaSBEYW5pZWwsCj4gCj4gQW0gTW9udGFnLCBkZW4gMTkuMTAuMjAxNSwgMTA6NTYg
-KzAyMDAgc2NocmllYiBEYW5pZWwgVmV0dGVyOgo+ID4gT24gRnJpLCBPY3QgMTYsIDIwMTUgYXQg
-MTA6MTI6MDRQTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPiA+ID4gRnJvbTogQ0sgSHUg
-PGNrLmh1QG1lZGlhdGVrLmNvbT4KPiA+ID4gCj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBhbiBpbml0
-aWFsIERSTSBkcml2ZXIgZm9yIHRoZSBNZWRpYXRlayBNVDgxNzMgRElTUAo+ID4gPiBzdWJzeXN0
-ZW0uIEl0IGN1cnJlbnRseSBzdXBwb3J0cyB0d28gZml4ZWQgb3V0cHV0IHN0cmVhbXMgZnJvbSB0
-aGUKPiA+ID4gT1ZMMC9PVkwxIHNvdXJjZXMgdG8gdGhlIERTSTAvRFBJMCBzaW5rcywgcmVzcGVj
-dGl2ZWx5Lgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVr
-LmNvbT4KPiA+ID4gU2lnbmVkLW9mZi1ieTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+
-Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXgu
-ZGU+Cj4gPiAKPiA+IEJ1bmNoIG9mIGRyaXZlLWJ5IGNvbW1lbnRzIGJlbG93IHRvIHBvaW50IG91
-dCBkZXByZWNhdGVkIGZ1bmN0aW9ucyBhbmQKPiA+IG1vcmUgY29tbW9uIGFwcHJvYWNoZXMgdXNl
-ZCBieSBvdGhlciBkcml2ZXJzLiBEb24ndCBjb25zaWRlciB0aGlzIGEgZnVsbAo+ID4gcmV2aWV3
-IDstKQo+IAo+IE11Y2ggYXBwcmVjaWF0ZWQgYWxsIHRoZSBzYW1lLgo+IAo+ID4gQ2hlZXJzLCBE
-YW5pZWwKPiA+IAo+ID4gPiAtLS0KPiA+ID4gQ2hhbmdlcyBzaW5jZSB2MzoKPiA+ID4gIC0gUmVt
-b3ZlZCBjcnRjIGVuYWJsaW5nL2Rpc2FibGluZyBvbiBiaW5kL3VuYmluZCwgdGhlIGVuYWJsZS9k
-aXNhYmxlCj4gPiA+ICAgIGNhbGxiYWNrcyBzaG91bGQgc3VmZmljZS4KPiA+ID4gIC0gRmluZCBz
-aWJsaW5nIGNvbXBvbmVudHMgaW4gdGhlIGRldmljZSB0cmVlIHZpYSBjb21wYXRpYmxlIHZhbHVl
-Cj4gPiAKPiA+IGJ0dyBmb3IgRFQgY29tcG9uZW50cyBzdHVmZiB0aGVyZSdzIHBpbGVzIG9mIFJG
-Q3MgZmxvYXRpbmcgYXJvdW5kIHRvCj4gPiBleHRyYWN0IHRoaXMgaW50byBoZWxwZXIgbGlicmFy
-aWVzLiBXb3VsZCBiZSBncmVhdCB3ZSBjb3VsZCBwdXNoIG9uZSBvZgo+ID4gdGhlbSBmb3J3YXJk
-Lgo+IAo+IFRoZSBub24tbWVkaWF0ZWstc3BlY2lmaWMgcGFydCBjdXJyZW50bHkgaXMgdGhlCj4g
-Cj4gCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoYnVzX25vZGUsIG5vZGUpIHsKPiAJCW9mX2lkID0g
-b2ZfbWF0Y2hfbm9kZShkdF9pZHMsIG5vZGUpOwo+IAkJaWYgKCFvZl9pZCkKPiAJCQljb250aW51
-ZTsKPiAJCWlmICghb2ZfZGV2aWNlX2lzX2F2YWlsYWJsZShub2RlKSkKPiAJCQljb250aW51ZTsK
-PiAKPiAJCS8qIC4uLiAqLwo+IAl9Cj4gCj4gbG9vcC4gVGhpcyBpcyBzb21ld2hhdCBzaW1pbGFy
-IHRvIGEgY29tYmluYXRpb24gb2YKPiBmb3JfZWFjaF9tYXRjaGluZ19ub2RlX2FuZF9tYXRjaCBh
-bmQgZm9yX2VhY2hfYXZhaWxhYmxlX2NoaWxkX29mX25vZGUuCj4gZm9yX2VhY2hfYXZhaWxhYmxl
-X21hdGNoaW5nX2NoaWxkX29mX25vZGVfYW5kX21hdGNoIHdvdWxkIGJlIHF1aXRlIGEKPiBtb3V0
-aGZ1bCB0aG91Z2guCj4gCj4gWy4uLl0KPiA+ID4gK3N0cnVjdCBtdGtfZHJtX2NydGMgewo+ID4g
-PiArCXN0cnVjdCBkcm1fY3J0YwkJCQliYXNlOwo+ID4gPiArCXVuc2lnbmVkIGludAkJCQlwaXBl
-Owo+ID4gPiArCWJvb2wJCQkJCWVuYWJsZWQ7Cj4gPiA+ICsJc3RydWN0IG10a19jcnRjX2RkcF9j
-b250ZXh0CQkqY3R4Owo+ID4gPiArCj4gPiA+ICsJc3RydWN0IGRybV9wZW5kaW5nX3ZibGFua19l
-dmVudAkJKmV2ZW50Owo+ID4gPiArCWJvb2wJCQkJCXBlbmRpbmdfbmVlZHNfdmJsYW5rOwo+ID4g
-PiArfTsKPiA+ID4gKwo+ID4gPiArc3RydWN0IG10a19jcnRjX2RkcF9jb250ZXh0IHsKPiA+ID4g
-KwlzdHJ1Y3QgZGV2aWNlCQkJKmRldjsKPiA+ID4gKwlzdHJ1Y3QgZHJtX2RldmljZQkJKmRybV9k
-ZXY7Cj4gPiA+ICsJc3RydWN0IG10a19kcm1fY3J0YwkJKmNydGM7Cj4gPiA+ICsJc3RydWN0IG10
-a19kcm1fcGxhbmUJCXBsYW5lc1tPVkxfTEFZRVJfTlJdOwo+ID4gPiArCWludAkJCQlwaXBlOwo+
-ID4gPiArCj4gPiA+ICsJdm9pZCBfX2lvbWVtCQkJKmNvbmZpZ19yZWdzOwo+ID4gPiArCXN0cnVj
-dCBkZXZpY2UJCQkqbXV0ZXhfZGV2Owo+ID4gPiArCXUzMgkJCQlkZHBfY29tcF9ucjsKPiA+ID4g
-KwlzdHJ1Y3QgbXRrX2RkcF9jb21wCQkqZGRwX2NvbXA7Cj4gPiAKPiA+IEFsbCB0aGUgYWJvdmUg
-cHJvYmFibHkgc2hvdWxkIGp1c3QgYmUgbW92ZWQgaW50byBtdGtfZHJtX2NydGMuIEF0IGxlYXN0
-IEkKPiA+IGRvbid0IHVuZGVyc3RhbmQgd2h5IHlvdSBuZWVkIHRoaXMgaW5kaXJlY3Rpb24uCj4g
-Cj4gQWdyZWVkLiBUaGlzIHdhcyBuZWVkZWQgZm9yIGEgZGVidWdmcyBwYXRjaCB0aGF0IEkgaGF2
-ZSBsZWZ0IG91dCBmb3IKPiBub3cuCj4gCj4gPiA+ICsKPiA+ID4gKwlib29sCQkJCXBlbmRpbmdf
-Y29uZmlnOwo+ID4gPiArCXVuc2lnbmVkIGludAkJCXBlbmRpbmdfd2lkdGg7Cj4gPiA+ICsJdW5z
-aWduZWQgaW50CQkJcGVuZGluZ19oZWlnaHQ7Cj4gPiA+ICsKPiA+ID4gKwlib29sCQkJCXBlbmRp
-bmdfb3ZsX2NvbmZpZ1tPVkxfTEFZRVJfTlJdOwo+ID4gPiArCWJvb2wJCQkJcGVuZGluZ19vdmxf
-ZW5hYmxlW09WTF9MQVlFUl9OUl07Cj4gPiA+ICsJdW5zaWduZWQgaW50CQkJcGVuZGluZ19vdmxf
-YWRkcltPVkxfTEFZRVJfTlJdOwo+ID4gPiArCXVuc2lnbmVkIGludAkJCXBlbmRpbmdfb3ZsX3Bp
-dGNoW09WTF9MQVlFUl9OUl07Cj4gPiA+ICsJdW5zaWduZWQgaW50CQkJcGVuZGluZ19vdmxfZm9y
-bWF0W09WTF9MQVlFUl9OUl07Cj4gPiA+ICsJaW50CQkJCXBlbmRpbmdfb3ZsX3hbT1ZMX0xBWUVS
-X05SXTsKPiA+ID4gKwlpbnQJCQkJcGVuZGluZ19vdmxfeVtPVkxfTEFZRVJfTlJdOwo+ID4gPiAr
-CXVuc2lnbmVkIGludAkJCXBlbmRpbmdfb3ZsX3NpemVbT1ZMX0xBWUVSX05SXTsKPiA+ID4gKwli
-b29sCQkJCXBlbmRpbmdfb3ZsX2RpcnR5W09WTF9MQVlFUl9OUl07Cj4gPiAKPiA+IFRoaXMgd29y
-a3Mgc2luY2UgeW91IG9ubHkgdG91Y2ggdGhlc2UgaW4gdGhlIGF0b21pY19jb21taXQgcGhhc2Us
-IGJ1dCB0aGUKPiA+IHJlY29tbWVuZCB3YXkgdG8gZG8gdGhpcyB3aXRoIGF0b21pYyBpcyB0byBz
-dWJjbGFzcyBkcm1fY3J0Y19zdGF0ZToKPiA+Cj4gPiBzdHJ1Y3QgbXRrX2NydGNfc3RhdGUgewo+
-ID4gCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSBiYXNlOwo+ID4gCj4gPiAJLyogYWxsIHRoZSBwZW5k
-aW5nXyBzdHVmZiBhYm92ZSAqLwo+ID4gfTsKPiA+IAo+ID4gVGhlbiB5b3UganVzdCBwYXNzIHRo
-ZSBtdGsgdG8geW91ciBpcnEgaGFuZGxlciB0byBkbyB0aGUgdXBkYXRlLgo+IAo+IEknbGwgbW92
-ZSB0aGVzZSBpbnRvIG10a19jcnRjX3N0YXRlLCBidXQgSSdtIG5vdCBzdXJlIHdoYXQgeW91IG1l
-YW4gd2l0aAo+IHRoZSBsYXN0IHNlbnRlbmNlLiBDdXJyZW50bHkgSSBwYXNzIHRoZSBtdGtfY3J0
-Y19kZHBfY29udGV4dCB0byB0aGUgaXJxCj4gaGFuZGxlci4gSSBjYW4gZ2V0IHRvIHRoZSBtdGtf
-Y3J0Y19zdGF0ZSBmcm9tIHRoYXQuCgpUaGF0IHdvcmtzIHRvby4KCj4gPiA+ICtzdGF0aWMgaW50
-IG10a19kcm1fYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ICt7Cj4gPiA+ICsJcmV0dXJu
-IGRybV9wbGF0Zm9ybV9pbml0KCZtdGtfZHJtX2RyaXZlciwgdG9fcGxhdGZvcm1fZGV2aWNlKGRl
-dikpOwo+ID4gCj4gPiBUaGlzIGlzIGRlcHJlY2F0ZWQsIHBsZWFzZSB1c2UgZHJtX2Rldl9hbGxv
-Yy9kcm1fZGV2X3JlZ2lzdGVyIGluc3RlYWQgYW5kCj4gPiByZW1vdmUgeW91ciAtPmxvYWQgZHJp
-dmVyIGNhbGxiYWNrLgo+IAo+IFdpbGwgcmVwbGFjZSBkcm1fcGxhdGZvcm1faW5pdCB3aXRoIGRy
-bV9kZXZfYWxsb2MvZHJtX2Rldl9yZWdpc3RlciBhbmQKPiBpbnRlZ3JhdGUgbXRrX2RybV9sb2Fk
-IGludG8gbXRrX2RybV9iaW5kLgo+IAo+ID4gPiAraW50IG10a19kcm1fZ2VtX2R1bWJfbWFwX29m
-ZnNldChzdHJ1Y3QgZHJtX2ZpbGUgKmZpbGVfcHJpdiwKPiA+ID4gKwkJCQlzdHJ1Y3QgZHJtX2Rl
-dmljZSAqZGV2LCB1aW50MzJfdCBoYW5kbGUsCj4gPiA+ICsJCQkJdWludDY0X3QgKm9mZnNldCkK
-PiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iajsKPiA+ID4gKwlpbnQg
-cmV0Owo+ID4gPiArCj4gPiA+ICsJbXV0ZXhfbG9jaygmZGV2LT5zdHJ1Y3RfbXV0ZXgpOwo+ID4g
-Cj4gPiBzdHJ1Y3RfbXV0ZXggaXNuJ3QgbmVlZGVkIGhlcmUgKGdlbSBvYmplY3QgbG9va3VwIGFu
-ZCB0aGUgdm1hIHN0dWZmIGFyZQo+ID4gYWxsIHByb3RlY3RlZCBieSBsb29rcyBhbHJlYWR5KS4g
-UGxlYXNlIGRyb3AgaXQuCj4gWy4uLl0KPiA+ID4gK291dDoKPiA+ID4gKwlkcm1fZ2VtX29iamVj
-dF91bnJlZmVyZW5jZShvYmopOwo+ID4gCj4gPiBCdXQgdGhlbiB5b3UgbmVlZCB1bnJlZmVyZW5j
-ZV91bmxvY2tlZCBoZXJlLgo+IAo+IE9rLCBkcm9wcGVkIHRoZSBsb2NrLgo+IAo+IFsuLi5dCj4g
-PiA+ICtpbnQgbXRrX2RybV9nZW1fbW1hcF9idWYoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmos
-IHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hKQo+ID4gCj4gPiBUaGlzIGZ1bmN0aW9uIHNlZW1z
-IHVudXNlZC4KPiAKPiBDdXJyZW50bHkgdW51c2VkLCB5ZXMuIEknbGwgbW92ZSBpdCBvdXQgb2Yg
-dGhpcyBzZXJpZXMuCj4gCj4gPiA+ICt7Cj4gPiA+ICsJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9
-IG9iai0+ZGV2Owo+ID4gPiArCWludCByZXQ7Cj4gPiA+ICsKPiA+ID4gKwltdXRleF9sb2NrKCZk
-cm0tPnN0cnVjdF9tdXRleCk7Cj4gPiA+ICsJcmV0ID0gZHJtX2dlbV9tbWFwX29iaihvYmosIG9i
-ai0+c2l6ZSwgdm1hKTsKPiA+ID4gKwltdXRleF91bmxvY2soJmRybS0+c3RydWN0X211dGV4KTsK
-PiA+IAo+ID4gVGhpcyBsb2NraW5nIGlzbid0IHJlcXVpcmVkIHdpdGggbGF0ZXN0IGRybS1taXNj
-IGFueW1vcmUsIHBsZWFzZSByZWJhc2UKPiA+IG9udG8gbGF0ZXN0IGxpbnV4LW5leHQgYW5kIGRy
-b3Agc3RydWN0X211dGV4Lgo+IAo+IFdpbGwgZG8uCj4gCj4gWy4uLl0KPiA+ID4gK2ludCBtdGtf
-ZHJtX2dlbV9tbWFwKHN0cnVjdCBmaWxlICpmaWxwLCBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZt
-YSkKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iajsKPiA+ID4gKwlp
-bnQgcmV0Owo+ID4gPiArCj4gPiA+ICsJcmV0ID0gZHJtX2dlbV9tbWFwKGZpbHAsIHZtYSk7Cj4g
-PiA+ICsJaWYgKHJldCkKPiA+ID4gKwkJcmV0dXJuIHJldDsKPiA+ID4gKwo+ID4gPiArCW9iaiA9
-IHZtYS0+dm1fcHJpdmF0ZV9kYXRhOwo+ID4gPiArCj4gPiA+ICsJcmV0dXJuIG10a19kcm1fZ2Vt
-X29iamVjdF9tbWFwKG9iaiwgdm1hKTsKPiA+IAo+ID4gQXNpZGU6IFdoeSBjYW4ndCB5b3UganVz
-dCB1c2UgY21hIGhlbHBlcnMgZm9yIGdlbSBvYmplY3RzPyBDTUEganVzdAo+ID4gZXNzZW50aWFs
-bHkgbWVhbnMgYmFja2VkIGJ5IGRtYV9hbGxvYyBtZW1vcnkuIFdvdWxkIGF2b2lkIGEgbG90IG9m
-Cj4gPiBkdXBsaWNhdGVkIGNvZGUgSSB0aGluay4KPiAKPiBJIHN1cHBvc2Ugd2Ugd29uJ3QgbmVl
-ZCBkbWFfYWxsb2MgbWVtb3J5IGV2ZW50dWFsbHksIGR1ZSB0byB0aGUgaW9tbXUuCj4gCj4gWy4u
-Ll0KPiA+ID4gK3N0YXRpYyB2b2lkIG10a19wbGFuZV9hdG9taWNfdXBkYXRlKHN0cnVjdCBkcm1f
-cGxhbmUgKnBsYW5lLAo+ID4gPiArCQkJCSAgICBzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpvbGRf
-c3RhdGUpCj4gPiA+ICt7Cj4gWy4uLl0KPiA+ID4gKwlpZiAocGxhbmUtPmZiKQo+ID4gPiArCQlk
-cm1fZnJhbWVidWZmZXJfdW5yZWZlcmVuY2UocGxhbmUtPmZiKTsKPiA+ID4gKwlpZiAoc3RhdGUt
-PmZiKQo+ID4gPiArCQlkcm1fZnJhbWVidWZmZXJfcmVmZXJlbmNlKHN0YXRlLT5mYik7Cj4gPiA+
-ICsJcGxhbmUtPmZiID0gc3RhdGUtPmZiOwo+ID4gCj4gPiBUaGVyZSBzaG91bGRuJ3QgYmUgYW55
-IG5lZWQgdG8gcmVmY291bnQgZnJhbWVidWZmZXJzIHlvdXJzZWxmLiBJZiB0aGF0J3MKPiA+IHRo
-ZSBjYXNlIHRoZW4gdGhlcmUncyBhIGJ1ZyBpbiB0aGUgZHJtIGNvcmUvaGVscGVycy4KPiAKPiBJ
-IHdhcyBzdGlsbCB1c2luZyBwbGFuZS0+ZmIgaW4gbXRrX2RybV9jcnRjX3BsYW5lX2NvbmZpZy4g
-SSdsbCBjaGVjayBpZgo+IHN3aXRjaGluZyB0byBwbGFuZS0+c3RhdGUtPmZiIHRoZXJlIHdpbGwg
-YWxsb3cgbWUgdG8gZHJvcCB0aGlzLgoKTXkgY29tbWVudCB3YXMgYWJvdXQgdGhlIHJlZmNvdW50
-aW5nLCBub3QgYWJvdXQgYXNzaWduaW5nIHBsYW5lLT5mYi4KQXNzaWduaW5nIHBsYW5lLT5mYiA9
-IHN0YXRlLT5mYiBpbiB5b3VyIGNvbW1pdCBmdW5jdGlvbnMgaXMgYWxsb3dlZCAodGhlCmRybSBj
-b3JlIHdpbGwgZG8gaXQgaWYgeW91IGRvbid0IGRvIGl0KSwgYnV0IGl0J3Mgb25seSBhbGxvd2Vk
-IGZvcgpiYWNrd2FyZHMgY29tcGF0IHdpdGggZXhpc3RpbmcgZHJpdmVycy4gTmV3IGRyaXZlcnMg
-cmVhbGx5IHNob3VsZCBvbmx5Cmxvb2sgYXQgc3RhdGUtPmZiIGFuZCB0b3RhbGx5IGlnbm9yZSBw
-bGFuZS0+ZmIuCgpUaGUgcmVmY291bnRpbmcgb3RvaCBpcyBzaW1wbHkgYnVnZ3kgc2luY2UgaXQn
-bGwgY29uZnVzZSB0aGUgcmVmY291bnRpbmcKdGhlIGNvcmUgZG9lcyBhbmQgSSB0aGluayBzaG91
-bGQgcmVzdWx0IGluIHNvbWUgbGVha3MgZXZlbi4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
-b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, 27 Oct 2015 17:50:25 +0100
+Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> The Allwinner H3 is a home entertainment system oriented SoC with
+> four Cortex-A7 cores and a Mali-400MP2 GPU.
+>=20
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 482 ++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 482 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3=
+.dtsi
+> new file mode 100644
+> index 0000000..c18b5f7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+	[snip]
+> +	soc {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		ranges;
+> +
+> +		dma: dma-controller@01c02000 {
+> +			compatible =3D "allwinner,sun8i-h3-dma";
+> +			reg =3D <0x01c02000 0x1000>;
+> +			interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&bus_gates 6>;
+> +			resets =3D <&bus_rst 6>;
+> +			#dma-cells =3D <1>;
+> +		};
+	[snip]
+> +
+> +		bus_rst: reset@01c202c0 {
+> +			#reset-cells =3D <1>;
+> +			compatible =3D "allwinner,sun8i-h3-bus-reset";
+> +			reg =3D <0x01c202c0 0x1c>;
+> +		};
+> +
+	[snip]
+> +		uart0: serial@01c28000 {
+> +			compatible =3D "snps,dw-apb-uart";
+> +			reg =3D <0x01c28000 0x400>;
+> +			interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift =3D <2>;
+> +			reg-io-width =3D <4>;
+> +			clocks =3D <&bus_gates 112>;
+> +			resets =3D <&bus_rst 144>;
+> +			dmas =3D <&dma 6>, <&dma 6>;
+> +			dma-names =3D "rx", "tx";
+> +			status =3D "disabled";
+> +		};
+
+The reset definitions would be clearer with declarations as the other
+Allwinner SoCs and without driver hack:
+
+soc {
+	compatible =3D "simple-bus";
+	#address-cells =3D <1>;
+	#size-cells =3D <1>;
+	ranges;
+
+		dma: dma-controller@01c02000 {
+		compatible =3D "allwinner,sun8i-h3-dma";
+		reg =3D <0x01c02000 0x1000>;
+		interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+		clocks =3D <&bus_gates 6>;
+		resets =3D <&rst_reg0 6>;
+		#dma-cells =3D <1>;
+	};
+    ...
+	rst_reg0: reset@01c202c0 {
+		#reset-cells =3D <1>;
+		compatible =3D "allwinner,sun6i-a31-clock-reset";
+		reg =3D <0x01c202c0 0x04>;
+	};
+	...
+ 	rst_reg4: reset@01c202d8 {
+		#reset-cells =3D <1>;
+		compatible =3D "allwinner,sun6i-a31-clock-reset";
+		reg =3D <0x01c202d8 0x04>;
+	};
+   ...
+	uart0: serial@01c28000 {
+		compatible =3D "snps,dw-apb-uart";
+		reg =3D <0x01c28000 0x400>;
+		interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+		reg-shift =3D <2>;
+		reg-io-width =3D <4>;
+		clocks =3D <&bus_gates 112>;
+		resets =3D <&rst_reg4 16>;
+		dmas =3D <&dma 6>, <&dma 6>;
+		dma-names =3D "rx", "tx";
+		status =3D "disabled";
+	};
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
