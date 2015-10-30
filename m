@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 03/19] clk: sunxi: Add TCON channel0 clock
-Date: Fri, 30 Oct 2015 15:20:49 +0100
-Message-ID: <1446214865-3972-4-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 05/19] clk: sunxi: add DRAM gates
+Date: Fri, 30 Oct 2015 15:20:51 +0100
+Message-ID: <1446214865-3972-6-git-send-email-maxime.ripard@free-electrons.com>
 References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBV7ZZWYQKGQEWDET4AY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBY7ZZWYQKGQECYYSEPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1446214865-3972-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,211 +19,29 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The TCON is a controller generating the timings to output videos signals,
-acting like both a CRTC and an encoder.
+The Allwinner SoCs have a gate controller to gate the access to the DRAM
+clock to the some devices that need to access the DRAM directly (mostly
+display / image related IPs).
 
-It has two channels depending on the output, each channel being driven by
-its own clock (and own clock controller).
-
-Add a driver for the channel 0 clock.
+Use a simple gates driver to support it.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clk/sunxi/Makefile             |   1 +
- drivers/clk/sunxi/clk-sun4i-tcon-ch0.c | 173 +++++++++++++++++++++++++++++++++
- 2 files changed, 174 insertions(+)
- create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
+ drivers/clk/sunxi/clk-simple-gates.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index 40c32ffd912c..7821b2b63d58 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -12,6 +12,7 @@ obj-y += clk-mod0.o
- obj-y += clk-simple-gates.o
- obj-y += clk-sun4i-display.o
- obj-y += clk-sun4i-pll3.o
-+obj-y += clk-sun4i-tcon-ch0.o
- obj-y += clk-sun8i-mbus.o
- obj-y += clk-sun9i-core.o
- obj-y += clk-sun9i-mmc.o
-diff --git a/drivers/clk/sunxi/clk-sun4i-tcon-ch0.c b/drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
-new file mode 100644
-index 000000000000..db10cfb94a1d
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
-@@ -0,0 +1,173 @@
-+/*
-+ * Copyright 2015 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/of_address.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#define SUN4I_A10_TCON_CH0_PARENTS	4
-+
-+#define SUN4I_A10_TCON_CH0_GATE_BIT	31
-+#define SUN4I_A10_TCON_CH0_RESET_SHIFT	29
-+#define SUN4I_A10_TCON_CH0_MUX_MASK	3
-+#define SUN4I_A10_TCON_CH0_MUX_SHIFT	24
-+
-+struct reset_data {
-+	void __iomem			*reg;
-+	spinlock_t			*lock;
-+	struct reset_controller_dev	rcdev;
-+};
-+
-+static DEFINE_SPINLOCK(sun4i_a10_tcon_ch0_lock);
-+
-+static int sun4i_a10_tcon_ch0_assert(struct reset_controller_dev *rcdev,
-+				     unsigned long id)
-+{
-+	struct reset_data *data = container_of(rcdev,
-+					       struct reset_data,
-+					       rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg & ~BIT(SUN4I_A10_TCON_CH0_RESET_SHIFT + id), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int sun4i_a10_tcon_ch0_deassert(struct reset_controller_dev *rcdev,
-+				       unsigned long id)
-+{
-+	struct reset_data *data = container_of(rcdev,
-+						   struct reset_data,
-+						   rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg | BIT(SUN4I_A10_TCON_CH0_RESET_SHIFT + id), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int sun4i_a10_tcon_ch0_status(struct reset_controller_dev *rcdev,
-+				     unsigned long id)
-+{
-+	struct reset_data *data = container_of(rcdev,
-+					       struct reset_data,
-+					       rcdev);
-+
-+	return !(readl(data->reg) & BIT(SUN4I_A10_TCON_CH0_RESET_SHIFT + id));
-+}
-+
-+static struct reset_control_ops sun4i_a10_tcon_ch0_reset_ops = {
-+	.assert		= sun4i_a10_tcon_ch0_assert,
-+	.deassert	= sun4i_a10_tcon_ch0_deassert,
-+	.status		= sun4i_a10_tcon_ch0_status,
-+};
-+
-+static void __init sun4i_a10_tcon_ch0_setup(struct device_node *node)
-+{
-+	const char *parents[SUN4I_A10_TCON_CH0_PARENTS];
-+	const char *clk_name = node->name;
-+	struct reset_data *reset_data;
-+	struct clk_gate *gate;
-+	struct clk_mux *mux;
-+	void __iomem *reg;
-+	struct clk *clk;
-+	int i;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg)) {
-+		pr_err("%s: Could not map the clock registers\n", clk_name);
-+		return;
-+	}
-+
-+	for (i = 0; i < SUN4I_A10_TCON_CH0_PARENTS; i++)
-+		parents[i] = of_clk_get_parent_name(node, i);
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		return;
-+
-+	mux->reg = reg;
-+	mux->shift = SUN4I_A10_TCON_CH0_MUX_SHIFT;
-+	mux->mask = SUN4I_A10_TCON_CH0_MUX_MASK;
-+	mux->lock = &sun4i_a10_tcon_ch0_lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto free_mux;
-+
-+	gate->reg = reg;
-+	gate->bit_idx = SUN4I_A10_TCON_CH0_GATE_BIT;
-+	gate->lock = &sun4i_a10_tcon_ch0_lock;
-+
-+	clk = clk_register_composite(NULL, clk_name,
-+				     parents, SUN4I_A10_TCON_CH0_PARENTS,
-+				     &mux->hw, &clk_mux_ops,
-+				     NULL, NULL,
-+				     &gate->hw, &clk_gate_ops,
-+				     0);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: Couldn't register the clock\n", clk_name);
-+		goto free_gate;
-+	}
-+
-+	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+
-+	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
-+	if (!reset_data)
-+		goto free_clk;
-+
-+	reset_data->reg = reg;
-+	reset_data->lock = &sun4i_a10_tcon_ch0_lock;
-+	reset_data->rcdev.nr_resets = 2;
-+	reset_data->rcdev.ops = &sun4i_a10_tcon_ch0_reset_ops;
-+	reset_data->rcdev.of_node = node;
-+
-+	if (reset_controller_register(&reset_data->rcdev)) {
-+		pr_err("%s: Couldn't register the reset controller\n",
-+		       clk_name);
-+		goto free_reset;
-+	}
-+
-+	return;
-+
-+free_reset:
-+	kfree(reset_data);
-+free_clk:
-+	clk_unregister(clk);
-+free_gate:
-+	kfree(gate);
-+free_mux:
-+	kfree(mux);
-+}
-+
-+CLK_OF_DECLARE(sun4i_a10_tcon_ch0, "allwinner,sun4i-a10-tcon-ch0-clk",
-+	       sun4i_a10_tcon_ch0_setup);
+diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+index 0214c6548afd..5666c767fa14 100644
+--- a/drivers/clk/sunxi/clk-simple-gates.c
++++ b/drivers/clk/sunxi/clk-simple-gates.c
+@@ -112,6 +112,8 @@ CLK_OF_DECLARE(sun5i_a13_apb0, "allwinner,sun5i-a13-apb0-gates-clk",
+ 	       sunxi_simple_gates_init);
+ CLK_OF_DECLARE(sun5i_a13_apb1, "allwinner,sun5i-a13-apb1-gates-clk",
+ 	       sunxi_simple_gates_init);
++CLK_OF_DECLARE(sun5i_a13_dram, "allwinner,sun5i-a13-dram-gates-clk",
++	       sunxi_simple_gates_init);
+ CLK_OF_DECLARE(sun6i_a31_ahb1, "allwinner,sun6i-a31-ahb1-gates-clk",
+ 	       sunxi_simple_gates_init);
+ CLK_OF_DECLARE(sun6i_a31_apb1, "allwinner,sun6i-a31-apb1-gates-clk",
 -- 
 2.6.2
