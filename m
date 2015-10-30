@@ -1,140 +1,141 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 25/32] scsi: hisi_sas: add abnormal irq handler
-Date: Fri, 30 Oct 2015 16:58:02 +0000
-Message-ID: <5633A19A.1010900@huawei.com>
-References: <1445868903-183817-1-git-send-email-john.garry@huawei.com>
- <1445868903-183817-26-git-send-email-john.garry@huawei.com>
- <3709094.hsDE2JcmxW@wuerfel>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4] EDAC: Add ARM64 EDAC
+Date: Fri, 30 Oct 2015 17:06:06 +0000
+Message-ID: <20151030170605.GI31073@leverpostej>
+References: <1446048829-3359-1-git-send-email-brijeshkumar.singh@amd.com>
+ <20151028164053.GG25451@leverpostej>
+ <56339A52.8060701@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3709094.hsDE2JcmxW@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56339A52.8060701@amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brijesh Singh <brijeshkumar.singh@amd.com>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, devicetree@vger.kernel.org, guohanjun@huawei.com, andre.przywara@arm.com, arnd@arndb.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/10/2015 14:10, Arnd Bergmann wrote:
-> On Monday 26 October 2015 22:14:56 John Garry wrote:
->> Add abnormal irq handler. This handler is concerned with
->> phy down event.
->> Also add port formed and port deformed handlers.
->>
->> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->
-> I noticed a couple more coding style issues in this patch than elsewhere, so here
-> is a slightly more detailed review.
->
->> +static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy, int lock)
->> +{
->> +	struct sas_ha_struct *sas_ha = sas_phy->ha;
->> +	struct hisi_hba *hisi_hba = NULL;
->> +	int i = 0;
->> +	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
->> +	struct asd_sas_port *sas_port = sas_phy->port;
->> +	struct hisi_sas_port *port;
->> +	unsigned long flags = 0;
->
-> Here and in general, please avoid initializing local variables
-> to zero, as that prevents gcc from warning about uses that
-> come before the real initialization.
->
-> The flags that get passed into spin_lock_irqsave() are architecture
-> specific, so you cannot rely on '0' to have a particular meaning.
->
+On Fri, Oct 30, 2015 at 11:26:58AM -0500, Brijesh Singh wrote:
+> Hi Mark,
+> 
+> >> +
+> >> +Required properties:
+> >> +- compatible: Should be "arm,cortex-a57-edac" or "arm,cortex-a53-edac"
+> >> +
+> >> +Example:
+> >> +	edac {
+> >> +		compatible = "arm,cortex-a57-edac";
+> >> +	};
+> >> +
+> > 
+> > This is insufficient for big.LITTLE, no interrupt is possible, and we
+> > haven't defined the rules for accessing the registers (e.g. whether
+> > write backs are permitted).
+> > 
+> > Please see my prior comments [1] on those points.
+> > 
+> > If we're going to use this feature directly within the kernel, we need
+> > to consider the envelope of possible implementations rather than your
+> > use-case alone.
+> >
+> 
+> I have looked at possibility of pushing correctable error logging in the
+> firmware; but given current hardware limitation it seems like OS is the best
+> place to implement it. Let me summaries the issues we are running into:
+> 
+> * Correctable errors does not generate any interrupt:
+>   If we have to implement error parsing inside the firmware then work need
+>   to be split between OS and firmware. Maybe OS can call SMC instruction to 
+>   dial into firmware and then firmware can check error syndrome registers; 
+>   if it finds correctable error then build HEST table. This method will introduce
+>   performance issue because it require OS executing SMC every 100ms or so to just
+>   poll for correctable error. If you have any other recommendation then please share it.
 
-Noted. Will change.
+I agree that this is a problem, and is an unfortunate hardware
+limitation.
 
->> +	if (!sas_port)
->> +		return;
->> +
->> +	while (sas_ha->sas_phy[i]) {
->
-> Using a for() loop would avoid the initialization here.
->
+I am still wary of making use of IMPLEMENTATION DEFINED features like
+this in the kernel.
 
-Yes.
+> > * Interaction with firmware
+> > - When/do we handle interrupts?
+> 
+> We can a properties in dt bindings:
+> 
+> 1) "num-interrupts = 1" - number of interrupt count. One interrupts per cluster
+>     e.g if you have 4 cluster then num-interrupts=4.
+> 2) interrupts = <0, 92, 0> <0, 94, 0> <0, 96, 0> <0, 98, 0>  // interrupt mapping
+> 
+> If num-interrupts = 0, then firmware handles interrupts. Optionally we can use HEST FIRMWARE-FIRST
+> bit, if bit is set then firmware is handling the interrupt otherwise use DT information.
 
->> +		if (sas_ha->sas_phy[i] == sas_phy) {
->> +			hisi_hba = (struct hisi_hba *)sas_ha->lldd_ha;
->
-> lldd_ha is a void pointer, so you don't need a cast.
->
+You won't have the HEST and DT information at the same time, given that
+at runtime the kernel uses one of ACPI or DT.
 
-Noted.
+This also doesn't define the affinity of interrupts (i.e. which
+cluster/CPU does each interrupt get generated by), which is the more
+important part.
 
->> +			port = &hisi_hba->port[i];
->> +			break;
->> +		}
->> +		i++;
->> +	}
->
-> The loop is really odd, as you apparently only try to find the
-> array index to a pointer you already have. Is there no space for
-> driver-specific data in 'asd_sas_phy'? If there is, just point to
-> per-phy structure that you define yourself and put the index into
-> that structure. I believe you already have a struct like that.
->
+> >  - When is it valid to write back and clear an error? We should not do
+> >    this behind the back of any firmware that owns the interface.
+> 
+> As per A57 TRM is concerned you are right both the correctable and uncorrectable 
+> error needs to clear VALID bit in L1/L2 syndrome registers. So yes we need to define
+> a rule for accessing the registers. I can think of two possible approach here:
+> 
+> 1) add "error-syndrome-reg-write-access=1" property in dt.
+>    * if '1' then OS has exclusive write backs access to error syndrome register
+>    * if '0' then OS will not clear the valid bit on fatal error
 
-This code is a remnant from when we used to have the driver designed in 
-such a way that we had a single Scsi Host and which had multiple cores 
-(and hisi_hba's). Will address.
+What about correctable errors? What if someone wants to poll that in FW
+(no matter how horrible that may be for performance)? What if a future
+CPU revision adds an optional interrupt for that?
 
->> +	if (hisi_hba == NULL) {
->
-> When checking a pointer for validity, do not compare against
-> NULL, but write this as 'if (!hisi_hba)', which is the more
-> normal coding style.
+>   The handler looks like this:
+> 
+>   parse_error_syndrome () {
+>    val = read_cpumerrsr
+> 
+>    if (!IS_VALID(val))
+>      return
+> 
+>    /* log the error details */
+> 
+>    /* if fatal error and OS does not have exclusive write back access */
+>    if (IS_FATAL(val) && !error-syndrom-reg-write-access)
+>      return; 
+> 
+>    val = ~(1UL << 31); /* clear valid bit */
+>   }
 
-OK.
+Ok.
 
->
->> +		pr_err("%s: could not find hba\n", __func__);
->> +		return;
->> +	}
->
-> Better use dev_err() to print the device name, but remove the __func__
-> argument. Again, when you have the per-phy structure, put a pointer
-> to the device in there.
->
->> +
->> +	if (lock)
->> +		spin_lock_irqsave(&hisi_hba->lock, flags);
->> +	port->port_attached = 1;
->> +	port->id = phy->port_id;
->> +	phy->port = port;
->> +	sas_port->lldd_port = port;
->> +
->> +	if (lock)
->> +		spin_unlock_irqrestore(&hisi_hba->lock, flags);
->> +}
->
-> This breaks some checking tools that try to validate the uses of
-> locks. Better wrap the function in another one depending on the
-> caller. When using spinlocks in general, it's also better to replace
-> the "I have no clue where I'm called from" spin_lock_irqsave()
-> call with either spin_lock() or spin_lock_irq() if at all possible.
->
-Ok, I can remove the lock check. I know that the function can be called 
-from irq context in my irq handler and also from multiple functions in 
-libsas (whose context I am unsure of).
-> 	Arnd
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> .
->
+> 2) Use HEST FIRMWARE-FIRST bit field, if the bit is set then OS should not clear
+>    the valid bit on fatal error and similarly if bit is clear then OS clears the VALID bit.
+> 
+> Since firmware will never handle the correctable error hence its always safe to clear
+> the VALID bit on non-fatal error. If you have any other suggestions then please share it.
 
-Thanks for the detailed review. I'll try and address your comments for 
-other patches.
+As above, I don't think this is true in general.
 
-john
+> I am not pushing my use-case only; I am trying to work through current hardware
+> limitation and still support all the possibilities. I am open to hear your suggestions.
+> I am also not well versed on big.LITTILE CPU, so you may need to point me on right 
+> direction as we progress. My testing is limited to Cortex A57.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The important thing to consider is that an arbitrary subset of CPUs may
+have this feature, while another arbitrary subset may not.
+
+> > I don't think the use of old_mask is sufficient here, given the mapping
+> > of logical to physical ID is arbitrary. For example, we could have CPUs
+> > 0,5,6,7 in one cluster, and CPUs 1,2,3,4 in another, and in that case
+> > we'd check the first cluster twice.
+> > 
+> 
+> Noted. I should use physical ID instead of logical mapping.
+
+Or you could simply keep a mask of CPUs whose clusters have already been
+checked...
+
+Thanks,
+Mark.
