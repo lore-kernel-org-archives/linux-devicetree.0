@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v4 2/3] clk: bcm: Add BCM63138 clock support
-Date: Thu, 29 Oct 2015 18:23:18 -0700
-Message-ID: <1446168199-5959-3-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH v4 3/3] ARM: dts: BCM63xx: Add ARMPLL device tree nodes
+Date: Thu, 29 Oct 2015 18:23:19 -0700
+Message-ID: <1446168199-5959-4-git-send-email-f.fainelli@gmail.com>
 References: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
@@ -10,85 +10,96 @@ To: linux-clk@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-BCM63138 has a simple clocking domain which is primarily the ARMPLL
-clocking complex, from which the ARM (CPU), APB and AXI clocks would be
-derived from.
-
-Since the ARMPLL controller is entirely compatible with the iProc ARM
-PLL, we just initialize it without additional parameters.
+Add the ARM PLL controller which comes standard with the Cortex-A9 found
+on the BCM63138 SoCs. This is the same controller as the one found in
+the Broadcom iProc architecture, however, we have a separate compatible
+string to indicate the integration difference, since the hardware is
+different.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-No changes in v4
+Changes in v4:
+- properly reflect the HW clocking and make it clear that periph_clk
+  is feeding into the ARM PLL clock domain
 
-Changes in v3:
+No changes in v2 or v3
 
-- made default depend on ARCH_BCM_63XX per Stephen Boyd's comment
+ arch/arm/boot/dts/bcm63138.dtsi | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-Changes in v2:
-- added COMPILE_TEST per Scott Branden's comment
-
- drivers/clk/bcm/Kconfig       | 10 ++++++++++
- drivers/clk/bcm/Makefile      |  1 +
- drivers/clk/bcm/clk-bcm63xx.c | 22 ++++++++++++++++++++++
- 3 files changed, 33 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
-
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index 85260fb96b36..f2878459199a 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -1,3 +1,13 @@
-+config CLK_BCM_63XX
-+	bool "Broadcom BCM63xx clock support"
-+	depends on ARCH_BCM_63XX || COMPILE_TEST
-+	depends on COMMON_CLK
-+	select COMMON_CLK_IPROC
-+	default ARCH_BCM_63XX
-+	help
-+	  Enable common clock framework support for Broadcom BCM63xx DSL SoCs
-+	  based on the ARM architecture
+diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
+index 34cd64051250..d0560e8cd6de 100644
+--- a/arch/arm/boot/dts/bcm63138.dtsi
++++ b/arch/arm/boot/dts/bcm63138.dtsi
+@@ -43,18 +43,31 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		arm_timer_clk: arm_timer_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <500000000>;
+-		};
+-
++		/* UBUS peripheral clock */
+ 		periph_clk: periph_clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <50000000>;
+ 			clock-output-names = "periph";
+ 		};
 +
- config CLK_BCM_KONA
- 	bool "Broadcom Kona CCU clock support"
- 	depends on ARCH_BCM_MOBILE || COMPILE_TEST
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 3fc95060d875..247c26750d8b 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -1,3 +1,4 @@
-+obj-$(CONFIG_CLK_BCM_63XX)	+= clk-bcm63xx.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
-diff --git a/drivers/clk/bcm/clk-bcm63xx.c b/drivers/clk/bcm/clk-bcm63xx.c
-new file mode 100644
-index 000000000000..fbc17ae5ff2b
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm63xx.c
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/init.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include "clk-iproc.h"
++		/* peripheral clock for system timer */
++		axi_clk: axi_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&armpll>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
 +
-+static void __init bcm63138_armpll_init(struct device_node *node)
-+{
-+	iproc_armpll_setup(node);
-+}
-+CLK_OF_DECLARE(bcm63138_armpll, "brcm,bcm63138-armpll", bcm63138_armpll_init);
++		/* APB bus clock */
++		apb_clk: apb_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&armpll>;
++			clock-div = <4>;
++			clock-mult = <1>;
++		};
+ 	};
+ 
+ 	/* ARM bus */
+@@ -93,14 +106,14 @@
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x1e200 0x20>;
+ 			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&arm_timer_clk>;
++			clocks = <&axi_clk>;
+ 		};
+ 
+ 		local_timer: local-timer@1e600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x1e600 0x20>;
+ 			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&arm_timer_clk>;
++			clocks = <&axi_clk>;
+ 		};
+ 
+ 		twd_watchdog: watchdog@1e620 {
+@@ -109,6 +122,13 @@
+ 			interrupts = <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		armpll: armpll {
++			#clock-cells = <0>;
++			compatible = "brcm,bcm63138-armpll";
++			clocks = <&periph_clk>;
++			reg = <0x20000 0xf00>;
++		};
++
+ 		pmb0: reset-controller@4800c0 {
+ 			compatible = "brcm,bcm63138-pmb";
+ 			reg = <0x4800c0 0x10>;
 -- 
 2.1.0
 
