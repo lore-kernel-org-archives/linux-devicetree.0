@@ -1,741 +1,558 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v6 3/5] mfd: tps65912: Add driver for the TPS65912 PMIC
-Date: Fri, 30 Oct 2015 17:28:06 -0500
-Message-ID: <1446244088-28281-4-git-send-email-afd@ti.com>
-References: <1446244088-28281-1-git-send-email-afd@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
+Date: Fri, 30 Oct 2015 23:28:24 +0100
+Message-ID: <4552697.VhjWnxQoIo@wuerfel>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org> <5741892.rRLhcI7KQG@wuerfel> <5633E442.3010003@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446244088-28281-1-git-send-email-afd@ti.com>
+In-Reply-To: <5633E442.3010003@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for TPS65912 PMIC MFD core. It provides
-communication through the I2C and SPI interfaces. It contains
-the following components:
+On Friday 30 October 2015 17:42:26 Sinan Kaya wrote:
+> On 10/30/2015 6:24 AM, Arnd Bergmann wrote:
+> > On Thursday 29 October 2015 23:08:13 Sinan Kaya wrote:
+> >> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> >> ---
+> >>   .../devicetree/bindings/dma/qcom_hidma.txt         |   18 +
+> >>   drivers/dma/Kconfig                                |   11 +
+> >>   drivers/dma/Makefile                               |    4 +
+> >>   drivers/dma/qcom_hidma.c                           | 1717 ++++++++++++++++++++
+> >>   drivers/dma/qcom_hidma.h                           |   44 +
+> >>   drivers/dma/qcom_hidma_ll.c                        | 1132 +++++++++++++
+> >>   6 files changed, 2926 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma.txt
+> >>   create mode 100644 drivers/dma/qcom_hidma.c
+> >>   create mode 100644 drivers/dma/qcom_hidma.h
+> >>   create mode 100644 drivers/dma/qcom_hidma_ll.c
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma.txt b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
+> >> new file mode 100644
+> >> index 0000000..9a01635
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
+> >> @@ -0,0 +1,18 @@
+> >> +Qualcomm Technologies HIDMA Channel driver
+> >> +
+> >> +Required properties:
+> >> +- compatible: must contain "qcom,hidma"
+> >
+> > Be more specific here. Also, should this be 'hisilicon,hidma-1.0' rather
+> > than 'qcom'? I'm guessing from the name that this is a device you licensed
+> > from them.
+> >
+> No, this is a QCOM part. I used the driver from hisilicon as a starting 
+> point instead of starting from scratch. That's why, I kept the original 
+> copy rights.
 
- - Regulators
- - GPIO controller
+I meant the 'hidma' name. ;-)
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/Kconfig          |  26 ++++
- drivers/mfd/Makefile         |   3 +
- drivers/mfd/tps65912-core.c  | 122 +++++++++++++++
- drivers/mfd/tps65912-i2c.c   |  81 ++++++++++
- drivers/mfd/tps65912-spi.c   |  80 ++++++++++
- include/linux/mfd/tps65912.h | 345 +++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 657 insertions(+)
- create mode 100644 drivers/mfd/tps65912-core.c
- create mode 100644 drivers/mfd/tps65912-i2c.c
- create mode 100644 drivers/mfd/tps65912-spi.c
- create mode 100644 include/linux/mfd/tps65912.h
+> >> +- reg: Addresses for the transfer and event channel
+> >> +- interrupts: Should contain the event interrupt
+> >> +- desc-count: Number of asynchronous requests this channel can handle
+> >> +- event-channel: The HW event channel completions will be delivered.
+> >> +Example:
+> >> +
+> >> +	hidma_24: hidma@0x5c050000 {
+> >
+> > Name should be 'dma-controller' in DT, not 'hidma'.
+> will test and change.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 9a8df8e..1398340 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1167,6 +1167,32 @@ config MFD_TPS65910
- 	  if you say yes here you get support for the TPS65910 series of
- 	  Power Management chips.
- 
-+config MFD_TPS65912
-+	tristate
-+	select MFD_CORE
-+	select REGMAP
-+	select REGMAP_IRQ
-+
-+config MFD_TPS65912_I2C
-+	tristate "TI TPS65912 Power Management chip with I2C"
-+	select MFD_TPS65912
-+	select REGMAP_I2C
-+	depends on I2C
-+	depends on OF || COMPILE_TEST
-+	help
-+	  If you say yes here you get support for the TPS65912 series of
-+	  PM chips with I2C interface.
-+
-+config MFD_TPS65912_SPI
-+	tristate "TI TPS65912 Power Management chip with SPI"
-+	select MFD_TPS65912
-+	select REGMAP_SPI
-+	depends on SPI_MASTER
-+	depends on OF || COMPILE_TEST
-+	help
-+	  If you say yes here you get support for the TPS65912 series of
-+	  PM chips with SPI interface.
-+
- config MFD_TPS80031
- 	bool "TI TPS80031/TPS80032 Power Management chips"
- 	depends on I2C=y
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 004aa76..49c3530 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -69,6 +69,9 @@ obj-$(CONFIG_TPS6507X)		+= tps6507x.o
- obj-$(CONFIG_MFD_TPS65217)	+= tps65217.o
- obj-$(CONFIG_MFD_TPS65218)	+= tps65218.o
- obj-$(CONFIG_MFD_TPS65910)	+= tps65910.o
-+obj-$(CONFIG_MFD_TPS65912)	+= tps65912-core.o
-+obj-$(CONFIG_MFD_TPS65912_I2C)	+= tps65912-i2c.o
-+obj-$(CONFIG_MFD_TPS65912_SPI)  += tps65912-spi.o
- obj-$(CONFIG_MFD_TPS80031)	+= tps80031.o
- obj-$(CONFIG_MENELAUS)		+= menelaus.o
- 
-diff --git a/drivers/mfd/tps65912-core.c b/drivers/mfd/tps65912-core.c
-new file mode 100644
-index 0000000..93a382e
---- /dev/null
-+++ b/drivers/mfd/tps65912-core.c
-@@ -0,0 +1,122 @@
-+/*
-+ * Core functions for TI TPS65912x PMIC
-+ *
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Author: Andrew F. Davis <afd@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether expressed or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License version 2 for more details.
-+ *
-+ * Based on the TPS65218 driver and the previous TPS65912 driver by
-+ * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+
-+#include <linux/mfd/tps65912.h>
-+
-+static const struct mfd_cell tps65912_cells[] = {
-+	{
-+		.name = "tps65912-regulator",
-+		.of_compatible = "ti,tps65912-regulator",
-+	},
-+	{
-+		.name = "tps65912-gpio",
-+		.of_compatible = "ti,tps65912-gpio",
-+	},
-+};
-+
-+static const struct regmap_irq tps65912_irqs[] = {
-+	/* INT_STS IRQs */
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PWRHOLD_F, 0, TPS65912_INT_STS_PWRHOLD_F),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_VMON, 0, TPS65912_INT_STS_VMON),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PWRON, 0, TPS65912_INT_STS_PWRON),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PWRON_LP, 0, TPS65912_INT_STS_PWRON_LP),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PWRHOLD_R, 0, TPS65912_INT_STS_PWRHOLD_R),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_HOTDIE, 0, TPS65912_INT_STS_HOTDIE),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO1_R, 0, TPS65912_INT_STS_GPIO1_R),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO1_F, 0, TPS65912_INT_STS_GPIO1_F),
-+	/* INT_STS2 IRQs */
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO2_R, 1, TPS65912_INT_STS2_GPIO2_R),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO2_F, 1, TPS65912_INT_STS2_GPIO2_F),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO3_R, 1, TPS65912_INT_STS2_GPIO3_R),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO3_F, 1, TPS65912_INT_STS2_GPIO3_F),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO4_R, 1, TPS65912_INT_STS2_GPIO4_R),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO4_F, 1, TPS65912_INT_STS2_GPIO4_F),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO5_R, 1, TPS65912_INT_STS2_GPIO5_R),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_GPIO5_F, 1, TPS65912_INT_STS2_GPIO5_F),
-+	/* INT_STS3 IRQs */
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC1, 2, TPS65912_INT_STS3_PGOOD_DCDC1),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC2, 2, TPS65912_INT_STS3_PGOOD_DCDC2),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC3, 2, TPS65912_INT_STS3_PGOOD_DCDC3),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_DCDC4, 2, TPS65912_INT_STS3_PGOOD_DCDC4),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO1, 2, TPS65912_INT_STS3_PGOOD_LDO1),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO2, 2, TPS65912_INT_STS3_PGOOD_LDO2),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO3, 2, TPS65912_INT_STS3_PGOOD_LDO3),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO4, 2, TPS65912_INT_STS3_PGOOD_LDO4),
-+	/* INT_STS4 IRQs */
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO5, 3, TPS65912_INT_STS4_PGOOD_LDO5),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO6, 3, TPS65912_INT_STS4_PGOOD_LDO6),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO7, 3, TPS65912_INT_STS4_PGOOD_LDO7),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO8, 3, TPS65912_INT_STS4_PGOOD_LDO8),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO9, 3, TPS65912_INT_STS4_PGOOD_LDO9),
-+	REGMAP_IRQ_REG(TPS65912_IRQ_PGOOD_LDO10, 3, TPS65912_INT_STS4_PGOOD_LDO10),
-+};
-+
-+static struct regmap_irq_chip tps65912_irq_chip = {
-+	.name = "tps65912",
-+	.irqs = tps65912_irqs,
-+	.num_irqs = ARRAY_SIZE(tps65912_irqs),
-+	.num_regs = 4,
-+	.irq_reg_stride = 2,
-+	.mask_base = TPS65912_INT_MSK,
-+	.status_base = TPS65912_INT_STS,
-+	.ack_base = TPS65912_INT_STS,
-+	.init_ack_masked = true,
-+};
-+
-+int tps65912_device_init(struct tps65912 *tps)
-+{
-+	int ret;
-+
-+	ret = regmap_add_irq_chip(tps->regmap, tps->irq, IRQF_ONESHOT, 0,
-+				  &tps65912_irq_chip, &tps->irq_data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65912_cells,
-+			      ARRAY_SIZE(tps65912_cells), NULL, 0,
-+			      regmap_irq_get_domain(tps->irq_data));
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	regmap_del_irq_chip(tps->irq, tps->irq_data);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(tps65912_device_init);
-+
-+int tps65912_device_exit(struct tps65912 *tps)
-+{
-+	regmap_del_irq_chip(tps->irq, tps->irq_data);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(tps65912_device_exit);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_DESCRIPTION("TPS65912x MFD Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/mfd/tps65912-i2c.c b/drivers/mfd/tps65912-i2c.c
-new file mode 100644
-index 0000000..5808a44
---- /dev/null
-+++ b/drivers/mfd/tps65912-i2c.c
-@@ -0,0 +1,81 @@
-+/*
-+ * I2C access driver for TI TPS65912x PMIC
-+ *
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Author: Andrew F. Davis <afd@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether expressed or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License version 2 for more details.
-+ *
-+ * Based on the TPS65218 driver and the previous TPS65912 driver by
-+ * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/mfd/tps65912.h>
-+
-+static const struct of_device_id tps65912_i2c_of_match_table[] = {
-+	{ .compatible = "ti,tps65912", },
-+	{ /* sentinel */ }
-+};
-+
-+static int tps65912_i2c_probe(struct i2c_client *client,
-+			      const struct i2c_device_id *ids)
-+{
-+	struct tps65912 *tps;
-+
-+	tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
-+	if (!tps)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, tps);
-+	tps->dev = &client->dev;
-+	tps->irq = client->irq;
-+
-+	tps->regmap = devm_regmap_init_i2c(client, &tps65912_regmap_config);
-+	if (IS_ERR(tps->regmap)) {
-+		dev_err(tps->dev, "Failed to initialize register map\n");
-+		return PTR_ERR(tps->regmap);
-+	}
-+
-+	return tps65912_device_init(tps);
-+}
-+
-+static int tps65912_i2c_remove(struct i2c_client *client)
-+{
-+	struct tps65912 *tps = i2c_get_clientdata(client);
-+
-+	return tps65912_device_exit(tps);
-+}
-+
-+static const struct i2c_device_id tps65912_i2c_id_table[] = {
-+	{ "tps65912", 0 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, tps65912_i2c_id_table);
-+
-+static struct i2c_driver tps65912_i2c_driver = {
-+	.driver		= {
-+		.name	= "tps65912",
-+		.of_match_table = tps65912_i2c_of_match_table,
-+	},
-+	.probe		= tps65912_i2c_probe,
-+	.remove		= tps65912_i2c_remove,
-+	.id_table       = tps65912_i2c_id_table,
-+};
-+module_i2c_driver(tps65912_i2c_driver);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_DESCRIPTION("TPS65912x I2C Interface Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
-new file mode 100644
-index 0000000..563cc64
---- /dev/null
-+++ b/drivers/mfd/tps65912-spi.c
-@@ -0,0 +1,80 @@
-+/*
-+ * SPI access driver for TI TPS65912x PMIC
-+ *
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Author: Andrew F. Davis <afd@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether expressed or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License version 2 for more details.
-+ *
-+ * Based on the TPS65218 driver and the previous TPS65912 driver by
-+ * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+
-+#include <linux/mfd/tps65912.h>
-+
-+static const struct of_device_id tps65912_spi_of_match_table[] = {
-+	{ .compatible = "ti,tps65912", },
-+	{ /* sentinel */ }
-+};
-+
-+static int tps65912_spi_probe(struct spi_device *spi)
-+{
-+	struct tps65912 *tps;
-+
-+	tps = devm_kzalloc(&spi->dev, sizeof(*tps), GFP_KERNEL);
-+	if (!tps)
-+		return -ENOMEM;
-+
-+	spi_set_drvdata(spi, tps);
-+	tps->dev = &spi->dev;
-+	tps->irq = spi->irq;
-+
-+	tps->regmap = devm_regmap_init_spi(spi, &tps65912_regmap_config);
-+	if (IS_ERR(tps->regmap)) {
-+		dev_err(tps->dev, "Failed to initialize register map\n");
-+		return PTR_ERR(tps->regmap);
-+	}
-+
-+	return tps65912_device_init(tps);
-+}
-+
-+static int tps65912_spi_remove(struct spi_device *client)
-+{
-+	struct tps65912 *tps = spi_get_drvdata(client);
-+
-+	return tps65912_device_exit(tps);
-+}
-+
-+static const struct spi_device_id tps65912_spi_id_table[] = {
-+	{ "tps65912", 0 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(spi, tps65912_spi_id_table);
-+
-+static struct spi_driver tps65912_spi_driver = {
-+	.driver		= {
-+		.name	= "tps65912",
-+		.of_match_table = tps65912_spi_of_match_table,
-+	},
-+	.probe		= tps65912_spi_probe,
-+	.remove		= tps65912_spi_remove,
-+	.id_table       = tps65912_spi_id_table,
-+};
-+module_spi_driver(tps65912_spi_driver);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_DESCRIPTION("TPS65912x SPI Interface Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/tps65912.h b/include/linux/mfd/tps65912.h
-new file mode 100644
-index 0000000..8843c0d
---- /dev/null
-+++ b/include/linux/mfd/tps65912.h
-@@ -0,0 +1,345 @@
-+/*
-+ * TI TPS65912x
-+ *
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Author: Andrew F. Davis <afd@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether expressed or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License version 2 for more details.
-+ *
-+ * Based on the TPS65218 driver and the previous TPS65912 driver by
-+ * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
-+ */
-+
-+#ifndef __LINUX_MFD_TPS65912_H
-+#define __LINUX_MFD_TPS65912_H
-+
-+#include <linux/device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+
-+/* List of registers for TPS65912 */
-+#define TPS65912_DCDC1_CTRL		0x00
-+#define TPS65912_DCDC2_CTRL		0x01
-+#define TPS65912_DCDC3_CTRL		0x02
-+#define TPS65912_DCDC4_CTRL		0x03
-+#define TPS65912_DCDC1_OP		0x04
-+#define TPS65912_DCDC1_AVS		0x05
-+#define TPS65912_DCDC1_LIMIT		0x06
-+#define TPS65912_DCDC2_OP		0x07
-+#define TPS65912_DCDC2_AVS		0x08
-+#define TPS65912_DCDC2_LIMIT		0x09
-+#define TPS65912_DCDC3_OP		0x0A
-+#define TPS65912_DCDC3_AVS		0x0B
-+#define TPS65912_DCDC3_LIMIT		0x0C
-+#define TPS65912_DCDC4_OP		0x0D
-+#define TPS65912_DCDC4_AVS		0x0E
-+#define TPS65912_DCDC4_LIMIT		0x0F
-+#define TPS65912_LDO1_OP		0x10
-+#define TPS65912_LDO1_AVS		0x11
-+#define TPS65912_LDO1_LIMIT		0x12
-+#define TPS65912_LDO2_OP		0x13
-+#define TPS65912_LDO2_AVS		0x14
-+#define TPS65912_LDO2_LIMIT		0x15
-+#define TPS65912_LDO3_OP		0x16
-+#define TPS65912_LDO3_AVS		0x17
-+#define TPS65912_LDO3_LIMIT		0x18
-+#define TPS65912_LDO4_OP		0x19
-+#define TPS65912_LDO4_AVS		0x1A
-+#define TPS65912_LDO4_LIMIT		0x1B
-+#define TPS65912_LDO5			0x1C
-+#define TPS65912_LDO6			0x1D
-+#define TPS65912_LDO7			0x1E
-+#define TPS65912_LDO8			0x1F
-+#define TPS65912_LDO9			0x20
-+#define TPS65912_LDO10			0x21
-+#define TPS65912_THRM			0x22
-+#define TPS65912_CLK32OUT		0x23
-+#define TPS65912_DEVCTRL		0x24
-+#define TPS65912_DEVCTRL2		0x25
-+#define TPS65912_I2C_SPI_CFG		0x26
-+#define TPS65912_KEEP_ON		0x27
-+#define TPS65912_KEEP_ON2		0x28
-+#define TPS65912_SET_OFF1		0x29
-+#define TPS65912_SET_OFF2		0x2A
-+#define TPS65912_DEF_VOLT		0x2B
-+#define TPS65912_DEF_VOLT_MAPPING	0x2C
-+#define TPS65912_DISCHARGE		0x2D
-+#define TPS65912_DISCHARGE2		0x2E
-+#define TPS65912_EN1_SET1		0x2F
-+#define TPS65912_EN1_SET2		0x30
-+#define TPS65912_EN2_SET1		0x31
-+#define TPS65912_EN2_SET2		0x32
-+#define TPS65912_EN3_SET1		0x33
-+#define TPS65912_EN3_SET2		0x34
-+#define TPS65912_EN4_SET1		0x35
-+#define TPS65912_EN4_SET2		0x36
-+#define TPS65912_PGOOD			0x37
-+#define TPS65912_PGOOD2			0x38
-+#define TPS65912_INT_STS		0x39
-+#define TPS65912_INT_MSK		0x3A
-+#define TPS65912_INT_STS2		0x3B
-+#define TPS65912_INT_MSK2		0x3C
-+#define TPS65912_INT_STS3		0x3D
-+#define TPS65912_INT_MSK3		0x3E
-+#define TPS65912_INT_STS4		0x3F
-+#define TPS65912_INT_MSK4		0x40
-+#define TPS65912_GPIO1			0x41
-+#define TPS65912_GPIO2			0x42
-+#define TPS65912_GPIO3			0x43
-+#define TPS65912_GPIO4			0x44
-+#define TPS65912_GPIO5			0x45
-+#define TPS65912_VMON			0x46
-+#define TPS65912_LEDA_CTRL1		0x47
-+#define TPS65912_LEDA_CTRL2		0x48
-+#define TPS65912_LEDA_CTRL3		0x49
-+#define TPS65912_LEDA_CTRL4		0x4A
-+#define TPS65912_LEDA_CTRL5		0x4B
-+#define TPS65912_LEDA_CTRL6		0x4C
-+#define TPS65912_LEDA_CTRL7		0x4D
-+#define TPS65912_LEDA_CTRL8		0x4E
-+#define TPS65912_LEDB_CTRL1		0x4F
-+#define TPS65912_LEDB_CTRL2		0x50
-+#define TPS65912_LEDB_CTRL3		0x51
-+#define TPS65912_LEDB_CTRL4		0x52
-+#define TPS65912_LEDB_CTRL5		0x53
-+#define TPS65912_LEDB_CTRL6		0x54
-+#define TPS65912_LEDB_CTRL7		0x55
-+#define TPS65912_LEDB_CTRL8		0x56
-+#define TPS65912_LEDC_CTRL1		0x57
-+#define TPS65912_LEDC_CTRL2		0x58
-+#define TPS65912_LEDC_CTRL3		0x59
-+#define TPS65912_LEDC_CTRL4		0x5A
-+#define TPS65912_LEDC_CTRL5		0x5B
-+#define TPS65912_LEDC_CTRL6		0x5C
-+#define TPS65912_LEDC_CTRL7		0x5D
-+#define TPS65912_LEDC_CTRL8		0x5E
-+#define TPS65912_LED_RAMP_UP_TIME	0x5F
-+#define TPS65912_LED_RAMP_DOWN_TIME	0x60
-+#define TPS65912_LED_SEQ_EN		0x61
-+#define TPS65912_LOADSWITCH		0x62
-+#define TPS65912_SPARE			0x63
-+#define TPS65912_VERNUM			0x64
-+#define TPS6591X_MAX_REGISTER		0x64
-+
-+/* INT_STS Register field definitions */
-+#define TPS65912_INT_STS_PWRHOLD_F	BIT(0)
-+#define TPS65912_INT_STS_VMON		BIT(1)
-+#define TPS65912_INT_STS_PWRON		BIT(2)
-+#define TPS65912_INT_STS_PWRON_LP	BIT(3)
-+#define TPS65912_INT_STS_PWRHOLD_R	BIT(4)
-+#define TPS65912_INT_STS_HOTDIE		BIT(5)
-+#define TPS65912_INT_STS_GPIO1_R	BIT(6)
-+#define TPS65912_INT_STS_GPIO1_F	BIT(7)
-+
-+/* INT_STS Register field definitions */
-+#define TPS65912_INT_STS2_GPIO2_R	BIT(0)
-+#define TPS65912_INT_STS2_GPIO2_F	BIT(1)
-+#define TPS65912_INT_STS2_GPIO3_R	BIT(2)
-+#define TPS65912_INT_STS2_GPIO3_F	BIT(3)
-+#define TPS65912_INT_STS2_GPIO4_R	BIT(4)
-+#define TPS65912_INT_STS2_GPIO4_F	BIT(5)
-+#define TPS65912_INT_STS2_GPIO5_R	BIT(6)
-+#define TPS65912_INT_STS2_GPIO5_F	BIT(7)
-+
-+/* INT_STS Register field definitions */
-+#define TPS65912_INT_STS3_PGOOD_DCDC1	BIT(0)
-+#define TPS65912_INT_STS3_PGOOD_DCDC2	BIT(1)
-+#define TPS65912_INT_STS3_PGOOD_DCDC3	BIT(2)
-+#define TPS65912_INT_STS3_PGOOD_DCDC4	BIT(3)
-+#define TPS65912_INT_STS3_PGOOD_LDO1	BIT(4)
-+#define TPS65912_INT_STS3_PGOOD_LDO2	BIT(5)
-+#define TPS65912_INT_STS3_PGOOD_LDO3	BIT(6)
-+#define TPS65912_INT_STS3_PGOOD_LDO4	BIT(7)
-+
-+/* INT_STS Register field definitions */
-+#define TPS65912_INT_STS4_PGOOD_LDO5	BIT(0)
-+#define TPS65912_INT_STS4_PGOOD_LDO6	BIT(1)
-+#define TPS65912_INT_STS4_PGOOD_LDO7	BIT(2)
-+#define TPS65912_INT_STS4_PGOOD_LDO8	BIT(3)
-+#define TPS65912_INT_STS4_PGOOD_LDO9	BIT(4)
-+#define TPS65912_INT_STS4_PGOOD_LDO10	BIT(5)
-+
-+/* GPIO 1 and 2 Register field definitions */
-+#define GPIO_SLEEP_MASK			0x80
-+#define GPIO_SLEEP_SHIFT		7
-+#define GPIO_DEB_MASK			0x10
-+#define GPIO_DEB_SHIFT			4
-+#define GPIO_CFG_MASK			0x04
-+#define GPIO_CFG_SHIFT			2
-+#define GPIO_STS_MASK			0x02
-+#define GPIO_STS_SHIFT			1
-+#define GPIO_SET_MASK			0x01
-+#define GPIO_SET_SHIFT			0
-+
-+/* GPIO 3 Register field definitions */
-+#define GPIO3_SLEEP_MASK		0x80
-+#define GPIO3_SLEEP_SHIFT		7
-+#define GPIO3_SEL_MASK			0x40
-+#define GPIO3_SEL_SHIFT			6
-+#define GPIO3_ODEN_MASK			0x20
-+#define GPIO3_ODEN_SHIFT		5
-+#define GPIO3_DEB_MASK			0x10
-+#define GPIO3_DEB_SHIFT			4
-+#define GPIO3_PDEN_MASK			0x08
-+#define GPIO3_PDEN_SHIFT		3
-+#define GPIO3_CFG_MASK			0x04
-+#define GPIO3_CFG_SHIFT			2
-+#define GPIO3_STS_MASK			0x02
-+#define GPIO3_STS_SHIFT			1
-+#define GPIO3_SET_MASK			0x01
-+#define GPIO3_SET_SHIFT			0
-+
-+/* GPIO 4 Register field definitions */
-+#define GPIO4_SLEEP_MASK		0x80
-+#define GPIO4_SLEEP_SHIFT		7
-+#define GPIO4_SEL_MASK			0x40
-+#define GPIO4_SEL_SHIFT			6
-+#define GPIO4_ODEN_MASK			0x20
-+#define GPIO4_ODEN_SHIFT		5
-+#define GPIO4_DEB_MASK			0x10
-+#define GPIO4_DEB_SHIFT			4
-+#define GPIO4_PDEN_MASK			0x08
-+#define GPIO4_PDEN_SHIFT		3
-+#define GPIO4_CFG_MASK			0x04
-+#define GPIO4_CFG_SHIFT			2
-+#define GPIO4_STS_MASK			0x02
-+#define GPIO4_STS_SHIFT			1
-+#define GPIO4_SET_MASK			0x01
-+#define GPIO4_SET_SHIFT			0
-+
-+/* Register THERM  (0x80) register.RegisterDescription */
-+#define THERM_THERM_HD_MASK		0x20
-+#define THERM_THERM_HD_SHIFT		5
-+#define THERM_THERM_TS_MASK		0x10
-+#define THERM_THERM_TS_SHIFT		4
-+#define THERM_THERM_HDSEL_MASK		0x0C
-+#define THERM_THERM_HDSEL_SHIFT		2
-+#define THERM_RSVD1_MASK		0x02
-+#define THERM_RSVD1_SHIFT		1
-+#define THERM_THERM_STATE_MASK		0x01
-+#define THERM_THERM_STATE_SHIFT		0
-+
-+/* Register DCDCCTRL1 register.RegisterDescription */
-+#define DCDCCTRL_VCON_ENABLE_MASK	0x80
-+#define DCDCCTRL_VCON_ENABLE_SHIFT	7
-+#define DCDCCTRL_VCON_RANGE1_MASK	0x40
-+#define DCDCCTRL_VCON_RANGE1_SHIFT	6
-+#define DCDCCTRL_VCON_RANGE0_MASK	0x20
-+#define DCDCCTRL_VCON_RANGE0_SHIFT	5
-+#define DCDCCTRL_TSTEP2_MASK		0x10
-+#define DCDCCTRL_TSTEP2_SHIFT		4
-+#define DCDCCTRL_TSTEP1_MASK		0x08
-+#define DCDCCTRL_TSTEP1_SHIFT		3
-+#define DCDCCTRL_TSTEP0_MASK		0x04
-+#define DCDCCTRL_TSTEP0_SHIFT		2
-+#define DCDCCTRL_DCDC1_MODE_MASK	0x02
-+#define DCDCCTRL_DCDC1_MODE_SHIFT	1
-+
-+/* Register DCDCCTRL2 and DCDCCTRL3 register.RegisterDescription */
-+#define DCDCCTRL_TSTEP2_MASK		0x10
-+#define DCDCCTRL_TSTEP2_SHIFT		4
-+#define DCDCCTRL_TSTEP1_MASK		0x08
-+#define DCDCCTRL_TSTEP1_SHIFT		3
-+#define DCDCCTRL_TSTEP0_MASK		0x04
-+#define DCDCCTRL_TSTEP0_SHIFT		2
-+#define DCDCCTRL_DCDC_MODE_MASK		0x02
-+#define DCDCCTRL_DCDC_MODE_SHIFT	1
-+#define DCDCCTRL_RSVD0_MASK		0x01
-+#define DCDCCTRL_RSVD0_SHIFT		0
-+
-+/* Register DCDCCTRL4 register.RegisterDescription */
-+#define DCDCCTRL_RAMP_TIME_MASK		0x01
-+#define DCDCCTRL_RAMP_TIME_SHIFT	0
-+
-+/* Register DCDCx_AVS */
-+#define DCDC_AVS_ENABLE_MASK		0x80
-+#define DCDC_AVS_ENABLE_SHIFT		7
-+#define DCDC_AVS_ECO_MASK		0x40
-+#define DCDC_AVS_ECO_SHIFT		6
-+
-+/* Register DCDCx_LIMIT */
-+#define DCDC_LIMIT_RANGE_MASK		0xC0
-+#define DCDC_LIMIT_RANGE_SHIFT		6
-+#define DCDC_LIMIT_MAX_SEL_MASK		0x3F
-+#define DCDC_LIMIT_MAX_SEL_SHIFT	0
-+
-+/* Define the TPS65912 IRQ numbers */
-+enum tps65912_irqs {
-+	/* INT_STS registers */
-+	TPS65912_IRQ_PWRHOLD_F,
-+	TPS65912_IRQ_VMON,
-+	TPS65912_IRQ_PWRON,
-+	TPS65912_IRQ_PWRON_LP,
-+	TPS65912_IRQ_PWRHOLD_R,
-+	TPS65912_IRQ_HOTDIE,
-+	TPS65912_IRQ_GPIO1_R,
-+	TPS65912_IRQ_GPIO1_F,
-+	/* INT_STS2 registers */
-+	TPS65912_IRQ_GPIO2_R,
-+	TPS65912_IRQ_GPIO2_F,
-+	TPS65912_IRQ_GPIO3_R,
-+	TPS65912_IRQ_GPIO3_F,
-+	TPS65912_IRQ_GPIO4_R,
-+	TPS65912_IRQ_GPIO4_F,
-+	TPS65912_IRQ_GPIO5_R,
-+	TPS65912_IRQ_GPIO5_F,
-+	/* INT_STS3 registers */
-+	TPS65912_IRQ_PGOOD_DCDC1,
-+	TPS65912_IRQ_PGOOD_DCDC2,
-+	TPS65912_IRQ_PGOOD_DCDC3,
-+	TPS65912_IRQ_PGOOD_DCDC4,
-+	TPS65912_IRQ_PGOOD_LDO1,
-+	TPS65912_IRQ_PGOOD_LDO2,
-+	TPS65912_IRQ_PGOOD_LDO3,
-+	TPS65912_IRQ_PGOOD_LDO4,
-+	/* INT_STS4 registers */
-+	TPS65912_IRQ_PGOOD_LDO5,
-+	TPS65912_IRQ_PGOOD_LDO6,
-+	TPS65912_IRQ_PGOOD_LDO7,
-+	TPS65912_IRQ_PGOOD_LDO8,
-+	TPS65912_IRQ_PGOOD_LDO9,
-+	TPS65912_IRQ_PGOOD_LDO10,
-+};
-+
-+/*
-+ * struct tps65912 - state holder for the tps65912 driver
-+ *
-+ * Device data may be used to access the TPS65912 chip
-+ */
-+struct tps65912 {
-+	struct device *dev;
-+	struct regmap *regmap;
-+
-+	/* IRQ Data */
-+	int irq;
-+	struct regmap_irq_chip_data *irq_data;
-+};
-+
-+static const struct regmap_range tps65912_yes_ranges[] = {
-+	regmap_reg_range(TPS65912_INT_STS, TPS65912_GPIO5),
-+};
-+
-+static const struct regmap_access_table tps65912_volatile_table = {
-+	.yes_ranges = tps65912_yes_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(tps65912_yes_ranges),
-+};
-+
-+static const struct regmap_config tps65912_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.cache_type = REGCACHE_RBTREE,
-+	.volatile_table = &tps65912_volatile_table,
-+};
-+
-+int tps65912_device_init(struct tps65912 *tps);
-+int tps65912_device_exit(struct tps65912 *tps);
-+
-+#endif /*  __LINUX_MFD_TPS65912_H */
--- 
-1.9.1
+no need to test, Linux ignores the node name.
+
+> >
+> > MODULE_NAME and HIDMA_DEFAULT_DESCRIPTOR_COUNT can be dropped
+> 
+> I'll remove the module_name. The default descriptor is used if 
+> device-tree or acpi table does not have the descriptor count.
+
+I missed that part. If the descriptor count is a hardware feature,
+just make that property mandatory. OTOH, if this is an optimization
+setting, better drop that property entirely.
+
+> >> +#define HIDMA_RUNTIME_GET(dmadev)				\
+> >> +do {								\
+> >> +	atomic_inc(&(dmadev)->pm_counter);			\
+> >> +	TRC_PM((dmadev)->ddev.dev,				\
+> >> +		"%s:%d pm_runtime_get %d\n", __func__, __LINE__,\
+> >> +		atomic_read(&(dmadev)->pm_counter));		\
+> >> +	pm_runtime_get_sync((dmadev)->ddev.dev);		\
+> >> +} while (0)
+> >> +
+> >> +#define HIDMA_RUNTIME_SET(dmadev)				\
+> >> +do {								\
+> >> +	atomic_dec(&(dmadev)->pm_counter);			\
+> >> +	TRC_PM((dmadev)->ddev.dev,				\
+> >> +		"%s:%d pm_runtime_put_autosuspend:%d\n",	\
+> >> +		__func__, __LINE__,				\
+> >> +		atomic_read(&(dmadev)->pm_counter));		\
+> >> +	pm_runtime_mark_last_busy((dmadev)->ddev.dev);		\
+> >> +	pm_runtime_put_autosuspend((dmadev)->ddev.dev);		\
+> >> +} while (0)
+> >
+> > Inline functions.
+> 
+> ok, I was hoping to keep the file and line numbers as the PM stuff gets 
+> called from multiple locations. should I call the inline functions with 
+> __func__ and __LINE__ from another macro  like
+> 
+> #define HIDMA_RUNTIME_GET(dmadev)
+> 	func(dmadev, __func__, __LINE__)
+> 
+> etc.
+
+I would just drop the debugging macros entirely here.
+
+> >
+> >> +struct hidma_dev {
+> >> +	u8				evridx;
+> >> +	u32				nr_descriptors;
+> >> +
+> >> +	void				*lldev;
+> >> +	void				__iomem *dev_trca;
+> >> +	void				__iomem *dev_evca;
+> >> +	int (*self_test)(struct hidma_dev *device);
+> >> +	struct dentry			*debugfs;
+> >> +	struct dentry			*stats;
+> >> +
+> >> +	/* used to protect the pending channel list*/
+> >> +	spinlock_t			lock;
+> >> +	dma_addr_t			dev_trca_phys;
+> >> +	struct dma_device		ddev;
+> >> +	struct tasklet_struct		tasklet;
+> >
+> > workqueue maybe?
+> 
+> is there an advantage of workqueue over tasklet? I'm open to suggestions.
+
+tasklets are not normally used in new code. They are only marginally
+faster than workqueues, but are executed in atomic context and cannot
+call sleeping functions.
+
+> >> +static unsigned int debug_pm;
+> >> +module_param(debug_pm, uint, 0644);
+> >> +MODULE_PARM_DESC(debug_pm,
+> >> +		 "debug runtime power management transitions (default: 0)");
+> >> +
+> >> +#define TRC_PM(...) do {			\
+> >> +		if (debug_pm)			\
+> >> +			dev_info(__VA_ARGS__);	\
+> >> +	} while (0)
+> >
+> > Again, remove these after you are done debugging the problem at hand,
+> > we don't need to clutter up the upstream version.
+> 
+> ok, I'll take them out if that's the norm. I was hoping to keep them in 
+> case something shows up.
+
+In my experience, the bugs you have now are different from the bugs
+that other people find next, and debugging macros like this end up
+not helping then.
+
+> >> +	/*
+> >> +	 * It is assumed that the hardware can move the data within 1s
+> >> +	 * and signal the OS of the completion
+> >> +	 */
+> >> +	ret = wait_event_interruptible_timeout(dmadev->test_result.wq,
+> >> +		atomic_read(&dmadev->test_result.counter) == (map_count),
+> >> +				msecs_to_jiffies(10000));
+> >> +
+> >> +	if (ret <= 0) {
+> >> +		dev_err(dmadev->ddev.dev,
+> >> +			"Self-test sg copy timed out, disabling\n");
+> >> +		err = -ENODEV;
+> >> +		goto tx_status;
+> >> +	}
+> >
+> > Why ENODEV? Could you make this handle restarted system calls?
+> 
+> This is the self test code. It gets called from probe. If there is a 
+> problem with the device or system configuration, I don't want to enable 
+> this device. I can certainly return a different error code though. 
+> What's a good code?
+
+I see. probe() is not restartable, so it cannot be -ERESTARTSYS.
+
+Maybe better use wait_event_timeout and not handle the signals then.
+It will eventually time out if something goes wrong.
+
+> >> +
+> >> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> >> +
+> >> +#define SIER_CHAN_SHOW(chan, name) \
+> >> +		seq_printf(s, #name "=%u\n", chan->name)
+> >
+> > can be open-coded for clarity.
+> >
+> 
+> I think I copied this from another driver. Would you rather see 
+> seq_printf in the code than a macro.
+> 
+> Sorry, I didn't get what you mean by "open-coded".
+
+Yes, that is what I meant. Keep the code but don't put it into
+an inline function or macro.
+
+> >> +       ret = dma_mapping_error(dev, dma_src);
+> >> +       if (ret) {
+> >> +               dev_err(dev, "dma_mapping_error with ret:%d\n", ret);
+> >> +               ret = -ENOMEM;
+> >> +       } else {
+> >> +               phys_addr_t phys;
+> >> +
+> >> +               phys = dma_to_phys(dev, dma_src);
+> >> +               if (strcmp(__va(phys), "hello world") != 0) {
+> >> +                       dev_err(dev, "memory content mismatch\n");
+> >> +                       ret = -EINVAL;
+> >> +               } else {
+> >> +                       dev_dbg(dev, "mapsingle:dma_map_single works\n");
+> >> +               }
+> >> +               dma_unmap_single(dev, dma_src, buf_size, DMA_TO_DEVICE);
+> >> +       }
+> >
+> > dma_to_phys() is architecture specific and does not work if you
+> > have an IOMMU. Just use the virtual address you passed into dma_map_*.
+> 
+> Should we fix the real problem?
+> 
+> I patched dma_to_phys to call IOMMU driver for translation when IOMMU is 
+> present. I was planning to upstream that patch when Robin Murphy's 
+> changes make upstream.
+> 
+> The assumption of phys==dma address doesn't look scalable to me. I was 
+> checking the DMA subsystem for correctness with this test. If use 
+> dma_src, it is going to be a 1==1 test.
+
+dma_to_phys is the internal helper that is used by the iommu
+implementation, drivers should never call it, and I don't see
+why you would do that.
+
+
+> >
+> >> +	seq_printf(s, "self_test=%u\n",
+> >> +		atomic_read(&dmadev->test_result.counter));
+> >> +
+> >> +	seq_printf(s, "copy%s%s%s%s%s%s%s%s%s%s%s\n",
+> >> +		dma_has_cap(DMA_PQ, dma->cap_mask) ? " pq" : "",
+> >> +		dma_has_cap(DMA_PQ_VAL, dma->cap_mask) ? " pq_val" : "",
+> >> +		dma_has_cap(DMA_XOR, dma->cap_mask) ? " xor" : "",
+> >> +		dma_has_cap(DMA_XOR_VAL, dma->cap_mask) ? " xor_val" : "",
+> >> +		dma_has_cap(DMA_INTERRUPT, dma->cap_mask) ? " intr" : "",
+> >> +		dma_has_cap(DMA_SG, dma->cap_mask) ? " sg" : "",
+> >> +		dma_has_cap(DMA_ASYNC_TX, dma->cap_mask) ? " async" : "",
+> >> +		dma_has_cap(DMA_SLAVE, dma->cap_mask) ? " slave" : "",
+> >> +		dma_has_cap(DMA_CYCLIC, dma->cap_mask) ? " cyclic" : "",
+> >> +		dma_has_cap(DMA_INTERLEAVE, dma->cap_mask) ? " intl" : "",
+> >> +		dma_has_cap(DMA_MEMCPY, dma->cap_mask) ? " memcpy" : "");
+> >> +
+> >> +	return 0;
+> >> +}
+> >
+> > The selftest part and the features could just be separate files in the
+> > core dmaengine code, it doesn't really belong here.
+> >
+> I'll take a look. It could take a couple of iterations to get this right 
+> but I could certainly move my testing to another file for sharing.
+
+I also missed the part about the selftest being called from probe
+rather than through debugfs.
+
+> >> +}
+> >> +#else
+> >> +static void hidma_debug_uninit(struct hidma_dev *dmadev)
+> >> +{
+> >> +}
+> >> +static int hidma_debug_init(struct hidma_dev *dmadev)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +#endif
+> >
+> > You can remove the #ifdef here. The debugfs code already stubs out all
+> > debugfs_create_*() and turns it all into nops when it is disabled.
+> 
+> ok, I think I got compilation errors with the data structures but I'll 
+> take a look.
+
+Ok. There may be cases where a structure definition is mistakenly placed
+in an #ifdef and should instead be taken out.
+
+> >> +	dma_cap_set(DMA_MEMCPY, dmadev->ddev.cap_mask);
+> >> +	/* Apply default dma_mask if needed */
+> >> +	if (!pdev->dev.dma_mask) {
+> >> +		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> >> +		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+> >> +	}
+> >> +
+> >
+> > remove the check, or use
+> 
+> I got caught on this problem before. Let me go back and revisit. It took 
+> my entire day to figure out that dma_mask pointer was not set.
+> 
+> >
+> > 	if (WARN_ON(!pdev->dev.dma_mask))
+> > 		return -ENXIO;
+> >
+> > The dma mask has to always be set by the platform code before probe()
+> > is called. If it is not set, you are not allowed to perform DMA.
+> 
+> I tested this on an ACPI platform BTW when I was working on the initial 
+> implementation.
+
+I remember there was a bug in ACPI that it was not setting the dma mask
+pointer right. That should be fixed in newer kernels. If not, don't
+add another workaround for broken ACPI but instead fix the ACPI code.
+
+> >
+> >> +	rc = devm_request_irq(&pdev->dev, chirq, hidma_chirq_handler, 0,
+> >> +			      "qcom-hidma", &dmadev->lldev);
+> >> +	if (rc) {
+> >> +		dev_err(&pdev->dev, "chirq registration failed: %d\n", chirq);
+> >> +		goto chirq_request_failed;
+> >> +	}
+> >> +
+> >> +	dev_dbg(&pdev->dev, "initializing DMA channels\n");
+> >> +	INIT_LIST_HEAD(&dmadev->ddev.channels);
+> >> +	rc = hidma_chan_init(dmadev, 0);
+> >> +	if (rc) {
+> >> +		dev_err(&pdev->dev, "probe:channel init failed\n");
+> >> +		goto channel_init_failed;
+> >> +	}
+> >> +	dev_dbg(&pdev->dev, "HI-DMA engine driver starting self test\n");
+> >> +	rc = dmadev->self_test(dmadev);
+> >> +	if (rc) {
+> >> +		dev_err(&pdev->dev, "probe: self test failed: %d\n", rc);
+> >> +		goto self_test_failed;
+> >> +	}
+> >> +	dev_info(&pdev->dev, "probe: self test succeeded.\n");
+> >> +
+> >> +	dev_dbg(&pdev->dev, "calling dma_async_device_register\n");
+> >> +	rc = dma_async_device_register(&dmadev->ddev);
+> >> +	if (rc) {
+> >> +		dev_err(&pdev->dev,
+> >> +			"probe: failed to register slave DMA: %d\n", rc);
+> >> +		goto device_register_failed;
+> >> +	}
+> >> +	dev_dbg(&pdev->dev, "probe: dma_async_device_register done\n");
+> >> +
+> >> +	rc = hidma_debug_init(dmadev);
+> >> +	if (rc) {
+> >> +		dev_err(&pdev->dev,
+> >> +			"probe: failed to init debugfs: %d\n", rc);
+> >> +		goto debug_init_failed;
+> >> +	}
+> >> +
+> >> +	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
+> >> +	platform_set_drvdata(pdev, dmadev);
+> >> +	HIDMA_RUNTIME_SET(dmadev);
+> >> +	return 0;
+> >
+> > Remove the debug prints when you are done debugging.
+> 
+> errors or the dev_infos?
+
+I would remove both. Some might still be useful, but generally you only
+want to print messages when something happens that is not triggered by
+user action.
+
+> 
+> > Also, if you waste CPU cycles for hundreds of milliseconds, it's unlikely
+> > that the function is so performance critical that it requires writel_relaxed().
+> >
+> > Just use writel() here.
+> 
+> The issue is not writel_relaxed vs. writel. After I issue reset, I need 
+> wait for some time to confirm reset was done. I can use readl_polling 
+> instead of mdelay if we don't like mdelay.
+
+I meant that both _relaxed() and mdelay() are probably wrong here.
+
+readl_polling() would avoid the part with _relaxed(), but if that can
+still take more than a few microseconds, you should try to sleep inbetween
+rather than burn CPU cycles.
+
+> >> +/*
+> >> + * The interrupt handler for HIDMA will try to consume as many pending
+> >> + * EVRE from the event queue as possible. Each EVRE has an associated
+> >> + * TRE that holds the user interface parameters. EVRE reports the
+> >> + * result of the transaction. Hardware guarantees ordering between EVREs
+> >> + * and TREs. We use last processed offset to figure out which TRE is
+> >> + * associated with which EVRE. If two TREs are consumed by HW, the EVREs
+> >> + * are in order in the event ring.
+> >> + * This handler will do a one pass for consuming EVREs. Other EVREs may
+> >> + * be delivered while we are working. It will try to consume incoming
+> >> + * EVREs one more time and return.
+> >> + * For unprocessed EVREs, hardware will trigger another interrupt until
+> >> + * all the interrupt bits are cleared.
+> >> + */
+> >> +static void hidma_ll_int_handler_internal(struct hidma_lldev *lldev)
+> >> +{
+> >> +	u32 status;
+> >> +	u32 enable;
+> >> +	u32 cause;
+> >> +	int repeat = 2;
+> >> +	unsigned long timeout;
+> >> +
+> >> +	status = readl_relaxed(lldev->evca + EVCA_IRQ_STAT_OFFSET);
+> >> +	enable = readl_relaxed(lldev->evca + EVCA_IRQ_EN_OFFSET);
+> >> +	cause = status & enable;
+> >> +
+> >
+> > Reading the status probably requires a readl() rather than readl_relaxed()
+> > to guarantee that the DMA data has arrived in memory by the time that the
+> > register data is seen by the CPU. If using readl_relaxed() here is a valid
+> > and required optimization, please add a comment to explain why it works
+> > and how much you gain.
+> 
+> I will add some description. This is a high speed peripheral. I don't 
+> like spreading barriers as candies inside the readl and writel unless I 
+> have to.
+> 
+> According to the barriers video, I watched on youtube this should be the 
+> rule for ordering.
+> 
+> "if you do two relaxed reads and check the results of the returned 
+> variables, ARM architecture guarantees that these two relaxed variables 
+> will get observed during the check."
+> 
+> this is called implied ordering or something of that sort.
+
+My point was a bit different: while it is guaranteed that the
+result of the readl_relaxed() is observed in order, they do not
+guarantee that a DMA from device to memory that was started by
+the device before the readl_relaxed() has arrived in memory
+by the time that the readl_relaxed() result is visible to the
+CPU and it starts accessing the memory.
+
+In other words, when the hardware sends you data followed by an
+interrupt to tell you the data is there, your interrupt handler
+can tell the driver that is waiting for this data that the DMA
+is complete while the data itself is still in flight, e.g. waiting
+for an IOMMU to fetch page table entries.
+
+> >> +	wmb();
+> >> +
+> >> +	mdelay(1);
+> >
+> > Another workqueue? You should basically never call mdelay().
+> 
+> I'll use polled read instead.
+
+Ok, but again make sure that you call msleep() or usleep_range()
+between the reads.
+
+> >> +static int hidma_ll_hw_start(void *llhndl)
+> >> +{
+> >> +	int rc = 0;
+> >> +	struct hidma_lldev *lldev = llhndl;
+> >> +	unsigned long irqflags;
+> >> +
+> >> +	spin_lock_irqsave(&lldev->lock, irqflags);
+> >> +	writel_relaxed(lldev->tre_write_offset,
+> >> +			lldev->trca + TRCA_DOORBELL_OFFSET);
+> >> +	spin_unlock_irqrestore(&lldev->lock, irqflags);
+> >
+> > How does this work? The writel_relaxed() won't synchronize with either
+> > the DMA data or the spinlock.
+> 
+> mutex and spinlocks have barriers inside. See the youtube video.
+> 
+> https://www.youtube.com/watch?v=6ORn6_35kKo
+
+I'm pretty sure these barriers only make sense to the CPU, so the
+spinlock guarantees that the access to lldev->tre_write_offset is
+protected, but not the access to lldev->trca, because that write
+is posted on the bus and might not complete until after the
+unlock. There is no "dsb(st)" in here:
+
+static inline void arch_spin_unlock(arch_spinlock_t *lock)
+{
+        unsigned long tmp;
+
+        asm volatile(ARM64_LSE_ATOMIC_INSN(
+        /* LL/SC */
+        "       ldrh    %w1, %0\n"
+        "       add     %w1, %w1, #1\n"
+        "       stlrh   %w1, %0",
+        /* LSE atomics */
+        "       mov     %w1, #1\n"
+        "       nop\n"
+        "       staddlh %w1, %0")
+        : "=Q" (lock->owner), "=&r" (tmp)
+        :
+        : "memory");
+}
+
+> >
+> > Also, your abstraction seem to go a little too far if the upper driver
+> > doesn't know what the lower driver calls its main device structure.
+> >
+> > Or you can go further and just embed the struct hidma_lldev within the
+> > struct hidma_dev to save one?
+> 
+> That's how it was before. It got too complex and variables/spinlocks got 
+> intermixed. I borrowed the upper layer and it worked as it is. I rather 
+> keep all hardware stuff in another file and do not mix and match for safety.
+
+Ok, then just use a forward declaration for the struct name so you can
+have a type-safe pointer but don't need to show the members.
+
+> >> +void hidma_ll_chstats(struct seq_file *s, void *llhndl, u32 tre_ch)
+> >> +{
+> >> +	struct hidma_lldev *lldev = llhndl;
+> >> +	struct hidma_tre *tre;
+> >> +	u32 length;
+> >> +	dma_addr_t src_start;
+> >> +	dma_addr_t dest_start;
+> >> +	u32 *tre_local;
+> >> +
+> >> +	if (unlikely(tre_ch >= lldev->nr_tres)) {
+> >> +		dev_err(lldev->dev, "invalid TRE number in chstats:%d",
+> >> +			tre_ch);
+> >> +		return;
+> >> +	}
+> >> +	tre = &lldev->trepool[tre_ch];
+> >> +	seq_printf(s, "------Channel %d -----\n", tre_ch);
+> >> +	seq_printf(s, "allocated=%d\n", atomic_read(&tre->allocated));
+> >> +	HIDMA_CHAN_SHOW(tre, queued);
+> >> +	seq_printf(s, "err_info=0x%x\n",
+> >> +		   lldev->tx_status_list[tre->chidx].err_info);
+> >> +	seq_printf(s, "err_code=0x%x\n",
+> >> +		   lldev->tx_status_list[tre->chidx].err_code);
+> >> +	HIDMA_CHAN_SHOW(tre, status);
+> >> +	HIDMA_CHAN_SHOW(tre, chidx);
+> >> +	HIDMA_CHAN_SHOW(tre, dma_sig);
+> >> +	seq_printf(s, "dev_name=%s\n", tre->dev_name);
+> >> +	seq_printf(s, "callback=%p\n", tre->callback);
+> >> +	seq_printf(s, "data=%p\n", tre->data);
+> >> +	HIDMA_CHAN_SHOW(tre, tre_index);
+> >> +
+> >> +	tre_local = &tre->tre_local[0];
+> >> +	src_start = tre_local[TRE_SRC_LOW_IDX];
+> >> +	src_start = ((u64)(tre_local[TRE_SRC_HI_IDX]) << 32) + src_start;
+> >> +	dest_start = tre_local[TRE_DEST_LOW_IDX];
+> >> +	dest_start += ((u64)(tre_local[TRE_DEST_HI_IDX]) << 32);
+> >> +	length = tre_local[TRE_LEN_IDX];
+> >> +
+> >> +	seq_printf(s, "src=%pap\n", &src_start);
+> >> +	seq_printf(s, "dest=%pap\n", &dest_start);
+> >> +	seq_printf(s, "length=0x%x\n", length);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(hidma_ll_chstats);
+> >
+> > Remove all the pointers here. I guess you can remove the entire debugfs
+> > file really ;-)
+> 
+> ok, I need some facility to print out stuff when problems happened. 
+> Would you rather use sysfs?
+
+sysfs would be less appropriate, as that requires providing a stable ABI
+for user space. I think ftrace should provide what you need. Let me know
+if that doesn't work out.
+
+	Arnd
