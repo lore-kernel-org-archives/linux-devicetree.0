@@ -1,96 +1,117 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add documentation for
- s2mps15 PMIC
-Date: Fri, 30 Oct 2015 11:55:31 +0530
-Message-ID: <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
-References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, broonie@kernel.org
-Cc: k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Fri, 30 Oct 2015 15:30:06 +0900
+Message-ID: <56330E6E.50003@samsung.com>
+References: <cover.1446122247.git.p.fedin@samsung.com>
+ <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Abraham <thomas.ab@samsung.com>
+On 29.10.2015 21:42, Pavel Fedin wrote:
+> Add documentation for new subnode properties, allowing bank configuration.
+> Based on u-boot implementation, but heavily reworked.
 
-Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 device
-is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regulators.
-This also supports RTC and three 32.768KHz clock outputs.
+Please, carefully look at:
+Documentation/devicetree/bindings/net/gpmc-eth.txt
+Documentation/devicetree/bindings/bus/ti-gpmc.txt
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+1. Try to re-use existing bindings. Although I see existing bank-width
+and gpmc,device-width but yours samsung,srom-data-width seems better.
+Maybe there are other to re-use?
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 890f0b0e1643..4c0543ceec25 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
- 
--* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current Regulator
-+* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
- 
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,8 +7,12 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-pmic"
--	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
-+- compatible: Should be one of the following
-+	- "samsung,s2mps11-pmic"
-+	- "samsung,s2mps13-pmic"
-+	- "samsung,s2mps14-pmic"
-+	- "samsung,s2mps15-pmic"
-+	- "samsung,s2mpu02-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -24,7 +28,7 @@ Optional properties:
-   unwanted buck warm reset (setting buck voltages to default values).
- 
- Optional nodes:
--- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffered 32.768
-+- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/BT) buffered 32.768
-   KHz outputs, so to register these as clocks with common clock framework
-   instantiate a sub-node named "clocks". It uses the common clock binding
-   documented in :
-@@ -37,12 +41,13 @@ Optional nodes:
-     the clock which they consume.
-     Clock               ID           Devices
-     ----------------------------------------------------------
--    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S5M8767
--    32KhzCP		1            S2MPS11, S2MPS13, S5M8767
--    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S5M8767
-+    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M8767
-+    32KhzCP		1            S2MPS11, S2MPS13, S2MPS15, S5M8767
-+    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M8767
- 
-   - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2mps13-clk",
- 		"samsung,s2mps14-clk", "samsung,s5m8767-clk"
-+    The s2msp15 uses the same compatible as s2mps13, as both provides similar clocks.
- 
- - regulators: The regulators of s2mps11 that have to be instantiated should be
- included in a sub-node named 'regulators'. Regulator nodes included in this
-@@ -90,6 +95,7 @@ as per the datasheet of s2mps11.
- 			- S2MPS11: 1 to 38
- 			- S2MPS13: 1 to 40
- 			- S2MPS14: 1 to 25
-+			- S2MPS15: 1 to 27
- 			- S2MPU02: 1 to 28
- 		  - Example: LDO1, LDO2, LDO28
- 	- BUCKn
-@@ -97,6 +103,7 @@ as per the datasheet of s2mps11.
- 			- S2MPS11: 1 to 10
- 			- S2MPS13: 1 to 10
- 			- S2MPS14: 1 to 5
-+			- S2MPS15: 1 to 10
- 			- S2MPU02: 1 to 7
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
--- 
-1.7.10.4
+2. The array of "PMC, Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs" is poorly
+extendable and not very descriptive/readable. You mapped directly device
+register which is the easier way for the driver but that is not the
+purpose of binding.
+
+3. Please provide ranges for valid values and units.
+
+4. PMC is not a timing.
+
+I doubt that TI GPMC could be used in Exynos SROM but please look at it
+and get useful stuff from it.
+
+Best regards,
+Krzysztof
+
+> 
+> Signed-off-by: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../bindings/arm/samsung/exynos-srom.txt           | 50 +++++++++++++++++++++-
+>  1 file changed, 48 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> index 33886d5..02ecc7f 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> @@ -5,8 +5,54 @@ Required properties:
+>  
+>  - reg: offset and length of the register set
+>  
+> -Example:
+> +- #address-cells, #size-cells : should be '1' if the device has sub-nodes
+> +				with 'reg' property.
+> +- ranges: allows valid 1:1 translation between child's address space and
+> +	  parent's address space
+> +
+> +Sub-nodes:
+> +The SROM controller can be used to attach external peripherials. In this case
+> +device nodes should be added as subnodes to the SROMc node. These subnodes,
+> +except regular device specification, should contain the following properties,
+> +describing configuration of the relevant SROM bank:
+> +
+> +Required properties:
+> +- samsung,srom-bank : bank number (0 - 3)
+> +
+> +- samsung,srom-timing : array of 7 integers: PMC, Tacp, Tcah, Tcoh, Tacc, Tcos,
+> +			Tacs
+> +
+> +Optional properties:
+> +- samsung,srom-data-width : data width in bytes (1 or 2). If omitted, default
+> +			    of 1 is used.
+> +
+> +Example: basic definition, no banks are configured
+>  	sromc@12570000 {
+>  		compatible = "samsung,exynos-srom";
+> -		reg = <0x12570000 0x10>;
+> +		reg = <0x12570000 0x14>;
+> +	};
+> +
+> +Example: SROMc with smsc 911x ethernet chip on bank 3
+> +	sromc@12570000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		compatible = "samsung,exynos-srom";
+> +		reg = <0x12570000 0x14>;
+> +
+> +		ethernet@07000000 {
+> +			compatible = "smsc,lan9115";
+> +			reg = <0x07000000 0x10000>;
+> +			phy-mode = "mii";
+> +			interrupt-parent = <&gpx0>;
+> +			interrupts = <5 8>;
+> +			reg-io-width = <2>;
+> +			smsc,irq-push-pull;
+> +			smsc,force-internal-phy;
+> +
+> +			samsung,srom-bank = <3>;
+> +			samsung,srom-data-width = <2>;
+> +			samsung,srom-timing = <1 9 12 1 9 1 1>;
+> +		};
+>  	};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
