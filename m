@@ -1,85 +1,81 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/3] gpio: xgene: add support to configure GPIO line as input, output or external IRQ pin
-Date: Fri, 30 Oct 2015 09:38:54 +0100
-Message-ID: <3805459.UaJmXm5MV7@wuerfel>
-References: <1445842175-11446-1-git-send-email-yvo@apm.com> <CACRpkdbWKmRKXL=+57KQVYYRc79tgGwCi=7p4LSBwFgUwgz-gw@mail.gmail.com> <CAFopSPQtuVxSn4SkVHtf-0AZE7MqRJ3XQMutCubzMd8CztA8CA@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RESEND PATCH 2/4] clk: rockchip: set an id for crypto clk
+Date: Fri, 30 Oct 2015 09:54:02 +0100
+Message-ID: <4280600.OxjmG17dRp@phil>
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com> <1446193369-4453-3-git-send-email-zain.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAFopSPQtuVxSn4SkVHtf-0AZE7MqRJ3XQMutCubzMd8CztA8CA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446193369-4453-3-git-send-email-zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 30 October 2015 12:41:03 Quan Nguyen wrote:
-> On Thu, Oct 29, 2015 at 8:28 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Mon, Oct 26, 2015 at 7:49 AM, Y Vo <yvo@apm.com> wrote:
-> > (...)
-> >> +#define XGENE_HWIRQ_TO_GPIO(hwirq)     ((hwirq) + XGENE_GPIO8_IDX)
-> >> +#define XGENE_GPIO_TO_HWIRQ(gpio)      ((gpio) - XGENE_GPIO8_IDX)
-> >> +#define GIC_IRQ_TO_GPIO_IRQ(hwirq)     ((hwirq) - XGENE_GPIO8_HWIRQ)
-> >> +#define GPIO_IRQ_TO_GIC_IRQ(hwirq)     ((hwirq) + XGENE_GPIO8_HWIRQ)
-> >
-> > I'm a bit uneasy about this, maybe I just don't get it.
-> >
-> > What is this indexing into "GIC IRQ" that is starting to happen
-> > here?
-> >
-> > The GIC (if that is drivers/irqchip/irq-gic.c) has a totally dynamic IRQ
-> > translation and the Linux IRQs it is using may change. I am worried
-> > that there is some reliance here on Linux IRQ having certain numbers
-> > because there is certainly no ABI like that.
-> >
-> > Is this 0x48 really an index into the *hardware* offset in the GIC?
-> >
-> > And if it is: why are we not getting this hardware information from the
-> > device tree like all other interrupt numbers and offsets?
-> >
-> > I'm worried about this.
-> 
-> The SPI40(0x48) through SPI45(0x4D) from GIC are mapped as external
-> IRQ0 - IRQ5 in this GPIO block, so it is hardware offset not mapped
-> irq number.
-> 
-> Below is detail:
-> 
-> + GIC: SPI40 (hwirq=0x48)  <=> SB-GPIO: (hwirq=0) (gpio line 8)
-> + GIC: SPI41 (hwirq=0x49)  <=> SB-GPIO: (hwirq=1) (gpio line 9)
-> ...
-> + GIC: SPI45 (hwirq=0x4D)  <=> SB-GPIO: (hwirq=5) (gpio line 13)
-> 
-> These defines are to help translating between Gic hardware irq and
-> SBGPIO hardware irq number.
+Hi Zain,
 
-But the numbers are already in DT, so don't duplicate them in the
-source code but just use irq_of_parse_and_map() to get the parent
-irq number.
-
-> >> -       u32 *irq;
-> >> +       void __iomem *regs;
-> >> +       struct irq_domain *gic_domain;
-> >> +       struct irq_domain *irq_domain;
-> >
-> > And there is some secondary gic_domain here, which is confusing
-> > since the GIC does have an IRQ domain too.
-> >
-> > I think I want a clear explanation to how this GPIO controller interacts
-> > with the GIC, and I want it to be part of the patch, as comments in the
-> > code and in the commit message (which is way too small for a complex
-> > patch like this).
-> >
-> > Otherwise I have no chance to understand what is really going on here.
+Am Freitag, 30. Oktober 2015, 16:22:47 schrieb Zain Wang:
+> set an id for crypto clk, so that it can be called in other part.
 > 
-> SBGPIO currently is not capable to mask/unmask/... irqs, so these will
-> rely on the parent (GIC) instead. To do so, we need keep a parent
-> domain reference here "struct irq_domain *gic_domain" so we can find
-> correspond parent irq in runtime.
+> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  drivers/clk/rockchip/clk-rk3288.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> index 9040878..d74bd5d 100644
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
+> +	COMPOSITE_NOMUX(SRST_CRYPTO, "crypto", "aclk_cpu_pre", 0,
 
-Maybe rename the domain to 'parent_domain' or something like that
-to avoid hardcoding any knowledge of the parent IRQ controller being
-a GIC. If the same GPIO block gets reused on a PowerPC machine, we
-want the driver to just work and not have any ARM specifics in it.
+the id you want to use actually is a soft-reset index, not a clock-id.
+You would need to add a real id, in this case with an sclk_ prefix.
 
-	Arnd
+>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+> 
+
+It should probably look more like below, but as suggested by Stephen Boyd
+in another thread, we should coordinate with Chris to add more necessary clock
+ids in one go:
+-------- 8< -----------
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 9040878..9fd9f5a 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+ 	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+ 			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+-	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
++	COMPOSITE_NOMUX(SCLK_CRYPTO, "sclk_crypto", "aclk_cpu_pre", 0,
+ 			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+ 			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+ 	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+index c719aac..9e0a5e9 100644
+--- a/include/dt-bindings/clock/rk3288-cru.h
++++ b/include/dt-bindings/clock/rk3288-cru.h
+@@ -86,6 +86,7 @@
+ #define SCLK_USBPHY480M_SRC	122
+ #define SCLK_PVTM_CORE		123
+ #define SCLK_PVTM_GPU		124
++#define SCLK_CRYPTO		125
+ 
+ #define SCLK_MAC		151
+ #define SCLK_MACREF_OUT		152
+-- 
+2.6.1
+
+-------- 8< -----------
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
