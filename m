@@ -1,666 +1,979 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
-Date: Fri, 30 Oct 2015 11:24:49 +0100
-Message-ID: <5741892.rRLhcI7KQG@wuerfel>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org> <1446174501-8870-2-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH] Revert "h8300: clocksource"
+Date: Fri, 30 Oct 2015 11:26:08 +0100
+Message-ID: <1446200775-23898-1-git-send-email-daniel.lezcano@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446174501-8870-2-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:H8/300
+	ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 29 October 2015 23:08:13 Sinan Kaya wrote:
-> This patch adds support for hidma engine. The driver
-> consists of two logical blocks. The DMA engine interface
-> and the low-level interface. This version of the driver
-> does not support virtualization on this release and only
-> memcpy interface support is included.
-
-Does that mean you can have slave device support eventually?
-
-If so, please put that into the binding document already.
-
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  .../devicetree/bindings/dma/qcom_hidma.txt         |   18 +
->  drivers/dma/Kconfig                                |   11 +
->  drivers/dma/Makefile                               |    4 +
->  drivers/dma/qcom_hidma.c                           | 1717 ++++++++++++++++++++
->  drivers/dma/qcom_hidma.h                           |   44 +
->  drivers/dma/qcom_hidma_ll.c                        | 1132 +++++++++++++
->  6 files changed, 2926 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma.txt
->  create mode 100644 drivers/dma/qcom_hidma.c
->  create mode 100644 drivers/dma/qcom_hidma.h
->  create mode 100644 drivers/dma/qcom_hidma_ll.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma.txt b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
-> new file mode 100644
-> index 0000000..9a01635
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
-> @@ -0,0 +1,18 @@
-> +Qualcomm Technologies HIDMA Channel driver
-> +
-> +Required properties:
-> +- compatible: must contain "qcom,hidma"
-
-Be more specific here. Also, should this be 'hisilicon,hidma-1.0' rather
-than 'qcom'? I'm guessing from the name that this is a device you licensed
-from them.
-
-> +- reg: Addresses for the transfer and event channel
-> +- interrupts: Should contain the event interrupt
-> +- desc-count: Number of asynchronous requests this channel can handle
-> +- event-channel: The HW event channel completions will be delivered.
-> +Example:
-> +
-> +	hidma_24: hidma@0x5c050000 {
-
-Name should be 'dma-controller' in DT, not 'hidma'.
-
-> +		compatible = "qcom,hidma";
-> +		reg = <0 0x5c050000 0x0 0x1000>,
-> +		      <0 0x5c0b0000 0x0 0x1000>;
-> +		interrupts = <0 389 0>;
-> +		desc-count = <10>;
-> +		event-channel = /bits/ 8 <4>;
-> +	};
-
-Remove the /bits/.
-
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 76a5a5e..2645185 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -512,6 +512,17 @@ config QCOM_HIDMA_MGMT
->  	  OS would run QCOM_HIDMA driver and the hypervisor would run
->  	  the QCOM_HIDMA_MGMT driver.
->  
-> +config QCOM_HIDMA
-> +	tristate "Qualcomm Technologies HIDMA support"
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	help
-> +	  Enable support for the Qualcomm Technologies HIDMA controller.
-> +	  The HIDMA controller supports optimized buffer copies
-> +	  (user to kernel, kernel to kernel, etc.).  It only supports
-> +	  memcpy/memset interfaces. The core is not intended for general
-> +	  purpose slave DMA.
-> +
->  config XILINX_VDMA
->  	tristate "Xilinx AXI VDMA Engine"
->  	depends on (ARCH_ZYNQ || MICROBLAZE)
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index 3d25ffd..5665df2 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -53,6 +53,10 @@ obj-$(CONFIG_PL330_DMA) += pl330.o
->  obj-$(CONFIG_PPC_BESTCOMM) += bestcomm/
->  obj-$(CONFIG_PXA_DMA) += pxa_dma.o
->  obj-$(CONFIG_QCOM_BAM_DMA) += qcom_bam_dma.o
-> +obj-$(CONFIG_QCOM_HIDMA) +=  qcom_hdma.o
-> +qcom_hdma-objs        := qcom_hidma_ll.o qcom_hidma.o
-> +
-
-The driver is linked into a single module, so all the EXPORT_SYMBOL
-statements can be dropped.
-
-> +/* Default idle time is 2 seconds. This parameter can
-> + * be overridden by changing the following
-> + * /sys/bus/platform/devices/QCOM8061:<xy>/power/autosuspend_delay_ms
-> + * during kernel boot.
-> + */
-> +#define AUTOSUSPEND_TIMEOUT		2000
-> +#define HIDMA_DEFAULT_DESCRIPTOR_COUNT	16
-> +#define MODULE_NAME			"hidma"
-
-MODULE_NAME and HIDMA_DEFAULT_DESCRIPTOR_COUNT can be dropped
-
-
-> +#define HIDMA_RUNTIME_GET(dmadev)				\
-> +do {								\
-> +	atomic_inc(&(dmadev)->pm_counter);			\
-> +	TRC_PM((dmadev)->ddev.dev,				\
-> +		"%s:%d pm_runtime_get %d\n", __func__, __LINE__,\
-> +		atomic_read(&(dmadev)->pm_counter));		\
-> +	pm_runtime_get_sync((dmadev)->ddev.dev);		\
-> +} while (0)
-> +
-> +#define HIDMA_RUNTIME_SET(dmadev)				\
-> +do {								\
-> +	atomic_dec(&(dmadev)->pm_counter);			\
-> +	TRC_PM((dmadev)->ddev.dev,				\
-> +		"%s:%d pm_runtime_put_autosuspend:%d\n",	\
-> +		__func__, __LINE__,				\
-> +		atomic_read(&(dmadev)->pm_counter));		\
-> +	pm_runtime_mark_last_busy((dmadev)->ddev.dev);		\
-> +	pm_runtime_put_autosuspend((dmadev)->ddev.dev);		\
-> +} while (0)
-
-Inline functions.
-
-> +struct hidma_test_sync {
-> +	atomic_t			counter;
-> +	wait_queue_head_t		wq;
-> +};
-
-Let me guess, you converted this from a semaphore? ;-)
-
-Just put the two members into the containing structure and relete it here.
-
-> +struct hidma_dev {
-> +	u8				evridx;
-> +	u32				nr_descriptors;
-> +
-> +	void				*lldev;
-> +	void				__iomem *dev_trca;
-> +	void				__iomem *dev_evca;
-> +	int (*self_test)(struct hidma_dev *device);
-> +	struct dentry			*debugfs;
-> +	struct dentry			*stats;
-> +
-> +	/* used to protect the pending channel list*/
-> +	spinlock_t			lock;
-> +	dma_addr_t			dev_trca_phys;
-> +	struct dma_device		ddev;
-> +	struct tasklet_struct		tasklet;
-
-workqueue maybe?
-
-> +	resource_size_t			dev_trca_size;
-> +	dma_addr_t			dev_evca_phys;
-> +	resource_size_t			dev_evca_size;
-
-All three look unused and can be removed.
-
-> +static unsigned int debug_pm;
-> +module_param(debug_pm, uint, 0644);
-> +MODULE_PARM_DESC(debug_pm,
-> +		 "debug runtime power management transitions (default: 0)");
-> +
-> +#define TRC_PM(...) do {			\
-> +		if (debug_pm)			\
-> +			dev_info(__VA_ARGS__);	\
-> +	} while (0)
-
-Again, remove these after you are done debugging the problem at hand,
-we don't need to clutter up the upstream version.
-
-> +	/*
-> +	 * It is assumed that the hardware can move the data within 1s
-> +	 * and signal the OS of the completion
-> +	 */
-> +	ret = wait_event_interruptible_timeout(dmadev->test_result.wq,
-> +		atomic_read(&dmadev->test_result.counter) == (map_count),
-> +				msecs_to_jiffies(10000));
-> +
-> +	if (ret <= 0) {
-> +		dev_err(dmadev->ddev.dev,
-> +			"Self-test sg copy timed out, disabling\n");
-> +		err = -ENODEV;
-> +		goto tx_status;
-> +	}
-
-Why ENODEV? Could you make this handle restarted system calls?
-
-> +
-> +/*
-> + * Perform a streaming transaction to verify the HW works.
-> + */
-> +static int hidma_selftest_streaming(struct hidma_dev *dmadev,
-> +			struct dma_chan *dma_chanptr, u64 size,
-> +			unsigned long flags)
-> +{
-
-You have a lot of selftest code here. Can you try to move that into a file
-that works for all DMA engines? It feels like this should not be part of
-a driver.
-
-> +
-> +#if IS_ENABLED(CONFIG_DEBUG_FS)
-> +
-> +#define SIER_CHAN_SHOW(chan, name) \
-> +		seq_printf(s, #name "=%u\n", chan->name)
-
-can be open-coded for clarity.
-
-> +       ret = dma_mapping_error(dev, dma_src);
-> +       if (ret) {
-> +               dev_err(dev, "dma_mapping_error with ret:%d\n", ret);
-> +               ret = -ENOMEM;
-> +       } else {
-> +               phys_addr_t phys;
-> +
-> +               phys = dma_to_phys(dev, dma_src);
-> +               if (strcmp(__va(phys), "hello world") != 0) {
-> +                       dev_err(dev, "memory content mismatch\n");
-> +                       ret = -EINVAL;
-> +               } else {
-> +                       dev_dbg(dev, "mapsingle:dma_map_single works\n");
-> +               }
-> +               dma_unmap_single(dev, dma_src, buf_size, DMA_TO_DEVICE);
-> +       }
-
-dma_to_phys() is architecture specific and does not work if you
-have an IOMMU. Just use the virtual address you passed into dma_map_*.
-
-> +/**
-> + * hidma_dma_info: display HIDMA device info
-> + *
-> + * Display the info for the current HIDMA device.
-> + */
-> +static int hidma_dma_info(struct seq_file *s, void *unused)
-> +{
-> +	struct hidma_dev *dmadev = s->private;
-> +	struct dma_device *dma = &dmadev->ddev;
-> +
-> +	seq_printf(s, "nr_descriptors=%d\n", dmadev->nr_descriptors);
-> +	seq_printf(s, "dev_trca=%p\n", &dmadev->dev_trca);
-> +	seq_printf(s, "dev_trca_phys=%pa\n", &dmadev->dev_trca_phys);
-> +	seq_printf(s, "dev_trca_size=%pa\n", &dmadev->dev_trca_size);
-> +	seq_printf(s, "dev_evca=%p\n", &dmadev->dev_evca);
-> +	seq_printf(s, "dev_evca_phys=%pa\n", &dmadev->dev_evca_phys);
-> +	seq_printf(s, "dev_evca_size=%pa\n", &dmadev->dev_evca_size);
-
-Don't print pointers here.
-
-> +	seq_printf(s, "self_test=%u\n",
-> +		atomic_read(&dmadev->test_result.counter));
-> +
-> +	seq_printf(s, "copy%s%s%s%s%s%s%s%s%s%s%s\n",
-> +		dma_has_cap(DMA_PQ, dma->cap_mask) ? " pq" : "",
-> +		dma_has_cap(DMA_PQ_VAL, dma->cap_mask) ? " pq_val" : "",
-> +		dma_has_cap(DMA_XOR, dma->cap_mask) ? " xor" : "",
-> +		dma_has_cap(DMA_XOR_VAL, dma->cap_mask) ? " xor_val" : "",
-> +		dma_has_cap(DMA_INTERRUPT, dma->cap_mask) ? " intr" : "",
-> +		dma_has_cap(DMA_SG, dma->cap_mask) ? " sg" : "",
-> +		dma_has_cap(DMA_ASYNC_TX, dma->cap_mask) ? " async" : "",
-> +		dma_has_cap(DMA_SLAVE, dma->cap_mask) ? " slave" : "",
-> +		dma_has_cap(DMA_CYCLIC, dma->cap_mask) ? " cyclic" : "",
-> +		dma_has_cap(DMA_INTERLEAVE, dma->cap_mask) ? " intl" : "",
-> +		dma_has_cap(DMA_MEMCPY, dma->cap_mask) ? " memcpy" : "");
-> +
-> +	return 0;
-> +}
-
-The selftest part and the features could just be separate files in the
-core dmaengine code, it doesn't really belong here.
-
-> +}
-> +#else
-> +static void hidma_debug_uninit(struct hidma_dev *dmadev)
-> +{
-> +}
-> +static int hidma_debug_init(struct hidma_dev *dmadev)
-> +{
-> +	return 0;
-> +}
-> +#endif
-
-You can remove the #ifdef here. The debugfs code already stubs out all
-debugfs_create_*() and turns it all into nops when it is disabled.
-
-> +	dma_cap_set(DMA_MEMCPY, dmadev->ddev.cap_mask);
-> +	/* Apply default dma_mask if needed */
-> +	if (!pdev->dev.dma_mask) {
-> +		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-> +		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
-> +	}
-> +
-
-remove the check, or use
-
-	if (WARN_ON(!pdev->dev.dma_mask))
-		return -ENXIO;
-
-The dma mask has to always be set by the platform code before probe()
-is called. If it is not set, you are not allowed to perform DMA.
-
-> +	dmadev->dev_evca_phys = evca_resource->start;
-> +	dmadev->dev_evca_size = resource_size(evca_resource);
-> +
-> +	dev_dbg(&pdev->dev, "dev_evca_phys:%pa\n", &dmadev->dev_evca_phys);
-> +	dev_dbg(&pdev->dev, "dev_evca_size:%pa\n", &dmadev->dev_evca_size);
-> +
-
-> +	dev_dbg(&pdev->dev, "qcom_hidma: mapped EVCA %pa to %p\n",
-> +		&dmadev->dev_evca_phys, dmadev->dev_evca);
-
-
-
-> +	dmadev->dev_trca_phys = trca_resource->start;
-> +	dmadev->dev_trca_size = resource_size(trca_resource);
-> +
-> +	dev_dbg(&pdev->dev, "dev_trca_phys:%pa\n", &dmadev->dev_trca_phys);
-> +	dev_dbg(&pdev->dev, "dev_trca_size:%pa\n", &dmadev->dev_trca_size);
-
-Don't print pointers.
-
-> +	rc = devm_request_irq(&pdev->dev, chirq, hidma_chirq_handler, 0,
-> +			      "qcom-hidma", &dmadev->lldev);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "chirq registration failed: %d\n", chirq);
-> +		goto chirq_request_failed;
-> +	}
-> +
-> +	dev_dbg(&pdev->dev, "initializing DMA channels\n");
-> +	INIT_LIST_HEAD(&dmadev->ddev.channels);
-> +	rc = hidma_chan_init(dmadev, 0);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "probe:channel init failed\n");
-> +		goto channel_init_failed;
-> +	}
-> +	dev_dbg(&pdev->dev, "HI-DMA engine driver starting self test\n");
-> +	rc = dmadev->self_test(dmadev);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "probe: self test failed: %d\n", rc);
-> +		goto self_test_failed;
-> +	}
-> +	dev_info(&pdev->dev, "probe: self test succeeded.\n");
-> +
-> +	dev_dbg(&pdev->dev, "calling dma_async_device_register\n");
-> +	rc = dma_async_device_register(&dmadev->ddev);
-> +	if (rc) {
-> +		dev_err(&pdev->dev,
-> +			"probe: failed to register slave DMA: %d\n", rc);
-> +		goto device_register_failed;
-> +	}
-> +	dev_dbg(&pdev->dev, "probe: dma_async_device_register done\n");
-> +
-> +	rc = hidma_debug_init(dmadev);
-> +	if (rc) {
-> +		dev_err(&pdev->dev,
-> +			"probe: failed to init debugfs: %d\n", rc);
-> +		goto debug_init_failed;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
-> +	platform_set_drvdata(pdev, dmadev);
-> +	HIDMA_RUNTIME_SET(dmadev);
-> +	return 0;
-
-Remove the debug prints when you are done debugging.
-
-> +debug_init_failed:
-> +device_register_failed:
-> +self_test_failed:
-> +channel_init_failed:
-> +chirq_request_failed:
-> +	hidma_ll_uninit(dmadev->lldev);
-> +ll_init_failed:
-> +evridx_failed:
-> +remap_trca_failed:
-> +remap_evca_failed:
-> +	if (dmadev)
-> +		hidma_free(dmadev);
-
-Rename the labels according to what you do at in the failure case
-and remove most of them. This is 'goto', not 'comefrom' ;-)
-
-> +static struct platform_driver hidma_driver = {
-> +	.probe = hidma_probe,
-> +	.remove = hidma_remove,
-> +	.driver = {
-> +		.name = MODULE_NAME,
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(hidma_match),
-> +		.acpi_match_table = ACPI_PTR(hidma_acpi_ids),
-
-
-Remove .owner and of_match_ptr().
-
-> +	},
-> +};
-> +
-> +static int __init hidma_init(void)
-> +{
-> +	return platform_driver_register(&hidma_driver);
-> +}
-> +late_initcall(hidma_init);
-> +
-> +static void __exit hidma_exit(void)
-> +{
-> +	platform_driver_unregister(&hidma_driver);
-> +}
-> +module_exit(hidma_exit);
-
-module_platform_driver()
-
-> +
-> +	if (unlikely(tre_ch >= lldev->nr_tres)) {
-> +		dev_err(lldev->dev, "invalid TRE number in free:%d", tre_ch);
-> +		return;
-> +	}
-> +
-> +	tre = &lldev->trepool[tre_ch];
-> +	if (unlikely(atomic_read(&tre->allocated) != true)) {
-> +		dev_err(lldev->dev, "trying to free an unused TRE:%d",
-> +			tre_ch);
-> +		return;
-> +	}
-
-Remove the 'unlikely' and the redundant '!= true'.
-
-Only use 'likely' or 'unlikely' if you can measure a difference.
-
-> +static int hidma_ll_reset(struct hidma_lldev *lldev)
-> +{
-> +	u32 val;
-> +	int count;
-> +
-> +	val = readl_relaxed(lldev->trca + TRCA_CTRLSTS_OFFSET);
-> +	val = val & ~(CH_CONTROL_MASK << 16);
-> +	val = val | (CH_RESET << 16);
-> +	writel_relaxed(val, lldev->trca + TRCA_CTRLSTS_OFFSET);
-> +
-> +	/* wait until the reset is performed */
-> +	wmb();
-> +
-> +	/* Delay 10ms after reset to allow DMA logic to quiesce.*/
-> +	for (count = 0; count < 10; count++) {
-> +		val = readl_relaxed(lldev->trca + TRCA_CTRLSTS_OFFSET);
-> +		lldev->trch_state = (val >> CH_STATE_BIT_POS)
-> +					& CH_STATE_MASK;
-> +		if (lldev->trch_state == CH_DISABLED)
-> +			break;
-> +		mdelay(1);
-> +	}
-> +	val = readl_relaxed(lldev->trca + TRCA_CTRLSTS_OFFSET);
-> +	lldev->trch_state = (val >> CH_STATE_BIT_POS) & CH_STATE_MASK;
-> +	if (lldev->trch_state != CH_DISABLED) {
-> +		dev_err(lldev->dev,
-> +			"transfer channel did not reset\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	val = readl_relaxed(lldev->evca + EVCA_CTRLSTS_OFFSET);
-> +	val = val & ~(CH_CONTROL_MASK << 16);
-> +	val = val | (CH_RESET << 16);
-> +	writel_relaxed(val, lldev->evca + EVCA_CTRLSTS_OFFSET);
-> +
-> +	/* wait until the reset is performed */
-> +	wmb();
-> +
-> +	/* Delay 10ms after reset to allow DMA logic to quiesce.*/
-> +	for (count = 0; count < 10; count++) {
-> +		val = readl_relaxed(lldev->evca + EVCA_CTRLSTS_OFFSET);
-> +		lldev->evch_state = (val >> CH_STATE_BIT_POS)
-> +					& CH_STATE_MASK;
-> +		if (lldev->evch_state == CH_DISABLED)
-> +			break;
-> +		mdelay(1);
-> +	}
-
-Try using a workqueue to get into a state where you can call msleep()
-instead of mdelay().
-
-Also, if you waste CPU cycles for hundreds of milliseconds, it's unlikely
-that the function is so performance critical that it requires writel_relaxed().
-
-Just use writel() here.
-> +/*
-> + * The interrupt handler for HIDMA will try to consume as many pending
-> + * EVRE from the event queue as possible. Each EVRE has an associated
-> + * TRE that holds the user interface parameters. EVRE reports the
-> + * result of the transaction. Hardware guarantees ordering between EVREs
-> + * and TREs. We use last processed offset to figure out which TRE is
-> + * associated with which EVRE. If two TREs are consumed by HW, the EVREs
-> + * are in order in the event ring.
-> + * This handler will do a one pass for consuming EVREs. Other EVREs may
-> + * be delivered while we are working. It will try to consume incoming
-> + * EVREs one more time and return.
-> + * For unprocessed EVREs, hardware will trigger another interrupt until
-> + * all the interrupt bits are cleared.
-> + */
-> +static void hidma_ll_int_handler_internal(struct hidma_lldev *lldev)
-> +{
-> +	u32 status;
-> +	u32 enable;
-> +	u32 cause;
-> +	int repeat = 2;
-> +	unsigned long timeout;
-> +
-> +	status = readl_relaxed(lldev->evca + EVCA_IRQ_STAT_OFFSET);
-> +	enable = readl_relaxed(lldev->evca + EVCA_IRQ_EN_OFFSET);
-> +	cause = status & enable;
-> +
-
-Reading the status probably requires a readl() rather than readl_relaxed()
-to guarantee that the DMA data has arrived in memory by the time that the
-register data is seen by the CPU. If using readl_relaxed() here is a valid
-and required optimization, please add a comment to explain why it works
-and how much you gain.
-
-> +		/* Another interrupt might have arrived while we are
-> +		 * processing this one. Read the new cause.
-> +		 */
-> +		status = readl_relaxed(lldev->evca + EVCA_IRQ_STAT_OFFSET);
-> +		enable = readl_relaxed(lldev->evca + EVCA_IRQ_EN_OFFSET);
-> +		cause = status & enable;
-> +
-> +		repeat--;
-> +	}
-
-Same here.
-
-
-> +}
-> +
-> +
-> +static int hidma_ll_enable(struct hidma_lldev *lldev)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(lldev->evca + EVCA_CTRLSTS_OFFSET);
-> +	val &= ~(CH_CONTROL_MASK << 16);
-> +	val |= (CH_ENABLE << 16);
-> +
-> +	writel_relaxed(val, lldev->evca + EVCA_CTRLSTS_OFFSET);
-> +
-> +	/* wait until channel is enabled */
-> +	wmb();
-> +
-> +	mdelay(1);
-> +
-> +	val = readl_relaxed(lldev->evca + EVCA_CTRLSTS_OFFSET);
-> +	lldev->evch_state = (val >> CH_STATE_BIT_POS) & CH_STATE_MASK;
-> +	if ((lldev->evch_state != CH_ENABLED) &&
-> +		(lldev->evch_state != CH_RUNNING)) {
-> +		dev_err(lldev->dev,
-> +			"event channel did not get enabled\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	val = readl_relaxed(lldev->trca + TRCA_CTRLSTS_OFFSET);
-> +	val = val & ~(CH_CONTROL_MASK << 16);
-> +	val = val | (CH_ENABLE << 16);
-> +	writel_relaxed(val, lldev->trca + TRCA_CTRLSTS_OFFSET);
-> +
-> +	/* wait until channel is enabled */
-> +	wmb();
-> +
-> +	mdelay(1);
-
-Another workqueue? You should basically never call mdelay(). 
-
-> +static int hidma_ll_hw_start(void *llhndl)
-> +{
-> +	int rc = 0;
-> +	struct hidma_lldev *lldev = llhndl;
-> +	unsigned long irqflags;
-> +
-> +	spin_lock_irqsave(&lldev->lock, irqflags);
-> +	writel_relaxed(lldev->tre_write_offset,
-> +			lldev->trca + TRCA_DOORBELL_OFFSET);
-> +	spin_unlock_irqrestore(&lldev->lock, irqflags);
-
-How does this work? The writel_relaxed() won't synchronize with either
-the DMA data or the spinlock.
-
-> +int hidma_ll_init(void **lldevp, struct device *dev, u32 nr_tres,
-> +			void __iomem *trca, void __iomem *evca,
-> +			u8 evridx)
-
-How about returning the pointer rather than passing in an indirect pointer?
-
-Also, your abstraction seem to go a little too far if the upper driver
-doesn't know what the lower driver calls its main device structure.
-
-Or you can go further and just embed the struct hidma_lldev within the
-struct hidma_dev to save one?
-
-> +void hidma_ll_chstats(struct seq_file *s, void *llhndl, u32 tre_ch)
-> +{
-> +	struct hidma_lldev *lldev = llhndl;
-> +	struct hidma_tre *tre;
-> +	u32 length;
-> +	dma_addr_t src_start;
-> +	dma_addr_t dest_start;
-> +	u32 *tre_local;
-> +
-> +	if (unlikely(tre_ch >= lldev->nr_tres)) {
-> +		dev_err(lldev->dev, "invalid TRE number in chstats:%d",
-> +			tre_ch);
-> +		return;
-> +	}
-> +	tre = &lldev->trepool[tre_ch];
-> +	seq_printf(s, "------Channel %d -----\n", tre_ch);
-> +	seq_printf(s, "allocated=%d\n", atomic_read(&tre->allocated));
-> +	HIDMA_CHAN_SHOW(tre, queued);
-> +	seq_printf(s, "err_info=0x%x\n",
-> +		   lldev->tx_status_list[tre->chidx].err_info);
-> +	seq_printf(s, "err_code=0x%x\n",
-> +		   lldev->tx_status_list[tre->chidx].err_code);
-> +	HIDMA_CHAN_SHOW(tre, status);
-> +	HIDMA_CHAN_SHOW(tre, chidx);
-> +	HIDMA_CHAN_SHOW(tre, dma_sig);
-> +	seq_printf(s, "dev_name=%s\n", tre->dev_name);
-> +	seq_printf(s, "callback=%p\n", tre->callback);
-> +	seq_printf(s, "data=%p\n", tre->data);
-> +	HIDMA_CHAN_SHOW(tre, tre_index);
-> +
-> +	tre_local = &tre->tre_local[0];
-> +	src_start = tre_local[TRE_SRC_LOW_IDX];
-> +	src_start = ((u64)(tre_local[TRE_SRC_HI_IDX]) << 32) + src_start;
-> +	dest_start = tre_local[TRE_DEST_LOW_IDX];
-> +	dest_start += ((u64)(tre_local[TRE_DEST_HI_IDX]) << 32);
-> +	length = tre_local[TRE_LEN_IDX];
-> +
-> +	seq_printf(s, "src=%pap\n", &src_start);
-> +	seq_printf(s, "dest=%pap\n", &dest_start);
-> +	seq_printf(s, "length=0x%x\n", length);
-> +}
-> +EXPORT_SYMBOL_GPL(hidma_ll_chstats);
-
-Remove all the pointers here. I guess you can remove the entire debugfs
-file really ;-)
-
-This looks like it is better done using ftrace for the low-level internals
-of the driver.
-
-	Arnd
+This reverts commit 618b902d8c098f2fff188119da7b3184c4bc5483.
+
+The renesas architecture have been dropped and re-introduced two years
+after with a supposed improvement of the code.
+
+While looking at the timer drivers, I see it did not passed a correct code
+review process. No maintainters were in Cc, not code review and no ack
+from them (Thomas and I).
+
+Even if those drivers where already in the tree several years ago, that
+does not prevent them, when re-introduced, to be reviewed again and at
+least acked by the maintainer.
+
+Even if the patches where on lkml@, that does not prevent the different
+sub-system maintainers to be in Cc.
+
+Instead of that, these drivers passed silently through another tree (arm-soc
+I guess).
+
+Revert these drivers in order to have them re-submitted and reviewed again.
+
+There is legacy code to be removed.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+Conflicts:
+	drivers/clocksource/Kconfig
+	drivers/clocksource/Makefile
+	drivers/clocksource/h8300_timer16.c
+	drivers/clocksource/h8300_timer8.c
+	drivers/clocksource/h8300_tpu.c
+---
+ .../bindings/timer/renesas,16bit-timer.txt         |  25 --
+ .../bindings/timer/renesas,8bit-timer.txt          |  25 --
+ .../devicetree/bindings/timer/renesas,tpu.txt      |  21 --
+ drivers/clocksource/Kconfig                        |   7 -
+ drivers/clocksource/Makefile                       |   3 -
+ drivers/clocksource/h8300_timer16.c                | 253 ----------------
+ drivers/clocksource/h8300_timer8.c                 | 317 ---------------------
+ drivers/clocksource/h8300_tpu.c                    | 206 -------------
+ 8 files changed, 857 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt
+ delete mode 100644 Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt
+ delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.txt
+ delete mode 100644 drivers/clocksource/h8300_timer16.c
+ delete mode 100644 drivers/clocksource/h8300_timer8.c
+ delete mode 100644 drivers/clocksource/h8300_tpu.c
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt b/Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt
+deleted file mode 100644
+index e879244..0000000
+--- a/Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-* Renesas H8/300 16bit timer
+-
+-The 16bit timer is a 16bit timer/counter with configurable clock inputs and
+-programmable compare match.
+-
+-Required Properties:
+-
+-  - compatible: must contain "renesas,16bit-timer"
+-  - reg: base address and length of the registers block for the timer module.
+-  - interrupts: interrupt-specifier for the timer, IMIA
+-  - clocks: a list of phandle, one for each entry in clock-names.
+-  - clock-names: must contain "peripheral_clk" for the functional clock.
+-  - renesas,channel: timer channel number.
+-
+-Example:
+-
+-	timer16: timer@ffff68 {
+-		compatible = "reneas,16bit-timer";
+-		reg = <0xffff68 8>, <0xffff60 8>;
+-		interrupts = <24>;
+-		renesas,channel = <0>;
+-		clocks = <&pclk>;
+-		clock-names = "peripheral_clk";
+-	};
+-
+diff --git a/Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt b/Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt
+deleted file mode 100644
+index 9dca375..0000000
+--- a/Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-* Renesas H8/300 8bit timer
+-
+-The 8bit timer is a 8bit timer/counter with configurable clock inputs and
+-programmable compare match.
+-
+-This implement only supported cascade mode.
+-
+-Required Properties:
+-
+-  - compatible: must contain "renesas,8bit-timer"
+-  - reg: base address and length of the registers block for the timer module.
+-  - interrupts: interrupt-specifier for the timer, CMIA and TOVI
+-  - clocks: a list of phandle, one for each entry in clock-names.
+-  - clock-names: must contain "fck" for the functional clock.
+-
+-Example:
+-
+-	timer8_0: timer@ffff80 {
+-		compatible = "renesas,8bit-timer";
+-		reg = <0xffff80 10>;
+-		interrupts = <36>;
+-		clocks = <&fclk>;
+-		clock-names = "fck";
+-	};
+-
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tpu.txt b/Documentation/devicetree/bindings/timer/renesas,tpu.txt
+deleted file mode 100644
+index f8b2589..0000000
+--- a/Documentation/devicetree/bindings/timer/renesas,tpu.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-* Renesas H8/300 Timer Pluse Unit
+-
+-The TPU is a 16bit timer/counter with configurable clock inputs and
+-programmable compare match.
+-This implementation support only cascade mode.
+-
+-Required Properties:
+-
+-  - compatible: must contain "renesas,tpu"
+-  - reg: base address and length of the registers block in 2 channel.
+-  - clocks: a list of phandle, one for each entry in clock-names.
+-  - clock-names: must contain "peripheral_clk" for the functional clock.
+-
+-
+-Example:
+-	tpu: tpu@ffffe0 {
+-		compatible = "renesas,tpu";
+-		reg = <0xffffe0 16>, <0xfffff0 12>;
+-		clocks = <&pclk>;
+-		clock-names = "peripheral_clk";
+-	};
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 50b68bc..34e1cfa 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -290,12 +290,6 @@ config CLKSRC_PXA
+ 	  This enables OST0 support available on PXA and SA-11x0
+ 	  platforms.
+ 
+-config H8300_TMR16
+-        bool
+-
+-config H8300_TPU
+-        bool
+-
+ config CLKSRC_IMX_GPT
+ 	bool "Clocksource using i.MX GPT" if COMPILE_TEST
+ 	depends on ARM && CLKDEV_LOOKUP
+@@ -308,5 +302,4 @@ config CLKSRC_ST_LPC
+ 	help
+ 	  Enable this option to use the Low Power controller timer
+ 	  as clocksource.
+-
+ endmenu
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index fc9348d..89ba4f2 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -59,7 +59,4 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+= mips-gic-timer.o
+ obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+= tango_xtal.o
+ obj-$(CONFIG_CLKSRC_IMX_GPT)		+= timer-imx-gpt.o
+ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+-obj-$(CONFIG_H8300)			+= h8300_timer8.o
+-obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+-obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+diff --git a/drivers/clocksource/h8300_timer16.c b/drivers/clocksource/h8300_timer16.c
+deleted file mode 100644
+index 0e076c6..0000000
+--- a/drivers/clocksource/h8300_timer16.c
++++ /dev/null
+@@ -1,253 +0,0 @@
+-/*
+- *  H8/300 16bit Timer driver
+- *
+- *  Copyright 2015 Yoshinori Sato <ysato@users.sourcefoge.jp>
+- */
+-
+-#include <linux/errno.h>
+-#include <linux/kernel.h>
+-#include <linux/param.h>
+-#include <linux/string.h>
+-#include <linux/slab.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
+-#include <linux/platform_device.h>
+-#include <linux/clocksource.h>
+-#include <linux/module.h>
+-#include <linux/clk.h>
+-#include <linux/io.h>
+-#include <linux/of.h>
+-
+-#include <asm/segment.h>
+-#include <asm/irq.h>
+-
+-#define TSTR	0
+-#define TSNC	1
+-#define TMDR	2
+-#define TOLR	3
+-#define TISRA	4
+-#define TISRB	5
+-#define TISRC	6
+-
+-#define TCR	0
+-#define TIOR	1
+-#define TCNT	2
+-#define GRA	4
+-#define GRB	6
+-
+-#define FLAG_REPROGRAM (1 << 0)
+-#define FLAG_SKIPEVENT (1 << 1)
+-#define FLAG_IRQCONTEXT (1 << 2)
+-#define FLAG_STARTED (1 << 3)
+-
+-#define ONESHOT  0
+-#define PERIODIC 1
+-
+-#define RELATIVE 0
+-#define ABSOLUTE 1
+-
+-struct timer16_priv {
+-	struct platform_device *pdev;
+-	struct clocksource cs;
+-	struct irqaction irqaction;
+-	unsigned long total_cycles;
+-	unsigned long mapbase;
+-	unsigned long mapcommon;
+-	unsigned long flags;
+-	unsigned short gra;
+-	unsigned short cs_enabled;
+-	unsigned char enb;
+-	unsigned char imfa;
+-	unsigned char imiea;
+-	unsigned char ovf;
+-	raw_spinlock_t lock;
+-	struct clk *clk;
+-};
+-
+-static unsigned long timer16_get_counter(struct timer16_priv *p)
+-{
+-	unsigned long v1, v2, v3;
+-	int o1, o2;
+-
+-	o1 = ctrl_inb(p->mapcommon + TISRC) & p->ovf;
+-
+-	/* Make sure the timer value is stable. Stolen from acpi_pm.c */
+-	do {
+-		o2 = o1;
+-		v1 = ctrl_inw(p->mapbase + TCNT);
+-		v2 = ctrl_inw(p->mapbase + TCNT);
+-		v3 = ctrl_inw(p->mapbase + TCNT);
+-		o1 = ctrl_inb(p->mapcommon + TISRC) & p->ovf;
+-	} while (unlikely((o1 != o2) || (v1 > v2 && v1 < v3)
+-			  || (v2 > v3 && v2 < v1) || (v3 > v1 && v3 < v2)));
+-
+-	v2 |= 0x10000;
+-	return v2;
+-}
+-
+-
+-static irqreturn_t timer16_interrupt(int irq, void *dev_id)
+-{
+-	struct timer16_priv *p = (struct timer16_priv *)dev_id;
+-
+-	ctrl_outb(ctrl_inb(p->mapcommon + TISRA) & ~p->imfa,
+-		  p->mapcommon + TISRA);
+-	p->total_cycles += 0x10000;
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static inline struct timer16_priv *cs_to_priv(struct clocksource *cs)
+-{
+-	return container_of(cs, struct timer16_priv, cs);
+-}
+-
+-static cycle_t timer16_clocksource_read(struct clocksource *cs)
+-{
+-	struct timer16_priv *p = cs_to_priv(cs);
+-	unsigned long flags, raw;
+-	unsigned long value;
+-
+-	raw_spin_lock_irqsave(&p->lock, flags);
+-	value = p->total_cycles;
+-	raw = timer16_get_counter(p);
+-	raw_spin_unlock_irqrestore(&p->lock, flags);
+-
+-	return value + raw;
+-}
+-
+-static int timer16_enable(struct clocksource *cs)
+-{
+-	struct timer16_priv *p = cs_to_priv(cs);
+-
+-	WARN_ON(p->cs_enabled);
+-
+-	p->total_cycles = 0;
+-	ctrl_outw(0x0000, p->mapbase + TCNT);
+-	ctrl_outb(0x83, p->mapbase + TCR);
+-	ctrl_outb(ctrl_inb(p->mapcommon + TSTR) | p->enb,
+-		  p->mapcommon + TSTR);
+-
+-	p->cs_enabled = true;
+-	return 0;
+-}
+-
+-static void timer16_disable(struct clocksource *cs)
+-{
+-	struct timer16_priv *p = cs_to_priv(cs);
+-
+-	WARN_ON(!p->cs_enabled);
+-
+-	ctrl_outb(ctrl_inb(p->mapcommon + TSTR) & ~p->enb,
+-		  p->mapcommon + TSTR);
+-
+-	p->cs_enabled = false;
+-}
+-
+-#define REG_CH   0
+-#define REG_COMM 1
+-
+-static int timer16_setup(struct timer16_priv *p, struct platform_device *pdev)
+-{
+-	struct resource *res[2];
+-	int ret, irq;
+-	unsigned int ch;
+-
+-	p->pdev = pdev;
+-
+-	res[REG_CH] = platform_get_resource(p->pdev,
+-					    IORESOURCE_MEM, REG_CH);
+-	res[REG_COMM] = platform_get_resource(p->pdev,
+-					      IORESOURCE_MEM, REG_COMM);
+-	if (!res[REG_CH] || !res[REG_COMM]) {
+-		dev_err(&p->pdev->dev, "failed to get I/O memory\n");
+-		return -ENXIO;
+-	}
+-	irq = platform_get_irq(p->pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&p->pdev->dev, "failed to get irq\n");
+-		return irq;
+-	}
+-
+-	p->clk = clk_get(&p->pdev->dev, "fck");
+-	if (IS_ERR(p->clk)) {
+-		dev_err(&p->pdev->dev, "can't get clk\n");
+-		return PTR_ERR(p->clk);
+-	}
+-	of_property_read_u32(p->pdev->dev.of_node, "renesas,channel", &ch);
+-
+-	p->pdev = pdev;
+-	p->mapbase = res[REG_CH]->start;
+-	p->mapcommon = res[REG_COMM]->start;
+-	p->enb = 1 << ch;
+-	p->imfa = 1 << ch;
+-	p->imiea = 1 << (4 + ch);
+-	p->cs.name = pdev->name;
+-	p->cs.rating = 200;
+-	p->cs.read = timer16_clocksource_read;
+-	p->cs.enable = timer16_enable;
+-	p->cs.disable = timer16_disable;
+-	p->cs.mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
+-	p->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+-
+-	ret = request_irq(irq, timer16_interrupt,
+-			  IRQF_TIMER, pdev->name, p);
+-	if (ret < 0) {
+-		dev_err(&p->pdev->dev, "failed to request irq %d\n", irq);
+-		return ret;
+-	}
+-
+-	clocksource_register_hz(&p->cs, clk_get_rate(p->clk) / 8);
+-
+-	return 0;
+-}
+-
+-static int timer16_probe(struct platform_device *pdev)
+-{
+-	struct timer16_priv *p = platform_get_drvdata(pdev);
+-
+-	if (p) {
+-		dev_info(&pdev->dev, "kept as earlytimer\n");
+-		return 0;
+-	}
+-
+-	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+-	if (!p)
+-		return -ENOMEM;
+-
+-	return timer16_setup(p, pdev);
+-}
+-
+-static int timer16_remove(struct platform_device *pdev)
+-{
+-	return -EBUSY;
+-}
+-
+-static const struct of_device_id timer16_of_table[] = {
+-	{ .compatible = "renesas,16bit-timer" },
+-	{ }
+-};
+-static struct platform_driver timer16_driver = {
+-	.probe		= timer16_probe,
+-	.remove		= timer16_remove,
+-	.driver		= {
+-		.name	= "h8300h-16timer",
+-		.of_match_table = of_match_ptr(timer16_of_table),
+-	}
+-};
+-
+-static int __init timer16_init(void)
+-{
+-	return platform_driver_register(&timer16_driver);
+-}
+-
+-static void __exit timer16_exit(void)
+-{
+-	platform_driver_unregister(&timer16_driver);
+-}
+-
+-subsys_initcall(timer16_init);
+-module_exit(timer16_exit);
+-MODULE_AUTHOR("Yoshinori Sato");
+-MODULE_DESCRIPTION("H8/300H 16bit Timer Driver");
+-MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clocksource/h8300_timer8.c b/drivers/clocksource/h8300_timer8.c
+deleted file mode 100644
+index 44375d8..0000000
+--- a/drivers/clocksource/h8300_timer8.c
++++ /dev/null
+@@ -1,317 +0,0 @@
+-/*
+- *  linux/arch/h8300/kernel/cpu/timer/timer8.c
+- *
+- *  Yoshinori Sato <ysato@users.sourcefoge.jp>
+- *
+- *  8bit Timer driver
+- *
+- */
+-
+-#include <linux/errno.h>
+-#include <linux/sched.h>
+-#include <linux/kernel.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-#include <linux/clockchips.h>
+-#include <linux/module.h>
+-#include <linux/clk.h>
+-#include <linux/io.h>
+-#include <linux/of.h>
+-
+-#include <asm/irq.h>
+-
+-#define _8TCR	0
+-#define _8TCSR	2
+-#define TCORA	4
+-#define TCORB	6
+-#define _8TCNT	8
+-
+-#define FLAG_REPROGRAM (1 << 0)
+-#define FLAG_SKIPEVENT (1 << 1)
+-#define FLAG_IRQCONTEXT (1 << 2)
+-#define FLAG_STARTED (1 << 3)
+-
+-#define ONESHOT  0
+-#define PERIODIC 1
+-
+-#define RELATIVE 0
+-#define ABSOLUTE 1
+-
+-struct timer8_priv {
+-	struct platform_device *pdev;
+-	struct clock_event_device ced;
+-	struct irqaction irqaction;
+-	unsigned long mapbase;
+-	raw_spinlock_t lock;
+-	unsigned long flags;
+-	unsigned int rate;
+-	unsigned int tcora;
+-	struct clk *pclk;
+-};
+-
+-static unsigned long timer8_get_counter(struct timer8_priv *p)
+-{
+-	unsigned long v1, v2, v3;
+-	int o1, o2;
+-
+-	o1 = ctrl_inb(p->mapbase + _8TCSR) & 0x20;
+-
+-	/* Make sure the timer value is stable. Stolen from acpi_pm.c */
+-	do {
+-		o2 = o1;
+-		v1 = ctrl_inw(p->mapbase + _8TCNT);
+-		v2 = ctrl_inw(p->mapbase + _8TCNT);
+-		v3 = ctrl_inw(p->mapbase + _8TCNT);
+-		o1 = ctrl_inb(p->mapbase + _8TCSR) & 0x20;
+-	} while (unlikely((o1 != o2) || (v1 > v2 && v1 < v3)
+-			  || (v2 > v3 && v2 < v1) || (v3 > v1 && v3 < v2)));
+-
+-	v2 |= o1 << 10;
+-	return v2;
+-}
+-
+-static irqreturn_t timer8_interrupt(int irq, void *dev_id)
+-{
+-	struct timer8_priv *p = dev_id;
+-
+-	ctrl_outb(ctrl_inb(p->mapbase + _8TCSR) & ~0x40,
+-		  p->mapbase + _8TCSR);
+-	p->flags |= FLAG_IRQCONTEXT;
+-	ctrl_outw(p->tcora, p->mapbase + TCORA);
+-	if (!(p->flags & FLAG_SKIPEVENT)) {
+-		if (clockevent_state_oneshot(&p->ced))
+-			ctrl_outw(0x0000, p->mapbase + _8TCR);
+-		p->ced.event_handler(&p->ced);
+-	}
+-	p->flags &= ~(FLAG_SKIPEVENT | FLAG_IRQCONTEXT);
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static void timer8_set_next(struct timer8_priv *p, unsigned long delta)
+-{
+-	unsigned long flags;
+-	unsigned long now;
+-
+-	raw_spin_lock_irqsave(&p->lock, flags);
+-	if (delta >= 0x10000)
+-		dev_warn(&p->pdev->dev, "delta out of range\n");
+-	now = timer8_get_counter(p);
+-	p->tcora = delta;
+-	ctrl_outb(ctrl_inb(p->mapbase + _8TCR) | 0x40, p->mapbase + _8TCR);
+-	if (delta > now)
+-		ctrl_outw(delta, p->mapbase + TCORA);
+-	else
+-		ctrl_outw(now + 1, p->mapbase + TCORA);
+-
+-	raw_spin_unlock_irqrestore(&p->lock, flags);
+-}
+-
+-static int timer8_enable(struct timer8_priv *p)
+-{
+-	p->rate = clk_get_rate(p->pclk) / 64;
+-	ctrl_outw(0xffff, p->mapbase + TCORA);
+-	ctrl_outw(0x0000, p->mapbase + _8TCNT);
+-	ctrl_outw(0x0c02, p->mapbase + _8TCR);
+-
+-	return 0;
+-}
+-
+-static int timer8_start(struct timer8_priv *p)
+-{
+-	int ret = 0;
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&p->lock, flags);
+-
+-	if (!(p->flags & FLAG_STARTED))
+-		ret = timer8_enable(p);
+-
+-	if (ret)
+-		goto out;
+-	p->flags |= FLAG_STARTED;
+-
+- out:
+-	raw_spin_unlock_irqrestore(&p->lock, flags);
+-
+-	return ret;
+-}
+-
+-static void timer8_stop(struct timer8_priv *p)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&p->lock, flags);
+-
+-	ctrl_outw(0x0000, p->mapbase + _8TCR);
+-
+-	raw_spin_unlock_irqrestore(&p->lock, flags);
+-}
+-
+-static inline struct timer8_priv *ced_to_priv(struct clock_event_device *ced)
+-{
+-	return container_of(ced, struct timer8_priv, ced);
+-}
+-
+-static void timer8_clock_event_start(struct timer8_priv *p, int periodic)
+-{
+-	struct clock_event_device *ced = &p->ced;
+-
+-	timer8_start(p);
+-
+-	ced->shift = 32;
+-	ced->mult = div_sc(p->rate, NSEC_PER_SEC, ced->shift);
+-	ced->max_delta_ns = clockevent_delta2ns(0xffff, ced);
+-	ced->min_delta_ns = clockevent_delta2ns(0x0001, ced);
+-
+-	timer8_set_next(p, periodic?(p->rate + HZ/2) / HZ:0x10000);
+-}
+-
+-static int timer8_clock_event_shutdown(struct clock_event_device *ced)
+-{
+-	timer8_stop(ced_to_priv(ced));
+-	return 0;
+-}
+-
+-static int timer8_clock_event_periodic(struct clock_event_device *ced)
+-{
+-	struct timer8_priv *p = ced_to_priv(ced);
+-
+-	dev_info(&p->pdev->dev, "used for periodic clock events\n");
+-	timer8_stop(p);
+-	timer8_clock_event_start(p, PERIODIC);
+-
+-	return 0;
+-}
+-
+-static int timer8_clock_event_oneshot(struct clock_event_device *ced)
+-{
+-	struct timer8_priv *p = ced_to_priv(ced);
+-
+-	dev_info(&p->pdev->dev, "used for oneshot clock events\n");
+-	timer8_stop(p);
+-	timer8_clock_event_start(p, ONESHOT);
+-
+-	return 0;
+-}
+-
+-static int timer8_clock_event_next(unsigned long delta,
+-				   struct clock_event_device *ced)
+-{
+-	struct timer8_priv *p = ced_to_priv(ced);
+-
+-	BUG_ON(!clockevent_state_oneshot(ced));
+-	timer8_set_next(p, delta - 1);
+-
+-	return 0;
+-}
+-
+-static int timer8_setup(struct timer8_priv *p,
+-			struct platform_device *pdev)
+-{
+-	struct resource *res;
+-	int irq;
+-	int ret;
+-
+-	p->pdev = pdev;
+-
+-	res = platform_get_resource(p->pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(&p->pdev->dev, "failed to get I/O memory\n");
+-		return -ENXIO;
+-	}
+-
+-	irq = platform_get_irq(p->pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&p->pdev->dev, "failed to get irq\n");
+-		return -ENXIO;
+-	}
+-
+-	p->mapbase = res->start;
+-
+-	p->irqaction.name = dev_name(&p->pdev->dev);
+-	p->irqaction.handler = timer8_interrupt;
+-	p->irqaction.dev_id = p;
+-	p->irqaction.flags = IRQF_TIMER;
+-
+-	p->pclk = clk_get(&p->pdev->dev, "fck");
+-	if (IS_ERR(p->pclk)) {
+-		dev_err(&p->pdev->dev, "can't get clk\n");
+-		return PTR_ERR(p->pclk);
+-	}
+-
+-	p->ced.name = pdev->name;
+-	p->ced.features = CLOCK_EVT_FEAT_PERIODIC |
+-		CLOCK_EVT_FEAT_ONESHOT;
+-	p->ced.rating = 200;
+-	p->ced.cpumask = cpumask_of(0);
+-	p->ced.set_next_event = timer8_clock_event_next;
+-	p->ced.set_state_shutdown = timer8_clock_event_shutdown;
+-	p->ced.set_state_periodic = timer8_clock_event_periodic;
+-	p->ced.set_state_oneshot = timer8_clock_event_oneshot;
+-
+-	ret = setup_irq(irq, &p->irqaction);
+-	if (ret < 0) {
+-		dev_err(&p->pdev->dev,
+-			"failed to request irq %d\n", irq);
+-		return ret;
+-	}
+-	clockevents_register_device(&p->ced);
+-	platform_set_drvdata(pdev, p);
+-
+-	return 0;
+-}
+-
+-static int timer8_probe(struct platform_device *pdev)
+-{
+-	struct timer8_priv *p = platform_get_drvdata(pdev);
+-
+-	if (p) {
+-		dev_info(&pdev->dev, "kept as earlytimer\n");
+-		return 0;
+-	}
+-
+-	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+-	if (!p)
+-		return -ENOMEM;
+-
+-	return timer8_setup(p, pdev);
+-}
+-
+-static int timer8_remove(struct platform_device *pdev)
+-{
+-	return -EBUSY;
+-}
+-
+-static const struct of_device_id timer8_of_table[] __maybe_unused = {
+-	{ .compatible = "renesas,8bit-timer" },
+-	{ }
+-};
+-
+-MODULE_DEVICE_TABLE(of, timer8_of_table);
+-static struct platform_driver timer8_driver = {
+-	.probe		= timer8_probe,
+-	.remove		= timer8_remove,
+-	.driver		= {
+-		.name	= "h8300-8timer",
+-		.of_match_table = of_match_ptr(timer8_of_table),
+-	}
+-};
+-
+-static int __init timer8_init(void)
+-{
+-	return platform_driver_register(&timer8_driver);
+-}
+-
+-static void __exit timer8_exit(void)
+-{
+-	platform_driver_unregister(&timer8_driver);
+-}
+-
+-subsys_initcall(timer8_init);
+-module_exit(timer8_exit);
+-MODULE_AUTHOR("Yoshinori Sato");
+-MODULE_DESCRIPTION("H8/300 8bit Timer Driver");
+-MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clocksource/h8300_tpu.c b/drivers/clocksource/h8300_tpu.c
+deleted file mode 100644
+index 5487410..0000000
+--- a/drivers/clocksource/h8300_tpu.c
++++ /dev/null
+@@ -1,206 +0,0 @@
+-/*
+- *  H8/300 TPU Driver
+- *
+- *  Copyright 2015 Yoshinori Sato <ysato@users.sourcefoge.jp>
+- *
+- */
+-
+-#include <linux/errno.h>
+-#include <linux/sched.h>
+-#include <linux/kernel.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-#include <linux/clocksource.h>
+-#include <linux/module.h>
+-#include <linux/clk.h>
+-#include <linux/io.h>
+-#include <linux/of.h>
+-
+-#include <asm/irq.h>
+-
+-#define TCR	0
+-#define TMDR	1
+-#define TIOR	2
+-#define TER	4
+-#define TSR	5
+-#define TCNT	6
+-#define TGRA	8
+-#define TGRB	10
+-#define TGRC	12
+-#define TGRD	14
+-
+-struct tpu_priv {
+-	struct platform_device *pdev;
+-	struct clocksource cs;
+-	struct clk *clk;
+-	unsigned long mapbase1;
+-	unsigned long mapbase2;
+-	raw_spinlock_t lock;
+-	unsigned int cs_enabled;
+-};
+-
+-static inline unsigned long read_tcnt32(struct tpu_priv *p)
+-{
+-	unsigned long tcnt;
+-
+-	tcnt = ctrl_inw(p->mapbase1 + TCNT) << 16;
+-	tcnt |= ctrl_inw(p->mapbase2 + TCNT);
+-	return tcnt;
+-}
+-
+-static int tpu_get_counter(struct tpu_priv *p, unsigned long long *val)
+-{
+-	unsigned long v1, v2, v3;
+-	int o1, o2;
+-
+-	o1 = ctrl_inb(p->mapbase1 + TSR) & 0x10;
+-
+-	/* Make sure the timer value is stable. Stolen from acpi_pm.c */
+-	do {
+-		o2 = o1;
+-		v1 = read_tcnt32(p);
+-		v2 = read_tcnt32(p);
+-		v3 = read_tcnt32(p);
+-		o1 = ctrl_inb(p->mapbase1 + TSR) & 0x10;
+-	} while (unlikely((o1 != o2) || (v1 > v2 && v1 < v3)
+-			  || (v2 > v3 && v2 < v1) || (v3 > v1 && v3 < v2)));
+-
+-	*val = v2;
+-	return o1;
+-}
+-
+-static inline struct tpu_priv *cs_to_priv(struct clocksource *cs)
+-{
+-	return container_of(cs, struct tpu_priv, cs);
+-}
+-
+-static cycle_t tpu_clocksource_read(struct clocksource *cs)
+-{
+-	struct tpu_priv *p = cs_to_priv(cs);
+-	unsigned long flags;
+-	unsigned long long value;
+-
+-	raw_spin_lock_irqsave(&p->lock, flags);
+-	if (tpu_get_counter(p, &value))
+-		value += 0x100000000;
+-	raw_spin_unlock_irqrestore(&p->lock, flags);
+-
+-	return value;
+-}
+-
+-static int tpu_clocksource_enable(struct clocksource *cs)
+-{
+-	struct tpu_priv *p = cs_to_priv(cs);
+-
+-	WARN_ON(p->cs_enabled);
+-
+-	ctrl_outw(0, p->mapbase1 + TCNT);
+-	ctrl_outw(0, p->mapbase2 + TCNT);
+-	ctrl_outb(0x0f, p->mapbase1 + TCR);
+-	ctrl_outb(0x03, p->mapbase2 + TCR);
+-
+-	p->cs_enabled = true;
+-	return 0;
+-}
+-
+-static void tpu_clocksource_disable(struct clocksource *cs)
+-{
+-	struct tpu_priv *p = cs_to_priv(cs);
+-
+-	WARN_ON(!p->cs_enabled);
+-
+-	ctrl_outb(0, p->mapbase1 + TCR);
+-	ctrl_outb(0, p->mapbase2 + TCR);
+-	p->cs_enabled = false;
+-}
+-
+-#define CH_L 0
+-#define CH_H 1
+-
+-static int __init tpu_setup(struct tpu_priv *p, struct platform_device *pdev)
+-{
+-	struct resource *res[2];
+-
+-	p->pdev = pdev;
+-
+-	res[CH_L] = platform_get_resource(p->pdev, IORESOURCE_MEM, CH_L);
+-	res[CH_H] = platform_get_resource(p->pdev, IORESOURCE_MEM, CH_H);
+-	if (!res[CH_L] || !res[CH_H]) {
+-		dev_err(&p->pdev->dev, "failed to get I/O memory\n");
+-		return -ENXIO;
+-	}
+-
+-	p->clk = clk_get(&p->pdev->dev, "fck");
+-	if (IS_ERR(p->clk)) {
+-		dev_err(&p->pdev->dev, "can't get clk\n");
+-		return PTR_ERR(p->clk);
+-	}
+-
+-	p->mapbase1 = res[CH_L]->start;
+-	p->mapbase2 = res[CH_H]->start;
+-
+-	p->cs.name = pdev->name;
+-	p->cs.rating = 200;
+-	p->cs.read = tpu_clocksource_read;
+-	p->cs.enable = tpu_clocksource_enable;
+-	p->cs.disable = tpu_clocksource_disable;
+-	p->cs.mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
+-	p->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+-	clocksource_register_hz(&p->cs, clk_get_rate(p->clk) / 64);
+-	platform_set_drvdata(pdev, p);
+-
+-	return 0;
+-}
+-
+-static int tpu_probe(struct platform_device *pdev)
+-{
+-	struct tpu_priv *p = platform_get_drvdata(pdev);
+-
+-	if (p) {
+-		dev_info(&pdev->dev, "kept as earlytimer\n");
+-		return 0;
+-	}
+-
+-	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+-	if (!p)
+-		return -ENOMEM;
+-
+-	return tpu_setup(p, pdev);
+-}
+-
+-static int tpu_remove(struct platform_device *pdev)
+-{
+-	return -EBUSY;
+-}
+-
+-static const struct of_device_id tpu_of_table[] = {
+-	{ .compatible = "renesas,tpu" },
+-	{ }
+-};
+-
+-static struct platform_driver tpu_driver = {
+-	.probe		= tpu_probe,
+-	.remove		= tpu_remove,
+-	.driver		= {
+-		.name	= "h8s-tpu",
+-		.of_match_table = of_match_ptr(tpu_of_table),
+-	}
+-};
+-
+-static int __init tpu_init(void)
+-{
+-	return platform_driver_register(&tpu_driver);
+-}
+-
+-static void __exit tpu_exit(void)
+-{
+-	platform_driver_unregister(&tpu_driver);
+-}
+-
+-subsys_initcall(tpu_init);
+-module_exit(tpu_exit);
+-MODULE_AUTHOR("Yoshinori Sato");
+-MODULE_DESCRIPTION("H8S Timer Pulse Unit Driver");
+-MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
