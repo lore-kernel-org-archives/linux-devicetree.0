@@ -1,185 +1,221 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 00/19] drm: Add Allwinner A10 display engine support
-Date: Fri, 30 Oct 2015 15:52:17 +0100
-Message-ID: <20151030145217.GA16848@phenom.ffwll.local>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Fri, 30 Oct 2015 11:55:07 -0300
+Message-ID: <563384CB.3070607@vanguardiasur.com.ar>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+ <CAGhQ9Vyg6sScq7yM=7judsMPHOc5VF2zf=7LPxmbmL7wF=vvgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Wynter Woods <wynter@nextthing.co>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alexander Kaplan <alex@nextthing.co>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9Vyg6sScq7yM=7judsMPHOc5VF2zf=7LPxmbmL7wF=vvgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMzAsIDIwMTUgYXQgMDM6MjA6NDZQTSArMDEwMCwgTWF4aW1lIFJpcGFyZCB3
-cm90ZToKPiBIaSBldmVyeW9uZSwKPiAKPiBUaGUgQWxsd2lubmVyIFNvQ3MgKGV4Y2VwdCBmb3Ig
-dGhlIHZlcnkgbGF0ZXN0IG9uZXMpIGFsbCBzaGFyZSB0aGUKPiBzYW1lIHNldCBvZiBjb250cm9s
-bGVycywgbG9vc2VseSBjb3VwbGVkIHRvZ2V0aGVyIHRvIGZvcm0gdGhlIGRpc3BsYXkKPiBwaXBl
-bGluZS4KPiAKPiBEZXBlbmRpbmcgb24gdGhlIFNvQywgdGhlIG51bWJlciBvZiBpbnN0YW5jZXMg
-b2YgdGhlIGNvbnRyb2xsZXIgd2lsbAo+IGNoYW5nZSAoMiBpbnN0YW5jZXMgb2YgZWFjaCBpbiB0
-aGUgQTEwLCBvbmx5IG9uZSBpbiB0aGUgQTEzLCBmb3IKPiBleGFtcGxlKSwgYW5kIHRoZSBvdXRw
-dXQgYXZhaWxhYmxlcyB3aWxsIGNoYW5nZSB0b28gKEhETUksIGNvbXBvc2l0ZSwKPiBWR0Egb24g
-dGhlIEEyMCwgbm9uZSBvZiB0aGVtIG9uIHRoZSBBMTMpLgo+IAo+IE9uIG1vc3QgZmVhdHVyZWQg
-U29DcywgaXQgbG9va3MgbGlrZSB0aGF0Ogo+IAo+ICArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gIHwgICAgICAgICAgICAgICAgICAgIFJBTSAgICAgICAg
-ICAgICAgICAgICAgIHwKPiAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tKwo+ICAgICAgICB8ICAgICAgICAgICAgfCAgICAgIHwgICAgICAgICAgICB8Cj4gICAg
-ICAgIHYgICAgICAgICAgICB8ICAgICAgfCAgICAgICAgICAgIHYKPiAgKy0tLS0tLS0tLS0tLS0t
-LS0rIHwgICAgICB8ICstLS0tLS0tLS0tLS0tLS0tKwo+ICB8ICAgIEZyb250ZW5kICAgIHwgfCAg
-ICAgIHwgfCAgICBGcm9udGVuZCAgICB8Cj4gICstLS0tLS0tLS0tLS0tLS0tKyB8ICAgICAgfCAr
-LS0tLS0tLS0tLS0tLS0tLSsKPiAgICAgICAgICB8ICAgICAgICAgIHwgICAgICB8ICAgICAgICAg
-fAo+ICAgICAgICAgIHYgICAgICAgICAgfCAgICAgIHwgICAgICAgICB2Cj4gICstLS0tLS0tLS0t
-LS0tLS0tKyB8ICAgICAgfCArLS0tLS0tLS0tLS0tLS0tLSsKPiAgfCAgICBCYWNrZW5kICAgICB8
-PCsgICAgICArPnwgICAgQmFja2VuZCAgICAgfAo+ICArLS0tLS0tLS0tLS0tLS0tLSsgICAgICAg
-ICAgKy0tLS0tLS0tLS0tLS0tLS0rCj4gICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwKPiAgICAgICAgICB2ICAgICAgICAgICAgICAgICAgICAgICAgICAgdgo+ICArLS0tLS0t
-LS0tLS0tLS0tLSsgICAgICAgICAgKy0tLS0tLS0tLS0tLS0tLS0rLS0tPiBMVkRTCj4gIHwgICAg
-ICBUQ09OICAgICAgfCAgICAgICAgICB8ICAgICAgVENPTiAgICAgIHwtLS0+IFJHQgo+ICArLS0t
-LS0tLS0tLS0tLS0tLSsgICAgICAgICAgKy0tLS0tLS0tLS0tLS0tLS0rCj4gICAgICAgIHwgICAg
-ICAgKy0tLSsgICAgICAgKy0tLSsgICAgICAgICAgfAo+ICAgICAgICB8ICAgICAgICAgICB8ICAg
-ICAgIHwgICAgICAgICAgICAgIHwKPiAgICAgICAgdiAgICAgICAgICAgdiAgICAgICB2ICAgICAg
-ICAgICAgICB2Cj4gICstLS0tLS0tLS0tLS0rICArLS0tLS0tLS0tLS0tKyAgKy0tLS0tLS0tLS0t
-LSstLS0+IFZHQQo+ICB8IFRWIEVuY29kZXIgfCAgfCAgICBIRE1JICAgIHwgIHwgVFYgRW5jb2Rl
-ciB8LS0tPiBDb21wb3NpdGUKPiAgKy0tLS0tLS0tLS0tLSsgICstLS0tLS0tLS0tLS0rICArLS0t
-LS0tLS0tLS0tKwo+IAo+IFRoZSBjdXJyZW50IGNvZGUgb25seSBhc3N1bWVzIHRoYXQgdGhlcmUg
-aXMgYSBzaW5nbGUgaW5zdGFuY2Ugb2YgYWxsCj4gdGhlIGNvbnRyb2xsZXJzLiBJdCBhbHNvIHN1
-cHBvcnRzIG9ubHkgdGhlIFJHQiBhbmQgQ29tcG9zaXRlCj4gaW50ZXJmYWNlcy4KPiAKPiBBIGZl
-dyBtb3JlIHRoaW5ncyBhcmUgbWlzc2luZyB0aG91Z2gsIGFuZCB3aWxsIGJlIHN1cHBvcnRlZAo+
-IGV2ZW50dWFsbHk6Cj4gICAtIE92ZXJzY2FuIHN1cHBvcnQKPiAgIC0gQXN5bmNocm9ub3VzIHBh
-Z2UgZmxpcAo+ICAgLSBNdWx0aXBsZSBwbGFuZSBzdXBwb3J0Cj4gICAtIENvbXBvc2l0ZSAvIFZH
-QSBIb3RwbHVnIGRldGVjdGlvbgo+ICAgLSBNb3JlIG91dHB1dHMKPiAgIC0gU3VwcG9ydCBmb3Ig
-c2V2ZXJhbCB2aWRlb3MgcGlwZWxpbmVzCj4gCj4gQW5kIHRoZXJlJ3Mgb25lIGJpZyBnb3RjaGE6
-IHRoaGUgY29kZSB0byBwYXJzZSB0aGUgbW9kZSBmcm9tIHRoZQo+IGtlcm5lbCBjb21tYW5kbGlu
-ZSBkb2Vzbid0IHNlZW0gdG8gc3VwcG9ydCBuYW1lZCBtb2Rlcy4gU2luY2Ugd2UKPiBleHBvc2Ug
-dGhlIHZhcmlvdXMgVFYgc3RhbmRhcmRzIHRocm91Z2ggbmFtZWQgbW9kZXMsIGl0IG1lYW5zIHRo
-YXQKPiB0aGVyZSdzIG5vIHdheSB0byB1c2UgYSBwYXJ0aWN1bGFyIHN0YW5kYXJkIHRvIGRpc3Bs
-YXkgc29tZXRoaW5nCj4gZHVyaW5nIHRoZSBrZXJuZWwgYm9vdC4gVGhlIGRlZmF1bHQgd2lsbCBh
-bHdheXMgYmUgdXNlZCwgaW4gb3RoZXIKPiB3b3JkcywgUEFMLgoKU2ltcGx5IG5vdCBkb25lIHll
-dC4KCj4gQSBmZXcgbW9yZSBxdWVzdGlvbnMgdGhhdCBhcmUgcHJvYmFibHkgZ29pbmcgdG8gYmUg
-cmFpc2VkIGR1cmluZyB0aGUKPiByZXZpZXc6Cj4gICAtIEhvdyBkbyB5b3UgYXNzb2NpYXRlIHBy
-aXZhdGUgZGF0YSB0byBhIG1vZGUsIGZvciBleGFtcGxlIHRvIGRlYWwKPiAgICAgd2l0aCB0aGUg
-bm9uLWdlbmVyaWMsIGRyaXZlci1zcGVjaWZpYyBzZXR0aW5ncyByZXF1aXJlZCB0byBkZWFsCj4g
-ICAgIHdpdGggdGhlIHZhcmlvdXMgVFYgc3RhbmRhcmRzPyBkcm1fZGlzcGxheV9tb2RlIHNlZW1z
-IHRvIGhhdmUgYQo+ICAgICBwcml2YXRlIGZpZWxkLCBidXQgaXQgaXNuJ3QgYWx3YXlzIHByZXNl
-cnZlZC4KCkFuYWxvZyBUViBpbiBnZW5lcmFsIGlzIGEgZ2lhbnQgbWVzcywgYW5kIHRoZXJlJ3Mg
-bm90IHJlYWxseSBhbGwgdGhhdCBtdWNoCm9mIGEgc3RhbmRhcmRpemVkIHNvbHV0aW9uLiBJIGFs
-c28gZG9uJ3QgaGF2ZSBtdWNoIGNsdWUgYXQgYWxsIGFib3V0IHdoYXQKbmVlZHMgdG8gYmUgdHVu
-ZWQgd2l0aCBhbmFsb2cgVFYuIFByb2JhYmx5IHRoZSBiZXN0IHdvdWxkIGJlIHRvIGxvb2sgYXQK
-ZXhpc3RpbmcgZHJpdmVycyB3aXRoIFRWLW91dCBzdXBwb3J0IGFuZCB3aGF0IGtpbmQgb2YgcHJv
-cGVydGllcyB0aGV5CnN1cHBvcnQuIFRoZW4gc3RhbmRhcmRpemUgdGhlbSAod2l0aCByZWxldmFu
-dCBoZWxwZXIgY29kZSBpbiBkcm0gY29yZSkgYW5kCnVzZSB0aGF0LiBBZGRpdGlvbmFsIGZsYWdz
-IG9uIHRoZSBtb2RlLCBlc3BlY2lhbGx5IHVzaW5nIHRoZSBwcml2YXRlIHN0dWZmCmlzIGtpbmRh
-IHRoZSBkZXByZWNhdGVkIG5vbi1hdG9taWMgYXBwcm9hY2guIElmIHlvdSBuZWVkIHByaXZhdGUg
-ZGF0YQpiZXlvbmQgdGhlIG1vZGUgYW5kIGFueSBhZGRpdGlvbmFsIHByb3BlcnRpZXMgb24gdGhl
-IGNydGMgKGZvciBkZXJpdmVkCnN0YXRlKSB0aGVuIGp1c3Qgc3ViY2xhc3MgZHJtX2NydGNfc3Rh
-dGUgYW5kIHB1dCBpdCB0aGVyZS4KCj4gICAtIEhvdyBkbyB5b3Ugc2V0dXAgcHJvcGVydGllcyBp
-biB0aGUga2VybmVsIGNvbW1hbmQgbGluZT8gSW4gb3JkZXIKPiAgICAgdG8gaGF2ZSBhIGRlY2Vu
-dCBkaXNwbGF5IGR1cmluZyBib290IG9uIHJlbGV2YW50IGludGVyZmFjZXMsIHlvdQo+ICAgICBw
-cm9iYWJseSB3YW50IHRvIHNldHVwIHRoZSBvdmVyc2NhbiBiZWZvcmVoYW5kLiBPdmVyc2NhbiBz
-ZWVtcyB0bwo+ICAgICBiZSBoYW5kbGVkIHRocm91Z2ggcHJvcGVydGllcywgYW5kIGFmYWlrLCB0
-aGVyZSdzIG5vIHdheSB0byBzZXQKPiAgICAgdGhhdCBmcm9tIHRoZSBjbWRsaW5lLiBTaG91bGQg
-d2UgdXNlIGEga2VybmVsIHBhcmFtZXRlciB0byBzZXQgdGhlCj4gICAgIGRlZmF1bHQgdmFsdWUg
-aW5zdGVhZD8KCk9uZSBpZGVhIHRvc3NlZCBhcm91bmQgaXMgdG8gZXhwb3NlIHRoZW0gdG8gRFQg
-c29tZWhvdyBhbmQgdGhlbiBqdXN0IGxvYWQKYSBEVC1ibG9iIHRvIHNldCB0aGVtIGFsbC4gVGhh
-dCB3b3VsZCBlLmcuIGFsc28gYWxsb3cgdG8gc3BlY2lmeSBmaXJtd2FyZQpibG9iIHBhdGhzIHRv
-IGUuZy4gbG9hZCB0aGUgYm9vdCBzcGxhc2ggaW1hZ2UgKGlmIHVib290IG9yIHNpbWlsYXIgaGF2
-ZW4ndApkb25lIHRoYXQgeWV0KS4gSSdtIHBlcnNvbmFsbHkgbm90IHN1cmUgaG93IG11Y2ggdXNl
-IHRoZXJlIGlzIGluIGV4cG9zaW5nCmEgZ2VuZXJpYyBkcm0gcHJvcGVydHkgY21kbGluZSBvcHRp
-b24gLi4uCgpXaGF0J3MgbmVlZGVkIGZvciBzdXJlIGlzIHNvbWUgZ2VuZXJpYyB3YXkgdG8gZG8g
-b25lIGluaXRpYWwgKGF0b21pYykKbW9kZXNldCB0byBoYW1tZXIgYWxsIHRoZXNlIHNldHRpbmdz
-IGludG8gdGhlIGRyaXZlci4gVGhhdCB3b3VsZCBiZSByZWFsbHkKdXNlZnVsIHRvIGhhdmUsIHNp
-bmNlIGN1cnJlbnRseSB0aGF0J3MgdGllZCB0byB0aGUgZmJkZXYgZW11bGF0aW9uLCB3aGljaApt
-ZWFucyBpZiB5b3UgZG9uJ3QgaGF2ZSB0aGF0IGl0IHdpbGwgYmUgc2ltcGx5IGxvc3QuCgpDaGVl
-cnMsIERhbmllbAoKPiAKPiBUaGFua3MhCj4gTWF4aW1lCj4gCj4gTWF4aW1lIFJpcGFyZCAoMTkp
-Ogo+ICAgY2xrOiBzdW54aTogQWRkIGRpc3BsYXkgY2xvY2sKPiAgIGNsazogc3VueGk6IEFkZCBQ
-TEwzIGNsb2NrCj4gICBjbGs6IHN1bnhpOiBBZGQgVENPTiBjaGFubmVsMCBjbG9jawo+ICAgY2xr
-OiBzdW54aTogQWRkIFRDT04gY2hhbm5lbDEgY2xvY2sKPiAgIGNsazogc3VueGk6IGFkZCBEUkFN
-IGdhdGVzCj4gICBjbGs6IHN1bnhpOiBBZGQgQWxsd2lubmVyIFI4IEFIQiBnYXRlcyBzdXBwb3J0
-Cj4gICBkcm0vcGFuZWw6IHNpbXBsZTogQWRkIHRpbWluZ3MgZm9yIHRoZSBPbGltZXggTENELU9M
-aW51WGluby00LjNUUwo+ICAgZHJtOiBBZGQgQWxsd2lubmVyIEExMCBEaXNwbGF5IEVuZ2luZSBz
-dXBwb3J0Cj4gICBkcm06IHN1bjRpOiBBZGQgRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbgo+ICAg
-ZHJtOiBzdW40aTogQWRkIFJHQiBvdXRwdXQKPiAgIGRybTogc3VuNGk6IEFkZCBjb21wb3NpdGUg
-b3V0cHV0Cj4gICBkcm06IHN1bjRpOiB0djogQWRkIFBBTCBvdXRwdXQgc3RhbmRhcmQKPiAgIGRy
-bTogc3VuNGk6IHR2OiBBZGQgTlRTQyBvdXRwdXQgc3RhbmRhcmQKPiAgIEFSTTogc3VuNWk6IGR0
-OiBBZGQgcGxsMyBhbmQgcGxsNyBjbG9ja3MKPiAgIEFSTTogc3VuNWk6IGR0OiBBZGQgZGlzcGxh
-eSBhbmQgVENPTiBjbG9ja3MKPiAgIEFSTTogc3VuNWk6IGR0OiBBZGQgRFJBTSBnYXRlcwo+ICAg
-QVJNOiBzdW41aTogZHQ6IEFkZCBkaXNwbGF5IGJsb2NrcyB0byB0aGUgRFRTSQo+ICAgQVJNOiBz
-dW41aTogcjg6IEFkZCBBSEIgZ2F0ZXMgdG8gdGhlIERUU0kKPiAgIEFSTTogc3VuNWk6IGNoaXA6
-IEVuYWJsZSB0aGUgVFYgRW5jb2Rlcgo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0v
-c3VueGkvc3VuNGktZHJtLnR4dCAgICB8IDEyMiArKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1
-bjVpLWExMHMuZHRzaSAgICAgICAgICAgICAgICAgIHwgICA5ICstCj4gIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjVpLWExMy5kdHNpICAgICAgICAgICAgICAgICAgIHwgICAzICstCj4gIGFyY2gvYXJt
-L2Jvb3QvZHRzL3N1bjVpLXI4LmR0c2kgICAgICAgICAgICAgICAgICAgIHwgIDQ2ICstCj4gIGFy
-Y2gvYXJtL2Jvb3QvZHRzL3N1bjVpLmR0c2kgICAgICAgICAgICAgICAgICAgICAgIHwgMTM3ICsr
-KysrCj4gIGRyaXZlcnMvY2xrL3N1bnhpL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICA0ICsKPiAgZHJpdmVycy9jbGsvc3VueGkvY2xrLXNpbXBsZS1nYXRlcy5jICAgICAgICAg
-ICAgICAgfCAgIDQgKwo+ICBkcml2ZXJzL2Nsay9zdW54aS9jbGstc3VuNGktZGlzcGxheS5jICAg
-ICAgICAgICAgICB8IDE5OSArKysrKysrCj4gIGRyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW40aS1w
-bGwzLmMgICAgICAgICAgICAgICAgIHwgIDg0ICsrKwo+ICBkcml2ZXJzL2Nsay9zdW54aS9jbGst
-c3VuNGktdGNvbi1jaDAuYyAgICAgICAgICAgICB8IDE3MyArKysrKysKPiAgZHJpdmVycy9jbGsv
-c3VueGkvY2xrLXN1bjRpLXRjb24tY2gxLmMgICAgICAgICAgICAgfCAxNjcgKysrKysrCj4gIGRy
-aXZlcnMvZ3B1L2RybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsK
-PiAgZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
-IDMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAg
-ICAgfCAgMjYgKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvS2NvbmZpZyAgICAgICAgICAgICAg
-ICAgICAgICB8ICAxNCArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9NYWtlZmlsZSAgICAgICAg
-ICAgICAgICAgICAgIHwgIDExICsKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2JhY2tl
-bmQuYyAgICAgICAgICAgICAgfCAyNzEgKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40
-aS9zdW40aV9iYWNrZW5kLmggICAgICAgICAgICAgIHwgMTU5ICsrKysrKwo+ICBkcml2ZXJzL2dw
-dS9kcm0vc3VuNGkvc3VuNGlfY3J0Yy5jICAgICAgICAgICAgICAgICB8IDExNyArKysrCj4gIGRy
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9jcnRjLmggICAgICAgICAgICAgICAgIHwgIDMxICsr
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kcnYuYyAgICAgICAgICAgICAgICAgIHwg
-Mjk2ICsrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2Rydi5oICAgICAg
-ICAgICAgICAgICAgfCAgMzAgKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfZnJhbWVi
-dWZmZXIuYyAgICAgICAgICB8ICA1NCArKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
-ZnJhbWVidWZmZXIuaCAgICAgICAgICB8ICAxOSArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9z
-dW40aV9sYXllci5jICAgICAgICAgICAgICAgIHwgMTExICsrKysKPiAgZHJpdmVycy9ncHUvZHJt
-L3N1bjRpL3N1bjRpX2xheWVyLmggICAgICAgICAgICAgICAgfCAgMzAgKwo+ICBkcml2ZXJzL2dw
-dS9kcm0vc3VuNGkvc3VuNGlfcmdiLmMgICAgICAgICAgICAgICAgICB8IDI0MyArKysrKysrKwo+
-ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfcmdiLmggICAgICAgICAgICAgICAgICB8ICAx
-OCArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgICAgICAgICAgICAgICAg
-IHwgNDc4ICsrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rj
-b24uaCAgICAgICAgICAgICAgICAgfCAxODIgKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40
-aS9zdW40aV90di5jICAgICAgICAgICAgICAgICAgIHwgNjE5ICsrKysrKysrKysrKysrKysrKysr
-Kwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdHYuaCAgICAgICAgICAgICAgICAgICB8
-ICAxOCArCj4gIDMyIGZpbGVzIGNoYW5nZWQsIDM2NzMgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlv
-bnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kcm0vc3VueGkvc3VuNGktZHJtLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9jbGsvc3VueGkvY2xrLXN1bjRpLWRpc3BsYXkuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9jbGsvc3VueGkvY2xrLXN1bjRpLXBsbDMuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9jbGsvc3VueGkvY2xrLXN1bjRpLXRjb24tY2gwLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvY2xrL3N1bnhpL2Nsay1zdW40aS10Y29uLWNoMS5jCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvS2NvbmZpZwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfYmFja2VuZC5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfY3J0Yy5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfY3J0Yy5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfZHJ2LmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kcnYuaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2ZyYW1lYnVmZmVyLmMKPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9mcmFtZWJ1ZmZlci5oCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfbGF5ZXIuYwo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2xheWVyLmgKPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9yZ2IuYwo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5oCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5oCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdHYuYwo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3R2LmgKPiAKPiAtLSAKPiAy
-LjYuMgo+IAoKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBv
-cmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Joachim,
+
+El 24/10/15 a las 19:04, Joachim Eastwood escribi=C3=B3:
+> Hi Ariel,
+>=20
+> On 19 October 2015 at 19:32, Ariel D'Alessandro
+> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>> This commit adds support for NXP LPC18xx EEPROM memory found in NXP
+>> LPC185x/3x and LPC435x/3x/2x/1x devices.
+>>
+>> EEPROM size is 16384 bytes and it can be entirely read and
+>> written/erased with 1 word (4 bytes) granularity. The last page
+>> (128 bytes) contains the EEPROM initialization data and is not writa=
+ble.
+>>
+>> Erase/program time is less than 3ms. The EEPROM device requires a
+>> ~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated dividi=
+ng
+>> the system bus clock by the division factor, contained in the divide=
+r
+>> register (minus 1 encoded).
+>>
+>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>> ---
+>>  drivers/nvmem/Kconfig          |   9 ++
+>>  drivers/nvmem/Makefile         |   2 +
+>>  drivers/nvmem/lpc18xx_eeprom.c | 266 ++++++++++++++++++++++++++++++=
++++++++++++
+>>  3 files changed, 277 insertions(+)
+>>  create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
+>=20
+>> +static int lpc18xx_eeprom_gather_write(void *context, const void *r=
+eg,
+>> +                                      size_t reg_size, const void *=
+val,
+>> +                                      size_t val_size)
+>> +{
+>> +       struct lpc18xx_eeprom_dev *eeprom =3D context;
+>> +       unsigned int offset =3D *(u32 *)reg;
+>> +
+>> +       /* 3 ms of erase/program time between each writing */
+>> +       while (val_size) {
+>> +               writel(*(u32 *)val, eeprom->mem_base + offset);
+>> +               usleep_range(3000, 4000);
+>> +               val_size -=3D eeprom->val_bytes;
+>> +               val +=3D eeprom->val_bytes;
+>> +               offset +=3D eeprom->val_bytes;
+>> +       }
+>=20
+> What happens here if 'val_size' is less than 4 or not dividable by 4?
+
+AFAIK, before calling to gather_write, the caller ensures that
+'val_size' % map->format.val_bytes =3D=3D 0
+
+Like nvmem_device_write() do this in
+drivers/base/regmap/regmap.c:regmap_raw_write()
+
+Then, if val_size =3D=3D 0, nothing will happen.
+
+> Same thing for 'offset'.
+
+Let me check this one.
+
+>=20
+> I tested the driver from sysfs by writing strings into the nvmem-file
+> with echo. Writing a string not dividable by 4 seems to hang the
+> system.
+
+Yeah, I saw that too. I think that's a nvmem core issue and Srinivas's
+patch solves this. Will confirm that as soon as I have the board back.
+
+>=20
+>=20
+>> +static int lpc18xx_eeprom_read(void *context, const void *reg, size=
+_t reg_size,
+>> +                              void *val, size_t val_size)
+>> +{
+>> +       struct lpc18xx_eeprom_dev *eeprom =3D context;
+>> +       unsigned int offset =3D *(u32 *)reg;
+>> +
+>> +       while (val_size) {
+>> +               *(u32 *)val =3D readl(eeprom->mem_base + offset);
+>> +               val_size -=3D eeprom->val_bytes;
+>> +               val +=3D eeprom->val_bytes;
+>> +               offset +=3D eeprom->val_bytes;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>=20
+> Same comments as for lpc18xx_eeprom_gather_write().
+
+Same answer.
+
+>=20
+>=20
+>> +static const struct of_device_id lpc18xx_eeprom_of_match[] =3D {
+>> +       { .compatible =3D "nxp,lpc1857-eeprom" },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, lpc18xx_eeprom_of_match);
+>=20
+> nit: It's usual to place of_device_id struct just above the
+> platform_driver struct.
+
+I see.
+
+>=20
+>=20
+>> +       eeprom->val_bytes =3D lpc18xx_regmap_config.val_bits / 8;
+>> +       eeprom->reg_bytes =3D lpc18xx_regmap_config.reg_bits / 8;
+>=20
+> There is a BITS_PER_BYTE define in bitops.h that you might want to us=
+e here.
+
+Right. Thanks.
+
+>=20
+>=20
+>> +       /*
+>> +        * Clock rate is generated by dividing the system bus clock =
+by the
+>> +        * division factor, contained in the divider register (minus=
+ 1 encoded).
+>> +        */
+>> +       clk_rate =3D clk_get_rate(eeprom->clk);
+>> +       clk_rate =3D DIV_ROUND_UP(clk_rate, LPC18XX_EEPROM_CLOCK_HZ)=
+ - 1;
+>> +       lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_CLKDIV, clk_rat=
+e);
+>> +
+>> +       /*
+>> +        * Writing a single word to the page will start the erase/pr=
+ogram cycle
+>> +        * automatically
+>> +        */
+>> +       lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_AUTOPROG,
+>> +                             LPC18XX_EEPROM_AUTOPROG_WORD);
+>> +
+>> +       lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_PWRDWN,
+>> +                             LPC18XX_EEPROM_PWRDWN_NO);
+>> +
+>> +       lpc18xx_regmap_config.max_register =3D resource_size(res) - =
+1;
+>> +       lpc18xx_regmap_config.writeable_reg =3D lpc18xx_eeprom_write=
+able_reg;
+>> +       lpc18xx_regmap_config.readable_reg =3D lpc18xx_eeprom_readab=
+le_reg;
+>> +
+>> +       regmap =3D devm_regmap_init(dev, &lpc18xx_eeprom_bus, eeprom=
+,
+>> +                                 &lpc18xx_regmap_config);
+>> +       if (IS_ERR(regmap)) {
+>> +               dev_err(dev, "regmap init failed: %ld\n", PTR_ERR(re=
+gmap));
+>> +               ret =3D PTR_ERR(regmap);
+>> +               goto err_clk;
+>> +       }
+>> +
+>> +       lpc18xx_nvmem_config.dev =3D dev;
+>> +
+>> +       eeprom->nvmem =3D nvmem_register(&lpc18xx_nvmem_config);
+>> +       if (IS_ERR(eeprom->nvmem)) {
+>> +               ret =3D PTR_ERR(eeprom->nvmem);
+>> +               goto err_clk;
+>> +       }
+>> +
+>> +       platform_set_drvdata(pdev, eeprom);
+>> +
+>> +       return 0;
+>> +
+>> +err_clk:
+>> +       clk_disable_unprepare(eeprom->clk);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static int lpc18xx_eeprom_remove(struct platform_device *pdev)
+>> +{
+>> +       struct lpc18xx_eeprom_dev *eeprom =3D platform_get_drvdata(p=
+dev);
+>> +
+>> +       lpc18xx_eeprom_writel(eeprom, LPC18XX_EEPROM_PWRDWN,
+>> +                             LPC18XX_EEPROM_PWRDWN_YES);
+>> +
+>> +       clk_disable_unprepare(eeprom->clk);
+>> +
+>> +       return nvmem_unregister(eeprom->nvmem);
+>=20
+> Normally you do tear down in the reverse order of initialization.
+>=20
+> Consider what happens here when you power down and disable the clock
+> while there still are nvmem users of the eeprom.
+
+You're right! Will fix this. Thanks again.
+
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
