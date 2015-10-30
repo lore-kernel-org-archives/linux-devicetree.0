@@ -1,119 +1,136 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 3/3] PM / OPP: Remove 'operating-points-names' binding
-Date: Fri, 30 Oct 2015 06:55:07 +0530
-Message-ID: <0290b40c1cb5062335b74ad7e845a1f1d3111f13.1446167359.git.viresh.kumar@linaro.org>
-References: <cover.1446167359.git.viresh.kumar@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1446167359.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1446167359.git.viresh.kumar@linaro.org>
-References: <cover.1446167359.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3] Input: tsc2005 - Add support for tsc2004
+Date: Thu, 29 Oct 2015 18:45:22 -0700
+Message-ID: <20151030014522.GA14178@localhost>
+References: <1446077554-19684-1-git-send-email-mwelling@ieee.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446077554-19684-1-git-send-email-mwelling@ieee.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>
+Cc: Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These aren't used until now by any DT files and wouldn't be used now as
-we have a better scheme in place now, i.e. opp-property-<name>
-properties.
+Hi Michael,
 
-Remove the (useless) binding without breaking ABI.
+On Wed, Oct 28, 2015 at 07:12:34PM -0500, Michael Welling wrote:
+> Adds support for the i2c based tsc2004.
+> 
+> Due to the overlapping functionality of the tsc2004 and tsc2005
+> the common code was moved to a core driver (tsc200x-core).
+> 
+> Signed-off-by: Michael Welling <mwelling@ieee.org>
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/opp/opp.txt | 62 +--------------------------
- 1 file changed, 2 insertions(+), 60 deletions(-)
+In addition to what has been discussed in the other email:
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 6e0dd8db3b86..9d2e08f488b5 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -45,21 +45,10 @@ Devices supporting OPPs must set their "operating-points-v2" property with
- phandle to a OPP table in their DT node. The OPP core will use this phandle to
- find the operating points for the device.
- 
--Devices may want to choose OPP tables at runtime and so can provide a list of
--phandles here. But only *one* of them should be chosen at runtime. This must be
--accompanied by a corresponding "operating-points-names" property, to uniquely
--identify the OPP tables.
--
- If required, this can be extended for SoC vendor specfic bindings. Such bindings
- should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
- and should have a compatible description like: "operating-points-v2-<vendor>".
- 
--Optional properties:
--- operating-points-names: Names of OPP tables (required if multiple OPP
--  tables are present), to uniquely identify them. The same list must be present
--  for all the CPUs which are sharing clock/voltage rails and hence the OPP
--  tables.
--
- * OPP Table Node
- 
- This describes the OPPs belonging to a device. This node can have following
-@@ -446,54 +435,7 @@ Example 4: Handling multiple regulators
- 	};
- };
- 
--Example 5: Multiple OPP tables
--
--/ {
--	cpus {
--		cpu@0 {
--			compatible = "arm,cortex-a7";
--			...
--
--			cpu-supply = <&cpu_supply>
--			operating-points-v2 = <&cpu0_opp_table_slow>, <&cpu0_opp_table_fast>;
--			operating-points-names = "slow", "fast";
--		};
--	};
--
--	cpu0_opp_table_slow: opp_table_slow {
--		compatible = "operating-points-v2";
--		status = "okay";
--		opp-shared;
--
--		opp00 {
--			opp-hz = /bits/ 64 <600000000>;
--			...
--		};
--
--		opp01 {
--			opp-hz = /bits/ 64 <800000000>;
--			...
--		};
--	};
--
--	cpu0_opp_table_fast: opp_table_fast {
--		compatible = "operating-points-v2";
--		status = "okay";
--		opp-shared;
--
--		opp10 {
--			opp-hz = /bits/ 64 <1000000000>;
--			...
--		};
--
--		opp11 {
--			opp-hz = /bits/ 64 <1100000000>;
--			...
--		};
--	};
--};
--
--Example 6: opp-supported-hw
-+Example 5: opp-supported-hw
- (example: three level hierarchy of versions: cuts, substrate and process)
- 
- / {
-@@ -538,7 +480,7 @@ Example 6: opp-supported-hw
- 	};
- };
- 
--Example 7: opp-microvolt-<name>, opp-microamp-<name>, turbo-mode-<name>,
-+Example 6: opp-microvolt-<name>, opp-microamp-<name>, turbo-mode-<name>,
- opp-suspend-<name>:
- (example: device with two possible microvolt ranges: slow and fast)
- 
+> ---
+> v3: Splits the tsc2004 and tsc2005 into separate drivers with
+> with common routines in tsc200x-core.
+> v2: Fixes Kconfig based on report for 0-day build bot.
+>  .../bindings/input/touchscreen/tsc2004.txt         |  38 +
+
+Can we please combine tsc2004.txt and tsc2005.txt?
+
+>  
+> +config TOUCHSCREEN_TSC200X
+> +	tristate
+
+Let's call it TOUCHSCREEN_TSC200X_CORE.
+
+> --- /dev/null
+> +++ b/drivers/input/touchscreen/tsc2004.c
+> @@ -0,0 +1,73 @@
+> +/*
+> + * TSC2004 touchscreen driver
+> + *
+> + * Copyright (C) 2015 EMAC Inc.
+> + * Copyright (C) 2015 QWERTY Embedded Design
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+
+Please drop this empty line in the comment.
+
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/input.h>
+> +#include <linux/pm.h>
+> +#include <linux/of.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +#include "tsc200x-core.h"
+> +
+> +static int tsc2004_probe(struct i2c_client *i2c,
+> +			 const struct i2c_device_id *id)
+> +
+> +{
+> +	return tsc200x_probe(&i2c->dev, i2c->irq, BUS_I2C,
+> +			     devm_regmap_init_i2c(i2c,
+> +						  &tsc2005_regmap_config));
+> +}
+> +
+> +static int tsc2004_remove(struct i2c_client *i2c)
+> +{
+> +	return tsc200x_remove(&i2c->dev);
+> +}
+> +
+> +static const struct i2c_device_id tsc2004_idtable[] = {
+> +	{ "tsc2004", 0 },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, tsc2004_idtable);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tsc2004_of_match[] = {
+> +	{ .compatible = "ti,tsc2004" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, tsc2004_of_match);
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(tsc2004_pm_ops, tsc200x_suspend, tsc200x_resume);
+
+Hmm, maybe you should export tsc200x_pm_ops instead of individual
+functions.
+
+> +
+> +int __maybe_unused tsc200x_suspend(struct device *dev)
+> +{
+> +	struct tsc2005 *ts = dev_get_drvdata(dev);
+> +
+> +	mutex_lock(&ts->mutex);
+> +
+> +	if (!ts->suspended && ts->opened)
+> +		__tsc2005_disable(ts);
+> +
+> +	ts->suspended = true;
+> +
+> +	mutex_unlock(&ts->mutex);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(tsc200x_suspend);
+
+__maybe_unused does not make sense here - the symbol is exported and
+therefore is always used. If you export the pm_ops stucture then you can
+keep functions as __maybe_unused.
+
+BTW, can you generate the patch with -M to let git do the rename
+detection - it will be easier to see what changed in the core.
+
+Thanks!
+
 -- 
-2.6.2.198.g614a2ac
-
+Dmitry
