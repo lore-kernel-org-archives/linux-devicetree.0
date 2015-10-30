@@ -1,130 +1,74 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add documentation for
- s2mps15 PMIC
-Date: Fri, 30 Oct 2015 17:24:14 +0000
-Message-ID: <20151030172414.GC4058@x1>
-References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
- <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding
+ documentation
+Date: Fri, 30 Oct 2015 18:24:55 +0100
+Message-ID: <20151030172455.GA17183@ulmo.nvidia.com>
+References: <1438133861-22370-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: broonie@kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
+In-Reply-To: <1438133861-22370-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Werner Johansson <werner.johansson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Oct 2015, Alim Akhtar wrote:
 
-> From: Thomas Abraham <thomas.ab@samsung.com>
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 28, 2015 at 06:37:40PM -0700, Bjorn Andersson wrote:
+> From: Werner Johansson <werner.johansson@sonymobile.com>
 >=20
-> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 dev=
-ice
-> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regul=
-ators.
-> This also supports RTC and three 32.768KHz clock outputs.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Signed-off-by: Werner Johansson <werner.johansson@sonymobile.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 > ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |   21 +++++++++++=
-+++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
+>  .../bindings/panel/sharp,ls043t1le01.txt           | 22 ++++++++++++++++=
+++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls043t1=
+le01.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.tx=
+t b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
+> new file mode 100644
+> index 000000000000..758d48d33e46
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
+> @@ -0,0 +1,22 @@
+> +Sharp Microelectronics 4.3" qHD TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "sharp,ls043t1le01-qhd-vid"
 
-Applied, thanks.
+The -vid suffix needs to go away, otherwise the binding looks good to
+me.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mps11.txt
-> index 890f0b0e1643..4c0543ceec25 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
-> =20
-> -* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current =
-Regulator
-> +* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
-> =20
->  The Samsung S2MPS11 is a multi-function device which includes voltag=
-e and
->  current regulators, RTC, charger controller and other sub-blocks. It=
- is
-> @@ -7,8 +7,12 @@ interfaced to the host controller using an I2C inter=
-face. Each sub-block is
->  addressed by the host system using different I2C slave addresses.
-> =20
->  Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-p=
-mic"
-> -	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
-> +- compatible: Should be one of the following
-> +	- "samsung,s2mps11-pmic"
-> +	- "samsung,s2mps13-pmic"
-> +	- "samsung,s2mps14-pmic"
-> +	- "samsung,s2mps15-pmic"
-> +	- "samsung,s2mpu02-pmic".
->  - reg: Specifies the I2C slave address of the pmic block. It should =
-be 0x66.
-> =20
->  Optional properties:
-> @@ -24,7 +28,7 @@ Optional properties:
->    unwanted buck warm reset (setting buck voltages to default values)=
-=2E
-> =20
->  Optional nodes:
-> -- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffe=
-red 32.768
-> +- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/=
-BT) buffered 32.768
->    KHz outputs, so to register these as clocks with common clock fram=
-ework
->    instantiate a sub-node named "clocks". It uses the common clock bi=
-nding
->    documented in :
-> @@ -37,12 +41,13 @@ Optional nodes:
->      the clock which they consume.
->      Clock               ID           Devices
->      ----------------------------------------------------------
-> -    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S5M8767
-> -    32KhzCP		1            S2MPS11, S2MPS13, S5M8767
-> -    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S5M8767
-> +    32KhzAP		0            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M876=
-7
-> +    32KhzCP		1            S2MPS11, S2MPS13, S2MPS15, S5M8767
-> +    32KhzBT		2            S2MPS11, S2MPS13, S2MPS14, S2MPS15, S5M876=
-7
-> =20
->    - compatible: Should be one of: "samsung,s2mps11-clk", "samsung,s2=
-mps13-clk",
->  		"samsung,s2mps14-clk", "samsung,s5m8767-clk"
-> +    The s2msp15 uses the same compatible as s2mps13, as both provide=
-s similar clocks.
-> =20
->  - regulators: The regulators of s2mps11 that have to be instantiated=
- should be
->  included in a sub-node named 'regulators'. Regulator nodes included =
-in this
-> @@ -90,6 +95,7 @@ as per the datasheet of s2mps11.
->  			- S2MPS11: 1 to 38
->  			- S2MPS13: 1 to 40
->  			- S2MPS14: 1 to 25
-> +			- S2MPS15: 1 to 27
->  			- S2MPU02: 1 to 28
->  		  - Example: LDO1, LDO2, LDO28
->  	- BUCKn
-> @@ -97,6 +103,7 @@ as per the datasheet of s2mps11.
->  			- S2MPS11: 1 to 10
->  			- S2MPS13: 1 to 10
->  			- S2MPS14: 1 to 5
-> +			- S2MPS15: 1 to 10
->  			- S2MPU02: 1 to 7
->  		  - Example: BUCK1, BUCK2, BUCK9
-> =20
+Thierry
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWM6fkAAoJEN0jrNd/PrOhvAsP/1RJPOoWUmguagUJxsDwu/9g
+KwmKYRkzPuO5xNkW4HDA3PDQvHKKlJ49GS8BX6Epv/CxdngoDaD6949CP+P5qF1g
+fhrhf8y51eLznB/qwKPBp789fFwam2EBL35icEV6q3zY0BOVC9DPLa2hZX4z96vO
+jpBa+XFFN1HlwOOD8FYrnX9GnzzawVvB2ZmjvGdqjxz6xLhY0GoazBqTNSjLMv58
+lQEHj+24srgb2/+jPQiW6jPIslcbqZ5dm/IRPxDJrdBX03aHFm3Jo3C1mG8fSXvH
+etRRhbYO6Pj15Kv1wbZmvCPORV9P6KpgGhKbzXc6OmTh0z2KyfaxezVcxxD/0Ho9
+Ttggbj5tKmNYppXHoXS/J40kGsvYjxYqcy6L0HKiMeKehDxeH3BdA3j6X1hfbovA
+g6DfwPZrhQkbEKak0GJmnwpKKDVd69M9lh5MqjQ3uGEKvbWMdu8Kow+az8qGlwEg
+jX3nFj6JV5bbm+c2c0TmP+WQSQ0s80oUswDQ7DW0N+5esI/hd08Vt3EmNSQpyfXk
+4Hrqsqs3Wp2CZqoWoBI0ZXzw+LXaZFRcFCrd8kcKnqAM368AqPx4PdA3MNa/Hr1r
+ea+nCbDRK0mICkAXnCZkOWpvrYlu5k9LXYzarV5f1d0n1jKn4ALlL6YKjF8gwSub
+1QUX7jHkTzCezE1JRQhj
+=3t2g
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
