@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 19/19] ARM: sun5i: chip: Enable the TV Encoder
-Date: Fri, 30 Oct 2015 15:21:05 +0100
-Message-ID: <1446214865-3972-20-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 12/19] drm: sun4i: tv: Add PAL output standard
+Date: Fri, 30 Oct 2015 15:20:58 +0100
+Message-ID: <1446214865-3972-13-git-send-email-maxime.ripard@free-electrons.com>
 References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAP2ZWYQKGQEXCRSZKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDH2ZWYQKGQEZITJXKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1446214865-3972-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,35 +19,67 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The TV encoder is used to drive VGA and composite display.
-
-Enable it on the CHIP
+Now that we have support for the composite output, we can start adding new
+supported standards. Start with PAL, and we will add other eventually.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-r8.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_tv.c | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-r8.dtsi b/arch/arm/boot/dts/sun5i-r8.dtsi
-index d69df3a73cbf..e39c903da864 100644
---- a/arch/arm/boot/dts/sun5i-r8.dtsi
-+++ b/arch/arm/boot/dts/sun5i-r8.dtsi
-@@ -86,4 +86,16 @@
- 					     "ahb_mali400";
- 		};
- 	};
-+
-+	soc@01c00000 {
-+		tve: encoder@01c0a000 {
-+			compatible = "allwinner,sun4i-a10-tv-encoder";
-+			reg = <0x01c0a000 0x1000>;
-+			clocks = <&ahb_gates 34>;
-+		};
-+	};
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
+index dc55e340410c..4b95d04ff457 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+@@ -175,7 +175,49 @@ struct sun4i_tv {
+ 	struct sun4i_drv	*drv;
+ };
+ 
++struct video_levels pal_video_levels = {
++	.black = 252,	.blank = 252,
 +};
 +
-+&de {
-+	allwinner,tv-encoder = <&tve>;
++struct burst_levels pal_burst_levels = {
++	.cb = 40,	.cr = 40,
++};
++
++struct color_gains pal_color_gains = {
++	.cb = 224,	.cr = 224,
++};
++
++struct resync_parameters pal_resync_parameters = {
++	.field = true,	.line = 13,	.pixel = 12,
++};
++
+ struct tv_mode tv_modes[] = {
++	{
++		.name		= "PAL",
++		.mode		= SUN4I_TVE_CFG0_RES_576i,
++		.chroma_freq	= 0x2a098acb,
++
++		.back_porch	= 138,
++		.front_porch	= 24,
++		.line_number	= 625,
++
++		.hdisplay	= 720,
++		.hfront_porch	= 3,
++		.hsync_len	= 2,
++		.hback_porch	= 139,
++
++		.vdisplay	= 576,
++		.vfront_porch	= 28,
++		.vsync_len	= 2,
++		.vback_porch	= 19,
++
++		.vblank_level	= 252,
++
++		.color_gains	= &pal_color_gains,
++		.burst_levels	= &pal_burst_levels,
++		.video_levels	= &pal_video_levels,
++		.resync_params	= &pal_resync_parameters,
++	},
  };
+ 
+ static inline struct sun4i_tv *
 -- 
 2.6.2
