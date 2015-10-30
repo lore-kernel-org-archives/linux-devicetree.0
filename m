@@ -1,43 +1,58 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
-Date: Fri, 30 Oct 2015 16:55:16 -0500
-Message-ID: <5633E744.6040202@codeaurora.org>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
- <1446174501-8870-2-git-send-email-okaya@codeaurora.org>
- <5741892.rRLhcI7KQG@wuerfel> <5633E442.3010003@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
+Date: Fri, 30 Oct 2015 15:18:26 -0700
+Message-ID: <20151030221826.GM19782@codeaurora.org>
+References: <cover.1446167359.git.viresh.kumar@linaro.org>
+ <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5633E442.3010003-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2015 04:42 PM, Sinan Kaya wrote:
->>
->>     if (WARN_ON(!pdev->dev.dma_mask))
->>         return -ENXIO;
->>
->> The dma mask has to always be set by the platform code before probe()
->> is called. If it is not set, you are not allowed to perform DMA.
->
-> I tested this on an ACPI platform BTW when I was working on the initial
-> implementation.
+On 10/30, Viresh Kumar wrote:
+> +	opp_table {
+> +		compatible = "operating-points-v2";
+> +		status = "okay";
+> +		opp-shared;
+> +
+> +		opp00 {
 
-PowerPC sets the mask to 32 bits by default:
+A side-note. I wonder if it would be better style to have the
+node name be:
 
-http://lxr.free-electrons.com/ident?i=arch_setup_pdev_archdata
+		opp@600000000 {
 
-Should we do something similar in ARM64?  Today, we have to manually set 
-the DMA mask in all drivers.
+At least it seems that the assumption is we can store all the
+possible combinations of OPP values for a particular frequency in
+the same node. Following this style would make dt compilation
+fail if two nodes have the same frequency.
+
+Also, this makes it sound like opp-supported-hw is really just
+telling us if this is a supported frequency or not for the
+particular device we're running on. The current wording makes it
+sound like we could have two OPP nodes with the same frequency
+but different voltages inside them, which we're trying to
+discourage by compressing the tables into less nodes.
+
+I think in Lee's case we're only going to use the cuts parameter
+to figure out if the OPP is supported or not. On qcom platforms
+we will only use one parameter for this property as well, the
+speed bin. The slow/fast and version stuff will be handled by
+named opp properties.
+
+> +			/*
+> +			 * Supports all substrate and process versions for 0xF
+> +			 * cuts, i.e. only first four cuts.
+> +			 */
+> +			opp-supported-hw = <0xF 0xFFFFFFFF 0xFFFFFFFF>
+> +			opp-hz = /bits/ 64 <600000000>;
+> +			opp-microvolt = <900000 915000 925000>;
 
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
