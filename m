@@ -1,85 +1,89 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management driver
-Date: Fri, 30 Oct 2015 20:18:49 +0200
-Message-ID: <CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
-	<20151030150025.GF31073@leverpostej>
-	<CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
-	<5633B207.5030505@codeaurora.org>
+From: Stuart Yoder <stuart.yoder@freescale.com>
+Subject: RE: [PATCH v3] arm64: dts: Added syscon-reboot node for FSL's LS2085A
+ SoC
+Date: Fri, 30 Oct 2015 18:22:58 +0000
+Message-ID: <CY1PR0301MB0748FFB9490DB247C389330C872F0@CY1PR0301MB0748.namprd03.prod.outlook.com>
+References: <1446224892-29407-1-git-send-email-German.Rivera@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5633B207.5030505-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1446224892-29407-1-git-send-email-German.Rivera@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Sharma Bhupesh <bhupesh.sharma@freescale.com>, Jose Rivera <German.Rivera@freescale.com>, Li Leo <LeoLi@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 8:08 PM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-
->> The ACPI tables DSDT and CSRT (more info here:
->> http://www.acpi.info/links.htm) defines properties.
->>
->> DSDT:
->>   per DMAC: the resources
->>   per client: FixedDMA descriptor that contains channel / request line
->> pair.
->>
->> CSRT:
->>   necessary table to map which DMAC provides which request line, thus
->> request line numbering are global on platform.
->>
->> When DMAC driver is probed in the running system it should call as
->> well registration function from acpi-dma.c.
->>
->> All clients when use new DMA slave API gets channel automatically
->> based on their FixedDMA property.
->>
->> So, above is how it should be done. Didn't actually checked what this
->> driver does.
->>
-> I was going to reply to all the questions in one pass but let me handle
-> piece by piece.
->
-> Here are some facts.
-> - This hardware supports memcpy and memset only.
-> - Memset feature was removed from the kernel sometime around 3.14. So no
-> memset support in this driver either.
-> - The hardware does not support DMA slave support
-> - The goal is to provide an interface to DMA engine framework for memcpy
-> optimization so that the rest of the kernel drivers and applications make
-> use of the hardware.
->
-
-> CSRT is an Intel specific ACPI table for slave devices.
-
-Wrong.
-It was designed by Microsoft to support multiple controllers, in
-particular DMACs.
-Have you read that document I posted link to?
-
-> It was decided by
-> Linaro that CSRT will not be supported for ARM64.
-
-Interesting, ARM64 platforms are not going to have more than one DMAC
-per system?
-
-> There were some discussions in ACPI forums to define a similar table for
-> ARM64 but we are not there today and this hardware does not support slave
-> interface.
->
-> ACPI enumeration is just like any other platform device. The driver gets
-> looked up by a QCOM specific HID and the driver gets probed with the rest of
-> the arguments in DSM object similar to device-tree attributes. The code uses
-> device functions so the driver is not aware of where the parameters are
-> coming from.
 
 
+> -----Original Message-----
+> From: J. German Rivera [mailto:German.Rivera@freescale.com]
+> Sent: Friday, October 30, 2015 12:08 PM
+> To: robh+dt@kernel.org; mark.rutland@arm.com; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Cc: Sharma Bhupesh-B45370; Yoder Stuart-B08248; Li Yang-Leo-R58472; Rivera Jose-B46482
+> Subject: [PATCH v3] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
+> 
+> Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
+> the ARM-generic reboot mechanism for this SoC. This mechanism
+> is enabled through CONFIG_POWER_RESET_SYSCON.
+> 
+> Signed-off-by: J. German Rivera <German.Rivera@freescale.com>
+> ---
+> CHANGE HISTORY:
+> 
+> Changes in v2:
+> - Addressed comment form Stuart Yoder:
+>   * Removed "@<address>" from reboot node
+> 
+> Changes in v3:
+> - Addressed comment form Stuart Yoder:
+>   * Expose only the reset register
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+> index e281ceb..5e3d894 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2085a.dtsi
+> @@ -131,6 +131,18 @@
+>  		interrupts = <1 9 0x4>;
+>  	};
+> 
+> +	rstcr: rstcr@1E60000 {
+> +		compatible = "syscon";
+> +		reg = <0x0 0x1E60000 0x0 0x4>;
+> +	};
+> +
+> +	reboot {
+> +		compatible ="syscon-reboot";
+> +		regmap = <&rstcr>;
+> +		offset = <0x0>;
+> +		mask = <0x2>;
+> +	};
+> +
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+>  		interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
 
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+German, the other thing I just noticed that I had mentioned on 
+v1 of the patch was that the device tree has been renamed, so
+fsl-ls2085a.dtsi no longer exists.
+
+You need to rebase this on top of:
+git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
+
+branch: for-next
+
+Thanks,
+Stuart
