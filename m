@@ -1,7 +1,7 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v5 1/3] mtd: brcmnand: factor out CFG and CFG_EXT bitfields
-Date: Fri, 30 Oct 2015 12:29:19 +0530
-Message-ID: <1446188361-15146-2-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH v5 3/3] arm64: dts: Add BRCM IPROC NAND DT node for NS2
+Date: Fri, 30 Oct 2015 12:29:21 +0530
+Message-ID: <1446188361-15146-4-git-send-email-anup.patel@broadcom.com>
 References: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,78 +9,90 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Linux MTD <linux-mtd@lists.infradead.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Pramod KUMAR <pramodku@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Sandeep Tripathy <tripathy@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace@gmail.com>
+The NAND controller on NS2 SoC is compatible with existing
+BRCM IPROC NAND driver so let's enable it in NS2 DT and
+NS2 SVK DT.
 
-Use enum instead of magic numbers for CFG and CFG_EXT bitfields.
+This patch also fixes use of node labels in ns2-svk.dts.
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-Tested-by: Anup Patel <anup.patel@broadcom.com>
+Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Reviewed-by: Brian Norris <computersforpeace@gmail.com>
 ---
- drivers/mtd/nand/brcmnand/brcmnand.c | 38 +++++++++++++++++++++++++++++-------
- 1 file changed, 31 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts | 30 ++++++++++++++++++++----------
+ arch/arm64/boot/dts/broadcom/ns2.dtsi    | 14 ++++++++++++++
+ 2 files changed, 34 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-index 4cba03d..dda96fa 100644
---- a/drivers/mtd/nand/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-@@ -344,6 +344,28 @@ static const u8 brcmnand_cs_offsets_cs0[] = {
- 	[BRCMNAND_CS_TIMING2]		= 0x14,
- };
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+index e5950d5..6bb3d4d 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
++++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+@@ -50,18 +50,28 @@
+ 		device_type = "memory";
+ 		reg = <0x000000000 0x80000000 0x00000000 0x40000000>;
+ 	};
++};
  
-+/*
-+ * Bitfields for the CFG and CFG_EXT registers. Pre-v7.1 controllers only had
-+ * one config register, but once the bitfields overflowed, newer controllers
-+ * (v7.1 and newer) added a CFG_EXT register and shuffled a few fields around.
-+ */
-+enum {
-+	CFG_BLK_ADR_BYTES_SHIFT		= 8,
-+	CFG_COL_ADR_BYTES_SHIFT		= 12,
-+	CFG_FUL_ADR_BYTES_SHIFT		= 16,
-+	CFG_BUS_WIDTH_SHIFT		= 23,
-+	CFG_BUS_WIDTH			= BIT(CFG_BUS_WIDTH_SHIFT),
-+	CFG_DEVICE_SIZE_SHIFT		= 24,
-+
-+	/* Only for pre-v7.1 (with no CFG_EXT register) */
-+	CFG_PAGE_SIZE_SHIFT		= 20,
-+	CFG_BLK_SIZE_SHIFT		= 28,
-+
-+	/* Only for v7.1+ (with CFG_EXT register) */
-+	CFG_EXT_PAGE_SIZE_SHIFT		= 0,
-+	CFG_EXT_BLK_SIZE_SHIFT		= 4,
+-	soc: soc {
+-		i2c0: i2c@66080000 {
+-			status = "ok";
+-		};
++&i2c0 {
++	status = "ok";
++};
+ 
+-		i2c1: i2c@660b0000 {
+-			status = "ok";
+-		};
++&i2c1 {
++	status = "ok";
 +};
 +
- /* BRCMNAND_INTFC_STATUS */
- enum {
- 	INTFC_FLASH_STATUS		= GENMASK(7, 0),
-@@ -1720,17 +1742,19 @@ static int brcmnand_set_cfg(struct brcmnand_host *host,
- 	}
- 	device_size = fls64(cfg->device_size) - fls64(BRCMNAND_MIN_DEVSIZE);
++&uart3 {
++	status = "ok";
++};
  
--	tmp = (cfg->blk_adr_bytes << 8) |
--		(cfg->col_adr_bytes << 12) |
--		(cfg->ful_adr_bytes << 16) |
--		(!!(cfg->device_width == 16) << 23) |
--		(device_size << 24);
-+	tmp = (cfg->blk_adr_bytes << CFG_BLK_ADR_BYTES_SHIFT) |
-+		(cfg->col_adr_bytes << CFG_COL_ADR_BYTES_SHIFT) |
-+		(cfg->ful_adr_bytes << CFG_FUL_ADR_BYTES_SHIFT) |
-+		(!!(cfg->device_width == 16) << CFG_BUS_WIDTH_SHIFT) |
-+		(device_size << CFG_DEVICE_SIZE_SHIFT);
- 	if (cfg_offs == cfg_ext_offs) {
--		tmp |= (page_size << 20) | (block_size << 28);
-+		tmp |= (page_size << CFG_PAGE_SIZE_SHIFT) |
-+		       (block_size << CFG_BLK_SIZE_SHIFT);
- 		nand_writereg(ctrl, cfg_offs, tmp);
- 	} else {
- 		nand_writereg(ctrl, cfg_offs, tmp);
--		tmp = page_size | (block_size << 4);
-+		tmp = (page_size << CFG_EXT_PAGE_SIZE_SHIFT) |
-+		      (block_size << CFG_EXT_BLK_SIZE_SHIFT);
- 		nand_writereg(ctrl, cfg_ext_offs, tmp);
- 	}
- 
+-		uart3: serial@66130000 {
+-			status = "ok";
+-		};
++&nand {
++	nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-ecc-mode = "hw";
++		nand-ecc-strength = <8>;
++		nand-ecc-step-size = <512>;
++		#address-cells = <1>;
++		#size-cells = <1>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index f603277..9610822 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -212,5 +212,19 @@
+ 			compatible = "brcm,iproc-rng200";
+ 			reg = <0x66220000 0x28>;
+ 		};
++
++		nand: nand@66460000 {
++			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
++			reg = <0x66460000 0x600>,
++			      <0x67015408 0x600>,
++			      <0x66460f00 0x20>;
++			reg-names = "nand", "iproc-idm", "iproc-ext";
++			interrupts = <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>;
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			brcm,nand-has-wp;
++		};
+ 	};
+ };
 -- 
 1.9.1
