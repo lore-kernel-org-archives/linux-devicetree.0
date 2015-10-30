@@ -1,13 +1,11 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 01/19] clk: sunxi: Add display clock
-Date: Fri, 30 Oct 2015 15:20:47 +0100
-Message-ID: <1446214865-3972-2-git-send-email-maxime.ripard@free-electrons.com>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 00/19] drm: Add Allwinner A10 display engine support
+Date: Fri, 30 Oct 2015 15:20:46 +0100
+Message-ID: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBVPZZWYQKGQEB4IGDGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1446214865-3972-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -19,234 +17,157 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A10 SoCs and its relatives has a special clock controller to drive the
-display engines (both frontend and backend).
+Hi everyone,
 
-Add a driver for it.
+The Allwinner SoCs (except for the very latest ones) all share the
+same set of controllers, loosely coupled together to form the display
+pipeline.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/clk/sunxi/Makefile            |   1 +
- drivers/clk/sunxi/clk-sun4i-display.c | 199 ++++++++++++++++++++++++++++++++++
- 2 files changed, 200 insertions(+)
+Depending on the SoC, the number of instances of the controller will
+change (2 instances of each in the A10, only one in the A13, for
+example), and the output availables will change too (HDMI, composite,
+VGA on the A20, none of them on the A13).
+
+On most featured SoCs, it looks like that:
+
+ +--------------------------------------------+
+ |                    RAM                     |
+ +--------------------------------------------+
+       |            |      |            |
+       v            |      |            v
+ +----------------+ |      | +----------------+
+ |    Frontend    | |      | |    Frontend    |
+ +----------------+ |      | +----------------+
+         |          |      |         |
+         v          |      |         v
+ +----------------+ |      | +----------------+
+ |    Backend     |<+      +>|    Backend     |
+ +----------------+          +----------------+
+         |                           |
+         v                           v
+ +----------------+          +----------------+---> LVDS
+ |      TCON      |          |      TCON      |---> RGB
+ +----------------+          +----------------+
+       |       +---+       +---+          |
+       |           |       |              |
+       v           v       v              v
+ +------------+  +------------+  +------------+---> VGA
+ | TV Encoder |  |    HDMI    |  | TV Encoder |---> Composite
+ +------------+  +------------+  +------------+
+
+The current code only assumes that there is a single instance of all
+the controllers. It also supports only the RGB and Composite
+interfaces.
+
+A few more things are missing though, and will be supported
+eventually:
+  - Overscan support
+  - Asynchronous page flip
+  - Multiple plane support
+  - Composite / VGA Hotplug detection
+  - More outputs
+  - Support for several videos pipelines
+
+And there's one big gotcha: thhe code to parse the mode from the
+kernel commandline doesn't seem to support named modes. Since we
+expose the various TV standards through named modes, it means that
+there's no way to use a particular standard to display something
+during the kernel boot. The default will always be used, in other
+words, PAL.
+
+A few more questions that are probably going to be raised during the
+review:
+  - How do you associate private data to a mode, for example to deal
+    with the non-generic, driver-specific settings required to deal
+    with the various TV standards? drm_display_mode seems to have a
+    private field, but it isn't always preserved.
+  - How do you setup properties in the kernel command line? In order
+    to have a decent display during boot on relevant interfaces, you
+    probably want to setup the overscan beforehand. Overscan seems to
+    be handled through properties, and afaik, there's no way to set
+    that from the cmdline. Should we use a kernel parameter to set the
+    default value instead?
+
+Thanks!
+Maxime
+
+Maxime Ripard (19):
+  clk: sunxi: Add display clock
+  clk: sunxi: Add PLL3 clock
+  clk: sunxi: Add TCON channel0 clock
+  clk: sunxi: Add TCON channel1 clock
+  clk: sunxi: add DRAM gates
+  clk: sunxi: Add Allwinner R8 AHB gates support
+  drm/panel: simple: Add timings for the Olimex LCD-OLinuXino-4.3TS
+  drm: Add Allwinner A10 Display Engine support
+  drm: sun4i: Add DT bindings documentation
+  drm: sun4i: Add RGB output
+  drm: sun4i: Add composite output
+  drm: sun4i: tv: Add PAL output standard
+  drm: sun4i: tv: Add NTSC output standard
+  ARM: sun5i: dt: Add pll3 and pll7 clocks
+  ARM: sun5i: dt: Add display and TCON clocks
+  ARM: sun5i: dt: Add DRAM gates
+  ARM: sun5i: dt: Add display blocks to the DTSI
+  ARM: sun5i: r8: Add AHB gates to the DTSI
+  ARM: sun5i: chip: Enable the TV Encoder
+
+ .../devicetree/bindings/drm/sunxi/sun4i-drm.txt    | 122 ++++
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |   9 +-
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |   3 +-
+ arch/arm/boot/dts/sun5i-r8.dtsi                    |  46 +-
+ arch/arm/boot/dts/sun5i.dtsi                       | 137 +++++
+ drivers/clk/sunxi/Makefile                         |   4 +
+ drivers/clk/sunxi/clk-simple-gates.c               |   4 +
+ drivers/clk/sunxi/clk-sun4i-display.c              | 199 +++++++
+ drivers/clk/sunxi/clk-sun4i-pll3.c                 |  84 +++
+ drivers/clk/sunxi/clk-sun4i-tcon-ch0.c             | 173 ++++++
+ drivers/clk/sunxi/clk-sun4i-tcon-ch1.c             | 167 ++++++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   3 +-
+ drivers/gpu/drm/panel/panel-simple.c               |  26 +
+ drivers/gpu/drm/sun4i/Kconfig                      |  14 +
+ drivers/gpu/drm/sun4i/Makefile                     |  11 +
+ drivers/gpu/drm/sun4i/sun4i_backend.c              | 271 +++++++++
+ drivers/gpu/drm/sun4i/sun4i_backend.h              | 159 ++++++
+ drivers/gpu/drm/sun4i/sun4i_crtc.c                 | 117 ++++
+ drivers/gpu/drm/sun4i/sun4i_crtc.h                 |  31 ++
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  | 296 ++++++++++
+ drivers/gpu/drm/sun4i/sun4i_drv.h                  |  30 +
+ drivers/gpu/drm/sun4i/sun4i_framebuffer.c          |  54 ++
+ drivers/gpu/drm/sun4i/sun4i_framebuffer.h          |  19 +
+ drivers/gpu/drm/sun4i/sun4i_layer.c                | 111 ++++
+ drivers/gpu/drm/sun4i/sun4i_layer.h                |  30 +
+ drivers/gpu/drm/sun4i/sun4i_rgb.c                  | 243 ++++++++
+ drivers/gpu/drm/sun4i/sun4i_rgb.h                  |  18 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 478 ++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                 | 182 ++++++
+ drivers/gpu/drm/sun4i/sun4i_tv.c                   | 619 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tv.h                   |  18 +
+ 32 files changed, 3673 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/sunxi/sun4i-drm.txt
  create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
+ create mode 100644 drivers/clk/sunxi/clk-sun4i-pll3.c
+ create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
+ create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
+ create mode 100644 drivers/gpu/drm/sun4i/Kconfig
+ create mode 100644 drivers/gpu/drm/sun4i/Makefile
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_backend.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_backend.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_crtc.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_crtc.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_drv.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_drv.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_framebuffer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_framebuffer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_layer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_layer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_rgb.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_rgb.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_tcon.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_tcon.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.h
 
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index cb4c299214ce..a9e1a5885846 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -9,6 +9,7 @@ obj-y += clk-a10-mod1.o
- obj-y += clk-a10-pll2.o
- obj-y += clk-a20-gmac.o
- obj-y += clk-mod0.o
-+obj-y += clk-sun4i-display.o
- obj-y += clk-simple-gates.o
- obj-y += clk-sun8i-mbus.o
- obj-y += clk-sun9i-core.o
-diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
-new file mode 100644
-index 000000000000..f13b095c6d7a
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-sun4i-display.c
-@@ -0,0 +1,199 @@
-+/*
-+ * Copyright 2015 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/of_address.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#define SUN4I_A10_DISPLAY_PARENTS	3
-+
-+#define SUN4I_A10_DISPLAY_GATE_BIT	31
-+#define SUN4I_A10_DISPLAY_RESET_BIT	30
-+#define SUN4I_A10_DISPLAY_MUX_MASK	3
-+#define SUN4I_A10_DISPLAY_MUX_SHIFT	24
-+#define SUN4I_A10_DISPLAY_DIV_WIDTH	4
-+#define SUN4I_A10_DISPLAY_DIV_SHIFT	0
-+
-+struct reset_data {
-+	void __iomem			*reg;
-+	spinlock_t			*lock;
-+	struct reset_controller_dev	rcdev;
-+};
-+
-+static DEFINE_SPINLOCK(sun4i_a10_display_lock);
-+
-+static int sun4i_a10_display_assert(struct reset_controller_dev *rcdev,
-+				    unsigned long id)
-+{
-+	struct reset_data *data = container_of(rcdev,
-+					       struct reset_data,
-+					       rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg & ~BIT(SUN4I_A10_DISPLAY_RESET_BIT), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int sun4i_a10_display_deassert(struct reset_controller_dev *rcdev,
-+				      unsigned long id)
-+{
-+	struct reset_data *data = container_of(rcdev,
-+						   struct reset_data,
-+						   rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg | BIT(SUN4I_A10_DISPLAY_RESET_BIT), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int sun4i_a10_display_status(struct reset_controller_dev *rcdev,
-+				    unsigned long id)
-+{
-+	struct reset_data *data = container_of(rcdev,
-+					       struct reset_data,
-+					       rcdev);
-+
-+	return !(readl(data->reg) & BIT(SUN4I_A10_DISPLAY_RESET_BIT));
-+}
-+
-+static struct reset_control_ops sun4i_a10_display_reset_ops = {
-+	.assert		= sun4i_a10_display_assert,
-+	.deassert	= sun4i_a10_display_deassert,
-+	.status		= sun4i_a10_display_status,
-+};
-+
-+static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
-+					 const struct of_phandle_args *spec)
-+{
-+	if (WARN_ON(spec->args_count != rcdev->of_reset_n_cells))
-+		return -EINVAL;
-+
-+	/* We only have a single reset signal */
-+	return 0;
-+}
-+
-+static void __init sun4i_a10_display_setup(struct device_node *node)
-+{
-+	const char *parents[SUN4I_A10_DISPLAY_PARENTS];
-+	const char *clk_name = node->name;
-+	struct reset_data *reset_data;
-+	struct clk_divider *div;
-+	struct clk_gate *gate;
-+	struct clk_mux *mux;
-+	void __iomem *reg;
-+	struct clk *clk;
-+	int i;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg)) {
-+		pr_err("%s: Could not map the clock registers\n", clk_name);
-+		return;
-+	}
-+
-+	for (i = 0; i < SUN4I_A10_DISPLAY_PARENTS; i++)
-+		parents[i] = of_clk_get_parent_name(node, i);
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		return;
-+
-+	mux->reg = reg;
-+	mux->shift = SUN4I_A10_DISPLAY_MUX_SHIFT;
-+	mux->mask = SUN4I_A10_DISPLAY_MUX_MASK;
-+	mux->lock = &sun4i_a10_display_lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto free_mux;
-+
-+	gate->reg = reg;
-+	gate->bit_idx = SUN4I_A10_DISPLAY_GATE_BIT;
-+	gate->lock = &sun4i_a10_display_lock;
-+
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		goto free_gate;
-+
-+	div->reg = reg;
-+	div->shift = SUN4I_A10_DISPLAY_DIV_SHIFT;
-+	div->width = SUN4I_A10_DISPLAY_DIV_WIDTH;
-+	div->lock = &sun4i_a10_display_lock;
-+
-+	clk = clk_register_composite(NULL, clk_name,
-+				     parents, SUN4I_A10_DISPLAY_PARENTS,
-+				     &mux->hw, &clk_mux_ops,
-+				     &div->hw, &clk_divider_ops,
-+				     &gate->hw, &clk_gate_ops,
-+				     0);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: Couldn't register the clock\n", clk_name);
-+		goto free_div;
-+	}
-+
-+	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+
-+	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
-+	if (!reset_data)
-+		goto free_clk;
-+
-+	reset_data->reg = reg;
-+	reset_data->lock = &sun4i_a10_display_lock;
-+	reset_data->rcdev.nr_resets = 1;
-+	reset_data->rcdev.ops = &sun4i_a10_display_reset_ops;
-+	reset_data->rcdev.of_node = node;
-+	reset_data->rcdev.of_reset_n_cells = 0;
-+	reset_data->rcdev.of_xlate = &sun4i_a10_display_reset_xlate;
-+
-+	if (reset_controller_register(&reset_data->rcdev)) {
-+		pr_err("%s: Couldn't register the reset controller\n",
-+		       clk_name);
-+		goto free_reset;
-+	}
-+
-+	return;
-+
-+free_reset:
-+	kfree(reset_data);
-+free_clk:
-+	clk_unregister(clk);
-+free_div:
-+	kfree(div);
-+free_gate:
-+	kfree(gate);
-+free_mux:
-+	kfree(mux);
-+}
-+
-+CLK_OF_DECLARE(sun4i_a10_display, "allwinner,sun4i-a10-display-clk",
-+	       sun4i_a10_display_setup);
 -- 
 2.6.2
