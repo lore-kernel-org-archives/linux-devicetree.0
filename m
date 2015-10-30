@@ -1,265 +1,36 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] pinctrl: sunxi: Add H3 PIO
- controller support
-Date: Fri, 30 Oct 2015 16:08:25 +0800
-Message-ID: <CAGb2v66wsCgoxedFY1mvVmQkLoRCRz_yeLaa0F8wG10JYHvXRg@mail.gmail.com>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com> <1445964626-6484-4-git-send-email-jenskuske@gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBEWLZSYQKGQEJS5YQJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1445964626-6484-4-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Zain Wang <zain.wang@rock-chips.com>
+Subject: [RESEND PATCH 0/4] Crypto: add crypto accelerator support for rk3288
+Date: Fri, 30 Oct 2015 16:22:45 +0800
+Message-ID: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Zain Wang <zain.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This commit support three cipher(AES/DES/DES3) and two chainmode(ecb/cbc),
+and the more algorithms or new hash drivers will be added later on.
 
-On Wed, Oct 28, 2015 at 12:50 AM, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The H3 uses the same pin controller as previous SoC's from Allwinner.
-> Add support for the pins controlled by the main PIO controller.
->
-> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
->  drivers/pinctrl/sunxi/Kconfig                      |   4 +
->  drivers/pinctrl/sunxi/Makefile                     |   1 +
->  drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 516 +++++++++++++++++++++
->  4 files changed, 522 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-> index b321b26..e6ba602 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-> @@ -18,6 +18,7 @@ Required properties:
->    "allwinner,sun8i-a23-r-pinctrl"
->    "allwinner,sun8i-a33-pinctrl"
->    "allwinner,sun8i-a83t-pinctrl"
-> +  "allwinner,sun8i-h3-pinctrl"
->
->  - reg: Should contain the register physical address and length for the
->    pin controller.
-> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-> index e68fd95..89ab7f5 100644
-> --- a/drivers/pinctrl/sunxi/Kconfig
-> +++ b/drivers/pinctrl/sunxi/Kconfig
-> @@ -51,6 +51,10 @@ config PINCTRL_SUN8I_A23_R
->         depends on RESET_CONTROLLER
->         select PINCTRL_SUNXI_COMMON
->
-> +config PINCTRL_SUN8I_H3
-> +       def_bool MACH_SUN8I
-> +       select PINCTRL_SUNXI_COMMON
-> +
->  config PINCTRL_SUN9I_A80
->         def_bool MACH_SUN9I
->         select PINCTRL_SUNXI_COMMON
-> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-> index e080290..6bd818e 100644
-> --- a/drivers/pinctrl/sunxi/Makefile
-> +++ b/drivers/pinctrl/sunxi/Makefile
-> @@ -13,4 +13,5 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23)               += pinctrl-sun8i-a23.o
->  obj-$(CONFIG_PINCTRL_SUN8I_A23_R)      += pinctrl-sun8i-a23-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_A33)                += pinctrl-sun8i-a33.o
->  obj-$(CONFIG_PINCTRL_SUN8I_A83T)       += pinctrl-sun8i-a83t.o
-> +obj-$(CONFIG_PINCTRL_SUN8I_H3)         += pinctrl-sun8i-h3.o
->  obj-$(CONFIG_PINCTRL_SUN9I_A80)                += pinctrl-sun9i-a80.o
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
-> new file mode 100644
-> index 0000000..98d465d
-> --- /dev/null
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
-> @@ -0,0 +1,516 @@
-> +/*
-> + * Allwinner H3 SoCs pinctrl driver.
-> + *
-> + * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * Based on pinctrl-sun8i-a23.c, which is:
-> + * Copyright (C) 2014 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> + * Copyright (C) 2014 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +
-> +#include "pinctrl-sunxi.h"
-> +
-> +static const struct sunxi_desc_pin sun8i_h3_pins[] = {
+Zain Wang (4):
+  Crypto: Crypto driver support aes/des/des3 for rk3288
+  clk: rockchip: set an id for crypto clk
+  ARM: dts: rockchip: Add Crypto drivers for rk3288
+  crypto: rk_crypto - add DT bindings documentation
 
-<snip>
+ .../devicetree/bindings/crypto/rk-crypto.txt       |  31 ++
+ arch/arm/boot/dts/rk3288.dtsi                      |  16 +
+ drivers/clk/rockchip/clk-rk3288.c                  |   2 +-
+ drivers/crypto/Makefile                            |   1 +
+ drivers/crypto/rk_crypto/Makefile                  |   3 +
+ drivers/crypto/rk_crypto/rk3288_crypto.c           | 393 ++++++++++++++++
+ drivers/crypto/rk_crypto/rk3288_crypto.h           | 291 ++++++++++++
+ .../crypto/rk_crypto/rk3288_crypto_ablkcipher.c    | 502 +++++++++++++++++++++
+ 8 files changed, 1238 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
+ create mode 100644 drivers/crypto/rk_crypto/Makefile
+ create mode 100644 drivers/crypto/rk_crypto/rk3288_crypto.c
+ create mode 100644 drivers/crypto/rk_crypto/rk3288_crypto.h
+ create mode 100644 drivers/crypto/rk_crypto/rk3288_crypto_ablkcipher.c
 
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 0),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXD3 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 1),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXD2 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 2),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXD1 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 3),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXD0 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 4),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXCK */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 5),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXCTL/RCDV */
-
-RXDV?
-
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 6),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* RXERR */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 7),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* TXD3 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 8),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* TXD2L */
-
-Trailing "L" there.
-
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(D, 9),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "emac")),         /* TXD1 */
-
-<snip>
-
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 0),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "mmc1"),          /* CLK */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 0)),  /* PG_EINT0 */
-
-Datasheet say EINT is function 0x6. Same for all the other pins in group G.
-
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 1),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "mmc1"),          /* CMD */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 1)),  /* PG_EINT1 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 2),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "mmc1"),          /* D0 */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 2)),  /* PG_EINT2 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 3),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "mmc1"),          /* D1 */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 3)),  /* PG_EINT3 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 4),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "mmc1"),          /* D2 */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 4)),  /* PG_EINT4 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 5),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "mmc1"),          /* D3 */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 5)),  /* PG_EINT5 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 6),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "uart1"),         /* TX */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 6)),  /* PG_EINT6 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 7),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "uart1"),         /* RX */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 7)),  /* PG_EINT7 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 8),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "uart1"),         /* RTS */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 8)),  /* PG_EINT8 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 9),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "uart1"),         /* CTS */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 9)),  /* PG_EINT9 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 10),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "i2s1"),          /* SYNC */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 10)), /* PG_EINT10 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 11),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "i2s1"),          /* CLK */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 11)), /* PG_EINT11 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 12),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "i2s1"),          /* DOUT */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 12)), /* PG_EINT12 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(G, 13),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "i2s1"),          /* DIN */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x4, 1, 13)), /* PG_EINT13 */
-> +};
-> +
-> +static const struct sunxi_pinctrl_desc sun8i_h3_pinctrl_data = {
-> +       .pins = sun8i_h3_pins,
-> +       .npins = ARRAY_SIZE(sun8i_h3_pins),
-> +       .irq_banks = 2,
-> +};
-> +
-> +static int sun8i_h3_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +       return sunxi_pinctrl_init(pdev,
-> +                                 &sun8i_h3_pinctrl_data);
-> +}
-> +
-> +static const struct of_device_id sun8i_h3_pinctrl_match[] = {
-> +       { .compatible = "allwinner,sun8i-h3-pinctrl", },
-> +       {}
-> +};
-> +
-> +static struct platform_driver sun8i_h3_pinctrl_driver = {
-> +       .probe  = sun8i_h3_pinctrl_probe,
-> +       .driver = {
-> +               .name           = "sun8i-h3-pinctrl",
-> +               .of_match_table = sun8i_h3_pinctrl_match,
-> +       },
-> +};
-> +builtin_platform_driver(sun8i_h3_pinctrl_driver);
-> --
-> 2.6.2
->
-
-The rest looks good. Thanks!
-
-
-Regards
-ChenYu
+-- 
+1.9.1
