@@ -1,37 +1,33 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: RE: [PATCH v4 0/4] [PATCH v4 0/4] Exynos SROMc configuration and
- Ethernet support for SMDK5410
-Date: Fri, 30 Oct 2015 09:43:28 +0300
-Message-ID: <00a001d112de$49b31d90$dd1958b0$@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
- <CAGcde9GtepdzFLCfW+ughAdyU_sKXUhgK35z434FPOFXpmRX9Q@mail.gmail.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v4 0/3] NAND support for Broadcom NS2 SoC
+Date: Fri, 30 Oct 2015 06:57:32 +0000
+Message-ID: <39063E8F96E11742B35A201CC5D095B7B02194@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1446185938-17520-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAGcde9GtepdzFLCfW+ughAdyU_sKXUhgK35z434FPOFXpmRX9Q@mail.gmail.com>
-Content-language: ru
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Pankaj Dubey' <dubepankaj1980@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, 'Mark Rutland' <mark.rutland@arm.com>, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446185938-17520-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux MTD <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikramp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- Hello!
+Hi All,
 
-> >  .../bindings/arm/samsung/exynos-srom.txt           | 50 ++++++++++++++++++-
-> >  arch/arm/boot/dts/exynos5410-smdk5410.dts          | 41 +++++++++++++++
-> >  arch/arm/boot/dts/exynos5410.dtsi                  | 15 ++++++
-> >  arch/arm/mach-exynos/Kconfig                       |  2 +-
-> >  drivers/soc/samsung/Kconfig                        |  2 +-
-> >  drivers/soc/samsung/exynos-srom.c                  | 58 +++++++++++++++++++++-
-> >  6 files changed, 162 insertions(+), 6 deletions(-)
-> >
-> 
-> Something wrong here, I am not able to find V4 1/4 and 3/4 in this mailing list.
+Please disregard this patchset.
 
- Which mailing list is "this"? I've just rechecked, i've got my messages back on both (linux-samsung-soc and linux-arm-kernel).
+There is an accidental typo in patch2.
 
-Kind regards,
-Pavel Fedin
-Expert Engineer
-Samsung Electronics Research center Russia
+We should use ~CFG_BUS_WIDTH instead of CFG_BUS_WIDTH
+in patch2. I will quickly send v5 patchset to fix this.
+
+Sorry, for the noise.
+
+Regards,
+Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
