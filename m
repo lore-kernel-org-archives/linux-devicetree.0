@@ -1,68 +1,171 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Thu, 29 Oct 2015 22:02:49 -0700
-Message-ID: <20151030050249.GB31863@localhost>
-References: <1444729160-26433-1-git-send-email-bayi.cheng@mediatek.com>
- <1444729160-26433-3-git-send-email-bayi.cheng@mediatek.com>
- <20151016073959.GB28158@localhost>
- <1445178035.4832.23.camel@mhfsdcap03>
- <20151029015237.GE13239@google.com>
- <1446089334.25711.10.camel@mhfsdcap03>
- <1446126991.25711.23.camel@mhfsdcap03>
- <20151029160331.GA12954@localhost>
- <1446171159.25711.36.camel@mhfsdcap03>
+From: Quan Nguyen <qnguyen@apm.com>
+Subject: Re: [PATCH v2 1/3] gpio: xgene: add support to configure GPIO line as
+ input, output or external IRQ pin
+Date: Fri, 30 Oct 2015 12:41:03 +0700
+Message-ID: <CAFopSPQtuVxSn4SkVHtf-0AZE7MqRJ3XQMutCubzMd8CztA8CA@mail.gmail.com>
+References: <1445842175-11446-1-git-send-email-yvo@apm.com>
+	<1445842175-11446-2-git-send-email-yvo@apm.com>
+	<CACRpkdbWKmRKXL=+57KQVYYRc79tgGwCi=7p4LSBwFgUwgz-gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446171159.25711.36.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "bayi.cheng" <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbWKmRKXL=+57KQVYYRc79tgGwCi=7p4LSBwFgUwgz-gw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Y Vo <yvo@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bayi,
+Forgive me for not turn on plain text mode my last email.
 
-On Fri, Oct 30, 2015 at 10:12:39AM +0800, bayi.cheng wrote:
-> Hi Brian,  The current station is as follows.
-> 
-> 1: put 0x9F to MTK_NOR_PRGDATA5_REG, and five 0x0 to
-> MTK_NOR_PRGDATA4_REG ~ MTK_NOR_PRGDATA0_REG, then set (1 + 5) * 8 
-> to MTK_NOR_CNT_REG, for this way, we can read five IDs.
-> 
-> 2: put 0x9F to MTK_NOR_PRGDATA5_REG, and five 0x0 to
-> MTK_NOR_PRGDATA4_REG ~ MTK_NOR_PRGDATA0_REG, then set (1 + 5 + 1) * 8
-> to MTK_NOR_CNT_REG, for this way, we can read six IDs.
-> In this case, nor flash IDs can be read from MTK_NOR_SHREG5_REG to
-> MTK_NOR_SHREG0_REG . Thanks!
+Hi Linus,
 
-Thanks for the update. Glad to hear you can read more bytes there; the
-extra number of Shift Registers *looked* to me like you should be able
-to read even more than 5...
+My name is Quan Nguyen, I'm working with Y Vo on this patch.
 
-So in my other email, I showed you how I generalized the TX/RX function,
-so it can handle most of both the write_reg() and read_reg() functions.
-I'm not 100% sure now that it has all of the RX path correct; it worked
-for the cases I could test, but it's confusing when reading the manual
-to figure out which SHREG register I should start from. But anyway, I
-think it should only take some small adjustments to my patch to make it
-handle things properly.
+Allow me to explain as below:
 
-I'd really appreciate it if you could incorporate my feedback and
-review/improve the ..._do_tx_rx() function I wrote, to make sure it
-handles reading any arbitrary number of bytes (at least up to 6). So,
-you might, for example, run some tests where you have spi-nor.c call
+In current implementation, gic irq resources were used in both sbgpio
+and gpios-key nodes, and this causes confusion.
+To avoid this, we introduce sbgpio driver as interrupt controller, it
+now provides 6 external irq pins mapped from gpio line 8-13. The
+gpio-keys node now uses sbgpio irq resources instead.
 
-	nor->read_reg(nor, SPINOR_OP_RDID, id, idlen)
+-- Quan
 
-with varying values for 'idlen', and make sure they all work properly.
 
-Let me know if you have any questions about comments either here, or on
-v5.
+On Thu, Oct 29, 2015 at 8:28 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Oct 26, 2015 at 7:49 AM, Y Vo <yvo@apm.com> wrote:
+>
+>> Add support to configure GPIO line as input, output or external IRQ pin.
+>>
+>> Signed-off-by: Y Vo <yvo@apm.com>
+>
+> As I will say again, this description is too terse, add lots of information
+> on how IRQs work on this controller please. I get confused.
 
-Regards,
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about:
++++++++++++++++++++++++++++++++++
+Enable X-Gene standby GPIO driver as interrupt controller, it provides
+6 external irq pins via gpio line 8-13.
++++++++++++++++++++++++++++++++++
+>
+> (...)
+>
+>> +#define XGENE_GPIO8_HWIRQ              0x48
+>> +#define XGENE_GPIO8_IDX                        8
+> (...)
+>> +#define XGENE_HWIRQ_TO_GPIO(hwirq)     ((hwirq) + XGENE_GPIO8_IDX)
+>> +#define XGENE_GPIO_TO_HWIRQ(gpio)      ((gpio) - XGENE_GPIO8_IDX)
+>> +#define GIC_IRQ_TO_GPIO_IRQ(hwirq)     ((hwirq) - XGENE_GPIO8_HWIRQ)
+>> +#define GPIO_IRQ_TO_GIC_IRQ(hwirq)     ((hwirq) + XGENE_GPIO8_HWIRQ)
+>
+> I'm a bit uneasy about this, maybe I just don't get it.
+>
+> What is this indexing into "GIC IRQ" that is starting to happen
+> here?
+>
+> The GIC (if that is drivers/irqchip/irq-gic.c) has a totally dynamic IRQ
+> translation and the Linux IRQs it is using may change. I am worried
+> that there is some reliance here on Linux IRQ having certain numbers
+> because there is certainly no ABI like that.
+>
+> Is this 0x48 really an index into the *hardware* offset in the GIC?
+>
+> And if it is: why are we not getting this hardware information from the
+> device tree like all other interrupt numbers and offsets?
+>
+> I'm worried about this.
+
+The SPI40(0x48) through SPI45(0x4D) from GIC are mapped as external
+IRQ0 - IRQ5 in this GPIO block, so it is hardware offset not mapped
+irq number.
+
+Below is detail:
+
++ GIC: SPI40 (hwirq=0x48)  <=> SB-GPIO: (hwirq=0) (gpio line 8)
++ GIC: SPI41 (hwirq=0x49)  <=> SB-GPIO: (hwirq=1) (gpio line 9)
+...
++ GIC: SPI45 (hwirq=0x4D)  <=> SB-GPIO: (hwirq=5) (gpio line 13)
+
+These defines are to help translating between Gic hardware irq and
+SBGPIO hardware irq number.
+
+>
+>> -       u32 *irq;
+>> +       void __iomem *regs;
+>> +       struct irq_domain *gic_domain;
+>> +       struct irq_domain *irq_domain;
+>
+> And there is some secondary gic_domain here, which is confusing
+> since the GIC does have an IRQ domain too.
+>
+> I think I want a clear explanation to how this GPIO controller interacts
+> with the GIC, and I want it to be part of the patch, as comments in the
+> code and in the commit message (which is way too small for a complex
+> patch like this).
+>
+> Otherwise I have no chance to understand what is really going on here.
+
+SBGPIO currently is not capable to mask/unmask/... irqs, so these will
+rely on the parent (GIC) instead. To do so, we need keep a parent
+domain reference here "struct irq_domain *gic_domain" so we can find
+correspond parent irq in runtime.
+>
+>> +static int xgene_gpio_sb_irq_set_type(struct irq_data *d, unsigned int type)
+>> +{
+>> +       int hwirq = d->hwirq;
+>> +       int gpio = XGENE_HWIRQ_TO_GPIO(hwirq);
+>> +       struct xgene_gpio_sb *priv = irq_data_get_irq_chip_data(d);
+>> +       int lvl_type;
+>> +       int ret;
+>> +
+>> +       switch (type & IRQ_TYPE_SENSE_MASK) {
+>> +       case IRQ_TYPE_EDGE_RISING:
+>> +       case IRQ_TYPE_LEVEL_HIGH:
+>> +               lvl_type = GPIO_INT_LVL_LEVEL_HIGH;
+>> +               break;
+>> +       case IRQ_TYPE_EDGE_FALLING:
+>> +       case IRQ_TYPE_LEVEL_LOW:
+>> +               lvl_type = GPIO_INT_LVL_LEVEL_LOW;
+>> +               break;
+>> +       default:
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       ret = gpiochip_lock_as_irq(&priv->bgc.gc, gpio);
+>> +       if (ret) {
+>> +               dev_err(priv->bgc.gc.dev,
+>> +               "Unable to configure XGene GPIO standby pin %d as IRQ\n",
+>> +                                                               gpio);
+>> +               return ret;
+>> +       }
+>> +
+>> +       if ((gpio >= XGENE_GPIO8_IDX) &&
+>> +                       (hwirq < XGENE_MAX_GPIO_DS_IRQ)) {
+>> +               xgene_gpio_set_bit(&priv->bgc, priv->regs + MPA_GPIO_SEL_LO,
+>> +                               gpio * 2, 1);
+>> +               xgene_gpio_set_bit(&priv->bgc, priv->regs + MPA_GPIO_INT_LVL,
+>> +                               hwirq, lvl_type);
+>> +       }
+>> +       if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
+>> +               irq_set_handler_locked(d, handle_edge_irq);
+>> +       else
+>> +               irq_set_handler_locked(d, handle_level_irq);
+>> +
+>> +       return 0;
+>> +}
+>
+> If you are assigning hadle_edge_irq() your irqchip *must* have an
+> .irq_ack() callback that acknowledges the IRQs as they come in.
+>
+> This makes me suspect that you haven't really tested edge
+> interrupts, because if you did, the kernel would crash as it
+> is unconditionally calling the .irq_ack() from handle_level_irq().
+
+irq_ack() callback is no-op function in this patch.
++static struct irq_chip xgene_gpio_sb_irq_chip = {
++       .name           = "sbgpio",
++       .irq_ack        = xgene_gpio_sb_nop,
+
+>
+> Yours,
+> Linus Walleij
