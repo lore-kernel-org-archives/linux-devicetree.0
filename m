@@ -1,116 +1,68 @@
-From: Brijesh Singh <brijeshkumar.singh@amd.com>
-Subject: Re: [PATCH v4] EDAC: Add ARM64 EDAC
-Date: Fri, 30 Oct 2015 11:26:58 -0500
-Message-ID: <56339A52.8060701@amd.com>
-References: <1446048829-3359-1-git-send-email-brijeshkumar.singh@amd.com>
- <20151028164053.GG25451@leverpostej>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 06/19] clk: sunxi: Add Allwinner R8 AHB
+ gates support
+Date: Fri, 30 Oct 2015 17:33:22 +0100
+Message-ID: <56339BD2.9010001@redhat.com>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-7-git-send-email-maxime.ripard@free-electrons.com>
+ <CAGb2v64ErryRq+-fToWihKONO5tgPxyydZ78gzsYYYJtOMGxWw@mail.gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151028164053.GG25451@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: brijeshkumar.singh@amd.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dougthompson@xmission.com, bp@alien8.de, mchehab@osg.samsung.com, devicetree@vger.kernel.org, guohanjun@huawei.com, andre.przywara@arm.com, arnd@arndb.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBYFXZ2YQKGQEKMVMKBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v64ErryRq+-fToWihKONO5tgPxyydZ78gzsYYYJtOMGxWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi,
 
->> +
->> +Required properties:
->> +- compatible: Should be "arm,cortex-a57-edac" or "arm,cortex-a53-edac"
->> +
->> +Example:
->> +	edac {
->> +		compatible = "arm,cortex-a57-edac";
->> +	};
->> +
-> 
-> This is insufficient for big.LITTLE, no interrupt is possible, and we
-> haven't defined the rules for accessing the registers (e.g. whether
-> write backs are permitted).
-> 
-> Please see my prior comments [1] on those points.
-> 
-> If we're going to use this feature directly within the kernel, we need
-> to consider the envelope of possible implementations rather than your
-> use-case alone.
+On 30-10-15 17:01, Chen-Yu Tsai wrote:
+> On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> The R8 has yet another array of gates for AHB. Let's add it to the list of
+>> compatibles we can deal with.
+>>
+>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>   drivers/clk/sunxi/clk-simple-gates.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+>> index 5666c767fa14..e3190a8687a8 100644
+>> --- a/drivers/clk/sunxi/clk-simple-gates.c
+>> +++ b/drivers/clk/sunxi/clk-simple-gates.c
+>> @@ -158,5 +158,7 @@ CLK_OF_DECLARE(sun5i_a10s_ahb, "allwinner,sun5i-a10s-ahb-gates-clk",
+>>                 sun4i_a10_ahb_init);
+>>   CLK_OF_DECLARE(sun5i_a13_ahb, "allwinner,sun5i-a13-ahb-gates-clk",
+>>                 sun4i_a10_ahb_init);
+>> +CLK_OF_DECLARE(sun5i_r8_ahb, "allwinner,sun5i-r8-ahb-gates-clk",
+>> +              sun4i_a10_ahb_init);
+>>   CLK_OF_DECLARE(sun7i_a20_ahb, "allwinner,sun7i-a20-ahb-gates-clk",
+>>                 sun4i_a10_ahb_init);
+>> --
+>> 2.6.2
+>>
 >
-
-I have looked at possibility of pushing correctable error logging in the
-firmware; but given current hardware limitation it seems like OS is the best
-place to implement it. Let me summaries the issues we are running into:
-
-* Correctable errors does not generate any interrupt:
-  If we have to implement error parsing inside the firmware then work need
-  to be split between OS and firmware. Maybe OS can call SMC instruction to 
-  dial into firmware and then firmware can check error syndrome registers; 
-  if it finds correctable error then build HEST table. This method will introduce
-  performance issue because it require OS executing SMC every 100ms or so to just
-  poll for correctable error. If you have any other recommendation then please share it.
-
-
-> * Interaction with firmware
-> - When/do we handle interrupts?
-
-We can a properties in dt bindings:
-
-1) "num-interrupts = 1" - number of interrupt count. One interrupts per cluster
-    e.g if you have 4 cluster then num-interrupts=4.
-2) interrupts = <0, 92, 0> <0, 94, 0> <0, 96, 0> <0, 98, 0>  // interrupt mapping
-
-If num-interrupts = 0, then firmware handles interrupts. Optionally we can use HEST FIRMWARE-FIRST
-bit, if bit is set then firmware is handling the interrupt otherwise use DT information.
-
+> Please also update Documentation/devicetree/bindings/clock/sunxi.txt
 >
->  - When is it valid to write back and clear an error? We should not do
->    this behind the back of any firmware that owns the interface.
+> Otherwise,
+>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-As per A57 TRM is concerned you are right both the correctable and uncorrectable 
-error needs to clear VALID bit in L1/L2 syndrome registers. So yes we need to define
-a rule for accessing the registers. I can think of two possible approach here:
+I wonder if this patch really is a good idea. We've confirmation from
+Allwinner that all of the sun5i SoCs are using the same die. Sure some
+peripherals are not connected to the outside but it is still the same
+die. This patch feels to me like it just grows the kernel and dts size
+without serving any purpose.
 
-1) add "error-syndrome-reg-write-access=1" property in dt.
-   * if '1' then OS has exclusive write backs access to error syndrome register
-   * if '0' then OS will not clear the valid bit on fatal error
+Regards,
 
-  The handler looks like this:
-
-  parse_error_syndrome () {
-   val = read_cpumerrsr
-
-   if (!IS_VALID(val))
-     return
-
-   /* log the error details */
-
-   /* if fatal error and OS does not have exclusive write back access */
-   if (IS_FATAL(val) && !error-syndrom-reg-write-access)
-     return; 
-
-   val = ~(1UL << 31); /* clear valid bit */
-  }
-
-2) Use HEST FIRMWARE-FIRST bit field, if the bit is set then OS should not clear
-   the valid bit on fatal error and similarly if bit is clear then OS clears the VALID bit.
-
-Since firmware will never handle the correctable error hence its always safe to clear
-the VALID bit on non-fatal error. If you have any other suggestions then please share it.
-
-I am not pushing my use-case only; I am trying to work through current hardware
-limitation and still support all the possibilities. I am open to hear your suggestions.
-I am also not well versed on big.LITTILE CPU, so you may need to point me on right 
-direction as we progress. My testing is limited to Cortex A57.
-
-> 
-> I don't think the use of old_mask is sufficient here, given the mapping
-> of logical to physical ID is arbitrary. For example, we could have CPUs
-> 0,5,6,7 in one cluster, and CPUs 1,2,3,4 in another, and in that case
-> we'd check the first cluster twice.
-> 
-
-Noted. I should use physical ID instead of logical mapping.
-
-> This also is wrong for big.LITTLE; we can't necessarily check on every
-> CPU.
-> 
+Hans
