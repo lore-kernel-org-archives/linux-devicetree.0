@@ -1,84 +1,57 @@
-From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: Re: [v3 08/10] MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
-Date: Fri, 30 Oct 2015 22:52:46 +0900
-Message-ID: <A997D184-1774-4720-A3A9-B34C1E2F6365@gmail.com>
-References: <1446212339-1210-1-git-send-email-jaedon.shin@gmail.com> <1446212339-1210-9-git-send-email-jaedon.shin@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1446212339-1210-9-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 27/32] scsi: hisi_sas: add smp protocol support
+Date: Fri, 30 Oct 2015 14:53:51 +0100
+Message-ID: <3976707.At0tktvfqn@wuerfel>
+References: <1445868903-183817-1-git-send-email-john.garry@huawei.com> <1445868903-183817-28-git-send-email-john.garry@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445868903-183817-28-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On Oct 30, 2015, at 10:38 PM, Jaedon Shin <jaedon.shin@gmail.com> wrote:
-> 
-> Add AHCI and PHY device nodes to MIPS-based BCM7425 set-top box
-> platform.
-> 
-> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
-> ---
-> arch/mips/boot/dts/brcm/bcm7425.dtsi | 42 ++++++++++++++++++++++++++++++++++++
-> 1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> index 5b660b617ead..e24d41ab4e30 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> @@ -221,5 +221,47 @@
-> 			interrupts = <73>;
-> 			status = "disabled";
-> 		};
-> +
-> +		sata: sata@181000 {
-> +			compatible = "brcm,bcm7425-ahci", "brcm,sata3-ahci";
-> +			reg-names = "ahci", "top-ctrl";
-> +			reg = <0x181000 0xa9c>, <0x180020 0x1c>;
-> +			interrupt-parent = <&periph_intc>;
-> +			interrupts = <40>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			brcm,broken-ncq;
-> +			brcm,broken-phi;
+On Monday 26 October 2015 22:14:58 John Garry wrote:
 
-I am sorry. This should be remove brcm,broken-ncq and brcm,broken-phy.
+> +       /*
+> +       * DMA-map SMP request, response buffers
+> +       */
+> +       /* req */
+> +       sg_req = &task->smp_task.smp_req;
+> +       elem = dma_map_sg(dev, sg_req, 1, DMA_TO_DEVICE);
+> +       if (!elem)
+> +               return -ENOMEM;
+> +       req_len = sg_dma_len(sg_req);
+> +       req_dma_addr = sg_dma_address(sg_req);
 
-> +			status = "disabled";
+If you only use the first element, could you just use dma_map_single()?
+
+> +       hdr->cmd_table_addr_lo = cpu_to_le32(lower_32_bits(req_dma_addr));
+> +       hdr->cmd_table_addr_hi = cpu_to_le32(upper_32_bits(req_dma_addr));
 > +
-> +			sata0: sata-port@0 {
-> +				reg = <0>;
-> +				phys = <&sata_phy0>;
-> +			};
+> +       hdr->sts_buffer_addr_lo =
+> +                       cpu_to_le32(lower_32_bits(slot->status_buffer_dma));
+> +       hdr->sts_buffer_addr_hi =
+> +                       cpu_to_le32(upper_32_bits(slot->status_buffer_dma));
 > +
-> +			sata1: sata-port@1 {
-> +				reg = <1>;
-> +				phys = <&sata_phy1>;
-> +			};
-> +		};
-> +
-> +		sata_phy: sata-phy@1800000 {
-> +			compatible = "brcm,bcm7425-sata-phy", "brcm,phy-sata3";
-> +			reg = <0x180100 0x0eff>;
-> +			reg-names = "phy";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +
-> +			sata_phy0: sata-phy@0 {
-> +				reg = <0>;
-> +				#phy-cells = <0>;
-> +			};
-> +
-> +			sata_phy1: sata-phy@1 {
-> +				reg = <1>;
-> +				#phy-cells = <0>;
-> +			};
-> +		};
-> 	};
-> };
-> -- 
-> 2.6.2
 > 
 
+I see these a lot in your code. Could you replace this wit
+
+	hdr->cmd_table_addr = cpu_to_le64(req_dma_addr);
+
+and so on? That would be much more readable. Or are the two __le32 variables
+swapped? If so, you could add a small helper function like
+
+static inline __le64 cpu_to_le64_wordswapped(u64 val)
+{
+	return cpu_to_le64(val >> 32 | val << 32);
+}
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
