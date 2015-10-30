@@ -1,133 +1,86 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 1/3] gpio: xgene: add support to configure GPIO line
- as input, output or external IRQ pin
-Date: Fri, 30 Oct 2015 09:35:00 +0000
-Message-ID: <20151030093500.7ad59365@arm.com>
-References: <1445842175-11446-1-git-send-email-yvo@apm.com>
-	<1445842175-11446-2-git-send-email-yvo@apm.com>
-	<CACRpkdbWKmRKXL=+57KQVYYRc79tgGwCi=7p4LSBwFgUwgz-gw@mail.gmail.com>
-	<CAFopSPQtuVxSn4SkVHtf-0AZE7MqRJ3XQMutCubzMd8CztA8CA@mail.gmail.com>
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Setup ethernet0 alias for u-boot
+Date: Fri, 30 Oct 2015 10:47:03 +0100
+Message-ID: <1446198423.4092.285.camel@collabora.co.uk>
+References: <1446151497-29833-1-git-send-email-sjoerd.simons@collabora.co.uk>
+	 <CAMuHMdXBcZAXSm1hXv6E-hW9Zp-bPLpp-HxuWukS-Y837LBneQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAFopSPQtuVxSn4SkVHtf-0AZE7MqRJ3XQMutCubzMd8CztA8CA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Phong Vo <pvo@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Feng Kan <fkan@apm.com>, Y Vo <yvo@apm.com>, Toan Le <toanle@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Loc Ho <lho@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXBcZAXSm1hXv6E-hW9Zp-bPLpp-HxuWukS-Y837LBneQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Oct 2015 12:41:03 +0700
-Quan Nguyen <qnguyen@apm.com> wrote:
+On Fri, 2015-10-30 at 10:15 +0100, Geert Uytterhoeven wrote:
+> Hi Sjoerd,
+>=20
+> On Thu, Oct 29, 2015 at 9:44 PM, Sjoerd Simons
+> <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+> > Add an ethernet0 alias for the wired network card and an all 0
+> > default
+> > mac address so that u-boot can find the device-node and fill in the
+> > mac address.
+>=20
+> Thanks a lot!
+>=20
+> I had the same issue on another board, and adding an "ethernet0"
+> alias
+> fixes it.
 
-> Forgive me for not turn on plain text mode my last email.
-> 
-> Hi Linus,
-> 
-> My name is Quan Nguyen, I'm working with Y Vo on this patch.
-> 
-> Allow me to explain as below:
-> 
-> In current implementation, gic irq resources were used in both sbgpio
-> and gpios-key nodes, and this causes confusion.
-> To avoid this, we introduce sbgpio driver as interrupt controller, it
-> now provides 6 external irq pins mapped from gpio line 8-13. The
-> gpio-keys node now uses sbgpio irq resources instead.
-> 
-> -- Quan
-> 
-> 
-> On Thu, Oct 29, 2015 at 8:28 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Mon, Oct 26, 2015 at 7:49 AM, Y Vo <yvo@apm.com> wrote:
-> >
-> >> Add support to configure GPIO line as input, output or external IRQ pin.
-> >>
-> >> Signed-off-by: Y Vo <yvo@apm.com>
-> >
-> > As I will say again, this description is too terse, add lots of information
-> > on how IRQs work on this controller please. I get confused.
-> 
-> How about:
-> +++++++++++++++++++++++++++++++++
-> Enable X-Gene standby GPIO driver as interrupt controller, it provides
-> 6 external irq pins via gpio line 8-13.
-> +++++++++++++++++++++++++++++++++
-> >
-> > (...)
-> >
-> >> +#define XGENE_GPIO8_HWIRQ              0x48
-> >> +#define XGENE_GPIO8_IDX                        8
-> > (...)
-> >> +#define XGENE_HWIRQ_TO_GPIO(hwirq)     ((hwirq) + XGENE_GPIO8_IDX)
-> >> +#define XGENE_GPIO_TO_HWIRQ(gpio)      ((gpio) - XGENE_GPIO8_IDX)
-> >> +#define GIC_IRQ_TO_GPIO_IRQ(hwirq)     ((hwirq) - XGENE_GPIO8_HWIRQ)
-> >> +#define GPIO_IRQ_TO_GIC_IRQ(hwirq)     ((hwirq) + XGENE_GPIO8_HWIRQ)
-> >
-> > I'm a bit uneasy about this, maybe I just don't get it.
-> >
-> > What is this indexing into "GIC IRQ" that is starting to happen
-> > here?
-> >
-> > The GIC (if that is drivers/irqchip/irq-gic.c) has a totally dynamic IRQ
-> > translation and the Linux IRQs it is using may change. I am worried
-> > that there is some reliance here on Linux IRQ having certain numbers
-> > because there is certainly no ABI like that.
-> >
-> > Is this 0x48 really an index into the *hardware* offset in the GIC?
-> >
-> > And if it is: why are we not getting this hardware information from the
-> > device tree like all other interrupt numbers and offsets?
-> >
-> > I'm worried about this.
-> 
-> The SPI40(0x48) through SPI45(0x4D) from GIC are mapped as external
-> IRQ0 - IRQ5 in this GPIO block, so it is hardware offset not mapped
-> irq number.
-> 
-> Below is detail:
-> 
-> + GIC: SPI40 (hwirq=0x48)  <=> SB-GPIO: (hwirq=0) (gpio line 8)
-> + GIC: SPI41 (hwirq=0x49)  <=> SB-GPIO: (hwirq=1) (gpio line 9)
-> ...
-> + GIC: SPI45 (hwirq=0x4D)  <=> SB-GPIO: (hwirq=5) (gpio line 13)
-> 
-> These defines are to help translating between Gic hardware irq and
-> SBGPIO hardware irq number.
-> 
-> >
-> >> -       u32 *irq;
-> >> +       void __iomem *regs;
-> >> +       struct irq_domain *gic_domain;
-> >> +       struct irq_domain *irq_domain;
-> >
-> > And there is some secondary gic_domain here, which is confusing
-> > since the GIC does have an IRQ domain too.
-> >
-> > I think I want a clear explanation to how this GPIO controller interacts
-> > with the GIC, and I want it to be part of the patch, as comments in the
-> > code and in the commit message (which is way too small for a complex
-> > patch like this).
-> >
-> > Otherwise I have no chance to understand what is really going on here.
-> 
-> SBGPIO currently is not capable to mask/unmask/... irqs, so these will
-> rely on the parent (GIC) instead. To do so, we need keep a parent
-> domain reference here "struct irq_domain *gic_domain" so we can find
-> correspond parent irq in runtime.
+Happy to help, this stuff is really not that well document
+unfortunately.
 
-All this only means one thing: this should be implemented as a
-hierarchical domain, just like any other "random widget stacked on top
-of the GIC". Digging into the internals of the GIC driver is not
-acceptable anymore, and this patch is just horrible.
+> > @@ -130,6 +134,8 @@
+> > =C2=A0};
+> >=20
+> > =C2=A0&gmac {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* To be filled in by U-=
+Boot */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mac-address =3D [00 00 0=
+0 00 00 00];
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0status =3D "ok";
+> > =C2=A0};
+>=20
+> Note that in my case I didn't have to add an empty mac-address
+> property.
+> U-Boot (2015.04-something --- don't have the sources) seems to add a
+> "local-mac-address" property automatically.
 
-There is plenty of examples in the tree for you to look at and rewrite
-that code using the abstractions that are already in place.
+After submitting the patch i actually dived a bit deeper at how this
+all hangs together.
 
-In the meantime, I am NAKing this patch. Please include the irqchip
-maintainers in the next iteration of this series.
+The linux kernel checks for mac-address, local-mac-address and address
+in the fdt node, in that order of preference. u-boot (at least recent
+ones like you have), will set the mac-address property *if* it's
+already defined but will always create the local-mac-address property
+regardless.
 
-Thanks,
+So indeed practially, as you noticed, just setting the alias is enough.
+I'm now just very confused about the intended meanings of the
+properties, Documentation/devicetree/bindings/net/ethernet.txt doesn't
+shed a lot of light on it:
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+- local-mac-address: array of 6 bytes, specifies the MAC address that=C2=
+=A0
+=C2=A0 was assigned to the network device;
+- mac-address: array of 6 bytes, specifies the MAC address that was=C2=A0
+=C2=A0 last used by the boot program; should be used in cases where the=
+ MAC=C2=A0
+=C2=A0 address assigned to the device by the boot program is different =
+from=C2=A0
+=C2=A0 the "local-mac-address"property;
+
+So yeah, I'm not sure what the "correct" fix is. It's tempting to
+indeed just leave out the mac-address property though :)
+
+--=20
+Sjoerd Simons
+Collabora Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
