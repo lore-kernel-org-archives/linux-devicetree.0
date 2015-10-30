@@ -1,44 +1,52 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] drivers: of: removing assignment of 0 to static variable
-Date: Fri, 30 Oct 2015 13:30:34 -0500
-Message-ID: <CAL_JsqLGCJkw-YmxQ5TUpy880CYnZbZRqxpme3vuHNdXvqC1hA@mail.gmail.com>
-References: <saurabh.truth@gmail.com> <1445917321-5225-1-git-send-email-saurabh.truth@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: simplify arch_find_n_match_cpu_physical_id() function
+Date: Fri, 30 Oct 2015 13:31:06 -0500
+Message-ID: <CAL_JsqLUcJx9bDYf5wuixY=XDhn7UR+QZKdy9GjDy+fW60cK3w@mail.gmail.com>
+References: <1446001527-6700-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445917321-5225-1-git-send-email-saurabh.truth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saurabh Sengar <saurabh.truth@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446001527-6700-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 10:42 PM, Saurabh Sengar
-<saurabh.truth@gmail.com> wrote:
-> no need to initialise static variable with 0, hence correcting it.
+On Tue, Oct 27, 2015 at 10:05 PM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> This commit does not change the function behavior.
 >
-> Signed-off-by: Saurabh Sengar <saurabh.truth@gmail.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
 Applied. Thanks.
 
 Rob
 
 > ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 6e82bc42..63699dd 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -184,7 +184,7 @@ static void * unflatten_dt_node(const void *blob,
->         struct property *pp, **prev_pp = NULL;
->         const char *pathp;
->         unsigned int l, allocl;
-> -       static int depth = 0;
-> +       static int depth;
->         int old_depth;
->         int offset;
->         int has_name = 0;
+>  drivers/of/base.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 8b5a187..017dd94 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -375,10 +375,7 @@ bool __weak arch_find_n_match_cpu_physical_id(struct device_node *cpun,
+>                                            cpu, thread))
+>                 return true;
+>
+> -       if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
+> -               return true;
+> -
+> -       return false;
+> +       return __of_find_n_match_cpu_property(cpun, "reg", cpu, thread);
+>  }
+>
+>  /**
 > --
 > 1.9.1
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
