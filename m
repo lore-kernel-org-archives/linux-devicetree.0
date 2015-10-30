@@ -1,31 +1,32 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/4] watchdog: ts4800: add new driver for TS-4800 watchdog
-Date: Fri, 30 Oct 2015 13:53 +0100
-Message-ID: <6804900.txcGkbUFcL@wuerfel>
-References: <1445978021-13961-1-git-send-email-damien.riegel@savoirfairelinux.com> <1445978021-13961-3-git-send-email-damien.riegel@savoirfairelinux.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] Input: tsc2005 - Add support for tsc2004
+Date: Fri, 30 Oct 2015 13:59:13 +0100
+Message-ID: <4699994.s366ePcOrS@wuerfel>
+References: <201510280724.dKfeR76E%fengguang.wu@intel.com> <20151028054829.GA13066@deathstar> <20151028061258.GD16963@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445978021-13961-3-git-send-email-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151028061258.GD16963@localhost>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Michael Welling <mwelling@ieee.org>, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 October 2015 16:33:39 Damien Riegel wrote:
-> +static void ts4800_write_feed(struct ts4800_wdt *wdt, u16 val)
-> +{
-> +       __raw_writew(val, wdt->base + TS4800_WTD_FEED);
-> +}
-> +
+On Tuesday 27 October 2015 23:12:58 Dmitry Torokhov wrote:
+> > Yes it does.
+> > 
+> > I have been told that using wildcard names is bad in other subsystems.
+> > Perhaps tsc200x-core.c should be called something else because it has
+> > nothing to do with the tsc2007 but it is covered by the wildcard.
+> > 
+> > You you think this is a big deal?
 > 
+> No I do not.
 
-Using __raw_writew() is broken when you run a big-endian kernel. Better always
-use the normal writew() in device drivers.
+To clarify: using wildcards in DT bindings is bad, because that is
+the only way to clearly identify small differences between related
+devices there. In file names or identifiers in the kernel, there is
+no problem.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
