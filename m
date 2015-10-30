@@ -1,76 +1,88 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
- compatible
-Date: Fri, 30 Oct 2015 11:42:29 +0100
-Message-ID: <56334995.6090103@linaro.org>
-References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
- <1443147298-12603-2-git-send-email-wxt@rock-chips.com>
- <560A10FB.7040408@linaro.org> <2486591.i0n1KlEQoc@diego>
- <5632E765.4010207@gmail.com>
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: RE: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Fri, 30 Oct 2015 13:43:07 +0300
+Message-ID: <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
+References: <cover.1446122247.git.p.fedin@samsung.com>
+ <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
+ <56330E6E.50003@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5632E765.4010207@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <caesar.upstream@gmail.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56330E6E.50003@samsung.com>
+Content-language: ru
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2015 04:43 AM, Caesar Wang wrote:
-> Hi Daniel,
->
-> =E5=9C=A8 2015=E5=B9=B410=E6=9C=8801=E6=97=A5 03:14, Heiko St=C3=BCbn=
-er =E5=86=99=E9=81=93:
->> Hi Daniel,
->>
->> Am Dienstag, 29. September 2015, 06:18:03 schrieb Daniel Lezcano:
->>> On 09/25/2015 04:14 AM, Caesar Wang wrote:
->>>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
->>>> There are some failure with build up on timer driver for rockchip.
->>>>
->>>> Says:
->>>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  operan=
-d
->>>> 1 --
->>>> `dsb`
->>>> ...
->>>>
->>>> The problem was different semantics of dsb on btw arm32 and arm64,
->>>> Here we can convert the dsb with insteading of dsb(sy).The "sy" pa=
-ram
->>>> is the default which you are allow to omit, so on arm32 dsb()and
->>>> dsb(sy)
->>>> are the same.
->>>>
->>>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> as you have "just" Acked these patches, I guess you are expecting th=
-em
->> to go
->> through the same tree as the devicetree changes, right?
->
-> I'm wonder if someone will apply this series patchs but the wait.:-)
-> In fact, I'm no sure that the Acked is really meaning.:-
+ Hello!
 
-Yes, by acking the patch I say I am ok with it and I agree it can go=20
-through another tree.
+> Please, carefully look at:
+> Documentation/devicetree/bindings/net/gpmc-eth.txt
+> Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> 
+> 1. Try to re-use existing bindings. Although I see existing bank-width
+> and gpmc,device-width but yours samsung,srom-data-width seems better.
+> Maybe there are other to re-use?
 
-I suggest before sending patches you read carefully the file=20
-Documentation/SubmittingPatches.
+ I've done this and this is what i currently came up with. I'd like to discuss this before respin because nobody needs this
+back-and-forth bouncing.
+--- cut exynos5410.dtsi ---
+		sromc: sromc@12250000 {
+			#address-cells = <2>;
+			#size-cells = <1>;
+			ranges = <0 0 0x04000000 0x20000
+				  1 0 0x05000000 0x20000
+				  2 0 0x06000000 0x20000
+				  3 0 0x07000000 0x20000>;
 
-Especially, 11), 12) and 13).
+			compatible = "samsung,exynos-srom";
+			reg = <0x12250000 0x14>;
+		};
+--- cut exynos5410.dtsi ---
+--- cut exynos5410-smdk5410.dts ---
+&sromc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&srom_ctl>, <&srom_ebi>;
 
-Thanks.
+	ethernet@3 {
+		compatible = "smsc,lan9115";
+		reg = <3 0 0x10000>;
+		phy-mode = "mii";
+		interrupt-parent = <&gpx0>;
+		interrupts = <5 8>;
+		reg-io-width = <2>;
+		smsc,irq-push-pull;
+		smsc,force-internal-phy;
 
-   -- Daniel
+		samsung,srom-config = <1 9 12 1 9 1 1>;
+	};
+};
+--- cut exynos5410-smdk5410.dts ---
 
+ 1. After writing proper ranges i was able to get rid of dedicated bank number property, because now it is the first value in
+device's "reg".
+ 2. I noticed that smsc binding already uses reg-io-width property. I searched for it, and it appears to be reused by many devices.
+So, i decided to use it to specify bank width, since it's already there. ti-gpmc uses bank-width because it supports configurations
+like reg-io-width = 4 && bank-width = 2. I don't know if it's possible to do the same with SROMc, Exynos doc doesn't tell anything
+about 32-bit accesses. But, if you want to support it too, i would suggest the following algorithm:
+    if (have bank-width)
+        width = bank-width
+    else if (have reg-io-width)
+        width = reg-io-width
+    else
+        width = 1 /* default */
+ 3. About samsung,srom-config array. I have the following reasons to keep if this way:
+    - listing every property under own name is just too much typing
+    - these values really do not make sense without each other, or partialy. I would say that in array form they are even better
+readable, because it is the same order in which they go into the register. However, it is still a nice idea do document them, but...
+my PDF has "confidential" watermark on it, and this would mean that i essentially copy some information from it into Linux doc. Is
+it okay to do this?
+ If you still dislike the array, i'll redo is a set of properties like samsung,srom-tacs, samsung,srom-tcos, etc.
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Kind regards,
+Pavel Fedin
+Expert Engineer
+Samsung Electronics Research center Russia
