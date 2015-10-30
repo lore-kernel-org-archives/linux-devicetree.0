@@ -1,58 +1,223 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
- compatible
-Date: Sat, 31 Oct 2015 00:47:11 +0100
-Message-ID: <21587719.mnFBFBzBeI@phil>
-References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
- <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v3 1/3] devicetree: mfd: Add binding for the TI LM3533
+Date: Fri, 30 Oct 2015 16:50:38 -0700
+Message-ID: <1446249040-16552-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <56334995.6090103-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Johan Hovold <jhovold@gmail.com>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLAoKQW0gRnJlaXRhZywgMzAuIE9rdG9iZXIgMjAxNSwgMTE6NDI6Mjkgc2Nocmll
-YiBEYW5pZWwgTGV6Y2FubzoKPiBPbiAxMC8zMC8yMDE1IDA0OjQzIEFNLCBDYWVzYXIgV2FuZyB3
-cm90ZToKPiA+IEhpIERhbmllbCwKPiA+Cj4gPiDlnKggMjAxNeW5tDEw5pyIMDHml6UgMDM6MTQs
-IEhlaWtvIFN0w7xibmVyIOWGmemBkzoKPiA+PiBIaSBEYW5pZWwsCj4gPj4KPiA+PiBBbSBEaWVu
-c3RhZywgMjkuIFNlcHRlbWJlciAyMDE1LCAwNjoxODowMyBzY2hyaWViIERhbmllbCBMZXpjYW5v
-Ogo+ID4+PiBPbiAwOS8yNS8yMDE1IDA0OjE0IEFNLCBDYWVzYXIgV2FuZyB3cm90ZToKPiA+Pj4+
-IEJ1aWxkIHRoZSBhcm02NCBTb0NzIChlLmcuOiBSSzMzNjgpIG9uIFJvY2tjaGlwIHBsYXRmb3Jt
-LAo+ID4+Pj4gVGhlcmUgYXJlIHNvbWUgZmFpbHVyZSB3aXRoIGJ1aWxkIHVwIG9uIHRpbWVyIGRy
-aXZlciBmb3Igcm9ja2NoaXAuCj4gPj4+Pgo+ID4+Pj4gU2F5czoKPiA+Pj4+IC90bXAvY2NkQW5O
-eTUuczo0NzogRXJyb3I6IG1pc3NpbmcgaW1tZWRpYXRlIGV4cHJlc3Npb24gYXQgIG9wZXJhbmQK
-PiA+Pj4+IDEgLS0KPiA+Pj4+IGBkc2JgCj4gPj4+PiAuLi4KPiA+Pj4+Cj4gPj4+PiBUaGUgcHJv
-YmxlbSB3YXMgZGlmZmVyZW50IHNlbWFudGljcyBvZiBkc2Igb24gYnR3IGFybTMyIGFuZCBhcm02
-NCwKPiA+Pj4+IEhlcmUgd2UgY2FuIGNvbnZlcnQgdGhlIGRzYiB3aXRoIGluc3RlYWRpbmcgb2Yg
-ZHNiKHN5KS5UaGUgInN5IiBwYXJhbQo+ID4+Pj4gaXMgdGhlIGRlZmF1bHQgd2hpY2ggeW91IGFy
-ZSBhbGxvdyB0byBvbWl0LCBzbyBvbiBhcm0zMiBkc2IoKWFuZAo+ID4+Pj4gZHNiKHN5KQo+ID4+
-Pj4gYXJlIHRoZSBzYW1lLgo+ID4+Pj4KPiA+Pj4+IFNpZ25lZC1vZmYtYnk6IENhZXNhciBXYW5n
-IDx3eHRAcm9jay1jaGlwcy5jb20+Cj4gPj4+IEFja2VkLWJ5OiBEYW5pZWwgTGV6Y2FubyA8ZGFu
-aWVsLmxlemNhbm9AbGluYXJvLm9yZz4KPiA+PiBhcyB5b3UgaGF2ZSAianVzdCIgQWNrZWQgdGhl
-c2UgcGF0Y2hlcywgSSBndWVzcyB5b3UgYXJlIGV4cGVjdGluZyB0aGVtCj4gPj4gdG8gZ28KPiA+
-PiB0aHJvdWdoIHRoZSBzYW1lIHRyZWUgYXMgdGhlIGRldmljZXRyZWUgY2hhbmdlcywgcmlnaHQ/
-Cj4gPgo+ID4gSSdtIHdvbmRlciBpZiBzb21lb25lIHdpbGwgYXBwbHkgdGhpcyBzZXJpZXMgcGF0
-Y2hzIGJ1dCB0aGUgd2FpdC46LSkKPiA+IEluIGZhY3QsIEknbSBubyBzdXJlIHRoYXQgdGhlIEFj
-a2VkIGlzIHJlYWxseSBtZWFuaW5nLjotCj4gCj4gWWVzLCBieSBhY2tpbmcgdGhlIHBhdGNoIEkg
-c2F5IEkgYW0gb2sgd2l0aCBpdCBhbmQgSSBhZ3JlZSBpdCBjYW4gZ28gCj4gdGhyb3VnaCBhbm90
-aGVyIHRyZWUuCgphbHRob3VnaCBJIGd1ZXNzIHRoZSB0d28gY2xvY2tzb3VyY2UgY2hhbmdlcyBj
-b3VsZCB2ZXJ5IHdlbGwganVzdCBnbwp0aHJvdWdoIHlvdXIgdHJlZS4gZHNiKCkgLT4gZHNiKHN5
-KSBpcyBzdXBwb3NlZCB0byBiZSBlcXVhbCBhbmQgdGhlIHNlY29uZApvbmUgaXMganVzdCBjb3Nt
-ZXRpY3MuICBUaGUgS2NvbmZpZyBhbmQgZHRzIGNoYW5nZXMgbmVlZCB0byB3YWl0IGluIGFueSBj
-YXNlCmZvciA0LjUgLi4uIGJ1dCBJIGd1ZXNzIHRoYXQgbWF5IGJlIHRydWUgZm9yIHRoZSBjbG9j
-a3NvdXJjZSBjaGFuZ2VzIGFzIHdlbGw/CgoKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGlu
-dXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+Add the binding for the Texas Instruments LM3533 lighting power
+solution.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+
+Changes since v2:
+- Drop vendor prefix of vendor properties
+- Specify unit of various properties
+- Fix reference paths
+
+Changes since v1:
+- Added unit to boost-freq and als-resistance (as the frequency now comes with
+  a unit specifier I changed it to be expressed in kHz)
+
+ Documentation/devicetree/bindings/mfd/lm3533.txt | 184 +++++++++++++++++++++++
+ 1 file changed, 184 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
+new file mode 100644
+index 000000000000..963cee153a4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
+@@ -0,0 +1,184 @@
++Texas Instruments LM3533 binding
++
++This binding describes the Texas Instruments LM3533, a lighting power solution
++for smartphone handsets. The common properties are described directly in the
++node, while each individual component are described in an optional subnode.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be:
++		    "ti,lm3533"
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: i2c address of the LM3533 chip
++
++- als-supply:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: reference to regulator powering the V_als input; as
++		    specified in "../regulator/regulator.txt"
++
++- hwen-gpios:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to gpio pin connected to the HWEN input; as
++		    specified in "../gpio/gpio.txt"
++
++- ti,boost-freq-hz:
++	Usage: required
++	Value type: <u32>
++	Definition: switch-frequency of the boost converter, must be either:
++		    500000 or 1000000
++
++- ti,boost-ovp-mv:
++	Usage: required
++	Value type: <u32>
++	Definition: over-voltage protection limit, in mV. Must be one of:
++		    16000, 24000, 32000 or 40000
++
++- #address-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1
++
++- #size-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 0
++
++= ALS SUBNODE
++The ambient light sensor subnode must be named "als", it carries the light
++sensor related properties.
++
++- ti,als-resistance-ohm:
++	Usage: required (unless ti,pwm-mode is specified)
++	Value type: <u32>
++	Definition: specifies the resistor value (R_als), in Ohm. Valid values
++		    ranges from 200000 to 1574 Ohm.
++
++- ti,pwm-mode:
++	Usage: optional
++	Value type: <empty>
++	Definition: specifies, if present, that the als should operate in PWM
++		    mode - rather than analog mode
++
++= BACKLIGHT NODES
++Backlight subnodes must be named "backlight", they carry the backlight related
++properties.
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies which of the two backlights this node corresponds
++		    to
++
++- default-brightness:
++	Usage: optional
++	Value type: <32>
++	Definition: specifies the default brightness for the backlight, in
++		    units of brightness [0-255]
++
++- label:
++	Usage: required
++	Value type: <string>
++	Definition: specifies a name of this backlight
++
++- led-max-microamp:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies the max current for this backlight, in uA, as
++		    described in "../leds/common.txt"
++
++- ti,pwm-zones:
++	Usage: optional
++	Value type: <u32 list>
++	Definition: lists the ALS zones to be PWM controlled for this backlight,
++		    the values in the list are in the range [0 - 4]
++
++= LED NODES
++LED subnodes must be named "led", they carry the LED related properties.
++
++- reg:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies which of the four LEDs this node corresponds to
++
++- linux,default-trigger:
++	Usage: optional
++	Value type: <string>
++	Definition: specifies the default trigger for the LED, as described in
++		    "../leds/common.txt"
++
++- label:
++	Usage: required
++	Value type: <string>
++	Definition: specifies a name of this LED, as described in
++		    "../leds/common.txt"
++
++- led-max-microamp:
++	Usage: required
++	Value type: <u32>
++	Definition: specifies the max current for this LED, in uA, as described
++		    in "../leds/common.txt"
++
++- ti,pwm-zones:
++	Usage: optional
++	Value type: <u32 list>
++	Definition: lists the ALS zones to be PWM controlled for this LED, the
++		    values in the list are in the range [0 - 4]
++
++= EXAMPLE
++
++i2c@12460000 {
++	compatible = "qcom,i2c-qup-v1.1.1";
++	...
++
++	lm3533@36 {
++		compatible = "ti,lm3533";
++		reg = <0x36>;
++
++		als-supply = <&pm8921_l11>;
++		hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
++
++		ti,boost-freq-hz = <500000>;
++		ti,boost-ovp-mv = <24000>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		als {
++			ti,als-resistance-ohm = <200000>;
++		};
++
++		backlight@0 {
++			reg = <0>;
++			label = "backlight";
++
++			led-max-microamp = <20200>;
++		};
++
++		led@0 {
++			reg = <0>;
++			label = "red";
++
++			led-max-microamp = <5000>;
++		};
++
++		led@1 {
++			reg = <1>;
++			label = "green";
++
++			led-max-microamp = <5000>;
++		};
++
++		led@2 {
++			reg = <2>;
++			label = "blue";
++
++			led-max-microamp = <5000>;
++		};
++	};
++
+-- 
+2.4.2
