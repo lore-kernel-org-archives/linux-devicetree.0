@@ -1,39 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] arm64: renesas: salvator-x: Setup ethernet0 alias for U-Boot
-Date: Fri, 30 Oct 2015 15:37:26 +0200
-Message-ID: <7457617.F4Cc6TXnNy@avalon>
-References: <1446197120-4640-1-git-send-email-geert+renesas@glider.be> <5186464.J3dvUFu6c7@avalon> <CAMuHMdXUyL=v2wv8-zfOi0bH6fbs5bnHvDKE2yeaAi-6Ltz1Vg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXUyL=v2wv8-zfOi0bH6fbs5bnHvDKE2yeaAi-6Ltz1Vg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Subject: [v3 00/10] add support SATA for BMIPS_GENERIC
+Date: Fri, 30 Oct 2015 22:38:49 +0900
+Message-ID: <1446212339-1210-1-git-send-email-jaedon.shin@gmail.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi all,
 
-On Friday 30 October 2015 14:16:03 Geert Uytterhoeven wrote:
-> On Fri, Oct 30, 2015 at 2:06 PM, Laurent Pinchart wrote:
-> > On Friday 30 October 2015 10:25:20 Geert Uytterhoeven wrote:
-> >> Add an ethernet0 alias for the wired network card so that U-Boot can
-> >> find the device-node and add an appropriate "local-mac-address"
-> >> property.
-> > 
-> > I like that :-) Can U-Boot add the property ? I thought it needed a
-> > placeholder.
-> 
-> At least for Salvator-X it does. See also the thread at
-> http://www.spinics.net/lists/arm-kernel/msg456841.html
+This patch series add support SATA for BMIPS_GENERIC.
 
-Cool :-)
+Changes in v3:
+- fix typo quirk instead of quick
+- disable NCQ before initialzing SATA controller endianness
+- fix misnomer controlling phy interface
+- remove brcm,broken-ncq and brcm,broken-phy properties from devicetree
+- use compatible string for quirks
+- use list for compatible strings
+- add "Acked-by:" tags
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Changes in v2:
+- adds quirk for ncq
+- adds quirk for phy interface control
+- remove unused definitions in ahci_brcmstb
+- combines compatible string
+
+Jaedon Shin (10):
+  ata: ahci_brcmstb: add support MIPS-based platforms
+  ata: ahci_brcmstb: add quirk for broken ncq
+  ata: ahci_brcmstb: add quirk for different phy
+  ata: ahci_brcmstb: remove unused definitions
+  phy: phy_brcmstb_sata: remove duplicate definitions
+  phy: phy_brcmstb_sata: add data for phy version
+  phy: phy_brcmstb_sata: add support MIPS-based platforms
+  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
+  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7346
+  MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7362
+
+ .../devicetree/bindings/ata/brcm,sata-brcmstb.txt  |  4 +-
+ .../bindings/phy/brcm,brcmstb-sata-phy.txt         |  1 +
+ arch/mips/boot/dts/brcm/bcm7346.dtsi               | 42 ++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm7362.dtsi               | 42 ++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm7425.dtsi               | 42 ++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm97346dbsmb.dts          |  8 +++
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts           |  8 +++
+ drivers/ata/Kconfig                                |  2 +-
+ drivers/ata/ahci_brcmstb.c                         | 58 +++++++++++++++++++++-
+ drivers/phy/Kconfig                                |  4 +-
+ drivers/phy/phy-brcmstb-sata.c                     | 47 ++++++++++++++----
+ 11 files changed, 242 insertions(+), 16 deletions(-)
 
 -- 
-Regards,
-
-Laurent Pinchart
+2.6.2
 
