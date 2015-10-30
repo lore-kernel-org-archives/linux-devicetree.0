@@ -1,68 +1,92 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management driver
-Date: Fri, 30 Oct 2015 22:15:09 +0200
-Message-ID: <CAHp75VcQ6r2FGqsP2mtnv95etCGJmeQ=T7aKSB5H3cvwhdSbDw@mail.gmail.com>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
-	<20151030150025.GF31073@leverpostej>
-	<CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
-	<5633B207.5030505@codeaurora.org>
-	<CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
-	<20151030182537.GB30791@leverpostej>
-	<CAHp75Vd-z22XJboxQ=CMxDQ9UaTatbCmpAPLO0jPM0FwJadBOg@mail.gmail.com>
-	<5633BB66.3070505@codeaurora.org>
-	<20151030190106.GC30791@leverpostej>
-	<5633CE23.7060303@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5633CE23.7060303-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 0/2] Patches to fix remote wakeup on rk3288 dwc2 "host" port
+Date: Fri, 30 Oct 2015 13:17:52 -0700
+Message-ID: <1446236275-12698-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 10:08 PM, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 10/30/2015 01:01 PM, Mark Rutland wrote:
->> On Fri, Oct 30, 2015 at 02:48:06PM -0400, Sinan Kaya wrote:
+On the rk3288 USB host-only port (the one that's not the OTG-enabled
+port) the PHY can get into a bad state when a wakeup is asserted (not
+just a wakeup from full system suspend but also a wakeup from
+autosuspend).
 
->> The CSRT is listed under "Want", not "Never" or "Don't Care", so Linaro
->> have certainly not said that CSRT will not be supported. If anything,
->> they have stated that the table should be supported.
->
-> "Want" means interesting, and probably useful, but no clear indication that
-> anyone actually needs it.  At one point, we thought we might use the CSRT
-> for describing DMA, but it turns out we have not needed to.
+We can get the PHY out of its bad state by asserting its "port reset",
+but unfortunately that seems to assert a reset onto the USB bus so it
+could confuse things if we don't actually deenumerate / reenumerate the
+device.
 
-Then you are going to have either 1 or 0 DMAC for slave devices, right?
+We can also get the PHY out of its bad state by fully resetting it using
+the reset from the CRU (clock reset unit), which does a more full
+reset.  The CRU-based reset appears to actually cause devices on the bus
+to be removed and reinserted, which fixes the problem (albeit in a hacky
+way).
 
-The CSRT, unfortunately, the only way how to enumerate DMAC to be used
-by slave devices.
-You may look into drivers/dma/acpi-dma.c for usage in Linux.
+It's unfortunate that we need to do a full re-enumeration of devices at
+wakeup time, but this is better than alternative of letting the bus get
+wedged.
 
-Yes, I know about _DSD, but I don't think it will provide soon any
-other official mechanisms to what we have now. Better to ask Rafael
-and Mika.
+I've tested this series atop a bit of a conglomeration of Heiko's github
+"somewhat stable" branch (v4.3-rc3-876-g6509232) but with Greg KH's
+usb-next merged in.
 
-> However, let's make sure we're saying the same thing: the CSRT table is
-> properly defined in the kernel include/acpi/actbl2.h file so one can read
-> such a table and use it if they so choose.  Nothing that we have done at
-> Linaro in the arm64 part of the kernel relies on any of the content from
-> the CSRT, nor does it preclude someone relying on that content.  So, the
-> CSRT is defined, and is usable, but is just not being used -- by Linaro --
-> at present.
+===
 
-This sounds clear.
+I've posted up a bunch of patches recently but tried to keep them in
+separate series where it makes sense.  A summary of known patches:
+All patches can be found with: https://patchwork.kernel.org/patch/<ID>/
 
-> If that needs to change, let me know; no one has asked us to use the CSRT
-> for a DMA engine, and we have not been provided any hardware that requires
-> it.
+ACKed (thanks!) and not yet landed:
+ 7453801  usb: dwc2: host: Fix ahbcfg for rk3066
+ 7467521  usb: dwc2: host: Fix remote wakeup when not in DWC2_L2
 
-See above.
+Important, not yet reviewed:
+ 7421171  [1/2] usb: dwc2: host: Fix missing device insertions
+
+Fixes no known issues, not yet reviewed:
+ 7421181  [2/2] usb: dwc2: host: Clear interrupts before handling them
+
+Optimization to reduce probe time (may require simple rebase):
+ 7348131  [1/5] usb: dwc2: Restore GUSBCFG in dwc2_get_hwparams()
+ 7348221  [2/5] usb: dwc2: reset dwc2 core before dwc2_get_hwparams()
+ 7348191  [3/5] CHROMIUM: usb: dwc2: Avoid double-reset at boot time
+ 7348211  [4/5] usb: dwc2: Speed dwc2_get_hwparams() on some host-only ports
+ 7348201  [5/5] usb: dwc2: reduce dwc2 driver probe time
+ 7355241  usb: dwc2: Avoid more calls to dwc2_core_reset()
+
+This series:
+ usb: dwc2: optionally assert phy "full reset" when waking up
+ ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
+
+Coming soon:
+ RFT: usb: dwc2: bus suspend/resume that's not hibernate
+
+Abandoned for now (can't get wakeup to work on mainline):
+ 6727091  [REPOST,1/3] USB: Export usb_wakeup_enabled_descendants()
+ 6727101  [REPOST,2/3] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+ 6727121  [REPOST,3/3] USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+
+Changes in v2:
+- Use a full PHY reset for safety; no PHY changes needed for that.
+- Cover letter explains outstanding patches
+
+Doug Anderson (2):
+  usb: dwc2: optionally assert phy "full reset" when waking up
+  ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  7 +++++++
+ arch/arm/boot/dts/rk3288.dtsi                  |  5 +++++
+ drivers/usb/dwc2/core.h                        |  5 +++++
+ drivers/usb/dwc2/core_intr.c                   | 14 ++++++++++++++
+ drivers/usb/dwc2/platform.c                    | 13 +++++++++++++
+ 5 files changed, 44 insertions(+)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.6.0.rc2.230.g3dd15c0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
