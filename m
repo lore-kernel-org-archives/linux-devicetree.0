@@ -1,135 +1,97 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v5 1/5] Documentation: tps65912: Add DT bindings for the
- TPS65912 PMIC
-Date: Fri, 30 Oct 2015 13:01:28 -0500
-Message-ID: <5633B078.7080209@ti.com>
-References: <1446161922-8755-1-git-send-email-afd@ti.com>
- <1446161922-8755-2-git-send-email-afd@ti.com> <20151030171006.GZ4058@x1>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Fri, 30 Oct 2015 14:08:07 -0400
+Message-ID: <5633B207.5030505@codeaurora.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <20151030150025.GF31073@leverpostej>
+ <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151030171006.GZ4058@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2015 12:10 PM, Lee Jones wrote:
-> On Thu, 29 Oct 2015, Andrew F. Davis wrote:
+
+
+On 10/30/2015 1:59 PM, Andy Shevchenko wrote:
+> On Fri, Oct 30, 2015 at 5:00 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Thu, Oct 29, 2015 at 11:08:12PM -0400, Sinan Kaya wrote:
+>>> The Qualcomm Technologies HIDMA device has been designed
+>>> to support virtualization technology. The driver has been
+>>> divided into two to follow the hardware design. The management
+>>> driver is executed in hypervisor context and is the main
+>>> managment for all channels provided by the device. The
+>>> channel driver is exected in the guest OS context.
+>>>
 >
->> The TPS65912 PMIC contains several regulators and a GPIO controller.
->> Add bindings for the TPS65912 PMIC.
+>>> +#if IS_ENABLED(CONFIG_ACPI)
+>>> +static const struct acpi_device_id qcom_hidma_mgmt_acpi_ids[] = {
+>>> +     {"QCOM8060"},
+>>> +     {},
+>>> +};
+>>> +#endif
 >>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>   .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
->
-> Why have you dropped Linus' Review-by?
->
-
-Strange, I thought I made a change to this. Well this brings up a question,
-how much change can we have before we are supposed to drop Reviewed/Acked-by?
-
->>   Documentation/devicetree/bindings/mfd/tps65912.txt | 51 ++++++++++++++++++++++
->>   .../bindings/regulator/tps65912-regulator.txt      | 28 ++++++++++++
->>   3 files changed, 95 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
->>   create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
->>   create mode 100644 Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+>> How do DMA engines work with ACPI?
 >>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
->> new file mode 100644
->> index 0000000..0c5c05c4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
->> @@ -0,0 +1,16 @@
->> +* TPS65912 GPIO Controller bindings
->> +
->> +Required properties:
->> + - compatible : Should be "ti,tps65912-gpio".
->> + - gpio-controller : Marks the device node as a GPIO Controller.
->> + - #gpio-cells : Should be two.  The first cell is the pin number and
+>> How are client relationships defined?
 >
-> You should add a (See: ../gpio/gpio.txt) here I think.
+> The ACPI tables DSDT and CSRT (more info here:
+> http://www.acpi.info/links.htm) defines properties.
 >
+> DSDT:
+>   per DMAC: the resources
+>   per client: FixedDMA descriptor that contains channel / request line pair.
+>
+> CSRT:
+>   necessary table to map which DMAC provides which request line, thus
+> request line numbering are global on platform.
+>
+> When DMAC driver is probed in the running system it should call as
+> well registration function from acpi-dma.c.
+>
+> All clients when use new DMA slave API gets channel automatically
+> based on their FixedDMA property.
+>
+> So, above is how it should be done. Didn't actually checked what this
+> driver does.
+>
+I was going to reply to all the questions in one pass but let me handle 
+piece by piece.
 
-ACK
+Here are some facts.
+- This hardware supports memcpy and memset only.
+- Memset feature was removed from the kernel sometime around 3.14. So no 
+memset support in this driver either.
+- The hardware does not support DMA slave support
+- The goal is to provide an interface to DMA engine framework for memcpy 
+optimization so that the rest of the kernel drivers and applications 
+make use of the hardware.
 
->> +     the second cell is used to specify flags.
->> +     See include/dt-bindings/gpio/gpio.h for possible values.
->
-> This is a Linuxisum and shouldn't really live in here.
->
-> I think it would be better to document them in ../gpio/gpio.txt and
-> reference that instead.
->
+CSRT is an Intel specific ACPI table for slave devices. It was decided 
+by Linaro that CSRT will not be supported for ARM64.
 
-Looks like that is already in ../gpio/gpio.txt:57
+There were some discussions in ACPI forums to define a similar table for 
+ARM64 but we are not there today and this hardware does not support 
+slave interface.
 
->> +Example:
->> +
->> +	gpio4: tps65912_gpio {
->
-> Device names don't belong in node names.
->
-> Just "gpio" will do.
->
+ACPI enumeration is just like any other platform device. The driver gets 
+looked up by a QCOM specific HID and the driver gets probed with the 
+rest of the arguments in DSM object similar to device-tree attributes. 
+The code uses device functions so the driver is not aware of where the 
+parameters are coming from.
 
-ACK
 
->> +		compatible = "ti,tps65912-gpio";
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +	};
->> diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
->> new file mode 100644
->> index 0000000..da5804a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
->> @@ -0,0 +1,51 @@
->> +* TPS65912 Power Management Integrated Circuit bindings
->> +
->> +Required properties:
->> + - compatible : Should be "ti,tps65912".
->> + - reg : Slave address or chip select number (I2C / SPI).
->> + - interrupt-parent : The parent interrupt controller.
->> + - interrupts : The interrupt line the device is connected to.
->> + - interrupt-controller : Marks the device node as an interrupt controller.
->> + - #interrupt-cells: The number of cells to describe an IRQ, this should be 2.
->> +     The first cell is the IRQ number.
->> +     The second cell is the flags, encoded as the trigger masks from
->> +     ../interrupt-controller/interrupts.txt
->
-> Nit: We *normally* treat these as bullet-points and not place
-> full-stops on them:
->
-> $ git grep "compatible" -- Documentation/devicetree/bindings/ | grep -v "\.$" | wc -l
-> 5227
-> $ git grep "compatible.*\.$" -- Documentation/devicetree/bindings/ | wc -l
-> 486
->
-
-What about for multi-sentence descriptions, we need the middle full-stops, then to not
-have one on the end seems kinda odd looking.
-
-> ... and I *personally* think it's easier to read the document if it's
-> formatted as follows:
->
-> - compatible			: Should be "ti,tps65912".
-> - reg				: Slave address or chip select number (I2C / SPI).
-> - interrupt-parent		: The parent interrupt controller.
-> - interrupts			: The interrupt line the device is connected to.
-> - interrupt-controller		: Marks the device node as an interrupt controller.
-> - #interrupt-cells		: The number of cells to describe an IRQ, this should be 2.
-> 					The first cell is the IRQ number.
-> 					The second cell is the flags, encoded as the trigger masks from
-> 					../interrupt-controller/interrupts.txt
->
-> ... I hope you agree.
->
-
-Yeah, I did that with the last driver, not sure why I forgot to fix that here, I'll fix this.
-
-> [...]
->
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
