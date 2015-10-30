@@ -1,979 +1,153 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH] Revert "h8300: clocksource"
-Date: Fri, 30 Oct 2015 11:26:08 +0100
-Message-ID: <1446200775-23898-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:H8/300
-	ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [RFC v4 02/11] drm/mediatek: Add DRM Driver for Mediatek SoC
+ MT8173.
+Date: Fri, 30 Oct 2015 11:32:47 +0100
+Message-ID: <20151030103247.GV16848@phenom.ffwll.local>
+References: <1445026333-17013-1-git-send-email-p.zabel@pengutronix.de>
+ <1445026333-17013-3-git-send-email-p.zabel@pengutronix.de>
+ <20151019085644.GO13786@phenom.ffwll.local>
+ <1446052429.12590.112.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1446052429.12590.112.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 618b902d8c098f2fff188119da7b3184c4bc5483.
-
-The renesas architecture have been dropped and re-introduced two years
-after with a supposed improvement of the code.
-
-While looking at the timer drivers, I see it did not passed a correct code
-review process. No maintainters were in Cc, not code review and no ack
-from them (Thomas and I).
-
-Even if those drivers where already in the tree several years ago, that
-does not prevent them, when re-introduced, to be reviewed again and at
-least acked by the maintainer.
-
-Even if the patches where on lkml@, that does not prevent the different
-sub-system maintainers to be in Cc.
-
-Instead of that, these drivers passed silently through another tree (arm-soc
-I guess).
-
-Revert these drivers in order to have them re-submitted and reviewed again.
-
-There is legacy code to be removed.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-Conflicts:
-	drivers/clocksource/Kconfig
-	drivers/clocksource/Makefile
-	drivers/clocksource/h8300_timer16.c
-	drivers/clocksource/h8300_timer8.c
-	drivers/clocksource/h8300_tpu.c
----
- .../bindings/timer/renesas,16bit-timer.txt         |  25 --
- .../bindings/timer/renesas,8bit-timer.txt          |  25 --
- .../devicetree/bindings/timer/renesas,tpu.txt      |  21 --
- drivers/clocksource/Kconfig                        |   7 -
- drivers/clocksource/Makefile                       |   3 -
- drivers/clocksource/h8300_timer16.c                | 253 ----------------
- drivers/clocksource/h8300_timer8.c                 | 317 ---------------------
- drivers/clocksource/h8300_tpu.c                    | 206 -------------
- 8 files changed, 857 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.txt
- delete mode 100644 drivers/clocksource/h8300_timer16.c
- delete mode 100644 drivers/clocksource/h8300_timer8.c
- delete mode 100644 drivers/clocksource/h8300_tpu.c
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt b/Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt
-deleted file mode 100644
-index e879244..0000000
---- a/Documentation/devicetree/bindings/timer/renesas,16bit-timer.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* Renesas H8/300 16bit timer
--
--The 16bit timer is a 16bit timer/counter with configurable clock inputs and
--programmable compare match.
--
--Required Properties:
--
--  - compatible: must contain "renesas,16bit-timer"
--  - reg: base address and length of the registers block for the timer module.
--  - interrupts: interrupt-specifier for the timer, IMIA
--  - clocks: a list of phandle, one for each entry in clock-names.
--  - clock-names: must contain "peripheral_clk" for the functional clock.
--  - renesas,channel: timer channel number.
--
--Example:
--
--	timer16: timer@ffff68 {
--		compatible = "reneas,16bit-timer";
--		reg = <0xffff68 8>, <0xffff60 8>;
--		interrupts = <24>;
--		renesas,channel = <0>;
--		clocks = <&pclk>;
--		clock-names = "peripheral_clk";
--	};
--
-diff --git a/Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt b/Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt
-deleted file mode 100644
-index 9dca375..0000000
---- a/Documentation/devicetree/bindings/timer/renesas,8bit-timer.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* Renesas H8/300 8bit timer
--
--The 8bit timer is a 8bit timer/counter with configurable clock inputs and
--programmable compare match.
--
--This implement only supported cascade mode.
--
--Required Properties:
--
--  - compatible: must contain "renesas,8bit-timer"
--  - reg: base address and length of the registers block for the timer module.
--  - interrupts: interrupt-specifier for the timer, CMIA and TOVI
--  - clocks: a list of phandle, one for each entry in clock-names.
--  - clock-names: must contain "fck" for the functional clock.
--
--Example:
--
--	timer8_0: timer@ffff80 {
--		compatible = "renesas,8bit-timer";
--		reg = <0xffff80 10>;
--		interrupts = <36>;
--		clocks = <&fclk>;
--		clock-names = "fck";
--	};
--
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tpu.txt b/Documentation/devicetree/bindings/timer/renesas,tpu.txt
-deleted file mode 100644
-index f8b2589..0000000
---- a/Documentation/devicetree/bindings/timer/renesas,tpu.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Renesas H8/300 Timer Pluse Unit
--
--The TPU is a 16bit timer/counter with configurable clock inputs and
--programmable compare match.
--This implementation support only cascade mode.
--
--Required Properties:
--
--  - compatible: must contain "renesas,tpu"
--  - reg: base address and length of the registers block in 2 channel.
--  - clocks: a list of phandle, one for each entry in clock-names.
--  - clock-names: must contain "peripheral_clk" for the functional clock.
--
--
--Example:
--	tpu: tpu@ffffe0 {
--		compatible = "renesas,tpu";
--		reg = <0xffffe0 16>, <0xfffff0 12>;
--		clocks = <&pclk>;
--		clock-names = "peripheral_clk";
--	};
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 50b68bc..34e1cfa 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -290,12 +290,6 @@ config CLKSRC_PXA
- 	  This enables OST0 support available on PXA and SA-11x0
- 	  platforms.
- 
--config H8300_TMR16
--        bool
--
--config H8300_TPU
--        bool
--
- config CLKSRC_IMX_GPT
- 	bool "Clocksource using i.MX GPT" if COMPILE_TEST
- 	depends on ARM && CLKDEV_LOOKUP
-@@ -308,5 +302,4 @@ config CLKSRC_ST_LPC
- 	help
- 	  Enable this option to use the Low Power controller timer
- 	  as clocksource.
--
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index fc9348d..89ba4f2 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -59,7 +59,4 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+= mips-gic-timer.o
- obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+= tango_xtal.o
- obj-$(CONFIG_CLKSRC_IMX_GPT)		+= timer-imx-gpt.o
- obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
--obj-$(CONFIG_H8300)			+= h8300_timer8.o
--obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
--obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
-diff --git a/drivers/clocksource/h8300_timer16.c b/drivers/clocksource/h8300_timer16.c
-deleted file mode 100644
-index 0e076c6..0000000
---- a/drivers/clocksource/h8300_timer16.c
-+++ /dev/null
-@@ -1,253 +0,0 @@
--/*
-- *  H8/300 16bit Timer driver
-- *
-- *  Copyright 2015 Yoshinori Sato <ysato@users.sourcefoge.jp>
-- */
--
--#include <linux/errno.h>
--#include <linux/kernel.h>
--#include <linux/param.h>
--#include <linux/string.h>
--#include <linux/slab.h>
--#include <linux/interrupt.h>
--#include <linux/init.h>
--#include <linux/platform_device.h>
--#include <linux/clocksource.h>
--#include <linux/module.h>
--#include <linux/clk.h>
--#include <linux/io.h>
--#include <linux/of.h>
--
--#include <asm/segment.h>
--#include <asm/irq.h>
--
--#define TSTR	0
--#define TSNC	1
--#define TMDR	2
--#define TOLR	3
--#define TISRA	4
--#define TISRB	5
--#define TISRC	6
--
--#define TCR	0
--#define TIOR	1
--#define TCNT	2
--#define GRA	4
--#define GRB	6
--
--#define FLAG_REPROGRAM (1 << 0)
--#define FLAG_SKIPEVENT (1 << 1)
--#define FLAG_IRQCONTEXT (1 << 2)
--#define FLAG_STARTED (1 << 3)
--
--#define ONESHOT  0
--#define PERIODIC 1
--
--#define RELATIVE 0
--#define ABSOLUTE 1
--
--struct timer16_priv {
--	struct platform_device *pdev;
--	struct clocksource cs;
--	struct irqaction irqaction;
--	unsigned long total_cycles;
--	unsigned long mapbase;
--	unsigned long mapcommon;
--	unsigned long flags;
--	unsigned short gra;
--	unsigned short cs_enabled;
--	unsigned char enb;
--	unsigned char imfa;
--	unsigned char imiea;
--	unsigned char ovf;
--	raw_spinlock_t lock;
--	struct clk *clk;
--};
--
--static unsigned long timer16_get_counter(struct timer16_priv *p)
--{
--	unsigned long v1, v2, v3;
--	int o1, o2;
--
--	o1 = ctrl_inb(p->mapcommon + TISRC) & p->ovf;
--
--	/* Make sure the timer value is stable. Stolen from acpi_pm.c */
--	do {
--		o2 = o1;
--		v1 = ctrl_inw(p->mapbase + TCNT);
--		v2 = ctrl_inw(p->mapbase + TCNT);
--		v3 = ctrl_inw(p->mapbase + TCNT);
--		o1 = ctrl_inb(p->mapcommon + TISRC) & p->ovf;
--	} while (unlikely((o1 != o2) || (v1 > v2 && v1 < v3)
--			  || (v2 > v3 && v2 < v1) || (v3 > v1 && v3 < v2)));
--
--	v2 |= 0x10000;
--	return v2;
--}
--
--
--static irqreturn_t timer16_interrupt(int irq, void *dev_id)
--{
--	struct timer16_priv *p = (struct timer16_priv *)dev_id;
--
--	ctrl_outb(ctrl_inb(p->mapcommon + TISRA) & ~p->imfa,
--		  p->mapcommon + TISRA);
--	p->total_cycles += 0x10000;
--
--	return IRQ_HANDLED;
--}
--
--static inline struct timer16_priv *cs_to_priv(struct clocksource *cs)
--{
--	return container_of(cs, struct timer16_priv, cs);
--}
--
--static cycle_t timer16_clocksource_read(struct clocksource *cs)
--{
--	struct timer16_priv *p = cs_to_priv(cs);
--	unsigned long flags, raw;
--	unsigned long value;
--
--	raw_spin_lock_irqsave(&p->lock, flags);
--	value = p->total_cycles;
--	raw = timer16_get_counter(p);
--	raw_spin_unlock_irqrestore(&p->lock, flags);
--
--	return value + raw;
--}
--
--static int timer16_enable(struct clocksource *cs)
--{
--	struct timer16_priv *p = cs_to_priv(cs);
--
--	WARN_ON(p->cs_enabled);
--
--	p->total_cycles = 0;
--	ctrl_outw(0x0000, p->mapbase + TCNT);
--	ctrl_outb(0x83, p->mapbase + TCR);
--	ctrl_outb(ctrl_inb(p->mapcommon + TSTR) | p->enb,
--		  p->mapcommon + TSTR);
--
--	p->cs_enabled = true;
--	return 0;
--}
--
--static void timer16_disable(struct clocksource *cs)
--{
--	struct timer16_priv *p = cs_to_priv(cs);
--
--	WARN_ON(!p->cs_enabled);
--
--	ctrl_outb(ctrl_inb(p->mapcommon + TSTR) & ~p->enb,
--		  p->mapcommon + TSTR);
--
--	p->cs_enabled = false;
--}
--
--#define REG_CH   0
--#define REG_COMM 1
--
--static int timer16_setup(struct timer16_priv *p, struct platform_device *pdev)
--{
--	struct resource *res[2];
--	int ret, irq;
--	unsigned int ch;
--
--	p->pdev = pdev;
--
--	res[REG_CH] = platform_get_resource(p->pdev,
--					    IORESOURCE_MEM, REG_CH);
--	res[REG_COMM] = platform_get_resource(p->pdev,
--					      IORESOURCE_MEM, REG_COMM);
--	if (!res[REG_CH] || !res[REG_COMM]) {
--		dev_err(&p->pdev->dev, "failed to get I/O memory\n");
--		return -ENXIO;
--	}
--	irq = platform_get_irq(p->pdev, 0);
--	if (irq < 0) {
--		dev_err(&p->pdev->dev, "failed to get irq\n");
--		return irq;
--	}
--
--	p->clk = clk_get(&p->pdev->dev, "fck");
--	if (IS_ERR(p->clk)) {
--		dev_err(&p->pdev->dev, "can't get clk\n");
--		return PTR_ERR(p->clk);
--	}
--	of_property_read_u32(p->pdev->dev.of_node, "renesas,channel", &ch);
--
--	p->pdev = pdev;
--	p->mapbase = res[REG_CH]->start;
--	p->mapcommon = res[REG_COMM]->start;
--	p->enb = 1 << ch;
--	p->imfa = 1 << ch;
--	p->imiea = 1 << (4 + ch);
--	p->cs.name = pdev->name;
--	p->cs.rating = 200;
--	p->cs.read = timer16_clocksource_read;
--	p->cs.enable = timer16_enable;
--	p->cs.disable = timer16_disable;
--	p->cs.mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
--	p->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
--
--	ret = request_irq(irq, timer16_interrupt,
--			  IRQF_TIMER, pdev->name, p);
--	if (ret < 0) {
--		dev_err(&p->pdev->dev, "failed to request irq %d\n", irq);
--		return ret;
--	}
--
--	clocksource_register_hz(&p->cs, clk_get_rate(p->clk) / 8);
--
--	return 0;
--}
--
--static int timer16_probe(struct platform_device *pdev)
--{
--	struct timer16_priv *p = platform_get_drvdata(pdev);
--
--	if (p) {
--		dev_info(&pdev->dev, "kept as earlytimer\n");
--		return 0;
--	}
--
--	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
--	if (!p)
--		return -ENOMEM;
--
--	return timer16_setup(p, pdev);
--}
--
--static int timer16_remove(struct platform_device *pdev)
--{
--	return -EBUSY;
--}
--
--static const struct of_device_id timer16_of_table[] = {
--	{ .compatible = "renesas,16bit-timer" },
--	{ }
--};
--static struct platform_driver timer16_driver = {
--	.probe		= timer16_probe,
--	.remove		= timer16_remove,
--	.driver		= {
--		.name	= "h8300h-16timer",
--		.of_match_table = of_match_ptr(timer16_of_table),
--	}
--};
--
--static int __init timer16_init(void)
--{
--	return platform_driver_register(&timer16_driver);
--}
--
--static void __exit timer16_exit(void)
--{
--	platform_driver_unregister(&timer16_driver);
--}
--
--subsys_initcall(timer16_init);
--module_exit(timer16_exit);
--MODULE_AUTHOR("Yoshinori Sato");
--MODULE_DESCRIPTION("H8/300H 16bit Timer Driver");
--MODULE_LICENSE("GPL v2");
-diff --git a/drivers/clocksource/h8300_timer8.c b/drivers/clocksource/h8300_timer8.c
-deleted file mode 100644
-index 44375d8..0000000
---- a/drivers/clocksource/h8300_timer8.c
-+++ /dev/null
-@@ -1,317 +0,0 @@
--/*
-- *  linux/arch/h8300/kernel/cpu/timer/timer8.c
-- *
-- *  Yoshinori Sato <ysato@users.sourcefoge.jp>
-- *
-- *  8bit Timer driver
-- *
-- */
--
--#include <linux/errno.h>
--#include <linux/sched.h>
--#include <linux/kernel.h>
--#include <linux/interrupt.h>
--#include <linux/init.h>
--#include <linux/platform_device.h>
--#include <linux/slab.h>
--#include <linux/clockchips.h>
--#include <linux/module.h>
--#include <linux/clk.h>
--#include <linux/io.h>
--#include <linux/of.h>
--
--#include <asm/irq.h>
--
--#define _8TCR	0
--#define _8TCSR	2
--#define TCORA	4
--#define TCORB	6
--#define _8TCNT	8
--
--#define FLAG_REPROGRAM (1 << 0)
--#define FLAG_SKIPEVENT (1 << 1)
--#define FLAG_IRQCONTEXT (1 << 2)
--#define FLAG_STARTED (1 << 3)
--
--#define ONESHOT  0
--#define PERIODIC 1
--
--#define RELATIVE 0
--#define ABSOLUTE 1
--
--struct timer8_priv {
--	struct platform_device *pdev;
--	struct clock_event_device ced;
--	struct irqaction irqaction;
--	unsigned long mapbase;
--	raw_spinlock_t lock;
--	unsigned long flags;
--	unsigned int rate;
--	unsigned int tcora;
--	struct clk *pclk;
--};
--
--static unsigned long timer8_get_counter(struct timer8_priv *p)
--{
--	unsigned long v1, v2, v3;
--	int o1, o2;
--
--	o1 = ctrl_inb(p->mapbase + _8TCSR) & 0x20;
--
--	/* Make sure the timer value is stable. Stolen from acpi_pm.c */
--	do {
--		o2 = o1;
--		v1 = ctrl_inw(p->mapbase + _8TCNT);
--		v2 = ctrl_inw(p->mapbase + _8TCNT);
--		v3 = ctrl_inw(p->mapbase + _8TCNT);
--		o1 = ctrl_inb(p->mapbase + _8TCSR) & 0x20;
--	} while (unlikely((o1 != o2) || (v1 > v2 && v1 < v3)
--			  || (v2 > v3 && v2 < v1) || (v3 > v1 && v3 < v2)));
--
--	v2 |= o1 << 10;
--	return v2;
--}
--
--static irqreturn_t timer8_interrupt(int irq, void *dev_id)
--{
--	struct timer8_priv *p = dev_id;
--
--	ctrl_outb(ctrl_inb(p->mapbase + _8TCSR) & ~0x40,
--		  p->mapbase + _8TCSR);
--	p->flags |= FLAG_IRQCONTEXT;
--	ctrl_outw(p->tcora, p->mapbase + TCORA);
--	if (!(p->flags & FLAG_SKIPEVENT)) {
--		if (clockevent_state_oneshot(&p->ced))
--			ctrl_outw(0x0000, p->mapbase + _8TCR);
--		p->ced.event_handler(&p->ced);
--	}
--	p->flags &= ~(FLAG_SKIPEVENT | FLAG_IRQCONTEXT);
--
--	return IRQ_HANDLED;
--}
--
--static void timer8_set_next(struct timer8_priv *p, unsigned long delta)
--{
--	unsigned long flags;
--	unsigned long now;
--
--	raw_spin_lock_irqsave(&p->lock, flags);
--	if (delta >= 0x10000)
--		dev_warn(&p->pdev->dev, "delta out of range\n");
--	now = timer8_get_counter(p);
--	p->tcora = delta;
--	ctrl_outb(ctrl_inb(p->mapbase + _8TCR) | 0x40, p->mapbase + _8TCR);
--	if (delta > now)
--		ctrl_outw(delta, p->mapbase + TCORA);
--	else
--		ctrl_outw(now + 1, p->mapbase + TCORA);
--
--	raw_spin_unlock_irqrestore(&p->lock, flags);
--}
--
--static int timer8_enable(struct timer8_priv *p)
--{
--	p->rate = clk_get_rate(p->pclk) / 64;
--	ctrl_outw(0xffff, p->mapbase + TCORA);
--	ctrl_outw(0x0000, p->mapbase + _8TCNT);
--	ctrl_outw(0x0c02, p->mapbase + _8TCR);
--
--	return 0;
--}
--
--static int timer8_start(struct timer8_priv *p)
--{
--	int ret = 0;
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&p->lock, flags);
--
--	if (!(p->flags & FLAG_STARTED))
--		ret = timer8_enable(p);
--
--	if (ret)
--		goto out;
--	p->flags |= FLAG_STARTED;
--
-- out:
--	raw_spin_unlock_irqrestore(&p->lock, flags);
--
--	return ret;
--}
--
--static void timer8_stop(struct timer8_priv *p)
--{
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&p->lock, flags);
--
--	ctrl_outw(0x0000, p->mapbase + _8TCR);
--
--	raw_spin_unlock_irqrestore(&p->lock, flags);
--}
--
--static inline struct timer8_priv *ced_to_priv(struct clock_event_device *ced)
--{
--	return container_of(ced, struct timer8_priv, ced);
--}
--
--static void timer8_clock_event_start(struct timer8_priv *p, int periodic)
--{
--	struct clock_event_device *ced = &p->ced;
--
--	timer8_start(p);
--
--	ced->shift = 32;
--	ced->mult = div_sc(p->rate, NSEC_PER_SEC, ced->shift);
--	ced->max_delta_ns = clockevent_delta2ns(0xffff, ced);
--	ced->min_delta_ns = clockevent_delta2ns(0x0001, ced);
--
--	timer8_set_next(p, periodic?(p->rate + HZ/2) / HZ:0x10000);
--}
--
--static int timer8_clock_event_shutdown(struct clock_event_device *ced)
--{
--	timer8_stop(ced_to_priv(ced));
--	return 0;
--}
--
--static int timer8_clock_event_periodic(struct clock_event_device *ced)
--{
--	struct timer8_priv *p = ced_to_priv(ced);
--
--	dev_info(&p->pdev->dev, "used for periodic clock events\n");
--	timer8_stop(p);
--	timer8_clock_event_start(p, PERIODIC);
--
--	return 0;
--}
--
--static int timer8_clock_event_oneshot(struct clock_event_device *ced)
--{
--	struct timer8_priv *p = ced_to_priv(ced);
--
--	dev_info(&p->pdev->dev, "used for oneshot clock events\n");
--	timer8_stop(p);
--	timer8_clock_event_start(p, ONESHOT);
--
--	return 0;
--}
--
--static int timer8_clock_event_next(unsigned long delta,
--				   struct clock_event_device *ced)
--{
--	struct timer8_priv *p = ced_to_priv(ced);
--
--	BUG_ON(!clockevent_state_oneshot(ced));
--	timer8_set_next(p, delta - 1);
--
--	return 0;
--}
--
--static int timer8_setup(struct timer8_priv *p,
--			struct platform_device *pdev)
--{
--	struct resource *res;
--	int irq;
--	int ret;
--
--	p->pdev = pdev;
--
--	res = platform_get_resource(p->pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(&p->pdev->dev, "failed to get I/O memory\n");
--		return -ENXIO;
--	}
--
--	irq = platform_get_irq(p->pdev, 0);
--	if (irq < 0) {
--		dev_err(&p->pdev->dev, "failed to get irq\n");
--		return -ENXIO;
--	}
--
--	p->mapbase = res->start;
--
--	p->irqaction.name = dev_name(&p->pdev->dev);
--	p->irqaction.handler = timer8_interrupt;
--	p->irqaction.dev_id = p;
--	p->irqaction.flags = IRQF_TIMER;
--
--	p->pclk = clk_get(&p->pdev->dev, "fck");
--	if (IS_ERR(p->pclk)) {
--		dev_err(&p->pdev->dev, "can't get clk\n");
--		return PTR_ERR(p->pclk);
--	}
--
--	p->ced.name = pdev->name;
--	p->ced.features = CLOCK_EVT_FEAT_PERIODIC |
--		CLOCK_EVT_FEAT_ONESHOT;
--	p->ced.rating = 200;
--	p->ced.cpumask = cpumask_of(0);
--	p->ced.set_next_event = timer8_clock_event_next;
--	p->ced.set_state_shutdown = timer8_clock_event_shutdown;
--	p->ced.set_state_periodic = timer8_clock_event_periodic;
--	p->ced.set_state_oneshot = timer8_clock_event_oneshot;
--
--	ret = setup_irq(irq, &p->irqaction);
--	if (ret < 0) {
--		dev_err(&p->pdev->dev,
--			"failed to request irq %d\n", irq);
--		return ret;
--	}
--	clockevents_register_device(&p->ced);
--	platform_set_drvdata(pdev, p);
--
--	return 0;
--}
--
--static int timer8_probe(struct platform_device *pdev)
--{
--	struct timer8_priv *p = platform_get_drvdata(pdev);
--
--	if (p) {
--		dev_info(&pdev->dev, "kept as earlytimer\n");
--		return 0;
--	}
--
--	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
--	if (!p)
--		return -ENOMEM;
--
--	return timer8_setup(p, pdev);
--}
--
--static int timer8_remove(struct platform_device *pdev)
--{
--	return -EBUSY;
--}
--
--static const struct of_device_id timer8_of_table[] __maybe_unused = {
--	{ .compatible = "renesas,8bit-timer" },
--	{ }
--};
--
--MODULE_DEVICE_TABLE(of, timer8_of_table);
--static struct platform_driver timer8_driver = {
--	.probe		= timer8_probe,
--	.remove		= timer8_remove,
--	.driver		= {
--		.name	= "h8300-8timer",
--		.of_match_table = of_match_ptr(timer8_of_table),
--	}
--};
--
--static int __init timer8_init(void)
--{
--	return platform_driver_register(&timer8_driver);
--}
--
--static void __exit timer8_exit(void)
--{
--	platform_driver_unregister(&timer8_driver);
--}
--
--subsys_initcall(timer8_init);
--module_exit(timer8_exit);
--MODULE_AUTHOR("Yoshinori Sato");
--MODULE_DESCRIPTION("H8/300 8bit Timer Driver");
--MODULE_LICENSE("GPL v2");
-diff --git a/drivers/clocksource/h8300_tpu.c b/drivers/clocksource/h8300_tpu.c
-deleted file mode 100644
-index 5487410..0000000
---- a/drivers/clocksource/h8300_tpu.c
-+++ /dev/null
-@@ -1,206 +0,0 @@
--/*
-- *  H8/300 TPU Driver
-- *
-- *  Copyright 2015 Yoshinori Sato <ysato@users.sourcefoge.jp>
-- *
-- */
--
--#include <linux/errno.h>
--#include <linux/sched.h>
--#include <linux/kernel.h>
--#include <linux/interrupt.h>
--#include <linux/init.h>
--#include <linux/platform_device.h>
--#include <linux/slab.h>
--#include <linux/clocksource.h>
--#include <linux/module.h>
--#include <linux/clk.h>
--#include <linux/io.h>
--#include <linux/of.h>
--
--#include <asm/irq.h>
--
--#define TCR	0
--#define TMDR	1
--#define TIOR	2
--#define TER	4
--#define TSR	5
--#define TCNT	6
--#define TGRA	8
--#define TGRB	10
--#define TGRC	12
--#define TGRD	14
--
--struct tpu_priv {
--	struct platform_device *pdev;
--	struct clocksource cs;
--	struct clk *clk;
--	unsigned long mapbase1;
--	unsigned long mapbase2;
--	raw_spinlock_t lock;
--	unsigned int cs_enabled;
--};
--
--static inline unsigned long read_tcnt32(struct tpu_priv *p)
--{
--	unsigned long tcnt;
--
--	tcnt = ctrl_inw(p->mapbase1 + TCNT) << 16;
--	tcnt |= ctrl_inw(p->mapbase2 + TCNT);
--	return tcnt;
--}
--
--static int tpu_get_counter(struct tpu_priv *p, unsigned long long *val)
--{
--	unsigned long v1, v2, v3;
--	int o1, o2;
--
--	o1 = ctrl_inb(p->mapbase1 + TSR) & 0x10;
--
--	/* Make sure the timer value is stable. Stolen from acpi_pm.c */
--	do {
--		o2 = o1;
--		v1 = read_tcnt32(p);
--		v2 = read_tcnt32(p);
--		v3 = read_tcnt32(p);
--		o1 = ctrl_inb(p->mapbase1 + TSR) & 0x10;
--	} while (unlikely((o1 != o2) || (v1 > v2 && v1 < v3)
--			  || (v2 > v3 && v2 < v1) || (v3 > v1 && v3 < v2)));
--
--	*val = v2;
--	return o1;
--}
--
--static inline struct tpu_priv *cs_to_priv(struct clocksource *cs)
--{
--	return container_of(cs, struct tpu_priv, cs);
--}
--
--static cycle_t tpu_clocksource_read(struct clocksource *cs)
--{
--	struct tpu_priv *p = cs_to_priv(cs);
--	unsigned long flags;
--	unsigned long long value;
--
--	raw_spin_lock_irqsave(&p->lock, flags);
--	if (tpu_get_counter(p, &value))
--		value += 0x100000000;
--	raw_spin_unlock_irqrestore(&p->lock, flags);
--
--	return value;
--}
--
--static int tpu_clocksource_enable(struct clocksource *cs)
--{
--	struct tpu_priv *p = cs_to_priv(cs);
--
--	WARN_ON(p->cs_enabled);
--
--	ctrl_outw(0, p->mapbase1 + TCNT);
--	ctrl_outw(0, p->mapbase2 + TCNT);
--	ctrl_outb(0x0f, p->mapbase1 + TCR);
--	ctrl_outb(0x03, p->mapbase2 + TCR);
--
--	p->cs_enabled = true;
--	return 0;
--}
--
--static void tpu_clocksource_disable(struct clocksource *cs)
--{
--	struct tpu_priv *p = cs_to_priv(cs);
--
--	WARN_ON(!p->cs_enabled);
--
--	ctrl_outb(0, p->mapbase1 + TCR);
--	ctrl_outb(0, p->mapbase2 + TCR);
--	p->cs_enabled = false;
--}
--
--#define CH_L 0
--#define CH_H 1
--
--static int __init tpu_setup(struct tpu_priv *p, struct platform_device *pdev)
--{
--	struct resource *res[2];
--
--	p->pdev = pdev;
--
--	res[CH_L] = platform_get_resource(p->pdev, IORESOURCE_MEM, CH_L);
--	res[CH_H] = platform_get_resource(p->pdev, IORESOURCE_MEM, CH_H);
--	if (!res[CH_L] || !res[CH_H]) {
--		dev_err(&p->pdev->dev, "failed to get I/O memory\n");
--		return -ENXIO;
--	}
--
--	p->clk = clk_get(&p->pdev->dev, "fck");
--	if (IS_ERR(p->clk)) {
--		dev_err(&p->pdev->dev, "can't get clk\n");
--		return PTR_ERR(p->clk);
--	}
--
--	p->mapbase1 = res[CH_L]->start;
--	p->mapbase2 = res[CH_H]->start;
--
--	p->cs.name = pdev->name;
--	p->cs.rating = 200;
--	p->cs.read = tpu_clocksource_read;
--	p->cs.enable = tpu_clocksource_enable;
--	p->cs.disable = tpu_clocksource_disable;
--	p->cs.mask = CLOCKSOURCE_MASK(sizeof(unsigned long) * 8);
--	p->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
--	clocksource_register_hz(&p->cs, clk_get_rate(p->clk) / 64);
--	platform_set_drvdata(pdev, p);
--
--	return 0;
--}
--
--static int tpu_probe(struct platform_device *pdev)
--{
--	struct tpu_priv *p = platform_get_drvdata(pdev);
--
--	if (p) {
--		dev_info(&pdev->dev, "kept as earlytimer\n");
--		return 0;
--	}
--
--	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
--	if (!p)
--		return -ENOMEM;
--
--	return tpu_setup(p, pdev);
--}
--
--static int tpu_remove(struct platform_device *pdev)
--{
--	return -EBUSY;
--}
--
--static const struct of_device_id tpu_of_table[] = {
--	{ .compatible = "renesas,tpu" },
--	{ }
--};
--
--static struct platform_driver tpu_driver = {
--	.probe		= tpu_probe,
--	.remove		= tpu_remove,
--	.driver		= {
--		.name	= "h8s-tpu",
--		.of_match_table = of_match_ptr(tpu_of_table),
--	}
--};
--
--static int __init tpu_init(void)
--{
--	return platform_driver_register(&tpu_driver);
--}
--
--static void __exit tpu_exit(void)
--{
--	platform_driver_unregister(&tpu_driver);
--}
--
--subsys_initcall(tpu_init);
--module_exit(tpu_exit);
--MODULE_AUTHOR("Yoshinori Sato");
--MODULE_DESCRIPTION("H8S Timer Pulse Unit Driver");
--MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+T24gV2VkLCBPY3QgMjgsIDIwMTUgYXQgMDY6MTM6NDlQTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
+cm90ZToKPiBIaSBEYW5pZWwsCj4gCj4gQW0gTW9udGFnLCBkZW4gMTkuMTAuMjAxNSwgMTA6NTYg
+KzAyMDAgc2NocmllYiBEYW5pZWwgVmV0dGVyOgo+ID4gT24gRnJpLCBPY3QgMTYsIDIwMTUgYXQg
+MTA6MTI6MDRQTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPiA+ID4gRnJvbTogQ0sgSHUg
+PGNrLmh1QG1lZGlhdGVrLmNvbT4KPiA+ID4gCj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBhbiBpbml0
+aWFsIERSTSBkcml2ZXIgZm9yIHRoZSBNZWRpYXRlayBNVDgxNzMgRElTUAo+ID4gPiBzdWJzeXN0
+ZW0uIEl0IGN1cnJlbnRseSBzdXBwb3J0cyB0d28gZml4ZWQgb3V0cHV0IHN0cmVhbXMgZnJvbSB0
+aGUKPiA+ID4gT1ZMMC9PVkwxIHNvdXJjZXMgdG8gdGhlIERTSTAvRFBJMCBzaW5rcywgcmVzcGVj
+dGl2ZWx5Lgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVr
+LmNvbT4KPiA+ID4gU2lnbmVkLW9mZi1ieTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+
+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXgu
+ZGU+Cj4gPiAKPiA+IEJ1bmNoIG9mIGRyaXZlLWJ5IGNvbW1lbnRzIGJlbG93IHRvIHBvaW50IG91
+dCBkZXByZWNhdGVkIGZ1bmN0aW9ucyBhbmQKPiA+IG1vcmUgY29tbW9uIGFwcHJvYWNoZXMgdXNl
+ZCBieSBvdGhlciBkcml2ZXJzLiBEb24ndCBjb25zaWRlciB0aGlzIGEgZnVsbAo+ID4gcmV2aWV3
+IDstKQo+IAo+IE11Y2ggYXBwcmVjaWF0ZWQgYWxsIHRoZSBzYW1lLgo+IAo+ID4gQ2hlZXJzLCBE
+YW5pZWwKPiA+IAo+ID4gPiAtLS0KPiA+ID4gQ2hhbmdlcyBzaW5jZSB2MzoKPiA+ID4gIC0gUmVt
+b3ZlZCBjcnRjIGVuYWJsaW5nL2Rpc2FibGluZyBvbiBiaW5kL3VuYmluZCwgdGhlIGVuYWJsZS9k
+aXNhYmxlCj4gPiA+ICAgIGNhbGxiYWNrcyBzaG91bGQgc3VmZmljZS4KPiA+ID4gIC0gRmluZCBz
+aWJsaW5nIGNvbXBvbmVudHMgaW4gdGhlIGRldmljZSB0cmVlIHZpYSBjb21wYXRpYmxlIHZhbHVl
+Cj4gPiAKPiA+IGJ0dyBmb3IgRFQgY29tcG9uZW50cyBzdHVmZiB0aGVyZSdzIHBpbGVzIG9mIFJG
+Q3MgZmxvYXRpbmcgYXJvdW5kIHRvCj4gPiBleHRyYWN0IHRoaXMgaW50byBoZWxwZXIgbGlicmFy
+aWVzLiBXb3VsZCBiZSBncmVhdCB3ZSBjb3VsZCBwdXNoIG9uZSBvZgo+ID4gdGhlbSBmb3J3YXJk
+Lgo+IAo+IFRoZSBub24tbWVkaWF0ZWstc3BlY2lmaWMgcGFydCBjdXJyZW50bHkgaXMgdGhlCj4g
+Cj4gCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoYnVzX25vZGUsIG5vZGUpIHsKPiAJCW9mX2lkID0g
+b2ZfbWF0Y2hfbm9kZShkdF9pZHMsIG5vZGUpOwo+IAkJaWYgKCFvZl9pZCkKPiAJCQljb250aW51
+ZTsKPiAJCWlmICghb2ZfZGV2aWNlX2lzX2F2YWlsYWJsZShub2RlKSkKPiAJCQljb250aW51ZTsK
+PiAKPiAJCS8qIC4uLiAqLwo+IAl9Cj4gCj4gbG9vcC4gVGhpcyBpcyBzb21ld2hhdCBzaW1pbGFy
+IHRvIGEgY29tYmluYXRpb24gb2YKPiBmb3JfZWFjaF9tYXRjaGluZ19ub2RlX2FuZF9tYXRjaCBh
+bmQgZm9yX2VhY2hfYXZhaWxhYmxlX2NoaWxkX29mX25vZGUuCj4gZm9yX2VhY2hfYXZhaWxhYmxl
+X21hdGNoaW5nX2NoaWxkX29mX25vZGVfYW5kX21hdGNoIHdvdWxkIGJlIHF1aXRlIGEKPiBtb3V0
+aGZ1bCB0aG91Z2guCj4gCj4gWy4uLl0KPiA+ID4gK3N0cnVjdCBtdGtfZHJtX2NydGMgewo+ID4g
+PiArCXN0cnVjdCBkcm1fY3J0YwkJCQliYXNlOwo+ID4gPiArCXVuc2lnbmVkIGludAkJCQlwaXBl
+Owo+ID4gPiArCWJvb2wJCQkJCWVuYWJsZWQ7Cj4gPiA+ICsJc3RydWN0IG10a19jcnRjX2RkcF9j
+b250ZXh0CQkqY3R4Owo+ID4gPiArCj4gPiA+ICsJc3RydWN0IGRybV9wZW5kaW5nX3ZibGFua19l
+dmVudAkJKmV2ZW50Owo+ID4gPiArCWJvb2wJCQkJCXBlbmRpbmdfbmVlZHNfdmJsYW5rOwo+ID4g
+PiArfTsKPiA+ID4gKwo+ID4gPiArc3RydWN0IG10a19jcnRjX2RkcF9jb250ZXh0IHsKPiA+ID4g
+KwlzdHJ1Y3QgZGV2aWNlCQkJKmRldjsKPiA+ID4gKwlzdHJ1Y3QgZHJtX2RldmljZQkJKmRybV9k
+ZXY7Cj4gPiA+ICsJc3RydWN0IG10a19kcm1fY3J0YwkJKmNydGM7Cj4gPiA+ICsJc3RydWN0IG10
+a19kcm1fcGxhbmUJCXBsYW5lc1tPVkxfTEFZRVJfTlJdOwo+ID4gPiArCWludAkJCQlwaXBlOwo+
+ID4gPiArCj4gPiA+ICsJdm9pZCBfX2lvbWVtCQkJKmNvbmZpZ19yZWdzOwo+ID4gPiArCXN0cnVj
+dCBkZXZpY2UJCQkqbXV0ZXhfZGV2Owo+ID4gPiArCXUzMgkJCQlkZHBfY29tcF9ucjsKPiA+ID4g
+KwlzdHJ1Y3QgbXRrX2RkcF9jb21wCQkqZGRwX2NvbXA7Cj4gPiAKPiA+IEFsbCB0aGUgYWJvdmUg
+cHJvYmFibHkgc2hvdWxkIGp1c3QgYmUgbW92ZWQgaW50byBtdGtfZHJtX2NydGMuIEF0IGxlYXN0
+IEkKPiA+IGRvbid0IHVuZGVyc3RhbmQgd2h5IHlvdSBuZWVkIHRoaXMgaW5kaXJlY3Rpb24uCj4g
+Cj4gQWdyZWVkLiBUaGlzIHdhcyBuZWVkZWQgZm9yIGEgZGVidWdmcyBwYXRjaCB0aGF0IEkgaGF2
+ZSBsZWZ0IG91dCBmb3IKPiBub3cuCj4gCj4gPiA+ICsKPiA+ID4gKwlib29sCQkJCXBlbmRpbmdf
+Y29uZmlnOwo+ID4gPiArCXVuc2lnbmVkIGludAkJCXBlbmRpbmdfd2lkdGg7Cj4gPiA+ICsJdW5z
+aWduZWQgaW50CQkJcGVuZGluZ19oZWlnaHQ7Cj4gPiA+ICsKPiA+ID4gKwlib29sCQkJCXBlbmRp
+bmdfb3ZsX2NvbmZpZ1tPVkxfTEFZRVJfTlJdOwo+ID4gPiArCWJvb2wJCQkJcGVuZGluZ19vdmxf
+ZW5hYmxlW09WTF9MQVlFUl9OUl07Cj4gPiA+ICsJdW5zaWduZWQgaW50CQkJcGVuZGluZ19vdmxf
+YWRkcltPVkxfTEFZRVJfTlJdOwo+ID4gPiArCXVuc2lnbmVkIGludAkJCXBlbmRpbmdfb3ZsX3Bp
+dGNoW09WTF9MQVlFUl9OUl07Cj4gPiA+ICsJdW5zaWduZWQgaW50CQkJcGVuZGluZ19vdmxfZm9y
+bWF0W09WTF9MQVlFUl9OUl07Cj4gPiA+ICsJaW50CQkJCXBlbmRpbmdfb3ZsX3hbT1ZMX0xBWUVS
+X05SXTsKPiA+ID4gKwlpbnQJCQkJcGVuZGluZ19vdmxfeVtPVkxfTEFZRVJfTlJdOwo+ID4gPiAr
+CXVuc2lnbmVkIGludAkJCXBlbmRpbmdfb3ZsX3NpemVbT1ZMX0xBWUVSX05SXTsKPiA+ID4gKwli
+b29sCQkJCXBlbmRpbmdfb3ZsX2RpcnR5W09WTF9MQVlFUl9OUl07Cj4gPiAKPiA+IFRoaXMgd29y
+a3Mgc2luY2UgeW91IG9ubHkgdG91Y2ggdGhlc2UgaW4gdGhlIGF0b21pY19jb21taXQgcGhhc2Us
+IGJ1dCB0aGUKPiA+IHJlY29tbWVuZCB3YXkgdG8gZG8gdGhpcyB3aXRoIGF0b21pYyBpcyB0byBz
+dWJjbGFzcyBkcm1fY3J0Y19zdGF0ZToKPiA+Cj4gPiBzdHJ1Y3QgbXRrX2NydGNfc3RhdGUgewo+
+ID4gCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSBiYXNlOwo+ID4gCj4gPiAJLyogYWxsIHRoZSBwZW5k
+aW5nXyBzdHVmZiBhYm92ZSAqLwo+ID4gfTsKPiA+IAo+ID4gVGhlbiB5b3UganVzdCBwYXNzIHRo
+ZSBtdGsgdG8geW91ciBpcnEgaGFuZGxlciB0byBkbyB0aGUgdXBkYXRlLgo+IAo+IEknbGwgbW92
+ZSB0aGVzZSBpbnRvIG10a19jcnRjX3N0YXRlLCBidXQgSSdtIG5vdCBzdXJlIHdoYXQgeW91IG1l
+YW4gd2l0aAo+IHRoZSBsYXN0IHNlbnRlbmNlLiBDdXJyZW50bHkgSSBwYXNzIHRoZSBtdGtfY3J0
+Y19kZHBfY29udGV4dCB0byB0aGUgaXJxCj4gaGFuZGxlci4gSSBjYW4gZ2V0IHRvIHRoZSBtdGtf
+Y3J0Y19zdGF0ZSBmcm9tIHRoYXQuCgpUaGF0IHdvcmtzIHRvby4KCj4gPiA+ICtzdGF0aWMgaW50
+IG10a19kcm1fYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ICt7Cj4gPiA+ICsJcmV0dXJu
+IGRybV9wbGF0Zm9ybV9pbml0KCZtdGtfZHJtX2RyaXZlciwgdG9fcGxhdGZvcm1fZGV2aWNlKGRl
+dikpOwo+ID4gCj4gPiBUaGlzIGlzIGRlcHJlY2F0ZWQsIHBsZWFzZSB1c2UgZHJtX2Rldl9hbGxv
+Yy9kcm1fZGV2X3JlZ2lzdGVyIGluc3RlYWQgYW5kCj4gPiByZW1vdmUgeW91ciAtPmxvYWQgZHJp
+dmVyIGNhbGxiYWNrLgo+IAo+IFdpbGwgcmVwbGFjZSBkcm1fcGxhdGZvcm1faW5pdCB3aXRoIGRy
+bV9kZXZfYWxsb2MvZHJtX2Rldl9yZWdpc3RlciBhbmQKPiBpbnRlZ3JhdGUgbXRrX2RybV9sb2Fk
+IGludG8gbXRrX2RybV9iaW5kLgo+IAo+ID4gPiAraW50IG10a19kcm1fZ2VtX2R1bWJfbWFwX29m
+ZnNldChzdHJ1Y3QgZHJtX2ZpbGUgKmZpbGVfcHJpdiwKPiA+ID4gKwkJCQlzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZGV2LCB1aW50MzJfdCBoYW5kbGUsCj4gPiA+ICsJCQkJdWludDY0X3QgKm9mZnNldCkK
+PiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iajsKPiA+ID4gKwlpbnQg
+cmV0Owo+ID4gPiArCj4gPiA+ICsJbXV0ZXhfbG9jaygmZGV2LT5zdHJ1Y3RfbXV0ZXgpOwo+ID4g
+Cj4gPiBzdHJ1Y3RfbXV0ZXggaXNuJ3QgbmVlZGVkIGhlcmUgKGdlbSBvYmplY3QgbG9va3VwIGFu
+ZCB0aGUgdm1hIHN0dWZmIGFyZQo+ID4gYWxsIHByb3RlY3RlZCBieSBsb29rcyBhbHJlYWR5KS4g
+UGxlYXNlIGRyb3AgaXQuCj4gWy4uLl0KPiA+ID4gK291dDoKPiA+ID4gKwlkcm1fZ2VtX29iamVj
+dF91bnJlZmVyZW5jZShvYmopOwo+ID4gCj4gPiBCdXQgdGhlbiB5b3UgbmVlZCB1bnJlZmVyZW5j
+ZV91bmxvY2tlZCBoZXJlLgo+IAo+IE9rLCBkcm9wcGVkIHRoZSBsb2NrLgo+IAo+IFsuLi5dCj4g
+PiA+ICtpbnQgbXRrX2RybV9nZW1fbW1hcF9idWYoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmos
+IHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hKQo+ID4gCj4gPiBUaGlzIGZ1bmN0aW9uIHNlZW1z
+IHVudXNlZC4KPiAKPiBDdXJyZW50bHkgdW51c2VkLCB5ZXMuIEknbGwgbW92ZSBpdCBvdXQgb2Yg
+dGhpcyBzZXJpZXMuCj4gCj4gPiA+ICt7Cj4gPiA+ICsJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9
+IG9iai0+ZGV2Owo+ID4gPiArCWludCByZXQ7Cj4gPiA+ICsKPiA+ID4gKwltdXRleF9sb2NrKCZk
+cm0tPnN0cnVjdF9tdXRleCk7Cj4gPiA+ICsJcmV0ID0gZHJtX2dlbV9tbWFwX29iaihvYmosIG9i
+ai0+c2l6ZSwgdm1hKTsKPiA+ID4gKwltdXRleF91bmxvY2soJmRybS0+c3RydWN0X211dGV4KTsK
+PiA+IAo+ID4gVGhpcyBsb2NraW5nIGlzbid0IHJlcXVpcmVkIHdpdGggbGF0ZXN0IGRybS1taXNj
+IGFueW1vcmUsIHBsZWFzZSByZWJhc2UKPiA+IG9udG8gbGF0ZXN0IGxpbnV4LW5leHQgYW5kIGRy
+b3Agc3RydWN0X211dGV4Lgo+IAo+IFdpbGwgZG8uCj4gCj4gWy4uLl0KPiA+ID4gK2ludCBtdGtf
+ZHJtX2dlbV9tbWFwKHN0cnVjdCBmaWxlICpmaWxwLCBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZt
+YSkKPiA+ID4gK3sKPiA+ID4gKwlzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iajsKPiA+ID4gKwlp
+bnQgcmV0Owo+ID4gPiArCj4gPiA+ICsJcmV0ID0gZHJtX2dlbV9tbWFwKGZpbHAsIHZtYSk7Cj4g
+PiA+ICsJaWYgKHJldCkKPiA+ID4gKwkJcmV0dXJuIHJldDsKPiA+ID4gKwo+ID4gPiArCW9iaiA9
+IHZtYS0+dm1fcHJpdmF0ZV9kYXRhOwo+ID4gPiArCj4gPiA+ICsJcmV0dXJuIG10a19kcm1fZ2Vt
+X29iamVjdF9tbWFwKG9iaiwgdm1hKTsKPiA+IAo+ID4gQXNpZGU6IFdoeSBjYW4ndCB5b3UganVz
+dCB1c2UgY21hIGhlbHBlcnMgZm9yIGdlbSBvYmplY3RzPyBDTUEganVzdAo+ID4gZXNzZW50aWFs
+bHkgbWVhbnMgYmFja2VkIGJ5IGRtYV9hbGxvYyBtZW1vcnkuIFdvdWxkIGF2b2lkIGEgbG90IG9m
+Cj4gPiBkdXBsaWNhdGVkIGNvZGUgSSB0aGluay4KPiAKPiBJIHN1cHBvc2Ugd2Ugd29uJ3QgbmVl
+ZCBkbWFfYWxsb2MgbWVtb3J5IGV2ZW50dWFsbHksIGR1ZSB0byB0aGUgaW9tbXUuCj4gCj4gWy4u
+Ll0KPiA+ID4gK3N0YXRpYyB2b2lkIG10a19wbGFuZV9hdG9taWNfdXBkYXRlKHN0cnVjdCBkcm1f
+cGxhbmUgKnBsYW5lLAo+ID4gPiArCQkJCSAgICBzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpvbGRf
+c3RhdGUpCj4gPiA+ICt7Cj4gWy4uLl0KPiA+ID4gKwlpZiAocGxhbmUtPmZiKQo+ID4gPiArCQlk
+cm1fZnJhbWVidWZmZXJfdW5yZWZlcmVuY2UocGxhbmUtPmZiKTsKPiA+ID4gKwlpZiAoc3RhdGUt
+PmZiKQo+ID4gPiArCQlkcm1fZnJhbWVidWZmZXJfcmVmZXJlbmNlKHN0YXRlLT5mYik7Cj4gPiA+
+ICsJcGxhbmUtPmZiID0gc3RhdGUtPmZiOwo+ID4gCj4gPiBUaGVyZSBzaG91bGRuJ3QgYmUgYW55
+IG5lZWQgdG8gcmVmY291bnQgZnJhbWVidWZmZXJzIHlvdXJzZWxmLiBJZiB0aGF0J3MKPiA+IHRo
+ZSBjYXNlIHRoZW4gdGhlcmUncyBhIGJ1ZyBpbiB0aGUgZHJtIGNvcmUvaGVscGVycy4KPiAKPiBJ
+IHdhcyBzdGlsbCB1c2luZyBwbGFuZS0+ZmIgaW4gbXRrX2RybV9jcnRjX3BsYW5lX2NvbmZpZy4g
+SSdsbCBjaGVjayBpZgo+IHN3aXRjaGluZyB0byBwbGFuZS0+c3RhdGUtPmZiIHRoZXJlIHdpbGwg
+YWxsb3cgbWUgdG8gZHJvcCB0aGlzLgoKTXkgY29tbWVudCB3YXMgYWJvdXQgdGhlIHJlZmNvdW50
+aW5nLCBub3QgYWJvdXQgYXNzaWduaW5nIHBsYW5lLT5mYi4KQXNzaWduaW5nIHBsYW5lLT5mYiA9
+IHN0YXRlLT5mYiBpbiB5b3VyIGNvbW1pdCBmdW5jdGlvbnMgaXMgYWxsb3dlZCAodGhlCmRybSBj
+b3JlIHdpbGwgZG8gaXQgaWYgeW91IGRvbid0IGRvIGl0KSwgYnV0IGl0J3Mgb25seSBhbGxvd2Vk
+IGZvcgpiYWNrd2FyZHMgY29tcGF0IHdpdGggZXhpc3RpbmcgZHJpdmVycy4gTmV3IGRyaXZlcnMg
+cmVhbGx5IHNob3VsZCBvbmx5Cmxvb2sgYXQgc3RhdGUtPmZiIGFuZCB0b3RhbGx5IGlnbm9yZSBw
+bGFuZS0+ZmIuCgpUaGUgcmVmY291bnRpbmcgb3RvaCBpcyBzaW1wbHkgYnVnZ3kgc2luY2UgaXQn
+bGwgY29uZnVzZSB0aGUgcmVmY291bnRpbmcKdGhlIGNvcmUgZG9lcyBhbmQgSSB0aGluayBzaG91
+bGQgcmVzdWx0IGluIHNvbWUgbGVha3MgZXZlbi4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpT
+b2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
