@@ -1,74 +1,64 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding
- documentation
-Date: Fri, 30 Oct 2015 18:24:55 +0100
-Message-ID: <20151030172455.GA17183@ulmo.nvidia.com>
-References: <1438133861-22370-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/3] PM / OPP: opp-supported-hw and <prop>-name bindings
+Date: Fri, 30 Oct 2015 12:26:22 -0500
+Message-ID: <CAL_JsqLpGhvE44du+_oGb+3S9DvbxwOd47FdmXnhwNoiq3V3Cg@mail.gmail.com>
+References: <cover.1446167359.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438133861-22370-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Werner Johansson <werner.johansson@sonymobile.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1446167359.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 29, 2015 at 8:25 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> Hi Rob/Stephen/Rafael,
+>
+> These bindings are discussed in detail earlier:
+> http://marc.info/?l=linux-kernel&m=144237804923159&w=2
+>
+> and I was waiting for the multi-regulator series to get applied first,
+> to post these patches.
+>
+> But that series is not moving at fast pace and probably its time to get
+> other things going at least.
+>
+> These are already kind of approved by Rob and Stephen (these are the
+> bindings we came up with for solving the issues reported by Lee Jones),
+> but a formal Ack is still required to get them merged.
+>
+> The first patch enables us to select only a subset of OPPs from the
+> bigger table, based on what version of the hardware we are running on.
+>
+> The second one enables us to select slightly different values for
+> multiple properties, based on what kind of hardware they are running on.
+>
+> And the last one removes an (unused) binding, which is replaced by the
+> second patch with a better solution.
+>
+> @Stephen/Rob: I already have working code for these bindings, which I
+> shared with Lee earlier. Just that I need to rebase that without the
+> multi-regulator series, will do that in coming days. But please see if
+> we can get these Acked/merged before that :)
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It looks okay to me, but I'll defer to Stephen and Lee as they are the users.
 
-On Tue, Jul 28, 2015 at 06:37:40PM -0700, Bjorn Andersson wrote:
-> From: Werner Johansson <werner.johansson@sonymobile.com>
->=20
-> Signed-off-by: Werner Johansson <werner.johansson@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  .../bindings/panel/sharp,ls043t1le01.txt           | 22 ++++++++++++++++=
-++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls043t1=
-le01.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.tx=
-t b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
-> new file mode 100644
-> index 000000000000..758d48d33e46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/sharp,ls043t1le01.txt
-> @@ -0,0 +1,22 @@
-> +Sharp Microelectronics 4.3" qHD TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "sharp,ls043t1le01-qhd-vid"
+I'd imagine Rafael will tell you the same thing, but it is too late
+for 4.4 anyway.
 
-The -vid suffix needs to go away, otherwise the binding looks good to
-me.
+Rob
 
-Thierry
-
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWM6fkAAoJEN0jrNd/PrOhvAsP/1RJPOoWUmguagUJxsDwu/9g
-KwmKYRkzPuO5xNkW4HDA3PDQvHKKlJ49GS8BX6Epv/CxdngoDaD6949CP+P5qF1g
-fhrhf8y51eLznB/qwKPBp789fFwam2EBL35icEV6q3zY0BOVC9DPLa2hZX4z96vO
-jpBa+XFFN1HlwOOD8FYrnX9GnzzawVvB2ZmjvGdqjxz6xLhY0GoazBqTNSjLMv58
-lQEHj+24srgb2/+jPQiW6jPIslcbqZ5dm/IRPxDJrdBX03aHFm3Jo3C1mG8fSXvH
-etRRhbYO6Pj15Kv1wbZmvCPORV9P6KpgGhKbzXc6OmTh0z2KyfaxezVcxxD/0Ho9
-Ttggbj5tKmNYppXHoXS/J40kGsvYjxYqcy6L0HKiMeKehDxeH3BdA3j6X1hfbovA
-g6DfwPZrhQkbEKak0GJmnwpKKDVd69M9lh5MqjQ3uGEKvbWMdu8Kow+az8qGlwEg
-jX3nFj6JV5bbm+c2c0TmP+WQSQ0s80oUswDQ7DW0N+5esI/hd08Vt3EmNSQpyfXk
-4Hrqsqs3Wp2CZqoWoBI0ZXzw+LXaZFRcFCrd8kcKnqAM368AqPx4PdA3MNa/Hr1r
-ea+nCbDRK0mICkAXnCZkOWpvrYlu5k9LXYzarV5f1d0n1jKn4ALlL6YKjF8gwSub
-1QUX7jHkTzCezE1JRQhj
-=3t2g
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
+>
+> Viresh Kumar (3):
+>   PM / OPP: Add "opp-supported-hw" binding
+>   PM / OPP: Add
+>     {opp-microvolt|opp-microamp|turbo-mode|opp-suspend}-<name> binding
+>   PM / OPP: Remove 'operating-points-names' binding
+>
+>  Documentation/devicetree/bindings/opp/opp.txt | 101 ++++++++++++++++++++------
+>  1 file changed, 79 insertions(+), 22 deletions(-)
+>
+> --
+> 2.6.2.198.g614a2ac
+>
