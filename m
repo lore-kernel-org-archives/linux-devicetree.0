@@ -1,50 +1,48 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH v12 0/6] Altera PCIe host controller driver with MSI support
-Date: Fri, 30 Oct 2015 13:51:27 +0800
-Message-ID: <CAFiDJ59QNqK6Np8Pp7JDV7Xr2mn3TEXpO2GPH12VYO4QOhtK+g@mail.gmail.com>
-References: <1445596035-27733-1-git-send-email-lftan@altera.com>
-	<20151027142644.GA8660@localhost>
-	<CAFiDJ5_vCqh=uKkF2E_BQkJUv692r3yr26bBj8boK2DY_Dj+gA@mail.gmail.com>
-	<CAErSpo5okE86k846hs28s4jvL59hmm+4az-dDsymzNayPCPCzw@mail.gmail.com>
-	<CAFiDJ59wOUj-Mr3cyqQEz+P=8AkmRoy7XzUCmM33_e03Y2G_ZQ@mail.gmail.com>
-	<20151029232238.GB11994@localhost>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Fri, 30 Oct 2015 15:09:28 +0900
+Message-ID: <56330998.5060706@samsung.com>
+References: <cover.1446018918.git.p.fedin@samsung.com>
+ <046d990092dc85cf50db9082fc894d93a3ece7c0.1446018918.git.p.fedin@samsung.com>
+ <563183F9.6020806@samsung.com> <008001d1121d$c0fef160$42fcd420$@samsung.com>
+ <CAJKOXPcSehXRYDpYiybzdagPS76QKGpeMb7DxkpwJq8GTfuPOw@mail.gmail.com>
+ <003c01d1123f$002a3220$007e9660$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20151029232238.GB11994@localhost>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <003c01d1123f$002a3220$007e9660$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pavel Fedin <p.fedin@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'Kukjin Kim' <kgene@kernel.org>, 'Pankaj Dubey' <pankaj.dubey@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 7:22 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 29.10.2015 20:43, Pavel Fedin wrote:
+>  Hello!
+> 
+>>>> Any vendor prefix here? How generic is this?
+>>>
+>>>  I just don't know... Does *everything* really need a vendor prefix? How readable would that
+>> be? "compatible" property already says
+>>> that it's samsung-exynos-specific. And IMHO it's quite obvious that properties of vendor-
+>> specific device are automatically
+>>> vendor-specific.
+>>>  Ok, i am currently fixing up the rest and will post v4 soon, and will Cc: it to devicetree
+>> ML.
+>>
+>> Which my reply you are referring to? You stripped part of some
+>> sentence and put it without *any context*. Just random sentence.
+>> I asked for vendor prefix in few places... srom-timing? width? And I
+>> do not remember where I used exactly these words.
+> 
+>  Ok, sorry, i promise to improve. :)
+>  Anyway, i have figured out how to add sub-devices, and heavily modified the whole thing. And indeed, vendor prefix is now very useful, so i added it to all three properties. Making v4...
 
->> >>>
->> >>> I applied these to pci/host-altera for v4.4, thanks!
->> >>>
->> >>> I squashed these into three patches:
->> >>>
->> >>>   - add msi.h to Kbuild
->> >>>   - add Altera host driver (including DT binding and MAINTAINERS update)
->> >>>   - add Altera MSI driver (including DT binding and MAINTAINERS update)
->> >>>
->> >>> Since the convention is to add PCI ID #defines only when they are used in
->> >>> multiple places, I replaced PCI_VENDOR_ID_ALTERA with 0x1172 in the single
->> >>> place it is used.
->> >> Hi Bjorn
->> >>
->> >> Thanks for applied these.
->> >>
->> >> By the way, I can't see pci/host-altera branch in your pci.git tree
->> >> yet. It takes some time to appear there?
->> >
->> > Sorry, I forgot to push it.  It should be there now!
->> >
->> Yes, saw it now. It will merge to 'next' branch eventually?
->
-> Yep, I just merged it to 'next' and pushed it.
+Actually now I found:
+Documentation/devicetree/bindings/net/gpmc-eth.txt
 
-Saw it. Thanks!
+Aren't you duplicating this work? This looks very, very similar.
 
-Regards
-Ley Foon
+Best regards,
+Krzysztof
