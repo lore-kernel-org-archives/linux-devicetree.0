@@ -1,48 +1,86 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] Documentation: arm: Fixed typo in socfpga fpga mgr example
-Date: Fri, 30 Oct 2015 13:31:23 -0500
-Message-ID: <CAL_JsqJEC+L-x2hLVzhq8DyvMVuCBovGTNmLqXRj4gr2_RkAzQ@mail.gmail.com>
-References: <1446223887-3144-1-git-send-email-moritz.fischer@ettus.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v8 1/5] Documentation: add sbsa-gwdt driver documentation
+Date: Sat, 31 Oct 2015 02:35:52 +0800
+Message-ID: <CADyBb7sPqsoQdYBUpHY2HvZ+iT7ABa9NoCX7Jax1NKugYOy1zQ@mail.gmail.com>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+	<1445961999-9506-2-git-send-email-fu.wei@linaro.org>
+	<20151027162257.GJ3091@leverpostej>
+	<CADyBb7sAcT4bXrkNo2GKx1Tw5wOuf8JeMgCoiAw=owHqvYx6ug@mail.gmail.com>
+	<CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446223887-3144-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOZdJXVan3xaYAS_+150nDO1ogWh+PtkQAZvwrHusJhY4R1a4A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 11:51 AM, Moritz Fischer
-<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
-> Addresses should not be prefixed contain '0x' in nodes.
->
-> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Hi Timur
 
-Applied. Thanks.
+On 31 October 2015 at 01:46, Timur Tabi <timur@codeaurora.org> wrote:
+> On Tue, Oct 27, 2015 at 11:10 PM, Fu Wei <fu.wei@linaro.org> wrote:
+>>
+>>> Why is WS1 optional?
+>>
+>> According to the description of WS1 in SBSA 2.3 (5.2 Watchdog Operation) page 21
+>> -----------------
+>> The signal is fed to a higher agent as an interrupt or reset for it to
+>> take executive action.
+>> ----------------
+>>
+>> So WS1 maybe a interrupt.
+>>
+>> In a real Hardware,  WS1 hooks to a  reset signal pin of BMC, if this
+>> pin is triggered, BMC will do a real warm reset.
+>> In this case, WS1 is a reset, Linux doesn't need to deal with that.
+>>
+>> For now , I haven't found a hardware use WS1 as  interrupt.
+>> In <ARM v8-A Foundation Platform User Guide> 3.2 Interrupt maps  Page 22
+>> Table 3-3 Shared peripheral interrupt assignments
+>> IRQ ID       SPI offset      Device
+>> 60               28              EL2 Generic Watchdog WS1
+>>
+>> But I don't have further info about it.
+>>
+>> Anyway,  because this signal could be interrupt or reset, Linux don't
+>> need know this signal sometimes.
+>> So I think it should be optional in binding info.
+>>
+>> Do I miss something? Any suggestion ? Please correct me, thanks.
+>
+> I think maybe Mark was asking why WS1 is optional, not the WS1
 
-Rob
+My answer is for "why WS1 is optional"!
 
-> ---
->  Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> interrupt.  Maybe you can reword the documentation to make is clear
+> that
+
+I didn't say : "only the *interrupt* for WS1 is optional."
+
 >
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt
-> index 9b027a6..d52f334 100644
-> --- a/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt
-> +++ b/Documentation/devicetree/bindings/fpga/altera-socfpga-fpga-mgr.txt
-> @@ -9,7 +9,7 @@ Required properties:
+> However, the ACPI table only allows for one interrupt, and it's not
+> clear whether that's the WS0 or WS1 interrupt.  So if both WS0 and WS1
+> generate an interrupt, how does the driver handle that?
+
+register a interrupt handle for both
+
 >
->  Example:
->
-> -       hps_0_fpgamgr: fpgamgr@0xff706000 {
-> +       hps_0_fpgamgr: fpgamgr@ff706000 {
->                 compatible = "altr,socfpga-fpga-mgr";
->                 reg = <0xFF706000 0x1000
->                        0xFFB90000 0x1000>;
 > --
-> 2.6.2
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
