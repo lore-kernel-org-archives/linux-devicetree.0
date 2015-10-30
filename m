@@ -1,46 +1,38 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v4 1/3] clk: iproc: Extend binding to cover BCM63138
-Date: Thu, 29 Oct 2015 18:23:17 -0700
-Message-ID: <1446168199-5959-2-git-send-email-f.fainelli@gmail.com>
-References: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH v4 0/3] clk: Broadcom BCM63138 support
+Date: Thu, 29 Oct 2015 18:23:16 -0700
+Message-ID: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1446168199-5959-1-git-send-email-f.fainelli@gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, jonmason@broadcom.com, sboyd@codeaurora.org, mturquette@baylibre.com, linux@arm.linux.org.uk, sbranden@broadcom.com, rjui@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Broadcom BCM63138 DSL SoCs have the same ARMPLL clocking infrastructure
-as the Cygnus and iProc chips, add a dedicated compatible string and
-document that the ARMPLL node is a valid node for this chip.
+This patch series adds support for the Broadcom BCM63138 DSL SoCs
+clocking framework.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-No changes in v4
+Since the HW is identical to the one found in Broadcom iProc SoCs, but the
+integration is different (obviously), there is still a new compatible string
+introduced just in case we happen to find issues in the future.
 
-Changes in v3:
+Stephen, could you stage the two patches in a clk-bcm63xx branch that I could
+later utilize while doing the arm-soc DT pull request?
 
-- added Rob's Acked-by tag
+Thank you!
 
-No changes in v2
+Florian Fainelli (3):
+  clk: iproc: Extend binding to cover BCM63138
+  clk: bcm: Add BCM63138 clock support
+  ARM: dts: BCM63xx: Add ARMPLL device tree nodes
 
- Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../bindings/clock/brcm,iproc-clocks.txt           |  5 +++
+ arch/arm/boot/dts/bcm63138.dtsi                    | 36 +++++++++++++++++-----
+ drivers/clk/bcm/Kconfig                            | 10 ++++++
+ drivers/clk/bcm/Makefile                           |  1 +
+ drivers/clk/bcm/clk-bcm63xx.c                      | 22 +++++++++++++
+ 5 files changed, 66 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/clk/bcm/clk-bcm63xx.c
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index ede65a55e21b..0b35e71b39e8 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -208,3 +208,8 @@ These clock IDs are defined in:
-     ch3_unused	lcpll_ports	4	BCM_NS2_LCPLL_PORTS_CH3_UNUSED
-     ch4_unused	lcpll_ports	5	BCM_NS2_LCPLL_PORTS_CH4_UNUSED
-     ch5_unused	lcpll_ports	6	BCM_NS2_LCPLL_PORTS_CH5_UNUSED
-+
-+BCM63138
-+--------
-+PLL and leaf clock compatible strings for BCM63138 are:
-+    "brcm,bcm63138-armpll"
 -- 
 2.1.0
 
