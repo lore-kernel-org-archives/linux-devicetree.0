@@ -1,104 +1,35 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 25/32] scsi: hisi_sas: add abnormal irq handler
-Date: Fri, 30 Oct 2015 15:10:24 +0100
-Message-ID: <3709094.hsDE2JcmxW@wuerfel>
-References: <1445868903-183817-1-git-send-email-john.garry@huawei.com> <1445868903-183817-26-git-send-email-john.garry@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 5/5] gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
+Date: Fri, 30 Oct 2015 15:13:03 +0100
+Message-ID: <CACRpkdb+C1M=cFKDNbJW74hUEA=87aA_weR0u22-9bDKgif6xQ@mail.gmail.com>
+References: <1446161922-8755-1-git-send-email-afd@ti.com>
+	<1446161922-8755-6-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445868903-183817-26-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1446161922-8755-6-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 26 October 2015 22:14:56 John Garry wrote:  
-> Add abnormal irq handler. This handler is concerned with
-> phy down event.
-> Also add port formed and port deformed handlers.
-> 
-> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On Fri, Oct 30, 2015 at 12:38 AM, Andrew F. Davis <afd@ti.com> wrote:
 
-I noticed a couple more coding style issues in this patch than elsewhere, so here
-is a slightly more detailed review.
+> This patch adds support for the TPS65912 PMIC GPIOs.
+>
+> TPS65912 has five configurable GPIOs that can be used for several
+> purposes.
+>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-> +static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy, int lock)
-> +{
-> +	struct sas_ha_struct *sas_ha = sas_phy->ha;
-> +	struct hisi_hba *hisi_hba = NULL;
-> +	int i = 0;
-> +	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
-> +	struct asd_sas_port *sas_port = sas_phy->port;
-> +	struct hisi_sas_port *port;
-> +	unsigned long flags = 0;
+This looks like a fine driver, can't really see anything wrong with it so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Here and in general, please avoid initializing local variables
-to zero, as that prevents gcc from warning about uses that
-come before the real initialization.
+> +#define to_tps65912_gpio(gc) container_of(gc, struct tps65912_gpio, gpio_chip)
 
-The flags that get passed into spin_lock_irqsave() are architecture
-specific, so you cannot rely on '0' to have a particular meaning.
+I would rewrite that to static inline however.
 
-> +	if (!sas_port)
-> +		return;
-> +
-> +	while (sas_ha->sas_phy[i]) {
+Lee can take this into the MFD tree with my review-tag if he wants.
 
-Using a for() loop would avoid the initialization here.
-
-> +		if (sas_ha->sas_phy[i] == sas_phy) {
-> +			hisi_hba = (struct hisi_hba *)sas_ha->lldd_ha;
-
-lldd_ha is a void pointer, so you don't need a cast.
-
-> +			port = &hisi_hba->port[i];
-> +			break;
-> +		}
-> +		i++;
-> +	}
-
-The loop is really odd, as you apparently only try to find the
-array index to a pointer you already have. Is there no space for
-driver-specific data in 'asd_sas_phy'? If there is, just point to
-per-phy structure that you define yourself and put the index into
-that structure. I believe you already have a struct like that.
-
-> +	if (hisi_hba == NULL) {
-
-When checking a pointer for validity, do not compare against
-NULL, but write this as 'if (!hisi_hba)', which is the more
-normal coding style.
-
-> +		pr_err("%s: could not find hba\n", __func__);
-> +		return;
-> +	}
-
-Better use dev_err() to print the device name, but remove the __func__
-argument. Again, when you have the per-phy structure, put a pointer
-to the device in there.
-
-> +
-> +	if (lock)
-> +		spin_lock_irqsave(&hisi_hba->lock, flags);
-> +	port->port_attached = 1;
-> +	port->id = phy->port_id;
-> +	phy->port = port;
-> +	sas_port->lldd_port = port;
-> +
-> +	if (lock)
-> +		spin_unlock_irqrestore(&hisi_hba->lock, flags);
-> +}
-
-This breaks some checking tools that try to validate the uses of
-locks. Better wrap the function in another one depending on the
-caller. When using spinlocks in general, it's also better to replace
-the "I have no clue where I'm called from" spin_lock_irqsave()
-call with either spin_lock() or spin_lock_irq() if at all possible.
-
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
