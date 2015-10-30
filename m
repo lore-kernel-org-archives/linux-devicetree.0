@@ -1,117 +1,87 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Fri, 30 Oct 2015 15:30:06 +0900
-Message-ID: <56330E6E.50003@samsung.com>
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: RE: [PATCH v4 2/4] ARM: dts: Add SROMc to Exynos 5410
+Date: Fri, 30 Oct 2015 09:41:15 +0300
+Message-ID: <009f01d112dd$fab40830$f01c1890$@samsung.com>
 References: <cover.1446122247.git.p.fedin@samsung.com>
- <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
+ <eafa355058ff500a72ff2e3408ab635954467a76.1446122247.git.p.fedin@samsung.com>
+ <CAGcde9EXfe0amqoTOwgKi-Y6=4mRcEbZrA=as-BxzfMv3ntAhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAGcde9EXfe0amqoTOwgKi-Y6=4mRcEbZrA=as-BxzfMv3ntAhQ@mail.gmail.com>
+Content-language: ru
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Pankaj Dubey' <pankaj.dubey@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29.10.2015 21:42, Pavel Fedin wrote:
-> Add documentation for new subnode properties, allowing bank configuration.
-> Based on u-boot implementation, but heavily reworked.
+ Hello!
 
-Please, carefully look at:
-Documentation/devicetree/bindings/net/gpmc-eth.txt
-Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> -----Original Message-----
+> From: linux-samsung-soc-owner@vger.kernel.org [mailto:linux-samsung-soc-owner@vger.kernel.org]
+> On Behalf Of Pankaj Dubey
+> Sent: Thursday, October 29, 2015 8:28 PM
+> To: Pavel Fedin
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-soc;
+> linux-kernel@vger.kernel.org; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala;
+> Kukjin Kim; Krzysztof Kozlowski
+> Subject: Re: [PATCH v4 2/4] ARM: dts: Add SROMc to Exynos 5410
+> 
+> Hi Pavel,
+> 
+> On 29 October 2015 at 18:12, Pavel Fedin <p.fedin@samsung.com> wrote:
+> > This machine uses own SoC device tree file, add missing part.
+> >
+> > Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos5410.dtsi | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+> > index 4603356..da6a8fa0e 100644
+> > --- a/arch/arm/boot/dts/exynos5410.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5410.dtsi
+> > @@ -101,6 +101,15 @@
+> >                         reg = <0x10000000 0x100>;
+> >                 };
+> >
+> > +               sromc: sromc@12250000 {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +                       ranges;
+> > +
+> 
+> We do not need to specify these three properties as they are already
+> present in parent node "soc".
 
-1. Try to re-use existing bindings. Although I see existing bank-width
-and gpmc,device-width but yours samsung,srom-data-width seems better.
-Maybe there are other to re-use?
-
-2. The array of "PMC, Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs" is poorly
-extendable and not very descriptive/readable. You mapped directly device
-register which is the easier way for the driver but that is not the
-purpose of binding.
-
-3. Please provide ranges for valid values and units.
-
-4. PMC is not a timing.
-
-I doubt that TI GPMC could be used in Exynos SROM but please look at it
-and get useful stuff from it.
-
-Best regards,
-Krzysztof
+ We do, otherwise dtc complains about defaults of #address-cells = 2 and #size-cells=1, and without empty "ranges" subnode's resources are not correctly translated.
 
 > 
-> Signed-off-by: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../bindings/arm/samsung/exynos-srom.txt           | 50 +++++++++++++++++++++-
->  1 file changed, 48 insertions(+), 2 deletions(-)
+> > +                       compatible = "samsung,exynos-srom";
+> > +                       reg = <0x12250000 0x14>;
+> > +               };
+> > +
+> >                 pmu_system_controller: system-controller@10040000 {
+> >                         compatible = "samsung,exynos5410-pmu", "syscon";
+> >                         reg = <0x10040000 0x5000>;
+> > @@ -133,6 +142,12 @@
+> >                                                 <10 &gic 0 130 0>,
+> >                                                 <11 &gic 0 131 0>;
+> >                         };
+> > +
+> > +                       arch_timer {
+> > +                               compatible = "arm,armv7-timer";
+> > +                               clock-frequency = <24000000>;
+> > +                       };
+> > +
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> index 33886d5..02ecc7f 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> @@ -5,8 +5,54 @@ Required properties:
->  
->  - reg: offset and length of the register set
->  
-> -Example:
-> +- #address-cells, #size-cells : should be '1' if the device has sub-nodes
-> +				with 'reg' property.
-> +- ranges: allows valid 1:1 translation between child's address space and
-> +	  parent's address space
-> +
-> +Sub-nodes:
-> +The SROM controller can be used to attach external peripherials. In this case
-> +device nodes should be added as subnodes to the SROMc node. These subnodes,
-> +except regular device specification, should contain the following properties,
-> +describing configuration of the relevant SROM bank:
-> +
-> +Required properties:
-> +- samsung,srom-bank : bank number (0 - 3)
-> +
-> +- samsung,srom-timing : array of 7 integers: PMC, Tacp, Tcah, Tcoh, Tacc, Tcos,
-> +			Tacs
-> +
-> +Optional properties:
-> +- samsung,srom-data-width : data width in bytes (1 or 2). If omitted, default
-> +			    of 1 is used.
-> +
-> +Example: basic definition, no banks are configured
->  	sromc@12570000 {
->  		compatible = "samsung,exynos-srom";
-> -		reg = <0x12570000 0x10>;
-> +		reg = <0x12570000 0x14>;
-> +	};
-> +
-> +Example: SROMc with smsc 911x ethernet chip on bank 3
-> +	sromc@12570000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		compatible = "samsung,exynos-srom";
-> +		reg = <0x12570000 0x14>;
-> +
-> +		ethernet@07000000 {
-> +			compatible = "smsc,lan9115";
-> +			reg = <0x07000000 0x10000>;
-> +			phy-mode = "mii";
-> +			interrupt-parent = <&gpx0>;
-> +			interrupts = <5 8>;
-> +			reg-io-width = <2>;
-> +			smsc,irq-push-pull;
-> +			smsc,force-internal-phy;
-> +
-> +			samsung,srom-bank = <3>;
-> +			samsung,srom-data-width = <2>;
-> +			samsung,srom-timing = <1 9 12 1 9 1 1>;
-> +		};
->  	};
-> 
+> This change should not be part of this patch.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Ooops, thank you very much, this should not have been here at all. This is a leftover from my experiments, i was tracing DT parsing code and added it just for test, to see why timer gets probed as a subnode.
+ Just forgot to remove it afterwards and it slipped into the patch.
+
+Kind regards,
+Pavel Fedin
+Expert Engineer
+Samsung Electronics Research center Russia
