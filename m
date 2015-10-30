@@ -1,32 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] Input: tsc2005 - Add support for tsc2004
-Date: Fri, 30 Oct 2015 13:59:13 +0100
-Message-ID: <4699994.s366ePcOrS@wuerfel>
-References: <201510280724.dKfeR76E%fengguang.wu@intel.com> <20151028054829.GA13066@deathstar> <20151028061258.GD16963@localhost>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] arm64: renesas: salvator-x: Setup ethernet0 alias for U-Boot
+Date: Fri, 30 Oct 2015 15:06:48 +0200
+Message-ID: <5186464.J3dvUFu6c7@avalon>
+References: <1446197120-4640-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20151028061258.GD16963@localhost>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Michael Welling <mwelling@ieee.org>, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1446197120-4640-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 October 2015 23:12:58 Dmitry Torokhov wrote:
-> > Yes it does.
-> > 
-> > I have been told that using wildcard names is bad in other subsystems.
-> > Perhaps tsc200x-core.c should be called something else because it has
-> > nothing to do with the tsc2007 but it is covered by the wildcard.
-> > 
-> > You you think this is a big deal?
+Hi Geert,
+
+Thank you for the patch.
+
+On Friday 30 October 2015 10:25:20 Geert Uytterhoeven wrote:
+> Add an ethernet0 alias for the wired network card so that U-Boot can
+> find the device-node and add an appropriate "local-mac-address"
+> property.
+
+I like that :-) Can U-Boot add the property ? I thought it needed a 
+placeholder.
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> No I do not.
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+> b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts index
+> 86b70ce3d0599d6e..d16506338f020427 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+> @@ -41,6 +41,7 @@
+>  	aliases {
+>  		serial0 = &scif2;
+>  		serial1 = &scif1;
+> +		ethernet0 = &avb;
+>  	};
+> 
+>  	chosen {
 
-To clarify: using wildcards in DT bindings is bad, because that is
-the only way to clearly identify small differences between related
-devices there. In file names or identifiers in the kernel, there is
-no problem.
+-- 
+Regards,
 
-	Arnd
+Laurent Pinchart
+
