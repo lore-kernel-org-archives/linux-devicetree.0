@@ -1,53 +1,77 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 5/5] gpio: tps65912: Add GPIO driver for the TPS65912
- PMIC
-Date: Fri, 30 Oct 2015 17:10:45 +0000
-Message-ID: <20151030171045.GA4058@x1>
-References: <1446161922-8755-1-git-send-email-afd@ti.com>
- <1446161922-8755-6-git-send-email-afd@ti.com>
- <CACRpkdb+C1M=cFKDNbJW74hUEA=87aA_weR0u22-9bDKgif6xQ@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc configuration
+Date: Fri, 30 Oct 2015 12:15:40 -0500
+Message-ID: <CAL_JsqKhyB7d+HQ08241-za-7vHbU49TiWJHM2vrp6jVVh4h=A@mail.gmail.com>
+References: <cover.1446122247.git.p.fedin@samsung.com> <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
+ <56330E6E.50003@samsung.com> <00a101d112e0$537a18e0$fa6e4aa0$@samsung.com> <56331ADB.1070602@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb+C1M=cFKDNbJW74hUEA=87aA_weR0u22-9bDKgif6xQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56331ADB.1070602@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Pavel Fedin <p.fedin@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Oct 2015, Linus Walleij wrote:
+On Fri, Oct 30, 2015 at 2:23 AM, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On 30.10.2015 15:58, Pavel Fedin wrote:
+>>  Hello!
+>>
+>>>> Add documentation for new subnode properties, allowing bank configuration.
+>>>> Based on u-boot implementation, but heavily reworked.
+>>>
+>>> Please, carefully look at:
+>>> Documentation/devicetree/bindings/net/gpmc-eth.txt
+>>> Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>>
+>>  Thank you very much. Indeed, this looks very similar. By the way, should i document smsc over sromc in the same manner, writing
+>> devicetree/bindings/net/sromc-eth.txt?
+>>
+>>  This is a short reply for now, i'll make longer one (or just a new version) after studying these existing bindings and trying to
+>> apply them.
+>
+> Existing SROMC bindings document is small so one document for everything
+> should be sufficient. This can be always split if new type of devices
+> will be using SROMC (BTW, do you know of any other devices using SROMC
+> on Exynos?).
+>
+>>
+>>  Pankaj:
+>>
+>>>> +&sromc {
+>>>> +       pinctrl-names = "default";
+>>>> +       pinctrl-0 = <&srom_ctl>, <&srom_ebi>;
+>>>> +
+>>>> +       ethernet@07000000 {
+>>>> +               compatible = "smsc,lan9115";
+>>>> +               reg = <0x07000000 0x10000>;
+>>>> +               phy-mode = "mii";
+>>>> +               interrupt-parent = <&gpx0>;
+>>>> +               interrupts = <5 8>;
+>>>> +               reg-io-width = <2>;
+>>>> +               smsc,irq-push-pull;
+>>>> +               smsc,force-internal-phy;
+>>>> +
+>>>> +               samsung,srom-bank = <3>;
+>>>> +               samsung,srom-data-width = <2>;
+>>>> +               samsung,srom-timing = <1 9 12 1 9 1 1>;
+>>>
+>>> I think this is not correct. We can't change binding of "smsc,lan9115"
+>>> which is already documented here [1]. These samsung specific srom
+>>> properties should be in srom node or its subnode, but not in this way.
+>>
+>>  So, if you look at gpmc-eth.txt, you'll see that this approach is perfectly valid (this is a reply to another msg, just don't want
+>> to post one more single-line reply).
+>
+>
+> Yes, the binding of smsc,lan9115 is not changed.
+>
+> Putting srom properties in separate bank node would be good also but
+> then some mapping (connection) between ethernet and bank should be added
+> probably...
 
-> On Fri, Oct 30, 2015 at 12:38 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
->=20
-> > This patch adds support for the TPS65912 PMIC GPIOs.
-> >
-> > TPS65912 has five configurable GPIOs that can be used for several
-> > purposes.
-> >
-> > Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
->=20
-> This looks like a fine driver, can't really see anything wrong with i=
-t so:
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> > +#define to_tps65912_gpio(gc) container_of(gc, struct tps65912_gpio=
-, gpio_chip)
->=20
-> I would rewrite that to static inline however.
->=20
-> Lee can take this into the MFD tree with my review-tag if he wants.
+Is this to get some data needed by the ethernet from the ROM? We have
+the nvmem binding to support that.
 
-Please fix this, then resubmit the set with Acks/Reviewed-by's applied.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
