@@ -1,82 +1,114 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Fri, 30 Oct 2015 18:25:37 +0000
-Message-ID: <20151030182537.GB30791@leverpostej>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
- <20151030150025.GF31073@leverpostej>
- <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
- <5633B207.5030505@codeaurora.org>
- <CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] Documentation: dt: Add bindings for Secure-only devices
+Date: Fri, 30 Oct 2015 13:28:39 -0500
+Message-ID: <CAL_JsqJz+w2SYEBLVGdZNS6J1tmt5VWV0q1G_Z2rgFfch6J=2A@mail.gmail.com>
+References: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Maydell <peter.maydell@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 08:18:49PM +0200, Andy Shevchenko wrote:
-> On Fri, Oct 30, 2015 at 8:08 PM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> 
-> >> The ACPI tables DSDT and CSRT (more info here:
-> >> http://www.acpi.info/links.htm) defines properties.
-> >>
-> >> DSDT:
-> >>   per DMAC: the resources
-> >>   per client: FixedDMA descriptor that contains channel / request line
-> >> pair.
-> >>
-> >> CSRT:
-> >>   necessary table to map which DMAC provides which request line, thus
-> >> request line numbering are global on platform.
-> >>
-> >> When DMAC driver is probed in the running system it should call as
-> >> well registration function from acpi-dma.c.
-> >>
-> >> All clients when use new DMA slave API gets channel automatically
-> >> based on their FixedDMA property.
-> >>
-> >> So, above is how it should be done. Didn't actually checked what this
-> >> driver does.
-> >>
-> > I was going to reply to all the questions in one pass but let me handle
-> > piece by piece.
-> >
-> > Here are some facts.
-> > - This hardware supports memcpy and memset only.
-> > - Memset feature was removed from the kernel sometime around 3.14. So no
-> > memset support in this driver either.
-> > - The hardware does not support DMA slave support
-> > - The goal is to provide an interface to DMA engine framework for memcpy
-> > optimization so that the rest of the kernel drivers and applications make
-> > use of the hardware.
-> >
-> 
-> > CSRT is an Intel specific ACPI table for slave devices.
-> 
-> Wrong.
-> It was designed by Microsoft to support multiple controllers, in
-> particular DMACs.
-> Have you read that document I posted link to?
-> 
-> > It was decided by
-> > Linaro that CSRT will not be supported for ARM64.
-> 
-> Interesting, ARM64 platforms are not going to have more than one DMAC
-> per system?
+On Thu, Oct 29, 2015 at 9:01 AM, Peter Maydell <peter.maydell@linaro.org> wrote:
+> The existing device tree bindings assume that we are only trying to
+> describe a single address space with a device tree (for ARM, either
+> the Normal or the Secure world). Some uses for device tree need to
+> describe both Normal and Secure worlds in a single device tree. Add
+> documentation of how to do this, by adding extra properties which
+> describe when a device appears differently in the two worlds or when
+> it only appears in one of them.
+>
+> The binding describes the general principles for adding new
+> properties describing the secure world, but for now we only need a
+> single new property, "secure-status", which can be used to annotate
+> devices to indicate that they are only visible in one of the two
+> worlds.
+>
+> The primary expected use of this binding is for a virtual machine
+> like QEMU to describe the VM layout to a TrustZone aware firmware
+> (which would then use the secure-only devices itself, and pass the DT
+> on to a kernel running in the non-secure world, which ignores the
+> secure-only devices and uses the rest).
+>
+> Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
+> ---
+> This binding doesn't affect the kernel itself, but the kernel
+> Documentation/ tree is the de-facto current place where all DT
+> bindings are documented, so Grant suggested this was the right
+> place to send a doc patch.
+>
+>  Documentation/devicetree/bindings/arm/secure.txt | 41 ++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+> new file mode 100644
+> index 0000000..4129fba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+> @@ -0,0 +1,41 @@
+> +* ARM Secure world bindings
+> +
+> +ARM CPUs with TrustZone support have two distinct address spaces,
+> +"Normal" and "Secure". Most devicetree consumers (including the Linux
+> +kernel) are not TrustZone aware and run entirely in either the Normal
+> +world or the Secure world. However some devicetree consumers are
+> +TrustZone aware and need to be able to determine whether devices are
+> +visible only in the Secure address space, only in the Normal address
+> +space, or visible in both. (One example of that situation would be a
+> +virtual machine which boots Secure firmware and wants to tell the
+> +firmware about the layout of the machine via devicetree.)
+> +
+> +The general principle of the naming scheme for Secure world bindings
+> +is that any property that needs a different value in the Secure world
+> +can be supported by prefixing the property name with "secure-". So for
+> +instance "secure-reg" would override "reg". If there is no "secure-"
+> +property then the Secure world value is the same as specified for the
+> +Normal world by the non-prefixed property. However, only the
+> +properties listed below may validly have "secure-" versions; this list
+> +will be enlarged on a case-by-case basis.
 
-I cannot imagine that being true, and I don't see why Linaro would
-decide such a thing.
+Certainly having lots of properties prefixed this way is not what I
+would like to see.
 
-It does appear that it's not relevant to this device and driver, given
-the lack of clients, unless I've misunderstood?
+> +Defining the bindings in this way means that a device tree which has
+> +been annotated to indicate the presence of Secure-only devices can
+> +still be processed unmodified by existing Non-secure software (and in
+> +particular by the kernel).
+> +
+> +Note that it is still valid for bindings intended for purely Secure
+> +world consumers (like kernels that run entirely in Secure) to simply
+> +describe the view of Secure world using the standard bindings. These
+> +secure- bindings only need to be used where both the Secure and Normal
+> +world views need to be described in a single device tree.
+> +
+> +Valid Secure world properties:
+> +
+> +- secure-status : specifies whether the device is present and usable
+> +  in the secure world. The combination of this with "status" allows
+> +  the various possible combinations of device visibility to be
+> +  specified:
+> +   status = "okay";                             // visible in S and NS
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I assume neither property present or both okay also mean the same.
+
+status = "okay"; secure-status = "okay";
+
+We should be explicit.
+
+> +   status = "disabled"; secure-status = "okay"; // S-only
+> +   status = "okay"; secure-status = "disabled"; // NS-only
+
+In HKG when we discussed this, 'status = "secure"' was the proposal.
+That would be simpler:
+
+S world can use "okay" or "secure"
+NS world can use "okay" or no property.
+
+That leaves out the case of disabled in S and enabled for NS. We could
+want that for s/w reasons, but can we have h/w like that?
+
+Rob
