@@ -1,28 +1,49 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] doc: dt: mtd: support partitions in a special
- 'partitions' subnode
-Date: Fri, 30 Oct 2015 17:23:26 -0700
-Message-ID: <20151031002326.GM13239@google.com>
-References: <1446072486-145169-1-git-send-email-computersforpeace@gmail.com>
+From: bjorn@kryo.se
+Subject: [PATCH 2/3] panel/panasonic-vvx10f034n00: Add DT bindings
+Date: Fri, 30 Oct 2015 17:38:27 -0700
+Message-ID: <1446251908-2603-2-git-send-email-bjorn@kryo.se>
+References: <1446251908-2603-1-git-send-email-bjorn@kryo.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446072486-145169-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1446251908-2603-1-git-send-email-bjorn@kryo.se>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 03:48:06PM -0700, Brian Norris wrote:
-> From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> To avoid conflict with other drivers using subnodes of the mtd device
-> create only one ofpart-specific node rather than any number of
-> arbitrary partition subnodes.
-> 
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Applied to l2-mtd.git
+RnJvbTogV2VybmVyIEpvaGFuc3NvbiA8d2VybmVyLmpvaGFuc3NvbkBzb255bW9iaWxlLmNvbT4K
+ClRoaXMgcGF0Y2ggYWRkcyBiaW5kaW5ncyBmb3IgdGhlIFBhbmFzb25pYyBWVlgxMEYwMzROMDAK
+V1VYR0EgcGFuZWwuCgpTaWduZWQtb2ZmLWJ5OiBXZXJuZXIgSm9oYW5zc29uIDx3ZXJuZXIuam9o
+YW5zc29uQHNvbnltb2JpbGUuY29tPgpTaWduZWQtb2ZmLWJ5OiBCam9ybiBBbmRlcnNzb24gPGJq
+b3JuLmFuZGVyc3NvbkBzb255bW9iaWxlLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvcGFuZWwvcGFu
+YXNvbmljLHZ2eDEwZjAzNG4wMC50eHQgICAgICAgIHwgMjAgKysrKysrKysrKysrKysrKysrKysK
+IDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL3BhbmFzb25pYyx2dngxMGYwMzRu
+MDAudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bh
+bmVsL3BhbmFzb25pYyx2dngxMGYwMzRuMDAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BhbmVsL3BhbmFzb25pYyx2dngxMGYwMzRuMDAudHh0Cm5ldyBmaWxlIG1vZGUg
+MTAwNjQ0CmluZGV4IDAwMDAwMDAuLjM3ZGVkZjYKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvcGFuYXNvbmljLHZ2eDEwZjAzNG4wMC50
+eHQKQEAgLTAsMCArMSwyMCBAQAorUGFuYXNvbmljIDEwIiBXVVhHQSBURlQgTENEIHBhbmVsCisK
+K1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAicGFuYXNvbmlj
+LHZ2eDEwZjAzNG4wMCIKKy0gcmVnOiBEU0kgdmlydHVhbCBjaGFubmVsIG9mIHRoZSBwZXJpcGhl
+cmFsCistIHBvd2VyLXN1cHBseTogcGhhbmRsZSBvZiB0aGUgcmVndWxhdG9yIHRoYXQgcHJvdmlk
+ZXMgdGhlIHN1cHBseSB2b2x0YWdlCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGJhY2tsaWdo
+dDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwK
+KworRXhhbXBsZToKKworCW1kc3NfZHNpQGZkOTIyODAwIHsKKwkJcGFuZWxAMCB7CisJCQljb21w
+YXRpYmxlID0gInBhbmFzb25pYyx2dngxMGYwMzRuMDAiOworCQkJcmVnID0gPDA+OworCQkJcG93
+ZXItc3VwcGx5ID0gPCZ2cmVnX3ZzcD47CisJCQliYWNrbGlnaHQgPSA8JmxwODU2Nl93bGVkPjsK
+KwkJfTsKKwl9OwotLSAKMi4zLjIgKEFwcGxlIEdpdC01NSkKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
