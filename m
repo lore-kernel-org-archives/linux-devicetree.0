@@ -1,28 +1,47 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 1/3] ahci: qoriq: Rename LS2085A SoC support code to
- LS2080A
-Date: Sat, 31 Oct 2015 09:53:13 +0900
-Message-ID: <20151031005313.GA3582@mtj.duckdns.org>
-References: <1446099737-41854-1-git-send-email-Yuantian.Tang@freescale.com>
+From: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH RESEND v2 net-next] net: hisilicon: updates HNS config
+ and documents
+Date: Sat, 31 Oct 2015 09:40:16 +0800
+Message-ID: <56341C00.8080303@hisilicon.com>
+References: <1445944594-244149-1-git-send-email-huangdaode@hisilicon.com> <4549013.K7sn8Pca5b@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446099737-41854-1-git-send-email-Yuantian.Tang@freescale.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tang Yuantian <Yuantian.Tang@freescale.com>
-Cc: hdegoede@redhat.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4549013.K7sn8Pca5b@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 29, 2015 at 02:22:15PM +0800, Tang Yuantian wrote:
-> Freescale is renaming the LS2085A SoC to LS2080A.
-> This patch addresses the same.
-> 
-> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
-
-Applied 1-3 to libata/for-4.4 with cosmetic updates.
-
-Thanks.
+On 2015/10/30 22:20, Arnd Bergmann wrote:
+> On Tuesday 27 October 2015 19:16:34 huangdaode wrote:
+>>            mdio@803c0000 {
+>>                      #address-cells = <1>;
+>>                      #size-cells = <0>;
+>> -                   compatible = "hisilicon,mdio","hisilicon,hns-mdio";
+>> +                   compatible = "hisilicon,hns-mdio","hisilicon,mdio";
+>>                      reg = <0x0 0x803c0000 0x0 0x10000>;
+>>   
+>>
+> Does "hisilicon,mdio" actually have a specific meaning? Is that just there
+> for legacy reasons?
+>
+> 	Arnd
+>
+> .
+>
+hi Arnd,
+"hisilicon,mdio" is  the gernerical configuation compatible  for the 
+default hisilicon chip,
+We use generic hisilicon since our MDIO/PHY is same across flavour of SoCs.
 
 -- 
-tejun
+Best Regards
+Daode Huang
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
