@@ -1,34 +1,31 @@
 From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] Add Freescale LS1043a device tree
-Date: Sat, 31 Oct 2015 01:59:15 +0000
-Message-ID: <20151031015915.GH1722@localhost>
-References: <1446153126-6219-1-git-send-email-leoli@freescale.com>
+Subject: Re: [PATCH] ARM: dts: uniphier: add system-bus-controller nodes
+Date: Sat, 31 Oct 2015 01:58:02 +0000
+Message-ID: <20151031015802.GG1722@localhost>
+References: <1445916065-13118-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446153126-6219-1-git-send-email-leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1445916065-13118-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 29, 2015 at 04:12:03PM -0500, Li Yang wrote:
-> Hi ARM SoC maintainers,
+On Tue, Oct 27, 2015 at 12:21:05PM +0900, Masahiro Yamada wrote:
+> The System Bus Controller block has two register regions,
+> but having only the second one in a separate node was not nice.
 > 
-> After several rounds of review I think the patch series is generally in
-> good shape.  Can someone from the ARM maintainers group help to pick
-> these patches up?
+> Replace it with a new node with two register regions in it.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
-Ah! I saw your question on IRC and I went out to reply to one of the patches in
-the V6 series based on that.
+Applied even though it's very late.
 
-It's very very late in the release cycle, so this is material that should be
-queued up for the next release instead. Please send it to us after -rc1 is out
-and we'll be happy to queue it up for 4.5.
-
-
-Thanks!
+Based on the contents in the DT, the chips seem to share several identical
+blocks at the same addresses. It could be worth trying to consolidate some
+of the DT contents in a shared dtsi that contains these blocks.
 
 
 -Olof
