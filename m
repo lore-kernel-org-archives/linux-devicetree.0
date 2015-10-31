@@ -1,231 +1,99 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] devicetree: mfd: Add binding for the TI LM3533
-Date: Sat, 31 Oct 2015 10:08:01 +0000
-Message-ID: <56349301.5030001@kernel.org>
-References: <1446249040-16552-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 03/19] clk: sunxi: Add TCON channel0 clock
+Date: Sat, 31 Oct 2015 18:19:59 +0800
+Message-ID: <CAGb2v66hjH_GpkXpHdpCM+mUv-CgvqxJNFzsoRJ5MWp04b+jew@mail.gmail.com>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-4-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446249040-16552-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1446214865-3972-4-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Wynter Woods <wynter@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 30/10/15 23:50, Bjorn Andersson wrote:
-> Add the binding for the Texas Instruments LM3533 lighting power
-> solution.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-For the ALS bits.  It does feel like the als resistance might become
-a generic parameter in the long term, but it's not common enough to
-conclude that now.
+Hi,
 
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> The TCON is a controller generating the timings to output videos signals,
+> acting like both a CRTC and an encoder.
+>
+> It has two channels depending on the output, each channel being driven by
+> its own clock (and own clock controller).
+>
+> Add a driver for the channel 0 clock.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > ---
-> 
-> Changes since v2:
-> - Drop vendor prefix of vendor properties
-> - Specify unit of various properties
-> - Fix reference paths
-> 
-> Changes since v1:
-> - Added unit to boost-freq and als-resistance (as the frequency now comes with
->   a unit specifier I changed it to be expressed in kHz)
-> 
->  Documentation/devicetree/bindings/mfd/lm3533.txt | 184 +++++++++++++++++++++++
->  1 file changed, 184 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
+>  drivers/clk/sunxi/Makefile             |   1 +
+>  drivers/clk/sunxi/clk-sun4i-tcon-ch0.c | 173 +++++++++++++++++++++++++++++++++
+>  2 files changed, 174 insertions(+)
+>  create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
+>
+> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+> index 40c32ffd912c..7821b2b63d58 100644
+> --- a/drivers/clk/sunxi/Makefile
+> +++ b/drivers/clk/sunxi/Makefile
+> @@ -12,6 +12,7 @@ obj-y += clk-mod0.o
+>  obj-y += clk-simple-gates.o
+>  obj-y += clk-sun4i-display.o
+>  obj-y += clk-sun4i-pll3.o
+> +obj-y += clk-sun4i-tcon-ch0.o
+>  obj-y += clk-sun8i-mbus.o
+>  obj-y += clk-sun9i-core.o
+>  obj-y += clk-sun9i-mmc.o
+> diff --git a/drivers/clk/sunxi/clk-sun4i-tcon-ch0.c b/drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
 > new file mode 100644
-> index 000000000000..963cee153a4d
+> index 000000000000..db10cfb94a1d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
-> @@ -0,0 +1,184 @@
-> +Texas Instruments LM3533 binding
+> +++ b/drivers/clk/sunxi/clk-sun4i-tcon-ch0.c
+> @@ -0,0 +1,173 @@
+> +/*
+> + * Copyright 2015 Maxime Ripard
+> + *
+> + * Maxime Ripard <maxime.ripard@free-electrons.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 > +
-> +This binding describes the Texas Instruments LM3533, a lighting power solution
-> +for smartphone handsets. The common properties are described directly in the
-> +node, while each individual component are described in an optional subnode.
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be:
-> +		    "ti,lm3533"
+> +#define SUN4I_A10_TCON_CH0_PARENTS     4
 > +
-> +- reg:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: i2c address of the LM3533 chip
+> +#define SUN4I_A10_TCON_CH0_GATE_BIT    31
+> +#define SUN4I_A10_TCON_CH0_RESET_SHIFT 29
+
+This is sun5i specific.
+
+A10s manual says bit 30 is the LCD reset, while bit 29 is the TV encoder reset.
+A13/R8 don't mention TCON_CH0 clock. A10/A20 have no separate TV encoder reset.
+
+Please rename the clock.
+
+ChenYu
+
+> +#define SUN4I_A10_TCON_CH0_MUX_MASK    3
+> +#define SUN4I_A10_TCON_CH0_MUX_SHIFT   24
 > +
-> +- als-supply:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: reference to regulator powering the V_als input; as
-> +		    specified in "../regulator/regulator.txt"
+> +struct reset_data {
+> +       void __iomem                    *reg;
+> +       spinlock_t                      *lock;
+> +       struct reset_controller_dev     rcdev;
+> +};
 > +
-> +- hwen-gpios:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: reference to gpio pin connected to the HWEN input; as
-> +		    specified in "../gpio/gpio.txt"
+> +static DEFINE_SPINLOCK(sun4i_a10_tcon_ch0_lock);
 > +
-> +- ti,boost-freq-hz:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: switch-frequency of the boost converter, must be either:
-> +		    500000 or 1000000
-> +
-> +- ti,boost-ovp-mv:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: over-voltage protection limit, in mV. Must be one of:
-> +		    16000, 24000, 32000 or 40000
-> +
-> +- #address-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 1
-> +
-> +- #size-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 0
-> +
-> += ALS SUBNODE
-> +The ambient light sensor subnode must be named "als", it carries the light
-> +sensor related properties.
-> +
-> +- ti,als-resistance-ohm:
-> +	Usage: required (unless ti,pwm-mode is specified)
-> +	Value type: <u32>
-> +	Definition: specifies the resistor value (R_als), in Ohm. Valid values
-> +		    ranges from 200000 to 1574 Ohm.
-> +
-> +- ti,pwm-mode:
-> +	Usage: optional
-> +	Value type: <empty>
-> +	Definition: specifies, if present, that the als should operate in PWM
-> +		    mode - rather than analog mode
-> +
-> += BACKLIGHT NODES
-> +Backlight subnodes must be named "backlight", they carry the backlight related
-> +properties.
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: specifies which of the two backlights this node corresponds
-> +		    to
-> +
-> +- default-brightness:
-> +	Usage: optional
-> +	Value type: <32>
-> +	Definition: specifies the default brightness for the backlight, in
-> +		    units of brightness [0-255]
-> +
-> +- label:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: specifies a name of this backlight
-> +
-> +- led-max-microamp:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: specifies the max current for this backlight, in uA, as
-> +		    described in "../leds/common.txt"
-> +
-> +- ti,pwm-zones:
-> +	Usage: optional
-> +	Value type: <u32 list>
-> +	Definition: lists the ALS zones to be PWM controlled for this backlight,
-> +		    the values in the list are in the range [0 - 4]
-> +
-> += LED NODES
-> +LED subnodes must be named "led", they carry the LED related properties.
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: specifies which of the four LEDs this node corresponds to
-> +
-> +- linux,default-trigger:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: specifies the default trigger for the LED, as described in
-> +		    "../leds/common.txt"
-> +
-> +- label:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: specifies a name of this LED, as described in
-> +		    "../leds/common.txt"
-> +
-> +- led-max-microamp:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: specifies the max current for this LED, in uA, as described
-> +		    in "../leds/common.txt"
-> +
-> +- ti,pwm-zones:
-> +	Usage: optional
-> +	Value type: <u32 list>
-> +	Definition: lists the ALS zones to be PWM controlled for this LED, the
-> +		    values in the list are in the range [0 - 4]
-> +
-> += EXAMPLE
-> +
-> +i2c@12460000 {
-> +	compatible = "qcom,i2c-qup-v1.1.1";
-> +	...
-> +
-> +	lm3533@36 {
-> +		compatible = "ti,lm3533";
-> +		reg = <0x36>;
-> +
-> +		als-supply = <&pm8921_l11>;
-> +		hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
-> +
-> +		ti,boost-freq-hz = <500000>;
-> +		ti,boost-ovp-mv = <24000>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		als {
-> +			ti,als-resistance-ohm = <200000>;
-> +		};
-> +
-> +		backlight@0 {
-> +			reg = <0>;
-> +			label = "backlight";
-> +
-> +			led-max-microamp = <20200>;
-> +		};
-> +
-> +		led@0 {
-> +			reg = <0>;
-> +			label = "red";
-> +
-> +			led-max-microamp = <5000>;
-> +		};
-> +
-> +		led@1 {
-> +			reg = <1>;
-> +			label = "green";
-> +
-> +			led-max-microamp = <5000>;
-> +		};
-> +
-> +		led@2 {
-> +			reg = <2>;
-> +			label = "blue";
-> +
-> +			led-max-microamp = <5000>;
-> +		};
-> +	};
-> +
-> 
