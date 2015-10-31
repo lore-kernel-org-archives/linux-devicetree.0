@@ -1,92 +1,48 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 01/19] clk: sunxi: Add display clock
-Date: Sat, 31 Oct 2015 18:28:16 +0800
-Message-ID: <CAGb2v65uzLgKkxKh9RN58w1FZGRJKSbMFmdhZxnRzCdCArBuPw@mail.gmail.com>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-2-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCHv2 1/2] Documentation: ad5592r: Added devicetree bindings
+ documentation
+Date: Sat, 31 Oct 2015 11:03:50 +0000
+Message-ID: <5634A016.4020801@kernel.org>
+References: <1444729080-9937-1-git-send-email-paul.cercueil@analog.com>
+ <562CD9BD.6030206@kernel.org>
+ <CACRpkdatEhs34y3D5evo-_rmG=pPb9LcdNWE+3zgnGqbZFh9hQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBV5P2KYQKGQE3T4VAXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1446214865-3972-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdatEhs34y3D5evo-_rmG=pPb9LcdNWE+3zgnGqbZFh9hQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Paul Cercueil <paul.cercueil@analog.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Antonio Fiol <antonio@fiol.es>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The A10 SoCs and its relatives has a special clock controller to drive the
-> display engines (both frontend and backend).
->
-> Add a driver for it.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/clk/sunxi/Makefile            |   1 +
->  drivers/clk/sunxi/clk-sun4i-display.c | 199 ++++++++++++++++++++++++++++++++++
->  2 files changed, 200 insertions(+)
->  create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
->
-> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> index cb4c299214ce..a9e1a5885846 100644
-> --- a/drivers/clk/sunxi/Makefile
-> +++ b/drivers/clk/sunxi/Makefile
-> @@ -9,6 +9,7 @@ obj-y += clk-a10-mod1.o
->  obj-y += clk-a10-pll2.o
->  obj-y += clk-a20-gmac.o
->  obj-y += clk-mod0.o
-> +obj-y += clk-sun4i-display.o
->  obj-y += clk-simple-gates.o
->  obj-y += clk-sun8i-mbus.o
->  obj-y += clk-sun9i-core.o
-> diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
-> new file mode 100644
-> index 000000000000..f13b095c6d7a
-> --- /dev/null
-> +++ b/drivers/clk/sunxi/clk-sun4i-display.c
-> @@ -0,0 +1,199 @@
-> +/*
-> + * Copyright 2015 Maxime Ripard
-> + *
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_address.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define SUN4I_A10_DISPLAY_PARENTS      3
-
-Can we change this to 4, so we can reuse this for TCON clocks on sun4i/sun7i?
-
-Thanks
-
-ChenYu
-
-> +#define SUN4I_A10_DISPLAY_GATE_BIT     31
-> +#define SUN4I_A10_DISPLAY_RESET_BIT    30
-> +#define SUN4I_A10_DISPLAY_MUX_MASK     3
-> +#define SUN4I_A10_DISPLAY_MUX_SHIFT    24
-> +#define SUN4I_A10_DISPLAY_DIV_WIDTH    4
-> +#define SUN4I_A10_DISPLAY_DIV_SHIFT    0
+On 27/10/15 16:13, Linus Walleij wrote:
+> On Sun, Oct 25, 2015 at 2:31 PM, Jonathan Cameron <jic23@kernel.org> wrote:
+>> On 13/10/15 10:37, Paul Cercueil wrote:
+>>> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
+>> Looks good to me, but as it is a little bit 'different' and we are
+>> defining entirely new generic bindings (the channel modes stuff)
+>> I would like some more input.  It might be overkill but we do
+>> of course have the pinctl framework which covers this sort of
+>> thing... Might be worth considering if using that to get the unified
+>> bindings might make sense here...
+>>
+>> cc'd Linus in case he wants to comment on this.
+>>
+>> It would obviously be a very heavy weight solution to the problem
+>> so I'm far from convinced it makes sense - or even fits the usecase
+>> terrible well.  Just thought I'd mention the possibility.
+> 
+> There is something of a grey area between "definately pin control"
+> and "some extra pin hardware duct-taped to something else".
+> 
+> I guess that is natural, life is full of grey areas...
+> 
+> Basically if there are plenty of pins and functions, local solutions
+> to the problem will not scale. Then it is necessary to go ahead
+> and implement full pin control. Especially for say a big BGA
+> package or so with lots and lots of pins.
+> 
+> It is is a few pins or they just alter between similar functionality
+> (like different graphic modes) I think local solutions are OK.
+Thanks Linus.  Makes sense
