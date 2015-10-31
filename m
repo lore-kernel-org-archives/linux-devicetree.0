@@ -1,223 +1,69 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH v3 1/3] devicetree: mfd: Add binding for the TI LM3533
-Date: Fri, 30 Oct 2015 16:50:38 -0700
-Message-ID: <1446249040-16552-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [REPOST PATCH 0/3] dwc2 patches to allow wakeup on Rockchip rk3288
+Date: Fri, 30 Oct 2015 17:01:22 -0700
+Message-ID: <CAD=FV=UY6F5xGc2LjxOPExkdRe02aWWV6cbMRVx6nt9xEVhDDQ@mail.gmail.com>
+References: <1436207224-21849-1-git-send-email-dianders@chromium.org>
+	<CAD=FV=W-iT48ah4WJDpAGqeNMkcTp3gMMddKYVz0ad-QXVz3fw@mail.gmail.com>
+	<2B3535C5ECE8B5419E3ECBE30077290901DC3A9725@US01WEMBX2.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2B3535C5ECE8B5419E3ECBE30077290901DC3A9725@US01WEMBX2.internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Johan Hovold <jhovold@gmail.com>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: John Youn <John.Youn@synopsys.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Chris Zhong <zyw@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Julius Werner <jwerner@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, Alexandru Stan <amstan@chromium.org>, lyz <lyz@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Petr Mladek <pmladek@suse.cz>, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kever Yang <kever.yang@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Matthew Garrett <mjg59@coreos.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pratyush Anand <pratyush.anand@gmail.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the binding for the Texas Instruments LM3533 lighting power
-solution.
+John,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
+On Mon, Oct 26, 2015 at 7:05 PM, John Youn <John.Youn@synopsys.com> wrote:
+> On 10/21/2015 9:23 AM, Doug Anderson wrote:
+>> John,
+>>
+>> On Mon, Jul 6, 2015 at 11:27 AM, Douglas Anderson <dianders@chromium.org> wrote:
+>>> This series of patches, together with
+>>> <https://patchwork.kernel.org/patch/6652341/> from Chris Zhong and a
+>>> dts change allow us to wake up from a USB device on rk3288 boards.
+>>> The patches were tested on rk3288-jerry in the chromeos-3.14 kernel.
+>>> The chromeos-3.14 kernel tested included a full set of dwc2 backports
+>>> from upstream, so this is expected to function upstream once we get
+>>> everything setup there.
+>>>
+>>>
+>>> Douglas Anderson (3):
+>>>   USB: Export usb_wakeup_enabled_descendants()
+>>>   Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+>>>   USB: dwc2: Don't turn off the usbphy in suspend if wakeup is enabled
+>>>
+>>>  Documentation/devicetree/bindings/usb/dwc2.txt |  4 +++
+>>>  drivers/usb/core/hub.c                         |  7 ++--
+>>>  drivers/usb/dwc2/core.h                        |  2 ++
+>>>  drivers/usb/dwc2/platform.c                    | 45 ++++++++++++++++++++++++--
+>>>  include/linux/usb/hcd.h                        |  5 +++
+>>>  5 files changed, 58 insertions(+), 5 deletions(-)
+>>
+>> This series was posted a while ago.  Do you have any comments on it?
+>> Should I repost it?
+>>
+>> Thanks!
+>>
+>> -Doug
+>>
+>
+>
+> Sorry, I must have missed it earlier.
+>
+> Could you repost based on latest and I'll review.
 
-Changes since v2:
-- Drop vendor prefix of vendor properties
-- Specify unit of various properties
-- Fix reference paths
+I tried today but something has changed in mainline Linux and the
+rk3288 isn't waking up from USB even when I've configured it
+correctly.  I can still send up the patches, but they won't actually
+produce something that will work upstream.  :(
 
-Changes since v1:
-- Added unit to boost-freq and als-resistance (as the frequency now comes with
-  a unit specifier I changed it to be expressed in kHz)
+I'll keep it my back burner to investigate, though if someone else
+(like maybe someone from Rockchip) wanted to, they could to it too...
 
- Documentation/devicetree/bindings/mfd/lm3533.txt | 184 +++++++++++++++++++++++
- 1 file changed, 184 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
+...until we figure out what's going on we should probably consider
+these patches abandoned.
 
-diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
-new file mode 100644
-index 000000000000..963cee153a4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
-@@ -0,0 +1,184 @@
-+Texas Instruments LM3533 binding
-+
-+This binding describes the Texas Instruments LM3533, a lighting power solution
-+for smartphone handsets. The common properties are described directly in the
-+node, while each individual component are described in an optional subnode.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be:
-+		    "ti,lm3533"
-+
-+- reg:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: i2c address of the LM3533 chip
-+
-+- als-supply:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: reference to regulator powering the V_als input; as
-+		    specified in "../regulator/regulator.txt"
-+
-+- hwen-gpios:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to gpio pin connected to the HWEN input; as
-+		    specified in "../gpio/gpio.txt"
-+
-+- ti,boost-freq-hz:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: switch-frequency of the boost converter, must be either:
-+		    500000 or 1000000
-+
-+- ti,boost-ovp-mv:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: over-voltage protection limit, in mV. Must be one of:
-+		    16000, 24000, 32000 or 40000
-+
-+- #address-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1
-+
-+- #size-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 0
-+
-+= ALS SUBNODE
-+The ambient light sensor subnode must be named "als", it carries the light
-+sensor related properties.
-+
-+- ti,als-resistance-ohm:
-+	Usage: required (unless ti,pwm-mode is specified)
-+	Value type: <u32>
-+	Definition: specifies the resistor value (R_als), in Ohm. Valid values
-+		    ranges from 200000 to 1574 Ohm.
-+
-+- ti,pwm-mode:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: specifies, if present, that the als should operate in PWM
-+		    mode - rather than analog mode
-+
-+= BACKLIGHT NODES
-+Backlight subnodes must be named "backlight", they carry the backlight related
-+properties.
-+
-+- reg:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: specifies which of the two backlights this node corresponds
-+		    to
-+
-+- default-brightness:
-+	Usage: optional
-+	Value type: <32>
-+	Definition: specifies the default brightness for the backlight, in
-+		    units of brightness [0-255]
-+
-+- label:
-+	Usage: required
-+	Value type: <string>
-+	Definition: specifies a name of this backlight
-+
-+- led-max-microamp:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: specifies the max current for this backlight, in uA, as
-+		    described in "../leds/common.txt"
-+
-+- ti,pwm-zones:
-+	Usage: optional
-+	Value type: <u32 list>
-+	Definition: lists the ALS zones to be PWM controlled for this backlight,
-+		    the values in the list are in the range [0 - 4]
-+
-+= LED NODES
-+LED subnodes must be named "led", they carry the LED related properties.
-+
-+- reg:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: specifies which of the four LEDs this node corresponds to
-+
-+- linux,default-trigger:
-+	Usage: optional
-+	Value type: <string>
-+	Definition: specifies the default trigger for the LED, as described in
-+		    "../leds/common.txt"
-+
-+- label:
-+	Usage: required
-+	Value type: <string>
-+	Definition: specifies a name of this LED, as described in
-+		    "../leds/common.txt"
-+
-+- led-max-microamp:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: specifies the max current for this LED, in uA, as described
-+		    in "../leds/common.txt"
-+
-+- ti,pwm-zones:
-+	Usage: optional
-+	Value type: <u32 list>
-+	Definition: lists the ALS zones to be PWM controlled for this LED, the
-+		    values in the list are in the range [0 - 4]
-+
-+= EXAMPLE
-+
-+i2c@12460000 {
-+	compatible = "qcom,i2c-qup-v1.1.1";
-+	...
-+
-+	lm3533@36 {
-+		compatible = "ti,lm3533";
-+		reg = <0x36>;
-+
-+		als-supply = <&pm8921_l11>;
-+		hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
-+
-+		ti,boost-freq-hz = <500000>;
-+		ti,boost-ovp-mv = <24000>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		als {
-+			ti,als-resistance-ohm = <200000>;
-+		};
-+
-+		backlight@0 {
-+			reg = <0>;
-+			label = "backlight";
-+
-+			led-max-microamp = <20200>;
-+		};
-+
-+		led@0 {
-+			reg = <0>;
-+			label = "red";
-+
-+			led-max-microamp = <5000>;
-+		};
-+
-+		led@1 {
-+			reg = <1>;
-+			label = "green";
-+
-+			led-max-microamp = <5000>;
-+		};
-+
-+		led@2 {
-+			reg = <2>;
-+			label = "blue";
-+
-+			led-max-microamp = <5000>;
-+		};
-+	};
-+
--- 
-2.4.2
+-Doug
