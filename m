@@ -1,243 +1,231 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 04/19] clk: sunxi: Add TCON channel1 clock
-Date: Sat, 31 Oct 2015 17:53:26 +0800
-Message-ID: <CAGb2v650S8+8SNNBqx7u8k8wxHm2fSKdht=W3yA9Mh=rpU+hOA@mail.gmail.com>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-5-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] devicetree: mfd: Add binding for the TI LM3533
+Date: Sat, 31 Oct 2015 10:08:01 +0000
+Message-ID: <56349301.5030001@kernel.org>
+References: <1446249040-16552-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBLU72KYQKGQEXNDERCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1446214865-3972-5-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446249040-16552-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The TCON is a controller generating the timings to output videos signals,
-> acting like both a CRTC and an encoder.
->
-> It has two channels depending on the output, each channel being driven by
-> its own clock (and own clock controller).
->
-> Add a driver for the channel 1 clock.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 30/10/15 23:50, Bjorn Andersson wrote:
+> Add the binding for the Texas Instruments LM3533 lighting power
+> solution.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+For the ALS bits.  It does feel like the als resistance might become
+a generic parameter in the long term, but it's not common enough to
+conclude that now.
+
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/clk/sunxi/Makefile             |   1 +
->  drivers/clk/sunxi/clk-sun4i-tcon-ch1.c | 167 +++++++++++++++++++++++++++++++++
->  2 files changed, 168 insertions(+)
->  create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
-
-According to the documents I have, this variant of the TCON clock
-is specific to sun5i. On sun4i/sun7i, TCON CH1 clock has the same
-layout as TCON CH0 and the other display clocks.
-
->
-> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> index 7821b2b63d58..ed59ee4b3a85 100644
-> --- a/drivers/clk/sunxi/Makefile
-> +++ b/drivers/clk/sunxi/Makefile
-> @@ -13,6 +13,7 @@ obj-y += clk-simple-gates.o
->  obj-y += clk-sun4i-display.o
->  obj-y += clk-sun4i-pll3.o
->  obj-y += clk-sun4i-tcon-ch0.o
-> +obj-y += clk-sun4i-tcon-ch1.o
->  obj-y += clk-sun8i-mbus.o
->  obj-y += clk-sun9i-core.o
->  obj-y += clk-sun9i-mmc.o
-> diff --git a/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c b/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
+> 
+> Changes since v2:
+> - Drop vendor prefix of vendor properties
+> - Specify unit of various properties
+> - Fix reference paths
+> 
+> Changes since v1:
+> - Added unit to boost-freq and als-resistance (as the frequency now comes with
+>   a unit specifier I changed it to be expressed in kHz)
+> 
+>  Documentation/devicetree/bindings/mfd/lm3533.txt | 184 +++++++++++++++++++++++
+>  1 file changed, 184 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/lm3533.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/lm3533.txt b/Documentation/devicetree/bindings/mfd/lm3533.txt
 > new file mode 100644
-> index 000000000000..9f2ab52b0bf9
+> index 000000000000..963cee153a4d
 > --- /dev/null
-> +++ b/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
-> @@ -0,0 +1,167 @@
-> +/*
-> + * Copyright 2015 Maxime Ripard
-> + *
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> +++ b/Documentation/devicetree/bindings/mfd/lm3533.txt
+> @@ -0,0 +1,184 @@
+> +Texas Instruments LM3533 binding
 > +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
+> +This binding describes the Texas Instruments LM3533, a lighting power solution
+> +for smartphone handsets. The common properties are described directly in the
+> +node, while each individual component are described in an optional subnode.
 > +
-> +#define SUN4I_TCON_CH1_SCLK_NAME_LEN   32
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be:
+> +		    "ti,lm3533"
 > +
-> +#define SUN4I_A10_TCON_CH1_SCLK1_PARENTS       2
-> +#define SUN4I_A10_TCON_CH1_SCLK2_PARENTS       4
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: i2c address of the LM3533 chip
 > +
-> +#define SUN4I_A10_TCON_CH1_SCLK2_GATE_BIT      31
-> +#define SUN4I_A10_TCON_CH1_SCLK2_MUX_MASK      3
-> +#define SUN4I_A10_TCON_CH1_SCLK2_MUX_SHIFT     24
-> +#define SUN4I_A10_TCON_CH1_SCLK2_DIV_WIDTH     4
-> +#define SUN4I_A10_TCON_CH1_SCLK2_DIV_SHIFT     0
+> +- als-supply:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to regulator powering the V_als input; as
+> +		    specified in "../regulator/regulator.txt"
 > +
-> +#define SUN4I_A10_TCON_CH1_SCLK1_GATE_BIT      15
-> +#define SUN4I_A10_TCON_CH1_SCLK1_MUX_MASK      1
-> +#define SUN4I_A10_TCON_CH1_SCLK1_MUX_SHIFT     11
+> +- hwen-gpios:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to gpio pin connected to the HWEN input; as
+> +		    specified in "../gpio/gpio.txt"
 > +
-> +static DEFINE_SPINLOCK(sun4i_a10_tcon_ch1_lock);
+> +- ti,boost-freq-hz:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: switch-frequency of the boost converter, must be either:
+> +		    500000 or 1000000
 > +
-> +static void __init sun4i_a10_tcon_ch1_setup(struct device_node *node)
-> +{
-> +       const char *sclk1_parents[SUN4I_A10_TCON_CH1_SCLK1_PARENTS];
-> +       const char *sclk2_parents[SUN4I_A10_TCON_CH1_SCLK2_PARENTS];
-> +       const char *sclk1_name = node->name;
-> +       char sclk2_name[SUN4I_TCON_CH1_SCLK_NAME_LEN];
-> +       char sclk2d2_name[SUN4I_TCON_CH1_SCLK_NAME_LEN];
-> +       struct clk_gate *sclk1_gate, *sclk2_gate;
-> +       struct clk_mux *sclk1_mux, *sclk2_mux;
-> +       struct clk *sclk1, *sclk2, *sclk2d2;
-> +       struct clk_divider *sclk2_div;
-> +       void __iomem *reg;
-> +       int i;
+> +- ti,boost-ovp-mv:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: over-voltage protection limit, in mV. Must be one of:
+> +		    16000, 24000, 32000 or 40000
 > +
-> +       of_property_read_string(node, "clock-output-names",
-> +                               &sclk1_name);
+> +- #address-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 1
 > +
-> +       snprintf(sclk2_name, SUN4I_TCON_CH1_SCLK_NAME_LEN,
-> +                "%s2", sclk1_name);
+> +- #size-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 0
 > +
-> +       snprintf(sclk2d2_name, SUN4I_TCON_CH1_SCLK_NAME_LEN,
-> +                "%s2d2", sclk1_name);
+> += ALS SUBNODE
+> +The ambient light sensor subnode must be named "als", it carries the light
+> +sensor related properties.
 > +
-> +       reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-> +       if (IS_ERR(reg)) {
-> +               pr_err("%s: Could not map the clock registers\n", sclk2_name);
-> +               return;
-> +       }
+> +- ti,als-resistance-ohm:
+> +	Usage: required (unless ti,pwm-mode is specified)
+> +	Value type: <u32>
+> +	Definition: specifies the resistor value (R_als), in Ohm. Valid values
+> +		    ranges from 200000 to 1574 Ohm.
 > +
-> +       for (i = 0; i < SUN4I_A10_TCON_CH1_SCLK2_PARENTS; i++)
-> +               sclk2_parents[i] = of_clk_get_parent_name(node, i);
+> +- ti,pwm-mode:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: specifies, if present, that the als should operate in PWM
+> +		    mode - rather than analog mode
 > +
-> +       sclk2_mux = kzalloc(sizeof(*sclk2_mux), GFP_KERNEL);
-> +       if (!sclk2_mux)
-> +               return;
+> += BACKLIGHT NODES
+> +Backlight subnodes must be named "backlight", they carry the backlight related
+> +properties.
 > +
-> +       sclk2_mux->reg = reg;
-> +       sclk2_mux->shift = SUN4I_A10_TCON_CH1_SCLK2_MUX_SHIFT;
-> +       sclk2_mux->mask = SUN4I_A10_TCON_CH1_SCLK2_MUX_MASK;
-> +       sclk2_mux->lock = &sun4i_a10_tcon_ch1_lock;
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: specifies which of the two backlights this node corresponds
+> +		    to
 > +
-> +       sclk2_gate = kzalloc(sizeof(*sclk2_gate), GFP_KERNEL);
-> +       if (!sclk2_gate)
-> +               goto free_sclk2_mux;
+> +- default-brightness:
+> +	Usage: optional
+> +	Value type: <32>
+> +	Definition: specifies the default brightness for the backlight, in
+> +		    units of brightness [0-255]
 > +
-> +       sclk2_gate->reg = reg;
-> +       sclk2_gate->bit_idx = SUN4I_A10_TCON_CH1_SCLK2_GATE_BIT;
-> +       sclk2_gate->lock = &sun4i_a10_tcon_ch1_lock;
+> +- label:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: specifies a name of this backlight
 > +
-> +       sclk2_div = kzalloc(sizeof(*sclk2_div), GFP_KERNEL);
-> +       if (!sclk2_div)
-> +               goto free_sclk2_gate;
+> +- led-max-microamp:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: specifies the max current for this backlight, in uA, as
+> +		    described in "../leds/common.txt"
 > +
-> +       sclk2_div->reg = reg;
-> +       sclk2_div->shift = SUN4I_A10_TCON_CH1_SCLK2_DIV_SHIFT;
-> +       sclk2_div->width = SUN4I_A10_TCON_CH1_SCLK2_DIV_WIDTH;
-> +       sclk2_div->lock = &sun4i_a10_tcon_ch1_lock;
+> +- ti,pwm-zones:
+> +	Usage: optional
+> +	Value type: <u32 list>
+> +	Definition: lists the ALS zones to be PWM controlled for this backlight,
+> +		    the values in the list are in the range [0 - 4]
 > +
-> +       sclk2 = clk_register_composite(NULL, sclk2_name, sclk2_parents,
-> +                                      SUN4I_A10_TCON_CH1_SCLK2_PARENTS,
-> +                                      &sclk2_mux->hw, &clk_mux_ops,
-> +                                      &sclk2_div->hw, &clk_divider_ops,
-> +                                      &sclk2_gate->hw, &clk_gate_ops,
-> +                                      0);
-> +       if (IS_ERR(sclk2)) {
-> +               pr_err("%s: Couldn't register the clock\n", sclk2_name);
-> +               goto free_sclk2_div;
-> +       }
+> += LED NODES
+> +LED subnodes must be named "led", they carry the LED related properties.
 > +
-> +       sclk2d2 = clk_register_fixed_factor(NULL, sclk2d2_name, sclk2_name, 0,
-> +                                           1, 2);
-> +       if (IS_ERR(sclk2d2)) {
-> +               pr_err("%s: Couldn't register the clock\n", sclk2d2_name);
-> +               goto free_sclk2;
-> +       }
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: specifies which of the four LEDs this node corresponds to
 > +
-> +       sclk1_parents[0] = sclk2_name;
-> +       sclk1_parents[1] = sclk2d2_name;
-
-Is there any need to expose these 2 clocks via DT using of_clk_add_provider?
-
-Note that these complex clock trees within a clock node breaks the
-assigned-clock-parents mechanism, as you can no longer specify the output
-clock's direct parents.
-
-
-Regards
-ChenYu
-
+> +- linux,default-trigger:
+> +	Usage: optional
+> +	Value type: <string>
+> +	Definition: specifies the default trigger for the LED, as described in
+> +		    "../leds/common.txt"
 > +
-> +       sclk1_mux = kzalloc(sizeof(*sclk1_mux), GFP_KERNEL);
-> +       if (!sclk1_mux)
-> +               goto free_sclk2d2;
+> +- label:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: specifies a name of this LED, as described in
+> +		    "../leds/common.txt"
 > +
-> +       sclk1_mux->reg = reg;
-> +       sclk1_mux->shift = SUN4I_A10_TCON_CH1_SCLK1_MUX_SHIFT;
-> +       sclk1_mux->mask = SUN4I_A10_TCON_CH1_SCLK1_MUX_MASK;
-> +       sclk1_mux->lock = &sun4i_a10_tcon_ch1_lock;
+> +- led-max-microamp:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: specifies the max current for this LED, in uA, as described
+> +		    in "../leds/common.txt"
 > +
-> +       sclk1_gate = kzalloc(sizeof(*sclk1_gate), GFP_KERNEL);
-> +       if (!sclk1_gate)
-> +               goto free_sclk1_mux;
+> +- ti,pwm-zones:
+> +	Usage: optional
+> +	Value type: <u32 list>
+> +	Definition: lists the ALS zones to be PWM controlled for this LED, the
+> +		    values in the list are in the range [0 - 4]
 > +
-> +       sclk1_gate->reg = reg;
-> +       sclk1_gate->bit_idx = SUN4I_A10_TCON_CH1_SCLK1_GATE_BIT;
-> +       sclk1_gate->lock = &sun4i_a10_tcon_ch1_lock;
+> += EXAMPLE
 > +
-> +       sclk1 = clk_register_composite(NULL, sclk1_name, sclk1_parents,
-> +                                      SUN4I_A10_TCON_CH1_SCLK1_PARENTS,
-> +                                      &sclk1_mux->hw, &clk_mux_ops,
-> +                                      NULL, NULL,
-> +                                      &sclk1_gate->hw, &clk_gate_ops,
-> +                                      0);
-> +       if (IS_ERR(sclk1)) {
-> +               pr_err("%s: Couldn't register the clock\n", sclk1_name);
-> +               goto free_sclk1_gate;
-> +       }
+> +i2c@12460000 {
+> +	compatible = "qcom,i2c-qup-v1.1.1";
+> +	...
 > +
-> +       of_clk_add_provider(node, of_clk_src_simple_get, sclk1);
+> +	lm3533@36 {
+> +		compatible = "ti,lm3533";
+> +		reg = <0x36>;
 > +
-> +       return;
+> +		als-supply = <&pm8921_l11>;
+> +		hwen-gpios = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
 > +
-> +free_sclk1_gate:
-> +       kfree(sclk1_gate);
-> +free_sclk1_mux:
-> +       kfree(sclk1_mux);
-> +free_sclk2d2:
-> +       clk_unregister(sclk2d2);
-> +free_sclk2:
-> +       clk_unregister(sclk2);
-> +free_sclk2_div:
-> +       kfree(sclk2_div);
-> +free_sclk2_gate:
-> +       kfree(sclk2_gate);
-> +free_sclk2_mux:
-> +       kfree(sclk2_mux);
-> +}
+> +		ti,boost-freq-hz = <500000>;
+> +		ti,boost-ovp-mv = <24000>;
 > +
-> +CLK_OF_DECLARE(sun4i_a10_tcon_ch1, "allwinner,sun4i-a10-tcon-ch1-clk",
-> +              sun4i_a10_tcon_ch1_setup);
-> --
-> 2.6.2
->
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		als {
+> +			ti,als-resistance-ohm = <200000>;
+> +		};
+> +
+> +		backlight@0 {
+> +			reg = <0>;
+> +			label = "backlight";
+> +
+> +			led-max-microamp = <20200>;
+> +		};
+> +
+> +		led@0 {
+> +			reg = <0>;
+> +			label = "red";
+> +
+> +			led-max-microamp = <5000>;
+> +		};
+> +
+> +		led@1 {
+> +			reg = <1>;
+> +			label = "green";
+> +
+> +			led-max-microamp = <5000>;
+> +		};
+> +
+> +		led@2 {
+> +			reg = <2>;
+> +			label = "blue";
+> +
+> +			led-max-microamp = <5000>;
+> +		};
+> +	};
+> +
+> 
