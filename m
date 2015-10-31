@@ -1,8 +1,8 @@
 From: Timur Tabi <timur@codeaurora.org>
 Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
  driver
-Date: Sat, 31 Oct 2015 07:53:39 -0500
-Message-ID: <5634B9D3.9000009@codeaurora.org>
+Date: Sat, 31 Oct 2015 07:53:42 -0500
+Message-ID: <5634B9D6.7090604@codeaurora.org>
 References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
  <4548985.gMZJhM3R1p@wuerfel> <56346502.5070600@codeaurora.org>
 Mime-Version: 1.0
@@ -28,8 +28,6 @@ Sinan Kaya wrote:
 > As soon as I use module_platform_driver, the ordering gets reversed for
 > some reason.
 
-If you want to force two probe functions to be called in order, then 
-that's what -EPROBE_DEFER is for.
 
 -- 
 Sent by an employee of the Qualcomm Innovation Center, Inc.
