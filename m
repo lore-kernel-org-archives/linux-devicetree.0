@@ -1,94 +1,92 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 09/13] ARM: dts: rockchip: add rk3288 mipi_dsi nodes
-Date: Sat, 31 Oct 2015 20:56:05 +0800
-Message-ID: <1446296170-3702-10-git-send-email-zyw@rock-chips.com>
-References: <1446296170-3702-1-git-send-email-zyw@rock-chips.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
+ compatible
+Date: Sat, 31 Oct 2015 14:04:47 +0100
+Message-ID: <5634BC6F.6020408@linaro.org>
+References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
+ <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
+ <21587719.mnFBFBzBeI@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446296170-3702-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <21587719.mnFBFBzBeI@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a mipi_dsi node, and also add mipi_dsi endpoints to vopb and vopl
-output port nodes.
+On 10/31/2015 12:47 AM, Heiko Stuebner wrote:
+> Hi Daniel,
+>
+> Am Freitag, 30. Oktober 2015, 11:42:29 schrieb Daniel Lezcano:
+>> On 10/30/2015 04:43 AM, Caesar Wang wrote:
+>>> Hi Daniel,
+>>>
+>>> =E5=9C=A8 2015=E5=B9=B410=E6=9C=8801=E6=97=A5 03:14, Heiko St=C3=BC=
+bner =E5=86=99=E9=81=93:
+>>>> Hi Daniel,
+>>>>
+>>>> Am Dienstag, 29. September 2015, 06:18:03 schrieb Daniel Lezcano:
+>>>>> On 09/25/2015 04:14 AM, Caesar Wang wrote:
+>>>>>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
+>>>>>> There are some failure with build up on timer driver for rockchi=
+p.
+>>>>>>
+>>>>>> Says:
+>>>>>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  oper=
+and
+>>>>>> 1 --
+>>>>>> `dsb`
+>>>>>> ...
+>>>>>>
+>>>>>> The problem was different semantics of dsb on btw arm32 and arm6=
+4,
+>>>>>> Here we can convert the dsb with insteading of dsb(sy).The "sy" =
+param
+>>>>>> is the default which you are allow to omit, so on arm32 dsb()and
+>>>>>> dsb(sy)
+>>>>>> are the same.
+>>>>>>
+>>>>>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> as you have "just" Acked these patches, I guess you are expecting =
+them
+>>>> to go
+>>>> through the same tree as the devicetree changes, right?
+>>>
+>>> I'm wonder if someone will apply this series patchs but the wait.:-=
+)
+>>> In fact, I'm no sure that the Acked is really meaning.:-
+>>
+>> Yes, by acking the patch I say I am ok with it and I agree it can go
+>> through another tree.
+>
+> although I guess the two clocksource changes could very well just go
+> through your tree. dsb() -> dsb(sy) is supposed to be equal and the s=
+econd
+> one is just cosmetics.  The Kconfig and dts changes need to wait in a=
+ny case
+> for 4.5 ... but I guess that may be true for the clocksource changes =
+as well?
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Ok, I will take the two first patches through my tree.
 
-Changes in v2: None
+Thanks
+   -- Daniel
 
- arch/arm/boot/dts/rk3288.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6a79c9c..a5c5670 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -798,6 +798,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopb>;
- 			};
-+			vopb_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopb>;
-+			};
- 		};
- 	};
- 
-@@ -831,6 +835,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopl>;
- 			};
-+			vopl_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopl>;
-+			};
- 		};
- 	};
- 
-@@ -871,6 +879,37 @@
- 		};
- 	};
- 
-+	mipi_dsi: mipi@ff960000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0xff960000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
-+		clock-names = "ref", "pclk";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			mipi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mipi_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_mipi>;
-+				};
-+				mipi_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_mipi>;
-+				};
-+			};
-+		};
-+	};
-+
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
--- 
-2.6.2
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
