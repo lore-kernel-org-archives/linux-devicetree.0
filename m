@@ -1,140 +1,417 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v10 09/17] dt-bindings: add document for rockchip variant of analogix_dp
-Date: Sat, 31 Oct 2015 14:42:17 +0800
-Message-ID: <1446273737-15262-1-git-send-email-ykk@rock-chips.com>
-References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>
-Cc: Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Sat, 31 Oct 2015 02:51:46 -0400
+Message-ID: <56346502.5070600@codeaurora.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <4548985.gMZJhM3R1p@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4548985.gMZJhM3R1p@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rockchip DP driver is a helper driver of analogix_dp coder driver,
-so most of the DT property should be descriped in analogix_dp document.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
-Changes in v10:
-- Removed the duplicated signed-of.
 
-Changes in v9:
-- Document more details for 'ports' property.
+On 10/30/2015 5:34 AM, Arnd Bergmann wrote:
+> On Thursday 29 October 2015 23:08:12 Sinan Kaya wrote:
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>> new file mode 100644
+>> index 0000000..81674ab
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>> @@ -0,0 +1,42 @@
+>> +Qualcomm Technologies HIDMA Management interface
+>> +
+>> +Required properties:
+>> +- compatible: must contain "qcom,hidma_mgmt"
+>
+> No underscores in the name please. Also try to be more specific, in case this
+> device shows up in more than one SoC and they end up not being 100% compatible
+> we want to be able to tell them apart.
 
-Changes in v8:
-- Modify the commit subject name. (Heiko)
+ok
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5:
-- Split binding doc's from driver changes. (Rob)
-- Add eDP hotplug pinctrl property. (Heiko)
+>
+>> +- reg: Address range for DMA device
+>> +- interrupts: Should contain the one interrupt shared by all channels
+>> +- nr-channels: Number of channels supported by this DMA controller.
+>> +- max-write: Maximum write burst in bytes. A memcpy requested is
+>> +  fragmented to multiples of this amount.
+>> +- max-read: Maximum read burst in bytes. A memcpy request is
+>> +  fragmented to multiples of this amount.
+>> +- max-wxactions: Maximum write transactions to perform in a burst
+>> +- max-rdactions: Maximum read transactions to perform in a burst
+>> +- max-memset-limit: Maximum memset limit
+>> +- ch-priority-#n: Priority of the channel
+>> +- ch-weight-#n: Round robin weight of the channel
+>
+> For the last two, you can just use a multi-cell property, using one
+> cell per channel.
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+will look
+>
+>> +
+>> +#define MODULE_NAME			"hidma-mgmt"
+>> +#define PREFIX				MODULE_NAME ": "
+>
+> These can be removed, just use dev_info() etc for messages, to include
+> a unique identifier.
 
- .../display/rockchip/analogix_dp-rockchip.txt      | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
+got rid of them
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
-new file mode 100644
-index 0000000..dae86c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
-@@ -0,0 +1,91 @@
-+Rockchip RK3288 specific extensions to the Analogix Display Port
-+================================
-+
-+Required properties:
-+- compatible: "rockchip,rk3288-edp";
-+
-+- reg: physical base address of the controller and length
-+
-+- clocks: from common clock binding: handle to dp clock.
-+	  of memory mapped region.
-+
-+- clock-names: from common clock binding:
-+	       Required elements: "dp" "pclk"
-+
-+- resets: Must contain an entry for each entry in reset-names.
-+	  See ../reset/reset.txt for details.
-+
-+- pinctrl-names: Names corresponding to the chip hotplug pinctrl states.
-+- pinctrl-0: pin-control mode. should be <&edp_hpd>
-+
-+- reset-names: Must include the name "dp"
-+
-+- rockchip,grf: this soc should set GRF regs, so need get grf here.
-+
-+- ports: there are 2 port nodes with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+    Port 0: contained 2 endpoints, connecting to the ouput of vop.
-+    Port 1: contained 1 endpoint, connecting to the input of panel.
-+
-+For the below properties, please refer to Analogix DP binding document:
-+ * Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
-+- phys (required)
-+- phy-names (required)
-+- hpd-gpios (optional)
-+-------------------------------------------------------------------------------
-+
-+Example:
-+	dp-controller: dp@ff970000 {
-+		compatible = "rockchip,rk3288-dp";
-+		reg = <0xff970000 0x4000>;
-+		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_EDP>, <&cru PCLK_EDP_CTRL>;
-+		clock-names = "dp", "pclk";
-+		phys = <&dp_phy>;
-+		phy-names = "dp";
-+
-+		rockchip,grf = <&grf>;
-+		resets = <&cru 111>;
-+		reset-names = "dp";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&edp_hpd>;
-+
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			edp_in: port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				edp_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_edp>;
-+				};
-+				edp_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_edp>;
-+				};
-+			};
-+
-+			edp_out: port@1 {
-+				reg = <1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				edp_out_panel: endpoint {
-+					reg = <0>;
-+					remote-endpoint = <&panel_in_edp>
-+				};
-+			};
-+		};
-+	};
-+
-+	pinctrl {
-+		edp {
-+			edp_hpd: edp-hpd {
-+				rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+	};
+>
+>> +#define AUTOSUSPEND_TIMEOUT		2000
+>> +
+>> +#define HIDMA_RUNTIME_GET(dmadev)				\
+>> +do {								\
+>> +	atomic_inc(&(dmadev)->pm_counter);			\
+>> +	TRC_PM(&(dmadev)->pdev->dev,				\
+>> +		"%s:%d pm_runtime_get %d\n", __func__, __LINE__,\
+>> +		atomic_read(&(dmadev)->pm_counter));		\
+>> +	pm_runtime_get_sync(&(dmadev)->pdev->dev);		\
+>> +} while (0)
+>> +
+>> +#define HIDMA_RUNTIME_SET(dmadev)				\
+>> +do {								\
+>> +	atomic_dec(&(dmadev)->pm_counter);			\
+>> +	TRC_PM(&(dmadev)->pdev->dev,				\
+>> +		"%s:%d pm_runtime_put_autosuspend:%d\n",	\
+>> +		__func__, __LINE__,				\
+>> +		atomic_read(&(dmadev)->pm_counter));		\
+>> +	pm_runtime_mark_last_busy(&(dmadev)->pdev->dev);	\
+>> +	pm_runtime_put_autosuspend(&(dmadev)->pdev->dev);	\
+>> +} while (0)
+>
+> Better use inline functions.
+
+removed these
+
+>
+>> +struct qcom_hidma_mgmt_dev {
+>> +	u8 max_wr_xactions;
+>> +	u8 max_rd_xactions;
+>> +	u8 max_memset_limit;
+>> +	u16 max_write_request;
+>> +	u16 max_read_request;
+>> +	u16 nr_channels;
+>> +	u32 chreset_timeout;
+>> +	u32 sw_version;
+>> +	u8 *priority;
+>> +	u8 *weight;
+>> +
+>> +	atomic_t	pm_counter;
+>> +	/* Hardware device constants */
+>> +	dma_addr_t dev_physaddr;
+>
+> No need to store the physaddr, it's write-only here.
+ok
+>
+>> +
+>> +static unsigned int debug_pm;
+>> +module_param(debug_pm, uint, 0644);
+>> +MODULE_PARM_DESC(debug_pm,
+>> +		 "debug runtime power management transitions (default: 0)");
+>> +
+>> +#define TRC_PM(...) do {			\
+>> +		if (debug_pm)			\
+>> +			dev_info(__VA_ARGS__);	\
+>> +	} while (0)
+>> +
+>
+> Once you are done debugging the driver and have a final version, please
+> remove these.
+
+removed TRC_PM
+
+>
+>> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+>> +
+>> +#define HIDMA_SHOW(dma, name) \
+>> +		seq_printf(s, #name "=0x%x\n", dma->name)
+>
+> Only used once, just remove.
+ok
+
+>
+>> +#define HIDMA_READ_SHOW(dma, name, offset) \
+>> +	do { \
+>> +		u32 val; \
+>> +		val = readl(dma->dev_virtaddr + offset); \
+>> +		seq_printf(s, name "=0x%x\n", val); \
+>> +	} while (0)
+>
+> Inline function.
+
+ok
+
+>
+>> +/**
+>> + * qcom_hidma_mgmt_info: display HIDMA device info
+>> + *
+>> + * Display the info for the current HIDMA device.
+>> + */
+>> +static int qcom_hidma_mgmt_info(struct seq_file *s, void *unused)
+>> +{
+>> +	struct qcom_hidma_mgmt_dev *mgmtdev = s->private;
+>> +	u32 val;
+>> +	int i;
+>> +
+>> +	HIDMA_RUNTIME_GET(mgmtdev);
+>> +	HIDMA_SHOW(mgmtdev, sw_version);
+>> +
+>> +	val = readl(mgmtdev->dev_virtaddr + CFG_OFFSET);
+>> +	seq_printf(s, "ENABLE=%d\n", val & 0x1);
+>> +
+>> +	val = readl(mgmtdev->dev_virtaddr + CHRESET_TIMEOUUT_OFFSET);
+>> +	seq_printf(s, "reset_timeout=%d\n", val & CHRESET_TIMEOUUT_MASK);
+>> +
+>> +	val = readl(mgmtdev->dev_virtaddr + MHICFG_OFFSET);
+>> +	seq_printf(s, "nr_event_channel=%d\n",
+>> +		(val >> NR_EV_CHANNEL_BIT_POS) & NR_CHANNEL_MASK);
+>> +	seq_printf(s, "nr_tr_channel=%d\n", (val & NR_CHANNEL_MASK));
+>> +	seq_printf(s, "nr_virt_tr_channel=%d\n", mgmtdev->nr_channels);
+>> +	seq_printf(s, "dev_virtaddr=%p\n", &mgmtdev->dev_virtaddr);
+>> +	seq_printf(s, "dev_physaddr=%pap\n", &mgmtdev->dev_physaddr);
+>> +	seq_printf(s, "dev_addrsize=%pap\n", &mgmtdev->dev_addrsize);
+>
+> printing pointers is a security risk, just remove them if they are
+> not essential here.
+ok
+
+>> +
+>> +static int qcom_hidma_mgmt_err_open(struct inode *inode, struct file *file)
+>> +{
+>> +	return single_open(file, qcom_hidma_mgmt_err, inode->i_private);
+>> +}
+>> +
+>> +static const struct file_operations qcom_hidma_mgmt_err_fops = {
+>> +	.open = qcom_hidma_mgmt_err_open,
+>> +	.read = seq_read,
+>> +	.llseek = seq_lseek,
+>> +	.release = single_release,
+>> +};
+>> +
+>> +static ssize_t qcom_hidma_mgmt_mhiderr_clr(struct file *file,
+>> +	const char __user *user_buf, size_t count, loff_t *ppos)
+>> +{
+>> +	struct qcom_hidma_mgmt_dev *mgmtdev = file->f_inode->i_private;
+>> +
+>> +	HIDMA_RUNTIME_GET(mgmtdev);
+>> +	writel(1, mgmtdev->dev_virtaddr + MHID_BUS_ERR_CLR_OFFSET);
+>> +	HIDMA_RUNTIME_SET(mgmtdev);
+>> +	return count;
+>> +}
+>> +
+>> +static const struct file_operations qcom_hidma_mgmt_mhiderr_clrfops = {
+>> +	.write = qcom_hidma_mgmt_mhiderr_clr,
+>> +};
+>
+> Is this really just a debugging interface? If anyone would do this
+> for normal operation, it needs to be a proper API.
+>
+This will be used by the system admin to monitor/reset the execution 
+state of the DMA channels. This will be the management interface. 
+Debugfs is probably not the right choice. I originally had sysfs but 
+than had some doubts. I'm open to suggestions.
+
+>> +
+>> +static void qcom_hidma_mgmt_debug_uninit(struct qcom_hidma_mgmt_dev *mgmtdev)
+>> +{
+>> +	debugfs_remove(mgmtdev->evt_ena);
+>> +	debugfs_remove(mgmtdev->tre_errclr);
+>> +	debugfs_remove(mgmtdev->msi_errclr);
+>> +	debugfs_remove(mgmtdev->ode_errclr);
+>> +	debugfs_remove(mgmtdev->ide_errclr);
+>> +	debugfs_remove(mgmtdev->evt_errclr);
+>> +	debugfs_remove(mgmtdev->mhid_errclr);
+>> +	debugfs_remove(mgmtdev->err);
+>> +	debugfs_remove(mgmtdev->info);
+>> +	debugfs_remove(mgmtdev->debugfs);
+>> +}
+>>
+> I guess debugfs_remove_recursive() would do the job as well.
+
+ok
+
+>
+>> +static int qcom_hidma_mgmt_debug_init(struct qcom_hidma_mgmt_dev *mgmtdev)
+>> +{
+>> +	int rc = 0;
+>> +
+>> +	mgmtdev->debugfs = debugfs_create_dir(dev_name(&mgmtdev->pdev->dev),
+>> +						NULL);
+>> +	if (!mgmtdev->debugfs) {
+>> +		rc = -ENODEV;
+>> +		return rc;
+>> +	}
+>> +
+>> +	mgmtdev->info = debugfs_create_file("info", S_IRUGO,
+>> +			mgmtdev->debugfs, mgmtdev, &qcom_hidma_mgmt_fops);
+>> +	if (!mgmtdev->info) {
+>> +		rc = -ENOMEM;
+>> +		goto cleanup;
+>> +	}
+>> +
+>> +	mgmtdev->err = debugfs_create_file("err", S_IRUGO,
+>> +			mgmtdev->debugfs, mgmtdev,
+>> +			&qcom_hidma_mgmt_err_fops);
+>> +	if (!mgmtdev->err) {
+>> +		rc = -ENOMEM;
+>> +		goto cleanup;
+>> +	}
+>> +
+>> +	mgmtdev->mhid_errclr = debugfs_create_file("mhiderrclr", S_IWUSR,
+>> +			mgmtdev->debugfs, mgmtdev,
+>> +			&qcom_hidma_mgmt_mhiderr_clrfops);
+>> +	if (!mgmtdev->mhid_errclr) {
+>> +		rc = -ENOMEM;
+>> +		goto cleanup;
+>> +	}
+>
+> Maybe use a loop around an array here to avoid writing the same thing 10 times?
+>
+will do
+
+> Also, you could move the debugging code into a separate file and have a separate
+> Kconfig symbol so users can disable this if they do not debug your driver
+> but still want to use debugfs for other things.
+>
+I need these to be accessible all the time, maybe via sysfs or ioctl.
+
+>> +static irqreturn_t qcom_hidma_mgmt_irq_handler(int irq, void *arg)
+>> +{
+>> +	/* TODO: handle irq here */
+>> +	return IRQ_HANDLED;
+>> +}
+>
+>
+>> +	rc = devm_request_irq(&pdev->dev, irq, qcom_hidma_mgmt_irq_handler,
+>> +		IRQF_SHARED, "qcom-hidmamgmt", mgmtdev);
+>> +	if (rc) {
+>> +		dev_err(&pdev->dev, "irq registration failed: %d\n", irq);
+>> +		goto out;
+>> +	}
+>
+> If you create a shared handler, you must check whether there was an
+> interrupt pending, otherwise you will lose interrupts for all other devices
+> that share the same IRQ.
+
+ok, I'll remove it for now. The interrupt handler is a to-do.
+
+>
+> Better remove the handler completely here so you don't need to check it.
+>
+>> +
+>> +	if (device_property_read_u16(&pdev->dev, "nr-channels",
+>> +		&mgmtdev->nr_channels)) {
+>> +		dev_err(&pdev->dev, "number of channels missing\n");
+>> +		rc = -EINVAL;
+>> +		goto out;
+>> +	}
+>
+> This should be a u32 name 'dma-channels' for consistency with the
+> generic DMA binding.
+>
+ok
+
+> Also, try to avoid using u8 and u16 properties everywhere and just
+> us u32 for consistency.
+
+will do
+
+>
+>> +
+>> +	for (i = 0; i < mgmtdev->nr_channels; i++) {
+>> +		char name[30];
+>> +
+>> +		sprintf(name, "ch-priority-%d", i);
+>> +		device_property_read_u8(&pdev->dev, name,
+>> +			&mgmtdev->priority[i]);
+>> +
+>> +		sprintf(name, "ch-weight-%d", i);
+>> +		device_property_read_u8(&pdev->dev, name,
+>> +			&mgmtdev->weight[i]);
+>
+> Per comment above, just read this as an array.
+
+will look. While device tree syntax for arrays is easy, describing an 
+array in DSM package looks really ugly. I tried to keep things simple. 
+I'll spend some time on it.
+
+>
+>> +	dev_info(&pdev->dev,
+>> +		"HI-DMA engine management driver registration complete\n");
+>> +	platform_set_drvdata(pdev, mgmtdev);
+>> +	HIDMA_RUNTIME_SET(mgmtdev);
+>> +	return 0;
+>> +out:
+>> +	pm_runtime_disable(&pdev->dev);
+>> +	pm_runtime_put_sync_suspend(&pdev->dev);
+>> +	return rc;
+>> +}
+>
+> The rest of the probe function does not register any user interface aside from
+> the debugging stuff. Can you explain in the changelog how you expect the
+> driver to be used in a real system? Is there another driver coming?
+
+I expect this driver to grow in functionality over time. Right now, it 
+does the global init for the DMA. After that all channels execute on 
+their own without depending on each other. Global init has to be done 
+first before attempting to do any channel initialization.
+
+There is also implied startup ordering requirements. I was doing this by 
+using channel driver with the late binding to guarantee that.
+
+As soon as I use module_platform_driver, the ordering gets reversed for 
+some reason.
+
+>
+>> +
+>> +static const struct of_device_id qcom_hidma_mgmt_match[] = {
+>> +	{ .compatible = "qcom,hidma_mgmt", },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, qcom_hidma_mgmt_match);
+>> +
+>> +static struct platform_driver qcom_hidma_mgmt_driver = {
+>> +	.probe = qcom_hidma_mgmt_probe,
+>> +	.remove = qcom_hidma_mgmt_remove,
+>> +	.driver = {
+>> +		.name = MODULE_NAME,
+>> +		.owner = THIS_MODULE,
+>> +		.of_match_table = of_match_ptr(qcom_hidma_mgmt_match),
+>
+> drop the .owner field and the of_match_ptr() macro to avoid warnings here.
+>
+>> +static int __init qcom_hidma_mgmt_init(void)
+>> +{
+>> +	return platform_driver_register(&qcom_hidma_mgmt_driver);
+>> +}
+>> +device_initcall(qcom_hidma_mgmt_init);
+>> +
+>> +static void __exit qcom_hidma_mgmt_exit(void)
+>> +{
+>> +	platform_driver_unregister(&qcom_hidma_mgmt_driver);
+>> +}
+>> +module_exit(qcom_hidma_mgmt_exit);
+>
+> module_platform_driver()
+>
+> 	Arnd
+>
+thanks for the feedback.
+
 -- 
-1.9.1
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
