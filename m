@@ -1,186 +1,120 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
-Date: Sat, 31 Oct 2015 10:28:39 -0700
-Message-ID: <20151031172839.GB25091@localhost>
-References: <1F3AC3675D538145B1661F571FE1805F2F0FE432@irsmsx105.ger.corp.intel.com>
- <20151013070824.GA22304@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F2F0FE683@irsmsx105.ger.corp.intel.com>
- <20151013100724.GG1492@lahna.fi.intel.com>
- <20151014062303.GC20406@dtor-ws>
- <20151014111820.GV1492@lahna.fi.intel.com>
- <20151014134403.GA25691@lahna.fi.intel.com>
- <1F3AC3675D538145B1661F571FE1805F2F101AC0@irsmsx105.ger.corp.intel.com>
- <20151019145239.GA1526@lahna.fi.intel.com>
- <20151030163328.GA17589@dtor-pixel>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Sat, 31 Oct 2015 13:34:29 -0400
+Message-ID: <5634FBA5.70403@codeaurora.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <20151030150025.GF31073@leverpostej>
+ <CAHp75VdHxGC841cFY3M+ujZKSX04nT4+7gc3iKsgwzLRC4AYWQ@mail.gmail.com>
+ <5633B207.5030505@codeaurora.org>
+ <CAHp75Ve_7NeyJD==EpgzKes9n9wb5oTwtNt7FvZHUSUxqZ4+=Q@mail.gmail.com>
+ <20151030182537.GB30791@leverpostej>
+ <CAHp75Vd-z22XJboxQ=CMxDQ9UaTatbCmpAPLO0jPM0FwJadBOg@mail.gmail.com>
+ <5633BB66.3070505@codeaurora.org> <20151030190106.GC30791@leverpostej>
+ <5633CE23.7060303@linaro.org>
+ <CAHp75VcQ6r2FGqsP2mtnv95etCGJmeQ=T7aKSB5H3cvwhdSbDw@mail.gmail.com>
+ <5634366D.9080307@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151030163328.GA17589@dtor-pixel>
+In-Reply-To: <5634366D.9080307@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-Cc: "Tirdea, Irina" <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Dolca, Robert" <robert.dolca@intel.com>
+To: Jon Masters <jcm@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Stone <al.stone@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, dmaengine <dmaengine@vger.kernel.org>, timur@codeaurora.org, cov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, leif.lindholm@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 09:33:28AM -0700, Dmitry Torokhov wrote:
-> On Mon, Oct 19, 2015 at 05:52:39PM +0300, mika.westerberg@linux.intel.com wrote:
-> > On Mon, Oct 19, 2015 at 02:32:24PM +0000, Tirdea, Irina wrote:
-> > > 
-> > > 
-> > > > -----Original Message-----
-> > > > From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of
-> > > > mika.westerberg@linux.intel.com
-> > > > Sent: 14 October, 2015 16:44
-> > > > To: Dmitry Torokhov
-> > > > Cc: Tirdea, Irina; Bastien Nocera; Aleksei Mamlin; Karsten Merker; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-
-> > > > kernel@vger.kernel.org; devicetree@vger.kernel.org
-> > > > Subject: Re: [PATCH v9 2/9] Input: goodix - reset device at init
-> > > > 
-> > > > On Wed, Oct 14, 2015 at 02:18:20PM +0300, mika.westerberg@linux.intel.com wrote:
-> > > > > On Tue, Oct 13, 2015 at 11:23:03PM -0700, Dmitry Torokhov wrote:
-> > > > > > I understand why one might use acpi_dev_add_driver_gpios() to augment
-> > > > > > data in ACPI, however here we have completely different issue: driver
-> > > > > > that expects named gpios gets returned gpio that has nothing to do with
-> > > > > > what it requested, because gpiolib acpi code always falls back to
-> > > > > > unnamed gpio if it does not find named gpio. That can be acceptable if
-> > > > > > driver uses the same con_id for all requests to gpiolib, but is not
-> > > > > > working when driver supplies different con_ids.
-> > > > >
-> > > > > Right, the ACPI fallback ignores con_id completely and uses only the
-> > > > > index.
-> > > > >
-> > > > > AFAIK there is only one driver using ACPI _CRS index method:
-> > > > > sdhci-[acpi|pci].c. If we can convert that to use acpi_dev_add_driver_gpios()
-> > > > > to feed names for card detection GPIOs, I think we can remove the
-> > > > > fallback alltogether in favor of named GPIOs for ACPI.
-> > > > 
-> > > > Nah, there seems to be several drivers relying on this already :-/
-> > > 
-> > > Would it be possible to add an optional parameter to the GPIO API
-> > > to specify whether we want to fall back to indexed GPIOs for ACPI?
-> > 
-> > I don't think it's a good idea to add ACPI specifics to generic APIs.
-> > 
-> > I went through ACPI enabled drivers calling GPIO APIs and majority of
-> > them are doing this:
-> > 
-> > static int stk8312_gpio_probe(struct i2c_client *client)
-> > {
-> >         struct device *dev;
-> >         struct gpio_desc *gpio;
-> >         int ret;
-> > 
-> >         if (!client)
-> >                 return -EINVAL;
-> > 
-> >         dev = &client->dev;
-> > 
-> >         /* data ready gpio interrupt pin */
-> >         gpio = devm_gpiod_get_index(dev, STK8312_GPIO, 0, GPIOD_IN);
-> >         if (IS_ERR(gpio)) {
-> >                 dev_err(dev, "acpi gpio get index failed\n");
-> >                 return PTR_ERR(gpio);
-> >         }
-> > 
-> >         ret = gpiod_to_irq(gpio);
-> >         dev_dbg(dev, "GPIO resource, no:%d irq:%d\n", desc_to_gpio(gpio), ret);
-> > 
-> >         return ret;
-> > }
-> > 
-> > We can drop all this because I2C core already handles GpioInt -> interrupt
-> > number translation.
-> > 
-> > Few drivers are doing something more complex but I think we can still convert
-> > them to use acpi_dev_add_driver_gpios() and eventually get rid of the whole
-> > _CRS index lookup.
-> 
-> cpi_dev_add_driver_gpios() does not really help with generic drivers
-> (unless we keep adding more and more board specific data to them). How
-> about we keep track of names used and only allow conversion for the
-> first name used, like in the patch below?
-> 
-> -- 
-> Dmitry
-> 
-> gpiolib: tighten up ACPI legacy gpio lookups
-> 
-> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> We should not fall back to the legacy unnamed gpio lookup style if the
-> driver requests gpios with different names, because we'll give out the same
-> gpio twice. Let's keep track of the names that were used for the device and
-> only do the fallback for the first name used.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/gpio/gpiolib.c |   42 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 5db3445..4ae5447 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1738,6 +1738,45 @@ static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
->  	return desc;
->  }
->  
-> +struct acpi_gpio_lookup {
-> +	struct list_head node;
-> +	struct device *dev;
-> +	const char *con_id;
-> +};
-> +
-> +static DEFINE_MUTEX(acpi_gpio_lookup_lock);
-> +static LIST_HEAD(acpi_gpio_lookup_list);
-> +
-> +static bool acpi_can_fallback_crs(struct device *dev, const char *con_id)
-> +{
-> +	struct acpi_gpio_lookup *l, *lookup = NULL;
-> +
-> +	mutex_lock(&acpi_gpio_lookup_lock);
-> +
-> +	list_for_each_entry(l, &acpi_gpio_lookup_list, node) {
-> +		if (l->dev == dev) {
-> +			lookup = l;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!lookup) {
-> +		lookup = kmalloc(sizeof(*lookup), GFP_KERNEL);
-> +		if (lookup) {
-> +			lookup->dev = dev;
-> +			lookup->con_id = con_id;
-> +			list_add_tail(&lookup->node, &acpi_gpio_lookup_list);
-> +		}
-> +	}
-> +
-> +	mutex_lock(&acpi_gpio_lookup_lock);
 
-This should of course be mutex_unlock() according to the awesome 0-day
-build bot.
 
-> +
-> +	return lookup &&
-> +		((!lookup->con_id && !con_id) ||
-> +		 (lookup->con_id && con_id &&
-> +		  strcmp(lookup->con_id, con_id) == 0));
-> +}
-> +
->  static struct gpio_desc *acpi_find_gpio(struct device *dev, const char *con_id,
->  					unsigned int idx,
->  					enum gpio_lookup_flags *flags)
-> @@ -1765,7 +1804,8 @@ static struct gpio_desc *acpi_find_gpio(struct device *dev, const char *con_id,
->  
->  	/* Then from plain _CRS GPIOs */
->  	if (IS_ERR(desc)) {
-> -		desc = acpi_get_gpiod_by_index(adev, NULL, idx, &info);
-> +		if (acpi_can_fallback_crs(dev, con_id))
-> +			desc = acpi_get_gpiod_by_index(adev, NULL, idx, &info);
->  		if (IS_ERR(desc))
->  			return desc;
->  	}
+On 10/30/2015 11:33 PM, Jon Masters wrote:
+> Hi Andy,
+>
+> On 10/30/2015 04:15 PM, Andy Shevchenko wrote:
+>> On Fri, Oct 30, 2015 at 10:08 PM, Al Stone <al.stone@linaro.org> wrote:
+>>> On 10/30/2015 01:01 PM, Mark Rutland wrote:
+>>>> On Fri, Oct 30, 2015 at 02:48:06PM -0400, Sinan Kaya wrote:
+>>
+>>>> The CSRT is listed under "Want", not "Never" or "Don't Care", so Linaro
+>>>> have certainly not said that CSRT will not be supported. If anything,
+>>>> they have stated that the table should be supported.
+>>>
+>>> "Want" means interesting, and probably useful, but no clear indication that
+>>> anyone actually needs it.  At one point, we thought we might use the CSRT
+>>> for describing DMA, but it turns out we have not needed to.
+>>
+>> Then you are going to have either 1 or 0 DMAC for slave devices, right?
+>
+> I believe what Al means is that such hardware has not appeared
+> (publicly) until this time and so such situation was theoretical and
+> thus not covered by the Linaro wiki. Linaro had not prioritized CSRT
+> because it didn't seem that the need to support it would arise soon.
+>
+>> The CSRT, unfortunately, the only way how to enumerate DMAC to be used
+>> by slave devices.
+>> You may look into drivers/dma/acpi-dma.c for usage in Linux.
+>>
+>> Yes, I know about _DSD, but I don't think it will provide soon any
+>> other official mechanisms to what we have now. Better to ask Rafael
+>> and Mika.
+>
+> Thanks for the feedback. I agree that generally the plan is to use
+> existing tables from x86 on arm64 when possible. Please see below.
+>
+>>> However, let's make sure we're saying the same thing: the CSRT table is
+>>> properly defined in the kernel include/acpi/actbl2.h file so one can read
+>>> such a table and use it if they so choose.  Nothing that we have done at
+>>> Linaro in the arm64 part of the kernel relies on any of the content from
+>>> the CSRT, nor does it preclude someone relying on that content.  So, the
+>>> CSRT is defined, and is usable, but is just not being used -- by Linaro --
+>>> at present.
+>>
+>> This sounds clear.
+>>
+>>> If that needs to change, let me know; no one has asked us to use the CSRT
+>>> for a DMA engine, and we have not been provided any hardware that requires
+>>> it.
+>>
+>> See above.
+>
+> Here's, what I believe to be the summary:
+>
+> 1). QCOM are not implementing slave device support in their current
+> HIDMA hardware, therefore the requirement for CSRT does not exist *at
+> present* for this specific driver to be merged and the discussion in
+> this sub-thread pertains only to a situation not affecting HIDMA.
+>
+> 2). A requirement upon the CSRT should be clarified in the various
+> specifications. The SBBR[0] currently "recommends" CSRT but does not
+> necessarily provide guidance about what kinds of system resources would
+> be covered by that, and so there is a potential for this to be missed.
+>
+> As one of the lead authors of certain ARM server specifications, I will
+> contact those involved in such and ensure that this is addressed with a
+> clarification in a future release.
+>
+> Thanks for raising the concern,
+>
+> Jon.
+>
+> [0]
+> http://infocenter.arm.com/help/topic/com.arm.doc.den0044a/Server_Base_Boot_Requirements.pdf
+>
+
+Apologies for creating confusion.
+
+I tried using the dma-acpi.c implementation at the beginning. It didn't 
+quite play well with what I was trying to do with HIDMA. Since the file 
+header said Intel, I assumed it was an Intel specific implementation.
+
+To confirm my suspicion, I looked at the Linaro wiki. I haven't seen 
+CSRT in MUST tables.
+
+I considered WANT meaning some spec work required similar to DMAR vs. 
+IORT table.
+
 
 -- 
-Dmitry
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
