@@ -1,125 +1,86 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Sun, 1 Nov 2015 17:48:46 +0900
-Message-ID: <5635D1EE.5010604@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
- <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
- <56330E6E.50003@samsung.com> <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Enable audio codec on Olimex A20-SOM-EVB
+Date: Sun, 1 Nov 2015 10:39:15 +0100
+Message-ID: <20151101093915.GP6114@lukather>
+References: <1446296142-4152-1-git-send-email-mweseloh42@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: k.kozlowski.k@gmail.com, 'Mark Rutland' <mark.rutland@arm.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EqVOK5mkaJAMmtSx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446296142-4152-1-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-W dniu 30.10.2015 o 19:43, Pavel Fedin pisze:
->  Hello!
-> 
->> Please, carefully look at:
->> Documentation/devicetree/bindings/net/gpmc-eth.txt
->> Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>
->> 1. Try to re-use existing bindings. Although I see existing bank-width
->> and gpmc,device-width but yours samsung,srom-data-width seems better.
->> Maybe there are other to re-use?
-> 
->  I've done this and this is what i currently came up with. I'd like to discuss this before respin because nobody needs this
-> back-and-forth bouncing.
-> --- cut exynos5410.dtsi ---
-> 		sromc: sromc@12250000 {
-> 			#address-cells = <2>;
-> 			#size-cells = <1>;
-> 			ranges = <0 0 0x04000000 0x20000
-> 				  1 0 0x05000000 0x20000
-> 				  2 0 0x06000000 0x20000
-> 				  3 0 0x07000000 0x20000>;
 
-Do you have to use 2 cells for address? Cannot it be:
- 			ranges = <0 0x04000000 0x20000
- 				  1 0x05000000 0x20000
- 				  2 0x06000000 0x20000
- 				  3 0x07000000 0x20000>;
+--EqVOK5mkaJAMmtSx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> 			compatible = "samsung,exynos-srom";
-> 			reg = <0x12250000 0x14>;
+Hi,
 
-Put compatible and reg at beginning.
+On Sat, Oct 31, 2015 at 01:55:42PM +0100, Marcus Weseloh wrote:
+> Enable the on-chip audio codec on the Olimex A20-SOM-EVB
+>=20
+> Signed-off-by: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/bo=
+ot/dts/sun7i-a20-olimex-som-evb.dts
+> index b7fe102..03352cc 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+> @@ -86,6 +86,10 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&codec {
+> +        status =3D "okay";
+> +};
 
-> 		};
-> --- cut exynos5410.dtsi ---
-> --- cut exynos5410-smdk5410.dts ---
-> &sromc {
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&srom_ctl>, <&srom_ebi>;
-> 
-> 	ethernet@3 {
-> 		compatible = "smsc,lan9115";
-> 		reg = <3 0 0x10000>;
-> 		phy-mode = "mii";
-> 		interrupt-parent = <&gpx0>;
-> 		interrupts = <5 8>;
-> 		reg-io-width = <2>;
-> 		smsc,irq-push-pull;
-> 		smsc,force-internal-phy;
-> 
-> 		samsung,srom-config = <1 9 12 1 9 1 1>;
-> 	};
-> };
-> --- cut exynos5410-smdk5410.dts ---
-> 
->  1. After writing proper ranges i was able to get rid of dedicated bank number property, because now it is the first value in
-> device's "reg".
+The indentation in the DT in with tabs, and not spaces (and checkpatch
+actually complains about that).
 
-Good, I like your approach.
+Make sure you run checkpatch before sending a new patch.
 
->  2. I noticed that smsc binding already uses reg-io-width property. I searched for it, and it appears to be reused by many devices.
-> So, i decided to use it to specify bank width, since it's already there. ti-gpmc uses bank-width because it supports configurations
-> like reg-io-width = 4 && bank-width = 2. I don't know if it's possible to do the same with SROMc, Exynos doc doesn't tell anything
-> about 32-bit accesses. But, if you want to support it too, i would suggest the following algorithm:
->     if (have bank-width)
->         width = bank-width
->     else if (have reg-io-width)
->         width = reg-io-width
->     else
->         width = 1 /* default */
+I've fixed it, and queued the patch for 4.5. Thanks!
 
-Re-using reg-io-width seems fine. In future, if needed, this can be
-extended by introducing bank-width but now there is no sense in it.
+Maxime
 
->  3. About samsung,srom-config array. I have the following reasons to keep if this way:
->     - listing every property under own name is just too much typing
->     - these values really do not make sense without each other, or partialy. I would say that in array form they are even better
-> readable, because it is the same order in which they go into the register.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-For timings - OK. PMC is separate. This is not a timing.
+--EqVOK5mkaJAMmtSx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> However, it is still a nice idea do document them, but...
-> my PDF has "confidential" watermark on it, and this would mean that i essentially copy some information from it into Linux doc. Is
-> it okay to do this?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-You need to document them. We are not gonna put some data looking like a
-vendor blob into the binding. I understand that document has
-confidential mark... all of Samsung datasheets I've seen had it. I don't
-find it as problem but of course I am not the one to judge here. If you
-do not feel comfortable publishing such data, get an approval from your
-manager. You can also try to search for this in vendor code
-(opensource.samsung.com). If it is published there, then this won't be a
-disclosure.
+iQIcBAEBAgAGBQJWNd3DAAoJEBx+YmzsjxAgvxUP/0lEJouiMEM4lKymo1AHN6CQ
+0e9dASWKKClGgEgq9YxPUK3P5c5fav+HNYzvWoXtQ4Io6jyxgRRxHpBNg4jD/28Z
+iEe7aQ3z+sw33BcjZKv/gAIv7/J52xlP6vys5CLeYxwX3TMDxjCdQzmJDQUITl5t
+3r+Po+LJWQHmOFr3c5it/wV8KjDLIoiSLpnpH8/ol1aq6GW55R8ZDBiDL+iudPhM
+h437gwa7t+IfUhGZvU7NKG6jecLCGq7mFADnHSWnC6kYxPcUntc2ogukV630jDi3
+01bC7kVJR5Sr6TKFyaYQttTei2QVOV4kUnOWngbTeo5qcZqFhcSi5vNJnZ3iOeuA
+KcqiZV1JE/5KKGo2m5+6Zp68XITS5nL2breL6VS9SZ2wn0/zNiB7mk8o/zx4ZpLy
+4QJgUS8bzOibQGkv/D7kaAUAqtMaPrk8gvoPFe/uVFlSBV9RhEM3XXvY+UoL0YS+
+nb2NgrN8U/HKA32AH62N1L8qyMIGvAEBITAUC8+yEWPeGQKP4XqY6GRBHllXKi2a
+XjYk9Kq1GGNcuLqpOYX1XW9HusZg19N3pkh2tv3lLXSfnN/EKZA+r78sAxBTfN0V
+WEBM5CPuXz0P0JkWHNApbDxJwiKoUDDbVwRgYFDit+Dzzp+XgcWDkcDs+v99nWT4
+/RhFjd1jf92BWHMa+nfk
+=VTLK
+-----END PGP SIGNATURE-----
 
->  If you still dislike the array, i'll redo is a set of properties like samsung,srom-tacs, samsung,srom-tcos, etc.
-> 
-
-Ok, array for timings, but PMC IMHO is different.
-
-BTW, your email client is weird. You are sending non-wrapped emails
-without format=flowed in Content-Type. Please stick to mailing list
-convention of wrapping at 72-char. It is really difficult to read your
-replies.
-
-Best regards,
-Krzysztof
+--EqVOK5mkaJAMmtSx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
