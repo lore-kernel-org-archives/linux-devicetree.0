@@ -1,44 +1,29 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun7i: Enable audio codec on Wexler
- TAB7200 tablet.
-Date: Sun,  1 Nov 2015 16:53:52 +0300
-Message-ID: <1446386032-19839-1-git-send-email-mamlinav@gmail.com>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Input: Add binding document for a generic ADC keypad
+Date: Sun, 1 Nov 2015 11:55:10 -0200
+Message-ID: <CAOMZO5Bc8hotVooOG+sEjtYqb7ENapQ0Fw08a_Y-hRpvLgxwTw@mail.gmail.com>
+References: <1427503398-19682-1-git-send-email-abrestic@chromium.org>
+	<20150329040053.GD36501@dtor-ws>
+	<CAL1qeaFHhPW=eS+CaVC1DZXHL8YausOaR1itc8pwVLTeWyDnMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEII7M6YWECRUBFV7LHO4-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaFHhPW=eS+CaVC1DZXHL8YausOaR1itc8pwVLTeWyDnMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable on-chip audio codec on the Wexler TAB7200 tablet.
+Hi Andrew,
 
-Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Mon, Mar 30, 2015 at 1:56 AM, Andrew Bresticker
+<abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-index 90952ab..69f0a2c 100644
---- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-@@ -75,6 +75,10 @@
- 	};
- };
- 
-+&codec {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&reg_dcdc2>;
- };
--- 
-2.4.9
+>> I'd rather we have it defined explicitly in the binding, i.e. make it a
+>> required property?
+>
+> Sure, will do.
+
+Do you plan to send a v2 of the generic ADC keypad series?
+
+Thanks
