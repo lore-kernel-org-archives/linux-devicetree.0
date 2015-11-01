@@ -1,79 +1,58 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] iio: Heart Rate Monitors
-Date: Sun, 1 Nov 2015 18:35:54 +0000
-Message-ID: <56365B8A.3030908@kernel.org>
-References: <1446309089-21094-1-git-send-email-afd@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Sun, 1 Nov 2015 10:52:05 +0100
+Message-ID: <20151101095205.GS6114@lukather>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-6-git-send-email-jenskuske@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446309089-21094-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mzmkN2k+aDjaU9Rr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF5X3GYQKGQEII7AWGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445964626-6484-6-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31/10/15 16:31, Andrew F. Davis wrote:
-> Hello all,
-> 
-> This series adds the TI AFE4404 "Ultra-small, Integrated AFE for
-> Wearable, Optical Heart Rate Monitoring and Bio-Sensing".
-> 
-> This work is based on previous work by Dan Murphy [0] who is working
-> on other tasks at the moment, so I will be helping to continue
-> upstreaming this driver. This is more of a re-write than a continuation
-> and there are many changes so I am submitting this as a v1.
-> 
-> This device is very similar to the AFE4403 and I was originally planning
-> on pushing the two drivers together with common core functions in a
-> third file. The AFE4403 driver is still being tested so I merged common
-> code back into this driver, this is why this driver may seem a bit
-> unnecessarily modular. I will probably split this stuff back out when
-> I push the AFE4403.
-> 
-> I also had some issues with sysfs naming for the channels; this device
-> has three input channels from three LED stages and two ambient
-> channels based on the LED stages. This might have been be a good place
-> for using IIO modifiers[1], but we also have two differential channels
-> based on the ambient channels, and channels cannot have both modifiers
-> and be differential (the modifier is stored in the differential channel's
-> ID field?).
-True enough. Didn't expect to run into this particular problem, but I guess
-someone will always make hardware breaking any assumptions we make from the
-software side of things.
- So I used sysfs names that would be close to what they
-> would be if IIO supported these things.
-Fair enough as a starting point though we probably want to figure out how
-to do this 'right'.   Adding an extra field to the channel descriptor will
-be easy enough - it'll be event codes that are nasty to handle.
+--mzmkN2k+aDjaU9Rr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Jonathan
-> 
-> [0] http://www.spinics.net/lists/linux-iio/msg18413.html
-> [1] IIO_MOD_TEMP_AMBIENT could be renamed IIO_MOD_AMBIENT as it can
-> also apply to LIGHT, PRESSURE, HUMIDITY, etc..
-No problem with this change so please send a patch.
-> 
-> Thanks,
-> Andrew
-> 
-> Andrew F. Davis (2):
->   Documentation: afe4404: Add DT bindings for the AFE4404 heart monitor
->   iio: health: Add driver for the TI AFE4404 heart monitor
-> 
->  .../ABI/testing/sysfs-bus-iio-health-afe4404       |  70 +++
->  .../devicetree/bindings/iio/health/afe4404.txt     |  27 ++
->  drivers/iio/Kconfig                                |   1 +
->  drivers/iio/Makefile                               |   1 +
->  drivers/iio/health/Kconfig                         |  24 +
->  drivers/iio/health/Makefile                        |   6 +
->  drivers/iio/health/afe4404.c                       | 526 +++++++++++++++++++++
->  drivers/iio/health/afe440x.h                       | 159 +++++++
->  8 files changed, 814 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-health-afe4404
->  create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
->  create mode 100644 drivers/iio/health/Kconfig
->  create mode 100644 drivers/iio/health/Makefile
->  create mode 100644 drivers/iio/health/afe4404.c
->  create mode 100644 drivers/iio/health/afe440x.h
-> 
+On Tue, Oct 27, 2015 at 05:50:25PM +0100, Jens Kuske wrote:
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <24000000>;
+> +		arm,cpu-registers-not-fw-configured;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x40000000 0x80000000>;
+> +	};
+
+What's the u-boot support like these days?
+
+If it's ready, or at least some patches have been sent, you shouldn't
+set both the memory node (that will be overriden anyway) and the
+clock-frequency and arm,cpu-registers-not-fw-configured properties in
+the timer node, that will prevent the kernel from booting there.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--mzmkN2k+aDjaU9Rr--
