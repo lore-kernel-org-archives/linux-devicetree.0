@@ -1,292 +1,707 @@
-From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH RESEND 11/16] backlight: ti-lmu-backlight: add LM3633 driver
-Date: Mon, 2 Nov 2015 14:24:30 +0900
-Message-ID: <1446441875-1256-12-git-send-email-milo.kim@ti.com>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [PATCH RESEND 07/16] backlight: add TI LMU backlight common driver
+Date: Mon, 2 Nov 2015 14:24:26 +0900
+Message-ID: <1446441875-1256-8-git-send-email-milo.kim@ti.com>
 References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Cc: Milo Kim <milo.kim@ti.com>, Jingoo Han <jingoohan1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-LM3633 has 3 backlight strings and 11 bit dimming is supported.
-PWM brightness control is also supported.
+TI LMU backlight driver provides common driver features.
+Chip specific configuration is handled by each backlight driver such like
+LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
 
-LM3633 MFD has HWMON driver which monitors hardware fault detection.
-After this monitoring is done, LM3633 backlight device should be
-reinitialized. To enable this, 'hwmon_notifier_used' is set to true.
-Then, TI LMU backlight handles LMU HWMON event in
-ti_lmu_backlight_hwmon_notifier().
+It supports common features as below.
+  - Backlight subsystem control
+  - Consistent device control flow
+  - Control bank assignment
+  - HWMON notifier handling
+  - PWM brightness control
+  - Shared device tree node
 
-Common backlight driver is controlled by TI LMU backlight driver.
-Only LM3633 specific code is implemented here.
+Operation
+---------
+  Each LMU backlight driver uses two macros for device registration.
+  TI_LMU_BL_OF_DEVICE() and TI_LMU_BL_PLATFORM_DRIVER().
 
-Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+  (Common driver code)		(Chip dependent code)
+
+				Define device operations, 'ti_lmu_bl_ops'
+				: init, configure, update brightness,
+				  enable, max brightness, light effect
+				  and LMU HWMON event option
+
+  _probe()
+    register backlight
+      parsing the device tree
+      create data from the DT
+      init			-> init()
+      configure			-> configure()
+      add backlight device
+
+  Helper
+    convert ramp time value to
+    register index
+
+  Update brightness
+    pwm mode
+    I2C mode			-> enable(), update_brightness()
+
+  LMU HWMON event handling	-> check 'hwmon_notifier_used'
+    reinitialize device		-> init(), configure()
+
+  _remove()
+    unregister notifier if used
+    turn off the backlight
+
+Data structure
+--------------
+  ti_lmu_bl_ops:	Configure device specific operation and option.
+  ti_lmu_bl_chip: 	Backlight device data.
+  ti_lmu_bl:		Backlight output channel data.
+			One backlight device can have multiple backlight
+			channels.
+
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Milo Kim <milo.kim@ti.com>
 ---
- drivers/video/backlight/Kconfig     |   9 ++
- drivers/video/backlight/Makefile    |   1 +
- drivers/video/backlight/lm3633_bl.c | 210 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 220 insertions(+)
- create mode 100644 drivers/video/backlight/lm3633_bl.c
+ drivers/video/backlight/Kconfig            |   9 +
+ drivers/video/backlight/Makefile           |   1 +
+ drivers/video/backlight/ti-lmu-backlight.c | 429 +++++++++++++++++++++++++++++
+ drivers/video/backlight/ti-lmu-backlight.h | 152 ++++++++++
+ 4 files changed, 591 insertions(+)
+ create mode 100644 drivers/video/backlight/ti-lmu-backlight.c
+ create mode 100644 drivers/video/backlight/ti-lmu-backlight.h
 
 diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index e3bf905..e3c4adb 100644
+index 5ffa4b4..f26eb1c 100644
 --- a/drivers/video/backlight/Kconfig
 +++ b/drivers/video/backlight/Kconfig
-@@ -417,6 +417,15 @@ config BACKLIGHT_LM3632
- 	  Up to 2 backlight strings and 11 bit dimming is supported.
- 	  PWM brightness control is also supported.
+@@ -390,6 +390,15 @@ config BACKLIGHT_LM3639
+ 	help
+ 	  This supports TI LM3639 Backlight + 1.5A Flash LED Driver
  
-+config BACKLIGHT_LM3633
-+	tristate "Backlight driver for TI LM3633"
-+	depends on BACKLIGHT_CLASS_DEVICE && MFD_TI_LMU
-+	select TI_LMU_BACKLIGHT
++config TI_LMU_BACKLIGHT
++	tristate "Backlight driver for TI LMU"
++	depends on BACKLIGHT_LM3532 || BACKLIGHT_LM3631 || \
++		   BACKLIGHT_LM3632 || BACKLIGHT_LM3633 || \
++		   BACKLIGHT_LM3695 || BACKLIGHT_LM3697
 +	help
-+	  Say Y to enable the backlight driver for TI LM3633.
-+	  Up to 3 backlight strings and 11 bit dimming is supported.
-+	  PWM brightness control is also supported.
++	  TI LMU backlight driver provides common driver features.
++	  Chip specific configuration is handled by each backlight driver.
 +
- config TI_LMU_BACKLIGHT
- 	tristate "Backlight driver for TI LMU"
- 	depends on BACKLIGHT_LM3532 || BACKLIGHT_LM3631 || \
+ config BACKLIGHT_LP855X
+ 	tristate "Backlight driver for TI LP855X"
+ 	depends on BACKLIGHT_CLASS_DEVICE && I2C && PWM
 diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-index 6cd5232..364b854 100644
+index 16ec534..9e475dc 100644
 --- a/drivers/video/backlight/Makefile
 +++ b/drivers/video/backlight/Makefile
-@@ -41,6 +41,7 @@ obj-$(CONFIG_BACKLIGHT_LM3533)		+= lm3533_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3630A)		+= lm3630a_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3631)		+= lm3631_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3632)		+= lm3632_bl.o
-+obj-$(CONFIG_BACKLIGHT_LM3633)		+= lm3633_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3639)		+= lm3639_bl.o
- obj-$(CONFIG_BACKLIGHT_LOCOMO)		+= locomolcd.o
- obj-$(CONFIG_BACKLIGHT_LP855X)		+= lp855x_bl.o
-diff --git a/drivers/video/backlight/lm3633_bl.c b/drivers/video/backlight/lm3633_bl.c
+@@ -55,3 +55,4 @@ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+ obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+ obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
++obj-$(CONFIG_TI_LMU_BACKLIGHT)		+= ti-lmu-backlight.o
+diff --git a/drivers/video/backlight/ti-lmu-backlight.c b/drivers/video/backlight/ti-lmu-backlight.c
 new file mode 100644
-index 0000000..6e01746
+index 0000000..ca59c07
 --- /dev/null
-+++ b/drivers/video/backlight/lm3633_bl.c
-@@ -0,0 +1,210 @@
++++ b/drivers/video/backlight/ti-lmu-backlight.c
+@@ -0,0 +1,429 @@
 +/*
-+ * TI LM3633 Backlight Driver
++ * TI LMU(Lighting Management Unit) Backlight Common Driver
 + *
 + * Copyright 2015 Texas Instruments
 + *
-+ * Author: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
++ * Author: Milo Kim <milo.kim@ti.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
++#include <linux/backlight.h>
++#include <linux/err.h>
 +#include <linux/kernel.h>
 +#include <linux/mfd/ti-lmu.h>
-+#include <linux/mfd/ti-lmu-register.h>
 +#include <linux/module.h>
++#include <linux/notifier.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/slab.h>
 +
 +#include "ti-lmu-backlight.h"
 +
-+#define LM3633_DEFAULT_OVP		LM3633_BOOST_OVP_40V
-+#define LM3633_BL_MAX_STRINGS		3
-+#define LM3633_BL_MAX_BRIGHTNESS	2047
++#define DEFAULT_BL_NAME			"lcd-backlight"
++#define DEFAULT_PWM_NAME		"lmu-backlight"
 +
-+static int lm3633_bl_init(struct ti_lmu_bl_chip *chip)
++static int ti_lmu_backlight_enable(struct ti_lmu_bl *lmu_bl, int enable)
 +{
-+	/* Configure ramp selection for each bank */
-+	return ti_lmu_update_bits(chip->lmu, LM3633_REG_BL_RAMP_CONF,
-+				  LM3633_BL_RAMP_MASK, LM3633_BL_RAMP_EACH);
-+}
++	const struct ti_lmu_bl_ops *ops = lmu_bl->chip->ops;
 +
-+static int lm3633_bl_enable(struct ti_lmu_bl *lmu_bl, int enable)
-+{
-+	return ti_lmu_update_bits(lmu_bl->chip->lmu, LM3633_REG_ENABLE,
-+				  BIT(lmu_bl->bank_id),
-+				  enable << lmu_bl->bank_id);
-+}
-+
-+static int lm3633_bl_set_brightness(struct ti_lmu_bl *lmu_bl, int brightness)
-+{
-+	int ret;
-+	u8 data;
-+	u8 reg_lsb[] = { LM3633_REG_BRT_HVLED_A_LSB,
-+			 LM3633_REG_BRT_HVLED_B_LSB, };
-+	u8 reg_msb[] = { LM3633_REG_BRT_HVLED_A_MSB,
-+			 LM3633_REG_BRT_HVLED_B_MSB, };
-+
-+	if (lmu_bl->mode == BL_PWM_BASED) {
-+		/*
-+		 * PWM can start from any non-zero code and dim down to zero.
-+		 * So, brightness register should be updated even in PWM mode.
-+		 */
-+		if (brightness > 0)
-+			brightness = LM3633_BL_MAX_BRIGHTNESS;
-+		else
-+			brightness = 0;
-+	}
-+
-+	data = brightness & LM3633_BRT_HVLED_LSB_MASK;
-+	ret = ti_lmu_update_bits(lmu_bl->chip->lmu, reg_lsb[lmu_bl->bank_id],
-+				 LM3633_BRT_HVLED_LSB_MASK, data);
-+	if (ret)
-+		return ret;
-+
-+	data = (brightness >> LM3633_BRT_HVLED_MSB_SHIFT) & 0xFF;
-+	return ti_lmu_write_byte(lmu_bl->chip->lmu, reg_msb[lmu_bl->bank_id],
-+				 data);
-+}
-+
-+static int lm3633_bl_boost_configure(struct ti_lmu_bl *lmu_bl)
-+{
-+	return ti_lmu_update_bits(lmu_bl->chip->lmu, LM3633_REG_BOOST_CFG,
-+				  LM3633_BOOST_OVP_MASK, LM3633_DEFAULT_OVP);
-+}
-+
-+static int lm3633_bl_set_ctrl_mode(struct ti_lmu_bl *lmu_bl)
-+{
-+	int bank_id = lmu_bl->bank_id;
-+
-+	if (lmu_bl->mode == BL_PWM_BASED)
-+		return ti_lmu_update_bits(lmu_bl->chip->lmu,
-+					  LM3633_REG_PWM_CFG,
-+					  BIT(bank_id), 1 << bank_id);
++	if (ops->bl_enable)
++		return ops->bl_enable(lmu_bl, enable);
 +
 +	return 0;
 +}
 +
-+static int lm3633_bl_string_configure(struct ti_lmu_bl *lmu_bl)
++static void ti_lmu_backlight_pwm_ctrl(struct ti_lmu_bl *lmu_bl, int br,
++				      int max_br)
 +{
-+	struct ti_lmu *lmu = lmu_bl->chip->lmu;
-+	int is_detected = 0;
-+	int i, ret;
++	struct pwm_device *pwm;
++	unsigned int duty, period;
 +
-+	/* Assign control bank from backlight string configuration */
-+	for (i = 0; i < LM3633_BL_MAX_STRINGS; i++) {
-+		if (test_bit(i, &lmu_bl->bl_string)) {
-+			ret = ti_lmu_update_bits(lmu,
-+						 LM3633_REG_HVLED_OUTPUT_CFG,
-+						 BIT(i), lmu_bl->bank_id << i);
-+			if (ret)
-+				return ret;
-+
-+			is_detected = 1;
++	/* Request a PWM device with the consumer name */
++	if (!lmu_bl->pwm) {
++		pwm = devm_pwm_get(lmu_bl->chip->dev, DEFAULT_PWM_NAME);
++		if (IS_ERR(pwm)) {
++			dev_err(lmu_bl->chip->dev,
++				"Can not get PWM device, err: %ld\n",
++				PTR_ERR(pwm));
++			return;
 +		}
++
++		lmu_bl->pwm = pwm;
 +	}
 +
-+	if (!is_detected) {
-+		dev_err(lmu_bl->chip->dev, "No backlight string found\n");
++	period = lmu_bl->pwm_period;
++	duty = br * period / max_br;
++
++	pwm_config(lmu_bl->pwm, duty, period);
++	if (duty)
++		pwm_enable(lmu_bl->pwm);
++	else
++		pwm_disable(lmu_bl->pwm);
++}
++
++static int ti_lmu_backlight_update_status(struct backlight_device *bl_dev)
++{
++	struct ti_lmu_bl *lmu_bl = bl_get_data(bl_dev);
++	const struct ti_lmu_bl_ops *ops = lmu_bl->chip->ops;
++	int brightness = bl_dev->props.brightness;
++	int ret;
++
++	if (bl_dev->props.state & BL_CORE_SUSPENDED)
++		brightness = 0;
++
++	if (brightness > 0)
++		ret = ti_lmu_backlight_enable(lmu_bl, 1);
++	else
++		ret = ti_lmu_backlight_enable(lmu_bl, 0);
++	if (ret)
++		return ret;
++
++	if (lmu_bl->mode == BL_PWM_BASED)
++		ti_lmu_backlight_pwm_ctrl(lmu_bl, brightness,
++					  bl_dev->props.max_brightness);
++
++	/*
++	 * In some devices, additional handling is required after PWM control.
++	 * So, just call device-specific brightness function.
++	 */
++	if (ops->update_brightness)
++		return ops->update_brightness(lmu_bl, brightness);
++
++	return 0;
++}
++
++static const struct backlight_ops lmu_bl_common_ops = {
++	.options = BL_CORE_SUSPENDRESUME,
++	.update_status = ti_lmu_backlight_update_status,
++};
++
++static int ti_lmu_backlight_of_create(struct ti_lmu_bl_chip *chip,
++				      struct device_node *np)
++{
++	struct device_node *child;
++	struct ti_lmu_bl *lmu_bl, *each;
++	int num_backlights;
++	int i = 0;
++	u32 imax;
++
++	num_backlights = of_get_child_count(np);
++	if (num_backlights == 0) {
++		dev_err(chip->dev, "No backlight strings\n");
 +		return -EINVAL;
 +	}
 +
++	/* One chip can have mulitple backlight strings */
++	lmu_bl = devm_kzalloc(chip->dev, sizeof(*lmu_bl) * num_backlights,
++			      GFP_KERNEL);
++	if (!lmu_bl)
++		return -ENOMEM;
++
++	for_each_child_of_node(np, child) {
++		each = lmu_bl + i;
++		each->bank_id = i;
++		each->chip = chip;
++
++		of_property_read_string(child, "backlight-name",
++					&each->name);
++
++		/* Backlight string configuration */
++		each->bl_string = 0;
++		if (of_property_read_bool(child, "hvled1-used"))
++			each->bl_string |= LMU_HVLED1;
++		if (of_property_read_bool(child, "hvled2-used"))
++			each->bl_string |= LMU_HVLED2;
++		if (of_property_read_bool(child, "hvled3-used"))
++			each->bl_string |= LMU_HVLED3;
++
++		imax = 0;
++		of_property_read_u32(child, "backlight-max-microamp", &imax);
++		each->imax = ti_lmu_get_current_code(imax);
++
++		of_property_read_u32(child, "initial-brightness",
++				     &each->init_brightness);
++
++		/* Lighting effect properties */
++		of_property_read_u32(child, "ramp-up-msec",
++				     &each->ramp_up_msec);
++		of_property_read_u32(child, "ramp-down-msec",
++				     &each->ramp_down_msec);
++
++		/* PWM mode */
++		of_property_read_u32(child, "pwm-period", &each->pwm_period);
++		if (each->pwm_period > 0)
++			each->mode = BL_PWM_BASED;
++		else
++			each->mode = BL_REGISTER_BASED;
++
++		each->chip = chip;
++		i++;
++	}
++
++	chip->lmu_bl = lmu_bl;
++	chip->num_backlights = num_backlights;
++
 +	return 0;
 +}
 +
-+static int lm3633_bl_set_current_limit(struct ti_lmu_bl *lmu_bl)
++static int ti_lmu_backlight_configure(struct ti_lmu_bl *lmu_bl)
 +{
-+	u8 reg[] = { LM3633_REG_IMAX_HVLED_A, LM3633_REG_IMAX_HVLED_B, };
++	const struct ti_lmu_bl_ops *ops = lmu_bl->chip->ops;
 +
-+	return ti_lmu_write_byte(lmu_bl->chip->lmu, reg[lmu_bl->bank_id],
-+				 lmu_bl->imax);
++	if (ops->configure)
++		return ops->configure(lmu_bl);
++
++	return 0;
 +}
 +
-+static int lm3633_bl_set_ramp(struct ti_lmu_bl *lmu_bl)
++static int ti_lmu_backlight_reload(struct ti_lmu_bl_chip *chip)
 +{
-+	int ret, index;
-+	u8 reg;
++	struct ti_lmu_bl *each;
++	int i, ret;
 +
-+	index = ti_lmu_backlight_get_ramp_index(lmu_bl, BL_RAMP_UP);
-+	if (index > 0) {
-+		if (lmu_bl->bank_id == 0)
-+			reg = LM3633_REG_BL0_RAMPUP;
-+		else
-+			reg = LM3633_REG_BL1_RAMPUP;
-+
-+		ret = ti_lmu_update_bits(lmu_bl->chip->lmu, reg,
-+					 LM3633_BL_RAMPUP_MASK,
-+					 index << LM3633_BL_RAMPUP_SHIFT);
++	if (chip->ops->init) {
++		ret = chip->ops->init(chip);
 +		if (ret)
 +			return ret;
 +	}
 +
-+	index = ti_lmu_backlight_get_ramp_index(lmu_bl, BL_RAMP_DOWN);
-+	if (index > 0) {
-+		if (lmu_bl->bank_id == 0)
-+			reg = LM3633_REG_BL0_RAMPDN;
-+		else
-+			reg = LM3633_REG_BL1_RAMPDN;
-+
-+		ret = ti_lmu_update_bits(lmu_bl->chip->lmu, reg,
-+					 LM3633_BL_RAMPDN_MASK,
-+					 index << LM3633_BL_RAMPDN_SHIFT);
++	for (i = 0; i < chip->num_backlights; i++) {
++		each = chip->lmu_bl + i;
++		ret = ti_lmu_backlight_configure(each);
 +		if (ret)
 +			return ret;
++
++		backlight_update_status(each->bl_dev);
 +	}
 +
 +	return 0;
 +}
 +
-+static int lm3633_bl_configure(struct ti_lmu_bl *lmu_bl)
++static int ti_lmu_backlight_hwmon_notifier(struct notifier_block *nb,
++					   unsigned long action, void *unused)
++{
++	struct ti_lmu_bl_chip *chip = container_of(nb, struct ti_lmu_bl_chip,
++						   nb);
++	int ret;
++
++	/*
++	 * LMU HWMON driver reset the device, so backlight should be
++	 * re-initialized after hwmon detection procedure is done.
++	 */
++	if (action == LMU_EVENT_HWMON_DONE) {
++		ret = ti_lmu_backlight_reload(chip);
++		if (ret)
++			return NOTIFY_STOP;
++	}
++
++	return NOTIFY_OK;
++}
++
++static int ti_lmu_backlight_init(struct ti_lmu_bl_chip *chip,
++				 struct device_node *np)
 +{
 +	int ret;
 +
-+	ret = lm3633_bl_boost_configure(lmu_bl);
++	ret = ti_lmu_backlight_of_create(chip, np);
 +	if (ret)
 +		return ret;
 +
-+	ret = lm3633_bl_set_ctrl_mode(lmu_bl);
-+	if (ret)
-+		return ret;
++	if (chip->ops->init) {
++		ret = chip->ops->init(chip);
++		if (ret)
++			return ret;
++	}
 +
-+	ret = lm3633_bl_string_configure(lmu_bl);
-+	if (ret)
-+		return ret;
-+
-+	ret = lm3633_bl_set_current_limit(lmu_bl);
-+	if (ret)
-+		return ret;
-+
-+	ret = lm3633_bl_set_ramp(lmu_bl);
-+	if (ret)
-+		return ret;
++	/* Register notifier for LMU HWMON event */
++	if (chip->ops->hwmon_notifier_used) {
++		chip->nb.notifier_call = ti_lmu_backlight_hwmon_notifier;
++		ret = blocking_notifier_chain_register(&chip->lmu->notifier,
++						       &chip->nb);
++		if (ret)
++			return ret;
++	}
 +
 +	return 0;
 +}
 +
-+/* Backlight ramp up/down time. Unit is msec. */
-+static const int lm3633_ramp_table[] = {
-+	   2, 250, 500, 1000, 2000, 4000, 8000, 16000,
-+};
++static int ti_lmu_backlight_add_device(struct device *dev,
++				       struct ti_lmu_bl *lmu_bl)
++{
++	struct backlight_device *bl_dev;
++	struct backlight_properties props;
++	int max_brightness = lmu_bl->chip->ops->max_brightness;
++	char name[20];
 +
-+static const struct ti_lmu_bl_ops lm3633_lmu_ops = {
-+	.init			= lm3633_bl_init,
-+	.configure		= lm3633_bl_configure,
-+	.update_brightness	= lm3633_bl_set_brightness,
-+	.bl_enable		= lm3633_bl_enable,
-+	.hwmon_notifier_used	= true,
-+	.max_brightness		= LM3633_BL_MAX_BRIGHTNESS,
-+	.ramp_table		= lm3633_ramp_table,
-+	.size_ramp		= ARRAY_SIZE(lm3633_ramp_table),
-+};
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.type = BACKLIGHT_PLATFORM;
++	props.brightness = lmu_bl->init_brightness;
++	props.max_brightness = max_brightness;
 +
-+/* LM3633 backlight of_device_id */
-+TI_LMU_BL_OF_DEVICE(lm3633, "ti,lm3633-backlight");
++	/* Backlight device name */
++	if (!lmu_bl->name)
++		snprintf(name, sizeof(name), "%s:%d", DEFAULT_BL_NAME,
++			 lmu_bl->bank_id);
++	else
++		snprintf(name, sizeof(name), "%s", lmu_bl->name);
 +
-+/* LM3633 backlight platform driver */
-+TI_LMU_BL_PLATFORM_DRIVER(lm3633, "lm3633-backlight");
++	bl_dev = devm_backlight_device_register(dev, name, lmu_bl->chip->dev,
++						lmu_bl, &lmu_bl_common_ops,
++						&props);
++	if (IS_ERR(bl_dev))
++		return PTR_ERR(bl_dev);
 +
-+MODULE_DESCRIPTION("TI LM3633 Backlight Driver");
++	lmu_bl->bl_dev = bl_dev;
++
++	return 0;
++}
++
++static struct ti_lmu_bl_chip *
++ti_lmu_backlight_register(struct device *dev, struct ti_lmu *lmu,
++			  const struct ti_lmu_bl_ops *ops)
++{
++	struct device_node *np = dev->of_node;
++	struct ti_lmu_bl_chip *chip;
++	struct ti_lmu_bl *each;
++	int i, ret;
++
++	if (!ops) {
++		dev_err(dev, "Operation is not configured\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return ERR_PTR(-ENOMEM);
++
++	chip->dev = dev;
++	chip->lmu = lmu;
++	chip->ops = ops;
++
++	ret = ti_lmu_backlight_init(chip, np);
++	if (ret) {
++		dev_err(dev, "Backlight init err: %d\n", ret);
++		return ERR_PTR(ret);
++	}
++
++	/* Add backlight strings */
++	for (i = 0; i < chip->num_backlights; i++) {
++		each = chip->lmu_bl + i;
++
++		ret = ti_lmu_backlight_configure(each);
++		if (ret) {
++			dev_err(dev, "Backlight config err: %d\n", ret);
++			return ERR_PTR(ret);
++		}
++
++		ret = ti_lmu_backlight_add_device(dev, each);
++		if (ret) {
++			dev_err(dev, "Backlight device err: %d\n", ret);
++			return ERR_PTR(ret);
++		}
++
++		backlight_update_status(each->bl_dev);
++	}
++
++	return chip;
++}
++
++static void ti_lmu_backlight_unregister(struct ti_lmu_bl_chip *chip)
++{
++	struct ti_lmu_bl *each;
++	int i;
++
++	for (i = 0; i < chip->num_backlights; i++) {
++		each = chip->lmu_bl + i;
++		each->bl_dev->props.brightness = 0;
++		backlight_update_status(each->bl_dev);
++	}
++}
++
++/* Common probe() function for LMU backlight drivers */
++int ti_lmu_backlight_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct ti_lmu *lmu = dev_get_drvdata(dev->parent);
++	struct ti_lmu_bl_chip *chip;
++	const struct of_device_id *match;
++	const struct ti_lmu_bl_ops *ops;
++
++	match = of_match_device(dev->driver->of_match_table, dev);
++	if (!match) {
++		dev_err(dev, "No matched device is found\n");
++		return -ENODEV;
++	}
++
++	/*
++	 * Get device specific data(ti_lmu_bl_ops) from of_match table.
++	 * This data is defined by TI_LMU_BL_OF_DEVICE() of each device.
++	 */
++	ops = (struct ti_lmu_bl_ops *)match->data;
++	chip = ti_lmu_backlight_register(&pdev->dev, lmu, ops);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++
++	platform_set_drvdata(pdev, chip);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ti_lmu_backlight_probe);
++
++/* Common remove() function for LMU backlight drivers */
++int ti_lmu_backlight_remove(struct platform_device *pdev)
++{
++	struct ti_lmu_bl_chip *chip = platform_get_drvdata(pdev);
++
++	if (chip->ops->hwmon_notifier_used)
++		blocking_notifier_chain_unregister(&chip->lmu->notifier,
++						   &chip->nb);
++
++	ti_lmu_backlight_unregister(chip);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ti_lmu_backlight_remove);
++
++/*
++ * Convert ramp up/down time into register index value.
++ * Get appropriate index by comparing ramp time table.
++ */
++int ti_lmu_backlight_get_ramp_index(struct ti_lmu_bl *lmu_bl,
++				    enum ti_lmu_bl_ramp_mode mode)
++{
++	const int *table = lmu_bl->chip->ops->ramp_table;
++	const int size = lmu_bl->chip->ops->size_ramp;
++	unsigned int ramp_time;
++	int i;
++
++	if (!table)
++		return -EINVAL;
++
++	if (mode == BL_RAMP_UP)
++		ramp_time = lmu_bl->ramp_up_msec;
++	else if (mode == BL_RAMP_DOWN)
++		ramp_time = lmu_bl->ramp_down_msec;
++	else
++		return -EINVAL;
++
++	if (ramp_time <= table[0])
++		return 0;
++
++	if (ramp_time >= table[size - 1])
++		return size - 1;
++
++	for (i = 1; i < size; i++)
++		if (ramp_time >= table[i - 1] && ramp_time < table[i])
++			return i - 1;
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(ti_lmu_backlight_get_ramp_index);
++
++MODULE_DESCRIPTION("TI LMU Backlight Common Driver");
 +MODULE_AUTHOR("Milo Kim");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:lm3633-backlight");
+diff --git a/drivers/video/backlight/ti-lmu-backlight.h b/drivers/video/backlight/ti-lmu-backlight.h
+new file mode 100644
+index 0000000..f3f3784
+--- /dev/null
++++ b/drivers/video/backlight/ti-lmu-backlight.h
+@@ -0,0 +1,152 @@
++/*
++ * TI LMU(Lighting Management Unit) Backlight Common Driver
++ *
++ * Copyright 2015 Texas Instruments
++ *
++ * Author: Milo Kim <milo.kim@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __TI_LMU_BACKLIGHT_H__
++#define __TI_LMU_BACKLIGHT_H__
++
++#include <linux/mfd/ti-lmu.h>
++#include <linux/notifier.h>
++#include <linux/platform_device.h>
++
++/* Macro for LMU backlight of_device_id */
++#define TI_LMU_BL_OF_DEVICE(chip, compat)				\
++static const struct of_device_id chip##_bl_of_match[] = {		\
++	{ .compatible = compat, .data = &chip##_lmu_ops },		\
++	{ }								\
++};									\
++MODULE_DEVICE_TABLE(of, chip##_bl_of_match)				\
++
++/* Macro for LMU backlight platform driver */
++#define TI_LMU_BL_PLATFORM_DRIVER(chip, _name)				\
++static struct platform_driver chip##_bl_driver = {			\
++	.probe  = ti_lmu_backlight_probe,				\
++	.remove = ti_lmu_backlight_remove,				\
++	.driver = {							\
++		.name = _name,						\
++		.of_match_table = chip##_bl_of_match,			\
++	},								\
++};									\
++									\
++module_platform_driver(chip##_bl_driver)
++
++enum ti_lmu_bl_ctrl_mode {
++	BL_REGISTER_BASED,
++	BL_PWM_BASED,
++};
++
++enum ti_lmu_bl_ramp_mode {
++	BL_RAMP_UP,
++	BL_RAMP_DOWN,
++};
++
++struct ti_lmu_bl;
++struct ti_lmu_bl_chip;
++
++/**
++ * struct ti_lmu_bl_ops
++ *
++ * @init:		Device initialization function
++ * @configure:		Device string configuration function
++ * @update_brightness:	Device brightness control function
++ * @bl_enable:		Device backlight enable/disable control function
++ * @hwmon_notifier_used:Set true if the device needs to handle LMU HWMON event
++ * @max_brightness:	Max brightness value of backlight device
++ * @ramp_table:		Ramp time table for lighting effect.
++ *			It's used for searching appropriate register index.
++ *			Please refer to ti_lmu_backlight_get_ramp_index().
++ * @size_ramp:		Size of ramp table
++ *
++ * TI LMU backlight device should call ti_lmu_backlight_register() with
++ * each device operation.
++ */
++struct ti_lmu_bl_ops {
++	int (*init)(struct ti_lmu_bl_chip *lmu_chip);
++	int (*configure)(struct ti_lmu_bl *lmu_bl);
++	int (*update_brightness)(struct ti_lmu_bl *lmu_bl, int brightness);
++	int (*bl_enable)(struct ti_lmu_bl *lmu_bl, int enable);
++	bool hwmon_notifier_used;
++	const int max_brightness;
++	const int *ramp_table;
++	const int size_ramp;
++};
++
++/**
++ * struct ti_lmu_bl_chip
++ *
++ * @dev:		Parent device pointer
++ * @lmu:		LMU structure. Used for register R/W access.
++ * @ops:		Device specific operation
++ * @lmu_bl:		Multiple backlight strings
++ * @num_backlights:	Number of backlight strings
++ * @nb:			Notifier block for handling hwmon event
++ *
++ * One backlight chip can have multiple backlight strings, 'ti_lmu_bl'.
++ */
++struct ti_lmu_bl_chip {
++	struct device *dev;
++	struct ti_lmu *lmu;
++	const struct ti_lmu_bl_ops *ops;
++	struct ti_lmu_bl *lmu_bl;
++	int num_backlights;
++	struct notifier_block nb;
++};
++
++/**
++ * struct ti_lmu_bl
++ *
++ * @chip:		Pointer to parent backlight device
++ * @bl_dev:		Backlight subsystem device structure
++ * @bank_id:		Backlight bank ID
++ * @name:		Backlight channel name
++ * @mode:		Backlight control mode
++ * @bl_string:		Backlight string configuration.
++ *			Bit mask is set on parsing DT.
++ * @imax:		[Optional] Max current index.
++ *			It's result of ti_lmu_get_current_code().
++ * @init_brightness:	[Optional] Initial brightness value
++ * @ramp_up_msec:	[Optional] Ramp up time
++ * @ramp_down_msec:	[Optional] Ramp down time
++ * @pwm_period:		[Optional] PWM period
++ * @pwm:		[Optional] PWM subsystem structure
++ *
++ * Each backlight device has its own channel configuration.
++ * For chip control, parent chip data structure is used.
++ */
++struct ti_lmu_bl {
++	struct ti_lmu_bl_chip *chip;
++	struct backlight_device *bl_dev;
++
++	int bank_id;
++	const char *name;
++	enum ti_lmu_bl_ctrl_mode mode;
++	unsigned long bl_string;	/* bit OR mask of LMU_HVLEDx */
++	#define LMU_HVLED1	BIT(0)
++	#define LMU_HVLED2	BIT(1)
++	#define LMU_HVLED3	BIT(2)
++
++	enum ti_lmu_max_current imax;
++	unsigned int init_brightness;
++
++	/* Used for lighting effect */
++	unsigned int ramp_up_msec;
++	unsigned int ramp_down_msec;
++
++	/* Only valid in case of PWM mode */
++	unsigned int pwm_period;
++	struct pwm_device *pwm;
++};
++
++int ti_lmu_backlight_probe(struct platform_device *pdev);
++int ti_lmu_backlight_remove(struct platform_device *pdev);
++int ti_lmu_backlight_get_ramp_index(struct ti_lmu_bl *lmu_bl,
++				    enum ti_lmu_bl_ramp_mode mode);
++#endif
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
