@@ -1,85 +1,88 @@
-From: Zain <zain.wang@rock-chips.com>
-Subject: Re: [RESEND PATCH 2/4] clk: rockchip: set an id for crypto clk
-Date: Mon, 2 Nov 2015 15:54:18 +0800
-Message-ID: <563716AA.5050809@rock-chips.com>
-References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
- <1446193369-4453-3-git-send-email-zain.wang@rock-chips.com>
- <4280600.OxjmG17dRp@phil>
+From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] Add support for STM32 DMA
+Date: Mon, 2 Nov 2015 09:25:35 +0100
+Message-ID: <CAOAejn3x4RR_4LNyx3QD1SpYnpbqbpyYLdxHvPg6_TTzodJTmA@mail.gmail.com>
+References: <1445003956-9150-1-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4280600.OxjmG17dRp@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445003956-9150-1-git-send-email-cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+ Hi Vinod,
 
-On 2015=E5=B9=B410=E6=9C=8830=E6=97=A5 16:54, Heiko Stuebner wrote:
-> Hi Zain,
+Do you have any further comments or suggestions on this serie ?
+
+BR,
+Cedric
+
+2015-10-16 15:59 GMT+02:00 M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> This patchset adds support for the STM32 DMA controller.
+> This controller provides 8 channels dedicated to managing memory access
+> request from one or more peripherals.
+> Each stream can have up to 8 requests in total.
 >
-> Am Freitag, 30. Oktober 2015, 16:22:47 schrieb Zain Wang:
->> set an id for crypto clk, so that it can be called in other part.
->>
->> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
->> ---
->>  drivers/clk/rockchip/clk-rk3288.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchi=
-p/clk-rk3288.c
->> index 9040878..d74bd5d 100644
->> --- a/drivers/clk/rockchip/clk-rk3288.c
->> +++ b/drivers/clk/rockchip/clk-rk3288.c
->> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_bra=
-nches[] __initdata =3D {
->>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
->>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
->>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
->> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
->> +	COMPOSITE_NOMUX(SRST_CRYPTO, "crypto", "aclk_cpu_pre", 0,
-> the id you want to use actually is a soft-reset index, not a clock-id=
-=2E
-> You would need to add a real id, in this case with an sclk_ prefix.
-ok! done!
+> Changes since v3:
+>  - Fix regression introduced in v3 during request channel
+>  - Fix regression introduced in v3 for cyclic mode dma transfer
+>  - update interrupt description in DT
+>  - remove half transfer interrupt management as client callback as to be
+>    called only for complete transfer
 >
->>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
->>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
->>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
->>
-> It should probably look more like below, but as suggested by Stephen =
-Boyd
-> in another thread, we should coordinate with Chris to add more necess=
-ary clock
-> ids in one go:
-> -------- 8< -----------
-> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip=
-/clk-rk3288.c
-> index 9040878..9fd9f5a 100644
-> --- a/drivers/clk/rockchip/clk-rk3288.c
-> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_bran=
-ches[] __initdata =3D {
->  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
->  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
->  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
-> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
-> +	COMPOSITE_NOMUX(SCLK_CRYPTO, "sclk_crypto", "aclk_cpu_pre", 0,
->  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
->  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
->  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
-> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bind=
-ings/clock/rk3288-cru.h
-> index c719aac..9e0a5e9 100644
-> --- a/include/dt-bindings/clock/rk3288-cru.h
-> +++ b/include/dt-bindings/clock/rk3288-cru.h
-> @@ -86,6 +86,7 @@
->  #define SCLK_USBPHY480M_SRC	122
->  #define SCLK_PVTM_CORE		123
->  #define SCLK_PVTM_GPU		124
-> +#define SCLK_CRYPTO		125
-> =20
->  #define SCLK_MAC		151
->  #define SCLK_MACREF_OUT		152
+> Changes since v2:
+>  - remove interrupt configuration management from DT (Mark)
+>  - remove FIFO configuration management from DT except threshold as it is very
+>    hard to handle it in the driver due to many possible combinations according
+>    to burst and bus width (Mark)
+>  - update DMA client message in DT documentation file
+>  - specify the order to be used to set per-channel DMA interrupts in the DT
+>    (Mark)
+>  - remove unused enumerations for channel and request ids (Daniel)
+>  - keep as soon as possible 80 lines char for more readability (Vinod)
+>  - replace unsigned int by u32 (Vinod)
+>  - use GFP_NOWAIT instead of GFP_ATOMIC during dma descriptors allocation
+>    (Vinod)
+>  - return error if burst is not supported in stm32_dma_get_burst() (Vinod)
+>  - return error if bus_width is not supported in stm32_dma_get_width() (Vinod)
+>  - add FIFO configuration management inside the driver except for threshold
+>  - add interrupt configuration management inside the driver (Mark)
+>  - rework stm32_dma_chan_irq() to handle error interrupt in one way (Vinod)
+>  - rework stm32_dma_set_xfer_param() to be easier to read
+>  - update stm32_dma_tx_status() to always return status from dma_cookie_status() (Vinod)
+>  - disable clk if we don't manage to stop the DMA channel during channel
+>    resources allocation (Daniel)
+>  - set driver as built-in as DMA will be required by other built-in driver
+>
+>  Changes since v1:
+>   - remove dmamux boolean as it is not needed
+>   - replace dma by DMA in Kconfig (Maxime)
+>   - add default return value in stm32_dma_get_width()
+>   - add defalut return value in stm32_dma_get_burst()
+>   - use lower case for constant hexadecimal values (Maxime)
+>
+> M'boumba Cedric Madianga (4):
+>   dt-bindings: Document the STM32 DMA bindings
+>   dmaengine: Add STM32 DMA driver
+>   ARM: dts: Add STM32 DMA support for STM32F429 MCU
+>   ARM: configs: Add STM32 DMA support in STM32 defconfig
+>
+>  .../devicetree/bindings/dma/stm32-dma.txt          |   82 ++
+>  arch/arm/boot/dts/stm32f429.dtsi                   |   31 +
+>  arch/arm/configs/stm32_defconfig                   |    2 +
+>  drivers/dma/Kconfig                                |   12 +
+>  drivers/dma/Makefile                               |    1 +
+>  drivers/dma/stm32-dma.c                            | 1141 ++++++++++++++++++++
+>  6 files changed, 1269 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
+>  create mode 100644 drivers/dma/stm32-dma.c
+>
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
