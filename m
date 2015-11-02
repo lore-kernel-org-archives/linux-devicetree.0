@@ -1,74 +1,58 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos7: Enable HS200 mode operation
-Date: Mon, 2 Nov 2015 21:27:57 +0900
-Message-ID: <CAJKOXPf+twUu4_fxjQ1Xp24L-YzNj6=mZ+dOxu72FWJcrYk3Rw@mail.gmail.com>
-References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
-	<1446458641-4447-2-git-send-email-alim.akhtar@samsung.com>
-	<CAJKOXPcpyBQ-2MDC6D69-p+038wxfVdS+weBGJy+r+eP6tNB-g@mail.gmail.com>
-	<56375229.3090906@samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: OMAP: hwmod: AM33xx/43xx: Add HWMOD_INIT_NO_IDLE
+ flag to tptc
+Date: Mon, 2 Nov 2015 14:49:22 +0200
+Message-ID: <56375BD2.9050107@ti.com>
+References: <1446459060-16220-1-git-send-email-peter.ujfalusi@ti.com>
+ <20151102102440.GM21326@localhost> <5637398C.6020000@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <56375229.3090906@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5637398C.6020000-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-11-02 21:08 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
-> Hi Krzysztof,
->
->
-> On 11/02/2015 05:28 PM, Krzysztof Kozlowski wrote:
->>
->> Subject - name of the board at the end (not the name of the SoC):
->> arm64: dts: Enable HS200 mode operation on exynos7-espresso
->>
->> 2015-11-02 19:04 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
+On 11/02/2015 12:23 PM, Peter Ujfalusi wrote:
+> On 11/02/2015 12:24 PM, Vinod Koul wrote:
+>> On Mon, Nov 02, 2015 at 12:11:00PM +0200, Peter Ujfalusi wrote:
+>>> In Linux we do not have driver for TPTCs of eDMA3 since there is no=
+ need to
+>>> do any configuration within TPTC for the eDMA3 to be operational. A=
+ll
+>>> configuration is via the TPCC.
+>>> To prevent the omap_device_late_idle() to disable the TPTCs when th=
+ey are
+>>> no longer bind with the edma driver, the HWMOD_INIT_NO_IDLE need to=
+ be
+>>> added.
 >>>
->>> This patch enables HS200 mode operation on exynos7 based
->>> espresso board.
->>> This also remove _broken-cd_ property as per mmc binding documentation
->>
->>
->> s/remove/removes/
->>
->>> which say one of the properties between broken-cd and non-removable
->>
->>
->> s/say/says/
->>
->>> should be used. And we already use _non-removable_ as emmc mounted
->>> on board which is a non-removable device.
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 >>> ---
->>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts |    2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>> Vinod, Olof,
 >>>
->>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>> b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>> index 8ce04a0ec928..7f19b99fc85b 100644
->>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>> @@ -405,8 +405,8 @@
->>>   &mmc_0 {
->>>          status = "okay";
->>>          num-slots = <1>;
->>> -       broken-cd;
->>>          cap-mmc-highspeed;
->>> +       mmc-hs200-1_8v;
+>>> This patch somehow got lost in my working branch. It was mixed with=
+in the patches
+>>> I will have for 4.5 while it should have been within the new eDMA3 =
+binding
+>>> series..
 >>
->>
->> The "mmc-ddr-1_8v" should also be supported but I guess you did not
->> add it on purpose?
->>
-> Well, I have not tested it, that why didn't added. Will check if this works
-> then will add.
-> Thanks for your comments.
+>> Does this fix the issue reported by Olof? Also ACK pls for this
+>=20
+> Yes, it is fixing the issue, I have this in my branch. everything loo=
+ks fine
+> on AM335x/AM437x/Dra7xx where I have eDMA in use.
 
-Right, it would require testing... Just came to my mind. Anyway this
-is up to you.
+Vinod, can you please ignore this patch? I'm going to send a patch agai=
+ns
+edma.c which will handle this better.
 
-Best regards,
-Krzysztof
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
