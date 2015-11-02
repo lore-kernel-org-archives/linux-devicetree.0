@@ -1,40 +1,89 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 14/16] hwmon: add TI LMU hardware fault monitoring
- driver
-Date: Mon, 2 Nov 2015 06:27:35 -0800
-Message-ID: <563772D7.4030807@roeck-us.net>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-15-git-send-email-milo.kim@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 01/14] serial: sh-sci: Drop the interface clock
+Date: Mon, 2 Nov 2015 15:27:59 +0100
+Message-ID: <CAMuHMdWx-uuuKXEKccuem+yf5ioGxTuA8Pr63==D5z0tJH=5+A@mail.gmail.com>
+References: <1442232876-27629-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1442232876-27629-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446441875-1256-15-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1442232876-27629-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2015 09:24 PM, Milo Kim wrote:
-> LM3633 and LM3697 are TI LMU MFD device.
-> Those device have hardware monitoring feature which detects opened or
-> shorted circuit case.
+Hi Laurent,
+
+On Mon, Sep 14, 2015 at 2:14 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
+> As no platform defines an interface clock the SCI driver always fall
+> back to a clock named "peripheral_clk". On SH platform that clock is the
+> base clock for the SCI functional clock and has the same frequency. On
+> ARM platforms that clock doesn't exist, and clk_get() will return the
+> default clock for the device. We can thus make the functional clock
+> mandatory and drop the interface clock.
 >
-Sure, but it only makes sense if you provide standard hwmon attributes
-which can be interpreted by the "sensors" command. Which is not the case
-here. You neither have a standard device type (light is not handled by hwmon),
-nor standard attributes, nor do the attributes return standard values.
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+>  .../bindings/serial/renesas,sci-serial.txt         |  4 +-
+>  drivers/tty/serial/sh-sci.c                        | 60 +++++++++++++---------
+>  2 files changed, 39 insertions(+), 25 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> index e84b13a8eda3..c390860bc23f 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
 
-I think there may be a basic misunderstanding. hwmon is not intended
-to monitor a specific chip on the board. Its scope is to monitor the
-system (such as temperature, voltages, or current).
+> @@ -2181,6 +2177,38 @@ static struct uart_ops sci_uart_ops = {
+>  #endif
+>  };
+>
+> +static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
+> +{
+> +       /* Get the SCI functional clock. It's called "fck" on ARM. */
+> +       sci_port->fclk = clk_get(dev, "fck");
+> +       if (!IS_ERR(sci_port->fclk))
+> +               return 0;
+> +
+> +       /*
+> +        * But it used to be called "sci_ick", and we need to maintain DT
+> +        * backward compatibility.
+> +        */
+> +       sci_port->fclk = clk_get(dev, "sci_ick");
+> +       if (!IS_ERR(sci_port->fclk))
+> +               return 0;
+> +
+> +       /* SH has historically named the clock "sci_fck". */
+> +       sci_port->fclk = clk_get(dev, "sci_fck");
+> +       if (!IS_ERR(sci_port->fclk))
+> +               return 0;
+> +
+> +       /*
+> +        * Not all SH platforms declare a clock lookup entry for SCI devices, in
+> +        * which case we need to get the global "peripheral_clk" clock.
+> +        */
+> +       sci_port->fclk = clk_get(dev, "peripheral_clk");
+> +       if (!IS_ERR(sci_port->fclk))
+> +               return 0;
+> +
+> +       dev_err(dev, "failed to get functional clock\n");
+> +       return PTR_ERR(sci_port->fclk);
 
-In your case, it might be better to attach the attributes to the mfd device.
+This doesn't handle probe deferral correctly.
+-EPROBE_DEFER from an earlier clock will be overwritten by -ENOENT from a
+later clock, and the driver will never be reprobed.
 
-Thanks,
-Guenter
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
