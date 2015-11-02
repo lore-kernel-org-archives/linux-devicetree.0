@@ -1,89 +1,72 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 01/14] serial: sh-sci: Drop the interface clock
-Date: Mon, 2 Nov 2015 15:27:59 +0100
-Message-ID: <CAMuHMdWx-uuuKXEKccuem+yf5ioGxTuA8Pr63==D5z0tJH=5+A@mail.gmail.com>
-References: <1442232876-27629-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1442232876-27629-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] gpio: dt-bindings: document the official use of "ngpios"
+Date: Mon, 2 Nov 2015 08:29:23 -0600
+Message-ID: <CAL_Jsq+tiLehdr21JagJoOsO767d-Joy8QT+Y09GPnUKa=TTPA@mail.gmail.com>
+References: <1446203002-7910-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1442232876-27629-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1446203002-7910-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pramod Kumar <pramodku@broadcom.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Mon, Sep 14, 2015 at 2:14 PM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> As no platform defines an interface clock the SCI driver always fall
-> back to a clock named "peripheral_clk". On SH platform that clock is the
-> base clock for the SCI functional clock and has the same frequency. On
-> ARM platforms that clock doesn't exist, and clk_get() will return the
-> default clock for the device. We can thus make the functional clock
-> mandatory and drop the interface clock.
+On Fri, Oct 30, 2015 at 6:03 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> There are a bunch of drivers that utilize the "ngpios" DT property
+> without any vendor prefix. Try to start cleaning up the mess by
+> defining what we mean by this property.
 >
 > Cc: devicetree@vger.kernel.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Cc: Pramod Kumar <pramodku@broadcom.com>
+> Cc: Jonas Gorski <jogo@openwrt.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
->  .../bindings/serial/renesas,sci-serial.txt         |  4 +-
->  drivers/tty/serial/sh-sci.c                        | 60 +++++++++++++---------
->  2 files changed, 39 insertions(+), 25 deletions(-)
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> index e84b13a8eda3..c390860bc23f 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-
-> @@ -2181,6 +2177,38 @@ static struct uart_ops sci_uart_ops = {
->  #endif
->  };
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 63b1b9039ce8..9b081e6143a0 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -129,6 +129,30 @@ Every GPIO controller node must contain both an empty "gpio-controller"
+>  property, and a #gpio-cells integer property, which indicates the number of
+>  cells in a gpio-specifier.
 >
-> +static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
-> +{
-> +       /* Get the SCI functional clock. It's called "fck" on ARM. */
-> +       sci_port->fclk = clk_get(dev, "fck");
-> +       if (!IS_ERR(sci_port->fclk))
-> +               return 0;
+> +Optionally, a GPIO controller may have a "ngpios" property. This property
+> +indicates the number of in-use slots of available slots for GPIOs. The
+> +typical example is something like this: the hardware register is 32 bits
+> +wide, but only 18 of the bits have a physical counterpart. The driver is
+> +generally written so that all 32 bits can be used, but the IP block is reused
+> +in a lot of designs, some using all 32 bits, some using 18 and some using
+> +12. In this case, setting "ngpios = <18>;" informs the driver that only the
+> +first 18 GPIOs, at local offset 0 .. 17, are in use.
 > +
-> +       /*
-> +        * But it used to be called "sci_ick", and we need to maintain DT
-> +        * backward compatibility.
-> +        */
-> +       sci_port->fclk = clk_get(dev, "sci_ick");
-> +       if (!IS_ERR(sci_port->fclk))
-> +               return 0;
+> +If these GPIOs do not happen to be the first N GPIOs at offset 0...N, an
+> +additional bitmask is needed to specify which GPIOs are actually in use,
+> +and which are dummies. The bindings for this case has not yet been
+> +specified, but should be specified if/when such hardware appears.
 > +
-> +       /* SH has historically named the clock "sci_fck". */
-> +       sci_port->fclk = clk_get(dev, "sci_fck");
-> +       if (!IS_ERR(sci_port->fclk))
-> +               return 0;
+> +Example:
 > +
-> +       /*
-> +        * Not all SH platforms declare a clock lookup entry for SCI devices, in
-> +        * which case we need to get the global "peripheral_clk" clock.
-> +        */
-> +       sci_port->fclk = clk_get(dev, "peripheral_clk");
-> +       if (!IS_ERR(sci_port->fclk))
-> +               return 0;
-> +
-> +       dev_err(dev, "failed to get functional clock\n");
-> +       return PTR_ERR(sci_port->fclk);
-
-This doesn't handle probe deferral correctly.
--EPROBE_DEFER from an earlier clock will be overwritten by -ENOENT from a
-later clock, and the driver will never be reprobed.
-
+> +gpio-controller@00000000 {
+> +       compatible = "foo";
+> +       reg = <0x00000000 0x1000>;
+> +       gpio-controller;
+> +       #gpio-cells = <2>;
+> +       ngpios = <18>;
 > +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +
+>  The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+>  providing automatic GPIO request and configuration as part of the
+>  gpio-controller's driver probe function.
+> --
+> 2.4.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
