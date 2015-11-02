@@ -1,71 +1,38 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
- the eDMA3
-Date: Mon, 2 Nov 2015 21:10:57 +0530
-Message-ID: <20151102154057.GQ21326@localhost>
-References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
- <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
- <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw@mail.gmail.com>
- <20151102100405.GJ21326@localhost>
- <5637534D.2020304@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings documentation
+Date: Mon, 2 Nov 2015 09:39:51 -0600
+Message-ID: <CAL_JsqLj6m2Df+LW4F++hEgxYkyqPDbeMVv8QrF7-eVCZJfj6w@mail.gmail.com>
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+ <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
+ <20151030140334.GB31073@leverpostej> <56372942.2080900@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5637534D.2020304-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56372942.2080900@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zain <zain.wang@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, zhengsq@rock-chips.com, hl@rock-chips.com, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, Michael Turquette <mturquette@baylibre.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 02, 2015 at 02:13:01PM +0200, Peter Ujfalusi wrote:
-> Vinod,
-> 
-> On 11/02/2015 12:04 PM, Vinod Koul wrote:
-> > On Mon, Nov 02, 2015 at 01:21:19AM -0800, Olof Johansson wrote:
-> >> Hi,
-> >>
-> >> 1) This seems to have broken BBB in -next for me, bisected down to this patch.
-> >>
-> >> For bootlog:
-> >> http://arm-soc.lixom.net/bootlogs/next/next-20151102/bbb-arm-omap2plus_defconfig.html
-> >>
-> >> 2) Please avoid merging DT/platform code in your driver tree, Vinod,
-> >> at least without an ack from the platform maintainer. It can be a a
-> >> huge mess if they end up causing conflicts, so we always ask to merge
-> >> the DT changes through the platform maintainer (Tony in this case) by
-> >> default.
-> > 
-> > I did warn when applying that I am doing so without ACK on ARM code, noone
-> > said a thing!
-> > 
-> > I knew Tony was following the work by Peter so assumed he must have been okay
-> > with it otherwise would have spoken for ~couple of weeks these were in
-> > review
-> > 
-> > Anyway now that we have a regression, I can revert this patch if that fixes,
-> > please confirm, but might break edma... peter?
-> 
-> Can you revert or drop the last two DTS patches?
-> 
-> I think I will try a different route to get the split of the tpcc and tptc.
-> Without the DT patches the driver will fall back to the legacy mode so things
-> will work in a same way they did before.
-> Or I can send a followup patch for edma.c, with that there is no need to add
-> the HWMOD_INIT_NO_IDLE to hwmod and power management looks better.
-> Basically I'm registering a 'dummy' driver for the edma3-tptc so omap hwmod
-> code will not shut it down but we will keep the possibility to manage the
-> power state still.
+On Mon, Nov 2, 2015 at 3:13 AM, Zain <zain.wang@rock-chips.com> wrote:
+> Hi Mark
+>
+> On 2015=E5=B9=B410=E6=9C=8830=E6=97=A5 22:03, Mark Rutland wrote:
+>> On Fri, Oct 30, 2015 at 04:22:49PM +0800, Zain Wang wrote:
+>>> Add DT bindings documentation for the rk3288 crypto drivers.
+>>>
+>>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+>>> ---
 
-Okay I have reverted the two and applied the edma patch sent, can you please
-verify topic/edma_fix before I merge it and send my PULL request.
+>>> +Required properties:
+>>> +- compatible: should be "rockchip,crypto"
+>> Choose a more specific name. Rockchip could easily come up with anot=
+her
+>> crypto accelerator later.
+> ok! done.
+> rk3288_crypto may be better than crypto.
 
-Would appreciate any tested-by
+Yes, but use '-' not '_'.
 
-Thanks
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
