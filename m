@@ -1,136 +1,152 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
-Date: Mon, 2 Nov 2015 09:00:05 +0000
-Message-ID: <20151102090005.GQ4058@x1>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] rpi: add support to enable usb power domain
+Date: Mon, 2 Nov 2015 10:02:58 +0100
+Message-ID: <20151102090257.GB1342@omega>
+References: <1446064810-5064-1-git-send-email-alex.aring@gmail.com>
+ <5631A165.3050304@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <5631A165.3050304-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Is it just me, or have you missed lots of people off Cc?
+On Wed, Oct 28, 2015 at 10:32:37PM -0600, Stephen Warren wrote:
+> On 10/28/2015 02:40 PM, Alexander Aring wrote:
+> > This patch adds support for RPi several Power Domains and enable support
+> > to enable the USB Power Domain when it's not enabled before.
+> > 
+> > This patch based on Eric Anholt's patch to support Power Domains. He had
+> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
+> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
+> > if we fail to init or turn-on domain").
+> 
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+> 
+> >  firmware {
+> >  	compatible = "raspberrypi,bcm2835-firmware";
+> >  	mboxes = <&mailbox>;
+> > +	#power-domain-cells = <1>;
+> > +};
+> 
+> I would have expected a separate DT node for the power domains driver
+> that referenced the firmware node by phandle. I believe that's why the
+> firmware node exports mailboxes to other drivers. If the firmware driver
+> was going to implement all the features directly, it wouldn't need to
+> act as a mailbox provider, since all the mailbox programming would be
+> internal.
+> 
 
-> TI LMU(Lighting Management Unit) driver supports lighting devices bel=
-ow.
->=20
->          Enable pin  Backlights  HWMON  LEDs   Regulators
->          ----------  ----------  -----  ----  ------------
-> LM3532       o           o         x     x        x
-> LM3631       o           o         x     x    5 regulators
-> LM3632       o           o         x     x    3 regulators
-> LM3633       o           o         o     o        x
-> LM3695       o           o         x     x        x
-> LM3697       o           o         o     x        x
->=20
-> This patch-set consists of several parts below.
->=20
->   DT bindings           : Binding information for each module
->   TI LMU MFD            : Device registration, HW enable pin control =
-and
->                           I2C register access
->   TI LMU backlight      : Common driver for TI LMU backlight devices
->   Each backlight driver : Chip dependent code
->   HWMON                 : LMU hardware fault monitoring driver
->   LM3633 LED            : LED subsystem and dimming pattern generatio=
-n
->                           supported
->   LM363X regulator      : LM3631 and LM3632 regulator driver for the
->                           display bias
->=20
-> Git location:
->   Please refer to the location below. Branch name is 'ti-lmu'.
->   git clone -b ti-lmu https://github.com/milokim/linux.git
->=20
-> Milo Kim (16):
->   Documentation: dt-bindings: mfd: add TI LMU device binding informat=
-ion
->   Documentation: dt-bindings: backlight: add TI LMU backlight binding
->     information
->   Documentation: dt-bindings: hwmon: add TI LMU HWMON binding
->     information
->   Documentation: dt-bindings: leds: add LM3633 LED binding informatio=
-n
->   Documentation: dt-bindings: regulator: add LM363x regulator binding
->     information
->   mfd: add TI LMU driver
->   backlight: add TI LMU backlight common driver
->   backlight: ti-lmu-backlight: add LM3532 driver
->   backlight: ti-lmu-backlight: add LM3631 driver
->   backlight: ti-lmu-backlight: add LM3632 driver
->   backlight: ti-lmu-backlight: add LM3633 driver
->   backlight: ti-lmu-backlight: add LM3695 driver
->   backlight: ti-lmu-backlight: add LM3697 driver
->   hwmon: add TI LMU hardware fault monitoring driver
->   leds: add LM3633 driver
->   regulator: add LM363X driver
->=20
->  Documentation/ABI/testing/sysfs-class-led-lm3633   |  60 ++
->  .../devicetree/bindings/hwmon/ti-lmu-hwmon.txt     |  12 +
->  .../devicetree/bindings/leds/leds-lm3633.txt       |  28 +
->  Documentation/devicetree/bindings/mfd/ti-lmu.txt   | 282 ++++++++
->  .../bindings/regulator/lm363x-regulator.txt        |  28 +
->  .../bindings/video/backlight/ti-lmu-backlight.txt  |  67 ++
->  drivers/hwmon/Kconfig                              |  10 +
->  drivers/hwmon/Makefile                             |   1 +
->  drivers/hwmon/ti-lmu-hwmon.c                       | 393 +++++++++++
->  drivers/leds/Kconfig                               |  10 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-lm3633.c                         | 749 +++++++++++=
-++++++++++
->  drivers/mfd/Kconfig                                |  12 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/ti-lmu.c                               | 324 +++++++++
->  drivers/regulator/Kconfig                          |   9 +
->  drivers/regulator/Makefile                         |   1 +
->  drivers/regulator/lm363x-regulator.c               | 349 ++++++++++
->  drivers/video/backlight/Kconfig                    |  62 ++
->  drivers/video/backlight/Makefile                   |   7 +
->  drivers/video/backlight/lm3532_bl.c                | 183 +++++
->  drivers/video/backlight/lm3631_bl.c                | 129 ++++
->  drivers/video/backlight/lm3632_bl.c                | 125 ++++
->  drivers/video/backlight/lm3633_bl.c                | 210 ++++++
->  drivers/video/backlight/lm3695_bl.c                |  91 +++
->  drivers/video/backlight/lm3697_bl.c                | 187 +++++
->  drivers/video/backlight/ti-lmu-backlight.c         | 429 +++++++++++=
-+
->  drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
->  include/linux/mfd/ti-lmu-register.h                | 277 ++++++++
->  include/linux/mfd/ti-lmu.h                         |  81 +++
->  30 files changed, 4270 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-lm3633
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ti-lmu-hw=
-mon.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm363=
-3.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/lm363=
-x-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/video/backlight=
-/ti-lmu-backlight.txt
->  create mode 100644 drivers/hwmon/ti-lmu-hwmon.c
->  create mode 100644 drivers/leds/leds-lm3633.c
->  create mode 100644 drivers/mfd/ti-lmu.c
->  create mode 100644 drivers/regulator/lm363x-regulator.c
->  create mode 100644 drivers/video/backlight/lm3532_bl.c
->  create mode 100644 drivers/video/backlight/lm3631_bl.c
->  create mode 100644 drivers/video/backlight/lm3632_bl.c
->  create mode 100644 drivers/video/backlight/lm3633_bl.c
->  create mode 100644 drivers/video/backlight/lm3695_bl.c
->  create mode 100644 drivers/video/backlight/lm3697_bl.c
->  create mode 100644 drivers/video/backlight/ti-lmu-backlight.c
->  create mode 100644 drivers/video/backlight/ti-lmu-backlight.h
->  create mode 100644 include/linux/mfd/ti-lmu-register.h
->  create mode 100644 include/linux/mfd/ti-lmu.h
->=20
+ok.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> > diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+> 
+> > +#define RPI_POWER_DOMAIN(_domain, _name)			\
+> > +	[_domain] =						\
+> > +	{							\
+> 
+> I'd expect { wrapped onto the previous line.
+> 
+
+ok.
+
+> > +static int raspberrypi_firmware_set_power(struct rpi_firmware *fw,
+> > +					  u32 domain, bool on)
+> 
+> > +	packet.on = on;
+> > +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_SET_POWER_STATE, &packet,
+> > +				    sizeof(packet));
+> > +	if (!ret && !packet.on)
+> > +		ret = -EINVAL;
+> 
+> The error is only reported for power off requests?
+> 
+
+grab it from old patch. I will fix that, I suppose it should something
+like:
+
+if (!ret && packet.on != on)
+	ret = -EINVAL;
+
+to confirm if packet.on is set or unset afterwards. I don't know if this
+is a valid error reporting mechanism from firmware.
+
+I will drop such checking here.
+
+> > +/* Asks the firmware to if power is on for a specific power domain. */
+> > +static int raspberrypi_firmware_power_is_on(struct rpi_firmware *fw,
+> > +					    u32 domain)
+> 
+> > +	packet.domain = domain;
+> > +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_GET_POWER_STATE, &packet,
+> > +				    sizeof(packet));
+> > +	if (ret < 0)
+> > +		return ret;
+> 
+> Hmm. If rpi_firmware_property() returns <0 on error, I'm confused what
+> the test I commented on above is intended to do.
+> 
+
+yes, I will fix it.
+
+> > +/*
+> > + * IMPORTANT: be sure this array has no entries which are not specified
+> > + * between others by RPI_POWER_DOMAIN, otherwise mapping between
+> > + * generic_pm_domain array doesn't work anymore.
+> > + */
+> 
+> "has no entries which are not specified between others by
+> RPI_POWER_DOMAIN" might be better phrased as "is contiguous" or
+> "contains only contiguous entries".
+> 
+
+Okay, Eric Anholt told me to support the power domains which he had in
+his patch only. I would add add the power domains only which has an
+use-case -> "USB". 
+
+> > @@ -208,15 +312,44 @@ static int rpi_firmware_probe(struct platform_device *pdev)
+> 
+> > +	for (i = 0; i < num_domains; i++) {
+> > +		bool is_off;
+> > +
+> > +		rpi_power_domains[i].fw = fw;
+> > +		power_domains[i] = &rpi_power_domains[i].base;
+> > +
+> > +		/* get the initial state */
+> > +		ret = raspberrypi_firmware_power_is_on(fw, i);
+> > +		if (ret < 0)
+> > +			goto mbox;
+> 
+> The label name "mbox" doesn't give a clue that it's an error handler.
+> "free_mbox" might be better.
+> 
+
+ok.
+
+> > +mbox:
+> > +	mbox_free_channel(fw->chan);
+> > +	return ret;
+> >  }
+> 
+> Does the pm_genpd_init() call for all the power domains need to be
+> undone at all?
+
+I would say yes. The function will call:
+
+list_add(&genpd->gpd_list_node, &gpd_list);
+
+And gpd_list is a _static_ list inside the generic power domain subsystem.
+If probing fails we need to delete these entries from gpd_list again.
+
+I searched the whole file about "gpd_list_node" and can't find a
+list_del on it. :-( Seems such handling isn't supported, but I think
+"normally" it should be cleanuped then.
+
+- Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
