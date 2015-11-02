@@ -1,52 +1,35 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH RESEND v4 0/2] ARM: dts: bcm5301x: Add SVK DT files and docs
-Date: Mon, 2 Nov 2015 13:34:51 -0500
-Message-ID: <1446489293-25088-1-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH RESEND 0/3]  ARM: dts: NSP: Add PCI, NAND, and TWD Support to DT
+Date: Mon, 2 Nov 2015 13:40:55 -0500
+Message-ID: <1446489658-29705-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Resending due to lack of any response to the original v4 series
+Resending due to lack of any response to the original series
 
-Changes in v4:
-* Changed bootargs to stdout-path, per Sudeep Holla
+Add PCI, NAND, and TWD Support to the Broadcom Northstar Plus SoC device
+tree file.  Since no driver changes are needed to enable these pieces of
+hardware, only the device tree changes are required to make them
+functional.
 
-Changes in v3:
-* Updated the DT documentation compat strings
-* Modified the include files and compat strings for the SVK DT files,
-  per Hauke Mehrtens
+Jon Mason (3):
+  ARM: dts: NSP: Add PCI support
+  ARM: dts: NSP: Add NAND Support to DT
+  ARM: dts: NSP: Add TWD Support to DT
 
-Changes in v2:
-* Reorder the patches to add the DT binding documentation prior to the
-  new DT files
-* Removed the DT documentation compat strings to only the SoCs, not the
-  individual boards
-* Fixed the compat strings in the individual device tree files
-* Added the memory node and removed the "mem=" from the bootargs
-
-
-Add device tree files and update the documentation for Broadcom
-Northstar based SVKs.  Since the bcm5301x.dtsi already exists, all that
-is necessary is the dts files to enable the UARTs.  With these files,
-the SVKs are able to boot to shell
-
-Jon Mason (2):
-  dt-bindings: Add new SoCs to bcm4708 DT bindings
-  ARM: dts: bcm5301x: Add BCM SVK DT files
-
- .../devicetree/bindings/arm/bcm/brcm,bcm4708.txt   |  7 +++
- arch/arm/boot/dts/Makefile                         |  5 +-
- arch/arm/boot/dts/bcm94708.dts                     | 56 +++++++++++++++++++
- arch/arm/boot/dts/bcm94709.dts                     | 56 +++++++++++++++++++
- arch/arm/boot/dts/bcm953012k.dts                   | 63 ++++++++++++++++++++++
- 5 files changed, 186 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm94708.dts
- create mode 100644 arch/arm/boot/dts/bcm94709.dts
- create mode 100644 arch/arm/boot/dts/bcm953012k.dts
+ arch/arm/boot/dts/bcm-nsp.dtsi   | 104 ++++++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/bcm958625k.dts |  50 +++++++++++++++++++
+ 2 files changed, 153 insertions(+), 1 deletion(-)
 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
