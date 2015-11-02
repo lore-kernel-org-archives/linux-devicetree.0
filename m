@@ -1,88 +1,122 @@
-From: Zain <zain.wang@rock-chips.com>
-Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings
- documentation
-Date: Mon, 2 Nov 2015 17:13:38 +0800
-Message-ID: <56372942.2080900@rock-chips.com>
-References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
- <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
- <20151030140334.GB31073@leverpostej>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/5] Documentation: tps65912: Add DT bindings for the
+ TPS65912 PMIC
+Date: Mon, 2 Nov 2015 09:17:21 +0000
+Message-ID: <20151102091721.GU4058@x1>
+References: <1446161922-8755-1-git-send-email-afd@ti.com>
+ <1446161922-8755-2-git-send-email-afd@ti.com>
+ <20151030171006.GZ4058@x1>
+ <5633B078.7080209@ti.com>
+ <20151030190622.GN4058@x1>
+ <5633C31E.5030408@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20151030140334.GB31073@leverpostej>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5633C31E.5030408@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark
+On Fri, 30 Oct 2015, Andrew F. Davis wrote:
 
-On 2015=E5=B9=B410=E6=9C=8830=E6=97=A5 22:03, Mark Rutland wrote:
-> On Fri, Oct 30, 2015 at 04:22:49PM +0800, Zain Wang wrote:
->> Add DT bindings documentation for the rk3288 crypto drivers.
->>
->> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
->> ---
->>  .../devicetree/bindings/crypto/rk-crypto.txt       | 31 +++++++++++=
-+++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/crypto/rk-cryp=
-to.txt
->>
->> diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt =
-b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
->> new file mode 100644
->> index 0000000..1e50768
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
->> @@ -0,0 +1,31 @@
->> +Rockchip Electronics And Security Accelerator
->> +
->> +Required properties:
->> +- compatible: should be "rockchip,crypto"
-> Choose a more specific name. Rockchip could easily come up with anoth=
-er
-> crypto accelerator later.
-ok! done.
-rk3288_crypto may be better than crypto.
->> +- reg: base physical address of the engine and length of memory map=
-ped
->> +       region.
->> +- interrupts: interrupt number
->> +- clocks: clock specifiers
->> +- clock-names: "aclk_crypto" used to clock data
->> +			   "hclk_crypto" used to clock data
->> +			   "srst_crypto" used to clock crypto accelerator
->> +			   "apb_pclk"    used to clock dma
->> +-status: Enable
-> No need to mention the status property.
-ok! done!
-> Thanks,
-> Mark.
->
->> +
->> +Examples:
->> +
->> +	crypto: cypto-controller@ff8a0000 {
->> +		compatible =3D "rockchip,crypto";
->> +		reg =3D <0xff8a0000 0x4000>;
->> +		interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks =3D <&cru ACLK_CRYPTO>,
->> +			 <&cru HCLK_CRYPTO>,
->> +			 <&cru SRST_CRYPTO>,
->> +			 <&cru ACLK_DMAC1>;
->> +
->> +		clock-names =3D "aclk_crypto",
->> +			      "hclk_crypto",
->> +			      "srst_crypto",
->> +				  "apb_pclk";
->> +		status =3D "okay";
->> +	};
->> --=20
->> 1.9.1
->>
->>
->
-Thanks
-Zain
+> On 10/30/2015 02:06 PM, Lee Jones wrote:
+> >On Fri, 30 Oct 2015, Andrew F. Davis wrote:
+> >
+> >>On 10/30/2015 12:10 PM, Lee Jones wrote:
+> >>>On Thu, 29 Oct 2015, Andrew F. Davis wrote:
+> >>>
+> >>>>The TPS65912 PMIC contains several regulators and a GPIO controll=
+er.
+> >>>>Add bindings for the TPS65912 PMIC.
+> >>>>
+> >>>>Signed-off-by: Andrew F. Davis <afd@ti.com>
+> >>>>---
+> >>>>  .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
+> >>>
+> >>>Why have you dropped Linus' Review-by?
+> >>>
+> >>
+> >>Strange, I thought I made a change to this. Well this brings up a q=
+uestion,
+> >>how much change can we have before we are supposed to drop Reviewed=
+/Acked-by?
+> >
+> >Common sense call I'm afraid. ;)
+> >
+> >[...]
+> >
+> >>>>+     the second cell is used to specify flags.
+> >>>>+     See include/dt-bindings/gpio/gpio.h for possible values.
+> >>>
+> >>>This is a Linuxisum and shouldn't really live in here.
+> >>>
+> >>>I think it would be better to document them in ../gpio/gpio.txt an=
+d
+> >>>reference that instead.
+> >>>
+> >>
+> >>Looks like that is already in ../gpio/gpio.txt:57
+> >
+> >There is a mention of GPIO_ACTIVE_HIGH, as it's used in an example.
+> >However GPIO_ACTIVE_LOW is missing.  I think both could do with
+> >documenting properly, then you can refer to them from here.
+> >
+>=20
+> I mean the lines above the example, they say to use the macros
+> defined in include/dt-bindings/gpio/gpio.h whenever possible,
+> that's really all I would say.
+
+Let's at least attempt to stick to the rules.
+
+Please adapt your formatting to <dt-bindings/gpio/gpio.h> in order to
+eradicate any Linuxiness.
+
+> >[...]
+> >
+> >>>>+Required properties:
+> >>>>+ - compatible : Should be "ti,tps65912".
+> >>>>+ - reg : Slave address or chip select number (I2C / SPI).
+> >>>>+ - interrupt-parent : The parent interrupt controller.
+> >>>>+ - interrupts : The interrupt line the device is connected to.
+> >>>>+ - interrupt-controller : Marks the device node as an interrupt =
+controller.
+> >>>>+ - #interrupt-cells: The number of cells to describe an IRQ, thi=
+s should be 2.
+> >>>>+     The first cell is the IRQ number.
+> >>>>+     The second cell is the flags, encoded as the trigger masks =
+from
+> >>>>+     ../interrupt-controller/interrupts.txt
+> >>>
+> >>>Nit: We *normally* treat these as bullet-points and not place
+> >>>full-stops on them:
+> >>>
+> >>>$ git grep "compatible" -- Documentation/devicetree/bindings/ | gr=
+ep -v "\.$" | wc -l
+> >>>5227
+> >>>$ git grep "compatible.*\.$" -- Documentation/devicetree/bindings/=
+ | wc -l
+> >>>486
+> >>>
+> >>
+> >>What about for multi-sentence descriptions, we need the middle full=
+-stops, then to not
+> >>have one on the end seems kinda odd looking.
+> >
+> >That's the way I usually do it -- doesn't look too bad. ;)
+> >
+> >[...]
+> >
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
