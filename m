@@ -1,7 +1,7 @@
 From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH RESEND 02/16] Documentation: dt-bindings: backlight: add TI LMU backlight binding information
-Date: Mon, 2 Nov 2015 14:24:21 +0900
-Message-ID: <1446441875-1256-3-git-send-email-milo.kim@ti.com>
+Subject: [PATCH RESEND 04/16] Documentation: dt-bindings: leds: add LM3633 LED binding information
+Date: Mon, 2 Nov 2015 14:24:23 +0900
+Message-ID: <1446441875-1256-5-git-send-email-milo.kim@ti.com>
 References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,95 +9,56 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697 use common dt-bindings
-for describing device.
+LM3633 LED device is one of TI LMU device list.
 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
 ---
- .../bindings/video/backlight/ti-lmu-backlight.txt  | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
+ .../devicetree/bindings/leds/leds-lm3633.txt       | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3633.txt
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt b/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3633.txt b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
 new file mode 100644
-index 0000000..27b0036
+index 0000000..bb7f213
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
-@@ -0,0 +1,67 @@
-+TI LMU backlight device tree bindings
++++ b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
+@@ -0,0 +1,28 @@
++TI LMU LM3633 LED device tree bindings
 +
 +Required properties:
-+  - compatible: Should be one of lists below.
-+                "ti,lm3532-backlight"
-+                "ti,lm3631-backlight"
-+                "ti,lm3632-backlight"
-+                "ti,lm3633-backlight"
-+                "ti,lm3695-backlight"
-+                "ti,lm3697-backlight"
-+
-+Optional properties:
-+  There are two backlight control mode. One is I2C, the other is PWM mode.
-+  Following properties are only specified in PWM mode.
-+  Please note that LMU backlight device can have only one PWM channel.
-+
-+  - pwms: OF device-tree PWM specification.
-+  - pwm-names: a list of names for the PWM devices specified in the "pwms"
-+               property.
-+
-+  For the PWM user nodes, please refer to [1].
++  - compatible: "ti,lm3633-leds"
 +
 +Child nodes:
-+  LMU backlight is represented as sub-nodes of the TI LMU device [2].
-+  So, LMU backlight should have more than one backlight child node.
-+  Each node exactly matches with backlight control bank configuration.
-+  Maximum numbers of child nodes depend on the device.
-+  1 = LM3631, LM3632, LM3695
-+  2 = LM3633, LM3697
-+  3 = LM3532
++  Each node matches with LED control bank.
++  Please refer to the datasheet [1].
 +
-+  Required property of a child node:
-+  - hvled1-used, hvled2-used, hvled3-used:
-+    High voltage backlight strings configuration. Type is <boolean>.
-+    Please describe which output backlight string is used.
-+    Please refer to the datasheets [3].
++  Required properties of a child node:
++  - lvled1-used, lvled2-used, lvled3-used,
++    lvled4-used, lvled5-used, lvled6-used:
++    Low voltage LED string configuration. Type is <boolean>.
++    Please describe which output LED string is used.
 +
 +  Optional properties of a child node:
-+  - backlight-name: Name string for backlight device identification.
-+                    It is used for creating backlight sysfs,
-+                    /sys/class/backlight/<backlight-name>/.
-+  - backlight-max-microamp: Max current setting. Type is <u32>.
-+                            Unit is microampere.
-+                            Range is from 5000 to 30000.
-+  - initial-brightness: Backlight initial brightness value. Type is <u32>.
-+                        It is set as soon as backlight device is created.
-+                        0 ~ 2047 = LM3631, LM3632, LM3633, LM3695 and LM3697
-+                        0 ~ 255  = LM3532
-+  - ramp-up-msec, ramp-down-msec: Light dimming effect properties.
-+                                  Type is <u32>. Unit is millisecond.
-+                                  0 ~ 65 msec    = LM3532
-+                                  0 ~ 4000 msec  = LM3631
-+                                  0 ~ 16000 msec = LM3633 and LM3697
-+  - pwm-period: PWM period. Only valid in PWM brightness mode.
-+                Type is <u32>. If this property is missing, then control
-+                mode is set to I2C by default.
++  - channel-name: Name string for LED channel identification
++                  It is used for creating LED sysfs,
++                  /sys/class/leds/<channel-name>/.
++                  If this property is empty, then default name is set to
++                  "indicator:<id>" by the driver.
++  - led-max-microamp: Max current setting. Type is <u32>.
++                      Unit is microampere. Range is from 5000 to 30000.
 +
-+Examples: Please refer to ti-lmu dt-bindings. [2].
++Examples: Please refer to ti-lmu dt-bindings [2].
 +
-+[1] Documentation/devicetree/bindings/pwm/pwm.txt
++[1] http://www.ti.com/product/LM3633/datasheet
 +[2] Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+[3] LM3532: http://www.ti.com/product/LM3532/datasheet
-+    LM3631: http://www.ti.com/product/LM3631/datasheet
-+    LM3632: http://www.ti.com/product/LM3632A/datasheet
-+    LM3633: http://www.ti.com/product/LM3633/datasheet
-+    LM3695: Datasheet is not opened yet, but only two strings are used.
-+    LM3697: http://www.ti.com/product/LM3697/datasheet
 -- 
 1.9.1
 
