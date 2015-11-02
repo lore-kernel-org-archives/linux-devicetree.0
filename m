@@ -1,141 +1,30 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH RESEND 1/3] ARM: dts: NSP: Add PCI support
-Date: Mon, 2 Nov 2015 13:40:56 -0500
-Message-ID: <1446489658-29705-2-git-send-email-jonmason@broadcom.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND 0/3]  ARM: dts: NSP: Add PCI, NAND, and TWD Support
+ to DT
+Date: Mon, 02 Nov 2015 10:45:44 -0800
+Message-ID: <5637AF58.6050906@gmail.com>
 References: <1446489658-29705-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446489658-29705-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCI support to the Northstar Plus SoC.  This uses the existing
-pcie-iproc driver.  So, all that is needed is device tree entries in the
-DTS.
+On 02/11/15 10:40, Jon Mason wrote:
+> Resending due to lack of any response to the original series
+> 
+> Add PCI, NAND, and TWD Support to the Broadcom Northstar Plus SoC device
+> tree file.  Since no driver changes are needed to enable these pieces of
+> hardware, only the device tree changes are required to make them
+> functional.
 
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/bcm-nsp.dtsi   | 74 +++++++++++++++++++++++++++++++++++++++-
- arch/arm/boot/dts/bcm958625k.dts | 12 +++++++
- 2 files changed, 85 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 58aca27..85fb1c8 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -96,7 +96,7 @@
- 
- 	axi {
- 		compatible = "simple-bus";
--		ranges = <0x00000000 0x18000000 0x00001000>;
-+		ranges = <0x00000000 0x18000000 0x00015000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -115,5 +115,77 @@
- 			clock-frequency = <62499840>;
- 			status = "disabled";
- 		};
-+
-+		pcie0: pcie@18012000 {
-+			compatible = "brcm,iproc-pcie";
-+			reg = <0x12000 0x1000>;
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 131 IRQ_TYPE_NONE>;
-+
-+			linux,pci-domain = <0>;
-+
-+			bus-range = <0x00 0xff>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+
-+			/* Note: The HW does not support I/O resources.  So,
-+			 * only the memory resource range is being specified.
-+			 */
-+			ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie1: pcie@18013000 {
-+			compatible = "brcm,iproc-pcie";
-+			reg = <0x13000 0x1000>;
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 137 IRQ_TYPE_NONE>;
-+
-+			linux,pci-domain = <1>;
-+
-+			bus-range = <0x00 0xff>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+
-+			/* Note: The HW does not support I/O resources.  So,
-+			 * only the memory resource range is being specified.
-+			 */
-+			ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie2: pcie@18014000 {
-+			compatible = "brcm,iproc-pcie";
-+			reg = <0x14000 0x1000>;
-+
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 143 IRQ_TYPE_NONE>;
-+
-+			linux,pci-domain = <2>;
-+
-+			bus-range = <0x00 0xff>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+
-+			/* Note: The HW does not support I/O resources.  So,
-+			 * only the memory resource range is being specified.
-+			 */
-+			ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
-+
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-index 16303db..4859268 100644
---- a/arch/arm/boot/dts/bcm958625k.dts
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -55,3 +55,15 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+&pcie2 {
-+	status = "okay";
-+};
+Series applied to devicetree/next, thanks Jon!
 -- 
-1.9.1
-
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
