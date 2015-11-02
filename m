@@ -1,32 +1,37 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [RFC PATCH v2 0/2] Expose DMA_MEMORY_EXCLUSIVE through
- shared-dma-pool
-Date: Mon, 2 Nov 2015 12:04:35 +0100
-Message-ID: <56374343.8080206@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC PATCH v2 2/2] devicetree: reserved-memory: document the optional
+ no-exclusive parameter
+Date: Mon, 2 Nov 2015 12:04:45 +0100
+Message-ID: <5637434D.9070401@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The shared-dma-pool dt node only exposes exclusive memory, but in order to export
-non-exclusive coherent memory, add the no-exclusive property and document it.
+Document the 'no-exclusive' parameter used for the 'shared-dma-pool'
+compatible reserved-memory type.
 
-v2: simplify patch by looking for DT attribute in callback
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Neil Armstrong (2):
-  base: dma-coherent: Add DT property for non exclusive shared-dma-pool
-  devicetree: reserved-memory: document the optional no-exclusive parameter
+diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+index 3da0ebd..897aada 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+@@ -63,6 +63,9 @@ reusable (optional) - empty property
+       able to reclaim it back. Typically that means that the operating
+       system can use that region to store volatile or cached data that
+       can be otherwise regenerated or migrated elsewhere.
++no-exclusive (optional) - empty property
++    - Indicates the operating system can fall back to the default allocation
++      mechanism if no more enough memory is available from this pool.
 
- .../devicetree/bindings/reserved-memory/reserved-memory.txt         | 3 +++
- drivers/base/dma-coherent.c                                         | 6 +++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
+ Linux implementation note:
+ - If a "linux,cma-default" property is present, then Linux will use the
 -- 
 1.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
