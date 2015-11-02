@@ -1,92 +1,81 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] dmaengine: edma: Add dummy driver skeleton for edma3-tptc
-Date: Mon, 2 Nov 2015 15:21:40 +0200
-Message-ID: <1446470500-27504-1-git-send-email-peter.ujfalusi@ti.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/6] drivers: psci: replace psci firmware calls
+Date: Mon, 2 Nov 2015 13:46:47 +0000
+Message-ID: <20151102134647.GE29657@arm.com>
+References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
+ <1446106888-8983-3-git-send-email-jens.wiklander@linaro.org>
+ <20151102115539.GC29657@arm.com>
+ <20151102130825.GA16849@ermac>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, nsekhar@ti.com, olof@lixom.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, t-kristo@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151102130825.GA16849@ermac>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The eDMA3 TPTC does not need any software configuration, but it is a
-separate IP block in the SoC. In order the omap hwmod core to be able to
-handle the TPTC resources correctly in regards of PM we need to have a
-driver loaded for it.
-This patch will add a dummy driver skeleton without probe or remove
-callbacks provided.
+On Mon, Nov 02, 2015 at 02:08:26PM +0100, Jens Wiklander wrote:
+> On Mon, Nov 02, 2015 at 11:55:39AM +0000, Will Deacon wrote:
+> > On Thu, Oct 29, 2015 at 09:21:24AM +0100, Jens Wiklander wrote:
+> > > Switch to use a generic interface for issuing SMC/HVC based on ARM SMC
+> > > Calling Convention. Removes now the now unused psci-call.S.
+> > > 
+> > > Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  arch/arm/kernel/Makefile      |  1 -
+> > >  arch/arm/kernel/psci-call.S   | 31 -------------------------------
+> > >  arch/arm64/kernel/Makefile    |  2 +-
+> > >  arch/arm64/kernel/psci-call.S | 28 ----------------------------
+> > >  drivers/firmware/psci.c       | 21 +++++++++++++++++++--
+> > >  5 files changed, 20 insertions(+), 63 deletions(-)
+> > >  delete mode 100644 arch/arm/kernel/psci-call.S
+> > >  delete mode 100644 arch/arm64/kernel/psci-call.S
+> > 
+> > [...]
+> > 
+> > > diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> > > index 42700f0..53c9606 100644
+> > > --- a/drivers/firmware/psci.c
+> > > +++ b/drivers/firmware/psci.c
+> > > @@ -19,6 +19,7 @@
+> > >  #include <linux/pm.h>
+> > >  #include <linux/printk.h>
+> > >  #include <linux/psci.h>
+> > > +#include <linux/arm-smccc.h>
+> > >  #include <linux/reboot.h>
+> > >  
+> > >  #include <uapi/linux/psci.h>
+> > > @@ -56,8 +57,6 @@ struct psci_operations psci_ops;
+> > >  
+> > >  typedef unsigned long (psci_fn)(unsigned long, unsigned long,
+> > >  				unsigned long, unsigned long);
+> > > -asmlinkage psci_fn __invoke_psci_fn_hvc;
+> > > -asmlinkage psci_fn __invoke_psci_fn_smc;
+> > >  static psci_fn *invoke_psci_fn;
+> > >  
+> > >  enum psci_function {
+> > > @@ -70,6 +69,24 @@ enum psci_function {
+> > >  
+> > >  static u32 psci_function_id[PSCI_FN_MAX];
+> > >  
+> > > +static unsigned long __invoke_psci_fn_hvc(unsigned long a0, unsigned long a1,
+> > > +			unsigned long a2, unsigned long a3)
+> > 
+> > Minor comment, but could we keep these argument names the same as before
+> > please?
+> 
+> You mean function_id, arg0, arg1... instead? I guess I should update
+> arm-smccc.h also then.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Olof Johansson <olof@lixom.net>
----
-Hi,
+No; I think just updating the psci caller to use those, but leave the
+SMCCC low-level details as they are. The latter is just pushing data,
+whilst the former has some (albeit limited) knowledge of what those
+values represent.
 
-while it would have been possible to add the edma3-tptc compatible to be handled
-by the edma-tpcc driver (and when the device is tptc, do nothing) it would
-make the driver code a bit harder to follow.
-I think having separate structure for the tptc looks better and if we ever need
-to have separate driver for the tptc it will be cleaner for us the separate it.
-
-This patch alone w/o any hwmod flag changes will make sure that the edma-tptc is
-not powered down after the kernel is finished it's booting.
-
-Regards,
-Peter
-
- drivers/dma/edma.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index 31722d436a42..6b03e4e84e6b 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -269,6 +269,11 @@ static const struct of_device_id edma_of_ids[] = {
- 	{}
- };
- 
-+static const struct of_device_id edma_tptc_of_ids[] = {
-+	{ .compatible = "ti,edma3-tptc", },
-+	{}
-+};
-+
- static inline unsigned int edma_read(struct edma_cc *ecc, int offset)
- {
- 	return (unsigned int)__raw_readl(ecc->base + offset);
-@@ -2399,6 +2404,13 @@ static struct platform_driver edma_driver = {
- 	},
- };
- 
-+static struct platform_driver edma_tptc_driver = {
-+	.driver = {
-+		.name	= "edma3-tptc",
-+		.of_match_table = edma_tptc_of_ids,
-+	},
-+};
-+
- bool edma_filter_fn(struct dma_chan *chan, void *param)
- {
- 	bool match = false;
-@@ -2418,6 +2430,12 @@ EXPORT_SYMBOL(edma_filter_fn);
- 
- static int edma_init(void)
- {
-+	int ret;
-+
-+	ret = platform_driver_register(&edma_tptc_driver);
-+	if (ret)
-+		return ret;
-+
- 	return platform_driver_register(&edma_driver);
- }
- subsys_initcall(edma_init);
-@@ -2425,6 +2443,7 @@ subsys_initcall(edma_init);
- static void __exit edma_exit(void)
- {
- 	platform_driver_unregister(&edma_driver);
-+	platform_driver_unregister(&edma_tptc_driver);
- }
- module_exit(edma_exit);
- 
--- 
-2.6.1
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
