@@ -1,83 +1,85 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RESEND 08/16] backlight: ti-lmu-backlight: add LM3532
- driver
-Date: Mon, 2 Nov 2015 16:33:54 +0900
-Message-ID: <563711E2.70002@ti.com>
-References: <201511021324.3ZsaAzBu%fengguang.wu@intel.com>
+From: Zain <zain.wang@rock-chips.com>
+Subject: Re: [RESEND PATCH 2/4] clk: rockchip: set an id for crypto clk
+Date: Mon, 2 Nov 2015 15:54:18 +0800
+Message-ID: <563716AA.5050809@rock-chips.com>
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+ <1446193369-4453-3-git-send-email-zain.wang@rock-chips.com>
+ <4280600.OxjmG17dRp@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201511021324.3ZsaAzBu%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4280600.OxjmG17dRp@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Ouch! The notifier.h must be included. I didn't notice this error in ARM 
-architecture. Let me fix this error in next patch-set.
-Thanks a lot for catching this!
+Hi Heiko,
 
-Best regards,
-Milo
-
-diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
-index eeb6b9e..44268c7 100644
---- a/include/linux/mfd/ti-lmu.h
-+++ b/include/linux/mfd/ti-lmu.h
-@@ -14,6 +14,7 @@
-  #define __MFD_TI_LMU_H__
-
-  #include <linux/gpio.h>
-+#include <linux/notifier.h>
-  #include <linux/regmap.h>
-
-  /* Notifier event */
-
-On 11/2/2015 2:37 PM, kbuild test robot wrote:
-> Hi Milo,
+On 2015=E5=B9=B410=E6=9C=8830=E6=97=A5 16:54, Heiko Stuebner wrote:
+> Hi Zain,
 >
-> [auto build test ERROR on ljones-mfd/for-mfd-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+> Am Freitag, 30. Oktober 2015, 16:22:47 schrieb Zain Wang:
+>> set an id for crypto clk, so that it can be called in other part.
+>>
+>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+>> ---
+>>  drivers/clk/rockchip/clk-rk3288.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchi=
+p/clk-rk3288.c
+>> index 9040878..d74bd5d 100644
+>> --- a/drivers/clk/rockchip/clk-rk3288.c
+>> +++ b/drivers/clk/rockchip/clk-rk3288.c
+>> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_bra=
+nches[] __initdata =3D {
+>>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+>>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+>>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+>> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
+>> +	COMPOSITE_NOMUX(SRST_CRYPTO, "crypto", "aclk_cpu_pre", 0,
+> the id you want to use actually is a soft-reset index, not a clock-id=
+=2E
+> You would need to add a real id, in this case with an sclk_ prefix.
+ok! done!
 >
-> url:    https://github.com/0day-ci/linux/commits/Milo-Kim/Support-TI-LMU-devices/20151102-130804
-> config: mips-allyesconfig (attached as .config)
-> reproduce:
->          wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          make.cross ARCH=mips
->
-> All errors (new ones prefixed by >>):
->
->     In file included from drivers/video/backlight/lm3532_bl.c:14:0:
->>> include/linux/mfd/ti-lmu.h:74:32: error: field 'notifier' has incomplete type
->       struct blocking_notifier_head notifier;
->                                     ^
->
-> vim +/notifier +74 include/linux/mfd/ti-lmu.h
->
-> 51194f72 Milo Kim 2015-11-02  68   * @notifier:	Notifier for reporting hwmon event
-> 51194f72 Milo Kim 2015-11-02  69   */
-> 51194f72 Milo Kim 2015-11-02  70  struct ti_lmu {
-> 51194f72 Milo Kim 2015-11-02  71  	struct device *dev;
-> 51194f72 Milo Kim 2015-11-02  72  	struct regmap *regmap;
-> 51194f72 Milo Kim 2015-11-02  73  	int en_gpio;
-> 51194f72 Milo Kim 2015-11-02 @74  	struct blocking_notifier_head notifier;
-> 51194f72 Milo Kim 2015-11-02  75  };
-> 51194f72 Milo Kim 2015-11-02  76
-> 51194f72 Milo Kim 2015-11-02  77  int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read);
->
-> :::::: The code at line 74 was first introduced by commit
-> :::::: 51194f72221b7b83a8f6a5ba9bf0c49a10233ca2 mfd: add TI LMU driver
->
-> :::::: TO: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-> :::::: CC: 0day robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+>>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+>>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+>>
+> It should probably look more like below, but as suggested by Stephen =
+Boyd
+> in another thread, we should coordinate with Chris to add more necess=
+ary clock
+> ids in one go:
+> -------- 8< -----------
+> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip=
+/clk-rk3288.c
+> index 9040878..9fd9f5a 100644
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_bran=
+ches[] __initdata =3D {
+>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
+> +	COMPOSITE_NOMUX(SCLK_CRYPTO, "sclk_crypto", "aclk_cpu_pre", 0,
+>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bind=
+ings/clock/rk3288-cru.h
+> index c719aac..9e0a5e9 100644
+> --- a/include/dt-bindings/clock/rk3288-cru.h
+> +++ b/include/dt-bindings/clock/rk3288-cru.h
+> @@ -86,6 +86,7 @@
+>  #define SCLK_USBPHY480M_SRC	122
+>  #define SCLK_PVTM_CORE		123
+>  #define SCLK_PVTM_GPU		124
+> +#define SCLK_CRYPTO		125
+> =20
+>  #define SCLK_MAC		151
+>  #define SCLK_MACREF_OUT		152
