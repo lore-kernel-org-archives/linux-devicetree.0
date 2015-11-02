@@ -1,42 +1,89 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC v2 1/2] Documentation: bridge: Add documentation for
- ps8640 DT properties
-Date: Mon, 02 Nov 2015 12:09:59 +0100
-Message-ID: <1446462599.3442.19.camel@pengutronix.de>
-References: <1446430166-7378-1-git-send-email-jitao.shi@mediatek.com>
-	 <1446436421.8671.1.camel@mszsdhlt06>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos7: Add pmic s2mps15 device tree
+ node
+Date: Mon, 2 Nov 2015 12:30:37 +0100
+Message-ID: <5637495D.1080701@osg.samsung.com>
+References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446436421.8671.1.camel@mszsdhlt06>
+In-Reply-To: <1446458641-4447-1-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jitao shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark
+To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jitao,
+Hello Alim,
 
-Am Montag, den 02.11.2015, 11:53 +0800 schrieb jitao shi:
-[...]
-> > +Example:
-> > +	edp-bridge@18 {
-> > +		compatible = "parade,ps8640";
-> > +		reg = <0x18>;
-> > +		sleep-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
-> > +		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
-> > +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
-> > +		ps8640-1v2-supply = <&ps8640_fixed_1v2>;
+This patch looks mostly good to me, I just have two comments below:
 
-This should be vdd12-supply now.
+On 11/02/2015 11:04 AM, Alim Akhtar wrote:
+> This patch add pmic (s2mps15) node of espresso board,
+> which includes addition of regulators and pmic-clk sub-nodes.
+> 
+> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> This patch should go in after driver side changes [1] lands.
+> [1]-> https://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg47736.html
+> 
+>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts |  349 +++++++++++++++++++++++
+>  1 file changed, 349 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> index 838a3626dac1..8ce04a0ec928 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> @@ -53,6 +53,355 @@
+>  	status = "okay";
+>  };
+>  
+> +&hsi2c_4 {
+> +	samsung,i2c-sda-delay = <100>;
+> +	samsung,i2c-max-bus-freq = <200000>;
+> +	status = "okay";
+> +
+> +	s2mps15_pmic@66 {
+> +		compatible = "samsung,s2mps15-pmic";
+> +		reg = <0x66>;
+> +		interrupts = <2 0>;
 
-> > +		ps8640-3v3-supply = <&mt6397_vgp2_reg>;
+Maybe using IRQ_TYPE_NONE instead of 0?
 
-Should be vdd33-supply now.
+> +		interrupt-parent = <&gpa0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_irq>;
+> +		wakeup-source;
+> +
+> +		s2mps15_osc: clocks {
+> +			compatible = "samsung,s2mps13-clk";
+> +			#clock-cells = <1>;
+> +			clock-output-names = "s2mps13_ap", "s2mps13_cp",
+> +				"s2mps13_bt";
+> +		};
+> +
+> +		regulators {
+> +			ldo1_reg: LDO1 {
+> +				regulator-name = "vdd_ldo1";
+> +				regulator-min-microvolt = <500000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-always-on;
 
-regards
-Philipp
+I see that all regulators are marked as regulator-always-on but that will
+prevent the regulator subsystem to disable unused regulators. Can you please
+double check which regulators should really be always on and which ones can
+be disabled if are not used?
 
+After those two changes:
+
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
