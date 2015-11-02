@@ -1,56 +1,67 @@
 From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 12/13] drm/panel: simple: Add simple panel device tree binding
-Date: Mon, 2 Nov 2015 09:06:46 -0600
-Message-ID: <CAL_Jsq+76CMdtu8MZZhb_Bbg+J=hjJ2as-NRnjS4w_3y0YXvLA@mail.gmail.com>
-References: <1446296170-3702-1-git-send-email-zyw@rock-chips.com> <1446296170-3702-13-git-send-email-zyw@rock-chips.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Documentation for Hi6220 gpio driver
+Date: Mon, 2 Nov 2015 09:09:33 -0600
+Message-ID: <CAL_JsqK1HJ1aDRWMj+7SVXz_zBbD_qbBZ79cbWCnLeKT2++bbw@mail.gmail.com>
+References: <1446258260-72902-1-git-send-email-zhongkaihua@huawei.com> <1446258260-72902-2-git-send-email-zhongkaihua@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446296170-3702-13-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1446258260-72902-2-git-send-email-zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 31, 2015 at 7:56 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-
-Your subject should be more specific with the panel name.
-
-> This binding specifies a set of common properties for display panels. It
-> can be used as a basis by bindings for specific panels.
-> Bindings for three specific panels are provided to show how the
-> simple panel binding can be used.
+On Fri, Oct 30, 2015 at 9:24 PM, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> dt-bindings: gpio: Documentation for Hi6220 gpio driver
 >
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
+> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
+>  .../devicetree/bindings/gpio/gpio-hi6220.txt       | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
 >
-> Changes in v2:
-> As Thierry.Reding comment, add a documentation for this panel.
->
->  Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
-
-Please move to bindings/display/panel/
-
->
-> diff --git a/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt b/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
 > new file mode 100644
-> index 0000000..50be5e2
+> index 0000000..76a8932
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
-> @@ -0,0 +1,7 @@
-> +Boe Corporation 8.0" WUXGA TFT LCD panel
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+> @@ -0,0 +1,23 @@
+> +Hisilicon Hi6220 GPIO controller bindings
 > +
 > +Required properties:
-> +- compatible: should be "boe,tv080wum-nl0"
+> +  - compatible:        "arm,pl061", "arm,primecell"
+> +  - gpio-controller: Marks the device node as a        GPIO controller.
+> +  - #gpio-cells: Should        be 2. See gpio.txt in this directory for a
+
+Some strange spacing in here. Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> +                description of the cells format.
+> +  - interrupt-controller: Mark the device node as an interrupt controller
 > +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
+> +Example:
+> +
+> +       gpio0: gpio@f8011000 {
+> +               compatible = "arm,pl061", "arm,primecell";
+> +               reg = <0x0 0xf8011000 0x0 0x1000>;
+> +               interrupts = <0 52 0x4>;
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <2>;
+> +               clocks = <&ao_ctrl 2>;
+> +               clock-names = "apb_pclk";
+> +               status = "ok";
+> +       };
 > --
-> 2.6.2
+> 1.9.1
 >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
