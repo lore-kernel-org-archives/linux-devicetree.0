@@ -1,89 +1,89 @@
-From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 11/19] drm: sun4i: Add composite output
-Date: Mon, 2 Nov 2015 13:53:20 +1100
-Message-ID: <CANwerB0tva90mj7Anits0gfecQuLcDZ-BEctc0VNAY+Oq0dLbA@mail.gmail.com>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
-	<1446214865-3972-12-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: jitao shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC v2 1/2] Documentation: bridge: Add documentation for
+ ps8640 DT properties
+Date: Mon, 2 Nov 2015 11:53:41 +0800
+Message-ID: <1446436421.8671.1.camel@mszsdhlt06>
+References: <1446430166-7378-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCVMZKEXYEFBBIFA3OYQKGQEPENOHBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1446214865-3972-12-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1446430166-7378-1-git-send-email-jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David
+ Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh@med
+Cc: ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31 October 2015 at 01:20, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Some Allwinner SoCs have an IP called the TV encoder that is used to output
-> composite and VGA signals. In such a case, we need to use the second TCON
-> channel.
->
-> Add support for that TV encoder.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Mon, 2015-11-02 at 10:09 +0800, Jitao Shi wrote:
+> Add documentation for DT properties supported by
+> ps8640 DSI-eDP converter.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+changes since v1:
+        1. changes power-gpios to sleep-gpios.
+        2. drop "ps8640-" in properties.
+        3. add ports property.
 > ---
->  drivers/gpu/drm/sun4i/Makefile    |   1 +
->  drivers/gpu/drm/sun4i/sun4i_drv.c |  10 +-
->  drivers/gpu/drm/sun4i/sun4i_tv.c  | 532 ++++++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun4i_tv.h  |  18 ++
->  4 files changed, 560 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.c
->  create mode 100644 drivers/gpu/drm/sun4i/sun4i_tv.h
->
-> diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
-> index 4d230b658a05..fc0dc8be82d9 100644
-> --- a/drivers/gpu/drm/sun4i/Makefile
-> +++ b/drivers/gpu/drm/sun4i/Makefile
-> @@ -6,5 +6,6 @@ sun4i-drm-y += sun4i_layer.o
->  sun4i-drm-y += sun4i_tcon.o
->
->  sun4i-drm-y += sun4i_rgb.o
-> +sun4i-drm-y += sun4i_tv.o
->
->  obj-$(CONFIG_DRM_SUN4I)                += sun4i-drm.o
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> index f2c9c8a2eb75..3cf7a9e89afa 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> @@ -22,6 +22,7 @@
->  #include "sun4i_layer.h"
->  #include "sun4i_rgb.h"
->  #include "sun4i_tcon.h"
-> +#include "sun4i_tv.h"
->
->  static void sun4i_drv_preclose(struct drm_device *drm,
->                                struct drm_file *file_priv)
-> @@ -134,12 +135,18 @@ static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
->                 goto err_free_crtc;
->         }
->
-> +       ret = sun4i_tv_init(drm);
-> +       if (ret) {
-> +               dev_err(drm->dev, "Couldn't create our RGB output\n");
-
-RGB should be composite. Seems like a copy-paste error.
-
-> +               goto err_free_rgb;
-> +       }
+>  .../devicetree/bindings/display/bridge/ps8640.txt  |   43 ++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+> new file mode 100644
+> index 0000000..7edc547
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+> @@ -0,0 +1,43 @@
+> +ps8640-bridge bindings
 > +
->         /* Create our framebuffer */
->         drv->fbdev = sun4i_framebuffer_init(drm);
->         if (IS_ERR(drv->fbdev)) {
->                 dev_err(drm->dev, "Couldn't create our framebuffer\n");
->                 ret = PTR_ERR(drv->fbdev);
-> -               goto err_free_rgb;
-> +               goto err_free_tv;
->         }
->
->         /* Enable connectors polling */
-
-Regards,
-Jonathan
+> +Required properties:
+> +	- compatible: "parade,ps8640"
+> +	- reg: first page address of the bridge.
+> +	- sleep-gpios: OF device-tree gpio specification for PD_ pin.
+> +	- reset-gpios: OF device-tree gpio specification for reset pin.
+> +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
+> +	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
+> +	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
+> +	- ports: The device node can contain video interface port nodes per
+> +		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
+> +		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
+> +
+> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +	edp-bridge@18 {
+> +		compatible = "parade,ps8640";
+> +		reg = <0x18>;
+> +		sleep-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
+> +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
+> +		ps8640-1v2-supply = <&ps8640_fixed_1v2>;
+> +		ps8640-3v3-supply = <&mt6397_vgp2_reg>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				ps8640_in: endpoint {
+> +					remote-endpoint = <&dsi0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				ps8640_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +				};
+> +			};
+> +		};
+> +	};
