@@ -1,20 +1,20 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
-Date: Mon, 2 Nov 2015 08:59:24 +0000
-Message-ID: <20151102085924.GP4058@x1>
+Date: Mon, 2 Nov 2015 09:00:05 +0000
+Message-ID: <20151102090005.GQ4058@x1>
 References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Nov 2015, Milo Kim wrote:
+Is it just me, or have you missed lots of people off Cc?
 
 > TI LMU(Lighting Management Unit) driver supports lighting devices bel=
 ow.
@@ -100,11 +100,6 @@ n
 >  drivers/video/backlight/ti-lmu-backlight.c         | 429 +++++++++++=
 +
 >  drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
-
-How different are all of these drivers?
-
-Can you create one driver that supports them all instead?
-
 >  include/linux/mfd/ti-lmu-register.h                | 277 ++++++++
 >  include/linux/mfd/ti-lmu.h                         |  81 +++
 >  30 files changed, 4270 insertions(+)
@@ -139,8 +134,3 @@ Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
