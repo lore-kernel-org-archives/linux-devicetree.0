@@ -1,152 +1,88 @@
-From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] rpi: add support to enable usb power domain
-Date: Mon, 2 Nov 2015 10:02:58 +0100
-Message-ID: <20151102090257.GB1342@omega>
-References: <1446064810-5064-1-git-send-email-alex.aring@gmail.com>
- <5631A165.3050304@wwwdotorg.org>
+From: Zain <zain.wang@rock-chips.com>
+Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings
+ documentation
+Date: Mon, 2 Nov 2015 17:13:38 +0800
+Message-ID: <56372942.2080900@rock-chips.com>
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+ <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
+ <20151030140334.GB31073@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5631A165.3050304-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20151030140334.GB31073@leverpostej>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 28, 2015 at 10:32:37PM -0600, Stephen Warren wrote:
-> On 10/28/2015 02:40 PM, Alexander Aring wrote:
-> > This patch adds support for RPi several Power Domains and enable support
-> > to enable the USB Power Domain when it's not enabled before.
-> > 
-> > This patch based on Eric Anholt's patch to support Power Domains. He had
-> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
-> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
-> > if we fail to init or turn-on domain").
-> 
-> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
-> 
-> >  firmware {
-> >  	compatible = "raspberrypi,bcm2835-firmware";
-> >  	mboxes = <&mailbox>;
-> > +	#power-domain-cells = <1>;
-> > +};
-> 
-> I would have expected a separate DT node for the power domains driver
-> that referenced the firmware node by phandle. I believe that's why the
-> firmware node exports mailboxes to other drivers. If the firmware driver
-> was going to implement all the features directly, it wouldn't need to
-> act as a mailbox provider, since all the mailbox programming would be
-> internal.
-> 
+Hi Mark
 
-ok.
-
-> > diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-> 
-> > +#define RPI_POWER_DOMAIN(_domain, _name)			\
-> > +	[_domain] =						\
-> > +	{							\
-> 
-> I'd expect { wrapped onto the previous line.
-> 
-
-ok.
-
-> > +static int raspberrypi_firmware_set_power(struct rpi_firmware *fw,
-> > +					  u32 domain, bool on)
-> 
-> > +	packet.on = on;
-> > +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_SET_POWER_STATE, &packet,
-> > +				    sizeof(packet));
-> > +	if (!ret && !packet.on)
-> > +		ret = -EINVAL;
-> 
-> The error is only reported for power off requests?
-> 
-
-grab it from old patch. I will fix that, I suppose it should something
-like:
-
-if (!ret && packet.on != on)
-	ret = -EINVAL;
-
-to confirm if packet.on is set or unset afterwards. I don't know if this
-is a valid error reporting mechanism from firmware.
-
-I will drop such checking here.
-
-> > +/* Asks the firmware to if power is on for a specific power domain. */
-> > +static int raspberrypi_firmware_power_is_on(struct rpi_firmware *fw,
-> > +					    u32 domain)
-> 
-> > +	packet.domain = domain;
-> > +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_GET_POWER_STATE, &packet,
-> > +				    sizeof(packet));
-> > +	if (ret < 0)
-> > +		return ret;
-> 
-> Hmm. If rpi_firmware_property() returns <0 on error, I'm confused what
-> the test I commented on above is intended to do.
-> 
-
-yes, I will fix it.
-
-> > +/*
-> > + * IMPORTANT: be sure this array has no entries which are not specified
-> > + * between others by RPI_POWER_DOMAIN, otherwise mapping between
-> > + * generic_pm_domain array doesn't work anymore.
-> > + */
-> 
-> "has no entries which are not specified between others by
-> RPI_POWER_DOMAIN" might be better phrased as "is contiguous" or
-> "contains only contiguous entries".
-> 
-
-Okay, Eric Anholt told me to support the power domains which he had in
-his patch only. I would add add the power domains only which has an
-use-case -> "USB". 
-
-> > @@ -208,15 +312,44 @@ static int rpi_firmware_probe(struct platform_device *pdev)
-> 
-> > +	for (i = 0; i < num_domains; i++) {
-> > +		bool is_off;
-> > +
-> > +		rpi_power_domains[i].fw = fw;
-> > +		power_domains[i] = &rpi_power_domains[i].base;
-> > +
-> > +		/* get the initial state */
-> > +		ret = raspberrypi_firmware_power_is_on(fw, i);
-> > +		if (ret < 0)
-> > +			goto mbox;
-> 
-> The label name "mbox" doesn't give a clue that it's an error handler.
-> "free_mbox" might be better.
-> 
-
-ok.
-
-> > +mbox:
-> > +	mbox_free_channel(fw->chan);
-> > +	return ret;
-> >  }
-> 
-> Does the pm_genpd_init() call for all the power domains need to be
-> undone at all?
-
-I would say yes. The function will call:
-
-list_add(&genpd->gpd_list_node, &gpd_list);
-
-And gpd_list is a _static_ list inside the generic power domain subsystem.
-If probing fails we need to delete these entries from gpd_list again.
-
-I searched the whole file about "gpd_list_node" and can't find a
-list_del on it. :-( Seems such handling isn't supported, but I think
-"normally" it should be cleanuped then.
-
-- Alex
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2015=E5=B9=B410=E6=9C=8830=E6=97=A5 22:03, Mark Rutland wrote:
+> On Fri, Oct 30, 2015 at 04:22:49PM +0800, Zain Wang wrote:
+>> Add DT bindings documentation for the rk3288 crypto drivers.
+>>
+>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+>> ---
+>>  .../devicetree/bindings/crypto/rk-crypto.txt       | 31 +++++++++++=
++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/crypto/rk-cryp=
+to.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt =
+b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+>> new file mode 100644
+>> index 0000000..1e50768
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+>> @@ -0,0 +1,31 @@
+>> +Rockchip Electronics And Security Accelerator
+>> +
+>> +Required properties:
+>> +- compatible: should be "rockchip,crypto"
+> Choose a more specific name. Rockchip could easily come up with anoth=
+er
+> crypto accelerator later.
+ok! done.
+rk3288_crypto may be better than crypto.
+>> +- reg: base physical address of the engine and length of memory map=
+ped
+>> +       region.
+>> +- interrupts: interrupt number
+>> +- clocks: clock specifiers
+>> +- clock-names: "aclk_crypto" used to clock data
+>> +			   "hclk_crypto" used to clock data
+>> +			   "srst_crypto" used to clock crypto accelerator
+>> +			   "apb_pclk"    used to clock dma
+>> +-status: Enable
+> No need to mention the status property.
+ok! done!
+> Thanks,
+> Mark.
+>
+>> +
+>> +Examples:
+>> +
+>> +	crypto: cypto-controller@ff8a0000 {
+>> +		compatible =3D "rockchip,crypto";
+>> +		reg =3D <0xff8a0000 0x4000>;
+>> +		interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks =3D <&cru ACLK_CRYPTO>,
+>> +			 <&cru HCLK_CRYPTO>,
+>> +			 <&cru SRST_CRYPTO>,
+>> +			 <&cru ACLK_DMAC1>;
+>> +
+>> +		clock-names =3D "aclk_crypto",
+>> +			      "hclk_crypto",
+>> +			      "srst_crypto",
+>> +				  "apb_pclk";
+>> +		status =3D "okay";
+>> +	};
+>> --=20
+>> 1.9.1
+>>
+>>
+>
+Thanks
+Zain
