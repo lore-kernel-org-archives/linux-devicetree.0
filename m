@@ -1,81 +1,145 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/6] drivers: psci: replace psci firmware calls
-Date: Mon, 2 Nov 2015 13:46:47 +0000
-Message-ID: <20151102134647.GE29657@arm.com>
-References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
- <1446106888-8983-3-git-send-email-jens.wiklander@linaro.org>
- <20151102115539.GC29657@arm.com>
- <20151102130825.GA16849@ermac>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos7: Add pmic s2mps15 device tree node
+Date: Mon, 2 Nov 2015 22:52:43 +0900
+Message-ID: <CAJKOXPcPQD+3QinbaKcREQSn1yJCf2kQG0C4rhJtCS=W_25Gmw@mail.gmail.com>
+References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
+	<CAJKOXPfrvuH8t3Pkf2Qt8VEfMR3qOeFKHrG0i3qUf94BR1y2tQ@mail.gmail.com>
+	<56375EB1.2090504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151102130825.GA16849@ermac>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56375EB1.2090504@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 02, 2015 at 02:08:26PM +0100, Jens Wiklander wrote:
-> On Mon, Nov 02, 2015 at 11:55:39AM +0000, Will Deacon wrote:
-> > On Thu, Oct 29, 2015 at 09:21:24AM +0100, Jens Wiklander wrote:
-> > > Switch to use a generic interface for issuing SMC/HVC based on ARM SMC
-> > > Calling Convention. Removes now the now unused psci-call.S.
-> > > 
-> > > Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  arch/arm/kernel/Makefile      |  1 -
-> > >  arch/arm/kernel/psci-call.S   | 31 -------------------------------
-> > >  arch/arm64/kernel/Makefile    |  2 +-
-> > >  arch/arm64/kernel/psci-call.S | 28 ----------------------------
-> > >  drivers/firmware/psci.c       | 21 +++++++++++++++++++--
-> > >  5 files changed, 20 insertions(+), 63 deletions(-)
-> > >  delete mode 100644 arch/arm/kernel/psci-call.S
-> > >  delete mode 100644 arch/arm64/kernel/psci-call.S
-> > 
-> > [...]
-> > 
-> > > diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-> > > index 42700f0..53c9606 100644
-> > > --- a/drivers/firmware/psci.c
-> > > +++ b/drivers/firmware/psci.c
-> > > @@ -19,6 +19,7 @@
-> > >  #include <linux/pm.h>
-> > >  #include <linux/printk.h>
-> > >  #include <linux/psci.h>
-> > > +#include <linux/arm-smccc.h>
-> > >  #include <linux/reboot.h>
-> > >  
-> > >  #include <uapi/linux/psci.h>
-> > > @@ -56,8 +57,6 @@ struct psci_operations psci_ops;
-> > >  
-> > >  typedef unsigned long (psci_fn)(unsigned long, unsigned long,
-> > >  				unsigned long, unsigned long);
-> > > -asmlinkage psci_fn __invoke_psci_fn_hvc;
-> > > -asmlinkage psci_fn __invoke_psci_fn_smc;
-> > >  static psci_fn *invoke_psci_fn;
-> > >  
-> > >  enum psci_function {
-> > > @@ -70,6 +69,24 @@ enum psci_function {
-> > >  
-> > >  static u32 psci_function_id[PSCI_FN_MAX];
-> > >  
-> > > +static unsigned long __invoke_psci_fn_hvc(unsigned long a0, unsigned long a1,
-> > > +			unsigned long a2, unsigned long a3)
-> > 
-> > Minor comment, but could we keep these argument names the same as before
-> > please?
-> 
-> You mean function_id, arg0, arg1... instead? I guess I should update
-> arm-smccc.h also then.
+2015-11-02 22:01 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
+>>>
+>>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts |  349
+>>> +++++++++++++++++++++++
+>>>   1 file changed, 349 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> index 838a3626dac1..8ce04a0ec928 100644
+>>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> @@ -53,6 +53,355 @@
+>>>          status = "okay";
+>>>   };
+>>>
+>>> +&hsi2c_4 {
+>>> +       samsung,i2c-sda-delay = <100>;
+>>> +       samsung,i2c-max-bus-freq = <200000>;
+>>> +       status = "okay";
+>>> +
+>>> +       s2mps15_pmic@66 {
+>>> +               compatible = "samsung,s2mps15-pmic";
+>>> +               reg = <0x66>;
+>>> +               interrupts = <2 0>;
+>>> +               interrupt-parent = <&gpa0>;
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&pmic_irq>;
+>>> +               wakeup-source;
+>>> +
+>>> +               s2mps15_osc: clocks {
+>>> +                       compatible = "samsung,s2mps13-clk";
+>>> +                       #clock-cells = <1>;
+>>> +                       clock-output-names = "s2mps13_ap", "s2mps13_cp",
+>>> +                               "s2mps13_bt";
+>>> +               };
+>>
+>>
+>> Don't you want to use one of these clocks for s3c-rtc (&rtc node)?
+>>
+> yes, you are right, rtc on this board is currently broken, mainly because of
+> the introduction of rtc_src clock in the s3c-rtc driver.
+> That is on my do list next. will take a look.
+>
+> Are you suggesting to remove this -clk node now and add along with rtc
+> changes? I feel this should go in along with this patch.
 
-No; I think just updating the psci caller to use those, but leave the
-SMCCC low-level details as they are. The latter is just pushing data,
-whilst the former has some (albeit limited) knowledge of what those
-values represent.
+Just add it in consecutive patch in this series. You added here some
+providers (clock and regulators) without consumers. This of course
+looks good as a way of providing full description of the board but:
+1. For regulators always on: may be meaningless for kernel. Kernel
+does not use it. Existence of regulator subnode will fulfill driver's
+needs for probe.
+2. For clocks: actually will disable these clocks because of lack of
+consumers... which is fine but probably not what you wanted.
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The standard approach is to add such providers when they are needed -
+there are some consumers using them.
+
+>>> +
+>>> +               regulators {
+>>> +                       ldo1_reg: LDO1 {
+>>> +                               regulator-name = "vdd_ldo1";
+>>> +                               regulator-min-microvolt = <500000>;
+>>> +                               regulator-max-microvolt = <900000>;
+>>> +                               regulator-always-on;
+>>> +                               regulator-enable-ramp-delay = <125>;
+>>> +                       };
+
+(...)
+
+>>> +
+>>> +                       buck10_reg: BUCK10 {
+>>> +                               regulator-name = "vdd_buck10";
+>>> +                               regulator-min-microvolt = <1000000>;
+>>> +                               regulator-max-microvolt = <3000000>;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-always-on;
+>>> +                               regulator-ramp-delay = <25000>;
+>>> +                               regulator-enable-ramp-delay = <250>;
+>>> +                       };
+>>
+>>
+>> All of these ldo3 and bucks in vendor tree for Espresso board have
+>> ramp delay of 12000. Also they don't have enable-ramp-delay set and
+>> voltages sometimes differ. I don't have S2MPS15 datasheet so I don't
+>> know what is the true value... I'll leave it up to you but it looks
+>> suspicious.
+>>
+> These values generally comes from our board design team, so I cann't really
+> comment on that, it may vary from board revision etc.
+> I will check if we have any updated version of recommended value and update
+> accordingly.
+
+Okay, just pointing the difference. I cannot verify them.
+
+>
+>>> +               };
+>>> +       };
+>>> +};
+>>
+>>
+>> What will be the benefit of defining all of these regulators if they
+>> are always on and without consumers? No one will disable them, no one
+>> will change the voltage. Please provide some consumers.
+>>
+> As many drivers are not yet enabled in arm64 defconfig, that is one of the
+> reason why we are not seeing many consumer for these nodes.
+
+That is not a problem. Please send a patch changing the defconfig.
+Usually defconfig (for armv7 this would be exynos and multi_v7) should
+provide bootable and working environment for all of our supported
+boards.
+
+> This is the ground work being done for enabling those. If you insist will
+> try to reduce what is being used now. Moreover this was used to verify
+> functionality of pmic driver as well.
+
+Actually as a verification I think even adding simple node
+"regulators" is sufficient - driver will add all regulators anyway.
+However seeing all regulators described for particular board is
+good... but lack of consumers is disturbing because this may mean that
+it was not really fully modeled.
+
+>From my point of view - all of regulators in DT are welcomed but at
+least some of them should have a consumer. This means that someone
+took care and looked at the relationships between them.
+
+Best regards,
+Krzysztof
