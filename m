@@ -1,7 +1,7 @@
 From: Milo Kim <milo.kim@ti.com>
-Subject: [PATCH 13/16] backlight: ti-lmu-backlight: add LM3697 driver
-Date: Mon, 2 Nov 2015 14:01:20 +0900
-Message-ID: <1446440483-6948-14-git-send-email-milo.kim@ti.com>
+Subject: [PATCH 16/16] regulator: add LM363X driver
+Date: Mon, 2 Nov 2015 14:01:23 +0900
+Message-ID: <1446440483-6948-17-git-send-email-milo.kim@ti.com>
 References: <1446440483-6948-1-git-send-email-milo.kim@ti.com>
  <1446440483-6948-2-git-send-email-milo.kim@ti.com>
  <1446440483-6948-3-git-send-email-milo.kim@ti.com>
@@ -15,78 +15,79 @@ References: <1446440483-6948-1-git-send-email-milo.kim@ti.com>
  <1446440483-6948-11-git-send-email-milo.kim@ti.com>
  <1446440483-6948-12-git-send-email-milo.kim@ti.com>
  <1446440483-6948-13-git-send-email-milo.kim@ti.com>
+ <1446440483-6948-14-git-send-email-milo.kim@ti.com>
+ <1446440483-6948-15-git-send-email-milo.kim@ti.com>
+ <1446440483-6948-16-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446440483-6948-13-git-send-email-milo.kim@ti.com>
+In-Reply-To: <1446440483-6948-16-git-send-email-milo.kim@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org
-Cc: Milo Kim <milo.kim@ti.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: Milo Kim <milo.kim@ti.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-LM3697 has 3 backlight strings and 11 bit dimming is supported.
-PWM brightness control is also supported.
+LM363X regulator driver supports LM3631 and LM3632.
+LM3631 has 5 regulators. LM3632 provides 3 regulators.
+One boost output and LDOs are used for the display module.
+Boost voltage is configurable but always on.
+Supported operations for LDOs are enabled/disabled and voltage change.
 
-LM3697 MFD has HWMON driver which monitors hardware fault detection.
-After this monitoring is done, LM3697 backlight device should be
-reinitialized. To enable this, 'hwmon_notifier_used' is set to true.
-Then, TI LMU backlight handles LMU HWMON event in
-ti_lmu_backlight_hwmon_notifier().
+Two LDOs of LM3632 can be controlled by external pins.
+Those are described in the device tree bindings.
 
-Common backlight driver is controlled by TI LMU backlight driver.
-Only LM3697 specific code is implemented here.
-
-Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
 Cc: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Milo Kim <milo.kim@ti.com>
 ---
- drivers/video/backlight/Kconfig     |   9 ++
- drivers/video/backlight/Makefile    |   1 +
- drivers/video/backlight/lm3697_bl.c | 187 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 197 insertions(+)
- create mode 100644 drivers/video/backlight/lm3697_bl.c
+ drivers/regulator/Kconfig            |   9 +
+ drivers/regulator/Makefile           |   1 +
+ drivers/regulator/lm363x-regulator.c | 349 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 359 insertions(+)
+ create mode 100644 drivers/regulator/lm363x-regulator.c
 
-diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index c1dc908..c672073 100644
---- a/drivers/video/backlight/Kconfig
-+++ b/drivers/video/backlight/Kconfig
-@@ -434,6 +434,15 @@ config BACKLIGHT_LM3695
- 	  Say Y to enable the backlight driver for TI LM3695.
- 	  Up to 2 backlight strings and 11 bit dimming is supported.
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 64bccff..efac1eb 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -274,6 +274,15 @@ config REGULATOR_ISL6271A
+ 	help
+ 	  This driver supports ISL6271A voltage regulator chip.
  
-+config BACKLIGHT_LM3697
-+	tristate "Backlight driver for TI LM3697"
-+	depends on BACKLIGHT_CLASS_DEVICE && MFD_TI_LMU
-+	select TI_LMU_BACKLIGHT
++config REGULATOR_LM363X
++	tristate "TI LM363X voltage regulators"
++	depends on MFD_TI_LMU
 +	help
-+	  Say Y to enable the backlight driver for TI LM3697.
-+	  Up to 3 backlight strings and 11 bit dimming is supported.
-+	  PWM brightness control is also supported.
++	  This driver supports LM3631 and LM3632 voltage regulators for
++	  the LCD bias.
++	  One boost output voltage is configurable and always on.
++	  Other LDOs are used for the display module.
 +
- config TI_LMU_BACKLIGHT
- 	tristate "Backlight driver for TI LMU"
- 	depends on BACKLIGHT_LM3532 || BACKLIGHT_LM3631 || \
-diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-index af20285..abb7fe0 100644
---- a/drivers/video/backlight/Makefile
-+++ b/drivers/video/backlight/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_BACKLIGHT_LM3632)		+= lm3632_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3633)		+= lm3633_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3639)		+= lm3639_bl.o
- obj-$(CONFIG_BACKLIGHT_LM3695)		+= lm3695_bl.o
-+obj-$(CONFIG_BACKLIGHT_LM3697)		+= lm3697_bl.o
- obj-$(CONFIG_BACKLIGHT_LOCOMO)		+= locomolcd.o
- obj-$(CONFIG_BACKLIGHT_LP855X)		+= lp855x_bl.o
- obj-$(CONFIG_BACKLIGHT_LP8788)		+= lp8788_bl.o
-diff --git a/drivers/video/backlight/lm3697_bl.c b/drivers/video/backlight/lm3697_bl.c
+ config REGULATOR_LP3971
+ 	tristate "National Semiconductors LP3971 PMIC regulator driver"
+ 	depends on I2C
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 0f81749..0ea87cd 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_REGULATOR_GPIO) += gpio-regulator.o
+ obj-$(CONFIG_REGULATOR_HI6421) += hi6421-regulator.o
+ obj-$(CONFIG_REGULATOR_ISL6271A) += isl6271a-regulator.o
+ obj-$(CONFIG_REGULATOR_ISL9305) += isl9305.o
++obj-$(CONFIG_REGULATOR_LM363X) += lm363x-regulator.o
+ obj-$(CONFIG_REGULATOR_LP3971) += lp3971.o
+ obj-$(CONFIG_REGULATOR_LP3972) += lp3972.o
+ obj-$(CONFIG_REGULATOR_LP872X) += lp872x.o
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
 new file mode 100644
-index 0000000..bb0c2bf
+index 0000000..28408d4
 --- /dev/null
-+++ b/drivers/video/backlight/lm3697_bl.c
-@@ -0,0 +1,187 @@
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -0,0 +1,349 @@
 +/*
-+ * TI LM3697 Backlight Driver
++ * TI LM363X Regulator Driver
 + *
 + * Copyright 2015 Texas Instruments
 + *
@@ -97,180 +98,342 @@ index 0000000..bb0c2bf
 + * published by the Free Software Foundation.
 + */
 +
++#include <linux/err.h>
 +#include <linux/kernel.h>
 +#include <linux/mfd/ti-lmu.h>
 +#include <linux/mfd/ti-lmu-register.h>
 +#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/slab.h>
 +
-+#include "ti-lmu-backlight.h"
++/* LM3631 */
++#define LM3631_BOOST_VSEL_MAX		0x25
++#define LM3631_LDO_VSEL_MAX		0x28
++#define LM3631_CONT_VSEL_MAX		0x03
++#define LM3631_VBOOST_MIN		4500000
++#define LM3631_VCONT_MIN		1800000
++#define LM3631_VLDO_MIN			4000000
++#define ENABLE_TIME_USEC		1000
 +
-+#define LM3697_BL_MAX_STRINGS		3
-+#define LM3697_MAX_BRIGHTNESS		2047
++/* LM3632 */
++#define LM3632_BOOST_VSEL_MAX		0x26
++#define LM3632_LDO_VSEL_MAX		0x29
++#define LM3632_VBOOST_MIN		4500000
++#define LM3632_VLDO_MIN			4000000
 +
-+static int lm3697_bl_init(struct ti_lmu_bl_chip *chip)
++/* Common */
++#define LM363X_STEP_50mV		50000
++#define LM363X_STEP_500mV		500000
++
++struct lm363x_regulator {
++	struct ti_lmu *lmu;
++	struct regulator_dev *regulator;
++};
++
++const int ldo_cont_enable_time[] = {
++	0, 2000, 5000, 10000, 20000, 50000, 100000, 200000,
++};
++
++static int lm363x_regulator_enable_time(struct regulator_dev *rdev)
 +{
-+	/* Configure ramp selection for each bank */
-+	return ti_lmu_update_bits(chip->lmu, LM3697_REG_RAMP_CONF,
-+				  LM3697_RAMP_MASK, LM3697_RAMP_EACH);
++	struct lm363x_regulator *lm363x_regulator = rdev_get_drvdata(rdev);
++	enum lm363x_regulator_id id = rdev_get_id(rdev);
++	u8 val, addr, mask;
++
++	switch (id) {
++	case LM3631_LDO_CONT:
++		addr = LM3631_REG_ENTIME_VCONT;
++		mask = LM3631_ENTIME_CONT_MASK;
++		break;
++	case LM3631_LDO_OREF:
++		addr = LM3631_REG_ENTIME_VOREF;
++		mask = LM3631_ENTIME_MASK;
++		break;
++	case LM3631_LDO_POS:
++		addr = LM3631_REG_ENTIME_VPOS;
++		mask = LM3631_ENTIME_MASK;
++		break;
++	case LM3631_LDO_NEG:
++		addr = LM3631_REG_ENTIME_VNEG;
++		mask = LM3631_ENTIME_MASK;
++		break;
++	default:
++		return 0;
++	}
++
++	if (ti_lmu_read_byte(lm363x_regulator->lmu, addr, &val))
++		return -EINVAL;
++
++	val = (val & mask) >> LM3631_ENTIME_SHIFT;
++
++	if (id == LM3631_LDO_CONT)
++		return ldo_cont_enable_time[val];
++	else
++		return ENABLE_TIME_USEC * val;
 +}
 +
-+static int lm3697_bl_enable(struct ti_lmu_bl *lmu_bl, int enable)
++static struct regulator_ops lm363x_boost_voltage_table_ops = {
++	.list_voltage     = regulator_list_voltage_linear,
++	.set_voltage_sel  = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel  = regulator_get_voltage_sel_regmap,
++};
++
++static struct regulator_ops lm363x_regulator_voltage_table_ops = {
++	.list_voltage     = regulator_list_voltage_linear,
++	.set_voltage_sel  = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel  = regulator_get_voltage_sel_regmap,
++	.enable           = regulator_enable_regmap,
++	.disable          = regulator_disable_regmap,
++	.is_enabled       = regulator_is_enabled_regmap,
++	.enable_time      = lm363x_regulator_enable_time,
++};
++
++static const struct regulator_desc lm363x_regulator_desc[] = {
++	/* LM3631 */
++	{
++		.name           = "vboost",
++		.id             = LM3631_BOOST,
++		.ops            = &lm363x_boost_voltage_table_ops,
++		.n_voltages     = LM3631_BOOST_VSEL_MAX + 1,
++		.min_uV         = LM3631_VBOOST_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3631_REG_VOUT_BOOST,
++		.vsel_mask      = LM3631_VOUT_MASK,
++	},
++	{
++		.name           = "ldo_cont",
++		.id             = LM3631_LDO_CONT,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM3631_CONT_VSEL_MAX + 1,
++		.min_uV         = LM3631_VCONT_MIN,
++		.uV_step        = LM363X_STEP_500mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3631_REG_VOUT_CONT,
++		.vsel_mask      = LM3631_VOUT_CONT_MASK,
++		.enable_reg     = LM3631_REG_LDO_CTRL2,
++		.enable_mask    = LM3631_EN_CONT_MASK,
++	},
++	{
++		.name           = "ldo_oref",
++		.id             = LM3631_LDO_OREF,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM3631_LDO_VSEL_MAX + 1,
++		.min_uV         = LM3631_VLDO_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3631_REG_VOUT_OREF,
++		.vsel_mask      = LM3631_VOUT_MASK,
++		.enable_reg     = LM3631_REG_LDO_CTRL1,
++		.enable_mask    = LM3631_EN_OREF_MASK,
++	},
++	{
++		.name           = "ldo_vpos",
++		.id             = LM3631_LDO_POS,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM3631_LDO_VSEL_MAX + 1,
++		.min_uV         = LM3631_VLDO_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3631_REG_VOUT_POS,
++		.vsel_mask      = LM3631_VOUT_MASK,
++		.enable_reg     = LM3631_REG_LDO_CTRL1,
++		.enable_mask    = LM3631_EN_VPOS_MASK,
++	},
++	{
++		.name           = "ldo_vneg",
++		.id             = LM3631_LDO_NEG,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM3631_LDO_VSEL_MAX + 1,
++		.min_uV         = LM3631_VLDO_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3631_REG_VOUT_NEG,
++		.vsel_mask      = LM3631_VOUT_MASK,
++		.enable_reg     = LM3631_REG_LDO_CTRL1,
++		.enable_mask    = LM3631_EN_VNEG_MASK,
++	},
++	/* LM3632 */
++	{
++		.name           = "vboost",
++		.id             = LM3632_BOOST,
++		.ops            = &lm363x_boost_voltage_table_ops,
++		.n_voltages     = LM3632_BOOST_VSEL_MAX + 1,
++		.min_uV         = LM3632_VBOOST_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3632_REG_VOUT_BOOST,
++		.vsel_mask      = LM3632_VOUT_MASK,
++	},
++	{
++		.name           = "ldo_vpos",
++		.id             = LM3632_LDO_POS,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM3632_LDO_VSEL_MAX + 1,
++		.min_uV         = LM3632_VLDO_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3632_REG_VOUT_POS,
++		.vsel_mask      = LM3632_VOUT_MASK,
++		.enable_reg     = LM3632_REG_BIAS_CONFIG,
++		.enable_mask    = LM3632_EN_VPOS_MASK,
++	},
++	{
++		.name           = "ldo_vneg",
++		.id             = LM3632_LDO_NEG,
++		.ops            = &lm363x_regulator_voltage_table_ops,
++		.n_voltages     = LM3632_LDO_VSEL_MAX + 1,
++		.min_uV         = LM3632_VLDO_MIN,
++		.uV_step        = LM363X_STEP_50mV,
++		.type           = REGULATOR_VOLTAGE,
++		.owner          = THIS_MODULE,
++		.vsel_reg       = LM3632_REG_VOUT_NEG,
++		.vsel_mask      = LM3632_VOUT_MASK,
++		.enable_reg     = LM3632_REG_BIAS_CONFIG,
++		.enable_mask    = LM3632_EN_VNEG_MASK,
++	},
++};
++
++static struct of_regulator_match lm363x_regulator_matches[] = {
++	[LM3631_BOOST]		= { .name = "vboost" },
++	[LM3631_LDO_CONT]	= { .name = "vcont" },
++	[LM3631_LDO_OREF]	= { .name = "voref" },
++	[LM3631_LDO_POS]	= { .name = "vpos" },
++	[LM3631_LDO_NEG]	= { .name = "vneg" },
++	[LM3632_BOOST]		= { .name = "vboost" },
++	[LM3632_LDO_POS]	= { .name = "vpos" },
++	[LM3632_LDO_NEG]	= { .name = "vneg" },
++};
++
++static struct regulator_init_data *
++lm363x_regulator_of_get_init_data(struct device *dev,
++			struct lm363x_regulator *lm363x_regulator, int id)
 +{
-+	return ti_lmu_update_bits(lmu_bl->chip->lmu, LM3697_REG_ENABLE,
-+				  BIT(lmu_bl->bank_id),
-+				  enable << lmu_bl->bank_id);
++	struct device_node *np = dev->of_node;
++	int count;
++
++	count = of_regulator_match(dev, np, &lm363x_regulator_matches[id], 1);
++	if (count <= 0)
++		return ERR_PTR(-ENODEV);
++
++	return lm363x_regulator_matches[id].init_data;
 +}
 +
-+static int lm3697_bl_set_brightness(struct ti_lmu_bl *lmu_bl, int brightness)
++static int lm363x_regulator_of_get_enable_gpio(struct device *dev, int id)
 +{
-+	int ret;
-+	u8 data;
-+	u8 reg_lsb[] = { LM3697_REG_BRT_A_LSB, LM3697_REG_BRT_B_LSB, };
-+	u8 reg_msb[] = { LM3697_REG_BRT_A_MSB, LM3697_REG_BRT_B_MSB, };
++	struct device_node *np = dev->of_node;
++	int gpio = -1;
 +
-+	data = brightness & LM3697_BRT_LSB_MASK;
-+	ret = ti_lmu_update_bits(lmu_bl->chip->lmu, reg_lsb[lmu_bl->bank_id],
-+				 LM3697_BRT_LSB_MASK, data);
-+	if (ret)
-+		return ret;
++	/*
++	 * Check LCM_EN1/2_GPIO is configured.
++	 * Those pins are used for enabling VPOS/VNEG LDOs.
++	 */
++	if (id == LM3632_LDO_POS)
++		gpio = of_get_named_gpio(np, "ti,lcm-en1-gpio", 0);
++	else if (id == LM3632_LDO_NEG)
++		gpio = of_get_named_gpio(np, "ti,lcm-en2-gpio", 0);
 +
-+	data = (brightness >> LM3697_BRT_MSB_SHIFT) & 0xFF;
-+	return ti_lmu_write_byte(lmu_bl->chip->lmu, reg_msb[lmu_bl->bank_id],
-+				 data);
++	return gpio;
 +}
 +
-+static int lm3697_bl_set_ctrl_mode(struct ti_lmu_bl *lmu_bl)
++static int lm363x_regulator_probe(struct platform_device *pdev)
 +{
-+	int bank_id = lmu_bl->bank_id;
++	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
++	struct lm363x_regulator *lm363x_regulator;
++	struct regulator_init_data *init_data;
++	struct regulator_config cfg = { };
++	struct regulator_dev *rdev;
++	struct device *dev = &pdev->dev;
++	int id = pdev->id;
++	int ret, ena_gpio;
 +
-+	if (lmu_bl->mode == BL_PWM_BASED)
-+		return ti_lmu_update_bits(lmu_bl->chip->lmu,
-+					  LM3697_REG_PWM_CFG,
-+					  BIT(bank_id), 1 << bank_id);
++	lm363x_regulator = devm_kzalloc(dev, sizeof(*lm363x_regulator),
++					GFP_KERNEL);
++	if (!lm363x_regulator)
++		return -ENOMEM;
 +
-+	return 0;
-+}
++	lm363x_regulator->lmu = lmu;
 +
-+static int lm3697_bl_string_configure(struct ti_lmu_bl *lmu_bl)
-+{
-+	struct ti_lmu *lmu = lmu_bl->chip->lmu;
-+	int bank_id = lmu_bl->bank_id;
-+	int is_detected = 0;
-+	int i, ret;
++	init_data = lm363x_regulator_of_get_init_data(dev, lm363x_regulator,
++						      id);
++	if (IS_ERR(init_data))
++		return PTR_ERR(init_data);
 +
-+	/* Assign control bank from backlight string configuration */
-+	for (i = 0; i < LM3697_BL_MAX_STRINGS; i++) {
-+		if (test_bit(i, &lmu_bl->bl_string)) {
-+			ret = ti_lmu_update_bits(lmu,
-+						 LM3697_REG_HVLED_OUTPUT_CFG,
-+						 BIT(i), bank_id << i);
-+			if (ret)
-+				return ret;
++	cfg.dev = dev->parent;
++	cfg.init_data = init_data;
++	cfg.driver_data = lm363x_regulator;
++	cfg.regmap = lmu->regmap;
 +
-+			is_detected = 1;
++	/*
++	 * LM3632 LDOs can be controlled by external pin.
++	 * Register update is required if the pin is used.
++	 */
++	ena_gpio = lm363x_regulator_of_get_enable_gpio(dev, id);
++	if (gpio_is_valid(ena_gpio)) {
++		cfg.ena_gpio = ena_gpio;
++		cfg.ena_gpio_flags = GPIOF_OUT_INIT_LOW;
++
++		ret = ti_lmu_update_bits(lmu, LM3632_REG_BIAS_CONFIG,
++					 LM3632_EXT_EN_MASK,
++					 LM3632_EXT_EN_MASK);
++		if (ret) {
++			dev_err(dev, "External pin err: %d\n", ret);
++			return ret;
 +		}
 +	}
 +
-+	if (!is_detected) {
-+		dev_err(lmu_bl->chip->dev, "No backlight string found\n");
-+		return -EINVAL;
++	rdev = regulator_register(&lm363x_regulator_desc[id], &cfg);
++	if (IS_ERR(rdev)) {
++		ret = PTR_ERR(rdev);
++		dev_err(dev, "[%d] regulator register err: %d\n", id, ret);
++		return ret;
 +	}
++
++	lm363x_regulator->regulator = rdev;
++	platform_set_drvdata(pdev, lm363x_regulator);
 +
 +	return 0;
 +}
 +
-+static int lm3697_bl_set_current_limit(struct ti_lmu_bl *lmu_bl)
++static int lm363x_regulator_remove(struct platform_device *pdev)
 +{
-+	u8 reg[] = { LM3697_REG_IMAX_A, LM3697_REG_IMAX_B, };
++	struct lm363x_regulator *lm363x_regulator = platform_get_drvdata(pdev);
 +
-+	return ti_lmu_write_byte(lmu_bl->chip->lmu, reg[lmu_bl->bank_id],
-+				 lmu_bl->imax);
-+}
-+
-+static int lm3697_bl_set_ramp(struct ti_lmu_bl *lmu_bl)
-+{
-+	int ret, index;
-+	u8 reg;
-+
-+	index = ti_lmu_backlight_get_ramp_index(lmu_bl, BL_RAMP_UP);
-+	if (index > 0) {
-+		if (lmu_bl->bank_id == 0)
-+			reg = LM3697_REG_BL0_RAMPUP;
-+		else
-+			reg = LM3697_REG_BL1_RAMPUP;
-+
-+		ret = ti_lmu_update_bits(lmu_bl->chip->lmu, reg,
-+					 LM3697_BL_RAMPUP_MASK,
-+					 index << LM3697_BL_RAMPUP_SHIFT);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	index = ti_lmu_backlight_get_ramp_index(lmu_bl, BL_RAMP_DOWN);
-+	if (index > 0) {
-+		if (lmu_bl->bank_id == 0)
-+			reg = LM3697_REG_BL0_RAMPDN;
-+		else
-+			reg = LM3697_REG_BL1_RAMPDN;
-+
-+		ret = ti_lmu_update_bits(lmu_bl->chip->lmu, reg,
-+					 LM3697_BL_RAMPDN_MASK,
-+					 index << LM3697_BL_RAMPDN_SHIFT);
-+		if (ret)
-+			return ret;
-+	}
-+
++	regulator_unregister(lm363x_regulator->regulator);
 +	return 0;
 +}
 +
-+static int lm3697_bl_configure(struct ti_lmu_bl *lmu_bl)
-+{
-+	int ret;
++static const struct of_device_id lm363x_regulator_of_match[] = {
++	{ .compatible = "ti,lm363x-regulator" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lm363x_regulator_of_match);
 +
-+	ret = lm3697_bl_set_ctrl_mode(lmu_bl);
-+	if (ret)
-+		return ret;
-+
-+	ret = lm3697_bl_string_configure(lmu_bl);
-+	if (ret)
-+		return ret;
-+
-+	ret = lm3697_bl_set_current_limit(lmu_bl);
-+	if (ret)
-+		return ret;
-+
-+	ret = lm3697_bl_set_ramp(lmu_bl);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/* Backlight ramp up/down time. Unit is msec. */
-+static const int lm3697_ramp_table[] = {
-+	   2, 250, 500, 1000, 2000, 4000, 8000, 16000,
++static struct platform_driver lm363x_regulator_driver = {
++	.probe = lm363x_regulator_probe,
++	.remove = lm363x_regulator_remove,
++	.driver = {
++		.name = "lm363x-regulator",
++		.of_match_table = lm363x_regulator_of_match,
++	},
 +};
 +
-+static const struct ti_lmu_bl_ops lm3697_lmu_ops = {
-+	.init			= lm3697_bl_init,
-+	.configure		= lm3697_bl_configure,
-+	.update_brightness	= lm3697_bl_set_brightness,
-+	.bl_enable		= lm3697_bl_enable,
-+	.hwmon_notifier_used	= true,
-+	.max_brightness		= LM3697_MAX_BRIGHTNESS,
-+	.ramp_table		= lm3697_ramp_table,
-+	.size_ramp		= ARRAY_SIZE(lm3697_ramp_table),
-+};
++module_platform_driver(lm363x_regulator_driver);
 +
-+/* LM3697 backlight of_device_id */
-+TI_LMU_BL_OF_DEVICE(lm3697, "ti,lm3697-backlight");
-+
-+/* LM3697 backlight platform driver */
-+TI_LMU_BL_PLATFORM_DRIVER(lm3697, "lm3697-backlight");
-+
-+MODULE_DESCRIPTION("TI LM3697 Backlight Driver");
++MODULE_DESCRIPTION("TI LM363X Regulator Driver");
 +MODULE_AUTHOR("Milo Kim");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:lm3697-backlight");
++MODULE_ALIAS("platform:lm363x-regulator");
 -- 
 1.9.1
