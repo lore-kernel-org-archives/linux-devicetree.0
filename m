@@ -1,40 +1,69 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH 2/2] arm64: dts: exynos7: Enable HS200 mode operation
-Date: Mon, 02 Nov 2015 15:34:01 +0530
-Message-ID: <1446458641-4447-2-git-send-email-alim.akhtar@samsung.com>
-References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: OMAP: hwmod: AM33xx/43xx: Add HWMOD_INIT_NO_IDLE flag to tptc
+Date: Mon, 2 Nov 2015 12:11:00 +0200
+Message-ID: <1446459060-16220-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
+To: vinod.koul@intel.com, nsekhar@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-This patch enables HS200 mode operation on exynos7 based
-espresso board.
-This also remove _broken-cd_ property as per mmc binding documentation
-which say one of the properties between broken-cd and non-removable
-should be used. And we already use _non-removable_ as emmc mounted
-on board which is a non-removable device.
+In Linux we do not have driver for TPTCs of eDMA3 since there is no need to
+do any configuration within TPTC for the eDMA3 to be operational. All
+configuration is via the TPCC.
+To prevent the omap_device_late_idle() to disable the TPTCs when they are
+no longer bind with the edma driver, the HWMOD_INIT_NO_IDLE need to be
+added.
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Vinod, Olof,
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 8ce04a0ec928..7f19b99fc85b 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -405,8 +405,8 @@
- &mmc_0 {
- 	status = "okay";
- 	num-slots = <1>;
--	broken-cd;
- 	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
- 	non-removable;
- 	card-detect-delay = <200>;
- 	clock-frequency = <800000000>;
+This patch somehow got lost in my working branch. It was mixed within the patches
+I will have for 4.5 while it should have been within the new eDMA3 binding
+series..
+
+Regards,
+Peter
+
+ arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+index 907a452b78ea..3c7106a09801 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -1169,7 +1169,8 @@ struct omap_hwmod am33xx_tptc0_hwmod = {
+ 	.name		= "tptc0",
+ 	.class		= &am33xx_tptc_hwmod_class,
+ 	.clkdm_name	= "l3_clkdm",
+-	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
++	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY |
++			   HWMOD_INIT_NO_IDLE),
+ 	.main_clk	= "l3_gclk",
+ 	.prcm		= {
+ 		.omap4	= {
+@@ -1183,7 +1184,8 @@ struct omap_hwmod am33xx_tptc1_hwmod = {
+ 	.name		= "tptc1",
+ 	.class		= &am33xx_tptc_hwmod_class,
+ 	.clkdm_name	= "l3_clkdm",
+-	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY),
++	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY |
++			   HWMOD_INIT_NO_IDLE),
+ 	.main_clk	= "l3_gclk",
+ 	.prcm		= {
+ 		.omap4	= {
+@@ -1197,7 +1199,8 @@ struct omap_hwmod am33xx_tptc2_hwmod = {
+ 	.name		= "tptc2",
+ 	.class		= &am33xx_tptc_hwmod_class,
+ 	.clkdm_name	= "l3_clkdm",
+-	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY),
++	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY |
++			   HWMOD_INIT_NO_IDLE),
+ 	.main_clk	= "l3_gclk",
+ 	.prcm		= {
+ 		.omap4	= {
 -- 
-1.7.10.4
+2.6.1
