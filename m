@@ -1,82 +1,83 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: RE: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Mon, 02 Nov 2015 10:31:52 +0300
-Message-ID: <012101d11540$8c280be0$a47823a0$@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
- <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
- <56330E6E.50003@samsung.com> <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
- <5635D1EE.5010604@samsung.com>
+From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH RESEND 08/16] backlight: ti-lmu-backlight: add LM3532
+ driver
+Date: Mon, 2 Nov 2015 16:33:54 +0900
+Message-ID: <563711E2.70002@ti.com>
+References: <201511021324.3ZsaAzBu%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5635D1EE.5010604@samsung.com>
-Content-language: ru
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: k.kozlowski.k@gmail.com, 'Mark Rutland' <mark.rutland@arm.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201511021324.3ZsaAzBu%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- Hello!
+Ouch! The notifier.h must be included. I didn't notice this error in ARM 
+architecture. Let me fix this error in next patch-set.
+Thanks a lot for catching this!
 
-> > --- cut exynos5410.dtsi ---
-> > 		sromc: sromc@12250000 {
-> > 			#address-cells = <2>;
-> > 			#size-cells = <1>;
-> > 			ranges = <0 0 0x04000000 0x20000
-> > 				  1 0 0x05000000 0x20000
-> > 				  2 0 0x06000000 0x20000
-> > 				  3 0 0x07000000 0x20000>;
-> 
-> Do you have to use 2 cells for address? Cannot it be:
->  			ranges = <0 0x04000000 0x20000
->  				  1 0x05000000 0x20000
->  				  2 0x06000000 0x20000
->  				  3 0x07000000 0x20000>;
+Best regards,
+Milo
 
- I tried this first, but it didn't work, and ranges translation
-gave me something really weird (like addr = 0x80 and
-size = 0x04000004). I decided not to dig deeply into
-"ranges" processing, but just followed GPMC approach. They say
-that first number is range ID and second number is offset within
-the range. And it just worked.
+diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
+index eeb6b9e..44268c7 100644
+--- a/include/linux/mfd/ti-lmu.h
++++ b/include/linux/mfd/ti-lmu.h
+@@ -14,6 +14,7 @@
+  #define __MFD_TI_LMU_H__
 
-> >  3. About samsung,srom-config array. I have the following reasons to keep if this way:
-> >     - listing every property under own name is just too much typing
-> >     - these values really do not make sense without each other, or partialy. I would say
-> that in array form they are even better
-> > readable, because it is the same order in which they go into the register.
-> 
-> For timings - OK. PMC is separate. This is not a timing.
+  #include <linux/gpio.h>
++#include <linux/notifier.h>
+  #include <linux/regmap.h>
 
- But it's srom-config, and not srom-timing anymore. So do you want
-two properties like srom-timing + srom-page-mode (with vendor prefix
-of course)?
+  /* Notifier event */
 
-> You need to document them. We are not gonna put some data looking like a
-> vendor blob into the binding. I understand that document has
-> confidential mark... all of Samsung datasheets I've seen had it. I don't
-> find it as problem but of course I am not the one to judge here. If you
-> do not feel comfortable publishing such data, get an approval from your
-> manager. You can also try to search for this in vendor code
-> (opensource.samsung.com). If it is published there, then this won't be a
-> disclosure.
-
- I've seen the actual SROMc settings in some old Android kernels, like 3.0.4.
-But they are not documented there, no comments, just #define's.
- Ok, i'll try to take a look how to minimize the actual information. :)
-
-> BTW, your email client is weird. You are sending non-wrapped emails
-> without format=flowed in Content-Type. Please stick to mailing list
-> convention of wrapping at 72-char.
-
- I know, sorry, this is MS Outlook (not Express), and it's impossible
-to configure it this way (if i just set up word wrap, it starts to
-corrupt patches). I am now trying to wrap the text by hands, i hope
-it's better. And i cannot use anything else because... You know why. :)
-
-Kind regards,
-Pavel Fedin
-Expert Engineer
-Samsung Electronics Research center Russia
+On 11/2/2015 2:37 PM, kbuild test robot wrote:
+> Hi Milo,
+>
+> [auto build test ERROR on ljones-mfd/for-mfd-next -- if it's inappropriate base, please suggest rules for selecting the more suitable base]
+>
+> url:    https://github.com/0day-ci/linux/commits/Milo-Kim/Support-TI-LMU-devices/20151102-130804
+> config: mips-allyesconfig (attached as .config)
+> reproduce:
+>          wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          make.cross ARCH=mips
+>
+> All errors (new ones prefixed by >>):
+>
+>     In file included from drivers/video/backlight/lm3532_bl.c:14:0:
+>>> include/linux/mfd/ti-lmu.h:74:32: error: field 'notifier' has incomplete type
+>       struct blocking_notifier_head notifier;
+>                                     ^
+>
+> vim +/notifier +74 include/linux/mfd/ti-lmu.h
+>
+> 51194f72 Milo Kim 2015-11-02  68   * @notifier:	Notifier for reporting hwmon event
+> 51194f72 Milo Kim 2015-11-02  69   */
+> 51194f72 Milo Kim 2015-11-02  70  struct ti_lmu {
+> 51194f72 Milo Kim 2015-11-02  71  	struct device *dev;
+> 51194f72 Milo Kim 2015-11-02  72  	struct regmap *regmap;
+> 51194f72 Milo Kim 2015-11-02  73  	int en_gpio;
+> 51194f72 Milo Kim 2015-11-02 @74  	struct blocking_notifier_head notifier;
+> 51194f72 Milo Kim 2015-11-02  75  };
+> 51194f72 Milo Kim 2015-11-02  76
+> 51194f72 Milo Kim 2015-11-02  77  int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read);
+>
+> :::::: The code at line 74 was first introduced by commit
+> :::::: 51194f72221b7b83a8f6a5ba9bf0c49a10233ca2 mfd: add TI LMU driver
+>
+> :::::: TO: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+> :::::: CC: 0day robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
