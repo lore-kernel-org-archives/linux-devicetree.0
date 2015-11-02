@@ -1,79 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] Input: tsc2004 - Document ts2004 dt bindings
-Date: Mon, 2 Nov 2015 09:19:50 -0600
-Message-ID: <CAL_JsqKpbrWcHj4eubWMAjtVRHE8TTN_qC5S=J7qzcf8khpzng@mail.gmail.com>
-References: <1446252086-24334-1-git-send-email-mwelling@ieee.org> <1446252086-24334-5-git-send-email-mwelling@ieee.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding
+ documentation
+Date: Mon, 2 Nov 2015 09:27:29 -0600
+Message-ID: <CAL_Jsq+Pe+W-OJ325FPi1wxGJWAk4qn=DZD0vqo=Cvv9mRzspw@mail.gmail.com>
+References: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1446252086-24334-5-git-send-email-mwelling@ieee.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Michael Welling <mwelling@ieee.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 7:41 PM, Michael Welling <mwelling@ieee.org> wrote:
-> Adds documentation for the devicetree bindings of the new tsc2004 driver.
->
-> Signed-off-by: Michael Welling <mwelling@ieee.org>
-> ---
->  .../bindings/input/touchscreen/tsc2005.txt         | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-> index 09089a6..27c6082 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-> @@ -1,3 +1,42 @@
-> +* Texas Instruments tsc2004 touchscreen controller
-> +
-> +Required properties:
-> + - compatible                : "ti,tsc2004"
-> + - interrupts                : IRQ specifier
-> + - vio-supply                 : Regulator specifier
-
-reg property?
-
-> +
-> +Optional properties:
-> + - reset-gpios               : GPIO specifier
-> + - ti,x-plate-ohms           : integer, resistance of the touchscreen's X plates
-> +                               in ohm (defaults to 280)
-> + - ti,esd-recovery-timeout-ms : integer, if the touchscreen does not respond after
-> +                               the configured time (in milli seconds), the driver
-> +                               will reset it. This is disabled by default.
-> + - properties defined in touchscreen.txt
-> +
-> +Example:
-> +
-> +&i2c3 {
-> +       tsc2004@48 {
-> +               compatible = "ti,tsc2004";
-> +               reg = <0x48>;
-> +               vio-supply = <&vio>;
-> +
-> +               reset-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-> +               interrupts-extended = <&gpio1 27 IRQ_TYPE_EDGE_RISING>;
-> +
-> +               touchscreen-fuzz-x = <4>;
-> +               touchscreen-fuzz-y = <7>;
-> +               touchscreen-fuzz-pressure = <2>;
-> +               touchscreen-size-x = <4096>;
-> +               touchscreen-size-y = <4096>;
-> +               touchscreen-max-pressure = <2048>;
-> +
-> +               ti,x-plate-ohms = <280>;
-> +               ti,esd-recovery-timeout-ms = <8000>;
-> +       };
-> +}
-> +
->  * Texas Instruments tsc2005 touchscreen controller
->
->  Required properties:
-> --
-> 2.1.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBPY3QgMzAsIDIwMTUgYXQgNTozNCBQTSwgQmpvcm4gQW5kZXJzc29uCjxiam9ybi5h
+bmRlcnNzb25Ac29ueW1vYmlsZS5jb20+IHdyb3RlOgo+IEZyb206IFdlcm5lciBKb2hhbnNzb24g
+PHdlcm5lci5qb2hhbnNzb25Ac29ueW1vYmlsZS5jb20+Cj4KPiBTaWduZWQtb2ZmLWJ5OiBXZXJu
+ZXIgSm9oYW5zc29uIDx3ZXJuZXIuam9oYW5zc29uQHNvbnltb2JpbGUuY29tPgo+IFNpZ25lZC1v
+ZmYtYnk6IEJqb3JuIEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQHNvbnltb2JpbGUuY29tPgoK
+QWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+IC0tLQo+Cj4gQ2hhbmdl
+IHNpbmNlIHYxOgo+IC0gRHJvcHBlZCAtdmlkIHN1ZmZpeCBmcm9tIGNvbXBhdGlibGUKPgo+ICAu
+Li4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxsczA0M3QxbGUwMS50eHQgICB8IDIyICsr
+KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3NoYXJwLGxzMDQzdDFsZTAxLnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxzMDQzdDFs
+ZTAxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L3NoYXJwLGxzMDQzdDFsZTAxLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAw
+MDAwMDAwMDAwLi5iM2Q0ZTA3MzkzMGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHMwNDN0MWxlMDEu
+dHh0Cj4gQEAgLTAsMCArMSwyMiBAQAo+ICtTaGFycCBNaWNyb2VsZWN0cm9uaWNzIDQuMyIgcUhE
+IFRGVCBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJs
+ZTogc2hvdWxkIGJlICJzaGFycCxsczA0M3QxbGUwMS1xaGQiCj4gKy0gcmVnOiBEU0kgdmlydHVh
+bCBjaGFubmVsIG9mIHRoZSBwZXJpcGhlcmFsCj4gKy0gcG93ZXItc3VwcGx5OiBwaGFuZGxlIG9m
+IHRoZSByZWd1bGF0b3IgdGhhdCBwcm92aWRlcyB0aGUgc3VwcGx5IHZvbHRhZ2UKPiArCj4gK09w
+dGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYmFja2xpZ2h0OiBwaGFuZGxlIG9mIHRoZSBiYWNrbGln
+aHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICstIHJlc2V0LWdwaW9zOiBhIEdQSU8g
+c3BlYyBmb3IgdGhlIHJlc2V0IHBpbgo+ICsKPiArRXhhbXBsZToKPiArCj4gKyAgICAgICBtZHNz
+X2RzaUBmZDkyMjgwMCB7Cj4gKyAgICAgICAgICAgICAgIHBhbmVsQDAgewo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2hhcnAsbHMwNDN0MWxlMDEtcWhkIjsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+YXZkZC1zdXBwbHkgPSA8JnBtODk0MV9sMjI+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJh
+Y2tsaWdodCA9IDwmcG04OTQxX3dsZWQ+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlc2V0
+LWdwaW9zID0gPCZwbTg5NDFfZ3Bpb3MgMTkgR1BJT19BQ1RJVkVfSElHSD47Cj4gKyAgICAgICAg
+ICAgICAgIH07Cj4gKyAgICAgICB9Owo+IC0tCj4gMi40LjIKPgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
