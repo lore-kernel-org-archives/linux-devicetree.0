@@ -1,61 +1,40 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Mon, 2 Nov 2015 13:49:35 -0500
-Message-ID: <5637B03F.9090905@codeaurora.org>
-References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
- <1446444460-21600-2-git-send-email-okaya@codeaurora.org>
- <CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
- <56378D38.9050509@codeaurora.org> <56379CD6.5020807@codeaurora.org>
- <CAL_JsqJYOe+uE1VE_ojSq=Hx=2roW1CAiB2Hyow0tKUR85cV0Q@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
+Date: Mon, 2 Nov 2015 11:20:37 -0800
+Message-ID: <20151102192037.GP19782@codeaurora.org>
+References: <cover.1446167359.git.viresh.kumar@linaro.org>
+ <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
+ <20151030221826.GM19782@codeaurora.org>
+ <20151031022003.GV3716@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJYOe+uE1VE_ojSq=Hx=2roW1CAiB2Hyow0tKUR85cV0Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Timur Tabi <timur@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, Christopher Covington <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151031022003.GV3716@ubuntu>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10/31, Viresh Kumar wrote:
+> On 30-10-15, 15:18, Stephen Boyd wrote:
+> 
+> > Also, this makes it sound like opp-supported-hw is really just
+> > telling us if this is a supported frequency or not for the
+> > particular device we're running on.
+> 
+> That's right.
+> 
+> > The current wording makes it
+> 
+> Of the commit log ? Or the way the nodes are written?
 
-
-On 11/2/2015 12:42 PM, Rob Herring wrote:
-> Except I was suggesting not using 1.0 or 1.1. There is one main
-> exception and that is Xilinx blocks, but they are releasing versions
-> of blocks to customers. If "1.0" is not a well defined number, then
-> don't use that. I'd be surprised if any SOC vendor had such well
-> defined process around versioning of their IP blocks such that they
-> are well documented and guaranteed such that every change will change
-> the version.
-
-Here is one.
-
-I have two versions of the same IP. The first version in one chip has 
-sw_version register that returns 1.0. The second version which has more 
-capabilities has 1.1 in it.
-
-Is it OK to use?
-
-compatible="qcom,hidma-mgmt-1.0", "qcom,hidma-mgmt"
-
-for now and
-
-compatible="qcom,hidma-mgmt-1.1", "qcom,hidma-mgmt"
-
-later for the second chip? 1.1 is backwards compatible with 1.0 BTW.
-
-Since the same IP goes into multiple chips, why would you list the chip 
-name here and submit patches multiple times for each single chip.
-
-or to follow what Timur did, I can do this.
-
-"qcom,qdf2xxx-hidma-mgmt-1.0"
-
-qdf2xxx would become the chip family.
+The way the documentation is written.
 
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
