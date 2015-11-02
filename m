@@ -1,94 +1,81 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
- the eDMA3
-Date: Mon, 2 Nov 2015 17:46:05 +0200
-Message-ID: <5637853D.8040306@ti.com>
-References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
- <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
- <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw@mail.gmail.com>
- <20151102100405.GJ21326@localhost> <5637534D.2020304@ti.com>
- <20151102154057.GQ21326@localhost>
+From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] thermal: mediatek: Add cpu power cooling model
+Date: Mon, 02 Nov 2015 15:53:33 +0000
+Message-ID: <9hh4mh4bdoi.fsf@e105922-lin.cambridge.arm.com>
+References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
+ <20151028154449.GH3716@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151102154057.GQ21326@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Olof Johansson <olof@lixom.net>
-Cc: Sekhar Nori <nsekhar@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Robert Schwebel <r.schwebel@pengutronix.de>, "arm@kernel.org" <arm@kernel.org>, "Kristo, Tero" <t-kristo@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20151028154449.GH3716@ubuntu> (Viresh Kumar's message of "Wed,
+ 28 Oct 2015 21:14:49 +0530")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Vinod,
+Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-On 11/02/2015 05:40 PM, Vinod Koul wrote:
-> On Mon, Nov 02, 2015 at 02:13:01PM +0200, Peter Ujfalusi wrote:
->> Vinod,
->>
->> On 11/02/2015 12:04 PM, Vinod Koul wrote:
->>> On Mon, Nov 02, 2015 at 01:21:19AM -0800, Olof Johansson wrote:
->>>> Hi,
->>>>
->>>> 1) This seems to have broken BBB in -next for me, bisected down to=
- this patch.
->>>>
->>>> For bootlog:
->>>> http://arm-soc.lixom.net/bootlogs/next/next-20151102/bbb-arm-omap2=
-plus_defconfig.html
->>>>
->>>> 2) Please avoid merging DT/platform code in your driver tree, Vino=
-d,
->>>> at least without an ack from the platform maintainer. It can be a =
-a
->>>> huge mess if they end up causing conflicts, so we always ask to me=
-rge
->>>> the DT changes through the platform maintainer (Tony in this case)=
- by
->>>> default.
->>>
->>> I did warn when applying that I am doing so without ACK on ARM code=
-, noone
->>> said a thing!
->>>
->>> I knew Tony was following the work by Peter so assumed he must have=
- been okay
->>> with it otherwise would have spoken for ~couple of weeks these were=
- in
->>> review
->>>
->>> Anyway now that we have a regression, I can revert this patch if th=
-at fixes,
->>> please confirm, but might break edma... peter?
->>
->> Can you revert or drop the last two DTS patches?
->>
->> I think I will try a different route to get the split of the tpcc an=
-d tptc.
->> Without the DT patches the driver will fall back to the legacy mode =
-so things
->> will work in a same way they did before.
->> Or I can send a followup patch for edma.c, with that there is no nee=
-d to add
->> the HWMOD_INIT_NO_IDLE to hwmod and power management looks better.
->> Basically I'm registering a 'dummy' driver for the edma3-tptc so oma=
-p hwmod
->> code will not shut it down but we will keep the possibility to manag=
-e the
->> power state still.
->=20
-> Okay I have reverted the two and applied the edma patch sent, can you=
- please
-> verify topic/edma_fix before I merge it and send my PULL request.
+> On 22-10-15, 20:02, Dawei Chien wrote:
+>> Use Intelligent Power Allocation (IPA) technical to add static/dynamic power model for binding CPU thermal zone.
+>> The power allocator governor allocates power budget to control CPU temperature.
+>> 
+>> Power Allocator governor is able to keep SOC temperature within a
+>> defined temperature range to avoid SOC overheat and keep it's
+>> performance. mt8173-cpufreq.c need to register its' own power model
+>> with power allocator thermal governor, so that power allocator
+>> governor can allocates suitable power budget to control CPU
+>> temperature.
+>> 
+>> PATCH1 is base on
+>> https://patchwork.kernel.org/patch/7034601/
+>> 
+>> PATCH2 is base on Sascha's thermal driver V9
+>> https://patchwork.kernel.org/patch/7249821/
+>> https://patchwork.kernel.org/patch/7249861/
+>> https://patchwork.kernel.org/patch/7249891/
+>> 
+>> Change since V1:
+>> include mt8171.h and sort header file for mt8173.dtsi
+>> 
+>> Change since V2:
+>> Move dynamic/static power model in device tree
+>> 
+>> Dawei.Chien (2):
+>>   thermal: mediatek: Add cpu power cooling model.
+>>   arm64: dts: mt8173: Add thermal zone node for mt8173.
+>
+> Sorry for being extremely late in reviewing this stuff. You are
+> already on v3 and I haven't reviewed it once. Mostly due to bad timing
+> of my holidays and other work pressure.
+>
+> Now, there are few things that I feel are not properly addressed here,
+> and I may be wrong:
+> - Where are the bindings for static-power-points and
+>   dynamic-power-coefficient. Sorry I failed to see them in this or
+>   other series you mentioned.
 
-The branch looks good. Thank you!
-It would have been great if the DTS changes for am335x/am437x would hav=
-e been
-in 4.4, but I will send them for 4.5 after rc1 is out.
+For dynamic power, I had posted some patches[0][1][2] introducing the
+binding as well as updating cooling device registration via cpufreq
+driver. Now that the SCPI hwmon driver is merged, I should re-send the
+remaining patches.
 
-> Would appreciate any tested-by
->=20
-> Thanks
->=20
+[0] http://lkml.iu.edu/hypermail/linux/kernel/1508.0/01020.html
+[1] http://lkml.iu.edu/hypermail/linux/kernel/1508.0/01022.html
+[3] http://lkml.iu.edu/hypermail/linux/kernel/1508.0/01031.html
 
-
---=20
-P=E9ter
+> - Even then, why should we be adding another table into DT for
+>   voltage/power ? And not reuse and extend the opp-v2 stuff which is
+>   already mainlined now.
+> - There are few issues with the code as well, but I want to see where
+>   the bindings should go first. And then only discuss the code
+>   further.
