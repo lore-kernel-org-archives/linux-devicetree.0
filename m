@@ -1,40 +1,55 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: Add binding document for a generic ADC keypad
-Date: Mon, 2 Nov 2015 09:17:28 -0800
-Message-ID: <CAL1qeaE6Tkge4CR+b0h9f+CipN8De-fhuP=9BbAdagnCxKdGmA@mail.gmail.com>
-References: <1427503398-19682-1-git-send-email-abrestic@chromium.org>
-	<20150329040053.GD36501@dtor-ws>
-	<CAL1qeaFHhPW=eS+CaVC1DZXHL8YausOaR1itc8pwVLTeWyDnMg@mail.gmail.com>
-	<CAOMZO5Bc8hotVooOG+sEjtYqb7ENapQ0Fw08a_Y-hRpvLgxwTw@mail.gmail.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Mon, 2 Nov 2015 11:26:46 -0600
+Message-ID: <56379CD6.5020807@codeaurora.org>
+References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
+ <1446444460-21600-2-git-send-email-okaya@codeaurora.org>
+ <CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
+ <56378D38.9050509@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5Bc8hotVooOG+sEjtYqb7ENapQ0Fw08a_Y-hRpvLgxwTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56378D38.9050509@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: dmaengine@vger.kernel.org, Christopher Covington <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-
-On Sun, Nov 1, 2015 at 5:55 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Andrew,
->
-> On Mon, Mar 30, 2015 at 1:56 AM, Andrew Bresticker
-> <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->
->>> I'd rather we have it defined explicitly in the binding, i.e. make it a
->>> required property?
+On 11/02/2015 10:20 AM, Sinan Kaya wrote:
 >>
->> Sure, will do.
+> Is there a good example I can look or a wiki about the device-tree
+> naming conventions?
 >
-> Do you plan to send a v2 of the generic ADC keypad series?
+> I'm more of an ACPI person than DTS.
 
-We ended up not needing this driver, so I didn't send up a v2.
+I think Rob is talking about something like this:
 
-Thanks,
-Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	compatible="qcom,hidma-mgmt-1.0", "qcom,hidma-mgmt"
+
+This specifies that this is the v1.0 of the HIDMA management engine (or, 
+the management engine for the 1.0 HIDMA device).  That way, if in the 
+future there's a v1.1, you can do this:
+
+	compatible="qcom,hidma-mgmt-1.1", "qcom,hidma-mgmt"
+
+The driver will probe only on ""qcom,hidma-mgmt", but in the probe 
+function, it can query the version number and act accordingly.
+
+Alternatively, the driver can probe on both:
+
+static const struct of_device_id hidma_match[] = {
+	{ .compatible = "qcom,hidma-mgmt-1.0", &v10_struct},
+	{ .compatible = "qcom,hidma-mgmt-1.1", &v11_struct},
+	{},
+};
+MODULE_DEVICE_TABLE(of, hidma_match);
+
+And then the probe function will automatically get a pointer to either 
+v10_struct or v11_struct.
+	
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
