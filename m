@@ -1,63 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/13] irqchips: fix ARM11MPCore GIC bindings
-Date: Mon, 2 Nov 2015 08:35:53 -0600
-Message-ID: <CAL_Jsq+ONggpXBXWXQgP90T4oWkjzL5TaQ=prmcG2C=PBxbrPw@mail.gmail.com>
-References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org> <1444916813-31024-4-git-send-email-linus.walleij@linaro.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] arm/arm64: add smccc
+Date: Mon, 2 Nov 2015 14:45:22 +0000
+Message-ID: <20151102144521.GG29657@arm.com>
+References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
+ <1446106888-8983-2-git-send-email-jens.wiklander@linaro.org>
+ <20151102115119.GB29657@arm.com>
+ <20151102135633.GA17559@ermac>
+ <20151102140313.GG2684@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444916813-31024-4-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151102140313.GG2684@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 15, 2015 at 8:46 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> The GIC bindings for the ARM11MPCore need to differentiate between
-> the GIC on the Test Chip and the one on the evaluation baseboard.
-> Split the binding in two and define new compatible-strings.
->
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Mon, Nov 02, 2015 at 02:03:13PM +0000, Mark Rutland wrote:
+> > > > +/**
+> > > > + * struct smccc_res - Result from SMC/HVC call
+> > > > + * @a0-a3 result values from registers 0 to 3
+> > > > + */
+> > > > +struct smccc_res {
+> > > > +	unsigned long a0;
+> > > > +	unsigned long a1;
+> > > > +	unsigned long a2;
+> > > > +	unsigned long a3;
+> > > > +};
+> > > 
+> > > Are there any endianness considerations for this structure?
+> > 
+> > No, I can't find anything in the ARM SMC Calling Convention document
+> > indicating that.
+> 
+> The calling conventions have no bearing on the structure, which is our
+> invention.
+> 
+> We stash register values (which don't have endianness) returned by the
+> firmeware into the structure in the sequences above (which appear
+> endian-clean to me).
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Ah yes, the structure is populated by the kernel not the firmware, so
+there's nothing to worry about. Thanks for the explanation.
 
-> ---
->  Documentation/devicetree/bindings/arm/gic.txt | 3 ++-
->  drivers/irqchip/irq-gic.c                     | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> index 2da059a4790c..a5445622c216 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -15,7 +15,8 @@ Main node required properties:
->         "arm,cortex-a15-gic"
->         "arm,cortex-a9-gic"
->         "arm,cortex-a7-gic"
-> -       "arm,arm11mp-gic"
-> +       "arm,tc11mp-gic"
-> +       "arm,pb11mp-gic"
->         "brcm,brahma-b15-gic"
->         "arm,arm1176jzf-devchip-gic"
->         "qcom,msm-8660-qgic"
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 982c09c2d791..5376d1cb0a4f 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -1184,7 +1184,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
->         return 0;
->  }
->  IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
-> -IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", gic_of_init);
-> +IRQCHIP_DECLARE(armtc11mp_gic, "arm,tc11mp-gic", gic_of_init);
-> +IRQCHIP_DECLARE(armpb11mp_gic, "arm,pb11mp-gic", gic_of_init);
->  IRQCHIP_DECLARE(arm1176jzf_dc_gic, "arm,arm1176jzf-devchip-gic", gic_of_init);
->  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
->  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
-> --
-> 2.4.3
->
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
