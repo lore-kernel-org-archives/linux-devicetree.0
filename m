@@ -1,95 +1,54 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
- compatible
-Date: Mon, 2 Nov 2015 18:28:38 +0100
-Message-ID: <56379D46.1000402@linaro.org>
-References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
- <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
- <21587719.mnFBFBzBeI@phil>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management driver
+Date: Mon, 2 Nov 2015 11:42:20 -0600
+Message-ID: <CAL_JsqJYOe+uE1VE_ojSq=Hx=2roW1CAiB2Hyow0tKUR85cV0Q@mail.gmail.com>
+References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
+ <1446444460-21600-2-git-send-email-okaya@codeaurora.org> <CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
+ <56378D38.9050509@codeaurora.org> <56379CD6.5020807@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <21587719.mnFBFBzBeI@phil>
+In-Reply-To: <56379CD6.5020807-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2015 12:47 AM, Heiko Stuebner wrote:
-> Hi Daniel,
->
-> Am Freitag, 30. Oktober 2015, 11:42:29 schrieb Daniel Lezcano:
->> On 10/30/2015 04:43 AM, Caesar Wang wrote:
->>> Hi Daniel,
+On Mon, Nov 2, 2015 at 11:26 AM, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 11/02/2015 10:20 AM, Sinan Kaya wrote:
 >>>
->>> =E5=9C=A8 2015=E5=B9=B410=E6=9C=8801=E6=97=A5 03:14, Heiko St=C3=BC=
-bner =E5=86=99=E9=81=93:
->>>> Hi Daniel,
->>>>
->>>> Am Dienstag, 29. September 2015, 06:18:03 schrieb Daniel Lezcano:
->>>>> On 09/25/2015 04:14 AM, Caesar Wang wrote:
->>>>>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
->>>>>> There are some failure with build up on timer driver for rockchi=
-p.
->>>>>>
->>>>>> Says:
->>>>>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  oper=
-and
->>>>>> 1 --
->>>>>> `dsb`
->>>>>> ...
->>>>>>
->>>>>> The problem was different semantics of dsb on btw arm32 and arm6=
-4,
->>>>>> Here we can convert the dsb with insteading of dsb(sy).The "sy" =
-param
->>>>>> is the default which you are allow to omit, so on arm32 dsb()and
->>>>>> dsb(sy)
->>>>>> are the same.
->>>>>>
->>>>>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> as you have "just" Acked these patches, I guess you are expecting =
-them
->>>> to go
->>>> through the same tree as the devicetree changes, right?
 >>>
->>> I'm wonder if someone will apply this series patchs but the wait.:-=
-)
->>> In fact, I'm no sure that the Acked is really meaning.:-
+>> Is there a good example I can look or a wiki about the device-tree
+>> naming conventions?
+
+There are many examples. Generally, it is the form of:
+
+<vendor>,<chip/soc>-<block name>
+
 >>
->> Yes, by acking the patch I say I am ok with it and I agree it can go
->> through another tree.
+>> I'm more of an ACPI person than DTS.
 >
-> although I guess the two clocksource changes could very well just go
-> through your tree. dsb() -> dsb(sy) is supposed to be equal and the s=
-econd
-> one is just cosmetics.  The Kconfig and dts changes need to wait in a=
-ny case
-> for 4.5 ... but I guess that may be true for the clocksource changes =
-as well?
+>
+> I think Rob is talking about something like this:
+>
+>         compatible="qcom,hidma-mgmt-1.0", "qcom,hidma-mgmt"
+>
+> This specifies that this is the v1.0 of the HIDMA management engine (or, the
+> management engine for the 1.0 HIDMA device).  That way, if in the future
+> there's a v1.1, you can do this:
+>
+>         compatible="qcom,hidma-mgmt-1.1", "qcom,hidma-mgmt"
 
-Heiko, Caesar,
+Except I was suggesting not using 1.0 or 1.1. There is one main
+exception and that is Xilinx blocks, but they are releasing versions
+of blocks to customers. If "1.0" is not a well defined number, then
+don't use that. I'd be surprised if any SOC vendor had such well
+defined process around versioning of their IP blocks such that they
+are well documented and guaranteed such that every change will change
+the version.
 
-I am wondering if the dsb() is really necessary. Is it possible you tes=
-t=20
-the timer by removing this instruction ? Otherwise I will have to setup=
-=20
-my board again and it will take awhile.
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
