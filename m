@@ -1,72 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: dt-bindings: document the official use of "ngpios"
-Date: Mon, 2 Nov 2015 08:29:23 -0600
-Message-ID: <CAL_Jsq+tiLehdr21JagJoOsO767d-Joy8QT+Y09GPnUKa=TTPA@mail.gmail.com>
-References: <1446203002-7910-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/13] irqchips: fix ARM11MPCore GIC bindings
+Date: Mon, 2 Nov 2015 08:35:53 -0600
+Message-ID: <CAL_Jsq+ONggpXBXWXQgP90T4oWkjzL5TaQ=prmcG2C=PBxbrPw@mail.gmail.com>
+References: <1444916813-31024-1-git-send-email-linus.walleij@linaro.org> <1444916813-31024-4-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1446203002-7910-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pramod Kumar <pramodku@broadcom.com>, Jonas Gorski <jogo@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444916813-31024-4-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 6:03 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> There are a bunch of drivers that utilize the "ngpios" DT property
-> without any vendor prefix. Try to start cleaning up the mess by
-> defining what we mean by this property.
+On Thu, Oct 15, 2015 at 8:46 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The GIC bindings for the ARM11MPCore need to differentiate between
+> the GIC on the Test Chip and the one on the evaluation baseboard.
+> Split the binding in two and define new compatible-strings.
 >
-> Cc: devicetree@vger.kernel.org
-> Cc: Pramod Kumar <pramodku@broadcom.com>
-> Cc: Jonas Gorski <jogo@openwrt.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  Documentation/devicetree/bindings/gpio/gpio.txt | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  Documentation/devicetree/bindings/arm/gic.txt | 3 ++-
+>  drivers/irqchip/irq-gic.c                     | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-> index 63b1b9039ce8..9b081e6143a0 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -129,6 +129,30 @@ Every GPIO controller node must contain both an empty "gpio-controller"
->  property, and a #gpio-cells integer property, which indicates the number of
->  cells in a gpio-specifier.
->
-> +Optionally, a GPIO controller may have a "ngpios" property. This property
-> +indicates the number of in-use slots of available slots for GPIOs. The
-> +typical example is something like this: the hardware register is 32 bits
-> +wide, but only 18 of the bits have a physical counterpart. The driver is
-> +generally written so that all 32 bits can be used, but the IP block is reused
-> +in a lot of designs, some using all 32 bits, some using 18 and some using
-> +12. In this case, setting "ngpios = <18>;" informs the driver that only the
-> +first 18 GPIOs, at local offset 0 .. 17, are in use.
-> +
-> +If these GPIOs do not happen to be the first N GPIOs at offset 0...N, an
-> +additional bitmask is needed to specify which GPIOs are actually in use,
-> +and which are dummies. The bindings for this case has not yet been
-> +specified, but should be specified if/when such hardware appears.
-> +
-> +Example:
-> +
-> +gpio-controller@00000000 {
-> +       compatible = "foo";
-> +       reg = <0x00000000 0x1000>;
-> +       gpio-controller;
-> +       #gpio-cells = <2>;
-> +       ngpios = <18>;
-> +}
-> +
->  The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
->  providing automatic GPIO request and configuration as part of the
->  gpio-controller's driver probe function.
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 2da059a4790c..a5445622c216 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -15,7 +15,8 @@ Main node required properties:
+>         "arm,cortex-a15-gic"
+>         "arm,cortex-a9-gic"
+>         "arm,cortex-a7-gic"
+> -       "arm,arm11mp-gic"
+> +       "arm,tc11mp-gic"
+> +       "arm,pb11mp-gic"
+>         "brcm,brahma-b15-gic"
+>         "arm,arm1176jzf-devchip-gic"
+>         "qcom,msm-8660-qgic"
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 982c09c2d791..5376d1cb0a4f 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -1184,7 +1184,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+>         return 0;
+>  }
+>  IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
+> -IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", gic_of_init);
+> +IRQCHIP_DECLARE(armtc11mp_gic, "arm,tc11mp-gic", gic_of_init);
+> +IRQCHIP_DECLARE(armpb11mp_gic, "arm,pb11mp-gic", gic_of_init);
+>  IRQCHIP_DECLARE(arm1176jzf_dc_gic, "arm,arm1176jzf-devchip-gic", gic_of_init);
+>  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+>  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
 > --
 > 2.4.3
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
