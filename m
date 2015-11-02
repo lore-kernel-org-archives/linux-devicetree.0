@@ -1,41 +1,48 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Mon, 2 Nov 2015 12:30:41 -0600
-Message-ID: <5637ABD1.5060707@codeaurora.org>
-References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
- <1446444460-21600-2-git-send-email-okaya@codeaurora.org>
- <CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
- <56378D38.9050509@codeaurora.org> <56379CD6.5020807@codeaurora.org>
- <CAL_JsqJYOe+uE1VE_ojSq=Hx=2roW1CAiB2Hyow0tKUR85cV0Q@mail.gmail.com>
- <5637A1EB.9080002@codeaurora.org>
- <CAL_JsqLeDEUk6fQN4J20jL5Yma12ucNb0V7PxbQqUC6jJUH3oQ@mail.gmail.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH RESEND v4 1/2] dt-bindings: Add new SoCs to bcm4708 DT bindings
+Date: Mon, 2 Nov 2015 13:34:52 -0500
+Message-ID: <1446489293-25088-2-git-send-email-jonmason@broadcom.com>
+References: <1446489293-25088-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLeDEUk6fQN4J20jL5Yma12ucNb0V7PxbQqUC6jJUH3oQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, Christopher Covington <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446489293-25088-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2015 12:25 PM, Rob Herring wrote:
-> Then document it with "<chip>" and fill that in later. Just don't make
-> up version numbers.
+Add the 4708, 4709, and 53012 SoCs to the the documentation for the
+Broadcom Northstar device tree bindings.
 
-I don't think you understand.  We literally have no name for our chip. 
-The closest is what I used on the pin control driver, "qdf2xxx", which 
-really doesn't say anything.
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Acked-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Acked-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-	"qcom,qdf2xxx-hidma-mgmt"
-
-doesn't sound right.
-
-As for version numbers, sorry, I don't know what I was thinking.  I 
-wrote plenty of device trees the way you suggest, I just forgot about them.
-
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+index 6b0f49f..8608a77 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+@@ -5,4 +5,11 @@ Boards with the BCM4708 SoC shall have the following properties:
+ 
+ Required root node property:
+ 
++bcm4708
+ compatible = "brcm,bcm4708";
++
++bcm4709
++compatible = "brcm,bcm4709";
++
++bcm53012
++compatible = "brcm,bcm53012";
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
