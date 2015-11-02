@@ -1,58 +1,71 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding
- documentation
-Date: Mon, 2 Nov 2015 09:27:29 -0600
-Message-ID: <CAL_Jsq+Pe+W-OJ325FPi1wxGJWAk4qn=DZD0vqo=Cvv9mRzspw@mail.gmail.com>
-References: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
+ the eDMA3
+Date: Mon, 2 Nov 2015 21:10:57 +0530
+Message-ID: <20151102154057.GQ21326@localhost>
+References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
+ <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
+ <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw@mail.gmail.com>
+ <20151102100405.GJ21326@localhost>
+ <5637534D.2020304@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5637534D.2020304-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMzAsIDIwMTUgYXQgNTozNCBQTSwgQmpvcm4gQW5kZXJzc29uCjxiam9ybi5h
-bmRlcnNzb25Ac29ueW1vYmlsZS5jb20+IHdyb3RlOgo+IEZyb206IFdlcm5lciBKb2hhbnNzb24g
-PHdlcm5lci5qb2hhbnNzb25Ac29ueW1vYmlsZS5jb20+Cj4KPiBTaWduZWQtb2ZmLWJ5OiBXZXJu
-ZXIgSm9oYW5zc29uIDx3ZXJuZXIuam9oYW5zc29uQHNvbnltb2JpbGUuY29tPgo+IFNpZ25lZC1v
-ZmYtYnk6IEJqb3JuIEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQHNvbnltb2JpbGUuY29tPgoK
-QWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+IC0tLQo+Cj4gQ2hhbmdl
-IHNpbmNlIHYxOgo+IC0gRHJvcHBlZCAtdmlkIHN1ZmZpeCBmcm9tIGNvbXBhdGlibGUKPgo+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxsczA0M3QxbGUwMS50eHQgICB8IDIyICsr
-KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3NoYXJwLGxzMDQzdDFsZTAxLnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxzMDQzdDFs
-ZTAxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L3NoYXJwLGxzMDQzdDFsZTAxLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAw
-MDAwMDAwMDAwLi5iM2Q0ZTA3MzkzMGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHMwNDN0MWxlMDEu
-dHh0Cj4gQEAgLTAsMCArMSwyMiBAQAo+ICtTaGFycCBNaWNyb2VsZWN0cm9uaWNzIDQuMyIgcUhE
-IFRGVCBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJs
-ZTogc2hvdWxkIGJlICJzaGFycCxsczA0M3QxbGUwMS1xaGQiCj4gKy0gcmVnOiBEU0kgdmlydHVh
-bCBjaGFubmVsIG9mIHRoZSBwZXJpcGhlcmFsCj4gKy0gcG93ZXItc3VwcGx5OiBwaGFuZGxlIG9m
-IHRoZSByZWd1bGF0b3IgdGhhdCBwcm92aWRlcyB0aGUgc3VwcGx5IHZvbHRhZ2UKPiArCj4gK09w
-dGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYmFja2xpZ2h0OiBwaGFuZGxlIG9mIHRoZSBiYWNrbGln
-aHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICstIHJlc2V0LWdwaW9zOiBhIEdQSU8g
-c3BlYyBmb3IgdGhlIHJlc2V0IHBpbgo+ICsKPiArRXhhbXBsZToKPiArCj4gKyAgICAgICBtZHNz
-X2RzaUBmZDkyMjgwMCB7Cj4gKyAgICAgICAgICAgICAgIHBhbmVsQDAgewo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2hhcnAsbHMwNDN0MWxlMDEtcWhkIjsKPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-YXZkZC1zdXBwbHkgPSA8JnBtODk0MV9sMjI+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJh
-Y2tsaWdodCA9IDwmcG04OTQxX3dsZWQ+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlc2V0
-LWdwaW9zID0gPCZwbTg5NDFfZ3Bpb3MgMTkgR1BJT19BQ1RJVkVfSElHSD47Cj4gKyAgICAgICAg
-ICAgICAgIH07Cj4gKyAgICAgICB9Owo+IC0tCj4gMi40LjIKPgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Nov 02, 2015 at 02:13:01PM +0200, Peter Ujfalusi wrote:
+> Vinod,
+> 
+> On 11/02/2015 12:04 PM, Vinod Koul wrote:
+> > On Mon, Nov 02, 2015 at 01:21:19AM -0800, Olof Johansson wrote:
+> >> Hi,
+> >>
+> >> 1) This seems to have broken BBB in -next for me, bisected down to this patch.
+> >>
+> >> For bootlog:
+> >> http://arm-soc.lixom.net/bootlogs/next/next-20151102/bbb-arm-omap2plus_defconfig.html
+> >>
+> >> 2) Please avoid merging DT/platform code in your driver tree, Vinod,
+> >> at least without an ack from the platform maintainer. It can be a a
+> >> huge mess if they end up causing conflicts, so we always ask to merge
+> >> the DT changes through the platform maintainer (Tony in this case) by
+> >> default.
+> > 
+> > I did warn when applying that I am doing so without ACK on ARM code, noone
+> > said a thing!
+> > 
+> > I knew Tony was following the work by Peter so assumed he must have been okay
+> > with it otherwise would have spoken for ~couple of weeks these were in
+> > review
+> > 
+> > Anyway now that we have a regression, I can revert this patch if that fixes,
+> > please confirm, but might break edma... peter?
+> 
+> Can you revert or drop the last two DTS patches?
+> 
+> I think I will try a different route to get the split of the tpcc and tptc.
+> Without the DT patches the driver will fall back to the legacy mode so things
+> will work in a same way they did before.
+> Or I can send a followup patch for edma.c, with that there is no need to add
+> the HWMOD_INIT_NO_IDLE to hwmod and power management looks better.
+> Basically I'm registering a 'dummy' driver for the edma3-tptc so omap hwmod
+> code will not shut it down but we will keep the possibility to manage the
+> power state still.
+
+Okay I have reverted the two and applied the edma patch sent, can you please
+verify topic/edma_fix before I merge it and send my PULL request.
+
+Would appreciate any tested-by
+
+Thanks
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
