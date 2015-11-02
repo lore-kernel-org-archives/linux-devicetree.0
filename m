@@ -1,90 +1,106 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/2] iio: Heart Rate Monitors
-Date: Mon, 2 Nov 2015 10:31:50 -0600
-Message-ID: <56378FF6.7000703@ti.com>
-References: <1446309089-21094-1-git-send-email-afd@ti.com>
- <56365B8A.3030908@kernel.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
+Date: Mon, 02 Nov 2015 17:33:34 +0100
+Message-ID: <3962829.iR3I63FEm8@wuerfel>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org> <4552697.VhjWnxQoIo@wuerfel> <56365F0D.6010508@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56365B8A.3030908-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56365F0D.6010508-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2015 12:35 PM, Jonathan Cameron wrote:
-> On 31/10/15 16:31, Andrew F. Davis wrote:
->> Hello all,
->>
->> This series adds the TI AFE4404 "Ultra-small, Integrated AFE for
->> Wearable, Optical Heart Rate Monitoring and Bio-Sensing".
->>
->> This work is based on previous work by Dan Murphy [0] who is working
->> on other tasks at the moment, so I will be helping to continue
->> upstreaming this driver. This is more of a re-write than a continuation
->> and there are many changes so I am submitting this as a v1.
->>
->> This device is very similar to the AFE4403 and I was originally planning
->> on pushing the two drivers together with common core functions in a
->> third file. The AFE4403 driver is still being tested so I merged common
->> code back into this driver, this is why this driver may seem a bit
->> unnecessarily modular. I will probably split this stuff back out when
->> I push the AFE4403.
->>
->> I also had some issues with sysfs naming for the channels; this device
->> has three input channels from three LED stages and two ambient
->> channels based on the LED stages. This might have been be a good place
->> for using IIO modifiers[1], but we also have two differential channels
->> based on the ambient channels, and channels cannot have both modifiers
->> and be differential (the modifier is stored in the differential channel's
->> ID field?).
-> True enough. Didn't expect to run into this particular problem, but I guess
-> someone will always make hardware breaking any assumptions we make from the
-> software side of things.
+On Sunday 01 November 2015 13:50:53 Sinan Kaya wrote:
+> 
+> >> The issue is not writel_relaxed vs. writel. After I issue reset, I need
+> >> wait for some time to confirm reset was done. I can use readl_polling
+> >> instead of mdelay if we don't like mdelay.
+> >
+> > I meant that both _relaxed() and mdelay() are probably wrong here.
+> 
+> You are right about redundant writel_relaxed + wmb. They are effectively 
+> equal to writel.
 
-Seems that way, it probably would work to have modified be more that a single
-bit flag, maybe call it modifier and just store the modifier in there. Doesn't
-look like it would be that hard right now to fix.
+Actually, writel() is wmb()+writel_relaxed(), not the other way round:
 
-I'm not really sure I understand the need for modifiers at all really, seems
-most are used by a single driver to get around just naming the channel.
+When sending a command to a device that can start a DMA transfer,
+the barrier is required to ensure that the DMA happens after previously
+written data has gone from the CPU write buffers into the memory that
+is used as the source for the transfer.
 
->> So I used sysfs names that would be close to what they
->> would be if IIO supported these things.
-> Fair enough as a starting point though we probably want to figure out how
-> to do this 'right'.   Adding an extra field to the channel descriptor will
-> be easy enough - it'll be event codes that are nasty to handle.
->
-> Jonathan
->>
->> [0] http://www.spinics.net/lists/linux-iio/msg18413.html
->> [1] IIO_MOD_TEMP_AMBIENT could be renamed IIO_MOD_AMBIENT as it can
->> also apply to LIGHT, PRESSURE, HUMIDITY, etc..
-> No problem with this change so please send a patch.
->>
->> Thanks,
->> Andrew
->>
->> Andrew F. Davis (2):
->>    Documentation: afe4404: Add DT bindings for the AFE4404 heart monitor
->>    iio: health: Add driver for the TI AFE4404 heart monitor
->>
->>   .../ABI/testing/sysfs-bus-iio-health-afe4404       |  70 +++
->>   .../devicetree/bindings/iio/health/afe4404.txt     |  27 ++
->>   drivers/iio/Kconfig                                |   1 +
->>   drivers/iio/Makefile                               |   1 +
->>   drivers/iio/health/Kconfig                         |  24 +
->>   drivers/iio/health/Makefile                        |   6 +
->>   drivers/iio/health/afe4404.c                       | 526 +++++++++++++++++++++
->>   drivers/iio/health/afe440x.h                       | 159 +++++++
->>   8 files changed, 814 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-health-afe4404
->>   create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
->>   create mode 100644 drivers/iio/health/Kconfig
->>   create mode 100644 drivers/iio/health/Makefile
->>   create mode 100644 drivers/iio/health/afe4404.c
->>   create mode 100644 drivers/iio/health/afe440x.h
->>
->
+A barrier after the writel() has no effect, as MMIO writes are posted
+on the bus.
+
+> However, after issuing the command; I still need to wait some amount of 
+> time until hardware acknowledges the commands like reset/enable/disable. 
+> These are relatively faster operations happening in microseconds. That's 
+> why, I have mdelay there.
+> 
+> I'll take a look at workqueues but it could turn out to be an overkill 
+> for few microseconds.
+
+Most devices are able to provide an interrupt for long-running commands.
+Are you sure that yours is unable to do this? If so, is this a design
+mistake or an implementation bug?
+
+> >>> Reading the status probably requires a readl() rather than readl_relaxed()
+> >>> to guarantee that the DMA data has arrived in memory by the time that the
+> >>> register data is seen by the CPU. If using readl_relaxed() here is a valid
+> >>> and required optimization, please add a comment to explain why it works
+> >>> and how much you gain.
+> >>
+> >> I will add some description. This is a high speed peripheral. I don't
+> >> like spreading barriers as candies inside the readl and writel unless I
+> >> have to.
+> >>
+> >> According to the barriers video, I watched on youtube this should be the
+> >> rule for ordering.
+> >>
+> >> "if you do two relaxed reads and check the results of the returned
+> >> variables, ARM architecture guarantees that these two relaxed variables
+> >> will get observed during the check."
+> >>
+> >> this is called implied ordering or something of that sort.
+> >
+> > My point was a bit different: while it is guaranteed that the
+> > result of the readl_relaxed() is observed in order, they do not
+> > guarantee that a DMA from device to memory that was started by
+> > the device before the readl_relaxed() has arrived in memory
+> > by the time that the readl_relaxed() result is visible to the
+> > CPU and it starts accessing the memory.
+> >
+> I checked with the hardware designers. Hardware guarantees that by the 
+> time interrupt is observed, all data transactions in flight are 
+> delivered to their respective places and are visible to the CPU. I'll 
+> add a comment in the code about this.
+
+I'm curious about this. Does that mean the device is not meant for
+high-performance transfers and just synchronizes the bus before
+triggering the interrupt?
+
+> > In other words, when the hardware sends you data followed by an
+> > interrupt to tell you the data is there, your interrupt handler
+> > can tell the driver that is waiting for this data that the DMA
+> > is complete while the data itself is still in flight, e.g. waiting
+> > for an IOMMU to fetch page table entries.
+> >
+> There is HW guarantee for ordering.
+> 
+> On demand paging for IOMMU is only supported for PCIe via PRI (Page 
+> Request Interface) not for HIDMA. All other hardware instances work on 
+> pinned DMA addresses. I'll drop a note about this too to the code as well.
+
+I wasn't talking about paging, just fetching the IOTLB from the
+preloaded page tables in RAM. This can takes several uncached memory
+accesses, so it would generally be slow.
+
+
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
