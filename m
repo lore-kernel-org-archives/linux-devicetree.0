@@ -1,224 +1,73 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH v6 1/6] arm/arm64: add smccc
-Date: Mon, 2 Nov 2015 14:56:36 +0100
-Message-ID: <20151102135633.GA17559@ermac>
+Date: Mon, 2 Nov 2015 14:03:13 +0000
+Message-ID: <20151102140313.GG2684@leverpostej>
 References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
  <1446106888-8983-2-git-send-email-jens.wiklander@linaro.org>
  <20151102115119.GB29657@arm.com>
+ <20151102135633.GA17559@ermac>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151102115119.GB29657@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20151102135633.GA17559@ermac>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 02, 2015 at 11:51:19AM +0000, Will Deacon wrote:
-> Hi Jens,
-> 
-> On Thu, Oct 29, 2015 at 09:21:23AM +0100, Jens Wiklander wrote:
-> > Adds helpers to do SMC and HVC based on ARM SMC Calling Convention.
-> > CONFIG_HAVE_SMCCC is enabled for architectures that may support
-> > the SMC or HVC instruction. It's the responsibility of the caller
-> > to know if the SMC instruction is supported by the platform.
+> > > +/*
+> > > + * void smccc_smc(unsigned long a0, unsigned long a1, unsigned long a2,
+> > > + *		  unsigned long a3, unsigned long a4, unsigned long a5,
+> > > + *		  unsigned long a6, unsigned long a7, struct smccc_res *res)
+> > > + */
+> > > +ENTRY(smccc_smc)
+> > > +	smc	#0
+> > > +	ldr	x4, [sp]
+> > > +	stp	x0, x1, [x4, #SMC_RES_X0_OFFS]
+> > > +	stp	x2, x3, [x4, #SMC_RES_X2_OFFS]
+> > > +	ret
+> > > +ENDPROC(smccc_smc)
+
+> > > +/*
+> > > + * void smccc_hvc(unsigned long a0, unsigned long a1, unsigned long a2,
+> > > + *		  unsigned long a3, unsigned long a4, unsigned long a5,
+> > > + *		  unsigned long a6, unsigned long a7, struct smccc_res *res)
+> > > + */
+> > > +ENTRY(smccc_hvc)
+> > > +	hvc	#0
+> > > +	ldr	x4, [sp]
+> > > +	stp	x0, x1, [x4, #SMC_RES_X0_OFFS]
+> > > +	stp	x2, x3, [x4, #SMC_RES_X2_OFFS]
+> > > +	ret
+> > > +ENDPROC(smccc_hvc)
+
+> > > +/**
+> > > + * struct smccc_res - Result from SMC/HVC call
+> > > + * @a0-a3 result values from registers 0 to 3
+> > > + */
+> > > +struct smccc_res {
+> > > +	unsigned long a0;
+> > > +	unsigned long a1;
+> > > +	unsigned long a2;
+> > > +	unsigned long a3;
+> > > +};
 > > 
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > ---
-> >  arch/arm/Kconfig               |  4 ++
-> >  arch/arm/kernel/Makefile       |  2 +
-> >  arch/arm/kernel/smccc-call.S   | 49 +++++++++++++++++++++
-> >  arch/arm/kernel/smccc.c        | 18 ++++++++
-> >  arch/arm64/Kconfig             |  4 ++
-> >  arch/arm64/kernel/Makefile     |  1 +
-> >  arch/arm64/kernel/smccc-call.S | 43 ++++++++++++++++++
-> >  arch/arm64/kernel/smccc.c      | 18 ++++++++
-> >  include/linux/arm-smccc.h      | 98 ++++++++++++++++++++++++++++++++++++++++++
+> > Are there any endianness considerations for this structure?
 > 
-> This should probably be split so that the arm and arm64 patches can be
-> merged separately.
+> No, I can't find anything in the ARM SMC Calling Convention document
+> indicating that.
 
-OK, what's preferable two or three patches?
+The calling conventions have no bearing on the structure, which is our
+invention.
 
-> 
-> >  9 files changed, 237 insertions(+)
-> >  create mode 100644 arch/arm/kernel/smccc-call.S
-> >  create mode 100644 arch/arm/kernel/smccc.c
-> >  create mode 100644 arch/arm64/kernel/smccc-call.S
-> >  create mode 100644 arch/arm64/kernel/smccc.c
-> >  create mode 100644 include/linux/arm-smccc.h
-> 
-> [...]
-> 
-> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > index 72ad724..29ab16a 100644
-> > --- a/arch/arm/Kconfig
-> > +++ b/arch/arm/Kconfig
-> > @@ -226,6 +226,9 @@ config NEED_RET_TO_USER
-> >  config ARCH_MTD_XIP
-> >  	bool
-> >  
-> > +config HAVE_SMCCC
-> > +	bool
-> 
-> If you want this to be selectable by multiple arches, wouldn't it be
-> better to define it out in a common Kconfig file? Maybe HAVE_ARM_SMCCC
-> too, for some better namespacing.
-
-What's a good place, init/Kconfig?
-
-> 
-> An alternative is just making your TEE driver depend on ARM || ARM64
-> and providing dummy smc wrappers that return an error code for cores
-> older than ARMv7.
-
-It's tempting, but it would mean adding this dummy function for all
-architectures as it need to be exported to be usable from a load module.
-
-> 
-> > diff --git a/arch/arm64/kernel/smccc-call.S b/arch/arm64/kernel/smccc-call.S
-> > new file mode 100644
-> > index 0000000..9098bd8
-> > --- /dev/null
-> > +++ b/arch/arm64/kernel/smccc-call.S
-> > @@ -0,0 +1,43 @@
-> > +/*
-> > + * Copyright (c) 2015, Linaro Limited
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License Version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + */
-> > +#include <linux/linkage.h>
-> > +
-> > +#define SMC_RES_X0_OFFS	0
-> > +#define SMC_RES_X2_OFFS	16
-> 
-> These should be generates in asm-offsets.c
-
-OK
-
-> 
-> > +
-> > +/*
-> > + * void smccc_smc(unsigned long a0, unsigned long a1, unsigned long a2,
-> > + *		  unsigned long a3, unsigned long a4, unsigned long a5,
-> > + *		  unsigned long a6, unsigned long a7, struct smccc_res *res)
-> > + */
-> > +ENTRY(smccc_smc)
-> > +	smc	#0
-> > +	ldr	x4, [sp]
-> > +	stp	x0, x1, [x4, #SMC_RES_X0_OFFS]
-> > +	stp	x2, x3, [x4, #SMC_RES_X2_OFFS]
-> > +	ret
-> > +ENDPROC(smccc_smc)
-> > +
-> > +/*
-> > + * void smccc_hvc(unsigned long a0, unsigned long a1, unsigned long a2,
-> > + *		  unsigned long a3, unsigned long a4, unsigned long a5,
-> > + *		  unsigned long a6, unsigned long a7, struct smccc_res *res)
-> > + */
-> > +ENTRY(smccc_hvc)
-> > +	hvc	#0
-> > +	ldr	x4, [sp]
-> > +	stp	x0, x1, [x4, #SMC_RES_X0_OFFS]
-> > +	stp	x2, x3, [x4, #SMC_RES_X2_OFFS]
-> > +	ret
-> > +ENDPROC(smccc_hvc)
-> 
-> Maybe you could generate both of these from an asm macro that takes the
-> first instruction as a parameter?
-
-OK
-
-> 
-> > diff --git a/arch/arm64/kernel/smccc.c b/arch/arm64/kernel/smccc.c
-> > new file mode 100644
-> > index 0000000..ed13ba3
-> > --- /dev/null
-> > +++ b/arch/arm64/kernel/smccc.c
-> > @@ -0,0 +1,18 @@
-> > +/*
-> > + * Copyright (c) 2015, Linaro Limited
-> > + *
-> > + * This software is licensed under the terms of the GNU General Public
-> > + * License version 2, as published by the Free Software Foundation, and
-> > + * may be copied, distributed, and modified under those terms.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + */
-> > +#include <linux/export.h>
-> > +#include <linux/arm-smccc.h>
-> > +
-> > +EXPORT_SYMBOL_GPL(smccc_smc);
-> > +EXPORT_SYMBOL_GPL(smccc_hvc);
-> 
-> Again, I think you want an arm_ prefix for some better namespacing.
-
-Agree
-
-> 
-> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> 
-> [...]
-> 
-> > +#define SMCCC_SMC_32			(0 << 30)
-> > +#define SMCCC_SMC_64			(1 << 30)
-> > +#define SMCCC_FAST_CALL			(1 << 31)
-> > +#define SMCCC_STD_CALL			(0 << 31)
-> > +
-> > +#define SMCCC_OWNER_MASK		0x3F
-> > +#define SMCCC_OWNER_SHIFT		24
-> > +
-> > +#define SMCCC_FUNC_MASK			0xFFFF
-> > +
-> > +#define SMCCC_IS_FAST_CALL(smc_val)	((smc_val) & SMCCC_FAST_CALL)
-> > +#define SMCCC_IS_64(smc_val)		((smc_val) & SMCCC_SMC_64)
-> > +#define SMCCC_FUNC_NUM(smc_val)		((smc_val) & SMCCC_FUNC_MASK)
-> > +#define SMCCC_OWNER_NUM(smc_val) \
-> > +	(((smc_val) >> SMCCC_OWNER_SHIFT) & SMCCC_OWNER_MASK)
-> > +
-> > +#define SMCCC_CALL_VAL(type, calling_convention, owner, func_num) \
-> > +			((type) | (calling_convention) | \
-> > +			(((owner) & SMCCC_OWNER_MASK) << SMCCC_OWNER_SHIFT) | \
-> > +			((func_num) & SMCCC_FUNC_MASK))
-> > +
-> > +#define SMCCC_OWNER_ARCH		0
-> > +#define SMCCC_OWNER_CPU			1
-> > +#define SMCCC_OWNER_SIP			2
-> > +#define SMCCC_OWNER_OEM			3
-> > +#define SMCCC_OWNER_STANDARD		4
-> > +#define SMCCC_OWNER_TRUSTED_APP		48
-> > +#define SMCCC_OWNER_TRUSTED_APP_END	49
-> > +#define SMCCC_OWNER_TRUSTED_OS		50
-> > +#define SMCCC_OWNER_TRUSTED_OS_END	63
-> > +
-> > +/**
-> > + * struct smccc_res - Result from SMC/HVC call
-> > + * @a0-a3 result values from registers 0 to 3
-> > + */
-> > +struct smccc_res {
-> > +	unsigned long a0;
-> > +	unsigned long a1;
-> > +	unsigned long a2;
-> > +	unsigned long a3;
-> > +};
-> 
-> Are there any endianness considerations for this structure?
-
-No, I can't find anything in the ARM SMC Calling Convention document
-indicating that.
+We stash register values (which don't have endianness) returned by the
+firmeware into the structure in the sequences above (which appear
+endian-clean to me).
 
 Thanks,
-Jens
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
