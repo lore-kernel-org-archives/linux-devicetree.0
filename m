@@ -1,77 +1,90 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/6] drivers: psci: replace psci firmware calls
-Date: Mon, 2 Nov 2015 11:55:39 +0000
-Message-ID: <20151102115539.GC29657@arm.com>
-References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
- <1446106888-8983-3-git-send-email-jens.wiklander@linaro.org>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos7: Add pmic s2mps15 device tree node
+Date: Mon, 02 Nov 2015 17:28:27 +0530
+Message-ID: <56374FE3.9050805@samsung.com>
+References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
+ <5637495D.1080701@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446106888-8983-3-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <5637495D.1080701@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 29, 2015 at 09:21:24AM +0100, Jens Wiklander wrote:
-> Switch to use a generic interface for issuing SMC/HVC based on ARM SMC
-> Calling Convention. Removes now the now unused psci-call.S.
-> 
-> Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/kernel/Makefile      |  1 -
->  arch/arm/kernel/psci-call.S   | 31 -------------------------------
->  arch/arm64/kernel/Makefile    |  2 +-
->  arch/arm64/kernel/psci-call.S | 28 ----------------------------
->  drivers/firmware/psci.c       | 21 +++++++++++++++++++--
->  5 files changed, 20 insertions(+), 63 deletions(-)
->  delete mode 100644 arch/arm/kernel/psci-call.S
->  delete mode 100644 arch/arm64/kernel/psci-call.S
 
-[...]
 
-> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-> index 42700f0..53c9606 100644
-> --- a/drivers/firmware/psci.c
-> +++ b/drivers/firmware/psci.c
-> @@ -19,6 +19,7 @@
->  #include <linux/pm.h>
->  #include <linux/printk.h>
->  #include <linux/psci.h>
-> +#include <linux/arm-smccc.h>
->  #include <linux/reboot.h>
->  
->  #include <uapi/linux/psci.h>
-> @@ -56,8 +57,6 @@ struct psci_operations psci_ops;
->  
->  typedef unsigned long (psci_fn)(unsigned long, unsigned long,
->  				unsigned long, unsigned long);
-> -asmlinkage psci_fn __invoke_psci_fn_hvc;
-> -asmlinkage psci_fn __invoke_psci_fn_smc;
->  static psci_fn *invoke_psci_fn;
->  
->  enum psci_function {
-> @@ -70,6 +69,24 @@ enum psci_function {
->  
->  static u32 psci_function_id[PSCI_FN_MAX];
->  
-> +static unsigned long __invoke_psci_fn_hvc(unsigned long a0, unsigned long a1,
-> +			unsigned long a2, unsigned long a3)
-
-Minor comment, but could we keep these argument names the same as before
-please?
-
-> +{
-> +	struct smccc_res res;
-> +
-> +	smccc_hvc(a0, a1, a2, a3, 0, 0, 0, 0, &res);
-
-It's slightly tempting to use varargs instead of the '0' argument padding,
-but that will probably make the asm code unmanageable.
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 11/02/2015 05:00 PM, Javier Martinez Canillas wrote:
+> Hello Alim,
+>
+> This patch looks mostly good to me, I just have two comments below:
+>
+> On 11/02/2015 11:04 AM, Alim Akhtar wrote:
+>> This patch add pmic (s2mps15) node of espresso board,
+>> which includes addition of regulators and pmic-clk sub-nodes.
+>>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> ---
+>> This patch should go in after driver side changes [1] lands.
+>> [1]-> https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg47736.html
+>>
+>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts |  349 +++++++++++++++++++++++
+>>   1 file changed, 349 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>> index 838a3626dac1..8ce04a0ec928 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>> @@ -53,6 +53,355 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&hsi2c_4 {
+>> +	samsung,i2c-sda-delay = <100>;
+>> +	samsung,i2c-max-bus-freq = <200000>;
+>> +	status = "okay";
+>> +
+>> +	s2mps15_pmic@66 {
+>> +		compatible = "samsung,s2mps15-pmic";
+>> +		reg = <0x66>;
+>> +		interrupts = <2 0>;
+>
+> Maybe using IRQ_TYPE_NONE instead of 0?
+>
+Ok will check
+>> +		interrupt-parent = <&gpa0>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pmic_irq>;
+>> +		wakeup-source;
+>> +
+>> +		s2mps15_osc: clocks {
+>> +			compatible = "samsung,s2mps13-clk";
+>> +			#clock-cells = <1>;
+>> +			clock-output-names = "s2mps13_ap", "s2mps13_cp",
+>> +				"s2mps13_bt";
+>> +		};
+>> +
+>> +		regulators {
+>> +			ldo1_reg: LDO1 {
+>> +				regulator-name = "vdd_ldo1";
+>> +				regulator-min-microvolt = <500000>;
+>> +				regulator-max-microvolt = <900000>;
+>> +				regulator-always-on;
+>
+> I see that all regulators are marked as regulator-always-on but that will
+> prevent the regulator subsystem to disable unused regulators. Can you please
+> double check which regulators should really be always on and which ones can
+> be disabled if are not used?
+>
+I kept it on always, as I am still in a process for validating all IPs 
+on board. Will see if I can remove some of them, which I feel can be done.
+> After those two changes:
+>
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>
+Thanks!
+> Best regards,
+>
