@@ -1,7 +1,7 @@
 From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH RESEND 01/16] Documentation: dt-bindings: mfd: add TI LMU device binding information
-Date: Mon, 2 Nov 2015 14:24:20 +0900
-Message-ID: <1446441875-1256-2-git-send-email-milo.kim@ti.com>
+Subject: [PATCH RESEND 02/16] Documentation: dt-bindings: backlight: add TI LMU backlight binding information
+Date: Mon, 2 Nov 2015 14:24:21 +0900
+Message-ID: <1446441875-1256-3-git-send-email-milo.kim@ti.com>
 References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,308 +9,95 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446441875-1256-1-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch describes overall binding for TI LMU MFD devices.
+LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697 use common dt-bindings
+for describing device.
 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/ti-lmu.txt | 282 +++++++++++++++++++++++
- 1 file changed, 282 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
+ .../bindings/video/backlight/ti-lmu-backlight.txt  | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+diff --git a/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt b/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
 new file mode 100644
-index 0000000..7ccf07e
+index 0000000..27b0036
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -0,0 +1,282 @@
-+TI LMU(Lighting Management Unit) device tree bindings
-+
-+TI LMU driver supports lighting devices belows.
-+
-+   Name              Child nodes
-+  ------      -------------------------
-+  LM3532       Backlight
-+  LM3631       Backlight and regulator
-+  LM3632       Backlight and regulator
-+  LM3633       Backlight, LED and HWMON
-+  LM3695       Backlight
-+  LM3697       Backlight and HWMON
++++ b/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
+@@ -0,0 +1,67 @@
++TI LMU backlight device tree bindings
 +
 +Required properties:
 +  - compatible: Should be one of lists below.
-+                "ti,lm3532"
-+                "ti,lm3631"
-+                "ti,lm3632"
-+                "ti,lm3633"
-+                "ti,lm3695"
-+                "ti,lm3697"
-+  - reg: I2C slave address.
-+         0x11 is LM3632
-+         0x29 is LM3631
-+         0x36 is LM3633, LM3697
-+         0x38 is LM3532
-+         0x63 is LM3695
++                "ti,lm3532-backlight"
++                "ti,lm3631-backlight"
++                "ti,lm3632-backlight"
++                "ti,lm3633-backlight"
++                "ti,lm3695-backlight"
++                "ti,lm3697-backlight"
 +
 +Optional properties:
-+  - enable-gpios: A GPIO specifier for hardware enable pin.
++  There are two backlight control mode. One is I2C, the other is PWM mode.
++  Following properties are only specified in PWM mode.
++  Please note that LMU backlight device can have only one PWM channel.
 +
-+Required node:
-+  - backlight: All LMU devices have backlight child nodes.
-+               For the properties, please refer to [1].
++  - pwms: OF device-tree PWM specification.
++  - pwm-names: a list of names for the PWM devices specified in the "pwms"
++               property.
 +
-+Optional nodes:
-+  - hwmon: Hardware fault monitoring driver for LM3633 and LM3697.
-+           For the property, please refer to [2].
-+  - leds: LED properties for LM3633. Please refer to [3].
-+  - regulators: Regulator properties for LM3631 and LM3632.
-+          Please refer to [4].
++  For the PWM user nodes, please refer to [1].
 +
-+[1] Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
-+[2] Documentation/devicetree/bindings/hwm/ti-lmu-hwmon.txt
-+[3] Documentation/devicetree/bindings/leds/leds-lm3633.txt
-+[4] Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
++Child nodes:
++  LMU backlight is represented as sub-nodes of the TI LMU device [2].
++  So, LMU backlight should have more than one backlight child node.
++  Each node exactly matches with backlight control bank configuration.
++  Maximum numbers of child nodes depend on the device.
++  1 = LM3631, LM3632, LM3695
++  2 = LM3633, LM3697
++  3 = LM3532
 +
-+Examples:
++  Required property of a child node:
++  - hvled1-used, hvled2-used, hvled3-used:
++    High voltage backlight strings configuration. Type is <boolean>.
++    Please describe which output backlight string is used.
++    Please refer to the datasheets [3].
 +
-+LM3532 has a backlight device. External GPIO is used for enabling LM3532.
++  Optional properties of a child node:
++  - backlight-name: Name string for backlight device identification.
++                    It is used for creating backlight sysfs,
++                    /sys/class/backlight/<backlight-name>/.
++  - backlight-max-microamp: Max current setting. Type is <u32>.
++                            Unit is microampere.
++                            Range is from 5000 to 30000.
++  - initial-brightness: Backlight initial brightness value. Type is <u32>.
++                        It is set as soon as backlight device is created.
++                        0 ~ 2047 = LM3631, LM3632, LM3633, LM3695 and LM3697
++                        0 ~ 255  = LM3532
++  - ramp-up-msec, ramp-down-msec: Light dimming effect properties.
++                                  Type is <u32>. Unit is millisecond.
++                                  0 ~ 65 msec    = LM3532
++                                  0 ~ 4000 msec  = LM3631
++                                  0 ~ 16000 msec = LM3633 and LM3697
++  - pwm-period: PWM period. Only valid in PWM brightness mode.
++                Type is <u32>. If this property is missing, then control
++                mode is set to I2C by default.
 +
-+lm3532@38 {
-+	compatible = "ti,lm3532";
-+	reg = <0x38>;
++Examples: Please refer to ti-lmu dt-bindings. [2].
 +
-+	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
-+
-+	backlight {
-+		compatible = "ti,lm3532-backlight";
-+
-+		lcd {
-+			hvled1-used;
-+			hvled2-used;
-+			hvled3-used;
-+
-+			ramp-up-msec = <30>;
-+			ramp-down-msec = <0>;
-+
-+			backlight-max-microamp = <5000>;
-+		};
-+	};
-+};
-+
-+LM3631 has 5 regulators with one backlight device.
-+
-+lm3631@29 {
-+	compatible = "ti,lm3631";
-+	reg = <0x29>;
-+
-+	regulators {
-+		compatible = "ti,lm363x-regulator";
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6350000>;
-+			regulator-always-on;
-+		};
-+
-+		vcont {
-+			regulator-name = "lcd_vcont";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		voref {
-+			regulator-name = "lcd_voref";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+	};
-+
-+	backlight {
-+		compatible = "ti,lm3631-backlight";
-+
-+		lcd {
-+			backlight-name = "lcd_bl";
-+			hvled1-used;
-+			hvled2-used;
-+
-+			ramp-up-msec = <300>;
-+		};
-+	};
-+};
-+
-+LM3632 has 3 regulators with one backlight device. External GPIO is
-+used for enabling LM3632.
-+
-+lm3632@11 {
-+	compatible = "ti,lm3632";
-+	reg = <0x11>;
-+
-+	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
-+
-+	regulators {
-+		compatible = "ti,lm363x-regulator";
-+
-+		ti,lcm-en1-gpio = <&pioC 0 GPIO_ACTIVE_HIGH>;
-+		ti,lcm-en2-gpio = <&pioC 1 GPIO_ACTIVE_HIGH>;
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6400000>;
-+			regulator-always-on;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+	};
-+
-+	backlight {
-+		compatible = "ti,lm3632-backlight";
-+
-+		lcd {
-+			backlight-name = "lcd";
-+			hvled1-used;
-+			hvled2-used;
-+		};
-+	};
-+};
-+
-+LM3633 has multiple backlight channels, LED channels and hardware fault
-+monitoring driver. External GPIO is used for enabling LM3633.
-+
-+lm3633@36 {
-+	compatible = "ti,lm3633";
-+	reg = <0x36>;
-+
-+	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
-+
-+	backlight {
-+		compatible = "ti,lm3633-backlight";
-+
-+		pwms = <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-+		pwm-names = "lmu-backlight";
-+
-+		main {
-+			backlight-name = "main_lcd";
-+			hvled2-used;
-+			hvled3-used;
-+			backlight-max-microamp = <20000>;
-+
-+			ramp-up-msec = <500>;
-+			ramp-down-msec = <500>;
-+		};
-+
-+		front {
-+			backlight-name = "front_lcd";
-+			hvled1-used;
-+
-+			ramp-up-msec = <1000>;
-+			ramp-down-msec = <0>;
-+
-+			pwm-period = <10000>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "ti,lm3633-leds";
-+
-+		chan2 {
-+			channel-name = "status";
-+			lvled2-used;
-+			led-max-microamp = <6000>;
-+		};
-+
-+		chan456 {
-+			channel-name = "rgb";
-+			lvled4-used;
-+			lvled5-used;
-+			lvled6-used;
-+		};
-+	};
-+
-+	hwmon {
-+		compatible = "ti,lm3633-hwmon";
-+	};
-+};
-+
-+LM3695 is single backlight device.
-+
-+lm3695@63 {
-+	compatible = "ti,lm3695";
-+	reg = <0x63>;
-+
-+	backlight {
-+		compatible = "ti,lm3695-backlight";
-+
-+		lcd {
-+			hvled1-used;
-+			hvled2-used;
-+			backlight-max-microamp = <20000>;
-+		};
-+	};
-+};
-+
-+LM3697 has one backlight device and hardware fault monitoring driver.
-+External GPIO is used for enabling LM3697.
-+
-+lm3697@36 {
-+	compatible = "ti,lm3697";
-+	reg = <0x36>;
-+
-+	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
-+
-+	backlight {
-+		compatible = "ti,lm3697-backlight";
-+
-+		pwms = <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-+		pwm-names = "lmu-backlight";
-+
-+		lcd {
-+			backlight-name = "bl";
-+			hvled1-used;
-+			hvled2-used;
-+			hvled3-used;
-+			backlight-max-microamp = <20000>;
-+
-+			ramp-up-msec = <500>;
-+			ramp-down-msec = <500>;
-+			pwm-period = <10000>;
-+		};
-+	};
-+
-+	hwmon {
-+		compatible = "ti,lm3697-hwmon";
-+	};
-+};
++[1] Documentation/devicetree/bindings/pwm/pwm.txt
++[2] Documentation/devicetree/bindings/mfd/ti-lmu.txt
++[3] LM3532: http://www.ti.com/product/LM3532/datasheet
++    LM3631: http://www.ti.com/product/LM3631/datasheet
++    LM3632: http://www.ti.com/product/LM3632A/datasheet
++    LM3633: http://www.ti.com/product/LM3633/datasheet
++    LM3695: Datasheet is not opened yet, but only two strings are used.
++    LM3697: http://www.ti.com/product/LM3697/datasheet
 -- 
 1.9.1
 
