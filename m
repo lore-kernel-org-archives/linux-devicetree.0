@@ -1,50 +1,84 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 1/6] arm/arm64: add smccc
-Date: Mon, 2 Nov 2015 14:45:22 +0000
-Message-ID: <20151102144521.GG29657@arm.com>
-References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
- <1446106888-8983-2-git-send-email-jens.wiklander@linaro.org>
- <20151102115119.GB29657@arm.com>
- <20151102135633.GA17559@ermac>
- <20151102140313.GG2684@leverpostej>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/16] Documentation: dt-bindings: leds: add LM3633 LED
+ binding information
+Date: Mon, 2 Nov 2015 08:53:16 -0600
+Message-ID: <CAL_Jsq+rsScGf3L0Qx+NreMpSPDNoxkYL4qeC+QCwe1F8KoRPA@mail.gmail.com>
+References: <1446440483-6948-1-git-send-email-milo.kim@ti.com>
+ <1446440483-6948-2-git-send-email-milo.kim@ti.com> <1446440483-6948-3-git-send-email-milo.kim@ti.com>
+ <1446440483-6948-4-git-send-email-milo.kim@ti.com> <1446440483-6948-5-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151102140313.GG2684@leverpostej>
+In-Reply-To: <1446440483-6948-5-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 02, 2015 at 02:03:13PM +0000, Mark Rutland wrote:
-> > > > +/**
-> > > > + * struct smccc_res - Result from SMC/HVC call
-> > > > + * @a0-a3 result values from registers 0 to 3
-> > > > + */
-> > > > +struct smccc_res {
-> > > > +	unsigned long a0;
-> > > > +	unsigned long a1;
-> > > > +	unsigned long a2;
-> > > > +	unsigned long a3;
-> > > > +};
-> > > 
-> > > Are there any endianness considerations for this structure?
-> > 
-> > No, I can't find anything in the ARM SMC Calling Convention document
-> > indicating that.
-> 
-> The calling conventions have no bearing on the structure, which is our
-> invention.
-> 
-> We stash register values (which don't have endianness) returned by the
-> firmeware into the structure in the sequences above (which appear
-> endian-clean to me).
+On Sun, Nov 1, 2015 at 11:01 PM, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org> wrote:
+> LM3633 LED device is one of TI LMU device list.
+>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/leds/leds-lm3633.txt       | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3633.txt
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3633.txt b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
+> new file mode 100644
+> index 0000000..bb7f213
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
+> @@ -0,0 +1,28 @@
+> +TI LMU LM3633 LED device tree bindings
+> +
+> +Required properties:
+> +  - compatible: "ti,lm3633-leds"
+> +
+> +Child nodes:
+> +  Each node matches with LED control bank.
+> +  Please refer to the datasheet [1].
+> +
+> +  Required properties of a child node:
+> +  - lvled1-used, lvled2-used, lvled3-used,
+> +    lvled4-used, lvled5-used, lvled6-used:
+> +    Low voltage LED string configuration. Type is <boolean>.
+> +    Please describe which output LED string is used.
 
-Ah yes, the structure is populated by the kernel not the firmware, so
-there's nothing to worry about. Thanks for the explanation.
+What is "LED string"?
 
-Will
+We have properties for which LED driver/channel of the parent to use
+and "status" can be used to disable child nodes.
+
+> +
+> +  Optional properties of a child node:
+> +  - channel-name: Name string for LED channel identification
+> +                  It is used for creating LED sysfs,
+> +                  /sys/class/leds/<channel-name>/.
+> +                  If this property is empty, then default name is set to
+> +                  "indicator:<id>" by the driver.
+
+I believe "label" already provides this function.
+
+> +  - led-max-microamp: Max current setting. Type is <u32>.
+> +                      Unit is microampere. Range is from 5000 to 30000.
+> +
+> +Examples: Please refer to ti-lmu dt-bindings [2].
+> +
+> +[1] http://www.ti.com/product/LM3633/datasheet
+> +[2] Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
