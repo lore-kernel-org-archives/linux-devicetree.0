@@ -1,44 +1,48 @@
-From: Mason <slash.tmp@free.fr>
-Subject: Re: [PATCH] devicetree: add Sigma Designs vendor prefix
-Date: Mon, 2 Nov 2015 10:42:33 +0100
-Message-ID: <56373009.3050306@free.fr>
-References: <1443806507-12061-1-git-send-email-mans@mansr.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
+ the eDMA3
+Date: Mon, 2 Nov 2015 15:34:05 +0530
+Message-ID: <20151102100405.GJ21326@localhost>
+References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
+ <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
+ <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1443806507-12061-1-git-send-email-mans@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mans Rullgard <mans@mansr.com>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Schwebel <r.schwebel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2015 19:21, Mans Rullgard wrote:
-
-> Add the "sigma" vendor prefix for Sigma Designs, Inc.
+On Mon, Nov 02, 2015 at 01:21:19AM -0800, Olof Johansson wrote:
+> Hi,
 > 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 1) This seems to have broken BBB in -next for me, bisected down to this patch.
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 82d2ac9..ea77ee5 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -192,6 +192,7 @@ schindler	Schindler
->  seagate	Seagate Technology PLC
->  semtech	Semtech Corporation
->  sharp	Sharp Corporation
-> +sigma	Sigma Designs, Inc.
->  sil	Silicon Image
->  silabs	Silicon Laboratories
->  siliconmitus	Silicon Mitus, Inc.
+> For bootlog:
+> http://arm-soc.lixom.net/bootlogs/next/next-20151102/bbb-arm-omap2plus_defconfig.html
+> 
+> 2) Please avoid merging DT/platform code in your driver tree, Vinod,
+> at least without an ack from the platform maintainer. It can be a a
+> huge mess if they end up causing conflicts, so we always ask to merge
+> the DT changes through the platform maintainer (Tony in this case) by
+> default.
 
-Hello,
+I did warn when applying that I am doing so without ACK on ARM code, noone
+said a thing!
 
-How can I determine whether this patch has been applied?
+I knew Tony was following the work by Peter so assumed he must have been okay
+with it otherwise would have spoken for ~couple of weeks these were in
+review
 
-(I examined a few branches in Rob's tree.)
+Anyway now that we have a regression, I can revert this patch if that fixes,
+please confirm, but might break edma... peter?
 
-Regards.
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
