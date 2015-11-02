@@ -1,44 +1,43 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH v2 1/2] base: dma-coherent: Add DT property for non
- exclusive shared-dma-pool
-Date: Mon, 2 Nov 2015 12:04:41 +0100
-Message-ID: <56374349.1000306@baylibre.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC v2 1/2] Documentation: bridge: Add documentation for
+ ps8640 DT properties
+Date: Mon, 02 Nov 2015 12:09:59 +0100
+Message-ID: <1446462599.3442.19.camel@pengutronix.de>
+References: <1446430166-7378-1-git-send-email-jitao.shi@mediatek.com>
+	 <1446436421.8671.1.camel@mszsdhlt06>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446436421.8671.1.camel@mszsdhlt06>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jitao shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark
 List-Id: devicetree@vger.kernel.org
 
-In order to have the ability to declare a non exclusive shared-dma-pool,
-i.e. without the DMA_MEMORY_EXCLUSIVE flag, add the 'no-exclusive' DT
-optional parameter to initialize the coherent memory without the flag.
+Hi Jitao,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/base/dma-coherent.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Am Montag, den 02.11.2015, 11:53 +0800 schrieb jitao shi:
+[...]
+> > +Example:
+> > +	edp-bridge@18 {
+> > +		compatible = "parade,ps8640";
+> > +		reg = <0x18>;
+> > +		sleep-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
+> > +		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
+> > +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
+> > +		ps8640-1v2-supply = <&ps8640_fixed_1v2>;
 
-diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
-index 55b8398..cda6364 100644
---- a/drivers/base/dma-coherent.c
-+++ b/drivers/base/dma-coherent.c
-@@ -279,10 +279,14 @@ EXPORT_SYMBOL(dma_mmap_from_coherent);
- static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
- {
- 	struct dma_coherent_mem *mem = rmem->priv;
-+	unsigned flags = 0;
-+
-+	if (!of_property_read_bool(rmem->fdt_node, "no-exclusive"))
-+		flags |= DMA_MEMORY_EXCLUSIVE;
+This should be vdd12-supply now.
 
- 	if (!mem &&
- 	    dma_init_coherent_memory(rmem->base, rmem->base, rmem->size,
--				     DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE,
-+				     DMA_MEMORY_MAP | flags,
- 				     &mem) != DMA_MEMORY_MAP) {
- 		pr_err("Reserved memory: failed to init DMA memory pool at %pa, size %ld MiB\n",
- 			&rmem->base, (unsigned long)rmem->size / SZ_1M);
--- 
-1.9.1
+> > +		ps8640-3v3-supply = <&mt6397_vgp2_reg>;
+
+Should be vdd33-supply now.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
