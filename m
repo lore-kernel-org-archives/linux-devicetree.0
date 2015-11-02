@@ -1,48 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RESEND 16/16] regulator: add LM363X driver
-Date: Mon, 2 Nov 2015 12:26:40 +0000
-Message-ID: <20151102122640.GF20228@sirena.org.uk>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-17-git-send-email-milo.kim@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos7: Enable HS200 mode operation
+Date: Mon, 2 Nov 2015 21:27:57 +0900
+Message-ID: <CAJKOXPf+twUu4_fxjQ1Xp24L-YzNj6=mZ+dOxu72FWJcrYk3Rw@mail.gmail.com>
+References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
+	<1446458641-4447-2-git-send-email-alim.akhtar@samsung.com>
+	<CAJKOXPcpyBQ-2MDC6D69-p+038wxfVdS+weBGJy+r+eP6tNB-g@mail.gmail.com>
+	<56375229.3090906@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8TaQrIeukR7mmbKf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446441875-1256-17-git-send-email-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56375229.3090906@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+2015-11-02 21:08 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
+> Hi Krzysztof,
+>
+>
+> On 11/02/2015 05:28 PM, Krzysztof Kozlowski wrote:
+>>
+>> Subject - name of the board at the end (not the name of the SoC):
+>> arm64: dts: Enable HS200 mode operation on exynos7-espresso
+>>
+>> 2015-11-02 19:04 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
+>>>
+>>> This patch enables HS200 mode operation on exynos7 based
+>>> espresso board.
+>>> This also remove _broken-cd_ property as per mmc binding documentation
+>>
+>>
+>> s/remove/removes/
+>>
+>>> which say one of the properties between broken-cd and non-removable
+>>
+>>
+>> s/say/says/
+>>
+>>> should be used. And we already use _non-removable_ as emmc mounted
+>>> on board which is a non-removable device.
+>>>
+>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>> ---
+>>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts |    2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> index 8ce04a0ec928..7f19b99fc85b 100644
+>>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> @@ -405,8 +405,8 @@
+>>>   &mmc_0 {
+>>>          status = "okay";
+>>>          num-slots = <1>;
+>>> -       broken-cd;
+>>>          cap-mmc-highspeed;
+>>> +       mmc-hs200-1_8v;
+>>
+>>
+>> The "mmc-ddr-1_8v" should also be supported but I guess you did not
+>> add it on purpose?
+>>
+> Well, I have not tested it, that why didn't added. Will check if this works
+> then will add.
+> Thanks for your comments.
 
---8TaQrIeukR7mmbKf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Right, it would require testing... Just came to my mind. Anyway this
+is up to you.
 
-On Mon, Nov 02, 2015 at 02:24:35PM +0900, Milo Kim wrote:
-> LM363X regulator driver supports LM3631 and LM3632.
-> LM3631 has 5 regulators. LM3632 provides 3 regulators.
-> One boost output and LDOs are used for the display module.
-> Boost voltage is configurable but always on.
-> Supported operations for LDOs are enabled/disabled and voltage change.
-
-As far as I can tell this is another partial resend of a series you
-originally sent about 15 minutes previously - what's going on here?
-
---8TaQrIeukR7mmbKf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWN1Z/AAoJECTWi3JdVIfQgy0H/01YUd2cS9BIOad8QD4fCpq2
-FebcXGfosE5JvKn3QQlmjSm24DJ213AbdVrd2Z88OWWfcDt6ObJvv/AV6bTeHMlK
-fMGHPmDNl4sgw8hHwPXZpMqxImB6wbVG9fHD/RkxyMKc8L+j3ancEUH6fLDY6YEh
-Mlu2c9bNaBnm0DLUkpLDhP6T3qCAS/ApsDy4W4H+XiJuDYDSZeWvdTmCInXEKooM
-0CqBtf3e4v7Q6jIs+swgx3HXYTD0IJPIfcBFgZx8vEVeCCIV4NJuN0Z0F7oS4Xin
-8oBuLFwoXSWwscIPJ78mZCwdSW0RmYl/pBCD93eB9QxaV4zEOzd0mqPbGIsZL4A=
-=1UDH
------END PGP SIGNATURE-----
-
---8TaQrIeukR7mmbKf--
+Best regards,
+Krzysztof
