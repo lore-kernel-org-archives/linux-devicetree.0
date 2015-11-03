@@ -1,47 +1,49 @@
-From: Zain Wang <zain.wang@rock-chips.com>
-Subject: [PATCH v1 3/4] ARM: dts: rockchip: Add Crypto drivers for rk3288
-Date: Tue,  3 Nov 2015 13:52:07 +0800
-Message-ID: <1446529928-12521-4-git-send-email-zain.wang@rock-chips.com>
-References: <1446529928-12521-1-git-send-email-zain.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446529928-12521-1-git-send-email-zain.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Zain Wang <zain.wang@rock-chips.com>
+From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
+Date: Tue, 3 Nov 2015 15:52:08 +0900
+Message-ID: <56385998.5080006@ti.com>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <20151102085924.GP4058@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151102085924.GP4058@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add Crypto drivers for rk3288 including crypto controller and dma clk.
+Hi Lee,
 
-Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
----
- arch/arm/boot/dts/rk3288.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 11/2/2015 5:59 PM, Lee Jones wrote:
+>>   drivers/video/backlight/Kconfig                    |  62 ++
+>> >  drivers/video/backlight/Makefile                   |   7 +
+>> >  drivers/video/backlight/lm3532_bl.c                | 183 +++++
+>> >  drivers/video/backlight/lm3631_bl.c                | 129 ++++
+>> >  drivers/video/backlight/lm3632_bl.c                | 125 ++++
+>> >  drivers/video/backlight/lm3633_bl.c                | 210 ++++++
+>> >  drivers/video/backlight/lm3695_bl.c                |  91 +++
+>> >  drivers/video/backlight/lm3697_bl.c                | 187 +++++
+>> >  drivers/video/backlight/ti-lmu-backlight.c         | 429 ++++++++++++
+>> >  drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
+> How different are all of these drivers?
+>
+> Can you create one driver that supports them all instead?
+>
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6a79c9c..7b7914e 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -170,6 +170,21 @@
- 		};
- 	};
- 
-+	crypto: cypto-controller@ff8a0000 {
-+		compatible = "rockchip,rk3288-crypto";
-+		reg = <0xff8a0000 0x4000>;
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_CRYPTO>,
-+			 <&cru HCLK_CRYPTO>,
-+			 <&cru SCLK_CRYPTO>,
-+			 <&cru ACLK_DMAC1>;
-+		clock-names = "aclk",
-+			      "hclk",
-+			      "sclk",
-+			      "apb_pclk";
-+		status = "okay";
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.9.1
+Thanks for your suggestion.
+
+'ti-lmu-backlight' is the common part of lmxxxx_bl drivers. And each 
+lmxxx_bl has its own operation functions by using ti_lmu_bl_ops.
+I've tried to make consolidated driver but it contained too much device 
+specific code in one file. So I prefer simple drivers structure - 
+'common part' and 'device specific operations'.
+It would be appreciated if you could introduce better idea.
+
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
