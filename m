@@ -1,973 +1,426 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
-Date: Tue, 03 Nov 2015 17:15:21 +0100
-Message-ID: <5638DD99.9070502@samsung.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-16-git-send-email-milo.kim@ti.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Tue, 03 Nov 2015 16:18:42 +0000
+Message-ID: <5638DE62.6050605@arm.com>
+References: <1446564227-4704-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1446441875-1256-16-git-send-email-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446564227-4704-1-git-send-email-bharatku@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michals@xilinx.com, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, rjui@broadcom.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, dhdang@apm.com, sbranden@broadcom.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Milo,
-
-Thanks for the patch. Please find my comments in the code.
-
-On 11/02/2015 06:24 AM, Milo Kim wrote:
-> LM3633 LED driver supports generic LED functions and pattern generation.
-> Pattern is generated through the sysfs. ABI documentation is also added.
->
-> Device creation from device tree
-> --------------------------------
->    LED channel name, LED string usage and max current settings are
->    configured inside the DT.
->
-> LED dimming pattern generation
-> ------------------------------
->    LM3633 supports programmable dimming pattern generator.
->    To enable it, three attributes are used.
->    'pattern_times', 'pattern_levels' and 'run_pattern'.
->    Sysfs ABI describes it.
->
-> LMU HWMON event handling
-> ------------------------
->    As soon as LMU HWMON operation is done, LMU HWMON driver sends the event,
->    'LMU_EVENT_HWMON_DONE'. Then, LM3633 device should be reinitialized
->    because the device was reset by LMU HWMON driver.
->    lm3633_led_hwmon_notifier() handles this event.
->
-> Data structure
-> --------------
->    ti_lmu_led_chip:	LED device data.
->    ti_lmu_led:		LED output channel data.
-> 			One LED device can have multiple LED channels.
->
-> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Cc: linux-leds@vger.kernel.org
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
+On 03/11/15 15:23, Bharat Kumar Gogada wrote:
+> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 > ---
->   Documentation/ABI/testing/sysfs-class-led-lm3633 |  60 ++
->   drivers/leds/Kconfig                             |  10 +
->   drivers/leds/Makefile                            |   1 +
->   drivers/leds/leds-lm3633.c                       | 749 +++++++++++++++++++++++
->   4 files changed, 820 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-class-led-lm3633
->   create mode 100644 drivers/leds/leds-lm3633.c
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-lm3633 b/Documentation/ABI/testing/sysfs-class-led-lm3633
-> new file mode 100644
-> index 0000000..c1d8759
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-lm3633
-> @@ -0,0 +1,60 @@
-> +LM3633 LED driver generates programmable pattern via the sysfs.
-> +
-> +LED Pattern Generator Structure
-> +
-> +                            (3)
-> +  (a) --------------->  ___________
-> +                       /           \
-> +                  (2) /             \ (4)
-> +  (b) ----> _________/               \_________  ...
-> +               (1)                       (5)
-> +
-> +                     |<-----   period   -----> |
-> +
-> +What:		/sys/class/leds/<led>/pattern_times
+> Removed msi_controller and added irq_domian for MSI domain hierarchy.
+> Modified code for filling MSI address in struct msg.
+> Added check for hwirq before passing it to irq_domain_set_info.
+> ---
+>  .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
+>  drivers/pci/host/Kconfig                           |   10 +
+>  drivers/pci/host/Makefile                          |    1 +
+>  drivers/pci/host/pcie-xilinx-nwl.c                 | 1053 ++++++++++++++++++++
+>  4 files changed, 1132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
 
-"time" noun is uncountable.
+[...]
 
-> +Date:		Oct 2015
-> +KernelVersion:	4.3
-
-These properties certainly will not appear in 4.3.
-
-> +Contact:	Milo Kim <milo.kim@ti.com>
-> +Description:	read/write
-> +                Set pattern time dimension. There are five arguments.
-> +                  (1) startup delay
-> +                  (2) rising dimming time
-> +                  (3) how much time stays at high level
-> +                  (4) falling dimming time
-> +                  (5) how much time stays at low level
-> +                Ranges are
-> +                  (1), (3), (5): 0 ~ 10000. Unit is millisecond.
-> +                  (2), (4): 0 ~ 16000. Unit is millisecond.
+> +#ifdef CONFIG_PCI_MSI
+> +static struct irq_chip nwl_msi_irq_chip = {
+> +	.name = "nwl_pcie:msi",
+> +	.irq_enable = unmask_msi_irq,
+> +	.irq_disable = mask_msi_irq,
+> +	.irq_mask = mask_msi_irq,
+> +	.irq_unmask = unmask_msi_irq,
 > +
-> +                Example:
-> +                No delay, rising 200ms, high 300ms, falling 100ms, low 400ms.
-> +                echo "0 200 300 100 400" > /sys/class/leds/<led>/pattern_times
-> +
-> +                cat /sys/class/leds/<led>/pattern_times
-> +                delay: 0, rise: 200, high: 300, fall: 100, low: 400
-
-Generally a sysfs attribute should represent a single value.
-There are cases where the attribute comprises a list of space separated
-values, but certainly colons and commas adds to much noise, and are
-cumbersome to parse. I'd opt for creating a separate sysfs attribute
-for each of the above 5 properties.
-
-> +What:		/sys/class/leds/<led>/pattern_levels
-> +Date:		Oct 2015
-> +KernelVersion:	4.3
-> +Contact:	Milo Kim <milo.kim@ti.com>
-> +Description:	read/write
-> +                Set pattern level(brightness). There are two arguments.
-> +                  (a) Low brightness level
-> +                  (b) High brightness level
-> +                Ranges are from 0 to 255.
-> +
-> +                Example:
-> +                Low level is 0, high level is 255.
-> +                echo "0 255" > /sys/class/leds/<led>/pattern_levels
-
-I'd go also for two separate attributes. E.g. pattern_brightness_lo and
-pattern_brightness_hi, or maybe you'll have better idea.
-
-> +                cat /sys/class/leds/<led>/pattern_levels
-> +                low brightness: 0, high brightness: 255
-> +
-> +What:		/sys/class/leds/<led>/run_pattern
-> +Date:		Oct 2015
-> +KernelVersion:	4.3
-> +Contact:	Milo Kim <milo.kim@ti.com>
-> +Description:	write only
-> +                After 'pattern_times' and 'pattern_levels' are updated,
-> +                run the pattern by writing 1 to 'run_pattern'.
-> +                To stop running pattern, writes 0 to 'run_pattern'.
-
-I wonder how registering an in-driver trigger would work. It would
-allow for hiding above pattern attributes when the trigger is inactive,
-and thus making the sysfs interface more transparent. You could avoid
-the need for run_pattern attribute, as setting the trigger would itself
-activate the pattern, and setting brightness to 0 would turn it off.
-
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 42990f2..bc41a0e 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -88,6 +88,16 @@ config LEDS_LM3533
->   	  hardware-accelerated blinking with maximum on and off periods of 9.8
->   	  and 77 seconds respectively.
->
-> +config LEDS_LM3633
-> +	tristate "LED support for the TI LM3633 LMU"
-> +	depends on LEDS_CLASS
-> +	depends on MFD_TI_LMU
-> +	help
-> +	  This option enables support for the LEDs on the LM3633.
-> +	  LM3633 has 6 low voltage indicator LEDs.
-> +	  All low voltage current sinks can have a programmable pattern
-> +	  modulated onto LED output strings.
-> +
->   config LEDS_LM3642
->   	tristate "LED support for LM3642 Chip"
->   	depends on LEDS_CLASS && I2C
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index b503f92..984f44a 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
->   obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
->   obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
->   obj-$(CONFIG_LEDS_LM3533)		+= leds-lm3533.o
-> +obj-$(CONFIG_LEDS_LM3633)		+= leds-lm3633.o
->   obj-$(CONFIG_LEDS_LM3642)		+= leds-lm3642.o
->   obj-$(CONFIG_LEDS_MIKROTIK_RB532)	+= leds-rb532.o
->   obj-$(CONFIG_LEDS_S3C24XX)		+= leds-s3c24xx.o
-> diff --git a/drivers/leds/leds-lm3633.c b/drivers/leds/leds-lm3633.c
-> new file mode 100644
-> index 0000000..66da609
-> --- /dev/null
-> +++ b/drivers/leds/leds-lm3633.c
-> @@ -0,0 +1,749 @@
-> +/*
-> + * TI LM3633 LED driver
-> + *
-> + * Copyright 2015 Texas Instruments
-> + *
-> + * Author: Milo Kim <milo.kim@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/mfd/ti-lmu.h>
-> +#include <linux/mfd/ti-lmu-register.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#define LM3633_LED_MAX_BRIGHTNESS		255
-> +#define LM3633_DEFAULT_LED_NAME			"indicator"
-> +#define LM3633_MAX_PERIOD			9700
-> +#define LM3633_SHORT_TIMESTEP			16
-> +#define LM3633_LONG_TIMESTEP			131
-> +#define LM3633_TIME_OFFSET			61
-> +#define LM3633_PATTERN_REG_OFFSET		16
-> +
-> +enum lm3633_led_bank_id {
-> +	LM3633_LED_BANK_C,
-> +	LM3633_LED_BANK_D,
-> +	LM3633_LED_BANK_E,
-> +	LM3633_LED_BANK_F,
-> +	LM3633_LED_BANK_G,
-> +	LM3633_LED_BANK_H,
-> +	LM3633_MAX_LEDS,
 > +};
 > +
-> +struct lm3633_pattern_time {
-> +	unsigned int delay;
-> +	unsigned int rise;
-> +	unsigned int high;
-> +	unsigned int fall;
-> +	unsigned int low;
+> +static struct msi_domain_info nwl_msi_domain_info = {
+> +	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +		  MSI_FLAG_MULTI_PCI_MSI),
+
+If you're supporting multi-MSI, how do you ensure that all hwirqs are
+contiguous as required by the spec? Clearly, your allocator doesn't
+provide this guarantee.
+
+Also, you still lack support for MSI-X (which would come for free...).
+
+> +	.chip = &nwl_msi_irq_chip,
+> +};
+> +#endif
+> +
+> +static void nwl_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct nwl_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +	struct nwl_msi *msi = &pcie->msi;
+> +	phys_addr_t msi_addr = virt_to_phys((void *)msi->pages);
+> +
+> +	msg->address_lo = lower_32_bits(msi_addr);
+> +	msg->address_hi = upper_32_bits(msi_addr);
+> +	msg->data = data->hwirq;
+> +}
+> +
+> +static int nwl_msi_set_affinity(struct irq_data *irq_data,
+> +				const struct cpumask *mask, bool force)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static struct irq_chip nwl_irq_chip = {
+> +	.name = "Xilinx MSI",
+> +	.irq_compose_msi_msg = nwl_compose_msi_msg,
+> +	.irq_set_affinity = nwl_msi_set_affinity,
 > +};
 > +
-> +struct lm3633_pattern_level {
-> +	u8 low;
-> +	u8 high;
-> +};
-> +
-> +/**
-> + * struct ti_lmu_led_chip
-> + *
-> + * @dev:		Parent device pointer
-> + * @lmu:		LMU structure. Used for register R/W access.
-> + * @lock:		Secure handling for multiple user interface access
-> + * @lmu_led:		Multiple LED strings
-> + * @num_leds:		Number of LED strings
-> + * @nb:			Notifier block for handling hwmon event
-> + *
-> + * One LED chip can have multiple LED strings.
-> + */
-> +struct ti_lmu_led_chip {
-> +	struct device *dev;
-> +	struct ti_lmu *lmu;
-> +	struct mutex lock;
-> +	struct ti_lmu_led *lmu_led;
-> +	int num_leds;
-> +	struct notifier_block nb;
-> +};
-> +
-> +/**
-> + * struct ti_lmu_led
-> + *
-> + * @chip:		Pointer to parent LED device
-> + * @bank_id:		LED bank ID
-> + * @cdev:		LED subsystem device structure
-> + * @name:		LED channel name
-> + * @led_string:		LED string configuration.
-> + *			Bit mask is set on parsing DT.
-> + * @imax:		[Optional] Max current index.
-> + *			It's result of ti_lmu_get_current_code().
-
-Why is this optional?
-
-> + * @work:		Used for scheduling brightness control
-> + * @brightness:		Brightness value
-> + * @time:		Pattern time dimension
-> + * @level:		Pattern level dimension
-> + *
-> + * Each LED device has its own channel configuration.
-> + * For chip control, parent chip data structure is used.
-> + */
-> +struct ti_lmu_led {
-> +	struct ti_lmu_led_chip *chip;
-> +	enum lm3633_led_bank_id bank_id;
-> +	struct led_classdev cdev;
-> +	const char *name;
-> +
-> +	unsigned long led_string;	/* bit OR mask of LMU_LVLEDx */;
-> +	#define LMU_LVLED1	BIT(0)
-> +	#define LMU_LVLED2	BIT(1)
-> +	#define LMU_LVLED3	BIT(2)
-> +	#define LMU_LVLED4	BIT(3)
-> +	#define LMU_LVLED5	BIT(4)
-> +	#define LMU_LVLED6	BIT(5)
-> +
-> +	struct work_struct work;
-> +	enum led_brightness brightness;
-> +	enum ti_lmu_max_current imax;
-> +
-> +	/* Pattern specific data */
-> +	struct lm3633_pattern_time time;
-> +	struct lm3633_pattern_level level;
-> +};
-> +
-> +static struct ti_lmu_led *to_ti_lmu_led(struct device *dev)
+> +static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				unsigned int nr_irqs, void *args)
 > +{
-> +	struct led_classdev *cdev = dev_get_drvdata(dev);
+> +	struct nwl_pcie *pcie = domain->host_data;
+> +	struct nwl_msi *msi = &pcie->msi;
+> +	unsigned long bit;
 > +
-> +	return container_of(cdev, struct ti_lmu_led, cdev);
-> +}
-> +
-> +static u8 lm3633_led_get_enable_mask(struct ti_lmu_led *lmu_led)
-> +{
-> +	return 1 << (lmu_led->bank_id + LM3633_LED_BANK_OFFSET);
-> +}
-> +
-> +static int lm3633_led_enable_bank(struct ti_lmu_led *lmu_led)
-> +{
-> +	u8 mask = lm3633_led_get_enable_mask(lmu_led);
-> +
-> +	return ti_lmu_update_bits(lmu_led->chip->lmu, LM3633_REG_ENABLE,
-> +				  mask, mask);
-> +}
-> +
-> +static int lm3633_led_disable_bank(struct ti_lmu_led *lmu_led)
-> +{
-> +	u8 mask = lm3633_led_get_enable_mask(lmu_led);
-> +
-> +	return ti_lmu_update_bits(lmu_led->chip->lmu, LM3633_REG_ENABLE,
-> +				  mask, 0);
-> +}
-> +
-> +static int lm3633_led_enable_pattern(struct ti_lmu_led *lmu_led)
-> +{
-> +	u8 mask = lm3633_led_get_enable_mask(lmu_led);
-> +
-> +	return ti_lmu_update_bits(lmu_led->chip->lmu, LM3633_REG_PATTERN, mask,
-> +				  mask);
-> +}
-> +
-> +static int lm3633_led_disable_pattern(struct ti_lmu_led *lmu_led)
-> +{
-> +	u8 mask = lm3633_led_get_enable_mask(lmu_led);
-> +
-> +	return ti_lmu_update_bits(lmu_led->chip->lmu, LM3633_REG_PATTERN, mask,
-> +				  0);
-> +}
-> +
-> +static int lm3633_led_config_bank(struct ti_lmu_led *lmu_led)
-> +{
-> +	const u8 group_led[] = { 0, BIT(0), BIT(0), 0, BIT(3), BIT(3), };
-> +	const enum lm3633_led_bank_id default_id[] = {
-> +		LM3633_LED_BANK_C, LM3633_LED_BANK_C, LM3633_LED_BANK_C,
-> +		LM3633_LED_BANK_F, LM3633_LED_BANK_F, LM3633_LED_BANK_F,
-> +	};
-> +	const enum lm3633_led_bank_id separate_id[] = {
-> +		LM3633_LED_BANK_C, LM3633_LED_BANK_D, LM3633_LED_BANK_E,
-> +		LM3633_LED_BANK_F, LM3633_LED_BANK_G, LM3633_LED_BANK_H,
-> +	};
-> +	int i, ret;
-> +	u8 val;
-> +
-> +	/*
-> +	 * Check configured LED string and assign control bank
-> +	 *
-> +	 * Each LED is tied with other LEDS (group):
-> +	 *   the default control bank is assigned
-> +	 *
-> +	 * Otherwise:
-> +	 *   separate bank is assigned
-> +	 */
-> +	for (i = 0; i < LM3633_MAX_LEDS; i++) {
-> +		/* LED 0 and LED 3 are fixed, so no assignment is required */
-> +		if (i == 0 || i == 3)
-> +			continue;
-> +
-> +		if (test_bit(i, &lmu_led->led_string)) {
-> +			if (lmu_led->led_string & group_led[i]) {
-> +				lmu_led->bank_id = default_id[i];
-> +				val = 0;
-> +			} else {
-> +				lmu_led->bank_id = separate_id[i];
-> +				val = BIT(i);
-> +			}
-> +
-> +			ret = ti_lmu_update_bits(lmu_led->chip->lmu,
-> +						 LM3633_REG_BANK_SEL,
-> +						 BIT(i), val);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t lm3633_led_show_pattern_times(struct device *dev,
-> +					     struct device_attribute *attr,
-> +					     char *buf)
-> +{
-> +	struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
-> +
-> +	return sprintf(buf,
-> +		       "delay: %u, rise: %u, high: %u, fall: %u, low: %u\n",
-> +		       lmu_led->time.delay, lmu_led->time.rise,
-> +		       lmu_led->time.high, lmu_led->time.fall,
-> +		       lmu_led->time.low);
-> +}
-> +
-> +static u8 lm3633_convert_time_to_index(unsigned int msec)
-> +{
-> +	u8 idx, offset;
-> +
-> +	/*
-> +	 * Find appropriate register index around input time value
-> +	 *
-> +	 *      0 <= time <= 1000 : 16ms step
-> +	 *   1000 <  time <= 9700 : 131ms step, base index is 61
-> +	 */
-> +
-> +	msec = min_t(int, msec, LM3633_MAX_PERIOD);
-> +
-> +	if (msec <= 1000) {
-> +		idx = msec / LM3633_SHORT_TIMESTEP;
-> +		if (idx > 1)
-> +			idx--;
-> +		offset = 0;
-> +	} else {
-> +		idx = (msec - 1000) / LM3633_LONG_TIMESTEP;
-> +		offset = LM3633_TIME_OFFSET;
-> +	}
-> +
-> +	return idx + offset;
-> +}
-> +
-> +static u8 lm3633_convert_ramp_to_index(unsigned int msec)
-> +{
-> +	const int ramp_table[] = { 2, 250, 500, 1000, 2000, 4000, 8000, 16000 };
-> +	int size = ARRAY_SIZE(ramp_table);
-> +	int i;
-> +
-> +	if (msec <= ramp_table[0])
-> +		return 0;
-> +
-> +	if (msec > ramp_table[size - 1])
-> +		return size - 1;
-> +
-> +	for (i = 1; i < size; i++) {
-> +		if (msec == ramp_table[i])
-> +			return i;
-> +
-> +		/* Find the most closest value by looking up the table */
-> +		if (msec > ramp_table[i - 1] && msec < ramp_table[i]) {
-> +			if (msec - ramp_table[i - 1] < ramp_table[i] - msec)
-> +				return i - 1;
-> +			else
-> +				return i;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t lm3633_led_store_pattern_times(struct device *dev,
-> +					      struct device_attribute *attr,
-> +					      const char *buf, size_t len)
-> +{
-> +	struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
-> +	struct ti_lmu_led_chip *chip = lmu_led->chip;
-> +	struct lm3633_pattern_time *time = &lmu_led->time;
-> +	u8 offset = lmu_led->bank_id * LM3633_PATTERN_REG_OFFSET;
-> +	int ret;
-> +	u8 reg, val;
-> +
-> +	/*
-> +	 * Sequence
-> +	 *
-> +	 * 1) Read pattern time data (unit: msec)
-> +	 * 2) Update DELAY register
-> +	 * 3) Update HIGH TIME register
-> +	 * 4) Update LOW TIME register
-> +	 * 5) Update RAMP TIME registers
-> +	 *
-> +	 * Time register addresses need offset number based on the LED bank.
-> +	 * Register values are index domain, so input time value should be
-> +	 * converted to index.
-> +	 * Please note that ramp register address has no offset value.
-> +	 */
-> +
-> +	ret = sscanf(buf, "%u %u %u %u %u", &time->delay, &time->rise,
-> +		     &time->high, &time->fall, &time->low);
-> +	if (ret != 5)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&chip->lock);
-> +
-> +	reg = LM3633_REG_PTN_DELAY + offset;
-> +	val = lm3633_convert_time_to_index(time->delay);
-> +	ret = ti_lmu_write_byte(chip->lmu, reg, val);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	reg = LM3633_REG_PTN_HIGHTIME + offset;
-> +	val = lm3633_convert_time_to_index(time->high);
-> +	ret = ti_lmu_write_byte(chip->lmu, reg, val);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	reg = LM3633_REG_PTN_LOWTIME + offset;
-> +	val = lm3633_convert_time_to_index(time->low);
-> +	ret = ti_lmu_write_byte(chip->lmu, reg, val);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	switch (lmu_led->bank_id) {
-> +	case LM3633_LED_BANK_C:
-> +	case LM3633_LED_BANK_D:
-> +	case LM3633_LED_BANK_E:
-> +		reg = LM3633_REG_PTN0_RAMP;
-> +		break;
-> +	case LM3633_LED_BANK_F:
-> +	case LM3633_LED_BANK_G:
-> +	case LM3633_LED_BANK_H:
-> +		reg = LM3633_REG_PTN1_RAMP;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		goto skip;
-> +	}
-> +
-> +	val = lm3633_convert_ramp_to_index(time->rise);
-> +	ret = ti_lmu_update_bits(chip->lmu, reg, LM3633_PTN_RAMPUP_MASK,
-> +				 val << LM3633_PTN_RAMPUP_SHIFT);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	val = lm3633_convert_ramp_to_index(time->fall);
-> +	ret = ti_lmu_update_bits(chip->lmu, reg, LM3633_PTN_RAMPDN_MASK,
-> +				 val << LM3633_PTN_RAMPDN_SHIFT);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	mutex_unlock(&chip->lock);
-> +	return len;
-> +
-> +skip:
-> +	mutex_unlock(&chip->lock);
-> +	return ret;
-> +}
-> +
-> +static ssize_t lm3633_led_show_pattern_levels(struct device *dev,
-> +					      struct device_attribute *attr,
-> +					      char *buf)
-> +{
-> +	struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
-> +
-> +	return sprintf(buf, "low brightness: %u, high brightness: %u\n",
-> +		       lmu_led->level.low, lmu_led->level.high);
-> +}
-> +
-> +static ssize_t lm3633_led_store_pattern_levels(struct device *dev,
-> +					       struct device_attribute *attr,
-> +					       const char *buf, size_t len)
-> +{
-> +	struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
-> +	struct ti_lmu_led_chip *chip = lmu_led->chip;
-> +	unsigned int low, high;
-> +	u8 reg, offset, val;
-> +	int ret;
-> +
-> +	/*
-> +	 * Sequence
-> +	 *
-> +	 * 1) Read pattern level data
-> +	 * 2) Disable a bank before programming a pattern
-> +	 * 3) Update LOW BRIGHTNESS register
-> +	 * 4) Update HIGH BRIGHTNESS register
-> +	 *
-> +	 * Level register addresses have offset number based on the LED bank.
-> +	 */
-> +
-> +	ret = sscanf(buf, "%u %u", &low, &high);
-> +	if (ret != 2)
-> +		return -EINVAL;
-> +
-> +	low = min_t(unsigned int, low, LM3633_LED_MAX_BRIGHTNESS);
-
-Why don't you take into account the value defined by led-max-microamp
-DT property here?
-
-> +	high = min_t(unsigned int, high, LM3633_LED_MAX_BRIGHTNESS);
-
-Ditto.
-
-> +	lmu_led->level.low = (u8)low;
-> +	lmu_led->level.high = (u8)high;
-> +
-> +	mutex_lock(&chip->lock);
-> +	ret = lm3633_led_disable_bank(lmu_led);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	offset = lmu_led->bank_id * LM3633_PATTERN_REG_OFFSET;
-> +	reg = LM3633_REG_PTN_LOWBRT + offset;
-> +	val = lmu_led->level.low;
-> +	ret = ti_lmu_write_byte(chip->lmu, reg, val);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	offset = lmu_led->bank_id;
-> +	reg = LM3633_REG_PTN_HIGHBRT + offset;
-> +	val = lmu_led->level.high;
-> +	ret = ti_lmu_write_byte(chip->lmu, reg, val);
-> +	if (ret)
-> +		goto skip;
-> +
-> +	mutex_unlock(&chip->lock);
-> +	return len;
-> +
-> +skip:
-> +	mutex_unlock(&chip->lock);
-> +	return ret;
-> +}
-> +
-> +static ssize_t lm3633_led_run_pattern(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
-> +	struct ti_lmu_led_chip *chip = lmu_led->chip;
-> +	unsigned long enable;
-> +	int ret;
-> +
-> +	if (kstrtoul(buf, 0, &enable))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&chip->lock);
-> +
-> +	if (enable)
-> +		ret = lm3633_led_enable_pattern(lmu_led);
+> +	mutex_lock(&msi->lock);
+> +	bit = find_first_zero_bit(msi->used, INT_PCI_MSI_NR);
+> +	if (bit < INT_PCI_MSI_NR)
+> +		set_bit(bit, msi->used);
 > +	else
-> +		ret = lm3633_led_disable_pattern(lmu_led);
+> +		bit = -ENOSPC;
 > +
-> +	if (ret) {
-> +		mutex_unlock(&chip->lock);
-> +		return ret;
-> +	}
+> +	mutex_unlock(&msi->lock);
 > +
-> +	if (enable)
-> +		lm3633_led_enable_bank(lmu_led);
+> +	if (bit < 0)
+> +		return bit;
 > +
-> +	mutex_unlock(&chip->lock);
-> +
-> +	return len;
+> +	irq_domain_set_info(domain, virq, bit, &nwl_irq_chip,
+> +			domain->host_data, handle_simple_irq,
+> +			NULL, NULL);
+> +	return 0;
 > +}
 > +
-> +static DEVICE_ATTR(pattern_times, S_IRUGO | S_IWUSR,
-> +		   lm3633_led_show_pattern_times,
-> +		   lm3633_led_store_pattern_times);
-> +static DEVICE_ATTR(pattern_levels, S_IRUGO | S_IWUSR,
-> +		   lm3633_led_show_pattern_levels,
-> +		   lm3633_led_store_pattern_levels);
-> +static DEVICE_ATTR(run_pattern, S_IWUSR, NULL,
-> +		   lm3633_led_run_pattern);
-> +
-> +static struct attribute *lm3633_led_attrs[] = {
-> +	&dev_attr_pattern_times.attr,
-> +	&dev_attr_pattern_levels.attr,
-> +	&dev_attr_run_pattern.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(lm3633_led);	/* lm3633_led_groups */
-> +
-> +static int lm3633_led_set_max_current(struct ti_lmu_led *lmu_led)
+> +static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+> +					unsigned int nr_irqs)
 > +{
-> +	u8 reg = LM3633_REG_IMAX_LVLED_BASE + lmu_led->bank_id;
+> +	struct irq_data *data = irq_domain_get_irq_data(domain, virq);
+> +	struct nwl_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +	struct nwl_msi *msi = &pcie->msi;
 > +
-> +	return ti_lmu_write_byte(lmu_led->chip->lmu, reg, lmu_led->imax);
-> +}
-> +
-> +static void lm3633_led_work(struct work_struct *work)
-> +{
-> +	struct ti_lmu_led *lmu_led = container_of(work, struct ti_lmu_led,
-> +						  work);
-> +	struct ti_lmu_led_chip *chip = lmu_led->chip;
-> +	int ret;
-> +
-> +	mutex_lock(&chip->lock);
-> +
-> +	ret = ti_lmu_write_byte(chip->lmu,
-> +				LM3633_REG_BRT_LVLED_BASE + lmu_led->bank_id,
-> +				lmu_led->brightness);
-> +	if (ret) {
-> +		mutex_unlock(&chip->lock);
-> +		return;
-> +	}
-> +
-> +	if (lmu_led->brightness == 0)
-> +		lm3633_led_disable_bank(lmu_led);
+> +	mutex_lock(&msi->lock);
+> +	if (!test_bit(data->hwirq, msi->used))
+> +		dev_err(pcie->dev, "freeing unused MSI %lu\n", data->hwirq);
 > +	else
-> +		lm3633_led_enable_bank(lmu_led);
-
-Is it possible to control a brightness of a whole bank only,
-and not individual LEDs?
-
-> +	mutex_unlock(&chip->lock);
+> +		clear_bit(data->hwirq, msi->used);
+> +
+> +	mutex_unlock(&msi->lock);
 > +}
 > +
-> +static void lm3633_led_brightness_set(struct led_classdev *cdev,
-> +				      enum led_brightness brt_val)
-> +{
-> +	struct ti_lmu_led *lmu_led = container_of(cdev, struct ti_lmu_led,
-> +						  cdev);
+> +static const struct irq_domain_ops dev_msi_domain_ops = {
+> +	.alloc  = nwl_irq_domain_alloc,
+> +	.free   = nwl_irq_domain_free,
+> +};
 > +
-> +	lmu_led->brightness = brt_val;
-> +	schedule_work(&lmu_led->work);
+> +static void nwl_pcie_free_irq_domain(struct nwl_pcie *pcie)
+> +{
+> +	int i;
+> +	u32 irq;
+> +
+> +#ifdef CONFIG_PCI_MSI
+> +	struct nwl_msi *msi = &pcie->msi;
+> +#endif
+> +
+> +	for (i = 0; i < 4; i++) {
+> +		irq = irq_find_mapping(pcie->legacy_irq_domain, i + 1);
+> +		if (irq > 0)
+> +			irq_dispose_mapping(irq);
+> +	}
+> +
+> +	irq_domain_remove(pcie->legacy_irq_domain);
+> +
+> +#ifdef CONFIG_PCI_MSI
+> +	irq_set_chained_handler_and_data(msi->irq_msi0, NULL, NULL);
+> +	irq_set_chained_handler_and_data(msi->irq_msi1, NULL, NULL);
+> +
+> +	irq_domain_remove(msi->msi_domain);
+> +	irq_domain_remove(msi->dev_domain);
+> +#endif
+> +
+> +}
+
+Remove these #ifdefs. You can test the validity of these fields before
+calling the various functions. You can also move this to a separate
+function.
+
+> +
+> +static int nwl_pcie_init_irq_domain(struct nwl_pcie *pcie)
+> +{
+> +	struct device_node *node = pcie->dev->of_node;
+> +	struct device_node *legacy_intc_node;
+> +
+> +#ifdef CONFIG_PCI_MSI
+> +	struct nwl_msi *msi = &pcie->msi;
+> +#endif
+> +
+> +	legacy_intc_node = of_get_next_child(node, NULL);
+> +	if (!legacy_intc_node) {
+> +		dev_err(pcie->dev, "No legacy intc node found\n");
+> +		return PTR_ERR(legacy_intc_node);
+> +	}
+> +
+> +	pcie->legacy_irq_domain = irq_domain_add_linear(legacy_intc_node, 4,
+> +							&legacy_domain_ops,
+> +							pcie);
+> +
+> +	if (!pcie->legacy_irq_domain) {
+> +		dev_err(pcie->dev, "failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +#ifdef CONFIG_PCI_MSI
+> +	msi->dev_domain = irq_domain_add_linear(NULL, INT_PCI_MSI_NR,
+> +					&dev_msi_domain_ops, pcie);
+> +	if (!msi->dev_domain) {
+> +		dev_err(pcie->dev, "failed to create dev IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+> +	msi->msi_domain = pci_msi_create_irq_domain(node,
+> +							&nwl_msi_domain_info,
+> +							msi->dev_domain);
+> +	if (!msi->msi_domain) {
+> +		dev_err(pcie->dev, "failed to create msi IRQ domain\n");
+> +		irq_domain_remove(msi->dev_domain);
+> +		return -ENOMEM;
+> +	}
+> +#endif
+
+Similar treatment here: move anything that's MSI-dependent to another
+function, and provide a dummy implementation for the !PCI_MSI case.
+
+> +	return 0;
 > +}
 > +
-> +static int lm3633_led_init(struct ti_lmu_led *lmu_led, int bank_id)
+> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus *bus)
 > +{
-> +	struct device *dev = lmu_led->chip->dev;
-> +	char name[12];
+> +	struct platform_device *pdev = to_platform_device(pcie->dev);
+> +	struct nwl_msi *msi = &pcie->msi;
+> +	unsigned long base;
 > +	int ret;
 > +
-> +	/*
-> +	 * Sequence
-> +	 *
-> +	 * 1) Configure LED bank which is used for brightness control
-> +	 * 2) Set max current for each output channel
-> +	 * 3) Add LED device
-> +	 */
+> +	mutex_init(&msi->lock);
 > +
-> +	ret = lm3633_led_config_bank(lmu_led);
-> +	if (ret) {
-> +		dev_err(dev, "Output bank register err: %d\n", ret);
-> +		return ret;
+> +	/* Check for msii_present bit */
+> +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
+> +	if (!ret) {
+> +		dev_err(pcie->dev, "MSI not present\n");
+> +		ret = -EIO;
+> +		goto err;
 > +	}
 > +
-> +	ret = lm3633_led_set_max_current(lmu_led);
-> +	if (ret) {
-> +		dev_err(dev, "Set max current err: %d\n", ret);
-> +		return ret;
+> +	/* Enable MSII */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
+> +			  MSII_ENABLE, I_MSII_CONTROL);
+> +
+> +	/* Enable MSII status */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
+> +			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
+> +
+> +	/* setup AFI/FPCI range */
+> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
+> +	base = virt_to_phys((void *)msi->pages);
+> +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
+> +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
+
+I just read this, and I'm puzzled. Actually, puzzled is an
+understatement. Why on Earth do you need to give RAM to your MSI HW?
+This should be a device, not RAM. By the look of it, this could be
+absolutely anything. Are you sure you have to supply RAM here?
+
+> +
+> +	/* Disable high range msi interrupts */
+> +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_HI_MASK, MSGF_MSI_MASK_HI);
+> +
+> +	/* Clear pending high range msi interrupts */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,  MSGF_MSI_STATUS_HI) &
+> +			  MSGF_MSI_SR_HI_MASK, MSGF_MSI_STATUS_HI);
+> +	/* Get msi_1 IRQ number */
+> +	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
+> +	if (msi->irq_msi1 < 0) {
+> +		dev_err(&pdev->dev, "failed to get IRQ#%d\n", msi->irq_msi1);
+> +		goto err;
+> +	}
+> +	/* Register msi handler */
+> +	irq_set_chained_handler_and_data(msi->irq_msi1,
+> +					 nwl_pcie_msi_handler_high, pcie);
+> +
+> +	/* Enable all high range msi interrupts */
+> +	nwl_bridge_writel(pcie, MSGF_MSI_SR_HI_MASK, MSGF_MSI_MASK_HI);
+> +
+> +	/* Disable low range msi interrupts */
+> +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
+> +
+> +	/* Clear pending low range msi interrupts */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_MSI_STATUS_LO) &
+> +			  MSGF_MSI_SR_LO_MASK, MSGF_MSI_STATUS_LO);
+> +	/* Get msi_0 IRQ number */
+> +	msi->irq_msi0 = platform_get_irq_byname(pdev, "msi0");
+> +	if (msi->irq_msi0 < 0) {
+> +		dev_err(&pdev->dev, "failed to get IRQ#%d\n", msi->irq_msi0);
+> +		goto err;
 > +	}
 > +
-> +	lmu_led->cdev.max_brightness = LM3633_LED_MAX_BRIGHTNESS;
-
-The value assigned here should be determined by led-max-microamp
-DT property.
-
-> +	lmu_led->cdev.brightness_set = lm3633_led_brightness_set;
-> +	lmu_led->cdev.groups = lm3633_led_groups;
+> +	/* Register msi handler */
+> +	irq_set_chained_handler_and_data(msi->irq_msi0,
+> +					 nwl_pcie_msi_handler_low, pcie);
 > +
-> +	if (lmu_led->name) {
-> +		lmu_led->cdev.name = lmu_led->name;
-> +	} else {
-> +		snprintf(name, sizeof(name), "%s:%d", LM3633_DEFAULT_LED_NAME,
-> +			 bank_id);
-> +		lmu_led->cdev.name = name;
-> +	}
-> +
-> +	ret = led_classdev_register(dev, &lmu_led->cdev);
-
-Please use devm prefixed version.
-
-> +	if (ret) {
-> +		dev_err(dev, "LED register err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	INIT_WORK(&lmu_led->work, lm3633_led_work);
-
-Work queue should be initialized before LED class device is registered.
-
-> +	return 0;
-> +}
-> +
-> +static int lm3633_led_of_create(struct ti_lmu_led_chip *chip,
-> +				struct device_node *np)
-> +{
-> +	struct device_node *child;
-> +	struct device *dev = chip->dev;
-> +	struct ti_lmu_led *lmu_led, *each;
-> +	int num_leds;
-> +	int i = 0;
-> +	u32 imax;
-> +
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	num_leds = of_get_child_count(np);
-> +	if (num_leds == 0 || num_leds > LM3633_MAX_LEDS) {
-> +		dev_err(dev, "Invalid number of LEDs: %d\n", num_leds);
-> +		return -EINVAL;
-> +	}
-> +
-> +	lmu_led = devm_kzalloc(dev, sizeof(*lmu_led) * num_leds, GFP_KERNEL);
-> +	if (!lmu_led)
-> +		return -ENOMEM;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		each = lmu_led + i;
-> +
-> +		of_property_read_string(child, "channel-name", &each->name);
-> +
-> +		/* Make LED strings */
-> +		each->led_string = 0;
-> +		if (of_property_read_bool(child, "lvled1-used"))
-> +			each->led_string |= LMU_LVLED1;
-> +		if (of_property_read_bool(child, "lvled2-used"))
-> +			each->led_string |= LMU_LVLED2;
-> +		if (of_property_read_bool(child, "lvled3-used"))
-> +			each->led_string |= LMU_LVLED3;
-> +		if (of_property_read_bool(child, "lvled4-used"))
-> +			each->led_string |= LMU_LVLED4;
-> +		if (of_property_read_bool(child, "lvled5-used"))
-> +			each->led_string |= LMU_LVLED5;
-> +		if (of_property_read_bool(child, "lvled6-used"))
-> +			each->led_string |= LMU_LVLED6;
-> +
-> +		imax = 0;
-> +		of_property_read_u32(child, "led-max-microamp", &imax);
-> +		each->imax = ti_lmu_get_current_code(imax);
-> +
-> +		each->bank_id = 0;
-> +		each->chip = chip;
-> +		i++;
-> +	}
-> +
-> +	chip->lmu_led = lmu_led;
-> +	chip->num_leds = num_leds;
+> +	/* Enable all low range msi interrupts */
+> +	nwl_bridge_writel(pcie, MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
 > +
 > +	return 0;
-> +}
-> +
-> +static int lm3633_led_hwmon_notifier(struct notifier_block *nb,
-> +				     unsigned long action, void *unused)
-> +{
-> +	struct ti_lmu_led_chip *chip = container_of(nb, struct ti_lmu_led_chip,
-> +						    nb);
-> +	struct ti_lmu_led *each;
-> +	int i, ret;
-> +
-> +	/* LED should be reconfigured after hwmon procedure is done */
-> +	if (action == LMU_EVENT_HWMON_DONE) {
-> +		for (i = 0; i < chip->num_leds; i++) {
-> +			each = chip->lmu_led + i;
-> +			ret = lm3633_led_config_bank(each);
-> +			if (ret) {
-> +				dev_err(chip->dev,
-> +					"Output bank register err: %d\n", ret);
-> +				return NOTIFY_STOP;
-> +			}
-> +
-> +			ret = lm3633_led_set_max_current(each);
-> +			if (ret) {
-> +				dev_err(chip->dev, "Set max current err: %d\n",
-> +					ret);
-> +				return NOTIFY_STOP;
-> +			}
-> +		}
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int lm3633_led_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct ti_lmu *lmu = dev_get_drvdata(dev->parent);
-> +	struct ti_lmu_led_chip *chip;
-> +	struct ti_lmu_led *each;
-> +	int i, ret;
-> +
-> +	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	chip->dev = dev;
-> +	chip->lmu = lmu;
-> +
-> +	ret = lm3633_led_of_create(chip, dev->of_node);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Notifier callback is required because LED device needs
-> +	 * reconfiguration after opened/shorted circuit fault monitoring
-
-Shouldn't this be open/short circuit?
-
-> +	 * by ti-lmu-hwmon driver.
-> +	 */
-> +	chip->nb.notifier_call = lm3633_led_hwmon_notifier;
-> +	ret = blocking_notifier_chain_register(&chip->lmu->notifier, &chip->nb);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < chip->num_leds; i++) {
-> +		each = chip->lmu_led + i;
-> +		ret = lm3633_led_init(each, i);
-> +		if (ret) {
-> +			dev_err(dev, "LED initialization err: %d\n", ret);
-> +			goto cleanup_leds;
-> +		}
-> +	}
-> +
-> +	mutex_init(&chip->lock);
-
-Please initialize the mutex above the loop.
-
-> +	platform_set_drvdata(pdev, chip);
-> +
-> +	return 0;
-> +
-> +cleanup_leds:
-> +	while (--i >= 0) {
-> +		each = chip->lmu_led + i;
-> +		led_classdev_unregister(&each->cdev);
-> +	}
+> +err:
 > +	return ret;
 > +}
 > +
-> +static int lm3633_led_remove(struct platform_device *pdev)
+> +static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
 > +{
-> +	struct ti_lmu_led_chip *chip = platform_get_drvdata(pdev);
-> +	struct ti_lmu_led *each;
-> +	int i;
+> +	struct platform_device *pdev = to_platform_device(pcie->dev);
+> +	u32 breg_val, ecam_val, first_busno = 0;
+> +	int err;
+> +	int check_link_up = 0;
 > +
-> +	blocking_notifier_chain_unregister(&chip->lmu->notifier, &chip->nb);
-> +
-> +	for (i = 0; i < chip->num_leds; i++) {
-> +		each = chip->lmu_led + i;
-> +		led_classdev_unregister(&each->cdev);
-> +		flush_work(&each->work);
+> +	/* Check for BREG present bit */
+> +	breg_val = nwl_bridge_readl(pcie, E_BREG_CAPABILITIES) & BREG_PRESENT;
+> +	if (!breg_val) {
+> +		dev_err(pcie->dev, "BREG is not present\n");
+> +		return breg_val;
 > +	}
+> +	/* Write bridge_off to breg base */
+> +	nwl_bridge_writel(pcie, (u32)(pcie->phys_breg_base),
+> +			  E_BREG_BASE_LO);
+> +
+> +	/* Enable BREG */
+> +	nwl_bridge_writel(pcie, ~BREG_ENABLE_FORCE & BREG_ENABLE,
+> +			  E_BREG_CONTROL);
+> +
+> +	/* Disable DMA channel registers */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX0) |
+> +			  CFG_DMA_REG_BAR, BRCFG_PCIE_RX0);
+> +
+> +	/* Enable the bridge config interrupt */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_INTERRUPT) |
+> +			  BRCFG_INTERRUPT_MASK, BRCFG_INTERRUPT);
+> +	/* Enable Ingress subtractive decode translation */
+> +	nwl_bridge_writel(pcie, SET_ISUB_CONTROL, I_ISUB_CONTROL);
+> +
+> +	/* Enable msg filtering details */
+> +	nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
+> +			  BRCFG_PCIE_RX_MSG_FILTER);
+> +	do {
+> +		err = nwl_pcie_link_up(pcie, PHY_RDY_LINKUP);
+> +		if (err != 1) {
+> +			check_link_up++;
+> +			if (check_link_up > LINKUP_ITER_CHECK)
+> +				return -ENODEV;
+> +			mdelay(1000);
+> +		}
+> +	} while (!err);
+> +
+> +	/* Check for ECAM present bit */
+> +	ecam_val = nwl_bridge_readl(pcie, E_ECAM_CAPABILITIES) & E_ECAM_PRESENT;
+> +	if (!ecam_val) {
+> +		dev_err(pcie->dev, "ECAM is not present\n");
+> +		return ecam_val;
+> +	}
+> +
+> +	/* Enable ECAM */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
+> +			  E_ECAM_CR_ENABLE, E_ECAM_CONTROL);
+> +	/* Write ecam_value on ecam_control */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
+> +			  (pcie->ecam_value << E_ECAM_SIZE_SHIFT),
+> +			  E_ECAM_CONTROL);
+> +	/* Write phy_reg_base to ecam base */
+> +	nwl_bridge_writel(pcie, (u32)pcie->phys_ecam_base, E_ECAM_BASE_LO);
+> +
+> +	/* Get bus range */
+> +	ecam_val = nwl_bridge_readl(pcie, E_ECAM_CONTROL);
+> +	pcie->last_busno = (ecam_val & E_ECAM_SIZE_LOC) >> E_ECAM_SIZE_SHIFT;
+> +	/* Write primary, secondary and subordinate bus numbers */
+> +	ecam_val = first_busno;
+> +	ecam_val |= (first_busno + 1) << 8;
+> +	ecam_val |= (pcie->last_busno << E_ECAM_SIZE_SHIFT);
+> +	writel(ecam_val, (pcie->ecam_base + PCI_PRIMARY_BUS));
+> +
+> +	/* Check if PCIe link is up? */
+> +	pcie->link_up = nwl_pcie_link_up(pcie, PCIE_USER_LINKUP);
+> +	if (!pcie->link_up)
+> +		dev_info(pcie->dev, "Link is DOWN\n");
+> +	else
+> +		dev_info(pcie->dev, "Link is UP\n");
+> +
+> +	/* Disable all misc interrupts */
+> +	nwl_bridge_writel(pcie, (u32)~MSGF_MISC_SR_MASKALL, MSGF_MISC_MASK);
+> +
+> +	/* Clear pending misc interrupts */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_MISC_STATUS) &
+> +			  MSGF_MISC_SR_MASKALL, MSGF_MISC_STATUS);
+> +
+> +	/* Get misc IRQ number */
+> +	pcie->irq_misc = platform_get_irq_byname(pdev, "misc");
+> +	if (pcie->irq_misc < 0) {
+> +		dev_err(&pdev->dev, "failed to get misc IRQ#%d\n",
+
+That's going to be a pretty funky interrupt number.
+
+> +			pcie->irq_misc);
+> +		return pcie->irq_misc;
+
+Don't you need to turn the thing down when you abort the probing?
+
+> +	}
+> +	/* Register misc handler */
+> +	err = devm_request_irq(pcie->dev, pcie->irq_misc,
+> +			       nwl_pcie_misc_handler, IRQF_SHARED,
+> +			       "nwl_pcie:misc", pcie);
+> +	if (err) {
+> +		dev_err(pcie->dev, "fail to register misc IRQ#%d\n",
+> +			pcie->irq_misc);
+> +		return err;
+> +	}
+> +	/* Enable all misc interrupts */
+> +	nwl_bridge_writel(pcie, MSGF_MISC_SR_MASKALL, MSGF_MISC_MASK);
+> +
+> +	/* Disable all legacy interrupts */
+> +	nwl_bridge_writel(pcie, (u32)~MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
+> +
+> +	/* Clear pending legacy interrupts */
+> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_LEG_STATUS) &
+> +			  MSGF_LEG_SR_MASKALL, MSGF_LEG_STATUS);
+> +	/* Get intx IRQ number */
+> +	pcie->irq_intx = platform_get_irq_byname(pdev, "intx");
+> +	if (pcie->irq_intx < 0) {
+> +		dev_err(&pdev->dev, "failed to get intx IRQ#%d\n",
+
+Same here.
+
+> +			pcie->irq_intx);
+> +		return pcie->irq_intx;
+> +	}
+> +
+> +	/* Enable all legacy interrupts */
+> +	nwl_bridge_writel(pcie, MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
 > +
 > +	return 0;
 > +}
-> +
-> +static const struct of_device_id lm3633_led_of_match[] = {
-> +	{ .compatible = "ti,lm3633-leds" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, lm3633_led_of_match);
-> +
-> +static struct platform_driver lm3633_led_driver = {
-> +	.probe = lm3633_led_probe,
-> +	.remove = lm3633_led_remove,
-> +	.driver = {
-> +		.name = "lm3633-leds",
-> +		.of_match_table = lm3633_led_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(lm3633_led_driver);
-> +
-> +MODULE_DESCRIPTION("TI LM3633 LED Driver");
-> +MODULE_AUTHOR("Milo Kim");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:lm3633-leds");
->
 
+Thanks,
 
+	M.
 -- 
-Best Regards,
-Jacek Anaszewski
+Jazz is not dead. It just smells funny...
