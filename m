@@ -1,42 +1,57 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
-Date: Tue, 3 Nov 2015 00:29:07 -0500
-Message-ID: <56384623.80305@codeaurora.org>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
- <3962829.iR3I63FEm8@wuerfel> <5637B7C1.2070200@codeaurora.org>
- <17979873.Bg2pv5SLy6@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <17979873.Bg2pv5SLy6@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Zain Wang <zain.wang@rock-chips.com>
+Subject: [PATCH v1 4/4] crypto: rk_crypto - add DT bindings documentation
+Date: Tue,  3 Nov 2015 13:52:08 +0800
+Message-ID: <1446529928-12521-5-git-send-email-zain.wang@rock-chips.com>
+References: <1446529928-12521-1-git-send-email-zain.wang@rock-chips.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1446529928-12521-1-git-send-email-zain.wang@rock-chips.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Zain Wang <zain.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+Add DT bindings documentation for the rk3288 crypto drivers.
 
+Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+---
+ .../devicetree/bindings/crypto/rockchip-crypto.txt | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
 
-On 11/2/2015 3:55 PM, Arnd Bergmann wrote:
-> Are you using message signaled interrupts then?
-> Typically MSI guarantees
-> ordering against DMA, but level or edge triggered interrupts by definition
-> cannot (at least on PCI, but most other buses are the same way), because
-> the DMA master has no insight into when a DMA is actually complete.
->
-> If you use MSI, please add a comment to the readl_relaxed() that it
-> is safe because of that, otherwise the next person who tries to debug
-> a problem with your driver has to look into this.
-
-No, using regular GIC SPI interrupts at this moment. I know that HW 
-doesn't use any of the typical AHB/AXI ARM buses.
-
-I'm familiar with how PCI endpoints works. While the first read in a 
-typical PCI endpoint ISR flushes all outstanding requests traditionally 
-to the destination, this concept does not apply here for this HW.
-
+diff --git a/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+new file mode 100644
+index 0000000..d27e203
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+@@ -0,0 +1,29 @@
++Rockchip Electronics And Security Accelerator
++
++Required properties:
++- compatible: Should be "rockchip,rk3288-crypto"
++- reg: base physical address of the engine and length of memory mapped
++       region
++- interrupts: interrupt number
++- clocks: reference to the clocks about crypto
++- clock-names: "aclk" used to clock data
++	       "hclk" used to clock data
++	       "srst" used to clock crypto accelerator
++	       "apb_pclk" used to clock dma
++
++Examples:
++
++	crypto: cypto-controller@ff8a0000 {
++		compatible = "rockchip,rk3288-crypto";
++		reg = <0xff8a0000 0x4000>;
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_CRYPTO>,
++			 <&cru HCLK_CRYPTO>,
++			 <&cru SCLK_CRYPTO>,
++			 <&cru ACLK_DMAC1>;
++		clock-names = "aclk",
++			      "hclk",
++			      "sclk",
++			      "apb_pclk";
++		status = "okay";
++	};
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+1.9.1
