@@ -1,69 +1,48 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 12/13] drm/panel: simple: Add simple panel device tree
- binding
-Date: Tue, 3 Nov 2015 08:28:55 +0800
-Message-ID: <5637FFC7.6080503@rock-chips.com>
-References: <1446296170-3702-1-git-send-email-zyw@rock-chips.com>
- <1446296170-3702-13-git-send-email-zyw@rock-chips.com>
- <CAL_Jsq+76CMdtu8MZZhb_Bbg+J=hjJ2as-NRnjS4w_3y0YXvLA@mail.gmail.com>
+From: Zain <zain.wang@rock-chips.com>
+Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings
+ documentation
+Date: Tue, 3 Nov 2015 08:29:42 +0800
+Message-ID: <5637FFF6.20202@rock-chips.com>
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+ <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
+ <20151030140334.GB31073@leverpostej> <56372942.2080900@rock-chips.com>
+ <CAL_JsqLj6m2Df+LW4F++hEgxYkyqPDbeMVv8QrF7-eVCZJfj6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+76CMdtu8MZZhb_Bbg+J=hjJ2as-NRnjS4w_3y0YXvLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLj6m2Df+LW4F++hEgxYkyqPDbeMVv8QrF7-eVCZJfj6w@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, zhengsq@rock-chips.com, hl@rock-chips.com, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, Michael Turquette <mturquette@baylibre.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+Hi Mark,
 
-
-On 11/02/2015 11:06 PM, Rob Herring wrote:
-> On Sat, Oct 31, 2015 at 7:56 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+On 2015=E5=B9=B411=E6=9C=8802=E6=97=A5 23:39, Rob Herring wrote:
+> On Mon, Nov 2, 2015 at 3:13 AM, Zain <zain.wang@rock-chips.com> wrote=
+:
+>> Hi Mark
+>>
+>> On 2015=E5=B9=B410=E6=9C=8830=E6=97=A5 22:03, Mark Rutland wrote:
+>>> On Fri, Oct 30, 2015 at 04:22:49PM +0800, Zain Wang wrote:
+>>>> Add DT bindings documentation for the rk3288 crypto drivers.
+>>>>
+>>>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+>>>> ---
+>>>> +Required properties:
+>>>> +- compatible: should be "rockchip,crypto"
+>>> Choose a more specific name. Rockchip could easily come up with ano=
+ther
+>>> crypto accelerator later.
+>> ok! done.
+>> rk3288_crypto may be better than crypto.
+> Yes, but use '-' not '_'.
+ok! done!
 >
-> Your subject should be more specific with the panel name.
-I'll write more specific in subject next version.
->
->> This binding specifies a set of common properties for display panels. It
->> can be used as a basis by bindings for specific panels.
->> Bindings for three specific panels are provided to show how the
->> simple panel binding can be used.
->>
->> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> ---
->>
->> Changes in v2:
->> As Thierry.Reding comment, add a documentation for this panel.
->>
->>   Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
-> Please move to bindings/display/panel/
-Okay.
->
->> diff --git a/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt b/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
->> new file mode 100644
->> index 0000000..50be5e2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
->> @@ -0,0 +1,7 @@
->> +Boe Corporation 8.0" WUXGA TFT LCD panel
->> +
->> +Required properties:
->> +- compatible: should be "boe,tv080wum-nl0"
->> +
->> +This binding is compatible with the simple-panel binding, which is specified
->> +in simple-panel.txt in this directory.
->> --
->> 2.6.2
->>
+> Rob
 >
 >
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+Thanks
+Zain
