@@ -1,166 +1,179 @@
-Return-Path: <cedric.madianga@gmail.com>
+Return-Path: <zain.wang@rock-chips.com>
+Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings
+ documentation
+References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
+ <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
+ <1830252.moyLTPMs2Y@phil>
+From: Zain <zain.wang@rock-chips.com>
+Message-ID: <56381C98.5050807@rock-chips.com>
+Date: Tue, 3 Nov 2015 10:31:52 +0800
 MIME-Version: 1.0
-In-Reply-To: <20151116032758.GS25173@localhost>
-References: <1445003956-9150-1-git-send-email-cedric.madianga@gmail.com>
-	<1445003956-9150-4-git-send-email-cedric.madianga@gmail.com>
-	<20151116032758.GS25173@localhost>
-Date: Mon, 16 Nov 2015 13:16:56 +0100
-Message-ID: <CAOAejn01G+HKOfvxfGNzimqeOSQXidD9yY=eShkeW_fFDAC4Zw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] ARM: dts: Add STM32 DMA support for STM32F429 MCU
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Content-Type: multipart/alternative; boundary=001a1134ae6ca54b4e0524a76235
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: linux@arm.linux.org.uk, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pawel.moll@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1830252.moyLTPMs2Y@phil>
+Content-Type: multipart/alternative;
+ boundary="------------000909070601050307080901"
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-ID: <devicetree@vger.kernel.org>
 
---001a1134ae6ca54b4e0524a76235
+This is a multi-part message in MIME format.
+--------------000909070601050307080901
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Vinod,
+Hi Heiko,
 
-Le 16 nov. 2015 04:24, "Vinod Koul" <vinod.koul@intel.com> a =C3=A9crit :
+On 2015年10月30日 22:08, Heiko Stuebner wrote:
+> Hi,
 >
-> On Fri, Oct 16, 2015 at 03:59:15PM +0200, M'boumba Cedric Madianga wrote:
-> > This patch adds STM32 DMA bindings for STM32F429.
+> Am Freitag, 30. Oktober 2015, 16:22:49 schrieb Zain Wang:
+>> Add DT bindings documentation for the rk3288 crypto drivers.
+>>
+>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+>> ---
+>>  .../devicetree/bindings/crypto/rk-crypto.txt       | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+>> new file mode 100644
+>> index 0000000..1e50768
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+>> @@ -0,0 +1,31 @@
+>> +Rockchip Electronics And Security Accelerator
+>> +
+>> +Required properties:
+>> +- compatible: should be "rockchip,crypto"
+>> +- reg: base physical address of the engine and length of memory mapped
+>> +       region.
+>> +- interrupts: interrupt number
+>> +- clocks: clock specifiers
+>> +- clock-names: "aclk_crypto" used to clock data
+>> +			   "hclk_crypto" used to clock data
+>> +			   "srst_crypto" used to clock crypto accelerator
+>> +			   "apb_pclk"    used to clock dma
+> The TRM area of the crypto IP block does not specifiy any special naming for
+> its clocks, but as a general rule clock names are in the scope of the ip block
+> so there is no need to add _crypto to every one of them :-) .
 >
-> I need an ACK from ARM folks on this one, and I suspect this might need
-> rebase on 4.4-rc1
-
-Maxime will take this patch and the other one about defconfig as he is the
-maintainer of STM32 machine.
-
-I think you don't need to take it into account..
-
-BR,
-Cedric
+> I'd suggest clock-names as "aclk", "hclk", "crypto" for the devicetree, with
+> crypto being the clock that actually drives the operation.
 >
-> >
-> > Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/stm32f429.dtsi | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/stm32f429.dtsi
-b/arch/arm/boot/dts/stm32f429.dtsi
-> > index d78a481..037eb29 100644
-> > --- a/arch/arm/boot/dts/stm32f429.dtsi
-> > +++ b/arch/arm/boot/dts/stm32f429.dtsi
-> > @@ -174,6 +174,37 @@
-> >                       reg =3D <0x40023800 0x400>;
-> >                       clocks =3D <&clk_hse>;
-> >               };
-> > +
-> > +             dma1: dma-controller@40026000 {
-> > +                     compatible =3D "st,stm32-dma";
-> > +                     reg =3D <0x40026000 0x400>;
-> > +                     interrupts =3D <11>,
-> > +                                  <12>,
-> > +                                  <13>,
-> > +                                  <14>,
-> > +                                  <15>,
-> > +                                  <16>,
-> > +                                  <17>,
-> > +                                  <47>;
-> > +                     clocks =3D <&rcc 0 21>;
-> > +                     #dma-cells =3D <4>;
-> > +             };
-> > +
-> > +             dma2: dma-controller@40026400 {
-> > +                     compatible =3D "st,stm32-dma";
-> > +                     reg =3D <0x40026400 0x400>;
-> > +                     interrupts =3D <56>,
-> > +                                  <57>,
-> > +                                  <58>,
-> > +                                  <59>,
-> > +                                  <60>,
-> > +                                  <68>,
-> > +                                  <69>,
-> > +                                  <70>;
-> > +                     clocks =3D <&rcc 0 22>;
-> > +                     #dma-cells =3D <4>;
-> > +                     st,mem2mem;
-> > +             };
-> >       };
-> >  };
-> >
-> > --
-> > 1.9.1
-> >
+ok! done!
+> Secondly, why do you need to drive the clock of the peripheral dma-
+> controller itself (your apb_pclk)? The documentation in the TRM is
+> quite sparse, so this might very well be justified, but it looks odd that
+> you need to control the dmac1-clock when it looks like the crypto block
+> is doing its own dma and neither system-dma has any crypto-related
+> channel.
 >
-> --
-> ~Vinod
+> So I'd really like some explanation for this :-)
+Because dmac1_clk(apb_pclk) is connected to NOC. NOC is the bus
+inter-connect. Gating dmac1_clock will block this part of NOC transfer.
+And crypto master is using this part of NOC transfer to access DDR/SRAM,
+it would be wrong result without dmac1_clk. That's why dmac1_clk should
+be refered here.
+>
+>
+> Thanks
+> Heiko
+>
+>
+>
+Thanks
+Zain
 
---001a1134ae6ca54b4e0524a76235
+--------------000909070601050307080901
 Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-PHAgZGlyPSJsdHIiPkhpIFZpbm9kLDwvcD4NCjxwIGRpcj0ibHRyIj5MZcKgMTYgbm92LiAyMDE1
-IDA0OjI0LCAmcXVvdDtWaW5vZCBLb3VsJnF1b3Q7ICZsdDs8YSBocmVmPSJtYWlsdG86dmlub2Qu
-a291bEBpbnRlbC5jb20iPnZpbm9kLmtvdWxAaW50ZWwuY29tPC9hPiZndDsgYSDDqWNyaXTCoDo8
-YnI+DQomZ3Q7PGJyPg0KJmd0OyBPbiBGcmksIE9jdCAxNiwgMjAxNSBhdCAwMzo1OToxNVBNICsw
-MjAwLCBNJiMzOTtib3VtYmEgQ2VkcmljIE1hZGlhbmdhIHdyb3RlOjxicj4NCiZndDsgJmd0OyBU
-aGlzIHBhdGNoIGFkZHMgU1RNMzIgRE1BIGJpbmRpbmdzIGZvciBTVE0zMkY0MjkuPGJyPg0KJmd0
-Ozxicj4NCiZndDsgSSBuZWVkIGFuIEFDSyBmcm9tIEFSTSBmb2xrcyBvbiB0aGlzIG9uZSwgYW5k
-IEkgc3VzcGVjdCB0aGlzIG1pZ2h0IG5lZWQ8YnI+DQomZ3Q7IHJlYmFzZSBvbiA0LjQtcmMxPC9w
-Pg0KPHAgZGlyPSJsdHIiPk1heGltZSB3aWxsIHRha2UgdGhpcyBwYXRjaCBhbmQgdGhlIG90aGVy
-IG9uZSBhYm91dCBkZWZjb25maWcgYXMgaGUgaXMgdGhlIG1haW50YWluZXIgb2YgU1RNMzIgbWFj
-aGluZS48L3A+DQo8cCBkaXI9Imx0ciI+SSB0aGluayB5b3UgZG9uJiMzOTt0IG5lZWQgdG8gdGFr
-ZSBpdCBpbnRvIGFjY291bnQuLiA8L3A+DQo8cCBkaXI9Imx0ciI+QlIsPGJyPg0KQ2VkcmljPGJy
-Pg0KJmd0Ozxicj4NCiZndDsgJmd0Ozxicj4NCiZndDsgJmd0OyBTaWduZWQtb2ZmLWJ5OiBNJiMz
-OTtib3VtYmEgQ2VkcmljIE1hZGlhbmdhICZsdDs8YSBocmVmPSJtYWlsdG86Y2VkcmljLm1hZGlh
-bmdhQGdtYWlsLmNvbSI+Y2VkcmljLm1hZGlhbmdhQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyPg0KJmd0
-OyAmZ3Q7IC0tLTxicj4NCiZndDsgJmd0O8KgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5k
-dHNpIHwgMzEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKzxicj4NCiZndDsgJmd0O8Kg
-IDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspPGJyPg0KJmd0OyAmZ3Q7PGJyPg0KJmd0
-OyAmZ3Q7IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5kdHNpPGJyPg0KJmd0OyAmZ3Q7IGluZGV4IGQ3OGE0
-ODEuLjAzN2ViMjkgMTAwNjQ0PGJyPg0KJmd0OyAmZ3Q7IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N0bTMyZjQyOS5kdHNpPGJyPg0KJmd0OyAmZ3Q7ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
-bTMyZjQyOS5kdHNpPGJyPg0KJmd0OyAmZ3Q7IEBAIC0xNzQsNiArMTc0LDM3IEBAPGJyPg0KJmd0
-OyAmZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHg0MDAy
-MzgwMCAweDQwMCZndDs7PGJyPg0KJmd0OyAmZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqBjbG9ja3MgPSAmbHQ7JmFtcDtjbGtfaHNlJmd0Ozs8YnI+DQomZ3Q7ICZndDvCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoH07PGJyPg0KJmd0OyAmZ3Q7ICs8YnI+DQomZ3Q7ICZndDsgK8Kg
-IMKgIMKgIMKgIMKgIMKgIMKgZG1hMTogZG1hLWNvbnRyb2xsZXJANDAwMjYwMDAgezxicj4NCiZn
-dDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb21wYXRpYmxlID0gJnF1
-b3Q7c3Qsc3RtMzItZG1hJnF1b3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHg0MDAyNjAwMCAweDQwMCZndDs7PGJyPg0KJmd0OyAm
-Z3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGludGVycnVwdHMgPSAmbHQ7MTEm
-Z3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgJmx0OzEyJmd0Oyw8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICZsdDsxMyZndDssPGJyPg0KJmd0
-OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCAmbHQ7MTQmZ3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0OzE1Jmd0Oyw8YnI+DQomZ3Q7ICZndDsgK8KgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICZsdDsxNiZndDss
-PGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCAmbHQ7MTcmZ3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0OzQ3Jmd0Ozs8YnI+DQomZ3Q7ICZn
-dDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY2xvY2tzID0gJmx0OyZhbXA7cmNj
-IDAgMjEmZ3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAjZG1hLWNlbGxzID0gJmx0OzQmZ3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAg
-wqAgwqB9Ozxicj4NCiZndDsgJmd0OyArPGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDC
-oCDCoGRtYTI6IGRtYS1jb250cm9sbGVyQDQwMDI2NDAwIHs8YnI+DQomZ3Q7ICZndDsgK8KgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY29tcGF0aWJsZSA9ICZxdW90O3N0LHN0bTMyLWRt
-YSZxdW90Ozs8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-cmVnID0gJmx0OzB4NDAwMjY0MDAgMHg0MDAmZ3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHRzID0gJmx0OzU2Jmd0Oyw8YnI+DQomZ3Q7
-ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-ICZsdDs1NyZndDssPGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAmbHQ7NTgmZ3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0OzU5Jmd0Oyw8
-YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgICZsdDs2MCZndDssPGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAmbHQ7NjgmZ3Q7LDxicj4NCiZndDsgJmd0
-OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0
-OzY5Jmd0Oyw8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgICZsdDs3MCZndDs7PGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNsb2NrcyA9ICZsdDsmYW1wO3JjYyAwIDIyJmd0Ozs8YnI+
-DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgI2RtYS1jZWxscyA9
-ICZsdDs0Jmd0Ozs8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgc3QsbWVtMm1lbTs8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+
-DQomZ3Q7ICZndDvCoCDCoCDCoCDCoH07PGJyPg0KJmd0OyAmZ3Q7wqAgfTs8YnI+DQomZ3Q7ICZn
-dDs8YnI+DQomZ3Q7ICZndDsgLS08YnI+DQomZ3Q7ICZndDsgMS45LjE8YnI+DQomZ3Q7ICZndDs8
-YnI+DQomZ3Q7PGJyPg0KJmd0OyAtLTxicj4NCiZndDsgflZpbm9kPGJyPg0KPC9wPg0K
---001a1134ae6ca54b4e0524a76235--
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    Hi Heiko,<br>
+    <br>
+    <div class="moz-cite-prefix">On 2015年10月30日 22:08, Heiko Stuebner
+      wrote:<br>
+    </div>
+    <blockquote cite="mid:1830252.moyLTPMs2Y@phil" type="cite">
+      <pre wrap="">Hi,
+
+Am Freitag, 30. Oktober 2015, 16:22:49 schrieb Zain Wang:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">Add DT bindings documentation for the rk3288 crypto drivers.
+
+Signed-off-by: Zain Wang <a class="moz-txt-link-rfc2396E" href="mailto:zain.wang@rock-chips.com">&lt;zain.wang@rock-chips.com&gt;</a>
+---
+ .../devicetree/bindings/crypto/rk-crypto.txt       | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
+
+diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+new file mode 100644
+index 0000000..1e50768
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
+@@ -0,0 +1,31 @@
++Rockchip Electronics And Security Accelerator
++
++Required properties:
++- compatible: should be "rockchip,crypto"
++- reg: base physical address of the engine and length of memory mapped
++       region.
++- interrupts: interrupt number
++- clocks: clock specifiers
++- clock-names: "aclk_crypto" used to clock data
++			   "hclk_crypto" used to clock data
++			   "srst_crypto" used to clock crypto accelerator
++			   "apb_pclk"    used to clock dma
+</pre>
+      </blockquote>
+      <pre wrap="">
+The TRM area of the crypto IP block does not specifiy any special naming for
+its clocks, but as a general rule clock names are in the scope of the ip block
+so there is no need to add _crypto to every one of them :-) .
+
+I'd suggest clock-names as "aclk", "hclk", "crypto" for the devicetree, with
+crypto being the clock that actually drives the operation.
+
+</pre>
+    </blockquote>
+    ok! done!<br>
+    <blockquote cite="mid:1830252.moyLTPMs2Y@phil" type="cite">
+      <pre wrap="">
+Secondly, why do you need to drive the clock of the peripheral dma-
+controller itself (your apb_pclk)? The documentation in the TRM is
+quite sparse, so this might very well be justified, but it looks odd that
+you need to control the dmac1-clock when it looks like the crypto block
+is doing its own dma and neither system-dma has any crypto-related
+channel.
+
+So I'd really like some explanation for this :-)</pre>
+    </blockquote>
+    Because dmac1_clk(apb_pclk) is connected to NOC. NOC is the bus
+    inter-connect. Gating dmac1_clock will block this part of NOC
+    transfer. And crypto master is using this part of NOC transfer to
+    access DDR/SRAM, it would be wrong result without dmac1_clk. That's
+    why dmac1_clk should be refered here.<span style="font-size: 10.5pt;
+      line-height: 1.5; background-color: window;"><br>
+    </span>
+    <blockquote cite="mid:1830252.moyLTPMs2Y@phil" type="cite">
+      <pre wrap="">
+
+
+Thanks
+Heiko
+
+
+
+</pre>
+    </blockquote>
+    Thanks<br>
+    Zain<br>
+  </body>
+</html>
+
+--------------000909070601050307080901--
