@@ -1,35 +1,49 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Tue, 3 Nov 2015 08:26:12 -0600
-Message-ID: <5638C404.1020805@codeaurora.org>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
- <9016417.z9Hz6MbmvQ@wuerfel> <56383BDD.9090903@codeaurora.org>
- <4010471.Nu3L6CWPWG@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: arizona: Add DT binding for irq-gpios property
+Date: Tue, 3 Nov 2015 15:04:50 +0000
+Message-ID: <20151103150450.GP20228@sirena.org.uk>
+References: <1446559806-3315-1-git-send-email-sjan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ssZxAlvqSOvXAj81"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4010471.Nu3L6CWPWG@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <1446559806-3315-1-git-send-email-sjan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastien Jan <sjan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> If you change the order in the Makefile, the management driver should
-> always get probed first if both are built-in. When the driver is a
-> loadable module, the ordering should work because of the way that the
-> modules are loaded.
 
-This sounds like something that should be commented in the Makefile. 
-Even if you use -EPROBE_DEFER and you re-order the Makefile only so that 
-it's less likely to be a problem, that's still worthy of a comment.
+--ssZxAlvqSOvXAj81
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+On Tue, Nov 03, 2015 at 03:10:06PM +0100, Sebastien Jan wrote:
+
+> +  - irq-gpios : GPIO specifier for the GPIO connected to /IRQ
+
+The platform data this is providing is essentially a workaround for the
+lack of an irq_to_gpio() function and the use of it is a workaround for
+the lack of level triggered IRQ emulation in genirq...  do we really
+want this in the ABI (especially as a generic thing)?
+
+--ssZxAlvqSOvXAj81
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWOM0RAAoJECTWi3JdVIfQ+AQH/09S0d5+AzdVFTjFytEc5MGk
+th1v5OlWKQ612HOZK1Qux2ib/FNcSQsNGVDH+/zOs9Q0/va+brCHd57l+XO6W2gi
+0/6j+a+OhsHMqTQ+yjGHTMDEssjp3VQxXXzlG9Xrf4eYlkg8dUd6huYBC6om0NWc
+Ue+1EY/zinmvVpLkOGUgnFWCFan1o0zkgm23cKVuijAyRWXAOnETlDMNMHL0Uyqs
+uNm77+Qo41GRW1w6YoEwc5AZAv2uemEJCM+++ZViJ5mQx2bfmOB6nju+SnpzMsm4
+fNO+DvPh2ZI9VGQ5NblFaskYQDim/hy3ZtrVs8+JPUjT3IQZ4qHzDvPf1aoKqh8=
+=/f+2
+-----END PGP SIGNATURE-----
+
+--ssZxAlvqSOvXAj81--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
