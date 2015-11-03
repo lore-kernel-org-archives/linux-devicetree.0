@@ -1,78 +1,193 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] regulator: tps65086: Add regulator driver for the
- TPS65086 PMIC
-Date: Tue, 3 Nov 2015 16:31:17 +0000
-Message-ID: <20151103163117.GQ20228@sirena.org.uk>
-References: <1446244904-29315-1-git-send-email-afd@ti.com>
- <1446244904-29315-6-git-send-email-afd@ti.com>
- <20151101023735.GE28319@sirena.org.uk>
- <5638D97A.8040306@ti.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v12 2/6] fpga: add bindings document for simple fpga
+ bus
+Date: Tue, 3 Nov 2015 10:28:51 -0600
+Message-ID: <alpine.DEB.2.02.1511031009590.7740@linuxheads99>
+References: <1445983755-24007-1-git-send-email-atull@opensource.altera.com> <1445983755-24007-3-git-send-email-atull@opensource.altera.com> <CAL_JsqK2twfWzCKucuSLrsD2rL3=ReUXt3uPdFcsf8B0Tg42Lg@mail.gmail.com> <alpine.DEB.2.02.1510291026020.17743@linuxheads99>
+ <CAL_JsqJURc=pQ-_ix_A79T9wU22pm-OQddP_BBkU_JsFK8iuCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nWEzmRaGLXxZdI3i"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5638D97A.8040306-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJURc=pQ-_ix_A79T9wU22pm-OQddP_BBkU_JsFK8iuCg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 30 Oct 2015, Rob Herring wrote:
 
---nWEzmRaGLXxZdI3i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Thu, Oct 29, 2015 at 11:02 AM, atull <atull@opensource.altera.com> wrote:
+> > On Wed, 28 Oct 2015, Rob Herring wrote:
+> >
+> >> On Tue, Oct 27, 2015 at 5:09 PM,  <atull@opensource.altera.com> wrote:
+> >> > From: Alan Tull <atull@opensource.altera.com>
+> >> >
+> >> > New bindings document for simple fpga bus.
+> >> >
+> >> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> >> > ---
+> >> > v9:  initial version added to this patchset
+> >> > v10: s/fpga/FPGA/g
+> >> >      replace DT overlay example with slightly more complicated example
+> >> >      move to staging/simple-fpga-bus
+> >> > v11: No change in this patch for v11 of the patch set
+> >> > v12: Moved out of staging.
+> >> >      Changed to use FPGA bridges framework instead of resets
+> >> >      for bridges.
+> >> > ---
+> >> >  .../devicetree/bindings/fpga/simple-fpga-bus.txt   |   81 ++++++++++++++++++++
+> >> >  1 file changed, 81 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> >> > new file mode 100644
+> >> > index 0000000..2e742f7
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+> >> > @@ -0,0 +1,81 @@
+> >> > +Simple FPGA Bus
+> >> > +===============
+> >> > +
+> >> > +A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
+> >> > +before populating the devices below its node.  All this happens when a device
+> >> > +tree overlay is added to the live tree.  This document describes that device
+> >> > +tree overlay.
+> >> > +
+> >> > +Required properties:
+> >> > +- compatible : should contain "simple-fpga-bus"
+> >> > +- #address-cells, #size-cells, ranges: must be present to handle address space
+> >> > +  mapping for children.
+> >> > +
+> >> > +Optional properties:
+> >> > +- fpga-mgr : should contain a phandle to a FPGA manager.
+> >> > +- fpga-firmware : should contain the name of a FPGA image file located on the
+> >> > +  firmware search path.
+> >>
+> >> Putting firmware filename in DT has come up in other cases recently[1]
+> >> and we concluded it should not be in the DT. Maybe the conclusion
+> >> would be different here, and if so we should have a common property
+> >> here.
+> >
+> > Interesting discussion.
+> >
+> > One FPGA image will almost always have multiple hardware devices in it.
+> > The device blocks will be reused in various combinations in different
+> > FPGA images.  So hardwiring the image name in some specific driver won't
+> > be possible.  Also many of the devices that could appear on a FPGA also
+> > could appear in normal hardware.  Same driver for both cases, just
+> > different address.
+> >
+> > I won't have control of the name of the firmware file.  It will be something
+> > that makes sense to a FPGA hardware guy so translating the node name to an
+> > image name would be brittle.
+> >
+> > Renaming this as a generic property "firmware-name" or "firmware" would be
+> > an improvement on what I proposed.
+> >
+> > If it is acceptible to have this in the DT, it means FPGA hardware development
+> > workflow does not require a kernel rebuild.  The DT can collect together the
+> > image name, the bridges to the FPGA (or to that area of the FPGA), and a list
+> > of the devices/drivers in that image.
+> 
+> You can deal with this purely in userspace.
 
-On Tue, Nov 03, 2015 at 09:57:46AM -0600, Andrew F. Davis wrote:
-> On 10/31/2015 09:37 PM, Mark Brown wrote:
-> >On Fri, Oct 30, 2015 at 05:41:43PM -0500, Andrew F. Davis wrote:
+We have.  It's ugly.  That means we have to also deal with bridges from
+userspace since they have to be disable during FPGA programming.  And the
+drivers have to be modules that we modprobe after FPGA programming.
 
-> >>+	struct regulator_desc desc;
-> >>+	unsigned int decay_reg;
-> >>+	unsigned int decay_mask;
+> The firmware userspace
+> helper can load any file you like. If the name is frequently changing,
+> then I agree it should not be in the kernel. But neither should it be
+> in the base DT. However, this would be in the overlay DT? In that use,
+> I think having the firmware name in DT is fine. The other option is
+> just put the firmware itself into the DT overlay (u-boot FIT images
+> are actually DTs with binary blobs). Either way please just create and
+> use a generic binding here.
 
-> >The decay_reg and decay_mask fields appear to be entirely write only,
-> >why are they present?
+Planning to use overlays.  I'll use "firmware-name."
 
-> Not sure what you mean, they are written to differently for each regulator,
-> and read when setting the decay mode in _probe.
+> 
+> >> > +- partial-reconfig : boolean property should be defined if partial
+> >> > +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> >> > +  is done.
+> >> > +- fpga-bridges : should contain a list of bridges that the bus will disable
+> >> > +  before   programming the FPGA and then enable after the FPGA has been
+> >> > +
+> >> > +Example:
+> >> > +
+> >> > +/dts-v1/;
+> >> > +/plugin/;
+> >> > +/ {
+> >> > +       fragment@0 {
+> >> > +               target-path="/soc";
+> >> > +               __overlay__ {
+> >> > +                       #address-cells = <1>;
+> >> > +                       #size-cells = <1>;
+> >> > +
+> >> > +                       bridge@0xff200000 {
+> >> > +                               compatible = "simple-fpga-bus";
+> >> > +                               reg = <0xc0000000 0x20000000>,
+> >> > +                                     <0xff200000 0x00200000>;
+> >>
+> >> You have registers for the bus, so therefore it is not simple. I think
+> >> the bus or bridge needs a specific compatible
+> >>
+> >
+> > The reg here is cruft from device tree generation.  I don't use it and will
+> > clean it out.  After I've done that, does that become simple again?
+> >
+> > What I need in a bus is:
+> >  - Handles 'ranges'
+> >  - Controls enabling/disabling bridges and programs the FPGA
+> 
+> Where are these controls?
 
-Ugh, that's a bit hidden (mostly due to not using the callback).
+The Simple FPGA Bus calls FPGA Bridge Framework functions to
+enable/disable the bridges.
 
-> >>+	ret = of_regulator_match(&pdev->dev, pdev->dev.of_node,
-> >>+				 tps65086_matches,
-> >>+				 ARRAY_SIZE(tps65086_matches));
-> >>+	if (ret < 0) {
-> >>+		dev_err(tps->dev, "Error parsing regulator init data\n");
-> >>+		return ret;
-> >>+	}
+> 
+> >  - Populates the child devices (and there will probably be many)
+> 
+> simple-bus handles at least the 1st and 3rd item. I suppose you don't
+> want the bus to probe before the bridge driver. If you want the bridge
+> driver to control that, you don't actually need a bus name.
+> of_platform_populate() will create all child devices. It is only if
+> you want to create the grandchildren that you need a bus match on the
+> child nodes.
+> 
+> 
+> > This raises another issue: each area of the FPGA is likely to have multiple
+> > bridges. That's why I had a list of phandles to bridges rather than
+> > different bus for each type of bridge.  Is that acceptible-ish?
+> 
+> Hard to say. A bridge tends to mean a parent bus to child bus
+> translator and the DT hierarchy generally follows the bus hierarchy,
+> so really it is better if DT follows the physical bus structure. Of
+> course, we really only do that with outbound bus and not the inbound
+> side.
+> 
+> I also worry that all this looks like it may be somewhat Altera specific.
 
-> >Please match regulators using the fields in the regulator_desc rather
-> >than open coding.
+I don't think it is Altera specific.  If you want to reprogram an
+FPGA with devices that need drivers, you will likely need to:
+ 1. Disable some bridges to prevent spurious stuff on the bus
+ 2. Load the FPGA
+ 3. Enable the bridges
+ 4. Probe some drivers
 
-> I need to match to get the driver specific information for each regulator,
-> if I let regulator_register do it I never get a chance to process the match,
-> unless there is a callback or something I'm missing.
+In the case where the whole FPGA gets rewritten, it is possible to
+combine the bridge control with the FPGA manager (then it *is* manufacturer
+specific).  In the case where part of the FPGA gets rewritten (partial
+reconfiguration), it is likely that some sort of bridge will exist on
+the FPGA to protect the bus.  And there will be that kind of bridge for
+each different area of the FPGA that needs to get rewritten.
 
-There's a callback you are missing, of_parse_cb().
+The device tree overlay seems a very natural way of keeping all that
+information together in one place.  Otherwise we have to invent
+something in userspace.
 
---nWEzmRaGLXxZdI3i
-Content-Type: application/pgp-signature; name="signature.asc"
+Alan
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWOOFUAAoJECTWi3JdVIfQL+gH/1gamFD4yXMhl9M/GVBcJSXt
-Sg0QAwkqCwb2LwCSrHz/0gc3w9qbOlcLP91npZh9kVk4b+LpitmjiDq2osX/SEOf
-EBAmD19qb+M/Zl2aKcPPap5/CB7Xarvxz0zKCezYVEPv6l6xTHl9IUbyOkuML5kK
-yle1bqWL07w/sbIZHFfYNG11AZgp+qbCq1iwKPMPVlOx9Mk84AyE9i/3oPxJjYwG
-PQKnew7PoWbF6p272x9xY+1qHsNRcpOKLYekpidE0mFTY7NKgOI9mDlm2qZfAtus
-0grs4jiwRG6aL16xZ6lDgiYC4RnYtQdVVoAd21jXxnrWzMdRyY/ZDzCyEbLFyPY=
-=2JKT
------END PGP SIGNATURE-----
-
---nWEzmRaGLXxZdI3i--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Rob
+> 
