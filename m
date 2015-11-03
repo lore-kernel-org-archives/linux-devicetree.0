@@ -1,156 +1,149 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management
  driver
-Date: Mon, 2 Nov 2015 23:45:17 -0500
-Message-ID: <56383BDD.9090903@codeaurora.org>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
- <4548985.gMZJhM3R1p@wuerfel> <56346502.5070600@codeaurora.org>
- <9016417.z9Hz6MbmvQ@wuerfel>
+Date: Tue, 3 Nov 2015 00:18:20 -0500
+Message-ID: <5638439C.1050301@codeaurora.org>
+References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
+ <1446444460-21600-2-git-send-email-okaya@codeaurora.org>
+ <CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9016417.z9Hz6MbmvQ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: dmaengine@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/2/2015 4:30 PM, Arnd Bergmann wrote:
-> On Saturday 31 October 2015 02:51:46 Sinan Kaya wrote:
->> On 10/30/2015 5:34 AM, Arnd Bergmann wrote:
->>> On Thursday 29 October 2015 23:08:12 Sinan Kaya wrote:
->>>> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
->>>> +
->>>> +static int qcom_hidma_mgmt_err_open(struct inode *inode, struct file *file)
->>>> +{
->>>> +	return single_open(file, qcom_hidma_mgmt_err, inode->i_private);
->>>> +}
->>>> +
->>>> +static const struct file_operations qcom_hidma_mgmt_err_fops = {
->>>> +	.open = qcom_hidma_mgmt_err_open,
->>>> +	.read = seq_read,
->>>> +	.llseek = seq_lseek,
->>>> +	.release = single_release,
->>>> +};
->>>> +
->>>> +static ssize_t qcom_hidma_mgmt_mhiderr_clr(struct file *file,
->>>> +	const char __user *user_buf, size_t count, loff_t *ppos)
->>>> +{
->>>> +	struct qcom_hidma_mgmt_dev *mgmtdev = file->f_inode->i_private;
->>>> +
->>>> +	HIDMA_RUNTIME_GET(mgmtdev);
->>>> +	writel(1, mgmtdev->dev_virtaddr + MHID_BUS_ERR_CLR_OFFSET);
->>>> +	HIDMA_RUNTIME_SET(mgmtdev);
->>>> +	return count;
->>>> +}
->>>> +
->>>> +static const struct file_operations qcom_hidma_mgmt_mhiderr_clrfops = {
->>>> +	.write = qcom_hidma_mgmt_mhiderr_clr,
->>>> +};
->>>
->>> Is this really just a debugging interface? If anyone would do this
->>> for normal operation, it needs to be a proper API.
->>>
->> This will be used by the system admin to monitor/reset the execution
->> state of the DMA channels. This will be the management interface.
->> Debugfs is probably not the right choice. I originally had sysfs but
->> than had some doubts. I'm open to suggestions.
->
-> User interface design is unfortunately always hard, and I don't have
-> an obvious answer for you.
->
-> Using debugfs by definition means that you don't expect users to
-> rely on ABI stability, so they should not write any automated scripts
-> against the contents of the files.
->
-> With sysfs, the opposite is true: you need to maintain compatibility
-> for as long as anyone might rely on the current interface, and it
-> needs to be reviewed properly and documented in Documentation/ABI/.
->
-> Other options are to use ioctl(), netlink or your own virtual file
-> system, but each of them has the same ABI requirements as sysfs.
->
-> Regardless of what you pick, you also need to consider how other drivers
-> would use the same interface: If someone else has hardware that does
-> the same thing, we want to be able to use the same tools to access
-> it, so you should avoid having any hardware specific data in it and
-> keep it as generic and extensible as possible. In this particular
-> case, that probably means you should implement the user interfaces in
-> the dmaengine core driver, and let the specific DMA driver provide
-> callback function pointers along with the normal ones to fill that
-> data.
->
-Thanks, I'll think about this. I'm inclined towards sysfs.
-
->>>> +	dev_info(&pdev->dev,
->>>> +		"HI-DMA engine management driver registration complete\n");
->>>> +	platform_set_drvdata(pdev, mgmtdev);
->>>> +	HIDMA_RUNTIME_SET(mgmtdev);
->>>> +	return 0;
->>>> +out:
->>>> +	pm_runtime_disable(&pdev->dev);
->>>> +	pm_runtime_put_sync_suspend(&pdev->dev);
->>>> +	return rc;
->>>> +}
->>>
->>> The rest of the probe function does not register any user interface aside from
->>> the debugging stuff. Can you explain in the changelog how you expect the
->>> driver to be used in a real system? Is there another driver coming?
+On 11/2/2015 10:57 AM, Rob Herring wrote:
+> On Mon, Nov 2, 2015 at 12:07 AM, Sinan Kaya <okaya@codeaurora.org> wrote:
+>> The Qualcomm Technologies HIDMA device has been designed
+>> to support virtualization technology. The driver has been
+>> divided into two to follow the hardware design. The management
+>> driver is executed in hypervisor context and is the main
+>> management entity for all channels provided by the device.
+>> The channel driver is executed in the hypervisor/guest OS
+>> context.
 >>
->> I expect this driver to grow in functionality over time. Right now, it
->> does the global init for the DMA. After that all channels execute on
->> their own without depending on each other. Global init has to be done
->> first before attempting to do any channel initialization.
+>> All channel devices get probed in the hypervisor
+>> context during power up. They show up as DMA engine
+>> channels. Then, before starting the virtualization; each
+>> channel device is unbound from the hypervisor by VFIO
+>> and assigned to the guest machine for control.
 >>
->> There is also implied startup ordering requirements. I was doing this by
->> using channel driver with the late binding to guarantee that.
+>> This management driver will be used by the system
+>> admin to monitor/reset the execution state of the DMA
+>> channels. This will be the management interface.
 >>
->> As soon as I use module_platform_driver, the ordering gets reversed for
->> some reason.
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  56 ++
+>>   drivers/dma/Kconfig                                |  11 +
+>>   drivers/dma/Makefile                               |   1 +
+>>   drivers/dma/qcom_hidma_mgmt.c                      | 747 +++++++++++++++++++++
+>>   4 files changed, 815 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>>   create mode 100644 drivers/dma/qcom_hidma_mgmt.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>> new file mode 100644
+>> index 0000000..514d37d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>> @@ -0,0 +1,56 @@
+>> +Qualcomm Technologies HIDMA Management interface
+>> +
+>> +The Qualcomm Technologies HIDMA device has been designed
+>> +to support virtualization technology. The driver has been
+>> +divided into two to follow the hardware design. The management
+>> +driver is executed in hypervisor context and is the main
+>> +management entity for all channels provided by the device.
+
+Let me try one more time. Hope this helps.
+
+Each HIDMA HW consists of multiple channels. These channels share
+some set of common parameters. These parameters are initialized
+by the management driver during power up. Same management driver is used 
+for monitoring the execution of the channels. Management driver
+can change the performance behaviors dynamically such as bandwidth
+allocation and prioritization.
+
 >
-> For the ordering requirements, it's probably best to export a symbol
-> with the entry point and let the normal driver call into that. Using
-> separate initcall levels is not something you should do in a normal
-> device driver like this.
+> This doesn't really explain what the block is.
 >
-I figured this out. If the channel driver starts before the management 
-driver; then channel reset fails. I'm handling this in the channel 
-driver and am returning -EPROBE_DEFER. After that, management driver 
-gets its chance to work. Then, the channel driver again. This change is 
-in the v2 series.
-
-> What is the relation between the device nodes for the two kinds of
-> devices? Does it make sense to model the other one as a child device
-> of this one? That way you would trivially do the ordering by not marking
-> this one as 'compatible="simple-bus"' and triggering the registration
-> of the child from the parent probe function.
+>> +All channel devices get probed in the hypervisor
+>> +context during power up. They show up as DMA engine
+>> +DMA channels. Then, before starting the virtualization; each
+>> +channel device is unbound from the hypervisor by VFIO
+>> +and assign to the guest machine for control.
+>> +
+>> +This management driver will  be used by the system
+>> +admin to monitor/reset the execution state of the DMA
+>> +channels. This will be the management interface.
+>> +
+>> +
+>> +Required properties:
+>> +- compatible: must contain "qcom,hidma-mgmt"
+>
+> Please make this more specific. It doesn't match your example either.
+> Unless "1.0" type versioning is tightly controlled and defined,
+> version numbers are usually not a good practice.
+>
+>> +- reg: Address range for DMA device
+>> +- dma-channels: Number of channels supported by this DMA controller.
+>> +- max-write-burst-bytes: Maximum write burst in bytes. A memcpy requested is
+>> +  fragmented to multiples of this amount.
+>> +- max-read-burst-bytes: Maximum read burst in bytes. A memcpy request is
+>> +  fragmented to multiples of this amount.
+>> +- max-write-transactions: Maximum write transactions to perform in a burst
+>> +- max-read-transactions: Maximum read transactions to perform in a burst
+>
+> This would be a function of burst-bytes and bus width. Are you sure
+> you don't me number of outstanding transactions which is a common
+> parameter for AXI bus peripherals.
 >
 
-The required order is management driver first, channel drivers next. If 
-the order is reversed, channel init fails. I handle this with deferred 
-probing.
+These are all the available HW knobs for performance at this moment. 
+max-write-transactions corresponds to the max number of outstanding 
+transactions.
 
-I tried to keep loose binding between the management driver due to QEMU.
-
-QEMU auto-generates the devicetree entries. The guest machine just sees 
-one devicetree object for the DMA channel but guest machine device-tree 
-kernel does not have any management driver entity.
-
-This requires DMA channel driver to work independently in the guest 
-machine without dependencies.
-
-> 	Arnd
+>> +- channel-reset-timeout: Channel reset timeout for this SOC.
 >
+> Please add units to property name.
+
+ok, changed to channel-reset-timeout-cycles
+
+>
+>> +- channel-priority: Priority of the channel.
+>> +  Each dma channel share the same HW bandwidth with other dma channels.
+>> +  If two requests reach to the HW at the same time from a low priority and
+>> +  high priority channel, high priority channel will claim the bus.
+>> +  0=low priority, 1=high priority
+>> +- channel-weight: Round robin weight of the channel
+>> +  Since there are only two priority levels supported, scheduling among
+>> +  the equal priority channels is done via weights.
+>> +
+>> +Example:
+>> +
+>> +       hidma-mgmt@f9984000 = {
+>> +               compatible = "qcom,hidma-mgmt-1.0";
+>> +               reg = <0xf9984000 0x15000>;
+>> +               dma-channels = 6;
+>> +               max-write-burst-bytes = 1024;
+>> +               max-read-burst-bytes = 1024;
+>> +               max-write-transactions = 31;
+>> +               max-read-transactions = 31;
+>> +               channel-reset-timeout = 0x500;
+>> +               channel-priority = < 1 1 0 0 0 0>;
+>> +               channel-weight = < 1 13 10 3 4 5>;
+>> +       };
+>> +
 
 -- 
 Sinan Kaya
 Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
 Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
