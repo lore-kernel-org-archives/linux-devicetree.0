@@ -1,60 +1,55 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: RE: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Tue, 03 Nov 2015 09:58:02 +0300
-Message-ID: <004d01d11604$fc7a2a80$f56e7f80$@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
- <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
- <56330E6E.50003@samsung.com> <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
- <5635D1EE.5010604@samsung.com> <012101d11540$8c280be0$a47823a0$@samsung.com>
- <5637FCCB.1060007@samsung.com>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH RESEND 14/16] hwmon: add TI LMU hardware
+ fault monitoring driver
+Date: Tue, 3 Nov 2015 16:01:34 +0900
+Message-ID: <56385BCE.5060300@ti.com>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+	<1446441875-1256-15-git-send-email-milo.kim@ti.com>
+	<563772D7.4030807@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <5637FCCB.1060007@samsung.com>
-Content-language: ru
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, k.kozlowski.k@gmail.com, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
+Return-path: <lm-sensors-bounces@lm-sensors.org>
+In-Reply-To: <563772D7.4030807@roeck-us.net>
+List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
+List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
+List-Post: <mailto:lm-sensors@lm-sensors.org>
+List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
+List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
+Sender: lm-sensors-bounces@lm-sensors.org
+Errors-To: lm-sensors-bounces@lm-sensors.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, lee.jones@linaro.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
 List-Id: devicetree@vger.kernel.org
 
- Hello!
+Hi Guenter,
 
-> >>> --- cut exynos5410.dtsi ---
-> >>> 		sromc: sromc@12250000 {
-> >>> 			#address-cells = <2>;
-> >>> 			#size-cells = <1>;
-> >>> 			ranges = <0 0 0x04000000 0x20000
-> >>> 				  1 0 0x05000000 0x20000
-> >>> 				  2 0 0x06000000 0x20000
-> >>> 				  3 0 0x07000000 0x20000>;
-> >>
-> >> Do you have to use 2 cells for address? Cannot it be:
-> >>  			ranges = <0 0x04000000 0x20000
-> >>  				  1 0x05000000 0x20000
-> >>  				  2 0x06000000 0x20000
-> >>  				  3 0x07000000 0x20000>;
-> >
-> >  I tried this first, but it didn't work, and ranges translation
-> > gave me something really weird (like addr = 0x80 and
-> > size = 0x04000004).
-> 
-> Did you change the address-cells to <1>?
+On 11/2/2015 11:27 PM, Guenter Roeck wrote:
+> On 11/01/2015 09:24 PM, Milo Kim wrote:
+>> LM3633 and LM3697 are TI LMU MFD device.
+>> Those device have hardware monitoring feature which detects opened or
+>> shorted circuit case.
+>>
+> Sure, but it only makes sense if you provide standard hwmon attributes
+> which can be interpreted by the "sensors" command. Which is not the case
+> here. You neither have a standard device type (light is not handled by hwmon),
+> nor standard attributes, nor do the attributes return standard values.
+>
+> I think there may be a basic misunderstanding. hwmon is not intended
+> to monitor a specific chip on the board. Its scope is to monitor the
+> system (such as temperature, voltages, or current).
+>
+> In your case, it might be better to attach the attributes to the mfd device.
+>
 
- Of course i did.
+OK, got your point. Thanks a lot for your suggestion.
 
- I don't quote the rest because i simply agree to what you've said. Will respin with these changes.
+Best regards,
+Milo
 
-Kind regards,
-Pavel Fedin
-Expert Engineer
-Samsung Electronics Research center Russia
+_______________________________________________
+lm-sensors mailing list
+lm-sensors@lm-sensors.org
+http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
