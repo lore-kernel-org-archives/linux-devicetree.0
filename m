@@ -1,89 +1,71 @@
-From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFCv2 1/2] power: domain: add pm_genpd_uninit
-Date: Tue,  3 Nov 2015 23:45:10 +0100
-Message-ID: <1446590711-18928-2-git-send-email-alex.aring@gmail.com>
-References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446590711-18928-1-git-send-email-alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/4] Input: tsc2004 - Document ts2004 dt bindings
+Date: Tue, 3 Nov 2015 14:59:13 -0800
+Message-ID: <20151103225913.GA29032@dtor-ws>
+References: <1446252086-24334-1-git-send-email-mwelling@ieee.org>
+ <1446252086-24334-5-git-send-email-mwelling@ieee.org>
+ <CAL_JsqKpbrWcHj4eubWMAjtVRHE8TTN_qC5S=J7qzcf8khpzng@mail.gmail.com>
+ <20151102205028.GA2571@deathstar>
+ <20151103072124.GA33601@dtor-ws>
+ <CAL_JsqKb0ms5syf6oTkEw6BGt0nUeqg6=Sm4Zd-5pH9JPrqLiQ@mail.gmail.com>
+ <20151103154117.GA13271@deathstar>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151103154117.GA13271@deathstar>
+Sender: linux-input-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>
+Cc: Rob Herring <robh@kernel.org>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds function pm_genpd_uninit for undo a pm_genpd_init. This
-is useful for multiple power domains while probing. If the probing fails
-after one pm_genpd_init was called we need to undo all previous
-registrations of generic pm domains inside the gpd_list list.
+On Tue, Nov 03, 2015 at 09:41:17AM -0600, Michael Welling wrote:
+> On Tue, Nov 03, 2015 at 09:31:10AM -0600, Rob Herring wrote:
+> > On Tue, Nov 3, 2015 at 1:21 AM, Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > > On Mon, Nov 02, 2015 at 02:50:29PM -0600, Michael Welling wrote:
+> > >> On Mon, Nov 02, 2015 at 09:19:50AM -0600, Rob Herring wrote:
+> > >> > > +Required properties:
+> > >> > > + - compatible                : "ti,tsc2004"
+> > >> > > + - interrupts                : IRQ specifier
+> > >> > > + - vio-supply                 : Regulator specifier
+> > >> >
+> > >> > reg property?
+> > >>
+> > >> Rob,
+> > >>
+> > >> It appears that I missed this in the description.
+> > >>
+> > >> Probably because I was following the lead of the ts2005 description.
+> > >>
+> > >> How does this look:
+> > >> - reg                 : I2C address. 0x48 - 0x4b based on the voltage applied to
+> > >>                         the AD1 and AD0 inputs on the IC.
+> > >>
+> > >
+> > > How about the version below?
+> > >
+> > > Thanks.
+> > >
+> > > --
+> > > Dmitry
+> > >
+> > >
+> > > Input: tsc2004 - document ts2004 dt bindings
+> 
+> Just noticed that it says ts2004 instead of tsc2004 in the subject.
+> Otherwise, I am fine with it.
+> 
+> Thanks for the assistance.
+> 
+> Still no acks or reviews for the other patches in the series.
+> I would like for someone to test the tsc2005 support to see if it still works.
+> 
+> The tsc2004 works very well on the target that I have here.
 
-There is a check on IS_ERR_OR_NULL(genpd) which is useful to check again
-registered power domains and not registered domains, the driver can use
-this mechanism to have an array with registered and non-registered power
-domains, where non-registered power domains are NULL.
+I folded this patch into the patch #3 and applied everything.
 
-Cc: Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Signed-off-by: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/base/power/domain.c | 15 +++++++++++++++
- include/linux/pm_domain.h   |  4 ++++
- 2 files changed, 19 insertions(+)
+Thanks!
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 16550c6..65b9d1a 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1730,6 +1730,21 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
- }
- EXPORT_SYMBOL_GPL(pm_genpd_init);
- 
-+/**
-+ * pm_genpd_uninit - Uninitialize a generic I/O PM domain object.
-+ * @genpd: PM domain object to initialize.
-+ */
-+void pm_genpd_uninit(struct generic_pm_domain *genpd)
-+{
-+	if (IS_ERR_OR_NULL(genpd))
-+		return;
-+
-+	mutex_lock(&gpd_list_lock);
-+	list_del(&genpd->gpd_list_node);
-+	mutex_unlock(&gpd_list_lock);
-+}
-+EXPORT_SYMBOL_GPL(pm_genpd_uninit);
-+
- #ifdef CONFIG_PM_GENERIC_DOMAINS_OF
- /*
-  * Device Tree based PM domain providers.
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index b1cf7e7..45d4f7a 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -143,6 +143,7 @@ extern int pm_genpd_detach_cpuidle(struct generic_pm_domain *genpd);
- extern int pm_genpd_name_detach_cpuidle(const char *name);
- extern void pm_genpd_init(struct generic_pm_domain *genpd,
- 			  struct dev_power_governor *gov, bool is_off);
-+extern void pm_genpd_uninit(struct generic_pm_domain *genpd);
- 
- extern int pm_genpd_poweron(struct generic_pm_domain *genpd);
- extern int pm_genpd_name_poweron(const char *domain_name);
-@@ -212,6 +213,9 @@ static inline void pm_genpd_init(struct generic_pm_domain *genpd,
- 				 struct dev_power_governor *gov, bool is_off)
- {
- }
-+static inline void pm_genpd_uninit(struct generic_pm_domain *genpd)
-+{
-+}
- static inline int pm_genpd_poweron(struct generic_pm_domain *genpd)
- {
- 	return -ENOSYS;
 -- 
-2.6.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
