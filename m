@@ -1,85 +1,62 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
- compatible
-Date: Tue, 3 Nov 2015 17:59:05 +0800
-Message-ID: <56388569.1070108@gmail.com>
-References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
- <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
- <21587719.mnFBFBzBeI@phil> <56379D46.1000402@linaro.org>
- <56381547.5070109@gmail.com> <56387110.4060805@linaro.org>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/5] Add memory mapped read support for ti-qspi
+Date: Tue, 3 Nov 2015 15:36:09 +0530
+Message-ID: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <56387110.4060805-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgrlnKggMjAxNeW5tDEx5pyIMDPml6UgMTY6MzIsIERhbmllbCBMZXpjYW5vIOWGmemBkzoKPiBP
-biAxMS8wMy8yMDE1IDAzOjAwIEFNLCBDYWVzYXIgV2FuZyB3cm90ZToKPj4gRGFuaWVsLAo+Pgo+
-PiDlnKggMjAxNeW5tDEx5pyIMDPml6UgMDE6MjgsIERhbmllbCBMZXpjYW5vIOWGmemBkzoKPj4+
-IE9uIDEwLzMxLzIwMTUgMTI6NDcgQU0sIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+Pj4+IEhpIERh
-bmllbCwKPj4+Pgo+Pj4+IEFtIEZyZWl0YWcsIDMwLiBPa3RvYmVyIDIwMTUsIDExOjQyOjI5IHNj
-aHJpZWIgRGFuaWVsIExlemNhbm86Cj4+Pj4+IE9uIDEwLzMwLzIwMTUgMDQ6NDMgQU0sIENhZXNh
-ciBXYW5nIHdyb3RlOgo+Pj4+Pj4gSGkgRGFuaWVsLAo+Pj4+Pj4KPj4+Pj4+IOWcqCAyMDE15bm0
-MTDmnIgwMeaXpSAwMzoxNCwgSGVpa28gU3TDvGJuZXIg5YaZ6YGTOgo+Pj4+Pj4+IEhpIERhbmll
-bCwKPj4+Pj4+Pgo+Pj4+Pj4+IEFtIERpZW5zdGFnLCAyOS4gU2VwdGVtYmVyIDIwMTUsIDA2OjE4
-OjAzIHNjaHJpZWIgRGFuaWVsIExlemNhbm86Cj4+Pj4+Pj4+IE9uIDA5LzI1LzIwMTUgMDQ6MTQg
-QU0sIENhZXNhciBXYW5nIHdyb3RlOgo+Pj4+Pj4+Pj4gQnVpbGQgdGhlIGFybTY0IFNvQ3MgKGUu
-Zy46IFJLMzM2OCkgb24gUm9ja2NoaXAgcGxhdGZvcm0sCj4+Pj4+Pj4+PiBUaGVyZSBhcmUgc29t
-ZSBmYWlsdXJlIHdpdGggYnVpbGQgdXAgb24gdGltZXIgZHJpdmVyIGZvciAKPj4+Pj4+Pj4+IHJv
-Y2tjaGlwLgo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IFNheXM6Cj4+Pj4+Pj4+PiAvdG1wL2NjZEFuTnk1
-LnM6NDc6IEVycm9yOiBtaXNzaW5nIGltbWVkaWF0ZSBleHByZXNzaW9uIGF0ICAKPj4+Pj4+Pj4+
-IG9wZXJhbmQKPj4+Pj4+Pj4+IDEgLS0KPj4+Pj4+Pj4+IGBkc2JgCj4+Pj4+Pj4+PiAuLi4KPj4+
-Pj4+Pj4+Cj4+Pj4+Pj4+PiBUaGUgcHJvYmxlbSB3YXMgZGlmZmVyZW50IHNlbWFudGljcyBvZiBk
-c2Igb24gYnR3IGFybTMyIGFuZCAKPj4+Pj4+Pj4+IGFybTY0LAo+Pj4+Pj4+Pj4gSGVyZSB3ZSBj
-YW4gY29udmVydCB0aGUgZHNiIHdpdGggaW5zdGVhZGluZyBvZiBkc2Ioc3kpLlRoZSAic3kiCj4+
-Pj4+Pj4+PiBwYXJhbQo+Pj4+Pj4+Pj4gaXMgdGhlIGRlZmF1bHQgd2hpY2ggeW91IGFyZSBhbGxv
-dyB0byBvbWl0LCBzbyBvbiBhcm0zMiBkc2IoKWFuZAo+Pj4+Pj4+Pj4gZHNiKHN5KQo+Pj4+Pj4+
-Pj4gYXJlIHRoZSBzYW1lLgo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IENhZXNh
-ciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4+Pj4+Pj4+IEFja2VkLWJ5OiBEYW5pZWwgTGV6
-Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4KPj4+Pj4+PiBhcyB5b3UgaGF2ZSAianVz
-dCIgQWNrZWQgdGhlc2UgcGF0Y2hlcywgSSBndWVzcyB5b3UgYXJlIGV4cGVjdGluZwo+Pj4+Pj4+
-IHRoZW0KPj4+Pj4+PiB0byBnbwo+Pj4+Pj4+IHRocm91Z2ggdGhlIHNhbWUgdHJlZSBhcyB0aGUg
-ZGV2aWNldHJlZSBjaGFuZ2VzLCByaWdodD8KPj4+Pj4+Cj4+Pj4+PiBJJ20gd29uZGVyIGlmIHNv
-bWVvbmUgd2lsbCBhcHBseSB0aGlzIHNlcmllcyBwYXRjaHMgYnV0IHRoZSB3YWl0LjotKQo+Pj4+
-Pj4gSW4gZmFjdCwgSSdtIG5vIHN1cmUgdGhhdCB0aGUgQWNrZWQgaXMgcmVhbGx5IG1lYW5pbmcu
-Oi0KPj4+Pj4KPj4+Pj4gWWVzLCBieSBhY2tpbmcgdGhlIHBhdGNoIEkgc2F5IEkgYW0gb2sgd2l0
-aCBpdCBhbmQgSSBhZ3JlZSBpdCBjYW4gZ28KPj4+Pj4gdGhyb3VnaCBhbm90aGVyIHRyZWUuCj4+
-Pj4KPj4+PiBhbHRob3VnaCBJIGd1ZXNzIHRoZSB0d28gY2xvY2tzb3VyY2UgY2hhbmdlcyBjb3Vs
-ZCB2ZXJ5IHdlbGwganVzdCBnbwo+Pj4+IHRocm91Z2ggeW91ciB0cmVlLiBkc2IoKSAtPiBkc2Io
-c3kpIGlzIHN1cHBvc2VkIHRvIGJlIGVxdWFsIGFuZCB0aGUKPj4+PiBzZWNvbmQKPj4+PiBvbmUg
-aXMganVzdCBjb3NtZXRpY3MuICBUaGUgS2NvbmZpZyBhbmQgZHRzIGNoYW5nZXMgbmVlZCB0byB3
-YWl0IGluCj4+Pj4gYW55IGNhc2UKPj4+PiBmb3IgNC41IC4uLiBidXQgSSBndWVzcyB0aGF0IG1h
-eSBiZSB0cnVlIGZvciB0aGUgY2xvY2tzb3VyY2UgY2hhbmdlcwo+Pj4+IGFzIHdlbGw/Cj4+Pgo+
-Pj4gSGVpa28sIENhZXNhciwKPj4+Cj4+PiBJIGFtIHdvbmRlcmluZyBpZiB0aGUgZHNiKCkgaXMg
-cmVhbGx5IG5lY2Vzc2FyeS4gSXMgaXQgcG9zc2libGUgeW91Cj4+PiB0ZXN0IHRoZSB0aW1lciBi
-eSByZW1vdmluZyB0aGlzIGluc3RydWN0aW9uID8gT3RoZXJ3aXNlIEkgd2lsbCBoYXZlIHRvCj4+
-PiBzZXR1cCBteSBib2FyZCBhZ2FpbiBhbmQgaXQgd2lsbCB0YWtlIGF3aGlsZS4KPj4+Cj4+Cj4+
-IEFzIHRoZSBAQXJuZCBzdWdnZXN0aW9uLAo+Pgo+PiBUaGF0J3Mgc2VlbSBvayBmb3IgbWUuCj4+
-IEFsdGhvdWdoIHRoZSB3cml0ZWxfcmVsYXhlZCgpIGFuZCB3cml0ZWwoKSBhIGJpdCBkaWZmZXJl
-bnQgIHdpdGggRFNCKCkKPj4gYW5kIEwyJ3Mgc3luYy4KPj4KPj4gRG8gSSBuZWVkIHNlbmQgdGhl
-IHBhdGNoIHYzPyAgSSB3aWxsIHRlc3QgdGhhdCBvbiBteSBib2FyZC4KPj4KPj4gSSdtIG5vIHN1
-cmUgdGhhdCB3aHkgdGhlIGNsb2Nrc291cmNlIGRyaXZlciBkaWRuJ3QgdXNlIHRoZQo+PiB3cml0
-ZWxfcmVsYXhlZCgpIHRvIHdvcmsuCj4+IE9rYXksIEkgdGhpbmsgd2Ugc2hvdWxkIGFjY29yZGlu
-ZyB0byB0aGUgc3VnZ2VzdGlvbiBvciByZXF1aXJlZC4KPgo+IEkgdGhpbmsgdGhlIHBhdGNoIGlz
-IHRyaXZpYWwgZW5vdWdoIEkgY2FuIGRvIHRoZSBjaGFuZ2UgbXlzZWxmIGlmIHlvdSAKPiB0ZXN0
-IHRoZSBjaGFuZ2Ugb24geW91ciBzaWRlLiBCdXQgaXQgd291bGQgYmUgYSBnb29kIHByYWN0aWNl
-IHRvIHNlbmQgCj4gdGhlIHBhdGNoIHlvdSBoYXZlIHRlc3RlZC4gVXAgdG8geW91IDspCj4KCll1
-cCwgdGhhdCdzIGFsc28gaGFwcHkgd29yay4KCkZlZWwgZnJlZSBhZGQgbXkgdGVzdCB0YWcgaWYg
-eW91IHJlbW92ZSB0aGUgZHNiKCkuClRlc3RlZC1ieTogQ2Flc2FyIFdhbmcgPHd4dEByb2NrLWNo
-aXBzLmNvbT4KClRoYW5rcyB5b3VyIHNlbmQhCgo+IFRoYW5rcyAhCj4KPiAgIC0tIERhbmllbAo+
-Cj4KCgotLSAKVGhhbmtzLApDYWVzYXIKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2No
-aXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+
+Changes since v1:
+Introduce API in SPI core that MTD flash driver can call for mmap read
+instead of directly calling spi-master driver callback. This API makes
+sure that SPI core msg queue is locked during mmap transfers.
+v1: https://lkml.org/lkml/2015/9/4/103
+
+
+Cover letter:
+
+This patch series adds support for memory mapped read port of ti-qspi.
+ti-qspi has a special memory mapped port through which SPI flash
+memories can be accessed directly via SoC specific memory region.
+
+First patch adds a method to pass flash specific information like read
+opcode, dummy bytes etc and to request mmap read. Second patch
+implements mmap read method in ti-qspi driver. Patch 3 adapts m25p80 to
+use mmap read method before trying normal SPI transfer. Patch 4 and 5
+add memory map region DT entries for DRA7xx and AM43xx SoCs.
+
+This patch series is based on the discussions here:
+http://www.spinics.net/lists/linux-spi/msg04796.html
+
+Tested on DRA74 EVM and AM437x-SK.
+Read performance increases from ~100kB/s to ~2.5MB/s.
+
+
+Vignesh R (5):
+  spi: introduce mmap read support for spi flash devices
+  spi: spi-ti-qspi: add mmap mode read support
+  mtd: devices: m25p80: add support for mmap read request
+  ARM: dts: DRA7: add entry for qspi mmap region
+  ARM: dts: AM4372: add entry for qspi mmap region
+
+ Documentation/devicetree/bindings/spi/ti_qspi.txt | 18 ++++-
+ arch/arm/boot/dts/am4372.dtsi                     |  4 +-
+ arch/arm/boot/dts/dra7.dtsi                       |  6 +-
+ drivers/mtd/devices/m25p80.c                      |  5 ++
+ drivers/spi/spi-ti-qspi.c                         | 92 ++++++++++++++++++++++-
+ drivers/spi/spi.c                                 | 35 +++++++++
+ include/linux/spi/spi.h                           | 23 ++++++
+ 7 files changed, 174 insertions(+), 9 deletions(-)
+
+-- 
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
