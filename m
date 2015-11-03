@@ -1,159 +1,88 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 38/42] drivers/of: Unflatten subordinate nodes after
- specified level
-Date: Wed, 4 Nov 2015 10:16:13 +1100
-Message-ID: <20151103231613.GA7126@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-39-git-send-email-gwshan@linux.vnet.ibm.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/4] Input: tsc2004 - Document ts2004 dt bindings
+Date: Tue, 3 Nov 2015 15:30:50 -0800
+Message-ID: <20151103233050.GB29032@dtor-ws>
+References: <1446252086-24334-1-git-send-email-mwelling@ieee.org>
+ <1446252086-24334-5-git-send-email-mwelling@ieee.org>
+ <CAL_JsqKpbrWcHj4eubWMAjtVRHE8TTN_qC5S=J7qzcf8khpzng@mail.gmail.com>
+ <20151102205028.GA2571@deathstar>
+ <20151103072124.GA33601@dtor-ws>
+ <CAL_JsqKb0ms5syf6oTkEw6BGt0nUeqg6=Sm4Zd-5pH9JPrqLiQ@mail.gmail.com>
+ <20151103154117.GA13271@deathstar>
+ <20151103225913.GA29032@dtor-ws>
+ <20151103231156.GA10138@deathstar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438834307-26960-39-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru
+In-Reply-To: <20151103231156.GA10138@deathstar>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>
+Cc: Rob Herring <robh@kernel.org>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 02:11:43PM +1000, Gavin Shan wrote:
->unflatten_dt_node() is called recursively to unflatten FDT nodes
->with the assumption that FDT blob has only one root node, which
->isn't true when the FDT blob represents device sub-tree. This
->improves the function to supporting device sub-tree that have
->multiple nodes in the first level:
->
->   * Rename original unflatten_dt_node() to __unflatten_dt_node().
->   * Wrapper unflatten_dt_node() calls __unflatten_dt_node() with
->     adjusted current node depth to 1 to avoid underflow.
->
->Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->---
-> drivers/of/fdt.c | 53 ++++++++++++++++++++++++++++++++++++++++-------------
-> 1 file changed, 40 insertions(+), 13 deletions(-)
->
->diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->index 0749656..a18a2ce 100644
->--- a/drivers/of/fdt.c
->+++ b/drivers/of/fdt.c
->@@ -161,7 +161,7 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
-> }
->
-> /**
->- * unflatten_dt_node - Alloc and populate a device_node from the flat tree
->+ * __unflatten_dt_node - Alloc and populate a device_node from the flat tree
->  * @blob: The parent device tree blob
->  * @mem: Memory chunk to use for allocating device nodes and properties
->  * @poffset: pointer to node in flat tree
->@@ -171,20 +171,20 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
->  * @dryrun: If true, do not allocate device nodes but still calculate needed
->  * memory size
->  */
->-static void * unflatten_dt_node(const void *blob,
->+static void *__unflatten_dt_node(const void *blob,
-> 				void *mem,
-> 				int *poffset,
-> 				struct device_node *dad,
-> 				struct device_node **nodepp,
-> 				unsigned long fpsize,
->-				bool dryrun)
->+				bool dryrun,
->+				int *depth)
-> {
-> 	const __be32 *p;
-> 	struct device_node *np;
-> 	struct property *pp, **prev_pp = NULL;
-> 	const char *pathp;
-> 	unsigned int l, allocl;
->-	static int depth = 0;
-> 	int old_depth;
-> 	int offset;
-> 	int has_name = 0;
->@@ -337,13 +337,25 @@ static void * unflatten_dt_node(const void *blob,
-> 			np->type = "<NULL>";
-> 	}
->
->-	old_depth = depth;
->-	*poffset = fdt_next_node(blob, *poffset, &depth);
->-	if (depth < 0)
->-		depth = 0;
->-	while (*poffset > 0 && depth > old_depth)
->-		mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
->-					fpsize, dryrun);
->+	/* Multiple nodes might be in the first depth level if
->+	 * the device tree is sub-tree. All nodes in current
->+	 * or deeper depth are unflattened after it returns.
->+	 */
->+	old_depth = *depth;
->+	*poffset = fdt_next_node(blob, *poffset, depth);
->+	while (*poffset > 0) {
->+		if (*depth < old_depth)
->+			break;
->+
->+		if (*depth == old_depth)
->+			mem = __unflatten_dt_node(blob, mem, poffset,
->+						  dad, NULL, fpsize,
->+						  dryrun, depth);
->+		else if (*depth > old_depth)
->+			mem = __unflatten_dt_node(blob, mem, poffset,
->+						  np, NULL, fpsize,
->+						  dryrun, depth);
->+	}
->
+On Tue, Nov 03, 2015 at 05:11:56PM -0600, Michael Welling wrote:
+> On Tue, Nov 03, 2015 at 02:59:13PM -0800, Dmitry Torokhov wrote:
+> > On Tue, Nov 03, 2015 at 09:41:17AM -0600, Michael Welling wrote:
+> > > On Tue, Nov 03, 2015 at 09:31:10AM -0600, Rob Herring wrote:
+> > > > On Tue, Nov 3, 2015 at 1:21 AM, Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > > On Mon, Nov 02, 2015 at 02:50:29PM -0600, Michael Welling wrote:
+> > > > >> On Mon, Nov 02, 2015 at 09:19:50AM -0600, Rob Herring wrote:
+> > > > >> > > +Required properties:
+> > > > >> > > + - compatible                : "ti,tsc2004"
+> > > > >> > > + - interrupts                : IRQ specifier
+> > > > >> > > + - vio-supply                 : Regulator specifier
+> > > > >> >
+> > > > >> > reg property?
+> > > > >>
+> > > > >> Rob,
+> > > > >>
+> > > > >> It appears that I missed this in the description.
+> > > > >>
+> > > > >> Probably because I was following the lead of the ts2005 description.
+> > > > >>
+> > > > >> How does this look:
+> > > > >> - reg                 : I2C address. 0x48 - 0x4b based on the voltage applied to
+> > > > >>                         the AD1 and AD0 inputs on the IC.
+> > > > >>
+> > > > >
+> > > > > How about the version below?
+> > > > >
+> > > > > Thanks.
+> > > > >
+> > > > > --
+> > > > > Dmitry
+> > > > >
+> > > > >
+> > > > > Input: tsc2004 - document ts2004 dt bindings
+> > > 
+> > > Just noticed that it says ts2004 instead of tsc2004 in the subject.
+> > > Otherwise, I am fine with it.
+> > > 
+> > > Thanks for the assistance.
+> > > 
+> > > Still no acks or reviews for the other patches in the series.
+> > > I would like for someone to test the tsc2005 support to see if it still works.
+> > > 
+> > > The tsc2004 works very well on the target that I have here.
+> > 
+> > I folded this patch into the patch #3 and applied everything.
+> >
+> 
+> Great.
+> 
+> Will this patch series conflict with the patch series to take out the .owner=THIS_MODULE
+> from spi_drivers?
+> 
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1004626.html
 
-Sorry for the delay. I'm afraid this one has to be reworked. With current
-code and changes, the nodes in the FDT blob are scanned in recursive fasion.
-That would cause exhausted stack when this function is called at early stage
-of system boot to unflatten the device tree that have too much levels and nodes.
-In next revision, I'll rework it to avoid recursive calls on this function.
+If he tries to get them in one pass - probably, but the conflicts should
+be trivial and should be easily resolved by SPI maintainer and/or Linus.
 
-So there're more time needed to post next revision. This issue was observed in
-recent testing with 4.3.rc6 and the patchset. On P7 box, the bad stack is reported
-directly. On P8 box, the /bin/init in the initram image can't be started properly.
-I run "git bisect" and this patch is located in both case.
+Or he could split the patch per-subsystem.
 
-> 	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
-> 		pr_err("unflatten: error %d processing FDT\n", *poffset);
->@@ -369,6 +381,20 @@ static void * unflatten_dt_node(const void *blob,
-> 	return mem;
-> }
->
->+static void *unflatten_dt_node(const void *blob,
->+			       void *mem,
->+			       int *poffset,
->+			       struct device_node *dad,
->+			       struct device_node **nodepp,
->+			       bool dryrun)
->+{
->+	int depth = 1;
->+
->+	return __unflatten_dt_node(blob, mem, poffset,
->+				   dad, nodepp, 0,
->+				   dryrun, &depth);
->+}
->+
-> /**
->  * __unflatten_device_tree - create tree of device_nodes from flat blob
->  *
->@@ -408,7 +434,8 @@ static void __unflatten_device_tree(const void *blob,
->
-> 	/* First pass, scan for size */
-> 	start = 0;
->-	size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
->+	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
->+						NULL, NULL, true);
-> 	size = ALIGN(size, 4);
->
-> 	pr_debug("  size is %lx, allocating...\n", size);
->@@ -423,7 +450,7 @@ static void __unflatten_device_tree(const void *blob,
->
-> 	/* Second pass, do actual unflattening */
-> 	start = 0;
->-	unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
->+	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
-> 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
-> 		pr_warning("End of tree marker overwritten: %08x\n",
-> 			   be32_to_cpup(mem + size));
->-- 
->2.1.0
->
+Thanks.
+
+-- 
+Dmitry
