@@ -1,59 +1,143 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
-Date: Tue, 3 Nov 2015 18:08:14 +0900
-Message-ID: <5638797E.8020201@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <20151102085924.GP4058@x1> <56385998.5080006@ti.com>
- <20151103083344.GA3503@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151103083344.GA3503@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: [PATCH v5 3/4] drivers: exynos-srom: Add support for bank configuration
+Date: Tue, 03 Nov 2015 12:16:40 +0300
+Message-ID: <72fa025c634fa477b1d7a89c254bd3c9c43f2b27.1446542020.git.p.fedin@samsung.com>
+References: <cover.1446542020.git.p.fedin@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <cover.1446542020.git.p.fedin@samsung.com>
+In-reply-to: <cover.1446542020.git.p.fedin@samsung.com>
+References: <cover.1446542020.git.p.fedin@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Implement handling properties in subnodes and adding child devices to the
+system. Child devices will not be added if configuration fails.
 
-On 11/3/2015 5:33 PM, Lee Jones wrote:
-> On Tue, 03 Nov 2015, Kim, Milo wrote:
->
->> Hi Lee,
->>
->> On 11/2/2015 5:59 PM, Lee Jones wrote:
->>>>   drivers/video/backlight/Kconfig                    |  62 ++
->>>>>   drivers/video/backlight/Makefile                   |   7 +
->>>>>   drivers/video/backlight/lm3532_bl.c                | 183 +++++
->>>>>   drivers/video/backlight/lm3631_bl.c                | 129 ++++
->>>>>   drivers/video/backlight/lm3632_bl.c                | 125 ++++
->>>>>   drivers/video/backlight/lm3633_bl.c                | 210 ++++++
->>>>>   drivers/video/backlight/lm3695_bl.c                |  91 +++
->>>>>   drivers/video/backlight/lm3697_bl.c                | 187 +++++
->>>>>   drivers/video/backlight/ti-lmu-backlight.c         | 429 ++++++++++++
->>>>>   drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
->>> How different are all of these drivers?
->>>
->>> Can you create one driver that supports them all instead?
->>>
->>
->> Thanks for your suggestion.
->>
->> 'ti-lmu-backlight' is the common part of lmxxxx_bl drivers. And each
->> lmxxx_bl has its own operation functions by using ti_lmu_bl_ops.
->> I've tried to make consolidated driver but it contained too much
->> device specific code in one file. So I prefer simple drivers
->> structure - 'common part' and 'device specific operations'.
->> It would be appreciated if you could introduce better idea.
->
-> I wish to avoid having to apply the patches to conduct my own analysis
-> of the files, as I am severely restricted on time.  Can you tell me how
-> much duplicated code there is between the files?  How many lines would
-> be saved by supporting all of the lm* drivers in a single file?
->
+Since the driver now does more than suspend-resume support, dependency on
+CONFIG_PM is removed.
 
-Understood. Let me try it again. I'll get back to you soon.
-Thanks for your help.
+Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
+---
+ arch/arm/mach-exynos/Kconfig      |  2 +-
+ drivers/soc/samsung/Kconfig       |  2 +-
+ drivers/soc/samsung/exynos-srom.c | 60 +++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 60 insertions(+), 4 deletions(-)
 
-Best regards,
-Milo
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 83c85f5..c22dc42 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -16,7 +16,7 @@ menuconfig ARCH_EXYNOS
+ 	select ARM_GIC
+ 	select COMMON_CLK_SAMSUNG
+ 	select EXYNOS_THERMAL
+-	select EXYNOS_SROM if PM
++	select EXYNOS_SROM
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_S3C2410_I2C if I2C
+ 	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+index 2833b5b..ea4bc2a 100644
+--- a/drivers/soc/samsung/Kconfig
++++ b/drivers/soc/samsung/Kconfig
+@@ -8,6 +8,6 @@ config SOC_SAMSUNG
+ 
+ config EXYNOS_SROM
+ 	bool
+-	depends on ARM && ARCH_EXYNOS && PM
++	depends on ARM && ARCH_EXYNOS
+ 
+ endmenu
+diff --git a/drivers/soc/samsung/exynos-srom.c b/drivers/soc/samsung/exynos-srom.c
+index 57a232d..49b5c9e 100644
+--- a/drivers/soc/samsung/exynos-srom.c
++++ b/drivers/soc/samsung/exynos-srom.c
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -67,11 +68,50 @@ static struct exynos_srom_reg_dump *exynos_srom_alloc_reg_dump(
+ 	return rd;
+ }
+ 
++static int decode_sromc(struct exynos_srom *srom, struct device_node *np)
++{
++	u32 bank, width, pmc;
++	u32 timing[6];
++	u32 cs, bw;
++
++	if (of_property_read_u32(np, "reg", &bank))
++		return -EINVAL;
++	if (of_property_read_u32(np, "reg-io-width", &width))
++		width = 1;
++	if (of_property_read_u32(np, "samsung,srom-page-mode", &pmc))
++		pmc = 0;
++	if (of_property_read_u32_array(np, "samsung,srom-timing", timing,
++				       ARRAY_SIZE(timing)))
++		return -EINVAL;
++
++	bank *= 4; /* Convert bank into shift/offset */
++
++	cs = 1 << EXYNOS_SROM_BW__BYTEENABLE__SHIFT;
++	if (width == 2)
++		cs |= 1 << EXYNOS_SROM_BW__DATAWIDTH__SHIFT;
++
++	bw = __raw_readl(srom->reg_base + EXYNOS_SROM_BW);
++	bw = (bw & ~(EXYNOS_SROM_BW__CS_MASK << bank)) | (cs << bank);
++	__raw_writel(bw, srom->reg_base + EXYNOS_SROM_BW);
++
++	__raw_writel((pmc << EXYNOS_SROM_BCX__PMC__SHIFT) |
++		    (timing[0] << EXYNOS_SROM_BCX__TACP__SHIFT) |
++		    (timing[1] << EXYNOS_SROM_BCX__TCAH__SHIFT) |
++		    (timing[2] << EXYNOS_SROM_BCX__TCOH__SHIFT) |
++		    (timing[3] << EXYNOS_SROM_BCX__TACC__SHIFT) |
++		    (timing[4] << EXYNOS_SROM_BCX__TCOS__SHIFT) |
++		    (timing[5] << EXYNOS_SROM_BCX__TACS__SHIFT),
++		    srom->reg_base + EXYNOS_SROM_BC0 + bank);
++
++	return 0;
++}
++
+ static int exynos_srom_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np;
++	struct device_node *np, *child;
+ 	struct exynos_srom *srom;
+ 	struct device *dev = &pdev->dev;
++	bool error = false;
+ 
+ 	np = dev->of_node;
+ 	if (!np) {
+@@ -100,7 +140,23 @@ static int exynos_srom_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	return 0;
++	for_each_child_of_node(np, child) {
++		if (decode_sromc(srom, child)) {
++			dev_err(dev,
++				"Could not decode bank configuration for %s\n",
++				child->name);
++			error = true;
++		}
++	}
++
++	/*
++	 * If any bank failed to configure, we still provide suspend/resume,
++	 * but do not probe child devices
++	 */
++	if (error)
++		return 0;
++
++	return of_platform_populate(np, NULL, NULL, dev);
+ }
+ 
+ static int exynos_srom_remove(struct platform_device *pdev)
+-- 
+2.4.4
