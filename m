@@ -1,54 +1,28 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: Re: [PATCH 1/4] Input: tsc2005 - Separate SPI and core functions
-Date: Tue, 3 Nov 2015 09:48:42 -0600
-Message-ID: <20151103154842.GB13271@deathstar>
-References: <1446252086-24334-1-git-send-email-mwelling@ieee.org>
- <1446252086-24334-2-git-send-email-mwelling@ieee.org>
- <20151103014946.GB32018@dtor-ws>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/1] ARM: dts: sun4i: inet9f-rev03: Add support
+ for game buttons /
+Date: Tue,  3 Nov 2015 16:51:47 +0100
+Message-ID: <1446565908-23406-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151103014946.GB32018@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBH5Q4OYQKGQEDVM2DEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 02, 2015 at 05:49:46PM -0800, Dmitry Torokhov wrote:
-> On Fri, Oct 30, 2015 at 07:41:23PM -0500, Michael Welling wrote:
-> > This patch separates the SPI functionality from core functionality
-> > that overlaps with the tsc2004.
-> > 
-> > Prepares kernel for new tsc2004 driver without much redundant code.
-> > 
-> > Signed-off-by: Michael Welling <mwelling@ieee.org>
-> > ---
-> >  drivers/input/touchscreen/Kconfig                  |   4 +
-> >  drivers/input/touchscreen/Makefile                 |   1 +
-> >  drivers/input/touchscreen/tsc2005.c                | 709 +--------------------
-> >  .../touchscreen/{tsc2005.c => tsc200x-core.c}      | 226 ++-----
-> >  drivers/input/touchscreen/tsc200x-core.h           |  78 +++
-> >  5 files changed, 162 insertions(+), 856 deletions(-)
-> >  copy drivers/input/touchscreen/{tsc2005.c => tsc200x-core.c} (72%)
-> >  create mode 100644 drivers/input/touchscreen/tsc200x-core.h
-> 
-> This was giving me:
-> 
-> Kernel: arch/x86/boot/bzImage is ready  (#1451)
->   MODPOST 1447 modules
-> ERROR: "tsc200x_regmap_config" [drivers/input/touchscreen/tsc2005.ko] undefined!
-> make[1]: *** [__modpost] Error 1
-> make: *** [modules] Error 2
-> 
-> I'll fix it up locally by exporting the symbol.
-> 
-> Thanks.
+Hi Maxime,
 
-Ooops. I guess that I need to check more thoroughly the different configs.
+Note this patch depends on #include <dt-bindings/input/input.h>
+changes from input.git/next commit 4f38b9f2f4a56164cad7a42e92f945c3515c5a2e.
 
-Thanks for your help.
+Regards,
 
-> 
-> -- 
-> Dmitry
+Hans
