@@ -1,211 +1,95 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
-Date: Tue, 3 Nov 2015 07:59:33 +0530
-Message-ID: <20151103022933.GN3639@ubuntu>
-References: <cover.1446167359.git.viresh.kumar@linaro.org>
- <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
- <20151030221826.GM19782@codeaurora.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v9 10/17] phy: Add driver for rockchip Display Port PHY
+Date: Mon, 2 Nov 2015 20:38:27 -0800
+Message-ID: <20151103043827.GA17261@localhost>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+ <1446083918-30809-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151030221826.GM19782@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+In-Reply-To: <1446083918-30809-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, djkurtz@chromium.org, dianders@chromium.org, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sean Paul <seanpaul@chromi>
 List-Id: devicetree@vger.kernel.org
 
-On 30-10-15, 15:18, Stephen Boyd wrote:
-> A side-note. I wonder if it would be better style to have the
-> node name be:
+Hi Yakir,
+
+On Thu, Oct 29, 2015 at 09:58:38AM +0800, Yakir Yang wrote:
+> Add phy driver for the Rockchip DisplayPort PHY module. This
+> is required to get DisplayPort working in Rockchip SoCs.
 > 
-> 		opp@600000000 {
-> 
-> At least it seems that the assumption is we can store all the
-> possible combinations of OPP values for a particular frequency in
-> the same node. Following this style would make dt compilation
-> fail if two nodes have the same frequency.
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
+...
+> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
+> new file mode 100644
+> index 0000000..f3e0058
+> --- /dev/null
+> +++ b/drivers/phy/phy-rockchip-dp.c
+> @@ -0,0 +1,151 @@
+> +/*
+> + * Rockchip DP PHY driver
+> + *
+> + * Copyright (C) 2015 FuZhou Rockchip Co., Ltd.
+> + * Author: Yakir Yang <ykk@@rock-chips.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/clk.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define GRF_SOC_CON12                           0x0274
+> +
+> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(4)
+> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Tue, 3 Nov 2015 07:51:09 +0530
-Subject: [PATCH] PM / OPP: Rename OPP nodes as opp@<opp-hz>
+Why are the above two macros the same? Judging by the RK3288 manual and
+other downstream drivers, it seems like you want the _MASK one to be
+shifted left by 16 (i.e., BIT(20)).
 
-It would be better to name OPP nodes as opp@<opp-hz> as that will ensure
-that multiple DT nodes don't contain the same frequency. Of course we
-expect the writer to name the node with its opp-hz frequency and not any
-other frequency.
+> +
+> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
+> +#define GRF_EDP_PHY_SIDDQ_ON                    0
+> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
+> +
 
-And that will let the compile error out if multiple nodes are using the
-same opp-hz frequency.
+...
 
-Suggested-by: Stephen Boyd <sboyd@codeaurora.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++--------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+> +	ret = regmap_write(dp->grf, GRF_SOC_CON12, GRF_EDP_REF_CLK_SEL_INTER |
+> +			   GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK);
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 8d4a4075d634..3af2eca7212a 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -183,20 +183,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
--		opp01 {
-+		opp@1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
- 			opp-microvolt = <980000 1000000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
--		opp02 {
-+		opp@1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1025000>;
- 			clock-latency-ns = <290000>;
-@@ -262,20 +262,20 @@ independently.
- 		 * independently.
- 		 */
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
--		opp01 {
-+		opp@1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
- 			opp-microvolt = <980000 1000000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
--		opp02 {
-+		opp@1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1025000>;
- 			opp-microamp = <90000;
-@@ -338,20 +338,20 @@ DVFS state together.
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
--		opp01 {
-+		opp@1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
- 			opp-microvolt = <980000 1000000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
--		opp02 {
-+		opp@1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1025000>;
- 			opp-microamp = <90000>;
-@@ -364,20 +364,20 @@ DVFS state together.
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp10 {
-+		opp@1300000000 {
- 			opp-hz = /bits/ 64 <1300000000>;
- 			opp-microvolt = <1045000 1050000 1055000>;
- 			opp-microamp = <95000>;
- 			clock-latency-ns = <400000>;
- 			opp-suspend;
- 		};
--		opp11 {
-+		opp@1400000000 {
- 			opp-hz = /bits/ 64 <1400000000>;
- 			opp-microvolt = <1075000>;
- 			opp-microamp = <100000>;
- 			clock-latency-ns = <400000>;
- 		};
--		opp12 {
-+		opp@1500000000 {
- 			opp-hz = /bits/ 64 <1500000000>;
- 			opp-microvolt = <1010000 1100000 1110000>;
- 			opp-microamp = <95000>;
-@@ -404,7 +404,7 @@ Example 4: Handling multiple regulators
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000>, /* Supply 0 */
- 					<960000>, /* Supply 1 */
-@@ -417,7 +417,7 @@ Example 4: Handling multiple regulators
- 
- 		/* OR */
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
- 					<960000 965000 975000>, /* Supply 1 */
-@@ -430,7 +430,7 @@ Example 4: Handling multiple regulators
- 
- 		/* OR */
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
- 					<960000 965000 975000>, /* Supply 1 */
-@@ -462,7 +462,7 @@ Example 5: opp-supported-hw
- 		status = "okay";
- 		opp-shared;
- 
--		opp00 {
-+		opp@600000000 {
- 			/*
- 			 * Supports all substrate and process versions for 0xF
- 			 * cuts, i.e. only first four cuts.
-@@ -473,7 +473,7 @@ Example 5: opp-supported-hw
- 			...
- 		};
- 
--		opp01 {
-+		opp@800000000 {
- 			/*
- 			 * Supports:
- 			 * - cuts: only one, 6th cut (represented by 6th bit).
-@@ -506,7 +506,7 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>, turbo-mode-<name>,
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp00 {
-+		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt-slow = <900000 915000 925000>;
- 			opp-microvolt-fast = <970000 975000 985000>;
-@@ -516,7 +516,7 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>, turbo-mode-<name>,
- 			opp-suspend-slow; /* Will be used as suspend-opp only if 'slow' is chosen */
- 		};
- 
--		opp01 {
-+		opp@1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt-slow = <900000 915000 925000>, /* Supply vcc0 */
- 					      <910000 925000 935000>; /* Supply vcc1 */
--- 
-viresh
+IOW, the above is writing:
+
+	BIT(4) | BIT(4)
+
+whereas I think you want:
+
+	BIT(4) | BIT(20)
+
+> +	if (ret != 0) {
+> +		dev_err(dp->dev, "Could not config GRF edp ref clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+
+...
+
+(FYI, I came across this by inspection when comparing Heiko's
+'somewhat-stable' branch [1] with this series. The former brings up eDP
+fine on veyron-jaq, whereas this one doesn't yet, even with the above
+change. Still debugging the issue.)
+
+Brian
+
+[1] https://github.com/mmind/linux-rockchip/tree/devel/somewhat-stable
