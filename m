@@ -1,100 +1,69 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Tue, 03 Nov 2015 09:16:11 +0900
-Message-ID: <5637FCCB.1060007@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
- <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
- <56330E6E.50003@samsung.com> <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
- <5635D1EE.5010604@samsung.com> <012101d11540$8c280be0$a47823a0$@samsung.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 12/13] drm/panel: simple: Add simple panel device tree
+ binding
+Date: Tue, 3 Nov 2015 08:28:55 +0800
+Message-ID: <5637FFC7.6080503@rock-chips.com>
+References: <1446296170-3702-1-git-send-email-zyw@rock-chips.com>
+ <1446296170-3702-13-git-send-email-zyw@rock-chips.com>
+ <CAL_Jsq+76CMdtu8MZZhb_Bbg+J=hjJ2as-NRnjS4w_3y0YXvLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <012101d11540$8c280be0$a47823a0$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: k.kozlowski.k@gmail.com, 'Mark Rutland' <mark.rutland@arm.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+76CMdtu8MZZhb_Bbg+J=hjJ2as-NRnjS4w_3y0YXvLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.11.2015 16:31, Pavel Fedin wrote:
->  Hello!
-> 
->>> --- cut exynos5410.dtsi ---
->>> 		sromc: sromc@12250000 {
->>> 			#address-cells = <2>;
->>> 			#size-cells = <1>;
->>> 			ranges = <0 0 0x04000000 0x20000
->>> 				  1 0 0x05000000 0x20000
->>> 				  2 0 0x06000000 0x20000
->>> 				  3 0 0x07000000 0x20000>;
+Hi Rob
+
+
+On 11/02/2015 11:06 PM, Rob Herring wrote:
+> On Sat, Oct 31, 2015 at 7:56 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>
+> Your subject should be more specific with the panel name.
+I'll write more specific in subject next version.
+>
+>> This binding specifies a set of common properties for display panels. It
+>> can be used as a basis by bindings for specific panels.
+>> Bindings for three specific panels are provided to show how the
+>> simple panel binding can be used.
 >>
->> Do you have to use 2 cells for address? Cannot it be:
->>  			ranges = <0 0x04000000 0x20000
->>  				  1 0x05000000 0x20000
->>  				  2 0x06000000 0x20000
->>  				  3 0x07000000 0x20000>;
-> 
->  I tried this first, but it didn't work, and ranges translation
-> gave me something really weird (like addr = 0x80 and
-> size = 0x04000004).
-
-Did you change the address-cells to <1>?
-
-> I decided not to dig deeply into
-> "ranges" processing, but just followed GPMC approach. They say
-> that first number is range ID and second number is offset within
-> the range. And it just worked.
-> 
->>>  3. About samsung,srom-config array. I have the following reasons to keep if this way:
->>>     - listing every property under own name is just too much typing
->>>     - these values really do not make sense without each other, or partialy. I would say
->> that in array form they are even better
->>> readable, because it is the same order in which they go into the register.
+>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >>
->> For timings - OK. PMC is separate. This is not a timing.
-> 
->  But it's srom-config, and not srom-timing anymore. So do you want
-> two properties like srom-timing + srom-page-mode (with vendor prefix
-> of course)?
-
-Yes, I still want separate properties because this too generic. In next
-SoC they will extend the register and you will have to extend the
-binding. I agree for simplicity reasons to group timings in an array.
-But not entire register.
-
->> You need to document them. We are not gonna put some data looking like a
->> vendor blob into the binding. I understand that document has
->> confidential mark... all of Samsung datasheets I've seen had it. I don't
->> find it as problem but of course I am not the one to judge here. If you
->> do not feel comfortable publishing such data, get an approval from your
->> manager. You can also try to search for this in vendor code
->> (opensource.samsung.com). If it is published there, then this won't be a
->> disclosure.
-> 
->  I've seen the actual SROMc settings in some old Android kernels, like 3.0.4.
-> But they are not documented there, no comments, just #define's.
->  Ok, i'll try to take a look how to minimize the actual information. :)
-
-Actually 15 secs of search by grep revealed that they are already
-documented and published. I looked at first image coming into my mind:
-GT-I9300_JB
-arch/arm/mach-exynos/include/mach/sromc-exynos4.h
-
-
->> BTW, your email client is weird. You are sending non-wrapped emails
->> without format=flowed in Content-Type. Please stick to mailing list
->> convention of wrapping at 72-char.
-> 
->  I know, sorry, this is MS Outlook (not Express), and it's impossible
-> to configure it this way (if i just set up word wrap, it starts to
-> corrupt patches). I am now trying to wrap the text by hands, i hope
-> it's better. And i cannot use anything else because... You know why. :)
-
-Actually no... I don't know why...
-All of us are using whatever we want (mutt+MDA, thunderbird, kmail,
-etc.). At least in two locations I've been: in Polish R&D and in HQ.
+>> ---
+>>
+>> Changes in v2:
+>> As Thierry.Reding comment, add a documentation for this panel.
+>>
+>>   Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
+> Please move to bindings/display/panel/
+Okay.
+>
+>> diff --git a/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt b/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
+>> new file mode 100644
+>> index 0000000..50be5e2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/panel/boe,tv080wum-nl0.txt
+>> @@ -0,0 +1,7 @@
+>> +Boe Corporation 8.0" WUXGA TFT LCD panel
+>> +
+>> +Required properties:
+>> +- compatible: should be "boe,tv080wum-nl0"
+>> +
+>> +This binding is compatible with the simple-panel binding, which is specified
+>> +in simple-panel.txt in this directory.
+>> --
+>> 2.6.2
+>>
+>
+>
 
 
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
