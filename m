@@ -1,10 +1,12 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v13 0/6] simple fpga bus and fpga bridge framework
-Date: Tue, 3 Nov 2015 11:10:58 -0600
-Message-ID: <1446570664-10293-1-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v13 2/6] fpga: add bindings document for simple fpga bus
+Date: Tue, 3 Nov 2015 11:11:00 -0600
+Message-ID: <1446570664-10293-3-git-send-email-atull@opensource.altera.com>
+References: <1446570664-10293-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446570664-10293-1-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
 Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
@@ -12,51 +14,106 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-These patches are too late for this merge window; I'm submitting
-them for those who are reviewing, especially the bindings.
+New bindings document for simple fpga bus.
 
-Changes since v12:
- Change DT property from "init-val" to "bridge-enable"
- Use proposed DT common property "firmware-name" instead of "fpga-firmware"
- Clean up cruft from simple-fpga-bus DT bindings example
- Support Simple FPGA Bus when FPGA Bridges are compiled out.
- Cleanup and nits
-
-The Simple FPGA Bus provides a manufacturer-agnostic interface for
-reprogramming FPGAs using Device Tree Overlays.  It uses the FPGA Bridge
-Framework and the upstreamed FPGA Manager Framework.  In the case where
-FPGA Bridges are not needed, they don't need to be specified in the DT
-and can compiled out, if desired.
-
-Alan Tull (6):
-  fpga: add usage documentation for simple fpga bus
-  fpga: add bindings document for simple fpga bus
-  fpga: add simple-fpga-bus
-  fpga: add fpga bridge framework
-  ARM: socfpga: add bindings document for fpga bridge drivers
-  ARM: socfpga: fpga bridge driver support
-
- .../bindings/fpga/altera-fpga2sdram-bridge.txt     |  15 +
- .../bindings/fpga/altera-hps2fpga-bridge.txt       |  31 ++
- .../devicetree/bindings/fpga/simple-fpga-bus.txt   |  74 +++++
- Documentation/fpga/simple-fpga-bus.txt             |  58 ++++
- drivers/fpga/Kconfig                               |  21 ++
- drivers/fpga/Makefile                              |   7 +
- drivers/fpga/altera-fpga2sdram.c                   | 185 ++++++++++++
- drivers/fpga/altera-hps2fpga.c                     | 233 +++++++++++++++
- drivers/fpga/fpga-bridge.c                         | 229 +++++++++++++++
- drivers/fpga/simple-fpga-bus.c                     | 323 +++++++++++++++++++++
- include/linux/fpga/fpga-bridge.h                   |  74 +++++
- 11 files changed, 1250 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+v9:  initial version added to this patchset
+v10: s/fpga/FPGA/g
+     replace DT overlay example with slightly more complicated example
+     move to staging/simple-fpga-bus
+v11: No change in this patch for v11 of the patch set
+v12: Moved out of staging.
+     Changed to use FPGA bridges framework instead of resets
+     for bridges.
+v13: bridge@0xff20000 -> bridge@ff200000, etc
+     Leave out directly talking about overlays
+     Remove regs and clocks directly under simple-fpga-bus in example
+     Use common "firmware-name" binding instead of "fpga-firmware"
+---
+ .../devicetree/bindings/fpga/simple-fpga-bus.txt   | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
- create mode 100644 Documentation/fpga/simple-fpga-bus.txt
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
- create mode 100644 drivers/fpga/fpga-bridge.c
- create mode 100644 drivers/fpga/simple-fpga-bus.c
- create mode 100644 include/linux/fpga/fpga-bridge.h
 
+diff --git a/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+new file mode 100644
+index 0000000..9646c09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/simple-fpga-bus.txt
+@@ -0,0 +1,74 @@
++Simple FPGA Bus
++===============
++
++A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
++before populating the devices below its node.
++
++Required properties:
++- compatible : should contain "simple-fpga-bus"
++- #address-cells, #size-cells, ranges: must be present to handle address space
++  mapping for children.
++
++Optional properties:
++- fpga-mgr : should contain a phandle to a FPGA manager.
++- fpga-firmware : should contain the name of a FPGA image file located on the
++  firmware search path.
++- partial-reconfig : boolean property should be defined if partial
++  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
++  is done.
++- fpga-bridges : should contain a list of bridges that the bus will disable
++  before programming the FPGA and then enable after the FPGA has been
++  programmed.
++
++Example:
++
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@0 {
++		target-path="/soc";
++		__overlay__ {
++			#address-cells = <1>;
++	                #size-cells = <1>;
++
++			bridge@ff200000 {
++				compatible = "simple-fpga-bus";
++
++				#address-cells = <0x2>;
++				#size-cells = <0x1>;
++
++				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
++					 <0x00000001 0x00020000 0xff220000 0x00000008>,
++					 <0x00000001 0x00010040 0xff210040 0x00000020>;
++
++				fpga-mgr = <&hps_0_fpgamgr>;
++				firmware-name = "soc_system.rbf";
++
++				fpga-bridges = <&hps_fpgabridge0>, <&hps_fpgabridge1>, <&hps_fpgabridge2>;
++
++				onchip_memory2_0: memory@000000000 {
++					device_type = "memory";
++					compatible = "ALTR,onchipmem-15.1";
++					reg = <0x00000000 0x00000000 0x00010000>;
++				};
++
++				jtag_uart: serial@100020000 {
++					compatible = "altr,juart-15.1", "altr,juart-1.0";
++					reg = <0x00000001 0x00020000 0x00000008>;
++					interrupt-parent = <&intc>;
++					interrupts = <0 42 4>;
++				};
++
++				led_pio: gpio@100010040 {
++					compatible = "altr,pio-15.1", "altr,pio-1.0";
++					reg = <0x00000001 0x00010040 0x00000020>;
++					altr,gpio-bank-width = <4>;
++					resetvalue = <0>;
++					#gpio-cells = <2>;
++					gpio-controller;
++				};
++			};
++		};
++	};
++};
++
 -- 
 1.9.1
