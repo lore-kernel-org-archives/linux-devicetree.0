@@ -1,112 +1,31 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 4/4] Input: tsc2004 - Document ts2004 dt bindings
-Date: Mon, 2 Nov 2015 23:21:24 -0800
-Message-ID: <20151103072124.GA33601@dtor-ws>
-References: <1446252086-24334-1-git-send-email-mwelling@ieee.org>
- <1446252086-24334-5-git-send-email-mwelling@ieee.org>
- <CAL_JsqKpbrWcHj4eubWMAjtVRHE8TTN_qC5S=J7qzcf8khpzng@mail.gmail.com>
- <20151102205028.GA2571@deathstar>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: RE: [PATCH 0/6] arm64: Simple additions to NS2 DT
+Date: Tue, 3 Nov 2015 08:10:03 +0000
+Message-ID: <39063E8F96E11742B35A201CC5D095B7B07443@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1443808463-21120-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151102205028.GA2571@deathstar>
-Sender: linux-input-owner@vger.kernel.org
-To: Michael Welling <mwelling@ieee.org>
-Cc: Rob Herring <robh@kernel.org>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1443808463-21120-1-git-send-email-anup.patel@broadcom.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anup Patel <anup.patel@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof
+ Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Pramod Kumar <pramodku@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 02, 2015 at 02:50:29PM -0600, Michael Welling wrote:
-> On Mon, Nov 02, 2015 at 09:19:50AM -0600, Rob Herring wrote:
-> > > +Required properties:
-> > > + - compatible                : "ti,tsc2004"
-> > > + - interrupts                : IRQ specifier
-> > > + - vio-supply                 : Regulator specifier
-> > 
-> > reg property?
-> 
-> Rob,
-> 
-> It appears that I missed this in the description.
-> 
-> Probably because I was following the lead of the ts2005 description.
-> 
-> How does this look:
-> - reg			: I2C address. 0x48 - 0x4b based on the voltage applied to
-> 			  the AD1 and AD0 inputs on the IC.
-> 
++Arnd, +Olof
 
-How about the version below?
+Ping?
 
-Thanks.
-
--- 
-Dmitry
-
-
-Input: tsc2004 - document ts2004 dt bindings
-
-From: Michael Welling <mwelling@ieee.org>
-
-Adds documentation for the devicetree bindings of the new tsc2004 driver.
-
-Signed-off-by: Michael Welling <mwelling@ieee.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- .../bindings/input/touchscreen/tsc2005.txt         |   34 ++++++++++++++++----
- 1 file changed, 28 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-index 09089a6..b80c04b 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-@@ -1,14 +1,15 @@
--* Texas Instruments tsc2005 touchscreen controller
-+* Texas Instruments tsc2004 and tsc2005 touchscreen controllers
- 
- Required properties:
-- - compatible		      : "ti,tsc2005"
-- - reg			      : SPI device address
-- - spi-max-frequency	      : Maximal SPI speed
-+ - compatible		      : "ti,tsc2004" or "ti,tsc2005"
-+ - reg			      : Device address
-  - interrupts		      : IRQ specifier
-- - reset-gpios		      : GPIO specifier
-- - vio-supply                 : Regulator specifier
-+ - spi-max-frequency	      : Maximum SPI clocking speed of the device
-+			        (for tsc2005)
- 
- Optional properties:
-+ - vio-supply		      : Regulator specifier
-+ - reset-gpios		      : GPIO specifier for the controller reset line
-  - ti,x-plate-ohms	      : integer, resistance of the touchscreen's X plates
- 				in ohm (defaults to 280)
-  - ti,esd-recovery-timeout-ms : integer, if the touchscreen does not respond after
-@@ -18,6 +19,27 @@ Optional properties:
- 
- Example:
- 
-+&i2c3 {
-+	tsc2004@48 {
-+		compatible = "ti,tsc2004";
-+		reg = <0x48>;
-+		vio-supply = <&vio>;
-+
-+		reset-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-+		interrupts-extended = <&gpio1 27 IRQ_TYPE_EDGE_RISING>;
-+
-+		touchscreen-fuzz-x = <4>;
-+		touchscreen-fuzz-y = <7>;
-+		touchscreen-fuzz-pressure = <2>;
-+		touchscreen-size-x = <4096>;
-+		touchscreen-size-y = <4096>;
-+		touchscreen-max-pressure = <2048>;
-+
-+		ti,x-plate-ohms = <280>;
-+		ti,esd-recovery-timeout-ms = <8000>;
-+	};
-+}
-+
- &mcspi1 {
- 	tsc2005@0 {
- 		compatible = "ti,tsc2005";
+Regards,
+Anup
