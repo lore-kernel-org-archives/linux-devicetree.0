@@ -1,1283 +1,1207 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v3 4/5] ASoC: cs47l24: Add driver for Cirrus Logic CS47L24 and WM1831 codecs
-Date: Tue, 3 Nov 2015 15:08:35 +0000
-Message-ID: <1446563316-28878-5-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1446563316-28878-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v7] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL PCIe
+ Host Controller
+Date: Tue, 3 Nov 2015 20:53:47 +0530
+Message-ID: <1446564227-4704-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446563316-28878-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michals@xilinx.com, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, rjui@broadcom.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, marc.zyngier@arm.com, dhdang@apm.com, sbranden@broadcom.com
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the Cirrus Logic CS47L24 and WM1831 codecs.
+Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
 
-Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 ---
- sound/soc/codecs/Kconfig   |    8 +
- sound/soc/codecs/Makefile  |    2 +
- sound/soc/codecs/cs47l24.c | 1148 ++++++++++++++++++++++++++++++++++++++++++++
- sound/soc/codecs/cs47l24.h |   23 +
- 4 files changed, 1181 insertions(+)
- create mode 100644 sound/soc/codecs/cs47l24.c
- create mode 100644 sound/soc/codecs/cs47l24.h
+Removed msi_controller and added irq_domian for MSI domain hierarchy.
+Modified code for filling MSI address in struct msg.
+Added check for hwirq before passing it to irq_domain_set_info.
+---
+ .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
+ drivers/pci/host/Kconfig                           |   10 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pcie-xilinx-nwl.c                 | 1053 ++++++++++++++++++++
+ 4 files changed, 1132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index cfdafc4..55e14a3 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -55,6 +55,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_CS4271_SPI if SPI_MASTER
- 	select SND_SOC_CS42XX8_I2C if I2C
- 	select SND_SOC_CS4349 if I2C
-+	select SND_SOC_CS47L24 if MFD_CS47L24
- 	select SND_SOC_CX20442 if TTY
- 	select SND_SOC_DA7210 if SND_SOC_I2C_AND_SPI
- 	select SND_SOC_DA7213 if I2C
-@@ -195,10 +196,12 @@ config SND_SOC_88PM860X
- 
- config SND_SOC_ARIZONA
- 	tristate
-+	default y if SND_SOC_CS47L24=y
- 	default y if SND_SOC_WM5102=y
- 	default y if SND_SOC_WM5110=y
- 	default y if SND_SOC_WM8997=y
- 	default y if SND_SOC_WM8998=y
-+	default m if SND_SOC_CS47L24=m
- 	default m if SND_SOC_WM5102=m
- 	default m if SND_SOC_WM5110=m
- 	default m if SND_SOC_WM8997=m
-@@ -211,9 +214,11 @@ config SND_SOC_WM_HUBS
- 
- config SND_SOC_WM_ADSP
- 	tristate
-+	default y if SND_SOC_CS47L24=y
- 	default y if SND_SOC_WM5102=y
- 	default y if SND_SOC_WM5110=y
- 	default y if SND_SOC_WM2200=y
-+	default m if SND_SOC_CS47L24=m
- 	default m if SND_SOC_WM5102=m
- 	default m if SND_SOC_WM5110=m
- 	default m if SND_SOC_WM2200=m
-@@ -422,6 +427,9 @@ config SND_SOC_CS4349
- 	tristate "Cirrus Logic CS4349 CODEC"
- 	depends on I2C
- 
-+config SND_SOC_CS47L24
-+	tristate
-+
- config SND_SOC_CX20442
- 	tristate
- 	depends on TTY
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index f632fc4..c1d73fe 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -47,6 +47,7 @@ snd-soc-cs4271-spi-objs := cs4271-spi.o
- snd-soc-cs42xx8-objs := cs42xx8.o
- snd-soc-cs42xx8-i2c-objs := cs42xx8-i2c.o
- snd-soc-cs4349-objs := cs4349.o
-+snd-soc-cs47l24-objs := cs47l24.o
- snd-soc-cx20442-objs := cx20442.o
- snd-soc-da7210-objs := da7210.o
- snd-soc-da7213-objs := da7213.o
-@@ -242,6 +243,7 @@ obj-$(CONFIG_SND_SOC_CS4271_SPI)	+= snd-soc-cs4271-spi.o
- obj-$(CONFIG_SND_SOC_CS42XX8)	+= snd-soc-cs42xx8.o
- obj-$(CONFIG_SND_SOC_CS42XX8_I2C) += snd-soc-cs42xx8-i2c.o
- obj-$(CONFIG_SND_SOC_CS4349)	+= snd-soc-cs4349.o
-+obj-$(CONFIG_SND_SOC_CS47L24)	+= snd-soc-cs47l24.o
- obj-$(CONFIG_SND_SOC_CX20442)	+= snd-soc-cx20442.o
- obj-$(CONFIG_SND_SOC_DA7210)	+= snd-soc-da7210.o
- obj-$(CONFIG_SND_SOC_DA7213)	+= snd-soc-da7213.o
-diff --git a/sound/soc/codecs/cs47l24.c b/sound/soc/codecs/cs47l24.c
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
 new file mode 100644
-index 0000000..dc5ae7f
+index 0000000..3b2a9ad
 --- /dev/null
-+++ b/sound/soc/codecs/cs47l24.c
-@@ -0,0 +1,1148 @@
++++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+@@ -0,0 +1,68 @@
++* Xilinx NWL PCIe Root Port Bridge DT description
++
++Required properties:
++- compatible: Should contain "xlnx,nwl-pcie-2.11"
++- #address-cells: Address representation for root ports, set to <3>
++- #size-cells: Size representation for root ports, set to <2>
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- reg: Should contain Bridge, PCIe Controller registers location,
++	configuration sapce, and length
++- reg-names: Must include the following entries:
++	"breg": bridge registers
++	"pcireg": PCIe controller registers
++	"cfg": configuration space region
++- device_type: must be "pci"
++- interrupts: Should contain NWL PCIe interrupt
++- interrupt-names: Must include the following entries:
++	"msi1, msi0": interrupt asserted when msi is received
++	"intx": interrupt that is asserted when an legacy interrupt is received
++	"misc": interrupt asserted when miscellaneous is received
++- interrupt-map-mask and interrupt-map: standard PCI properties to define the
++	mapping of the PCI interface to interrupt numbers.
++- ranges: ranges for the PCI memory regions (I/O space region is not
++	supported by hardware)
++	Please refer to the standard PCI bus binding document for a more
++	detailed explanation
++- msi-controller: indicates that this is MSI controller node
++- msi-parent:  MSI parent of the root complex itself
++- legacy-interrupt-controller: Interrupt controller device node for Legacy interrupts
++	- interrupt-controller: identifies the node as an interrupt controller
++	- #interrupt-cells: should be set to 1
++	- #address-cells: specifies the number of cells needed to encode an
++		address. The value must be 0.
++
++
++Example:
++++++++++
++
++nwl_pcie: pcie@fd0e0000 {
++	#address-cells = <3>;
++	#size-cells = <2>;
++	compatible = "xlnx,nwl-pcie-2.11";
++	#interrupt-cells = <1>;
++	msi-controller;
++	device_type = "pci";
++	interrupt-parent = <&gic>;
++	interrupts = <0 114 4>, <0 115 4>, <0 116 4>, <0 117 4>, <0 118 4>;
++	interrupt-names = "msi0", "msi1", "intx", "dummy", "misc";
++	interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++	interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
++			<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
++			<0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
++			<0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
++
++	msi-parent = <&nwl_pcie>;
++	reg = <0x0 0xfd0e0000 0x1000>,
++	      <0x0 0xfd480000 0x1000>,
++	      <0x0 0xe0000000 0x1000000>;
++	reg-names = "breg", "pcireg", "cfg";
++	ranges = <0x02000000 0x00000000 0xe1000000 0x00000000 0xe1000000 0 0x0f000000>;
++
++	pcie_intc: legacy-interrupt-controller {
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++	};
++
++};
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index d5e58ba..24cbcba 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -15,6 +15,16 @@ config PCI_MVEBU
+ 	depends on ARCH_MVEBU || ARCH_DOVE
+ 	depends on OF
+ 
++config PCIE_XILINX_NWL
++	bool "NWL PCIe Core"
++	depends on ARCH_ZYNQMP
++	select PCI_MSI_IRQ_DOMAIN if PCI_MSI
++	help
++	 Say 'Y' here if you want kernel to support for Xilinx
++	 NWL PCIe controller. The controller can act as Root Port
++	 or End Point. The current option selection will only
++	 support root port enabling.
++
+ config PCIE_DW
+ 	bool
+ 
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 140d66f..6a56df7 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
+ obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+ obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone-dw.o pci-keystone.o
+ obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
++obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
+ obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
+ obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
+ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
+new file mode 100644
+index 0000000..532f479
+--- /dev/null
++++ b/drivers/pci/host/pcie-xilinx-nwl.c
+@@ -0,0 +1,1053 @@
 +/*
-+ * cs47l24.h  --  ALSA SoC Audio driver for Cirrus Logic CS47L24
++ * PCIe host controller driver for NWL PCIe Bridge
++ * Based on pcie-xilinx.c, pci-tegra.c
 + *
-+ * Copyright 2015 Cirrus Logic Inc.
++ * (C) Copyright 2014 - 2015, Xilinx, Inc.
 + *
-+ * Author: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 2 of the License, or
++ * (at your option) any later version.
 + */
 +
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/init.h>
 +#include <linux/delay.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <sound/core.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/jack.h>
-+#include <sound/initval.h>
-+#include <sound/tlv.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/msi.h>
++#include <linux/of_address.h>
++#include <linux/of_pci.h>
++#include <linux/of_platform.h>
++#include <linux/of_irq.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/irqchip/chained_irq.h>
 +
-+#include <linux/mfd/arizona/core.h>
-+#include <linux/mfd/arizona/registers.h>
++/* Bridge core config registers */
++#define BRCFG_PCIE_RX0			0x00000000
++#define BRCFG_PCIE_RX1			0x00000004
++#define BRCFG_AXI_MASTER		0x00000008
++#define BRCFG_PCIE_TX			0x0000000C
++#define BRCFG_INTERRUPT			0x00000010
++#define BRCFG_RAM_DISABLE0		0x00000014
++#define BRCFG_RAM_DISABLE1		0x00000018
++#define BRCFG_PCIE_RELAXED_ORDER	0x0000001C
++#define BRCFG_PCIE_RX_MSG_FILTER	0x00000020
 +
-+#include "arizona.h"
-+#include "wm_adsp.h"
-+#include "cs47l24.h"
++/* Attribute registers */
++#define NWL_ATTRIB_100			0x00000190
 +
-+struct cs47l24_priv {
-+	struct arizona_priv core;
-+	struct arizona_fll fll[2];
++/* Egress - Bridge translation registers */
++#define E_BREG_CAPABILITIES		0x00000200
++#define E_BREG_STATUS			0x00000204
++#define E_BREG_CONTROL			0x00000208
++#define E_BREG_BASE_LO			0x00000210
++#define E_BREG_BASE_HI			0x00000214
++#define E_ECAM_CAPABILITIES		0x00000220
++#define E_ECAM_STATUS			0x00000224
++#define E_ECAM_CONTROL			0x00000228
++#define E_ECAM_BASE_LO			0x00000230
++#define E_ECAM_BASE_HI			0x00000234
++
++/* Ingress - address translations */
++#define I_MSII_CAPABILITIES		0x00000300
++#define I_MSII_CONTROL			0x00000308
++#define I_MSII_BASE_LO			0x00000310
++#define I_MSII_BASE_HI			0x00000314
++
++#define I_ISUB_CONTROL			0x000003E8
++#define SET_ISUB_CONTROL		BIT(0)
++/* Rxed msg fifo  - Interrupt status registers */
++#define MSGF_MISC_STATUS		0x00000400
++#define MSGF_MISC_MASK			0x00000404
++#define MSGF_LEG_STATUS			0x00000420
++#define MSGF_LEG_MASK			0x00000424
++#define MSGF_MSI_STATUS_LO		0x00000440
++#define MSGF_MSI_STATUS_HI		0x00000444
++#define MSGF_MSI_MASK_LO		0x00000448
++#define MSGF_MSI_MASK_HI		0x0000044C
++#define MSGF_RX_FIFO_POP		0x00000484
++#define MSGF_RX_FIFO_TYPE		0x00000488
++#define MSGF_RX_FIFO_ADDRLO		0x00000490
++#define MSGF_RX_FIFO_ADDRHI		0x00000494
++#define MSGF_RX_FIFO_DATA		0x00000498
++
++/* Msg filter mask bits */
++#define CFG_ENABLE_PM_MSG_FWD		BIT(1)
++#define CFG_ENABLE_INT_MSG_FWD		BIT(2)
++#define CFG_ENABLE_ERR_MSG_FWD		BIT(3)
++#define CFG_ENABLE_SLT_MSG_FWD		BIT(5)
++#define CFG_ENABLE_VEN_MSG_FWD		BIT(7)
++#define CFG_ENABLE_OTH_MSG_FWD		BIT(13)
++#define CFG_ENABLE_VEN_MSG_EN		BIT(14)
++#define CFG_ENABLE_VEN_MSG_VEN_INV	BIT(15)
++#define CFG_ENABLE_VEN_MSG_VEN_ID	GENMASK(31, 16)
++#define CFG_ENABLE_MSG_FILTER_MASK	(CFG_ENABLE_PM_MSG_FWD | \
++					CFG_ENABLE_INT_MSG_FWD | \
++					CFG_ENABLE_ERR_MSG_FWD | \
++					CFG_ENABLE_SLT_MSG_FWD | \
++					CFG_ENABLE_VEN_MSG_FWD | \
++					CFG_ENABLE_OTH_MSG_FWD | \
++					CFG_ENABLE_VEN_MSG_EN | \
++					CFG_ENABLE_VEN_MSG_VEN_INV | \
++					CFG_ENABLE_VEN_MSG_VEN_ID)
++
++/* Misc interrupt status mask bits */
++#define MSGF_MISC_SR_RXMSG_AVAIL	BIT(0)
++#define MSGF_MISC_SR_RXMSG_OVER		BIT(1)
++#define MSGF_MISC_SR_SLAVE_ERR		BIT(4)
++#define MSGF_MISC_SR_MASTER_ERR		BIT(5)
++#define MSGF_MISC_SR_I_ADDR_ERR		BIT(6)
++#define MSGF_MISC_SR_E_ADDR_ERR		BIT(7)
++
++#define MSGF_MISC_SR_PCIE_CORE		GENMASK(18, 16)
++#define MSGF_MISC_SR_PCIE_CORE_ERR	GENMASK(31, 20)
++
++#define MSGF_MISC_SR_MASKALL		(MSGF_MISC_SR_RXMSG_AVAIL | \
++					MSGF_MISC_SR_RXMSG_OVER | \
++					MSGF_MISC_SR_SLAVE_ERR | \
++					MSGF_MISC_SR_MASTER_ERR | \
++					MSGF_MISC_SR_I_ADDR_ERR | \
++					MSGF_MISC_SR_E_ADDR_ERR | \
++					MSGF_MISC_SR_PCIE_CORE | \
++					MSGF_MISC_SR_PCIE_CORE_ERR)
++
++/* Message rx fifo type mask bits */
++#define MSGF_RX_FIFO_TYPE_MSI	(1)
++#define MSGF_RX_FIFO_TYPE_TYPE	GENMASK(1, 0)
++
++/* Legacy interrupt status mask bits */
++#define MSGF_LEG_SR_INTA		BIT(0)
++#define MSGF_LEG_SR_INTB		BIT(1)
++#define MSGF_LEG_SR_INTC		BIT(2)
++#define MSGF_LEG_SR_INTD		BIT(3)
++#define MSGF_LEG_SR_MASKALL		(MSGF_LEG_SR_INTA | MSGF_LEG_SR_INTB | \
++					MSGF_LEG_SR_INTC | MSGF_LEG_SR_INTD)
++
++/* MSI interrupt status mask bits */
++#define MSGF_MSI_SR_LO_MASK		BIT(0)
++#define MSGF_MSI_SR_HI_MASK		BIT(0)
++
++#define MSII_PRESENT			BIT(0)
++#define MSII_ENABLE			BIT(0)
++#define MSII_STATUS_ENABLE		BIT(15)
++
++/* Bridge config interrupt mask */
++#define BRCFG_INTERRUPT_MASK		BIT(0)
++#define BREG_PRESENT			BIT(0)
++#define BREG_ENABLE			BIT(0)
++#define BREG_ENABLE_FORCE		BIT(1)
++
++/* E_ECAM status mask bits */
++#define E_ECAM_PRESENT			BIT(0)
++#define E_ECAM_SR_WR_PEND		BIT(16)
++#define E_ECAM_SR_RD_PEND		BIT(0)
++#define E_ECAM_SR_MASKALL		(E_ECAM_SR_WR_PEND | E_ECAM_SR_RD_PEND)
++#define E_ECAM_CR_ENABLE		BIT(0)
++#define E_ECAM_SIZE_LOC			GENMASK(20, 16)
++#define E_ECAM_SIZE_SHIFT		16
++#define ECAM_BUS_LOC_SHIFT		20
++#define ECAM_DEV_LOC_SHIFT		12
++#define NWL_ECAM_VALUE_DEFAULT		12
++#define NWL_ECAM_SIZE_MIN		4096
++
++#define ATTR_UPSTREAM_FACING		BIT(6)
++#define CFG_DMA_REG_BAR			GENMASK(2, 0)
++
++/* msgf_rx_fifo_pop bits */
++#define MSGF_RX_FIFO_POP_POP	BIT(0)
++
++#define INT_PCI_MSI_NR			(2 * 32)
++
++/* Readin the PS_LINKUP */
++#define PS_LINKUP_OFFSET			0x00000238
++#define PCIE_PHY_LINKUP_BIT			BIT(0)
++#define PHY_RDY_LINKUP_BIT			BIT(1)
++#define PCIE_USER_LINKUP			0
++#define PHY_RDY_LINKUP				1
++#define LINKUP_ITER_CHECK			5
++
++/* PCIE Message Request */
++#define TX_PCIE_MSG				0x00000620
++#define TX_PCIE_MSG_CNTL			0x00000004
++#define TX_PCIE_MSG_SPEC_LO			0x00000008
++#define TX_PCIE_MSG_SPEC_HI			0x0000000C
++#define TX_PCIE_MSG_DATA			0x00000010
++
++#define MSG_BUSY_BIT				BIT(8)
++#define MSG_EXECUTE_BIT				BIT(0)
++#define MSG_DONE_BIT				BIT(16)
++#define MSG_DONE_STATUS_BIT			(BIT(25) | BIT(24))
++#define RANDOM_DIGIT				0x11223344
++#define PATTRN_SSLP_TLP				0x01005074
++
++#define EXP_CAP_BASE				0x60
++
++/* SSPL ERROR */
++#define SLVERR					0x02
++#define DECERR					0x03
++
++struct nwl_msi {			/* MSI information */
++	struct irq_domain *msi_domain;
++	DECLARE_BITMAP(used, INT_PCI_MSI_NR);	/* Declare Bitmap for MSI */
++	struct irq_domain *dev_domain;
++	unsigned long pages;		/* MSI pages */
++	struct mutex lock;		/* protect used variable */
++	int irq_msi0;
++	int irq_msi1;
 +};
 +
-+static const struct wm_adsp_region cs47l24_dsp2_regions[] = {
-+	{ .type = WMFW_ADSP2_PM, .base = 0x200000 },
-+	{ .type = WMFW_ADSP2_ZM, .base = 0x280000 },
-+	{ .type = WMFW_ADSP2_XM, .base = 0x290000 },
-+	{ .type = WMFW_ADSP2_YM, .base = 0x2a8000 },
++struct nwl_pcie {
++	struct device *dev;
++	void __iomem *breg_base;
++	void __iomem *pcireg_base;
++	void __iomem *ecam_base;
++	u32 phys_breg_base;		/* Physical Bridge Register Base */
++	u32 phys_pcie_reg_base;		/* Physical PCIe Controller Base */
++	u32 phys_ecam_base;		/* Physical Configuration Base */
++	u32 breg_size;
++	u32 pcie_reg_size;
++	u32 ecam_size;
++	int irq_intx;
++	int irq_misc;
++	u32 ecam_value;
++	u8 last_busno;
++	u8 root_busno;
++	u8 link_up;
++	struct nwl_msi msi;
++	struct irq_domain *legacy_irq_domain;
 +};
 +
-+static const struct wm_adsp_region cs47l24_dsp3_regions[] = {
-+	{ .type = WMFW_ADSP2_PM, .base = 0x300000 },
-+	{ .type = WMFW_ADSP2_ZM, .base = 0x380000 },
-+	{ .type = WMFW_ADSP2_XM, .base = 0x390000 },
-+	{ .type = WMFW_ADSP2_YM, .base = 0x3a8000 },
-+};
-+
-+static const struct wm_adsp_region *cs47l24_dsp_regions[] = {
-+	cs47l24_dsp2_regions,
-+	cs47l24_dsp3_regions,
-+};
-+
-+static DECLARE_TLV_DB_SCALE(eq_tlv, -1200, 100, 0);
-+static DECLARE_TLV_DB_SCALE(digital_tlv, -6400, 50, 0);
-+static DECLARE_TLV_DB_SCALE(noise_tlv, -13200, 600, 0);
-+static DECLARE_TLV_DB_SCALE(ng_tlv, -10200, 600, 0);
-+
-+#define CS47L24_NG_SRC(name, base) \
-+	SOC_SINGLE(name " NG HPOUT1L Switch",  base,  0, 1, 0), \
-+	SOC_SINGLE(name " NG HPOUT1R Switch",  base,  1, 1, 0), \
-+	SOC_SINGLE(name " NG SPKOUT Switch",  base,  6, 1, 0)
-+
-+static const struct snd_kcontrol_new cs47l24_snd_controls[] = {
-+SOC_ENUM("IN1 OSR", arizona_in_dmic_osr[0]),
-+SOC_ENUM("IN2 OSR", arizona_in_dmic_osr[1]),
-+
-+SOC_ENUM("IN HPF Cutoff Frequency", arizona_in_hpf_cut_enum),
-+
-+SOC_SINGLE("IN1L HPF Switch", ARIZONA_IN1L_CONTROL,
-+	   ARIZONA_IN1L_HPF_SHIFT, 1, 0),
-+SOC_SINGLE("IN1R HPF Switch", ARIZONA_IN1R_CONTROL,
-+	   ARIZONA_IN1R_HPF_SHIFT, 1, 0),
-+SOC_SINGLE("IN2L HPF Switch", ARIZONA_IN2L_CONTROL,
-+	   ARIZONA_IN2L_HPF_SHIFT, 1, 0),
-+SOC_SINGLE("IN2R HPF Switch", ARIZONA_IN2R_CONTROL,
-+	   ARIZONA_IN2R_HPF_SHIFT, 1, 0),
-+
-+SOC_SINGLE_TLV("IN1L Digital Volume", ARIZONA_ADC_DIGITAL_VOLUME_1L,
-+	       ARIZONA_IN1L_DIG_VOL_SHIFT, 0xbf, 0, digital_tlv),
-+SOC_SINGLE_TLV("IN1R Digital Volume", ARIZONA_ADC_DIGITAL_VOLUME_1R,
-+	       ARIZONA_IN1R_DIG_VOL_SHIFT, 0xbf, 0, digital_tlv),
-+SOC_SINGLE_TLV("IN2L Digital Volume", ARIZONA_ADC_DIGITAL_VOLUME_2L,
-+	       ARIZONA_IN2L_DIG_VOL_SHIFT, 0xbf, 0, digital_tlv),
-+SOC_SINGLE_TLV("IN2R Digital Volume", ARIZONA_ADC_DIGITAL_VOLUME_2R,
-+	       ARIZONA_IN2R_DIG_VOL_SHIFT, 0xbf, 0, digital_tlv),
-+
-+SOC_ENUM("Input Ramp Up", arizona_in_vi_ramp),
-+SOC_ENUM("Input Ramp Down", arizona_in_vd_ramp),
-+
-+ARIZONA_MIXER_CONTROLS("EQ1", ARIZONA_EQ1MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("EQ2", ARIZONA_EQ2MIX_INPUT_1_SOURCE),
-+
-+ARIZONA_EQ_CONTROL("EQ1 Coefficients", ARIZONA_EQ1_2),
-+SOC_SINGLE_TLV("EQ1 B1 Volume", ARIZONA_EQ1_1, ARIZONA_EQ1_B1_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ1 B2 Volume", ARIZONA_EQ1_1, ARIZONA_EQ1_B2_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ1 B3 Volume", ARIZONA_EQ1_1, ARIZONA_EQ1_B3_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ1 B4 Volume", ARIZONA_EQ1_2, ARIZONA_EQ1_B4_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ1 B5 Volume", ARIZONA_EQ1_2, ARIZONA_EQ1_B5_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+
-+ARIZONA_EQ_CONTROL("EQ2 Coefficients", ARIZONA_EQ2_2),
-+SOC_SINGLE_TLV("EQ2 B1 Volume", ARIZONA_EQ2_1, ARIZONA_EQ2_B1_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ2 B2 Volume", ARIZONA_EQ2_1, ARIZONA_EQ2_B2_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ2 B3 Volume", ARIZONA_EQ2_1, ARIZONA_EQ2_B3_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ2 B4 Volume", ARIZONA_EQ2_2, ARIZONA_EQ2_B4_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+SOC_SINGLE_TLV("EQ2 B5 Volume", ARIZONA_EQ2_2, ARIZONA_EQ2_B5_GAIN_SHIFT,
-+	       24, 0, eq_tlv),
-+
-+ARIZONA_MIXER_CONTROLS("DRC1L", ARIZONA_DRC1LMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("DRC1R", ARIZONA_DRC1RMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("DRC2L", ARIZONA_DRC2LMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("DRC2R", ARIZONA_DRC2RMIX_INPUT_1_SOURCE),
-+
-+SND_SOC_BYTES_MASK("DRC1", ARIZONA_DRC1_CTRL1, 5,
-+		   ARIZONA_DRC1R_ENA | ARIZONA_DRC1L_ENA),
-+SND_SOC_BYTES_MASK("DRC2", ARIZONA_DRC2_CTRL1, 5,
-+		   ARIZONA_DRC2R_ENA | ARIZONA_DRC2L_ENA),
-+
-+ARIZONA_MIXER_CONTROLS("LHPF1", ARIZONA_HPLP1MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("LHPF2", ARIZONA_HPLP2MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("LHPF3", ARIZONA_HPLP3MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("LHPF4", ARIZONA_HPLP4MIX_INPUT_1_SOURCE),
-+
-+ARIZONA_LHPF_CONTROL("LHPF1 Coefficients", ARIZONA_HPLPF1_2),
-+ARIZONA_LHPF_CONTROL("LHPF2 Coefficients", ARIZONA_HPLPF2_2),
-+ARIZONA_LHPF_CONTROL("LHPF3 Coefficients", ARIZONA_HPLPF3_2),
-+ARIZONA_LHPF_CONTROL("LHPF4 Coefficients", ARIZONA_HPLPF4_2),
-+
-+SOC_ENUM("LHPF1 Mode", arizona_lhpf1_mode),
-+SOC_ENUM("LHPF2 Mode", arizona_lhpf2_mode),
-+SOC_ENUM("LHPF3 Mode", arizona_lhpf3_mode),
-+SOC_ENUM("LHPF4 Mode", arizona_lhpf4_mode),
-+
-+SOC_ENUM("ISRC1 FSL", arizona_isrc_fsl[0]),
-+SOC_ENUM("ISRC2 FSL", arizona_isrc_fsl[1]),
-+SOC_ENUM("ISRC3 FSL", arizona_isrc_fsl[2]),
-+SOC_ENUM("ISRC1 FSH", arizona_isrc_fsh[0]),
-+SOC_ENUM("ISRC2 FSH", arizona_isrc_fsh[1]),
-+SOC_ENUM("ISRC3 FSH", arizona_isrc_fsh[2]),
-+SOC_ENUM("ASRC RATE 1", arizona_asrc_rate1),
-+
-+ARIZONA_MIXER_CONTROLS("DSP2L", ARIZONA_DSP2LMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("DSP2R", ARIZONA_DSP2RMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("DSP3L", ARIZONA_DSP3LMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("DSP3R", ARIZONA_DSP3RMIX_INPUT_1_SOURCE),
-+
-+SOC_SINGLE_TLV("Noise Generator Volume", ARIZONA_COMFORT_NOISE_GENERATOR,
-+	       ARIZONA_NOISE_GEN_GAIN_SHIFT, 0x16, 0, noise_tlv),
-+
-+ARIZONA_MIXER_CONTROLS("HPOUT1L", ARIZONA_OUT1LMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("HPOUT1R", ARIZONA_OUT1RMIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("SPKOUT", ARIZONA_OUT4LMIX_INPUT_1_SOURCE),
-+
-+SOC_SINGLE("HPOUT1 SC Protect Switch", ARIZONA_HP1_SHORT_CIRCUIT_CTRL,
-+	   ARIZONA_HP1_SC_ENA_SHIFT, 1, 0),
-+
-+SOC_DOUBLE_R("HPOUT1 Digital Switch", ARIZONA_DAC_DIGITAL_VOLUME_1L,
-+	     ARIZONA_DAC_DIGITAL_VOLUME_1R, ARIZONA_OUT1L_MUTE_SHIFT, 1, 1),
-+SOC_SINGLE("Speaker Digital Switch", ARIZONA_DAC_DIGITAL_VOLUME_4L,
-+	     ARIZONA_OUT4L_MUTE_SHIFT, 1, 1),
-+
-+SOC_DOUBLE_R_TLV("HPOUT1 Digital Volume", ARIZONA_DAC_DIGITAL_VOLUME_1L,
-+		 ARIZONA_DAC_DIGITAL_VOLUME_1R, ARIZONA_OUT1L_VOL_SHIFT,
-+		 0xbf, 0, digital_tlv),
-+SOC_SINGLE_TLV("Speaker Digital Volume", ARIZONA_DAC_DIGITAL_VOLUME_4L,
-+		 ARIZONA_OUT4L_VOL_SHIFT,
-+		 0xbf, 0, digital_tlv),
-+
-+SOC_ENUM("Output Ramp Up", arizona_out_vi_ramp),
-+SOC_ENUM("Output Ramp Down", arizona_out_vd_ramp),
-+
-+SOC_SINGLE("Noise Gate Switch", ARIZONA_NOISE_GATE_CONTROL,
-+	   ARIZONA_NGATE_ENA_SHIFT, 1, 0),
-+SOC_SINGLE_TLV("Noise Gate Threshold Volume", ARIZONA_NOISE_GATE_CONTROL,
-+	       ARIZONA_NGATE_THR_SHIFT, 7, 1, ng_tlv),
-+SOC_ENUM("Noise Gate Hold", arizona_ng_hold),
-+
-+CS47L24_NG_SRC("HPOUT1L", ARIZONA_NOISE_GATE_SELECT_1L),
-+CS47L24_NG_SRC("HPOUT1R", ARIZONA_NOISE_GATE_SELECT_1R),
-+CS47L24_NG_SRC("SPKOUT", ARIZONA_NOISE_GATE_SELECT_4L),
-+
-+ARIZONA_MIXER_CONTROLS("AIF1TX1", ARIZONA_AIF1TX1MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX2", ARIZONA_AIF1TX2MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX3", ARIZONA_AIF1TX3MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX4", ARIZONA_AIF1TX4MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX5", ARIZONA_AIF1TX5MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX6", ARIZONA_AIF1TX6MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX7", ARIZONA_AIF1TX7MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF1TX8", ARIZONA_AIF1TX8MIX_INPUT_1_SOURCE),
-+
-+ARIZONA_MIXER_CONTROLS("AIF2TX1", ARIZONA_AIF2TX1MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF2TX2", ARIZONA_AIF2TX2MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF2TX3", ARIZONA_AIF2TX3MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF2TX4", ARIZONA_AIF2TX4MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF2TX5", ARIZONA_AIF2TX5MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF2TX6", ARIZONA_AIF2TX6MIX_INPUT_1_SOURCE),
-+
-+ARIZONA_MIXER_CONTROLS("AIF3TX1", ARIZONA_AIF3TX1MIX_INPUT_1_SOURCE),
-+ARIZONA_MIXER_CONTROLS("AIF3TX2", ARIZONA_AIF3TX2MIX_INPUT_1_SOURCE),
-+};
-+
-+ARIZONA_MIXER_ENUMS(EQ1, ARIZONA_EQ1MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(EQ2, ARIZONA_EQ2MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(DRC1L, ARIZONA_DRC1LMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(DRC1R, ARIZONA_DRC1RMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(DRC2L, ARIZONA_DRC2LMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(DRC2R, ARIZONA_DRC2RMIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(LHPF1, ARIZONA_HPLP1MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(LHPF2, ARIZONA_HPLP2MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(LHPF3, ARIZONA_HPLP3MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(LHPF4, ARIZONA_HPLP4MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(DSP2L, ARIZONA_DSP2LMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(DSP2R, ARIZONA_DSP2RMIX_INPUT_1_SOURCE);
-+ARIZONA_DSP_AUX_ENUMS(DSP2, ARIZONA_DSP2AUX1MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(DSP3L, ARIZONA_DSP3LMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(DSP3R, ARIZONA_DSP3RMIX_INPUT_1_SOURCE);
-+ARIZONA_DSP_AUX_ENUMS(DSP3, ARIZONA_DSP3AUX1MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(PWM1, ARIZONA_PWM1MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(PWM2, ARIZONA_PWM2MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(OUT1L, ARIZONA_OUT1LMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(OUT1R, ARIZONA_OUT1RMIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(SPKOUT, ARIZONA_OUT4LMIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(AIF1TX1, ARIZONA_AIF1TX1MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX2, ARIZONA_AIF1TX2MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX3, ARIZONA_AIF1TX3MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX4, ARIZONA_AIF1TX4MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX5, ARIZONA_AIF1TX5MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX6, ARIZONA_AIF1TX6MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX7, ARIZONA_AIF1TX7MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF1TX8, ARIZONA_AIF1TX8MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(AIF2TX1, ARIZONA_AIF2TX1MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF2TX2, ARIZONA_AIF2TX2MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF2TX3, ARIZONA_AIF2TX3MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF2TX4, ARIZONA_AIF2TX4MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF2TX5, ARIZONA_AIF2TX5MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF2TX6, ARIZONA_AIF2TX6MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MIXER_ENUMS(AIF3TX1, ARIZONA_AIF3TX1MIX_INPUT_1_SOURCE);
-+ARIZONA_MIXER_ENUMS(AIF3TX2, ARIZONA_AIF3TX2MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ASRC1L, ARIZONA_ASRC1LMIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ASRC1R, ARIZONA_ASRC1RMIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ASRC2L, ARIZONA_ASRC2LMIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ASRC2R, ARIZONA_ASRC2RMIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ISRC1INT1, ARIZONA_ISRC1INT1MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC1INT2, ARIZONA_ISRC1INT2MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC1INT3, ARIZONA_ISRC1INT3MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC1INT4, ARIZONA_ISRC1INT4MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ISRC1DEC1, ARIZONA_ISRC1DEC1MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC1DEC2, ARIZONA_ISRC1DEC2MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC1DEC3, ARIZONA_ISRC1DEC3MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC1DEC4, ARIZONA_ISRC1DEC4MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ISRC2INT1, ARIZONA_ISRC2INT1MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC2INT2, ARIZONA_ISRC2INT2MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC2INT3, ARIZONA_ISRC2INT3MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC2INT4, ARIZONA_ISRC2INT4MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ISRC2DEC1, ARIZONA_ISRC2DEC1MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC2DEC2, ARIZONA_ISRC2DEC2MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC2DEC3, ARIZONA_ISRC2DEC3MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC2DEC4, ARIZONA_ISRC2DEC4MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ISRC3INT1, ARIZONA_ISRC3INT1MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC3INT2, ARIZONA_ISRC3INT2MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC3INT3, ARIZONA_ISRC3INT3MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC3INT4, ARIZONA_ISRC3INT4MIX_INPUT_1_SOURCE);
-+
-+ARIZONA_MUX_ENUMS(ISRC3DEC1, ARIZONA_ISRC3DEC1MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC3DEC2, ARIZONA_ISRC3DEC2MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC3DEC3, ARIZONA_ISRC3DEC3MIX_INPUT_1_SOURCE);
-+ARIZONA_MUX_ENUMS(ISRC3DEC4, ARIZONA_ISRC3DEC4MIX_INPUT_1_SOURCE);
-+
-+static const char * const cs47l24_aec_loopback_texts[] = {
-+	"HPOUT1L", "HPOUT1R", "SPKOUT",
-+};
-+
-+static const unsigned int cs47l24_aec_loopback_values[] = {
-+	0, 1, 6,
-+};
-+
-+static const struct soc_enum cs47l24_aec_loopback =
-+	SOC_VALUE_ENUM_SINGLE(ARIZONA_DAC_AEC_CONTROL_1,
-+			      ARIZONA_AEC_LOOPBACK_SRC_SHIFT, 0xf,
-+			      ARRAY_SIZE(cs47l24_aec_loopback_texts),
-+			      cs47l24_aec_loopback_texts,
-+			      cs47l24_aec_loopback_values);
-+
-+static const struct snd_kcontrol_new cs47l24_aec_loopback_mux =
-+	SOC_DAPM_ENUM("AEC Loopback", cs47l24_aec_loopback);
-+
-+static const struct snd_soc_dapm_widget cs47l24_dapm_widgets[] = {
-+SND_SOC_DAPM_SUPPLY("SYSCLK", ARIZONA_SYSTEM_CLOCK_1,
-+		    ARIZONA_SYSCLK_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_SUPPLY("ASYNCCLK", ARIZONA_ASYNC_CLOCK_1,
-+		    ARIZONA_ASYNC_CLK_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_SUPPLY("OPCLK", ARIZONA_OUTPUT_SYSTEM_CLOCK,
-+		    ARIZONA_OPCLK_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_SUPPLY("ASYNCOPCLK", ARIZONA_OUTPUT_ASYNC_CLOCK,
-+		    ARIZONA_OPCLK_ASYNC_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_REGULATOR_SUPPLY("CPVDD", 20, 0),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("MICVDD", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
-+SND_SOC_DAPM_REGULATOR_SUPPLY("SPKVDD", 0, 0),
-+
-+SND_SOC_DAPM_SIGGEN("TONE"),
-+SND_SOC_DAPM_SIGGEN("NOISE"),
-+SND_SOC_DAPM_SIGGEN("HAPTICS"),
-+
-+SND_SOC_DAPM_INPUT("IN1L"),
-+SND_SOC_DAPM_INPUT("IN1R"),
-+SND_SOC_DAPM_INPUT("IN2L"),
-+SND_SOC_DAPM_INPUT("IN2R"),
-+
-+SND_SOC_DAPM_OUTPUT("DRC1 Signal Activity"),
-+SND_SOC_DAPM_OUTPUT("DRC2 Signal Activity"),
-+
-+SND_SOC_DAPM_PGA_E("IN1L PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN1L_ENA_SHIFT,
-+		   0, NULL, 0, arizona_in_ev,
-+		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
-+		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
-+SND_SOC_DAPM_PGA_E("IN1R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN1R_ENA_SHIFT,
-+		   0, NULL, 0, arizona_in_ev,
-+		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
-+		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
-+SND_SOC_DAPM_PGA_E("IN2L PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2L_ENA_SHIFT,
-+		   0, NULL, 0, arizona_in_ev,
-+		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
-+		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
-+SND_SOC_DAPM_PGA_E("IN2R PGA", ARIZONA_INPUT_ENABLES, ARIZONA_IN2R_ENA_SHIFT,
-+		   0, NULL, 0, arizona_in_ev,
-+		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
-+		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
-+
-+SND_SOC_DAPM_SUPPLY("MICBIAS1", ARIZONA_MIC_BIAS_CTRL_1,
-+		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_SUPPLY("MICBIAS2", ARIZONA_MIC_BIAS_CTRL_2,
-+		    ARIZONA_MICB1_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("Noise Generator", ARIZONA_COMFORT_NOISE_GENERATOR,
-+		 ARIZONA_NOISE_GEN_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("Tone Generator 1", ARIZONA_TONE_GENERATOR_1,
-+		 ARIZONA_TONE1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("Tone Generator 2", ARIZONA_TONE_GENERATOR_1,
-+		 ARIZONA_TONE2_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("EQ1", ARIZONA_EQ1_1, ARIZONA_EQ1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("EQ2", ARIZONA_EQ2_1, ARIZONA_EQ2_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("DRC1L", ARIZONA_DRC1_CTRL1, ARIZONA_DRC1L_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("DRC1R", ARIZONA_DRC1_CTRL1, ARIZONA_DRC1R_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("DRC2L", ARIZONA_DRC2_CTRL1, ARIZONA_DRC2L_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("DRC2R", ARIZONA_DRC2_CTRL1, ARIZONA_DRC2R_ENA_SHIFT, 0,
-+		 NULL, 0),
-+
-+SND_SOC_DAPM_PGA("LHPF1", ARIZONA_HPLPF1_1, ARIZONA_LHPF1_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("LHPF2", ARIZONA_HPLPF2_1, ARIZONA_LHPF2_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("LHPF3", ARIZONA_HPLPF3_1, ARIZONA_LHPF3_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("LHPF4", ARIZONA_HPLPF4_1, ARIZONA_LHPF4_ENA_SHIFT, 0,
-+		 NULL, 0),
-+
-+SND_SOC_DAPM_PGA("PWM1 Driver", ARIZONA_PWM_DRIVE_1, ARIZONA_PWM1_ENA_SHIFT,
-+		 0, NULL, 0),
-+SND_SOC_DAPM_PGA("PWM2 Driver", ARIZONA_PWM_DRIVE_1, ARIZONA_PWM2_ENA_SHIFT,
-+		 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("ASRC1L", ARIZONA_ASRC_ENABLE, ARIZONA_ASRC1L_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("ASRC1R", ARIZONA_ASRC_ENABLE, ARIZONA_ASRC1R_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("ASRC2L", ARIZONA_ASRC_ENABLE, ARIZONA_ASRC2L_ENA_SHIFT, 0,
-+		 NULL, 0),
-+SND_SOC_DAPM_PGA("ASRC2R", ARIZONA_ASRC_ENABLE, ARIZONA_ASRC2R_ENA_SHIFT, 0,
-+		 NULL, 0),
-+
-+WM_ADSP2("DSP2", 1),
-+WM_ADSP2("DSP3", 2),
-+
-+SND_SOC_DAPM_PGA("ISRC1INT1", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_INT0_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC1INT2", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_INT1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC1INT3", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_INT2_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC1INT4", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_INT3_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("ISRC1DEC1", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_DEC0_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC1DEC2", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_DEC1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC1DEC3", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_DEC2_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC1DEC4", ARIZONA_ISRC_1_CTRL_3,
-+		 ARIZONA_ISRC1_DEC3_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("ISRC2INT1", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_INT0_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC2INT2", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_INT1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC2INT3", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_INT2_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC2INT4", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_INT3_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("ISRC2DEC1", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_DEC0_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC2DEC2", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_DEC1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC2DEC3", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_DEC2_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC2DEC4", ARIZONA_ISRC_2_CTRL_3,
-+		 ARIZONA_ISRC2_DEC3_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("ISRC3INT1", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_INT0_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC3INT2", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_INT1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC3INT3", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_INT2_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC3INT4", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_INT3_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_PGA("ISRC3DEC1", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_DEC0_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC3DEC2", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_DEC1_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC3DEC3", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_DEC2_ENA_SHIFT, 0, NULL, 0),
-+SND_SOC_DAPM_PGA("ISRC3DEC4", ARIZONA_ISRC_3_CTRL_3,
-+		 ARIZONA_ISRC3_DEC3_ENA_SHIFT, 0, NULL, 0),
-+
-+SND_SOC_DAPM_MUX("AEC Loopback", ARIZONA_DAC_AEC_CONTROL_1,
-+		       ARIZONA_AEC_LOOPBACK_ENA_SHIFT, 0,
-+		       &cs47l24_aec_loopback_mux),
-+
-+SND_SOC_DAPM_AIF_OUT("AIF1TX1", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX1_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX2", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX2_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX3", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX3_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX4", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX4_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX5", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX5_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX6", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX6_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX7", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX7_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF1TX8", NULL, 0,
-+		     ARIZONA_AIF1_TX_ENABLES, ARIZONA_AIF1TX8_ENA_SHIFT, 0),
-+
-+SND_SOC_DAPM_AIF_IN("AIF1RX1", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX1_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX2", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX2_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX3", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX3_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX4", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX4_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX5", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX5_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX6", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX6_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX7", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX7_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF1RX8", NULL, 0,
-+		    ARIZONA_AIF1_RX_ENABLES, ARIZONA_AIF1RX8_ENA_SHIFT, 0),
-+
-+SND_SOC_DAPM_AIF_OUT("AIF2TX1", NULL, 0,
-+		     ARIZONA_AIF2_TX_ENABLES, ARIZONA_AIF2TX1_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF2TX2", NULL, 0,
-+		     ARIZONA_AIF2_TX_ENABLES, ARIZONA_AIF2TX2_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF2TX3", NULL, 0,
-+		     ARIZONA_AIF2_TX_ENABLES, ARIZONA_AIF2TX3_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF2TX4", NULL, 0,
-+		     ARIZONA_AIF2_TX_ENABLES, ARIZONA_AIF2TX4_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF2TX5", NULL, 0,
-+		     ARIZONA_AIF2_TX_ENABLES, ARIZONA_AIF2TX5_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF2TX6", NULL, 0,
-+		     ARIZONA_AIF2_TX_ENABLES, ARIZONA_AIF2TX6_ENA_SHIFT, 0),
-+
-+SND_SOC_DAPM_AIF_IN("AIF2RX1", NULL, 0,
-+		    ARIZONA_AIF2_RX_ENABLES, ARIZONA_AIF2RX1_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF2RX2", NULL, 0,
-+		    ARIZONA_AIF2_RX_ENABLES, ARIZONA_AIF2RX2_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF2RX3", NULL, 0,
-+		    ARIZONA_AIF2_RX_ENABLES, ARIZONA_AIF2RX3_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF2RX4", NULL, 0,
-+		    ARIZONA_AIF2_RX_ENABLES, ARIZONA_AIF2RX4_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF2RX5", NULL, 0,
-+		    ARIZONA_AIF2_RX_ENABLES, ARIZONA_AIF2RX5_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF2RX6", NULL, 0,
-+		    ARIZONA_AIF2_RX_ENABLES, ARIZONA_AIF2RX6_ENA_SHIFT, 0),
-+
-+SND_SOC_DAPM_AIF_OUT("AIF3TX1", NULL, 0,
-+		     ARIZONA_AIF3_TX_ENABLES, ARIZONA_AIF3TX1_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_OUT("AIF3TX2", NULL, 0,
-+		     ARIZONA_AIF3_TX_ENABLES, ARIZONA_AIF3TX2_ENA_SHIFT, 0),
-+
-+SND_SOC_DAPM_AIF_IN("AIF3RX1", NULL, 0,
-+		    ARIZONA_AIF3_RX_ENABLES, ARIZONA_AIF3RX1_ENA_SHIFT, 0),
-+SND_SOC_DAPM_AIF_IN("AIF3RX2", NULL, 0,
-+		    ARIZONA_AIF3_RX_ENABLES, ARIZONA_AIF3RX2_ENA_SHIFT, 0),
-+
-+SND_SOC_DAPM_PGA_E("OUT1L", SND_SOC_NOPM,
-+		   ARIZONA_OUT1L_ENA_SHIFT, 0, NULL, 0, arizona_hp_ev,
-+		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
-+		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
-+SND_SOC_DAPM_PGA_E("OUT1R", SND_SOC_NOPM,
-+		   ARIZONA_OUT1R_ENA_SHIFT, 0, NULL, 0, arizona_hp_ev,
-+		   SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD |
-+		   SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU),
-+
-+ARIZONA_MIXER_WIDGETS(EQ1, "EQ1"),
-+ARIZONA_MIXER_WIDGETS(EQ2, "EQ2"),
-+
-+ARIZONA_MIXER_WIDGETS(DRC1L, "DRC1L"),
-+ARIZONA_MIXER_WIDGETS(DRC1R, "DRC1R"),
-+ARIZONA_MIXER_WIDGETS(DRC2L, "DRC2L"),
-+ARIZONA_MIXER_WIDGETS(DRC2R, "DRC2R"),
-+
-+ARIZONA_MIXER_WIDGETS(LHPF1, "LHPF1"),
-+ARIZONA_MIXER_WIDGETS(LHPF2, "LHPF2"),
-+ARIZONA_MIXER_WIDGETS(LHPF3, "LHPF3"),
-+ARIZONA_MIXER_WIDGETS(LHPF4, "LHPF4"),
-+
-+ARIZONA_MIXER_WIDGETS(PWM1, "PWM1"),
-+ARIZONA_MIXER_WIDGETS(PWM2, "PWM2"),
-+
-+ARIZONA_MIXER_WIDGETS(OUT1L, "HPOUT1L"),
-+ARIZONA_MIXER_WIDGETS(OUT1R, "HPOUT1R"),
-+ARIZONA_MIXER_WIDGETS(SPKOUT, "SPKOUT"),
-+
-+ARIZONA_MIXER_WIDGETS(AIF1TX1, "AIF1TX1"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX2, "AIF1TX2"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX3, "AIF1TX3"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX4, "AIF1TX4"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX5, "AIF1TX5"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX6, "AIF1TX6"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX7, "AIF1TX7"),
-+ARIZONA_MIXER_WIDGETS(AIF1TX8, "AIF1TX8"),
-+
-+ARIZONA_MIXER_WIDGETS(AIF2TX1, "AIF2TX1"),
-+ARIZONA_MIXER_WIDGETS(AIF2TX2, "AIF2TX2"),
-+ARIZONA_MIXER_WIDGETS(AIF2TX3, "AIF2TX3"),
-+ARIZONA_MIXER_WIDGETS(AIF2TX4, "AIF2TX4"),
-+ARIZONA_MIXER_WIDGETS(AIF2TX5, "AIF2TX5"),
-+ARIZONA_MIXER_WIDGETS(AIF2TX6, "AIF2TX6"),
-+
-+ARIZONA_MIXER_WIDGETS(AIF3TX1, "AIF3TX1"),
-+ARIZONA_MIXER_WIDGETS(AIF3TX2, "AIF3TX2"),
-+
-+ARIZONA_MUX_WIDGETS(ASRC1L, "ASRC1L"),
-+ARIZONA_MUX_WIDGETS(ASRC1R, "ASRC1R"),
-+ARIZONA_MUX_WIDGETS(ASRC2L, "ASRC2L"),
-+ARIZONA_MUX_WIDGETS(ASRC2R, "ASRC2R"),
-+
-+ARIZONA_DSP_WIDGETS(DSP2, "DSP2"),
-+ARIZONA_DSP_WIDGETS(DSP3, "DSP3"),
-+
-+ARIZONA_MUX_WIDGETS(ISRC1DEC1, "ISRC1DEC1"),
-+ARIZONA_MUX_WIDGETS(ISRC1DEC2, "ISRC1DEC2"),
-+ARIZONA_MUX_WIDGETS(ISRC1DEC3, "ISRC1DEC3"),
-+ARIZONA_MUX_WIDGETS(ISRC1DEC4, "ISRC1DEC4"),
-+
-+ARIZONA_MUX_WIDGETS(ISRC1INT1, "ISRC1INT1"),
-+ARIZONA_MUX_WIDGETS(ISRC1INT2, "ISRC1INT2"),
-+ARIZONA_MUX_WIDGETS(ISRC1INT3, "ISRC1INT3"),
-+ARIZONA_MUX_WIDGETS(ISRC1INT4, "ISRC1INT4"),
-+
-+ARIZONA_MUX_WIDGETS(ISRC2DEC1, "ISRC2DEC1"),
-+ARIZONA_MUX_WIDGETS(ISRC2DEC2, "ISRC2DEC2"),
-+ARIZONA_MUX_WIDGETS(ISRC2DEC3, "ISRC2DEC3"),
-+ARIZONA_MUX_WIDGETS(ISRC2DEC4, "ISRC2DEC4"),
-+
-+ARIZONA_MUX_WIDGETS(ISRC2INT1, "ISRC2INT1"),
-+ARIZONA_MUX_WIDGETS(ISRC2INT2, "ISRC2INT2"),
-+ARIZONA_MUX_WIDGETS(ISRC2INT3, "ISRC2INT3"),
-+ARIZONA_MUX_WIDGETS(ISRC2INT4, "ISRC2INT4"),
-+
-+ARIZONA_MUX_WIDGETS(ISRC3DEC1, "ISRC3DEC1"),
-+ARIZONA_MUX_WIDGETS(ISRC3DEC2, "ISRC3DEC2"),
-+ARIZONA_MUX_WIDGETS(ISRC3DEC3, "ISRC3DEC3"),
-+ARIZONA_MUX_WIDGETS(ISRC3DEC4, "ISRC3DEC4"),
-+
-+ARIZONA_MUX_WIDGETS(ISRC3INT1, "ISRC3INT1"),
-+ARIZONA_MUX_WIDGETS(ISRC3INT2, "ISRC3INT2"),
-+ARIZONA_MUX_WIDGETS(ISRC3INT3, "ISRC3INT3"),
-+ARIZONA_MUX_WIDGETS(ISRC3INT4, "ISRC3INT4"),
-+
-+SND_SOC_DAPM_OUTPUT("HPOUT1L"),
-+SND_SOC_DAPM_OUTPUT("HPOUT1R"),
-+SND_SOC_DAPM_OUTPUT("SPKOUTN"),
-+SND_SOC_DAPM_OUTPUT("SPKOUTP"),
-+
-+SND_SOC_DAPM_OUTPUT("MICSUPP"),
-+};
-+
-+#define ARIZONA_MIXER_INPUT_ROUTES(name)	\
-+	{ name, "Noise Generator", "Noise Generator" }, \
-+	{ name, "Tone Generator 1", "Tone Generator 1" }, \
-+	{ name, "Tone Generator 2", "Tone Generator 2" }, \
-+	{ name, "Haptics", "HAPTICS" }, \
-+	{ name, "AEC", "AEC Loopback" }, \
-+	{ name, "IN1L", "IN1L PGA" }, \
-+	{ name, "IN1R", "IN1R PGA" }, \
-+	{ name, "IN2L", "IN2L PGA" }, \
-+	{ name, "IN2R", "IN2R PGA" }, \
-+	{ name, "AIF1RX1", "AIF1RX1" }, \
-+	{ name, "AIF1RX2", "AIF1RX2" }, \
-+	{ name, "AIF1RX3", "AIF1RX3" }, \
-+	{ name, "AIF1RX4", "AIF1RX4" }, \
-+	{ name, "AIF1RX5", "AIF1RX5" }, \
-+	{ name, "AIF1RX6", "AIF1RX6" }, \
-+	{ name, "AIF1RX7", "AIF1RX7" }, \
-+	{ name, "AIF1RX8", "AIF1RX8" }, \
-+	{ name, "AIF2RX1", "AIF2RX1" }, \
-+	{ name, "AIF2RX2", "AIF2RX2" }, \
-+	{ name, "AIF2RX3", "AIF2RX3" }, \
-+	{ name, "AIF2RX4", "AIF2RX4" }, \
-+	{ name, "AIF2RX5", "AIF2RX5" }, \
-+	{ name, "AIF2RX6", "AIF2RX6" }, \
-+	{ name, "AIF3RX1", "AIF3RX1" }, \
-+	{ name, "AIF3RX2", "AIF3RX2" }, \
-+	{ name, "EQ1", "EQ1" }, \
-+	{ name, "EQ2", "EQ2" }, \
-+	{ name, "DRC1L", "DRC1L" }, \
-+	{ name, "DRC1R", "DRC1R" }, \
-+	{ name, "DRC2L", "DRC2L" }, \
-+	{ name, "DRC2R", "DRC2R" }, \
-+	{ name, "LHPF1", "LHPF1" }, \
-+	{ name, "LHPF2", "LHPF2" }, \
-+	{ name, "LHPF3", "LHPF3" }, \
-+	{ name, "LHPF4", "LHPF4" }, \
-+	{ name, "ASRC1L", "ASRC1L" }, \
-+	{ name, "ASRC1R", "ASRC1R" }, \
-+	{ name, "ASRC2L", "ASRC2L" }, \
-+	{ name, "ASRC2R", "ASRC2R" }, \
-+	{ name, "ISRC1DEC1", "ISRC1DEC1" }, \
-+	{ name, "ISRC1DEC2", "ISRC1DEC2" }, \
-+	{ name, "ISRC1DEC3", "ISRC1DEC3" }, \
-+	{ name, "ISRC1DEC4", "ISRC1DEC4" }, \
-+	{ name, "ISRC1INT1", "ISRC1INT1" }, \
-+	{ name, "ISRC1INT2", "ISRC1INT2" }, \
-+	{ name, "ISRC1INT3", "ISRC1INT3" }, \
-+	{ name, "ISRC1INT4", "ISRC1INT4" }, \
-+	{ name, "ISRC2DEC1", "ISRC2DEC1" }, \
-+	{ name, "ISRC2DEC2", "ISRC2DEC2" }, \
-+	{ name, "ISRC2DEC3", "ISRC2DEC3" }, \
-+	{ name, "ISRC2DEC4", "ISRC2DEC4" }, \
-+	{ name, "ISRC2INT1", "ISRC2INT1" }, \
-+	{ name, "ISRC2INT2", "ISRC2INT2" }, \
-+	{ name, "ISRC2INT3", "ISRC2INT3" }, \
-+	{ name, "ISRC2INT4", "ISRC2INT4" }, \
-+	{ name, "ISRC3DEC1", "ISRC3DEC1" }, \
-+	{ name, "ISRC3DEC2", "ISRC3DEC2" }, \
-+	{ name, "ISRC3DEC3", "ISRC3DEC3" }, \
-+	{ name, "ISRC3DEC4", "ISRC3DEC4" }, \
-+	{ name, "ISRC3INT1", "ISRC3INT1" }, \
-+	{ name, "ISRC3INT2", "ISRC3INT2" }, \
-+	{ name, "ISRC3INT3", "ISRC3INT3" }, \
-+	{ name, "ISRC3INT4", "ISRC3INT4" }, \
-+	{ name, "DSP2.1", "DSP2" }, \
-+	{ name, "DSP2.2", "DSP2" }, \
-+	{ name, "DSP2.3", "DSP2" }, \
-+	{ name, "DSP2.4", "DSP2" }, \
-+	{ name, "DSP2.5", "DSP2" }, \
-+	{ name, "DSP2.6", "DSP2" }, \
-+	{ name, "DSP3.1", "DSP3" }, \
-+	{ name, "DSP3.2", "DSP3" }, \
-+	{ name, "DSP3.3", "DSP3" }, \
-+	{ name, "DSP3.4", "DSP3" }, \
-+	{ name, "DSP3.5", "DSP3" }, \
-+	{ name, "DSP3.6", "DSP3" }
-+
-+static const struct snd_soc_dapm_route cs47l24_dapm_routes[] = {
-+	{ "OUT1L", NULL, "CPVDD" },
-+	{ "OUT1R", NULL, "CPVDD" },
-+
-+	{ "OUT4L", NULL, "SPKVDD" },
-+
-+	{ "OUT1L", NULL, "SYSCLK" },
-+	{ "OUT1R", NULL, "SYSCLK" },
-+	{ "OUT4L", NULL, "SYSCLK" },
-+
-+	{ "IN1L", NULL, "SYSCLK" },
-+	{ "IN1R", NULL, "SYSCLK" },
-+	{ "IN2L", NULL, "SYSCLK" },
-+	{ "IN2R", NULL, "SYSCLK" },
-+
-+	{ "MICBIAS1", NULL, "MICVDD" },
-+	{ "MICBIAS2", NULL, "MICVDD" },
-+
-+	{ "Noise Generator", NULL, "SYSCLK" },
-+	{ "Tone Generator 1", NULL, "SYSCLK" },
-+	{ "Tone Generator 2", NULL, "SYSCLK" },
-+
-+	{ "Noise Generator", NULL, "NOISE" },
-+	{ "Tone Generator 1", NULL, "TONE" },
-+	{ "Tone Generator 2", NULL, "TONE" },
-+
-+	{ "AIF1 Capture", NULL, "AIF1TX1" },
-+	{ "AIF1 Capture", NULL, "AIF1TX2" },
-+	{ "AIF1 Capture", NULL, "AIF1TX3" },
-+	{ "AIF1 Capture", NULL, "AIF1TX4" },
-+	{ "AIF1 Capture", NULL, "AIF1TX5" },
-+	{ "AIF1 Capture", NULL, "AIF1TX6" },
-+	{ "AIF1 Capture", NULL, "AIF1TX7" },
-+	{ "AIF1 Capture", NULL, "AIF1TX8" },
-+
-+	{ "AIF1RX1", NULL, "AIF1 Playback" },
-+	{ "AIF1RX2", NULL, "AIF1 Playback" },
-+	{ "AIF1RX3", NULL, "AIF1 Playback" },
-+	{ "AIF1RX4", NULL, "AIF1 Playback" },
-+	{ "AIF1RX5", NULL, "AIF1 Playback" },
-+	{ "AIF1RX6", NULL, "AIF1 Playback" },
-+	{ "AIF1RX7", NULL, "AIF1 Playback" },
-+	{ "AIF1RX8", NULL, "AIF1 Playback" },
-+
-+	{ "AIF2 Capture", NULL, "AIF2TX1" },
-+	{ "AIF2 Capture", NULL, "AIF2TX2" },
-+	{ "AIF2 Capture", NULL, "AIF2TX3" },
-+	{ "AIF2 Capture", NULL, "AIF2TX4" },
-+	{ "AIF2 Capture", NULL, "AIF2TX5" },
-+	{ "AIF2 Capture", NULL, "AIF2TX6" },
-+
-+	{ "AIF2RX1", NULL, "AIF2 Playback" },
-+	{ "AIF2RX2", NULL, "AIF2 Playback" },
-+	{ "AIF2RX3", NULL, "AIF2 Playback" },
-+	{ "AIF2RX4", NULL, "AIF2 Playback" },
-+	{ "AIF2RX5", NULL, "AIF2 Playback" },
-+	{ "AIF2RX6", NULL, "AIF2 Playback" },
-+
-+	{ "AIF3 Capture", NULL, "AIF3TX1" },
-+	{ "AIF3 Capture", NULL, "AIF3TX2" },
-+
-+	{ "AIF3RX1", NULL, "AIF3 Playback" },
-+	{ "AIF3RX2", NULL, "AIF3 Playback" },
-+
-+	{ "AIF1 Playback", NULL, "SYSCLK" },
-+	{ "AIF2 Playback", NULL, "SYSCLK" },
-+	{ "AIF3 Playback", NULL, "SYSCLK" },
-+
-+	{ "AIF1 Capture", NULL, "SYSCLK" },
-+	{ "AIF2 Capture", NULL, "SYSCLK" },
-+	{ "AIF3 Capture", NULL, "SYSCLK" },
-+
-+	{ "IN1L PGA", NULL, "IN1L" },
-+	{ "IN1R PGA", NULL, "IN1R" },
-+
-+	{ "IN2L PGA", NULL, "IN2L" },
-+	{ "IN2R PGA", NULL, "IN2R" },
-+
-+	ARIZONA_MIXER_ROUTES("OUT1L", "HPOUT1L"),
-+	ARIZONA_MIXER_ROUTES("OUT1R", "HPOUT1R"),
-+
-+	ARIZONA_MIXER_ROUTES("OUT4L", "SPKOUT"),
-+
-+	ARIZONA_MIXER_ROUTES("PWM1 Driver", "PWM1"),
-+	ARIZONA_MIXER_ROUTES("PWM2 Driver", "PWM2"),
-+
-+	ARIZONA_MIXER_ROUTES("AIF1TX1", "AIF1TX1"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX2", "AIF1TX2"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX3", "AIF1TX3"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX4", "AIF1TX4"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX5", "AIF1TX5"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX6", "AIF1TX6"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX7", "AIF1TX7"),
-+	ARIZONA_MIXER_ROUTES("AIF1TX8", "AIF1TX8"),
-+
-+	ARIZONA_MIXER_ROUTES("AIF2TX1", "AIF2TX1"),
-+	ARIZONA_MIXER_ROUTES("AIF2TX2", "AIF2TX2"),
-+	ARIZONA_MIXER_ROUTES("AIF2TX3", "AIF2TX3"),
-+	ARIZONA_MIXER_ROUTES("AIF2TX4", "AIF2TX4"),
-+	ARIZONA_MIXER_ROUTES("AIF2TX5", "AIF2TX5"),
-+	ARIZONA_MIXER_ROUTES("AIF2TX6", "AIF2TX6"),
-+
-+	ARIZONA_MIXER_ROUTES("AIF3TX1", "AIF3TX1"),
-+	ARIZONA_MIXER_ROUTES("AIF3TX2", "AIF3TX2"),
-+
-+	ARIZONA_MIXER_ROUTES("EQ1", "EQ1"),
-+	ARIZONA_MIXER_ROUTES("EQ2", "EQ2"),
-+
-+	ARIZONA_MIXER_ROUTES("DRC1L", "DRC1L"),
-+	ARIZONA_MIXER_ROUTES("DRC1R", "DRC1R"),
-+	ARIZONA_MIXER_ROUTES("DRC2L", "DRC2L"),
-+	ARIZONA_MIXER_ROUTES("DRC2R", "DRC2R"),
-+
-+	ARIZONA_MIXER_ROUTES("LHPF1", "LHPF1"),
-+	ARIZONA_MIXER_ROUTES("LHPF2", "LHPF2"),
-+	ARIZONA_MIXER_ROUTES("LHPF3", "LHPF3"),
-+	ARIZONA_MIXER_ROUTES("LHPF4", "LHPF4"),
-+
-+	ARIZONA_MUX_ROUTES("ASRC1L", "ASRC1L"),
-+	ARIZONA_MUX_ROUTES("ASRC1R", "ASRC1R"),
-+	ARIZONA_MUX_ROUTES("ASRC2L", "ASRC2L"),
-+	ARIZONA_MUX_ROUTES("ASRC2R", "ASRC2R"),
-+
-+	ARIZONA_DSP_ROUTES("DSP2"),
-+	ARIZONA_DSP_ROUTES("DSP3"),
-+
-+	ARIZONA_MUX_ROUTES("ISRC1INT1", "ISRC1INT1"),
-+	ARIZONA_MUX_ROUTES("ISRC1INT2", "ISRC1INT2"),
-+	ARIZONA_MUX_ROUTES("ISRC1INT3", "ISRC1INT3"),
-+	ARIZONA_MUX_ROUTES("ISRC1INT4", "ISRC1INT4"),
-+
-+	ARIZONA_MUX_ROUTES("ISRC1DEC1", "ISRC1DEC1"),
-+	ARIZONA_MUX_ROUTES("ISRC1DEC2", "ISRC1DEC2"),
-+	ARIZONA_MUX_ROUTES("ISRC1DEC3", "ISRC1DEC3"),
-+	ARIZONA_MUX_ROUTES("ISRC1DEC4", "ISRC1DEC4"),
-+
-+	ARIZONA_MUX_ROUTES("ISRC2INT1", "ISRC2INT1"),
-+	ARIZONA_MUX_ROUTES("ISRC2INT2", "ISRC2INT2"),
-+	ARIZONA_MUX_ROUTES("ISRC2INT3", "ISRC2INT3"),
-+	ARIZONA_MUX_ROUTES("ISRC2INT4", "ISRC2INT4"),
-+
-+	ARIZONA_MUX_ROUTES("ISRC2DEC1", "ISRC2DEC1"),
-+	ARIZONA_MUX_ROUTES("ISRC2DEC2", "ISRC2DEC2"),
-+	ARIZONA_MUX_ROUTES("ISRC2DEC3", "ISRC2DEC3"),
-+	ARIZONA_MUX_ROUTES("ISRC2DEC4", "ISRC2DEC4"),
-+
-+	ARIZONA_MUX_ROUTES("ISRC3INT1", "ISRC3INT1"),
-+	ARIZONA_MUX_ROUTES("ISRC3INT2", "ISRC3INT2"),
-+	ARIZONA_MUX_ROUTES("ISRC3INT3", "ISRC3INT3"),
-+	ARIZONA_MUX_ROUTES("ISRC3INT4", "ISRC3INT4"),
-+
-+	ARIZONA_MUX_ROUTES("ISRC3DEC1", "ISRC3DEC1"),
-+	ARIZONA_MUX_ROUTES("ISRC3DEC2", "ISRC3DEC2"),
-+	ARIZONA_MUX_ROUTES("ISRC3DEC3", "ISRC3DEC3"),
-+	ARIZONA_MUX_ROUTES("ISRC3DEC4", "ISRC3DEC4"),
-+
-+	{ "AEC Loopback", "HPOUT1L", "OUT1L" },
-+	{ "AEC Loopback", "HPOUT1R", "OUT1R" },
-+	{ "HPOUT1L", NULL, "OUT1L" },
-+	{ "HPOUT1R", NULL, "OUT1R" },
-+
-+	{ "AEC Loopback", "SPKOUT", "OUT4L" },
-+	{ "SPKOUTN", NULL, "OUT4L" },
-+	{ "SPKOUTP", NULL, "OUT4L" },
-+
-+	{ "MICSUPP", NULL, "SYSCLK" },
-+
-+	{ "DRC1 Signal Activity", NULL, "DRC1L" },
-+	{ "DRC1 Signal Activity", NULL, "DRC1R" },
-+	{ "DRC2 Signal Activity", NULL, "DRC2L" },
-+	{ "DRC2 Signal Activity", NULL, "DRC2R" },
-+};
-+
-+static int cs47l24_set_fll(struct snd_soc_codec *codec, int fll_id, int source,
-+			  unsigned int Fref, unsigned int Fout)
++static inline u32 nwl_bridge_readl(struct nwl_pcie *pcie, u32 off)
 +{
-+	struct cs47l24_priv *cs47l24 = snd_soc_codec_get_drvdata(codec);
++	return readl(pcie->breg_base + off);
++}
 +
-+	switch (fll_id) {
-+	case CS47L24_FLL1:
-+		return arizona_set_fll(&cs47l24->fll[0], source, Fref, Fout);
-+	case CS47L24_FLL2:
-+		return arizona_set_fll(&cs47l24->fll[1], source, Fref, Fout);
-+	case CS47L24_FLL1_REFCLK:
-+		return arizona_set_fll_refclk(&cs47l24->fll[0], source, Fref,
-+					      Fout);
-+	case CS47L24_FLL2_REFCLK:
-+		return arizona_set_fll_refclk(&cs47l24->fll[1], source, Fref,
-+					      Fout);
++static inline void nwl_bridge_writel(struct nwl_pcie *pcie, u32 val, u32 off)
++{
++	writel(val, pcie->breg_base + off);
++}
++
++static inline bool nwl_pcie_link_up(struct nwl_pcie *pcie, u32 check_link_up)
++{
++	unsigned int status = -EINVAL;
++
++	if (check_link_up == PCIE_USER_LINKUP)
++		status = (readl(pcie->pcireg_base + PS_LINKUP_OFFSET) &
++			  PCIE_PHY_LINKUP_BIT) ? 1 : 0;
++	else if (check_link_up == PHY_RDY_LINKUP)
++		status = (readl(pcie->pcireg_base + PS_LINKUP_OFFSET) &
++			  PHY_RDY_LINKUP_BIT) ? 1 : 0;
++	return status;
++}
++
++static bool nwl_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
++{
++	struct nwl_pcie *pcie = bus->sysdata;
++
++	/* Check link,before accessing downstream ports */
++	if (bus->number != pcie->root_busno) {
++		if (!nwl_pcie_link_up(pcie, PCIE_USER_LINKUP))
++			return false;
++	}
++
++	/* Only one device down on each root port */
++	if (bus->number == pcie->root_busno && devfn > 0)
++		return false;
++
++	/*
++	 * Do not read more than one device on the bus directly attached
++	 * to root port.
++	 */
++	if (bus->primary == pcie->root_busno && devfn > 0)
++		return false;
++
++	return true;
++}
++
++/**
++ * nwl_pcie_get_config_base - Get configuration base
++ *
++ * @bus: Bus structure of current bus
++ * @devfn: Device/function
++ * @where: Offset from base
++ *
++ * Return: Base address of the configuration space needed to be
++ *	   accessed.
++ */
++static void __iomem *nwl_pcie_get_config_base(struct pci_bus *bus,
++						 unsigned int devfn,
++						 int where)
++{
++	struct nwl_pcie *pcie = bus->sysdata;
++	int relbus;
++
++	if (!nwl_pcie_valid_device(bus, devfn))
++		return NULL;
++
++	relbus = (bus->number << ECAM_BUS_LOC_SHIFT) |
++			(devfn << ECAM_DEV_LOC_SHIFT);
++
++	return pcie->ecam_base + relbus + where;
++}
++
++/**
++ * nwl_setup_sspl - Set Slot Power limit
++ *
++ * @pcie: PCIe port information
++ */
++static int nwl_setup_sspl(struct nwl_pcie *pcie)
++{
++	unsigned int status;
++	int retval = 0;
++
++	do {
++		status = nwl_bridge_readl(pcie, TX_PCIE_MSG) & MSG_BUSY_BIT;
++		if (!status) {
++			/*
++			 * Generate the TLP message for a single EP
++			 * [TODO] Add a multi-endpoint code
++			 */
++			nwl_bridge_writel(pcie, 0x0,
++					  TX_PCIE_MSG + TX_PCIE_MSG_CNTL);
++			nwl_bridge_writel(pcie, 0x0,
++					  TX_PCIE_MSG + TX_PCIE_MSG_SPEC_LO);
++			nwl_bridge_writel(pcie, 0x0,
++					  TX_PCIE_MSG + TX_PCIE_MSG_SPEC_HI);
++			nwl_bridge_writel(pcie, 0x0,
++					  TX_PCIE_MSG + TX_PCIE_MSG_DATA);
++			/* Pattern to generate SSLP TLP */
++			nwl_bridge_writel(pcie, PATTRN_SSLP_TLP,
++					  TX_PCIE_MSG + TX_PCIE_MSG_CNTL);
++			nwl_bridge_writel(pcie, RANDOM_DIGIT,
++					  TX_PCIE_MSG + TX_PCIE_MSG_DATA);
++			nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
++					  TX_PCIE_MSG) | 0x1, TX_PCIE_MSG);
++			mdelay(2);
++			status = nwl_bridge_readl(pcie, TX_PCIE_MSG)
++						  & MSG_DONE_BIT;
++			if (status) {
++				status = nwl_bridge_readl(pcie, TX_PCIE_MSG)
++						  & MSG_DONE_STATUS_BIT;
++				if (status == SLVERR) {
++					dev_err(pcie->dev, "AXI slave error");
++					retval = SLVERR;
++				} else if (status == DECERR) {
++					dev_err(pcie->dev, "AXI Decode error");
++					retval = DECERR;
++				}
++			} else {
++				retval = 1;
++			}
++		}
++	} while (status);
++
++	return retval;
++}
++
++/**
++ * nwl_nwl_readl_config - Read configuration space
++ *
++ * @bus: Bus structure of current bus
++ * @devfn: Device/function
++ * @where: Offset from base
++ * @size: Byte/word/dword
++ * @val: Value to be read
++ *
++ * Return: PCIBIOS_SUCCESSFUL on success
++ *	   PCIBIOS_DEVICE_NOT_FOUND on failure.
++ */
++static int nwl_nwl_readl_config(struct pci_bus *bus,
++				unsigned int devfn,
++				int where,
++				int size,
++				u32 *val)
++{
++	void __iomem *addr;
++
++	addr = nwl_pcie_get_config_base(bus, devfn, where);
++	if (!addr) {
++		*val = ~0;
++		return PCIBIOS_DEVICE_NOT_FOUND;
++	}
++
++	switch (size) {
++	case 1:
++		*val = readb(addr);
++		break;
++	case 2:
++		*val = readw(addr);
++		break;
 +	default:
-+		return -EINVAL;
++		*val = readl(addr);
++		break;
++	}
++	return PCIBIOS_SUCCESSFUL;
++}
++
++/**
++ * nwl_nwl_writel_config - Write configuration space
++ *
++ * @bus: Bus structure of current bus
++ * @devfn: Device/function
++ * @where: Offset from base
++ * @size: Byte/word/dword
++ * @val: Value to be written to device
++ *
++ * Return: PCIBIOS_SUCCESSFUL on success,
++ *	   PCIBIOS_DEVICE_NOT_FOUND on failure.
++ */
++static int nwl_nwl_writel_config(struct pci_bus *bus,
++				unsigned int devfn,
++				int where,
++				int size,
++				u32 val)
++{
++	void __iomem *addr;
++	int retval;
++	struct nwl_pcie *pcie = bus->sysdata;
++
++	addr = nwl_pcie_get_config_base(bus, devfn, where);
++	if (!addr)
++		return PCIBIOS_DEVICE_NOT_FOUND;
++
++	switch (size) {
++	case 1:
++		writeb(val, addr);
++		break;
++	case 2:
++		writew(val, addr);
++		break;
++	default:
++		writel(val, addr);
++		break;
++	}
++	if (addr == (pcie->ecam_base + EXP_CAP_BASE + PCI_EXP_SLTCAP)) {
++		retval = nwl_setup_sspl(pcie);
++		if (retval)
++			return PCIBIOS_SET_FAILED;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++/* PCIe operations */
++static struct pci_ops nwl_pcie_ops = {
++	.read  = nwl_nwl_readl_config,
++	.write = nwl_nwl_writel_config,
++};
++
++static irqreturn_t nwl_pcie_misc_handler(int irq, void *data)
++{
++	struct nwl_pcie *pcie = data;
++	u32 misc_stat;
++
++	/* Checking for misc interrupts */
++	misc_stat = nwl_bridge_readl(pcie, MSGF_MISC_STATUS) &
++				     MSGF_MISC_SR_MASKALL;
++	if (!misc_stat)
++		return IRQ_NONE;
++
++	if (misc_stat & MSGF_MISC_SR_RXMSG_OVER)
++		dev_err(pcie->dev, "Received Message FIFO Overflow\n");
++
++	if (misc_stat & MSGF_MISC_SR_SLAVE_ERR)
++		dev_err(pcie->dev, "Slave error\n");
++
++	if (misc_stat & MSGF_MISC_SR_MASTER_ERR)
++		dev_err(pcie->dev, "Master error\n");
++
++	if (misc_stat & MSGF_MISC_SR_I_ADDR_ERR)
++		dev_err(pcie->dev,
++			"In Misc Ingress address translation error\n");
++
++	if (misc_stat & MSGF_MISC_SR_E_ADDR_ERR)
++		dev_err(pcie->dev,
++			"In Misc Egress address translation error\n");
++
++	if (misc_stat & MSGF_MISC_SR_PCIE_CORE_ERR)
++		dev_err(pcie->dev, "PCIe Core error\n");
++
++	/* Clear misc interrupt status */
++	nwl_bridge_writel(pcie, misc_stat, MSGF_MISC_STATUS);
++
++	return IRQ_HANDLED;
++}
++
++static void nwl_pcie_leg_handler(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct nwl_pcie *pcie;
++	unsigned long status;
++	u32 bit;
++	u32 virq;
++
++	chained_irq_enter(chip, desc);
++	pcie = irq_desc_get_handler_data(desc);
++
++	while ((status = nwl_bridge_readl(pcie, MSGF_LEG_STATUS) &
++				MSGF_LEG_SR_MASKALL) != 0) {
++		for_each_set_bit(bit, &status, 4) {
++
++			virq = irq_find_mapping(pcie->legacy_irq_domain,
++						bit + 1);
++			if (virq)
++				generic_handle_irq(virq);
++		}
++	}
++
++	chained_irq_exit(chip, desc);
++}
++
++static void nwl_pcie_handle_msi_irq(struct nwl_pcie *pcie, u32 status_reg)
++{
++	struct nwl_msi *msi;
++	unsigned long status;
++	u32 bit;
++	u32 virq;
++
++	msi = &pcie->msi;
++
++	while ((status = nwl_bridge_readl(pcie, status_reg)) != 0) {
++		for_each_set_bit(bit, &status, 32) {
++			nwl_bridge_writel(pcie, 1 << bit, status_reg);
++			virq = irq_find_mapping(msi->dev_domain, bit);
++			if (virq)
++				generic_handle_irq(virq);
++		}
 +	}
 +}
 +
-+#define CS47L24_RATES SNDRV_PCM_RATE_8000_192000
-+
-+#define CS47L24_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
-+			 SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
-+
-+static struct snd_soc_dai_driver cs47l24_dai[] = {
-+	{
-+		.name = "cs47l24-aif1",
-+		.id = 1,
-+		.base = ARIZONA_AIF1_BCLK_CTRL,
-+		.playback = {
-+			.stream_name = "AIF1 Playback",
-+			.channels_min = 1,
-+			.channels_max = 8,
-+			.rates = CS47L24_RATES,
-+			.formats = CS47L24_FORMATS,
-+		},
-+		.capture = {
-+			 .stream_name = "AIF1 Capture",
-+			 .channels_min = 1,
-+			 .channels_max = 8,
-+			 .rates = CS47L24_RATES,
-+			 .formats = CS47L24_FORMATS,
-+		 },
-+		.ops = &arizona_dai_ops,
-+		.symmetric_rates = 1,
-+		.symmetric_samplebits = 1,
-+	},
-+	{
-+		.name = "cs47l24-aif2",
-+		.id = 2,
-+		.base = ARIZONA_AIF2_BCLK_CTRL,
-+		.playback = {
-+			.stream_name = "AIF2 Playback",
-+			.channels_min = 1,
-+			.channels_max = 6,
-+			.rates = CS47L24_RATES,
-+			.formats = CS47L24_FORMATS,
-+		},
-+		.capture = {
-+			 .stream_name = "AIF2 Capture",
-+			 .channels_min = 1,
-+			 .channels_max = 6,
-+			 .rates = CS47L24_RATES,
-+			 .formats = CS47L24_FORMATS,
-+		 },
-+		.ops = &arizona_dai_ops,
-+		.symmetric_rates = 1,
-+		.symmetric_samplebits = 1,
-+	},
-+	{
-+		.name = "cs47l24-aif3",
-+		.id = 3,
-+		.base = ARIZONA_AIF3_BCLK_CTRL,
-+		.playback = {
-+			.stream_name = "AIF3 Playback",
-+			.channels_min = 1,
-+			.channels_max = 2,
-+			.rates = CS47L24_RATES,
-+			.formats = CS47L24_FORMATS,
-+		},
-+		.capture = {
-+			 .stream_name = "AIF3 Capture",
-+			 .channels_min = 1,
-+			 .channels_max = 2,
-+			 .rates = CS47L24_RATES,
-+			 .formats = CS47L24_FORMATS,
-+		 },
-+		.ops = &arizona_dai_ops,
-+		.symmetric_rates = 1,
-+		.symmetric_samplebits = 1,
-+	},
-+};
-+
-+static int cs47l24_codec_probe(struct snd_soc_codec *codec)
++static void nwl_pcie_msi_handler_high(struct irq_desc *desc)
 +{
-+	struct snd_soc_dapm_context *dapm = snd_soc_codec_get_dapm(codec);
-+	struct cs47l24_priv *priv = snd_soc_codec_get_drvdata(codec);
-+	int ret;
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct nwl_pcie *pcie;
 +
-+	priv->core.arizona->dapm = dapm;
++	chained_irq_enter(chip, desc);
++	pcie = irq_desc_get_handler_data(desc);
++	nwl_pcie_handle_msi_irq(pcie, MSGF_MSI_STATUS_HI);
 +
-+	arizona_init_spk(codec);
-+	arizona_init_gpio(codec);
-+	arizona_init_mono(codec);
++	chained_irq_exit(chip, desc);
++}
 +
-+	ret = wm_adsp2_codec_probe(&priv->core.adsp[1], codec);
-+	if (ret)
-+		goto err_adsp2_codec_probe;
++static void nwl_pcie_msi_handler_low(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct nwl_pcie *pcie;
 +
-+	ret = wm_adsp2_codec_probe(&priv->core.adsp[2], codec);
-+	if (ret)
-+		goto err_adsp2_codec_probe;
++	chained_irq_enter(chip, desc);
++	pcie = irq_desc_get_handler_data(desc);
++	nwl_pcie_handle_msi_irq(pcie, MSGF_MSI_STATUS_LO);
 +
-+	ret = snd_soc_add_codec_controls(codec,
-+					 &arizona_adsp2_rate_controls[1], 2);
-+	if (ret)
-+		goto err_adsp2_codec_probe;
++	chained_irq_exit(chip, desc);
++}
 +
-+	snd_soc_dapm_disable_pin(dapm, "HAPTICS");
++static int nwl_legacy_map(struct irq_domain *domain, unsigned int irq,
++				irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
 +
 +	return 0;
++}
 +
-+err_adsp2_codec_probe:
-+	wm_adsp2_codec_remove(&priv->core.adsp[1], codec);
-+	wm_adsp2_codec_remove(&priv->core.adsp[2], codec);
++static const struct irq_domain_ops legacy_domain_ops = {
++	.map = nwl_legacy_map,
++};
 +
++#ifdef CONFIG_PCI_MSI
++static struct irq_chip nwl_msi_irq_chip = {
++	.name = "nwl_pcie:msi",
++	.irq_enable = unmask_msi_irq,
++	.irq_disable = mask_msi_irq,
++	.irq_mask = mask_msi_irq,
++	.irq_unmask = unmask_msi_irq,
++
++};
++
++static struct msi_domain_info nwl_msi_domain_info = {
++	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
++		  MSI_FLAG_MULTI_PCI_MSI),
++	.chip = &nwl_msi_irq_chip,
++};
++#endif
++
++static void nwl_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
++{
++	struct nwl_pcie *pcie = irq_data_get_irq_chip_data(data);
++	struct nwl_msi *msi = &pcie->msi;
++	phys_addr_t msi_addr = virt_to_phys((void *)msi->pages);
++
++	msg->address_lo = lower_32_bits(msi_addr);
++	msg->address_hi = upper_32_bits(msi_addr);
++	msg->data = data->hwirq;
++}
++
++static int nwl_msi_set_affinity(struct irq_data *irq_data,
++				const struct cpumask *mask, bool force)
++{
++	return -EINVAL;
++}
++
++static struct irq_chip nwl_irq_chip = {
++	.name = "Xilinx MSI",
++	.irq_compose_msi_msg = nwl_compose_msi_msg,
++	.irq_set_affinity = nwl_msi_set_affinity,
++};
++
++static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				unsigned int nr_irqs, void *args)
++{
++	struct nwl_pcie *pcie = domain->host_data;
++	struct nwl_msi *msi = &pcie->msi;
++	unsigned long bit;
++
++	mutex_lock(&msi->lock);
++	bit = find_first_zero_bit(msi->used, INT_PCI_MSI_NR);
++	if (bit < INT_PCI_MSI_NR)
++		set_bit(bit, msi->used);
++	else
++		bit = -ENOSPC;
++
++	mutex_unlock(&msi->lock);
++
++	if (bit < 0)
++		return bit;
++
++	irq_domain_set_info(domain, virq, bit, &nwl_irq_chip,
++			domain->host_data, handle_simple_irq,
++			NULL, NULL);
++	return 0;
++}
++
++static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
++					unsigned int nr_irqs)
++{
++	struct irq_data *data = irq_domain_get_irq_data(domain, virq);
++	struct nwl_pcie *pcie = irq_data_get_irq_chip_data(data);
++	struct nwl_msi *msi = &pcie->msi;
++
++	mutex_lock(&msi->lock);
++	if (!test_bit(data->hwirq, msi->used))
++		dev_err(pcie->dev, "freeing unused MSI %lu\n", data->hwirq);
++	else
++		clear_bit(data->hwirq, msi->used);
++
++	mutex_unlock(&msi->lock);
++}
++
++static const struct irq_domain_ops dev_msi_domain_ops = {
++	.alloc  = nwl_irq_domain_alloc,
++	.free   = nwl_irq_domain_free,
++};
++
++static void nwl_pcie_free_irq_domain(struct nwl_pcie *pcie)
++{
++	int i;
++	u32 irq;
++
++#ifdef CONFIG_PCI_MSI
++	struct nwl_msi *msi = &pcie->msi;
++#endif
++
++	for (i = 0; i < 4; i++) {
++		irq = irq_find_mapping(pcie->legacy_irq_domain, i + 1);
++		if (irq > 0)
++			irq_dispose_mapping(irq);
++	}
++
++	irq_domain_remove(pcie->legacy_irq_domain);
++
++#ifdef CONFIG_PCI_MSI
++	irq_set_chained_handler_and_data(msi->irq_msi0, NULL, NULL);
++	irq_set_chained_handler_and_data(msi->irq_msi1, NULL, NULL);
++
++	irq_domain_remove(msi->msi_domain);
++	irq_domain_remove(msi->dev_domain);
++#endif
++
++}
++
++static int nwl_pcie_init_irq_domain(struct nwl_pcie *pcie)
++{
++	struct device_node *node = pcie->dev->of_node;
++	struct device_node *legacy_intc_node;
++
++#ifdef CONFIG_PCI_MSI
++	struct nwl_msi *msi = &pcie->msi;
++#endif
++
++	legacy_intc_node = of_get_next_child(node, NULL);
++	if (!legacy_intc_node) {
++		dev_err(pcie->dev, "No legacy intc node found\n");
++		return PTR_ERR(legacy_intc_node);
++	}
++
++	pcie->legacy_irq_domain = irq_domain_add_linear(legacy_intc_node, 4,
++							&legacy_domain_ops,
++							pcie);
++
++	if (!pcie->legacy_irq_domain) {
++		dev_err(pcie->dev, "failed to create IRQ domain\n");
++		return -ENOMEM;
++	}
++
++#ifdef CONFIG_PCI_MSI
++	msi->dev_domain = irq_domain_add_linear(NULL, INT_PCI_MSI_NR,
++					&dev_msi_domain_ops, pcie);
++	if (!msi->dev_domain) {
++		dev_err(pcie->dev, "failed to create dev IRQ domain\n");
++		return -ENOMEM;
++	}
++	msi->msi_domain = pci_msi_create_irq_domain(node,
++							&nwl_msi_domain_info,
++							msi->dev_domain);
++	if (!msi->msi_domain) {
++		dev_err(pcie->dev, "failed to create msi IRQ domain\n");
++		irq_domain_remove(msi->dev_domain);
++		return -ENOMEM;
++	}
++#endif
++	return 0;
++}
++
++static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus *bus)
++{
++	struct platform_device *pdev = to_platform_device(pcie->dev);
++	struct nwl_msi *msi = &pcie->msi;
++	unsigned long base;
++	int ret;
++
++	mutex_init(&msi->lock);
++
++	/* Check for msii_present bit */
++	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
++	if (!ret) {
++		dev_err(pcie->dev, "MSI not present\n");
++		ret = -EIO;
++		goto err;
++	}
++
++	/* Enable MSII */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
++			  MSII_ENABLE, I_MSII_CONTROL);
++
++	/* Enable MSII status */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
++			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
++
++	/* setup AFI/FPCI range */
++	msi->pages = __get_free_pages(GFP_KERNEL, 0);
++	base = virt_to_phys((void *)msi->pages);
++	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
++	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
++
++	/* Disable high range msi interrupts */
++	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_HI_MASK, MSGF_MSI_MASK_HI);
++
++	/* Clear pending high range msi interrupts */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,  MSGF_MSI_STATUS_HI) &
++			  MSGF_MSI_SR_HI_MASK, MSGF_MSI_STATUS_HI);
++	/* Get msi_1 IRQ number */
++	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
++	if (msi->irq_msi1 < 0) {
++		dev_err(&pdev->dev, "failed to get IRQ#%d\n", msi->irq_msi1);
++		goto err;
++	}
++	/* Register msi handler */
++	irq_set_chained_handler_and_data(msi->irq_msi1,
++					 nwl_pcie_msi_handler_high, pcie);
++
++	/* Enable all high range msi interrupts */
++	nwl_bridge_writel(pcie, MSGF_MSI_SR_HI_MASK, MSGF_MSI_MASK_HI);
++
++	/* Disable low range msi interrupts */
++	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
++
++	/* Clear pending low range msi interrupts */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_MSI_STATUS_LO) &
++			  MSGF_MSI_SR_LO_MASK, MSGF_MSI_STATUS_LO);
++	/* Get msi_0 IRQ number */
++	msi->irq_msi0 = platform_get_irq_byname(pdev, "msi0");
++	if (msi->irq_msi0 < 0) {
++		dev_err(&pdev->dev, "failed to get IRQ#%d\n", msi->irq_msi0);
++		goto err;
++	}
++
++	/* Register msi handler */
++	irq_set_chained_handler_and_data(msi->irq_msi0,
++					 nwl_pcie_msi_handler_low, pcie);
++
++	/* Enable all low range msi interrupts */
++	nwl_bridge_writel(pcie, MSGF_MSI_SR_LO_MASK, MSGF_MSI_MASK_LO);
++
++	return 0;
++err:
 +	return ret;
 +}
 +
-+static int cs47l24_codec_remove(struct snd_soc_codec *codec)
++static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
 +{
-+	struct cs47l24_priv *priv = snd_soc_codec_get_drvdata(codec);
++	struct platform_device *pdev = to_platform_device(pcie->dev);
++	u32 breg_val, ecam_val, first_busno = 0;
++	int err;
++	int check_link_up = 0;
 +
++	/* Check for BREG present bit */
++	breg_val = nwl_bridge_readl(pcie, E_BREG_CAPABILITIES) & BREG_PRESENT;
++	if (!breg_val) {
++		dev_err(pcie->dev, "BREG is not present\n");
++		return breg_val;
++	}
++	/* Write bridge_off to breg base */
++	nwl_bridge_writel(pcie, (u32)(pcie->phys_breg_base),
++			  E_BREG_BASE_LO);
 +
-+	wm_adsp2_codec_remove(&priv->core.adsp[1], codec);
-+	wm_adsp2_codec_remove(&priv->core.adsp[2], codec);
++	/* Enable BREG */
++	nwl_bridge_writel(pcie, ~BREG_ENABLE_FORCE & BREG_ENABLE,
++			  E_BREG_CONTROL);
 +
-+	priv->core.arizona->dapm = NULL;
++	/* Disable DMA channel registers */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX0) |
++			  CFG_DMA_REG_BAR, BRCFG_PCIE_RX0);
 +
-+	return 0;
-+}
++	/* Enable the bridge config interrupt */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_INTERRUPT) |
++			  BRCFG_INTERRUPT_MASK, BRCFG_INTERRUPT);
++	/* Enable Ingress subtractive decode translation */
++	nwl_bridge_writel(pcie, SET_ISUB_CONTROL, I_ISUB_CONTROL);
 +
-+#define CS47L24_DIG_VU 0x0200
++	/* Enable msg filtering details */
++	nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
++			  BRCFG_PCIE_RX_MSG_FILTER);
++	do {
++		err = nwl_pcie_link_up(pcie, PHY_RDY_LINKUP);
++		if (err != 1) {
++			check_link_up++;
++			if (check_link_up > LINKUP_ITER_CHECK)
++				return -ENODEV;
++			mdelay(1000);
++		}
++	} while (!err);
 +
-+static unsigned int cs47l24_digital_vu[] = {
-+	ARIZONA_DAC_DIGITAL_VOLUME_1L,
-+	ARIZONA_DAC_DIGITAL_VOLUME_1R,
-+	ARIZONA_DAC_DIGITAL_VOLUME_4L,
-+};
-+
-+static struct regmap *cs47l24_get_regmap(struct device *dev)
-+{
-+	struct cs47l24_priv *priv = dev_get_drvdata(dev);
-+
-+	return priv->core.arizona->regmap;
-+}
-+
-+static struct snd_soc_codec_driver soc_codec_dev_cs47l24 = {
-+	.probe = cs47l24_codec_probe,
-+	.remove = cs47l24_codec_remove,
-+	.get_regmap = cs47l24_get_regmap,
-+
-+	.idle_bias_off = true,
-+
-+	.set_sysclk = arizona_set_sysclk,
-+	.set_pll = cs47l24_set_fll,
-+
-+	.controls = cs47l24_snd_controls,
-+	.num_controls = ARRAY_SIZE(cs47l24_snd_controls),
-+	.dapm_widgets = cs47l24_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(cs47l24_dapm_widgets),
-+	.dapm_routes = cs47l24_dapm_routes,
-+	.num_dapm_routes = ARRAY_SIZE(cs47l24_dapm_routes),
-+};
-+
-+static int cs47l24_probe(struct platform_device *pdev)
-+{
-+	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
-+	struct cs47l24_priv *cs47l24;
-+	int i, ret;
-+
-+	BUILD_BUG_ON(ARRAY_SIZE(cs47l24_dai) > ARIZONA_MAX_DAI);
-+
-+	cs47l24 = devm_kzalloc(&pdev->dev, sizeof(struct cs47l24_priv),
-+			      GFP_KERNEL);
-+	if (!cs47l24)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, cs47l24);
-+
-+	cs47l24->core.arizona = arizona;
-+	cs47l24->core.num_inputs = 4;
-+
-+	for (i = 1; i <= 2; i++) {
-+		cs47l24->core.adsp[i].part = "cs47l24";
-+		cs47l24->core.adsp[i].num = i + 1;
-+		cs47l24->core.adsp[i].type = WMFW_ADSP2;
-+		cs47l24->core.adsp[i].dev = arizona->dev;
-+		cs47l24->core.adsp[i].regmap = arizona->regmap;
-+
-+		cs47l24->core.adsp[i].base = ARIZONA_DSP1_CONTROL_1 +
-+					     (0x100 * i);
-+		cs47l24->core.adsp[i].mem = cs47l24_dsp_regions[i - 1];
-+		cs47l24->core.adsp[i].num_mems =
-+				ARRAY_SIZE(cs47l24_dsp2_regions);
-+
-+		ret = wm_adsp2_init(&cs47l24->core.adsp[i]);
-+		if (ret != 0)
-+			return ret;
++	/* Check for ECAM present bit */
++	ecam_val = nwl_bridge_readl(pcie, E_ECAM_CAPABILITIES) & E_ECAM_PRESENT;
++	if (!ecam_val) {
++		dev_err(pcie->dev, "ECAM is not present\n");
++		return ecam_val;
 +	}
 +
-+	for (i = 0; i < ARRAY_SIZE(cs47l24->fll); i++)
-+		cs47l24->fll[i].vco_mult = 3;
++	/* Enable ECAM */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
++			  E_ECAM_CR_ENABLE, E_ECAM_CONTROL);
++	/* Write ecam_value on ecam_control */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
++			  (pcie->ecam_value << E_ECAM_SIZE_SHIFT),
++			  E_ECAM_CONTROL);
++	/* Write phy_reg_base to ecam base */
++	nwl_bridge_writel(pcie, (u32)pcie->phys_ecam_base, E_ECAM_BASE_LO);
 +
-+	arizona_init_fll(arizona, 1, ARIZONA_FLL1_CONTROL_1 - 1,
-+			 ARIZONA_IRQ_FLL1_LOCK, ARIZONA_IRQ_FLL1_CLOCK_OK,
-+			 &cs47l24->fll[0]);
-+	arizona_init_fll(arizona, 2, ARIZONA_FLL2_CONTROL_1 - 1,
-+			 ARIZONA_IRQ_FLL2_LOCK, ARIZONA_IRQ_FLL2_CLOCK_OK,
-+			 &cs47l24->fll[1]);
++	/* Get bus range */
++	ecam_val = nwl_bridge_readl(pcie, E_ECAM_CONTROL);
++	pcie->last_busno = (ecam_val & E_ECAM_SIZE_LOC) >> E_ECAM_SIZE_SHIFT;
++	/* Write primary, secondary and subordinate bus numbers */
++	ecam_val = first_busno;
++	ecam_val |= (first_busno + 1) << 8;
++	ecam_val |= (pcie->last_busno << E_ECAM_SIZE_SHIFT);
++	writel(ecam_val, (pcie->ecam_base + PCI_PRIMARY_BUS));
 +
-+	/* SR2 fixed at 8kHz, SR3 fixed at 16kHz */
-+	regmap_update_bits(arizona->regmap, ARIZONA_SAMPLE_RATE_2,
-+			   ARIZONA_SAMPLE_RATE_2_MASK, 0x11);
-+	regmap_update_bits(arizona->regmap, ARIZONA_SAMPLE_RATE_3,
-+			   ARIZONA_SAMPLE_RATE_3_MASK, 0x12);
++	/* Check if PCIe link is up? */
++	pcie->link_up = nwl_pcie_link_up(pcie, PCIE_USER_LINKUP);
++	if (!pcie->link_up)
++		dev_info(pcie->dev, "Link is DOWN\n");
++	else
++		dev_info(pcie->dev, "Link is UP\n");
 +
-+	for (i = 0; i < ARRAY_SIZE(cs47l24_dai); i++)
-+		arizona_init_dai(&cs47l24->core, i);
++	/* Disable all misc interrupts */
++	nwl_bridge_writel(pcie, (u32)~MSGF_MISC_SR_MASKALL, MSGF_MISC_MASK);
 +
-+	/* Latch volume update bits */
-+	for (i = 0; i < ARRAY_SIZE(cs47l24_digital_vu); i++)
-+		regmap_update_bits(arizona->regmap, cs47l24_digital_vu[i],
-+				   CS47L24_DIG_VU, CS47L24_DIG_VU);
++	/* Clear pending misc interrupts */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_MISC_STATUS) &
++			  MSGF_MISC_SR_MASKALL, MSGF_MISC_STATUS);
 +
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_idle(&pdev->dev);
++	/* Get misc IRQ number */
++	pcie->irq_misc = platform_get_irq_byname(pdev, "misc");
++	if (pcie->irq_misc < 0) {
++		dev_err(&pdev->dev, "failed to get misc IRQ#%d\n",
++			pcie->irq_misc);
++		return pcie->irq_misc;
++	}
++	/* Register misc handler */
++	err = devm_request_irq(pcie->dev, pcie->irq_misc,
++			       nwl_pcie_misc_handler, IRQF_SHARED,
++			       "nwl_pcie:misc", pcie);
++	if (err) {
++		dev_err(pcie->dev, "fail to register misc IRQ#%d\n",
++			pcie->irq_misc);
++		return err;
++	}
++	/* Enable all misc interrupts */
++	nwl_bridge_writel(pcie, MSGF_MISC_SR_MASKALL, MSGF_MISC_MASK);
 +
-+	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_cs47l24,
-+				      cs47l24_dai, ARRAY_SIZE(cs47l24_dai));
-+}
++	/* Disable all legacy interrupts */
++	nwl_bridge_writel(pcie, (u32)~MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
 +
-+static int cs47l24_remove(struct platform_device *pdev)
-+{
-+	snd_soc_unregister_codec(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
++	/* Clear pending legacy interrupts */
++	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, MSGF_LEG_STATUS) &
++			  MSGF_LEG_SR_MASKALL, MSGF_LEG_STATUS);
++	/* Get intx IRQ number */
++	pcie->irq_intx = platform_get_irq_byname(pdev, "intx");
++	if (pcie->irq_intx < 0) {
++		dev_err(&pdev->dev, "failed to get intx IRQ#%d\n",
++			pcie->irq_intx);
++		return pcie->irq_intx;
++	}
++
++	/* Enable all legacy interrupts */
++	nwl_bridge_writel(pcie, MSGF_LEG_SR_MASKALL, MSGF_LEG_MASK);
 +
 +	return 0;
 +}
 +
-+static struct platform_driver cs47l24_codec_driver = {
-+	.driver = {
-+		.name = "cs47l24-codec",
-+	},
-+	.probe = cs47l24_probe,
-+	.remove = cs47l24_remove,
++static int nwl_pcie_parse_dt(struct nwl_pcie *pcie,
++					struct platform_device *pdev)
++{
++	struct device_node *node = pcie->dev->of_node;
++	struct resource *res;
++	const char *type;
++
++	/* Check for device type */
++	type = of_get_property(node, "device_type", NULL);
++	if (!type || strcmp(type, "pci")) {
++		dev_err(pcie->dev, "invalid \"device_type\" %s\n", type);
++		return -EINVAL;
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "breg");
++	pcie->breg_base = devm_ioremap_resource(pcie->dev, res);
++	if (IS_ERR(pcie->breg_base))
++		return PTR_ERR(pcie->breg_base);
++	pcie->phys_breg_base = res->start;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcireg");
++	pcie->pcireg_base = devm_ioremap_resource(pcie->dev, res);
++	if (IS_ERR(pcie->pcireg_base))
++		return PTR_ERR(pcie->pcireg_base);
++	pcie->phys_pcie_reg_base = res->start;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
++	pcie->ecam_base = devm_ioremap_resource(pcie->dev, res);
++	if (IS_ERR(pcie->ecam_base))
++		return PTR_ERR(pcie->ecam_base);
++	pcie->phys_ecam_base = res->start;
++
++	/* Get intx IRQ number */
++	pcie->irq_intx = platform_get_irq_byname(pdev, "intx");
++	if (pcie->irq_intx < 0) {
++		dev_err(&pdev->dev, "failed to get intx IRQ#%d\n",
++			pcie->irq_intx);
++		return pcie->irq_intx;
++	}
++
++	/* Register intx handler */
++	irq_set_chained_handler_and_data(pcie->irq_intx,
++					 nwl_pcie_leg_handler, pcie);
++
++	return 0;
++}
++
++static const struct of_device_id nwl_pcie_of_match[] = {
++	{ .compatible = "xlnx,nwl-pcie-2.11", },
++	{}
 +};
 +
-+module_platform_driver(cs47l24_codec_driver);
++static int nwl_pcie_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct nwl_pcie *pcie;
++	struct pci_bus *bus;
++	int err;
 +
-+MODULE_DESCRIPTION("ASoC CS47L24 driver");
-+MODULE_AUTHOR("Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:cs47l24-codec");
-diff --git a/sound/soc/codecs/cs47l24.h b/sound/soc/codecs/cs47l24.h
-new file mode 100644
-index 0000000..77ab2b7
---- /dev/null
-+++ b/sound/soc/codecs/cs47l24.h
-@@ -0,0 +1,23 @@
-+/*
-+ * cs47l24.h  --  ALSA SoC Audio driver for Cirrus Logic CS47L24
-+ *
-+ * Copyright 2015 Cirrus Logic Inc.
-+ *
-+ * Author: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++	resource_size_t iobase = 0;
++	LIST_HEAD(res);
 +
-+#ifndef _CS47L24_H
-+#define _CS47L24_H
++	pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
 +
-+#include "arizona.h"
++	pcie->ecam_value = NWL_ECAM_VALUE_DEFAULT;
 +
-+#define CS47L24_FLL1        1
-+#define CS47L24_FLL2        2
-+#define CS47L24_FLL1_REFCLK 3
-+#define CS47L24_FLL2_REFCLK 4
++	pcie->dev = &pdev->dev;
 +
-+#endif
++	err = nwl_pcie_parse_dt(pcie, pdev);
++	if (err) {
++		dev_err(pcie->dev, "Parsing DT failed\n");
++		return err;
++	}
++	/* Bridge initialization */
++	err = nwl_pcie_bridge_init(pcie);
++	if (err) {
++		dev_err(pcie->dev, "HW Initalization failed\n");
++		return err;
++	}
++
++	err = of_pci_get_host_bridge_resources(node, 0, 0xff, &res, &iobase);
++	if (err) {
++		pr_err("Getting bridge resources failed\n");
++		return err;
++	}
++
++	err = nwl_pcie_init_irq_domain(pcie);
++	if (err) {
++		dev_err(pcie->dev, "Failed creating IRQ Domain\n");
++		return err;
++	}
++
++	bus = pci_create_root_bus(&pdev->dev, pcie->root_busno,
++				  &nwl_pcie_ops, pcie, &res);
++	if (!bus)
++		return -ENOMEM;
++
++	/* Enable MSI */
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		err = nwl_pcie_enable_msi(pcie, bus);
++		if (err < 0) {
++			dev_err(&pdev->dev,
++				"failed to enable MSI support: %d\n", err);
++			return err;
++		}
++	}
++	pci_scan_child_bus(bus);
++	pci_assign_unassigned_bus_resources(bus);
++	pcie_bus_configure_settings(bus);
++	pci_bus_add_devices(bus);
++	platform_set_drvdata(pdev, pcie);
++
++	return 0;
++}
++
++static int nwl_pcie_remove(struct platform_device *pdev)
++{
++	struct nwl_pcie *pcie = platform_get_drvdata(pdev);
++
++	nwl_pcie_free_irq_domain(pcie);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++static struct platform_driver nwl_pcie_driver = {
++	.driver = {
++		.name = "nwl-pcie",
++		.of_match_table = nwl_pcie_of_match,
++	},
++	.probe = nwl_pcie_probe,
++	.remove = nwl_pcie_remove,
++};
++module_platform_driver(nwl_pcie_driver);
++
++MODULE_AUTHOR("Xilinx, Inc");
++MODULE_DESCRIPTION("NWL PCIe driver");
++MODULE_LICENSE("GPL");
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.1
