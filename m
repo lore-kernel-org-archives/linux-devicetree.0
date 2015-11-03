@@ -1,65 +1,85 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH v5 0/4] Exynos SROMc configuration and Ethernet support for
- SMDK5410
-Date: Tue, 03 Nov 2015 12:16:37 +0300
-Message-ID: <cover.1446542020.git.p.fedin@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
+ compatible
+Date: Tue, 3 Nov 2015 17:59:05 +0800
+Message-ID: <56388569.1070108@gmail.com>
+References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
+ <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
+ <21587719.mnFBFBzBeI@phil> <56379D46.1000402@linaro.org>
+ <56381547.5070109@gmail.com> <56387110.4060805@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56387110.4060805-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch extends Exynos SROM controller driver with ability to configure
-controller outputs and enables SMSC9115 Ethernet chip on SMDK5410 board,
-which is connected via SROMc bank #3.
-
-With this patchset, support for the whole existing SMDK range can be added.
-Actually, only bank number is different.
-
-This patchset also depends on Exynos 5410 pinctrl support, introduced by
-patches 0003 and 0004 from this set:
-[PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
-
-Pinctrl support is necessary in order to correctly configure
-multifunctional pins of the Exynos chip.
-
-v4 => v5:
-- Some cosmetic changes in the dtsi ("compatible" goes first)
-- Use correctly specified ranges for the SROMc node
-- Reuse existing properties where possible ("reg" for bank# and
-  "reg-io-width" for data width)
-- Separated page-mode property from timings array
-- More improvements to the documentation
-
-v3 => v4:
-- Devices are now added as subnodes, with additional properties. This allows
-  to cleary specify dependency. If configuration fails, error will be reported
-  and child devices will not be probed.
-- These additional properties now have "samsung,srom-XXX" format
-- Fixed code style, now better understood.
-
-v2 => v3:
-- Fixed up SROMc region size in the device tree
-- Reordered patches, documentation goes first now
-
-v1 => v2:
-- Fixed some typos and bad labels in device tree
-- Improved documentation
-
-Pavel Fedin (4):
-  Documentation: dt-bindings: Describe SROMc configuration
-  ARM: dts: Add SROMc to Exynos 5410
-  drivers: exynos-srom: Add support for bank configuration
-  ARM: dts: Add Ethernet chip to SMDK5410
-
- .../bindings/arm/samsung/exynos-srom.txt           | 68 +++++++++++++++++++++-
- arch/arm/boot/dts/exynos5410-smdk5410.dts          | 40 +++++++++++++
- arch/arm/boot/dts/exynos5410.dtsi                  | 11 ++++
- arch/arm/mach-exynos/Kconfig                       |  2 +-
- drivers/soc/samsung/Kconfig                        |  2 +-
- drivers/soc/samsung/exynos-srom.c                  | 60 ++++++++++++++++++-
- 6 files changed, 177 insertions(+), 6 deletions(-)
-
--- 
-2.4.4
+CgrlnKggMjAxNeW5tDEx5pyIMDPml6UgMTY6MzIsIERhbmllbCBMZXpjYW5vIOWGmemBkzoKPiBP
+biAxMS8wMy8yMDE1IDAzOjAwIEFNLCBDYWVzYXIgV2FuZyB3cm90ZToKPj4gRGFuaWVsLAo+Pgo+
+PiDlnKggMjAxNeW5tDEx5pyIMDPml6UgMDE6MjgsIERhbmllbCBMZXpjYW5vIOWGmemBkzoKPj4+
+IE9uIDEwLzMxLzIwMTUgMTI6NDcgQU0sIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+Pj4+IEhpIERh
+bmllbCwKPj4+Pgo+Pj4+IEFtIEZyZWl0YWcsIDMwLiBPa3RvYmVyIDIwMTUsIDExOjQyOjI5IHNj
+aHJpZWIgRGFuaWVsIExlemNhbm86Cj4+Pj4+IE9uIDEwLzMwLzIwMTUgMDQ6NDMgQU0sIENhZXNh
+ciBXYW5nIHdyb3RlOgo+Pj4+Pj4gSGkgRGFuaWVsLAo+Pj4+Pj4KPj4+Pj4+IOWcqCAyMDE15bm0
+MTDmnIgwMeaXpSAwMzoxNCwgSGVpa28gU3TDvGJuZXIg5YaZ6YGTOgo+Pj4+Pj4+IEhpIERhbmll
+bCwKPj4+Pj4+Pgo+Pj4+Pj4+IEFtIERpZW5zdGFnLCAyOS4gU2VwdGVtYmVyIDIwMTUsIDA2OjE4
+OjAzIHNjaHJpZWIgRGFuaWVsIExlemNhbm86Cj4+Pj4+Pj4+IE9uIDA5LzI1LzIwMTUgMDQ6MTQg
+QU0sIENhZXNhciBXYW5nIHdyb3RlOgo+Pj4+Pj4+Pj4gQnVpbGQgdGhlIGFybTY0IFNvQ3MgKGUu
+Zy46IFJLMzM2OCkgb24gUm9ja2NoaXAgcGxhdGZvcm0sCj4+Pj4+Pj4+PiBUaGVyZSBhcmUgc29t
+ZSBmYWlsdXJlIHdpdGggYnVpbGQgdXAgb24gdGltZXIgZHJpdmVyIGZvciAKPj4+Pj4+Pj4+IHJv
+Y2tjaGlwLgo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IFNheXM6Cj4+Pj4+Pj4+PiAvdG1wL2NjZEFuTnk1
+LnM6NDc6IEVycm9yOiBtaXNzaW5nIGltbWVkaWF0ZSBleHByZXNzaW9uIGF0ICAKPj4+Pj4+Pj4+
+IG9wZXJhbmQKPj4+Pj4+Pj4+IDEgLS0KPj4+Pj4+Pj4+IGBkc2JgCj4+Pj4+Pj4+PiAuLi4KPj4+
+Pj4+Pj4+Cj4+Pj4+Pj4+PiBUaGUgcHJvYmxlbSB3YXMgZGlmZmVyZW50IHNlbWFudGljcyBvZiBk
+c2Igb24gYnR3IGFybTMyIGFuZCAKPj4+Pj4+Pj4+IGFybTY0LAo+Pj4+Pj4+Pj4gSGVyZSB3ZSBj
+YW4gY29udmVydCB0aGUgZHNiIHdpdGggaW5zdGVhZGluZyBvZiBkc2Ioc3kpLlRoZSAic3kiCj4+
+Pj4+Pj4+PiBwYXJhbQo+Pj4+Pj4+Pj4gaXMgdGhlIGRlZmF1bHQgd2hpY2ggeW91IGFyZSBhbGxv
+dyB0byBvbWl0LCBzbyBvbiBhcm0zMiBkc2IoKWFuZAo+Pj4+Pj4+Pj4gZHNiKHN5KQo+Pj4+Pj4+
+Pj4gYXJlIHRoZSBzYW1lLgo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IENhZXNh
+ciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4+Pj4+Pj4+IEFja2VkLWJ5OiBEYW5pZWwgTGV6
+Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4KPj4+Pj4+PiBhcyB5b3UgaGF2ZSAianVz
+dCIgQWNrZWQgdGhlc2UgcGF0Y2hlcywgSSBndWVzcyB5b3UgYXJlIGV4cGVjdGluZwo+Pj4+Pj4+
+IHRoZW0KPj4+Pj4+PiB0byBnbwo+Pj4+Pj4+IHRocm91Z2ggdGhlIHNhbWUgdHJlZSBhcyB0aGUg
+ZGV2aWNldHJlZSBjaGFuZ2VzLCByaWdodD8KPj4+Pj4+Cj4+Pj4+PiBJJ20gd29uZGVyIGlmIHNv
+bWVvbmUgd2lsbCBhcHBseSB0aGlzIHNlcmllcyBwYXRjaHMgYnV0IHRoZSB3YWl0LjotKQo+Pj4+
+Pj4gSW4gZmFjdCwgSSdtIG5vIHN1cmUgdGhhdCB0aGUgQWNrZWQgaXMgcmVhbGx5IG1lYW5pbmcu
+Oi0KPj4+Pj4KPj4+Pj4gWWVzLCBieSBhY2tpbmcgdGhlIHBhdGNoIEkgc2F5IEkgYW0gb2sgd2l0
+aCBpdCBhbmQgSSBhZ3JlZSBpdCBjYW4gZ28KPj4+Pj4gdGhyb3VnaCBhbm90aGVyIHRyZWUuCj4+
+Pj4KPj4+PiBhbHRob3VnaCBJIGd1ZXNzIHRoZSB0d28gY2xvY2tzb3VyY2UgY2hhbmdlcyBjb3Vs
+ZCB2ZXJ5IHdlbGwganVzdCBnbwo+Pj4+IHRocm91Z2ggeW91ciB0cmVlLiBkc2IoKSAtPiBkc2Io
+c3kpIGlzIHN1cHBvc2VkIHRvIGJlIGVxdWFsIGFuZCB0aGUKPj4+PiBzZWNvbmQKPj4+PiBvbmUg
+aXMganVzdCBjb3NtZXRpY3MuICBUaGUgS2NvbmZpZyBhbmQgZHRzIGNoYW5nZXMgbmVlZCB0byB3
+YWl0IGluCj4+Pj4gYW55IGNhc2UKPj4+PiBmb3IgNC41IC4uLiBidXQgSSBndWVzcyB0aGF0IG1h
+eSBiZSB0cnVlIGZvciB0aGUgY2xvY2tzb3VyY2UgY2hhbmdlcwo+Pj4+IGFzIHdlbGw/Cj4+Pgo+
+Pj4gSGVpa28sIENhZXNhciwKPj4+Cj4+PiBJIGFtIHdvbmRlcmluZyBpZiB0aGUgZHNiKCkgaXMg
+cmVhbGx5IG5lY2Vzc2FyeS4gSXMgaXQgcG9zc2libGUgeW91Cj4+PiB0ZXN0IHRoZSB0aW1lciBi
+eSByZW1vdmluZyB0aGlzIGluc3RydWN0aW9uID8gT3RoZXJ3aXNlIEkgd2lsbCBoYXZlIHRvCj4+
+PiBzZXR1cCBteSBib2FyZCBhZ2FpbiBhbmQgaXQgd2lsbCB0YWtlIGF3aGlsZS4KPj4+Cj4+Cj4+
+IEFzIHRoZSBAQXJuZCBzdWdnZXN0aW9uLAo+Pgo+PiBUaGF0J3Mgc2VlbSBvayBmb3IgbWUuCj4+
+IEFsdGhvdWdoIHRoZSB3cml0ZWxfcmVsYXhlZCgpIGFuZCB3cml0ZWwoKSBhIGJpdCBkaWZmZXJl
+bnQgIHdpdGggRFNCKCkKPj4gYW5kIEwyJ3Mgc3luYy4KPj4KPj4gRG8gSSBuZWVkIHNlbmQgdGhl
+IHBhdGNoIHYzPyAgSSB3aWxsIHRlc3QgdGhhdCBvbiBteSBib2FyZC4KPj4KPj4gSSdtIG5vIHN1
+cmUgdGhhdCB3aHkgdGhlIGNsb2Nrc291cmNlIGRyaXZlciBkaWRuJ3QgdXNlIHRoZQo+PiB3cml0
+ZWxfcmVsYXhlZCgpIHRvIHdvcmsuCj4+IE9rYXksIEkgdGhpbmsgd2Ugc2hvdWxkIGFjY29yZGlu
+ZyB0byB0aGUgc3VnZ2VzdGlvbiBvciByZXF1aXJlZC4KPgo+IEkgdGhpbmsgdGhlIHBhdGNoIGlz
+IHRyaXZpYWwgZW5vdWdoIEkgY2FuIGRvIHRoZSBjaGFuZ2UgbXlzZWxmIGlmIHlvdSAKPiB0ZXN0
+IHRoZSBjaGFuZ2Ugb24geW91ciBzaWRlLiBCdXQgaXQgd291bGQgYmUgYSBnb29kIHByYWN0aWNl
+IHRvIHNlbmQgCj4gdGhlIHBhdGNoIHlvdSBoYXZlIHRlc3RlZC4gVXAgdG8geW91IDspCj4KCll1
+cCwgdGhhdCdzIGFsc28gaGFwcHkgd29yay4KCkZlZWwgZnJlZSBhZGQgbXkgdGVzdCB0YWcgaWYg
+eW91IHJlbW92ZSB0aGUgZHNiKCkuClRlc3RlZC1ieTogQ2Flc2FyIFdhbmcgPHd4dEByb2NrLWNo
+aXBzLmNvbT4KClRoYW5rcyB5b3VyIHNlbmQhCgo+IFRoYW5rcyAhCj4KPiAgIC0tIERhbmllbAo+
+Cj4KCgotLSAKVGhhbmtzLApDYWVzYXIKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2No
+aXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
