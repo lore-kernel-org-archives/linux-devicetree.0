@@ -1,95 +1,156 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v9 10/17] phy: Add driver for rockchip Display Port PHY
-Date: Mon, 2 Nov 2015 20:38:27 -0800
-Message-ID: <20151103043827.GA17261@localhost>
-References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
- <1446083918-30809-1-git-send-email-ykk@rock-chips.com>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Mon, 2 Nov 2015 23:45:17 -0500
+Message-ID: <56383BDD.9090903@codeaurora.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <4548985.gMZJhM3R1p@wuerfel> <56346502.5070600@codeaurora.org>
+ <9016417.z9Hz6MbmvQ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446083918-30809-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, djkurtz@chromium.org, dianders@chromium.org, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sean Paul <seanpaul@chromi>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9016417.z9Hz6MbmvQ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yakir,
 
-On Thu, Oct 29, 2015 at 09:58:38AM +0800, Yakir Yang wrote:
-> Add phy driver for the Rockchip DisplayPort PHY module. This
-> is required to get DisplayPort working in Rockchip SoCs.
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> ---
-...
-> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
-> new file mode 100644
-> index 0000000..f3e0058
-> --- /dev/null
-> +++ b/drivers/phy/phy-rockchip-dp.c
-> @@ -0,0 +1,151 @@
-> +/*
-> + * Rockchip DP PHY driver
-> + *
-> + * Copyright (C) 2015 FuZhou Rockchip Co., Ltd.
-> + * Author: Yakir Yang <ykk@@rock-chips.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/clk.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define GRF_SOC_CON12                           0x0274
-> +
-> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(4)
-> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
 
-Why are the above two macros the same? Judging by the RK3288 manual and
-other downstream drivers, it seems like you want the _MASK one to be
-shifted left by 16 (i.e., BIT(20)).
+On 11/2/2015 4:30 PM, Arnd Bergmann wrote:
+> On Saturday 31 October 2015 02:51:46 Sinan Kaya wrote:
+>> On 10/30/2015 5:34 AM, Arnd Bergmann wrote:
+>>> On Thursday 29 October 2015 23:08:12 Sinan Kaya wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>>>> +
+>>>> +static int qcom_hidma_mgmt_err_open(struct inode *inode, struct file *file)
+>>>> +{
+>>>> +	return single_open(file, qcom_hidma_mgmt_err, inode->i_private);
+>>>> +}
+>>>> +
+>>>> +static const struct file_operations qcom_hidma_mgmt_err_fops = {
+>>>> +	.open = qcom_hidma_mgmt_err_open,
+>>>> +	.read = seq_read,
+>>>> +	.llseek = seq_lseek,
+>>>> +	.release = single_release,
+>>>> +};
+>>>> +
+>>>> +static ssize_t qcom_hidma_mgmt_mhiderr_clr(struct file *file,
+>>>> +	const char __user *user_buf, size_t count, loff_t *ppos)
+>>>> +{
+>>>> +	struct qcom_hidma_mgmt_dev *mgmtdev = file->f_inode->i_private;
+>>>> +
+>>>> +	HIDMA_RUNTIME_GET(mgmtdev);
+>>>> +	writel(1, mgmtdev->dev_virtaddr + MHID_BUS_ERR_CLR_OFFSET);
+>>>> +	HIDMA_RUNTIME_SET(mgmtdev);
+>>>> +	return count;
+>>>> +}
+>>>> +
+>>>> +static const struct file_operations qcom_hidma_mgmt_mhiderr_clrfops = {
+>>>> +	.write = qcom_hidma_mgmt_mhiderr_clr,
+>>>> +};
+>>>
+>>> Is this really just a debugging interface? If anyone would do this
+>>> for normal operation, it needs to be a proper API.
+>>>
+>> This will be used by the system admin to monitor/reset the execution
+>> state of the DMA channels. This will be the management interface.
+>> Debugfs is probably not the right choice. I originally had sysfs but
+>> than had some doubts. I'm open to suggestions.
+>
+> User interface design is unfortunately always hard, and I don't have
+> an obvious answer for you.
+>
+> Using debugfs by definition means that you don't expect users to
+> rely on ABI stability, so they should not write any automated scripts
+> against the contents of the files.
+>
+> With sysfs, the opposite is true: you need to maintain compatibility
+> for as long as anyone might rely on the current interface, and it
+> needs to be reviewed properly and documented in Documentation/ABI/.
+>
+> Other options are to use ioctl(), netlink or your own virtual file
+> system, but each of them has the same ABI requirements as sysfs.
+>
+> Regardless of what you pick, you also need to consider how other drivers
+> would use the same interface: If someone else has hardware that does
+> the same thing, we want to be able to use the same tools to access
+> it, so you should avoid having any hardware specific data in it and
+> keep it as generic and extensible as possible. In this particular
+> case, that probably means you should implement the user interfaces in
+> the dmaengine core driver, and let the specific DMA driver provide
+> callback function pointers along with the normal ones to fill that
+> data.
+>
+Thanks, I'll think about this. I'm inclined towards sysfs.
 
-> +
-> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
-> +#define GRF_EDP_PHY_SIDDQ_ON                    0
-> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
-> +
+>>>> +	dev_info(&pdev->dev,
+>>>> +		"HI-DMA engine management driver registration complete\n");
+>>>> +	platform_set_drvdata(pdev, mgmtdev);
+>>>> +	HIDMA_RUNTIME_SET(mgmtdev);
+>>>> +	return 0;
+>>>> +out:
+>>>> +	pm_runtime_disable(&pdev->dev);
+>>>> +	pm_runtime_put_sync_suspend(&pdev->dev);
+>>>> +	return rc;
+>>>> +}
+>>>
+>>> The rest of the probe function does not register any user interface aside from
+>>> the debugging stuff. Can you explain in the changelog how you expect the
+>>> driver to be used in a real system? Is there another driver coming?
+>>
+>> I expect this driver to grow in functionality over time. Right now, it
+>> does the global init for the DMA. After that all channels execute on
+>> their own without depending on each other. Global init has to be done
+>> first before attempting to do any channel initialization.
+>>
+>> There is also implied startup ordering requirements. I was doing this by
+>> using channel driver with the late binding to guarantee that.
+>>
+>> As soon as I use module_platform_driver, the ordering gets reversed for
+>> some reason.
+>
+> For the ordering requirements, it's probably best to export a symbol
+> with the entry point and let the normal driver call into that. Using
+> separate initcall levels is not something you should do in a normal
+> device driver like this.
+>
+I figured this out. If the channel driver starts before the management 
+driver; then channel reset fails. I'm handling this in the channel 
+driver and am returning -EPROBE_DEFER. After that, management driver 
+gets its chance to work. Then, the channel driver again. This change is 
+in the v2 series.
 
-...
+> What is the relation between the device nodes for the two kinds of
+> devices? Does it make sense to model the other one as a child device
+> of this one? That way you would trivially do the ordering by not marking
+> this one as 'compatible="simple-bus"' and triggering the registration
+> of the child from the parent probe function.
+>
 
-> +	ret = regmap_write(dp->grf, GRF_SOC_CON12, GRF_EDP_REF_CLK_SEL_INTER |
-> +			   GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK);
+The required order is management driver first, channel drivers next. If 
+the order is reversed, channel init fails. I handle this with deferred 
+probing.
 
-IOW, the above is writing:
+I tried to keep loose binding between the management driver due to QEMU.
 
-	BIT(4) | BIT(4)
+QEMU auto-generates the devicetree entries. The guest machine just sees 
+one devicetree object for the DMA channel but guest machine device-tree 
+kernel does not have any management driver entity.
 
-whereas I think you want:
+This requires DMA channel driver to work independently in the guest 
+machine without dependencies.
 
-	BIT(4) | BIT(20)
+> 	Arnd
+>
 
-> +	if (ret != 0) {
-> +		dev_err(dp->dev, "Could not config GRF edp ref clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-
-...
-
-(FYI, I came across this by inspection when comparing Heiko's
-'somewhat-stable' branch [1] with this series. The former brings up eDP
-fine on veyron-jaq, whereas this one doesn't yet, even with the above
-change. Still debugging the issue.)
-
-Brian
-
-[1] https://github.com/mmind/linux-rockchip/tree/devel/somewhat-stable
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
