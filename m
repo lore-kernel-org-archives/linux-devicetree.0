@@ -1,111 +1,65 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
- compatible
-Date: Tue, 3 Nov 2015 10:00:39 +0800
-Message-ID: <56381547.5070109@gmail.com>
-References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
- <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
- <21587719.mnFBFBzBeI@phil> <56379D46.1000402@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
+Date: Tue, 3 Nov 2015 07:42:54 +0530
+Message-ID: <20151103021254.GM3639@ubuntu>
+References: <cover.1446167359.git.viresh.kumar@linaro.org>
+ <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
+ <20151030214907.GJ19782@codeaurora.org>
+ <20151031021612.GU3716@ubuntu>
+ <20151102192144.GQ19782@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56379D46.1000402-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151102192144.GQ19782@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Daniel,
+On 02-11-15, 11:21, Stephen Boyd wrote:
+> Ah I see that after looking at the previous thread. Perhaps we
+> can add such information into the documentation so that people
+> aren't misled into thinking they're limited to 32 bits?
 
-=E5=9C=A8 2015=E5=B9=B411=E6=9C=8803=E6=97=A5 01:28, Daniel Lezcano =E5=
-=86=99=E9=81=93:
-> On 10/31/2015 12:47 AM, Heiko Stuebner wrote:
->> Hi Daniel,
->>
->> Am Freitag, 30. Oktober 2015, 11:42:29 schrieb Daniel Lezcano:
->>> On 10/30/2015 04:43 AM, Caesar Wang wrote:
->>>> Hi Daniel,
->>>>
->>>> =E5=9C=A8 2015=E5=B9=B410=E6=9C=8801=E6=97=A5 03:14, Heiko St=C3=BC=
-bner =E5=86=99=E9=81=93:
->>>>> Hi Daniel,
->>>>>
->>>>> Am Dienstag, 29. September 2015, 06:18:03 schrieb Daniel Lezcano:
->>>>>> On 09/25/2015 04:14 AM, Caesar Wang wrote:
->>>>>>> Build the arm64 SoCs (e.g.: RK3368) on Rockchip platform,
->>>>>>> There are some failure with build up on timer driver for rockch=
-ip.
->>>>>>>
->>>>>>> Says:
->>>>>>> /tmp/ccdAnNy5.s:47: Error: missing immediate expression at  ope=
-rand
->>>>>>> 1 --
->>>>>>> `dsb`
->>>>>>> ...
->>>>>>>
->>>>>>> The problem was different semantics of dsb on btw arm32 and arm=
-64,
->>>>>>> Here we can convert the dsb with insteading of dsb(sy).The "sy"=
-=20
->>>>>>> param
->>>>>>> is the default which you are allow to omit, so on arm32 dsb()an=
-d
->>>>>>> dsb(sy)
->>>>>>> are the same.
->>>>>>>
->>>>>>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>>> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> as you have "just" Acked these patches, I guess you are expecting=
-=20
->>>>> them
->>>>> to go
->>>>> through the same tree as the devicetree changes, right?
->>>>
->>>> I'm wonder if someone will apply this series patchs but the wait.:=
--)
->>>> In fact, I'm no sure that the Acked is really meaning.:-
->>>
->>> Yes, by acking the patch I say I am ok with it and I agree it can g=
-o
->>> through another tree.
->>
->> although I guess the two clocksource changes could very well just go
->> through your tree. dsb() -> dsb(sy) is supposed to be equal and the=20
->> second
->> one is just cosmetics.  The Kconfig and dts changes need to wait in=20
->> any case
->> for 4.5 ... but I guess that may be true for the clocksource changes=
-=20
->> as well?
->
-> Heiko, Caesar,
->
-> I am wondering if the dsb() is really necessary. Is it possible you=20
-> test the timer by removing this instruction ? Otherwise I will have t=
-o=20
-> setup my board again and it will take awhile.
->
+What about these changes:
 
-As the @Arnd suggestion,
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 96892057586a..b6ca2239838b 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -123,11 +123,15 @@ properties.
+ - opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
+   the table should have this.
+ 
+-- opp-supported-hw: User defined array containing a hierarchy of hardware
+-  version numbers, supported by the OPP. For example: a platform with hierarchy
+-  of three levels of versions (A, B and C), this field should be like <X Y Z>,
+-  where X corresponds to Version hierarchy A, Y corresponds to version hierarchy
+-  B and Z corresponds to version hierarchy C.
++- opp-supported-hw: This enables us to select only a subset of OPPs from the
++  larger OPP table, based on what version of the hardware we are running on. We
++  still can't have multiple nodes with the same opp-hz value in OPP table.
++
++  Its an user defined array containing a hierarchy of hardware version numbers,
++  supported by the OPP. For example: a platform with hierarchy of three levels
++  of versions (A, B and C), this field should be like <X Y Z>, where X
++  corresponds to Version hierarchy A, Y corresponds to version hierarchy B and Z
++  corresponds to version hierarchy C.
+ 
+   Each level of hierarchy is represented by a 32 bit value, and so there can be
+   only 32 different supported version per hierarchy. i.e. 1 bit per version. A
+@@ -135,6 +139,10 @@ properties.
+   level. And a value of 0x00000000 will disable the OPP completely, and so we
+   never want that to happen.
+ 
++  If 32 values aren't sufficient for a version hierarchy, than that version
++  hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
++  above example, Z1 & Z2 refer to the version hierarchy Z.
++
+ - status: Marks the node enabled/disabled.
+ 
 
-That's seem ok for me.
-Although the writel_relaxed() and writel() a bit different  with DSB()=20
-and L2's sync.
 
-Do I need send the patch v3?  I will test that on my board.
-
-I'm no sure that why the clocksource driver didn't use the=20
-writel_relaxed() to work.
-Okay, I think we should according to the suggestion or required.
-
---=20
-Thanks,
-Caesar
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
