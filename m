@@ -1,138 +1,216 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: Re: [PATCH v2 1/5] spi: introduce mmap read support for spi flash devices
-Date: Tue, 3 Nov 2015 12:19:18 +0100
-Message-ID: <CAOMqctQ7uPXo5GzVK918DfvuaAPBvbooxW00jFP4ryyfcdLURA@mail.gmail.com>
-References: <1446545174-14193-1-git-send-email-vigneshr@ti.com> <1446545174-14193-2-git-send-email-vigneshr@ti.com>
+From: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 11/11] scsi: ufs-exynos: add UFS host support for Exynos
+ SoCs
+Date: Tue, 03 Nov 2015 17:14:58 +0530
+Message-ID: <56389E3A.7060004@samsung.com>
+References: <1444827351-24128-1-git-send-email-alim.akhtar@samsung.com>
+ <1444827351-24128-12-git-send-email-alim.akhtar@samsung.com>
+ <561F18C5.10406@samsung.com> <562A4FE3.9080200@ti.com>
+ <CAGOxZ51cFDvvSKN+=nNnHD=P756r74edUX5XrkvrHv+NXU_NTw@mail.gmail.com>
+ <5630C55D.80800@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446545174-14193-2-git-send-email-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, MTD Maling List <linux-mtd@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <5630C55D.80800-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "James E.J. Bottomley" <JBottomley-wo1vFcy6AUs@public.gmane.org>, vinayak holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 November 2015 at 11:06, Vignesh R <vigneshr@ti.com> wrote:
-> In addition to providing direct access to SPI bus, some spi controller
-> hardwares (like ti-qspi) provide special memory mapped port
-> to accesses SPI flash devices in order to increase read performance.
-> This means the controller can automatically send the SPI signals
-> required to read data from the SPI flash device.
-> For this, spi controller needs to know flash specific information like
-> read command to use, dummy bytes and address width. Once these settings
-> are populated in hardware registers, any read accesses to flash's memory
-> map region(SoC specific) through memcpy (or mem-to mem DMA copy) will be
-> handled by controller hardware. The hardware will automatically generate
-> SPI signals required to read data from flash and present it to CPU/DMA.
->
-> Introduce spi_mtd_mmap_read() interface to support memory mapped read
-> over SPI flash devices. SPI master drivers can implement this callback to
-> support memory mapped read interfaces. m25p80 flash driver and other
-> flash drivers can call this to request memory mapped read. The interface
-> should only be used MTD flashes and cannot be used with other SPI devices.
->
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
->  drivers/spi/spi.c       | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/spi/spi.h | 23 +++++++++++++++++++++++
->  2 files changed, 58 insertions(+)
->
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index a5f53de813d3..5a5c7a7d47f2 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -1059,6 +1059,7 @@ static void __spi_pump_messages(struct spi_master *master, bool in_kthread)
->                 }
->         }
->
-> +       mutex_lock(&master->mmap_lock_mutex);
->         trace_spi_message_start(master->cur_msg);
->
->         if (master->prepare_message) {
-> @@ -1068,6 +1069,7 @@ static void __spi_pump_messages(struct spi_master *master, bool in_kthread)
->                                 "failed to prepare message: %d\n", ret);
->                         master->cur_msg->status = ret;
->                         spi_finalize_current_message(master);
-> +                       mutex_unlock(&master->mmap_lock_mutex);
->                         return;
->                 }
->                 master->cur_msg_prepared = true;
-> @@ -1077,6 +1079,7 @@ static void __spi_pump_messages(struct spi_master *master, bool in_kthread)
->         if (ret) {
->                 master->cur_msg->status = ret;
->                 spi_finalize_current_message(master);
-> +               mutex_unlock(&master->mmap_lock_mutex);
->                 return;
->         }
->
-> @@ -1084,8 +1087,10 @@ static void __spi_pump_messages(struct spi_master *master, bool in_kthread)
->         if (ret) {
->                 dev_err(&master->dev,
->                         "failed to transfer one message from queue\n");
-> +               mutex_unlock(&master->mmap_lock_mutex);
->                 return;
->         }
-> +       mutex_unlock(&master->mmap_lock_mutex);
->  }
->
->  /**
-> @@ -1732,6 +1737,7 @@ int spi_register_master(struct spi_master *master)
->         spin_lock_init(&master->queue_lock);
->         spin_lock_init(&master->bus_lock_spinlock);
->         mutex_init(&master->bus_lock_mutex);
-> +       mutex_init(&master->mmap_lock_mutex);
->         master->bus_lock_flag = 0;
->         init_completion(&master->xfer_completion);
->         if (!master->max_dma_len)
-> @@ -2237,6 +2243,35 @@ int spi_async_locked(struct spi_device *spi, struct spi_message *message)
->  EXPORT_SYMBOL_GPL(spi_async_locked);
->
->
-> +int spi_mtd_mmap_read(struct spi_device *spi, loff_t from, size_t len,
-> +                     size_t *retlen, u_char *buf, u8 read_opcode,
-> +                     u8 addr_width, u8 dummy_bytes)
-> +
-> +{
-> +       struct spi_master *master = spi->master;
-> +       int ret;
-> +
-> +       if (master->auto_runtime_pm) {
-> +               ret = pm_runtime_get_sync(master->dev.parent);
-> +               if (ret < 0) {
-> +                       dev_err(&master->dev, "Failed to power device: %d\n",
-> +                               ret);
-> +                       goto err;
-> +               }
-> +       }
-> +       mutex_lock(&master->mmap_lock_mutex);
-> +       ret = master->spi_mtd_mmap_read(spi, from, len, retlen, buf,
-> +                                       read_opcode, addr_width,
-> +                                       dummy_bytes);
-> +       mutex_unlock(&master->mmap_lock_mutex);
-> +       if (master->auto_runtime_pm)
-> +               pm_runtime_put(master->dev.parent);
-> +
-> +err:
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(spi_mtd_mmap_read);
-> +
->  /*-------------------------------------------------------------------------*/
->
->  /* Utility methods for SPI master protocol drivers, layered on
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 6b00f18f5e6b..0a6d8ad57357 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -297,6 +297,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
->   * @flags: other constraints relevant to this driver
->   * @bus_lock_spinlock: spinlock for SPI bus locking
->   * @bus_lock_mutex: mutex for SPI bus locking
-> + * @mmap_lock_mutex: mutex for locking SPI bus when mmap transfer is on.
+Hi Kishon,
+Thanks for your time.
 
-Any reason to not use the bus_lock_mutex here? The bus is busy as much
-during mmap transfer as it is during any other transfer.
+On 10/28/2015 06:23 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Sunday 25 October 2015 05:34 PM, Alim Akhtar wrote:
+>> Hi Kishon
+>> Thanks again for you review.
+>>
+>> On Fri, Oct 23, 2015 at 8:48 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> On Thursday 15 October 2015 08:38 AM, Alim Akhtar wrote:
+>>>> +CCing kishon Vijay,
+>>>>
+>>>> On 10/14/2015 06:25 PM, Alim Akhtar wrote:
+>>>>> From: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>
+>>>>> This patch introduces Exynos UFS host controller driver,
+>>>>> which mainly handles vendor-specific operations including
+>>>>> link startup, power mode change and hibernation/unhibernation.
+>>>>>
+>>>>> Signed-off-by: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>> ---
+>>>>>    drivers/scsi/ufs/Kconfig         |   12 +
+>>>>>    drivers/scsi/ufs/Makefile        |    1 +
+>>>>>    drivers/scsi/ufs/ufs-exynos-hw.c |  131 ++++
+>>>>>    drivers/scsi/ufs/ufs-exynos-hw.h |   43 ++
+>>>>>    drivers/scsi/ufs/ufs-exynos.c    | 1317
+>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>    drivers/scsi/ufs/ufs-exynos.h    |  247 +++++++
+>>>>>    drivers/scsi/ufs/ufshci.h        |   26 +-
+>>>>>    drivers/scsi/ufs/unipro.h        |   47 ++
+>>>>>    8 files changed, 1823 insertions(+), 1 deletion(-)
+>>>>>    create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+>>>>>    create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+>>>>>    create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+>>>>>    create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+>>>>>
+>>> .
+>>> .
+>>> <snip>
+>>> .
+>>> .
+>>>>> diff --git a/drivers/scsi/ufs/ufs-exynos-hw.c
+>>>>> b/drivers/scsi/ufs/ufs-exynos-hw.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..be6c61541a8f
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/scsi/ufs/ufs-exynos-hw.c
+>>>>> @@ -0,0 +1,131 @@
+>>> .
+>>> .
+>>> <snip>
+>>> .
+>>> .
+>>>>> +
+>>>>> +#define PWR_MODE_STR_LEN    64
+>>>>> +static int exynos_ufs_post_pwr_mode(struct ufs_hba *hba,
+>>>>> +                struct ufs_pa_layer_attr *pwr_max,
+>>>>> +                struct ufs_pa_layer_attr *pwr_req)
+>>>>> +{
+>>>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>>>> +    struct exynos_ufs_phy_info *phy_info = phy_get_drvdata(ufs->phy);
+>>>
+>>> This is abusing the interface. phy_get_drvdata is meant to be used only
+>>> by the PHY driver.
+>>>>> +    struct exynos_ufs_phy_specific_ops *phy_ops =
+>>>>> +                    phy_info->phy_specific_ops;
+>>>
+>>> I'm really not happy about having platform specific ops for PHY. We have
+>>> to see if existing PHY ops can be used for this or in worst case add new
+>>> PHY ops.
+>> Well you said you like the controller driver to use only PHY ops[1], I
+>> am sorry If I misunderstood that point, can you please help me to
+>> understand that?
+>
+> I meant PHY generic ops and not PHY ops.
+Ok, got it, will use only generic phy here in controller driver.
+- Will remove the platform specific PHY ops from phy driver introduce in 
+this series (patch 02/11)
+>> [1]-> https://lkml.org/lkml/2015/9/18/29
+>>
+>>>>> +    struct uic_pwr_mode *pwr = &ufs->pwr_act;
+>>>>> +    char pwr_str[PWR_MODE_STR_LEN] = "";
+>>>>> +    int ret = 0;
+>>>>> +
+>>>>> +    if (ufs->drv_data->post_pwr_change)
+>>>>> +        ufs->drv_data->post_pwr_change(ufs, pwr);
+>>>>> +
+>>>>> +    if (IS_UFS_PWR_MODE_HS(pwr->mode)) {
+>>>>> +        switch (pwr->hs_series) {
+>>>>> +        case PA_HS_MODE_A:
+>>>>> +        case PA_HS_MODE_B:
+>>>>> +            phy_ops->calibrate_phy(ufs->phy, CFG_POST_PWR_HS,
+>>>>> +                PWR_MODE_HS(pwr->gear, pwr->hs_series));
+>>>>> +            break;
+>>>>> +        }
+>>>>> +
+>>>>> +        ret = phy_ops->wait_for_lock_acq(ufs->phy);
+>>>>> +        snprintf(pwr_str, sizeof(pwr_str), "Fast%s series_%s G_%d L_%d",
+>>>>> +            pwr->mode == FASTAUTO_MODE ? "_Auto" : "",
+>>>>> +            pwr->hs_series == PA_HS_MODE_A ? "A" : "B",
+>>>>> +            pwr->gear, pwr->lane);
+>>>>> +    } else if (IS_UFS_PWR_MODE_PWM(pwr->mode)) {
+>>>>> +        snprintf(pwr_str, sizeof(pwr_str), "Slow%s G_%d L_%d",
+>>>>> +            pwr->mode == SLOWAUTO_MODE ? "_Auto" : "",
+>>>>> +            pwr->gear, pwr->lane);
+>>>>> +    }
+>>>>> +
+>>>>> +    dev_info(hba->dev, "Power mode change %d : %s\n", ret, pwr_str);
+>>>>> +    return ret;
+>>>>> +}
+>>>>> +
+>>>>> +static void exynos_ufs_specify_nexus_t_xfer_req(struct ufs_hba *hba,
+>>>>> +                        int tag, struct scsi_cmnd *cmd)
+>>>>> +{
+>>>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>>>> +    u32 type;
+>>>>> +
+>>>>> +    type =  hci_readl(ufs, HCI_UTRL_NEXUS_TYPE);
+>>>>> +
+>>>>> +    if (cmd)
+>>>>> +        hci_writel(ufs, type | (1 << tag), HCI_UTRL_NEXUS_TYPE);
+>>>>> +    else
+>>>>> +        hci_writel(ufs, type & ~(1 << tag), HCI_UTRL_NEXUS_TYPE);
+>>>>> +}
+>>>>> +
+>>>>> +static void exynos_ufs_specify_nexus_t_tm_req(struct ufs_hba *hba,
+>>>>> +                        int tag, u8 func)
+>>>>> +{
+>>>>> +    struct exynos_ufs *ufs = to_exynos_ufs(hba);
+>>>>> +    u32 type;
+>>>>> +
+>>>>> +    type =  hci_readl(ufs, HCI_UTMRL_NEXUS_TYPE);
+>>>>> +
+>>>>> +    switch (func) {
+>>>>> +    case UFS_ABORT_TASK:
+>>>>> +    case UFS_QUERY_TASK:
+>>>>> +        hci_writel(ufs, type | (1 << tag), HCI_UTMRL_NEXUS_TYPE);
+>>>>> +        break;
+>>>>> +    case UFS_ABORT_TASK_SET:
+>>>>> +    case UFS_CLEAR_TASK_SET:
+>>>>> +    case UFS_LOGICAL_RESET:
+>>>>> +    case UFS_QUERY_TASK_SET:
+>>>>> +        hci_writel(ufs, type & ~(1 << tag), HCI_UTMRL_NEXUS_TYPE);
+>>>>> +        break;
+>>>>> +    }
+>>>>> +}
+>>>>> +
+>>>>> +static void exynos_ufs_phy_init(struct exynos_ufs *ufs)
+>>>>> +{
+>>>>> +    struct ufs_hba *hba = ufs->hba;
+>>>>> +    struct exynos_ufs_phy_info *phy_info = phy_get_drvdata(ufs->phy);
+>>>>> +    struct exynos_ufs_phy_specific_ops *phy_ops =
+>>>>> +                    phy_info->phy_specific_ops;
+>>>>> +
+>>>>> +    if (ufs->avail_ln_rx == 0 || ufs->avail_ln_tx == 0) {
+>>>>> +        ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILRXDATALANES),
+>>>>> +            &ufs->avail_ln_rx);
+>>>>> +        ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILTXDATALANES),
+>>>>> +            &ufs->avail_ln_tx);
+>>>>> +        WARN(ufs->avail_ln_rx != ufs->avail_ln_tx,
+>>>>> +            "available data lane is not equal(rx:%d, tx:%d)\n",
+>>>>> +            ufs->avail_ln_rx, ufs->avail_ln_tx);
+>>>>> +    }
+>>>>> +
+>>>>> +    phy_ops->set_lane_cnt(ufs->phy, ufs->avail_ln_rx);
+>>>
+>>> can't bus_width attribute in phy core be reused for this?
+>>>
+>> I will take a look on it.
+>>
+>>>>> +    phy_ops->calibrate_phy(ufs->phy, CFG_PRE_INIT, PWR_MODE_ANY);
+>>>
+>>> Why can't calibrate PHY be directly done in phy_init?
+>>>
+>> This is just one instance, need to calibrate PHY when the ufs pwr mode changes.
+>
+> Then maybe we should check when the power mode changes and see if it
+> makes sense to calibrate PHY in other generic PHY ops like phy_power_on
+> etc..
+>
+I did explore this but looks like in current situation it is not the 
+best option.
+Will post next revision after I am done with modifications, PTAL.
 
-Thanks
-
-Michal
+> Thanks
+> Kishon
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
