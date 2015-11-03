@@ -1,41 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
-Date: Tue, 03 Nov 2015 22:10:59 +0100
-Message-ID: <9870677.mbWe9PySGp@wuerfel>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org> <4135705.fKCjnZtDgZ@wuerfel> <56392216.8050305@codeaurora.org>
+From: Stuart Yoder <stuart.yoder@freescale.com>
+Subject: RE: [PATCH v4] arm64: dts: Added syscon-reboot node for FSL's LS2085A
+ SoC
+Date: Tue, 3 Nov 2015 22:26:34 +0000
+Message-ID: <CY1PR0301MB0748AB5722A44E0D65F5E29F872B0@CY1PR0301MB0748.namprd03.prod.outlook.com>
+References: <1446235498-4093-1-git-send-email-German.Rivera@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56392216.8050305@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1446235498-4093-1-git-send-email-German.Rivera@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Sharma Bhupesh <bhupesh.sharma@freescale.com>, Jose Rivera <German.Rivera@freescale.com>, Li Leo <LeoLi@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 November 2015 16:07:34 Sinan Kaya wrote:
-> On 11/3/2015 5:43 AM, Arnd Bergmann wrote:
-> > Ok, got it.
-> >
-> > Best add an explanation like the above in the interrupt handler,
-> > to prevent this from accidentally getting 'cleaned up' to use
-> > readl(), or copied into a driver that uses PCI ordering rules
-> > where it is actually wrong.
-> >
-> 
-> I'm adding this disclaimer into the ISR routine.
-> 
->         /*
->          * Fine tuned for this HW...
->          *
->          * This ISR has been designed for this particular hardware. Relaxed read
->          * and write accessors are used for performance reasons due to interrupt
->          * delivery guarantees. Do not copy this code blindly and expect
->          * that to work.
->          */
-> 
-> 
 
-Sounds good.
 
-	Arnd
+> -----Original Message-----
+> From: J. German Rivera [mailto:German.Rivera@freescale.com]
+> Sent: Friday, October 30, 2015 3:05 PM
+> To: robh+dt@kernel.org; mark.rutland@arm.com; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Cc: Sharma Bhupesh-B45370; Yoder Stuart-B08248; Li Yang-Leo-R58472; Rivera Jose-B46482
+> Subject: [PATCH v4] arm64: dts: Added syscon-reboot node for FSL's LS2085A SoC
+> 
+> Added sys-reboot node to the FSL's LS2085A SoC DT to leverage
+> the ARM-generic reboot mechanism for this SoC. This mechanism
+> is enabled through CONFIG_POWER_RESET_SYSCON.
+
+German, one thing I noticed with this patch-- with the name change to
+ls2080a, we should update the patch subject and commit message
+to reflect that.
+
+Thanks,
+Stuart
