@@ -1,83 +1,58 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
- compatible
-Date: Tue, 3 Nov 2015 09:32:16 +0100
-Message-ID: <56387110.4060805@linaro.org>
-References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
- <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
- <21587719.mnFBFBzBeI@phil> <56379D46.1000402@linaro.org>
- <56381547.5070109@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
+Date: Tue, 3 Nov 2015 08:33:44 +0000
+Message-ID: <20151103083344.GA3503@x1>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <20151102085924.GP4058@x1>
+ <56385998.5080006@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <56381547.5070109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56385998.5080006@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Kim, Milo" <milo.kim@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMDMvMjAxNSAwMzowMCBBTSwgQ2Flc2FyIFdhbmcgd3JvdGU6Cj4gRGFuaWVsLAo+Cj4g
-5ZyoIDIwMTXlubQxMeaciDAz5pelIDAxOjI4LCBEYW5pZWwgTGV6Y2FubyDlhpnpgZM6Cj4+IE9u
-IDEwLzMxLzIwMTUgMTI6NDcgQU0sIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+Pj4gSGkgRGFuaWVs
-LAo+Pj4KPj4+IEFtIEZyZWl0YWcsIDMwLiBPa3RvYmVyIDIwMTUsIDExOjQyOjI5IHNjaHJpZWIg
-RGFuaWVsIExlemNhbm86Cj4+Pj4gT24gMTAvMzAvMjAxNSAwNDo0MyBBTSwgQ2Flc2FyIFdhbmcg
-d3JvdGU6Cj4+Pj4+IEhpIERhbmllbCwKPj4+Pj4KPj4+Pj4g5ZyoIDIwMTXlubQxMOaciDAx5pel
-IDAzOjE0LCBIZWlrbyBTdMO8Ym5lciDlhpnpgZM6Cj4+Pj4+PiBIaSBEYW5pZWwsCj4+Pj4+Pgo+
-Pj4+Pj4gQW0gRGllbnN0YWcsIDI5LiBTZXB0ZW1iZXIgMjAxNSwgMDY6MTg6MDMgc2NocmllYiBE
-YW5pZWwgTGV6Y2FubzoKPj4+Pj4+PiBPbiAwOS8yNS8yMDE1IDA0OjE0IEFNLCBDYWVzYXIgV2Fu
-ZyB3cm90ZToKPj4+Pj4+Pj4gQnVpbGQgdGhlIGFybTY0IFNvQ3MgKGUuZy46IFJLMzM2OCkgb24g
-Um9ja2NoaXAgcGxhdGZvcm0sCj4+Pj4+Pj4+IFRoZXJlIGFyZSBzb21lIGZhaWx1cmUgd2l0aCBi
-dWlsZCB1cCBvbiB0aW1lciBkcml2ZXIgZm9yIHJvY2tjaGlwLgo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBT
-YXlzOgo+Pj4+Pj4+PiAvdG1wL2NjZEFuTnk1LnM6NDc6IEVycm9yOiBtaXNzaW5nIGltbWVkaWF0
-ZSBleHByZXNzaW9uIGF0ICBvcGVyYW5kCj4+Pj4+Pj4+IDEgLS0KPj4+Pj4+Pj4gYGRzYmAKPj4+
-Pj4+Pj4gLi4uCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFRoZSBwcm9ibGVtIHdhcyBkaWZmZXJlbnQgc2Vt
-YW50aWNzIG9mIGRzYiBvbiBidHcgYXJtMzIgYW5kIGFybTY0LAo+Pj4+Pj4+PiBIZXJlIHdlIGNh
-biBjb252ZXJ0IHRoZSBkc2Igd2l0aCBpbnN0ZWFkaW5nIG9mIGRzYihzeSkuVGhlICJzeSIKPj4+
-Pj4+Pj4gcGFyYW0KPj4+Pj4+Pj4gaXMgdGhlIGRlZmF1bHQgd2hpY2ggeW91IGFyZSBhbGxvdyB0
-byBvbWl0LCBzbyBvbiBhcm0zMiBkc2IoKWFuZAo+Pj4+Pj4+PiBkc2Ioc3kpCj4+Pj4+Pj4+IGFy
-ZSB0aGUgc2FtZS4KPj4+Pj4+Pj4KPj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogQ2Flc2FyIFdhbmcg
-PHd4dEByb2NrLWNoaXBzLmNvbT4KPj4+Pj4+PiBBY2tlZC1ieTogRGFuaWVsIExlemNhbm8gPGRh
-bmllbC5sZXpjYW5vQGxpbmFyby5vcmc+Cj4+Pj4+PiBhcyB5b3UgaGF2ZSAianVzdCIgQWNrZWQg
-dGhlc2UgcGF0Y2hlcywgSSBndWVzcyB5b3UgYXJlIGV4cGVjdGluZwo+Pj4+Pj4gdGhlbQo+Pj4+
-Pj4gdG8gZ28KPj4+Pj4+IHRocm91Z2ggdGhlIHNhbWUgdHJlZSBhcyB0aGUgZGV2aWNldHJlZSBj
-aGFuZ2VzLCByaWdodD8KPj4+Pj4KPj4+Pj4gSSdtIHdvbmRlciBpZiBzb21lb25lIHdpbGwgYXBw
-bHkgdGhpcyBzZXJpZXMgcGF0Y2hzIGJ1dCB0aGUgd2FpdC46LSkKPj4+Pj4gSW4gZmFjdCwgSSdt
-IG5vIHN1cmUgdGhhdCB0aGUgQWNrZWQgaXMgcmVhbGx5IG1lYW5pbmcuOi0KPj4+Pgo+Pj4+IFll
-cywgYnkgYWNraW5nIHRoZSBwYXRjaCBJIHNheSBJIGFtIG9rIHdpdGggaXQgYW5kIEkgYWdyZWUg
-aXQgY2FuIGdvCj4+Pj4gdGhyb3VnaCBhbm90aGVyIHRyZWUuCj4+Pgo+Pj4gYWx0aG91Z2ggSSBn
-dWVzcyB0aGUgdHdvIGNsb2Nrc291cmNlIGNoYW5nZXMgY291bGQgdmVyeSB3ZWxsIGp1c3QgZ28K
-Pj4+IHRocm91Z2ggeW91ciB0cmVlLiBkc2IoKSAtPiBkc2Ioc3kpIGlzIHN1cHBvc2VkIHRvIGJl
-IGVxdWFsIGFuZCB0aGUKPj4+IHNlY29uZAo+Pj4gb25lIGlzIGp1c3QgY29zbWV0aWNzLiAgVGhl
-IEtjb25maWcgYW5kIGR0cyBjaGFuZ2VzIG5lZWQgdG8gd2FpdCBpbgo+Pj4gYW55IGNhc2UKPj4+
-IGZvciA0LjUgLi4uIGJ1dCBJIGd1ZXNzIHRoYXQgbWF5IGJlIHRydWUgZm9yIHRoZSBjbG9ja3Nv
-dXJjZSBjaGFuZ2VzCj4+PiBhcyB3ZWxsPwo+Pgo+PiBIZWlrbywgQ2Flc2FyLAo+Pgo+PiBJIGFt
-IHdvbmRlcmluZyBpZiB0aGUgZHNiKCkgaXMgcmVhbGx5IG5lY2Vzc2FyeS4gSXMgaXQgcG9zc2li
-bGUgeW91Cj4+IHRlc3QgdGhlIHRpbWVyIGJ5IHJlbW92aW5nIHRoaXMgaW5zdHJ1Y3Rpb24gPyBP
-dGhlcndpc2UgSSB3aWxsIGhhdmUgdG8KPj4gc2V0dXAgbXkgYm9hcmQgYWdhaW4gYW5kIGl0IHdp
-bGwgdGFrZSBhd2hpbGUuCj4+Cj4KPiBBcyB0aGUgQEFybmQgc3VnZ2VzdGlvbiwKPgo+IFRoYXQn
-cyBzZWVtIG9rIGZvciBtZS4KPiBBbHRob3VnaCB0aGUgd3JpdGVsX3JlbGF4ZWQoKSBhbmQgd3Jp
-dGVsKCkgYSBiaXQgZGlmZmVyZW50ICB3aXRoIERTQigpCj4gYW5kIEwyJ3Mgc3luYy4KPgo+IERv
-IEkgbmVlZCBzZW5kIHRoZSBwYXRjaCB2Mz8gIEkgd2lsbCB0ZXN0IHRoYXQgb24gbXkgYm9hcmQu
-Cj4KPiBJJ20gbm8gc3VyZSB0aGF0IHdoeSB0aGUgY2xvY2tzb3VyY2UgZHJpdmVyIGRpZG4ndCB1
-c2UgdGhlCj4gd3JpdGVsX3JlbGF4ZWQoKSB0byB3b3JrLgo+IE9rYXksIEkgdGhpbmsgd2Ugc2hv
-dWxkIGFjY29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBvciByZXF1aXJlZC4KCkkgdGhpbmsgdGhl
-IHBhdGNoIGlzIHRyaXZpYWwgZW5vdWdoIEkgY2FuIGRvIHRoZSBjaGFuZ2UgbXlzZWxmIGlmIHlv
-dSAKdGVzdCB0aGUgY2hhbmdlIG9uIHlvdXIgc2lkZS4gQnV0IGl0IHdvdWxkIGJlIGEgZ29vZCBw
-cmFjdGljZSB0byBzZW5kIAp0aGUgcGF0Y2ggeW91IGhhdmUgdGVzdGVkLiBVcCB0byB5b3UgOykK
-ClRoYW5rcyAhCgogICAtLSBEYW5pZWwKCgotLSAKICA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4g
-TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCgpGb2xsb3cg
-TGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gRmFjZWJvb2sg
-fAo8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRlciB8CjxodHRwOi8vd3d3
-LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4
-LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+On Tue, 03 Nov 2015, Kim, Milo wrote:
+
+> Hi Lee,
+>=20
+> On 11/2/2015 5:59 PM, Lee Jones wrote:
+> >>  drivers/video/backlight/Kconfig                    |  62 ++
+> >>>  drivers/video/backlight/Makefile                   |   7 +
+> >>>  drivers/video/backlight/lm3532_bl.c                | 183 +++++
+> >>>  drivers/video/backlight/lm3631_bl.c                | 129 ++++
+> >>>  drivers/video/backlight/lm3632_bl.c                | 125 ++++
+> >>>  drivers/video/backlight/lm3633_bl.c                | 210 ++++++
+> >>>  drivers/video/backlight/lm3695_bl.c                |  91 +++
+> >>>  drivers/video/backlight/lm3697_bl.c                | 187 +++++
+> >>>  drivers/video/backlight/ti-lmu-backlight.c         | 429 +++++++=
++++++
+> >>>  drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
+> >How different are all of these drivers?
+> >
+> >Can you create one driver that supports them all instead?
+> >
+>=20
+> Thanks for your suggestion.
+>=20
+> 'ti-lmu-backlight' is the common part of lmxxxx_bl drivers. And each
+> lmxxx_bl has its own operation functions by using ti_lmu_bl_ops.
+> I've tried to make consolidated driver but it contained too much
+> device specific code in one file. So I prefer simple drivers
+> structure - 'common part' and 'device specific operations'.
+> It would be appreciated if you could introduce better idea.
+
+I wish to avoid having to apply the patches to conduct my own analysis
+of the files, as I am severely restricted on time.  Can you tell me how
+much duplicated code there is between the files?  How many lines would
+be saved by supporting all of the lm* drivers in a single file?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
