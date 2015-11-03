@@ -1,53 +1,27 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] dma: add Qualcomm Technologies HIDMA channel driver
-Date: Tue, 03 Nov 2015 11:43:50 +0100
-Message-ID: <4135705.fKCjnZtDgZ@wuerfel>
-References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org> <17979873.Bg2pv5SLy6@wuerfel> <56384623.80305@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: of_dma: Correct return code for of_dma_request_slave_channel in case !CONFIG_OF
+Date: Tue, 03 Nov 2015 11:46:59 +0100
+Message-ID: <43587003.79P18ZJed3@wuerfel>
+References: <1446546490-7432-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56384623.80305@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446546490-7432-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 November 2015 00:29:07 Sinan Kaya wrote:
-> On 11/2/2015 3:55 PM, Arnd Bergmann wrote:
-> > Are you using message signaled interrupts then?
-> > Typically MSI guarantees
-> > ordering against DMA, but level or edge triggered interrupts by definition
-> > cannot (at least on PCI, but most other buses are the same way), because
-> > the DMA master has no insight into when a DMA is actually complete.
-> >
-> > If you use MSI, please add a comment to the readl_relaxed() that it
-> > is safe because of that, otherwise the next person who tries to debug
-> > a problem with your driver has to look into this.
+On Tuesday 03 November 2015 12:28:10 Peter Ujfalusi wrote:
+> of_dma_request_slave_channel should return either pointer for valid
+> dma_chan or ERR_PTR() error code, NULL is not expected to be returned.
 > 
-> No, using regular GIC SPI interrupts at this moment. I know that HW 
-> doesn't use any of the typical AHB/AXI ARM buses.
-> 
-> I'm familiar with how PCI endpoints works. While the first read in a 
-> typical PCI endpoint ISR flushes all outstanding requests traditionally 
-> to the destination, this concept does not apply here for this HW.
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 > 
 
-Ok, got it.
-
-Best add an explanation like the above in the interrupt handler,
-to prevent this from accidentally getting 'cleaned up' to use
-readl(), or copied into a driver that uses PCI ordering rules
-where it is actually wrong.
-
-I think it should be done like this:
-
-- anything that is not performance critical, use normal readl/writel
-- in the fast path, add a comment to each readl_relaxed()/writel_relaxed()
-  that is safe in this driver but that would not be safe in a PCI
-  device
-- For the ones that would be safe on PCI as weel, use
-  readl_relaxed()/writel_relaxed() without a comment on each one,
-  but clarify somewhere that these are all intentional.
-
-	Arnd
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
