@@ -1,73 +1,83 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
-Date: Tue, 3 Nov 2015 09:20:00 +0100
-Message-ID: <56386E30.4060905@i2se.com>
-References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
- <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clocksource: rockchip: Make the driver more
+ compatible
+Date: Tue, 3 Nov 2015 09:32:16 +0100
+Message-ID: <56387110.4060805@linaro.org>
+References: <1443147298-12603-1-git-send-email-wxt@rock-chips.com>
+ <5632E765.4010207@gmail.com> <56334995.6090103@linaro.org>
+ <21587719.mnFBFBzBeI@phil> <56379D46.1000402@linaro.org>
+ <56381547.5070109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, manabian@gmail.com, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, ezequiel@vanguardiasur.com.ar, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56381547.5070109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ariel,
-
-Am 19.10.2015 um 19:32 schrieb Ariel D'Alessandro:
-> This commit adds support for NXP LPC18xx EEPROM memory found in NXP
-> LPC185x/3x and LPC435x/3x/2x/1x devices.
->
-> EEPROM size is 16384 bytes and it can be entirely read and
-> written/erased with 1 word (4 bytes) granularity. The last page
-> (128 bytes) contains the EEPROM initialization data and is not writable.
->
-> Erase/program time is less than 3ms. The EEPROM device requires a
-> ~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated dividing
-> the system bus clock by the division factor, contained in the divider
-> register (minus 1 encoded).
->
-> Signed-off-by: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
-> ---
->  drivers/nvmem/Kconfig          |   9 ++
->  drivers/nvmem/Makefile         |   2 +
->  drivers/nvmem/lpc18xx_eeprom.c | 266 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 277 insertions(+)
->  create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
-> [...]
-> +
-> +static int lpc18xx_eeprom_gather_write(void *context, const void *reg,
-> +				       size_t reg_size, const void *val,
-> +				       size_t val_size)
-> +{
-> +	struct lpc18xx_eeprom_dev *eeprom = context;
-> +	unsigned int offset = *(u32 *)reg;
-> +
-> +	/* 3 ms of erase/program time between each writing */
-> +	while (val_size) {
-> +		writel(*(u32 *)val, eeprom->mem_base + offset);
-> +		usleep_range(3000, 4000);
-
-i think it would be good to verify that the EEPROM write operation has
-really finished.
-
-Best regards
-Stefan
-
-> +		val_size -= eeprom->val_bytes;
-> +		val += eeprom->val_bytes;
-> +		offset += eeprom->val_bytes;
-> +	}
-> +
-> +	return 0;
-> +}
+T24gMTEvMDMvMjAxNSAwMzowMCBBTSwgQ2Flc2FyIFdhbmcgd3JvdGU6Cj4gRGFuaWVsLAo+Cj4g
+5ZyoIDIwMTXlubQxMeaciDAz5pelIDAxOjI4LCBEYW5pZWwgTGV6Y2FubyDlhpnpgZM6Cj4+IE9u
+IDEwLzMxLzIwMTUgMTI6NDcgQU0sIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+Pj4gSGkgRGFuaWVs
+LAo+Pj4KPj4+IEFtIEZyZWl0YWcsIDMwLiBPa3RvYmVyIDIwMTUsIDExOjQyOjI5IHNjaHJpZWIg
+RGFuaWVsIExlemNhbm86Cj4+Pj4gT24gMTAvMzAvMjAxNSAwNDo0MyBBTSwgQ2Flc2FyIFdhbmcg
+d3JvdGU6Cj4+Pj4+IEhpIERhbmllbCwKPj4+Pj4KPj4+Pj4g5ZyoIDIwMTXlubQxMOaciDAx5pel
+IDAzOjE0LCBIZWlrbyBTdMO8Ym5lciDlhpnpgZM6Cj4+Pj4+PiBIaSBEYW5pZWwsCj4+Pj4+Pgo+
+Pj4+Pj4gQW0gRGllbnN0YWcsIDI5LiBTZXB0ZW1iZXIgMjAxNSwgMDY6MTg6MDMgc2NocmllYiBE
+YW5pZWwgTGV6Y2FubzoKPj4+Pj4+PiBPbiAwOS8yNS8yMDE1IDA0OjE0IEFNLCBDYWVzYXIgV2Fu
+ZyB3cm90ZToKPj4+Pj4+Pj4gQnVpbGQgdGhlIGFybTY0IFNvQ3MgKGUuZy46IFJLMzM2OCkgb24g
+Um9ja2NoaXAgcGxhdGZvcm0sCj4+Pj4+Pj4+IFRoZXJlIGFyZSBzb21lIGZhaWx1cmUgd2l0aCBi
+dWlsZCB1cCBvbiB0aW1lciBkcml2ZXIgZm9yIHJvY2tjaGlwLgo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBT
+YXlzOgo+Pj4+Pj4+PiAvdG1wL2NjZEFuTnk1LnM6NDc6IEVycm9yOiBtaXNzaW5nIGltbWVkaWF0
+ZSBleHByZXNzaW9uIGF0ICBvcGVyYW5kCj4+Pj4+Pj4+IDEgLS0KPj4+Pj4+Pj4gYGRzYmAKPj4+
+Pj4+Pj4gLi4uCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFRoZSBwcm9ibGVtIHdhcyBkaWZmZXJlbnQgc2Vt
+YW50aWNzIG9mIGRzYiBvbiBidHcgYXJtMzIgYW5kIGFybTY0LAo+Pj4+Pj4+PiBIZXJlIHdlIGNh
+biBjb252ZXJ0IHRoZSBkc2Igd2l0aCBpbnN0ZWFkaW5nIG9mIGRzYihzeSkuVGhlICJzeSIKPj4+
+Pj4+Pj4gcGFyYW0KPj4+Pj4+Pj4gaXMgdGhlIGRlZmF1bHQgd2hpY2ggeW91IGFyZSBhbGxvdyB0
+byBvbWl0LCBzbyBvbiBhcm0zMiBkc2IoKWFuZAo+Pj4+Pj4+PiBkc2Ioc3kpCj4+Pj4+Pj4+IGFy
+ZSB0aGUgc2FtZS4KPj4+Pj4+Pj4KPj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogQ2Flc2FyIFdhbmcg
+PHd4dEByb2NrLWNoaXBzLmNvbT4KPj4+Pj4+PiBBY2tlZC1ieTogRGFuaWVsIExlemNhbm8gPGRh
+bmllbC5sZXpjYW5vQGxpbmFyby5vcmc+Cj4+Pj4+PiBhcyB5b3UgaGF2ZSAianVzdCIgQWNrZWQg
+dGhlc2UgcGF0Y2hlcywgSSBndWVzcyB5b3UgYXJlIGV4cGVjdGluZwo+Pj4+Pj4gdGhlbQo+Pj4+
+Pj4gdG8gZ28KPj4+Pj4+IHRocm91Z2ggdGhlIHNhbWUgdHJlZSBhcyB0aGUgZGV2aWNldHJlZSBj
+aGFuZ2VzLCByaWdodD8KPj4+Pj4KPj4+Pj4gSSdtIHdvbmRlciBpZiBzb21lb25lIHdpbGwgYXBw
+bHkgdGhpcyBzZXJpZXMgcGF0Y2hzIGJ1dCB0aGUgd2FpdC46LSkKPj4+Pj4gSW4gZmFjdCwgSSdt
+IG5vIHN1cmUgdGhhdCB0aGUgQWNrZWQgaXMgcmVhbGx5IG1lYW5pbmcuOi0KPj4+Pgo+Pj4+IFll
+cywgYnkgYWNraW5nIHRoZSBwYXRjaCBJIHNheSBJIGFtIG9rIHdpdGggaXQgYW5kIEkgYWdyZWUg
+aXQgY2FuIGdvCj4+Pj4gdGhyb3VnaCBhbm90aGVyIHRyZWUuCj4+Pgo+Pj4gYWx0aG91Z2ggSSBn
+dWVzcyB0aGUgdHdvIGNsb2Nrc291cmNlIGNoYW5nZXMgY291bGQgdmVyeSB3ZWxsIGp1c3QgZ28K
+Pj4+IHRocm91Z2ggeW91ciB0cmVlLiBkc2IoKSAtPiBkc2Ioc3kpIGlzIHN1cHBvc2VkIHRvIGJl
+IGVxdWFsIGFuZCB0aGUKPj4+IHNlY29uZAo+Pj4gb25lIGlzIGp1c3QgY29zbWV0aWNzLiAgVGhl
+IEtjb25maWcgYW5kIGR0cyBjaGFuZ2VzIG5lZWQgdG8gd2FpdCBpbgo+Pj4gYW55IGNhc2UKPj4+
+IGZvciA0LjUgLi4uIGJ1dCBJIGd1ZXNzIHRoYXQgbWF5IGJlIHRydWUgZm9yIHRoZSBjbG9ja3Nv
+dXJjZSBjaGFuZ2VzCj4+PiBhcyB3ZWxsPwo+Pgo+PiBIZWlrbywgQ2Flc2FyLAo+Pgo+PiBJIGFt
+IHdvbmRlcmluZyBpZiB0aGUgZHNiKCkgaXMgcmVhbGx5IG5lY2Vzc2FyeS4gSXMgaXQgcG9zc2li
+bGUgeW91Cj4+IHRlc3QgdGhlIHRpbWVyIGJ5IHJlbW92aW5nIHRoaXMgaW5zdHJ1Y3Rpb24gPyBP
+dGhlcndpc2UgSSB3aWxsIGhhdmUgdG8KPj4gc2V0dXAgbXkgYm9hcmQgYWdhaW4gYW5kIGl0IHdp
+bGwgdGFrZSBhd2hpbGUuCj4+Cj4KPiBBcyB0aGUgQEFybmQgc3VnZ2VzdGlvbiwKPgo+IFRoYXQn
+cyBzZWVtIG9rIGZvciBtZS4KPiBBbHRob3VnaCB0aGUgd3JpdGVsX3JlbGF4ZWQoKSBhbmQgd3Jp
+dGVsKCkgYSBiaXQgZGlmZmVyZW50ICB3aXRoIERTQigpCj4gYW5kIEwyJ3Mgc3luYy4KPgo+IERv
+IEkgbmVlZCBzZW5kIHRoZSBwYXRjaCB2Mz8gIEkgd2lsbCB0ZXN0IHRoYXQgb24gbXkgYm9hcmQu
+Cj4KPiBJJ20gbm8gc3VyZSB0aGF0IHdoeSB0aGUgY2xvY2tzb3VyY2UgZHJpdmVyIGRpZG4ndCB1
+c2UgdGhlCj4gd3JpdGVsX3JlbGF4ZWQoKSB0byB3b3JrLgo+IE9rYXksIEkgdGhpbmsgd2Ugc2hv
+dWxkIGFjY29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBvciByZXF1aXJlZC4KCkkgdGhpbmsgdGhl
+IHBhdGNoIGlzIHRyaXZpYWwgZW5vdWdoIEkgY2FuIGRvIHRoZSBjaGFuZ2UgbXlzZWxmIGlmIHlv
+dSAKdGVzdCB0aGUgY2hhbmdlIG9uIHlvdXIgc2lkZS4gQnV0IGl0IHdvdWxkIGJlIGEgZ29vZCBw
+cmFjdGljZSB0byBzZW5kIAp0aGUgcGF0Y2ggeW91IGhhdmUgdGVzdGVkLiBVcCB0byB5b3UgOykK
+ClRoYW5rcyAhCgogICAtLSBEYW5pZWwKCgotLSAKICA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4g
+TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCgpGb2xsb3cg
+TGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gRmFjZWJvb2sg
+fAo8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRlciB8CjxodHRwOi8vd3d3
+LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4
+LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
