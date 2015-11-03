@@ -1,62 +1,112 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Tue, 03 Nov 2015 16:18:36 +0900
-Message-ID: <56385FCC.1090007@samsung.com>
-References: <cover.1446122247.git.p.fedin@samsung.com>
- <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
- <56330E6E.50003@samsung.com> <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
- <5635D1EE.5010604@samsung.com> <012101d11540$8c280be0$a47823a0$@samsung.com>
- <5637FCCB.1060007@samsung.com> <004d01d11604$fc7a2a80$f56e7f80$@samsung.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/4] Input: tsc2004 - Document ts2004 dt bindings
+Date: Mon, 2 Nov 2015 23:21:24 -0800
+Message-ID: <20151103072124.GA33601@dtor-ws>
+References: <1446252086-24334-1-git-send-email-mwelling@ieee.org>
+ <1446252086-24334-5-git-send-email-mwelling@ieee.org>
+ <CAL_JsqKpbrWcHj4eubWMAjtVRHE8TTN_qC5S=J7qzcf8khpzng@mail.gmail.com>
+ <20151102205028.GA2571@deathstar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <004d01d11604$fc7a2a80$f56e7f80$@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, k.kozlowski.k@gmail.com, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151102205028.GA2571@deathstar>
+Sender: linux-input-owner@vger.kernel.org
+To: Michael Welling <mwelling@ieee.org>
+Cc: Rob Herring <robh@kernel.org>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>, Roger Quadros <rogerq@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03.11.2015 15:58, Pavel Fedin wrote:
->  Hello!
+On Mon, Nov 02, 2015 at 02:50:29PM -0600, Michael Welling wrote:
+> On Mon, Nov 02, 2015 at 09:19:50AM -0600, Rob Herring wrote:
+> > > +Required properties:
+> > > + - compatible                : "ti,tsc2004"
+> > > + - interrupts                : IRQ specifier
+> > > + - vio-supply                 : Regulator specifier
+> > 
+> > reg property?
 > 
->>>>> --- cut exynos5410.dtsi ---
->>>>> 		sromc: sromc@12250000 {
->>>>> 			#address-cells = <2>;
->>>>> 			#size-cells = <1>;
->>>>> 			ranges = <0 0 0x04000000 0x20000
->>>>> 				  1 0 0x05000000 0x20000
->>>>> 				  2 0 0x06000000 0x20000
->>>>> 				  3 0 0x07000000 0x20000>;
->>>>
->>>> Do you have to use 2 cells for address? Cannot it be:
->>>>  			ranges = <0 0x04000000 0x20000
->>>>  				  1 0x05000000 0x20000
->>>>  				  2 0x06000000 0x20000
->>>>  				  3 0x07000000 0x20000>;
->>>
->>>  I tried this first, but it didn't work, and ranges translation
->>> gave me something really weird (like addr = 0x80 and
->>> size = 0x04000004).
->>
->> Did you change the address-cells to <1>?
+> Rob,
 > 
->  Of course i did.
+> It appears that I missed this in the description.
+> 
+> Probably because I was following the lead of the ts2005 description.
+> 
+> How does this look:
+> - reg			: I2C address. 0x48 - 0x4b based on the voltage applied to
+> 			  the AD1 and AD0 inputs on the IC.
+> 
 
-I saw some other nodes use the ranges without the offset but maybe some
-more steps are required for such configuration.
+How about the version below?
 
-So anyway send the version with the child offset and I will try to
-figure out why it is required.
+Thanks.
 
-Best regards,
-Krzysztof
+-- 
+Dmitry
+
+
+Input: tsc2004 - document ts2004 dt bindings
+
+From: Michael Welling <mwelling@ieee.org>
+
+Adds documentation for the devicetree bindings of the new tsc2004 driver.
+
+Signed-off-by: Michael Welling <mwelling@ieee.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ .../bindings/input/touchscreen/tsc2005.txt         |   34 ++++++++++++++++----
+ 1 file changed, 28 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
+index 09089a6..b80c04b 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
+@@ -1,14 +1,15 @@
+-* Texas Instruments tsc2005 touchscreen controller
++* Texas Instruments tsc2004 and tsc2005 touchscreen controllers
+ 
+ Required properties:
+- - compatible		      : "ti,tsc2005"
+- - reg			      : SPI device address
+- - spi-max-frequency	      : Maximal SPI speed
++ - compatible		      : "ti,tsc2004" or "ti,tsc2005"
++ - reg			      : Device address
+  - interrupts		      : IRQ specifier
+- - reset-gpios		      : GPIO specifier
+- - vio-supply                 : Regulator specifier
++ - spi-max-frequency	      : Maximum SPI clocking speed of the device
++			        (for tsc2005)
+ 
+ Optional properties:
++ - vio-supply		      : Regulator specifier
++ - reset-gpios		      : GPIO specifier for the controller reset line
+  - ti,x-plate-ohms	      : integer, resistance of the touchscreen's X plates
+ 				in ohm (defaults to 280)
+  - ti,esd-recovery-timeout-ms : integer, if the touchscreen does not respond after
+@@ -18,6 +19,27 @@ Optional properties:
+ 
+ Example:
+ 
++&i2c3 {
++	tsc2004@48 {
++		compatible = "ti,tsc2004";
++		reg = <0x48>;
++		vio-supply = <&vio>;
++
++		reset-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>;
++		interrupts-extended = <&gpio1 27 IRQ_TYPE_EDGE_RISING>;
++
++		touchscreen-fuzz-x = <4>;
++		touchscreen-fuzz-y = <7>;
++		touchscreen-fuzz-pressure = <2>;
++		touchscreen-size-x = <4096>;
++		touchscreen-size-y = <4096>;
++		touchscreen-max-pressure = <2048>;
++
++		ti,x-plate-ohms = <280>;
++		ti,esd-recovery-timeout-ms = <8000>;
++	};
++}
++
+ &mcspi1 {
+ 	tsc2005@0 {
+ 		compatible = "ti,tsc2005";
