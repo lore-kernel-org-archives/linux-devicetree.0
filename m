@@ -1,65 +1,47 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
-Date: Tue, 3 Nov 2015 07:42:54 +0530
-Message-ID: <20151103021254.GM3639@ubuntu>
-References: <cover.1446167359.git.viresh.kumar@linaro.org>
- <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
- <20151030214907.GJ19782@codeaurora.org>
- <20151031021612.GU3716@ubuntu>
- <20151102192144.GQ19782@codeaurora.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 10/13] of: add vendor prefix for boe
+Date: Mon, 2 Nov 2015 20:24:29 -0600
+Message-ID: <CAL_JsqJZJkjE+U=f1k_3h=ywuzGrk+6jLp=Cz7Xfni1VnsvdOw@mail.gmail.com>
+References: <1446296170-3702-1-git-send-email-zyw@rock-chips.com> <1446296170-3702-11-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151102192144.GQ19782@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446296170-3702-11-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-11-15, 11:21, Stephen Boyd wrote:
-> Ah I see that after looking at the previous thread. Perhaps we
-> can add such information into the documentation so that people
-> aren't misled into thinking they're limited to 32 bits?
+On Sat, Oct 31, 2015 at 7:56 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
 
-What about these changes:
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 96892057586a..b6ca2239838b 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -123,11 +123,15 @@ properties.
- - opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
-   the table should have this.
- 
--- opp-supported-hw: User defined array containing a hierarchy of hardware
--  version numbers, supported by the OPP. For example: a platform with hierarchy
--  of three levels of versions (A, B and C), this field should be like <X Y Z>,
--  where X corresponds to Version hierarchy A, Y corresponds to version hierarchy
--  B and Z corresponds to version hierarchy C.
-+- opp-supported-hw: This enables us to select only a subset of OPPs from the
-+  larger OPP table, based on what version of the hardware we are running on. We
-+  still can't have multiple nodes with the same opp-hz value in OPP table.
-+
-+  Its an user defined array containing a hierarchy of hardware version numbers,
-+  supported by the OPP. For example: a platform with hierarchy of three levels
-+  of versions (A, B and C), this field should be like <X Y Z>, where X
-+  corresponds to Version hierarchy A, Y corresponds to version hierarchy B and Z
-+  corresponds to version hierarchy C.
- 
-   Each level of hierarchy is represented by a 32 bit value, and so there can be
-   only 32 different supported version per hierarchy. i.e. 1 bit per version. A
-@@ -135,6 +139,10 @@ properties.
-   level. And a value of 0x00000000 will disable the OPP completely, and so we
-   never want that to happen.
- 
-+  If 32 values aren't sufficient for a version hierarchy, than that version
-+  hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
-+  above example, Z1 & Z2 refer to the version hierarchy Z.
-+
- - status: Marks the node enabled/disabled.
- 
-
-
--- 
-viresh
+> ---
+>
+> Changes in v2:
+> add vendor prefix for boe
+>
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 8fb0590..404b798 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -33,6 +33,7 @@ auo   AU Optronics Corporation
+>  avago  Avago Technologies
+>  avic   Shanghai AVIC Optoelectronics Co., Ltd.
+>  axis   Axis Communications AB
+> +boe    BOE Technology Group Co., Ltd.
+>  bosch  Bosch Sensortec GmbH
+>  boundary       Boundary Devices Inc.
+>  brcm   Broadcom Corporation
+> --
+> 2.6.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
