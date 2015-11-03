@@ -1,15 +1,14 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: RE: [PATCH v5 0/3] NAND support for Broadcom NS2 SoC
-Date: Tue, 3 Nov 2015 08:12:27 +0000
-Message-ID: <39063E8F96E11742B35A201CC5D095B7B07457@SJEXCHMB10.corp.ad.broadcom.com>
-References: <1446188361-15146-1-git-send-email-anup.patel@broadcom.com>
- <20151030193152.GI13239@google.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Tue, 3 Nov 2015 09:20:00 +0100
+Message-ID: <56386E30.4060905@i2se.com>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151030193152.GI13239@google.com>
-Content-Language: en-US
+In-Reply-To: <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,11 +18,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Device Tree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Vikram Prakash <vikramp@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Linux MTD <linux-mtd@lists.infradead.org>, Sandeep Tripathy <tripathy@broadcom.com>, Sudeep Holla <sudeep.holla@arm.com>, Pramod Kumar <pramodku@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, David Woodhouse <dwmw2@infradead.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+To: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, manabian@gmail.com, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, ezequiel@vanguardiasur.com.ar, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-+Arnd, +Olof
+Hi Ariel,
 
-Regards,
-Anup
+Am 19.10.2015 um 19:32 schrieb Ariel D'Alessandro:
+> This commit adds support for NXP LPC18xx EEPROM memory found in NXP
+> LPC185x/3x and LPC435x/3x/2x/1x devices.
+>
+> EEPROM size is 16384 bytes and it can be entirely read and
+> written/erased with 1 word (4 bytes) granularity. The last page
+> (128 bytes) contains the EEPROM initialization data and is not writable.
+>
+> Erase/program time is less than 3ms. The EEPROM device requires a
+> ~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated dividing
+> the system bus clock by the division factor, contained in the divider
+> register (minus 1 encoded).
+>
+> Signed-off-by: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+> ---
+>  drivers/nvmem/Kconfig          |   9 ++
+>  drivers/nvmem/Makefile         |   2 +
+>  drivers/nvmem/lpc18xx_eeprom.c | 266 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 277 insertions(+)
+>  create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
+> [...]
+> +
+> +static int lpc18xx_eeprom_gather_write(void *context, const void *reg,
+> +				       size_t reg_size, const void *val,
+> +				       size_t val_size)
+> +{
+> +	struct lpc18xx_eeprom_dev *eeprom = context;
+> +	unsigned int offset = *(u32 *)reg;
+> +
+> +	/* 3 ms of erase/program time between each writing */
+> +	while (val_size) {
+> +		writel(*(u32 *)val, eeprom->mem_base + offset);
+> +		usleep_range(3000, 4000);
+
+i think it would be good to verify that the EEPROM write operation has
+really finished.
+
+Best regards
+Stefan
+
+> +		val_size -= eeprom->val_bytes;
+> +		val += eeprom->val_bytes;
+> +		offset += eeprom->val_bytes;
+> +	}
+> +
+> +	return 0;
+> +}
