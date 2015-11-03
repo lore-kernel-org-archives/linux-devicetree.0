@@ -1,122 +1,62 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH RESEND 02/16] Documentation: dt-bindings: backlight: add
- TI LMU backlight binding information
-Date: Tue, 3 Nov 2015 16:13:08 +0900
-Message-ID: <56385E84.2050702@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-3-git-send-email-milo.kim@ti.com>
- <CAL_JsqJVtObYi5+KYNC7fKDokM3a77mH5nqkExW73s+yPcC9DQ@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Tue, 03 Nov 2015 16:18:36 +0900
+Message-ID: <56385FCC.1090007@samsung.com>
+References: <cover.1446122247.git.p.fedin@samsung.com>
+ <f1fbd1a7877090f4318705f0fccbf4d96c0ebc9c.1446122247.git.p.fedin@samsung.com>
+ <56330E6E.50003@samsung.com> <00d401d112ff$c426e9a0$4c74bce0$@samsung.com>
+ <5635D1EE.5010604@samsung.com> <012101d11540$8c280be0$a47823a0$@samsung.com>
+ <5637FCCB.1060007@samsung.com> <004d01d11604$fc7a2a80$f56e7f80$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJVtObYi5+KYNC7fKDokM3a77mH5nqkExW73s+yPcC9DQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jingoo Han <jingoohan1@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <004d01d11604$fc7a2a80$f56e7f80$@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, k.kozlowski.k@gmail.com, 'Rob Herring' <robh+dt@kernel.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Kumar Gala' <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 11/3/2015 12:02 AM, Rob Herring wrote:
-> On Sun, Nov 1, 2015 at 11:24 PM, Milo Kim <milo.kim@ti.com> wrote:
->> LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697 use common dt-bindings
->> for describing device.
+On 03.11.2015 15:58, Pavel Fedin wrote:
+>  Hello!
+> 
+>>>>> --- cut exynos5410.dtsi ---
+>>>>> 		sromc: sromc@12250000 {
+>>>>> 			#address-cells = <2>;
+>>>>> 			#size-cells = <1>;
+>>>>> 			ranges = <0 0 0x04000000 0x20000
+>>>>> 				  1 0 0x05000000 0x20000
+>>>>> 				  2 0 0x06000000 0x20000
+>>>>> 				  3 0 0x07000000 0x20000>;
+>>>>
+>>>> Do you have to use 2 cells for address? Cannot it be:
+>>>>  			ranges = <0 0x04000000 0x20000
+>>>>  				  1 0x05000000 0x20000
+>>>>  				  2 0x06000000 0x20000
+>>>>  				  3 0x07000000 0x20000>;
+>>>
+>>>  I tried this first, but it didn't work, and ranges translation
+>>> gave me something really weird (like addr = 0x80 and
+>>> size = 0x04000004).
 >>
->> Cc: devicetree@vger.kernel.org
->> Cc: Jingoo Han <jingoohan1@gmail.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Milo Kim <milo.kim@ti.com>
->> ---
->>   .../bindings/video/backlight/ti-lmu-backlight.txt  | 67 ++++++++++++++++++++++
->
-> Please move to bindings/leds/backlight/
+>> Did you change the address-cells to <1>?
+> 
+>  Of course i did.
 
-There are backlight bindings under video/backlight. I'd like to know why 
-this 'led' location is preferred. My guess is most of properties are 
-from common LED properties. Any other reasons?
+I saw some other nodes use the ranges without the offset but maybe some
+more steps are required for such configuration.
 
->
->>   1 file changed, 67 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt b/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
->> new file mode 100644
->> index 0000000..27b0036
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
->> @@ -0,0 +1,67 @@
->> +TI LMU backlight device tree bindings
->> +
->> +Required properties:
->> +  - compatible: Should be one of lists below.
->> +                "ti,lm3532-backlight"
->> +                "ti,lm3631-backlight"
->> +                "ti,lm3632-backlight"
->> +                "ti,lm3633-backlight"
->> +                "ti,lm3695-backlight"
->> +                "ti,lm3697-backlight"
->> +
->> +Optional properties:
->> +  There are two backlight control mode. One is I2C, the other is PWM mode.
->> +  Following properties are only specified in PWM mode.
->> +  Please note that LMU backlight device can have only one PWM channel.
->> +
->> +  - pwms: OF device-tree PWM specification.
->> +  - pwm-names: a list of names for the PWM devices specified in the "pwms"
->> +               property.
->> +
->> +  For the PWM user nodes, please refer to [1].
->> +
->> +Child nodes:
->> +  LMU backlight is represented as sub-nodes of the TI LMU device [2].
->> +  So, LMU backlight should have more than one backlight child node.
->> +  Each node exactly matches with backlight control bank configuration.
->> +  Maximum numbers of child nodes depend on the device.
->> +  1 = LM3631, LM3632, LM3695
->> +  2 = LM3633, LM3697
->> +  3 = LM3532
->> +
->> +  Required property of a child node:
->> +  - hvled1-used, hvled2-used, hvled3-used:
->> +    High voltage backlight strings configuration. Type is <boolean>.
->> +    Please describe which output backlight string is used.
->> +    Please refer to the datasheets [3].
->
-> Use led-sources.
-
-OK.
-
->
->> +
->> +  Optional properties of a child node:
->> +  - backlight-name: Name string for backlight device identification.
->> +                    It is used for creating backlight sysfs,
->> +                    /sys/class/backlight/<backlight-name>/.
->
-> Use label.
-
-Got it.
-
->
->> +  - backlight-max-microamp: Max current setting. Type is <u32>.
->> +                            Unit is microampere.
->> +                            Range is from 5000 to 30000.
->
-> Use led-max-microamp
-
-OK.
-
->
->> +  - initial-brightness: Backlight initial brightness value. Type is <u32>.
->> +                        It is set as soon as backlight device is created.
->> +                        0 ~ 2047 = LM3631, LM3632, LM3633, LM3695 and LM3697
->> +                        0 ~ 255  = LM3532
->
-> Use default-brightness-level
->
-
-I'll update the bindings and drivers based on your review. Many thanks!
+So anyway send the version with the child offset and I will try to
+figure out why it is required.
 
 Best regards,
-Milo
+Krzysztof
