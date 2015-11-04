@@ -1,7 +1,7 @@
 From: Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH 4/4] ARM: dts: kirkwood: add ZyXEL NSA310s
-Date: Wed, 4 Nov 2015 22:25:12 +0000
-Message-ID: <00000150d49a979a-b2d6164f-f16d-4f1d-aaa5-008f46776e82-000000@email.amazonses.com>
+Subject: [PATCH 2/4] ARM: dts: kirkwood: add Linksys EA3500
+Date: Wed, 4 Nov 2015 22:25:07 +0000
+Message-ID: <00000150d49a832c-f77d66d7-8f66-4b36-ac2c-df85deee46b6-000000@email.amazonses.com>
 References: <1446675888-24495-1-git-send-email-luka.perkov@sartura.hr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,64 +18,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: gregory.clement@free-electrons.com, andrew@lunn.ch, Luka Perkov <luka.perkov@sartura.hr>, jason@lakedaemon.net, Tony Dinh <mibodhi@gmail.com>
+Cc: gregory.clement@free-electrons.com, andrew@lunn.ch, Luka Perkov <luka.perkov@sartura.hr>, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
 Based on dts files from OpenWrt.
 
 Signed-off-by: Luka Perkov <luka.perkov@sartura.hr>
-Signed-off-by: Tony Dinh <mibodhi@gmail.com>
 ---
  .../devicetree/bindings/arm/marvell,kirkwood.txt   |   1 +
  arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/kirkwood-nsa310s.dts             | 282 +++++++++++++++++++++
- 3 files changed, 284 insertions(+)
- create mode 100644 arch/arm/boot/dts/kirkwood-nsa310s.dts
+ arch/arm/boot/dts/kirkwood-ea3500.dts              | 149 +++++++++++++++++++++
+ 3 files changed, 151 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ea3500.dts
 
 diff --git a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
-index 37bd190..8a1a7f7 100644
+index 7a99d4a..ed381a3 100644
 --- a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
 +++ b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
-@@ -101,3 +101,4 @@ board. Currently known boards are:
- "usi,topkick-1281P2"
- "zyxel,nsa310"
- "zyxel,nsa310a"
-+"zyxel,nsa310s"
+@@ -50,6 +50,7 @@ board. Currently known boards are:
+ "lacie,netspace_mini_v2"
+ "lacie,netspace_v2"
+ "linksys,ea4500"
++"linksys,ea3500"
+ "marvell,db-88f6281-bp"
+ "marvell,db-88f6282-bp"
+ "marvell,mv88f6281gtw-ge"
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 1d6fb0d..b2ea55f 100644
+index a16c04b..ebe5b73 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -196,6 +196,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
- 	kirkwood-ns2mini.dtb \
- 	kirkwood-nsa310.dtb \
- 	kirkwood-nsa310a.dtb \
-+	kirkwood-nsa310s.dtb \
- 	kirkwood-openblocks_a6.dtb \
- 	kirkwood-openblocks_a7.dtb \
- 	kirkwood-openrd-base.dtb \
-diff --git a/arch/arm/boot/dts/kirkwood-nsa310s.dts b/arch/arm/boot/dts/kirkwood-nsa310s.dts
+@@ -168,6 +168,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+ 	kirkwood-ds411.dtb \
+ 	kirkwood-ds411j.dtb \
+ 	kirkwood-ds411slim.dtb \
++	kirkwood-ea3500.dtb \
+ 	kirkwood-ea4500.dtb \
+ 	kirkwood-goflexnet.dtb \
+ 	kirkwood-guruplug-server-plus.dtb \
+diff --git a/arch/arm/boot/dts/kirkwood-ea3500.dts b/arch/arm/boot/dts/kirkwood-ea3500.dts
 new file mode 100644
-index 0000000..afc8ecf
+index 0000000..3a064f6
 --- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-nsa310s.dts
-@@ -0,0 +1,282 @@
++++ b/arch/arm/boot/dts/kirkwood-ea3500.dts
+@@ -0,0 +1,149 @@
++/*
++ * kirkwood-ea3500.dts - Device Tree file for Linksys EA3500
++ *
++ * (c) 2013 Jonas Gorski <jogo@openwrt.org>
++ * (c) 2013 Deutsche Telekom Innovation Laboratories
++ * (c) 2014 Luka Perkov <luka.perkov@sartura.hr>
++ * (c) 2014 Dan Walters <dan@walters.io>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
 +/dts-v1/;
 +
 +#include "kirkwood.dtsi"
-+#include "kirkwood-6281.dtsi"
++#include "kirkwood-6282.dtsi"
 +
 +/ {
-+	model = "ZyXEL NSA310S";
-+	compatible = "zyxel,nsa310s", "marvell,kirkwood-88f6702", "marvell,kirkwood";
++	model = "Linksys EA3500";
++	compatible = "linksys,ea3500", "marvell,kirkwood-88f6282", "marvell,kirkwood";
 +
 +	memory {
 +		device_type = "memory";
-+		reg = <0x00000000 0x10000000>;
++		reg = <0x00000000 0x4000000>;
 +	};
 +
 +	chosen {
 +		bootargs = "console=ttyS0,115200n8 earlyprintk";
-+		stdout-path = &uart0;
 +	};
 +
 +	mbus {
@@ -85,260 +99,115 @@ index 0000000..afc8ecf
 +			pcie@1,0 {
 +				status = "okay";
 +			};
++
++			pcie@2,0 {
++				status = "okay";
++			};
 +		};
 +	};
 +
 +	ocp@f1000000 {
 +		pinctrl: pin-controller@10000 {
-+			pinctrl-names = "default";
-+
-+			pmx_sata0: pmx-sata0 {
-+				marvell,pins;
-+				marvell,function = "sata0";
++			pmx_led_green_power: pmx-led-green-power {
++				marvell,pins = "mpp7";
++				marvell,function = "gpo";
 +			};
-+			pmx_sata1: pmx-sata1 {
-+				marvell,pins;
-+				marvell,function = "sata1";
-+			};
-+			pmx_usb_power: pmx-usb-power {
-+				marvell,pins = "mpp21";
-+				marvell,function = "gpio";
-+			};
-+			pmx_pwr_off: pmx-pwr-off {
-+				marvell,pins = "mpp27";
++			pmx_btn_wps: pmx-btn-wps {
++				marvell,pins = "mpp47";
 +				marvell,function = "gpio";
 +			};
 +			pmx_btn_reset: pmx-btn-reset {
-+				marvell,pins = "mpp24";
++				marvell,pins = "mpp48";
 +				marvell,function = "gpio";
 +			};
-+			pmx_btn_copy: pmx-btn-copy {
-+				marvell,pins = "mpp25";
-+				marvell,function = "gpio";
-+			};
-+			pmx_btn_power: pmx-btn-power {
-+				marvell,pins = "mpp26";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_hdd2_green: pmx-led-hdd2-green {
-+				marvell,pins = "mpp34";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_hdd2_red: pmx-led-hdd2-red {
-+				marvell,pins = "mpp12";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_usb_green: pmx-led-usb-green {
-+				marvell,pins = "mpp15";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_copy_green: pmx-led-copy-green {
-+				marvell,pins = "mpp22";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_copy_red: pmx-led-copy-red {
-+				marvell,pins = "mpp23";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_sys_green: pmx-led-sys-green {
-+				marvell,pins = "mpp28";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_sys_orange: pmx-led-sys-orange {
-+				marvell,pins = "mpp29";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_hdd1_green: pmx-led-hdd1-green {
-+				marvell,pins = "mpp16";
-+				marvell,function = "gpio";
-+			};
-+			pmx_led_hdd1_red: pmx-led-hdd1-red {
-+				marvell,pins = "mpp13";
-+				marvell,function = "gpio";
-+			};
-+			pmx_pwr_sata1: pmx-pwr-sata1 {
-+				marvell,pins = "mpp33";
-+				marvell,function = "gpio";
-+			};
-+		};
-+
-+		serial@12000 {
-+			status = "okay";
-+		};
-+
-+		sata@80000 {
-+			status = "okay";
-+			nr-ports = <2>;
 +		};
 +
 +		rtc@10300 {
 +			status = "disabled";
 +		};
 +
-+		i2c@11000 {
++		serial@12000 {
 +			status = "okay";
 +		};
++
 +	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmx_usb_power &pmx_pwr_sata1>;
-+
-+		usb0_power: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "USB Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			enable-active-high;
-+			gpio = <&gpio0 21 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		sata1_power: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "SATA1 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			enable-active-high;
-+			gpio = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
 +
 +	gpio_keys {
 +		compatible = "gpio-keys";
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		pinctrl-0 = <&pmx_btn_reset &pmx_btn_copy &pmx_btn_power>;
++		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
 +		pinctrl-names = "default";
 +
-+		button@1 {
-+			label = "Power Button";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
++		button@15 {
++			label = "WPS Button";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
 +		};
-+		button@2 {
-+			label = "Copy Button";
-+			linux,code = <KEY_COPY>;
-+			gpios = <&gpio0 25 GPIO_ACTIVE_LOW>;
-+		};
-+		button@3 {
++
++		button@16 {
 +			label = "Reset Button";
 +			linux,code = <KEY_RESTART>;
-+			gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
 +		};
 +	};
 +
 +	gpio-leds {
 +		compatible = "gpio-leds";
-+		pinctrl-0 = <&pmx_led_hdd2_green &pmx_led_hdd2_red
-+				&pmx_led_usb_green
-+				&pmx_led_sys_green &pmx_led_sys_orange
-+				&pmx_led_copy_green &pmx_led_copy_red
-+				&pmx_led_hdd1_green &pmx_led_hdd1_red>;
++		pinctrl-0 = < &pmx_led_green_power >;
 +		pinctrl-names = "default";
 +
-+		green-sys {
-+			label = "nsa310s:green:sys";
-+			gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "timer";
++		green-power {
++			label = "ea3500:green:power";
++			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
 +		};
-+		orange-sys {
-+			label = "nsa310s:orange:sys";
-+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
-+		};
-+		green-hdd1 {
-+			label = "nsa310s:green:hdd1";
-+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+		};
-+		red-hdd1 {
-+			label = "nsa310s:red:hdd1";
-+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
-+		};
-+		green-hdd2 {
-+			label = "nsa310s:green:hdd2";
-+			gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		};
-+		red-hdd2 {
-+			label = "nsa310s:red:hdd2";
-+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-+		};
-+		green-usb {
-+			label = "nsa310s:green:usb";
-+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
-+		};
-+		green-copy {
-+			label = "nsa310s:green:copy";
-+			gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "ide-disk";
-+		};
-+		red-copy {
-+			label = "nsa310s:red:copy";
-+			gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	gpio_poweroff {
-+		compatible = "gpio-poweroff";
-+		pinctrl-0 = <&pmx_pwr_off>;
-+		pinctrl-names = "default";
-+		gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
 +	};
 +};
 +
 +&nand {
 +	status = "okay";
-+	chip-delay = <35>;
++	pinctrl-0 = <&pmx_nand>;
++	pinctrl-names = "default";
 +
 +	partition@0 {
 +		label = "u-boot";
-+		reg = <0x0000000 0xe0000>;
++		reg = <0x0000000 0x80000>;
++		read-only;
 +	};
 +
-+	partition@e0000 {
++	partition@80000 {
 +		label = "u-boot environment";
-+		reg = <0xe0000 0x100000>;
-+	};
-+
-+	partition@100000 {
-+		label = "second stage u-boot";
-+		reg = <0x100000 0x200000>;
++		reg = <0x80000 0x20000>;
 +	};
 +
 +	partition@200000 {
++		label = "kernel";
++		reg = <0x200000 0x200000>;
++	};
++
++	partition@400000 {
 +		label = "root";
-+		reg = <0x200000 0xfe00000>;
++		reg = <0x400000 0x1200000>;
 +	};
 +};
 +
 +&mdio {
 +	status = "okay";
-+	ethphy0: ethernet-phy@1 {
-+		reg = <1>;
-+		marvell,reg-init = <0x1 0x16 0x0 0x3>,
-+							<0x1 0x10 0x0 0x1017>,
-+							<0x1 0x11 0x0 0x4408>,
-+							<0x1 0x16 0x0 0x0>,
-+							<0x1 0x4 0x0 0x1e1>,
-+							<0x1 0x9 0x0 0x300>,
-+							<0x1 0x10 0x0 0x3860>,
-+							<0x1 0x0 0x0 0x9140>;
-+	};
 +};
 +
 +&eth0 {
 +	status = "okay";
-+
 +	ethernet0-port@0 {
-+		phy-handle = <&ethphy0>;
++		speed = <1000>;
++		duplex = <1>;
++	};
++};
++
++&eth1 {
++	status = "okay";
++	ethernet1-port@0 {
++		speed = <1000>;
++		duplex = <1>;
 +	};
 +};
 -- 
