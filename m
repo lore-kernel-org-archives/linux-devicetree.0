@@ -1,139 +1,62 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v9 10/17] phy: Add driver for rockchip Display Port PHY
-Date: Wed, 4 Nov 2015 08:48:38 +0800
-Message-ID: <563955E6.7000905@rock-chips.com>
-References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
- <1446083918-30809-1-git-send-email-ykk@rock-chips.com>
- <20151103043827.GA17261@localhost>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Tue, 3 Nov 2015 20:04:49 -0500
+Message-ID: <563959B1.5020101@codeaurora.org>
+References: <1446174501-8870-1-git-send-email-okaya@codeaurora.org>
+ <9016417.z9Hz6MbmvQ@wuerfel> <56383BDD.9090903@codeaurora.org>
+ <4010471.Nu3L6CWPWG@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20151103043827.GA17261@localhost>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, djkurtz@chromium.org, dianders@chromium.org, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sean Paul <seanpaul@chromi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4010471.Nu3L6CWPWG@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brain,
 
-On 11/03/2015 12:38 PM, Brian Norris wrote:
-> Hi Yakir,
+
+On 11/3/2015 7:42 AM, Arnd Bergmann wrote:
+> You have a distinct "compatible" string for qemu, right? It sounds like
+> this is not the same device if the dependencies are different, and
+> you could just have two ways to probe the same device.
 >
-> On Thu, Oct 29, 2015 at 09:58:38AM +0800, Yakir Yang wrote:
->> Add phy driver for the Rockchip DisplayPort PHY module. This
->> is required to get DisplayPort working in Rockchip SoCs.
->>
->> Reviewed-by: Heiko Stuebner<heiko@sntech.de>
->> Signed-off-by: Yakir Yang<ykk@rock-chips.com>
->> ---
-> ...
->> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
->> new file mode 100644
->> index 0000000..f3e0058
->> --- /dev/null
->> +++ b/drivers/phy/phy-rockchip-dp.c
->> @@ -0,0 +1,151 @@
->> +/*
->> + * Rockchip DP PHY driver
->> + *
->> + * Copyright (C) 2015 FuZhou Rockchip Co., Ltd.
->> + * Author: Yakir Yang<ykk@@rock-chips.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/clk.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/regmap.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/platform_device.h>
->> +
->> +#define GRF_SOC_CON12                           0x0274
->> +
->> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(4)
->> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
-> Why are the above two macros the same? Judging by the RK3288 manual and
-> other downstream drivers, it seems like you want the _MASK one to be
-> shifted left by 16 (i.e., BIT(20)).
+No, it is the same dma channel object that gets probed by the same name 
+like the hypervisor. The channel object gets unbound from the 
+hypervisor, it then gets bound to VFIO. Then, eventually QEMU takes 
+over. The channel driver does not know under which OS it is running and 
+it works in both environments as it is without any code changes at this 
+moment.
 
-Oops, yes, you're right, it should be BIT(20), thanks for the catch.
+> The split between the two drivers still feels a little awkward overall,
+> it might be good to give it some more thought.
 
->> +
->> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
->> +#define GRF_EDP_PHY_SIDDQ_ON                    0
->> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
->> +
-> ...
->
->> +	ret = regmap_write(dp->grf, GRF_SOC_CON12, GRF_EDP_REF_CLK_SEL_INTER |
->> +			   GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK);
-> IOW, the above is writing:
->
-> 	BIT(4) | BIT(4)
->
-> whereas I think you want:
->
-> 	BIT(4) | BIT(20)
->
->> +	if (ret != 0) {
->> +		dev_err(dp->dev, "Could not config GRF edp ref clk: %d\n", ret);
->> +		return ret;
->> +	}
->> +
-> ...
->
-> (FYI, I came across this by inspection when comparing Heiko's
-> 'somewhat-stable' branch [1] with this series. The former brings up eDP
-> fine on veyron-jaq, whereas this one doesn't yet, even with the above
-> change. Still debugging the issue.)
+I see. I'd like to keep the management driver as independent as possible 
+from the channel driver for security and functionality reasons. I need 
+to keep the management addresses and functionality in the hypervisor only.
 
-Hmm... I'm not sure whether your eDP screen have the hotplug signal, so I
-think you can try to add "analogix,force-hpd" flag into 
-rk3288-veyron-jaq.dts
+> > Would it work to describe the combination of the channel and management
+> registers as a single device with a single driver, but the management
+> parts being optional? That way, the management registers could be
+> intergrated better into the dmaengine framework, to provide a consistent
+> API to user space.
 
-&edp {
-     analogix,need-force-hpd;
-}
+I can compile both management driver and channel driver into the same 
+module if it sounds better. I can probe one with channel and another 
+with the management name. I just need to be careful about not sharing 
+any kind of data structure between them otherwise virtualization will break.
 
+I consider the management driver a client of the DMA engine API at this 
+moment.
 
-If that changes couldn't fix the problem, guess you may need max the panel
-power up delay time which pointed by Heiko. Like:
-
-Thanks,
-- Yakir
-
-
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c 
-b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index 4fa5f69..546a506 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -82,6 +82,13 @@ static int analogix_dp_detect_hpd(struct 
-analogix_dp_device *dp)
-          */
-         dev_dbg(dp->dev, "failed to get hpd plug status, try to force 
-hpd\n");
-
-+       /*
-+        * Hotplug signal would indicate the right time to operate
-+        * panel after poweron, but if the hotplug is missing, then
-+        * panel would need wait hundreds of milliseconds at here.
-+        */
-+       mdelay(100);
-+
-         analogix_dp_force_hpd(dp);
-
-         if (analogix_dp_get_plug_in_status(dp) != 0) {
-
-
-> Brian
->
-> [1]https://github.com/mmind/linux-rockchip/tree/devel/somewhat-stable
->
->
->
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
