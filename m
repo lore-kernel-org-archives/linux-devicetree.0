@@ -1,63 +1,111 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: kirkwood: add Linksys EA3500
-Date: Thu, 5 Nov 2015 00:38:22 +0100
-Message-ID: <20151104233822.GC8263@lunn.ch>
-References: <1446675888-24495-1-git-send-email-luka.perkov@sartura.hr>
- <00000150d49a832c-f77d66d7-8f66-4b36-ac2c-df85deee46b6-000000@email.amazonses.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] dt-bindings: add documentation of rk3036 clock controller
+Date: Thu, 05 Nov 2015 00:39:25 +0100
+Message-ID: <2700959.OiVQMNL8Ss@phil>
+References: <1446639503-11763-1-git-send-email-zhengxing@rock-chips.com> <1446639503-11763-2-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <00000150d49a832c-f77d66d7-8f66-4b36-ac2c-df85deee46b6-000000-p/GC64/jrecnJqMo6gzdpkEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <1446639503-11763-2-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Luka Perkov <luka.perkov-RnoqsreqS2Fd2+I6+x7OVA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Luka
+Hi,
 
->  "lacie,netspace_mini_v2"
->  "lacie,netspace_v2"
->  "linksys,ea4500"
-> +"linksys,ea3500"
+Am Mittwoch, 4. November 2015, 20:18:16 schrieb Xing Zheng:
+> Add the devicetree binding for the cru on the rk3036 which quite similar
+> structured as previous clock controllers.
+> 
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
 
-Other way around please, to keep the sorted order.
+your recipient-list is missing the clock maintainers+lists - sorry for
+not noticing this earlier.
 
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+While the devicetree-maintainers may Review it, we expect the clock-
+maintainers to actually apply all 4 clock-related patches.
 
-stdout = ...
+Same comment is true for
+[PATCH v6 2/8] clk: rockchip: add dt-binding header for rk3036
 
-> +&nand {
-> +	status = "okay";
-> +	pinctrl-0 = <&pmx_nand>;
-> +	pinctrl-names = "default";
+
+Heiko
+
+> 
+> Changes in v6: None
+> 
+>  .../bindings/clock/rockchip,rk3036-cru.txt         |   56 ++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> new file mode 100644
+> index 0000000..ace0599
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> @@ -0,0 +1,56 @@
+> +* Rockchip RK3036 Clock and Reset Unit
 > +
-> +	partition@0 {
-> +		label = "u-boot";
-> +		reg = <0x0000000 0x80000>;
-> +		read-only;
+> +The RK3036 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "rockchip,rk3036-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing pll rates are not changeable, due to the missing pll lock status.
+> +
+> +Each clock is assigned an identifier and client nodes can use this identifier
+> +to specify the clock which they consume. All available clocks are defined as
+> +preprocessor macros in the dt-bindings/clock/rk3036-cru.h headers and can be
+> +used in device tree sources. Similar macros exist for the reset sources in
+> +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
+> + - "xin24m" - crystal input - required,
+> + - "ext_i2s" - external I2S clock - optional,
+> + - "ext_gmac" - external GMAC clock - optional
+> +
+> +Example: Clock controller node:
+> +
+> +	cru: cru@20000000 {
+> +		compatible = "rockchip,rk3036-cru";
+> +		reg = <0x20000000 0x1000>;
+> +		rockchip,grf = <&grf>;
+> +
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
 > +	};
 > +
-> +	partition@80000 {
-> +		label = "u-boot environment";
-> +		reg = <0x80000 0x20000>;
-> +	};
-
-Same hole?
-
-> +	partition@200000 {
-> +		label = "kernel";
-> +		reg = <0x200000 0x200000>;
-> +	};
+> +Example: UART controller node that consumes the clock generated by the clock
+> +  controller:
 > +
-> +	partition@400000 {
-> +		label = "root";
-> +		reg = <0x400000 0x1200000>;
+> +	uart0: serial@20060000 {
+> +		compatible = "snps,dw-apb-uart";
+> +		reg = <0x20060000 0x100>;
+> +		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +		clocks = <&cru SCLK_UART0>;
 > +	};
-> +};
+> 
 
-  Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
