@@ -1,54 +1,77 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC v5 11/12] clk: mediatek: Add hdmi_ref HDMI PHY PLL reference
- clock output
-Date: Wed,  4 Nov 2015 12:45:08 +0100
-Message-ID: <1446637509-6418-12-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC v5 10/12] clk: mediatek: make dpi0_sel and hdmi_sel not propagate rate changes
+Date: Wed,  4 Nov 2015 12:45:07 +0100
+Message-ID: <1446637509-6418-11-git-send-email-p.zabel@pengutronix.de>
 References: <1446637509-6418-1-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1446637509-6418-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, kernel@pengutronix.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446637509-6418-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGNvbmZpZ3VyYWJsZSBoZG1pX3JlZiBvdXRwdXQgb2YgdGhlIFBMTCBibG9jayBpcyBkZXJp
-dmVkIGZyb20KdGhlIHR2ZHBsbF81OTRtIGNsb2NrIHNpZ25hbCB2aWEgYSBjb25maWd1cmFibGUg
-UExMIHBvc3QtZGl2aWRlci4KSXQgaXMgdXNlZCBhcyB0aGUgUExMIHJlZmVyZW5jZSBpbnB1dCB0
-byB0aGUgSERNSSBQSFkgbW9kdWxlLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56
-YWJlbEBwZW5ndXRyb25peC5kZT4KLS0tCiBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTcz
-LmMgICAgICB8IDUgKysrKysKIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ4MTczLWNsay5o
-IHwgMyArKy0KIDIgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jIGIvZHJpdmVy
-cy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jCmluZGV4IGU3YjM5OTcuLmZlN2E5MWIgMTAwNjQ0
-Ci0tLSBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxNzMuYworKysgYi9kcml2ZXJzL2Ns
-ay9tZWRpYXRlay9jbGstbXQ4MTczLmMKQEAgLTkwMSw2ICs5MDEsMTEgQEAgc3RhdGljIHZvaWQg
-X19pbml0IG10a19hcG1peGVkc3lzX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQogCQlj
-bGtfZGF0YS0+Y2xrc1tja3UtPmlkXSA9IGNsazsKIAl9CiAKKwljbGsgPSBjbGtfcmVnaXN0ZXJf
-ZGl2aWRlcihOVUxMLCAiaGRtaV9yZWYiLCAidHZkcGxsXzU5NG0iLCAwLAorCQkJCSAgIGJhc2Ug
-KyAweDQwLCAxNiwgMywgQ0xLX0RJVklERVJfUE9XRVJfT0ZfVFdPLAorCQkJCSAgIE5VTEwpOwor
-CWNsa19kYXRhLT5jbGtzW0NMS19BUE1JWEVEX0hETUlfUkVGXSA9IGNsazsKKwogCXIgPSBvZl9j
-bGtfYWRkX3Byb3ZpZGVyKG5vZGUsIG9mX2Nsa19zcmNfb25lY2VsbF9nZXQsIGNsa19kYXRhKTsK
-IAlpZiAocikKIAkJcHJfZXJyKCIlcygpOiBjb3VsZCBub3QgcmVnaXN0ZXIgY2xvY2sgcHJvdmlk
-ZXI6ICVkXG4iLApkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9tdDgxNzMt
-Y2xrLmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL210ODE3My1jbGsuaAppbmRleCBiZjEz
-MDJlLi43ODRlOTg3IDEwMDY0NAotLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL210ODE3
-My1jbGsuaAorKysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL210ODE3My1jbGsuaApAQCAt
-MTczLDcgKzE3Myw4IEBACiAjZGVmaW5lIENMS19BUE1JWEVEX0xWRFNQTEwJCTEzCiAjZGVmaW5l
-IENMS19BUE1JWEVEX01TRENQTEwyCQkxNAogI2RlZmluZSBDTEtfQVBNSVhFRF9SRUYyVVNCX1RY
-CQkxNQotI2RlZmluZSBDTEtfQVBNSVhFRF9OUl9DTEsJCTE2CisjZGVmaW5lIENMS19BUE1JWEVE
-X0hETUlfUkVGCQkxNgorI2RlZmluZSBDTEtfQVBNSVhFRF9OUl9DTEsJCTE3CiAKIC8qIElORlJB
-X1NZUyAqLwogCi0tIAoyLjYuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+These muxes are supposed to select a fitting divider after the PLL
+is already set to the correct rate.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/clk/mediatek/clk-mt8173.c | 4 ++--
+ drivers/clk/mediatek/clk-mtk.h    | 7 +++++--
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index 01f7365..e7b3997 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -550,7 +550,7 @@ static const struct mtk_composite top_muxes[] __initconst = {
+ 	MUX_GATE(CLK_TOP_ATB_SEL, "atb_sel", atb_parents, 0x0090, 16, 2, 23),
+ 	MUX_GATE(CLK_TOP_VENC_LT_SEL, "venclt_sel", venc_lt_parents, 0x0090, 24, 4, 31),
+ 	/* CLK_CFG_6 */
+-	MUX_GATE(CLK_TOP_DPI0_SEL, "dpi0_sel", dpi0_parents, 0x00a0, 0, 3, 7),
++	MUX_GATE_FLAGS(CLK_TOP_DPI0_SEL, "dpi0_sel", dpi0_parents, 0x00a0, 0, 3, 7, 0),
+ 	MUX_GATE(CLK_TOP_IRDA_SEL, "irda_sel", irda_parents, 0x00a0, 8, 2, 15),
+ 	MUX_GATE(CLK_TOP_CCI400_SEL, "cci400_sel", cci400_parents, 0x00a0, 16, 3, 23),
+ 	MUX_GATE(CLK_TOP_AUD_1_SEL, "aud_1_sel", aud_1_parents, 0x00a0, 24, 2, 31),
+@@ -561,7 +561,7 @@ static const struct mtk_composite top_muxes[] __initconst = {
+ 	MUX_GATE(CLK_TOP_SCAM_SEL, "scam_sel", scam_parents, 0x00b0, 24, 2, 31),
+ 	/* CLK_CFG_12 */
+ 	MUX_GATE(CLK_TOP_SPINFI_IFR_SEL, "spinfi_ifr_sel", spinfi_ifr_parents, 0x00c0, 0, 3, 7),
+-	MUX_GATE(CLK_TOP_HDMI_SEL, "hdmi_sel", hdmi_parents, 0x00c0, 8, 2, 15),
++	MUX_GATE_FLAGS(CLK_TOP_HDMI_SEL, "hdmi_sel", hdmi_parents, 0x00c0, 8, 2, 15, 0),
+ 	MUX_GATE(CLK_TOP_DPILVDS_SEL, "dpilvds_sel", dpilvds_parents, 0x00c0, 24, 3, 31),
+ 	/* CLK_CFG_13 */
+ 	MUX_GATE(CLK_TOP_MSDC50_2_H_SEL, "msdc50_2_h_sel", msdc50_2_h_parents, 0x00d0, 0, 3, 7),
+diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
+index f390cb0..1acb046 100644
+--- a/drivers/clk/mediatek/clk-mtk.h
++++ b/drivers/clk/mediatek/clk-mtk.h
+@@ -66,7 +66,7 @@ struct mtk_composite {
+ 	signed char num_parents;
+ };
+ 
+-#define MUX_GATE(_id, _name, _parents, _reg, _shift, _width, _gate) {	\
++#define MUX_GATE_FLAGS(_id, _name, _parents, _reg, _shift, _width, _gate, _flags) {	\
+ 		.id = _id,						\
+ 		.name = _name,						\
+ 		.mux_reg = _reg,					\
+@@ -77,9 +77,12 @@ struct mtk_composite {
+ 		.divider_shift = -1,					\
+ 		.parent_names = _parents,				\
+ 		.num_parents = ARRAY_SIZE(_parents),			\
+-		.flags = CLK_SET_RATE_PARENT,				\
++		.flags = _flags,					\
+ 	}
+ 
++#define MUX_GATE(_id, _name, _parents, _reg, _shift, _width, _gate)	\
++	MUX_GATE_FLAGS(_id, _name, _parents, _reg, _shift, _width, _gate, CLK_SET_RATE_PARENT)
++
+ #define MUX(_id, _name, _parents, _reg, _shift, _width) {		\
+ 		.id = _id,						\
+ 		.name = _name,						\
+-- 
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
