@@ -1,74 +1,232 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] clk: sunxi: Add H3 clocks support
-Date: Thu, 5 Nov 2015 09:17:48 +1100
-Message-ID: <CAGRGNgU1xMDQs1BnpH8KQL3bfUV_2rg_+sBCkn7PG_9gEasLhA@mail.gmail.com>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
- <1445964626-6484-3-git-send-email-jenskuske@gmail.com> <CAGRGNgW9nVJvAcaduF0y1ptbpLA-3MkR4LCYvh-n1=mtxTyqfg@mail.gmail.com>
- <20151104162304.GZ6114@lukather>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH 1/4] ARM: dts: kirkwood: add Linksys EA4500
+Date: Wed, 4 Nov 2015 22:25:05 +0000
+Message-ID: <00000150d49a7cf7-e97bf540-89ce-49bf-a25e-2d082acab273-000000@email.amazonses.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBIEI5KYQKGQEJ3463QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151104162304.GZ6114@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: gregory.clement@free-electrons.com, andrew@lunn.ch, Luka Perkov <luka.perkov@sartura.hr>, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Based on dts files from OpenWrt.
 
-On Thu, Nov 5, 2015 at 3:23 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Julian,
->
-> On Wed, Oct 28, 2015 at 10:12:09AM +1100, Julian Calaby wrote:
->> > +       of_property_for_each_u32(node, "clock-indices", prop, p, index) {
->> > +               of_property_read_string_index(node, "clock-output-names",
->> > +                                             i, &clk_name);
->> > +
->> > +               if (index == 17 || (index >= 29 && index <= 31))
->> > +                       clk_parent = AHB2;
->> > +               else if (index <= 63 || index >= 128)
->> > +                       clk_parent = AHB1;
->> > +               else if (index >= 64 && index <= 95)
->> > +                       clk_parent = APB1;
->> > +               else if (index >= 96 && index <= 127)
->> > +                       clk_parent = APB2;
->>
->> A way to make this reusable in the future might be to encode it in a
->> structure like:
->>
->> static const struct bus_clock_paths sun8i_h3_bus_clock_paths __initdata = {
->>         {.parent = 2, .min = 17, .max = 17}, /* index 17 is from AHB2 */
->>         {.parent = 2, .min = 29, .max = 31}, /* AHB2 bank */
->>         {.parent = 1, .min = 63, .max = 128}, /* AHB1 bank */
->> ...
->>         {}
->> };
->>
->> Then the code here can be reused for other clocks like this in the
->> future without too much bloat. (And this would potentially could be
->> generic enough for other platforms.)
->
-> We don't really need that at the moment. There's not point in writing
-> more complicated code to support a use case we don't have yet.
->
-> (However, something along these lines will definitely be needed if we
-> ever have another SoC having the same bus gates madness)
+Signed-off-by: Luka Perkov <luka.perkov@sartura.hr>
+---
+ .../devicetree/bindings/arm/marvell,kirkwood.txt   |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/kirkwood-ea4500.dts              | 156 +++++++++++++++++++++
+ 4 files changed, 159 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ea4500.dts
 
-This was a suggestion for the future to address Jens' comment about
-having a bus clock driver instead of encoding it in devicetree.
-
-Thanks,
-
+diff --git a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+index 5171ad8..7a99d4a 100644
+--- a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
++++ b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+@@ -49,6 +49,7 @@ board. Currently known boards are:
+ "lacie,netspace_max_v2"
+ "lacie,netspace_mini_v2"
+ "lacie,netspace_v2"
++"linksys,ea4500"
+ "marvell,db-88f6281-bp"
+ "marvell,db-88f6282-bp"
+ "marvell,mv88f6281gtw-ge"
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 82d2ac9..264f8ba 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -124,6 +124,7 @@ lantiq	Lantiq Semiconductor
+ lenovo	Lenovo Group Ltd.
+ lg	LG Corporation
+ linux	Linux-specific binding
++linksys	Belkin International, Inc.
+ lsi	LSI Corp. (LSI Logic)
+ lltc	Linear Technology Corporation
+ marvell	Marvell Technology Group Ltd.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index bb8fa02..a16c04b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -168,6 +168,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+ 	kirkwood-ds411.dtb \
+ 	kirkwood-ds411j.dtb \
+ 	kirkwood-ds411slim.dtb \
++	kirkwood-ea4500.dtb \
+ 	kirkwood-goflexnet.dtb \
+ 	kirkwood-guruplug-server-plus.dtb \
+ 	kirkwood-ib62x0.dtb \
+diff --git a/arch/arm/boot/dts/kirkwood-ea4500.dts b/arch/arm/boot/dts/kirkwood-ea4500.dts
+new file mode 100644
+index 0000000..caccc8e
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-ea4500.dts
+@@ -0,0 +1,156 @@
++/*
++ * kirkwood-ea4500.dts - Device Tree file for Linksys EA4500
++ *
++ * (c) 2013 Jonas Gorski <jogo@openwrt.org>
++ * (c) 2013 Deutsche Telekom Innovation Laboratories
++ * (c) 2014 Luka Perkov <luka.perkov@sartura.hr>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++
++#include "kirkwood.dtsi"
++#include "kirkwood-6282.dtsi"
++
++/ {
++	model = "Linksys EA4500";
++	compatible = "linksys,ea4500", "marvell,kirkwood-88f6282", "marvell,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x8000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200n8 earlyprintk";
++	};
++
++	mbus {
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++
++			pcie@2,0 {
++				status = "okay";
++			};
++		};
++	};
++
++	ocp@f1000000 {
++		pinctrl: pin-controller@10000 {
++			pmx_led_white_health: pmx-led-white-health {
++				marvell,pins = "mpp7";
++				marvell,function = "gpo";
++			};
++			pmx_led_white_pulse: pmx-led-white-pulse {
++				marvell,pins = "mpp14";
++				marvell,function = "gpio";
++			};
++			pmx_btn_wps: pmx-btn-wps {
++				marvell,pins = "mpp47";
++				marvell,function = "gpio";
++			};
++			pmx_btn_reset: pmx-btn-reset {
++				marvell,pins = "mpp48";
++				marvell,function = "gpio";
++			};
++		};
++
++		rtc@10300 {
++			status = "disabled";
++		};
++
++		serial@12000 {
++			status = "okay";
++		};
++
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
++		pinctrl-names = "default";
++
++		button@15 {
++			label = "WPS Button";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
++		};
++
++		button@16 {
++			label = "Reset Button";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = < &pmx_led_white_health &pmx_led_white_pulse >;
++		pinctrl-names = "default";
++
++		white-health {
++			label = "ea4500:white:health";
++			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
++		};
++
++		white-pulse {
++			label = "ea4500:white:pulse";
++			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
++
++&nand {
++	status = "okay";
++	pinctrl-0 = <&pmx_nand>;
++	pinctrl-names = "default";
++
++	partition@0 {
++		label = "u-boot";
++		reg = <0x0000000 0x80000>;
++	};
++
++	partition@80000 {
++		label = "u-boot environment";
++		reg = <0x80000 0x20000>;
++	};
++
++	partition@200000 {
++		label = "kernel";
++		reg = <0x200000 0x200000>;
++	};
++
++	partition@400000 {
++		label = "root";
++		reg = <0x400000 0x1c00000>;
++	};
++};
++
++&mdio {
++	status = "okay";
++};
++
++&eth0 {
++	status = "okay";
++	ethernet0-port@0 {
++		speed = <1000>;
++		duplex = <1>;
++	};
++};
++
++&eth1 {
++	status = "okay";
++	ethernet1-port@0 {
++		speed = <1000>;
++		duplex = <1>;
++	};
++};
 -- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+2.6.2
