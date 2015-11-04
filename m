@@ -1,204 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling unflatten_dt_node()
-Date: Wed, 4 Nov 2015 10:07:50 -0600
-Message-ID: <CAL_JsqJGpV-+JYyA1g0dw_nEduhmrMEouTH03kHtuCkGSOP57Q@mail.gmail.com>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable audio codec on pcDuino
+Date: Wed, 4 Nov 2015 08:06:42 -0800
+Message-ID: <20151104160642.GY6114@lukather>
+References: <1446565640-21069-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RCcFxJ34+mAtH0DM"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6625CYQKGQEPA7XOBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446565640-21069-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 4, 2015 at 7:12 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
-> In current implementation, unflatten_dt_node() is called recursively
-> to unflatten device nodes in FDT blob. It's stress to limited stack
-> capacity.
+--RCcFxJ34+mAtH0DM
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Did you actually hit a problem?
+Hi,
 
-Now we have a max depth of 64. Seems like that should be plenty... Any
-idea how this compares to when we run out of stack space?
+On Tue, Nov 03, 2015 at 04:47:20PM +0100, Hans de Goede wrote:
+> From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+> 
+> Enable the on-chip audio codec
+> 
+> Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-> This avoids calling the function recursively, meaning the device
-> nodes are unflattened in one call on unflatten_dt_node(): two arrays
-> are introduced to track the parent path size and the device node of
-> current level of depth, which will be used by the device node on next
-> level of depth to be unflattened. Also, the parameter "poffset" and
-> "fpsize" are unused and dropped.
+I removed the extra blank line, and applied the patch.
 
-Yay. I'm happy to see parameters removed instead of added to this function.
+Thanks!
+Maxime
 
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->  drivers/of/fdt.c | 94 +++++++++++++++++++++++++++++++++-----------------------
->  1 file changed, 56 insertions(+), 38 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 173b036..f4793d0 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -355,61 +355,82 @@ static unsigned long populate_node(const void *blob,
->         return fpsize;
->  }
->
-> +static void reverse_nodes(struct device_node *parent)
-> +{
-> +       struct device_node *child, *next;
-> +
-> +       /* In-depth first */
-> +       child = parent->child;
-> +       while (child) {
-> +               reverse_nodes(child);
-> +
-> +               child = child->sibling;
-> +       }
-> +
-> +       /* Reverse the nodes in the child list */
-> +       child = parent->child;
-> +       parent->child = NULL;
-> +       while (child) {
-> +               next = child->sibling;
-> +
-> +               child->sibling = parent->child;
-> +               parent->child = child;
-> +               child = next;
-> +       }
-> +}
-> +
->  /**
->   * unflatten_dt_node - Alloc and populate a device_node from the flat tree
->   * @blob: The parent device tree blob
->   * @mem: Memory chunk to use for allocating device nodes and properties
-> - * @poffset: pointer to node in flat tree
->   * @dad: Parent struct device_node
->   * @nodepp: The device_node tree created by the call
-> - * @fpsize: Size of the node path up at the current depth.
->   * @dryrun: If true, do not allocate device nodes but still calculate needed
->   * memory size
->   */
->  static void *unflatten_dt_node(const void *blob,
->                                void *mem,
-> -                              int *poffset,
->                                struct device_node *dad,
->                                struct device_node **nodepp,
-> -                              unsigned long fpsize,
->                                bool dryrun)
-
-We can probably further simplify things by returning an int with
-negative being errors and positive being the size. Also, dryrun can be
-dropped and implied by mem and/or nodepp being NULL.
-
->  {
-> -       struct device_node *np;
-> -       static int depth;
-> -       int old_depth;
-> -
-> -       fpsize = populate_node(blob, *poffset, &mem, dad, fpsize, &np, dryrun);
-> -       if (!fpsize)
-> -               return mem;
-> +       struct device_node *root;
-> +       int offset = 0, depth = 0;
-> +       unsigned long fpsizes[64];
-> +       struct device_node *nps[64];
-
-Use a define here.
-
->
-> -       old_depth = depth;
-> -       *poffset = fdt_next_node(blob, *poffset, &depth);
-> -       if (depth < 0)
-> -               depth = 0;
-> -       while (*poffset > 0 && depth > old_depth)
-> -               mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
-> -                                       fpsize, dryrun);
-> +       if (nodepp)
-> +               *nodepp = NULL;
-> +
-> +       root = dad;
-> +       fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
-> +       nps[depth++] = dad;
-> +       while (offset >= 0 && depth < 64) {
-> +               fpsizes[depth] = populate_node(blob, offset, &mem,
-> +                                              nps[depth - 1],
-> +                                              fpsizes[depth - 1],
-> +                                              &nps[depth], dryrun);
-> +               if (!fpsizes[depth])
-> +                       return mem;
-> +
-> +               if (!dryrun && nodepp && !*nodepp)
-> +                       *nodepp = nps[depth];
-> +               if (!dryrun && !root)
-> +                       root = nps[depth];
-> +
-> +               offset = fdt_next_node(blob, offset, &depth);
-> +       }
->
-> -       if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
-> -               pr_err("unflatten: error %d processing FDT\n", *poffset);
-> +       if (offset < 0 && offset != -FDT_ERR_NOTFOUND)
-> +               pr_err("%s: Error %d processing FDT\n",
-> +                      __func__, offset);
-
-What about depth == 64 case? I think the behavior should be a WARN and
-ignore those nodes so we at least can continue to boot and see the
-error. Of course, if there is a phandle pointing to ignored nodes, we
-have to handle that too.
-
->
->         /*
->          * Reverse the child list. Some drivers assumes node order matches .dts
->          * node order
->          */
-> -       if (!dryrun && np->child) {
-> -               struct device_node *child = np->child;
-> -               np->child = NULL;
-> -               while (child) {
-> -                       struct device_node *next = child->sibling;
-> -                       child->sibling = np->child;
-> -                       np->child = child;
-> -                       child = next;
-> -               }
-> -       }
-> -
-> -       if (nodepp)
-> -               *nodepp = np;
-> +       if (!dryrun)
-> +               reverse_nodes(root);
->
->         return mem;
->  }
-> @@ -431,7 +452,6 @@ static void __unflatten_device_tree(const void *blob,
->                              void * (*dt_alloc)(u64 size, u64 align))
->  {
->         unsigned long size;
-> -       int start;
->         void *mem;
->
->         pr_debug(" -> unflatten_device_tree()\n");
-> @@ -452,8 +472,7 @@ static void __unflatten_device_tree(const void *blob,
->         }
->
->         /* First pass, scan for size */
-> -       start = 0;
-> -       size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
-> +       size = (unsigned long)unflatten_dt_node(blob, NULL, NULL, NULL, true);
->         size = ALIGN(size, 4);
->
->         pr_debug("  size is %lx, allocating...\n", size);
-> @@ -467,8 +486,7 @@ static void __unflatten_device_tree(const void *blob,
->         pr_debug("  unflattening %p...\n", mem);
->
->         /* Second pass, do actual unflattening */
-> -       start = 0;
-> -       unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
-> +       unflatten_dt_node(blob, mem, NULL, mynodes, false);
->         if (be32_to_cpup(mem + size) != 0xdeadbeef)
->                 pr_warning("End of tree marker overwritten: %08x\n",
->                            be32_to_cpup(mem + size));
-> --
-> 2.1.0
->
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--RCcFxJ34+mAtH0DM--
