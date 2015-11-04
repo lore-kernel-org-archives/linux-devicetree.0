@@ -1,111 +1,46 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 29/50] powerpc/pci: Rename pcibios_find_pci_bus()
-Date: Thu,  5 Nov 2015 00:12:29 +1100
-Message-ID: <1446642770-4681-30-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 38/50] powerpc/powernv: Exclude root bus in pnv_pci_reset_secondary_bus()
+Date: Thu,  5 Nov 2015 00:12:38 +1100
+Message-ID: <1446642770-4681-39-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This renames pcibios_find_pci_bus() to pci_find_bus_by_node() to
-avoid conflicts with those PCI subsystem weak function names, which
-have prefix "pcibios". No logical changes introduced.
+When pnv_pci_reset_secondary_bus() is called to issue reset on
+the indicated secondary bus, the bus can't be root bus. So we
+needn't consider root bus in the function.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/pci-bridge.h      | 2 +-
- arch/powerpc/platforms/pseries/pci_dlpar.c | 5 ++---
- drivers/pci/hotplug/rpadlpar_core.c        | 6 +++---
- drivers/pci/hotplug/rpaphp_pci.c           | 2 +-
- 4 files changed, 7 insertions(+), 8 deletions(-)
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index c2360c8..28385cb 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -257,7 +257,7 @@ static inline struct eeh_dev *pdn_to_eeh_dev(struct pci_dn *pdn)
- #endif
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index a7d84a4..c69b6a1 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -880,16 +880,8 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
  
- /** Find the bus corresponding to the indicated device node */
--extern struct pci_bus *pcibios_find_pci_bus(struct device_node *dn);
-+extern struct pci_bus *pci_find_bus_by_node(struct device_node *dn);
- 
- /** Remove all of the PCI devices under this bus */
- extern void pci_remove_pci_devices(struct pci_bus *bus);
-diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
-index 5d4a3df..aee22b4 100644
---- a/arch/powerpc/platforms/pseries/pci_dlpar.c
-+++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
-@@ -54,8 +54,7 @@ find_bus_among_children(struct pci_bus *bus,
- 	return child;
+ void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
+ {
+-	struct pci_controller *hose;
+-
+-	if (pci_is_root_bus(dev->bus)) {
+-		hose = pci_bus_to_host(dev->bus);
+-		pnv_eeh_root_reset(hose, EEH_RESET_HOT);
+-		pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
+-	} else {
+-		pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+-		pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+-	}
++	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
++	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
  }
  
--struct pci_bus *
--pcibios_find_pci_bus(struct device_node *dn)
-+struct pci_bus *pci_find_bus_by_node(struct device_node *dn)
- {
- 	struct pci_dn *pdn = dn->data;
- 
-@@ -64,7 +63,7 @@ pcibios_find_pci_bus(struct device_node *dn)
- 
- 	return find_bus_among_children(pdn->phb->bus, dn);
- }
--EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
-+EXPORT_SYMBOL_GPL(pci_find_bus_by_node);
- 
- struct pci_controller *init_phb_dynamic(struct device_node *dn)
- {
-diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-index ebd283b..9aa392b 100644
---- a/drivers/pci/hotplug/rpadlpar_core.c
-+++ b/drivers/pci/hotplug/rpadlpar_core.c
-@@ -176,7 +176,7 @@ static int dlpar_add_pci_slot(char *drc_name, struct device_node *dn)
- 	struct pci_dev *dev;
- 	struct pci_controller *phb;
- 
--	if (pcibios_find_pci_bus(dn))
-+	if (pci_find_bus_by_node(dn))
- 		return -EINVAL;
- 
- 	/* Add pci bus */
-@@ -213,7 +213,7 @@ static int dlpar_remove_phb(char *drc_name, struct device_node *dn)
- 	struct pci_dn *pdn;
- 	int rc = 0;
- 
--	if (!pcibios_find_pci_bus(dn))
-+	if (!pci_find_bus_by_node(dn))
- 		return -EINVAL;
- 
- 	/* If pci slot is hotpluggable, use hotplug to remove it */
-@@ -357,7 +357,7 @@ int dlpar_remove_pci_slot(char *drc_name, struct device_node *dn)
- 
- 	pci_lock_rescan_remove();
- 
--	bus = pcibios_find_pci_bus(dn);
-+	bus = pci_find_bus_by_node(dn);
- 	if (!bus) {
- 		ret = -EINVAL;
- 		goto out;
-diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
-index 256066c..e7dd573 100644
---- a/drivers/pci/hotplug/rpaphp_pci.c
-+++ b/drivers/pci/hotplug/rpaphp_pci.c
-@@ -93,7 +93,7 @@ int rpaphp_enable_slot(struct slot *slot)
- 	if (rc)
- 		return rc;
- 
--	bus = pcibios_find_pci_bus(slot->dn);
-+	bus = pci_find_bus_by_node(slot->dn);
- 	if (!bus) {
- 		err("%s: no pci_bus for dn %s\n", __func__, slot->dn->full_name);
- 		return -EINVAL;
+ /**
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
