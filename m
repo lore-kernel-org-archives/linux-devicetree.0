@@ -1,459 +1,139 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Tue, 3 Nov 2015 19:47:06 -0500
-Message-ID: <5639558A.6030308@codeaurora.org>
-References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
- <1446444460-21600-2-git-send-email-okaya@codeaurora.org>
- <CAHp75Vf3OjSoqxdYCz6ZFiTo2gjbZq_D=F7PRtj8yU+KFrkOtg@mail.gmail.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v9 10/17] phy: Add driver for rockchip Display Port PHY
+Date: Wed, 4 Nov 2015 08:48:38 +0800
+Message-ID: <563955E6.7000905@rock-chips.com>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+ <1446083918-30809-1-git-send-email-ykk@rock-chips.com>
+ <20151103043827.GA17261@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf3OjSoqxdYCz6ZFiTo2gjbZq_D=F7PRtj8yU+KFrkOtg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: dmaengine <dmaengine@vger.kernel.org>, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20151103043827.GA17261@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, djkurtz@chromium.org, dianders@chromium.org, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sean Paul <seanpaul@chromi>
 List-Id: devicetree@vger.kernel.org
 
+Hi Brain,
 
-
-On 11/3/2015 5:22 AM, Andy Shevchenko wrote:
-> On Mon, Nov 2, 2015 at 8:07 AM, Sinan Kaya <okaya@codeaurora.org> wrote:
->> The Qualcomm Technologies HIDMA device has been designed
->> to support virtualization technology. The driver has been
->> divided into two to follow the hardware design. The management
->> driver is executed in hypervisor context and is the main
->> management entity for all channels provided by the device.
->> The channel driver is executed in the hypervisor/guest OS
->> context.
+On 11/03/2015 12:38 PM, Brian Norris wrote:
+> Hi Yakir,
+>
+> On Thu, Oct 29, 2015 at 09:58:38AM +0800, Yakir Yang wrote:
+>> Add phy driver for the Rockchip DisplayPort PHY module. This
+>> is required to get DisplayPort working in Rockchip SoCs.
 >>
->> All channel devices get probed in the hypervisor
->> context during power up. They show up as DMA engine
->> channels. Then, before starting the virtualization; each
->> channel device is unbound from the hypervisor by VFIO
->> and assigned to the guest machine for control.
->>
->> This management driver will be used by the system
->> admin to monitor/reset the execution state of the DMA
->> channels. This will be the management interface.
->
->
->> +static ssize_t qcom_hidma_mgmt_evtena(struct file *file,
->> +       const char __user *user_buf, size_t count, loff_t *ppos)
->> +{
->> +       char temp_buf[16+1];
->
-> 16 is a magic number. Make it defined constant.
->
+>> Reviewed-by: Heiko Stuebner<heiko@sntech.de>
+>> Signed-off-by: Yakir Yang<ykk@rock-chips.com>
+>> ---
+> ...
+>> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
+>> new file mode 100644
+>> index 0000000..f3e0058
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-rockchip-dp.c
+>> @@ -0,0 +1,151 @@
+>> +/*
+>> + * Rockchip DP PHY driver
+>> + *
+>> + * Copyright (C) 2015 FuZhou Rockchip Co., Ltd.
+>> + * Author: Yakir Yang<ykk@@rock-chips.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define GRF_SOC_CON12                           0x0274
+>> +
+>> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(4)
+>> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
+> Why are the above two macros the same? Judging by the RK3288 manual and
+> other downstream drivers, it seems like you want the _MASK one to be
+> shifted left by 16 (i.e., BIT(20)).
 
-removed it
-
->> +       struct qcom_hidma_mgmt_dev *mgmtdev = file->f_inode->i_private;
->> +       u32 event;
->> +       ssize_t ret;
->> +       unsigned long val;
->> +
->> +       temp_buf[16] = '\0';
->> +       if (copy_from_user(temp_buf, user_buf, min_t(int, count, 16)))
->> +               goto out;
->> +
->> +       ret = kstrtoul(temp_buf, 16, &val);
->
-> kstrtoul_from_user?
-
-nice, simpler.
-
->
->> +       if (ret) {
->> +               dev_warn(&mgmtdev->pdev->dev, "unknown event\n");
->> +               goto out;
->> +       }
->> +
->> +       event = (u32)val & HW_EVENTS_CFG_MASK;
->> +
->> +       pm_runtime_get_sync(&mgmtdev->pdev->dev);
->> +       writel(event, mgmtdev->dev_virtaddr + HW_EVENTS_CFG_OFFSET);
->> +       pm_runtime_mark_last_busy(&mgmtdev->pdev->dev);
->> +       pm_runtime_put_autosuspend(&mgmtdev->pdev->dev);
->> +out:
->> +       return count;
->> +}
->> +
->> +static const struct file_operations qcom_hidma_mgmt_evtena_fops = {
->> +       .write = qcom_hidma_mgmt_evtena,
->> +};
->> +
->> +struct fileinfo {
->> +       char *name;
->> +       int mode;
->> +       const struct file_operations *ops;
->> +};
->> +
->> +static struct fileinfo files[] = {
->> +       {"info", S_IRUGO, &qcom_hidma_mgmt_fops},
->> +       {"err", S_IRUGO,  &qcom_hidma_mgmt_err_fops},
->> +       {"mhiderrclr", S_IWUSR, &qcom_hidma_mgmt_mhiderr_clrfops},
->> +       {"evterrclr", S_IWUSR, &qcom_hidma_mgmt_evterr_clrfops},
->> +       {"ideerrclr", S_IWUSR, &qcom_hidma_mgmt_ideerr_clrfops},
->> +       {"odeerrclr", S_IWUSR, &qcom_hidma_mgmt_odeerr_clrfops},
->> +       {"msierrclr", S_IWUSR, &qcom_hidma_mgmt_msierr_clrfops},
->> +       {"treerrclr", S_IWUSR, &qcom_hidma_mgmt_treerr_clrfops},
->> +       {"evtena", S_IWUSR, &qcom_hidma_mgmt_evtena_fops},
->> +};
->> +
->> +static void qcom_hidma_mgmt_debug_uninit(struct qcom_hidma_mgmt_dev *mgmtdev)
->> +{
->> +       debugfs_remove_recursive(mgmtdev->debugfs);
->> +}
->> +
->> +static int qcom_hidma_mgmt_debug_init(struct qcom_hidma_mgmt_dev *mgmtdev)
->> +{
->> +       int rc = 0;
->> +       u32 i;
->> +       struct dentry   *fs_entry;
->> +
->> +       mgmtdev->debugfs = debugfs_create_dir(dev_name(&mgmtdev->pdev->dev),
->> +                                               NULL);
->> +       if (!mgmtdev->debugfs) {
->> +               rc = -ENODEV;
->> +               return rc;
->> +       }
->> +
->> +       for (i = 0; i < ARRAY_SIZE(files); i++) {
->> +               fs_entry = debugfs_create_file(files[i].name,
->> +                                       files[i].mode, mgmtdev->debugfs,
->> +                                       mgmtdev, files[i].ops);
->> +               if (!fs_entry) {
->> +                       rc = -ENOMEM;
->> +                       goto cleanup;
->> +               }
->> +       }
->> +
->> +       return 0;
->> +cleanup:
->> +       qcom_hidma_mgmt_debug_uninit(mgmtdev);
->> +       return rc;
->> +}
->> +#else
->> +static void qcom_hidma_mgmt_debug_uninit(struct qcom_hidma_mgmt_dev *mgmtdev)
->> +{
->> +}
->> +static int qcom_hidma_mgmt_debug_init(struct qcom_hidma_mgmt_dev *mgmtdev)
->> +{
->> +       return 0;
->> +}
->> +#endif
->> +
->> +static int qcom_hidma_mgmt_setup(struct qcom_hidma_mgmt_dev *mgmtdev)
->> +{
->> +       u32 val;
->> +       u32 i;
->> +
->> +       val = readl(mgmtdev->dev_virtaddr + MAX_BUS_REQ_LEN_OFFSET);
->> +       val = val &
->> +               ~(MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS);
->> +       val = val |
->> +               (mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS);
->> +       val = val & ~(MAX_BUS_REQ_LEN_MASK);
->> +       val = val | (mgmtdev->max_read_request);
->> +       writel(val, mgmtdev->dev_virtaddr + MAX_BUS_REQ_LEN_OFFSET);
->> +
->> +       val = readl(mgmtdev->dev_virtaddr + MAX_XACTIONS_OFFSET);
->> +       val = val &
->> +               ~(MAX_WR_XACTIONS_MASK << MAX_WR_XACTIONS_BIT_POS);
->> +       val = val |
->> +               (mgmtdev->max_wr_xactions << MAX_WR_XACTIONS_BIT_POS);
->> +       val = val & ~(MAX_RD_XACTIONS_MASK);
->> +       val = val | (mgmtdev->max_rd_xactions);
->> +       writel(val, mgmtdev->dev_virtaddr + MAX_XACTIONS_OFFSET);
->> +
->> +       mgmtdev->sw_version = readl(mgmtdev->dev_virtaddr + SW_VERSION_OFFSET);
->> +
->> +       for (i = 0; i < mgmtdev->dma_channels; i++) {
->> +               val = readl(mgmtdev->dev_virtaddr + QOS_N_OFFSET + (4 * i));
->> +               val = val & ~(1 << PRIORITY_BIT_POS);
->> +               val = val |
->> +                       ((mgmtdev->priority[i] & 0x1) << PRIORITY_BIT_POS);
->> +               val = val & ~(WEIGHT_MASK << WRR_BIT_POS);
->> +               val = val
->> +                       | ((mgmtdev->weight[i] & WEIGHT_MASK) << WRR_BIT_POS);
->> +               writel(val, mgmtdev->dev_virtaddr + QOS_N_OFFSET + (4 * i));
->> +       }
->> +
->> +       val = readl(mgmtdev->dev_virtaddr + CHRESET_TIMEOUT_OFFSET);
->> +       val = val & ~CHRESET_TIMEOUUT_MASK;
->> +       val = val | (mgmtdev->chreset_timeout & CHRESET_TIMEOUUT_MASK);
->> +       writel(val, mgmtdev->dev_virtaddr + CHRESET_TIMEOUT_OFFSET);
->> +
->> +       val = readl(mgmtdev->dev_virtaddr + CFG_OFFSET);
->> +       val = val | 1;
->> +       writel(val, mgmtdev->dev_virtaddr + CFG_OFFSET);
->> +
->> +       return 0;
->> +}
->> +
->> +static int qcom_hidma_mgmt_probe(struct platform_device *pdev)
->> +{
->> +       struct resource *dma_resource;
->> +       int irq;
->> +       int rc;
->> +       u32 i;
->> +       struct qcom_hidma_mgmt_dev *mgmtdev;
->
-> Better move this line to the top of definition block.
->
-done
+Oops, yes, you're right, it should be BIT(20), thanks for the catch.
 
 >> +
->> +       pm_runtime_set_autosuspend_delay(&pdev->dev, AUTOSUSPEND_TIMEOUT);
->> +       pm_runtime_use_autosuspend(&pdev->dev);
->> +       pm_runtime_set_active(&pdev->dev);
->> +       pm_runtime_enable(&pdev->dev);
->> +       dma_resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       if (!dma_resource) {
->> +               dev_err(&pdev->dev, "No memory resources found\n");
->> +               rc = -ENODEV;
->> +               goto out;
->> +       }
+>> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
+>> +#define GRF_EDP_PHY_SIDDQ_ON                    0
+>> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
+>> +
+> ...
 >
-> Consolidate with devm_ioremap_resource()
+>> +	ret = regmap_write(dp->grf, GRF_SOC_CON12, GRF_EDP_REF_CLK_SEL_INTER |
+>> +			   GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK);
+> IOW, the above is writing:
 >
+> 	BIT(4) | BIT(4)
+>
+> whereas I think you want:
+>
+> 	BIT(4) | BIT(20)
+>
+>> +	if (ret != 0) {
+>> +		dev_err(dp->dev, "Could not config GRF edp ref clk: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+> ...
+>
+> (FYI, I came across this by inspection when comparing Heiko's
+> 'somewhat-stable' branch [1] with this series. The former brings up eDP
+> fine on veyron-jaq, whereas this one doesn't yet, even with the above
+> change. Still debugging the issue.)
 
-OK
+Hmm... I'm not sure whether your eDP screen have the hotplug signal, so I
+think you can try to add "analogix,force-hpd" flag into 
+rk3288-veyron-jaq.dts
 
->> +
->> +       irq = platform_get_irq(pdev, 0);
->> +       if (irq < 0) {
->> +               dev_err(&pdev->dev, "irq resources not found\n");
->> +               rc = -ENODEV;
->> +               goto out;
->> +       }
->> +
->> +       mgmtdev = devm_kzalloc(&pdev->dev, sizeof(*mgmtdev), GFP_KERNEL);
->> +       if (!mgmtdev) {
->> +               rc = -ENOMEM;
->> +               goto out;
->> +       }
->> +
->> +       mgmtdev->pdev = pdev;
->> +
->> +       pm_runtime_get_sync(&mgmtdev->pdev->dev);
->> +       mgmtdev->dev_addrsize = resource_size(dma_resource);
->> +       mgmtdev->dev_virtaddr = devm_ioremap_resource(&pdev->dev,
->> +                                                       dma_resource);
->> +       if (IS_ERR(mgmtdev->dev_virtaddr)) {
->> +               dev_err(&pdev->dev, "can't map i/o memory at %pa\n",
->> +                       &dma_resource->start);
->> +               rc = -ENOMEM;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32(&pdev->dev, "dma-channels",
->> +               &mgmtdev->dma_channels)) {
->> +               dev_err(&pdev->dev, "number of channels missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32(&pdev->dev, "channel-reset-timeout",
->> +               &mgmtdev->chreset_timeout)) {
->> +               dev_err(&pdev->dev, "channel reset timeout missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32(&pdev->dev, "max-write-burst-bytes",
->> +               &mgmtdev->max_write_request)) {
->> +               dev_err(&pdev->dev, "max-write-burst-bytes missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +       if ((mgmtdev->max_write_request != 128) &&
->> +               (mgmtdev->max_write_request != 256) &&
->> +               (mgmtdev->max_write_request != 512) &&
->> +               (mgmtdev->max_write_request != 1024)) {
->
-> is_power_of_2()  && min/max ?
->
-ok
+&edp {
+     analogix,need-force-hpd;
+}
 
->> +               dev_err(&pdev->dev, "invalid write request %d\n",
->> +                       mgmtdev->max_write_request);
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32(&pdev->dev, "max-read-burst-bytes",
->> +               &mgmtdev->max_read_request)) {
->> +               dev_err(&pdev->dev, "max-read-burst-bytes missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if ((mgmtdev->max_read_request != 128) &&
->> +               (mgmtdev->max_read_request != 256) &&
->> +               (mgmtdev->max_read_request != 512) &&
->> +               (mgmtdev->max_read_request != 1024)) {
->
-> Ditto.
->
-done
 
->> +               dev_err(&pdev->dev, "invalid read request %d\n",
->> +                       mgmtdev->max_read_request);
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32(&pdev->dev, "max-write-transactions",
->> +               &mgmtdev->max_wr_xactions)) {
->> +               dev_err(&pdev->dev, "max-write-transactions missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32(&pdev->dev, "max-read-transactions",
->> +               &mgmtdev->max_rd_xactions)) {
->> +               dev_err(&pdev->dev, "max-read-transactions missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       mgmtdev->priority = devm_kcalloc(&pdev->dev,
->> +               mgmtdev->dma_channels, sizeof(*mgmtdev->priority), GFP_KERNEL);
->> +       if (!mgmtdev->priority) {
->> +               rc = -ENOMEM;
->> +               goto out;
->> +       }
->> +
->> +       mgmtdev->weight = devm_kcalloc(&pdev->dev,
->> +               mgmtdev->dma_channels, sizeof(*mgmtdev->weight), GFP_KERNEL);
->> +       if (!mgmtdev->weight) {
->> +               rc = -ENOMEM;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32_array(&pdev->dev, "channel-priority",
->> +                               mgmtdev->priority, mgmtdev->dma_channels)) {
->> +               dev_err(&pdev->dev, "channel-priority missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       if (device_property_read_u32_array(&pdev->dev, "channel-weight",
->> +                               mgmtdev->weight, mgmtdev->dma_channels)) {
->> +               dev_err(&pdev->dev, "channel-weight missing\n");
->> +               rc = -EINVAL;
->> +               goto out;
->> +       }
->> +
->> +       for (i = 0; i < mgmtdev->dma_channels; i++) {
->> +               if (mgmtdev->weight[i] > 15) {
->
-> 15 is magic.
->
+If that changes couldn't fix the problem, guess you may need max the panel
+power up delay time which pointed by Heiko. Like:
 
-I created a new macro called MAX_CHANNEL_WEIGHT.
+Thanks,
+- Yakir
 
->> +                       dev_err(&pdev->dev,
->> +                               "max value of weight can be 15.\n");
->> +                       rc = -EINVAL;
->> +                       goto out;
->> +               }
->> +
->> +               /* weight needs to be at least one */
->> +               if (mgmtdev->weight[i] == 0)
->> +                       mgmtdev->weight[i] = 1;
->> +       }
->> +
->> +       rc = qcom_hidma_mgmt_setup(mgmtdev);
->> +       if (rc) {
->> +               dev_err(&pdev->dev, "setup failed\n");
->> +               goto out;
->> +       }
->> +
->> +       rc = qcom_hidma_mgmt_debug_init(mgmtdev);
->> +       if (rc) {
->> +               dev_err(&pdev->dev, "debugfs init failed\n");
->> +               goto out;
->> +       }
->> +
->> +       dev_info(&pdev->dev,
->> +               "HI-DMA engine management driver registration complete\n");
->
-> You may put some useful information here, otherwise looks like a debug message.
->
-ok, I did now. I copied the syntax from another driver to here.
 
->> +       platform_set_drvdata(pdev, mgmtdev);
->> +       pm_runtime_mark_last_busy(&mgmtdev->pdev->dev);
->> +       pm_runtime_put_autosuspend(&mgmtdev->pdev->dev);
->> +       return 0;
->> +out:
->> +       pm_runtime_disable(&pdev->dev);
->> +       pm_runtime_put_sync_suspend(&pdev->dev);
->> +       return rc;
->> +}
->> +
->> +static int qcom_hidma_mgmt_remove(struct platform_device *pdev)
->> +{
->> +       struct qcom_hidma_mgmt_dev *mgmtdev = platform_get_drvdata(pdev);
->> +
->> +       pm_runtime_get_sync(&mgmtdev->pdev->dev);
->> +       qcom_hidma_mgmt_debug_uninit(mgmtdev);
->> +       pm_runtime_put_sync_suspend(&pdev->dev);
->> +       pm_runtime_disable(&pdev->dev);
->> +
->> +       dev_info(&pdev->dev, "HI-DMA engine management driver removed\n");
->
-> Useless message.
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c 
+b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index 4fa5f69..546a506 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -82,6 +82,13 @@ static int analogix_dp_detect_hpd(struct 
+analogix_dp_device *dp)
+          */
+         dev_dbg(dp->dev, "failed to get hpd plug status, try to force 
+hpd\n");
 
-removed .
++       /*
++        * Hotplug signal would indicate the right time to operate
++        * panel after poweron, but if the hotplug is missing, then
++        * panel would need wait hundreds of milliseconds at here.
++        */
++       mdelay(100);
++
+         analogix_dp_force_hpd(dp);
 
->
->> +       return 0;
->> +}
->> +
->> +#if IS_ENABLED(CONFIG_ACPI)
->> +static const struct acpi_device_id qcom_hidma_mgmt_acpi_ids[] = {
->> +       {"QCOM8060"},
->> +       {},
->> +};
->> +#endif
->> +
->> +static const struct of_device_id qcom_hidma_mgmt_match[] = {
->> +       { .compatible = "qcom,hidma-mgmt-1.0", },
->> +       {},
->> +};
->> +MODULE_DEVICE_TABLE(of, qcom_hidma_mgmt_match);
->> +
->> +static struct platform_driver qcom_hidma_mgmt_driver = {
->> +       .probe = qcom_hidma_mgmt_probe,
->> +       .remove = qcom_hidma_mgmt_remove,
->> +       .driver = {
->> +               .name = "hidma-mgmt",
->> +               .of_match_table = qcom_hidma_mgmt_match,
->> +               .acpi_match_table = ACPI_PTR(qcom_hidma_mgmt_acpi_ids),
->> +       },
->> +};
->> +module_platform_driver(qcom_hidma_mgmt_driver);
->> +MODULE_LICENSE("GPL v2");
->> --
->> Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
->
->
->
+         if (analogix_dp_get_plug_in_status(dp) != 0) {
 
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+
+> Brian
+>
+> [1]https://github.com/mmind/linux-rockchip/tree/devel/somewhat-stable
+>
+>
+>
