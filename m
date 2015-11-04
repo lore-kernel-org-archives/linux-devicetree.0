@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 16/50] powerpc/powernv: Define PNV_IODA1_DMA32_SEGSIZE
-Date: Thu,  5 Nov 2015 00:12:16 +1100
-Message-ID: <1446642770-4681-17-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 03/50] powerpc/pci: Cleanup on struct pci_controller_ops
+Date: Thu,  5 Nov 2015 00:12:03 +1100
+Message-ID: <1446642770-4681-4-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -10,124 +10,57 @@ To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, there is one macro (TCE32_TABLE_SIZE) representing the
-TCE table size for one DMA32 segment. The constant representing
-the DMA32 segment size (1 << 28) is still used in the code.
+Each PHB has one instance of "struct pci_controller_ops", which
+includes various callbacks called by PCI subsystem. In the definition
+of this struct, some callbacks have explicit names for its arguments,
+but the left don't have.
 
-This defines PNV_IODA1_DMA32_SEGSIZE representing one DMA32
-segment size. the TCE table size can be calcualted when the page
-has fixed 4KB size. So all the related calculation depends on one
-macro (PNV_IODA1_DMA32_SEGSIZE). No logical changes introduced.
+This adds all explicit names of the arguments to the callbacks in
+"struct pci_controller_ops" so that the code looks consistent.
 
 Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 27 ++++++++++++++-------------
- arch/powerpc/platforms/powernv/pci.h      |  1 +
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ arch/powerpc/include/asm/pci-bridge.h | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 8a19454..5a08e20 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -48,9 +48,6 @@
- #include "powernv.h"
- #include "pci.h"
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index 6076116..0f2ff3a 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -21,18 +21,19 @@ struct pci_controller_ops {
+ 	void		(*dma_dev_setup)(struct pci_dev *dev);
+ 	void		(*dma_bus_setup)(struct pci_bus *bus);
  
--/* 256M DMA window, 4K TCE pages, 8 bytes TCE */
--#define TCE32_TABLE_SIZE	((0x10000000 / 0x1000) * 8)
--
- #define POWERNV_IOMMU_DEFAULT_LEVELS	1
- #define POWERNV_IOMMU_MAX_LEVELS	5
+-	int		(*probe_mode)(struct pci_bus *);
++	int		(*probe_mode)(struct pci_bus *bus);
  
-@@ -1853,7 +1850,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+ 	/* Called when pci_enable_device() is called. Returns true to
+ 	 * allow assignment/enabling of the device. */
+-	bool		(*enable_device_hook)(struct pci_dev *);
++	bool		(*enable_device_hook)(struct pci_dev *dev);
  
- 	struct page *tce_mem = NULL;
- 	struct iommu_table *tbl;
--	unsigned int i;
-+	unsigned int tce32_segsz, i;
- 	int64_t rc;
- 	void *addr;
+-	void		(*disable_device)(struct pci_dev *);
++	void		(*disable_device)(struct pci_dev *dev);
  
-@@ -1873,29 +1870,31 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
- 	/* Grab a 32-bit TCE table */
- 	pe->tce32_seg = base;
- 	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
--		(base << 28), ((base + segs) << 28) - 1);
-+		base * PNV_IODA1_DMA32_SEGSIZE,
-+		(base + segs) * PNV_IODA1_DMA32_SEGSIZE - 1);
+-	void		(*release_device)(struct pci_dev *);
++	void		(*release_device)(struct pci_dev *dev);
  
- 	/* XXX Currently, we allocate one big contiguous table for the
- 	 * TCEs. We only really need one chunk per 256M of TCE space
- 	 * (ie per segment) but that's an optimization for later, it
- 	 * requires some added smarts with our get/put_tce implementation
- 	 */
-+	tce32_segsz = PNV_IODA1_DMA32_SEGSIZE >> (IOMMU_PAGE_SHIFT_4K - 3);
- 	tce_mem = alloc_pages_node(phb->hose->node, GFP_KERNEL,
--				   get_order(TCE32_TABLE_SIZE * segs));
-+				   get_order(tce32_segsz * segs));
- 	if (!tce_mem) {
- 		pe_err(pe, " Failed to allocate a 32-bit TCE memory\n");
- 		goto fail;
- 	}
- 	addr = page_address(tce_mem);
--	memset(addr, 0, TCE32_TABLE_SIZE * segs);
-+	memset(addr, 0, tce32_segsz * segs);
+ 	/* Called during PCI resource reassignment */
+-	resource_size_t (*window_alignment)(struct pci_bus *, unsigned long type);
++	resource_size_t (*window_alignment)(struct pci_bus *bus,
++					    unsigned long type);
+ 	void		(*setup_bridge)(struct pci_bus *bus,
+ 					unsigned long type);
+ 	void		(*reset_secondary_bus)(struct pci_dev *dev);
+@@ -46,7 +47,7 @@ struct pci_controller_ops {
+ 	int             (*dma_set_mask)(struct pci_dev *dev, u64 dma_mask);
+ 	u64		(*dma_get_required_mask)(struct pci_dev *dev);
  
- 	/* Configure HW */
- 	for (i = 0; i < segs; i++) {
- 		rc = opal_pci_map_pe_dma_window(phb->opal_id,
- 					      pe->pe_number,
- 					      base + i, 1,
--					      __pa(addr) + TCE32_TABLE_SIZE * i,
--					      TCE32_TABLE_SIZE, 0x1000);
-+					      __pa(addr) + tce32_segsz * i,
-+					      tce32_segsz, 0x1000);
- 		if (rc) {
- 			pe_err(pe, " Failed to configure 32-bit TCE table,"
- 			       " err %ld\n", rc);
-@@ -1904,8 +1903,9 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
- 	}
+-	void		(*shutdown)(struct pci_controller *);
++	void		(*shutdown)(struct pci_controller *hose);
+ };
  
- 	/* Setup linux iommu table */
--	pnv_pci_setup_iommu_table(tbl, addr, TCE32_TABLE_SIZE * segs,
--				  base << 28, IOMMU_PAGE_SHIFT_4K);
-+	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
-+				  base * PNV_IODA1_DMA32_SEGSIZE,
-+				  IOMMU_PAGE_SHIFT_4K);
- 
- 	/* OPAL variant of P7IOC SW invalidated TCEs */
- 	if (phb->ioda.tce_inval_reg)
-@@ -1935,7 +1935,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
- 	if (pe->tce32_seg >= 0)
- 		pe->tce32_seg = -1;
- 	if (tce_mem)
--		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
-+		__free_pages(tce_mem, get_order(tce32_segsz * segs));
- 	if (tbl) {
- 		pnv_pci_unlink_table_and_group(tbl, &pe->table_group);
- 		iommu_free_table(tbl, "pnv");
-@@ -3216,7 +3216,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	mutex_init(&phb->ioda.pe_list_mutex);
- 
- 	/* Calculate how many 32-bit TCE segments we have */
--	phb->ioda.tce32_count = phb->ioda.m32_pci_base >> 28;
-+	phb->ioda.tce32_count = phb->ioda.m32_pci_base /
-+				PNV_IODA1_DMA32_SEGSIZE;
- 
- #if 0 /* We should really do that ... */
- 	rc = opal_pci_set_phb_mem_window(opal->phb_id,
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index c4019ac..46927ff 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -80,6 +80,7 @@ struct pnv_ioda_pe {
- 
- #define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
- #define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
-+#define PNV_IODA1_DMA32_SEGSIZE	0x10000000
- 
- #define PNV_PHB_FLAG_EEH	(1 << 0)
- 
+ /*
 -- 
 2.1.0
 
