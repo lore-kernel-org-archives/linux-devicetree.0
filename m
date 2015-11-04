@@ -1,72 +1,50 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] dmaengine: edma: Add dummy driver skeleton for edma3-tptc
-Date: Wed, 4 Nov 2015 22:11:20 +0530
-Message-ID: <20151104164120.GO12910@localhost>
-References: <1446470500-27504-1-git-send-email-peter.ujfalusi@ti.com>
- <87egg54td4.fsf@saruman.tx.rr.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xaMk4Io5JJdpkLEb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87egg54td4.fsf@saruman.tx.rr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, nsekhar@ti.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, t-kristo@ti.com
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Add NVIDIA Tegra XUSB pad controller bindings
+Date: Wed,  4 Nov 2015 18:11:47 +0100
+Message-ID: <1446657109-15568-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---xaMk4Io5JJdpkLEb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the result of my attempt to come up with a correct binding for
+the XUSB pad controller found on NVIDIA Tegra SoCs. Note how this is a
+completely new binding document. The old binding, which we should mark
+deprecated if we settle on this new one, modelled the device as a
+pinctrl/PHY hybrid, but it turns out that it's really not much of a
+pin controller after all.
 
-On Wed, Nov 04, 2015 at 10:33:27AM -0600, Felipe Balbi wrote:
-> Peter Ujfalusi <peter.ujfalusi@ti.com> writes:
->=20
-> > The eDMA3 TPTC does not need any software configuration, but it is a
-> > separate IP block in the SoC. In order the omap hwmod core to be able to
-> > handle the TPTC resources correctly in regards of PM we need to have a
-> > driver loaded for it.
-> > This patch will add a dummy driver skeleton without probe or remove
-> > callbacks provided.
-> >
-> > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > Reported-by: Olof Johansson <olof@lixom.net>
->=20
-> This fixes the problem I also reported on linux-omap [1]
->=20
-> Tested-by: Felipe Balbi <balbi@ti.com>
->=20
-> [1] http://marc.info/?l=3Dlinux-omap&m=3D144665429032014&w=3D2
+I have a driver, which is pretty much Andrew's work, heavily reworked
+and put into drivers/phy. I've tested this on Jetson TK1 (for Tegra124)
+and P2371-2180 (for Tegra210) and I successfully see PCIe, SATA and
+super-speed USB working on Jetson TK1 as well as super-speed USB on the
+P2371-2180 (root on NFS and USB 3.0 and USB 2.0 pen drives work fine).
 
-Great, I was about to point you to this series, I will push this in -next
-now
+Moving the driver into drivers/phy also gives us a trivial way to keep
+backwards-compatibility by simply keeping the old driver in place and
+calling into it from the new driver if a legacy DTB is detected.
 
-Thanks
---=20
-~Vinod
+I still need to do a bit of squashing and sorting of the driver patches
+but I wanted to get this out now because I know Stephen is working on a
+set of patches to support the XUSB pad controller on Tegra210 in U-Boot
+and the discussion can hence continue irrespective of the driver code.
 
---xaMk4Io5JJdpkLEb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Note also that this isn't quite complete yet. I've left out most of the
+HSIC-specific properties for now because there is no user for those in
+the upstream kernel, so I didn't have an example nor test-case.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Thierry
 
-iQIcBAEBAgAGBQJWOjUwAAoJEHwUBw8lI4NHFuMP/1gAzmXLyjO44dPG/ZlF1uuT
-/AdOZ7MFuICWUtRoqD2CorhwSGo8tDv4aAgFBrI0lz3j99XwP/RnpcBzA0KQy6ci
-I4emMJyLTm+JXfsT94kP867t6MgwHfxdIDRTCKArITt42jlXv2OeIwCaXE/ODk0u
-lTM4mtXNfEWYkwxiaxbHLDI+gdNzl58vSgQNZl2C8mNShXfIjF4qq2WjvgVVKWpy
-NTQn89pe19qDXhh2EuSbtqOjRiALOgpbcd1j8glc+mlgt6tT3wXtlr/Gbv0r2u5z
-Wpjtt9jATeKL+NkKbVPy54buBCDSaMHpeAj/vQltt2kVhbxD10ypcJEjU1bo63d0
-0KkazQ3xNe8go2DHms7XdDY8s5J+MS0nyS57HJ/RUwL/sUROU2YTBOLwDYMpr8Ox
-PjhZ0IQOfq9L/SfI4CRpEcM819A/hQ8tL7w5W+dz+aMIJs4R2fmeiJ6yQkdKvgHv
-+X4ZaE9+mraqfmDfvkPG5v88N7jf1kvVXDIAFrE7rWYIhrfStzU/Qo1sEZsnsYNB
-hyQu+XnGIQPhoI8FLbDRAEoMLGVVTB7KqxZK6erv4UZWHfJB+jAO2a48P0Kqe2Sy
-28RRva9eNfHziiqiJ5IMAwjXzN4pVAAh3yDub+UOziHCaP3KcnE6rb4fwwJUZpYI
-bMUnn8OSHPz2om4weI0B
-=rznI
------END PGP SIGNATURE-----
+Thierry Reding (2):
+  dt-bindings: phy: Add NVIDIA Tegra XUSB pad controller binding
+  dt-bindings: phy: tegra-xusb-padctl: Add Tegra210 support
 
---xaMk4Io5JJdpkLEb--
+ .../bindings/phy/nvidia,tegra-xusb-padctl.txt      | 689 +++++++++++++++++++++
+ 1 file changed, 689 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/nvidia,tegra-xusb-padctl.txt
+
+-- 
+2.5.0
