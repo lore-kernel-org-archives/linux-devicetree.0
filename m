@@ -1,40 +1,41 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Wed, 4 Nov 2015 09:35:26 -0600
-Message-ID: <563A25BE.90609@ti.com>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
- <20151022164724.GZ8232@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable audio codec on
+ Wexler TAB7200 tablet.
+Date: Wed, 4 Nov 2015 07:54:05 -0800
+Message-ID: <20151104155405.GV6114@lukather>
+References: <1446386032-19839-1-git-send-email-mamlinav@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151022164724.GZ8232@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FT/vNgDLxVq4t/AU"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTWW5CYQKGQEN2G76CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446386032-19839-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2015 11:47 AM, Mark Brown wrote:
-> On Thu, Oct 01, 2015 at 03:37:53PM -0500, Andrew F. Davis wrote:
->
->> +static const struct of_device_id tps65912_regulator_of_match_table[] = {
->> +	{ .compatible = "ti,tps65912-regulator", },
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, tps65912_regulator_of_match_table);
->
-> Does this IP block exist outside of the tps65912?  If not why is it
-> directly represented in DT?  It seems like this is describing how Linux
-> loads drivers not how the hardware is constructed but DT should describe
-> the hardware.
->
+--FT/vNgDLxVq4t/AU
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Something I just noticed, when I remove this table, module loading stops
-working, even with 'MODULE_ALIAS("platform:tps65912-regulator");'. It
-looks like when DT is enabled platform_uevent (drivers/base/platform.c:787)
-only sends out the OF MODALIAS event then returns, not sending out the
-platform event, is this desired behavior? If so then I will need this
-table even though I still create the device and match it on platform
-name as you suggested.
+On Sun, Nov 01, 2015 at 04:53:52PM +0300, Aleksei Mamlin wrote:
+> Enable on-chip audio codec on the Wexler TAB7200 tablet.
+> 
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Queued for 4.5, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--FT/vNgDLxVq4t/AU--
