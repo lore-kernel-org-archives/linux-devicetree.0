@@ -1,124 +1,84 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 20/50] powerpc/powernv: Improve DMA32 segment calculation
-Date: Thu,  5 Nov 2015 00:12:20 +1100
-Message-ID: <1446642770-4681-21-git-send-email-gwshan@linux.vnet.ibm.com>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RESEND 16/16] regulator: add LM363X driver
+Date: Wed, 4 Nov 2015 13:59:11 +0000
+Message-ID: <20151104135911.GC1717@sirena.org.uk>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <1446441875-1256-17-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qbvjkv9qwOGw/5Fx"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446441875-1256-17-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SW4gY3VycmVudCBpbXBsZW1lbnRhdGlvbiwgdGhlIERNQTMyIHNlZ21lbnRzIHJlcXVpcmVkIGJ5
-IG9uZSBzcGVjaWZpYwpQRSBpc24ndCBjYWxjdWxhdGVkIHdpdGggdGhlIGluZm9ybWF0aW9uIGhv
-bGQgaW4gdGhlIFBFIGluZGVwZW5kZW50bHkuCkl0IGNvbmZsaWN0cyB3aXRoIHRoZSBQQ0kgaG90
-cGx1ZyBkZXNpZ246IFBFIGNlbnRyYWxpemVkLCBtZWFuaW5nIHRoZQpQRSdzIERNQTMyIHNlZ21l
-bnRzIHNob3VsZCBiZSBjYWxjdWxhdGVkIGZyb20gdGhlIGluZm9ybWF0aW9uIGhvbGQgaW4KdGhl
-IFBFIGluZGVwZW5kZW50bHkuCgpUaGlzIG1vdmVzIHRoZSBsb2dpYyBjYWxjdWxhdGluZyBQRSdz
-IGNvbnN1bWVkIERNQTMyIHNlZ21lbnRzIGZyb20KcG52X3BjaV9pb2RhMV9zZXR1cF9kbWEoKSB0
-byBwbnZfcGNpX2lvZGExX3NldHVwX2RtYV9wZSgpIHNvIHRoYXQgUEUncwpETUEzMiBzZWdtZW50
-cyBhcmUgY2FsY3VsYXRlZC9hbGxvY2F0ZWQgZnJvbSB0aGUgaW5mb3JtYXRpb24gaG9sZCBpbgp0
-aGUgUEUgKERNQTMyIHdlaWdodCkuIEFsc28gdGhlIGxvZ2ljIGlzIGltcHJvdmVkOiB3ZSB0cnkg
-dG8gYWxsb2NhdGUKYXMgbXVjaCBETUEzMiBzZWdtZW50cyBhcyB3ZSBjYW4uIEl0J3MgYWNjZXB0
-YWJsZSB0aGF0IG51bWJlciBvZiBETUEzMgpzZWdtZW50cyBsZXNzIHRoYW4gdGhlIGV4cGVjdGVk
-IG51bWJlciBhcmUgYWxsb2NhdGVkLgoKU2lnbmVkLW9mZi1ieTogR2F2aW4gU2hhbiA8Z3dzaGFu
-QGxpbnV4LnZuZXQuaWJtLmNvbT4KLS0tCiBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYv
-cGNpLWlvZGEuYyB8IDExOSArKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBj
-aGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspLCA2MiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9h
-cmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLWlvZGEuYyBiL2FyY2gvcG93ZXJwYy9w
-bGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jCmluZGV4IGZkYmMwMTIuLjBlNjZjNGQgMTAwNjQ0
-Ci0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jCisrKyBiL2Fy
-Y2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jCkBAIC0xODMwLDE1ICsxODMw
-LDIzIEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgcG52X3BjaV9pb2RhX3BlX2RtYV93ZWlnaHQoc3Ry
-dWN0IHBudl9pb2RhX3BlICpwZSkKIAlyZXR1cm4gd2VpZ2h0OwogfQogCitzdGF0aWMgdW5zaWdu
-ZWQgaW50IHBudl9wY2lfaW9kYV90b3RhbF9kbWFfd2VpZ2h0KHN0cnVjdCBwbnZfcGhiICpwaGIp
-Cit7CisJdW5zaWduZWQgaW50IHdlaWdodCA9IDA7CisKKwlwY2lfd2Fsa19idXMocGhiLT5ob3Nl
-LT5idXMsIHBudl9wY2lfaW9kYV9kZXZfZG1hX3dlaWdodCwgJndlaWdodCk7CisJcmV0dXJuIHdl
-aWdodDsKK30KKwogc3RhdGljIHZvaWQgcG52X3BjaV9pb2RhMV9zZXR1cF9kbWFfcGUoc3RydWN0
-IHBudl9waGIgKnBoYiwKLQkJCQkgICAgICAgc3RydWN0IHBudl9pb2RhX3BlICpwZSwKLQkJCQkg
-ICAgICAgdW5zaWduZWQgaW50IGJhc2UsCi0JCQkJICAgICAgIHVuc2lnbmVkIGludCBzZWdzKQor
-CQkJCSAgICAgICBzdHJ1Y3QgcG52X2lvZGFfcGUgKnBlKQogewogCiAJc3RydWN0IHBhZ2UgKnRj
-ZV9tZW0gPSBOVUxMOwogCXN0cnVjdCBpb21tdV90YWJsZSAqdGJsOwotCXVuc2lnbmVkIGludCB0
-Y2UzMl9zZWdzeiwgaTsKKwl1bnNpZ25lZCBpbnQgd2VpZ2h0LCB0b3RhbF93ZWlnaHQ7CisJdW5z
-aWduZWQgaW50IHRjZTMyX3NlZ3N6LCBiYXNlLCBzZWdzLCBpOworCWJvb2wgZm91bmQ7CiAJaW50
-NjRfdCByYzsKIAl2b2lkICphZGRyOwogCkBAIC0xODQ2LDEyICsxODU0LDU1IEBAIHN0YXRpYyB2
-b2lkIHBudl9wY2lfaW9kYTFfc2V0dXBfZG1hX3BlKHN0cnVjdCBwbnZfcGhiICpwaGIsCiAJLyog
-WFhYIEZJWE1FOiBQcm92aWRlIDY0LWJpdCBETUEgZmFjaWxpdGllcyAmIG5vbi00SyBUQ0UgdGFi
-bGVzIGV0Yy4uICovCiAJLyogWFhYIEZJWE1FOiBBbGxvY2F0ZSBtdWx0aS1sZXZlbCB0YWJsZXMg
-b24gUEhCMyAqLwogCisJdG90YWxfd2VpZ2h0ID0gcG52X3BjaV9pb2RhX3RvdGFsX2RtYV93ZWln
-aHQocGhiKTsKKwl3ZWlnaHQgPSBwbnZfcGNpX2lvZGFfcGVfZG1hX3dlaWdodChwZSk7CisJaWYg
-KCF0b3RhbF93ZWlnaHQgfHwgIXdlaWdodCkKKwkJcmV0dXJuOworCisJc2VncyA9ICh3ZWlnaHQg
-KiBwaGItPmlvZGEuZG1hMzJfY291bnQpIC8gdG90YWxfd2VpZ2h0OworCWlmICghc2VncykKKwkJ
-c2VncyA9IDE7CisKKwkvKgorCSAqIEFsbG9jYXRlIGNvbnRpbnVvdXMgRE1BMzIgc2VnbWVudHMu
-IFdlIGJlZ2luIHdpdGggdGhlIGV4cGVjdGVkCisJICogbnVtYmVyIG9mIHNlZ21lbnRzLiBXaXRo
-IG9uZSBtb3JlIGF0dGVtcHQsIHRoZSBudW1iZXIgb2YgRE1BMzIKKwkgKiBzZWdtZW50cyB0byBi
-ZSBhbGxvY2F0ZWQgaXMgZGVjcmVhc2VkIGJ5IG9uZSB1bnRpbCBvbmUgc2VnbWVudAorCSAqIGlz
-IGFsbG9jYXRlZCBzdWNjZXNzZnVsbHkuCisJICovCisJd2hpbGUgKHNlZ3MpIHsKKwkJZm91bmQg
-PSBmYWxzZTsKKwkJZm9yIChiYXNlID0gMDsgYmFzZSA8PSBwaGItPmlvZGEuZG1hMzJfY291bnQg
-LSBzZWdzOyBiYXNlKyspIHsKKwkJCWZvciAoaSA9IGJhc2U7IGkgPCBiYXNlICsgc2VnczsgaSsr
-KSB7CisJCQkJaWYgKHBoYi0+aW9kYS5kbWEzMl9zZWdtYXBbaV0gIT0KKwkJCQkgICAgSU9EQV9J
-TlZBTElEX1BFKQorCQkJCQlicmVhazsKKwkJCX0KKworCQkJaWYgKGkgPj0gYmFzZSArIHNlZ3Mp
-IHsKKwkJCQlmb3VuZCA9IHRydWU7CisJCQkJYnJlYWs7CisJCQl9CisJCX0KKworCQlpZiAoZm91
-bmQpCisJCQlicmVhazsKKworCQlzZWdzLS07CisJfQorCisJaWYgKCFzZWdzKSB7CisJCXBlX3dh
-cm4ocGUsICJObyBhdmFpbGFibGUgRE1BMzIgcmVzb3VyY2VcbiIpOworCQlyZXR1cm47CisJfQor
-CiAJdGJsID0gcG52X3BjaV90YWJsZV9hbGxvYyhwaGItPmhvc2UtPm5vZGUpOwogCWlvbW11X3Jl
-Z2lzdGVyX2dyb3VwKCZwZS0+dGFibGVfZ3JvdXAsIHBoYi0+aG9zZS0+Z2xvYmFsX251bWJlciwK
-IAkJCXBlLT5wZV9udW1iZXIpOwogCXBudl9wY2lfbGlua190YWJsZV9hbmRfZ3JvdXAocGhiLT5o
-b3NlLT5ub2RlLCAwLCB0YmwsICZwZS0+dGFibGVfZ3JvdXApOwogCiAJLyogR3JhYiBhIDMyLWJp
-dCBUQ0UgdGFibGUgKi8KKwlwZV9pbmZvKHBlLCAiRE1BIHdlaWdodCAlZCAoJWQpLCBhc3NpZ25l
-ZCAlZCBETUEzMiBzZWdtZW50c1xuIiwKKwkJd2VpZ2h0LCB0b3RhbF93ZWlnaHQsIHNlZ3MpOwog
-CXBlX2luZm8ocGUsICIgU2V0dGluZyB1cCAzMi1iaXQgVENFIHRhYmxlIGF0ICUwOHguLiUwOHhc
-biIsCiAJCWJhc2UgKiBQTlZfSU9EQTFfRE1BMzJfU0VHU0laRSwKIAkJKGJhc2UgKyBzZWdzKSAq
-IFBOVl9JT0RBMV9ETUEzMl9TRUdTSVpFIC0gMSk7CkBAIC0yMzYyLDY4ICsyNDEzLDEyIEBAIHN0
-YXRpYyB2b2lkIHBudl9wY2lfaW9kYTJfc2V0dXBfZG1hX3BlKHN0cnVjdCBwbnZfcGhiICpwaGIs
-CiAKIHN0YXRpYyB2b2lkIHBudl9wY2lfaW9kYTFfc2V0dXBfZG1hKHN0cnVjdCBwbnZfcGhiICpw
-aGIpCiB7Ci0Jc3RydWN0IHBjaV9jb250cm9sbGVyICpob3NlID0gcGhiLT5ob3NlOwotCXVuc2ln
-bmVkIGludCB3ZWlnaHQsIHRvdGFsX3dlaWdodCwgZG1hX3BlX2NvdW50OwotCXVuc2lnbmVkIGlu
-dCByZXNpZHVhbCwgcmVtYWluaW5nLCBzZWdzLCBiYXNlOwogCXN0cnVjdCBwbnZfaW9kYV9wZSAq
-cGU7CiAKLQl0b3RhbF93ZWlnaHQgPSAwOwotCWRtYV9wZV9jb3VudCA9IDA7Ci0JbGlzdF9mb3Jf
-ZWFjaF9lbnRyeShwZSwgJnBoYi0+aW9kYS5wZV9saXN0LCBsaXN0KSB7Ci0JCXdlaWdodCA9IHBu
-dl9wY2lfaW9kYV9wZV9kbWFfd2VpZ2h0KHBlKTsKLQkJaWYgKHdlaWdodCA+IDApCi0JCQlkbWFf
-cGVfY291bnQrKzsKLQotCQl0b3RhbF93ZWlnaHQgKz0gd2VpZ2h0OwotCX0KLQotCS8qIElmIHdl
-IGhhdmUgbW9yZSBQRSMgdGhhbiBzZWdtZW50cyBhdmFpbGFibGUsIGhhbmQgb3V0IG9uZQotCSAq
-IHBlciBQRSB1bnRpbCB3ZSBydW4gb3V0IGFuZCBsZXQgdGhlIHJlc3QgZmFpbC4gSWYgbm90LAot
-CSAqIHRoZW4gd2UgYXNzaWduIGF0IGxlYXN0IG9uZSBzZWdtZW50IHBlciBQRSwgcGx1cyBtb3Jl
-IGJhc2VkCi0JICogb24gdGhlIGFtb3VudCBvZiBkZXZpY2VzIHVuZGVyIHRoYXQgUEUKLQkgKi8K
-LQlpZiAoZG1hX3BlX2NvdW50ID4gcGhiLT5pb2RhLmRtYTMyX2NvdW50KQotCQlyZXNpZHVhbCA9
-IDA7Ci0JZWxzZQotCQlyZXNpZHVhbCA9IHBoYi0+aW9kYS5kbWEzMl9jb3VudCAtIGRtYV9wZV9j
-b3VudDsKLQotCXByX2luZm8oIlBDSTogRG9tYWluICUwNHggaGFzICVsZCBhdmFpbGFibGUgMzIt
-Yml0IERNQSBzZWdtZW50c1xuIiwKLQkJaG9zZS0+Z2xvYmFsX251bWJlciwgcGhiLT5pb2RhLmRt
-YTMyX2NvdW50KTsKLQlwcl9pbmZvKCJQQ0k6ICVkIFBFIyBmb3IgYSB0b3RhbCB3ZWlnaHQgb2Yg
-JWRcbiIsCi0JCWRtYV9wZV9jb3VudCwgdG90YWxfd2VpZ2h0KTsKLQogCXBudl9wY2lfaW9kYV9z
-ZXR1cF9vcGFsX3RjZV9raWxsKHBoYik7CiAKLQkvKiBXYWxrIG91ciBQRSBsaXN0IGFuZCBjb25m
-aWd1cmUgdGhlaXIgRE1BIHNlZ21lbnRzLCBoYW5kIHRoZW0KLQkgKiBvdXQgb25lIGJhc2Ugc2Vn
-bWVudCBwbHVzIGFueSByZXNpZHVhbCBzZWdtZW50cyBiYXNlZCBvbgotCSAqIHdlaWdodAotCSAq
-LwotCXJlbWFpbmluZyA9IHBoYi0+aW9kYS5kbWEzMl9jb3VudDsKLQliYXNlID0gMDsKLQlsaXN0
-X2Zvcl9lYWNoX2VudHJ5KHBlLCAmcGhiLT5pb2RhLnBlX2xpc3QsIGxpc3QpIHsKLQkJd2VpZ2h0
-ID0gcG52X3BjaV9pb2RhX3BlX2RtYV93ZWlnaHQocGUpOwotCQlpZiAoIXdlaWdodCkKLQkJCWNv
-bnRpbnVlOwotCi0JCWlmICghcmVtYWluaW5nKSB7Ci0JCQlwZV93YXJuKHBlLCAiTm8gRE1BMzIg
-cmVzb3VyY2VzIGF2YWlsYWJsZVxuIik7Ci0JCQljb250aW51ZTsKLQkJfQotCQlzZWdzID0gMTsK
-LQkJaWYgKHJlc2lkdWFsKSB7Ci0JCQlzZWdzICs9ICgod2VpZ2h0ICogcmVzaWR1YWwpICArICh0
-b3RhbF93ZWlnaHQgLyAyKSkgLwotCQkJCXRvdGFsX3dlaWdodDsKLQkJCWlmIChzZWdzID4gcmVt
-YWluaW5nKQotCQkJCXNlZ3MgPSByZW1haW5pbmc7Ci0JCX0KLQotCQlwZV9pbmZvKHBlLCAiRE1B
-IHdlaWdodCAlZCwgYXNzaWduZWQgJWQgRE1BMzIgc2VnbWVudHNcbiIsCi0JCQl3ZWlnaHQsIHNl
-Z3MpOwotCQlwbnZfcGNpX2lvZGExX3NldHVwX2RtYV9wZShwaGIsIHBlLCBiYXNlLCBzZWdzKTsK
-LQotCQlyZW1haW5pbmcgLT0gc2VnczsKLQkJYmFzZSArPSBzZWdzOwotCX0KKwlsaXN0X2Zvcl9l
-YWNoX2VudHJ5KHBlLCAmcGhiLT5pb2RhLnBlX2xpc3QsIGxpc3QpCisJCXBudl9wY2lfaW9kYTFf
-c2V0dXBfZG1hX3BlKHBoYiwgcGUpOwogfQogCiBzdGF0aWMgdm9pZCBwbnZfcGNpX2lvZGEyX3Nl
-dHVwX2RtYShzdHJ1Y3QgcG52X3BoYiAqcGhiKQotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QK
-TGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
-c3RpbmZvL2xpbnV4cHBjLWRldg==
+
+--Qbvjkv9qwOGw/5Fx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Nov 02, 2015 at 02:24:35PM +0900, Milo Kim wrote:
+
+This looks mostly good, just a few fairly small things:
+
+> +lm363x_regulator_of_get_init_data(struct device *dev,
+> +			struct lm363x_regulator *lm363x_regulator, int id)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	int count;
+> +
+> +	count = of_regulator_match(dev, np, &lm363x_regulator_matches[id], 1);
+> +	if (count <= 0)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return lm363x_regulator_matches[id].init_data;
+> +}
+
+Don't open code DT matching, use of_match in the regulator_desc and let
+the core do it for you.
+
+> +	/*
+> +	 * Check LCM_EN1/2_GPIO is configured.
+> +	 * Those pins are used for enabling VPOS/VNEG LDOs.
+> +	 */
+> +	if (id == LM3632_LDO_POS)
+> +		gpio = of_get_named_gpio(np, "ti,lcm-en1-gpio", 0);
+> +	else if (id == LM3632_LDO_NEG)
+> +		gpio = of_get_named_gpio(np, "ti,lcm-en2-gpio", 0);
+
+This looks like it should be a switch statement.
+
+> +	rdev = regulator_register(&lm363x_regulator_desc[id], &cfg);
+> +	if (IS_ERR(rdev)) {
+
+Use devm_regulator_register().
+
+> +static const struct of_device_id lm363x_regulator_of_match[] = {
+> +	{ .compatible = "ti,lm363x-regulator" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, lm363x_regulator_of_match);
+
+You shouldn't need a compatible string for a device like this, the MFD
+should just register a platform device based on the compatible string
+for the MFD.
+
+--Qbvjkv9qwOGw/5Fx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWOg8uAAoJECTWi3JdVIfQahQH/RcbMR6g3gAcvApQiYSNMn0p
+AesBCEMUjNBQvyokVRnAg2KVJVgUX98YTwGa+g04igD5vEz04ji6MAefSz944m5T
+SmElpGN4ZU4jKOCaFNwOHf+RCSee7/K/iQPYd3UyUJ1djL3U798uso34yrRd6L2s
+dR24lfWG2+CoSZuTw1xTeVemtdvZAbsO6BWVmJICUIzGZ3QXewAPJOdEkUXAs2LH
+4Rng3M4H8LQLSOFTMijC5QMKkIBinu9r8U+gY68aU1hyzbK+ZzKVAYZYJWJbyu6/
+6s3H/iLZNfpyS8luMTAqpXbvwAmSlh+GEY1nFFne+g+Xa4WaOP/z00usFerisLM=
+=KV7e
+-----END PGP SIGNATURE-----
+
+--Qbvjkv9qwOGw/5Fx--
