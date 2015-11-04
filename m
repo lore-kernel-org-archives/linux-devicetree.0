@@ -1,34 +1,59 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun7i: Enable audio codec on
- pcDuino
-Date: Wed, 4 Nov 2015 10:15:55 +0100
-Message-ID: <5639CCCB.9050700@redhat.com>
-References: <1446565640-21069-1-git-send-email-hdegoede@redhat.com>
- <jwvsi4mo5al.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 2/2] drivers/gpio: Port gpio driver to layerscape
+ platform
+Date: Wed, 4 Nov 2015 03:17:38 -0600
+Message-ID: <1446628658.12676.14.camel@freescale.com>
+References: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com>
+	 <1446619704-27669-2-git-send-email-Gang.Liu@freescale.com>
+	 <4040829.fHtCUjX87j@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <jwvsi4mo5al.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4040829.fHtCUjX87j@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Liu Gang <Gang.Liu@freescale.com>, robh+dt@kernel.org, linus.walleij@linaro.org, shawnguo@kernel.org, devicetree@vger.kernel.org, R58472@freescale.com, Shaveta Leekha <shaveta@freescale.com>, b07421@freescale.com, bhupesh.sharma@freescale.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Wed, 2015-11-04 at 09:53 +0100, Arnd Bergmann wrote:
+> On Wednesday 04 November 2015 14:48:24 Liu Gang wrote:
+> > 
+> > +static bool gpio_little_endian;
+> > +static inline u32 gpio_in32(void __iomem *addr)
+> > +{
+> > +   u32 val;
+> > +
+> > +   if (gpio_little_endian)
+> > +           val = ioread32(addr);
+> > +   else
+> > +           val = ioread32be(addr);
+> > +
+> > +   return val;
+> > +}
+> > +
+> > +static inline void gpio_out32(u32 val, void __iomem *addr)
+> > +{
+> > +   if (gpio_little_endian)
+> > +           iowrite32(val, addr);
+> > +   else
+> > +           iowrite32be(val, addr);
+> > +}
+> 
+> I guess this is fixed per architecture, so you could also do this as
+> 
+> static inline void gpio_out32(u32 val, void __iomem *addr)
+> {
+>       if (IS_ENABLED(CONFIG_ARM))
+>               iowrite32(val, addr);
+>       else if (IS_ENABLED(CONFIG_PPC)
+>               iowrite32be(val, addr);
+>       else
+>               BUG();
+> }
 
-On 04-11-15 03:43, Stefan Monnier wrote:
-> BTW, I've been using successfully the same additions in
-> sun7i-a20-bananapi.dts and sun7i-a20-orangepi-mini.dts.
+Unfortunately that guess is wrong.  Some of our ARM chips have big-endian I/O 
+and some have little-endian I/O.
 
-Can you please turn these additions into proper patches,
-and send 2 separate patches for these with S-o-b lines
-in the commit msg, using git send-email to send the patches ?
+-Scott
 
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
