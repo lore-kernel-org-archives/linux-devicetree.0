@@ -1,77 +1,71 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v7] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 4 Nov 2015 06:38:45 +0000
-Message-ID: <8520D5D51A55D047800579B09414719801693C20@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1446564227-4704-1-git-send-email-bharatku@xilinx.com>
- <5638DE62.6050605@arm.com>
+From: Liu Gang <Gang.Liu@freescale.com>
+Subject: [PATCH 1/2] ls2080a/dts: Add little endian property for GPIO IP block
+Date: Wed, 4 Nov 2015 14:48:23 +0800
+Message-ID: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5638DE62.6050605@arm.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, linus.walleij@linaro.org, arnd@arndb.de, shawnguo@kernel.org
+Cc: bhupesh.sharma@freescale.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b07421@freescale.com, R58472@freescale.com, Gang.Liu@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-> > +static struct msi_domain_info nwl_msi_domain_info = {
-> > +	.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
-> MSI_FLAG_USE_DEF_CHIP_OPS |
-> > +		  MSI_FLAG_MULTI_PCI_MSI),
-> 
-> If you're supporting multi-MSI, how do you ensure that all hwirqs are
-> contiguous as required by the spec? Clearly, your allocator doesn't provide
-> this guarantee.
-> 
-Oh ok, then how can we know if one EP is requesting for multiple irq's, because in pci_enable_msi_range,
- it does do while loop according to msi_capability_init return value 
-which in turn requests for multiple irq's. Is there any way to find out when single EP requesting for multiple MSI?
+The GPIO block for ls2080a platform has little endian registers,
+the GPIO driver needs this property to read/write registers by
+right interface.
 
-> Also, you still lack support for MSI-X (which would come for free...).
+Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
 
-We don't support MSI-X in root port mode.
-> 
-> > +	.chip = &nwl_msi_irq_chip,
-> > +};
-> > +#endif
-> > +
-> > +	irq_domain_remove(pcie->legacy_irq_domain);
-> > +
-> > +#ifdef CONFIG_PCI_MSI
-> > +	irq_set_chained_handler_and_data(msi->irq_msi0, NULL, NULL);
-> > +	irq_set_chained_handler_and_data(msi->irq_msi1, NULL, NULL);
-> > +
-> > +	irq_domain_remove(msi->msi_domain);
-> > +	irq_domain_remove(msi->dev_domain);
-> > +#endif
-> > +
-> > +}
-> 
-> Remove these #ifdefs. You can test the validity of these fields before calling
-> the various functions. You can also move this to a separate function.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+index f2455c5..c836dab 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+@@ -10,6 +10,9 @@ Required properties:
+   the second cell is used to specify the gpio polarity:
+       0 = active high
+       1 = active low
++- little-endian : Should be set if the GPIO has little endian
++		  registers. No the property means the GPIO
++		  registers are big endian mode.
+ 
+ Example:
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index f3c59f9..41bb8c1 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -277,6 +277,7 @@
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <0 36 0x4>; /* Level high type */
+ 			gpio-controller;
++			little-endian;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -287,6 +288,7 @@
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <0 36 0x4>; /* Level high type */
+ 			gpio-controller;
++			little-endian;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -297,6 +299,7 @@
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <0 37 0x4>; /* Level high type */
+ 			gpio-controller;
++			little-endian;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -307,6 +310,7 @@
+ 			reg = <0x0 0x2330000 0x0 0x10000>;
+ 			interrupts = <0 37 0x4>; /* Level high type */
+ 			gpio-controller;
++			little-endian;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-- 
+2.1.0.27.g96db324
 
-Without #ifdefs if we compile driver for legacy, MSI structures will not be available and we get compile time error.
-> 
-> > +
-> > +	/* setup AFI/FPCI range */
-> > +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> > +	base = virt_to_phys((void *)msi->pages);
-> > +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
-> > +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
-> 
-> I just read this, and I'm puzzled. Actually, puzzled is an understatement. Why
-> on Earth do you need to give RAM to your MSI HW?
-> This should be a device, not RAM. By the look of it, this could be absolutely
-> anything. Are you sure you have to supply RAM here?
-> 
-This is required in our hardware, so that bridge identifies incoming MWr as MSI.
-> > +
-> > +	/* Disable high range msi interrupts */
-> > +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_HI_MASK,
-> > +MSGF_MSI_MASK_HI);
-> > +
-> > +
-
-Bharat
