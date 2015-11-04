@@ -1,50 +1,32 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
- the eDMA3
-Date: Wed, 4 Nov 2015 10:49:53 +0200
-Message-ID: <5639C6B1.10105@ti.com>
-References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
- <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
- <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw@mail.gmail.com>
- <20151102100405.GJ21326@localhost> <5637534D.2020304@ti.com>
- <20151102154057.GQ21326@localhost> <5637853D.8040306@ti.com>
- <20151104083710.GK12910@localhost>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Wed, 04 Nov 2015 08:52:51 +0000
+Message-ID: <5639C763.7000707@arm.com>
+References: <1446564227-4704-1-git-send-email-bharatku@xilinx.com>	<5638DE62.6050605@arm.com>	<8520D5D51A55D047800579B09414719801693C20@XAP-PVEXMBX01.xlnx.xilinx.com> <CABHD4K_BWU7-c1NM0y5ZwFkfpG0+c9_9DpwyNXNcTvavmy8rJw@mail.gmail.com> <8520D5D51A55D047800579B09414719801693C5C@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151104083710.GK12910@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Olof Johansson <olof@lixom.net>, Sekhar Nori <nsekhar@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Robert Schwebel <r.schwebel@pengutronix.de>, "arm@kernel.org" <arm@kernel.org>, "Kristo, Tero" <t-kristo@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <8520D5D51A55D047800579B09414719801693C5C@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Amit Tomer <amittomer25@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/2015 10:37 AM, Vinod Koul wrote:
-> On Mon, Nov 02, 2015 at 05:46:05PM +0200, Peter Ujfalusi wrote:
->>> Okay I have reverted the two and applied the edma patch sent, can y=
-ou please
->>> verify topic/edma_fix before I merge it and send my PULL request.
+On 04/11/15 07:54, Bharat Kumar Gogada wrote:
+>>> Without #ifdefs if we compile driver for legacy, MSI structures will not be
+>> available and we get compile time error.
 >>
->> The branch looks good. Thank you!
->> It would have been great if the DTS changes for am335x/am437x would =
-have been
->> in 4.4, but I will send them for 4.5 after rc1 is out.
->=20
-> Any confirmation that this fixes the reported issue before I send pul=
-l
-> request?
+>> Sorry for nitpicking but at least can we use elegant version of #ifdefs .i.e. #if
+>> IS_ENABLED() here ?
+>>
+> Since IS_ENABLED() is checked at runtime, compile time error would come for legacy.
 
-Patch 'dmaengine: edma: Add dummy driver skeleton for edma3-tptc' alone=
- is
-fixing the issue:
-https://lkml.org/lkml/2015/11/2/297
+You're seriously misguided. IS_ENABLED() is specifically designed *not*
+to be checked at runtime, but instead to use the compiler optimization
+phase to get rid of code sections at compile time.
 
-I have tested it on: OMAP-L138-EVM, am335x-evmsk, am437x-gp-evm, dra7-e=
-vm (I
-have local patches to enable and use eDMA).
-All looks fine, mmc/audio works and they use eDMA.
-
-Olof: can you run a quick test with the linked patch?
-
-Thank you,
-P=E9ter
+	M.
+-- 
+Jazz is not dead. It just smells funny...
