@@ -1,194 +1,150 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 40/50] powerpc/powernv: Support PCI slot ID
-Date: Thu,  5 Nov 2015 00:12:40 +1100
-Message-ID: <1446642770-4681-41-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v7 19/50] powerpc/powernv: Track DMA32 segment consumption
+Date: Thu,  5 Nov 2015 00:12:19 +1100
+Message-ID: <1446642770-4681-20-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PowerNV platforms runs on top of skiboot firmware that includes
-changes to support PCI slots. PCI slots are identified by PHB's
-ID or the combo of that and PCI slot ID.
+Similar to the mechanism tracking consumed IO/M32/M64 segments,
+this introduces an array for each PHB to track the consumed DMA32
+segments, which are going to be released on PCI unplugging time.
+The index of the array is the DMA32 segment number while the value
+stored in the element is the assigned PE number.
 
-This changes the EEH PowerNV backend to support PCI slots:
-
-   * Rename arguments of opal_pci_reset() and opal_pci_poll().
-   * One more argument (PCI slot's state) added to opal_pci_poll().
-   * Drop pnv_eeh_phb_poll() and introduce a enhanced similar
-     function pnv_pci_poll() that will be used by PowerNV hotplug
-     backends.
-
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/include/asm/opal.h              |  4 +--
- arch/powerpc/platforms/powernv/eeh-powernv.c | 42 ++++++----------------------
- arch/powerpc/platforms/powernv/pci.c         | 21 ++++++++++++++
- arch/powerpc/platforms/powernv/pci.h         |  1 +
- 4 files changed, 32 insertions(+), 36 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 30 +++++++++++++++++++++---------
+ arch/powerpc/platforms/powernv/pci.h      |  7 ++++---
+ 2 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 8001159..11ee20e 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -130,7 +130,7 @@ int64_t opal_pci_map_pe_dma_window(uint64_t phb_id, uint16_t pe_number, uint16_t
- int64_t opal_pci_map_pe_dma_window_real(uint64_t phb_id, uint16_t pe_number,
- 					uint16_t dma_window_number, uint64_t pci_start_addr,
- 					uint64_t pci_mem_size);
--int64_t opal_pci_reset(uint64_t phb_id, uint8_t reset_scope, uint8_t assert_state);
-+int64_t opal_pci_reset(uint64_t id, uint8_t reset_scope, uint8_t assert_state);
- 
- int64_t opal_pci_get_hub_diag_data(uint64_t hub_id, void *diag_buffer,
- 				   uint64_t diag_buffer_len);
-@@ -147,7 +147,7 @@ int64_t opal_get_dpo_status(__be64 *dpo_timeout);
- int64_t opal_set_system_attention_led(uint8_t led_action);
- int64_t opal_pci_next_error(uint64_t phb_id, __be64 *first_frozen_pe,
- 			    __be16 *pci_error_type, __be16 *severity);
--int64_t opal_pci_poll(uint64_t phb_id);
-+int64_t opal_pci_poll(uint64_t id, uint8_t *state);
- int64_t opal_return_cpu(void);
- int64_t opal_check_token(uint64_t token);
- int64_t opal_reinit_cpus(uint64_t flags);
-diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-index ab8b93e..e533535 100644
---- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-@@ -729,28 +729,11 @@ static int pnv_eeh_get_state(struct eeh_pe *pe, int *delay)
- 	return ret;
- }
- 
--static s64 pnv_eeh_phb_poll(struct pnv_phb *phb)
--{
--	s64 rc = OPAL_HARDWARE;
--
--	while (1) {
--		rc = opal_pci_poll(phb->opal_id);
--		if (rc <= 0)
--			break;
--
--		if (system_state < SYSTEM_RUNNING)
--			udelay(1000 * rc);
--		else
--			msleep(rc);
--	}
--
--	return rc;
--}
--
- int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
- {
- 	struct pnv_phb *phb = hose->private_data;
- 	s64 rc = OPAL_HARDWARE;
-+	int ret;
- 
- 	pr_debug("%s: Reset PHB#%x, option=%d\n",
- 		 __func__, hose->global_number, option);
-@@ -765,8 +748,6 @@ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
- 		rc = opal_pci_reset(phb->opal_id,
- 				    OPAL_RESET_PHB_COMPLETE,
- 				    OPAL_DEASSERT_RESET);
--	if (rc < 0)
--		goto out;
- 
- 	/*
- 	 * Poll state of the PHB until the request is done
-@@ -774,24 +755,22 @@ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
- 	 * reset followed by hot reset on root bus. So we also
- 	 * need the PCI bus settlement delay.
- 	 */
--	rc = pnv_eeh_phb_poll(phb);
--	if (option == EEH_RESET_DEACTIVATE) {
-+	ret = pnv_pci_poll(phb->opal_id, rc, NULL);
-+	if (option == EEH_RESET_DEACTIVATE && !ret) {
- 		if (system_state < SYSTEM_RUNNING)
- 			udelay(1000 * EEH_PE_RST_SETTLE_TIME);
- 		else
- 			msleep(EEH_PE_RST_SETTLE_TIME);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 20ebe6e..fdbc012 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1885,6 +1885,10 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+ 		}
  	}
--out:
--	if (rc != OPAL_SUCCESS)
--		return -EIO;
  
--	return 0;
-+	return ret;
- }
++	/* Setup TCE32 segment mapping */
++	for (i = base; i < base + segs; i++)
++		phb->ioda.dma32_segmap[i] = pe->pe_number;
++
+ 	/* Setup linux iommu table */
+ 	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
+ 				  base * PNV_IODA1_DMA32_SEGSIZE,
+@@ -2378,13 +2382,13 @@ static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
+ 	 * then we assign at least one segment per PE, plus more based
+ 	 * on the amount of devices under that PE
+ 	 */
+-	if (dma_pe_count > phb->ioda.tce32_count)
++	if (dma_pe_count > phb->ioda.dma32_count)
+ 		residual = 0;
+ 	else
+-		residual = phb->ioda.tce32_count - dma_pe_count;
++		residual = phb->ioda.dma32_count - dma_pe_count;
  
- static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
+ 	pr_info("PCI: Domain %04x has %ld available 32-bit DMA segments\n",
+-		hose->global_number, phb->ioda.tce32_count);
++		hose->global_number, phb->ioda.dma32_count);
+ 	pr_info("PCI: %d PE# for a total weight of %d\n",
+ 		dma_pe_count, total_weight);
+ 
+@@ -2394,7 +2398,7 @@ static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
+ 	 * out one base segment plus any residual segments based on
+ 	 * weight
+ 	 */
+-	remaining = phb->ioda.tce32_count;
++	remaining = phb->ioda.dma32_count;
+ 	base = 0;
+ 	list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+ 		weight = pnv_pci_ioda_pe_dma_weight(pe);
+@@ -3094,7 +3098,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
  {
- 	struct pnv_phb *phb = hose->private_data;
- 	s64 rc = OPAL_HARDWARE;
-+	int ret;
+ 	struct pci_controller *hose;
+ 	struct pnv_phb *phb;
+-	unsigned long size, m64map_off, m32map_off, pemap_off, iomap_off = 0;
++	unsigned long size, m64map_off, m32map_off, pemap_off;
++	unsigned long iomap_off = 0, dma32map_off = 0;
+ 	const __be64 *prop64;
+ 	const __be32 *prop32;
+ 	int i, len;
+@@ -3177,6 +3182,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	phb->ioda.io_segsize = phb->ioda.io_size / phb->ioda.total_pe_num;
+ 	phb->ioda.io_pci_base = 0; /* XXX calculate this ? */
  
- 	pr_debug("%s: Reset PHB#%x, option=%d\n",
- 		 __func__, hose->global_number, option);
-@@ -813,18 +792,13 @@ static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
- 		rc = opal_pci_reset(phb->opal_id,
- 				    OPAL_RESET_PCI_HOT,
- 				    OPAL_DEASSERT_RESET);
--	if (rc < 0)
--		goto out;
- 
- 	/* Poll state of the PHB until the request is done */
--	rc = pnv_eeh_phb_poll(phb);
--	if (option == EEH_RESET_DEACTIVATE)
-+	ret = pnv_pci_poll(phb->opal_id, rc, NULL);
-+	if (option == EEH_RESET_DEACTIVATE && !ret)
- 		msleep(EEH_PE_RST_SETTLE_TIME);
--out:
--	if (rc != OPAL_SUCCESS)
--		return -EIO;
- 
--	return 0;
-+	return ret;
- }
- 
- static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index d8832ea..ae0f0c1 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -44,6 +44,27 @@
- #define cfg_dbg(fmt...)	do { } while(0)
- //#define cfg_dbg(fmt...)	printk(fmt)
- 
-+int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state)
-+{
-+	while (rval > 0) {
-+		if (system_state < SYSTEM_RUNNING)
-+			udelay(1000 * rval);
-+		else
-+			msleep(rval);
++	/* Calculate how many 32-bit TCE segments we have */
++	phb->ioda.dma32_count = phb->ioda.m32_pci_base /
++				PNV_IODA1_DMA32_SEGSIZE;
 +
-+		rval = opal_pci_poll(id, state);
-+	}
+ 	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
+ 	size = _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
+ 	m64map_off = size;
+@@ -3186,6 +3195,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	if (phb->type == PNV_PHB_IODA1) {
+ 		iomap_off = size;
+ 		size += phb->ioda.total_pe_num * sizeof(phb->ioda.io_segmap[0]);
++		dma32map_off = size;
++		size += phb->ioda.dma32_count *
++			sizeof(phb->ioda.dma32_segmap[0]);
+ 	}
+ 	pemap_off = size;
+ 	size += phb->ioda.total_pe_num * sizeof(struct pnv_ioda_pe);
+@@ -3201,6 +3213,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 		phb->ioda.io_segmap = aux + iomap_off;
+ 		for (i = 0; i < phb->ioda.total_pe_num; i++)
+ 			phb->ioda.io_segmap[i] = IODA_INVALID_PE;
 +
-+	/*
-+	 * The caller expects to retrieve additional
-+	 * information if the last argument isn't NULL.
-+	 */
-+	if (rval == OPAL_SUCCESS && state)
-+		rval = opal_pci_poll(id, state);
-+
-+	return (rval == OPAL_SUCCESS) ? 0 : -EIO;
-+}
-+
- #ifdef CONFIG_PCI_MSI
- int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
- {
++		phb->ioda.dma32_segmap = aux + dma32map_off;
++		for (i = 0; i < phb->ioda.dma32_count; i++)
++			phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
+ 	}
+ 	phb->ioda.pe_array = aux + pemap_off;
+ 	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
+@@ -3208,10 +3224,6 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	INIT_LIST_HEAD(&phb->ioda.pe_list);
+ 	mutex_init(&phb->ioda.pe_list_mutex);
+ 
+-	/* Calculate how many 32-bit TCE segments we have */
+-	phb->ioda.tce32_count = phb->ioda.m32_pci_base /
+-				PNV_IODA1_DMA32_SEGSIZE;
+-
+ #if 0 /* We should really do that ... */
+ 	rc = opal_pci_set_phb_mem_window(opal->phb_id,
+ 					 window_type,
 diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 3bb10de..30b0bfc 100644
+index 2038ef2..0802fcd 100644
 --- a/arch/powerpc/platforms/powernv/pci.h
 +++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -195,6 +195,7 @@ extern int pnv_tce_xchg(struct iommu_table *tbl, long index,
- 		unsigned long *hpa, enum dma_data_direction *direction);
- extern unsigned long pnv_tce_get(struct iommu_table *tbl, long index);
+@@ -148,6 +148,10 @@ struct pnv_phb {
+ 			int			*m32_segmap;
+ 			int			*io_segmap;
  
-+int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state);
- void pnv_pci_dump_phb_diag_data(struct pci_controller *hose,
- 				unsigned char *log_buff);
- int pnv_pci_cfg_read(struct pci_dn *pdn,
++			/* DMA32 segment maps - IODA1 only */
++			unsigned long		dma32_count;
++			int			*dma32_segmap;
++
+ 			/* IRQ chip */
+ 			int			irq_chip_init;
+ 			struct irq_chip		irq_chip;
+@@ -164,9 +168,6 @@ struct pnv_phb {
+ 			 */
+ 			unsigned char		pe_rmap[0x10000];
+ 
+-			/* 32-bit TCE tables allocation */
+-			unsigned long		tce32_count;
+-
+ 			/* TCE cache invalidate registers (physical and
+ 			 * remapped)
+ 			 */
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
