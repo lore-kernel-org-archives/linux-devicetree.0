@@ -1,300 +1,76 @@
-From: Liu Gang <Gang.Liu@freescale.com>
-Subject: [PATCH 2/2] drivers/gpio: Port gpio driver to layerscape platform
-Date: Wed, 4 Nov 2015 14:48:24 +0800
-Message-ID: <1446619704-27669-2-git-send-email-Gang.Liu@freescale.com>
-References: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] Documentation: dt: Add bindings for Secure-only devices
+Date: Tue, 03 Nov 2015 23:04:48 -0800
+Message-ID: <5639AE10.5090500@gmail.com>
+References: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
+ <CAL_JsqJz+w2SYEBLVGdZNS6J1tmt5VWV0q1G_Z2rgFfch6J=2A@mail.gmail.com>
+ <CAFEAcA8qgFFhrmXePtO_xQx=YEHK8dSA-1SacR5NsQWSNTwj-w@mail.gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: robh+dt@kernel.org, linus.walleij@linaro.org, arnd@arndb.de, shawnguo@kernel.org
-Cc: bhupesh.sharma@freescale.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b07421@freescale.com, R58472@freescale.com, Gang.Liu@freescale.com, Shaveta Leekha <shaveta@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFEAcA8qgFFhrmXePtO_xQx=YEHK8dSA-1SacR5NsQWSNTwj-w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Maydell <peter.maydell@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Christoffer Dall <christoffer.dall@linaro.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Layerscape has the same ip block/controller as
-GPIO on powerpc platform(MPC8XXX).
+On 10/30/2015 1:07 PM, Peter Maydell wrote:
+> On 30 October 2015 at 18:28, Rob Herring <robh+dt@kernel.org> wrote:
+>> On Thu, Oct 29, 2015 at 9:01 AM, Peter Maydell <peter.maydell@linaro.org> wrote:
+>>> +Valid Secure world properties:
+>>> +
+>>> +- secure-status : specifies whether the device is present and usable
+>>> +  in the secure world. The combination of this with "status" allows
+>>> +  the various possible combinations of device visibility to be
+>>> +  specified:
+>>> +   status = "okay";                             // visible in S and NS
+>>
+>> I assume neither property present or both okay also mean the same.
+>>
+>> status = "okay"; secure-status = "okay";
+>>
+>> We should be explicit.
+> 
+> Yes; status defaults to "okay" (presumably this is listed in
+> the overal DT binding spec somewhere), 
 
-So use portable i/o accessors, as in_be32/out_be32
-accessors are Power architecture specific whereas
-ioread32/iowrite32 and ioread32be/iowrite32be are
-available in other architectures.
+Valid values for the "status" property do not seem to be well documented
+for Linux.
 
-Layerscape GPIO controller's registers may be big
-or little endian, so the code needs to get the
-endian property from DTB, then make additional
-functions to fit right register read/write
-operations.
+The code, __of_device_is_available(), implements:
 
-Currently the code can support ls2080a GPIO with
-little endian registers. And it can also work well
-on other layerscape platform with big endian GPIO
-registers.
+  value of "okay"  returns true
+  value of "ok"    returns true
+  status property does not exist returns true (thus defaults to true)
 
-Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
-Signed-off-by: Shaveta Leekha <shaveta@freescale.com>
+  anything else returns false.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8949b3f..c3ca283 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -290,12 +290,12 @@ config GPIO_MPC5200
- 	depends on PPC_MPC52xx
- 
- config GPIO_MPC8XXX
--	bool "MPC512x/MPC8xxx GPIO support"
-+	bool "MPC512x/MPC8xxx/QorIQ GPIO support"
- 	depends on PPC_MPC512x || PPC_MPC831x || PPC_MPC834x || PPC_MPC837x || \
--		   FSL_SOC_BOOKE || PPC_86xx
-+		   FSL_SOC_BOOKE || PPC_86xx || ARCH_LAYERSCAPE
- 	help
- 	  Say Y here if you're going to use hardware that connects to the
--	  MPC512x/831x/834x/837x/8572/8610 GPIOs.
-+	  MPC512x/831x/834x/837x/8572/8610/QorIQ GPIOs.
- 
- config GPIO_MSM_V2
- 	tristate "Qualcomm MSM GPIO v2"
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 48ef368..eb7a1ca 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -1,5 +1,5 @@
- /*
-- * GPIOs on MPC512x/8349/8572/8610 and compatible
-+ * GPIOs on MPC512x/8349/8572/8610/QorIQ and compatible
-  *
-  * Copyright (C) 2008 Peter Korsgaard <jacmet@sunsite.dk>
-  *
-@@ -19,6 +19,7 @@
- #include <linux/gpio.h>
- #include <linux/slab.h>
- #include <linux/irq.h>
-+#include <linux/irqdomain.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -44,6 +45,27 @@ struct mpc8xxx_gpio_chip {
- 	const void *of_dev_id_data;
- };
- 
-+static bool gpio_little_endian;
-+static inline u32 gpio_in32(void __iomem *addr)
-+{
-+	u32 val;
-+
-+	if (gpio_little_endian)
-+		val = ioread32(addr);
-+	else
-+		val = ioread32be(addr);
-+
-+	return val;
-+}
-+
-+static inline void gpio_out32(u32 val, void __iomem *addr)
-+{
-+	if (gpio_little_endian)
-+		iowrite32(val, addr);
-+	else
-+		iowrite32be(val, addr);
-+}
-+
- static inline u32 mpc8xxx_gpio2mask(unsigned int gpio)
- {
- 	return 1u << (MPC8XXX_GPIO_PINS - 1 - gpio);
-@@ -59,9 +81,17 @@ static void mpc8xxx_gpio_save_regs(struct of_mm_gpio_chip *mm)
- {
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc = to_mpc8xxx_gpio_chip(mm);
- 
--	mpc8xxx_gc->data = in_be32(mm->regs + GPIO_DAT);
-+	mpc8xxx_gc->data = gpio_in32(mm->regs + GPIO_DAT);
- }
- 
-+/* Generic set and clear bits accessor ports */
-+#define bgpio_setbits32(_addr, _v) \
-+		gpio_out32(gpio_in32(_addr) |  (_v), (_addr))
-+#define bgpio_clrbits32(_addr, _v) \
-+		gpio_out32(gpio_in32(_addr) & ~(_v), (_addr))
-+#define bgpio_clrsetbits32(addr, clear, set) \
-+		gpio_out32((gpio_in32(addr) & ~(clear)) | (set), (addr))
-+
- /* Workaround GPIO 1 errata on MPC8572/MPC8536. The status of GPIOs
-  * defined as output cannot be determined by reading GPDAT register,
-  * so we use shadow data register instead. The status of input pins
-@@ -74,9 +104,9 @@ static int mpc8572_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc = to_mpc8xxx_gpio_chip(mm);
- 	u32 out_mask, out_shadow;
- 
--	out_mask = in_be32(mm->regs + GPIO_DIR);
-+	out_mask = gpio_in32(mm->regs + GPIO_DIR);
- 
--	val = in_be32(mm->regs + GPIO_DAT) & ~out_mask;
-+	val = gpio_in32(mm->regs + GPIO_DAT) & ~out_mask;
- 	out_shadow = mpc8xxx_gc->data & out_mask;
- 
- 	return (val | out_shadow) & mpc8xxx_gpio2mask(gpio);
-@@ -86,7 +116,7 @@ static int mpc8xxx_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- {
- 	struct of_mm_gpio_chip *mm = to_of_mm_gpio_chip(gc);
- 
--	return in_be32(mm->regs + GPIO_DAT) & mpc8xxx_gpio2mask(gpio);
-+	return gpio_in32(mm->regs + GPIO_DAT) & mpc8xxx_gpio2mask(gpio);
- }
- 
- static void mpc8xxx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
-@@ -102,7 +132,7 @@ static void mpc8xxx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	else
- 		mpc8xxx_gc->data &= ~mpc8xxx_gpio2mask(gpio);
- 
--	out_be32(mm->regs + GPIO_DAT, mpc8xxx_gc->data);
-+	gpio_out32(mpc8xxx_gc->data, mm->regs + GPIO_DAT);
- 
- 	raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- }
-@@ -128,7 +158,7 @@ static void mpc8xxx_gpio_set_multiple(struct gpio_chip *gc,
- 		}
- 	}
- 
--	out_be32(mm->regs + GPIO_DAT, mpc8xxx_gc->data);
-+	gpio_out32(mpc8xxx_gc->data, mm->regs + GPIO_DAT);
- 
- 	raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- }
-@@ -141,7 +171,7 @@ static int mpc8xxx_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- 
- 	raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
- 
--	clrbits32(mm->regs + GPIO_DIR, mpc8xxx_gpio2mask(gpio));
-+	bgpio_clrbits32(mm->regs + GPIO_DIR, mpc8xxx_gpio2mask(gpio));
- 
- 	raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 
-@@ -158,7 +188,7 @@ static int mpc8xxx_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val
- 
- 	raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
- 
--	setbits32(mm->regs + GPIO_DIR, mpc8xxx_gpio2mask(gpio));
-+	bgpio_setbits32(mm->regs + GPIO_DIR, mpc8xxx_gpio2mask(gpio));
- 
- 	raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 
-@@ -201,7 +231,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	struct of_mm_gpio_chip *mm = &mpc8xxx_gc->mm_gc;
- 	unsigned int mask;
- 
--	mask = in_be32(mm->regs + GPIO_IER) & in_be32(mm->regs + GPIO_IMR);
-+	mask = gpio_in32(mm->regs + GPIO_IER)
-+		& gpio_in32(mm->regs + GPIO_IMR);
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
-@@ -217,7 +248,8 @@ static void mpc8xxx_irq_unmask(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
- 
--	setbits32(mm->regs + GPIO_IMR, mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
-+	bgpio_setbits32(mm->regs + GPIO_IMR,
-+			mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
- 
- 	raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- }
-@@ -230,7 +262,8 @@ static void mpc8xxx_irq_mask(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
- 
--	clrbits32(mm->regs + GPIO_IMR, mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
-+	bgpio_clrbits32(mm->regs + GPIO_IMR,
-+			mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
- 
- 	raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- }
-@@ -240,7 +273,7 @@ static void mpc8xxx_irq_ack(struct irq_data *d)
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_data_get_irq_chip_data(d);
- 	struct of_mm_gpio_chip *mm = &mpc8xxx_gc->mm_gc;
- 
--	out_be32(mm->regs + GPIO_IER, mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
-+	gpio_out32(mpc8xxx_gpio2mask(irqd_to_hwirq(d)), mm->regs + GPIO_IER);
- }
- 
- static int mpc8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
-@@ -252,15 +285,15 @@ static int mpc8xxx_irq_set_type(struct irq_data *d, unsigned int flow_type)
- 	switch (flow_type) {
- 	case IRQ_TYPE_EDGE_FALLING:
- 		raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
--		setbits32(mm->regs + GPIO_ICR,
--			  mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
-+		bgpio_setbits32(mm->regs + GPIO_ICR,
-+				mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
- 		raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 		break;
- 
- 	case IRQ_TYPE_EDGE_BOTH:
- 		raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
--		clrbits32(mm->regs + GPIO_ICR,
--			  mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
-+		bgpio_clrbits32(mm->regs + GPIO_ICR,
-+				mpc8xxx_gpio2mask(irqd_to_hwirq(d)));
- 		raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 		break;
- 
-@@ -292,20 +325,20 @@ static int mpc512x_irq_set_type(struct irq_data *d, unsigned int flow_type)
- 	case IRQ_TYPE_EDGE_FALLING:
- 	case IRQ_TYPE_LEVEL_LOW:
- 		raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
--		clrsetbits_be32(reg, 3 << shift, 2 << shift);
-+		bgpio_clrsetbits32(reg, 3 << shift, 2 << shift);
- 		raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 		break;
- 
- 	case IRQ_TYPE_EDGE_RISING:
- 	case IRQ_TYPE_LEVEL_HIGH:
- 		raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
--		clrsetbits_be32(reg, 3 << shift, 1 << shift);
-+		bgpio_clrsetbits32(reg, 3 << shift, 1 << shift);
- 		raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 		break;
- 
- 	case IRQ_TYPE_EDGE_BOTH:
- 		raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
--		clrbits32(reg, 3 << shift);
-+		bgpio_clrbits32(reg, 3 << shift);
- 		raw_spin_unlock_irqrestore(&mpc8xxx_gc->lock, flags);
- 		break;
- 
-@@ -398,6 +431,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	mm_gc = &mpc8xxx_gc->mm_gc;
- 	gc = &mm_gc->gc;
- 
-+	if (of_property_read_bool(np, "little-endian")) {
-+		gpio_little_endian = true;
-+		dev_dbg(&pdev->dev, "GPIO REGISTERS are LITTLE endian\n");
-+	} else {
-+		gpio_little_endian = false;
-+		dev_dbg(&pdev->dev, "GPIO REGISTERS are BIG endian\n");
-+	}
-+
- 	mm_gc->save_regs = mpc8xxx_gpio_save_regs;
- 	gc->ngpio = MPC8XXX_GPIO_PINS;
- 	gc->direction_input = mpc8xxx_gpio_dir_in;
-@@ -422,7 +463,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
--	if (mpc8xxx_gc->irqn == NO_IRQ)
-+	if (mpc8xxx_gc->irqn == 0)
- 		return 0;
- 
- 	mpc8xxx_gc->irq = irq_domain_add_linear(np, MPC8XXX_GPIO_PINS,
-@@ -435,8 +476,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 		mpc8xxx_gc->of_dev_id_data = id->data;
- 
- 	/* ack and mask all irqs */
--	out_be32(mm_gc->regs + GPIO_IER, 0xffffffff);
--	out_be32(mm_gc->regs + GPIO_IMR, 0);
-+	gpio_out32(0xffffffff, mm_gc->regs + GPIO_IER);
-+	gpio_out32(0, mm_gc->regs + GPIO_IMR);
- 
- 	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
- 					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
--- 
-2.1.0.27.g96db324
+Eight individual bindings define the status property (I'll put them
+on my todo list to remove since they should be inherited).  The status
+property should be in a top level binding, which should be created as
+part of the bindings documentation cleanup.  I'll watch for it to get
+created or do it myself.
 
+(Lots of bindings show examples of using the status property in their
+examples -- that is fine.)
+
+ePAPR v1.1, section "2.3.4 status" does not list "ok", but does list:
+  "okay"
+  "disabled"
+  "fail"
+  "fail-sss"
+
+
+< snip >
+
+-Frank
