@@ -1,63 +1,74 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
-Date: Wed, 4 Nov 2015 14:10:06 -0800
-Message-ID: <20151104221006.GT19782@codeaurora.org>
-References: <cover.1446167359.git.viresh.kumar@linaro.org>
- <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
- <20151030214907.GJ19782@codeaurora.org>
- <20151031021612.GU3716@ubuntu>
- <20151102192144.GQ19782@codeaurora.org>
- <20151103021254.GM3639@ubuntu>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] clk: sunxi: Add H3 clocks support
+Date: Thu, 5 Nov 2015 09:17:48 +1100
+Message-ID: <CAGRGNgU1xMDQs1BnpH8KQL3bfUV_2rg_+sBCkn7PG_9gEasLhA@mail.gmail.com>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-3-git-send-email-jenskuske@gmail.com> <CAGRGNgW9nVJvAcaduF0y1ptbpLA-3MkR4LCYvh-n1=mtxTyqfg@mail.gmail.com>
+ <20151104162304.GZ6114@lukather>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151103021254.GM3639@ubuntu>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBIEI5KYQKGQEJ3463QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151104162304.GZ6114@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/03, Viresh Kumar wrote:
-> On 02-11-15, 11:21, Stephen Boyd wrote:
-> > Ah I see that after looking at the previous thread. Perhaps we
-> > can add such information into the documentation so that people
-> > aren't misled into thinking they're limited to 32 bits?
-> 
-> What about these changes:
+Hi Maxime,
 
-Yep looks good. Assuming this is squashed into the original:
+On Thu, Nov 5, 2015 at 3:23 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Julian,
+>
+> On Wed, Oct 28, 2015 at 10:12:09AM +1100, Julian Calaby wrote:
+>> > +       of_property_for_each_u32(node, "clock-indices", prop, p, index) {
+>> > +               of_property_read_string_index(node, "clock-output-names",
+>> > +                                             i, &clk_name);
+>> > +
+>> > +               if (index == 17 || (index >= 29 && index <= 31))
+>> > +                       clk_parent = AHB2;
+>> > +               else if (index <= 63 || index >= 128)
+>> > +                       clk_parent = AHB1;
+>> > +               else if (index >= 64 && index <= 95)
+>> > +                       clk_parent = APB1;
+>> > +               else if (index >= 96 && index <= 127)
+>> > +                       clk_parent = APB2;
+>>
+>> A way to make this reusable in the future might be to encode it in a
+>> structure like:
+>>
+>> static const struct bus_clock_paths sun8i_h3_bus_clock_paths __initdata = {
+>>         {.parent = 2, .min = 17, .max = 17}, /* index 17 is from AHB2 */
+>>         {.parent = 2, .min = 29, .max = 31}, /* AHB2 bank */
+>>         {.parent = 1, .min = 63, .max = 128}, /* AHB1 bank */
+>> ...
+>>         {}
+>> };
+>>
+>> Then the code here can be reused for other clocks like this in the
+>> future without too much bloat. (And this would potentially could be
+>> generic enough for other platforms.)
+>
+> We don't really need that at the moment. There's not point in writing
+> more complicated code to support a use case we don't have yet.
+>
+> (However, something along these lines will definitely be needed if we
+> ever have another SoC having the same bus gates madness)
 
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+This was a suggestion for the future to address Jens' comment about
+having a bus clock driver instead of encoding it in devicetree.
 
-One typo below.
-
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 96892057586a..b6ca2239838b 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -123,11 +123,15 @@ properties.
->  - opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
->    the table should have this.
->  
-> -- opp-supported-hw: User defined array containing a hierarchy of hardware
-> -  version numbers, supported by the OPP. For example: a platform with hierarchy
-> -  of three levels of versions (A, B and C), this field should be like <X Y Z>,
-> -  where X corresponds to Version hierarchy A, Y corresponds to version hierarchy
-> -  B and Z corresponds to version hierarchy C.
-> +- opp-supported-hw: This enables us to select only a subset of OPPs from the
-> +  larger OPP table, based on what version of the hardware we are running on. We
-> +  still can't have multiple nodes with the same opp-hz value in OPP table.
-> +
-> +  Its an user defined array containing a hierarchy of hardware version numbers,
-
-s/Its/It's/
+Thanks,
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
