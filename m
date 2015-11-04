@@ -1,66 +1,51 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: inet9f-rev03: Add support for game
- buttons / joysticks
-Date: Wed, 4 Nov 2015 13:54:56 -0800
-Message-ID: <20151104215456.GE6114@lukather>
-References: <1446565908-23406-1-git-send-email-hdegoede@redhat.com>
- <1446565908-23406-2-git-send-email-hdegoede@redhat.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/3] PM / OPP: Add "opp-supported-hw" binding
+Date: Wed, 4 Nov 2015 14:08:14 -0800
+Message-ID: <20151104220814.GS19782@codeaurora.org>
+References: <cover.1446167359.git.viresh.kumar@linaro.org>
+ <2d52388bd7d3cc546ac3ab5afeb47bfcb3012213.1446167359.git.viresh.kumar@linaro.org>
+ <20151030221826.GM19782@codeaurora.org>
+ <20151103022933.GN3639@ubuntu>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PYvLm/IFaQmMAfx6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446565908-23406-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20151103022933.GN3639@ubuntu>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11/03, Viresh Kumar wrote:
+> On 30-10-15, 15:18, Stephen Boyd wrote:
+> > A side-note. I wonder if it would be better style to have the
+> > node name be:
+> > 
+> > 		opp@600000000 {
+> > 
+> > At least it seems that the assumption is we can store all the
+> > possible combinations of OPP values for a particular frequency in
+> > the same node. Following this style would make dt compilation
+> > fail if two nodes have the same frequency.
+> 
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Date: Tue, 3 Nov 2015 07:51:09 +0530
+> Subject: [PATCH] PM / OPP: Rename OPP nodes as opp@<opp-hz>
+> 
+> It would be better to name OPP nodes as opp@<opp-hz> as that will ensure
+> that multiple DT nodes don't contain the same frequency. Of course we
+> expect the writer to name the node with its opp-hz frequency and not any
+> other frequency.
+> 
+> And that will let the compile error out if multiple nodes are using the
+> same opp-hz frequency.
+> 
+> Suggested-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
 
---PYvLm/IFaQmMAfx6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
-On Tue, Nov 03, 2015 at 04:51:48PM +0100, Hans de Goede wrote:
-> The inet9f-rev03 tablet has multiple fire-buttons / direction controls,
-> add support for these using the same axis mapping as ps2 compatible game
-> controllers with the same stick / button layout use.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Queued for 4.5, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---PYvLm/IFaQmMAfx6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWOn6wAAoJEBx+YmzsjxAgOHQQAMI7dO9jEp/SAJnx8zigDWHs
-9U040ilNhqSEBb2iS3SYVpx6bga+GY7uBT7+weDPkXulobkMVmjbxSahtjjmh0Pc
-9QR0bSeDqKZ3lZc0k9ZqzHhrJQ5hD7/jw6KXX2jyXvyhwUdJNoT7fpNkwwE3pyJd
-cgHEfzXjT27OQXzQYlPzMA7gSBxZslv/YrzeQ/PMfL0r746CynOxZn28Xa4lFmrJ
-SO9UK+lgGEpLY7WQQz5s9JpzlVSsOPku3A84Dqkf77Et1QX3/9bNq4D2b/nMO7E9
-WVwzMk0ieD2Z3rR6MOi2eVxSrmZoOmA/ZFWFb+OGqBXugVkaXBQGzANpumvNxV8W
-ACYrObe61MEiSCNCmeaudiTFFGS8IqhlBvTyg9FzN4tD6K8M46ZG9QLZsZZMm5nZ
-KG8fhB2DB+tlILvn9Pk3b50K7+VOgtlbPFxUdO4dRm4hp7kvTUiy49NPQSRp9rr+
-PDM9mGMGfIH/5JwYjZxXHLzDRht7i+1llqhEbwrjcdzh8hKOPunqU4VvjhkIfla9
-ffSogc9w806WXpdZerg8soJgeAojR8tkqBQkAIoqjnHOsBZ41AFFaS3sEy9BxmqG
-wkLKHRWWhpAteJdmQKwVFYDtwEkhHb1mqCCPvdQrHalKPgZVMGihkmXRY9WThY55
-L+hxFP1SG6Mu4l/Cs1jY
-=udaI
------END PGP SIGNATURE-----
-
---PYvLm/IFaQmMAfx6--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
