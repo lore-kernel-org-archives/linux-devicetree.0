@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 35/50] powerpc/pci: Don't scan empty slot
-Date: Thu,  5 Nov 2015 00:12:35 +1100
-Message-ID: <1446642770-4681-36-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 13/50] powerpc/powernv: Rename M64 related functions
+Date: Thu,  5 Nov 2015 00:12:13 +1100
+Message-ID: <1446642770-4681-14-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,32 +10,78 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-In hotplug case, function pcibios_add_pci_devices() is called to
-rescan the specified PCI bus, which might not have any child devices.
-Access to the PCI bus's child device node will cause kernel crash
-without exception.
-
-This adds condition to skip scanning PCI bus that doesn't have any
-subordinate devices, in order to avoid kernel crash.
+This renames those functions picking PE number based on consumed
+M64 segments, mapping M64 segments to PEs as those functions are
+going to be shared by IODA1/IODA2 in next patch. No logical changes
+introduced.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/kernel/pci-hotplug.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-index 96e2cc3..825b39c 100644
---- a/arch/powerpc/kernel/pci-hotplug.c
-+++ b/arch/powerpc/kernel/pci-hotplug.c
-@@ -120,7 +120,8 @@ void pci_add_pci_devices(struct pci_bus *bus)
- 	if (mode == PCI_PROBE_DEVTREE) {
- 		/* use ofdt-based probe */
- 		of_rescan_bus(dn, bus);
--	} else if (mode == PCI_PROBE_NORMAL) {
-+	} else if (mode == PCI_PROBE_NORMAL &&
-+		   dn->child && PCI_DN(dn->child)) {
- 		/*
- 		 * Use legacy probe. In the partial hotplug case, we
- 		 * probably have grandchildren devices unplugged. So
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 76ce694..1f7d985 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -229,7 +229,7 @@ fail:
+ 	return -EIO;
+ }
+ 
+-static void pnv_ioda2_reserve_dev_m64_pe(struct pci_dev *pdev,
++static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
+ 					 unsigned long *pe_bitmap)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+@@ -256,22 +256,22 @@ static void pnv_ioda2_reserve_dev_m64_pe(struct pci_dev *pdev,
+ 	}
+ }
+ 
+-static void pnv_ioda2_reserve_m64_pe(struct pci_bus *bus,
+-				     unsigned long *pe_bitmap,
+-				     bool all)
++static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
++				    unsigned long *pe_bitmap,
++				    bool all)
+ {
+ 	struct pci_dev *pdev;
+ 
+ 	list_for_each_entry(pdev, &bus->devices, bus_list) {
+-		pnv_ioda2_reserve_dev_m64_pe(pdev, pe_bitmap);
++		pnv_ioda_reserve_dev_m64_pe(pdev, pe_bitmap);
+ 
+ 		if (all && pdev->subordinate)
+-			pnv_ioda2_reserve_m64_pe(pdev->subordinate,
+-						 pe_bitmap, all);
++			pnv_ioda_reserve_m64_pe(pdev->subordinate,
++						pe_bitmap, all);
+ 	}
+ }
+ 
+-static int pnv_ioda2_pick_m64_pe(struct pci_bus *bus, bool all)
++static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(bus);
+ 	struct pnv_phb *phb = hose->private_data;
+@@ -293,7 +293,7 @@ static int pnv_ioda2_pick_m64_pe(struct pci_bus *bus, bool all)
+ 	}
+ 
+ 	/* Figure out reserved PE numbers by the PE */
+-	pnv_ioda2_reserve_m64_pe(bus, pe_alloc, all);
++	pnv_ioda_reserve_m64_pe(bus, pe_alloc, all);
+ 
+ 	/*
+ 	 * the current bus might not own M64 window and that's all
+@@ -374,8 +374,8 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+ 	/* Use last M64 BAR to cover M64 window */
+ 	phb->ioda.m64_bar_idx = 15;
+ 	phb->init_m64 = pnv_ioda2_init_m64;
+-	phb->reserve_m64_pe = pnv_ioda2_reserve_m64_pe;
+-	phb->pick_m64_pe = pnv_ioda2_pick_m64_pe;
++	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
++	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
+ }
+ 
+ static void pnv_ioda_freeze_pe(struct pnv_phb *phb, int pe_no)
 -- 
 2.1.0
