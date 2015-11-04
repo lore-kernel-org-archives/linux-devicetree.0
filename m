@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 25/50] powerpc/powernv: Reserve PE for root bus
-Date: Thu,  5 Nov 2015 00:12:25 +1100
-Message-ID: <1446642770-4681-26-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in pnv_pci_reset_secondary_bus()
+Date: Thu,  5 Nov 2015 00:12:39 +1100
+Message-ID: <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,97 +10,48 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-We're going to reserve/assign PEs when pcibios_setup_bridge() is
-called. The function won't be called for root bus as it doesn't
-have parent bridge. However, the root bus still needs a PE to be
-covered.
-
-This reserves PE numbers that are adjacent to the reserved one
-for root buses.
+In pnv_pci_reset_secondary_bus(), we should issue fundamental
+reset if any one subordinate device of the specified is requesting
+that. Otherwise, the device might not come up after the reset.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 33 ++++++++++++++++++++++---------
- arch/powerpc/platforms/powernv/pci.h      |  1 +
- 2 files changed, 25 insertions(+), 9 deletions(-)
+ arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index eea1c96..5e6745f 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -207,14 +207,14 @@ static int pnv_ioda2_init_m64(struct pnv_phb *phb)
- 	set_bit(phb->ioda.m64_bar_idx, &phb->ioda.m64_bar_alloc);
+diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+index c69b6a1..ab8b93e 100644
+--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
++++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+@@ -878,9 +878,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+ 	return 0;
+ }
  
- 	/*
--	 * Strip off the segment used by the reserved PE, which is
--	 * expected to be 0 or last one of PE capabicity.
-+	 * Exclude the segments for reserved and root bus PE, which
-+	 * are first or last two PEs.
- 	 */
- 	r = &phb->hose->mem_resources[1];
- 	if (phb->ioda.reserved_pe_idx == 0)
--		r->start += phb->ioda.m64_segsize;
-+		r->start += (2 * phb->ioda.m64_segsize);
- 	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
--		r->end -= phb->ioda.m64_segsize;
-+		r->end -= (2 * phb->ioda.m64_segsize);
- 	else
- 		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
- 			phb->ioda.reserved_pe_idx);
-@@ -294,14 +294,14 @@ static int pnv_ioda1_init_m64(struct pnv_phb *phb)
- 	}
- 
- 	/*
--	 * Exclude the segment used by the reserved PE, which
--	 * is expected to be 0 or last supported PE#.
-+	 * Exclude the segments for reserved and root bus PE, which
-+	 * are first or last two PEs.
- 	 */
- 	r = &phb->hose->mem_resources[1];
- 	if (phb->ioda.reserved_pe_idx == 0)
--		r->start += phb->ioda.m64_segsize;
-+		r->start += (2 * phb->ioda.m64_segsize);
- 	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
--		r->end -= phb->ioda.m64_segsize;
-+		r->end -= (2 * phb->ioda.m64_segsize);
- 	else
- 		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
- 			phb->ioda.reserved_pe_idx);
-@@ -3231,7 +3231,22 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 			phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
- 	}
- 	phb->ioda.pe_array = aux + pemap_off;
--	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
++static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
++{
++	int *freset = data;
 +
 +	/*
-+	 * Choose PE number for root bus, which shouldn't have
-+	 * M64 resources consumed by its child devices. To pick
-+	 * the PE number adjacent to the reserved one if possible.
++	 * Stop the iteration immediately if there has any one
++	 * PCI device requesting fundamental reset.
 +	 */
-+	pnv_ioda_reserve_pe(phb, phb->ioda.reserved_pe_idx);
-+	if (phb->ioda.reserved_pe_idx == 0) {
-+		phb->ioda.root_pe_idx = 1;
-+		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
-+	} else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1)) {
-+		phb->ioda.root_pe_idx = phb->ioda.reserved_pe_idx - 1;
-+		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
-+	} else {
-+		phb->ioda.root_pe_idx = IODA_INVALID_PE;
-+	}
++	*freset |= pdev->needs_freset;
++	return *freset;
++}
++
+ void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
+ {
+-	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
++	int option, freset = 0;
++
++	if (dev->subordinate)
++		pci_walk_bus(dev->subordinate,
++			     pnv_pci_dev_reset_type, &freset);
++
++	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
++	pnv_eeh_bridge_reset(dev, option);
+ 	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+ }
  
- 	INIT_LIST_HEAD(&phb->ioda.pe_list);
- 	mutex_init(&phb->ioda.pe_list_mutex);
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index e55ab0e..a8ba97f 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -120,6 +120,7 @@ struct pnv_phb {
- 			/* Global bridge info */
- 			unsigned int		total_pe_num;
- 			unsigned int		reserved_pe_idx;
-+			unsigned int		root_pe_idx;
- 
- 			/* 32-bit MMIO window */
- 			unsigned int		m32_size;
 -- 
 2.1.0
