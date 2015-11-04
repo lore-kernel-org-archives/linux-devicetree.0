@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 06/50] powerpc/powernv: Drop phb->bdfn_to_pe()
-Date: Thu,  5 Nov 2015 00:12:06 +1100
-Message-ID: <1446642770-4681-7-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 47/50] drivers/of: Specify parent node in of_fdt_unflatten_tree()
+Date: Thu,  5 Nov 2015 00:12:47 +1100
+Message-ID: <1446642770-4681-48-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -10,53 +10,110 @@ To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This drops struct pnv_phb::bdfn_to_pe() as nobody uses it.
+This adds one more argument to of_fdt_unflatten_tree() to specify
+the parent node of the FDT blob that is going to be unflattened.
+In the result, the function can be used to unflatten FDT blob that
+represents device sub-tree in PowerNV PCI hotplug driver.
 
 Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 9 ---------
- arch/powerpc/platforms/powernv/pci.h      | 1 -
- 2 files changed, 10 deletions(-)
+ drivers/of/fdt.c       | 14 ++++++++++----
+ drivers/of/unittest.c  |  2 +-
+ include/linux/of_fdt.h |  1 +
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 74288ab..968da91 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2978,12 +2978,6 @@ static bool pnv_pci_enable_device_hook(struct pci_dev *dev)
- 	return true;
- }
- 
--static u32 pnv_ioda_bdfn_to_pe(struct pnv_phb *phb, struct pci_bus *bus,
--			       u32 devfn)
--{
--	return phb->ioda.pe_rmap[(bus->number << 8) | devfn];
--}
--
- static void pnv_pci_ioda_shutdown(struct pci_controller *hose)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 559ce49..8c8228e 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -443,11 +443,13 @@ static void *unflatten_dt_nodes(const void *blob,
+  * pointers of the nodes so the normal device-tree walking functions
+  * can be used.
+  * @blob: The blob to expand
++ * @dad: Parent device node
+  * @mynodes: The device_node tree created by the call
+  * @dt_alloc: An allocator that provides a virtual address to memory
+  * for the resulting tree
+  */
+ static void __unflatten_device_tree(const void *blob,
++			     struct device_node *dad,
+ 			     struct device_node **mynodes,
+ 			     void * (*dt_alloc)(u64 size, u64 align))
  {
- 	struct pnv_phb *phb = hose->private_data;
-@@ -3144,9 +3138,6 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	phb->freeze_pe = pnv_ioda_freeze_pe;
- 	phb->unfreeze_pe = pnv_ioda_unfreeze_pe;
+@@ -472,7 +474,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	}
  
--	/* Setup RID -> PE mapping function */
--	phb->bdfn_to_pe = pnv_ioda_bdfn_to_pe;
--
- 	/* Setup TCEs */
- 	phb->dma_dev_setup = pnv_pci_ioda_dma_dev_setup;
+ 	/* First pass, scan for size */
+-	size = (unsigned long)unflatten_dt_nodes(blob, NULL, NULL, NULL, true);
++	size = (unsigned long)unflatten_dt_nodes(blob, NULL, dad, NULL, true);
+ 	size = ALIGN(size, 4);
  
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index c8ff50e..49e3baf 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -106,7 +106,6 @@ struct pnv_phb {
- 			 unsigned int is_64, struct msi_msg *msg);
- 	void (*dma_dev_setup)(struct pnv_phb *phb, struct pci_dev *pdev);
- 	void (*fixup_phb)(struct pci_controller *hose);
--	u32 (*bdfn_to_pe)(struct pnv_phb *phb, struct pci_bus *bus, u32 devfn);
- 	int (*init_m64)(struct pnv_phb *phb);
- 	void (*reserve_m64_pe)(struct pci_bus *bus,
- 			       unsigned long *pe_bitmap, bool all);
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -486,7 +488,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	pr_debug("  unflattening %p...\n", mem);
+ 
+ 	/* Second pass, do actual unflattening */
+-	unflatten_dt_nodes(blob, mem, NULL, mynodes, false);
++	unflatten_dt_nodes(blob, mem, dad, mynodes, false);
+ 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpup(mem + size));
+@@ -501,6 +503,9 @@ static void *kernel_tree_alloc(u64 size, u64 align)
+ 
+ /**
+  * of_fdt_unflatten_tree - create tree of device_nodes from flat blob
++ * @blob: Flat device tree blob
++ * @dad: Parent device node
++ * @mynodes: The device tree created by the call
+  *
+  * unflattens the device-tree passed by the firmware, creating the
+  * tree of struct device_node. It also fills the "name" and "type"
+@@ -508,9 +513,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
+  * can be used.
+  */
+ void of_fdt_unflatten_tree(const unsigned long *blob,
++			struct device_node *dad,
+ 			struct device_node **mynodes)
+ {
+-	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
++	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+ }
+ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+ 
+@@ -1163,7 +1169,7 @@ bool __init early_init_dt_scan(void *params)
+  */
+ void __init unflatten_device_tree(void)
+ {
+-	__unflatten_device_tree(initial_boot_params, &of_root,
++	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
+ 				early_init_dt_alloc_memory_arch);
+ 
+ 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 9f71770b6..bafcf66 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
+ 			"not running tests\n", __func__);
+ 		return -ENOMEM;
+ 	}
+-	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
++	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+ 	if (!unittest_data_node) {
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+ 		return -ENODATA;
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index df9ef38..3644960 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
+ extern int of_fdt_match(const void *blob, unsigned long node,
+ 			const char *const *compat);
+ extern void of_fdt_unflatten_tree(const unsigned long *blob,
++			       struct device_node *dad,
+ 			       struct device_node **mynodes);
+ 
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
 -- 
 2.1.0
 
