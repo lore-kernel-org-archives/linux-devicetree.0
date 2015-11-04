@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 19/50] powerpc/powernv: Track DMA32 segment consumption
-Date: Thu,  5 Nov 2015 00:12:19 +1100
-Message-ID: <1446642770-4681-20-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 11/50] powerpc/powernv: IO and M32 mapping based on PCI device resources
+Date: Thu,  5 Nov 2015 00:12:11 +1100
+Message-ID: <1446642770-4681-12-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -10,137 +10,180 @@ To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Similar to the mechanism tracking consumed IO/M32/M64 segments,
-this introduces an array for each PHB to track the consumed DMA32
-segments, which are going to be released on PCI unplugging time.
-The index of the array is the DMA32 segment number while the value
-stored in the element is the assigned PE number.
+Currently, the IO and M32 segments are mapped to the corresponding
+PE based on the windows of the parent bridge of PE's primary bus.
+It's not going to work when the windows of root port or upstream
+port of the PCIe switch behind root port are extended to PHB's
+aperatuses in order to support hotplug in subsequent patch.
+
+This fixes the issue by mapping IO and M32 segments based on the
+resources of the PCI devices included in the PE, instead of the
+windows of the parent bridge of the PE's primary bus.
 
 Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 30 +++++++++++++++++++++---------
- arch/powerpc/platforms/powernv/pci.h      |  7 ++++---
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 131 +++++++++++++++++-------------
+ 1 file changed, 75 insertions(+), 56 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 20ebe6e..fdbc012 100644
+index 553d3f3..4ab93f8 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1885,6 +1885,10 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+@@ -2741,71 +2741,90 @@ truncate_iov:
+ }
+ #endif /* CONFIG_PCI_IOV */
+ 
+-/*
+- * This function is supposed to be called on basis of PE from top
+- * to bottom style. So the the I/O or MMIO segment assigned to
+- * parent PE could be overrided by its child PEs if necessary.
+- */
+-static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+-				  struct pnv_ioda_pe *pe)
++static int pnv_ioda_setup_one_res(struct pnv_ioda_pe *pe,
++				  struct resource *res)
+ {
+-	struct pnv_phb *phb = hose->private_data;
++	struct pnv_phb *phb = pe->phb;
+ 	struct pci_bus_region region;
+-	struct resource *res;
+-	unsigned int segsize;
+-	int *segmap, index, i;
++	unsigned int index, segsize;
++	int *segmap;
+ 	uint16_t win;
+ 	int64_t rc;
+ 
+-	/*
+-	 * NOTE: We only care PCI bus based PE for now. For PCI
+-	 * device based PE, for example SRIOV sensitive VF should
+-	 * be figured out later.
+-	 */
+-	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
++	if (!res->parent || !res->flags || res->start > res->end)
++		return 0;
+ 
+-	pci_bus_for_each_resource(pe->pbus, res, i) {
+-		if (!res || !res->flags ||
+-		    res->start > res->end)
+-			continue;
++	if (res->flags & IORESOURCE_IO) {
++		region.start = res->start - phb->ioda.io_pci_base;
++		region.end   = res->end - phb->ioda.io_pci_base;
++		segsize      = phb->ioda.io_segsize;
++		segmap       = phb->ioda.io_segmap;
++		win          = OPAL_IO_WINDOW_TYPE;
++	} else if ((res->flags & IORESOURCE_MEM) &&
++		   !pnv_pci_is_mem_pref_64(res->flags)) {
++		region.start = res->start -
++			       phb->hose->mem_offset[0] -
++			       phb->ioda.m32_pci_base;
++		region.end   = res->end -
++			       phb->hose->mem_offset[0] -
++			       phb->ioda.m32_pci_base;
++		segsize      = phb->ioda.m32_segsize;
++		segmap       = phb->ioda.m32_segmap;
++		win          = OPAL_M32_WINDOW_TYPE;
++	} else {
++		return 0;
++	}
+ 
+-		if (res->flags & IORESOURCE_IO) {
+-			region.start = res->start - phb->ioda.io_pci_base;
+-			region.end   = res->end - phb->ioda.io_pci_base;
+-			segsize      = phb->ioda.io_segsize;
+-			segmap       = phb->ioda.io_segmap;
+-			win          = OPAL_IO_WINDOW_TYPE;
+-		} else if ((res->flags & IORESOURCE_MEM) &&
+-			   !pnv_pci_is_mem_pref_64(res->flags)) {
+-			region.start = res->start -
+-				       hose->mem_offset[0] -
+-				       phb->ioda.m32_pci_base;
+-			region.end   = res->end -
+-				       hose->mem_offset[0] -
+-				       phb->ioda.m32_pci_base;
+-			segsize      = phb->ioda.m32_segsize;
+-			segmap       = phb->ioda.m32_segmap;
+-			win          = OPAL_M32_WINDOW_TYPE;
+-		} else {
+-			continue;
++	region.start = _ALIGN_DOWN(region.start, segsize);
++	region.end   = _ALIGN_UP(region.end, segsize);
++	index = region.start / segsize;
++	while (index < phb->ioda.total_pe_num && region.start < region.end) {
++		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
++				pe->pe_number, win, 0, index);
++		if (rc != OPAL_SUCCESS) {
++			pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
++				__func__, rc, win, index,
++				phb->hose->global_number,
++				pe->pe_number);
++			return -EIO;
+ 		}
+ 
+-		index = region.start / segsize;
+-		while (index < phb->ioda.total_pe_num &&
+-		       region.start <= region.end) {
+-			segmap[index] = pe->pe_number;
+-			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+-					pe->pe_number, win, 0, index);
+-			if (rc != OPAL_SUCCESS) {
+-				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
+-					__func__, rc, win, index,
+-					pe->phb->hose->global_number,
+-					pe->pe_number);
+-				break;
+-			}
++		segmap[index] = pe->pe_number;
++		region.start += segsize;
++		index++;
++	}
++
++	return 0;
++}
++
++static void pnv_ioda_setup_pe_seg(struct pnv_ioda_pe *pe)
++{
++	struct pci_dev *pdev;
++	struct resource *res;
++	int i;
++
++	/* This function only works for bus dependent PE */
++	WARN_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
++
++	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
++		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
++			res = &pdev->resource[i];
++			if (pnv_ioda_setup_one_res(pe, res))
++				return;
++		}
++
++		/*
++		 * If the PE contains all subordinate PCI buses, the
++		 * windows of the child bridges should be mapped to
++		 * the PE as well.
++		 */
++		if (!(pe->flags & PNV_IODA_PE_BUS_ALL && pci_is_bridge(pdev)))
++			continue;
+ 
+-			region.start += segsize;
+-			index++;
++		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
++			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
++			if (pnv_ioda_setup_one_res(pe, res))
++				return;
  		}
  	}
- 
-+	/* Setup TCE32 segment mapping */
-+	for (i = base; i < base + segs; i++)
-+		phb->ioda.dma32_segmap[i] = pe->pe_number;
-+
- 	/* Setup linux iommu table */
- 	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
- 				  base * PNV_IODA1_DMA32_SEGSIZE,
-@@ -2378,13 +2382,13 @@ static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
- 	 * then we assign at least one segment per PE, plus more based
- 	 * on the amount of devices under that PE
- 	 */
--	if (dma_pe_count > phb->ioda.tce32_count)
-+	if (dma_pe_count > phb->ioda.dma32_count)
- 		residual = 0;
- 	else
--		residual = phb->ioda.tce32_count - dma_pe_count;
-+		residual = phb->ioda.dma32_count - dma_pe_count;
- 
- 	pr_info("PCI: Domain %04x has %ld available 32-bit DMA segments\n",
--		hose->global_number, phb->ioda.tce32_count);
-+		hose->global_number, phb->ioda.dma32_count);
- 	pr_info("PCI: %d PE# for a total weight of %d\n",
- 		dma_pe_count, total_weight);
- 
-@@ -2394,7 +2398,7 @@ static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
- 	 * out one base segment plus any residual segments based on
- 	 * weight
- 	 */
--	remaining = phb->ioda.tce32_count;
-+	remaining = phb->ioda.dma32_count;
- 	base = 0;
- 	list_for_each_entry(pe, &phb->ioda.pe_list, list) {
- 		weight = pnv_pci_ioda_pe_dma_weight(pe);
-@@ -3094,7 +3098,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- {
- 	struct pci_controller *hose;
- 	struct pnv_phb *phb;
--	unsigned long size, m64map_off, m32map_off, pemap_off, iomap_off = 0;
-+	unsigned long size, m64map_off, m32map_off, pemap_off;
-+	unsigned long iomap_off = 0, dma32map_off = 0;
- 	const __be64 *prop64;
- 	const __be32 *prop32;
- 	int i, len;
-@@ -3177,6 +3182,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	phb->ioda.io_segsize = phb->ioda.io_size / phb->ioda.total_pe_num;
- 	phb->ioda.io_pci_base = 0; /* XXX calculate this ? */
- 
-+	/* Calculate how many 32-bit TCE segments we have */
-+	phb->ioda.dma32_count = phb->ioda.m32_pci_base /
-+				PNV_IODA1_DMA32_SEGSIZE;
-+
- 	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
- 	size = _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
- 	m64map_off = size;
-@@ -3186,6 +3195,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	if (phb->type == PNV_PHB_IODA1) {
- 		iomap_off = size;
- 		size += phb->ioda.total_pe_num * sizeof(phb->ioda.io_segmap[0]);
-+		dma32map_off = size;
-+		size += phb->ioda.dma32_count *
-+			sizeof(phb->ioda.dma32_segmap[0]);
+ }
+@@ -2819,7 +2838,7 @@ static void pnv_pci_ioda_setup_seg(void)
+ 	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+ 		phb = hose->private_data;
+ 		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+-			pnv_ioda_setup_pe_seg(hose, pe);
++			pnv_ioda_setup_pe_seg(pe);
+ 		}
  	}
- 	pemap_off = size;
- 	size += phb->ioda.total_pe_num * sizeof(struct pnv_ioda_pe);
-@@ -3201,6 +3213,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 		phb->ioda.io_segmap = aux + iomap_off;
- 		for (i = 0; i < phb->ioda.total_pe_num; i++)
- 			phb->ioda.io_segmap[i] = IODA_INVALID_PE;
-+
-+		phb->ioda.dma32_segmap = aux + dma32map_off;
-+		for (i = 0; i < phb->ioda.dma32_count; i++)
-+			phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
- 	}
- 	phb->ioda.pe_array = aux + pemap_off;
- 	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
-@@ -3208,10 +3224,6 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	INIT_LIST_HEAD(&phb->ioda.pe_list);
- 	mutex_init(&phb->ioda.pe_list_mutex);
- 
--	/* Calculate how many 32-bit TCE segments we have */
--	phb->ioda.tce32_count = phb->ioda.m32_pci_base /
--				PNV_IODA1_DMA32_SEGSIZE;
--
- #if 0 /* We should really do that ... */
- 	rc = opal_pci_set_phb_mem_window(opal->phb_id,
- 					 window_type,
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 2038ef2..0802fcd 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -148,6 +148,10 @@ struct pnv_phb {
- 			int			*m32_segmap;
- 			int			*io_segmap;
- 
-+			/* DMA32 segment maps - IODA1 only */
-+			unsigned long		dma32_count;
-+			int			*dma32_segmap;
-+
- 			/* IRQ chip */
- 			int			irq_chip_init;
- 			struct irq_chip		irq_chip;
-@@ -164,9 +168,6 @@ struct pnv_phb {
- 			 */
- 			unsigned char		pe_rmap[0x10000];
- 
--			/* 32-bit TCE tables allocation */
--			unsigned long		tce32_count;
--
- 			/* TCE cache invalidate registers (physical and
- 			 * remapped)
- 			 */
+ }
 -- 
 2.1.0
 
