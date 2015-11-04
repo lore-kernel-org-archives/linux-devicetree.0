@@ -1,71 +1,69 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 32/50] powerpc/pci: Introduce pci_remove_device_node_info()
-Date: Thu,  5 Nov 2015 00:12:32 +1100
-Message-ID: <1446642770-4681-33-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 09/50] powerpc/powernv: Fix initial IO and M32 segmap
+Date: Thu,  5 Nov 2015 00:12:09 +1100
+Message-ID: <1446642770-4681-10-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This implements and exports pci_remove_device_node_info(). It's
-used to remove the pdn (struct pci_dn) for the indicated device
-node. The function is going to be used by PowerNV PCI hotplug
-driver.
-
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/pci-bridge.h |  1 +
- arch/powerpc/kernel/pci_dn.c          | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 7e0c67d..b8ce4f4 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -237,6 +237,7 @@ extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
- extern void remove_dev_pci_data(struct pci_dev *pdev);
- extern struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
- 					       struct device_node *dn);
-+extern void pci_remove_device_node_info(struct device_node *dn);
- 
- static inline int pci_device_from_OF_node(struct device_node *np,
- 					  u8 *bus, u8 *devfn)
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 36ae515..7f877a4 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -314,6 +314,29 @@ struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
- }
- EXPORT_SYMBOL_GPL(pci_add_device_node_info);
- 
-+void pci_remove_device_node_info(struct device_node *dn)
-+{
-+	struct pci_dn *pdn = dn ? PCI_DN(dn) : NULL;
-+#ifdef CONFIG_EEH
-+	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
-+
-+	if (edev)
-+		edev->pdn = NULL;
-+#endif
-+
-+	if (!pdn)
-+		return;
-+
-+	WARN_ON(!list_empty(&pdn->child_list));
-+	list_del(&pdn->list);
-+	if (pdn->parent)
-+		of_node_put(pdn->parent->node);
-+
-+	dn->data = NULL;
-+	kfree(pdn);
-+}
-+EXPORT_SYMBOL_GPL(pci_remove_device_node_info);
-+
- /*
-  * Traverse a device tree stopping each PCI device in the tree.
-  * This is done depth first.  As each node is processed, a "pre"
--- 
-2.1.0
+VGhlcmUgYXJlIHR3byBhcnJheXMgZm9yIElPIGFuZCBNMzIgc2VnbWVudCBtYXBzIG9uIGV2ZXJ5
+IFBIQi4KVGhlIGluZGV4IG9mIHRoZSBhcnJheXMgYXJlIHNlZ21lbnQgbnVtYmVyIGFuZCB0aGUg
+dmFsdWUgc3RvcmVkCmluIHRoZSBjb3JyZXNwb25kaW5nIGVsZW1lbnQgaXMgUEUgbnVtYmVyLCBp
+bmRpY2F0aW5nIHRoZSBzZWdtZW50CmlzIGFzc2lnbmVkIHRvIHRoZSBQRS4gSW5pdGlhbGx5LCBh
+bGwgZWxlbWVudHMgaW4gdGhvc2UgdHdvIGFycmF5cwphcmUgemVyb2VzLCBtZWFuaW5nIGFsbCBz
+ZWdtZW50cyBhcmUgYXNzaWduZWQgdG8gUEUjMC4gSXQncyB3cm9uZy4KClRoaXMgZml4ZXMgdGhl
+IGluaXRpYWwgdmFsdWVzIGluIHRoZSBlbGVtZW50cyBvZiB0aG9zZSB0d28gYXJyYXlzCnRvIElP
+REFfSU5WQUxJRF9QRSwgbWVhbmluZyBhbGwgc2VnbWVudHMgYXJlbid0IGFzc2lnbmVkIHRvIGFu
+eQpQRS4gSW4gb3JkZXIgdG8gdXNlIElPREFfSU5WQUxJRF9QRSAoLTEpIHRvIHJlcHJlc2VudCBp
+bnZhbGlkIFBFCm51bWJlciwgdGhlIHR5cGVzIG9mIHRob3NlIHR3byBhcnJheXMgYXJlIGNoYW5n
+ZWQgZnJvbSAidW5zaWduZWQgaW50Igp0byAiaW50Ii4KClNpZ25lZC1vZmYtYnk6IEdhdmluIFNo
+YW4gPGd3c2hhbkBsaW51eC52bmV0LmlibS5jb20+Ci0tLQogYXJjaC9wb3dlcnBjL3BsYXRmb3Jt
+cy9wb3dlcm52L3BjaS1pb2RhLmMgfCA5ICsrKysrKystLQogYXJjaC9wb3dlcnBjL3BsYXRmb3Jt
+cy9wb3dlcm52L3BjaS5oICAgICAgfCA0ICsrLS0KIDIgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRp
+b25zKCspLCA0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9y
+bXMvcG93ZXJudi9wY2ktaW9kYS5jIGIvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wb3dlcm52L3Bj
+aS1pb2RhLmMKaW5kZXggYjQ5MzJjMy4uN2VlN2NmZSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBj
+L3BsYXRmb3Jtcy9wb3dlcm52L3BjaS1pb2RhLmMKKysrIGIvYXJjaC9wb3dlcnBjL3BsYXRmb3Jt
+cy9wb3dlcm52L3BjaS1pb2RhLmMKQEAgLTMwMDgsNyArMzAwOCw3IEBAIHN0YXRpYyB2b2lkIF9f
+aW5pdCBwbnZfcGNpX2luaXRfaW9kYV9waGIoc3RydWN0IGRldmljZV9ub2RlICpucCwKIAl1bnNp
+Z25lZCBsb25nIHNpemUsIG0zMm1hcF9vZmYsIHBlbWFwX29mZiwgaW9tYXBfb2ZmID0gMDsKIAlj
+b25zdCBfX2JlNjQgKnByb3A2NDsKIAljb25zdCBfX2JlMzIgKnByb3AzMjsKLQlpbnQgbGVuOwor
+CWludCBpLCBsZW47CiAJdTY0IHBoYl9pZDsKIAl2b2lkICphdXg7CiAJbG9uZyByYzsKQEAgLTMx
+MDEsOCArMzEwMSwxMyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgcG52X3BjaV9pbml0X2lvZGFfcGhi
+KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsCiAJYXV4ID0gbWVtYmxvY2tfdmlydF9hbGxvYyhzaXpl
+LCAwKTsKIAlwaGItPmlvZGEucGVfYWxsb2MgPSBhdXg7CiAJcGhiLT5pb2RhLm0zMl9zZWdtYXAg
+PSBhdXggKyBtMzJtYXBfb2ZmOwotCWlmIChwaGItPnR5cGUgPT0gUE5WX1BIQl9JT0RBMSkKKwlm
+b3IgKGkgPSAwOyBpIDwgcGhiLT5pb2RhLnRvdGFsX3BlX251bTsgaSsrKQorCQlwaGItPmlvZGEu
+bTMyX3NlZ21hcFtpXSA9IElPREFfSU5WQUxJRF9QRTsKKwlpZiAocGhiLT50eXBlID09IFBOVl9Q
+SEJfSU9EQTEpIHsKIAkJcGhiLT5pb2RhLmlvX3NlZ21hcCA9IGF1eCArIGlvbWFwX29mZjsKKwkJ
+Zm9yIChpID0gMDsgaSA8IHBoYi0+aW9kYS50b3RhbF9wZV9udW07IGkrKykKKwkJCXBoYi0+aW9k
+YS5pb19zZWdtYXBbaV0gPSBJT0RBX0lOVkFMSURfUEU7CisJfQogCXBoYi0+aW9kYS5wZV9hcnJh
+eSA9IGF1eCArIHBlbWFwX29mZjsKIAlzZXRfYml0KHBoYi0+aW9kYS5yZXNlcnZlZF9wZV9pZHgs
+IHBoYi0+aW9kYS5wZV9hbGxvYyk7CiAKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9y
+bXMvcG93ZXJudi9wY2kuaCBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2kuaApp
+bmRleCBkMTFmMGE1Li4yZTAxZWRkIDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1z
+L3Bvd2VybnYvcGNpLmgKKysrIGIvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wb3dlcm52L3BjaS5o
+CkBAIC0xNDgsOCArMTQ4LDggQEAgc3RydWN0IHBudl9waGIgewogCQkJc3RydWN0IHBudl9pb2Rh
+X3BlCSpwZV9hcnJheTsKIAogCQkJLyogTTMyICYgSU8gc2VnbWVudCBtYXBzICovCi0JCQl1bnNp
+Z25lZCBpbnQJCSptMzJfc2VnbWFwOwotCQkJdW5zaWduZWQgaW50CQkqaW9fc2VnbWFwOworCQkJ
+aW50CQkJKm0zMl9zZWdtYXA7CisJCQlpbnQJCQkqaW9fc2VnbWFwOwogCiAJCQkvKiBJUlEgY2hp
+cCAqLwogCQkJaW50CQkJaXJxX2NoaXBfaW5pdDsKLS0gCjIuMS4wCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0
+CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9s
+aXN0aW5mby9saW51eHBwYy1kZXY=
