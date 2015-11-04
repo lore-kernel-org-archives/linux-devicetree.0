@@ -1,70 +1,71 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 03/50] powerpc/pci: Cleanup on struct pci_controller_ops
-Date: Thu,  5 Nov 2015 00:12:03 +1100
-Message-ID: <1446642770-4681-4-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 46/50] drivers/of: Rename unflatten_dt_node()
+Date: Thu,  5 Nov 2015 00:12:46 +1100
+Message-ID: <1446642770-4681-47-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Each PHB has one instance of "struct pci_controller_ops", which
-includes various callbacks called by PCI subsystem. In the definition
-of this struct, some callbacks have explicit names for its arguments,
-but the left don't have.
+This renames unflatten_dt_node() to unflatten_dt_nodes() as it
+populates multiple device nodes from FDT blob. No logical changes
+introduced.
 
-This adds all explicit names of the arguments to the callbacks in
-"struct pci_controller_ops" so that the code looks consistent.
-
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/pci-bridge.h | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/of/fdt.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 6076116..0f2ff3a 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -21,18 +21,19 @@ struct pci_controller_ops {
- 	void		(*dma_dev_setup)(struct pci_dev *dev);
- 	void		(*dma_bus_setup)(struct pci_bus *bus);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index f4793d0..559ce49 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -380,7 +380,7 @@ static void reverse_nodes(struct device_node *parent)
+ }
  
--	int		(*probe_mode)(struct pci_bus *);
-+	int		(*probe_mode)(struct pci_bus *bus);
+ /**
+- * unflatten_dt_node - Alloc and populate a device_node from the flat tree
++ * unflatten_dt_nodes - Alloc and populate device nodes from the flat tree
+  * @blob: The parent device tree blob
+  * @mem: Memory chunk to use for allocating device nodes and properties
+  * @dad: Parent struct device_node
+@@ -388,11 +388,11 @@ static void reverse_nodes(struct device_node *parent)
+  * @dryrun: If true, do not allocate device nodes but still calculate needed
+  * memory size
+  */
+-static void *unflatten_dt_node(const void *blob,
+-			       void *mem,
+-			       struct device_node *dad,
+-			       struct device_node **nodepp,
+-			       bool dryrun)
++static void *unflatten_dt_nodes(const void *blob,
++				void *mem,
++				struct device_node *dad,
++				struct device_node **nodepp,
++				bool dryrun)
+ {
+ 	struct device_node *root;
+ 	int offset = 0, depth = 0;
+@@ -472,7 +472,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	}
  
- 	/* Called when pci_enable_device() is called. Returns true to
- 	 * allow assignment/enabling of the device. */
--	bool		(*enable_device_hook)(struct pci_dev *);
-+	bool		(*enable_device_hook)(struct pci_dev *dev);
+ 	/* First pass, scan for size */
+-	size = (unsigned long)unflatten_dt_node(blob, NULL, NULL, NULL, true);
++	size = (unsigned long)unflatten_dt_nodes(blob, NULL, NULL, NULL, true);
+ 	size = ALIGN(size, 4);
  
--	void		(*disable_device)(struct pci_dev *);
-+	void		(*disable_device)(struct pci_dev *dev);
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -486,7 +486,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	pr_debug("  unflattening %p...\n", mem);
  
--	void		(*release_device)(struct pci_dev *);
-+	void		(*release_device)(struct pci_dev *dev);
- 
- 	/* Called during PCI resource reassignment */
--	resource_size_t (*window_alignment)(struct pci_bus *, unsigned long type);
-+	resource_size_t (*window_alignment)(struct pci_bus *bus,
-+					    unsigned long type);
- 	void		(*setup_bridge)(struct pci_bus *bus,
- 					unsigned long type);
- 	void		(*reset_secondary_bus)(struct pci_dev *dev);
-@@ -46,7 +47,7 @@ struct pci_controller_ops {
- 	int             (*dma_set_mask)(struct pci_dev *dev, u64 dma_mask);
- 	u64		(*dma_get_required_mask)(struct pci_dev *dev);
- 
--	void		(*shutdown)(struct pci_controller *);
-+	void		(*shutdown)(struct pci_controller *hose);
- };
- 
- /*
+ 	/* Second pass, do actual unflattening */
+-	unflatten_dt_node(blob, mem, NULL, mynodes, false);
++	unflatten_dt_nodes(blob, mem, NULL, mynodes, false);
+ 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpup(mem + size));
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
