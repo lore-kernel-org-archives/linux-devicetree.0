@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in pnv_pci_reset_secondary_bus()
-Date: Thu,  5 Nov 2015 00:12:39 +1100
-Message-ID: <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 21/50] powerpc/powernv: Increase PE# capacity
+Date: Thu,  5 Nov 2015 00:12:21 +1100
+Message-ID: <1446642770-4681-22-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,48 +10,62 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-In pnv_pci_reset_secondary_bus(), we should issue fundamental
-reset if any one subordinate device of the specified is requesting
-that. Otherwise, the device might not come up after the reset.
+Each PHB maintains an array helping to translate 2-bytes Request
+ID (RID) to PE# with the assumption that PE# takes one byte, meaning
+that we can't have more than 256 PEs. However, pci_dn->pe_number
+already had 4-bytes for the PE#.
+
+This extends the PE# capacity so that each of them will be 4-bytes
+long. Then we can reuse IODA_INVALID_PE to check the PE# stored in
+phb->pe_rmap[] is valid or not.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 6 +++++-
+ arch/powerpc/platforms/powernv/pci.h      | 7 ++-----
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-index c69b6a1..ab8b93e 100644
---- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-@@ -878,9 +878,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
- 	return 0;
- }
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 0e66c4d..ef93a01 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -766,7 +766,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
  
-+static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
-+{
-+	int *freset = data;
-+
-+	/*
-+	 * Stop the iteration immediately if there has any one
-+	 * PCI device requesting fundamental reset.
-+	 */
-+	*freset |= pdev->needs_freset;
-+	return *freset;
-+}
-+
- void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
- {
--	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
-+	int option, freset = 0;
-+
-+	if (dev->subordinate)
-+		pci_walk_bus(dev->subordinate,
-+			     pnv_pci_dev_reset_type, &freset);
-+
-+	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
-+	pnv_eeh_bridge_reset(dev, option);
- 	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
- }
+ 	/* Clear the reverse map */
+ 	for (rid = pe->rid; rid < rid_end; rid++)
+-		phb->ioda.pe_rmap[rid] = 0;
++		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
  
+ 	/* Release from all parents PELT-V */
+ 	while (parent) {
+@@ -3164,6 +3164,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	if (prop32)
+ 		phb->ioda.reserved_pe_idx = be32_to_cpup(prop32);
+ 
++	/* Invalidate RID to PE# mapping */
++	for (i = 0; i < ARRAY_SIZE(phb->ioda.pe_rmap); ++i)
++		phb->ioda.pe_rmap[i] = IODA_INVALID_PE;
++
+ 	/* Parse 64-bit MMIO range */
+ 	pnv_ioda_parse_m64_window(phb);
+ 
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 0802fcd..5df945f 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -162,11 +162,8 @@ struct pnv_phb {
+ 			struct list_head	pe_list;
+ 			struct mutex            pe_list_mutex;
+ 
+-			/* Reverse map of PEs, will have to extend if
+-			 * we are to support more than 256 PEs, indexed
+-			 * bus { bus, devfn }
+-			 */
+-			unsigned char		pe_rmap[0x10000];
++			/* Reverse map of PEs, indexed by {bus, devfn} */
++			int			pe_rmap[0x10000];
+ 
+ 			/* TCE cache invalidate registers (physical and
+ 			 * remapped)
 -- 
 2.1.0
