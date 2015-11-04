@@ -1,89 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] Documentation: tps65086: Add DT bindings for the
- TPS65086 PMIC
-Date: Wed, 4 Nov 2015 16:55:47 -0600
-Message-ID: <20151104225547.GA3705@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/6] Documentation: tps65086: Add DT bindings for the
+ TPS65086 GPO controller
+Date: Wed, 4 Nov 2015 16:57:38 -0600
+Message-ID: <20151104225738.GA5127@rob-hp-laptop>
 References: <1446657135-7820-1-git-send-email-afd@ti.com>
- <1446657135-7820-2-git-send-email-afd@ti.com>
+ <1446657135-7820-4-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446657135-7820-2-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1446657135-7820-4-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 04, 2015 at 11:12:10AM -0600, Andrew F. Davis wrote:
+On Wed, Nov 04, 2015 at 11:12:12AM -0600, Andrew F. Davis wrote:
 > The TPS65086 PMIC contains several regulators and a GPO controller.
-> Add bindings for the TPS65086 PMIC.
+> Add bindings for the TPS65086 GPO controller.
 > 
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
 > ---
->  Documentation/devicetree/bindings/mfd/tps65086.txt | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
+>  Documentation/devicetree/bindings/gpio/gpio-tps65086.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65086.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
 > new file mode 100644
-> index 0000000..2fd5394
+> index 0000000..ba05107
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
-> @@ -0,0 +1,46 @@
-> +* TPS65086 Power Management Integrated Circuit bindings
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
+> @@ -0,0 +1,16 @@
+> +* TPS65086 GPO Controller bindings
 > +
 > +Required properties:
-> + - compatible		: Should be "ti,tps65086".
-> + - reg			: I2C slave address.
-> + - interrupt-parent	: Phandle to he parent interrupt controller.
-> + - interrupts		: The interrupt line the device is connected to.
-> + - interrupt-controller	: Marks the device node as an interrupt controller.
-> + - #interrupt-cells	: The number of cells to describe an IRQ, this
-> +			    should be 2. The first cell is the IRQ number,
-> +			    the second cell is the flags, encoded as the trigger
-> +			    masks from <dt-bindings/interrupt-controller/irq.h>.
-> +
-> +Additional nodes defined in:
-> + - Regulators	: ../regulator/tps65086-regulator.txt
-> + - GPIO		: ../gpio/gpio-tps65086.txt
+> + - compatible		: Should be "ti,tps65086-gpio".
+> + - gpio-controller	: Marks the device node as a GPIO Controller.
+> + - #gpio-cells		: Should be two. The first cell is the pin number
+> +			    and the second cell is used to specify flags.
+> +			    See ../gpio/gpio.txt for possible values.
 > +
 > +Example:
 > +
-> +	pmic: tps65086@5e {
-> +		compatible = "ti,tps65086";
-> +		reg = <0x5e>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +
-> +		regulators {
-> +			compatible = "ti,tps65086-regulator";
-> +
-> +			buck1 {
-> +				regulator-name = "vcc1";
-> +				regulator-min-microvolt = <1600000>;
-> +				regulator-max-microvolt = <1600000>;
-> +				regulator-boot-on;
-> +				ti,regulator-decay;
-> +				ti,regulator-step-size-25mv;
-> +			};
-> +		};
-> +
-> +		gpio4: gpio {
-> +			compatible = "ti,tps65086-gpio";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
+> +	gpio4: gpio {
+> +		compatible = "ti,tps65086-gpio";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
 > +	};
 > -- 
 > 1.9.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
