@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 47/50] drivers/of: Specify parent node in of_fdt_unflatten_tree()
-Date: Thu,  5 Nov 2015 00:12:47 +1100
-Message-ID: <1446642770-4681-48-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 29/50] powerpc/pci: Rename pcibios_find_pci_bus()
+Date: Thu,  5 Nov 2015 00:12:29 +1100
+Message-ID: <1446642770-4681-30-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -10,110 +10,98 @@ To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds one more argument to of_fdt_unflatten_tree() to specify
-the parent node of the FDT blob that is going to be unflattened.
-In the result, the function can be used to unflatten FDT blob that
-represents device sub-tree in PowerNV PCI hotplug driver.
+This renames pcibios_find_pci_bus() to pci_find_bus_by_node() to
+avoid conflicts with those PCI subsystem weak function names, which
+have prefix "pcibios". No logical changes introduced.
 
 Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- drivers/of/fdt.c       | 14 ++++++++++----
- drivers/of/unittest.c  |  2 +-
- include/linux/of_fdt.h |  1 +
- 3 files changed, 12 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/pci-bridge.h      | 2 +-
+ arch/powerpc/platforms/pseries/pci_dlpar.c | 5 ++---
+ drivers/pci/hotplug/rpadlpar_core.c        | 6 +++---
+ drivers/pci/hotplug/rpaphp_pci.c           | 2 +-
+ 4 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 559ce49..8c8228e 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -443,11 +443,13 @@ static void *unflatten_dt_nodes(const void *blob,
-  * pointers of the nodes so the normal device-tree walking functions
-  * can be used.
-  * @blob: The blob to expand
-+ * @dad: Parent device node
-  * @mynodes: The device_node tree created by the call
-  * @dt_alloc: An allocator that provides a virtual address to memory
-  * for the resulting tree
-  */
- static void __unflatten_device_tree(const void *blob,
-+			     struct device_node *dad,
- 			     struct device_node **mynodes,
- 			     void * (*dt_alloc)(u64 size, u64 align))
- {
-@@ -472,7 +474,7 @@ static void __unflatten_device_tree(const void *blob,
- 	}
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index c2360c8..28385cb 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -257,7 +257,7 @@ static inline struct eeh_dev *pdn_to_eeh_dev(struct pci_dn *pdn)
+ #endif
  
- 	/* First pass, scan for size */
--	size = (unsigned long)unflatten_dt_nodes(blob, NULL, NULL, NULL, true);
-+	size = (unsigned long)unflatten_dt_nodes(blob, NULL, dad, NULL, true);
- 	size = ALIGN(size, 4);
+ /** Find the bus corresponding to the indicated device node */
+-extern struct pci_bus *pcibios_find_pci_bus(struct device_node *dn);
++extern struct pci_bus *pci_find_bus_by_node(struct device_node *dn);
  
- 	pr_debug("  size is %lx, allocating...\n", size);
-@@ -486,7 +488,7 @@ static void __unflatten_device_tree(const void *blob,
- 	pr_debug("  unflattening %p...\n", mem);
- 
- 	/* Second pass, do actual unflattening */
--	unflatten_dt_nodes(blob, mem, NULL, mynodes, false);
-+	unflatten_dt_nodes(blob, mem, dad, mynodes, false);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
-@@ -501,6 +503,9 @@ static void *kernel_tree_alloc(u64 size, u64 align)
- 
- /**
-  * of_fdt_unflatten_tree - create tree of device_nodes from flat blob
-+ * @blob: Flat device tree blob
-+ * @dad: Parent device node
-+ * @mynodes: The device tree created by the call
-  *
-  * unflattens the device-tree passed by the firmware, creating the
-  * tree of struct device_node. It also fills the "name" and "type"
-@@ -508,9 +513,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
-  * can be used.
-  */
- void of_fdt_unflatten_tree(const unsigned long *blob,
-+			struct device_node *dad,
- 			struct device_node **mynodes)
- {
--	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+ /** Remove all of the PCI devices under this bus */
+ extern void pci_remove_pci_devices(struct pci_bus *bus);
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index 5d4a3df..aee22b4 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -54,8 +54,7 @@ find_bus_among_children(struct pci_bus *bus,
+ 	return child;
  }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
  
-@@ -1163,7 +1169,7 @@ bool __init early_init_dt_scan(void *params)
-  */
- void __init unflatten_device_tree(void)
+-struct pci_bus *
+-pcibios_find_pci_bus(struct device_node *dn)
++struct pci_bus *pci_find_bus_by_node(struct device_node *dn)
  {
--	__unflatten_device_tree(initial_boot_params, &of_root,
-+	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
- 				early_init_dt_alloc_memory_arch);
+ 	struct pci_dn *pdn = dn->data;
  
- 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 9f71770b6..bafcf66 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
- 			"not running tests\n", __func__);
- 		return -ENOMEM;
- 	}
--	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-+	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
- 		return -ENODATA;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index df9ef38..3644960 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
- extern void of_fdt_unflatten_tree(const unsigned long *blob,
-+			       struct device_node *dad,
- 			       struct device_node **mynodes);
+@@ -64,7 +63,7 @@ pcibios_find_pci_bus(struct device_node *dn)
  
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
+ 	return find_bus_among_children(pdn->phb->bus, dn);
+ }
+-EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
++EXPORT_SYMBOL_GPL(pci_find_bus_by_node);
+ 
+ struct pci_controller *init_phb_dynamic(struct device_node *dn)
+ {
+diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+index ebd283b..9aa392b 100644
+--- a/drivers/pci/hotplug/rpadlpar_core.c
++++ b/drivers/pci/hotplug/rpadlpar_core.c
+@@ -176,7 +176,7 @@ static int dlpar_add_pci_slot(char *drc_name, struct device_node *dn)
+ 	struct pci_dev *dev;
+ 	struct pci_controller *phb;
+ 
+-	if (pcibios_find_pci_bus(dn))
++	if (pci_find_bus_by_node(dn))
+ 		return -EINVAL;
+ 
+ 	/* Add pci bus */
+@@ -213,7 +213,7 @@ static int dlpar_remove_phb(char *drc_name, struct device_node *dn)
+ 	struct pci_dn *pdn;
+ 	int rc = 0;
+ 
+-	if (!pcibios_find_pci_bus(dn))
++	if (!pci_find_bus_by_node(dn))
+ 		return -EINVAL;
+ 
+ 	/* If pci slot is hotpluggable, use hotplug to remove it */
+@@ -357,7 +357,7 @@ int dlpar_remove_pci_slot(char *drc_name, struct device_node *dn)
+ 
+ 	pci_lock_rescan_remove();
+ 
+-	bus = pcibios_find_pci_bus(dn);
++	bus = pci_find_bus_by_node(dn);
+ 	if (!bus) {
+ 		ret = -EINVAL;
+ 		goto out;
+diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
+index 256066c..e7dd573 100644
+--- a/drivers/pci/hotplug/rpaphp_pci.c
++++ b/drivers/pci/hotplug/rpaphp_pci.c
+@@ -93,7 +93,7 @@ int rpaphp_enable_slot(struct slot *slot)
+ 	if (rc)
+ 		return rc;
+ 
+-	bus = pcibios_find_pci_bus(slot->dn);
++	bus = pci_find_bus_by_node(slot->dn);
+ 	if (!bus) {
+ 		err("%s: no pci_bus for dn %s\n", __func__, slot->dn->full_name);
+ 		return -EINVAL;
 -- 
 2.1.0
 
