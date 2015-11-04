@@ -1,119 +1,50 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 04 Nov 2015 08:49:05 +0000
-Message-ID: <5639C681.6060007@arm.com>
-References: <1446564227-4704-1-git-send-email-bharatku@xilinx.com> <5638DE62.6050605@arm.com> <8520D5D51A55D047800579B09414719801693C20@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
+ the eDMA3
+Date: Wed, 4 Nov 2015 10:49:53 +0200
+Message-ID: <5639C6B1.10105@ti.com>
+References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
+ <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
+ <CAOesGMg0KsHnbF8hEYPZ8bY8wz9fC0_m7-KS4A6kB__nUi9kAw@mail.gmail.com>
+ <20151102100405.GJ21326@localhost> <5637534D.2020304@ti.com>
+ <20151102154057.GQ21326@localhost> <5637853D.8040306@ti.com>
+ <20151104083710.GK12910@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B09414719801693C20@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151104083710.GK12910@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Olof Johansson <olof@lixom.net>, Sekhar Nori <nsekhar@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Robert Schwebel <r.schwebel@pengutronix.de>, "arm@kernel.org" <arm@kernel.org>, "Kristo, Tero" <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/15 06:38, Bharat Kumar Gogada wrote:
->>> +static struct msi_domain_info nwl_msi_domain_info = {
->>> +	.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
->> MSI_FLAG_USE_DEF_CHIP_OPS |
->>> +		  MSI_FLAG_MULTI_PCI_MSI),
+On 11/04/2015 10:37 AM, Vinod Koul wrote:
+> On Mon, Nov 02, 2015 at 05:46:05PM +0200, Peter Ujfalusi wrote:
+>>> Okay I have reverted the two and applied the edma patch sent, can y=
+ou please
+>>> verify topic/edma_fix before I merge it and send my PULL request.
 >>
->> If you're supporting multi-MSI, how do you ensure that all hwirqs are
->> contiguous as required by the spec? Clearly, your allocator doesn't provide
->> this guarantee.
->>
-> Oh ok, then how can we know if one EP is requesting for multiple irq's, because in pci_enable_msi_range,
->  it does do while loop according to msi_capability_init return value 
-> which in turn requests for multiple irq's. Is there any way to find out when single EP requesting for multiple MSI?
+>> The branch looks good. Thank you!
+>> It would have been great if the DTS changes for am335x/am437x would =
+have been
+>> in 4.4, but I will send them for 4.5 after rc1 is out.
+>=20
+> Any confirmation that this fixes the reported issue before I send pul=
+l
+> request?
 
-Please read what I've written: hwirqs *must* be contiguous for
-multi-MSI. If the device requests 4 MSIs, they *must* be in the [x,x+3]
-range. Your allocator only allocates one interrupt at time (ignoring the
-nr_irqs parameter).
+Patch 'dmaengine: edma: Add dummy driver skeleton for edma3-tptc' alone=
+ is
+fixing the issue:
+https://lkml.org/lkml/2015/11/2/297
 
-You shouldn't try to find what the device does, that's irrelevant at
-that level.
+I have tested it on: OMAP-L138-EVM, am335x-evmsk, am437x-gp-evm, dra7-e=
+vm (I
+have local patches to enable and use eDMA).
+All looks fine, mmc/audio works and they use eDMA.
 
->> Also, you still lack support for MSI-X (which would come for free...).
-> 
-> We don't support MSI-X in root port mode.
+Olof: can you run a quick test with the linked patch?
 
-I don't believe you. If you support single MSI, you support MSI-X
-(because that's mostly a property of the endpoint).
-
->>> +	.chip = &nwl_msi_irq_chip,
->>> +};
->>> +#endif
->>> +
->>> +	irq_domain_remove(pcie->legacy_irq_domain);
->>> +
->>> +#ifdef CONFIG_PCI_MSI
->>> +	irq_set_chained_handler_and_data(msi->irq_msi0, NULL, NULL);
->>> +	irq_set_chained_handler_and_data(msi->irq_msi1, NULL, NULL);
->>> +
->>> +	irq_domain_remove(msi->msi_domain);
->>> +	irq_domain_remove(msi->dev_domain);
->>> +#endif
->>> +
->>> +}
->>
->> Remove these #ifdefs. You can test the validity of these fields before calling
->> the various functions. You can also move this to a separate function.
-> 
-> Without #ifdefs if we compile driver for legacy, MSI structures will not be available and we get compile time error.
-
-Legacy? Legacy interrupts? The msi structure is still there, you've
-embedded it in your pcie structure. Let me spell it out for you:
-
-static void nwl_msi_free_domain(struct nwl_pcie *pcie)
-{
-	struct nwl_msi *msi = &pcie->msi;
-
-	if (msi->irq_msi0)
-		irq_set_chained_handler_and_data(msi->irq_msi0, NULL, NULL);
-	if (msi->irq_msi1)
-		irq_set_chained_handler_and_data(msi->irq_msi1, NULL, NULL);
-
-	if (msi->msi_domain)
-		irq_domain_remove(msi->msi_domain);
-	if (msi->dev_domain)
-		irq_domain_remove(msi->dev_domain);
-}
-
-static void nwl_pcie_free_irq_domain(struct nwl_pcie *pcie)
-{
-	int i;
-	u32 irq;
-
-	for (i = 0; i < 4; i++) {
-		irq = irq_find_mapping(pcie->legacy_irq_domain, i + 1);
-		if (irq > 0)
-			irq_dispose_mapping(irq);
-	}
-
-	irq_domain_remove(pcie->legacy_irq_domain);
-
-	nwl_msi_free_domain(pcie);
-}
-
->>> +
->>> +	/* setup AFI/FPCI range */
->>> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
->>> +	base = virt_to_phys((void *)msi->pages);
->>> +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
->>> +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
->>
->> I just read this, and I'm puzzled. Actually, puzzled is an understatement. Why
->> on Earth do you need to give RAM to your MSI HW?
->> This should be a device, not RAM. By the look of it, this could be absolutely
->> anything. Are you sure you have to supply RAM here?
->>
-> This is required in our hardware, so that bridge identifies incoming MWr as MSI.
-
-I'm asking why this has to be RAM. What is the actual requirement?
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Thank you,
+P=E9ter
