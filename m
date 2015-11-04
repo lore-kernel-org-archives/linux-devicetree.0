@@ -1,56 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] spi: spi-ti-qspi: add mmap mode read support
-Date: Wed, 4 Nov 2015 14:41:12 +0000
-Message-ID: <20151104144112.GJ1717@sirena.org.uk>
-References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
- <1446545174-14193-3-git-send-email-vigneshr@ti.com>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [PATCH V3 00/11] Add support for Imagination
+	Technologies audio controllers
+Date: Wed, 4 Nov 2015 14:40:46 +0000
+Message-ID: <1446648057-373-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J2uG6jHjFLimDtBY"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446545174-14193-3-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, James Hartley <James.Hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
---J2uG6jHjFLimDtBY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add drivers and documentation for the following
+Imagination Technologies audio controllers:
 
-On Tue, Nov 03, 2015 at 03:36:11PM +0530, Vignesh R wrote:
+I2S Input Controller
+I2S Output Controller
+Parallel Output Controller
+SPDIF Input Controller
+SPDIF Output Controller
 
-> +	ti_qspi_enable_memory_map(spi);
-> +	ti_qspi_setup_mmap_read(spi, read_opcode, addr_width,
-> +				dummy_bytes);
-> +	memcpy_fromio(buf, qspi->mmap_base + from, len);
-> +	*retlen = len;
-> +	ti_qspi_disable_memory_map(spi);
+These controllers are used in Pistachio SoC
 
-We'll be constantly enabling and disabling memory mapping with this.
-I'm not sure that's a meaningful cost given that it doesn't actually
-remap anything but rather just switches hardware modes, we can always
-optimise it later if it is.
+Changes in V3:
+- Addressed comments from Mark Brown
 
---J2uG6jHjFLimDtBY
-Content-Type: application/pgp-signature; name="signature.asc"
+Damien.Horsley (11):
+  ASoC: img: Add binding document for I2S input controller
+  ASoC: img: Add driver for I2S input controller
+  ASoC: img: Add binding document for I2S output controller
+  ASoC: img: Add driver for I2S output controller
+  ASoC: img: Add binding document for parallel output controller
+  ASoC: img: Add driver for parallel output controller
+  ASoC: img: Add binding document for SPDIF input controller
+  ASoC: img: Add driver for SPDIF input controller
+  ASoC: img: Add documentation for SPDIF in controls
+  ASoC: img: Add binding document for SPDIF output controller
+  ASoC: img: Add driver for SPDIF output controller
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ .../devicetree/bindings/sound/img,i2s-in.txt       |  47 ++
+ .../devicetree/bindings/sound/img,i2s-out.txt      |  51 ++
+ .../devicetree/bindings/sound/img,parallel-out.txt |  44 ++
+ .../devicetree/bindings/sound/img,spdif-in.txt     |  41 ++
+ .../devicetree/bindings/sound/img,spdif-out.txt    |  44 ++
+ Documentation/sound/alsa/img,spdif-in.txt          |  49 ++
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/img/Kconfig                              |  44 ++
+ sound/soc/img/Makefile                             |   5 +
+ sound/soc/img/img-i2s-in.c                         | 516 +++++++++++++
+ sound/soc/img/img-i2s-out.c                        | 565 +++++++++++++++
+ sound/soc/img/img-parallel-out.c                   | 327 +++++++++
+ sound/soc/img/img-spdif-in.c                       | 806 +++++++++++++++++++++
+ sound/soc/img/img-spdif-out.c                      | 441 +++++++++++
+ 15 files changed, 2982 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,i2s-in.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/img,i2s-out.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/img,parallel-out.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/img,spdif-in.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/img,spdif-out.txt
+ create mode 100644 Documentation/sound/alsa/img,spdif-in.txt
+ create mode 100644 sound/soc/img/Kconfig
+ create mode 100644 sound/soc/img/Makefile
+ create mode 100644 sound/soc/img/img-i2s-in.c
+ create mode 100644 sound/soc/img/img-i2s-out.c
+ create mode 100644 sound/soc/img/img-parallel-out.c
+ create mode 100644 sound/soc/img/img-spdif-in.c
+ create mode 100644 sound/soc/img/img-spdif-out.c
 
-iQEcBAEBCAAGBQJWOhkHAAoJECTWi3JdVIfQrmcH/RSv12IrXq3lgkOLUxuYhAZj
-YOjt8j86vy59wUu+5W/9xdgcAnrL3mOWhJowkBCgY6108OkKhlgxBgnvmqGbQu8V
-Qu2sKe4sPQp/rnajAKPL8epEjegIkeE3mumUKN9tbKxraf8uVVS7thibwPPY0qwm
-m/OFxiu6+9RLHJ+Q1iBXHDV7ePbJU+eRl6+BKaWYMjHfgW9gw8ktZFX6hjnTG0vC
-6FcOCp1kdcgOn5GDwUthIyQOzHqtLv7qL+SkSLEeMdFG12FPyX5sN/k/c0WakBIw
-qC2rWHcTTfRHy/o1XZ/oM6osCtkRBaglWeUpXXVg5KTMZHgONyume4GHLMIVAAc=
-=vwZN
------END PGP SIGNATURE-----
-
---J2uG6jHjFLimDtBY--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.4
