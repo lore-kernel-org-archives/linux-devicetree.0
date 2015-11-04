@@ -1,60 +1,93 @@
-From: Edward Cragg <edward.cragg@codethink.co.uk>
-Subject: [PATCH v2] ARM: meson: Add status LED for Odroid-C1
-Date: Wed,  4 Nov 2015 12:17:20 +0000
-Message-ID: <1446639440-4057-1-git-send-email-edward.cragg@codethink.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ct173-kernel-internal@lists.codethink.co.uk
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH v6 0/8] Build and support rk3036 SoC platform
+Date: Wed,  4 Nov 2015 20:18:15 +0800
+Message-ID: <1446639503-11763-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kever Yang <kever.yang@rock-chips.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Paul Walmsley <paul@pwsan.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the blue status LED to the Hardkernel Odroid C1 board DTS.
 
-Signed-off-by: <edward.cragg@codethink.co.uk>
----
+Hi,
+  We need to support rk3036 soc platform via upstream, there are
+some primary parts for the initial release of minimum system: dts,
+clk-pll, smp, and clock tree for rk3036, and additional, we can use
+these startup and run to init processs.
 
-Changes in v2:
-    - Remove additional copyright
+Thanks.
 
- arch/arm/boot/dts/meson8b-odroidc1.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Changed in v6:
+- add hardware timer in dtsi and some the aliases of basic modules
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 88669a7..1f03406 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -1,6 +1,7 @@
- /*
-  * Copyright 2015 Endless Mobile, Inc.
-  * Author: Carlo Caione <carlo@endlessm.com>
-+ * Author: Edward Cragg <edward.cragg@codethink.co.uk>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -46,6 +47,7 @@
- 
- /dts-v1/;
- #include "meson8b.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Hardkernel ODROID-C1";
-@@ -58,6 +60,16 @@
- 	memory {
- 		reg = <0x40000000 0x40000000>;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		blue {
-+			label = "c1:blue:alive";
-+			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &mmc0 {
+Changed in v5:
+- don't use clk_ APIs in the pll init-callback
+
+Changed in v4:
+- add some basic IP modules on rk3036.dtsi
+- optimized supporting smp codes
+
+Changed in v3:
+- optimized some codes based on v2
+- removed the patch "initial set time for rtc-hym8563" (useless)
+- removed the patch "pinctrl" (approved)
+
+Changed in v2:
+- based on v1, add clock controller documentation
+- enable timer5 startup
+- add smp for cpu1
+- initial set time for rtc-hym8563
+
+Changes in v1:
+- add dts, pinctrl and clock tree for rk3036 soc platform
+
+The patchset (8):
+8) rockchip: make sure timer5 is enabled on rk3036 platforms
+7) ARM: dts: enable smp for rk3036
+6) ARM: rockchip: add support smp for rk3036
+5) ARM: dts: rockchip: add core rk3036 dts
+4) clk: rockchip: add clock controller for rk3036
+3) clk: rockchip: add new pll-type for rk3036 and similar socs
+2) clk: rockchip: add dt-binding header for rk3036
+1) dt-bindings: add documentation of rk3036 clock controller
+
+
+Changes in v6:
+Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+Heiko Stuebner (1):
+  ARM: rockchip: add support smp for rk3036
+
+Xing Zheng (7):
+  dt-bindings: add documentation of rk3036 clock controller
+  clk: rockchip: add dt-binding header for rk3036
+  clk: rockchip: add new pll-type for rk3036 and similar socs
+  clk: rockchip: add clock controller for rk3036
+  ARM: dts: rockchip: add core rk3036 dts
+  ARM: dts: enable smp for rk3036
+  rockchip: make sure timer5 is enabled on rk3036 platforms
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |    1 +
+ .../bindings/clock/rockchip,rk3036-cru.txt         |   56 ++
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/rk3036-evb.dts                   |   64 +++
+ arch/arm/boot/dts/rk3036.dtsi                      |  552 ++++++++++++++++++++
+ arch/arm/mach-rockchip/platsmp.c                   |   45 +-
+ arch/arm/mach-rockchip/rockchip.c                  |   44 +-
+ drivers/clk/rockchip/Makefile                      |    1 +
+ drivers/clk/rockchip/clk-pll.c                     |  249 ++++++++-
+ drivers/clk/rockchip/clk-rk3036.c                  |  478 +++++++++++++++++
+ drivers/clk/rockchip/clk.h                         |   32 +-
+ include/dt-bindings/clock/rk3036-cru.h             |  193 +++++++
+ 12 files changed, 1685 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+ create mode 100644 arch/arm/boot/dts/rk3036-evb.dts
+ create mode 100644 arch/arm/boot/dts/rk3036.dtsi
+ create mode 100644 drivers/clk/rockchip/clk-rk3036.c
+ create mode 100644 include/dt-bindings/clock/rk3036-cru.h
+
 -- 
-2.6.1
+1.7.9.5
+
+
