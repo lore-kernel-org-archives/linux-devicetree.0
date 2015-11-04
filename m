@@ -1,150 +1,132 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v7,1/3] dt-bindings: binding for jz4780-{nand,bch}
-Date: Wed, 4 Nov 2015 08:57:51 +0100
-Message-ID: <20151104085751.55fbf3c3@bbrezillon>
-References: <1444148837-10770-1-git-send-email-harvey.hunt@imgtec.com>
-	<1444148837-10770-2-git-send-email-harvey.hunt@imgtec.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Wed, 04 Nov 2015 17:09:36 +0900
+Message-ID: <5639BD40.4020000@samsung.com>
+References: <cover.1446542020.git.p.fedin@samsung.com>
+ <9a1edb15c06e27fa1fba5773c937e3a3d363c32a.1446542020.git.p.fedin@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1444148837-10770-2-git-send-email-harvey.hunt@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harvey Hunt <harvey.hunt@imgtec.com>
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-kernel@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>, Alex Smith <alex@alex-smith.me.uk>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <9a1edb15c06e27fa1fba5773c937e3a3d363c32a.1446542020.git.p.fedin@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Harvey,
+On 03.11.2015 18:16, Pavel Fedin wrote:
+> Add documentation for new subnode properties, allowing bank configuration.
+> Based on u-boot implementation, but heavily reworked.
 
-On Tue, 6 Oct 2015 17:27:15 +0100
-Harvey Hunt <harvey.hunt@imgtec.com> wrote:
-
-> From: Alex Smith <alex.smith@imgtec.com>
-> 
-> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-> drivers.
-
-Patch 3 does not seem to follow this binding: it still uses the
-ingenic,ecc-xxx properties and defines NAND timings.
-
-Also, as answered to patch 3, I think it would be clearer to separate
-the nand controller and nand chip representation.
-
-Best Regards,
-
-Boris
+Please mention also fixing the size of mapped memory in <reg> in the
+example.
 
 > 
-> Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Alex Smith <alex@alex-smith.me.uk>
-> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+> Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
 > ---
-> v6 -> v7:
->  - Add nand-ecc-mode to DT bindings.
->  - Add nand-on-flash-bbt to DT bindings.
+>  .../bindings/arm/samsung/exynos-srom.txt           | 68 +++++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 2 deletions(-)
 > 
-> v5 -> v6:
->  - No change.
-> 
-> v4 -> v5:
->  - Rename ingenic,bch-device to ingenic,bch-controller to fit with
->    existing convention.
-> 
-> v3 -> v4:
->  - No change
-> 
-> v2 -> v3:
->  - Rebase to 4.0-rc6
->  - Changed ingenic,ecc-size to common nand-ecc-step-size
->  - Changed ingenic,ecc-strength to common nand-ecc-strength
->  - Changed ingenic,busy-gpio to common rb-gpios
->  - Changed ingenic,wp-gpio to common wp-gpios
-> 
-> v1 -> v2:
->  - Rebase to 4.0-rc3
-> 
->  .../bindings/mtd/ingenic,jz4780-nand.txt           | 61 ++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> new file mode 100644
-> index 0000000..44a0468
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> @@ -0,0 +1,61 @@
-> +* Ingenic JZ4780 NAND/BCH
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> index 33886d5..ee378ca 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
+> @@ -5,8 +5,72 @@ Required properties:
+>  
+>  - reg: offset and length of the register set
+>  
+> -Example:
+> +- #address-cells: Must be set to 2 to allow memory address translation
 > +
-> +This file documents the device tree bindings for NAND flash devices on the
-> +JZ4780. NAND devices are connected to the NEMC controller (described in
-> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-> +be children of the NEMC node.
+> +- #size-cells: Must be set to 1 to allow CS address passing
 > +
-> +Required NAND device properties:
-> +- compatible: Should be set to "ingenic,jz4780-nand".
-> +- reg: For each bank with a NAND chip attached, should specify a bank number,
-> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+> +- ranges: Must be set up to reflect the memory layout with four integer values
+> +	  per bank:
+> +		<bank-number> 0 <physical address of bank> <size>
 > +
-> +Optional NAND device properties:
-> +- ingenic,bch-controller: To make use of the hardware BCH controller, this
-> +  property must contain a phandle for the BCH controller node. The required
-> +  properties for this node are described below. If this is not specified,
-> +  software BCH will be used instead.
-> +- nand-ecc-step-size: ECC block size in bytes.
-> +- nand-ecc-strength: ECC strength (max number of correctable bits).
-> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
-> +- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-> +- rb-gpios: GPIO specifier for the busy pin.
-> +- wp-gpios: GPIO specifier for the write protect pin.
+
+These are mentioned as required but actually they shouldn't be, if there
+are no peripherals.
+
+By making them required you would be breaking ABI. I see that actually
+the ABI is not broken by the driver so maybe just add a separate
+optional section for subdevices.
+In that section you would described required attributes and subnodes.
+
+> +Sub-nodes:
+> +The SROM controller can be used to attach external peripherials. In this case
+
+s/peripherials/peripherals/
+
+> +device nodes should be added as subnodes to the SROMc node. These subnodes,
+> +except regular device specification, should contain the following properties,
+> +describing configuration of the relevant SROM bank:
 > +
-> +Example:
+> +Required properties:
+> +- reg: bank number, base address (relative to start of the bank) and size of
+> +       the memory mapped for the device. Note that base address will be
+> +       typically 0 as this is the start of the bank.
 > +
-> +nemc: nemc@13410000 {
-> +	...
+> +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
+> +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
+> +                        Each value is specified in cycles (0 - 15) and has the
+> +                        following meaning:
+> +                        Tacp : Page mode access cycle at Page mode
+> +                        Tcah : Address holding time after CSn
+> +                        Tcoh : Chip selection hold on OEn
+> +                        Tacc : Access cycle
+
+This one has values 1-32 clock cycles
+
+> +                        Tcos : Chip selection set-up before OEn
+> +                        Tacs : Address set-up before CSn
 > +
-> +	nand: nand@1 {
-> +		compatible = "ingenic,jz4780-nand";
-> +		reg = <1 0 0x1000000>;	/* Bank 1 */
+> +Optional properties:
+> +- reg-io-width : data width in bytes (1 or 2). If omitted, default of 1 is used.
 > +
-> +		ingenic,bch-controller = <&bch>;
-> +		nand-ecc-step-size = <1024>;
-> +		nand-ecc-strength = <24>;
-> +		nand-ecc-mode = "hw";
-> +		nand-on-flash-bbt;
+> +- samsung,srom-page-mode : page mode configuration for the bank:
+> +			   0 - normal (one data)
+> +			   1 - four data
+> +			   If omitted, default of 0 is used.
 > +
-> +		rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
-> +		wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
+> +Example: basic definition, no banks are configured
+> +	sromc@12570000 {
+> +		compatible = "samsung,exynos-srom";
+> +		reg = <0x12570000 0x14>;
 > +	};
-> +};
 > +
-> +The BCH controller is a separate SoC component used for error correction on
-> +NAND devices. The following is a description of the device properties for a
-> +BCH controller.
-> +
-> +Required BCH properties:
-> +- compatible: Should be set to "ingenic,jz4780-bch".
-> +- reg: Should specify the BCH controller registers location and length.
-> +- clocks: Clock for the BCH controller.
-> +
-> +Example:
-> +
-> +bch: bch@134d0000 {
-> +	compatible = "ingenic,jz4780-bch";
-> +	reg = <0x134d0000 0x10000>;
-> +
-> +	clocks = <&cgu JZ4780_CLK_BCH>;
-> +};
+> +Example: SROMc with smsc 911x ethernet chip on bank 3
 
+Maybe:
+s/smsc 911x ethernet/SMSC911x Ethernet/
 
+Best regards,
+Krzysztof
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+>  	sromc@12570000 {
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x04000000 0x20000   // Bank0
+> +			  1 0 0x05000000 0x20000   // Bank1
+> +			  2 0 0x06000000 0x20000   // Bank2
+> +			  3 0 0x07000000 0x20000>; // Bank3
+> +
+>  		compatible = "samsung,exynos-srom";
+> -		reg = <0x12570000 0x10>;
+> +		reg = <0x12570000 0x14>;
+> +
+> +		ethernet@3 {
+> +			compatible = "smsc,lan9115";
+> +			reg = <3 0 0x10000>;	   // Bank 3, offset = 0
+> +			phy-mode = "mii";
+> +			interrupt-parent = <&gpx0>;
+> +			interrupts = <5 8>;
+> +			reg-io-width = <2>;
+> +			smsc,irq-push-pull;
+> +			smsc,force-internal-phy;
+> +
+> +			samsung,srom-config = <1 9 12 1 9 1 1>;
+> +		};
+>  	};
+> 
