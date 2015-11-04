@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 48/50] drivers/of: Return allocated memory from of_fdt_unflatten_tree()
-Date: Thu,  5 Nov 2015 00:12:48 +1100
-Message-ID: <1446642770-4681-49-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 05/50] powerpc/powernv: Drop pnv_ioda_setup_dev_PE()
+Date: Thu,  5 Nov 2015 00:12:05 +1100
+Message-ID: <1446642770-4681-6-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,99 +10,95 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This returns the allocate memory chunk, storing the unflattened device
-tree, from of_fdt_unflatten_tree() so that memory chunk can be released
-on demand in PowerNV PCI hotplug driver.
+Nobody uses this function and this just drops it.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 ---
- drivers/of/fdt.c       | 25 ++++++++++++++++---------
- include/linux/of_fdt.h |  6 +++---
- 2 files changed, 19 insertions(+), 12 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 71 -------------------------------
+ 1 file changed, 71 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 8c8228e..b0a5708 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -447,11 +447,14 @@ static void *unflatten_dt_nodes(const void *blob,
-  * @mynodes: The device_node tree created by the call
-  * @dt_alloc: An allocator that provides a virtual address to memory
-  * for the resulting tree
-+ *
-+ * Returns NULL on failure or the memory chunk containing the unflattened
-+ * device tree on success.
-  */
--static void __unflatten_device_tree(const void *blob,
--			     struct device_node *dad,
--			     struct device_node **mynodes,
--			     void * (*dt_alloc)(u64 size, u64 align))
-+static void *__unflatten_device_tree(const void *blob,
-+				     struct device_node *dad,
-+				     struct device_node **mynodes,
-+				     void *(*dt_alloc)(u64 size, u64 align))
- {
- 	unsigned long size;
- 	void *mem;
-@@ -460,7 +463,7 @@ static void __unflatten_device_tree(const void *blob,
- 
- 	if (!blob) {
- 		pr_debug("No device tree pointer\n");
--		return;
-+		return NULL;
- 	}
- 
- 	pr_debug("Unflattening device tree:\n");
-@@ -470,7 +473,7 @@ static void __unflatten_device_tree(const void *blob,
- 
- 	if (fdt_check_header(blob)) {
- 		pr_err("Invalid device tree blob header\n");
--		return;
-+		return NULL;
- 	}
- 
- 	/* First pass, scan for size */
-@@ -494,6 +497,7 @@ static void __unflatten_device_tree(const void *blob,
- 			   be32_to_cpup(mem + size));
- 
- 	pr_debug(" <- unflatten_device_tree()\n");
-+	return mem;
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index aa3645c..74288ab 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -918,77 +918,6 @@ static int pnv_pci_vf_resource_shift(struct pci_dev *dev, int offset)
  }
+ #endif /* CONFIG_PCI_IOV */
  
- static void *kernel_tree_alloc(u64 size, u64 align)
-@@ -511,10 +515,13 @@ static void *kernel_tree_alloc(u64 size, u64 align)
-  * tree of struct device_node. It also fills the "name" and "type"
-  * pointers of the nodes so the normal device-tree walking functions
-  * can be used.
-+ *
-+ * Returns NULL on failure or the memory chunk containing the unflattened
-+ * device tree on success.
-  */
--void of_fdt_unflatten_tree(const unsigned long *blob,
--			struct device_node *dad,
--			struct device_node **mynodes)
-+void *of_fdt_unflatten_tree(const unsigned long *blob,
-+			    struct device_node *dad,
-+			    struct device_node **mynodes)
+-#if 0
+-static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+-{
+-	struct pci_controller *hose = pci_bus_to_host(dev->bus);
+-	struct pnv_phb *phb = hose->private_data;
+-	struct pci_dn *pdn = pci_get_pdn(dev);
+-	struct pnv_ioda_pe *pe;
+-	int pe_num;
+-
+-	if (!pdn) {
+-		pr_err("%s: Device tree node not associated properly\n",
+-			   pci_name(dev));
+-		return NULL;
+-	}
+-	if (pdn->pe_number != IODA_INVALID_PE)
+-		return NULL;
+-
+-	/* PE#0 has been pre-set */
+-	if (dev->bus->number == 0)
+-		pe_num = 0;
+-	else
+-		pe_num = pnv_ioda_alloc_pe(phb);
+-	if (pe_num == IODA_INVALID_PE) {
+-		pr_warning("%s: Not enough PE# available, disabling device\n",
+-			   pci_name(dev));
+-		return NULL;
+-	}
+-
+-	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
+-	 * pointer in the PE data structure, both should be destroyed at the
+-	 * same time. However, this needs to be looked at more closely again
+-	 * once we actually start removing things (Hotplug, SR-IOV, ...)
+-	 *
+-	 * At some point we want to remove the PDN completely anyways
+-	 */
+-	pe = &phb->ioda.pe_array[pe_num];
+-	pci_dev_get(dev);
+-	pdn->pcidev = dev;
+-	pdn->pe_number = pe_num;
+-	pe->pdev = dev;
+-	pe->pbus = NULL;
+-	pe->tce32_seg = -1;
+-	pe->mve_number = -1;
+-	pe->rid = dev->bus->number << 8 | pdn->devfn;
+-
+-	pe_info(pe, "Associated device to PE\n");
+-
+-	if (pnv_ioda_configure_pe(phb, pe)) {
+-		/* XXX What do we do here ? */
+-		if (pe_num)
+-			pnv_ioda_free_pe(phb, pe_num);
+-		pdn->pe_number = IODA_INVALID_PE;
+-		pe->pdev = NULL;
+-		pci_dev_put(dev);
+-		return NULL;
+-	}
+-
+-	/* Assign a DMA weight to the device */
+-	pe->dma_weight = pnv_ioda_dma_weight(dev);
+-	if (pe->dma_weight != 0) {
+-		phb->ioda.dma_weight += pe->dma_weight;
+-		phb->ioda.dma_pe_count++;
+-	}
+-
+-	/* Link the PE */
+-	pnv_ioda_link_pe_by_weight(phb, pe);
+-
+-	return pe;
+-}
+-#endif /* Useful for SRIOV case */
+-
+ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
  {
- 	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
- }
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 3644960..b87b26a7 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -37,9 +37,9 @@ extern bool of_fdt_is_big_endian(const void *blob,
- 				 unsigned long node);
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
--extern void of_fdt_unflatten_tree(const unsigned long *blob,
--			       struct device_node *dad,
--			       struct device_node **mynodes);
-+extern void *of_fdt_unflatten_tree(const unsigned long *blob,
-+				   struct device_node *dad,
-+				   struct device_node **mynodes);
- 
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
+ 	struct pci_dev *dev;
 -- 
 2.1.0
