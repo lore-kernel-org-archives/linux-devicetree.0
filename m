@@ -1,178 +1,59 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v7 45/50] drivers/of: Avoid recursively calling unflatten_dt_node()
-Date: Thu,  5 Nov 2015 00:12:45 +1100
-Message-ID: <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 04/50] powerpc/powernv: Cleanup on
+ pnv_pci_ioda_controller_ops
+Date: Thu,  5 Nov 2015 00:12:04 +1100
+Message-ID: <1446642770-4681-5-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-In current implementation, unflatten_dt_node() is called recursively
-to unflatten device nodes in FDT blob. It's stress to limited stack
-capacity.
-
-This avoids calling the function recursively, meaning the device
-nodes are unflattened in one call on unflatten_dt_node(): two arrays
-are introduced to track the parent path size and the device node of
-current level of depth, which will be used by the device node on next
-level of depth to be unflattened. Also, the parameter "poffset" and
-"fpsize" are unused and dropped.
-
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
----
- drivers/of/fdt.c | 94 +++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 56 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 173b036..f4793d0 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -355,61 +355,82 @@ static unsigned long populate_node(const void *blob,
- 	return fpsize;
- }
- 
-+static void reverse_nodes(struct device_node *parent)
-+{
-+	struct device_node *child, *next;
-+
-+	/* In-depth first */
-+	child = parent->child;
-+	while (child) {
-+		reverse_nodes(child);
-+
-+		child = child->sibling;
-+	}
-+
-+	/* Reverse the nodes in the child list */
-+	child = parent->child;
-+	parent->child = NULL;
-+	while (child) {
-+		next = child->sibling;
-+
-+		child->sibling = parent->child;
-+		parent->child = child;
-+		child = next;
-+	}
-+}
-+
- /**
-  * unflatten_dt_node - Alloc and populate a device_node from the flat tree
-  * @blob: The parent device tree blob
-  * @mem: Memory chunk to use for allocating device nodes and properties
-- * @poffset: pointer to node in flat tree
-  * @dad: Parent struct device_node
-  * @nodepp: The device_node tree created by the call
-- * @fpsize: Size of the node path up at the current depth.
-  * @dryrun: If true, do not allocate device nodes but still calculate needed
-  * memory size
-  */
- static void *unflatten_dt_node(const void *blob,
- 			       void *mem,
--			       int *poffset,
- 			       struct device_node *dad,
- 			       struct device_node **nodepp,
--			       unsigned long fpsize,
- 			       bool dryrun)
- {
--	struct device_node *np;
--	static int depth;
--	int old_depth;
--
--	fpsize = populate_node(blob, *poffset, &mem, dad, fpsize, &np, dryrun);
--	if (!fpsize)
--		return mem;
-+	struct device_node *root;
-+	int offset = 0, depth = 0;
-+	unsigned long fpsizes[64];
-+	struct device_node *nps[64];
- 
--	old_depth = depth;
--	*poffset = fdt_next_node(blob, *poffset, &depth);
--	if (depth < 0)
--		depth = 0;
--	while (*poffset > 0 && depth > old_depth)
--		mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
--					fpsize, dryrun);
-+	if (nodepp)
-+		*nodepp = NULL;
-+
-+	root = dad;
-+	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
-+	nps[depth++] = dad;
-+	while (offset >= 0 && depth < 64) {
-+		fpsizes[depth] = populate_node(blob, offset, &mem,
-+					       nps[depth - 1],
-+					       fpsizes[depth - 1],
-+					       &nps[depth], dryrun);
-+		if (!fpsizes[depth])
-+			return mem;
-+
-+		if (!dryrun && nodepp && !*nodepp)
-+			*nodepp = nps[depth];
-+		if (!dryrun && !root)
-+			root = nps[depth];
-+
-+		offset = fdt_next_node(blob, offset, &depth);
-+	}
- 
--	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
--		pr_err("unflatten: error %d processing FDT\n", *poffset);
-+	if (offset < 0 && offset != -FDT_ERR_NOTFOUND)
-+		pr_err("%s: Error %d processing FDT\n",
-+		       __func__, offset);
- 
- 	/*
- 	 * Reverse the child list. Some drivers assumes node order matches .dts
- 	 * node order
- 	 */
--	if (!dryrun && np->child) {
--		struct device_node *child = np->child;
--		np->child = NULL;
--		while (child) {
--			struct device_node *next = child->sibling;
--			child->sibling = np->child;
--			np->child = child;
--			child = next;
--		}
--	}
--
--	if (nodepp)
--		*nodepp = np;
-+	if (!dryrun)
-+		reverse_nodes(root);
- 
- 	return mem;
- }
-@@ -431,7 +452,6 @@ static void __unflatten_device_tree(const void *blob,
- 			     void * (*dt_alloc)(u64 size, u64 align))
- {
- 	unsigned long size;
--	int start;
- 	void *mem;
- 
- 	pr_debug(" -> unflatten_device_tree()\n");
-@@ -452,8 +472,7 @@ static void __unflatten_device_tree(const void *blob,
- 	}
- 
- 	/* First pass, scan for size */
--	start = 0;
--	size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
-+	size = (unsigned long)unflatten_dt_node(blob, NULL, NULL, NULL, true);
- 	size = ALIGN(size, 4);
- 
- 	pr_debug("  size is %lx, allocating...\n", size);
-@@ -467,8 +486,7 @@ static void __unflatten_device_tree(const void *blob,
- 	pr_debug("  unflattening %p...\n", mem);
- 
- 	/* Second pass, do actual unflattening */
--	start = 0;
--	unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
-+	unflatten_dt_node(blob, mem, NULL, mynodes, false);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
--- 
-2.1.0
+VGhpcyBjbGVhbnMgdXAgb24gcG52X3BjaV9pb2RhX2NvbnRyb2xsZXJfb3BzIHN0cnVjdCB0byB1
+c2UgdGFiCmluc3RlYWQgb2Ygc3BhY2UgaW5kZW50IG9mIHN0YXRlbWVudCB0byBhdm9pZCBjb21w
+bGFpbnMgZnJvbQpzY3JpcHRzL2NoZWNrcGF0Y2gucGwuIE5vIGxvZ2ljYWwgY2hhbmdlcyBpbnRy
+b2R1Y2VkLgoKU2lnbmVkLW9mZi1ieTogR2F2aW4gU2hhbiA8Z3dzaGFuQGxpbnV4LnZuZXQuaWJt
+LmNvbT4KLS0tCiBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLWlvZGEuYyB8IDE4
+ICsrKysrKysrKy0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgOSBk
+ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYv
+cGNpLWlvZGEuYyBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jCmlu
+ZGV4IDJlMmJlZGIuLmFhMzY0NWMgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMv
+cG93ZXJudi9wY2ktaW9kYS5jCisrKyBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9w
+Y2ktaW9kYS5jCkBAIC0zMDY0LDE3ICszMDY0LDE3IEBAIHN0YXRpYyB2b2lkIHBudl9wY2lfaW9k
+YV9zaHV0ZG93bihzdHJ1Y3QgcGNpX2NvbnRyb2xsZXIgKmhvc2UpCiB9CiAKIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgcGNpX2NvbnRyb2xsZXJfb3BzIHBudl9wY2lfaW9kYV9jb250cm9sbGVyX29wcyA9
+IHsKLSAgICAgICAuZG1hX2Rldl9zZXR1cCA9IHBudl9wY2lfZG1hX2Rldl9zZXR1cCwKKwkuZG1h
+X2Rldl9zZXR1cAkJPSBwbnZfcGNpX2RtYV9kZXZfc2V0dXAsCiAjaWZkZWYgQ09ORklHX1BDSV9N
+U0kKLSAgICAgICAuc2V0dXBfbXNpX2lycXMgPSBwbnZfc2V0dXBfbXNpX2lycXMsCi0gICAgICAg
+LnRlYXJkb3duX21zaV9pcnFzID0gcG52X3RlYXJkb3duX21zaV9pcnFzLAorCS5zZXR1cF9tc2lf
+aXJxcwkJPSBwbnZfc2V0dXBfbXNpX2lycXMsCisJLnRlYXJkb3duX21zaV9pcnFzCT0gcG52X3Rl
+YXJkb3duX21zaV9pcnFzLAogI2VuZGlmCi0gICAgICAgLmVuYWJsZV9kZXZpY2VfaG9vayA9IHBu
+dl9wY2lfZW5hYmxlX2RldmljZV9ob29rLAotICAgICAgIC53aW5kb3dfYWxpZ25tZW50ID0gcG52
+X3BjaV93aW5kb3dfYWxpZ25tZW50LAotICAgICAgIC5yZXNldF9zZWNvbmRhcnlfYnVzID0gcG52
+X3BjaV9yZXNldF9zZWNvbmRhcnlfYnVzLAotICAgICAgIC5kbWFfc2V0X21hc2sgPSBwbnZfcGNp
+X2lvZGFfZG1hX3NldF9tYXNrLAotICAgICAgIC5kbWFfZ2V0X3JlcXVpcmVkX21hc2sgPSBwbnZf
+cGNpX2lvZGFfZG1hX2dldF9yZXF1aXJlZF9tYXNrLAotICAgICAgIC5zaHV0ZG93biA9IHBudl9w
+Y2lfaW9kYV9zaHV0ZG93biwKKwkuZW5hYmxlX2RldmljZV9ob29rCT0gcG52X3BjaV9lbmFibGVf
+ZGV2aWNlX2hvb2ssCisJLndpbmRvd19hbGlnbm1lbnQJPSBwbnZfcGNpX3dpbmRvd19hbGlnbm1l
+bnQsCisJLnJlc2V0X3NlY29uZGFyeV9idXMJPSBwbnZfcGNpX3Jlc2V0X3NlY29uZGFyeV9idXMs
+CisJLmRtYV9zZXRfbWFzawkJPSBwbnZfcGNpX2lvZGFfZG1hX3NldF9tYXNrLAorCS5kbWFfZ2V0
+X3JlcXVpcmVkX21hc2sJPSBwbnZfcGNpX2lvZGFfZG1hX2dldF9yZXF1aXJlZF9tYXNrLAorCS5z
+aHV0ZG93bgkJPSBwbnZfcGNpX2lvZGFfc2h1dGRvd24sCiB9OwogCiBzdGF0aWMgdm9pZCBfX2lu
+aXQgcG52X3BjaV9pbml0X2lvZGFfcGhiKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsCi0tIAoyLjEu
+MAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhw
+cGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczov
+L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
