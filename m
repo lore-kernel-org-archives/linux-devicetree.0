@@ -1,100 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] drivers/gpio: Port gpio driver to layerscape platform
-Date: Wed, 04 Nov 2015 09:53:13 +0100
-Message-ID: <4040829.fHtCUjX87j@wuerfel>
-References: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com> <1446619704-27669-2-git-send-email-Gang.Liu@freescale.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun7i: Enable audio codec on
+ pcDuino
+Date: Wed, 4 Nov 2015 10:15:55 +0100
+Message-ID: <5639CCCB.9050700@redhat.com>
+References: <1446565640-21069-1-git-send-email-hdegoede@redhat.com>
+ <jwvsi4mo5al.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1446619704-27669-2-git-send-email-Gang.Liu@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Liu Gang <Gang.Liu@freescale.com>, robh+dt@kernel.org, linus.walleij@linaro.org, shawnguo@kernel.org, devicetree@vger.kernel.org, R58472@freescale.com, Shaveta Leekha <shaveta@freescale.com>, b07421@freescale.com, bhupesh.sharma@freescale.com, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <jwvsi4mo5al.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 November 2015 14:48:24 Liu Gang wrote:
-> Layerscape has the same ip block/controller as
-> GPIO on powerpc platform(MPC8XXX).
-> 
-> So use portable i/o accessors, as in_be32/out_be32
-> accessors are Power architecture specific whereas
-> ioread32/iowrite32 and ioread32be/iowrite32be are
-> available in other architectures.
-> 
-> Layerscape GPIO controller's registers may be big
-> or little endian, so the code needs to get the
-> endian property from DTB, then make additional
-> functions to fit right register read/write
-> operations.
-> 
-> Currently the code can support ls2080a GPIO with
-> little endian registers. And it can also work well
-> on other layerscape platform with big endian GPIO
-> registers.
-> 
-> Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
-> Signed-off-by: Shaveta Leekha <shaveta@freescale.com>
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 8949b3f..c3ca283 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -290,12 +290,12 @@ config GPIO_MPC5200
->  	depends on PPC_MPC52xx
->  
->  config GPIO_MPC8XXX
-> -	bool "MPC512x/MPC8xxx GPIO support"
-> +	bool "MPC512x/MPC8xxx/QorIQ GPIO support"
->  	depends on PPC_MPC512x || PPC_MPC831x || PPC_MPC834x || PPC_MPC837x || \
-> -		   FSL_SOC_BOOKE || PPC_86xx
-> +		   FSL_SOC_BOOKE || PPC_86xx || ARCH_LAYERSCAPE
->  	help
->  	  Say Y here if you're going to use hardware that connects to the
-> -	  MPC512x/831x/834x/837x/8572/8610 GPIOs.
-> +	  MPC512x/831x/834x/837x/8572/8610/QorIQ GPIOs.
+Hi Stefan,
 
-It would be nice to also add '|| COMPILE_TEST' here and ensure that
-it also builds on x86 with that set, to get better coverage from
-the automated build testing infrastructure.
+On 04-11-15 03:43, Stefan Monnier wrote:
+> BTW, I've been using successfully the same additions in
+> sun7i-a20-bananapi.dts and sun7i-a20-orangepi-mini.dts.
 
-> +static bool gpio_little_endian;
-> +static inline u32 gpio_in32(void __iomem *addr)
-> +{
-> +	u32 val;
-> +
-> +	if (gpio_little_endian)
-> +		val = ioread32(addr);
-> +	else
-> +		val = ioread32be(addr);
-> +
-> +	return val;
-> +}
-> +
-> +static inline void gpio_out32(u32 val, void __iomem *addr)
-> +{
-> +	if (gpio_little_endian)
-> +		iowrite32(val, addr);
-> +	else
-> +		iowrite32be(val, addr);
-> +}
+Can you please turn these additions into proper patches,
+and send 2 separate patches for these with S-o-b lines
+in the commit msg, using git send-email to send the patches ?
 
-I guess this is fixed per architecture, so you could also do this as
+Regards,
 
-static inline void gpio_out32(u32 val, void __iomem *addr)
-{
-	if (IS_ENABLED(CONFIG_ARM))
-		iowrite32(val, addr);
-	else if (IS_ENABLED(CONFIG_PPC)
-		iowrite32be(val, addr);
-	else
-		BUG();
-}
-
-and then check that the DT flag for little-endian matches
-the architecture specific default.
-
-Your version is more generic of course, while the one I show here
-is a little more efficient and avoids the global variable. Your choice.
-
-	Arnd
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
