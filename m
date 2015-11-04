@@ -1,73 +1,204 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: consolidate display related bindings
-Date: Wed, 4 Nov 2015 10:00:55 -0600
-Message-ID: <CAL_JsqKfwxBRrej8eAomfO6RhyErsY7J76c3OdX75sd8eqGazA@mail.gmail.com>
-References: <1443737554-10352-1-git-send-email-robh@kernel.org>
- <1443737554-10352-2-git-send-email-robh@kernel.org> <20151104144724.GA2553@ulmo>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling unflatten_dt_node()
+Date: Wed, 4 Nov 2015 10:07:50 -0600
+Message-ID: <CAL_JsqJGpV-+JYyA1g0dw_nEduhmrMEouTH03kHtuCkGSOP57Q@mail.gmail.com>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151104144724.GA2553@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 4, 2015 at 8:47 AM, Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Thu, Oct 01, 2015 at 05:12:27PM -0500, Rob Herring wrote:
->> This is a quite large renaming to consolidate display related bindings
->> into a single "display" directory from various scattered locations of
->> video, drm, gpu, fb, mipi, and panel. The prior location was somewhat
->> based on the Linux driver location, but bindings should be independent
->> of that.
+On Wed, Nov 4, 2015 at 7:12 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+> In current implementation, unflatten_dt_node() is called recursively
+> to unflatten device nodes in FDT blob. It's stress to limited stack
+> capacity.
+
+Did you actually hit a problem?
+
+Now we have a max depth of 64. Seems like that should be plenty... Any
+idea how this compares to when we run out of stack space?
+
+> This avoids calling the function recursively, meaning the device
+> nodes are unflattened in one call on unflatten_dt_node(): two arrays
+> are introduced to track the parent path size and the device node of
+> current level of depth, which will be used by the device node on next
+> level of depth to be unflattened. Also, the parameter "poffset" and
+> "fpsize" are unused and dropped.
+
+Yay. I'm happy to see parameters removed instead of added to this function.
+
 >
-> Sorry for being so late to comment on this. I hadn't seen the patches
-> before and noticed only because various bindings that I chanced to look
-> at had moved in linux-next.
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>  drivers/of/fdt.c | 94 +++++++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 56 insertions(+), 38 deletions(-)
 >
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
-> [...]
->> diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> similarity index 100%
->> rename from Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
->> rename to Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 173b036..f4793d0 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -355,61 +355,82 @@ static unsigned long populate_node(const void *blob,
+>         return fpsize;
+>  }
 >
-> That's not quite correct in my opinion. host1x is a top-level module
-> that is the parent for a number of hardware blocks, only some of which
-> are display-related. host1x itself has nothing to do with display at
-> all, except perhaps for providing syncpoints for VBLANK counters. It's
-> not a GPU either, though the GPU hardware blocks are children (at least
-> on generations before Tegra124). Other children include hardware blocks
-> that do video encoding and decoding, so aren't really related to display
-> either.
+> +static void reverse_nodes(struct device_node *parent)
+> +{
+> +       struct device_node *child, *next;
+> +
+> +       /* In-depth first */
+> +       child = parent->child;
+> +       while (child) {
+> +               reverse_nodes(child);
+> +
+> +               child = child->sibling;
+> +       }
+> +
+> +       /* Reverse the nodes in the child list */
+> +       child = parent->child;
+> +       parent->child = NULL;
+> +       while (child) {
+> +               next = child->sibling;
+> +
+> +               child->sibling = parent->child;
+> +               parent->child = child;
+> +               child = next;
+> +       }
+> +}
+> +
+>  /**
+>   * unflatten_dt_node - Alloc and populate a device_node from the flat tree
+>   * @blob: The parent device tree blob
+>   * @mem: Memory chunk to use for allocating device nodes and properties
+> - * @poffset: pointer to node in flat tree
+>   * @dad: Parent struct device_node
+>   * @nodepp: The device_node tree created by the call
+> - * @fpsize: Size of the node path up at the current depth.
+>   * @dryrun: If true, do not allocate device nodes but still calculate needed
+>   * memory size
+>   */
+>  static void *unflatten_dt_node(const void *blob,
+>                                void *mem,
+> -                              int *poffset,
+>                                struct device_node *dad,
+>                                struct device_node **nodepp,
+> -                              unsigned long fpsize,
+>                                bool dryrun)
 
-It is no worse than before and "display" is somewhat more general than
-"gpu" was. There's other things like i.MX IPU that similarly don't fit
-well. I'm not looking to solve all those cases at this point. I
-haven't even looked at bindings/media/ yet...
+We can probably further simplify things by returning an int with
+negative being errors and positive being the size. Also, dryrun can be
+dropped and implied by mem and/or nodepp being NULL.
 
-> I suppose Documentation/devicetree/bindings/bus might be a more adequate
-> location for the host1x bindings, but then we'd need to split out the
-> display related pieces, and possibly refer to the host1x document from
-> them. The gr2d and gr3d could then be kept in the gpu subdirectory.
+>  {
+> -       struct device_node *np;
+> -       static int depth;
+> -       int old_depth;
+> -
+> -       fpsize = populate_node(blob, *poffset, &mem, dad, fpsize, &np, dryrun);
+> -       if (!fpsize)
+> -               return mem;
+> +       struct device_node *root;
+> +       int offset = 0, depth = 0;
+> +       unsigned long fpsizes[64];
+> +       struct device_node *nps[64];
+
+Use a define here.
+
 >
-> Also the MIPI block is a calibration block that's used for both DSI and
-> CSI lanes, so it's used for both video display and capture. I can't
-> think of a good location for those.
+> -       old_depth = depth;
+> -       *poffset = fdt_next_node(blob, *poffset, &depth);
+> -       if (depth < 0)
+> -               depth = 0;
+> -       while (*poffset > 0 && depth > old_depth)
+> -               mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
+> -                                       fpsize, dryrun);
+> +       if (nodepp)
+> +               *nodepp = NULL;
+> +
+> +       root = dad;
+> +       fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
+> +       nps[depth++] = dad;
+> +       while (offset >= 0 && depth < 64) {
+> +               fpsizes[depth] = populate_node(blob, offset, &mem,
+> +                                              nps[depth - 1],
+> +                                              fpsizes[depth - 1],
+> +                                              &nps[depth], dryrun);
+> +               if (!fpsizes[depth])
+> +                       return mem;
+> +
+> +               if (!dryrun && nodepp && !*nodepp)
+> +                       *nodepp = nps[depth];
+> +               if (!dryrun && !root)
+> +                       root = nps[depth];
+> +
+> +               offset = fdt_next_node(blob, offset, &depth);
+> +       }
+>
+> -       if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
+> -               pr_err("unflatten: error %d processing FDT\n", *poffset);
+> +       if (offset < 0 && offset != -FDT_ERR_NOTFOUND)
+> +               pr_err("%s: Error %d processing FDT\n",
+> +                      __func__, offset);
 
-For both cases, unless we have similar bindings living in multiple
-places, the location is not so important IMO.
+What about depth == 64 case? I think the behavior should be a WARN and
+ignore those nodes so we at least can continue to boot and see the
+error. Of course, if there is a phandle pointing to ignored nodes, we
+have to handle that too.
 
-> Also I notice that this patch doesn't update the MAINTAINERS entries
-> pointing at these documents, so maintainers will now no longer get Cc'ed
-> on patches that modify the bindings. Do you plan on fixing that up your-
-> self or do you expect maintainers to send patches, possibly after
-> further cleanup of the bindings?
-
-I'll update MAINTAINERS.
-
-Rob
+>
+>         /*
+>          * Reverse the child list. Some drivers assumes node order matches .dts
+>          * node order
+>          */
+> -       if (!dryrun && np->child) {
+> -               struct device_node *child = np->child;
+> -               np->child = NULL;
+> -               while (child) {
+> -                       struct device_node *next = child->sibling;
+> -                       child->sibling = np->child;
+> -                       np->child = child;
+> -                       child = next;
+> -               }
+> -       }
+> -
+> -       if (nodepp)
+> -               *nodepp = np;
+> +       if (!dryrun)
+> +               reverse_nodes(root);
+>
+>         return mem;
+>  }
+> @@ -431,7 +452,6 @@ static void __unflatten_device_tree(const void *blob,
+>                              void * (*dt_alloc)(u64 size, u64 align))
+>  {
+>         unsigned long size;
+> -       int start;
+>         void *mem;
+>
+>         pr_debug(" -> unflatten_device_tree()\n");
+> @@ -452,8 +472,7 @@ static void __unflatten_device_tree(const void *blob,
+>         }
+>
+>         /* First pass, scan for size */
+> -       start = 0;
+> -       size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
+> +       size = (unsigned long)unflatten_dt_node(blob, NULL, NULL, NULL, true);
+>         size = ALIGN(size, 4);
+>
+>         pr_debug("  size is %lx, allocating...\n", size);
+> @@ -467,8 +486,7 @@ static void __unflatten_device_tree(const void *blob,
+>         pr_debug("  unflattening %p...\n", mem);
+>
+>         /* Second pass, do actual unflattening */
+> -       start = 0;
+> -       unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
+> +       unflatten_dt_node(blob, mem, NULL, mynodes, false);
+>         if (be32_to_cpup(mem + size) != 0xdeadbeef)
+>                 pr_warning("End of tree marker overwritten: %08x\n",
+>                            be32_to_cpup(mem + size));
+> --
+> 2.1.0
+>
