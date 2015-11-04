@@ -1,65 +1,80 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v3 0/6] Add support for the TI TPS65086 PMIC
-Date: Wed, 4 Nov 2015 11:12:09 -0600
-Message-ID: <1446657135-7820-1-git-send-email-afd@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 4/6] reset: sunxi: Add Allwinner H3 bus resets
+Date: Wed, 4 Nov 2015 08:30:14 -0800
+Message-ID: <20151104163014.GB6114@lukather>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-5-git-send-email-jenskuske@gmail.com>
+ <13919923.o3Dj9msmoa@wuerfel>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="abYdCjSRCBwcb+dP"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBK745CYQKGQEV2CVFPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <13919923.o3Dj9msmoa@wuerfel>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the TPS65086 PMIC. It is a MFD with an I2C
-interface, several regulators and load switches, and a GPO controller.
+--abYdCjSRCBwcb+dP
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Based on v4.3-rc1 and needs b4fe8ba ("regmap: Add generic macro to define regmap_irq")
-from Lee Jones' tree to build.
+Hi Arnd,
 
-v1 can be found here: [1] v2: [2]
+On Fri, Oct 30, 2015 at 09:27:03AM +0100, Arnd Bergmann wrote:
+> On Tuesday 27 October 2015 17:50:24 Jens Kuske wrote:
+> > 
+> > +static int sun8i_h3_bus_reset_xlate(struct reset_controller_dev *rcdev,
+> > +                                   const struct of_phandle_args *reset_spec)
+> > +{
+> > +       unsigned int index = reset_spec->args[0];
+> > +
+> > +       if (index < 96)
+> > +               return index;
+> > +       else if (index < 128)
+> > +               return index + 32;
+> > +       else if (index < 160)
+> > +               return index + 64;
+> > +       else
+> > +               return -EINVAL;
+> > +}
+> > +
+> > 
+> 
+> This looks like you are doing something wrong and should either
+> put the actual number into DT,
 
-Changes from v2:
- - Use DT match callback in regulator
- - Typo fixes
+This is the actual number, except that there's some useless registers
+in between. Allwinner documents it like that:
 
-Changes from v1:
- - Split up DT Docs into separate patches
- - Use mfd core to instantiate sub-devices
- - Several small fixes as discussed in v1 thread
+0x0	Reset 0
+0x4	Reset 1
+0xc	Reset 2
 
-[1] http://www.spinics.net/lists/devicetree/msg98403.html
-[2] http://www.spinics.net/lists/kernel/msg2111345.html
+So we have to adjust the offset to account with the blank register in
+between (0x8).
 
-Andrew F. Davis (6):
-  Documentation: tps65086: Add DT bindings for the TPS65086 PMIC
-  Documentation: tps65086: Add DT bindings for the TPS65086 regulators
-  Documentation: tps65086: Add DT bindings for the TPS65086 GPO
-    controller
-  mfd: tps65086: Add driver for the TPS65086 PMIC
-  regulator: tps65086: Add regulator driver for the TPS65086 PMIC
-  gpio: tps65086: Add GPIO driver for the TPS65086 PMIC
+> or use a two-cell representation, with the first cell indicating the
+> block (0, 1 or 2), and the second cell the index.
 
- .../devicetree/bindings/gpio/gpio-tps65086.txt     |  16 ++
- Documentation/devicetree/bindings/mfd/tps65086.txt |  46 ++++
- .../bindings/regulator/tps65086-regulator.txt      |  35 +++
- drivers/gpio/Kconfig                               |   6 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-tps65086.c                       | 115 ++++++++++
- drivers/mfd/Kconfig                                |  14 ++
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/tps65086.c                             | 157 +++++++++++++
- drivers/regulator/Kconfig                          |   7 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/tps65086-regulator.c             | 250 +++++++++++++++++++++
- include/linux/mfd/tps65086.h                       | 120 ++++++++++
- 13 files changed, 769 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65086.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/tps65086-regulator.txt
- create mode 100644 drivers/gpio/gpio-tps65086.c
- create mode 100644 drivers/mfd/tps65086.c
- create mode 100644 drivers/regulator/tps65086-regulator.c
- create mode 100644 include/linux/mfd/tps65086.h
+And the missing register is not a block either.
+
+That would also imply either changing the bindings of that driver (and
+all the current DTS that are using it), or introducing a whole new
+driver just to deal with some extraordinary offset calculation.
+
+Maxime
 
 -- 
-1.9.1
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--abYdCjSRCBwcb+dP--
