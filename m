@@ -1,96 +1,67 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/8] dt-bindings: consolidate display related bindings
-Date: Wed, 4 Nov 2015 15:47:24 +0100
-Message-ID: <20151104144724.GA2553@ulmo>
-References: <1443737554-10352-1-git-send-email-robh@kernel.org>
- <1443737554-10352-2-git-send-email-robh@kernel.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Wed, 04 Nov 2015 15:05:48 +0000
+Message-ID: <563A1ECC.3000609@arm.com>
+References: <1446564227-4704-1-git-send-email-bharatku@xilinx.com> <5638DE62.6050605@arm.com> <8520D5D51A55D047800579B09414719801693C20@XAP-PVEXMBX01.xlnx.xilinx.com> <5639C681.6060007@arm.com> <8520D5D51A55D047800579B09414719801693D38@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1443737554-10352-2-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8520D5D51A55D047800579B09414719801693D38@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+On 04/11/15 12:30, Bharat Kumar Gogada wrote:
+>>
+>>>> Also, you still lack support for MSI-X (which would come for free...).
+>>>
+>>> We don't support MSI-X in root port mode.
+>>
+>> I don't believe you. If you support single MSI, you support MSI-X (because
+>> that's mostly a property of the endpoint).
+> 
+> In our architecture specification MSI-X is unsupported for Root Port.
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I still can't believe it, but in the end, that's your own problem.
 
-On Thu, Oct 01, 2015 at 05:12:27PM -0500, Rob Herring wrote:
-> This is a quite large renaming to consolidate display related bindings
-> into a single "display" directory from various scattered locations of
-> video, drm, gpu, fb, mipi, and panel. The prior location was somewhat
-> based on the Linux driver location, but bindings should be independent
-> of that.
+>>>>> +	.chip = &nwl_msi_irq_chip,
+>>>>> +};
+>>>>> +#endif
+>>>>> +
+>>>>> +
+>>>>> +	/* setup AFI/FPCI range */
+>>>>> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
+>>>>> +	base = virt_to_phys((void *)msi->pages);
+>>>>> +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
+>>>>> +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
+>>>>
+>>>> I just read this, and I'm puzzled. Actually, puzzled is an
+>>>> understatement. Why on Earth do you need to give RAM to your MSI
+>> HW?
+>>>> This should be a device, not RAM. By the look of it, this could be
+>>>> absolutely anything. Are you sure you have to supply RAM here?
+>>>>
+>>> This is required in our hardware, so that bridge identifies incoming MWr as
+>> MSI.
+>>
+>> I'm asking why this has to be RAM. What is the actual requirement?
+> 
+> We are allocating RAM for MSI (which is expected) and assigning this address to msi->pages
+> this is what EP MSI capability will be programmed with.
+> For the bridge to detect an incoming MWr from EP as MSI, hardware needs to know MSI address
+> so the same address is programmed in the hardware register for comparison purpose.
+> It is the actual requirement from hardware.
 
-Sorry for being so late to comment on this. I hadn't seen the patches
-before and noticed only because various bindings that I chanced to look
-at had moved in linux-next.
+I understand that you need to provide an address for the bridge to
+match. I'm asking why this has to be RAM as opposed to any other device
+address. This seems to be a unique requirement (nobody else does that),
+and I'd like to understand why there is this requirement.
 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-[...]
-> diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> rename to Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+Thanks,
 
-That's not quite correct in my opinion. host1x is a top-level module
-that is the parent for a number of hardware blocks, only some of which
-are display-related. host1x itself has nothing to do with display at
-all, except perhaps for providing syncpoints for VBLANK counters. It's
-not a GPU either, though the GPU hardware blocks are children (at least
-on generations before Tegra124). Other children include hardware blocks
-that do video encoding and decoding, so aren't really related to display
-either.
-
-I suppose Documentation/devicetree/bindings/bus might be a more adequate
-location for the host1x bindings, but then we'd need to split out the
-display related pieces, and possibly refer to the host1x document from
-them. The gr2d and gr3d could then be kept in the gpu subdirectory.
-
-Also the MIPI block is a calibration block that's used for both DSI and
-CSI lanes, so it's used for both video display and capture. I can't
-think of a good location for those.
-
-Also I notice that this patch doesn't update the MAINTAINERS entries
-pointing at these documents, so maintainers will now no longer get Cc'ed
-on patches that modify the bindings. Do you plan on fixing that up your-
-self or do you expect maintainers to send patches, possibly after
-further cleanup of the bindings?
-
-Thierry
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWOhp5AAoJEN0jrNd/PrOha2AQAIfg79VTUVXuX1fE0m+NCbMN
-1lRmem1s2S6TPJbKF2+eRoHldMSBZZuTSMSXcts2j1+Fl1b+5t4KeusHxqhQD0mm
-1kiy7Dxrcqmdpxmc/QVvYkxUtiNiq4VdnmG3h/DIa71MDi/7aEF89Y3CUPEIFpZj
-55Rg5U2CZBVrGuZqa0866g7iOU393OD0rOgZK1oF6LwDmx0kw5iCUmJLwLSJvRND
-KXP7y5wDcGa0RGdlfZLeiK1ZfFNOx9A9rJdHlv8j2XzGkOFUps5IqVTipIElDQ+A
-PmSRWaQdrqn4lTDhpSxEnaQg/RorLuc0J8ugfHmTUBJv7sHYBU9t8OQ2DlfouTPl
-k4NJhGlg4moop52RMKjI9P/7jYFWLWhHrRNaJeqNZ1KjwWuLmnNQguWQSwwtxkg/
-PRjQNuGrnwaWjClcmRzustLjXo9N/dXyCnSaIWkEudybNk1zz4vjneFzifSLZV0W
-lUsRZnuAUbg3GVFuuelURNQ69kBBdDia/raS3Ev4VwehyEb5mSDDqNaP42swy2+5
-f0R24LtI+z6gqqZfRZ+Y2sUF99UJXk7COehdrtfGmj1x6SBQMmNOnZmVXgHi/Mwe
-kCVLu10Q247VFiB8sNsMZqJmkLH5dFqeiur0HdWi0Y98qKNWtZcUN+LyK4X4MFt3
-tfRWD0WPvVB2Bucrf5Hk
-=p4yI
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	M.
+-- 
+Jazz is not dead. It just smells funny...
