@@ -1,52 +1,178 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 36/50] powerpc/pci: Update bridge windows on PCI plug
-Date: Thu,  5 Nov 2015 00:12:36 +1100
-Message-ID: <1446642770-4681-37-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v7 45/50] drivers/of: Avoid recursively calling unflatten_dt_node()
+Date: Thu,  5 Nov 2015 00:12:45 +1100
+Message-ID: <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446642770-4681-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On the PCI plugging event, PCI slot's subordinate devices are
-scanned and their (IO and MMIO) resources are assigned. Platform
-dependent resources (PE#, IO/MMIO/DMA windows) are allocated or
-created on updating windows of the slot's upstream bridge.
+In current implementation, unflatten_dt_node() is called recursively
+to unflatten device nodes in FDT blob. It's stress to limited stack
+capacity.
 
-This updates the windows of the hot plugged slot's upstream bridge
-in pcibios_finish_adding_to_bus() so that the platform resources
-(PE#, IO/MMIO/DMA segments) are allocated or created accordingly.
+This avoids calling the function recursively, meaning the device
+nodes are unflattened in one call on unflatten_dt_node(): two arrays
+are introduced to track the parent path size and the device node of
+current level of depth, which will be used by the device node on next
+level of depth to be unflattened. Also, the parameter "poffset" and
+"fpsize" are unused and dropped.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/kernel/pci-common.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/of/fdt.c | 94 +++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 56 insertions(+), 38 deletions(-)
 
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 40df3a5..be9e515 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -1444,8 +1444,12 @@ void pcibios_finish_adding_to_bus(struct pci_bus *bus)
- 	/* Allocate bus and devices resources */
- 	pcibios_allocate_bus_resources(bus);
- 	pcibios_claim_one_bus(bus);
--	if (!pci_has_flag(PCI_PROBE_ONLY))
--		pci_assign_unassigned_bus_resources(bus);
-+	if (!pci_has_flag(PCI_PROBE_ONLY)) {
-+		if (bus->self)
-+			pci_assign_unassigned_bridge_resources(bus->self);
-+		else
-+			pci_assign_unassigned_bus_resources(bus);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 173b036..f4793d0 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -355,61 +355,82 @@ static unsigned long populate_node(const void *blob,
+ 	return fpsize;
+ }
+ 
++static void reverse_nodes(struct device_node *parent)
++{
++	struct device_node *child, *next;
++
++	/* In-depth first */
++	child = parent->child;
++	while (child) {
++		reverse_nodes(child);
++
++		child = child->sibling;
++	}
++
++	/* Reverse the nodes in the child list */
++	child = parent->child;
++	parent->child = NULL;
++	while (child) {
++		next = child->sibling;
++
++		child->sibling = parent->child;
++		parent->child = child;
++		child = next;
++	}
++}
++
+ /**
+  * unflatten_dt_node - Alloc and populate a device_node from the flat tree
+  * @blob: The parent device tree blob
+  * @mem: Memory chunk to use for allocating device nodes and properties
+- * @poffset: pointer to node in flat tree
+  * @dad: Parent struct device_node
+  * @nodepp: The device_node tree created by the call
+- * @fpsize: Size of the node path up at the current depth.
+  * @dryrun: If true, do not allocate device nodes but still calculate needed
+  * memory size
+  */
+ static void *unflatten_dt_node(const void *blob,
+ 			       void *mem,
+-			       int *poffset,
+ 			       struct device_node *dad,
+ 			       struct device_node **nodepp,
+-			       unsigned long fpsize,
+ 			       bool dryrun)
+ {
+-	struct device_node *np;
+-	static int depth;
+-	int old_depth;
+-
+-	fpsize = populate_node(blob, *poffset, &mem, dad, fpsize, &np, dryrun);
+-	if (!fpsize)
+-		return mem;
++	struct device_node *root;
++	int offset = 0, depth = 0;
++	unsigned long fpsizes[64];
++	struct device_node *nps[64];
+ 
+-	old_depth = depth;
+-	*poffset = fdt_next_node(blob, *poffset, &depth);
+-	if (depth < 0)
+-		depth = 0;
+-	while (*poffset > 0 && depth > old_depth)
+-		mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
+-					fpsize, dryrun);
++	if (nodepp)
++		*nodepp = NULL;
++
++	root = dad;
++	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
++	nps[depth++] = dad;
++	while (offset >= 0 && depth < 64) {
++		fpsizes[depth] = populate_node(blob, offset, &mem,
++					       nps[depth - 1],
++					       fpsizes[depth - 1],
++					       &nps[depth], dryrun);
++		if (!fpsizes[depth])
++			return mem;
++
++		if (!dryrun && nodepp && !*nodepp)
++			*nodepp = nps[depth];
++		if (!dryrun && !root)
++			root = nps[depth];
++
++		offset = fdt_next_node(blob, offset, &depth);
 +	}
  
- 	/* Fixup EEH */
- 	eeh_add_device_tree_late(bus);
+-	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
+-		pr_err("unflatten: error %d processing FDT\n", *poffset);
++	if (offset < 0 && offset != -FDT_ERR_NOTFOUND)
++		pr_err("%s: Error %d processing FDT\n",
++		       __func__, offset);
+ 
+ 	/*
+ 	 * Reverse the child list. Some drivers assumes node order matches .dts
+ 	 * node order
+ 	 */
+-	if (!dryrun && np->child) {
+-		struct device_node *child = np->child;
+-		np->child = NULL;
+-		while (child) {
+-			struct device_node *next = child->sibling;
+-			child->sibling = np->child;
+-			np->child = child;
+-			child = next;
+-		}
+-	}
+-
+-	if (nodepp)
+-		*nodepp = np;
++	if (!dryrun)
++		reverse_nodes(root);
+ 
+ 	return mem;
+ }
+@@ -431,7 +452,6 @@ static void __unflatten_device_tree(const void *blob,
+ 			     void * (*dt_alloc)(u64 size, u64 align))
+ {
+ 	unsigned long size;
+-	int start;
+ 	void *mem;
+ 
+ 	pr_debug(" -> unflatten_device_tree()\n");
+@@ -452,8 +472,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	}
+ 
+ 	/* First pass, scan for size */
+-	start = 0;
+-	size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
++	size = (unsigned long)unflatten_dt_node(blob, NULL, NULL, NULL, true);
+ 	size = ALIGN(size, 4);
+ 
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -467,8 +486,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	pr_debug("  unflattening %p...\n", mem);
+ 
+ 	/* Second pass, do actual unflattening */
+-	start = 0;
+-	unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
++	unflatten_dt_node(blob, mem, NULL, mynodes, false);
+ 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpup(mem + size));
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
