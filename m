@@ -1,35 +1,99 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 6/8] ARM: rockchip: add support smp for rk3036
-Date: Thu, 05 Nov 2015 00:33:36 +0100
-Message-ID: <3167530.TSdLBvl1Zs@phil>
-References: <1446639503-11763-1-git-send-email-zhengxing@rock-chips.com> <1446639916-11957-1-git-send-email-zhengxing@rock-chips.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: kirkwood: add Linksys EA4500
+Date: Thu, 5 Nov 2015 00:34:47 +0100
+Message-ID: <20151104233447.GB8263@lunn.ch>
+References: <00000150d49a7cf7-e97bf540-89ce-49bf-a25e-2d082acab273-000000@email.amazonses.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446639916-11957-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <00000150d49a7cf7-e97bf540-89ce-49bf-a25e-2d082acab273-000000-p/GC64/jrecnJqMo6gzdpkEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Luka Perkov <luka.perkov-RnoqsreqS2Fd2+I6+x7OVA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 4. November 2015, 20:25:16 schrieb Xing Zheng:
-> From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> 
-> The dual-core Cortex A7 rk3036 is a bit special in that it does not allow
-> to control the actual powerdomain of the cpu cores, while the rest of the
-> smp-bringup like reset control and entry address handling stays the same.
-> Its bigger sibling, the quad-core rk3128 again allows powerdomain control.
-> 
-> So allow that case by introducing a separate smp-enable-method, that simply
-> disables powerdomain handling in the common code.
-> 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Tested-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 82d2ac9..264f8ba 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -124,6 +124,7 @@ lantiq	Lantiq Semiconductor
+>  lenovo	Lenovo Group Ltd.
+>  lg	LG Corporation
+>  linux	Linux-specific binding
+> +linksys	Belkin International, Inc.
+>  lsi	LSI Corp. (LSI Logic)
+>  lltc	Linear Technology Corporation
+>  marvell	Marvell Technology Group Ltd.
 
-This patch can work standalone, so I took the liberty of applying it to my soc 
-branch for 4.5 already, so you don't need to resend it in future versions.
+Hi Luka
+
+This part should probably be a patch of its own, sent to the DT
+maintainers.
+
+> +/ {
+> +	model = "Linksys EA4500";
+> +	compatible = "linksys,ea4500", "marvell,kirkwood-88f6282", "marvell,kirkwood";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x8000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+
+Please use stdout-path = &uart0; You can also put the baud rate etc on
+the end.
+
+> +&nand {
+> +	status = "okay";
+> +	pinctrl-0 = <&pmx_nand>;
+> +	pinctrl-names = "default";
+> +
+> +	partition@0 {
+> +		label = "u-boot";
+> +		reg = <0x0000000 0x80000>;
+> +	};
+> +
+> +	partition@80000 {
+> +		label = "u-boot environment";
+> +		reg = <0x80000 0x20000>;
+> +	};
+
+Is there a hole here?
+
+> +
+> +	partition@200000 {
+> +		label = "kernel";
+> +		reg = <0x200000 0x200000>;
+> +	};
+> +
+> +	partition@400000 {
+> +		label = "root";
+> +		reg = <0x400000 0x1c00000>;
+> +	};
+> +};
+
+> +&eth0 {
+> +	status = "okay";
+> +	ethernet0-port@0 {
+> +		speed = <1000>;
+> +		duplex = <1>;
+> +	};
+> +};
+> +
+> +&eth1 {
+> +	status = "okay";
+> +	ethernet1-port@0 {
+> +		speed = <1000>;
+> +		duplex = <1>;
+> +	};
+> +};
+
+Why fix the speed? Are they connected to a switch?
+
+    Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
