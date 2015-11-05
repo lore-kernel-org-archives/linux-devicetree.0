@@ -1,41 +1,41 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Thu, 5 Nov 2015 11:59:35 -0600
-Message-ID: <563B9907.7020608@codeaurora.org>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
- <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
- <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
- <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
- <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
- <563B62F7.3050307@codeaurora.org>
- <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
- <563B6A4B.7090400@codeaurora.org>
- <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
- <563B869F.2010004@roeck-us.net>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Thu, 5 Nov 2015 12:04:00 -0600
+Message-ID: <563B9A10.4020907@ti.com>
+References: <1443731874-21362-1-git-send-email-afd@ti.com>
+ <1443731874-21362-5-git-send-email-afd@ti.com>
+ <20151022164724.GZ8232@sirena.org.uk> <563A25BE.90609@ti.com>
+ <20151105101417.GM1717@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <563B869F.2010004@roeck-us.net>
+In-Reply-To: <20151105101417.GM1717@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Fu Wei <fu.wei@linaro.org>
-Cc: Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 10:41 AM, Guenter Roeck wrote:
+On 11/05/2015 04:14 AM, Mark Brown wrote:
+> On Wed, Nov 04, 2015 at 09:35:26AM -0600, Andrew F. Davis wrote:
 >
-> Ultimately, you'll have to decide if you want a simple driver accepted, or
-> a complex driver hanging in the review queue forever.
+>> Something I just noticed, when I remove this table, module loading stops
+>> working, even with 'MODULE_ALIAS("platform:tps65912-regulator");'. It
+>> looks like when DT is enabled platform_uevent (drivers/base/platform.c:787)
+>> only sends out the OF MODALIAS event then returns, not sending out the
+>> platform event, is this desired behavior? If so then I will need this
+>> table even though I still create the device and match it on platform
+>> name as you suggested.
+>
+> That sounds like a bug to me, it'll have broken a bunch of existing
+> devices.
+>
 
-Please note that I did post such a driver back in May:
+Most OF drivers have the OF MODALIAS.
 
-	http://www.spinics.net/lists/linux-watchdog/msg06567.html
-
-Officially I withdrew it in favor of Fu's, but the decision which driver 
-to pick up is not mine to make.  I can resubmit driver if you'd like.
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+'platform_uevent' can only emit one MODALIAS string per device (only
+the last emitted one seems to count), so for any device with
+'dev->of_node' set it will be the OF MODALIAS string. So I need
+that table (to generate the OF MODALIAS) or this sub-device module
+will not be loaded.
