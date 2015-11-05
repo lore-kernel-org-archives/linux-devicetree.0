@@ -1,129 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] MAINTAINERS: update DT binding doc locations
-Date: Thu,  5 Nov 2015 13:41:15 -0600
-Message-ID: <1446752475-2708-1-git-send-email-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>, Alison Wang <alison.wang@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Mark Yao <mark.yao@rock-chips.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent Abriou <vincent.abriou@st.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, James Hogan <james.hogan@imgtec.com>, Hans de Goede <hdegoede@redhat.com>, Vineet Gupta <vgupta@synopsys.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 3/4] of: overlay: add per overlay sysfs attributes
+Date: Thu, 5 Nov 2015 13:52:31 -0600
+Message-ID: <CAL_JsqL8+4HCrSFQf5oi1PdE0mQveL9OFPFPfVGT+xm-JeMO2g@mail.gmail.com>
+References: <1445368397-8732-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1445368397-8732-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <CAL_JsqKFJttTsTfwZdMBPEjzqo_OLV=GpHTYZrDGnsgBjF3Bzg@mail.gmail.com>
+ <8A0C91DE-EDF8-449D-918C-95C9807A7616@konsulko.com> <CAL_JsqLeQC7x3fuUFRm=MqHHwvDSLFz6GFxvOTCUToO-=yA0Kg@mail.gmail.com>
+ <1148C5AF-CA7C-44CE-9CBD-BCD949C6B5FD@konsulko.com> <CAL_JsqJse8wyRRAf2dbVBYQ9QtxD6JL02kd8zGuFxK3gnY_0rQ@mail.gmail.com>
+ <FA84C326-4CE3-4695-9F04-4AEF7A897BE7@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <FA84C326-4CE3-4695-9F04-4AEF7A897BE7-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-After the recent moving of DT binding documents, some maintainers entries
-are stale. Update them to the new locations.
+On Thu, Oct 22, 2015 at 11:15 AM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
+>
+>> On Oct 22, 2015, at 00:52 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+>>
+>> On Wed, Oct 21, 2015 at 2:37 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> Hi Rob,
+>>>
+>>>> On Oct 21, 2015, at 00:54 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+>>>>
+>>>> On Tue, Oct 20, 2015 at 4:11 PM, Pantelis Antoniou
+>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> Hi Rob,
+>>>>>
+>>>>>> On Oct 21, 2015, at 00:04 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>>>>>>
+>>>>>> On Tue, Oct 20, 2015 at 2:13 PM, Pantelis Antoniou
+>>>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>>>>> * A per overlay can_remove sysfs attribute that reports whether
+>>>>>>> the overlay can be removed or not due to another overlapping ov=
+erlay.
+>>>>>>>
+>>>>>>> * A target sysfs attribute listing the target of each fragment,
+>>>>>>> in a group named after the name of the fragment.
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> @@ -255,6 +278,17 @@ err_fail:
+>>>>>>>      return -EINVAL;
+>>>>>>> }
+>>>>>>>
+>>>>>>> +static ssize_t target_show(struct kobject *kobj,
+>>>>>>> +               struct fragment_attribute *fattr, char *buf)
+>>>>>>> +{
+>>>>>>> +       struct of_overlay_info *ovinfo =3D fattr->ovinfo;
+>>>>>>> +
+>>>>>>> +       return snprintf(buf, PAGE_SIZE, "%s\n",
+>>>>>>> +                       of_node_full_name(ovinfo->target));
+>>>>>>
+>>>>>> This can be a link to the node itself, can't it?
+>>>>>>
+>>>>>
+>>>>> Yes. Do you want it like this?
+>>>>
+>>>> Yes, hence the suggestion. Unless you see some reason why not.
+>>>>
+>>>
+>>> Nope, can=E2=80=99t be done. The sysfs API only allows linking one =
+kobj to another.
+>>> The kobj is the overlay but the target is in the fragment attribute=
+ group.
+>>
+>> Can't we make the fragments kobj's as well?
+>>
+>
+> We could, but it break the mental model of what a kobj should represe=
+nt.
+> An overlay is an object which can be address, a fragment is never dir=
+ectly
+> exposed.
 
-In bindings/fb/, there were only 2 files and I'm assuming the FB
-maintainers don't want to be copied on all of bindings/display/. So I've
-dropped them.
+But you are exposing fragments as there is a directory for each one.
 
-Reported-by: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Cc: Alison Wang <alison.wang@freescale.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Yao <mark.yao@rock-chips.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Vincent Abriou <vincent.abriou@st.com>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: James Hogan <james.hogan@imgtec.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- MAINTAINERS | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Overlays are just logical collections of fragments. You could go as
+far to say overlays don't need to be exposed at all and only fragments
+need to be (not that we should). We already have overlays and nodes as
+kobjs, so I don't think fragments as kobjs breaks the mental model.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f6685f..e2aa973 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3577,7 +3577,7 @@ S:	Maintained
- F:	drivers/gpu/drm/drm_panel.c
- F:	drivers/gpu/drm/panel/
- F:	include/drm/drm_panel.h
--F:	Documentation/devicetree/bindings/panel/
-+F:	Documentation/devicetree/bindings/display/panel/
- 
- INTEL DRM DRIVERS (excluding Poulsbo, Moorestown and derivative chipsets)
- M:	Daniel Vetter <daniel.vetter@intel.com>
-@@ -3609,15 +3609,15 @@ M:	Alison Wang <alison.wang@freescale.com>
- L:	dri-devel@lists.freedesktop.org
- S:	Supported
- F:	drivers/gpu/drm/fsl-dcu/
--F:	Documentation/devicetree/bindings/video/fsl,dcu.txt
--F:	Documentation/devicetree/bindings/panel/nec,nl4827hc19_05b.txt
-+F:	Documentation/devicetree/bindings/display/fsl,dcu.txt
-+F:	Documentation/devicetree/bindings/display/panel/nec,nl4827hc19_05b.txt
- 
- DRM DRIVERS FOR FREESCALE IMX
- M:	Philipp Zabel <p.zabel@pengutronix.de>
- L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- F:	drivers/gpu/drm/imx/
--F:	Documentation/devicetree/bindings/drm/imx/
-+F:	Documentation/devicetree/bindings/display/imx/
- 
- DRM DRIVERS FOR NVIDIA TEGRA
- M:	Thierry Reding <thierry.reding@gmail.com>
-@@ -3630,7 +3630,7 @@ F:	drivers/gpu/drm/tegra/
- F:	drivers/gpu/host1x/
- F:	include/linux/host1x.h
- F:	include/uapi/drm/tegra_drm.h
--F:	Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-+F:	Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
- 
- DRM DRIVERS FOR RENESAS
- M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-@@ -3647,7 +3647,7 @@ M:	Mark Yao <mark.yao@rock-chips.com>
- L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- F:	drivers/gpu/drm/rockchip/
--F:	Documentation/devicetree/bindings/video/rockchip*
-+F:	Documentation/devicetree/bindings/display/rockchip*
- 
- DRM DRIVERS FOR STI
- M:	Benjamin Gaignard <benjamin.gaignard@linaro.org>
-@@ -3656,7 +3656,7 @@ L:	dri-devel@lists.freedesktop.org
- T:	git http://git.linaro.org/people/benjamin.gaignard/kernel.git
- S:	Maintained
- F:	drivers/gpu/drm/sti
--F:	Documentation/devicetree/bindings/gpu/st,stih4xx.txt
-+F:	Documentation/devicetree/bindings/display/st,stih4xx.txt
- 
- DSBR100 USB FM RADIO DRIVER
- M:	Alexey Klimov <klimov.linux@gmail.com>
-@@ -4342,7 +4342,6 @@ Q:	http://patchwork.kernel.org/project/linux-fbdev/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/plagnioj/linux-fbdev.git
- S:	Maintained
- F:	Documentation/fb/
--F:	Documentation/devicetree/bindings/fb/
- F:	drivers/video/
- F:	include/video/
- F:	include/linux/fb.h
-@@ -6855,6 +6854,7 @@ S:	Supported
- F:	arch/metag/
- F:	Documentation/metag/
- F:	Documentation/devicetree/bindings/metag/
-+F:	Documentation/devicetree/bindings/interrupt-controller/img,*
- F:	drivers/clocksource/metag_generic.c
- F:	drivers/irqchip/irq-metag.c
- F:	drivers/irqchip/irq-metag-ext.c
-@@ -9443,7 +9443,7 @@ SIMPLEFB FB DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	linux-fbdev@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+F:	Documentation/devicetree/bindings/display/simple-framebuffer.txt
- F:	drivers/video/fbdev/simplefb.c
- F:	include/linux/platform_data/simplefb.h
- 
-@@ -10072,6 +10072,7 @@ M:	Vineet Gupta <vgupta@synopsys.com>
- S:	Supported
- F:	arch/arc/
- F:	Documentation/devicetree/bindings/arc/*
-+F:	Documentation/devicetree/bindings/interrupt-controller/snps,arc*
- F:	drivers/tty/serial/arc_uart.c
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git
- 
--- 
-2.5.0
+> TBH a link attribute is indeed better than a path attribute, but marg=
+inally so.
+> It=E2=80=99s not worth the trouble IMO.
+
+It is just an ABI we have to support forever...
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
