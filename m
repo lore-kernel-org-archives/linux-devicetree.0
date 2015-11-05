@@ -1,85 +1,45 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: [PATCH RESEND 2/4] ARM: dts: add SMP support for Broadcom NSP
-Date: Thu, 5 Nov 2015 00:51:19 -0500
-Message-ID: <1446702681-45339-3-git-send-email-kapilh@broadcom.com>
-References: <1446702681-45339-1-git-send-email-kapilh@broadcom.com>
+From: Sebastien Jan <sjan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: arizona: Add DT binding for irq-gpios property
+Date: Thu, 5 Nov 2015 07:08:01 +0100
+Message-ID: <563AF241.5030404@baylibre.com>
+References: <1446559806-3315-1-git-send-email-sjan@baylibre.com>
+ <20151103150450.GP20228@sirena.org.uk> <20151103165247.GC2549@ck-lbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1446702681-45339-1-git-send-email-kapilh@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
- Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell
- King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Heiko Stuebner <heiko@sntech.de>, Hauke Mehrtens <hauke@hauke-m.de>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Kever Yang <kever.yang@rock-chips.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kapil Hali <kapilh@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151103165247.GC2549@ck-lbox>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree changes required for providing SMP support
-for Broadcom Northstar Plus SoC.
+On 03/11/2015 17:52, Charles Keepax wrote:
+> On Tue, Nov 03, 2015 at 03:04:50PM +0000, Mark Brown wrote:
+>> On Tue, Nov 03, 2015 at 03:10:06PM +0100, Sebastien Jan wrote:
+>>
+>>> +  - irq-gpios : GPIO specifier for the GPIO connected to /IRQ
+>> The platform data this is providing is essentially a workaround for the
+>> lack of an irq_to_gpio() function and the use of it is a workaround for
+>> the lack of level triggered IRQ emulation in genirq...  do we really
+>> want this in the ABI (especially as a generic thing)?
+> Personally I would rather not add this to the DT unless we really
+> had to.
+>
+> Also are you sure this is necessary on your system? Specifically
+> you only need this entry if the CODEC is connected to an IRQ line
+> that only supports edge triggered IRQs.
 
-Signed-off-by: Kapil Hali <kapilh@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+Mark, Charles, thanks for pointing me to this information.
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 58aca27..d1875d9 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -40,24 +40,33 @@
- 	model = "Broadcom Northstar Plus SoC";
- 	interrupt-parent = <&gic>;
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm-nsp-smp";
-+		secondary-boot-reg = <0xffff042c>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x1>;
-+		};
-+	};
-+
- 	mpcore {
- 		compatible = "simple-bus";
- 		ranges = <0x00000000 0x19020000 0x00003000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
--		cpus {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			cpu@0 {
--				device_type = "cpu";
--				compatible = "arm,cortex-a9";
--				next-level-cache = <&L2>;
--				reg = <0x0>;
--			};
--		};
--
- 		L2: l2-cache {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x2000 0x1000>;
--- 
-2.1.0
+I don't have this specific constraint on my system and could finally 
+also have it working using the regular interrupts / interrup-parent 
+properties.
+
+So this new binding is not required for my case. I suppose we can forget 
+about it.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
