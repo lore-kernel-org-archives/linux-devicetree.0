@@ -1,53 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/7] doc:bindings:Document for mtcmos regulator on hi6220
- SoC
-Date: Thu, 5 Nov 2015 14:14:02 +0000
-Message-ID: <20151105141402.GH18409@sirena.org.uk>
-References: <1446730488-31930-1-git-send-email-puck.chen@hisilicon.com>
- <1446730488-31930-3-git-send-email-puck.chen@hisilicon.com>
+From: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/mpc85xx: Update B4 FMan MURAM size
+Date: Thu, 5 Nov 2015 12:23:06 +0200
+Message-ID: <1446718986-11710-1-git-send-email-igal.liberman@freescale.com>
+Reply-To: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446730488-31930-3-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>
-Cc: w.f@huawei.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, joro@8bytes.org, iommu@lists.linux-foundation.org, haojian.zhuang@linaro.org, devicetree@vger.kernel.org, xuwei5@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, yudongbin@hisilicon.com, weidong2@hisilicon.com, saberlily.xia@hisilicon.com, haojian.zhuang@outlook.com, leo.yan@linaro.org, linuxarm@huawei.com, dan.zhao@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
---G44BJl3Aq1QbV/QL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+FMan V3H has 2 different MURAM sizes:
+    In B4860/4420 the MURAM size is 512KB.
+    In T4240 and T2080 the MURAM size is 384KB.
 
-On Thu, Nov 05, 2015 at 09:34:43PM +0800, Chen Feng wrote:
+The MURAM size in FMan V3H device tree is 384KB.
+This patch updates the MURAM size for B4 to 512KB.
 
-> +- hisilicon,mtcmos-steady-us: The time to wait for power steady
-> +- hisilicon,mtcmos-sc-on-base: address of mtcmos on hi6220 SoC
-> +
-> +Required child device properties:
-> +- regulator-name: The name of mtcmos
-> +- hisilicon,ctrl-regs: Offset of ctrl-regs
-> +- hisilicon,ctrl-data: The bit to ctrl the regulator
+Based on prior submissions:
+https://patchwork.ozlabs.org/patch/503921/
+https://patchwork.ozlabs.org/patch/503922/
 
-This doesn't look like a regulator binding at all...  for one thing
-there's no reference to the generic regulator bindings, and having a
-mandatory regulator-name seems like there's a problem somewhere.
+Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---G44BJl3Aq1QbV/QL
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+index d51e2bb..abadc28 100644
+--- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+@@ -473,6 +473,11 @@
+ 	fman@400000 {
+ 		interrupts = <96 2 0 0>, <16 2 1 30>;
+ 
++		muram@0 {
++			compatible = "fsl,fman-muram";
++			reg = <0x0 0x80000>;
++		};
++
+ 		enet0: ethernet@e0000 {
+ 		};
+ 
+-- 
+1.7.9.5
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWO2QpAAoJECTWi3JdVIfQjWgH/1GAS4hIwaq3xg+vCn+MqmD5
-TpGgA0E/HGs+s+uZhfMHeKz27+uwUcMfOzzQ2xmyJOa1zP+PzyFdbXPAhE89El+m
-AiStkraFQdWEx+TRJbvs/pdI7oNC9uOgU386snZNKPy89/d1iKosANFT/XHxLxI2
-HPWR0JJyrniVhpyozFzuZ8e435BpMZFQMjz1e4qZtUJRcXkRb0CC4V63NTeIvYlM
-ucrU2SyEjL1gei58HQLujQj1btVDMdafNqOfcL4CJO4GJpgKO5TVGUa58HFSiiSs
-/qEjweFPfHpDcDbNSkZcH8nLIhWEFPG7RXZmTO8g4aQ8M7BPg3auYoT29upgxF4=
-=OODY
------END PGP SIGNATURE-----
-
---G44BJl3Aq1QbV/QL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
