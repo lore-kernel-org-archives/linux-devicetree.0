@@ -1,52 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/9] dt-bindings: rockchip-thermal: Support the RK3368
- SoCs compatible
-Date: Thu, 5 Nov 2015 17:45:43 -0600
-Message-ID: <20151105234543.GA32342@rob-hp-laptop>
-References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
- <1446700685-18017-2-git-send-email-wxt@rock-chips.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 02/50] powerpc/pci: Override pcibios_setup_bridge()
+Date: Fri, 6 Nov 2015 10:44:14 +1100
+Message-ID: <20151105234414.GA30465@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-3-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87wptwhyjl.fsf@gamma.ozlabs.ibm.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446700685-18017-2-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Eduardo Valentin <edubezval@gmail.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <87wptwhyjl.fsf@gamma.ozlabs.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Daniel Axtens <dja@axtens.net>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 05, 2015 at 01:17:57PM +0800, Caesar Wang wrote:
-> This patchset attempts to new compatible for thermal founding
-> on RK3368 SoCs.
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+On Fri, Nov 06, 2015 at 09:27:42AM +1100, Daniel Axtens wrote:
+>Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
+>
+>>  
+>> +void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
+>> +{
+>> +	struct pci_controller *hose = pci_bus_to_host(bus);
+>Very much a nit-pick, but I thought we were trying to move towards using
+>phb instead of hose in new code?
+>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Take PowerNV platform as an example, "hose" means "struct pci_controller",
+but "phb" means "struct pnv_phb". We don't have the movement to use "phb"
+to represent "struct pci_controller".
 
-> ---
-> 
-> Changes in v2: None
-> Changes in v1:
-> - %s/thermal/rockchip-thermal in subject.
-> 
->  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> index b38200d..0dfa60d 100644
-> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> @@ -1,7 +1,9 @@
->  * Temperature Sensor ADC (TSADC) on rockchip SoCs
->  
->  Required properties:
-> -- compatible : "rockchip,rk3288-tsadc"
-> +- compatible : should be "rockchip,<name>-tsadc"
-> +   "rockchip,rk3288-tsadc": found on RK3288 SoCs
-> +   "rockchip,rk3368-tsadc": found on RK3368 SoCs
->  - reg : physical base address of the controller and length of memory mapped
->  	region.
->  - interrupts : The interrupt number to the cpu. The interrupt specifier format
-> -- 
-> 1.9.1
-> 
+>Apart from that this looks good. I would probably have merged it with
+>the previous patch, but I know Alexey has been suggesting a lot of
+>splitting and merging previously, so whatever he prefers here is OK.
+>
+
+I'd like to keep them separate as they're for different subsystem:
+PCI generic subsystem and PowerPC subsystem. Separate maintainers
+for them can pick them as they will.
+
+>> +
+>> +	if (hose->controller_ops.setup_bridge)
+>> +		hose->controller_ops.setup_bridge(bus, type);
+>> +}
+>> +
+>>  void pcibios_reset_secondary_bus(struct pci_dev *dev)
+>>  {
+>>  	struct pci_controller *phb = pci_bus_to_host(dev->bus);
+>> -- 
+>> 2.1.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
