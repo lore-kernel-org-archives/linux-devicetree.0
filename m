@@ -1,212 +1,156 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: IIO device indexing issue
-Date: Thu, 5 Nov 2015 13:24:47 +0800
-Message-ID: <563AE81F.5050700@electromag.com.au>
-References: <5637AFC5.7080007@gmail.com> <5639D22D.3050901@metafoo.de>
- <563A5412.4030102@gmail.com> <563AB014.4030401@electromag.com.au>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos7: Add pmic s2mps15 device tree node
+Date: Thu, 05 Nov 2015 11:07:49 +0530
+Message-ID: <563AEB2D.5000408@samsung.com>
+References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
+ <CAJKOXPfrvuH8t3Pkf2Qt8VEfMR3qOeFKHrG0i3qUf94BR1y2tQ@mail.gmail.com>
+ <56375EB1.2090504@samsung.com>
+ <CAJKOXPcPQD+3QinbaKcREQSn1yJCf2kQG0C4rhJtCS=W_25Gmw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <563AB014.4030401-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJKOXPcPQD+3QinbaKcREQSn1yJCf2kQG0C4rhJtCS=W_25Gmw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof
 
-On 5/11/2015 9:25 AM, Phil Reid wrote:
-> On 5/11/2015 2:53 AM, Vesa J=C3=A4=C3=A4skel=C3=A4inen wrote:
->> On 04/11/15 11:38, Lars-Peter Clausen wrote:
->>> On 11/02/2015 07:47 PM, Vesa J=C3=A4=C3=A4skel=C3=A4inen wrote:
->>>> Hi,
+On 11/02/2015 07:22 PM, Krzysztof Kozlowski wrote:
+> 2015-11-02 22:01 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
 >>>>
->>>> When we were using kernel 3.2 and with that board files we just go=
-t=20
->>>> IIO
->>>> devices with static order so that we knew exactly what iio:device0=
- is.
+>>>>    arch/arm64/boot/dts/exynos/exynos7-espresso.dts |  349
+>>>> +++++++++++++++++++++++
+>>>>    1 file changed, 349 insertions(+)
 >>>>
->>>> Now with device tree that order is not so static anymore especiall=
-y=20
->>>> when
->>>> using device overlays (have not yet tried that thou). If there=20
->>>> would be
->>>> deferred probe for the device then if we have multiple iio:device'=
-s=20
->>>> then
->>>> those could in theory be in any order.
+>>>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>>> b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>>> index 838a3626dac1..8ce04a0ec928 100644
+>>>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>>> @@ -53,6 +53,355 @@
+>>>>           status = "okay";
+>>>>    };
 >>>>
->>>> In example libiio uses iio device index to open the IIO device. So=
- the
->>>> problem is to know what iio:device is what.
->>>>
->>>> If we look files under /sys/bus/iio/iio:deviceX. They do not revea=
-l=20
->>>> what
->>>> device this is (especially if there are multiple device of same=20
->>>> type). There
->>>> does not seem to be a way to give custom name for the iio device=20
->>>> from device
->>>> tree that could have been used as a cue.
->>>>
->>>> Device tree aliases kinda sounded a good idea to try. Eg. define=20
->>>> adc0 alias
->>>> and then link it to actual device node in tree.
->>>>
->>>> Aliases could be found under /proc/device-tree/aliases. Looking at=
-=20
->>>> it shows
->>>> what device tree node it is. However there does not seem to be=20
->>>> actual link
->>>> from any /proc/device-tree entries to kernel drivers exposed under=
-=20
->>>> sysfs.
->>>> And even the path components in device tree are not in same format=
-=20
->>>> as in
->>>> sysfs. So there is no 1:1 mapping possible here.
->>>>
->>>> IIO devices in /sys/bus/iio/iio:deviceX seem to be symlinks to act=
-ual
->>>> devices under /sys/devices and from there is physical path to the=20
->>>> device and
->>>> under that the IIO device with the same name as is under /sys/bus/=
-iio.
->>>>
->>>> So in theory we could make a mapping configuration file that speci=
-fies
->>>> logical name for iio device and then physical parent path for the=20
->>>> device and
->>>> then find under it iio:device* files to determine what is the iio=20
->>>> device
->>>> index for this physical device. Then open IIO device with that=20
->>>> index in
->>>> example with libiio. Sounds a bit complex?
->>>>
->>>> So did we miss something on how this should be defined/accessed or=
-=20
->>>> is there
->>>> a slight issue here on how to identify iio devices?
->>>>
->>>> Don't know how device tree overlays affect this if we first load=20
->>>> device tree
->>>> overlay with some configuration and then unload it and load anothe=
-r=20
->>>> one with
->>>> different configuration.
->>> Hi,
+>>>> +&hsi2c_4 {
+>>>> +       samsung,i2c-sda-delay = <100>;
+>>>> +       samsung,i2c-max-bus-freq = <200000>;
+>>>> +       status = "okay";
+>>>> +
+>>>> +       s2mps15_pmic@66 {
+>>>> +               compatible = "samsung,s2mps15-pmic";
+>>>> +               reg = <0x66>;
+>>>> +               interrupts = <2 0>;
+>>>> +               interrupt-parent = <&gpa0>;
+>>>> +               pinctrl-names = "default";
+>>>> +               pinctrl-0 = <&pmic_irq>;
+>>>> +               wakeup-source;
+>>>> +
+>>>> +               s2mps15_osc: clocks {
+>>>> +                       compatible = "samsung,s2mps13-clk";
+>>>> +                       #clock-cells = <1>;
+>>>> +                       clock-output-names = "s2mps13_ap", "s2mps13_cp",
+>>>> +                               "s2mps13_bt";
+>>>> +               };
 >>>
->>> Yes, excellent analysis. This is a real issue. As you said there is=
- no
->>> guarantee that the IIO device numbers are stable, they are assigned=
-=20
->>> in the
->>> order the devices are registered. If the device are registered in a
->>> different order for whatever reason the numbers will change. You ca=
-n=20
->>> use
->>> readlink on the IIO device in /sys/bus/iio/devices to get its=20
->>> position in
->>> the global device topology and be able to tell what the parent=20
->>> device is,
->>> but this path might not be completely stable either though. E.g. if=
-=20
->>> your
->>> device is on a I2C bus and the number of the I2C bus is dynamically=
-=20
->>> assigned
->>> it might change when the probe order changes.
 >>>
->>> Alias seem to be one way to solve this issue. The big question=20
->>> remains is
->>> how to communicate the alias to userspace. For other device classes=
- the
->>> alias index is used as the device index e.g. a device with alias=20
->>> i2c0 ends
->>> up being the i2c adapter with index 0. But with IIO where we suppor=
-t=20
->>> a wide
->>> range of different devices that does not really work. E.g. what to=20
->>> do if you
->>> have adc0 and dac0 as aliases for different devices. So you'd need =
-a
->>> different way to expose the alias.
+>>> Don't you want to use one of these clocks for s3c-rtc (&rtc node)?
 >>>
->>> Some bindings also use the "label" property to assign a unique name=
-=20
->>> to node.
->>> But again the same issue how to expose that information to=20
->>> applications.
->>>
->> To continue from this "label" property idea I was wondering if we=20
->> would add it as new optional(?) file node for IIO devices.
+>> yes, you are right, rtc on this board is currently broken, mainly because of
+>> the introduction of rtc_src clock in the s3c-rtc driver.
+>> That is on my do list next. will take a look.
 >>
->> One could then specify it like:
->>
->> tscadc: tscadc@44e0d000 {
->>     compatible =3D "ti,am3359-tscadc";
->> ...
->>     am335x_adc: adc {
->>         compatible =3D "ti,am3359-adc";
->> ...
->>         label =3D "Port A";
->>     };
->> };
->>
->> And this would generate file /sys/bus/iio/iio:deviceX/label with=20
->> contents of "Port A".
->>
->> Then during the application startup it would just need to scan all=20
->> devices under /sys/bus/iio and determine what labelled device it=20
->> wants to use.
->>
->> It would be up to device's developer to determine what labels to use=
-=20
->> in their designs. This would not break ABI and would be just an=20
->> extension for it.
->>
->> One could also auto-assign label "am335x_adc" in this case too. But=20
->> if you include existing arch device tree then changing label in top=20
->> level is kinda a bit annoying as you would then need to duplicate al=
-l=20
->> properties with another label and disable arch device tree's=20
->> settings. Could cause also conflict if there are references elsewher=
-e=20
->> to existing arch nodes.
->>
->> Having following in device's device tree file would allow one to=20
->> override label or just only specify that.
->>
->> #include "am33xx.dtsi"
->>
->> &tscadc {
->>     status =3D "okay";
->>
->>     adc {
->>         ti,adc-channels =3D <4 5 6 7>;
->>
->>         label =3D "Port A";
->>     };
->> };
->>
->> I think this "label" model would be simple to understand.
->>
->> Whether this needs to be implemented as per device driver feature or=
-=20
->> could be implemented as generic IIO functionality I do not know.
->>
->> Thanks,
->> Vesa J=C3=A4=C3=A4skel=C3=A4inen
-> This would be a very useful feature as I'm encountering this problem=20
-> at the moment.
-> The label concept is simple and easy to use.
-Thinking a bit more how would this work if accessing the device via the=
-=20
-network interface.
-Currently it show the device (chip) name (eg max5541) but there can be=20
-multiple devices like that.
-Needs to be published thru libiio as well?
+>> Are you suggesting to remove this -clk node now and add along with rtc
+>> changes? I feel this should go in along with this patch.
+>
+> Just add it in consecutive patch in this series. You added here some
+> providers (clock and regulators) without consumers. This of course
+> looks good as a way of providing full description of the board but:
+> 1. For regulators always on: may be meaningless for kernel. Kernel
+> does not use it. Existence of regulator subnode will fulfill driver's
+> needs for probe.
+> 2. For clocks: actually will disable these clocks because of lack of
+> consumers... which is fine but probably not what you wanted.
+>
+> The standard approach is to add such providers when they are needed -
+> there are some consumers using them.
+>
+OK. for now will keep the pmic clock added as clock will be in disabled 
+state, so it wont harm.
+- will keep system related regulator like supply to arm,mif,int etc ..
+will remove supplies to other peripherals IPs. Hope thats fine.
 
-Regards
-Phil
+>>>> +
+>>>> +               regulators {
+>>>> +                       ldo1_reg: LDO1 {
+>>>> +                               regulator-name = "vdd_ldo1";
+>>>> +                               regulator-min-microvolt = <500000>;
+>>>> +                               regulator-max-microvolt = <900000>;
+>>>> +                               regulator-always-on;
+>>>> +                               regulator-enable-ramp-delay = <125>;
+>>>> +                       };
+>
+> (...)
+>
+>>>> +
+>>>> +                       buck10_reg: BUCK10 {
+>>>> +                               regulator-name = "vdd_buck10";
+>>>> +                               regulator-min-microvolt = <1000000>;
+>>>> +                               regulator-max-microvolt = <3000000>;
+>>>> +                               regulator-boot-on;
+>>>> +                               regulator-always-on;
+>>>> +                               regulator-ramp-delay = <25000>;
+>>>> +                               regulator-enable-ramp-delay = <250>;
+>>>> +                       };
+>>>
+>>>
+>>> All of these ldo3 and bucks in vendor tree for Espresso board have
+>>> ramp delay of 12000. Also they don't have enable-ramp-delay set and
+>>> voltages sometimes differ. I don't have S2MPS15 datasheet so I don't
+>>> know what is the true value... I'll leave it up to you but it looks
+>>> suspicious.
+>>>
+>> These values generally comes from our board design team, so I cann't really
+>> comment on that, it may vary from board revision etc.
+>> I will check if we have any updated version of recommended value and update
+>> accordingly.
+>
+> Okay, just pointing the difference. I cannot verify them.
+>
+>>
+>>>> +               };
+>>>> +       };
+>>>> +};
+>>>
+>>>
+>>> What will be the benefit of defining all of these regulators if they
+>>> are always on and without consumers? No one will disable them, no one
+>>> will change the voltage. Please provide some consumers.
+>>>
+>> As many drivers are not yet enabled in arm64 defconfig, that is one of the
+>> reason why we are not seeing many consumer for these nodes.
+>
+> That is not a problem. Please send a patch changing the defconfig.
+> Usually defconfig (for armv7 this would be exynos and multi_v7) should
+> provide bootable and working environment for all of our supported
+> boards.
+>
+>> This is the ground work being done for enabling those. If you insist will
+>> try to reduce what is being used now. Moreover this was used to verify
+>> functionality of pmic driver as well.
+>
+> Actually as a verification I think even adding simple node
+> "regulators" is sufficient - driver will add all regulators anyway.
+> However seeing all regulators described for particular board is
+> good... but lack of consumers is disturbing because this may mean that
+> it was not really fully modeled.
+>
+>>From my point of view - all of regulators in DT are welcomed but at
+> least some of them should have a consumer. This means that someone
+> took care and looked at the relationships between them.
+>
+> Best regards,
+> Krzysztof
+>
