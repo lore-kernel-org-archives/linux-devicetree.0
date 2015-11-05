@@ -1,97 +1,73 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/2] arm64: dts: exynos7: Add pmic s2mps15 device tree node
-Date: Thu, 05 Nov 2015 14:40:55 +0900
-Message-ID: <563AEBE7.5040400@samsung.com>
-References: <1446458641-4447-1-git-send-email-alim.akhtar@samsung.com>
- <CAJKOXPfrvuH8t3Pkf2Qt8VEfMR3qOeFKHrG0i3qUf94BR1y2tQ@mail.gmail.com>
- <56375EB1.2090504@samsung.com>
- <CAJKOXPcPQD+3QinbaKcREQSn1yJCf2kQG0C4rhJtCS=W_25Gmw@mail.gmail.com>
- <563AEB2D.5000408@samsung.com>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH RESEND 0/4] SMP support for Broadcom NSP
+Date: Thu, 5 Nov 2015 00:51:17 -0500
+Message-ID: <1446702681-45339-1-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <563AEB2D.5000408@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene@kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05.11.2015 14:37, Alim Akhtar wrote:
-> Hi Krzysztof
-> 
-> On 11/02/2015 07:22 PM, Krzysztof Kozlowski wrote:
->> 2015-11-02 22:01 GMT+09:00 Alim Akhtar <alim.akhtar@samsung.com>:
->>>>>
->>>>>    arch/arm64/boot/dts/exynos/exynos7-espresso.dts |  349
->>>>> +++++++++++++++++++++++
->>>>>    1 file changed, 349 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>>>> b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>>>> index 838a3626dac1..8ce04a0ec928 100644
->>>>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>>>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->>>>> @@ -53,6 +53,355 @@
->>>>>           status = "okay";
->>>>>    };
->>>>>
->>>>> +&hsi2c_4 {
->>>>> +       samsung,i2c-sda-delay = <100>;
->>>>> +       samsung,i2c-max-bus-freq = <200000>;
->>>>> +       status = "okay";
->>>>> +
->>>>> +       s2mps15_pmic@66 {
->>>>> +               compatible = "samsung,s2mps15-pmic";
->>>>> +               reg = <0x66>;
->>>>> +               interrupts = <2 0>;
->>>>> +               interrupt-parent = <&gpa0>;
->>>>> +               pinctrl-names = "default";
->>>>> +               pinctrl-0 = <&pmic_irq>;
->>>>> +               wakeup-source;
->>>>> +
->>>>> +               s2mps15_osc: clocks {
->>>>> +                       compatible = "samsung,s2mps13-clk";
->>>>> +                       #clock-cells = <1>;
->>>>> +                       clock-output-names = "s2mps13_ap",
->>>>> "s2mps13_cp",
->>>>> +                               "s2mps13_bt";
->>>>> +               };
->>>>
->>>>
->>>> Don't you want to use one of these clocks for s3c-rtc (&rtc node)?
->>>>
->>> yes, you are right, rtc on this board is currently broken, mainly
->>> because of
->>> the introduction of rtc_src clock in the s3c-rtc driver.
->>> That is on my do list next. will take a look.
->>>
->>> Are you suggesting to remove this -clk node now and add along with rtc
->>> changes? I feel this should go in along with this patch.
->>
->> Just add it in consecutive patch in this series. You added here some
->> providers (clock and regulators) without consumers. This of course
->> looks good as a way of providing full description of the board but:
->> 1. For regulators always on: may be meaningless for kernel. Kernel
->> does not use it. Existence of regulator subnode will fulfill driver's
->> needs for probe.
->> 2. For clocks: actually will disable these clocks because of lack of
->> consumers... which is fine but probably not what you wanted.
->>
->> The standard approach is to add such providers when they are needed -
->> there are some consumers using them.
->>
-> OK. for now will keep the pmic clock added as clock will be in disabled
-> state, so it wont harm.
-> - will keep system related regulator like supply to arm,mif,int etc ..
-> will remove supplies to other peripherals IPs. Hope thats fine.
+Hi,
 
-You don't have to remove other regulators (these without consumers).
-Describe in DT all of regulators but:
-1. Add to some of them consumers;
-2. Disable these which are not needed (by not marking always-enabled).
+This series adds SMP support for Broadcom's Northstar Plus SoC.
 
-Just like for all other boards.
+There are similar SMP enablement methods for many ARMv7 bsed SoCs.
+BCM NSP SoC, has a typical such mechanism - after power-on, the
+secondary core is held in a standby state, primary core provides a
+startup address for the secondary core and wakes it up. Booting of
+the secondary core is serialized using pen_release global variable.
 
-Best regards,
-Krzysztof
+The startup address is programmed at a special register location
+which is defined in the device tree using a "secondary-boot-reg"
+property in a node whose "enable-method" property matches.
+
+The first patch adds cpu-enable-method in the device tree bindings
+documentation. It also updates ARM CPU device tree documentation
+with Broadcom Northstar Plus CPU details.
+
+The second patch adds SMP support to the BCM NSP device tree file.
+
+The third patch, enables SMP on BCM NSP. It also consolidates
+common SMP handling between BCM NSP and BCM Kona.
+
+The final patch, enables SMP on BCM 4708 and this patch is pulled
+in from Jon Mason's patch from the mailing list.
+
+This patch series is constructed based on Linux v4.3-rc2.
+
+The source code is available at GITHUB:
+https://github.com/Broadcom/cygnus-linux/tree/nsp-smp-v1
+
+Jon Mason (1):
+  ARM: BCM: Add SMP support for Broadcom 4708
+
+Kapil Hali (3):
+  dt-bindings: add SMP enable-method for Broadcom NSP
+  ARM: dts: add SMP support for Broadcom NSP
+  ARM: BCM: Add SMP support for Broadcom NSP
+
+ .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       |  36 ++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  33 +++--
+ arch/arm/boot/dts/bcm4708.dtsi                     |   2 +
+ arch/arm/mach-bcm/Kconfig                          |   3 +
+ arch/arm/mach-bcm/Makefile                         |  11 +-
+ arch/arm/mach-bcm/bcm_nsp.h                        |  19 +++
+ arch/arm/mach-bcm/headsmp.S                        |  37 ++++++
+ arch/arm/mach-bcm/{kona_smp.c => platsmp.c}        | 142 +++++++++++++++++++--
+ 9 files changed, 261 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+ create mode 100644 arch/arm/mach-bcm/bcm_nsp.h
+ create mode 100644 arch/arm/mach-bcm/headsmp.S
+ rename arch/arm/mach-bcm/{kona_smp.c => platsmp.c} (63%)
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
