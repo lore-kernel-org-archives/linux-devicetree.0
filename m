@@ -1,75 +1,48 @@
-From: Zhiqiang Hou <Zhiqiang.Hou@freescale.com>
-Subject: [PATCH V3 1/2] powerpc/fsl: Add PCI node in device tree of bsc9132qds
-Date: Thu, 5 Nov 2015 10:52:54 +0800
-Message-ID: <1446691975-8965-1-git-send-email-Zhiqiang.Hou@freescale.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Wed, 4 Nov 2015 21:13:44 -0800
+Message-ID: <563AE588.1080009@roeck-us.net>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+ <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org, scottwood@freescale.com, galak@kernel.crashing.org, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, harninder.rai@freescale.com
-Cc: Minghuan.Lian@freescale.com, Mingkai.Hu@freescale.com, Hou Zhiqiang <B48286@freescale.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Fu Wei <fu.wei@linaro.org>
+Cc: Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSGFybmluZGVyIFJhaSA8aGFybmluZGVyLnJhaUBmcmVlc2NhbGUuY29tPgoKU2lnbmVk
-LW9mZi1ieTogSGFybmluZGVyIFJhaSA8aGFybmluZGVyLnJhaUBmcmVlc2NhbGUuY29tPgpTaWdu
-ZWQtb2ZmLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQGZyZWVzY2FsZS5jb20+ClJl
-dmlld2VkLWJ5OiBaYW5nIFRpZWZlaS1SNjE5MTEgPHRpZS1mZWkuemFuZ0BmcmVlc2NhbGUuY29t
-PgpSZXZpZXdlZC1ieTogS3VzaHdhaGEgUHJhYmhha2FyLUIzMjU3OSA8cHJhYmhha2FyQGZyZWVz
-Y2FsZS5jb20+ClJldmlld2VkLWJ5OiBGbGVtaW5nIEFuZHJldy1BRkxFTUlORyA8QUZMRU1JTkdA
-ZnJlZXNjYWxlLmNvbT4KVGVzdGVkLWJ5OiBGbGVtaW5nIEFuZHJldy1BRkxFTUlORyA8QUZMRU1J
-TkdAZnJlZXNjYWxlLmNvbT4KU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxCNDgyODZAZnJl
-ZXNjYWxlLmNvbT4KLS0tClYzOgogLSBSZW1vdmUgZ2Vycml0IHN0dWZmLgpWMjoKIC0gUmVtb3Zl
-IHByb3BlcnR5IGNsb2NrLWZyZXF1ZW5jeS4KCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvYnNjOTEz
-MnFkcy5kdHMgICAgICAgICAgfCAxNSArKysrKysrKysrKysrKwogYXJjaC9wb3dlcnBjL2Jvb3Qv
-ZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNpIHwgMjggKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wcmUuZHRzaSAgfCAgMSAr
-CiAzIGZpbGVzIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvYnNjOTEzMnFkcy5kdHMgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvYnNj
-OTEzMnFkcy5kdHMKaW5kZXggNmNhYjEwNi4uOTQwZDcxOSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2JzYzkxMzJxZHMuZHRzCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9i
-c2M5MTMycWRzLmR0cwpAQCAtMjksNiArMjksMjEgQEAKIAlzb2M6IHNvY0BmZjcwMDAwMCB7CiAJ
-CXJhbmdlcyA9IDwweDAgMHgwIDB4ZmY3MDAwMDAgMHgxMDAwMDA+OwogCX07CisKKwlwY2kwOiBw
-Y2llQGZmNzBhMDAwIHsKKwkJcmVnID0gPDAgMHhmZjcwYTAwMCAwIDB4MTAwMD47CisJCXJhbmdl
-cyA9IDwweDIwMDAwMDAgMHgwIDB4OTAwMDAwMDAgMCAweDkwMDAwMDAwIDB4MCAweDIwMDAwMDAw
-CisJCQkgIDB4MTAwMDAwMCAweDAgMHgwMDAwMDAwMCAwIDB4YzAwMTAwMDAgMHgwIDB4MTAwMDA+
-OworCQlwY2llQDAgeworCQkJcmFuZ2VzID0gPDB4MjAwMDAwMCAweDAgMHg5MDAwMDAwMAorCQkJ
-CSAgMHgyMDAwMDAwIDB4MCAweDkwMDAwMDAwCisJCQkJICAweDAgMHgyMDAwMDAwMAorCisJCQkJ
-ICAweDEwMDAwMDAgMHgwIDB4MAorCQkJCSAgMHgxMDAwMDAwIDB4MCAweDAKKwkJCQkgIDB4MCAw
-eDEwMDAwMD47CisJCX07CisJfTsKIH07CiAKIC9pbmNsdWRlLyAiYnNjOTEzMnFkcy5kdHNpIgpk
-aWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNp
-IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNpCmluZGV4IGM3
-MjMwNzEuLmI1ZjA3MTUgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNj
-OTEzMnNpLXBvc3QuZHRzaQorKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJz
-aS1wb3N0LmR0c2kKQEAgLTQwLDYgKzQwLDM0IEBACiAJaW50ZXJydXB0cyA9IDwxNiAyIDAgMCAy
-MCAyIDAgMD47CiB9OwogCisvKiBjb250cm9sbGVyIGF0IDB4YTAwMCAqLworJnBjaTAgeworCWNv
-bXBhdGlibGUgPSAiZnNsLGJzYzkxMzItcGNpZSIsICJmc2wscW9yaXEtcGNpZS12Mi4yIjsKKwlk
-ZXZpY2VfdHlwZSA9ICJwY2kiOworCSNzaXplLWNlbGxzID0gPDI+OworCSNhZGRyZXNzLWNlbGxz
-ID0gPDM+OworCWJ1cy1yYW5nZSA9IDwwIDI1NT47CisJaW50ZXJydXB0cyA9IDwxNiAyIDAgMD47
-CisKKwlwY2llQDAgeworCQlyZWcgPSA8MCAwIDAgMCAwPjsKKwkJI2ludGVycnVwdC1jZWxscyA9
-IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8Mj47CisJCSNhZGRyZXNzLWNlbGxzID0gPDM+OworCQlk
-ZXZpY2VfdHlwZSA9ICJwY2kiOworCQlpbnRlcnJ1cHRzID0gPDE2IDIgMCAwPjsKKwkJaW50ZXJy
-dXB0LW1hcC1tYXNrID0gPDB4ZjgwMCAwIDAgNz47CisKKwkJaW50ZXJydXB0LW1hcCA9IDwKKwkJ
-CS8qIElEU0VMIDB4MCAqLworCQkJMDAwMCAweDAgMHgwIDB4MSAmbXBpYyAweDAgMHgyIDB4MCAw
-eDAKKwkJCTAwMDAgMHgwIDB4MCAweDIgJm1waWMgMHgxIDB4MiAweDAgMHgwCisJCQkwMDAwIDB4
-MCAweDAgMHgzICZtcGljIDB4MiAweDIgMHgwIDB4MAorCQkJMDAwMCAweDAgMHgwIDB4NCAmbXBp
-YyAweDMgMHgyIDB4MCAweDAKKwkJCT47CisJfTsKK307CisKICZzb2MgewogCSNhZGRyZXNzLWNl
-bGxzID0gPDE+OwogCSNzaXplLWNlbGxzID0gPDE+OwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcHJlLmR0c2kgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL2JzYzkxMzJzaS1wcmUuZHRzaQppbmRleCAzMDFhOWRiLi45MGY3OTQ5IDEwMDY0NAotLS0g
-YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wcmUuZHRzaQorKysgYi9hcmNo
-L3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wcmUuZHRzaQpAQCAtNDUsNiArNDUsNyBA
-QAogCQlzZXJpYWwwID0gJnNlcmlhbDA7CiAJCWV0aGVybmV0MCA9ICZlbmV0MDsKIAkJZXRoZXJu
-ZXQxID0gJmVuZXQxOworCQlwY2kwID0gJnBjaTA7CiAJfTsKIAogCWNwdXMgewotLSAKMi4xLjAu
-MjcuZzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On 11/04/2015 05:59 PM, Timur Tabi wrote:
+> On Tue, Oct 27, 2015 at 11:06 AM,  <fu.wei@linaro.org> wrote:
+>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+>> +       struct watchdog_device *wdd = &gwdt->wdd;
+>> +
+>> +       /* We don't use pretimeout, trigger WS1 now */
+>> +       if (!wdd->pretimeout)
+>> +               sbsa_gwdt_set_wcv(wdd, 0);
+>
+> So I'm still concerned about the fact this driver depends on an
+> interrupt handler in order to properly program the hardware.  Unlike
+> some other devices, the SBSA watchdog does not need assistance to
+> reset on a timeout -- it is a "fire and forget" device.  What happens
+> if there is a hard lockup, and interrupts no longer work?
+>
+> Keep in mind that 99% of watchdog daemons will not enable the
+> pre-timeout feature because it's new.
+>
+Same here, really.
+
+I would feel much more comfortable if the driver would just use the standard
+watchdog timeout and live with (worst case) 20 seconds timeout for now.
+This limitation will be gone once the infrastructure is in place to handle
+such short timeouts in the watchdog core. Until then, I would argue that the
+system designers asked for it if they really select the highest possible
+clock rate.
+
+Guenter
