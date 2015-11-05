@@ -1,67 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/5] mfd: arizona: Update DT bindings to add CS47L24
- and WM1831
-Date: Thu, 5 Nov 2015 08:35:15 -0600
-Message-ID: <20151105143515.GA26865@rob-hp-laptop>
-References: <1446563316-28878-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1446563316-28878-3-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Thu, 5 Nov 2015 22:35:57 +0800
+Message-ID: <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+	<1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+	<CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+	<563AE588.1080009@roeck-us.net>
+	<563B5DF9.6080102@codeaurora.org>
+	<CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
+	<563B62F7.3050307@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446563316-28878-3-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, broonie@kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <563B62F7.3050307@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 03, 2015 at 03:08:33PM +0000, Richard Fitzgerald wrote:
-> This updates the Arizona MFD device tree bindings to add the
-> Cirrus Logic CS47L24 and WM1831 codecs. Note that unlike all the
-> other codecs the DCVDD-supply and MICVDD-supply are mandatory.
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 9 ++++++++-
+Hi Timur,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 5 November 2015 at 22:08, Timur Tabi <timur@codeaurora.org> wrote:
+> Fu Wei wrote:
+>>
+>> SBSA 2.3 Page 23 :
+>> Note: the watchdog offset register is 32 bits wide. This gives a
+>> maximum watch period of around 10s at a system
+>> counter frequency of 400MHz. If a larger watch period is required then
+>> the compare value can be programmed
+>> directly into the compare value register.
+>>
+>> 214s means your system counter is approximately at 20MHz which is in
+>> the range of (10MHz ~ 400MHz)
+>>
+>> SBSA 2.3 Page 13 :
+>> The System Counter (of the Generic Timer) shall run at a minimum
+>> frequency of 10MHz and maximum of
+>> 400MHz.
+>
+>
+> Thanks, that explains a lot.
+>
+> If we expected customers to have a lower system counter frequency, then we
+> wouldn't have to worry about the timeouts being too short.  It seems to me
+> that the SBSA spec says that if you want a longer timeout, you have to lower
+> the frequency.
 
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index 18be0cb..84e1af5 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -1,4 +1,4 @@
-> -Wolfson Arizona class audio SoCs
-> +Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
->  
->  These devices are audio SoCs with extensive digital capabilites and a range
->  of analogue I/O.
-> @@ -6,12 +6,14 @@ of analogue I/O.
->  Required properties:
->  
->    - compatible : One of the following chip-specific strings:
-> +        "cirrus,cs47l24"
->          "wlf,wm5102"
->          "wlf,wm5110"
->          "wlf,wm8280"
->          "wlf,wm8997"
->          "wlf,wm8998"
->          "wlf,wm1814"
-> +        "wlf,wm1831"
->  
->    - reg : I2C slave address when connected using I2C, chip select number when
->      using SPI.
-> @@ -41,6 +43,10 @@ Required properties:
->  
->    - SPKVDD-supply : Speaker driver power supply (wm8997)
->  
-> +  - DCVDD-supply : Main power supply (cs47l24, wm1831)
-> +
-> +  - MICVDD-supply : Microphone power supply (cs47l24, wm1831)
-> +
+Did you really read the "Note" above???????? OK, let me paste it again
+and again:
 
-We normally do lower case, but I guess these aren't new...
+SBSA 2.3 Page 23 :
+If a larger watch period is required then the compare value can be
+programmed directly into the compare value register.
 
-Rob
+> We shouldn't be complicating the driver because some
+> customers might not follow the spec.
+
+OK it this customer might not follow the spec, that watchdog is not a
+SBSA watchdog,
+So please don't use SBSA watchdog driver on that non-SBSA watchdog
+device, Thanks a lot
+
+>
+>
+> --
+> Sent by an employee of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the
+> Code Aurora Forum, hosted by The Linux Foundation.
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
