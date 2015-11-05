@@ -1,41 +1,36 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: at91/dt: sama5d4: change watchdog compatible
-Date: Thu, 5 Nov 2015 15:40:48 +0800
-Message-ID: <1446709248-25098-1-git-send-email-wenyou.yang@atmel.com>
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: RE: [PATCH v5 0/4] Exynos SROMc configuration and Ethernet support for
+ SMDK5410
+Date: Thu, 05 Nov 2015 10:59:40 +0300
+Message-ID: <000b01d1179f$ed5032b0$c7f09810$@samsung.com>
+References: <cover.1446542020.git.p.fedin@samsung.com>
+ <5639B588.1080901@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5639B588.1080901@samsung.com>
+Content-language: ru
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Change the watchdog compatible to "atmel,sama5d4-wdt" to support
-SAMA5D4 watchdog driver.
+ Hello!
 
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+> > This patchset also depends on Exynos 5410 pinctrl support, introduced by
+> > patches 0003 and 0004 from this set:
+> > [PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
+> 
+> Only the first patch made up to kernel. The rest (2-5) received feedback
+> and I am waiting for fixing it. Andreas apparently loose the interest...
 
- arch/arm/boot/dts/sama5d4.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ I have rechecked the original thread on archives and found nothing new. Where can
+i read those feedbacks? Perhaps it makes sense for me to pick them up and include
+into my set.
 
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 15bbaf6..2193637 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -1300,7 +1300,7 @@
- 			};
- 
- 			watchdog@fc068640 {
--				compatible = "atmel,at91sam9260-wdt";
-+				compatible = "atmel,sama5d4-wdt";
- 				reg = <0xfc068640 0x10>;
- 				clocks = <&clk32k>;
- 				status = "disabled";
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards,
+Pavel Fedin
+Expert Engineer
+Samsung Electronics Research center Russia
