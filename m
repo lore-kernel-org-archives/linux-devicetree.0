@@ -1,50 +1,48 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: RE: [PATCH v5 0/4] Exynos SROMc configuration and Ethernet support for
- SMDK5410
-Date: Thu, 05 Nov 2015 11:44:47 +0300
-Message-ID: <001a01d117a6$3aed1140$b0c733c0$@samsung.com>
-References: <cover.1446542020.git.p.fedin@samsung.com>
- <5639B588.1080901@samsung.com> <000b01d1179f$ed5032b0$c7f09810$@samsung.com>
- <563B0E4D.6020808@samsung.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] ARM: dts: zynq: describe SLCR as simple-mfd rather than
+ simple-bus
+Date: Thu,  5 Nov 2015 17:46:06 +0900
+Message-ID: <1446713167-29306-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <563B0E4D.6020808@samsung.com>
-Content-language: ru
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
- Hello!
+The SLCR (System-Level Control Registers) block is an MFD (Multi
+Function Device) rather than a bus.
 
-> >>> This patchset also depends on Exynos 5410 pinctrl support, introduced by
-> >>> patches 0003 and 0004 from this set:
-> >>> [PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
-> >>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
-> >>
-> >> Only the first patch made up to kernel. The rest (2-5) received feedback
-> >> and I am waiting for fixing it. Andreas apparently loose the interest...
-> >
-> >  I have rechecked the original thread on archives and found nothing new. Where can
-> > i read those feedbacks? Perhaps it makes sense for me to pick them up and include
-> > into my set.
-> 
-> Go ahead. The only waiting feedback is at patch 2/5:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330910.html
-> Javier's pointed use of linux,stdout-path and putting xxti in
-> exynos5410.dtsi (and customizing it per board if needed).
-> 
-> Patches already got reviews and acks so only 2/5 is the stopper.
+"simple-mfd" seems a more suitable compatible string than "simple-bus".
 
- Ah, it's odroidXU device tree. Sorry, i don't have this particular board, and my patch actually doesn't need it. I could do some
-blind modifications, but cannot test them, and this is out of my scope at all.
- As mentioned in the commit msg, i need only 0003 and 0004 from there. Can they be picked up independently? They don't need 0002 by
-themselves, only 0005 needs it.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Kind regards,
-Pavel Fedin
-Expert Engineer
-Samsung Electronics Research center Russia
+ arch/arm/boot/dts/zynq-7000.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 1a5220e..64ddd4d 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -238,7 +238,7 @@
+ 		slcr: slcr@f8000000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			compatible = "xlnx,zynq-slcr", "syscon", "simple-bus";
++			compatible = "xlnx,zynq-slcr", "syscon", "simple-mfd";
+ 			reg = <0xF8000000 0x1000>;
+ 			ranges;
+ 			clkc: clkc@100 {
+-- 
+1.9.1
