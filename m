@@ -1,57 +1,201 @@
-From: Hou Zhiqiang <B48286@freescale.com>
-Subject: RE: [PATCH V3 1/2] powerpc/fsl: Add PCI node in device tree of
- bsc9132qds
-Date: Thu, 5 Nov 2015 03:16:06 +0000
-Message-ID: <CY1PR0301MB078078CD2D681D7D15D15D0E8B290@CY1PR0301MB0780.namprd03.prod.outlook.com>
-References: <1446691975-8965-1-git-send-email-Zhiqiang.Hou@freescale.com>
- <1446692954.12676.42.camel@freescale.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 4/5] PM / OPP: Rename OPP nodes as opp@<opp-hz>
+Date: Wed, 4 Nov 2015 21:18:41 -0600
+Message-ID: <20151105031841.GA27985@rob-hp-laptop>
+References: <cover.1446687367.git.viresh.kumar@linaro.org>
+ <5d5f139d334d5e503932c06694b47f0c3477caed.1446687367.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1446692954.12676.42.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>, Zhiqiang Hou <Zhiqiang.Hou@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Harninder Rai <harninder.rai@freescale.com>, "Lian M.H." <Minghuan.Lian@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "paulus@samba.org" <paulus@samba.org>, Hu Vincent <Mingkai.Hu@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5d5f139d334d5e503932c06694b47f0c3477caed.1446687367.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0
-MjENCj4gU2VudDogMjAxNeW5tDEx5pyINeaXpSAxMTowOQ0KPiBUbzogWmhpcWlhbmcgSG91DQo+
-IENjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgZ2FsYWtAa2VybmVsLmNyYXNoaW5n
-Lm9yZzsNCj4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVsdXNAc2FtYmEub3JnOyBtcGVA
-ZWxsZXJtYW4uaWQuYXU7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyByb2JoK2R0QGtl
-cm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGlq
-YytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBSYWkgSGFybmluZGVyLUIwMTA0NDsNCj4gTGlh
-biBNaW5naHVhbi1CMzE5Mzk7IEh1IE1pbmdrYWktQjIxMjg0OyBIb3UgWmhpcWlhbmctQjQ4Mjg2
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS8yXSBwb3dlcnBjL2ZzbDogQWRkIFBDSSBub2Rl
-IGluIGRldmljZSB0cmVlIG9mDQo+IGJzYzkxMzJxZHMNCj4gDQo+IE9uIFRodSwgMjAxNS0xMS0w
-NSBhdCAxMDo1MiArMDgwMCwgWmhpcWlhbmcgSG91IHdyb3RlOg0KPiA+IEZyb206IEhhcm5pbmRl
-ciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxlLmNvbT4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQGZyZWVzY2FsZS5jb20+DQo+
-ID4gUmV2aWV3ZWQtYnk6IFphbmcgVGllZmVpLVI2MTkxMSA8dGllLWZlaS56YW5nQGZyZWVzY2Fs
-ZS5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEt1c2h3YWhhIFByYWJoYWthci1CMzI1NzkgPHByYWJo
-YWthckBmcmVlc2NhbGUuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBGbGVtaW5nIEFuZHJldy1BRkxF
-TUlORyA8QUZMRU1JTkdAZnJlZXNjYWxlLmNvbT4NCj4gPiBUZXN0ZWQtYnk6IEZsZW1pbmcgQW5k
-cmV3LUFGTEVNSU5HIDxBRkxFTUlOR0BmcmVlc2NhbGUuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEhvdSBaaGlxaWFuZyA8QjQ4Mjg2QGZyZWVzY2FsZS5jb20+DQo+ID4gLS0tDQo+ID4gVjM6DQo+
-ID4gIC0gUmVtb3ZlIGdlcnJpdCBzdHVmZi4NCj4gDQo+IE5vLCB5b3UgZGlkbid0IHJlbW92ZSBh
-bGwgb2YgdGhlIEdlcnJpdCBzdHVmZi4gIEdldCByaWQgb2YgYWxsIHRoZQ0KPiBSZXZpZXdlZC0g
-YnkgYW5kIFRlc3RlZC1ieSBzaW5jZSB0aGV5IGFyZSBub3QgcmVsZXZhbnQgdG8gdGhpcyBjb250
-ZXh0Lg0KPiBIaXR0aW5nICIrMSINCj4gaW4gR2Vycml0IHRvIGFsbG93IGEgcGF0Y2ggdG8gZ28g
-aW50byB0aGUgU0RLIHRyZWUgYSBmZXcgeWVhcnMgYWdvIGlzIG5vdA0KPiB0aGUgc2FtZSBhcyBy
-ZXZpZXdpbmcgaXQgZm9yIGluY2x1c2lvbiBpbiBtYWlubGluZSBMaW51eCB0b2RheS4NCiANCk9r
-LCB0aGFua3MuDQoNClpoaXFpYW5nDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0
-cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1k
-ZXY=
+On Thu, Nov 05, 2015 at 07:11:55AM +0530, Viresh Kumar wrote:
+> It would be better to name OPP nodes as opp@<opp-hz> as that will ensure
+> that multiple DT nodes don't contain the same frequency. Of course we
+> expect the writer to name the node with its opp-hz frequency and not any
+> other frequency.
+> 
+> And that will let the compile error out if multiple nodes are using the
+> same opp-hz frequency.
+> 
+> Suggested-by: Stephen Boyd <sboyd@codeaurora.org>
+> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++--------------
+>  1 file changed, 19 insertions(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 30c4bb3718bc..10ef08dc1b4c 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -183,20 +183,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt = <970000 975000 985000>;
+>  			opp-microamp = <70000>;
+>  			clock-latency-ns = <300000>;
+>  			opp-suspend;
+>  		};
+> -		opp01 {
+> +		opp@1100000000 {
+>  			opp-hz = /bits/ 64 <1100000000>;
+>  			opp-microvolt = <980000 1000000 1010000>;
+>  			opp-microamp = <80000>;
+>  			clock-latency-ns = <310000>;
+>  		};
+> -		opp02 {
+> +		opp@1200000000 {
+>  			opp-hz = /bits/ 64 <1200000000>;
+>  			opp-microvolt = <1025000>;
+>  			clock-latency-ns = <290000>;
+> @@ -262,20 +262,20 @@ independently.
+>  		 * independently.
+>  		 */
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt = <970000 975000 985000>;
+>  			opp-microamp = <70000>;
+>  			clock-latency-ns = <300000>;
+>  			opp-suspend;
+>  		};
+> -		opp01 {
+> +		opp@1100000000 {
+>  			opp-hz = /bits/ 64 <1100000000>;
+>  			opp-microvolt = <980000 1000000 1010000>;
+>  			opp-microamp = <80000>;
+>  			clock-latency-ns = <310000>;
+>  		};
+> -		opp02 {
+> +		opp@1200000000 {
+>  			opp-hz = /bits/ 64 <1200000000>;
+>  			opp-microvolt = <1025000>;
+>  			opp-microamp = <90000;
+> @@ -338,20 +338,20 @@ DVFS state together.
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt = <970000 975000 985000>;
+>  			opp-microamp = <70000>;
+>  			clock-latency-ns = <300000>;
+>  			opp-suspend;
+>  		};
+> -		opp01 {
+> +		opp@1100000000 {
+>  			opp-hz = /bits/ 64 <1100000000>;
+>  			opp-microvolt = <980000 1000000 1010000>;
+>  			opp-microamp = <80000>;
+>  			clock-latency-ns = <310000>;
+>  		};
+> -		opp02 {
+> +		opp@1200000000 {
+>  			opp-hz = /bits/ 64 <1200000000>;
+>  			opp-microvolt = <1025000>;
+>  			opp-microamp = <90000>;
+> @@ -364,20 +364,20 @@ DVFS state together.
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+>  
+> -		opp10 {
+> +		opp@1300000000 {
+>  			opp-hz = /bits/ 64 <1300000000>;
+>  			opp-microvolt = <1045000 1050000 1055000>;
+>  			opp-microamp = <95000>;
+>  			clock-latency-ns = <400000>;
+>  			opp-suspend;
+>  		};
+> -		opp11 {
+> +		opp@1400000000 {
+>  			opp-hz = /bits/ 64 <1400000000>;
+>  			opp-microvolt = <1075000>;
+>  			opp-microamp = <100000>;
+>  			clock-latency-ns = <400000>;
+>  		};
+> -		opp12 {
+> +		opp@1500000000 {
+>  			opp-hz = /bits/ 64 <1500000000>;
+>  			opp-microvolt = <1010000 1100000 1110000>;
+>  			opp-microamp = <95000>;
+> @@ -404,7 +404,7 @@ Example 4: Handling multiple regulators
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt = <970000>, /* Supply 0 */
+>  					<960000>, /* Supply 1 */
+> @@ -417,7 +417,7 @@ Example 4: Handling multiple regulators
+>  
+>  		/* OR */
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
+>  					<960000 965000 975000>, /* Supply 1 */
+> @@ -430,7 +430,7 @@ Example 4: Handling multiple regulators
+>  
+>  		/* OR */
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
+>  					<960000 965000 975000>, /* Supply 1 */
+> @@ -462,7 +462,7 @@ Example 5: opp-supported-hw
+>  		status = "okay";
+>  		opp-shared;
+>  
+> -		opp00 {
+> +		opp@600000000 {
+>  			/*
+>  			 * Supports all substrate and process versions for 0xF
+>  			 * cuts, i.e. only first four cuts.
+> @@ -473,7 +473,7 @@ Example 5: opp-supported-hw
+>  			...
+>  		};
+>  
+> -		opp01 {
+> +		opp@800000000 {
+>  			/*
+>  			 * Supports:
+>  			 * - cuts: only one, 6th cut (represented by 6th bit).
+> @@ -506,7 +506,7 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>, turbo-mode-<name>,
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+>  
+> -		opp00 {
+> +		opp@1000000000 {
+>  			opp-hz = /bits/ 64 <1000000000>;
+>  			opp-microvolt-slow = <900000 915000 925000>;
+>  			opp-microvolt-fast = <970000 975000 985000>;
+> @@ -516,7 +516,7 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>, turbo-mode-<name>,
+>  			opp-suspend-slow; /* Will be used as suspend-opp only if 'slow' is chosen */
+>  		};
+>  
+> -		opp01 {
+> +		opp@1200000000 {
+>  			opp-hz = /bits/ 64 <1200000000>;
+>  			opp-microvolt-slow = <900000 915000 925000>, /* Supply vcc0 */
+>  					      <910000 925000 935000>; /* Supply vcc1 */
+> -- 
+> 2.6.2.198.g614a2ac
+> 
