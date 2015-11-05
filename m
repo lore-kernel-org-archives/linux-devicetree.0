@@ -1,148 +1,136 @@
-From: Matthew McClintock <mmcclint@codeaurora.org>
-Subject: [PATCH 4/5] qcom: ipq4019: Add basic board/dts support for IPQ4019 SoC
-Date: Thu,  5 Nov 2015 16:07:55 -0600
-Message-ID: <1446761276-9111-5-git-send-email-mmcclint@codeaurora.org>
-References: <1446761276-9111-1-git-send-email-mmcclint@codeaurora.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support
+ via 'ext-reset-output' dt prop
+Date: Thu, 5 Nov 2015 14:23:25 -0800
+Message-ID: <20151105222325.GA26159@roeck-us.net>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
+ <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1446761276-9111-1-git-send-email-mmcclint@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Matthew McClintock <mmcclint@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446758362-11702-2-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial dts files and SoC support for IPQ4019
+On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
+> From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> 
+> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+> can be pinmux'd to an external pin. This is typically used for boards that
+> have PMIC's in control of the IMX6 power rails. In fact, failure to use
+> such an external reset on boards with external PMIC's can result in various
+> hangs due to the IMX6 not being fully reset [1] as well as the board failing
+> to reset because its PMIC has not been reset to provide adequate voltage for
+> the CPU when coming out of reset at 800Mhz.
+> 
+> This uses a new device-tree property 'ext-reset-output' to indicate the
+> board has such a reset and to cause the watchdog to be configured to assert
+> WDOG_B instead of an internal reset both on a watchdog timeout and in
+> system_restart.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
+> 
+> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+>  drivers/watchdog/imx2_wdt.c                          | 20 ++++++++++++++++++--
+>  2 files changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> index 8dab6fd..9b89b3a 100644
+> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> @@ -9,6 +9,8 @@ Optional property:
 
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 108 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019.dtsi
+properties ?
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-new file mode 100644
-index 0000000..157a9ca
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -0,0 +1,108 @@
-+/*
-+ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/reset/qcom,gcc-ipq4019.h>
-+#include <dt-bindings/clock/qcom,gcc-ipq4019.h>
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ4019";
-+	compatible = "qcom,ipq4019";
-+	interrupt-parent = <&intc>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+			clocks = <&gcc GCC_APPS_CLK_SRC>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+			clocks = <&gcc GCC_APPS_CLK_SRC>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x2>;
-+			clocks = <&gcc GCC_APPS_CLK_SRC>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x3>;
-+			clocks = <&gcc GCC_APPS_CLK_SRC>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
-+
-+		intc: interrupt-controller@b000000 {
-+			compatible = "qcom,msm-qgic2";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x0b000000 0x1000>,
-+			<0x0b002000 0x1000>;
-+		};
-+
-+		gcc: clock-controller@1800000 {
-+			compatible = "qcom,gcc-ipq4019";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			reg = <0x1800000 0x60000>;
-+		};
-+
-+		tlmm: pinctrl@0x01000000 {
-+			compatible = "qcom,ipq4019-pinctrl";
-+			reg = <0x01000000 0x300000>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts = <0 208 0>;
-+		};
-+
-+		serial@78af000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x78af000 0x200>;
-+			interrupts = <0 107 0>;
-+			status = "disabled";
-+			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+		};
-+
-+		serial@78b0000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x78b0000 0x200>;
-+			interrupts = <0 108 0>;
-+			status = "disabled";
-+			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+		};
-+	};
-+};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>  - big-endian: If present the watchdog device's registers are implemented
+>    in big endian mode, otherwise in native mode(same with CPU), for more
+>    detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+> +- ext-reset-output: If present the watchdog device is configured to assert its
+
+Should that have a vendor prefix ? Also, not sure if "-output"
+has any real value in the property name. "fsl,external-reset", maybe ?
+
+> +  external reset (WDOG_B) instead of issuing a software reset.
+>  
+>  Examples:
+>  
+> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> index 29ef719..84bfec4 100644
+> --- a/drivers/watchdog/imx2_wdt.c
+> +++ b/drivers/watchdog/imx2_wdt.c
+> @@ -41,6 +41,8 @@
+>  
+>  #define IMX2_WDT_WCR		0x00		/* Control Register */
+>  #define IMX2_WDT_WCR_WT		(0xFF << 8)	/* -> Watchdog Timeout Field */
+> +#define IMX2_WDT_WCR_WDA	(1 << 5)	/* -> External Reset WDOG_B */
+> +#define IMX2_WDT_WCR_SRS	(1 << 4)	/* -> Software Reset Signal */
+>  #define IMX2_WDT_WCR_WRE	(1 << 3)	/* -> WDOG Reset Enable */
+>  #define IMX2_WDT_WCR_WDE	(1 << 2)	/* -> Watchdog Enable */
+>  #define IMX2_WDT_WCR_WDZST	(1 << 0)	/* -> Watchdog timer Suspend */
+> @@ -65,6 +67,7 @@ struct imx2_wdt_device {
+>  	struct timer_list timer;	/* Pings the watchdog when closed */
+>  	struct watchdog_device wdog;
+>  	struct notifier_block restart_handler;
+> +	bool ext_reset;
+>  };
+>  
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+> @@ -90,6 +93,13 @@ static int imx2_restart_handler(struct notifier_block *this, unsigned long mode,
+>  	struct imx2_wdt_device *wdev = container_of(this,
+>  						    struct imx2_wdt_device,
+>  						    restart_handler);
+> +
+> +	/* Use internal reset or external - not both */
+> +	if (wdev->ext_reset)
+> +		wcr_enable |= IMX2_WDT_WCR_SRS; /* do not assert int reset */
+> +	else
+> +		wcr_enable |= IMX2_WDT_WCR_WDA; /* do not assert ext-reset */
+> +
+>  	/* Assert SRS signal */
+>  	regmap_write(wdev->regmap, IMX2_WDT_WCR, wcr_enable);
+>  	/*
+> @@ -119,8 +129,12 @@ static inline void imx2_wdt_setup(struct watchdog_device *wdog)
+>  	val |= IMX2_WDT_WCR_WDZST;
+>  	/* Strip the old watchdog Time-Out value */
+>  	val &= ~IMX2_WDT_WCR_WT;
+> -	/* Generate reset if WDOG times out */
+> -	val &= ~IMX2_WDT_WCR_WRE;
+> +	/* Generate internal chip-level reset if WDOG times out */
+> +	if (!wdev->ext_reset)
+> +		val &= ~IMX2_WDT_WCR_WRE;
+> +	/* Or if external-reset assert WDOG_B reset only on time-out */
+> +	else
+> +		val |= IMX2_WDT_WCR_WRE;
+
+I don't really understand what this means. Normally I would hope that a watchdog
+only generates a reset if/when it times out.
+
+>  	/* Keep Watchdog Disabled */
+>  	val &= ~IMX2_WDT_WCR_WDE;
+>  	/* Set the watchdog's Time-Out value */
+> @@ -267,6 +281,8 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>  	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
+>  	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ? WDIOF_CARDRESET : 0;
+>  
+> +	wdev->ext_reset = of_property_read_bool(pdev->dev.of_node,
+> +						"ext-reset-output");
+>  	wdog->timeout = clamp_t(unsigned, timeout, 1, IMX2_WDT_MAX_TIME);
+>  	if (wdog->timeout != timeout)
+>  		dev_warn(&pdev->dev, "Initial timeout out of range! Clamped from %u to %u\n",
+> -- 
+> 2.6.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
