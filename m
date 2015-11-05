@@ -1,12 +1,15 @@
-From: Liu Gang <Gang.Liu@freescale.com>
-Subject: [PATCH 1/2 V2] ls2080a/dts: Add little endian property for GPIO IP
- block
-Date: Thu, 5 Nov 2015 10:42:21 +0800
-Message-ID: <1446691342-1943-1-git-send-email-Gang.Liu@freescale.com>
+From: Sharma Bhupesh <bhupesh.sharma@freescale.com>
+Subject: RE: [PATCH 1/2 V2] ls2080a/dts: Add little endian property for GPIO
+ IP block
+Date: Thu, 5 Nov 2015 02:54:37 +0000
+Message-ID: <BY1PR0301MB13033A8948975CFB2B4E628B82290@BY1PR0301MB1303.namprd03.prod.outlook.com>
+References: <1446691342-1943-1-git-send-email-Gang.Liu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1446691342-1943-1-git-send-email-Gang.Liu@freescale.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,71 +19,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, linus.walleij@linaro.org, arnd@arndb.de, shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, R58472@freescale.com, b07421@freescale.com, bhupesh.sharma@freescale.com, linux-gpio@vger.kernel.org, Gang.Liu@freescale.com, linux-arm-kernel@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Liu Gang <Gang.Liu@freescale.com>, Scott Wood <scottwood@freescale.com>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The GPIO block for ls2080a platform has little endian registers,
-the GPIO driver needs this property to read/write registers by
-right interface.
+Hi Gang,
 
-Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
----
-V2 changes: No
+> From: Liu Gang [mailto:Gang.Liu@freescale.com]
+> Sent: Thursday, November 05, 2015 8:12 AM
+> 
+> The GPIO block for ls2080a platform has little endian registers, the GPIO
+> driver needs this property to read/write registers by right interface.
+> 
+> Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
+> ---
+> V2 changes: No
+> 
+>  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 3 +++
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi          | 4 ++++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> index f2455c5..c836dab 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> @@ -10,6 +10,9 @@ Required properties:
+>    the second cell is used to specify the gpio polarity:
+>        0 = active high
+>        1 = active low
+> +- little-endian : Should be set if the GPIO has little endian
+> +		  registers. No the property means the GPIO
+> +		  registers are big endian mode.
 
- Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi          | 4 ++++
- 2 files changed, 7 insertions(+)
+Nitpick: I would suggest rewording this to the following, for better readability:
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-index f2455c5..c836dab 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-@@ -10,6 +10,9 @@ Required properties:
-   the second cell is used to specify the gpio polarity:
-       0 = active high
-       1 = active low
-+- little-endian : Should be set if the GPIO has little endian
-+		  registers. No the property means the GPIO
-+		  registers are big endian mode.
- 
- Example:
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index e81cd48..0099205 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -277,6 +277,7 @@
- 			reg = <0x0 0x2300000 0x0 0x10000>;
- 			interrupts = <0 36 0x4>; /* Level high type */
- 			gpio-controller;
-+			little-endian;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -287,6 +288,7 @@
- 			reg = <0x0 0x2310000 0x0 0x10000>;
- 			interrupts = <0 36 0x4>; /* Level high type */
- 			gpio-controller;
-+			little-endian;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -297,6 +299,7 @@
- 			reg = <0x0 0x2320000 0x0 0x10000>;
- 			interrupts = <0 37 0x4>; /* Level high type */
- 			gpio-controller;
-+			little-endian;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -307,6 +310,7 @@
- 			reg = <0x0 0x2330000 0x0 0x10000>;
- 			interrupts = <0 37 0x4>; /* Level high type */
- 			gpio-controller;
-+			little-endian;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
--- 
-2.1.0.27.g96db324
+ +- little-endian : Should be set if the GPIO has little endian
+ +		  registers. If this property is not set, then the GPIO
+ +		  registers are configured in big endian mode.
+
+Regards,
+Bhupesh
+
+> 
+>  Example:
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> index e81cd48..0099205 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> @@ -277,6 +277,7 @@
+>  			reg = <0x0 0x2300000 0x0 0x10000>;
+>  			interrupts = <0 36 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> @@ -287,6 +288,7 @@
+>  			reg = <0x0 0x2310000 0x0 0x10000>;
+>  			interrupts = <0 36 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> @@ -297,6 +299,7 @@
+>  			reg = <0x0 0x2320000 0x0 0x10000>;
+>  			interrupts = <0 37 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> @@ -307,6 +310,7 @@
+>  			reg = <0x0 0x2330000 0x0 0x10000>;
+>  			interrupts = <0 37 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> --
+> 2.1.0.27.g96db324
