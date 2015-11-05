@@ -1,53 +1,63 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [RFC 1/3] Documentation: dt: Add devicetree bindings for NI USRP E3xx pinconf
-Date: Thu,  5 Nov 2015 15:41:21 -0800
-Message-ID: <1446766883-25703-2-git-send-email-moritz.fischer@ettus.com>
-References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 03/50] powerpc/pci: Cleanup on struct
+ pci_controller_ops
+Date: Fri, 6 Nov 2015 10:45:37 +1100
+Message-ID: <20151105234537.GB30465@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-4-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87si4khyau.fsf@gamma.ozlabs.ibm.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87si4khyau.fsf@gamma.ozlabs.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Daniel Axtens <dja@axtens.net>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
----
- .../devicetree/bindings/pinctrl/pinctrl-e3xx.txt   | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-e3xx.txt
+On Fri, Nov 06, 2015 at 09:32:57AM +1100, Daniel Axtens wrote:
+>Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
+>
+>> Each PHB has one instance of "struct pci_controller_ops", which
+>> includes various callbacks called by PCI subsystem. In the definition
+>> of this struct, some callbacks have explicit names for its arguments,
+>> but the left don't have.
+>>
+>> This adds all explicit names of the arguments to the callbacks in
+>> "struct pci_controller_ops" so that the code looks consistent.
+>
+>Thank you very much for doing this - I should have done it the first
+>time I created pci_controller_ops.
+>
+>They all look good, with one nit-pick:
+>
+>> -	void		(*shutdown)(struct pci_controller *);
+>> +	void		(*shutdown)(struct pci_controller *hose);
+>
+>I think we're trying to move from hose to phb in new code.
+>
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-e3xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-e3xx.txt
-new file mode 100644
-index 0000000..2bfbd21
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-e3xx.txt
-@@ -0,0 +1,27 @@
-+USRP E3xx Pincontrol bindings
-+
-+The pins of the NI Ettus Research USRP E3xx idle image can be configured for different
-+daughterboard configurations. This pinmux is implemented in an FPGA as soft core.
-+
-+Required properties:
-+- compatible: Must be one of the following:
-+  - "ettus,pinctrl-e3xx-1.0"
-+- clocks: The clock driving the pinmux
-+
-+Example:
-+
-+	e3xx_pinctrl: e3xx-pinctrl@40200a00 {
-+		compatible = "ettus,e3xx-pinctrl-1.0";
-+		reg = <0x40200a00 0x1000>;
-+		clocks = <&clkc 15>;
-+
-+		foo_state: pinconf {
-+			conf {
-+				pins = E31X_LED_RX1_RX;
-+				output-low;
-+			};
-+		};
-+	};
-+
-+Note: Constants that facilitate creation of devicetree files are available in
-+      include/dt-bindings/pinctrl/pinctrl-e3xx.h
--- 
-2.4.3
+Nope, We don't have the movement as I explained in previous reply:
+hose for pci_controller while phb represents pnv_phb on PowerNV
+platform.
+
+>Once that is fixed:
+>  Reviewed-by: Daniel Axtens <dja@axtens.net>
+>
+
+Thanks,
+Gavin
+
+>
+>>  };
+>>  
+>>  /*
+>> -- 
+>> 2.1.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
