@@ -1,72 +1,157 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: AM4372: add entry for qspi mmap region
-Date: Thu, 5 Nov 2015 17:51:24 -0600
-Message-ID: <20151105235124.GA2805@rob-hp-laptop>
-References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
- <1446545174-14193-6-git-send-email-vigneshr@ti.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 10/50] powerpc/powernv: Simplify
+ pnv_ioda_setup_pe_seg()
+Date: Fri, 6 Nov 2015 10:52:18 +1100
+Message-ID: <20151105235218.GC30465@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-11-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87r3k4hx89.fsf@gamma.ozlabs.ibm.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446545174-14193-6-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <87r3k4hx89.fsf@gamma.ozlabs.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Daniel Axtens <dja@axtens.net>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 03, 2015 at 03:36:14PM +0530, Vignesh R wrote:
-> Add qspi memory mapped region entries for AM43xx based SoCs. Also,
-> update the binding documents for the controller to document this change.
-> 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+On Fri, Nov 06, 2015 at 09:56:06AM +1100, Daniel Axtens wrote:
+>Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
+>
+>> The original implementation of pnv_ioda_setup_pe_seg() configures
+>> IO and M32 segments by separate logics, which can be merged by
+>> by caching @segmap, @seg_size, @win in advance. This shouldn't
+>> cause any behavioural changes.
+>>
+>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>> ---
+>>  arch/powerpc/platforms/powernv/pci-ioda.c | 62 ++++++++++++++-----------------
+>>  1 file changed, 28 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> index 7ee7cfe..553d3f3 100644
+>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> @@ -2752,8 +2752,10 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>>  	struct pnv_phb *phb = hose->private_data;
+>>  	struct pci_bus_region region;
+>>  	struct resource *res;
+>> -	int i, index;
+>> -	int rc;
+>> +	unsigned int segsize;
+>> +	int *segmap, index, i;
+>> +	uint16_t win;
+>> +	int64_t rc;
+>
+>Good catch! Opal return codes are 64 bit and that should be explicit
+>in the type. However, I seem to remember that we preferred a different
+>type for 64 bit ints in the kernel. I think it's s64, and there are some
+>other uses of that in pci_ioda.c for return codes.
+>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Both int64_t and s64 are fine. I used s64 for the OPAL return value, but
+Alexey likes "int64_t", which is ok to me as well. I won't change it back
+to s64 :-)
 
-> ---
->  Documentation/devicetree/bindings/spi/ti_qspi.txt | 5 +++--
->  arch/arm/boot/dts/am4372.dtsi                     | 4 +++-
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> index f05dd631bef1..05488970060b 100644
-> --- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> @@ -17,9 +17,10 @@ Recommended properties:
->  
->  Example:
->  
-> +For am4372:
->  qspi: qspi@4b300000 {
-> -	compatible = "ti,dra7xxx-qspi";
-> -	reg = <0x47900000 0x100>, <0x30000000 0x3ffffff>;
-> +	compatible = "ti,am4372-qspi";
-> +	reg = <0x47900000 0x100>, <0x30000000 0x4000000>;
->  	reg-names = "qspi_base", "qspi_mmap";
->  	#address-cells = <1>;
->  	#size-cells = <0>;
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index 0447c04a40cc..1b2c545f3f2c 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -962,7 +962,9 @@
->  
->  		qspi: qspi@47900000 {
->  			compatible = "ti,am4372-qspi";
-> -			reg = <0x47900000 0x100>;
-> +			reg = <0x47900000 0x100>,
-> +			      <0x30000000 0x4000000>;
-> +			reg-names = "qspi_base", "qspi_mmap";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			ti,hwmods = "qspi";
-> -- 
-> 2.6.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>(I'm actually surprised that's not picked up as a compiler
+>warning. Maybe that's something to look at in future.)
+>
+
+Indeed, I didn't see a warning from gcc.
+
+>The rest of the patch looks good on casual inspection - to be sure I'll
+>test the entire series on a machine. (hopefully, time permitting!)
+>
+
+I run scripts/checkpatch.pl on the patchset. Only one warning came from
+[PATCH 44/50], but I won't bother to change that as the warning was
+brought by original code. If you want to test this patchset, you need
+run it on Tuleta where the hotpluggable PCI slots are supported.
+
+Thanks,
+Gavin
+
+>>  
+>>  	/*
+>>  	 * NOTE: We only care PCI bus based PE for now. For PCI
+>> @@ -2770,23 +2772,9 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>>  		if (res->flags & IORESOURCE_IO) {
+>>  			region.start = res->start - phb->ioda.io_pci_base;
+>>  			region.end   = res->end - phb->ioda.io_pci_base;
+>> -			index = region.start / phb->ioda.io_segsize;
+>> -
+>> -			while (index < phb->ioda.total_pe_num &&
+>> -			       region.start <= region.end) {
+>> -				phb->ioda.io_segmap[index] = pe->pe_number;
+>> -				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>> -					pe->pe_number, OPAL_IO_WINDOW_TYPE, 0, index);
+>> -				if (rc != OPAL_SUCCESS) {
+>> -					pr_err("%s: OPAL error %d when mapping IO "
+>> -					       "segment #%d to PE#%d\n",
+>> -					       __func__, rc, index, pe->pe_number);
+>> -					break;
+>> -				}
+>> -
+>> -				region.start += phb->ioda.io_segsize;
+>> -				index++;
+>> -			}
+>> +			segsize      = phb->ioda.io_segsize;
+>> +			segmap       = phb->ioda.io_segmap;
+>> +			win          = OPAL_IO_WINDOW_TYPE;
+>>  		} else if ((res->flags & IORESOURCE_MEM) &&
+>>  			   !pnv_pci_is_mem_pref_64(res->flags)) {
+>>  			region.start = res->start -
+>> @@ -2795,23 +2783,29 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>>  			region.end   = res->end -
+>>  				       hose->mem_offset[0] -
+>>  				       phb->ioda.m32_pci_base;
+>> -			index = region.start / phb->ioda.m32_segsize;
+>> -
+>> -			while (index < phb->ioda.total_pe_num &&
+>> -			       region.start <= region.end) {
+>> -				phb->ioda.m32_segmap[index] = pe->pe_number;
+>> -				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>> -					pe->pe_number, OPAL_M32_WINDOW_TYPE, 0, index);
+>> -				if (rc != OPAL_SUCCESS) {
+>> -					pr_err("%s: OPAL error %d when mapping M32 "
+>> -					       "segment#%d to PE#%d",
+>> -					       __func__, rc, index, pe->pe_number);
+>> -					break;
+>> -				}
+>> +			segsize      = phb->ioda.m32_segsize;
+>> +			segmap       = phb->ioda.m32_segmap;
+>> +			win          = OPAL_M32_WINDOW_TYPE;
+>> +		} else {
+>> +			continue;
+>> +		}
+>>  
+>> -				region.start += phb->ioda.m32_segsize;
+>> -				index++;
+>> +		index = region.start / segsize;
+>> +		while (index < phb->ioda.total_pe_num &&
+>> +		       region.start <= region.end) {
+>> +			segmap[index] = pe->pe_number;
+>> +			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>> +					pe->pe_number, win, 0, index);
+>> +			if (rc != OPAL_SUCCESS) {
+>> +				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
+>> +					__func__, rc, win, index,
+>> +					pe->phb->hose->global_number,
+>> +					pe->pe_number);
+>> +				break;
+>>  			}
+>> +
+>> +			region.start += segsize;
+>> +			index++;
+>>  		}
+>>  	}
+>>  }
+>> -- 
+>> 2.1.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
