@@ -1,39 +1,47 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH v6 2/4] ARM: dts: Add SROMc to Exynos 5410
-Date: Thu, 05 Nov 2015 15:03:01 +0300
-Message-ID: <db9de7f82ce611bff72ad156617378e28100a14c.1446724046.git.p.fedin@samsung.com>
-References: <cover.1446724046.git.p.fedin@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <cover.1446724046.git.p.fedin@samsung.com>
-In-reply-to: <cover.1446724046.git.p.fedin@samsung.com>
-References: <cover.1446724046.git.p.fedin@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ARM: dts: zynq: describe SLCR as simple-mfd rather than
+ simple-bus
+Date: Thu, 5 Nov 2015 13:10:54 +0100
+Message-ID: <563B474E.2000106@xilinx.com>
+References: <1446713167-29306-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446713167-29306-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This machine uses own SoC device tree file, add missing part.
+On 11/05/2015 09:46 AM, Masahiro Yamada wrote:
+> The SLCR (System-Level Control Registers) block is an MFD (Multi
+> Function Device) rather than a bus.
+> 
+> "simple-mfd" seems a more suitable compatible string than "simple-bus".
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  arch/arm/boot/dts/zynq-7000.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index 1a5220e..64ddd4d 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -238,7 +238,7 @@
+>  		slcr: slcr@f8000000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> -			compatible = "xlnx,zynq-slcr", "syscon", "simple-bus";
+> +			compatible = "xlnx,zynq-slcr", "syscon", "simple-mfd";
+>  			reg = <0xF8000000 0x1000>;
+>  			ranges;
+>  			clkc: clkc@100 {
+> 
 
-Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
----
- arch/arm/boot/dts/exynos5410.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Applied.
 
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 4603356..e2b58f8 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -101,6 +101,11 @@
- 			reg = <0x10000000 0x100>;
- 		};
- 
-+		sromc: sromc@12250000 {
-+			compatible = "samsung,exynos-srom";
-+			reg = <0x12250000 0x14>;
-+		};
-+
- 		pmu_system_controller: system-controller@10040000 {
- 			compatible = "samsung,exynos5410-pmu", "syscon";
- 			reg = <0x10040000 0x5000>;
--- 
-2.4.4
+Thanks,
+Michal
