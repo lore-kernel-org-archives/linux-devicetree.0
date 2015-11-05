@@ -1,80 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] ARM: dts: DRA7: add entry for qspi mmap region
-Date: Thu, 5 Nov 2015 10:36:58 -0600
-Message-ID: <20151105163658.GA28885@rob-hp-laptop>
-References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
- <1446545174-14193-5-git-send-email-vigneshr@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Thu, 5 Nov 2015 08:41:03 -0800
+Message-ID: <563B869F.2010004@roeck-us.net>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+ <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+ <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
+ <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
+ <563B62F7.3050307@codeaurora.org>
+ <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
+ <563B6A4B.7090400@codeaurora.org>
+ <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446545174-14193-5-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Timur Tabi <timur@codeaurora.org>
+Cc: Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 03, 2015 at 03:36:13PM +0530, Vignesh R wrote:
-> Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
-> update the binding documents for the controller to document this change.
-> 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+On 11/05/2015 07:00 AM, Fu Wei wrote:
+> Hi Timur,
+>
+> On 5 November 2015 at 22:40, Timur Tabi <timur@codeaurora.org> wrote:
+>> Fu Wei wrote:
+>>>
+>>> Did you really read the "Note" above???????? OK, let me paste it again
+>>> and again:
+>>>
+>>> SBSA 2.3 Page 23 :
+>>> If a larger watch period is required then the compare value can be
+>>> programmed directly into the compare value register.
+>>
+>>
+>> Well, okay.  Sorry, I should have read what you pasted more closely. But I
+>
+> Thanks for reading it again.
+>
+>> think that means during initialization, not during the WS0 timeout.
+>
+> I really don't see SBSA say "during initialization, not during the WS0 timeout",
+> please point it out the page number and the line number in SBSA spec.
+> maybe I miss it?
+> Thanks for your help in advance.
+>
+>>
+>> Anyway, I still don't like the fact that you're programming WCV in the
+>
+> "you don't like" doesn't mean "it is wrong" or "we can't do this", so
+> I will keep this way unless we have better idea to extend second stage
+> timeout.
+>
+>> interrupt handler, but I'm not going to make a big deal about it any more.
+>
+> Deal, Thanks a lot.
+>
 
-You don't really need an example for every possibility, but
+The problem with your driver, as I see it, is that dealing with WS0/WS1
+and pretimeout makes the driver so complex that, at least for my part,
+I am very wary about it. The driver could long since have been accepted
+if it were not for that. Besides that, I really believe that any system designer
+using the highest permitted frequency should be willing to live with the
+consequences, and not force the implementation of a a complex driver.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Ultimately, you'll have to decide if you want a simple driver accepted, or
+a complex driver hanging in the review queue forever.
 
-> ---
->  Documentation/devicetree/bindings/spi/ti_qspi.txt | 13 +++++++++++++
->  arch/arm/boot/dts/dra7.dtsi                       |  6 ++++--
->  2 files changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> index 601a360531a5..f05dd631bef1 100644
-> --- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> @@ -26,3 +26,16 @@ qspi: qspi@4b300000 {
->  	spi-max-frequency = <25000000>;
->  	ti,hwmods = "qspi";
->  };
-> +
-> +For dra7xx:
-> +qspi: qspi@4b300000 {
-> +	compatible = "ti,dra7xxx-qspi";
-> +	reg = <0x4b300000 0x100>, <0x4a002558 0x4>,
-> +	      <0x5c000000 0x4000000>;
-> +	reg-names = "qspi_base", "qspi_ctrlmod",
-> +		    "qspi_mmap";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	spi-max-frequency = <48000000>;
-> +	ti,hwmods = "qspi";
-> +};
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index e289c706d27d..13c2f10ec217 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -1108,8 +1108,10 @@
->  
->  		qspi: qspi@4b300000 {
->  			compatible = "ti,dra7xxx-qspi";
-> -			reg = <0x4b300000 0x100>;
-> -			reg-names = "qspi_base";
-> +			reg = <0x4b300000 0x100>, <0x4a002558 0x4>,
-> +			      <0x5c000000 0x4000000>;
-> +			reg-names = "qspi_base", "qspi_ctrlmod",
-> +				    "qspi_mmap";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			ti,hwmods = "qspi";
-> -- 
-> 2.6.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
