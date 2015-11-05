@@ -1,47 +1,51 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] ARM: dts: zynq: describe SLCR as simple-mfd rather than
- simple-bus
-Date: Thu, 5 Nov 2015 13:10:54 +0100
-Message-ID: <563B474E.2000106@xilinx.com>
-References: <1446713167-29306-1-git-send-email-yamada.masahiro@socionext.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/5] spi: introduce mmap read support for spi flash
+ devices
+Date: Thu, 5 Nov 2015 17:59:36 +0530
+Message-ID: <563B4BB0.9020206@ti.com>
+References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
+ <1446545174-14193-2-git-send-email-vigneshr@ti.com>
+ <20151104143915.GI1717@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446713167-29306-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <20151104143915.GI1717@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 09:46 AM, Masahiro Yamada wrote:
-> The SLCR (System-Level Control Registers) block is an MFD (Multi
-> Function Device) rather than a bus.
+
+
+On 11/04/2015 08:09 PM, Mark Brown wrote:
+> On Tue, Nov 03, 2015 at 03:36:10PM +0530, Vignesh R wrote:
 > 
-> "simple-mfd" seems a more suitable compatible string than "simple-bus".
+>> +	}
+>> +	mutex_lock(&master->mmap_lock_mutex);
+>> +	ret = master->spi_mtd_mmap_read(spi, from, len, retlen, buf,
+>> +					read_opcode, addr_width,
+>> +					dummy_bytes);
+>> +	mutex_unlock(&master->mmap_lock_mutex);
+>> +	if (master->auto_runtime_pm)
+>> +		pm_runtime_put(master->dev.parent);
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/arm/boot/dts/zynq-7000.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index 1a5220e..64ddd4d 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -238,7 +238,7 @@
->  		slcr: slcr@f8000000 {
->  			#address-cells = <1>;
->  			#size-cells = <1>;
-> -			compatible = "xlnx,zynq-slcr", "syscon", "simple-bus";
-> +			compatible = "xlnx,zynq-slcr", "syscon", "simple-mfd";
->  			reg = <0xF8000000 0x1000>;
->  			ranges;
->  			clkc: clkc@100 {
+> It's a bit worrying that this doesn't sync with the message queue except
+> via the mutex: this means that we might be out of order with respect to
+> any asynchronous transfers that are happening on the device.  I'm not
+> sure that this is a practical problem, though there is some risk of
+> unfair scheduling that would have to be under extreme load and it might
+> make sense to prioritise reads anyway.
 > 
 
-Applied.
+Since mmap interface is used only by mtd flash drivers and since almost
+all mtd flash devices use synchronous transfers (spi_sync()), IMO, there
+wont be out of order problem wrt mtd flashes.
+But mmap read might delay transfers queued for non mtd flash devices. It
+is difficult to wait for all transfers already queued to be pumped out
+by __spi_pump_messages() and then do the mmap transfer. Do you have any
+thoughts on how to sync with message queue?
 
-Thanks,
-Michal
+-- 
+Regards
+Vignesh
