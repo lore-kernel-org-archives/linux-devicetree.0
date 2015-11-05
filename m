@@ -1,67 +1,93 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Fri, 6 Nov 2015 02:04:44 +0800
-Message-ID: <CADyBb7tkELuJgmo81ypZf2dzgVqxBYTyKLV-xJ1QZbxK7pmuLQ@mail.gmail.com>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
-	<1445961999-9506-6-git-send-email-fu.wei@linaro.org>
-	<CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
-	<563AE588.1080009@roeck-us.net>
-	<563B5DF9.6080102@codeaurora.org>
-	<CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
-	<563B62F7.3050307@codeaurora.org>
-	<CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
-	<563B6A4B.7090400@codeaurora.org>
-	<CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
-	<563B869F.2010004@roeck-us.net>
-	<563B9907.7020608@codeaurora.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add NVIDIA Tegra XUSB pad
+ controller binding
+Date: Thu, 5 Nov 2015 10:13:36 -0800
+Message-ID: <CAL1qeaHHS5PAUzcPAKevfUzcp+AiNUeYX0AowM4HJX5-x2x+nQ@mail.gmail.com>
+References: <1446657109-15568-1-git-send-email-thierry.reding@gmail.com>
+	<1446657109-15568-2-git-send-email-thierry.reding@gmail.com>
+	<563B27AC.2000702@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <563B9907.7020608@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <563B27AC.2000702-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur
-
-On 6 November 2015 at 01:59, Timur Tabi <timur@codeaurora.org> wrote:
-> On 11/05/2015 10:41 AM, Guenter Roeck wrote:
->>
->>
->> Ultimately, you'll have to decide if you want a simple driver accepted, or
->> a complex driver hanging in the review queue forever.
+On Thu, Nov 5, 2015 at 1:55 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> +UTMI ports:
+>> +-----------
+>> +
+>> +Required properties:
+>> +- status: Defines the operation status of the port. Valid values are:
+>> +  - "disabled": the port is disabled
+>> +  - "okay": the port is enabled
+>> +- mode: A string that determines the mode in which to run the port. Valid
+>> +  values are:
+>> +  - "host": for USB host mode
+>> +  - "device": for USB device mode
+>> +  - "otg": for USB OTG mode
+>> +
+>> +Optional properties:
+>> +- nvidia,internal: A boolean property whose presence determines that a port
+>> +  is internal. In the absence of this property the port is considered to be
+>> +  external.
+>> +- vbus-supply: phandle to a regulator supplying the VBUS voltage.
+>> +
+>> +ULPI ports:
+>> +-----------
+>> +
+>> +Optional properties:
+>> +- status: Defines the operation status of the port. Valid values are:
+>> +  - "disabled": the port is disabled
+>> +  - "okay": the port is enabled
+>> +- nvidia,internal: A boolean property whose presence determines that a port
+>> +  is internal. In the absence of this property the port is considered to be
+>> +  external.
+>> +
+>> +HSIC ports:
+>> +-----------
+>> +
+>> +Required properties:
+>> +- status: Defines the operation status of the port. Valid values are:
+>> +  - "disabled": the port is disabled
+>> +  - "okay": the port is enabled
+>> +
+>> +Super-speed USB ports:
+>> +----------------------
+>> +
+>> +Required properties:
+>> +- status: Defines the operation status of the port. Valid values are:
+>> +  - "disabled": the port is disabled
+>> +  - "okay": the port is enabled
+>> +- nvidia,port: A single cell that specifies the physical port number to map
+>> +  this super-speed USB port to. The range of valid port numbers varies with
+>> +  the SoC generation:
+>> +  - 0-2: for Tegra124 and Tegra132
 >
->
-> Please note that I did post such a driver back in May:
->
->         http://www.spinics.net/lists/linux-watchdog/msg06567.html
->
-> Officially I withdrew it in favor of Fu's, but the decision which driver to
-> pick up is not mine to make.  I can resubmit driver if you'd like.
+> I am a bit confused by what nvidia,port property is used for. Is this to
+> program XUSB_PADCTL_SS_PORT_MAP_0? If so then I think that this should
+> be an optional property because if you want to use the usb3 ports for
+> usb3, then we should not need to specify this here.
 
-I totally  can not  agree with "make WS1 as backup",
-and that not a SBSA watchdog dirver, because that just have one stage
+"nvidia,port" is used to program XUSB_PADCTL_SS_PORT_MAP and is
+definitely required.  It specifies the UTMI port to which the SS port
+is mapped to.  For example, Nyan-Big has 3 UTMI ports (0, 1
+(internal), and 2) and 2 SS ports (0 and 1).  SS port 0 is mapped to
+the same physical port as UTMI port 0 and SS port 1 is mapped to the
+same physical port as UTMI port 2.
 
-And the short timeout is useless for kexec/kdump in real practice.
+> Also the XHCI has 3 usb2 ports and 2 usb3 ports and so when you have
+> port numbers 0-2 I am not sure what you are referring too.
 
->
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+The port numbers correspond tot he UTMI ports, so 3 UTMI ports =
+possible port values of 0 - 2.
 
+Maybe "port" isn't the best name here?
 
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+-Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
