@@ -1,81 +1,57 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH] MAINTAINERS: update DT binding doc locations
-Date: Thu, 5 Nov 2015 21:04:28 +0000
-Message-ID: <20151105210428.GG26383@jhogan-linux.le.imgtec.org>
-References: <1446752475-2708-1-git-send-email-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+sHJum3is6Tsg7/J"
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: [PATCH v4 0/2] imx6: Implement external watchdog reset
+Date: Thu,  5 Nov 2015 16:19:20 -0500
+Message-ID: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446752475-2708-1-git-send-email-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>, Alison Wang <alison.wang@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Mark Yao <mark.yao@rock-chips.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Vincent Abriou <vincent.abriou@st.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Hans de Goede <hdegoede@redhat.com>, Vineet Gupta <vgupta@synopsys.com>
+To: linux-watchdog@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, wim@iguana.be, tharvey@gateworks.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, justin.waters@timesys.com, l.stach@pengutronix.de, festevam@gmail.com, sr@denx.de, Akshay Bhat <akshay.bhat@timesys.com>
 List-Id: devicetree@vger.kernel.org
 
---+sHJum3is6Tsg7/J
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[Rebase to next-20151105 and re-sending work done by Tim Harvey]
 
-On Thu, Nov 05, 2015 at 01:41:15PM -0600, Rob Herring wrote:
-> After the recent moving of DT binding documents, some maintainers entries
-> are stale. Update them to the new locations.
->=20
-> In bindings/fb/, there were only 2 files and I'm assuming the FB
-> maintainers don't want to be copied on all of bindings/display/. So I've
-> dropped them.
->=20
-> Reported-by: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jianwei Wang <jianwei.wang.chn@gmail.com>
-> Cc: Alison Wang <alison.wang@freescale.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Mark Yao <mark.yao@rock-chips.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Vincent Abriou <vincent.abriou@st.com>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: James Hogan <james.hogan@imgtec.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+can be pinmux'd to an external pin. This is typically used for boards that
+have PMIC's in control of the IMX6 power rails. In fact, failure to use
+such an external reset on boards with external PMIC's can result in various
+hangs due to the IMX6 not being fully reset [1] as well as the board failing
+to reset because its PMIC has not been reset to provide adequate voltate for
+the CPU when comming out of reset at 800Mhz when it was at 400Mhz prior to
+reset.
+ 
+This adds a new device-tree property 'ext-reset-output' to fsl-imx-wdt in
+order to indicate the board has such a reset and to cause the watchdog to be
+configured to assert WDOG_B instead of an internal reset both on a
+watchdog timeout and in system_restart.
+ 
+The second patch adds the watchdog configuration and pinmux for Gateworks
+Ventana boards.
+ 
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
 
-Acked-by: James Hogan <james.hogan@imgtec.com> [metag]
+Changes:
+v3->v4:
+- Rebase and test against linux-next tag next-20151105
 
-Thanks!
-James
+History:
+v1: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/347168.html
+v2: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-June/348761.html
+v3: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/360188.html
 
-> @@ -6855,6 +6854,7 @@ S:	Supported
->  F:	arch/metag/
->  F:	Documentation/metag/
->  F:	Documentation/devicetree/bindings/metag/
-> +F:	Documentation/devicetree/bindings/interrupt-controller/img,*
->  F:	drivers/clocksource/metag_generic.c
->  F:	drivers/irqchip/irq-metag.c
->  F:	drivers/irqchip/irq-metag-ext.c
+Tim Harvey (2):
+  watchdog: imx2_wdt: add external reset support via 'ext-reset-output'
+    dt prop
+  ARM: dts: ventana: Add ext-reset support
 
---+sHJum3is6Tsg7/J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+ arch/arm/boot/dts/imx6qdl-gw51xx.dtsi                | 12 ++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi                | 12 ++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi                | 13 +++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi                | 17 +++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi                | 12 ++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw552x.dtsi                | 12 ++++++++++++
+ drivers/watchdog/imx2_wdt.c                          | 20 ++++++++++++++++++--
+ 8 files changed, 98 insertions(+), 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWO8RcAAoJEGwLaZPeOHZ6M2AP/1XfirFmDJu9VDoqEy8pwpWE
-Ows332+EdfSObVg55C/bvs8O0VOu+DO9Qrx1RBL0bIT7JgiM8Kynbcz+SdLZ7Zkv
-PfwlZ6F/dTyNPZKJvo5iQJ5cOVxws2NB8VHX5x8CFsxWFBzryDrQnRNp+uRrZRZ+
-WZkCfSZXd5lD4JMqBfqULl6y2SpkpN2NLl4K49FrBBUFz63kGgD4xyEuvdBQeL0k
-/UkRbmgvpZykkuxEZMPCHNDy0QQZuJ7JiXr0IlyD6tXf37y7R/JcOZHdAKwDu42O
-NrGGcvErFdEdBCFncsLc8SAS6HYtXyZkaiGduFnz2Gm8fSdaOZ+i8eVBqbcuVpTV
-xqHv7Aba4PHpiU63H62u/Utwky7CAsQ+59PQF7uc+OBL2qIifo/IRa5f3ePmBtxI
-Y/fokYDHNLyIMLI7goYw0I4byAu203L2c+27L6wsfj4ick6M+X7orX/tpSjyFH0o
-tSDLMPbeS3VpaPQJpBKf6YeuGiB67BY6w04Ur/wgegpvJ8LoO4EbpSdrqgopG8cp
-sFEIv8sKTpeQvLGGkperxIckwygZnYFOtIrddsQh/QhhnscE+21BhBe1YZ2FMDDZ
-TWGpg/Se+R8jbY/IP2Ax3vJlI5DCQac454pDEA0ZF28TN0iSPFm29a4vEoAtuAcJ
-qlyn04+h3wuWw4PXQM8r
-=jtPN
------END PGP SIGNATURE-----
-
---+sHJum3is6Tsg7/J--
+-- 
+2.6.2
