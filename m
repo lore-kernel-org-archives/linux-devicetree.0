@@ -1,85 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2 V2] ls2080a/dts: Add little endian property for GPIO
- IP block
-Date: Thu, 5 Nov 2015 15:21:42 -0600
-Message-ID: <20151105212142.GA22264@rob-hp-laptop>
-References: <1446691342-1943-1-git-send-email-Gang.Liu@freescale.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V2 0/5] PM / OPP: opp-supported-hw and <prop>-name bindings
+Date: Thu, 05 Nov 2015 23:31:16 +0100
+Message-ID: <3673640.WbFJib59uF@vostro.rjw.lan>
+References: <cover.1446687367.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446691342-1943-1-git-send-email-Gang.Liu@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Liu Gang <Gang.Liu@freescale.com>
-Cc: linus.walleij@linaro.org, arnd@arndb.de, shawnguo@kernel.org, bhupesh.sharma@freescale.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b07421@freescale.com, R58472@freescale.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1446687367.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 05, 2015 at 10:42:21AM +0800, Liu Gang wrote:
-> The GPIO block for ls2080a platform has little endian registers,
-> the GPIO driver needs this property to read/write registers by
-> right interface.
+On Thursday, November 05, 2015 07:11:51 AM Viresh Kumar wrote:
+> Hi Rafael,
 > 
-> Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
+> All the bindings are Reviewed by Stephen now and Rob didn't had a
+> problem with them (though he didn't Ack them separately yet) :)
+> 
+> The first patch enables us to select only a subset of OPPs from the
+> bigger table, based on what version of the hardware we are running on.
+> 
+> The second one enables us to select slightly different values for
+> multiple properties, based on what kind of hardware they are running on.
+> 
+> The third one removes an (unused) binding, which is replaced by the
+> second patch with a better solution.
+> 
+> The fourth patch is based on what Stephen suggested (and then reviewed)
+> in the earlier series, and the 5th one updates the existing users of
+> these bindings for it.
+> 
+> Viresh Kumar (5):
+>   PM / OPP: Add "opp-supported-hw" binding
+>   PM / OPP: Add
+>     {opp-microvolt|opp-microamp|turbo-mode|opp-suspend}-<name> binding
+>   PM / OPP: Remove 'operating-points-names' binding
+>   PM / OPP: Rename OPP nodes as opp@<opp-hz>
+>   ARM: dts: exynos4412: Rename OPP nodes as opp@<opp-hz>
+> 
+>  Documentation/devicetree/bindings/opp/opp.txt | 143 +++++++++++++++++++-------
+>  arch/arm/boot/dts/exynos4412.dtsi             |  28 ++---
+>  2 files changed, 118 insertions(+), 53 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+So this clearly is a new feature and it clearly missed the merge window boundary
+for v4.4.  I can queue it up for v4.5.
 
-> ---
-> V2 changes: No
-> 
->  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 3 +++
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi          | 4 ++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> index f2455c5..c836dab 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> @@ -10,6 +10,9 @@ Required properties:
->    the second cell is used to specify the gpio polarity:
->        0 = active high
->        1 = active low
-> +- little-endian : Should be set if the GPIO has little endian
-> +		  registers. No the property means the GPIO
-> +		  registers are big endian mode.
->  
->  Example:
->  
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index e81cd48..0099205 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -277,6 +277,7 @@
->  			reg = <0x0 0x2300000 0x0 0x10000>;
->  			interrupts = <0 36 0x4>; /* Level high type */
->  			gpio-controller;
-> +			little-endian;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> @@ -287,6 +288,7 @@
->  			reg = <0x0 0x2310000 0x0 0x10000>;
->  			interrupts = <0 36 0x4>; /* Level high type */
->  			gpio-controller;
-> +			little-endian;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> @@ -297,6 +299,7 @@
->  			reg = <0x0 0x2320000 0x0 0x10000>;
->  			interrupts = <0 37 0x4>; /* Level high type */
->  			gpio-controller;
-> +			little-endian;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> @@ -307,6 +310,7 @@
->  			reg = <0x0 0x2330000 0x0 0x10000>;
->  			interrupts = <0 37 0x4>; /* Level high type */
->  			gpio-controller;
-> +			little-endian;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
-> -- 
-> 2.1.0.27.g96db324
-> 
+Thanks,
+Rafael
+
