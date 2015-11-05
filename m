@@ -1,111 +1,103 @@
-From: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V4 1/2] powerpc/fsl: Add PCI node in device tree of bsc9132qds
-Date: Thu, 5 Nov 2015 11:15:59 +0800
-Message-ID: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] dt-bindings: add documentation of rk3036 clock
+ controller
+Date: Wed, 4 Nov 2015 21:22:56 -0600
+Message-ID: <20151105032256.GA3261@rob-hp-laptop>
+References: <1446639503-11763-1-git-send-email-zhengxing@rock-chips.com>
+ <1446639503-11763-2-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446639503-11763-2-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Wed, Nov 04, 2015 at 08:18:16PM +0800, Xing Zheng wrote:
+> Add the devicetree binding for the cru on the rk3036 which quite similar
+> structured as previous clock controllers.
+> 
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-V4: V3:
- - Remove gerrit stuff.
-V2:
- - Remove property clock-frequency.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
- arch/powerpc/boot/dts/bsc9132qds.dts          | 15 ++++++++++++++
- arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi | 28 +++++++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi  |  1 +
- 3 files changed, 44 insertions(+)
-
-diff --git a/arch/powerpc/boot/dts/bsc9132qds.dts b/arch/powerpc/boot/dts/bsc9132qds.dts
-index 6cab106..940d719 100644
---- a/arch/powerpc/boot/dts/bsc9132qds.dts
-+++ b/arch/powerpc/boot/dts/bsc9132qds.dts
-@@ -29,6 +29,21 @@
- 	soc: soc@ff700000 {
- 		ranges = <0x0 0x0 0xff700000 0x100000>;
- 	};
-+
-+	pci0: pcie@ff70a000 {
-+		reg = <0 0xff70a000 0 0x1000>;
-+		ranges = <0x2000000 0x0 0x90000000 0 0x90000000 0x0 0x20000000
-+			  0x1000000 0x0 0x00000000 0 0xc0010000 0x0 0x10000>;
-+		pcie@0 {
-+			ranges = <0x2000000 0x0 0x90000000
-+				  0x2000000 0x0 0x90000000
-+				  0x0 0x20000000
-+
-+				  0x1000000 0x0 0x0
-+				  0x1000000 0x0 0x0
-+				  0x0 0x100000>;
-+		};
-+	};
- };
- 
- /include/ "bsc9132qds.dtsi"
-diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
-index c723071..b5f0715 100644
---- a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
-@@ -40,6 +40,34 @@
- 	interrupts = <16 2 0 0 20 2 0 0>;
- };
- 
-+/* controller at 0xa000 */
-+&pci0 {
-+	compatible = "fsl,bsc9132-pcie", "fsl,qoriq-pcie-v2.2";
-+	device_type = "pci";
-+	#size-cells = <2>;
-+	#address-cells = <3>;
-+	bus-range = <0 255>;
-+	interrupts = <16 2 0 0>;
-+
-+	pcie@0 {
-+		reg = <0 0 0 0 0>;
-+		#interrupt-cells = <1>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		device_type = "pci";
-+		interrupts = <16 2 0 0>;
-+		interrupt-map-mask = <0xf800 0 0 7>;
-+
-+		interrupt-map = <
-+			/* IDSEL 0x0 */
-+			0000 0x0 0x0 0x1 &mpic 0x0 0x2 0x0 0x0
-+			0000 0x0 0x0 0x2 &mpic 0x1 0x2 0x0 0x0
-+			0000 0x0 0x0 0x3 &mpic 0x2 0x2 0x0 0x0
-+			0000 0x0 0x0 0x4 &mpic 0x3 0x2 0x0 0x0
-+			>;
-+	};
-+};
-+
- &soc {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
-index 301a9db..90f7949 100644
---- a/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
-@@ -45,6 +45,7 @@
- 		serial0 = &serial0;
- 		ethernet0 = &enet0;
- 		ethernet1 = &enet1;
-+		pci0 = &pci0;
- 	};
- 
- 	cpus {
--- 
-2.1.0.27.g96db324
-
+> ---
+> 
+> Changes in v6: None
+> 
+>  .../bindings/clock/rockchip,rk3036-cru.txt         |   56 ++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> new file mode 100644
+> index 0000000..ace0599
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+> @@ -0,0 +1,56 @@
+> +* Rockchip RK3036 Clock and Reset Unit
+> +
+> +The RK3036 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "rockchip,rk3036-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing pll rates are not changeable, due to the missing pll lock status.
+> +
+> +Each clock is assigned an identifier and client nodes can use this identifier
+> +to specify the clock which they consume. All available clocks are defined as
+> +preprocessor macros in the dt-bindings/clock/rk3036-cru.h headers and can be
+> +used in device tree sources. Similar macros exist for the reset sources in
+> +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
+> + - "xin24m" - crystal input - required,
+> + - "ext_i2s" - external I2S clock - optional,
+> + - "ext_gmac" - external GMAC clock - optional
+> +
+> +Example: Clock controller node:
+> +
+> +	cru: cru@20000000 {
+> +		compatible = "rockchip,rk3036-cru";
+> +		reg = <0x20000000 0x1000>;
+> +		rockchip,grf = <&grf>;
+> +
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
+> +
+> +Example: UART controller node that consumes the clock generated by the clock
+> +  controller:
+> +
+> +	uart0: serial@20060000 {
+> +		compatible = "snps,dw-apb-uart";
+> +		reg = <0x20060000 0x100>;
+> +		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +		clocks = <&cru SCLK_UART0>;
+> +	};
+> -- 
+> 1.7.9.5
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
