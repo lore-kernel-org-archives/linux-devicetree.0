@@ -1,63 +1,52 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 03/50] powerpc/pci: Cleanup on struct
- pci_controller_ops
-Date: Fri, 6 Nov 2015 10:45:37 +1100
-Message-ID: <20151105234537.GB30465@gwshan>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-4-git-send-email-gwshan@linux.vnet.ibm.com>
- <87si4khyau.fsf@gamma.ozlabs.ibm.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] mtd: arasan: Add device tree binding documentation
+Date: Thu, 5 Nov 2015 17:49:09 -0600
+Message-ID: <20151105234909.GA711@rob-hp-laptop>
+References: <1446691722-8338-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87si4khyau.fsf@gamma.ozlabs.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Daniel Axtens <dja@axtens.net>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+In-Reply-To: <1446691722-8338-1-git-send-email-punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 06, 2015 at 09:32:57AM +1100, Daniel Axtens wrote:
->Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
->
->> Each PHB has one instance of "struct pci_controller_ops", which
->> includes various callbacks called by PCI subsystem. In the definition
->> of this struct, some callbacks have explicit names for its arguments,
->> but the left don't have.
->>
->> This adds all explicit names of the arguments to the callbacks in
->> "struct pci_controller_ops" so that the code looks consistent.
->
->Thank you very much for doing this - I should have done it the first
->time I created pci_controller_ops.
->
->They all look good, with one nit-pick:
->
->> -	void		(*shutdown)(struct pci_controller *);
->> +	void		(*shutdown)(struct pci_controller *hose);
->
->I think we're trying to move from hose to phb in new code.
->
+On Thu, Nov 05, 2015 at 08:18:42AM +0530, Punnaiah Choudary Kalluri wrote:
+> This patch adds the dts binding document for arasan nand flash
+> controller.
+> 
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v4:
+> - Added num-cs property
+> - Added clock support
+> Changes in v3:
+> - None
+> Changes in v2:
+> - None
+> ---
+>  .../devicetree/bindings/mtd/arasan_nfc.txt         | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+> new file mode 100644
+> index 0000000..02e1ce3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+> @@ -0,0 +1,34 @@
+> +Arasan Nand Flash Controller with ONFI 3.1 support
+> +
+> +Required properties:
+> +- compatible: Should be "arasan,nfc-v3p10"
 
-Nope, We don't have the movement as I explained in previous reply:
-hose for pci_controller while phb represents pnv_phb on PowerNV
-platform.
+There should also be a chip specific property. Vendors are known to 
+integrate IP blocks in different and interesting ways.
 
->Once that is fixed:
->  Reviewed-by: Daniel Axtens <dja@axtens.net>
->
-
-Thanks,
-Gavin
-
->
->>  };
->>  
->>  /*
->> -- 
->> 2.1.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
