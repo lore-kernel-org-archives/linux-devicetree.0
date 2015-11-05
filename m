@@ -1,78 +1,72 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Thu, 5 Nov 2015 23:00:09 +0800
-Message-ID: <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
-	<1445961999-9506-6-git-send-email-fu.wei@linaro.org>
-	<CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
-	<563AE588.1080009@roeck-us.net>
-	<563B5DF9.6080102@codeaurora.org>
-	<CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
-	<563B62F7.3050307@codeaurora.org>
-	<CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
-	<563B6A4B.7090400@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Thu, 5 Nov 2015 15:27:36 +0000
+Message-ID: <20151105152736.GO18409@sirena.org.uk>
+References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2/+Vq7w28QOSGzSM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <563B6A4B.7090400@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
 
-On 5 November 2015 at 22:40, Timur Tabi <timur@codeaurora.org> wrote:
-> Fu Wei wrote:
->>
->> Did you really read the "Note" above???????? OK, let me paste it again
->> and again:
->>
->> SBSA 2.3 Page 23 :
->> If a larger watch period is required then the compare value can be
->> programmed directly into the compare value register.
->
->
-> Well, okay.  Sorry, I should have read what you pasted more closely. But I
+--2/+Vq7w28QOSGzSM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for reading it again.
+On Thu, Nov 05, 2015 at 10:43:19AM +0000, Adam Thomson wrote:
 
-> think that means during initialization, not during the WS0 timeout.
+> +/* ALC */
+> +static void da7218_alc_calib(struct snd_soc_codec *codec)
+> +{
+> +	struct da7218_priv *da7218 =3D snd_soc_codec_get_drvdata(codec);
+> +	u8 calib_ctrl;
+> +	int i =3D 0;
+> +	bool calibrated =3D false;
+> +
+> +	/* Bypass cache so it saves current settings */
+> +	regcache_cache_bypass(da7218->regmap, true);
 
-I really don't see SBSA say "during initialization, not during the WS0 timeout",
-please point it out the page number and the line number in SBSA spec.
-maybe I miss it?
-Thanks for your help in advance.
+What ensures that nothing else is running at the same time this is? =20
 
->
-> Anyway, I still don't like the fact that you're programming WCV in the
+> +static int da7218_mic_lvl_det_sw_put(struct snd_kcontrol *kcontrol,
+> +				     struct snd_ctl_elem_value *ucontrol)
+> +{
 
-"you don't like" doesn't mean "it is wrong" or "we can't do this", so
-I will keep this way unless we have better idea to extend second stage
-timeout.
+Why is this a user visible control?
 
-> interrupt handler, but I'm not going to make a big deal about it any more.
+> +	/* Default all mixers off */
+> +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_1L, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_1R, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_2L, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_2R, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_OUTFILT_1L, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_OUTFILT_1R, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_ST_OUTFILT_1L, 0);
+> +	snd_soc_write(codec, DA7218_DROUTING_ST_OUTFILT_1R, 0);
 
-Deal, Thanks a lot.
+We generally just use the device defaults, why change them?
 
->
->
-> --
-> Sent by an employee of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the
-> Code Aurora Forum, hosted by The Linux Foundation.
+--2/+Vq7w28QOSGzSM
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJWO3VnAAoJECTWi3JdVIfQOoIH/3WmoI/XdUvAlul5oKTGsLf1
+kE2Ms8ZIDfm3SgVXqi35qdMWfn16wXNE1tBGpbwqBdI53LtKVMwaTUc+upuhXOm7
+tuJCndsPIdBREvSMgpmplELfpB3ffUA3uIMHCJS+/u8Yzogy3wN0tGGF8eGajN/t
+9TeVWVedW1i0x8w4kCt2UBjpNzcMP/87Gb20hjL8IdG9bJ/IDlNgE4vUhDU28utI
+XkdpZp++WaJAvsvx2HbGsXbWX+pwSvXI74srMxKFRfVBVDAnP5JKErtkWceZ/n0R
+FIsd2LJJ4chk6RXbfT5VTsPH5RmL9SBVWT9FdeXyvo2OZKTOYFzCV7LSmeW1aAw=
+=FMP8
+-----END PGP SIGNATURE-----
 
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+--2/+Vq7w28QOSGzSM--
