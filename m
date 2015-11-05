@@ -1,88 +1,91 @@
 From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v7 0/6] Build and support rk3036 SoC platform
-Date: Thu,  5 Nov 2015 15:33:54 +0800
-Message-ID: <1446708840-12038-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH v7 1/6] dt-bindings: add documentation of rk3036 clock controller
+Date: Thu,  5 Nov 2015 15:33:55 +0800
+Message-ID: <1446708840-12038-2-git-send-email-zhengxing@rock-chips.com>
+References: <1446708840-12038-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446708840-12038-1-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, kmixter@google.com, benchan@google.com, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, kmixter@google.com, benchan@google.com, Xing Zheng <zhengxing@rock-chips.com>, sboyd@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-  We need to support rk3036 soc platform via upstream, there are
-some primary parts for the initial release of minimum system: dts,
-clk-pll, smp, and clock tree for rk3036, and additional, we can use
-these startup and run to init processs.
-
-Thanks.
-
-Changed in v7:
-- removed the patch "make sure timer5 is enabled on rk3036 platforms" (applied)
-- removed the patch "add support smp for rk3036" (applied)
-
-Changed in v6:
-- add hardware timer in dtsi and some the aliases of basic modules
-
-Changed in v5:
-- don't use clk_ APIs in the pll init-callback
-
-Changed in v4:
-- add some basic IP modules on rk3036.dtsi
-- optimized supporting smp codes
-
-Changed in v3:
-- optimized some codes based on v2
-- removed the patch "initial set time for rtc-hym8563" (useless)
-- removed the patch "pinctrl" (approved)
-
-Changed in v2:
-- based on v1, add clock controller documentation
-- enable timer5 startup
-- add smp for cpu1
-- initial set time for rtc-hym8563
-
-Changes in v1:
-- add dts, pinctrl and clock tree for rk3036 soc platform
-
-The patchset (6):
-6) ARM: dts: enable smp for rk3036
-5) ARM: dts: rockchip: add core rk3036 dts
-4) clk: rockchip: add clock controller for rk3036
-3) clk: rockchip: add new pll-type for rk3036 and similar socs
-2) clk: rockchip: add dt-binding header for rk3036
-1) dt-bindings: add documentation of rk3036 clock controller
+Add the devicetree binding for the cru on the rk3036 which quite similar
+structured as previous clock controllers.
 
 
-Changes in v7:
 Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Xing Zheng (6):
-  dt-bindings: add documentation of rk3036 clock controller
-  clk: rockchip: add dt-binding header for rk3036
-  clk: rockchip: add new pll-type for rk3036 and similar socs
-  clk: rockchip: add clock controller for rk3036
-  ARM: dts: rockchip: add core rk3036 dts
-  ARM: dts: enable smp for rk3036
+Changes in v7: None
 
- .../bindings/clock/rockchip,rk3036-cru.txt         |   56 ++
- arch/arm/boot/dts/Makefile                         |    1 +
- arch/arm/boot/dts/rk3036-evb.dts                   |   64 +++
- arch/arm/boot/dts/rk3036.dtsi                      |  552 ++++++++++++++++++++
- drivers/clk/rockchip/Makefile                      |    1 +
- drivers/clk/rockchip/clk-pll.c                     |  249 ++++++++-
- drivers/clk/rockchip/clk-rk3036.c                  |  478 +++++++++++++++++
- drivers/clk/rockchip/clk.h                         |   32 +-
- include/dt-bindings/clock/rk3036-cru.h             |  193 +++++++
- 9 files changed, 1624 insertions(+), 2 deletions(-)
+ .../bindings/clock/rockchip,rk3036-cru.txt         |   56 ++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
- create mode 100644 arch/arm/boot/dts/rk3036-evb.dts
- create mode 100644 arch/arm/boot/dts/rk3036.dtsi
- create mode 100644 drivers/clk/rockchip/clk-rk3036.c
- create mode 100644 include/dt-bindings/clock/rk3036-cru.h
 
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+new file mode 100644
+index 0000000..ace0599
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3036-cru.txt
+@@ -0,0 +1,56 @@
++* Rockchip RK3036 Clock and Reset Unit
++
++The RK3036 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
++
++Required Properties:
++
++- compatible: should be "rockchip,rk3036-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing pll rates are not changeable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3036-cru.h headers and can be
++used in device tree sources. Similar macros exist for the reset sources in
++these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "ext_i2s" - external I2S clock - optional,
++ - "ext_gmac" - external GMAC clock - optional
++
++Example: Clock controller node:
++
++	cru: cru@20000000 {
++		compatible = "rockchip,rk3036-cru";
++		reg = <0x20000000 0x1000>;
++		rockchip,grf = <&grf>;
++
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@20060000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x20060000 0x100>;
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		clocks = <&cru SCLK_UART0>;
++	};
 -- 
 1.7.9.5
-
-
