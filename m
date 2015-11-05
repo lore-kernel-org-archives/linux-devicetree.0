@@ -1,54 +1,171 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 2/5] PM / OPP: Add {opp-microvolt|opp-microamp|turbo-mode|opp-suspend}-<name>
- binding
-Date: Thu, 5 Nov 2015 17:33:12 -0600
-Message-ID: <CAL_Jsq+sKbn9Jsp6LjfwO59Ceps3zrL8eABXw74m3A25M8bjJg@mail.gmail.com>
-References: <cover.1446687367.git.viresh.kumar@linaro.org> <17a4388be606f21fe1d31b23180d41f6cabdd4b5.1446687367.git.viresh.kumar@linaro.org>
- <20151105030245.GA20613@rob-hp-laptop> <20151105031913.GA29491@ubuntu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [RFC 3/3] ARM: e3xx: Add header file for pinctrl constants
+Date: Thu,  5 Nov 2015 15:41:23 -0800
+Message-ID: <1446766883-25703-4-git-send-email-moritz.fischer@ettus.com>
+References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151105031913.GA29491@ubuntu>
+In-Reply-To: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+To: linus.walleij@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 4, 2015 at 9:19 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 04-11-15, 21:02, Rob Herring wrote:
->> > +- turbo-mode-<name>: Named turbo-mode property. Similar to opp-microvolt-<name>
->> > +  property, but for turbo mode instead.
->> > +
->> >  - opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
->> >    the table should have this.
->> >
->> > +- opp-suspend-<name>: Named opp-suspend property. Similar to
->> > +  opp-microvolt-<name> property, but for suspend opp instead.
->> > +
->>
->> I don't think these last 2 make sense. turbo-mode is a flag that the
->> mode has restrictions such as other cores have to be idle or something.
->> Similarly, opp-suspend should not vary by <name>.
->
-> Based on what version of the hardware you are running, via
-> opp-supported-hw property, the platform can enable a different set of
-> OPPs. And in that case we may want to select different OPPs marked as
-> turbo or suspend freq. That's what I thought at least.
->
-> For example, on version A of the hardware we have following available
-> frequencies: 800, 1000, 1100, 1200 MHz. Where 800 MHz is the suspend
-> freq and 1200 is the turbo one.
->
-> But on a slightly different version of hardware B, we have two more
-> OPPs available: 700 and 1400 MHz. And in that case we want the suspend
-> freq to be 700 and turbo OPP to be only 1400 MHz.
+This new header file defines pincontrol constants for USRP E3xx to
+use from E3xx's DTS file for pincontrol properties option.
 
-But different frequencies are different OPP nodes (since that is the
-unit address now), so it is not going to hurt to set turbo-mode on
-both 1200 and 1400.
+Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+---
+ include/dt-bindings/pinctrl/pinctrl-e3xx.h | 142 +++++++++++++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-e3xx.h
 
-Rob
-
->
-> --
-> viresh
+diff --git a/include/dt-bindings/pinctrl/pinctrl-e3xx.h b/include/dt-bindings/pinctrl/pinctrl-e3xx.h
+new file mode 100644
+index 0000000..7b35ad2
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-e3xx.h
+@@ -0,0 +1,142 @@
++/*
++ * Copyright (C) 2015 National Instruments Corp
++ *
++ * This header provides constants for USRP E3xx pinctrl bindings
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++
++#ifndef _DT_BINDINGS_PINCTRL_E3XX_H
++#define _DT_BINDINGS_PINCTRL_E3XX_H
++
++/* Pin names for the E31x usecase */
++#define E31X_TX_BANDSEL_2	"DB_1"
++#define E31X_RX1B_BANDSEL_0	"DB_3"
++#define E31X_RX1B_BANDSEL_1	"DB_5"
++#define E31X_VCTXRX2_V2		"DB_7"
++#define E31X_TX_ENABLE1A	"DB_9"
++#define E31X_TX_ENABLE2A	"DB_11"
++#define E31X_TX_BANDSEL_0	"DB_12"
++#define E31X_TX_ENABLE1B	"DB_13"
++#define E31X_TX_ENABLE2B	"DB_15"
++#define E31X_RX1C_BANDSEL_0	"DB_17"
++#define E31X_RX1C_BANDSEL_1	"DB_19"
++#define E31X_VCTXRX2_V1		"DB_21"
++#define E31X_VCTXRX1_V2		"DB_23"
++#define E31X_VCTXRX1_V1		"DB_25"
++#define E31X_VCRX1_V1		"DB_27"
++#define E31X_VCRX1_V2		"DB_29"
++#define E31X_VCRX2_V1		"DB_31"
++#define E31X_VCRX2_V2		"DB_33"
++#define E31X_CAT_CTRL_IN2	"DB_35"
++#define E31X_CAT_CTRL_IN3	"DB_37"
++#define E31X_CAT_CTRL_OUT0	"DB_39"
++#define E31X_CAT_CTRL_OUT1	"DB_41"
++#define E31X_CAT_CTRL_OUT2	"DB_43"
++#define E31X_CAT_CTRL_OUT3	"DB_45"
++/* pin 47 is nc */
++/* pin 49 is nc */
++/* pin 51 is nc */
++/* pin 53 is nc */
++/* pin 55 is nc */
++/* pin 57 is nc */
++/* pin 59 is nc */
++/* pin 61 is nc */
++/* pin 63 is nc */
++/* pin 65 is nc */
++#define E31X_CAT_TXNRX		"DB_67"
++#define E31X_CAT_ENABLE		"DB_69"
++#define E31X_CAT_ENAGC		"DB_71"
++/* pin 73 is nc */
++#define E31X_CAT_P0_D5		"DB_75"
++#define E31X_CAT_P0_D7		"DB_77"
++#define E31X_CAT_P0_D3		"DB_79"
++#define E31X_CAT_P0_D9		"DB_81"
++#define E31X_CAT_P0_D1		"DB_83"
++#define E31X_CAT_P0_D6		"DB_85"
++#define E31X_CAT_P0_D0		"DB_87"
++#define E31X_CAT_P0_D2		"DB_89"
++#define E31X_CAT_P0_D4		"DB_91"
++#define E31X_CAT_P0_D11		"DB_93"
++#define E31X_CAT_P0_D10		"DB_95"
++#define E31X_CAT_P0_D8		"DB_97"
++#define E31X_CAT_RX_FRAME	"DB_99"
++#define E31X_CAT_DATA_CLK	"DB_101"
++/* pin 103 is nc */
++/* pin 105 is nc */
++#define E31X_RX2_BANDSEL_2	"DB_107"
++#define E31X_RX2_BANDSEL_1	"DB_109"
++#define E31X_RX2_BANDSEL_0	"DB_111"
++#define E31X_RX2C_BANDSEL_1	"DB_113"
++#define E31X_RX2C_BANDSEL_0	"DB_115"
++#define E31X_RX2B_BANDSEL_0	"DB_117"
++#define E31X_RX2B_BANDSEL_1	"DB_119"
++
++/* pin 2 is nc */
++/* pin 4 is nc */
++#define E31X_RX1_BANDSEL_0	"DB_6"
++#define E31X_RX1_BANDSEL_1	"DB_8"
++#define E31X_RX1_BANDSEL_2	"DB_10"
++#define E31X_TX_BANDSEL_1	"DB_14"
++#define E31X_DB_SCL		"DB_16"
++#define E31X_DB_SCA		"DB_18"
++#define E31X_TUNE_DAC_SYNC_N	"DB_20"
++#define E31X_TUNE_DAC_SCLK	"DB_22"
++#define E31X_TUNE_DAC_SDIN	"DB_24"
++/* pin 26 is nc */
++/* pin 28 is nc */
++#define E31X_VCTCXO_TO_MB	"DB_30"
++/* pin 32 is nc */
++/* pin 34 is nc */
++/* pin 36 is nc */
++/* pin 38 is nc */
++#define E31X_CAT_CTRL_OUT4	"DB_40"
++#define E31X_CAT_CTRL_OUT5	"DB_42"
++#define E31X_CAT_CTRL_OUT6	"DB_44"
++#define E31X_CAT_CTRL_OUT7	"DB_46"
++#define E31X_CAT_RESET		"DB_48"
++#define E31X_CAT_CS		"DB_50"
++#define E31X_CAT_SCLK		"DB_52"
++#define E31X_CAT_MOSI		"DB_54"
++#define E31X_CAT_MISO		"DB_56"
++#define E31X_CAT_CTRL_IN0	"DB_58"
++#define E31X_CAT_CTRL_IN1	"DB_60"
++/* pin 62 is nc */
++/* pin 64 is nc */
++/* pin 66 is nc */
++/* pin 68 is nc */
++#define E31X_CAT_BBCLK_OUT	"DB_70"
++/* pin 72 is nc */
++#define E31X_CAT_SYNC		"DB_74"
++#define E31X_CAT_P1_D11		"DB_78"
++#define E31X_CAT_P1_D1		"DB_80"
++#define E31X_CAT_P1_D3		"DB_82"
++#define E31X_CAT_P1_D0		"DB_84"
++#define E31X_CAT_P1_D5		"DB_86"
++#define E31X_CAT_P1_D2		"DB_88"
++#define E31X_CAT_P1_D4		"DB_90"
++#define E31X_CAT_P1_D7		"DB_92"
++#define E31X_CAT_P1_D6		"DB_94"
++#define E31X_CAT_P1_D9		"DB_96"
++#define E31X_CAT_P1_D8		"DB_98"
++#define E31X_CAT_P1_D10		"DB_100"
++#define E31X_CAT_TX_FRAME	"DB_102"
++#define E31X_CAT_FB_CLK		"DB_104"
++/* pin 106 is nc */
++#define E31X_LED_TXRX1_TX	"DB_108"
++#define E31X_LED_TXRX1_RX	"DB_110"
++#define E31X_LED_RX1_RX		"DB_112"
++#define E31X_LED_TXRX2_TX	"DB_114"
++#define E31X_LED_TXRX2_RX	"DB_116"
++#define E31X_LED_RX2_RX		"DB_118"
++/* pin 120 is nc */
++
++#endif /* _DT_BINDINGS_PINCTRL_E3XX_H */
+-- 
+2.4.3
