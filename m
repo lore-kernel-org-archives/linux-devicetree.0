@@ -1,157 +1,112 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 6/8] ARM: rockchip: add support smp for rk3036
-Date: Wed, 4 Nov 2015 21:21:06 -0600
-Message-ID: <20151105032106.GA1932@rob-hp-laptop>
-References: <1446639503-11763-1-git-send-email-zhengxing@rock-chips.com>
- <1446639916-11957-1-git-send-email-zhengxing@rock-chips.com>
+From: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V4 1/2] powerpc/fsl: Add PCI node in device tree of bsc9132qds
+Date: Thu, 5 Nov 2015 11:15:59 +0800
+Message-ID: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446639916-11957-1-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xing Zheng <zhengxing@rock-chips.com>
-Cc: heiko@sntech.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, kever.yang@rock-chips.com, maxime.ripard@free-electrons.com, olof@lixom.net, gregory.clement@free-electrons.com, wens@csie.org, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 04, 2015 at 08:25:16PM +0800, Xing Zheng wrote:
-> From: Heiko Stuebner <heiko@sntech.de>
-> 
-> The dual-core Cortex A7 rk3036 is a bit special in that it does not allow
-> to control the actual powerdomain of the cpu cores, while the rest of the
-> smp-bringup like reset control and entry address handling stays the same.
-> Its bigger sibling, the quad-core rk3128 again allows powerdomain control.
-> 
-> So allow that case by introducing a separate smp-enable-method, that simply
-> disables powerdomain handling in the common code.
-> 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Xing Zheng <zhengxing@rock-chips.com>
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-> ---
-> 
-> Changes in v6: None
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt |    1 +
+From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+V4: V3:
+ - Remove gerrit stuff.
+V2:
+ - Remove property clock-frequency.
 
->  arch/arm/mach-rockchip/platsmp.c               |   45 +++++++++++++++++-------
->  2 files changed, 34 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 3a07a87..8fb0749 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -200,6 +200,7 @@ nodes to be present and contain the properties described below.
->  			    "qcom,gcc-msm8660"
->  			    "qcom,kpss-acc-v1"
->  			    "qcom,kpss-acc-v2"
-> +			    "rockchip,rk3036-smp"
->  			    "rockchip,rk3066-smp"
->  			    "ste,dbx500-smp"
->  
-> diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
-> index 3e7a4b7..5c138f9 100644
-> --- a/arch/arm/mach-rockchip/platsmp.c
-> +++ b/arch/arm/mach-rockchip/platsmp.c
-> @@ -42,6 +42,7 @@ static int ncores;
->  #define PMU_PWRDN_SCU		4
->  
->  static struct regmap *pmu;
-> +static int has_pmu = true;
->  
->  static int pmu_power_domain_is_on(int pd)
->  {
-> @@ -89,20 +90,23 @@ static int pmu_set_power_domain(int pd, bool on)
->  	if (!IS_ERR(rstc) && !on)
->  		reset_control_assert(rstc);
->  
-> -	ret = regmap_update_bits(pmu, PMU_PWRDN_CON, BIT(pd), val);
-> -	if (ret < 0) {
-> -		pr_err("%s: could not update power domain\n", __func__);
-> -		return ret;
-> -	}
-> -
-> -	ret = -1;
-> -	while (ret != on) {
-> -		ret = pmu_power_domain_is_on(pd);
-> +	if (has_pmu) {
-> +		ret = regmap_update_bits(pmu, PMU_PWRDN_CON, BIT(pd), val);
->  		if (ret < 0) {
-> -			pr_err("%s: could not read power domain state\n",
-> +			pr_err("%s: could not update power domain\n",
->  			       __func__);
->  			return ret;
->  		}
-> +
-> +		ret = -1;
-> +		while (ret != on) {
-> +			ret = pmu_power_domain_is_on(pd);
-> +			if (ret < 0) {
-> +				pr_err("%s: could not read power domain state\n",
-> +				       __func__);
-> +				return ret;
-> +			}
-> +		}
->  	}
->  
->  	if (!IS_ERR(rstc)) {
-> @@ -122,7 +126,7 @@ static int rockchip_boot_secondary(unsigned int cpu, struct task_struct *idle)
->  {
->  	int ret;
->  
-> -	if (!sram_base_addr || !pmu) {
-> +	if (!sram_base_addr || (has_pmu && !pmu)) {
->  		pr_err("%s: sram or pmu missing for cpu boot\n", __func__);
->  		return -ENXIO;
->  	}
-> @@ -275,7 +279,7 @@ static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
->  		return;
->  	}
->  
-> -	if (rockchip_smp_prepare_pmu())
-> +	if (has_pmu && rockchip_smp_prepare_pmu())
->  		return;
->  
->  	if (read_cpuid_part() == ARM_CPU_PART_CORTEX_A9) {
-> @@ -318,6 +322,13 @@ static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
->  		pmu_set_power_domain(0 + i, false);
->  }
->  
-> +static void __init rk3036_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +	has_pmu = false;
-> +
-> +	rockchip_smp_prepare_cpus(max_cpus);
-> +}
-> +
->  #ifdef CONFIG_HOTPLUG_CPU
->  static int rockchip_cpu_kill(unsigned int cpu)
->  {
-> @@ -340,6 +351,15 @@ static void rockchip_cpu_die(unsigned int cpu)
->  }
->  #endif
->  
-> +static struct smp_operations rk3036_smp_ops __initdata = {
-> +	.smp_prepare_cpus	= rk3036_smp_prepare_cpus,
-> +	.smp_boot_secondary	= rockchip_boot_secondary,
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +	.cpu_kill		= rockchip_cpu_kill,
-> +	.cpu_die		= rockchip_cpu_die,
-> +#endif
-> +};
-> +
->  static struct smp_operations rockchip_smp_ops __initdata = {
->  	.smp_prepare_cpus	= rockchip_smp_prepare_cpus,
->  	.smp_boot_secondary	= rockchip_boot_secondary,
-> @@ -349,4 +369,5 @@ static struct smp_operations rockchip_smp_ops __initdata = {
->  #endif
->  };
->  
-> +CPU_METHOD_OF_DECLARE(rk3036_smp, "rockchip,rk3036-smp", &rk3036_smp_ops);
->  CPU_METHOD_OF_DECLARE(rk3066_smp, "rockchip,rk3066-smp", &rockchip_smp_ops);
-> -- 
-> 1.7.9.5
-> 
-> 
+ arch/powerpc/boot/dts/bsc9132qds.dts          | 15 ++++++++++++++
+ arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi | 28 +++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi  |  1 +
+ 3 files changed, 44 insertions(+)
+
+diff --git a/arch/powerpc/boot/dts/bsc9132qds.dts b/arch/powerpc/boot/dts/bsc9132qds.dts
+index 6cab106..940d719 100644
+--- a/arch/powerpc/boot/dts/bsc9132qds.dts
++++ b/arch/powerpc/boot/dts/bsc9132qds.dts
+@@ -29,6 +29,21 @@
+ 	soc: soc@ff700000 {
+ 		ranges = <0x0 0x0 0xff700000 0x100000>;
+ 	};
++
++	pci0: pcie@ff70a000 {
++		reg = <0 0xff70a000 0 0x1000>;
++		ranges = <0x2000000 0x0 0x90000000 0 0x90000000 0x0 0x20000000
++			  0x1000000 0x0 0x00000000 0 0xc0010000 0x0 0x10000>;
++		pcie@0 {
++			ranges = <0x2000000 0x0 0x90000000
++				  0x2000000 0x0 0x90000000
++				  0x0 0x20000000
++
++				  0x1000000 0x0 0x0
++				  0x1000000 0x0 0x0
++				  0x0 0x100000>;
++		};
++	};
+ };
+ 
+ /include/ "bsc9132qds.dtsi"
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
+index c723071..b5f0715 100644
+--- a/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/bsc9132si-post.dtsi
+@@ -40,6 +40,34 @@
+ 	interrupts = <16 2 0 0 20 2 0 0>;
+ };
+ 
++/* controller at 0xa000 */
++&pci0 {
++	compatible = "fsl,bsc9132-pcie", "fsl,qoriq-pcie-v2.2";
++	device_type = "pci";
++	#size-cells = <2>;
++	#address-cells = <3>;
++	bus-range = <0 255>;
++	interrupts = <16 2 0 0>;
++
++	pcie@0 {
++		reg = <0 0 0 0 0>;
++		#interrupt-cells = <1>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		device_type = "pci";
++		interrupts = <16 2 0 0>;
++		interrupt-map-mask = <0xf800 0 0 7>;
++
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			0000 0x0 0x0 0x1 &mpic 0x0 0x2 0x0 0x0
++			0000 0x0 0x0 0x2 &mpic 0x1 0x2 0x0 0x0
++			0000 0x0 0x0 0x3 &mpic 0x2 0x2 0x0 0x0
++			0000 0x0 0x0 0x4 &mpic 0x3 0x2 0x0 0x0
++			>;
++	};
++};
++
+ &soc {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
+index 301a9db..90f7949 100644
+--- a/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/bsc9132si-pre.dtsi
+@@ -45,6 +45,7 @@
+ 		serial0 = &serial0;
+ 		ethernet0 = &enet0;
+ 		ethernet1 = &enet1;
++		pci0 = &pci0;
+ 	};
+ 
+ 	cpus {
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
