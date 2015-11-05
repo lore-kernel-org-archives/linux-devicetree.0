@@ -1,28 +1,39 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2 5/5] ARM: dts: exynos4412: Rename OPP nodes as
- opp@<opp-hz>
-Date: Thu, 5 Nov 2015 07:27:01 +0530
-Message-ID: <20151105015701.GD2116@ubuntu>
-References: <cover.1446687367.git.viresh.kumar@linaro.org>
- <a911512c457ac95b6d8cb46eb631786cb4b64da9.1446687367.git.viresh.kumar@linaro.org>
- <563AB620.5090904@samsung.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Wed, 4 Nov 2015 19:59:07 -0600
+Message-ID: <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+	<1445961999-9506-6-git-send-email-fu.wei@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <563AB620.5090904@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Kukjin Kim <kgene@kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>
+Cc: Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On 05-11-15, 10:51, Krzysztof Kozlowski wrote:
-> I see this patch does not depend on the rest of patchset so I presume
-> this can co through samsung-soc?
+On Tue, Oct 27, 2015 at 11:06 AM,  <fu.wei@linaro.org> wrote:
+> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+> +{
+> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+> +       struct watchdog_device *wdd = &gwdt->wdd;
+> +
+> +       /* We don't use pretimeout, trigger WS1 now */
+> +       if (!wdd->pretimeout)
+> +               sbsa_gwdt_set_wcv(wdd, 0);
 
-Yeah, I wouldn't mind that. But I would wait for a confirmation from
-Rafael for the bindings first, for an unlikely case where he doesn't
-like the fourth patch ;)
+So I'm still concerned about the fact this driver depends on an
+interrupt handler in order to properly program the hardware.  Unlike
+some other devices, the SBSA watchdog does not need assistance to
+reset on a timeout -- it is a "fire and forget" device.  What happens
+if there is a hard lockup, and interrupts no longer work?
+
+Keep in mind that 99% of watchdog daemons will not enable the
+pre-timeout feature because it's new.
 
 -- 
-viresh
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
