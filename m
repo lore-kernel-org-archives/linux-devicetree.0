@@ -1,7 +1,7 @@
 From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: at91/dt: sama5d2: add watchdog node
-Date: Thu, 5 Nov 2015 15:39:30 +0800
-Message-ID: <1446709170-24500-1-git-send-email-wenyou.yang@atmel.com>
+Subject: [PATCH] ARM: at91/dt: sama5d4: change watchdog compatible
+Date: Thu, 5 Nov 2015 15:40:48 +0800
+Message-ID: <1446709248-25098-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -10,48 +10,28 @@ To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog node to support SAMA5D4 watchdog.
+Change the watchdog compatible to "atmel,sama5d4-wdt" to support
+SAMA5D4 watchdog driver.
 
 Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts |    4 ++++
- arch/arm/boot/dts/sama5d2.dtsi              |    7 +++++++
- 2 files changed, 11 insertions(+)
+ arch/arm/boot/dts/sama5d4.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index e07c2b2..de3ef02 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -181,6 +181,10 @@
- 				};
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 15bbaf6..2193637 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -1300,7 +1300,7 @@
  			};
  
-+			watchdog@f8048040 {
-+				status = "okay";
-+			};
-+
- 			uart3: serial@fc008000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_uart3_default>;
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index c1f0cba..c29ff70 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -929,6 +929,13 @@
- 				clocks = <&h32ck>;
- 			};
- 
-+			watchdog@f8048040 {
+ 			watchdog@fc068640 {
+-				compatible = "atmel,at91sam9260-wdt";
 +				compatible = "atmel,sama5d4-wdt";
-+				reg = <0xf8048040 0x10>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH 7>;
-+				status = "disabled";
-+			};
-+
- 			sckc@f8048050 {
- 				compatible = "atmel,at91sam9x5-sckc";
- 				reg = <0xf8048050 0x4>;
+ 				reg = <0xfc068640 0x10>;
+ 				clocks = <&clk32k>;
+ 				status = "disabled";
 -- 
 1.7.9.5
 
