@@ -1,118 +1,72 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Thu, 5 Nov 2015 19:58:02 +0800
-Message-ID: <CADyBb7tTf0Jz0sgKecSn-LgMEUMdueTb5Uxq_e5t39byOsJQEQ@mail.gmail.com>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
-	<1445961999-9506-6-git-send-email-fu.wei@linaro.org>
-	<CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
-	<563AE588.1080009@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: [PATCH v6 0/4] Exynos SROMc configuration and Ethernet support for
+ SMDK5410
+Date: Thu, 05 Nov 2015 15:02:59 +0300
+Message-ID: <cover.1446724046.git.p.fedin@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <563AE588.1080009@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Timur Tabi <timur@codeaurora.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+This patch extends Exynos SROM controller driver with ability to configure
+controller outputs and enables SMSC9115 Ethernet chip on SMDK5410 board,
+which is connected via SROMc bank #3.
 
-Great thanks for your feedback!
+With this patchset, support for the whole existing SMDK range can be added.
+Actually, only bank number is different.
 
-On 5 November 2015 at 13:13, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 11/04/2015 05:59 PM, Timur Tabi wrote:
->>
->> On Tue, Oct 27, 2015 at 11:06 AM,  <fu.wei@linaro.org> wrote:
->>>
->>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
->>> +{
->>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
->>> +       struct watchdog_device *wdd = &gwdt->wdd;
->>> +
->>> +       /* We don't use pretimeout, trigger WS1 now */
->>> +       if (!wdd->pretimeout)
->>> +               sbsa_gwdt_set_wcv(wdd, 0);
->>
->>
->> So I'm still concerned about the fact this driver depends on an
->> interrupt handler in order to properly program the hardware.  Unlike
->> some other devices, the SBSA watchdog does not need assistance to
->> reset on a timeout -- it is a "fire and forget" device.  What happens
->> if there is a hard lockup, and interrupts no longer work?
+This patchset also depends on Exynos 5410 pinctrl support, introduced by
+patches 0003 and 0004 from this set:
+[PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
 
-The reason for this design(program WCV in interrupt handler):
-(1) if we don't, the second timeout stage(pretimeout) is only  (worst
-case) 10 seconds
-This short time is not enough for kexec(let alone kdump), that make
-panic less useful.
-(2)if  a hard lockup really happens, panic won't work too.But we still
-can reboot system by the help of WS1
-in this case, if clk is 400MHz, we just need to wait (worst case) 10
-seconds for WS1 reboot system
+Pinctrl support is necessary in order to correctly configure
+multifunctional pins of the Exynos chip.
 
->>
->> Keep in mind that 99% of watchdog daemons will not enable the
->> pre-timeout feature because it's new.
+v5 => v6:
+- Even more improvements to the documentation, fixed some errors and typos.
+- Separated adding bus ranges from generic SROMc support
+- Some stuff renamed for even better code readability
+- Stylistic cleanups in the DTS (everything in alphabetic order, use named
+  constant name for interrupt config byte)
 
-Answer:
-(1)It is not new.
- pre-timeout concept has been used by two drivers before this driver.
-and this concept has been in kernel documentation.
+v4 => v5:
+- Some cosmetic changes in the dtsi ("compatible" goes first)
+- Use correctly specified ranges for the SROMc node
+- Reuse existing properties where possible ("reg" for bank# and
+  "reg-io-width" for data width)
+- Separated page-mode property from timings array
+- More improvements to the documentation
 
-(2)even it's new, it doesn't mean we can not do this at this time.
-Because according to the info I got, I believe that is right way to do.
-After I make a "non-pretimeout" version. and compare with the original
-pretimeout version, I still believe pretimeout is best solution for
-now.
+v3 => v4:
+- Devices are now added as subnodes, with additional properties. This allows
+  to cleary specify dependency. If configuration fails, error will be reported
+  and child devices will not be probed.
+- These additional properties now have "samsung,srom-XXX" format
+- Fixed code style, now better understood.
 
-Reason for using pretimeout:
-(1) if we don't, for this two stages timeout, we have to config them
-by one value.
-that means "the first stage timeout" have to be equal to "the second
-stage timeout",
-For example, if we need 60 second for  "the second stage timeout", 30
-or less for "the first stage timeout".
-then "the first stage timeout" have to be 60s too. I don't think it 's
-good idea.
+v2 => v3:
+- Fixed up SROMc region size in the device tree
+- Reordered patches, documentation goes first now
 
->>
-> Same here, really.
->
-> I would feel much more comfortable if the driver would just use the standard
-> watchdog timeout and live with (worst case) 20 seconds timeout for now.
+v1 => v2:
+- Fixed some typos and bad labels in device tree
+- Improved documentation
 
-The worst case is 10s. like I said above, This short time is not
-enough for kexec(let alone kdump), that make WS0(and panic, even this
-two stages design) less useful
+Pavel Fedin (4):
+  Documentation: dt-bindings: Describe SROMc configuration
+  ARM: dts: Add SROMc to Exynos 5410
+  drivers: exynos-srom: Add support for bank configuration
+  ARM: dts: Add Ethernet chip to SMDK5410
 
-> This limitation will be gone once the infrastructure is in place to handle
-> such short timeouts in the watchdog core. Until then, I would argue that the
-
-unless WOR become 64 bit (or more then 32bit),  this limitation will be there.
-
-> system designers asked for it if they really select the highest possible
-> clock rate.
->
-
-even we can make clk to be 100MHz or lower, it is not very helpful for
-a really server which has big memory. they need more time for dumping
-memory for debug/analysis
-
-
-> Guenter
->
-
-
+ .../bindings/arm/samsung/exynos-srom.txt           | 71 +++++++++++++++++++++-
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          | 41 +++++++++++++
+ arch/arm/boot/dts/exynos5410.dtsi                  | 11 ++++
+ arch/arm/mach-exynos/Kconfig                       |  2 +-
+ drivers/soc/samsung/Kconfig                        |  2 +-
+ drivers/soc/samsung/exynos-srom.c                  | 61 ++++++++++++++++++-
+ 6 files changed, 182 insertions(+), 6 deletions(-)
 
 -- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+2.4.4
