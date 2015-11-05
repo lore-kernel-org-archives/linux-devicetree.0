@@ -1,106 +1,46 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 8/9] arm64: dts: Add main Thermal info to rk3368.dtsi
-Date: Thu,  5 Nov 2015 13:18:04 +0800
-Message-ID: <1446700685-18017-9-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v2 9/9] arm64: dts: Enable the Thermal on R88 board
+Date: Thu,  5 Nov 2015 13:18:05 +0800
+Message-ID: <1446700685-18017-10-git-send-email-wxt@rock-chips.com>
 References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the thermal needed info on RK3368.
-Meanwhile, support the trips to throttle for thermal.
+This patch enable the TS-ADC.
+
+When a thermal temperature is invoked use the CRU to reset the chip
+on R88 board. TSHUT is low active on this board.
 
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
 ---
 
-Changes in v2:
-- fix a copy wrong name.
-Series-changes: 1
-- support the opt gpio pinctrl state
-
+Changes in v2: None
 Changes in v1: None
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index cc093a4..83a2bd2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -45,6 +45,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/thermal/thermal.h>
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+index 401a812..7684426a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -336,6 +336,12 @@
+ 	status = "okay";
+ };
  
- / {
- 	compatible = "rockchip,rk3368";
-@@ -123,6 +124,8 @@
- 			reg = <0x0 0x0>;
- 			cpu-idle-states = <&cpu_sleep>;
- 			enable-method = "psci";
++&tsadc {
++	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
++	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
++	status = "okay";
++}
 +
-+			#cooling-cells = <2>; /* min followed by max */
- 		};
- 
- 		cpu_l1: cpu@1 {
-@@ -155,6 +158,8 @@
- 			reg = <0x0 0x100>;
- 			cpu-idle-states = <&cpu_sleep>;
- 			enable-method = "psci";
-+
-+			#cooling-cells = <2>; /* min followed by max */
- 		};
- 
- 		cpu_b1: cpu@101 {
-@@ -404,6 +409,27 @@
- 		status = "disabled";
- 	};
- 
-+	thermal-zones {
-+		#include "rk3368-thermal.dtsi"
-+	};
-+
-+	tsadc: tsadc@ff280000 {
-+		compatible = "rockchip,rk3368-tsadc";
-+		reg = <0x0 0xff280000 0x0 0x100>;
-+		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-+		clock-names = "tsadc", "apb_pclk";
-+		resets = <&cru SRST_TSADC>;
-+		reset-names = "tsadc-apb";
-+		pinctrl-names = "init", "default", "sleep";
-+		pinctrl-0 = <&otp_gpio>;
-+		pinctrl-1 = <&otp_out>;
-+		pinctrl-2 = <&otp_gpio>;
-+		#thermal-sensor-cells = <1>;
-+		rockchip,hw-tshut-temp = <95000>;
-+		status = "disabled";
-+	};
-+
- 	gmac: ethernet@ff290000 {
- 		compatible = "rockchip,rk3368-gmac";
- 		reg = <0x0 0xff290000 0x0 0x10000>;
-@@ -829,6 +855,16 @@
- 			};
- 		};
- 
-+		tsadc {
-+			otp_gpio: otp-gpio {
-+				rockchip,pins = <0 10 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+
-+			otp_out: otp-out {
-+				rockchip,pins = <0 10 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		uart0 {
- 			uart0_xfer: uart0-xfer {
- 				rockchip,pins = <2 24 RK_FUNC_1 &pcfg_pull_up>,
+ &uart2 {
+ 	status = "okay";
+ };
 -- 
 1.9.1
