@@ -1,121 +1,67 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [RFCv2 1/2] power: domain: add pm_genpd_uninit
-Date: Thu, 5 Nov 2015 15:34:46 +0100
-Message-ID: <20151105143445.GC599@omega>
-References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
- <1446590711-18928-2-git-send-email-alex.aring@gmail.com>
- <CAPDyKFrkzMZZjFRM7EbqDqmW8EXzV22O_tp8a45LVGQYSn6b3g@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] mfd: arizona: Update DT bindings to add CS47L24
+ and WM1831
+Date: Thu, 5 Nov 2015 08:35:15 -0600
+Message-ID: <20151105143515.GA26865@rob-hp-laptop>
+References: <1446563316-28878-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1446563316-28878-3-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrkzMZZjFRM7EbqDqmW8EXzV22O_tp8a45LVGQYSn6b3g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+In-Reply-To: <1446563316-28878-3-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, broonie@kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 05, 2015 at 10:01:32AM +0100, Ulf Hansson wrote:
-> On 3 November 2015 at 23:45, Alexander Aring <alex.aring@gmail.com> wrote:
-> > This patch adds function pm_genpd_uninit for undo a pm_genpd_init. This
-> > is useful for multiple power domains while probing. If the probing fails
-> > after one pm_genpd_init was called we need to undo all previous
-> > registrations of generic pm domains inside the gpd_list list.
+On Tue, Nov 03, 2015 at 03:08:33PM +0000, Richard Fitzgerald wrote:
+> This updates the Arizona MFD device tree bindings to add the
+> Cirrus Logic CS47L24 and WM1831 codecs. Note that unlike all the
+> other codecs the DCVDD-supply and MICVDD-supply are mandatory.
 > 
-> Yes, agree. Although I think it's a bit mote complicated than what you
-> suggest in this simple approach. :-)
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 9 ++++++++-
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 18be0cb..84e1af5 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -1,4 +1,4 @@
+> -Wolfson Arizona class audio SoCs
+> +Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
+>  
+>  These devices are audio SoCs with extensive digital capabilites and a range
+>  of analogue I/O.
+> @@ -6,12 +6,14 @@ of analogue I/O.
+>  Required properties:
+>  
+>    - compatible : One of the following chip-specific strings:
+> +        "cirrus,cs47l24"
+>          "wlf,wm5102"
+>          "wlf,wm5110"
+>          "wlf,wm8280"
+>          "wlf,wm8997"
+>          "wlf,wm8998"
+>          "wlf,wm1814"
+> +        "wlf,wm1831"
+>  
+>    - reg : I2C slave address when connected using I2C, chip select number when
+>      using SPI.
+> @@ -41,6 +43,10 @@ Required properties:
+>  
+>    - SPKVDD-supply : Speaker driver power supply (wm8997)
+>  
+> +  - DCVDD-supply : Main power supply (cs47l24, wm1831)
+> +
+> +  - MICVDD-supply : Microphone power supply (cs47l24, wm1831)
+> +
 
-ok.
+We normally do lower case, but I guess these aren't new...
 
-> >
-> > There is a check on IS_ERR_OR_NULL(genpd) which is useful to check again
-> > registered power domains and not registered domains, the driver can use
-> > this mechanism to have an array with registered and non-registered power
-> > domains, where non-registered power domains are NULL.
-> >
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Cc: Kevin Hilman <khilman@kernel.org>
-> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Alexander Aring <alex.aring@gmail.com>
-> > ---
-> >  drivers/base/power/domain.c | 15 +++++++++++++++
-> >  include/linux/pm_domain.h   |  4 ++++
-> >  2 files changed, 19 insertions(+)
-> >
-> > diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> > index 16550c6..65b9d1a 100644
-> > --- a/drivers/base/power/domain.c
-> > +++ b/drivers/base/power/domain.c
-> > @@ -1730,6 +1730,21 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
-> >  }
-> >  EXPORT_SYMBOL_GPL(pm_genpd_init);
-> >
-> > +/**
-> > + * pm_genpd_uninit - Uninitialize a generic I/O PM domain object.
-> > + * @genpd: PM domain object to initialize.
-> > + */
-> > +void pm_genpd_uninit(struct generic_pm_domain *genpd)
-> > +{
-> > +       if (IS_ERR_OR_NULL(genpd))
-> > +               return;
-> > +
-> > +       mutex_lock(&gpd_list_lock);
-> > +       list_del(&genpd->gpd_list_node);
-> > +       mutex_unlock(&gpd_list_lock);
-> 
-> This is too fragile. You don't protect from the cases below.
-> 
-> 1. The genpd may have devices attached to it.
-> 2. The genpd may have subdomains.
-> 
-> To deal with these case, that's when it becomes more complex which I
-> guess is the reason to why nobody really cared until now.
-> 
-
-Can we not just undo the things which pm_genpd_init does, then let the
-driver to deal with all other uninitialize of e.g. "subdomains" which might
-the driver has initialize before? We know there are no slaves or something
-else which is empty because pm_genpd_init runs INIT_LIST_HEAD, or not?
-
-To make such handling above I would add some:
-
-"pm_genpd_uninit_recursive" function, which cleanup everything from a
-power domain, e.g. subdomains, etc and other lists.
-
-What do you suggest to me for e.g. the raspberrypi power domain driver,
-also simple ignore such error handling?
-
-
-For my current use-case I can remove the failure between pm_genpd_init by
-simple getting all "power states" (the bool is_off for pm_genpd_init),
-before calling pm_genpd_init. In this case I don't have any failure between
-calling pm_genpd_init when another pm_genpd_init was before.
-
-Looks like this:
-
-1. get all states from firmware to get parameter "is_off", which can fail.
-   We should get here the states for the power domains which we want to
-   register only.
-
-2. Then call pm_genpd_init, which cannot be fail between another
-   pm_genpd_init. (There are only void functions in the middle, which cannot
-   fail). If I call pm_genpd_init, I use "is_off" variable from the step
-   of "1.".
-
-
-But then I have still the call of "of_genpd_add_provider_onecell" at the end
-of probing which can fail. So this is also not a valid solution, because
-I need to undo everything before.
-
-> Moreover, I think there are some more structures to "uninitialize"
-> besides just unlinking the genpd struct from the gpd list. For example
-> a mutex_destroy() should be done.
-> 
-
-yes, of course.
-
-- Alex
+Rob
