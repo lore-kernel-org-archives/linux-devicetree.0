@@ -1,42 +1,150 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 1/9] dt-bindings: rockchip-thermal: Support the RK3368 SoCs compatible
-Date: Thu,  5 Nov 2015 13:17:57 +0800
-Message-ID: <1446700685-18017-2-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v2 7/9] arm64: dts: Add the thermal data found on RK3368
+Date: Thu,  5 Nov 2015 13:18:03 +0800
+Message-ID: <1446700685-18017-8-git-send-email-wxt@rock-chips.com>
 References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rockchip@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset attempts to new compatible for thermal founding
-on RK3368 SoCs.
+This patchset add the thermal for RK3368 dts,
+Since the two CPU clusters, with four CPU core for each cluster,
+One cluster is optimized for high-performance(big cluster) and the othe
+is optimized for low power(little cluster).
+
+This patch adds the second order for thermal throttle, and the critical
+temperature for thermal over-tempeature protection on Software.
 
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
 
 Changes in v2: None
-Changes in v1:
-- %s/thermal/rockchip-thermal in subject.
+Changes in v1: None
 
- Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi | 112 +++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
 
-diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-index b38200d..0dfa60d 100644
---- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-@@ -1,7 +1,9 @@
- * Temperature Sensor ADC (TSADC) on rockchip SoCs
- 
- Required properties:
--- compatible : "rockchip,rk3288-tsadc"
-+- compatible : should be "rockchip,<name>-tsadc"
-+   "rockchip,rk3288-tsadc": found on RK3288 SoCs
-+   "rockchip,rk3368-tsadc": found on RK3368 SoCs
- - reg : physical base address of the controller and length of memory mapped
- 	region.
- - interrupts : The interrupt number to the cpu. The interrupt specifier format
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
+new file mode 100644
+index 0000000..a10010f
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
+@@ -0,0 +1,112 @@
++/*
++ * Device Tree Source for RK3368 SoC thermal
++ *
++ * Copyright (c) 2015, Fuzhou Rockchip Electronics Co., Ltd
++ * Caesar Wang <wxt@rock-chips.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/thermal/thermal.h>
++
++cpu_thermal: cpu_thermal {
++	polling-delay-passive = <100>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++	thermal-sensors = <&tsadc 0>;
++
++	trips {
++		cpu_alert0: cpu_alert0 {
++			temperature = <75000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_alert1: cpu_alert1 {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_crit: cpu_crit {
++			temperature = <95000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++				<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++		map1 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++				<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++gpu_thermal: gpu_thermal {
++	polling-delay-passive = <100>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++	thermal-sensors = <&tsadc 1>;
++
++	trips {
++		gpu_alert0: gpu_alert0 {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		gpu_crit: gpu_crit {
++			temperature = <1150000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&gpu_alert0>;
++			cooling-device =
++				<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
 -- 
 1.9.1
