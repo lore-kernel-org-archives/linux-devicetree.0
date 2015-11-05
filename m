@@ -1,51 +1,83 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 1/5] spi: introduce mmap read support for spi flash
- devices
-Date: Thu, 5 Nov 2015 17:59:36 +0530
-Message-ID: <563B4BB0.9020206@ti.com>
-References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
- <1446545174-14193-2-git-send-email-vigneshr@ti.com>
- <20151104143915.GI1717@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] ls2080a/dts: Add little endian property for GPIO IP
+ block
+Date: Thu, 5 Nov 2015 07:27:37 -0600
+Message-ID: <20151105132737.GA11186@rob-hp-laptop>
+References: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151104143915.GI1717@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446619704-27669-1-git-send-email-Gang.Liu@freescale.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Liu Gang <Gang.Liu@freescale.com>
+Cc: linus.walleij@linaro.org, arnd@arndb.de, shawnguo@kernel.org, bhupesh.sharma@freescale.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b07421@freescale.com, R58472@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/04/2015 08:09 PM, Mark Brown wrote:
-> On Tue, Nov 03, 2015 at 03:36:10PM +0530, Vignesh R wrote:
+On Wed, Nov 04, 2015 at 02:48:23PM +0800, Liu Gang wrote:
+> The GPIO block for ls2080a platform has little endian registers,
+> the GPIO driver needs this property to read/write registers by
+> right interface.
 > 
->> +	}
->> +	mutex_lock(&master->mmap_lock_mutex);
->> +	ret = master->spi_mtd_mmap_read(spi, from, len, retlen, buf,
->> +					read_opcode, addr_width,
->> +					dummy_bytes);
->> +	mutex_unlock(&master->mmap_lock_mutex);
->> +	if (master->auto_runtime_pm)
->> +		pm_runtime_put(master->dev.parent);
-> 
-> It's a bit worrying that this doesn't sync with the message queue except
-> via the mutex: this means that we might be out of order with respect to
-> any asynchronous transfers that are happening on the device.  I'm not
-> sure that this is a practical problem, though there is some risk of
-> unfair scheduling that would have to be under extreme load and it might
-> make sense to prioritise reads anyway.
-> 
+> Signed-off-by: Liu Gang <Gang.Liu@freescale.com>
 
-Since mmap interface is used only by mtd flash drivers and since almost
-all mtd flash devices use synchronous transfers (spi_sync()), IMO, there
-wont be out of order problem wrt mtd flashes.
-But mmap read might delay transfers queued for non mtd flash devices. It
-is difficult to wait for all transfers already queued to be pumped out
-by __spi_pump_messages() and then do the mmap transfer. Do you have any
-thoughts on how to sync with message queue?
+Acked-by: Rob Herring <robh@kernel.org>
 
--- 
-Regards
-Vignesh
+
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> index f2455c5..c836dab 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> @@ -10,6 +10,9 @@ Required properties:
+>    the second cell is used to specify the gpio polarity:
+>        0 = active high
+>        1 = active low
+> +- little-endian : Should be set if the GPIO has little endian
+> +		  registers. No the property means the GPIO
+> +		  registers are big endian mode.
+>  
+>  Example:
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> index f3c59f9..41bb8c1 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> @@ -277,6 +277,7 @@
+>  			reg = <0x0 0x2300000 0x0 0x10000>;
+>  			interrupts = <0 36 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> @@ -287,6 +288,7 @@
+>  			reg = <0x0 0x2310000 0x0 0x10000>;
+>  			interrupts = <0 36 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> @@ -297,6 +299,7 @@
+>  			reg = <0x0 0x2320000 0x0 0x10000>;
+>  			interrupts = <0 37 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> @@ -307,6 +310,7 @@
+>  			reg = <0x0 0x2330000 0x0 0x10000>;
+>  			interrupts = <0 37 0x4>; /* Level high type */
+>  			gpio-controller;
+> +			little-endian;
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> -- 
+> 2.1.0.27.g96db324
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
