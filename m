@@ -1,48 +1,51 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Thu, 5 Nov 2015 08:08:55 -0600
-Message-ID: <563B62F7.3050307@codeaurora.org>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
- <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
- <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
- <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
- <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
+From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFCv2 2/2] rpi: add support to enable usb power domain
+Date: Thu, 5 Nov 2015 15:12:36 +0100
+Message-ID: <20151105141231.GA599@omega>
+References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
+ <1446590711-18928-3-git-send-email-alex.aring@gmail.com>
+ <20151105133510.GA12530@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Jon Masters <jcm@redhat.com>, Pratyush Anand <panand@redhat.com>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Rob Herring <robherring2@gmail.com>, Vipul Gandhi <vgandhi@codeaurora.org>, Dave Young <dyoung@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151105133510.GA12530@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fu Wei wrote:
-> SBSA 2.3 Page 23 :
-> Note: the watchdog offset register is 32 bits wide. This gives a
-> maximum watch period of around 10s at a system
-> counter frequency of 400MHz. If a larger watch period is required then
-> the compare value can be programmed
-> directly into the compare value register.
->
-> 214s means your system counter is approximately at 20MHz which is in
-> the range of (10MHz ~ 400MHz)
->
-> SBSA 2.3 Page 13 :
-> The System Counter (of the Generic Timer) shall run at a minimum
-> frequency of 10MHz and maximum of
-> 400MHz.
+Hi,
 
-Thanks, that explains a lot.
+On Thu, Nov 05, 2015 at 07:35:10AM -0600, Rob Herring wrote:
+> On Tue, Nov 03, 2015 at 11:45:11PM +0100, Alexander Aring wrote:
+...
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
+> > new file mode 100644
+> > index 0000000..c3abc24
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
+> > @@ -0,0 +1,25 @@
+> > +Raspberry Pi power domain driver
+> > +
+> > +Required properties:
+> > +
+> > +- compatible:		Should be "raspberrypi,bcm2835-power".
+> 
+> These are board or chip level power domains? If the latter, the vendor 
+> should not be raspberrypi, but Broadcom. If the former, then it should 
+> describe the board rather than the chip.
+> 
 
-If we expected customers to have a lower system counter frequency, then 
-we wouldn't have to worry about the timeouts being too short.  It seems 
-to me that the SBSA spec says that if you want a longer timeout, you 
-have to lower the frequency.  We shouldn't be complicating the driver 
-because some customers might not follow the spec.
+the access to the power domains is provided by the firmware. The
+firmware is RPi specific. On an other bcm2835 with another firmware it
+would be working complete different.
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+Everything which is accessable over the firmware is RPi specific.
+
+- Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
