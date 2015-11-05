@@ -1,50 +1,81 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v6 6/8] ARM: rockchip: add support smp for rk3036
-Date: Thu, 05 Nov 2015 11:00:46 +0800
-Message-ID: <563AC65E.6050201@rock-chips.com>
-References: <1446639503-11763-1-git-send-email-zhengxing@rock-chips.com> <1446639916-11957-1-git-send-email-zhengxing@rock-chips.com> <3167530.TSdLBvl1Zs@phil>
+From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Documentation for Hi6220 gpio
+ driver
+Date: Thu, 5 Nov 2015 11:01:49 +0800
+Message-ID: <563AC69D.3070606@huawei.com>
+References: <1446258260-72902-1-git-send-email-zhongkaihua@huawei.com> <1446258260-72902-2-git-send-email-zhongkaihua@huawei.com> <CAL_JsqK1HJ1aDRWMj+7SVXz_zBbD_qbBZ79cbWCnLeKT2++bbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3167530.TSdLBvl1Zs@phil>
+In-Reply-To: <CAL_JsqK1HJ1aDRWMj+7SVXz_zBbD_qbBZ79cbWCnLeKT2++bbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015=E5=B9=B411=E6=9C=8805=E6=97=A5 07:33, Heiko Stuebner wrote:
-> Am Mittwoch, 4. November 2015, 20:25:16 schrieb Xing Zheng:
->> From: Heiko Stuebner<heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On 2015/11/2 23:09, Rob Herring wrote:
+> On Fri, Oct 30, 2015 at 9:24 PM, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>> dt-bindings: gpio: Documentation for Hi6220 gpio driver
 >>
->> The dual-core Cortex A7 rk3036 is a bit special in that it does not =
-allow
->> to control the actual powerdomain of the cpu cores, while the rest o=
-f the
->> smp-bringup like reset control and entry address handling stays the =
-same.
->> Its bigger sibling, the quad-core rk3128 again allows powerdomain co=
-ntrol.
+>> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-hi6220.txt       | 23 ++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
 >>
->> So allow that case by introducing a separate smp-enable-method, that=
- simply
->> disables powerdomain handling in the common code.
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+>> new file mode 100644
+>> index 0000000..76a8932
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-hi6220.txt
+>> @@ -0,0 +1,23 @@
+>> +Hisilicon Hi6220 GPIO controller bindings
+>> +
+>> +Required properties:
+>> +  - compatible:        "arm,pl061", "arm,primecell"
+>> +  - gpio-controller: Marks the device node as a        GPIO controller.
+>> +  - #gpio-cells: Should        be 2. See gpio.txt in this directory for a
+> 
+> Some strange spacing in here. Otherwise,
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Style problems have been fixed in V2 patch.
+
+Rearrange the document patch to the first of patch set.
+
+> 
+>> +                description of the cells format.
+>> +  - interrupt-controller: Mark the device node as an interrupt controller
+>> +
+>> +Example:
+>> +
+>> +       gpio0: gpio@f8011000 {
+>> +               compatible = "arm,pl061", "arm,primecell";
+>> +               reg = <0x0 0xf8011000 0x0 0x1000>;
+>> +               interrupts = <0 52 0x4>;
+>> +               gpio-controller;
+>> +               #gpio-cells = <2>;
+>> +               interrupt-controller;
+>> +               #interrupt-cells = <2>;
+>> +               clocks = <&ao_ctrl 2>;
+>> +               clock-names = "apb_pclk";
+>> +               status = "ok";
+>> +       };
+>> --
+>> 1.9.1
 >>
->> Signed-off-by: Heiko Stuebner<heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->> Tested-by: Xing Zheng<zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Xing Zheng<zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> This patch can work standalone, so I took the liberty of applying it =
-to my soc
-> branch for 4.5 already, so you don't need to resend it in future vers=
-ions.
->
->
->
-OK=EF=BC=8C thanks Heiko. :)
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
