@@ -1,90 +1,62 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 6/7] regulator: hisilicon: Add hi655x pmic voltage
- regulator driver
-Date: Thu, 5 Nov 2015 14:52:35 +0000
-Message-ID: <20151105145235.GL18409@sirena.org.uk>
-References: <1446730488-31930-1-git-send-email-puck.chen@hisilicon.com>
- <1446730488-31930-7-git-send-email-puck.chen@hisilicon.com>
+Subject: Re: [PATCH v2 1/5] spi: introduce mmap read support for spi flash
+ devices
+Date: Thu, 5 Nov 2015 15:29:43 +0000
+Message-ID: <20151105152943.GP18409@sirena.org.uk>
+References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
+ <1446545174-14193-2-git-send-email-vigneshr@ti.com>
+ <20151104143915.GI1717@sirena.org.uk>
+ <563B4BB0.9020206@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HBg0C3yr6HVa1ZCc"
+	protocol="application/pgp-signature"; boundary="1LW0Rr0Uq98qh6Rv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446730488-31930-7-git-send-email-puck.chen@hisilicon.com>
+In-Reply-To: <563B4BB0.9020206@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>
-Cc: w.f@huawei.com, sameo@linux.intel.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, joro@8bytes.org, iommu@lists.linux-foundation.org, haojian.zhuang@linaro.org, devicetree@vger.kernel.org, xuwei5@hisilicon.com, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, z.liuxinliang@hisilicon.com, yudongbin@hisilicon.com, weidong2@hisilicon.com, saberlily.xia@hisilicon.com, haojian.zhuang@outlook.com, leo.yan@linaro.org, linuxarm@huawei.com, dan.zhao@hisilicon.com, peter.panshilin@hisilicon.com, qijiwen@hisilicon.com
+To: Vignesh R <vigneshr@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---HBg0C3yr6HVa1ZCc
+--1LW0Rr0Uq98qh6Rv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Nov 05, 2015 at 09:34:47PM +0800, Chen Feng wrote:
+On Thu, Nov 05, 2015 at 05:59:36PM +0530, Vignesh R wrote:
+> On 11/04/2015 08:09 PM, Mark Brown wrote:
 
-> +config REGULATOR_HI6220_MTCMOS
-> +        bool "Hisilicon Hi6220 mtcmos support"
-> +        depends on ARCH_HISI
-> +        help
-> +          This driver provides support for the mtcmos regulators of Hi6220 Soc.
-> +
+> > It's a bit worrying that this doesn't sync with the message queue except
+> > via the mutex: this means that we might be out of order with respect to
+> > any asynchronous transfers that are happening on the device.  I'm not
+> > sure that this is a practical problem, though there is some risk of
+> > unfair scheduling that would have to be under extreme load and it might
+> > make sense to prioritise reads anyway.
 
-The Kconfig and Makefile updates for MCTMOS should have been in the
-patch adding the driver for that.
+> Since mmap interface is used only by mtd flash drivers and since almost
+> all mtd flash devices use synchronous transfers (spi_sync()), IMO, there
+> wont be out of order problem wrt mtd flashes.
+> But mmap read might delay transfers queued for non mtd flash devices. It
+> is difficult to wait for all transfers already queued to be pumped out
+> by __spi_pump_messages() and then do the mmap transfer. Do you have any
+> thoughts on how to sync with message queue?
 
-> +config REGULATOR_HI655X
-> +        bool "HiSilicon Hi655x PMIC voltage regulator support"
-> +        depends on ARCH_HISI
+Like I say I think it probably doesn't matter.  The main issue would be
+with other devices sharing the bus with a flash chip.
 
-For both of these we should have an || COMPILE_TEST and there's no need
-for either to be bool I can see, they should be tristate.
-
-> +static int hi655x_is_enabled(struct regulator_dev *rdev)
-> +{
-> +	unsigned int value = 0;
-> +
-> +	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
-> +	struct hi655x_regulator_ctrl_regs *ctrl_regs = &regulator->ctrl_regs;
-> +
-> +	regmap_read(rdev->regmap, ctrl_regs->status_reg, &value);
-> +	return (value & BIT(regulator->ctrl_mask));
-> +}
-
-Use the standard regmap helpers, don't open code them.
-
-> +static int hi655x_set_voltage(struct regulator_dev *rdev,
-> +			      int min_uV, int max_uV, unsigned *selector)
-
-Use the standard helpers, including one of the map_voltage()s and
-set_voltage_sel_regmap(), don't open code them.
-
-> +static unsigned int hi655x_map_mode(unsigned int mode)
-> +{
-> +	/* hi655x pmic on hi6220 SoC only support normal mode */
-> +	if (mode == REGULATOR_MODE_NORMAL)
-> +		return REGULATOR_MODE_NORMAL;
-> +	else
-> +		return -EINVAL;
-> +}
-
-If the device only has one mode it should not have any mode operations,
-they're only meaningful if there are multiple modes to set and they are
-optional.
-
---HBg0C3yr6HVa1ZCc
+--1LW0Rr0Uq98qh6Rv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWO20zAAoJECTWi3JdVIfQzNEH/jpa836KNhSjL0W65vB9atoO
-dRea5z98Kf63gySLLlDetVOpkognKWcINX1JpA8lX/rRcz+k7aMiGiUOMKcl8Nme
-FARTdYniBeaWFzsqnQ5x3Fj+hYQKZI1w790zmYXq8s62poBOKD7urZORFa6t7FyM
-dQbx+cv4GjTomMHyHP/ZG1sqzzmU5OOl3pU250perDTnMsAhWa7Ffcuiig3zvoSz
-mfkydBteaWlXHGfea7HY1qPD02ZVCbJXd+ggVGxbAVs4d8uW9uUDrdWPqGAkaelK
-Fj1hbNBp/bCxQyIXb/4wKx0vj/8an/MoRUMaanfofInXeRNj3Jdp0Mx0oXXiLPU=
-=9lqP
+iQEcBAEBCAAGBQJWO3XmAAoJECTWi3JdVIfQ8H4H/3upAPiXLF/N9hkvlFj/e0Da
+K8r42KaKguWp+Y3ERjZgOx+Y/KBHfR3yj/ugXa6pi+yqPx48AxB3m0bxQp9dENK8
+qTzW9/paC7WWZCM9ShGZQoMvhLvqQZbzjxDkofQz43WBv4P+SC+6rJSSJrENe7KK
+zg8rZCRtGpSQcJp7W113ugTkr81cri9DtCv9mYDUADHgfmJFA2k7Oa6QExN5I91d
+duuFw09PJV6ajNwY2lA7LF+2OJLyTkE+WGoQq5fet9+7HDi0ronHcVBk9GnCCnu/
+EJ4zsJ7PplNUAuTKwRGM8HfEzLee1UVRx40BDyz8LKXGAs9NygPpuobv8K3jTAY=
+=UrfS
 -----END PGP SIGNATURE-----
 
---HBg0C3yr6HVa1ZCc--
+--1LW0Rr0Uq98qh6Rv--
