@@ -1,117 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] [media] mt9v032: Add reset and standby gpios
-Date: Fri, 6 Nov 2015 14:28:40 -0600
-Message-ID: <20151106202840.GA19748@rob-hp-laptop>
-References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 3/3] ARM: e3xx: Add header file for pinctrl constants
+Date: Fri, 06 Nov 2015 21:28:53 +0100
+Message-ID: <4489852.SMA0lELne9@wuerfel>
+References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com> <4813305.v3X2DlHJmB@wuerfel> <CAAtXAHeQA2-XeK2n+ow8OC_s7_UcSBhxDN1NZyhc9M43F6KHpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAtXAHeQA2-XeK2n+ow8OC_s7_UcSBhxDN1NZyhc9M43F6KHpA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 06, 2015 at 02:13:43PM +0100, Markus Pargmann wrote:
-> Add optional reset and standby gpios. The reset gpio is used to reset
-> the chip in power_on().
+On Friday 06 November 2015 09:55:28 Moritz Fischer wrote:
+> On Fri, Nov 6, 2015 at 8:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 06 November 2015 08:01:25 Moritz Fischer wrote:
+> >> pins = E31X_TX_BANDSEL_2;
+> >> output-low;
+> >>
+> >> in one .dts, while having something like
+> >>
+> >> pins = E33X_TX_BANDSEL_2
+> >> output low;
+> >>
+> >> in the second dts
+> >
+> > That doesn't seem helpful though, because the assignment of the
+> > pins is not hidden from the source file that should be documenting
+> > it: if someone wants to know how the pins are muxed, they now have
+> > to cross-reference the dts file with the header. If you just put the
+> > pin number directly into the dts, it becomes completely clear
+> > what the setting is.
 > 
-> The standby gpio is not used currently. It is just unset, so the chip is
-> not in standby.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  .../devicetree/bindings/media/i2c/mt9v032.txt      |  2 ++
+> Just to clarify, you're suggesting using "DB_0" etc in the dts file?
+> At that point
+> the name becomes kinda useless. I found the PINCTRL_PIN_ANON macro,
+> but haven't found any use throughout the tree, is using it discouraged?
 
-Acked-by: Rob Herring <robh@kernel.org>
+I don't know if that is the best approach, but it's better than using
+macros here. You should only add a header file with macros if you
+absolutely have to define a common namespace between the driver and the
+dts files, but you don't do that here: the header file is only used
+in one place.
 
->  drivers/media/i2c/mt9v032.c                        | 23 ++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> index 202565313e82..100f0ae43269 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> @@ -20,6 +20,8 @@ Optional Properties:
->  
->  - link-frequencies: List of allowed link frequencies in Hz. Each frequency is
->  	expressed as a 64-bit big-endian integer.
-> +- reset-gpios: GPIO handle which is connected to the reset pin of the chip.
-> +- standby-gpios: GPIO handle which is connected to the standby pin of the chip.
->  
->  For further reading on port node refer to
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-> index a68ce94ee097..4aefde9634f5 100644
-> --- a/drivers/media/i2c/mt9v032.c
-> +++ b/drivers/media/i2c/mt9v032.c
-> @@ -24,6 +24,7 @@
->  #include <linux/videodev2.h>
->  #include <linux/v4l2-mediabus.h>
->  #include <linux/module.h>
-> +#include <linux/gpio/consumer.h>
->  
->  #include <media/mt9v032.h>
->  #include <media/v4l2-ctrls.h>
-> @@ -251,6 +252,8 @@ struct mt9v032 {
->  
->  	struct regmap *regmap;
->  	struct clk *clk;
-> +	struct gpio_desc *reset_gpio;
-> +	struct gpio_desc *standby_gpio;
->  
->  	struct mt9v032_platform_data *pdata;
->  	const struct mt9v032_model_info *model;
-> @@ -312,16 +315,26 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
->  	struct regmap *map = mt9v032->regmap;
->  	int ret;
->  
-> +	gpiod_set_value_cansleep(mt9v032->reset_gpio, 1);
-> +
->  	ret = clk_set_rate(mt9v032->clk, mt9v032->sysclk);
->  	if (ret < 0)
->  		return ret;
->  
-> +	/* system clock has to be enabled before releasing the reset */
->  	ret = clk_prepare_enable(mt9v032->clk);
->  	if (ret)
->  		return ret;
->  
->  	udelay(1);
->  
-> +	gpiod_set_value_cansleep(mt9v032->reset_gpio, 0);
-> +
-> +	/*
-> +	 * After releasing reset, it can take up to 1us until the chip is done
-> +	 */
-> +	udelay(1);
-> +
->  	/* Reset the chip and stop data read out */
->  	ret = regmap_write(map, MT9V032_RESET, 1);
->  	if (ret < 0)
-> @@ -954,6 +967,16 @@ static int mt9v032_probe(struct i2c_client *client,
->  	if (IS_ERR(mt9v032->clk))
->  		return PTR_ERR(mt9v032->clk);
->  
-> +	mt9v032->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> +						      GPIOD_OUT_HIGH);
-> +	if (IS_ERR(mt9v032->reset_gpio))
-> +		return PTR_ERR(mt9v032->reset_gpio);
-> +
-> +	mt9v032->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
-> +							GPIOD_OUT_LOW);
-> +	if (IS_ERR(mt9v032->standby_gpio))
-> +		return PTR_ERR(mt9v032->standby_gpio);
-> +
->  	mutex_init(&mt9v032->power_lock);
->  	mt9v032->pdata = pdata;
->  	mt9v032->model = (const void *)did->driver_data;
-> -- 
-> 2.6.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
