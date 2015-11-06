@@ -1,74 +1,93 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 03/19] clk: sunxi: Add TCON channel0 clock
-Date: Fri, 6 Nov 2015 14:11:22 -0800
-Message-ID: <20151106221122.GL6114@lukather>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-4-git-send-email-maxime.ripard@free-electrons.com>
- <CAGb2v66hjH_GpkXpHdpCM+mUv-CgvqxJNFzsoRJ5MWp04b+jew@mail.gmail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2080A SoC
+Date: Fri, 6 Nov 2015 19:12:39 -0300
+Message-ID: <CABxcv=n6UTcdskBv8fqRzfes+nCjPaFbCTDGRRDt=MStdepwWA@mail.gmail.com>
+References: <1446846529-10613-1-git-send-email-German.Rivera@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s7VmGO2m7mcnuX8Q"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66hjH_GpkXpHdpCM+mUv-CgvqxJNFzsoRJ5MWp04b+jew@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Wynter Woods <wynter@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446846529-10613-1-git-send-email-German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello J. German,
 
---s7VmGO2m7mcnuX8Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 6, 2015 at 6:48 PM, J. German Rivera
+<German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Added sys-reboot node to the FSL's LS2080A SoC DT to leverage
+> the ARM-generic reboot mechanism for this SoC. This mechanism
+> is enabled through CONFIG_POWER_RESET_SYSCON.
+>
 
-Hi,
+What's in the changelog ends as a part of the commit message and
+usually the change history is not added there...
 
-On Sat, Oct 31, 2015 at 06:19:59PM +0800, Chen-Yu Tsai wrote:
-> > +#define SUN4I_A10_TCON_CH0_RESET_SHIFT 29
->=20
-> This is sun5i specific.
->=20
-> A10s manual says bit 30 is the LCD reset, while bit 29 is the TV
-> encoder reset.  A13/R8 don't mention TCON_CH0 clock. A10/A20 have no
-> separate TV encoder reset.
->=20
-> Please rename the clock.
+> CHANGE HISTORY:
+>
+> Changes in v3:
+> - Addressed comment from Stuart Yoder
+>   * Fixed commit message to refer to LS2080A instead of LS2085A.
+>
+> Changes in v2:
+> - Addressed comment form Stuart Yoder:
+>   * Removed "@<address>" from reboot node
+>
+> Changes in v3:
+> - Addressed comment form Stuart Yoder:
+>   * Expose only the reset register
+>
+> Changes in v4:
+> - Addressed comment from Arnd Bergmann:
+>   * Changed compatible string to be more specific
+>   * Changed node name to 'syscon' instead of 'rstcr'
+>   * Changed address to lower case hex
+> - Addressed comment form Stuart Yoder:
+>   * Rebase on top of branch arm-soc/for-next
+>
+> Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
 
-This thing with the A10s is odd, the channel 0 is only used for the
-LCD interface, and not the tv encoder (and both the A13 and R8 do have
-a TCON).
+...so the change history should be added here, between the '---'
+marker line and the patch diff since that section is omitted by tools
+like git-am when applying patches.
 
-But you're right, I've fixed it.
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> index e81cd48..a790a90 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> @@ -153,6 +153,18 @@
+>                 };
+>         };
+>
+> +       rstcr: syscon@1e60000 {
+> +               compatible = "fsl,ls2085a-rstcr", "syscon";
+> +               reg = <0x0 0x1e60000 0x0 0x4>;
+> +       };
+> +
+> +       reboot {
+> +               compatible ="syscon-reboot";
+> +               regmap = <&rstcr>;
+> +               offset = <0x0>;
+> +               mask = <0x2>;
+> +       };
+> +
+>         timer {
+>                 compatible = "arm,armv8-timer";
+>                 interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
+> --
 
-Thanks!
-Maxime
+The patch looks good to me though.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
---s7VmGO2m7mcnuX8Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWPSWKAAoJEBx+YmzsjxAgfm8QAJNENjHOYLm8syjYmaydlF16
-QBQ4JZN1RBE3STh6eR37n8lysOsMl05pFxUKRCWAL2JtKiN4etU/oHI4UibGEXvS
-KJnDHTa0eF0HWUbahcj9nbGLhIUmb9bhJ58ttt5JuWtiQUjlTZ4mYRY9wjZj9usR
-g5zy4RVG4cD8JLwGwmdsVRt3nmJNvxa+7krP+PPLdV9KC+YqW9hq+XrvibvxHv7Z
-8xQgM2AG3YfT50GEkgkH2jSw5RETIp+5ttlZF7Fw6xxamvfKBBgc8N8wHRmFFEIF
-5K+L2bvN/0AKsrtKdfiuJlXQ9GfRCUL8t9cbLlHQQW5SiYF0gY+K/pblHBF8SBTR
-+hZcOk0FsXIlPEyx6WSncNixGxh/mcwJzr+SpLc4hsaDW2otwsvonB5RVxf1izOi
-qMDSpUg3/6m1i6Y0NmYUy35WcJUjNe7HIAh6Fejgpwk+eZ9LXdDb5nb6Jc38m9fK
-06Z44VMwOA4Tz+FW29smF5DwMVd1VJ01jVXzzmgLPga2pU/R3vFqQFBAOAmCsmsZ
-qx72InSwzOfeL+ceU+VywRF59Vy6X95pWylyH0BHozvQZHjJK8FZshFcd5zyIUbC
-kuZY1NbN7AWEQMiBp/Pj5gvzrJDVEXHg1GY1Q9Hp7BAtUt/mzJNVp48B3Mguj2P6
-Rm+QXx4eWpKx2hBBOani
-=of0s
------END PGP SIGNATURE-----
-
---s7VmGO2m7mcnuX8Q--
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
