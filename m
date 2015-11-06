@@ -1,78 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
-Date: Fri, 6 Nov 2015 11:54:51 +0000
-Message-ID: <20151106115451.GG18409@sirena.org.uk>
-References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
- <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
- <20151105152736.GO18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
- <20151106112141.GE18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH RESEND 0/4] SMP support for Broadcom NSP
+Date: Fri, 6 Nov 2015 17:39:43 +0530
+Message-ID: <563C9887.5090406@broadcom.com>
+References: <1446702681-45339-1-git-send-email-kapilh@broadcom.com>
+ <20151105093443.GO8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3645066527042135256=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151105093443.GO8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3645066527042135256==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FBBJgEOSAOerUJIT"
-Content-Disposition: inline
 
+On 11/5/2015 3:04 PM, Russell King - ARM Linux wrote:
+> On Thu, Nov 05, 2015 at 12:51:17AM -0500, Kapil Hali wrote:
+>> Hi,
+>>
+>> This series adds SMP support for Broadcom's Northstar Plus SoC.
+>>
+>> There are similar SMP enablement methods for many ARMv7 bsed SoCs.
+>> BCM NSP SoC, has a typical such mechanism - after power-on, the
+>> secondary core is held in a standby state, primary core provides a
+>> startup address for the secondary core and wakes it up. Booting of
+>> the secondary core is serialized using pen_release global variable.
+> 
+> Why do you need the pen_release stuff?  The above implies that you
+> have only one secondary core, and you can control when it comes out
+> of standby state.
+> 
+We can initiate a wake-up of the secondary core. I tested the changes
+without pen_release method and it works. However, as I understand, I
+think there is no other way for the primary core to know if the 
+secondary core has come out of standby state other than pen_release
+mechanism. When there is no other method available, will not 
+smp_boot_secondary() always return successful wake-up of the
+secondary core?
 
---FBBJgEOSAOerUJIT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Please, don't assume that the pen_release stuff is any kind of recommended
+> or standardised system.  It isn't.  It's a hack for ARMs evaluation
+> platforms.
+> 
+Got it. As pen_release is forbidden, I will change the SMP mechanism
+to remove pen_release method in the new patch set.
 
-On Fri, Nov 06, 2015 at 11:53:00AM +0000, Opensource [Adam Thomson] wrote:
-> On November 6, 2015 11:22, Mark Brown wrote:
+Thanks,
+Kapil
 
-> > > I can envisage in a system you may want to choose which capture channels can
-> > > trigger level detection (if any), and this may change depending on the use-case
-> > > at the time, so having it as a control makes sense to me.
-
-> > What is a "capture channel" here?
-
-> Input filters 1L/R and 2L/R, which are fed from either Mic1(ADC1) or DMic1L/R
-> and Mic2(ADC2) or DMic2L/R.
-
-Hang on, is this just recording a DC value with the ADC and then looking
-at that?
-
---FBBJgEOSAOerUJIT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWPJUKAAoJECTWi3JdVIfQxaQH/j50PUeabXfcN2XeYnNIMCUC
-Xrc1Ib5E9zhufAdCanT2O4B9j6JEpaTVjBF3S3BRDQJSWhC+ddhUG4P3JJ7iZ8pq
-rYVXJ8DrqBe+aNzxvtMxMsrGufFrT2cTRgv0BzefW1VD6jurXogz9N+1aYXOBRBw
-P1omRxkYBBAIykZnV1w4plu3nT3Q5yikIbz1EQS/NcdBxKzY8FQy0mDkFYEicDji
-gKI2+d2w/Z5uFek/iuEsfQW7M1vnSlb0uKxJf533nKXrj5GRXB/i7yds10zxRcTb
-z3VEULfzouC2+QqEyAL4OIbxWnoiV4WREaRMnPshXP+PEKLZbaLpqeKWrrbnRGQ=
-=oCfq
------END PGP SIGNATURE-----
-
---FBBJgEOSAOerUJIT--
-
---===============3645066527042135256==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3645066527042135256==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
