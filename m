@@ -1,455 +1,260 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v2 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Fri, 6 Nov 2015 12:50:33 -0800
-Message-ID: <20151106205033.GH24668@usrtlx11787.corpusers.net>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
- <1430743338-10441-5-git-send-email-svarbanov@mm-sol.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [RFC 2/3] pinctrl: e3xx: Adding support for NI Ettus Research
+ USRP E3xx pinconf
+Date: Fri, 6 Nov 2015 22:56:16 +0200
+Message-ID: <CAHp75Vem4MGuXDqwLKCQLyEsJohxu2GV8xKGH8r6hbp9sSSFDQ@mail.gmail.com>
+References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com>
+	<1446766883-25703-3-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1430743338-10441-5-git-send-email-svarbanov@mm-sol.com>
+In-Reply-To: <1446766883-25703-3-git-send-email-moritz.fischer@ettus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 04 May 05:42 PDT 2015, Stanimir Varbanov wrote:
+On Fri, Nov 6, 2015 at 1:41 AM, Moritz Fischer <moritz.fischer@ettus.com> wrote:
+> The USRP E3XX series requires pinctrl to configure the idle state
+> FPGA image for minimizing power consumption.
+> This is required since different daughtercards have different uses
+> for pins on a common connector.
 
-> The PCIe driver reuse the Designware common code for host
-> and MSI initialization, and also program the Qualcomm
-> application specific registers.
-> 
+> +#include <linux/pinctrl/pinconf-generic.h>
 
-I want to get the ethernet on the ifc6410 running and this seems like
-the last patchset for the PCIe.
++ empty line?
 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-[..]
-> diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
-> new file mode 100644
-> index 0000000..4f083c6
-> --- /dev/null
-> +++ b/drivers/pci/host/pcie-qcom.c
-> @@ -0,0 +1,677 @@
-> +/*
-> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> +#include "pinctrl-utils.h"
+> +#include "core.h"
 
-Bump the year, it's the future now :)
-
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> +static int e3xx_pinconf_cfg_get(struct pinctrl_dev *pctldev,
+> +                               unsigned pin,
+> +                               unsigned long *config)
+> +{
+> +       u32 reg, mask;
+> +       int arg;
+> +       struct e3xx_pinctrl *pctrl;
+> +       unsigned int param;
 > +
-[..]
+> +       param = pinconf_to_config_param(*config);
+> +       pctrl = pinctrl_dev_get_drvdata(pctldev);
 > +
-> +struct qcom_pcie {
-> +	struct pcie_port pp;
-> +	struct device *dev;
+> +       if (pin >= E3XX_NUM_DB_PINS)
+> +               return -ENOTSUPP;
+> +
+> +       mask = BIT(pin % E3XX_PINS_PER_REG);
+> +
+> +       switch (param) {
+> +       case PIN_CONFIG_OUTPUT:
+> +               clk_enable(pctrl->clk);
+> +               reg = e3xx_pinctrl_read(pctrl, E3XX_DDR_OFFSET +
+> +                                       (pin / E3XX_PINS_PER_REG) * 4);
+> +
+> +               clk_disable(pctrl->clk);
+> +               arg = !!(reg & mask);
 
-You already have this device pointer in pp->dev.
+So, for now arg variable seems redundant, you may use expression
+inside call below.
 
-> +	union pcie_resources res;
-> +	void __iomem *parf;
-> +	void __iomem *dbi;
-> +	void __iomem *elbi;
-> +	struct phy *phy;
-> +	struct gpio_desc *reset;
-> +	unsigned int version;
+> +               break;
+> +       default:
+> +               dev_err(pctrl->dev, "requested illegal configuration");
+> +               return -ENOTSUPP;
+> +       };
+> +
+> +       *config = pinconf_to_config_packed(param, arg);
+> +
+> +       return 0;
+> +}
+> +
+> +static int e3xx_pinconf_cfg_set(struct pinctrl_dev *pctldev,
+> +                               unsigned pin,
+> +                               unsigned long *configs,
+> +                               unsigned num_configs)
+> +{
+> +       u32 reg, mask;
+> +       int i;
+
+unsigned
+
+> +       struct e3xx_pinctrl *pctrl;
+> +       unsigned int param, arg;
+> +
+> +       if (pin >= E3XX_NUM_DB_PINS)
+> +               return -ENOTSUPP;
+> +       mask = BIT(pin % E3XX_PINS_PER_REG);
+> +
+> +       pctrl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +       clk_enable(pctrl->clk);
+> +
+> +       for (i = 0; i < num_configs; i++) {
+> +               param = pinconf_to_config_param(configs[i]);
+> +               arg = pinconf_to_config_argument(configs[i]);
+> +
+> +               switch (param) {
+> +               case PIN_CONFIG_OUTPUT:
+> +                       /* deal with value, set out bit if arg is 1 */
+> +                       reg = e3xx_pinctrl_read(pctrl, E3XX_OUT_OFFSET +
+> +                                               ((pin / E3XX_PINS_PER_REG) * 4))
+> +                               ;
+
+Why not one the previous line?
+
+> +                       reg &= ~mask;
+> +                       if (arg)
+> +                               reg |= mask;
+
+
+
+> +
+> +                       /* addresses need to be 4 byte aligned */
+> +                       e3xx_pinctrl_write(pctrl, E3XX_OUT_OFFSET +
+> +                                          ((pin / E3XX_PINS_PER_REG) * 4), reg)
+> +                               ;
+> +
+> +                       /* set ddr bit to high for output */
+> +                       reg = e3xx_pinctrl_read(pctrl, E3XX_DDR_OFFSET +
+> +                                               ((pin / E3XX_PINS_PER_REG) * 4))
+> +                               ;
+
+Ditto.
+
+> +                       reg |= mask;
+> +
+> +                       /* addresses need to be 4 byte aligned */
+> +                       e3xx_pinctrl_write(pctrl, E3XX_DDR_OFFSET +
+> +                                         ((pin / E3XX_PINS_PER_REG) * 4), reg);
+> +                       break;
+> +
+> +               default:
+> +                       clk_disable(pctrl->clk);
+> +                       return -ENOTSUPP;
+> +               };
+> +       }
+> +
+> +       clk_disable(pctrl->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int e3xx_pinconf_group_set(struct pinctrl_dev *pctldev,
+> +                                 unsigned selector,
+> +                                 unsigned long *configs,
+> +                                 unsigned num_configs)
+> +{
+> +       return -EAGAIN;
+> +}
+> +
+> +static const struct pinconf_ops e3xx_pinconf_ops = {
+> +       .is_generic = true,
+> +       .pin_config_get = e3xx_pinconf_cfg_get,
+> +       .pin_config_set = e3xx_pinconf_cfg_set,
+> +       .pin_config_group_set = e3xx_pinconf_group_set,
 > +};
 > +
-> +#define to_qcom_pcie(x)		container_of(x, struct qcom_pcie, pp)
-> +
-> +static inline void
-> +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
-> +{
-> +	u32 val = readl(addr);
-> +
-> +	val &= ~clear_mask;
-> +	val |= set_mask;
-> +	writel(val, addr);
-> +}
-
-There are no case where you do clear and set, so I would like that you
-just inline this function where you need it. It adds 2 extra lines at a
-few places, but a lot of clarity.
-
-> +
-> +static void qcom_ep_reset_assert_deassert(struct qcom_pcie *pcie, int assert)
-> +{
-> +	int val, active_low;
-> +
-> +	if (IS_ERR_OR_NULL(pcie->reset))
-> +		return;
-
-This will be NULL or valid here, never ERR. So it's fine to call
-gpiod_set_value() with this pointer without the check.
-
-> +
-> +	active_low = gpiod_is_active_low(pcie->reset);
-> +
-
-gpiod_set_value() checks for FLAG_ACTIVE_LOW and will invert the value
-first thing. So you do not need to do this manually.
-
-> +	if (assert)
-> +		val = !!active_low;
-> +	else
-> +		val = !active_low;
-> +
-> +	gpiod_set_value(pcie->reset, val);
-> +
-> +	usleep_range(PERST_DELAY_MIN_US, PERST_DELAY_MAX_US);
-
-This doesn't seem to be called in a hot path, so you should be able to
-simply msleep(1) here.
-
-> +}
-> +
-> +static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> +{
-> +	qcom_ep_reset_assert_deassert(pcie, 1);
-
-If we're down to this function just being a gpiod_set_value() and a
-sleep we can inline it here instead of having this proxy function.
-
-> +}
-> +
-> +static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
-> +{
-> +	qcom_ep_reset_assert_deassert(pcie, 0);
-
-Same here.
-
-> +}
-> +
-> +static irqreturn_t qcom_pcie_msi_irq_handler(int irq, void *arg)
-> +{
-> +	struct pcie_port *pp = arg;
-> +
-> +	return dw_handle_msi_irq(pp);
-> +}
-> +
-> +static int qcom_pcie_link_up(struct pcie_port *pp)
-> +{
-> +	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-> +	u32 val = readl(pcie->dbi + PCIE20_CAP_LINKCTRLSTATUS);
-> +
-> +	return val & BIT(29) ? 1 : 0;
-
-return !!(val & BIT(29));
-
-Do we know what this bit 29 is?
-
-> +}
-> +
-[..]
-> +
-> +static int qcom_pcie_get_resources_v1(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
-> +	struct device *dev = pcie->dev;
-> +
-> +	res->vdda = devm_regulator_get(dev, "vdda");
-> +	if (IS_ERR(res->vdda))
-> +		return PTR_ERR(res->vdda);
-> +
-> +	res->iface = devm_clk_get(dev, "iface");
-> +	if (IS_ERR(res->iface))
-> +		return PTR_ERR(res->iface);
-> +
-> +	res->aux = devm_clk_get(dev, "aux");
-> +	if (IS_ERR(res->aux) && PTR_ERR(res->aux) == -EPROBE_DEFER)
-
-PTR_ERR() == x implies IS_ERR(), so you don't need both.
-
-> +		return -EPROBE_DEFER;
-> +	else if (IS_ERR(res->aux))
-> +		res->aux = NULL;
-> +
-> +	res->master_bus = devm_clk_get(dev, "master_bus");
-> +	if (IS_ERR(res->master_bus))
-> +		return PTR_ERR(res->master_bus);
-> +
-> +	res->slave_bus = devm_clk_get(dev, "slave_bus");
-> +	if (IS_ERR(res->slave_bus))
-> +		return PTR_ERR(res->slave_bus);
-> +
-> +	res->core = devm_reset_control_get(dev, "core");
-> +	if (IS_ERR(res->core))
-> +		return PTR_ERR(res->core);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_pcie_enable_link_training(struct pcie_port *pp)
-> +{
-> +	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-> +	struct device *dev = pp->dev;
-> +	int retries;
-> +	u32 val;
-> +
-> +	/* enable link training */
-> +	writel_masked(pcie->elbi + PCIE20_ELBI_SYS_CTRL, 0, BIT(0));
-> +
-> +	/* wait for up to 100ms for the link to come up */
-> +	retries = LINKUP_RETRIES_COUNT;
-> +	do {
-> +		val = readl(pcie->elbi + PCIE20_ELBI_SYS_STTS);
-> +		if (val & XMLH_LINK_UP)
-> +			break;
-> +		usleep_range(LINKUP_DELAY_MIN_US, LINKUP_DELAY_MAX_US);
-> +	} while (retries--);
-> +
-> +	if (retries < 0 || !dw_pcie_link_up(pp)) {
-> +		dev_err(dev, "link initialization failed\n");
-> +		return -ENXIO;
-> +	}
-
-Rather than implementing this based on a number of retries, I think it
-would be cleaner to set a goal for jiffies + HZ / 10, then in the loop
-you check your conditions, then check for time_after(jiffies, timeout)
-and finally msleep() for a while.
-
-> +
-> +	return 0;
-> +}
-> +
-[..]
-> +static void qcom_pcie_host_init_v0(struct pcie_port *pp)
-> +{
-> +	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-> +	struct qcom_pcie_resources_v0 *res = &pcie->res.v0;
-> +	struct device *dev = pcie->dev;
-> +	int ret;
-> +
-> +	qcom_ep_reset_assert(pcie);
-> +
-> +	ret = qcom_pcie_enable_resources_v0(pcie);
-> +	if (ret)
-> +		return;
-> +
-> +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
-
-Do we have a name for this bit?
-
-> +
-> +	/* enable external reference clock */
-> +	writel_masked(pcie->parf + PCIE20_PARF_PHY_REFCLK, 0, BIT(16));
-
-Do we have a name for this bit?
-
-> +
-> +	ret = reset_control_deassert(res->phy_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot deassert phy reset\n");
-> +		return;
-> +	}
-> +
-> +	ret = reset_control_deassert(res->pci_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		return;
-> +	}
-> +
-> +	ret = reset_control_deassert(res->por_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot deassert por reset\n");
-> +		return;
-> +	}
-> +
-> +	ret = reset_control_deassert(res->axi_reset);
-> +	if (ret) {
-> +		dev_err(dev, "cannot deassert axi reset\n");
-> +		return;
-> +	}
-> +
-> +	/* wait 150ms for clock acquisition */
-> +	usleep_range(10000, 15000);
-
-Either the comment or the sleep is wrong. Also, I think you should just
-use msleep() here, the precision doesn't look important.
-
-> +
-> +	dw_pcie_setup_rc(pp);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		dw_pcie_msi_init(pp);
-> +
-> +	qcom_ep_reset_deassert(pcie);
-> +
-> +	ret = qcom_pcie_enable_link_training(pp);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return;
-> +err:
-> +	qcom_ep_reset_assert(pcie);
-> +	qcom_pcie_disable_resources_v0(pcie);
-> +}
-> +
-[..]
-> +static int
-> +qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size, u32 *val)
-> +{
-> +	/* the device class is not reported correctly from the register */
-> +	if (where == PCI_CLASS_REVISION && size == 4) {
-> +		*val = readl(pp->dbi_base + PCI_CLASS_REVISION);
-> +		*val &= ~(0xffff << 16);
-
-Isn't this the same as *val &= 0xffff; ?
-
-> +		*val |= PCI_CLASS_BRIDGE_PCI << 16;
-
-Feels like it would be cleaner to just to:
-
-u32 rev;
-
-rev = readl(pp->dbi_base + PCI_CLASS_REVISION);
-*val = PCI_CLASS_BRIDGE_PCI << 16 | rev & 0xffff;
-
-> +		return PCIBIOS_SUCCESSFUL;
-> +	}
-> +
-> +	return dw_pcie_cfg_read(pp->dbi_base + (where & ~0x3), where,
-> +				size, val);
-
-This api has been simplified, the new version should be:
-
-  dw_pcie_cfg_read(pp->dbi_base + where, size, val);
-
-> +}
-> +
-[..]
-> +static const struct of_device_id qcom_pcie_match[] = {
-> +	{ .compatible = "qcom,pcie-v0", .data = (void *)PCIE_V0 },
-> +	{ .compatible = "qcom,pcie-v1", .data = (void *)PCIE_V1 },
-> +	{ }
+> +static struct pinctrl_desc e3xx_desc = {
+> +       .name = "e3xx_pinctrl",
+> +       .pins = e3xx_pins,
+> +       .npins = ARRAY_SIZE(e3xx_pins),
+> +       .pctlops = &e3xx_pctrl_ops,
+> +       .confops = &e3xx_pinconf_ops,
+> +       .owner = THIS_MODULE,
 > +};
-
-MODULE_DEVICE_TABLE() and move this below remove()
-
 > +
-> +static int qcom_pcie_probe(struct platform_device *pdev)
+> +static int e3xx_pinctrl_probe(struct platform_device *pdev)
 > +{
-> +	struct device *dev = &pdev->dev;
-> +	const struct of_device_id *match;
-> +	struct resource *res;
-> +	struct qcom_pcie *pcie;
-> +	struct pcie_port *pp;
-> +	int ret;
+> +       struct resource *res;
+> +       struct e3xx_pinctrl *pctrl;
+> +       int err;
 > +
-> +	match = of_match_node(qcom_pcie_match, dev->of_node);
-> +	if (!match)
-> +		return -ENXIO;
+> +       pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+> +       if (!pctrl)
+> +               return -ENOMEM;
+> +       pctrl->dev = &pdev->dev;
 > +
-> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	pcie->version = (unsigned int)match->data;
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
-Use of_device_get_match_data() here instead.
+> +       if (!res) {
+> +               dev_err(&pdev->dev, "missing IO resource\n");
+> +               return -ENODEV;
+> +       }
 
-> +
-> +	pcie->reset = devm_gpiod_get_optional(dev, "perst");
-> +	if (IS_ERR(pcie->reset) && PTR_ERR(pcie->reset) == -EPROBE_DEFER)
-> +		return PTR_ERR(pcie->reset);
-
-devm_gpiod_get_optional() will either return an IS_ERR() or NULL in the
-case of it not being found. So I think you should always return
-PTR_ERR() if IS_ERR() is set.
-
-
-Also, the devm_gpiod_get_optional() api has gotten a third parameter,
-set it to GPIOD_OUT_LOW.
+Whole condition is redundant.
 
 > +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
-> +	pcie->parf = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pcie->parf))
-> +		return PTR_ERR(pcie->parf);
+> +       pctrl->io_base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(pctrl->io_base))
+> +               return PTR_ERR(pctrl->io_base);
 > +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	pcie->dbi = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pcie->dbi))
-> +		return PTR_ERR(pcie->dbi);
+> +       pctrl->clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(pctrl->clk)) {
+> +               dev_err(&pdev->dev, "input clock not found");
+> +               return PTR_ERR(pctrl->clk);
+> +       }
 > +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
-> +	pcie->elbi = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pcie->elbi))
-> +		return PTR_ERR(pcie->elbi);
+> +       err = clk_prepare(pctrl->clk);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "unable to prepare clock");
+> +               return err;
+> +       }
 > +
-> +	pcie->phy = devm_phy_optional_get(dev, "pciephy");
-> +	if (IS_ERR(pcie->phy))
-> +		return PTR_ERR(pcie->phy);
+> +       pctrl->pctl = pinctrl_register(&e3xx_desc, &pdev->dev, pctrl);
+> +       if (!pctrl->pctl)
+> +               return -ENOMEM;
 > +
-> +	pcie->dev = dev;
-
-nit, move this lonely assignment up to the version assignment to make it
-happier. Or you could just use pcie->pp->dev throughout the driver...
-
+> +       platform_set_drvdata(pdev, pctrl);
 > +
-> +	if (pcie->version == PCIE_V0)
-> +		ret = qcom_pcie_get_resources_v0(pcie);
-> +	else
-> +		ret = qcom_pcie_get_resources_v1(pcie);
+> +       dev_info(&pdev->dev, "NI Ettus Research E3xx pinctrl initialized\n");
 > +
-> +	if (ret)
-> +		return ret;
-> +
-> +	pp = &pcie->pp;
-> +	pp->dev = dev;
-> +	pp->dbi_base = pcie->dbi;
-> +	pp->root_bus_nr = -1;
-> +	pp->ops = &qcom_pcie_ops;
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> +		if (pp->msi_irq < 0) {
-> +			dev_err(dev, "cannot get msi irq\n");
-> +			return pp->msi_irq;
-> +		}
-> +
-
-Feeding an error value of msi_irq into request_irq will fails
-gracefully, so you could just skip the error handling above.
-
-> +		ret = devm_request_irq(dev, pp->msi_irq,
-> +				       qcom_pcie_msi_irq_handler,
-> +				       IRQF_SHARED, "qcom-pcie-msi", pp);
-> +		if (ret) {
-> +			dev_err(dev, "cannot request msi irq\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "cannot initialize host\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	return 0;
+> +       return 0;
 > +}
 > +
-[..]
+> +static int e3xx_pinctrl_remove(struct platform_device *pdev)
+> +{
+> +       struct e3xx_pinctrl *pctrl = platform_get_drvdata(pdev);
 > +
-> +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
-> +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
+> +       pinctrl_unregister(pctrl->pctl);
+> +
+> +       clk_unprepare(pctrl->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id e3xx_pinctrl_of_match[] = {
+> +       { .compatible = "ettus,e3xx-pinctrl-1.0", },
+> +       {},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, e3xx_pinctrl_of_match);
+> +#endif
+> +
+> +static struct platform_driver e3xx_pinctrl_driver = {
+> +       .probe = e3xx_pinctrl_probe,
+> +       .remove = e3xx_pinctrl_remove,
+> +       .driver = {
+> +               .name = "e3xx_pinctrl",
+> +               .of_match_table = of_match_ptr(e3xx_pinctrl_of_match),
+> +       },
+> +};
+> +
+> +module_platform_driver(e3xx_pinctrl_driver);
+> +
+> +MODULE_AUTHOR("Moritz Fischer <moritz.fischer@ettus.com>");
+> +MODULE_DESCRIPTION("Ettus Research pinctrl driver");
 > +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:qcom-pcie");
+> --
+> 2.4.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-There's little point in the MODULE_ALIAS(), please drop it.
 
-Regards,
-Bjorn
+
+-- 
+With Best Regards,
+Andy Shevchenko
