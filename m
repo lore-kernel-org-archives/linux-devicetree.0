@@ -1,47 +1,150 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 3/3] ARM: e3xx: Add header file for pinctrl constants
-Date: Fri, 06 Nov 2015 21:28:53 +0100
-Message-ID: <4489852.SMA0lELne9@wuerfel>
-References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com> <4813305.v3X2DlHJmB@wuerfel> <CAAtXAHeQA2-XeK2n+ow8OC_s7_UcSBhxDN1NZyhc9M43F6KHpA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/5] Documentation: tps65912: Add DT bindings for the
+ TPS65912 PMIC
+Date: Fri, 6 Nov 2015 14:36:55 -0600
+Message-ID: <20151106203655.GA4950@rob-hp-laptop>
+References: <1446244088-28281-1-git-send-email-afd@ti.com>
+ <1446244088-28281-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHeQA2-XeK2n+ow8OC_s7_UcSBhxDN1NZyhc9M43F6KHpA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1446244088-28281-2-git-send-email-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 06 November 2015 09:55:28 Moritz Fischer wrote:
-> On Fri, Nov 6, 2015 at 8:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 06 November 2015 08:01:25 Moritz Fischer wrote:
-> >> pins = E31X_TX_BANDSEL_2;
-> >> output-low;
-> >>
-> >> in one .dts, while having something like
-> >>
-> >> pins = E33X_TX_BANDSEL_2
-> >> output low;
-> >>
-> >> in the second dts
-> >
-> > That doesn't seem helpful though, because the assignment of the
-> > pins is not hidden from the source file that should be documenting
-> > it: if someone wants to know how the pins are muxed, they now have
-> > to cross-reference the dts file with the header. If you just put the
-> > pin number directly into the dts, it becomes completely clear
-> > what the setting is.
+On Fri, Oct 30, 2015 at 05:28:04PM -0500, Andrew F. Davis wrote:
+> The TPS65912 PMIC contains several regulators and a GPIO controller.
+> Add bindings for the TPS65912 PMIC.
 > 
-> Just to clarify, you're suggesting using "DB_0" etc in the dts file?
-> At that point
-> the name becomes kinda useless. I found the PINCTRL_PIN_ANON macro,
-> but haven't found any use throughout the tree, is using it discouraged?
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-tps65912.txt     | 16 +++++++
+>  Documentation/devicetree/bindings/mfd/tps65912.txt | 51 ++++++++++++++++++++++
+>  .../bindings/regulator/tps65912-regulator.txt      | 28 ++++++++++++
+>  3 files changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
 
-I don't know if that is the best approach, but it's better than using
-macros here. You should only add a header file with macros if you
-absolutely have to define a common namespace between the driver and the
-dts files, but you don't do that here: the header file is only used
-in one place.
+Acked-by: Rob Herring <robh@kernel.org>
 
-	Arnd
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+> new file mode 100644
+> index 0000000..ba8d633
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+> @@ -0,0 +1,16 @@
+> +* TPS65912 GPIO Controller bindings
+> +
+> +Required properties:
+> + - compatible		: Should be "ti,tps65912-gpio".
+> + - gpio-controller	: Marks the device node as a GPIO Controller.
+> + - #gpio-cells		: Should be two.  The first cell is the pin number and
+> +			    the second cell is used to specify flags.
+> +			    See ../gpio/gpio.txt for more information.
+> +
+> +Example:
+> +
+> +	gpio4: gpio {
+> +		compatible = "ti,tps65912-gpio";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
+> new file mode 100644
+> index 0000000..65426b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+> @@ -0,0 +1,51 @@
+> +* TPS65912 Power Management Integrated Circuit bindings
+> +
+> +Required properties:
+> + - compatible		: Should be "ti,tps65912".
+> + - reg			: Slave address or chip select number (I2C / SPI).
+> + - interrupt-parent	: The parent interrupt controller.
+> + - interrupts		: The interrupt line the device is connected to.
+> + - interrupt-controller	: Marks the device node as an interrupt controller.
+> + - #interrupt-cells	: The number of cells to describe an IRQ, this should be 2.
+> +			    The first cell is the IRQ number.
+> +			    The second cell is the flags, encoded as the trigger masks from
+> +			    ../interrupt-controller/interrupts.txt.
+> +
+> +Additional nodes defined in:
+> + - Regulators: ../regulator/tps65912-regulator.txt
+> + - GPIO: ../gpio/gpio-tps65912.txt.
+> +
+> +Example:
+> +
+> +	pmic: tps65912@2d {
+> +		compatible = "ti,tps65912";
+> +		reg = <0x2d>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +
+> +		regulators {
+> +			compatible = "ti,tps65912-regulator";
+> +
+> +			dcdc1 {
+> +				regulator-name = "vdd_core";
+> +				regulator-min-microvolt = <912000>;
+> +				regulator-max-microvolt = <1144000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo1 {
+> +				regulator-name = "ldo1";
+> +				regulator-min-microvolt = <1900000>;
+> +				regulator-max-microvolt = <1900000>;
+> +			};
+> +		};
+> +
+> +		gpio4: gpio {
+> +			compatible = "ti,tps65912-gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +	};
+> diff --git a/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+> new file mode 100644
+> index 0000000..b81973d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+> @@ -0,0 +1,28 @@
+> +* TPS65912 regulator bindings
+> +
+> +Required properties:
+> + - compatible		: Should be "ti,tps65912-regulator".
+> + - list of regulators provided by this controller, must be named
+> +     after their hardware counterparts: dcdc[1-4] and ldo[1-10].
+> +
+> +Each regulator is defined using the standard binding for regulators.
+> +
+> +Example:
+> +
+> +	regulator {
+> +		compatible = "ti,tps65912-regulator";
+> +
+> +		dcdc1 {
+> +			regulator-name = "vdd_core";
+> +			regulator-min-microvolt = <912000>;
+> +			regulator-max-microvolt = <1144000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		ldo1 {
+> +			regulator-name = "ldo1";
+> +			regulator-min-microvolt = <1900000>;
+> +			regulator-max-microvolt = <1900000>;
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
