@@ -1,7 +1,7 @@
 From: Kapil Hali <kapilh@broadcom.com>
-Subject: [PATCH v3 2/4] ARM: dts: add SMP support for Broadcom NSP
-Date: Fri, 6 Nov 2015 16:11:11 -0500
-Message-ID: <1446844273-6460-3-git-send-email-kapilh@broadcom.com>
+Subject: [PATCH v3 4/4] ARM: BCM: Add SMP support for Broadcom 4708
+Date: Fri, 6 Nov 2015 16:11:13 -0500
+Message-ID: <1446844273-6460-5-git-send-email-kapilh@broadcom.com>
 References: <1446844273-6460-1-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,63 +12,58 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kapil Hali <kapilh@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree changes required for providing SMP support
-for Broadcom Northstar Plus SoC.
+From: Jon Mason <jonmason@broadcom.com>
 
+Add SMP support for Broadcom's 4708 SoCs.
+
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
 Signed-off-by: Kapil Hali <kapilh@broadcom.com>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/bcm4708.dtsi | 2 ++
+ arch/arm/mach-bcm/Kconfig      | 1 +
+ arch/arm/mach-bcm/Makefile     | 3 +++
+ 3 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 58aca27..d1875d9 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -40,24 +40,33 @@
- 	model = "Broadcom Northstar Plus SoC";
- 	interrupt-parent = <&gic>;
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm-nsp-smp";
-+		secondary-boot-reg = <0xffff042c>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x1>;
-+		};
-+	};
-+
- 	mpcore {
- 		compatible = "simple-bus";
- 		ranges = <0x00000000 0x19020000 0x00003000>;
+diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+index 31141e8..22a41df 100644
+--- a/arch/arm/boot/dts/bcm4708.dtsi
++++ b/arch/arm/boot/dts/bcm4708.dtsi
+@@ -15,6 +15,8 @@
+ 	cpus {
  		#address-cells = <1>;
- 		#size-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "brcm,bcm-nsp-smp";
++		secondary-boot-reg = <0xffff0400>;
  
--		cpus {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			cpu@0 {
--				device_type = "cpu";
--				compatible = "arm,cortex-a9";
--				next-level-cache = <&L2>;
--				reg = <0x0>;
--			};
--		};
--
- 		L2: l2-cache {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x2000 0x1000>;
+ 		cpu@0 {
+ 			device_type = "cpu";
+diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+index 2e9dbb5..4fc8fa3 100644
+--- a/arch/arm/mach-bcm/Kconfig
++++ b/arch/arm/mach-bcm/Kconfig
+@@ -54,6 +54,7 @@ config ARCH_BCM_NSP
+ config ARCH_BCM_5301X
+ 	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
+ 	select ARCH_BCM_IPROC
++	select HAVE_SMP
+ 	help
+ 	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
+ 
+diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+index 5193a25..7d66515 100644
+--- a/arch/arm/mach-bcm/Makefile
++++ b/arch/arm/mach-bcm/Makefile
+@@ -43,6 +43,9 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
+ 
+ # BCM5301X
+ obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
++ifeq ($(CONFIG_ARCH_BCM_5301X),y)
++obj-$(CONFIG_SMP)		+= platsmp.o
++endif
+ 
+ # BCM63XXx
+ ifeq ($(CONFIG_ARCH_BCM_63XX),y)
 -- 
 2.1.0
