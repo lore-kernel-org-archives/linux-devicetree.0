@@ -1,57 +1,129 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] MAINTAINERS: update DT binding doc locations
-Date: Fri, 6 Nov 2015 05:25:07 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F44D0CB2@IN01WEMBXA.internal.synopsys.com>
-References: <1446752475-2708-1-git-send-email-robh@kernel.org>
+From: <gregkh@linuxfoundation.org>
+Subject: Patch "MFD/OF: document MFD devices and handle simple-mfd" has been added to the 4.1-stable tree
+Date: Thu, 05 Nov 2015 22:58:38 -0800
+Message-ID: <144679311811250@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, arcml <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linus.walleij@linaro.org, alexandre.belloni@free-electrons.com, antoine.tenart@free-electrons.com, arnd@arndb.de, benh@kernel.crashing.org, devicetree@vger.kernel.org, galak@codeaurora.org, grant.likely@linaro.org, gregkh@linuxfoundation.org, hjp@liab.dk, ijc+devicetree@hellion.org.uk, lee.jones@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+Cc: stable@vger.kernel.org, stable-commits@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 06 November 2015 01:11 AM, Rob Herring wrote:
-> After the recent moving of DT binding documents, some maintainers entries
-> are stale. Update them to the new locations.
->
-> In bindings/fb/, there were only 2 files and I'm assuming the FB
-> maintainers don't want to be copied on all of bindings/display/. So I've
-> dropped them.
->
-> Reported-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-For arc bits:
-Acked-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+This is a note to let you know that I've just added the patch titled
 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> ...
->  
-> @@ -10072,6 +10072,7 @@ M:	Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->  S:	Supported
->  F:	arch/arc/
->  F:	Documentation/devicetree/bindings/arc/*
-> +F:	Documentation/devicetree/bindings/interrupt-controller/snps,arc*
->  F:	drivers/tty/serial/arc_uart.c
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git
->  
+    MFD/OF: document MFD devices and handle simple-mfd
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+to the 4.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mfd-of-document-mfd-devices-and-handle-simple-mfd.patch
+and it can be found in the queue-4.1 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+>From 22869a9eca4ea5b534538d160b68c7aef44e378a Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 3 Mar 2015 09:52:20 +0100
+Subject: MFD/OF: document MFD devices and handle simple-mfd
+
+From: Linus Walleij <linus.walleij@linaro.org>
+
+commit 22869a9eca4ea5b534538d160b68c7aef44e378a upstream.
+
+This defines a new compatible option for MFD devices "simple-mfd" that will
+make the OF core spawn child devices for all subnodes of that MFD device.
+It is optional but handy for things like syscon and possibly other
+simpler MFD devices.
+
+Since there was no file to put the documentation in, I took this opportunity
+to make a small writeup on MFD devices and add the compatible definition
+there.
+
+Suggested-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Devicetree <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Henrik Juul Pedersen <hjp@liab.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Documentation/devicetree/bindings/mfd/mfd.txt |   41 ++++++++++++++++++++++++++
+ drivers/of/platform.c                         |    1 
+ 2 files changed, 42 insertions(+)
+
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+@@ -0,0 +1,41 @@
++Multi-Function Devices (MFD)
++
++These devices comprise a nexus for heterogeneous hardware blocks containing
++more than one non-unique yet varying hardware functionality.
++
++A typical MFD can be:
++
++- A mixed signal ASIC on an external bus, sometimes a PMIC (Power Management
++  Integrated Circuit) that is manufactured in a lower technology node (rough
++  silicon) that handles analog drivers for things like audio amplifiers, LED
++  drivers, level shifters, PHY (physical interfaces to things like USB or
++  ethernet), regulators etc.
++
++- A range of memory registers containing "miscellaneous system registers" also
++  known as a system controller "syscon" or any other memory range containing a
++  mix of unrelated hardware devices.
++
++Optional properties:
++
++- compatible : "simple-mfd" - this signifies that the operating system should
++  consider all subnodes of the MFD device as separate devices akin to how
++  "simple-bus" inidicates when to see subnodes as children for a simple
++  memory-mapped bus. For more complex devices, when the nexus driver has to
++  probe registers to figure out what child devices exist etc, this should not
++  be used. In the latter case the child devices will be determined by the
++  operating system.
++
++Example:
++
++foo@1000 {
++	compatible = "syscon", "simple-mfd";
++	reg = <0x01000 0x1000>;
++
++	led@08.0 {
++		compatible = "register-bit-led";
++		offset = <0x08>;
++		mask = <0x01>;
++		label = "myled";
++		default-state = "on";
++	};
++};
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -25,6 +25,7 @@
+ 
+ const struct of_device_id of_default_bus_match_table[] = {
+ 	{ .compatible = "simple-bus", },
++	{ .compatible = "simple-mfd", },
+ #ifdef CONFIG_ARM_AMBA
+ 	{ .compatible = "arm,amba-bus", },
+ #endif /* CONFIG_ARM_AMBA */
+
+
+Patches currently in stable-queue which might be from linus.walleij@linaro.org are
+
+queue-4.1/iio-st_accel-fix-interrupt-handling-on-lis3lv02.patch
+queue-4.1/mfd-of-document-mfd-devices-and-handle-simple-mfd.patch
