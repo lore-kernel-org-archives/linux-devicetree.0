@@ -1,107 +1,103 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.1 72/86] MFD/OF: document MFD devices and handle simple-mfd
-Date: Fri,  6 Nov 2015 11:23:11 -0800
-Message-ID: <20151106192208.892194650@linuxfoundation.org>
-References: <20151106192205.351595349@linuxfoundation.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/19] clk: sunxi: Add display clock
+Date: Fri, 6 Nov 2015 11:42:20 -0800
+Message-ID: <20151106194220.GK6114@lukather>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-2-git-send-email-maxime.ripard@free-electrons.com>
+ <CAGb2v65uzLgKkxKh9RN58w1FZGRJKSbMFmdhZxnRzCdCArBuPw@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151106192205.351595349@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Antoine Tenart <antoine.tenart@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Henrik Juul Pedersen <hjp@liab.dk>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b/6gol1SqNxk8K3i"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBHUF6SYQKGQEJACXZEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65uzLgKkxKh9RN58w1FZGRJKSbMFmdhZxnRzCdCArBuPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-4.1-stable review patch.  If anyone has any objections, please let me know.
+--b/6gol1SqNxk8K3i
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-------------------
+Hi,
 
-From: Linus Walleij <linus.walleij@linaro.org>
+On Sat, Oct 31, 2015 at 06:28:16PM +0800, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > The A10 SoCs and its relatives has a special clock controller to drive the
+> > display engines (both frontend and backend).
+> >
+> > Add a driver for it.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/clk/sunxi/Makefile            |   1 +
+> >  drivers/clk/sunxi/clk-sun4i-display.c | 199 ++++++++++++++++++++++++++++++++++
+> >  2 files changed, 200 insertions(+)
+> >  create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
+> >
+> > diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+> > index cb4c299214ce..a9e1a5885846 100644
+> > --- a/drivers/clk/sunxi/Makefile
+> > +++ b/drivers/clk/sunxi/Makefile
+> > @@ -9,6 +9,7 @@ obj-y += clk-a10-mod1.o
+> >  obj-y += clk-a10-pll2.o
+> >  obj-y += clk-a20-gmac.o
+> >  obj-y += clk-mod0.o
+> > +obj-y += clk-sun4i-display.o
+> >  obj-y += clk-simple-gates.o
+> >  obj-y += clk-sun8i-mbus.o
+> >  obj-y += clk-sun9i-core.o
+> > diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
+> > new file mode 100644
+> > index 000000000000..f13b095c6d7a
+> > --- /dev/null
+> > +++ b/drivers/clk/sunxi/clk-sun4i-display.c
+> > @@ -0,0 +1,199 @@
+> > +/*
+> > + * Copyright 2015 Maxime Ripard
+> > + *
+> > + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/reset-controller.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#define SUN4I_A10_DISPLAY_PARENTS      3
+> 
+> Can we change this to 4, so we can reuse this for TCON clocks on
+> sun4i/sun7i?
 
-commit 22869a9eca4ea5b534538d160b68c7aef44e378a upstream.
+Good point, I'll change this.
 
-This defines a new compatible option for MFD devices "simple-mfd" that will
-make the OF core spawn child devices for all subnodes of that MFD device.
-It is optional but handy for things like syscon and possibly other
-simpler MFD devices.
+Thanks!
+Maxime
 
-Since there was no file to put the documentation in, I took this opportunity
-to make a small writeup on MFD devices and add the compatible definition
-there.
-
-Suggested-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Devicetree <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: Henrik Juul Pedersen <hjp@liab.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- Documentation/devicetree/bindings/mfd/mfd.txt |   41 ++++++++++++++++++++++++++
- drivers/of/platform.c                         |    1 
- 2 files changed, 42 insertions(+)
-
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-@@ -0,0 +1,41 @@
-+Multi-Function Devices (MFD)
-+
-+These devices comprise a nexus for heterogeneous hardware blocks containing
-+more than one non-unique yet varying hardware functionality.
-+
-+A typical MFD can be:
-+
-+- A mixed signal ASIC on an external bus, sometimes a PMIC (Power Management
-+  Integrated Circuit) that is manufactured in a lower technology node (rough
-+  silicon) that handles analog drivers for things like audio amplifiers, LED
-+  drivers, level shifters, PHY (physical interfaces to things like USB or
-+  ethernet), regulators etc.
-+
-+- A range of memory registers containing "miscellaneous system registers" also
-+  known as a system controller "syscon" or any other memory range containing a
-+  mix of unrelated hardware devices.
-+
-+Optional properties:
-+
-+- compatible : "simple-mfd" - this signifies that the operating system should
-+  consider all subnodes of the MFD device as separate devices akin to how
-+  "simple-bus" inidicates when to see subnodes as children for a simple
-+  memory-mapped bus. For more complex devices, when the nexus driver has to
-+  probe registers to figure out what child devices exist etc, this should not
-+  be used. In the latter case the child devices will be determined by the
-+  operating system.
-+
-+Example:
-+
-+foo@1000 {
-+	compatible = "syscon", "simple-mfd";
-+	reg = <0x01000 0x1000>;
-+
-+	led@08.0 {
-+		compatible = "register-bit-led";
-+		offset = <0x08>;
-+		mask = <0x01>;
-+		label = "myled";
-+		default-state = "on";
-+	};
-+};
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -25,6 +25,7 @@
- 
- const struct of_device_id of_default_bus_match_table[] = {
- 	{ .compatible = "simple-bus", },
-+	{ .compatible = "simple-mfd", },
- #ifdef CONFIG_ARM_AMBA
- 	{ .compatible = "arm,amba-bus", },
- #endif /* CONFIG_ARM_AMBA */
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--b/6gol1SqNxk8K3i--
