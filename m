@@ -1,67 +1,69 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 06/10] pwm: sysfs: make use of the DEVICE_ATTR_[RW][WO]
- macro's
-Date: Fri, 6 Nov 2015 15:52:58 +0100
-Message-ID: <20151106145258.GC8418@ulmo>
-References: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com>
- <1445895161-2317-7-git-send-email-o.schinagl@ultimaker.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445895161-2317-7-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>
-Cc: Olliver Schinagl <oliver@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Olliver Schinagl <oliver+list@schinagl.nl>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH 2/7] drivers:input:tsc2007: send pendown and penup only once like ads7846(+tsc2046) driver does
+Date: Fri,  6 Nov 2015 16:14:44 +0100
+Message-ID: <fb7daf0f65e122b62e3149316849a3aeb3c8e5c3.1446822887.git.hns@goldelico.com>
+References: <cover.1446822887.git.hns@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1446822887.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <cover.1446822887.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+References: <cover.1446822887.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+this should reduce unnecessary input events.
 
---6zdv2QT/q3FMhpsV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+---
+ drivers/input/touchscreen/tsc2007.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-On Mon, Oct 26, 2015 at 10:32:37PM +0100, Olliver Schinagl wrote:
-> From: Olliver Schinagl <oliver@schinagl.nl>
->=20
-> For the npwm property the pwm sysfs interface already made use of the
-> DEVICE_ATTR_RO macro. This patch expands this to the other sysfs
-> properties so that the code base is concise and makes use of this
-> helpful macro.
->=20
-> This has the advantage of slightly reducing the code size, improving
-> readability and no longer using magic values for permissions.
->=20
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> ---
->  drivers/pwm/sysfs.c | 72 ++++++++++++++++++++++++++---------------------=
-------
->  1 file changed, 36 insertions(+), 36 deletions(-)
+diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007.c
+index e0c7173..1a8a79d 100644
+--- a/drivers/input/touchscreen/tsc2007.c
++++ b/drivers/input/touchscreen/tsc2007.c
+@@ -94,6 +94,7 @@ struct tsc2007 {
+ 
+ 	wait_queue_head_t	wait;
+ 	bool			stopped;
++	bool			pendown;
+ 
+ 	int			(*get_pendown_state)(struct device *);
+ 	void			(*clear_penirq)(void);
+@@ -251,7 +252,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
+ 			dev_dbg(&ts->client->dev,
+ 					"shaped point(%4d,%4d), pressure (%4u)\n",
+ 					tc.x, tc.y, rt);
+-			input_report_key(input, BTN_TOUCH, 1);
++			if (!ts->pendown) {
++				input_report_key(input, BTN_TOUCH, 1);
++				ts->pendown = true;
++			}
+ 			input_report_abs(input, ABS_X, tc.x);
+ 			input_report_abs(input, ABS_Y, tc.y);
+ 			input_report_abs(input, ABS_PRESSURE, rt);
+@@ -272,9 +276,13 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
+ 
+ 	dev_dbg(&ts->client->dev, "UP\n");
+ 
+-	input_report_key(input, BTN_TOUCH, 0);
+-	input_report_abs(input, ABS_PRESSURE, 0);
+-	input_sync(input);
++	if (ts->pendown) {
++		input_report_key(input, BTN_TOUCH, 0);
++		input_report_abs(input, ABS_PRESSURE, 0);
++		input_sync(input);
++
++		ts->pendown = false;
++	}
+ 
+ 	if (ts->clear_penirq)
+ 		ts->clear_penirq();
+-- 
+2.5.1
 
-Applied, thanks.
-
-Thierry
-
---6zdv2QT/q3FMhpsV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWPL7KAAoJEN0jrNd/PrOh+JIP/iD1ri4czkiNsNao+LyFWqg1
-X197/e70AgDzTZ7O4wiW5KDYBLEH4Mp6MS8gZUBucE+J/w4Q2nw8rvzI420kR8EK
-P5M5acZw7+tmSNmjxI43wpVof5hc6goI4BYCDY3/lWhuPIKhtzXvF3ZD3Gli34es
-0z9oScZn9QPXVSbxwoHtkKs/M1tJyzEXSP/eudt83kivcotMO4PhuvlrNsvJ/fBW
-nPPEKAcNuUacuCJWjpj4wYKPcXTfhohrowSZXRf0hqR+FTHf+4fGCy4hyrcx4Q1q
-9uyiK8p/hvAbHavTS/baP1T4hH7xFO6qYQhKdl2kf/A2rp2wMexPB013V277/NZR
-gx2zpt2U1fy7CJmkzwNLy3OQGPsGNxNZOgZ9qdFZroJxNdnCZ0dkDGgrLzGyhs9T
-Z4HimiTY1aKNQOkFcixUzFnm7WHgSXNsfJpqZ+w0IrpDSJBU0ZK3TMx4iDyYSh1W
-bA4ZYYkS1tzVhIZlRuLExVF8T/Cad5CKWatEBgVOv6/woq3z3/yzC8SKdVOpH+99
-VtcI3pTFg/bH/Zh2NMolUmcOMBtYZKVQvRC8B4Ay12C/H7d+/5SRAFOT8uqLCluR
-VdWthLdePWeAnsvccqUHPN+IkDtviFOTDYS13QzWnqAQ9b4nk2HeCHaE3ok3biFe
-gWeoTFSGhuf/FaebCnyo
-=4eAW
------END PGP SIGNATURE-----
-
---6zdv2QT/q3FMhpsV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
