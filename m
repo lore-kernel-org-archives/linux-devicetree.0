@@ -1,72 +1,71 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 09/19] drm: sun4i: Add DT bindings documentation
-Date: Fri, 6 Nov 2015 14:32:29 -0800
-Message-ID: <20151106223229.GM6114@lukather>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-10-git-send-email-maxime.ripard@free-electrons.com>
- <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add documentation for
+ s2mps15 PMIC
+Date: Fri, 6 Nov 2015 16:33:39 -0600
+Message-ID: <20151106223339.GA22411@rob-hp-laptop>
+References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
+ <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cO2ZlOvi7VNgmdOy"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDGV6SYQKGQEFLWKZVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+In-Reply-To: <1446186334-16510-2-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---cO2ZlOvi7VNgmdOy
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi Rob,
-
-On Fri, Oct 30, 2015 at 11:40:03AM -0500, Rob Herring wrote:
-> > +Display Engine Backend
-> > +----------------------
-> > +
-> > +The display engine backend exposes layers and sprites to the
-> > +system. It's split into two components, the frontend and backend, the
-> > +frontend doing formats conversion, scaling, deinterlacing, while the
-> > +backend actually manages the layers.
-> > +
-> > +Required properties:
-> > +  - compatible: value must be one of:
-> > +    * allwinner,sun5i-a13-display-engine
-> > +
-> > +  - reg: base address and size of the memory-mapped region. Two are needed:
-> > +    * backend0: registers of the display engine backend
-> > +    * frontend0: registers of the display engine frontend
+On Fri, Oct 30, 2015 at 11:55:31AM +0530, Alim Akhtar wrote:
+> From: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > 
-> Why the zeros? I think they should be dropped.
-
-We have SoCs that have two backends and two frontends, hence why I
-added 0. I guess I can also add several devices for them, but then I'd
-need to move to the component framework I guess (which was the plan anyway).
-
-> > +
-> > +  - allwinner,tcon: phandle to the TCON in our pipeline
+> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 device
+> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regulators.
+> This also supports RTC and three 32.768KHz clock outputs.
 > 
-> Use of-graph or just let the relationship live in the driver. If there
-> is only 1 instance of the blocks, the latter is fine.
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt |   21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> index 890f0b0e1643..4c0543ceec25 100644
+> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> @@ -1,5 +1,5 @@
+>  
+> -* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current Regulator
+> +* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
+>  
+>  The Samsung S2MPS11 is a multi-function device which includes voltage and
+>  current regulators, RTC, charger controller and other sub-blocks. It is
+> @@ -7,8 +7,12 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+>  addressed by the host system using different I2C slave addresses.
+>  
+>  Required properties:
+> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-pmic"
+> -	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
+> +- compatible: Should be one of the following
+> +	- "samsung,s2mps11-pmic"
+> +	- "samsung,s2mps13-pmic"
+> +	- "samsung,s2mps14-pmic"
+> +	- "samsung,s2mps15-pmic"
+> +	- "samsung,s2mpu02-pmic".
+>  - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+>  
+>  Optional properties:
+> @@ -24,7 +28,7 @@ Optional properties:
+>    unwanted buck warm reset (setting buck voltages to default values).
+>  
+>  Optional nodes:
+> -- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffered 32.768
+> +- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/BT) buffered 32.768
 
-We can also have several TCON instances in the SoC, and even though
-you can on a theorical point of view use any TCON with any backend,
-usually you're tied because of how the pins are routed on the boards.
+s5m8767 doesn't seem to be documented. Can you please fix or remove.
 
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---cO2ZlOvi7VNgmdOy--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
