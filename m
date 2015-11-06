@@ -1,45 +1,72 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: rockchip: Setup ethernet0 alias for u-boot
-Date: Fri,  6 Nov 2015 11:46:37 +0100
-Message-ID: <1446806797-20912-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Fri, 6 Nov 2015 11:11:38 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
+References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <20151105152736.GO18409@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20151105152736.GO18409@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an ethernet0 alias for the RK3288 mac interface so
-that u-boot can find the device-node and fill in the mac address on
-board that support a wired network interface.
+On November 5, 2015 15:28, Mark Brown wrote:
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> > +/* ALC */
+> > +static void da7218_alc_calib(struct snd_soc_codec *codec)
+> > +{
+> > +	struct da7218_priv *da7218 = snd_soc_codec_get_drvdata(codec);
+> > +	u8 calib_ctrl;
+> > +	int i = 0;
+> > +	bool calibrated = false;
+> > +
+> > +	/* Bypass cache so it saves current settings */
+> > +	regcache_cache_bypass(da7218->regmap, true);
+> 
+> What ensures that nothing else is running at the same time this is?
 
----
+Is a fair point. Originally I was saving the state of registers then
+re-instating them at the end, which worked fine, but then was trying to be
+clever and tidy things up by bypassing the cache instead. Will revert back to
+the previous method.
 
-Changes in v2:
-  - Move alias from a board specific dts to the general rk3288.dtsi
-  - Don't define an all-zero mac-address property, u-boot will always
-    add the local-mac-address property which linux also uses.
+> 
+> > +static int da7218_mic_lvl_det_sw_put(struct snd_kcontrol *kcontrol,
+> > +				     struct snd_ctl_elem_value *ucontrol)
+> > +{
+> 
+> Why is this a user visible control?
 
- arch/arm/boot/dts/rk3288.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+I can envisage in a system you may want to choose which capture channels can
+trigger level detection (if any), and this may change depending on the use-case
+at the time, so having it as a control makes sense to me.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index b905cf6..f7d4c6f 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -52,6 +52,7 @@
- 	interrupt-parent = <&gic>;
- 
- 	aliases {
-+		ethernet0 = &gmac;
- 		i2c0 = &i2c0;
- 		i2c1 = &i2c1;
- 		i2c2 = &i2c2;
--- 
-2.6.2
+> 
+> > +	/* Default all mixers off */
+> > +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_1L, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_1R, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_2L, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_OUTDAI_2R, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_OUTFILT_1L, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_OUTFILT_1R, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_ST_OUTFILT_1L, 0);
+> > +	snd_soc_write(codec, DA7218_DROUTING_ST_OUTFILT_1R, 0);
+> 
+> We generally just use the device defaults, why change them?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I figured it made more sense to have the device start with audio routes disabled
+but I can remove this as it's really not essential.
