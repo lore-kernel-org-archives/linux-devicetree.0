@@ -1,32 +1,40 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 3/6] iommu: add ARM short descriptor page table
- allocator
-Date: Fri, 6 Nov 2015 16:42:52 +0800
-Message-ID: <1446799372.6400.28.camel@mhfsdcap03>
-References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
-	 <1444357388-30257-4-git-send-email-yong.wu@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 3/3] ARM: e3xx: Add header file for pinctrl constants
+Date: Fri, 06 Nov 2015 09:54:46 +0100
+Message-ID: <3715539.QztuvljIIp@wuerfel>
+References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com> <1446766883-25703-4-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444357388-30257-4-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1446766883-25703-4-git-send-email-moritz.fischer@ettus.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-10-09 at 10:23 +0800, Yong Wu wrote:
-> This patch is for ARM Short Descriptor Format.
-> 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
+On Thursday 05 November 2015 15:41:23 Moritz Fischer wrote:
+> +/* Pin names for the E31x usecase */
+> +#define E31X_TX_BANDSEL_2      "DB_1"
+> +#define E31X_RX1B_BANDSEL_0    "DB_3"
+> +#define E31X_RX1B_BANDSEL_1    "DB_5"
+> +#define E31X_VCTXRX2_V2                "DB_7"
+> +#define E31X_TX_ENABLE1A       "DB_9"
+> +#define E31X_TX_ENABLE2A       "DB_11"
+> +#define E31X_TX_BANDSEL_0      "DB_12"
 
-Hi Will, Robin,
-   Is there any comment about this patch?
-   As our project request, We are going to prepare the next version.
-Thanks very much.
+Why not put the strings directly into the .dts files and change the
+lookup table in the driver accordingly:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++static const struct pinctrl_pin_desc e3xx_pins[] = {
++       /* pin0 doesn't exist */
++       PINCTRL_PIN(1, "TX_BANDSEL_2"),
++       PINCTRL_PIN(3, "RX1B_BANDSEL_0"),
++       PINCTRL_PIN(5, "RX1B_BANDSEL_1"),
++       PINCTRL_PIN(7, "VCTXRX2_V2"),
+
+That would save you the hassle of the three-way dependency between the
+dts file, the driver and the header when you want to change something
+going through three different maintainer trees.
+
+	arnd
