@@ -1,68 +1,65 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] ARM: BCM: Add SMP support for Broadcom 4708
-Date: Sat, 07 Nov 2015 00:27:51 +0100
-Message-ID: <563D3777.3050208@hauke-m.de>
-References: <1446844273-6460-1-git-send-email-kapilh@broadcom.com> <1446844273-6460-5-git-send-email-kapilh@broadcom.com> <563D1ED1.6050506@hauke-m.de> <20151106225419.GP8792@broadcom.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/19] clk: sunxi: Add display clock
+Date: Fri, 6 Nov 2015 15:39:26 -0800
+Message-ID: <20151106233926.GN6114@lukather>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20151030212902.GG19782@codeaurora.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151106225419.GP8792-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x+FS1wzm/v+2h3Q5"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOXU6SYQKGQEW5JDPEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151030212902.GG19782-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2015 11:54 PM, Jon Mason wrote:
-> On Fri, Nov 06, 2015 at 10:42:41PM +0100, Hauke Mehrtens wrote:
->> On 11/06/2015 10:11 PM, Kapil Hali wrote:
->>> From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>
->>> Add SMP support for Broadcom's 4708 SoCs.
->>>
->>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> Acked-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->>> Tested-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->>> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> I tested this on a Netgear R6250 V1 (BCM4708) and SMP worked.
->>
->>> ---
->>>  arch/arm/boot/dts/bcm4708.dtsi | 2 ++
->>>  arch/arm/mach-bcm/Kconfig      | 1 +
->>>  arch/arm/mach-bcm/Makefile     | 3 +++
->>>  3 files changed, 6 insertions(+)
->>>
->>
->> ...
->>
->>> --- a/arch/arm/mach-bcm/Kconfig
->>> +++ b/arch/arm/mach-bcm/Kconfig
->>> @@ -54,6 +54,7 @@ config ARCH_BCM_NSP
->>>  config ARCH_BCM_5301X
->>>  	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
->>>  	select ARCH_BCM_IPROC
->>
->> You activated ARM_ERRATA_764369 for NSP is this not needed for NS?
+--x+FS1wzm/v+2h3Q5
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi Stephen,
+
+Thanks for your feedback!
+
+On Fri, Oct 30, 2015 at 02:29:02PM -0700, Stephen Boyd wrote:
+> > +
+> > +	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+> > +	if (!mux)
+> [..]
+> > +		goto free_reset;
+> > +	}
+> > +
+> > +	return;
+> > +
+> > +free_reset:
+> > +	kfree(reset_data);
+> > +free_clk:
+> > +	clk_unregister(clk);
 > 
-> I'm not certain the CPU version, and without that it is difficult to
-> know what errata's are present in the underlying hardware.  My guess
-> is that all present in NSP are present in NS (for UP and SMP).  This
-> would put it as:
->         select ARM_ERRATA_754322
->         select ARM_ERRATA_775420
->         select ARM_ERRATA_764369 if SMP
-> 
-> Would you like me to have them added?
-> 
+> We really ought to have a clk_composite_unregister() API.
 
-I will send a separate patch adding all the workarounds for erratas in
-the CPU core and the cache controller.
+Can we?
 
-Hauke
+We can always unregister the clock itself, but do we have a way to
+retrieve the structure that has been allocated in there?
 
+(note that it also applies to the generic clocks registration: muxes,
+dividers, and so on).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--x+FS1wzm/v+2h3Q5--
