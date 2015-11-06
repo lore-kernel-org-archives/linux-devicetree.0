@@ -1,52 +1,53 @@
-From: Matthew McClintock <mmcclint@codeaurora.org>
-Subject: Re: [PATCH 1/5] pinctrl: qcom: ipq4019: Add IPQ4019 pinctrl support
-Date: Thu, 5 Nov 2015 21:24:22 -0600
-Message-ID: <837CDC90-83D6-4E94-9D04-C3CD5BBD628C@codeaurora.org>
-References: <1446761276-9111-1-git-send-email-mmcclint@codeaurora.org> <1446761276-9111-2-git-send-email-mmcclint@codeaurora.org> <20151106023411.GA17997@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 1/2] thermal: mediatek: Add cpu power cooling model.
+Date: Fri, 6 Nov 2015 08:54:33 +0530
+Message-ID: <20151106032433.GL3773@ubuntu>
+References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
+ <1445515359-8587-2-git-send-email-dawei.chien@mediatek.com>
+ <20151104193958.GC14127@localhost.localdomain>
+ <1446721837.4016.57.camel@mtksdaap41>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151106023411.GA17997@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1446721837.4016.57.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com, Sricharan R <sricharan@codeaurora.org>, Mathieu Olivari <mathieu@codeaurora.org>
+To: dawei chien <dawei.chien@mediatek.com>, Javi Merino <javi.merino@arm.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Cc'ing Javi (which you should have as he wrote the power-thing for
+cpu-cooling).
 
-> On Nov 5, 2015, at 8:34 PM, Rob Herring <robh@kernel.org> wrote:
-> 
-> On Thu, Nov 05, 2015 at 04:07:52PM -0600, Matthew McClintock wrote:
->> From: Varadarajan Narayanan <varada@codeaurora.org>
->> 
->> Add pinctrl driver support for IPQ4019 platform
->> 
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
->> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
->> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
->> ---
->> .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt      |  116 ++
->> drivers/pinctrl/qcom/Kconfig                       |    8 +
->> drivers/pinctrl/qcom/Makefile                      |    1 +
->> drivers/pinctrl/qcom/pinctrl-ipq4019.c             | 1280 ++++++++++++++++++++
->> 4 files changed, 1405 insertions(+)
->> create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
->> create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq4019.c
->> 
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
->> new file mode 100644
->> index 0000000..045c5aa
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
->> @@ -0,0 +1,116 @@
->> +Qualcomm Atheros IPQ4019 TLMM block
->> +
->> +Required properties:
->> +- compatible: "qcom,ipq4019-pinctrl"
-> 
-> Perhaps the name should have TLMM in it. Whatever that stands for.
+On 05-11-15, 19:10, dawei chien wrote:
+> This is because our platform currently only support mt8173_cpufreq.c, so
+> that I only add static power model for our owner IC.
 
-Sure, this was a holdover from Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt mostly. Will elaborate on v2 though.
+Bindings are (normally) supposed to be general than a platform
+specific.
 
--M
+> Please understanding that I wouldn't give a DT binding document since I
+> will remove static power table on next version, but I can try to explain
+> it.
+
+Then just don't add things in the first place.
+
+> As far as I know, static power is somewhat leakage of CPU clusters, so
+> that we hardly to find a formula, which can suitable all kinds of CPUs
+> since leakage is different. In ARM IPA framework, static power only need
+> to be defined by who register cpufreq_power_cooling_register. The
+> voltage/power table is just one way to present leakage power of CPUs.
+
+The bindings don't fix the values for static power, but just provides
+a field for platforms to use. Everyone can then send its own power
+figures. Why do you thing it can't be generalized?
+
+> Actually, static power is optional since dynamic power is much more than
+> static power.
+
+Maybe, we should still capture it.
+
+@Javi ?
+
+-- 
+viresh
