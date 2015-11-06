@@ -1,76 +1,72 @@
-From: Jose Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2080A
- SoC
-Date: Fri, 6 Nov 2015 22:45:45 +0000
-Message-ID: <DM2PR0301MB1309536CB3D9024A42ED02C9FE280@DM2PR0301MB1309.namprd03.prod.outlook.com>
-References: <1446846529-10613-1-git-send-email-German.Rivera@freescale.com>
- <CABxcv=n6UTcdskBv8fqRzfes+nCjPaFbCTDGRRDt=MStdepwWA@mail.gmail.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ARM: BCM: Add SMP support for Broadcom 4708
+Date: Fri, 6 Nov 2015 17:54:20 -0500
+Message-ID: <20151106225419.GP8792@broadcom.com>
+References: <1446844273-6460-1-git-send-email-kapilh@broadcom.com>
+ <1446844273-6460-5-git-send-email-kapilh@broadcom.com>
+ <563D1ED1.6050506@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=n6UTcdskBv8fqRzfes+nCjPaFbCTDGRRDt=MStdepwWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <563D1ED1.6050506-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXZpZXIgTWFydGluZXogQ2Fu
-aWxsYXMgW21haWx0bzpqYXZpZXJAZG93aGlsZTAub3JnXQ0KPiBTZW50OiBGcmlkYXksIE5vdmVt
-YmVyIDA2LCAyMDE1IDQ6MTMgUE0NCj4gVG86IFJpdmVyYSBKb3NlLUI0NjQ4Mg0KPiBDYzogUm9i
-IEhlcnJpbmc7IE1hcmsgUnV0bGFuZDsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IExpbnV4IEtlcm5lbDsgU2hhcm1h
-IEJodXBlc2gtQjQ1MzcwOyBMaSBZYW5nLQ0KPiBMZW8tUjU4NDcyOyBZb2RlciBTdHVhcnQtQjA4
-MjQ4DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IEFkZGVkIHN5c2Nvbi1yZWJv
-b3Qgbm9kZSBmb3IgRlNMJ3MNCj4gTFMyMDgwQSBTb0MNCj4gDQo+IEhlbGxvIEouIEdlcm1hbiwN
-Cj4gDQo+IE9uIEZyaSwgTm92IDYsIDIwMTUgYXQgNjo0OCBQTSwgSi4gR2VybWFuIFJpdmVyYQ0K
-PiA8R2VybWFuLlJpdmVyYUBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4gPiBBZGRlZCBzeXMtcmVi
-b290IG5vZGUgdG8gdGhlIEZTTCdzIExTMjA4MEEgU29DIERUIHRvIGxldmVyYWdlIHRoZQ0KPiA+
-IEFSTS1nZW5lcmljIHJlYm9vdCBtZWNoYW5pc20gZm9yIHRoaXMgU29DLiBUaGlzIG1lY2hhbmlz
-bSBpcyBlbmFibGVkDQo+ID4gdGhyb3VnaCBDT05GSUdfUE9XRVJfUkVTRVRfU1lTQ09OLg0KPiA+
-DQo+IA0KPiBXaGF0J3MgaW4gdGhlIGNoYW5nZWxvZyBlbmRzIGFzIGEgcGFydCBvZiB0aGUgY29t
-bWl0IG1lc3NhZ2UgYW5kIHVzdWFsbHkNCj4gdGhlIGNoYW5nZSBoaXN0b3J5IGlzIG5vdCBhZGRl
-ZCB0aGVyZS4uLg0KPiANCllvdSBhcmUgcmlnaHQsIHRoYW5rcy4gSSBmb3Jnb3QgdG8gbW92ZSB0
-aGUgQ0hBTkdFIEhJU1RPUlkgdG8gYmUgYmVsb3cgdGhlICItLS0iDQpNYXJrZXIuIEknbGwgcmVw
-b3N0IHRoZSBwYXRjaC4NCg0KPiA+IENIQU5HRSBISVNUT1JZOg0KPiA+DQo+ID4gQ2hhbmdlcyBp
-biB2MzoNCj4gPiAtIEFkZHJlc3NlZCBjb21tZW50IGZyb20gU3R1YXJ0IFlvZGVyDQo+ID4gICAq
-IEZpeGVkIGNvbW1pdCBtZXNzYWdlIHRvIHJlZmVyIHRvIExTMjA4MEEgaW5zdGVhZCBvZiBMUzIw
-ODVBLg0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAtIEFkZHJlc3NlZCBjb21tZW50IGZv
-cm0gU3R1YXJ0IFlvZGVyOg0KPiA+ICAgKiBSZW1vdmVkICJAPGFkZHJlc3M+IiBmcm9tIHJlYm9v
-dCBub2RlDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+IC0gQWRkcmVzc2VkIGNvbW1lbnQg
-Zm9ybSBTdHVhcnQgWW9kZXI6DQo+ID4gICAqIEV4cG9zZSBvbmx5IHRoZSByZXNldCByZWdpc3Rl
-cg0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2NDoNCj4gPiAtIEFkZHJlc3NlZCBjb21tZW50IGZyb20g
-QXJuZCBCZXJnbWFubjoNCj4gPiAgICogQ2hhbmdlZCBjb21wYXRpYmxlIHN0cmluZyB0byBiZSBt
-b3JlIHNwZWNpZmljDQo+ID4gICAqIENoYW5nZWQgbm9kZSBuYW1lIHRvICdzeXNjb24nIGluc3Rl
-YWQgb2YgJ3JzdGNyJw0KPiA+ICAgKiBDaGFuZ2VkIGFkZHJlc3MgdG8gbG93ZXIgY2FzZSBoZXgN
-Cj4gPiAtIEFkZHJlc3NlZCBjb21tZW50IGZvcm0gU3R1YXJ0IFlvZGVyOg0KPiA+ICAgKiBSZWJh
-c2Ugb24gdG9wIG9mIGJyYW5jaCBhcm0tc29jL2Zvci1uZXh0DQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBKLiBHZXJtYW4gUml2ZXJhIDxHZXJtYW4uUml2ZXJhQGZyZWVzY2FsZS5jb20+DQo+ID4g
-LS0tDQo+IA0KPiAuLi5zbyB0aGUgY2hhbmdlIGhpc3Rvcnkgc2hvdWxkIGJlIGFkZGVkIGhlcmUs
-IGJldHdlZW4gdGhlICctLS0nDQo+IG1hcmtlciBsaW5lIGFuZCB0aGUgcGF0Y2ggZGlmZiBzaW5j
-ZSB0aGF0IHNlY3Rpb24gaXMgb21pdHRlZCBieSB0b29scw0KPiBsaWtlIGdpdC1hbSB3aGVuIGFw
-cGx5aW5nIHBhdGNoZXMuDQo+IA0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9m
-c2wtbHMyMDgwYS5kdHNpIHwgMTIgKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAx
-MiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
-cy9mcmVlc2NhbGUvZnNsLWxzMjA4MGEuZHRzaQ0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMjA4MGEuZHRzaQ0KPiA+IGluZGV4IGU4MWNkNDguLmE3OTBhOTAgMTAw
-NjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4MGEu
-ZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwODBh
-LmR0c2kNCj4gPiBAQCAtMTUzLDYgKzE1MywxOCBAQA0KPiA+ICAgICAgICAgICAgICAgICB9Ow0K
-PiA+ICAgICAgICAgfTsNCj4gPg0KPiA+ICsgICAgICAgcnN0Y3I6IHN5c2NvbkAxZTYwMDAwIHsN
-Cj4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMyMDg1YS1yc3RjciIsICJz
-eXNjb24iOw0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MWU2MDAwMCAweDAgMHg0
-PjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgcmVib290IHsNCj4gPiArICAg
-ICAgICAgICAgICAgY29tcGF0aWJsZSA9InN5c2Nvbi1yZWJvb3QiOw0KPiA+ICsgICAgICAgICAg
-ICAgICByZWdtYXAgPSA8JnJzdGNyPjsNCj4gPiArICAgICAgICAgICAgICAgb2Zmc2V0ID0gPDB4
-MD47DQo+ID4gKyAgICAgICAgICAgICAgIG1hc2sgPSA8MHgyPjsNCj4gPiArICAgICAgIH07DQo+
-ID4gKw0KPiA+ICAgICAgICAgdGltZXIgew0KPiA+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gImFybSxhcm12OC10aW1lciI7DQo+ID4gICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
-MSAxMyAweDg+LCAvKiBQaHlzaWNhbCBTZWN1cmUgUFBJLA0KPiA+IGFjdGl2ZS1sb3cgKi8NCj4g
-PiAtLQ0KPiANCj4gVGhlIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWUgdGhvdWdoLg0KPiANCj4gUmV2
-aWV3ZWQtYnk6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNv
-bT4NCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4gSmF2aWVyDQo=
+On Fri, Nov 06, 2015 at 10:42:41PM +0100, Hauke Mehrtens wrote:
+> On 11/06/2015 10:11 PM, Kapil Hali wrote:
+> > From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add SMP support for Broadcom's 4708 SoCs.
+> > 
+> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > Acked-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> > Tested-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> > Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> I tested this on a Netgear R6250 V1 (BCM4708) and SMP worked.
+> 
+> > ---
+> >  arch/arm/boot/dts/bcm4708.dtsi | 2 ++
+> >  arch/arm/mach-bcm/Kconfig      | 1 +
+> >  arch/arm/mach-bcm/Makefile     | 3 +++
+> >  3 files changed, 6 insertions(+)
+> > 
+> 
+> ...
+> 
+> > --- a/arch/arm/mach-bcm/Kconfig
+> > +++ b/arch/arm/mach-bcm/Kconfig
+> > @@ -54,6 +54,7 @@ config ARCH_BCM_NSP
+> >  config ARCH_BCM_5301X
+> >  	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
+> >  	select ARCH_BCM_IPROC
+> 
+> You activated ARM_ERRATA_764369 for NSP is this not needed for NS?
+
+I'm not certain the CPU version, and without that it is difficult to
+know what errata's are present in the underlying hardware.  My guess
+is that all present in NSP are present in NS (for UP and SMP).  This
+would put it as:
+        select ARM_ERRATA_754322
+        select ARM_ERRATA_775420
+        select ARM_ERRATA_764369 if SMP
+
+Would you like me to have them added?
+
+Thanks,
+Jon
+
+> 
+> 
+> > +	select HAVE_SMP
+> >  	help
+> >  	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
+> >  
+> 
+> ...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
