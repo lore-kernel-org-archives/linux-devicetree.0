@@ -1,27 +1,76 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 1/3] Documentation: dt: Add devicetree bindings for NI USRP E3xx pinconf
-Date: Fri, 06 Nov 2015 09:56:09 +0100
-Message-ID: <13386304.3r3On4b7Qg@wuerfel>
-References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com> <1446766883-25703-2-git-send-email-moritz.fischer@ettus.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 4/4] crypto: rockchip/crypto - add DT bindings documentation
+Date: Fri, 06 Nov 2015 10:00:22 +0100
+Message-ID: <5400475.WGQH63T0iE@phil>
+References: <1446772644-2352-1-git-send-email-zain.wang@rock-chips.com> <1446772644-2352-5-git-send-email-zain.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1446766883-25703-2-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1446772644-2352-5-git-send-email-zain.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zain Wang <zain.wang@rock-chips.com>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 November 2015 15:41:21 Moritz Fischer wrote:
-> +       e3xx_pinctrl: e3xx-pinctrl@40200a00 {
+Am Freitag, 6. November 2015, 09:17:24 schrieb Zain Wang:
+> Add DT bindings documentation for the rk3288 crypto drivers.
+> 
+> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+> ---
+> 
+> Changde in v2:
+> - None
+> 
+> Changed in v1:
+> - remove the _crypto suffix
+> - use "rockchip,rk3288-crypto" instead of "rockchip,rk3288"
+> - remove the description of status
+> 
+>  .../devicetree/bindings/crypto/rockchip-crypto.txt | 29 
+++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/rockchip-
+crypto.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt 
+b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+> new file mode 100644
+> index 0000000..d27e203
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+> @@ -0,0 +1,29 @@
+> +Rockchip Electronics And Security Accelerator
+> +
+> +Required properties:
+> +- compatible: Should be "rockchip,rk3288-crypto"
+> +- reg: base physical address of the engine and length of memory mapped
+> +       region
+> +- interrupts: interrupt number
+> +- clocks: reference to the clocks about crypto
+> +- clock-names: "aclk" used to clock data
+> +	       "hclk" used to clock data
+> +	       "srst" used to clock crypto accelerator
 
-Just "pinctrl@40200a00"
+mistmatch between description and example. I think you mean "sclk" instead of 
+"srst", like we talked about in the first version.
 
-> +               compatible = "ettus,e3xx-pinctrl-1.0";
-
-no wildcards in the name, use exact chip revisions here. If two chips
-use the same one, add a fallback to the older version in the dts file
-of the newer one.
-
-	Arnd
+> +	       "apb_pclk" used to clock dma
+> +
+> +Examples:
+> +
+> +	crypto: cypto-controller@ff8a0000 {
+> +		compatible = "rockchip,rk3288-crypto";
+> +		reg = <0xff8a0000 0x4000>;
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru ACLK_CRYPTO>,
+> +			 <&cru HCLK_CRYPTO>,
+> +			 <&cru SCLK_CRYPTO>,
+> +			 <&cru ACLK_DMAC1>;
+> +		clock-names = "aclk",
+> +			      "hclk",
+> +			      "sclk",
+> +			      "apb_pclk";
+> +		status = "okay";
+> +	};
+> 
