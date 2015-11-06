@@ -1,72 +1,66 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 5/5] ARM: dts: AM4372: add entry for qspi mmap region
-Date: Fri, 6 Nov 2015 17:51:10 +0530
-Message-ID: <563C9B36.3010107@ti.com>
-References: <1446545174-14193-1-git-send-email-vigneshr@ti.com>
- <1446545174-14193-6-git-send-email-vigneshr@ti.com>
- <20151105235124.GA2805@rob-hp-laptop> <878u6b1zgg.fsf@saruman.tx.rr.com>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH RESEND 0/4] SMP support for Broadcom NSP
+Date: Fri, 6 Nov 2015 17:55:02 +0530
+Message-ID: <563C9C1E.1080202@broadcom.com>
+References: <1446702681-45339-1-git-send-email-kapilh@broadcom.com>
+ <20151105093443.GO8644@n2100.arm.linux.org.uk> <563BBB3A.6010605@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <878u6b1zgg.fsf@saruman.tx.rr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <563BBB3A.6010605-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/06/2015 10:44 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Rob Herring <robh@kernel.org> writes:
->> On Tue, Nov 03, 2015 at 03:36:14PM +0530, Vignesh R wrote:
->>> Add qspi memory mapped region entries for AM43xx based SoCs. Also,
->>> update the binding documents for the controller to document this change.
+On 11/6/2015 1:55 AM, Hauke Mehrtens wrote:
+> On 11/05/2015 10:34 AM, Russell King - ARM Linux wrote:
+>> On Thu, Nov 05, 2015 at 12:51:17AM -0500, Kapil Hali wrote:
+>>> Hi,
 >>>
->>> Signed-off-by: Vignesh R <vigneshr@ti.com>
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->>
->>> ---
->>>  Documentation/devicetree/bindings/spi/ti_qspi.txt | 5 +++--
->>>  arch/arm/boot/dts/am4372.dtsi                     | 4 +++-
->>>  2 files changed, 6 insertions(+), 3 deletions(-)
+>>> This series adds SMP support for Broadcom's Northstar Plus SoC.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
->>> index f05dd631bef1..05488970060b 100644
->>> --- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
->>> +++ b/Documentation/devicetree/bindings/spi/ti_qspi.txt
->>> @@ -17,9 +17,10 @@ Recommended properties:
->>>  
->>>  Example:
->>>  
->>> +For am4372:
->>>  qspi: qspi@4b300000 {
->>> -	compatible = "ti,dra7xxx-qspi";
->>> -	reg = <0x47900000 0x100>, <0x30000000 0x3ffffff>;
->>> +	compatible = "ti,am4372-qspi";
->>> +	reg = <0x47900000 0x100>, <0x30000000 0x4000000>;
->>>  	reg-names = "qspi_base", "qspi_mmap";
->>>  	#address-cells = <1>;
->>>  	#size-cells = <0>;
+>>> There are similar SMP enablement methods for many ARMv7 bsed SoCs.
+>>> BCM NSP SoC, has a typical such mechanism - after power-on, the
+>>> secondary core is held in a standby state, primary core provides a
+>>> startup address for the secondary core and wakes it up. Booting of
+>>> the secondary core is serialized using pen_release global variable.
+>>
+>> Why do you need the pen_release stuff?  The above implies that you
+>> have only one secondary core, and you can control when it comes out
+>> of standby state.
+>>
+>> Please, don't assume that the pen_release stuff is any kind of recommended
+>> or standardised system.  It isn't.  It's a hack for ARMs evaluation
+>> platforms.
+>>
 > 
-> and how does the user for this look like ? Don't you need to give this a
-> proper 'ranges' binding ?
+> I tried to remove the pen code because I also thought/hoped that it is
+> useless, but the 2. CPU did not boot any more after I removed it. I do
+> not know the internals of SoC, but it looks like this is needed.
 > 
-
-
-There are no other users of qspi_mmap region except ti-qspi driver itself:
-In probe:
-	res_mmap = platform_get_resource_byname(pdev,
-			IORESOURCE_MEM, "qspi_mmap");
-	qspi->mmap_base = devm_ioremap_resource(&pdev->dev, res_mmap);
-
-and for reading from mmap region:
-	memcpy_fromio(buf, qspi->mmap_base + from, len);
-
--- 
-Regards
-Vignesh
+> I described it here:
+> http://www.spinics.net/lists/arm-kernel/msg452178.html
+> 
+> I removed this comparison and the jump afterwards ("cmp     r7, r0") and
+> the 2. CPU did not boot any more. Is this pen stuff some kind of
+> workaround for some bug in the silicon?
+> 
+pen stuff is not a work around for any bug in BCM NSP silicon. It was the
+mechanism to bring-up SMP on some of the ARM based SoCs and many silicon
+vendors seem to consider it as a generic mechanism for controlled bring-up
+of SMP. But as is clear from Russel King's comments, it is not a 
+standardized recommended method.
+Also, I removed the pen_release method and it works on BCM NSP SoCs. I 
+will add the changes in the next patch set.
+> Hauke
+> 
+Thanks,
+Kapil Hali
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
