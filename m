@@ -1,87 +1,80 @@
-From: Zain <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] Crypto: add crypto accelerator support for rk3288
-Date: Fri, 6 Nov 2015 17:53:32 +0800
-Message-ID: <563C789C.8020106@rock-chips.com>
-References: <1446772644-2352-1-git-send-email-zain.wang@rock-chips.com>
- <563C0430.9000607@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v7 0/4] Exynos SROMc configuration and Ethernet support for
+ SMDK5410
+Date: Fri, 06 Nov 2015 13:03:45 +0300
+Message-ID: <cover.1446799912.git.p.fedin@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <563C0430.9000607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch extends Exynos SROM controller driver with ability to configure
+controller outputs and enables SMSC9115 Ethernet chip on SMDK5410 board,
+which is connected via SROMc bank #3.
 
+With this patchset, support for the whole existing SMDK range can be added.
+Actually, only bank number is different.
 
-On 2015=E5=B9=B411=E6=9C=8806=E6=97=A5 09:36, Caesar Wang wrote:
-> Hi
->
-> =E5=9C=A8 2015=E5=B9=B411=E6=9C=8806=E6=97=A5 09:17, Zain Wang =E5=86=
-=99=E9=81=93:
->> This commit support three cipher(AES/DES/DES3) and two
->> chainmode(ecb/cbc),
->> and the more algorithms and new hash drivers will be added later on.
->>
->> Changed in v2:
->> - remove some part about hash
->> - add weak key detection
->> - changed some variate's type
->>
->> Changed in v1:
->> - modify some variate's name
->> - modify some variate's type
->> - modify some return value
->> - remove or modify some print info
->> - use more dev_xxx in probe
->> - modify the prio of cipher
->> - add Kconfig
->>
->> Zain Wang (4):
->>    Crypto: Crypto driver support aes/des/des3 for rk3288
->>    clk: rockchip: set an id for crypto clk
->>    ARM: dts: rockchip: Add Crypto drivers for rk3288
->>    crypto: rockchip/crypto - add DT bindings documentation
-> I guess the series patchs order should be:
->
-> pacth 1/4 dt-binds/
-> patch 2/4 clk id
-> patch 3/4 crypto driver
-> patch 4/4 dts
->
-ok! done!
->
->
->>
->>   .../devicetree/bindings/crypto/rockchip-crypto.txt |  29 ++
->>   arch/arm/boot/dts/rk3288.dtsi                      |  15 +
->>   drivers/clk/rockchip/clk-rk3288.c                  |   2 +-
->>   drivers/crypto/Kconfig                             |  11 +
->>   drivers/crypto/Makefile                            |   1 +
->>   drivers/crypto/rockchip/Makefile                   |   3 +
->>   drivers/crypto/rockchip/rk3288_crypto.c            | 380
->> +++++++++++++++
->>   drivers/crypto/rockchip/rk3288_crypto.h            | 222 +++++++++
->>   drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c | 511
->> +++++++++++++++++++++
->>   include/dt-bindings/clock/rk3288-cru.h             |   1 +
->>   10 files changed, 1174 insertions(+), 1 deletion(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
->>   create mode 100644 drivers/crypto/rockchip/Makefile
->>   create mode 100644 drivers/crypto/rockchip/rk3288_crypto.c
->>   create mode 100644 drivers/crypto/rockchip/rk3288_crypto.h
->>   create mode 100644 drivers/crypto/rockchip/rk3288_crypto_ablkciphe=
-r.c
->>
->
->
+This patchset also depends on Exynos 5410 pinctrl support, introduced by
+patches 0003 and 0004 from this set:
+[PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
 
+Pinctrl support is necessary in order to correctly configure
+multifunctional pins of the Exynos chip.
+
+v6 => v7:
+- Fixed stupid error in Tacc description in the documentation
+
+v5 => v6:
+- Even more improvements to the documentation, fixed some errors and typos.
+- Separated adding bus ranges from generic SROMc support
+- Some stuff renamed for even better code readability
+- Stylistic cleanups in the DTS (everything in alphabetic order, use named
+  constant name for interrupt config byte)
+
+v4 => v5:
+- Some cosmetic changes in the dtsi ("compatible" goes first)
+- Use correctly specified ranges for the SROMc node
+- Reuse existing properties where possible ("reg" for bank# and
+  "reg-io-width" for data width)
+- Separated page-mode property from timings array
+- More improvements to the documentation
+
+v3 => v4:
+- Devices are now added as subnodes, with additional properties. This allows
+  to cleary specify dependency. If configuration fails, error will be reported
+  and child devices will not be probed.
+- These additional properties now have "samsung,srom-XXX" format
+- Fixed code style, now better understood.
+
+v2 => v3:
+- Fixed up SROMc region size in the device tree
+- Reordered patches, documentation goes first now
+
+v1 => v2:
+- Fixed some typos and bad labels in device tree
+- Improved documentation
+
+Pavel Fedin (4):
+  Documentation: dt-bindings: Describe SROMc configuration
+  ARM: dts: Add SROMc to Exynos 5410
+  drivers: exynos-srom: Add support for bank configuration
+  ARM: dts: Add Ethernet chip to SMDK5410
+
+ .../bindings/arm/samsung/exynos-srom.txt           | 71 +++++++++++++++++++++-
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          | 41 +++++++++++++
+ arch/arm/boot/dts/exynos5410.dtsi                  | 11 ++++
+ arch/arm/mach-exynos/Kconfig                       |  2 +-
+ drivers/soc/samsung/Kconfig                        |  2 +-
+ drivers/soc/samsung/exynos-srom.c                  | 61 ++++++++++++++++++-
+ 6 files changed, 182 insertions(+), 6 deletions(-)
+
+-- 
+2.4.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
