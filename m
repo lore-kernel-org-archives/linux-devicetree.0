@@ -1,102 +1,73 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: [PATCH v7 4/4] ARM: dts: Add Ethernet chip to SMDK5410
-Date: Fri, 06 Nov 2015 13:03:49 +0300
-Message-ID: <d129d652910aa3afb651e2c55382ef5d0bfebcf1.1446799912.git.p.fedin@samsung.com>
-References: <cover.1446799912.git.p.fedin@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <cover.1446799912.git.p.fedin@samsung.com>
-In-reply-to: <cover.1446799912.git.p.fedin@samsung.com>
-References: <cover.1446799912.git.p.fedin@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: rockchip: Add Crypto drivers for rk3288
+Date: Fri, 06 Nov 2015 11:12:55 +0100
+Message-ID: <4509145.eZ7GP0e6gb@phil>
+References: <1446772644-2352-1-git-send-email-zain.wang@rock-chips.com>
+ <1446772644-2352-4-git-send-email-zain.wang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1446772644-2352-4-git-send-email-zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The chip is smsc9115, connected via SROMc bank 3. Additionally, some GPIO
-initialization is required.
+Am Freitag, 6. November 2015, 09:17:23 schrieb Zain Wang:
+> Add Crypto drivers for rk3288 including crypto controller and dma clk.
+> 
+> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changed in v2:
+> - None
+> 
+> Changed in v1:
+> - remove the _crypto suffix
+> - use "rockchip,rk3288-crypto" instead of "rockchip,rk3288"
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 6a79c9c..7b7914e 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -170,6 +170,21 @@
+>  		};
+>  	};
+>  
+> +	crypto: cypto-controller@ff8a0000 {
+> +		compatible = "rockchip,rk3288-crypto";
+> +		reg = <0xff8a0000 0x4000>;
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru ACLK_CRYPTO>,
+> +			 <&cru HCLK_CRYPTO>,
+> +			 <&cru SCLK_CRYPTO>,
+> +			 <&cru ACLK_DMAC1>;
+> +		clock-names = "aclk",
+> +			      "hclk",
+> +			      "sclk",
+> +			      "apb_pclk";
+> +		status = "okay";
+> +	};
+> +
 
-Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos5410-smdk5410.dts | 41 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/exynos5410.dtsi         |  6 +++++
- 2 files changed, 47 insertions(+)
+please move that whole node to the right location. Entries are sorted by 
+register address (the ff8a0000 should then of course be below  i2s@ff890000 
+and above vop@ff930000)
 
-diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-index cebeaab..373abf7 100644
---- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
-+++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-@@ -11,6 +11,7 @@
- 
- /dts-v1/;
- #include "exynos5410.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
- / {
- 	model = "Samsung SMDK5410 board based on EXYNOS5410";
- 	compatible = "samsung,smdk5410", "samsung,exynos5410", "samsung,exynos5";
-@@ -61,6 +62,46 @@
- 	disable-wp;
- };
- 
-+&pinctrl_0 {
-+	srom_ctl: srom-ctl {
-+		samsung,pins = "gpy0-3", "gpy0-4", "gpy0-5",
-+			       "gpy1-0", "gpy1-1", "gpy1-2", "gpy1-3";
-+		samsung,pin-function = <2>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	srom_ebi: srom-ebi {
-+		samsung,pins = "gpy3-0", "gpy3-1", "gpy3-2", "gpy3-3",
-+			       "gpy3-4", "gpy3-5", "gpy3-6", "gpy3-7",
-+			       "gpy5-0", "gpy5-1", "gpy5-2", "gpy5-3",
-+			       "gpy5-4", "gpy5-5", "gpy5-6", "gpy5-7",
-+			       "gpy6-0", "gpy6-1", "gpy6-2", "gpy6-3",
-+			       "gpy6-4", "gpy6-5", "gpy6-6", "gpy6-7";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <3>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&sromc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&srom_ctl>, <&srom_ebi>;
-+
-+	ethernet@3 {
-+		compatible = "smsc,lan9115";
-+		reg = <3 0 0x10000>;
-+		phy-mode = "mii";
-+		interrupt-parent = <&gpx0>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-+		reg-io-width = <2>;
-+		smsc,irq-push-pull;
-+		smsc,force-internal-phy;
-+
-+		samsung,srom-page-mode = <1>;
-+		samsung,srom-timing = <9 12 1 9 1 1>;
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index e2b58f8..9cfb814 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -104,6 +104,12 @@
- 		sromc: sromc@12250000 {
- 			compatible = "samsung,exynos-srom";
- 			reg = <0x12250000 0x14>;
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x04000000 0x20000
-+				  1 0 0x05000000 0x20000
-+				  2 0 0x06000000 0x20000
-+				  3 0 0x07000000 0x20000>;
- 		};
- 
- 		pmu_system_controller: system-controller@10040000 {
--- 
-2.4.4
+
+>  	reserved-memory {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> 
