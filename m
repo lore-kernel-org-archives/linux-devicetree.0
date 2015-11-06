@@ -1,94 +1,147 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: [PATCH RESEND v2 1/4] dt-bindings: add SMP enable-method for Broadcom
- NSP
-Date: Fri, 6 Nov 2015 14:49:28 -0500
-Message-ID: <1446839371-22601-2-git-send-email-kapilh@broadcom.com>
-References: <1446839371-22601-1-git-send-email-kapilh@broadcom.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
+ 'ext-reset-output' dt prop
+Date: Fri, 6 Nov 2015 11:53:42 -0800
+Message-ID: <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
+	<1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
+	<20151105222325.GA26159@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1446839371-22601-1-git-send-email-kapilh@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
- Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell
- King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Heiko Stuebner <heiko@sntech.de>, Hauke Mehrtens <hauke@hauke-m.de>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Kever Yang <kever.yang@rock-chips.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kapil Hali <kapilh@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151105222325.GA26159@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Akshay Bhat <akshay.bhat@timesys.com>, linux-watchdog@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, justin.waters@timesys.com, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Stefan Roese <sr@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
-Northstar Plus CPU to the 32-bit ARM CPU device tree binding
-documentation file and create a new binding documentation for
-Northstar Plus CPU.
+On Thu, Nov 5, 2015 at 2:23 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
+>> From: Tim Harvey <tharvey@gateworks.com>
+>>
+>> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+>> can be pinmux'd to an external pin. This is typically used for boards that
+>> have PMIC's in control of the IMX6 power rails. In fact, failure to use
+>> such an external reset on boards with external PMIC's can result in various
+>> hangs due to the IMX6 not being fully reset [1] as well as the board failing
+>> to reset because its PMIC has not been reset to provide adequate voltage for
+>> the CPU when coming out of reset at 800Mhz.
+>>
+>> This uses a new device-tree property 'ext-reset-output' to indicate the
+>> board has such a reset and to cause the watchdog to be configured to assert
+>> WDOG_B instead of an internal reset both on a watchdog timeout and in
+>> system_restart.
+>>
+>> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
+>>
+>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+>> ---
+>>  .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+>>  drivers/watchdog/imx2_wdt.c                          | 20 ++++++++++++++++++--
+>>  2 files changed, 20 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>> index 8dab6fd..9b89b3a 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>> @@ -9,6 +9,8 @@ Optional property:
+>
+> properties ?
+>
+>>  - big-endian: If present the watchdog device's registers are implemented
+>>    in big endian mode, otherwise in native mode(same with CPU), for more
+>>    detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+>> +- ext-reset-output: If present the watchdog device is configured to assert its
+>
+> Should that have a vendor prefix ? Also, not sure if "-output"
+> has any real value in the property name. "fsl,external-reset", maybe ?
 
-Signed-off-by: Kapil Hali <kapilh@broadcom.com>
----
- .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 36 ++++++++++++++++++++++
- Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
- 2 files changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+Hi Guenter,
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
-new file mode 100644
-index 0000000..8506da7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
-@@ -0,0 +1,36 @@
-+Broadcom Northstar Plus SoC CPU Enable Method
-+---------------------------------------------
-+This binding defines the enable method used for starting secondary
-+CPUs in the following Broadcom SoCs:
-+  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
-+
-+The enable method is specified by defining the following required
-+properties in the "cpus" device tree node:
-+  - enable-method = "brcm,bcm-nsp-smp";
-+  - secondary-boot-reg = <...>;
-+
-+The secondary-boot-reg property is a u32 value that specifies the
-+physical address of the register used to request the ROM holding pen
-+code release a secondary CPU.
-+
-+Example:
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm-nsp-smp";
-+		secondary-boot-reg = <0xffff042c>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <1>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 91e6e5c..6abe3f3 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -191,6 +191,7 @@ nodes to be present and contain the properties described below.
- 			    "allwinner,sun8i-a23"
- 			    "arm,psci"
- 			    "brcm,brahma-b15"
-+			    "brcm,bcm-nsp-smp"
- 			    "marvell,armada-375-smp"
- 			    "marvell,armada-380-smp"
- 			    "marvell,armada-390-smp"
--- 
-2.1.0
+I don't see why a vendor prefix is necessary - its a feature of the
+IMX6 watchdog supported by this driver to be able to trigger an
+internal chip-level reset and/or an external signal that can be hooked
+to additional hardware.
+
+I started with ext-reset, but it was suggested
+(http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/347437.html)
+to also make it clear that this is an 'output' and not a reset input.
+
+>
+>> +  external reset (WDOG_B) instead of issuing a software reset.
+>>
+>>  Examples:
+>>
+>> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+>> index 29ef719..84bfec4 100644
+>> --- a/drivers/watchdog/imx2_wdt.c
+>> +++ b/drivers/watchdog/imx2_wdt.c
+>> @@ -41,6 +41,8 @@
+>>
+>>  #define IMX2_WDT_WCR         0x00            /* Control Register */
+>>  #define IMX2_WDT_WCR_WT              (0xFF << 8)     /* -> Watchdog Timeout Field */
+>> +#define IMX2_WDT_WCR_WDA     (1 << 5)        /* -> External Reset WDOG_B */
+>> +#define IMX2_WDT_WCR_SRS     (1 << 4)        /* -> Software Reset Signal */
+>>  #define IMX2_WDT_WCR_WRE     (1 << 3)        /* -> WDOG Reset Enable */
+>>  #define IMX2_WDT_WCR_WDE     (1 << 2)        /* -> Watchdog Enable */
+>>  #define IMX2_WDT_WCR_WDZST   (1 << 0)        /* -> Watchdog timer Suspend */
+>> @@ -65,6 +67,7 @@ struct imx2_wdt_device {
+>>       struct timer_list timer;        /* Pings the watchdog when closed */
+>>       struct watchdog_device wdog;
+>>       struct notifier_block restart_handler;
+>> +     bool ext_reset;
+>>  };
+>>
+>>  static bool nowayout = WATCHDOG_NOWAYOUT;
+>> @@ -90,6 +93,13 @@ static int imx2_restart_handler(struct notifier_block *this, unsigned long mode,
+>>       struct imx2_wdt_device *wdev = container_of(this,
+>>                                                   struct imx2_wdt_device,
+>>                                                   restart_handler);
+>> +
+>> +     /* Use internal reset or external - not both */
+>> +     if (wdev->ext_reset)
+>> +             wcr_enable |= IMX2_WDT_WCR_SRS; /* do not assert int reset */
+>> +     else
+>> +             wcr_enable |= IMX2_WDT_WCR_WDA; /* do not assert ext-reset */
+>> +
+>>       /* Assert SRS signal */
+>>       regmap_write(wdev->regmap, IMX2_WDT_WCR, wcr_enable);
+>>       /*
+>> @@ -119,8 +129,12 @@ static inline void imx2_wdt_setup(struct watchdog_device *wdog)
+>>       val |= IMX2_WDT_WCR_WDZST;
+>>       /* Strip the old watchdog Time-Out value */
+>>       val &= ~IMX2_WDT_WCR_WT;
+>> -     /* Generate reset if WDOG times out */
+>> -     val &= ~IMX2_WDT_WCR_WRE;
+>> +     /* Generate internal chip-level reset if WDOG times out */
+>> +     if (!wdev->ext_reset)
+>> +             val &= ~IMX2_WDT_WCR_WRE;
+>> +     /* Or if external-reset assert WDOG_B reset only on time-out */
+>> +     else
+>> +             val |= IMX2_WDT_WCR_WRE;
+>
+> I don't really understand what this means. Normally I would hope that a watchdog
+> only generates a reset if/when it times out.
+
+I think we went a couple of rounds on the info in the comment as well
+in the previous patch reversions.
+
+It is a feature of the IMX6 watchdog supported by this driver to be
+able to trigger an internal chip-level reset and/or an external signal
+that can be hooked to additional hardware.
+
+In the case of using a PMIC that can regulate it's own rails (ie the
+Freescale SabreSD reference design) an SoC chip-level reset will not
+reset the PMIC and thus if the PMIC's rails have been driven down by
+DVFS to a value below the necessary value for the chip to come up you
+will hang (which is certainly not what you want to do when a watchdog
+timeout occurs). The solution for designs that have a PMIC that is
+able to change its voltage levels is to 'not' have the SoC internally
+reset and to 'instead' drive an external reset signal that should
+reset the PMIC (and possibly other chips if needed). The reason for
+not allowing the internal reset is because as soon as the SoC goes
+into reset it de-asserts the external reset which makes the time the
+output is asserted un-deterministic.
+
+Tim
