@@ -1,246 +1,108 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH 3/3] [media] mt9v032: Add V4L2 controls for AEC and AGC
-Date: Fri,  6 Nov 2015 14:13:45 +0100
-Message-ID: <1446815625-18413-3-git-send-email-mpa@pengutronix.de>
-References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Markus Pargmann <mpa@pengutronix.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/3] [media] mt9v032: Add reset and standby gpios
+Date: Fri,  6 Nov 2015 14:13:43 +0100
+Message-ID: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds V4L2 controls for Auto Exposure Control and Auto Gain
-Control settings. These settings include low pass filter, update
-frequency of these settings and the update interval for those units.
+Add optional reset and standby gpios. The reset gpio is used to reset
+the chip in power_on().
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+The standby gpio is not used currently. It is just unset, so the chip is
+not in standby.
+
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/media/i2c/mt9v032.c | 153 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+ .../devicetree/bindings/media/i2c/mt9v032.txt      |  2 ++
+ drivers/media/i2c/mt9v032.c                        | 23 ++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+index 202565313e82..100f0ae43269 100644
+--- a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
++++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+@@ -20,6 +20,8 @@ Optional Properties:
+ 
+ - link-frequencies: List of allowed link frequencies in Hz. Each frequency is
+ 	expressed as a 64-bit big-endian integer.
++- reset-gpios: GPIO handle which is connected to the reset pin of the chip.
++- standby-gpios: GPIO handle which is connected to the standby pin of the chip.
+ 
+ For further reading on port node refer to
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
 diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index 943c3f39ea73..978ae8cbb0cc 100644
+index a68ce94ee097..4aefde9634f5 100644
 --- a/drivers/media/i2c/mt9v032.c
 +++ b/drivers/media/i2c/mt9v032.c
-@@ -133,9 +133,16 @@
- #define		MT9V032_TEST_PATTERN_GRAY_DIAGONAL	(3 << 11)
- #define		MT9V032_TEST_PATTERN_ENABLE		(1 << 13)
- #define		MT9V032_TEST_PATTERN_FLIP		(1 << 14)
-+#define MT9V032_AEC_LPF					0xa8
-+#define MT9V032_AGC_LPF					0xaa
-+#define MT9V032_DESIRED_BIN				0xa5
-+#define MT9V032_AEC_UPDATE_INTERVAL			0xa6
-+#define MT9V032_AGC_UPDATE_INTERVAL			0xa9
- #define MT9V032_AEC_AGC_ENABLE				0xaf
- #define		MT9V032_AEC_ENABLE			(1 << 0)
- #define		MT9V032_AGC_ENABLE			(1 << 1)
-+#define MT9V024_AEC_MAX_SHUTTER_WIDTH			0xad
-+#define MT9V032_AEC_MAX_SHUTTER_WIDTH			0xbd
- #define MT9V032_THERMAL_INFO				0xc1
+@@ -24,6 +24,7 @@
+ #include <linux/videodev2.h>
+ #include <linux/v4l2-mediabus.h>
+ #include <linux/module.h>
++#include <linux/gpio/consumer.h>
  
- enum mt9v032_model {
-@@ -162,6 +169,7 @@ struct mt9v032_model_data {
- 	unsigned int min_shutter;
- 	unsigned int max_shutter;
- 	unsigned int pclk_reg;
-+	unsigned int aec_max_shutter_reg;
- };
+ #include <media/mt9v032.h>
+ #include <media/v4l2-ctrls.h>
+@@ -251,6 +252,8 @@ struct mt9v032 {
  
- struct mt9v032_model_info {
-@@ -185,6 +193,7 @@ static const struct mt9v032_model_data mt9v032_model_data[] = {
- 		.min_shutter = MT9V032_TOTAL_SHUTTER_WIDTH_MIN,
- 		.max_shutter = MT9V032_TOTAL_SHUTTER_WIDTH_MAX,
- 		.pclk_reg = MT9V032_PIXEL_CLOCK,
-+		.aec_max_shutter_reg = MT9V032_AEC_MAX_SHUTTER_WIDTH,
- 	}, {
- 		/* MT9V024, MT9V034 */
- 		.min_row_time = 690,
-@@ -194,6 +203,7 @@ static const struct mt9v032_model_data mt9v032_model_data[] = {
- 		.min_shutter = MT9V034_TOTAL_SHUTTER_WIDTH_MIN,
- 		.max_shutter = MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
- 		.pclk_reg = MT9V034_PIXEL_CLOCK,
-+		.aec_max_shutter_reg = MT9V024_AEC_MAX_SHUTTER_WIDTH,
- 	},
- };
+ 	struct regmap *regmap;
+ 	struct clk *clk;
++	struct gpio_desc *reset_gpio;
++	struct gpio_desc *standby_gpio;
  
-@@ -265,6 +275,12 @@ struct mt9v032 {
- 	struct {
- 		struct v4l2_ctrl *test_pattern;
- 		struct v4l2_ctrl *test_pattern_color;
-+		struct v4l2_ctrl *desired_bin;
-+		struct v4l2_ctrl *aec_lpf;
-+		struct v4l2_ctrl *agc_lpf;
-+		struct v4l2_ctrl *aec_update_interval;
-+		struct v4l2_ctrl *agc_update_interval;
-+		struct v4l2_ctrl *aec_max_shutter_width;
- 	};
- };
+ 	struct mt9v032_platform_data *pdata;
+ 	const struct mt9v032_model_info *model;
+@@ -312,16 +315,26 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
+ 	struct regmap *map = mt9v032->regmap;
+ 	int ret;
  
-@@ -643,6 +659,33 @@ static int mt9v032_set_selection(struct v4l2_subdev *subdev,
-  */
++	gpiod_set_value_cansleep(mt9v032->reset_gpio, 1);
++
+ 	ret = clk_set_rate(mt9v032->clk, mt9v032->sysclk);
+ 	if (ret < 0)
+ 		return ret;
  
- #define V4L2_CID_TEST_PATTERN_COLOR	(V4L2_CID_USER_BASE | 0x1001)
-+/*
-+ * Value between 1 and 64 to set the desired bin. This is effectively a measure
-+ * of how bright the image is supposed to be. Both AGC and AEC try to reach
-+ * this.
-+ */
-+#define V4L2_CID_DESIRED_BIN		(V4L2_CID_USER_BASE | 0x1002)
-+/*
-+ * LPF is the low pass filter capability of the chip. Both AEC and AGC have
-+ * this setting. This limits the speed in which AGC/AEC adjust their settings.
-+ * Possible values are 0-2. 0 means no LPF. For 1 and 2 this equation is used:
-+ * 	if |(Calculated new exp - current exp)| > (current exp / 4)
-+ * 		next exp = Calculated new exp
-+ * 	else
-+ * 		next exp = Current exp +- (Calculated new exp / 2^LPF)
-+ */
-+#define V4L2_CID_AEC_LPF		(V4L2_CID_USER_BASE | 0x1003)
-+#define V4L2_CID_AGC_LPF		(V4L2_CID_USER_BASE | 0x1004)
-+/*
-+ * Value between 0 and 15. This is the number of frames being skipped before
-+ * updating the auto exposure/gain.
-+ */
-+#define V4L2_CID_AEC_UPDATE_INTERVAL	(V4L2_CID_USER_BASE | 0x1005)
-+#define V4L2_CID_AGC_UPDATE_INTERVAL	(V4L2_CID_USER_BASE | 0x1006)
-+/*
-+ * Maximum shutter width used for AEC.
-+ */
-+#define V4L2_CID_AEC_MAX_SHUTTER_WIDTH	(V4L2_CID_USER_BASE | 0x1007)
++	/* system clock has to be enabled before releasing the reset */
+ 	ret = clk_prepare_enable(mt9v032->clk);
+ 	if (ret)
+ 		return ret;
  
- static int mt9v032_s_ctrl(struct v4l2_ctrl *ctrl)
- {
-@@ -712,6 +755,28 @@ static int mt9v032_s_ctrl(struct v4l2_ctrl *ctrl)
- 			break;
- 		}
- 		return regmap_write(map, MT9V032_TEST_PATTERN, data);
-+
-+	case V4L2_CID_DESIRED_BIN:
-+		return regmap_write(map, MT9V032_DESIRED_BIN, ctrl->val);
-+
-+	case V4L2_CID_AEC_LPF:
-+		return regmap_write(map, MT9V032_AEC_LPF, ctrl->val);
-+
-+	case V4L2_CID_AGC_LPF:
-+		return regmap_write(map, MT9V032_AGC_LPF, ctrl->val);
-+
-+	case V4L2_CID_AEC_UPDATE_INTERVAL:
-+		return regmap_write(map, MT9V032_AEC_UPDATE_INTERVAL,
-+				    ctrl->val);
-+
-+	case V4L2_CID_AGC_UPDATE_INTERVAL:
-+		return regmap_write(map, MT9V032_AGC_UPDATE_INTERVAL,
-+				    ctrl->val);
-+
-+	case V4L2_CID_AEC_MAX_SHUTTER_WIDTH:
-+		return regmap_write(map,
-+				    mt9v032->model->data->aec_max_shutter_reg,
-+				    ctrl->val);
- 	}
+ 	udelay(1);
  
- 	return 0;
-@@ -741,6 +806,78 @@ static const struct v4l2_ctrl_config mt9v032_test_pattern_color = {
- 	.flags		= 0,
- };
++	gpiod_set_value_cansleep(mt9v032->reset_gpio, 0);
++
++	/*
++	 * After releasing reset, it can take up to 1us until the chip is done
++	 */
++	udelay(1);
++
+ 	/* Reset the chip and stop data read out */
+ 	ret = regmap_write(map, MT9V032_RESET, 1);
+ 	if (ret < 0)
+@@ -954,6 +967,16 @@ static int mt9v032_probe(struct i2c_client *client,
+ 	if (IS_ERR(mt9v032->clk))
+ 		return PTR_ERR(mt9v032->clk);
  
-+static const struct v4l2_ctrl_config mt9v032_desired_bin = {
-+	.ops		= &mt9v032_ctrl_ops,
-+	.id		= V4L2_CID_DESIRED_BIN,
-+	.type		= V4L2_CTRL_TYPE_INTEGER,
-+	.name		= "aec_agc_desired_bin",
-+	.min		= 1,
-+	.max		= 64,
-+	.step		= 1,
-+	.def		= 58,
-+	.flags		= 0,
-+};
++	mt9v032->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
++						      GPIOD_OUT_HIGH);
++	if (IS_ERR(mt9v032->reset_gpio))
++		return PTR_ERR(mt9v032->reset_gpio);
 +
-+static const struct v4l2_ctrl_config mt9v032_aec_lpf = {
-+	.ops		= &mt9v032_ctrl_ops,
-+	.id		= V4L2_CID_AEC_LPF,
-+	.type		= V4L2_CTRL_TYPE_INTEGER,
-+	.name		= "aec_lpf",
-+	.min		= 0,
-+	.max		= 2,
-+	.step		= 1,
-+	.def		= 0,
-+	.flags		= 0,
-+};
++	mt9v032->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
++							GPIOD_OUT_LOW);
++	if (IS_ERR(mt9v032->standby_gpio))
++		return PTR_ERR(mt9v032->standby_gpio);
 +
-+static const struct v4l2_ctrl_config mt9v032_agc_lpf = {
-+	.ops		= &mt9v032_ctrl_ops,
-+	.id		= V4L2_CID_AGC_LPF,
-+	.type		= V4L2_CTRL_TYPE_INTEGER,
-+	.name		= "agc_lpf",
-+	.min		= 0,
-+	.max		= 2,
-+	.step		= 1,
-+	.def		= 2,
-+	.flags		= 0,
-+};
-+
-+static const struct v4l2_ctrl_config mt9v032_aec_update_interval = {
-+	.ops		= &mt9v032_ctrl_ops,
-+	.id		= V4L2_CID_AEC_UPDATE_INTERVAL,
-+	.type		= V4L2_CTRL_TYPE_INTEGER,
-+	.name		= "aec_update_interval",
-+	.min		= 0,
-+	.max		= 16,
-+	.step		= 1,
-+	.def		= 2,
-+	.flags		= 0,
-+};
-+
-+static const struct v4l2_ctrl_config mt9v032_agc_update_interval = {
-+	.ops		= &mt9v032_ctrl_ops,
-+	.id		= V4L2_CID_AGC_UPDATE_INTERVAL,
-+	.type		= V4L2_CTRL_TYPE_INTEGER,
-+	.name		= "agc_update_interval",
-+	.min		= 0,
-+	.max		= 16,
-+	.step		= 1,
-+	.def		= 2,
-+	.flags		= 0,
-+};
-+
-+static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width = {
-+	.ops		= &mt9v032_ctrl_ops,
-+	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-+	.type		= V4L2_CTRL_TYPE_INTEGER,
-+	.name		= "aec_max_shutter_width",
-+	.min		= 1,
-+	.max		= MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
-+	.step		= 1,
-+	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-+	.flags		= 0,
-+};
-+
- /* -----------------------------------------------------------------------------
-  * V4L2 subdev core operations
-  */
-@@ -1010,6 +1147,22 @@ static int mt9v032_probe(struct i2c_client *client,
- 				mt9v032_test_pattern_menu);
- 	mt9v032->test_pattern_color = v4l2_ctrl_new_custom(&mt9v032->ctrls,
- 				      &mt9v032_test_pattern_color, NULL);
-+	mt9v032->desired_bin = v4l2_ctrl_new_custom(&mt9v032->ctrls,
-+						    &mt9v032_desired_bin,
-+						    NULL);
-+	mt9v032->aec_lpf = v4l2_ctrl_new_custom(&mt9v032->ctrls,
-+						&mt9v032_aec_lpf, NULL);
-+	mt9v032->agc_lpf = v4l2_ctrl_new_custom(&mt9v032->ctrls,
-+						&mt9v032_agc_lpf, NULL);
-+	mt9v032->aec_update_interval = v4l2_ctrl_new_custom(&mt9v032->ctrls,
-+						&mt9v032_aec_update_interval,
-+						NULL);
-+	mt9v032->agc_update_interval = v4l2_ctrl_new_custom(&mt9v032->ctrls,
-+						&mt9v032_agc_update_interval,
-+						NULL);
-+	mt9v032->aec_max_shutter_width = v4l2_ctrl_new_custom(&mt9v032->ctrls,
-+						&mt9v032_aec_max_shutter_width,
-+						NULL);
- 
- 	v4l2_ctrl_cluster(2, &mt9v032->test_pattern);
- 
+ 	mutex_init(&mt9v032->power_lock);
+ 	mt9v032->pdata = pdata;
+ 	mt9v032->model = (const void *)did->driver_data;
 -- 
 2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
