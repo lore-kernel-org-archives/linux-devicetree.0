@@ -1,53 +1,42 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 1/2] thermal: mediatek: Add cpu power cooling model.
-Date: Fri, 6 Nov 2015 08:54:33 +0530
-Message-ID: <20151106032433.GL3773@ubuntu>
-References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
- <1445515359-8587-2-git-send-email-dawei.chien@mediatek.com>
- <20151104193958.GC14127@localhost.localdomain>
- <1446721837.4016.57.camel@mtksdaap41>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH RESEND 03/16] Documentation: dt-bindings: hwmon: add TI
+ LMU HWMON binding information
+Date: Fri, 6 Nov 2015 12:48:06 +0900
+Message-ID: <563C22F6.7030906@ti.com>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <1446441875-1256-4-git-send-email-milo.kim@ti.com>
+ <20151106015757.GA32420@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446721837.4016.57.camel@mtksdaap41>
+In-Reply-To: <20151106015757.GA32420@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dawei chien <dawei.chien@mediatek.com>, Javi Merino <javi.merino@arm.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, lm-sensors@lm-sensors.org
 List-Id: devicetree@vger.kernel.org
 
-Cc'ing Javi (which you should have as he wrote the power-thing for
-cpu-cooling).
 
-On 05-11-15, 19:10, dawei chien wrote:
-> This is because our platform currently only support mt8173_cpufreq.c, so
-> that I only add static power model for our owner IC.
+On 11/6/2015 10:57 AM, Rob Herring wrote:
+> On Mon, Nov 02, 2015 at 02:24:22PM +0900, Milo Kim wrote:
+>> Hardware fault monitoring driver is used in LM3633 and LM3697 device.
+>> Just 'compatible' property is required to describe the driver.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Jean Delvare <jdelvare@suse.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: lm-sensors@lm-sensors.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Milo Kim <milo.kim@ti.com>
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Bindings are (normally) supposed to be general than a platform
-specific.
+Thanks for your review, Rob.
+HWMON maintainer, Guenter suggested moving LMU HWMON driver to MFD as 
+the sysfs attributes because it has no sensor data like temperature or 
+voltage.
+So I'll move this property to mfd/ti-lmu.txt in the next patch.
 
-> Please understanding that I wouldn't give a DT binding document since I
-> will remove static power table on next version, but I can try to explain
-> it.
-
-Then just don't add things in the first place.
-
-> As far as I know, static power is somewhat leakage of CPU clusters, so
-> that we hardly to find a formula, which can suitable all kinds of CPUs
-> since leakage is different. In ARM IPA framework, static power only need
-> to be defined by who register cpufreq_power_cooling_register. The
-> voltage/power table is just one way to present leakage power of CPUs.
-
-The bindings don't fix the values for static power, but just provides
-a field for platforms to use. Everyone can then send its own power
-figures. Why do you thing it can't be generalized?
-
-> Actually, static power is optional since dynamic power is much more than
-> static power.
-
-Maybe, we should still capture it.
-
-@Javi ?
-
--- 
-viresh
+Best regards,
+Milo
