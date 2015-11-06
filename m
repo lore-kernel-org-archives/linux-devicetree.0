@@ -1,61 +1,60 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Fri, 6 Nov 2015 12:10:45 -0600
-Message-ID: <563CED25.6020405@ti.com>
-References: <1443731874-21362-1-git-send-email-afd@ti.com>
- <1443731874-21362-5-git-send-email-afd@ti.com>
- <20151022164724.GZ8232@sirena.org.uk> <563A25BE.90609@ti.com>
- <20151105101417.GM1717@sirena.org.uk> <563B9A10.4020907@ti.com>
- <20151106104322.GA18409@sirena.org.uk>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v2 0/9] Better compatible for the rockchip thermal and
+ support RK3368 SoCs
+Date: Fri, 6 Nov 2015 10:47:40 -0800
+Message-ID: <20151106184739.GA8202@localhost.localdomain>
+References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151106104322.GA18409@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Jiri Kosina <trivial@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pm@vger.kernel.org, Olof Johansson <olof@lixom.net>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2015 04:43 AM, Mark Brown wrote:
-> On Thu, Nov 05, 2015 at 12:04:00PM -0600, Andrew F. Davis wrote:
->> On 11/05/2015 04:14 AM, Mark Brown wrote:
->
->>> That sounds like a bug to me, it'll have broken a bunch of existing
->>> devices.
->
->> Most OF drivers have the OF MODALIAS.
->
-> That's nice but not relevant to non-OF devices.
->
->> 'platform_uevent' can only emit one MODALIAS string per device (only
->> the last emitted one seems to count), so for any device with
->> 'dev->of_node' set it will be the OF MODALIAS string. So I need
->> that table (to generate the OF MODALIAS) or this sub-device module
->> will not be loaded.
->
-> No, you need to fix the bug that is causing dev->of_node to be populated
-> for the MFD function device.  Probably the issue is that you have put
-> this pointless compatible string in your DT.
->
+Caesar,
 
-If it is pointless what is the reason we have .of_compatible in mfd_cell?
-How else do you want us to populate the sub-device dev->of_node? Looking
-at other DT regulators a lot *do( just use an OF table, others use their
-parent's dev to get of_node, why all the push back on having an OF match
-table? Probe gets called with the pdev filled with its of_node to begin with.
+On Thu, Nov 05, 2015 at 01:17:56PM +0800, Caesar Wang wrote:
+> This series patchs are working for RK3368 on Rockchip platform.
+> 
 
-> Please stop this.  I don't understand why you are pushing so hard to put
-> the Linux device model representation of the device into DT but it's
-> getting very repetitive.
->
+Good to see the perseverance! :-)
 
-I'm not pushing anything, this is how other sub-nodes of MFD devices are
-represented, I'm not sure what you think I'm doing that is so wrong here.
-No one else seems to have an issue with the DT for this device, I see no
-reason the regulator node has to be different than the other sub-device
-nodes.
+> @Heiko,
+>     The PATCH [5/6] is working based on big/littel cluster cpufreq
+>     added. Anyway, the PATCH [5/6] also work for next kernel.
+> 
+> @Eduardo,
+> This patchset are based on linus master branch.
+> Note: Need add the following thermal patchs for thermal driver before apply
+> this series patchs.
+> 
+> 1) thermal: rockchip: fix handling of invalid readings
+> (https://patchwork.kernel.org/patch/6973101/)
+> 
+> 2) thermal: rockhip: fix setting thermal shutdown polarity
+> (https://patchwork.kernel.org/patch/6973131/)
+> 
+> 3) dt-bindings: rockchip-thermal: Add the pinctrl states in this document
+> (https://patchwork.kernel.org/patch/7472021/)
+> 
+> 4) thermal: rockchip: support the sleep pinctrl state to avoid glitches in s2r
+> (https://patchwork.kernel.org/patch/7472051/)
+> 
+> I'm glad these patchs have merged in thermal-soc git tree which can be found at
+> git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git
 
-It looks rather out of place to have regulators be singled out like this,
-for instance look at the mfd_cells for drivers/mfd/rt5033.c
+Yeah, apologize the delay on giving you a feedback on your code. As I
+mentioned before, I had a couple of other things in past weeks that
+consumed my time. 
+
+Anyways, this specific patch series looks way better now that you have
+split it further. I will have a better look on it again and let you
+know when it will land.
+
+BR,
+
+Eduardo Valentin
+
