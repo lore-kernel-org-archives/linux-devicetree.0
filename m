@@ -1,66 +1,101 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 1/2] Documentation: bridge: Add documentation for ps8640
- DT properties
-Date: Thu, 5 Nov 2015 20:02:51 -0600
-Message-ID: <20151106020251.GA3234@rob-hp-laptop>
-References: <1446430166-7378-1-git-send-email-jitao.shi@mediatek.com>
+Subject: Re: [PATCH v2 08/13] Documentation: dt-bindings: Add bindings for
+ rk3288 DW MIPI DSI driver
+Date: Thu, 5 Nov 2015 20:18:29 -0600
+Message-ID: <20151106021829.GA4810@rob-hp-laptop>
+References: <1446296170-3702-1-git-send-email-zyw@rock-chips.com>
+ <1446296170-3702-9-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446430166-7378-1-git-send-email-jitao.shi@mediatek.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <1446296170-3702-9-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBOb3YgMDIsIDIwMTUgYXQgMTA6MDk6MjVBTSArMDgwMCwgSml0YW8gU2hpIHdyb3Rl
-Ogo+IEFkZCBkb2N1bWVudGF0aW9uIGZvciBEVCBwcm9wZXJ0aWVzIHN1cHBvcnRlZCBieQo+IHBz
-ODY0MCBEU0ktZURQIGNvbnZlcnRlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGpp
-dGFvLnNoaUBtZWRpYXRlay5jb20+CgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4KCj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Bz
-ODY0MC50eHQgIHwgICA0MyArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-NDMgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3BzODY0MC50eHQKPiAKPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3BzODY0
-MC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-cHM4NjQwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uN2VkYzU0
-Nwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvcHM4NjQwLnR4dAo+IEBAIC0wLDAgKzEsNDMgQEAKPiArcHM4NjQw
-LWJyaWRnZSBiaW5kaW5ncwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArCS0gY29tcGF0
-aWJsZTogInBhcmFkZSxwczg2NDAiCj4gKwktIHJlZzogZmlyc3QgcGFnZSBhZGRyZXNzIG9mIHRo
-ZSBicmlkZ2UuCj4gKwktIHNsZWVwLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmlj
-YXRpb24gZm9yIFBEXyBwaW4uCj4gKwktIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlv
-IHNwZWNpZmljYXRpb24gZm9yIHJlc2V0IHBpbi4KPiArCS0gbW9kZS1zZWwtZ3Bpb3M6IE9GIGRl
-dmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgbW9kZS1zZWwgcGluLgo+ICsJLSB2ZGQx
-Mi1zdXBwbHk6IE9GIGRldmljZS10cmVlIHJlZ3VsYXRvciBzcGVjaWZpY2F0aW9uIGZvciAxLjJW
-IHBvd2VyLgo+ICsJLSB2ZGQzMy1zdXBwbHk6IE9GIGRldmljZS10cmVlIHJlZ3VsYXRvciBzcGVj
-aWZpY2F0aW9uIGZvciAzLjNWIHBvd2VyLgo+ICsJLSBwb3J0czogVGhlIGRldmljZSBub2RlIGNh
-biBjb250YWluIHZpZGVvIGludGVyZmFjZSBwb3J0IG5vZGVzIHBlcgo+ICsJCSB0aGUgdmlkZW8t
-aW50ZXJmYWNlcyBiaW5kWzFdLiBGb3IgcG9ydEAwLHNldCB0aGUgcmVnID0gPDA+IGFzCj4gKwkJ
-IHBzODY0MCBkc2kgaW4gYW5kIHBvcnRAMSxzZXQgdGhlIHJlZyA9IDwxPiBhcyBwczg2NDAgZURQ
-IG91dC4KPiArCj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
-L3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gKwo+ICtFeGFtcGxlOgo+ICsJZWRwLWJyaWRnZUAxOCB7
-Cj4gKwkJY29tcGF0aWJsZSA9ICJwYXJhZGUscHM4NjQwIjsKPiArCQlyZWcgPSA8MHgxOD47Cj4g
-KwkJc2xlZXAtZ3Bpb3MgPSA8JnBpbyAxMTYgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJcmVzZXQt
-Z3Bpb3MgPSA8JnBpbyAxMTUgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJbW9kZS1zZWwtZ3Bpb3Mg
-PSA8JnBpbyA5MiBHUElPX0FDVElWRV9ISUdIPjsKPiArCQlwczg2NDAtMXYyLXN1cHBseSA9IDwm
-cHM4NjQwX2ZpeGVkXzF2Mj47Cj4gKwkJcHM4NjQwLTN2My1zdXBwbHkgPSA8Jm10NjM5N192Z3Ay
-X3JlZz47Cj4gKwo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJ
-CSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlwb3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsJ
-CQkJcHM4NjQwX2luOiBlbmRwb2ludCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2kw
-X291dD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCQlwb3J0QDEgewo+ICsJCQkJcmVnID0gPDE+
-Owo+ICsJCQkJcHM4NjQwX291dDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmcGFuZWxfaW4+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiAtLSAKPiAx
-LjcuOS41Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sat, Oct 31, 2015 at 08:56:04PM +0800, Chris Zhong wrote:
+> add device tree bindings for rk3288 specific Synopsys DW MIPI DSI driver
+> 
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../bindings/video/dw_mipi_dsi_rockchip.txt        | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+> new file mode 100644
+> index 0000000..4dea804
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/dw_mipi_dsi_rockchip.txt
+
+Please move to bindings/display/rockchip/
+
+
+> @@ -0,0 +1,56 @@
+> +Rockchip specific extensions to the Synopsys Designware MIPI DSI
+> +================================
+> +
+> +Required properties:
+> +- compatible: "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi".
+> +- rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
+> +- ports: contain a port node with endpoint definitions as defined in [1].
+> +  For vopb,set the reg = <0> and set the reg = <1> for vopl.
+> +
+> +For more required properties, please refer to [2].
+> +
+> +[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+> +[2] Documentation/devicetree/bindings/drm/bridge/dw_mipi_dsi.txt
+
+This needs to be updated too.
+
+> +
+> +Example:
+> +	mipi_dsi: mipi@ff960000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
+> +		reg = <0xff960000 0x4000>;
+> +		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
+> +		clock-names = "ref", "pclk";
+> +		rockchip,grf = <&grf>;
+> +		status = "okay";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +
+> +			mipi_in: port {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				mipi_in_vopb: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&vopb_out_mipi>;
+> +				};
+> +				mipi_in_vopl: endpoint@1 {
+> +					reg = <1>;
+> +					remote-endpoint = <&vopl_out_mipi>;
+> +				};
+> +			};
+> +		};
+> +
+> +		panel {
+> +			compatible ="boe,tv080wum-nl0";
+> +			reg = <0>;
+> +
+> +			enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&lcd_en>;
+> +			backlight = <&backlight>;
+> +			status = "okay";
+> +		};
+> +	};
+> -- 
+> 2.6.2
+> 
