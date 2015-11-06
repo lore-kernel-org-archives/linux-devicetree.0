@@ -1,48 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dmaengine: ti-dma-crossbar: dra7: Support for
- reserving DMA event ranges
-Date: Fri, 6 Nov 2015 15:53:10 -0600
-Message-ID: <20151106215310.GA20278@rob-hp-laptop>
-References: <1446192038-11158-1-git-send-email-peter.ujfalusi@ti.com>
- <1446192038-11158-3-git-send-email-peter.ujfalusi@ti.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support
+ via 'ext-reset-output' dt prop
+Date: Fri, 6 Nov 2015 14:02:49 -0800
+Message-ID: <20151106220249.GA19791@roeck-us.net>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
+ <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
+ <20151105222325.GA26159@roeck-us.net>
+ <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446192038-11158-3-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vinod.koul@intel.com, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, r.schwebel@pengutronix.de
+In-Reply-To: <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 10:00:37AM +0200, Peter Ujfalusi wrote:
-> In eDMA the events are directly mapped to a DMA channel (for example DMA
-> event 14 can only be handled by DMA channel 14). If the memcpy is enabled
-> on the eDMA, there is a possibility that the crossbar driver would assign
-> DMA event number already allocated in eDMA for memcpy. Furthermore the
-> eDMA can be shared with DSP in which case the crossbar driver should also
-> avoid mapping xbar events to DSP used event numbers (or channels).
+On Fri, Nov 06, 2015 at 11:53:42AM -0800, Tim Harvey wrote:
+> On Thu, Nov 5, 2015 at 2:23 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> > On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
+> >> From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> >>
+> >> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+> >> can be pinmux'd to an external pin. This is typically used for boards that
+> >> have PMIC's in control of the IMX6 power rails. In fact, failure to use
+> >> such an external reset on boards with external PMIC's can result in various
+> >> hangs due to the IMX6 not being fully reset [1] as well as the board failing
+> >> to reset because its PMIC has not been reset to provide adequate voltage for
+> >> the CPU when coming out of reset at 800Mhz.
+> >>
+> >> This uses a new device-tree property 'ext-reset-output' to indicate the
+> >> board has such a reset and to cause the watchdog to be configured to assert
+> >> WDOG_B instead of an internal reset both on a watchdog timeout and in
+> >> system_restart.
+> >>
+> >> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
+> >>
+> >> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+> >>  drivers/watchdog/imx2_wdt.c                          | 20 ++++++++++++++++++--
+> >>  2 files changed, 20 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> >> index 8dab6fd..9b89b3a 100644
+> >> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> >> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> >> @@ -9,6 +9,8 @@ Optional property:
+> >
+> > properties ?
+> >
+> >>  - big-endian: If present the watchdog device's registers are implemented
+> >>    in big endian mode, otherwise in native mode(same with CPU), for more
+> >>    detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+> >> +- ext-reset-output: If present the watchdog device is configured to assert its
+> >
+> > Should that have a vendor prefix ? Also, not sure if "-output"
+> > has any real value in the property name. "fsl,external-reset", maybe ?
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  .../devicetree/bindings/dma/ti-dma-crossbar.txt    |  6 +++
->  drivers/dma/ti-dma-crossbar.c                      | 47 ++++++++++++++++++++--
->  2 files changed, 49 insertions(+), 4 deletions(-)
+> Hi Guenter,
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt b/Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt
-> index b152a75dceae..aead5869a28d 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt
-> @@ -14,6 +14,10 @@ The DMA controller node need to have the following poroperties:
->  
->  Optional properties:
->  - ti,dma-safe-map: Safe routing value for unused request lines
-> +- ti,reserved-dma-request-ranges: DMA request ranges which should not be used
-> +		when mapping xbar input to DMA request, they are either
-> +		allocated to be used by for example the DSP or they are used as
-> +		memcpy channels in eDMA.
+> I don't see why a vendor prefix is necessary - its a feature of the
+> IMX6 watchdog supported by this driver to be able to trigger an
+> internal chip-level reset and/or an external signal that can be hooked
+> to additional hardware.
+> 
+Sounded like vendor specific to me, but then I am not a devicetree maintainer,
+so I am not an authority on the subject.
 
-How many requests are there? I think I'd rather see this as a mask 
-value.
+> I started with ext-reset, but it was suggested
+> (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/347437.html)
+> to also make it clear that this is an 'output' and not a reset input.
+> 
+No problem, as long as you get an Ack from a devicetree maintainer.
 
-Rob
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
