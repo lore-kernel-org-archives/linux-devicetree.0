@@ -1,55 +1,50 @@
-From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] Better compatible for the rockchip thermal and
- support RK3368 SoCs
-Date: Fri, 6 Nov 2015 11:18:53 -0800
-Message-ID: <20151106191852.GG8202@localhost.localdomain>
-References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
- <20151106184739.GA8202@localhost.localdomain>
- <1509087.903MXQEqfv@phil>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 19/19] ARM: sun5i: chip: Enable the TV Encoder
+Date: Fri, 6 Nov 2015 11:37:41 -0800
+Message-ID: <20151106193741.GJ6114@lukather>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-20-git-send-email-maxime.ripard@free-electrons.com>
+ <CAGb2v66vjp=5GtGD-0i3OOw-wK3H4bogfvPoNzuwYvY8vt4fMQ@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C4ZO9l7mQWyMv5+Y"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCED6SYQKGQEJYHLKMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1509087.903MXQEqfv@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAGb2v66vjp=5GtGD-0i3OOw-wK3H4bogfvPoNzuwYvY8vt4fMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--C4ZO9l7mQWyMv5+Y
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Fri, Nov 06, 2015 at 08:03:24PM +0100, Heiko Stuebner wrote:
-> Hi Eduardo, Caesar,
+Hi Chen-Yu,
+
+On Fri, Oct 30, 2015 at 11:20:41PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Oct 30, 2015 at 10:21 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > The TV encoder is used to drive VGA and composite display.
+> >
+> > Enable it on the CHIP
 > 
-> Am Freitag, 6. November 2015, 10:47:40 schrieb Eduardo Valentin:
-> > On Thu, Nov 05, 2015 at 01:17:56PM +0800, Caesar Wang wrote:
-> > > This series patchs are working for RK3368 on Rockchip platform.
-> > > 
-> > 
-> > Good to see the perseverance! :-)
-> > 
+> The commit message does not match the contents. Missing a patch? :)
 
+No, I changed the commit a bit, and forgot to update the message :)
 
+Thanks!
+Maxime
 
-> 
-> I call dibs on the devicetree patches :-) .
-> 
-> Code and dt parts are very much separate, so I'd like to take the dt parts 
-> though my tree and arm-soc to keep further dts changes together.
-> Of course only once you are ok with the code parts :-)
-> 
-> Devicetree parts themselfs look ok to me.
-> 
-
-I am picking 1-3 for now. Device tree part looks OK to me too.
-
-> Heiko
-
-
-BR,
-
-Eduardo Valentin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--C4ZO9l7mQWyMv5+Y--
