@@ -1,129 +1,42 @@
-From: <gregkh@linuxfoundation.org>
-Subject: Patch "MFD/OF: document MFD devices and handle simple-mfd" has been added to the 4.1-stable tree
-Date: Thu, 05 Nov 2015 22:58:38 -0800
-Message-ID: <144679311811250@kroah.com>
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: RE: [PATCH v6 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Fri, 06 Nov 2015 11:14:49 +0300
+Message-ID: <001001d1186b$358b6470$a0a22d50$@samsung.com>
+References: <cover.1446724046.git.p.fedin@samsung.com>
+ <26ce9f26ee8537b2f81ad0bf470d1c6b1c8a1a31.1446724046.git.p.fedin@samsung.com>
+ <563BEE44.4040207@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linus.walleij@linaro.org, alexandre.belloni@free-electrons.com, antoine.tenart@free-electrons.com, arnd@arndb.de, benh@kernel.crashing.org, devicetree@vger.kernel.org, galak@codeaurora.org, grant.likely@linaro.org, gregkh@linuxfoundation.org, hjp@liab.dk, ijc+devicetree@hellion.org.uk, lee.jones@linaro.org, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
-Cc: stable@vger.kernel.org, stable-commits@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <563BEE44.4040207@samsung.com>
+Content-language: ru
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+ Hello!
 
-This is a note to let you know that I've just added the patch titled
+> > +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
+> > +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
+> > +                        Each value is specified in cycles and has the following
+> > +                        meaning and valid range:
+> > +                        Tacp : Page mode access cycle at Page mode (0 - 15)
+> > +                        Tcah : Address holding time after CSn (0 - 15)
+> > +                        Tcoh : Chip selection hold on OEn (0 - 15)
+> > +                        Tacc : Access cycle (0 - 32)
+> 
+> All of the manuals have error here. Probably it can be either: 1-32 or
+> 0-31. I would bet on 0-31, what do you think?
 
-    MFD/OF: document MFD devices and handle simple-mfd
+ Damn, everything starts from 0, so i automatically put '0 - 32'. The actual time, however, varies from 1 to 32, but the value is
+from 0 to 31, i. e. <time> - 1
+ What shall we do? Just document this, or adjust the code to take number of cycles and subtract 1? To tell the truth, i'm already
+sick of these small fixups, and i would prefer just to fix documentation.
 
-to the 4.1-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     mfd-of-document-mfd-devices-and-handle-simple-mfd.patch
-and it can be found in the queue-4.1 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
->From 22869a9eca4ea5b534538d160b68c7aef44e378a Mon Sep 17 00:00:00 2001
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 3 Mar 2015 09:52:20 +0100
-Subject: MFD/OF: document MFD devices and handle simple-mfd
-
-From: Linus Walleij <linus.walleij@linaro.org>
-
-commit 22869a9eca4ea5b534538d160b68c7aef44e378a upstream.
-
-This defines a new compatible option for MFD devices "simple-mfd" that will
-make the OF core spawn child devices for all subnodes of that MFD device.
-It is optional but handy for things like syscon and possibly other
-simpler MFD devices.
-
-Since there was no file to put the documentation in, I took this opportunity
-to make a small writeup on MFD devices and add the compatible definition
-there.
-
-Suggested-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Devicetree <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: Henrik Juul Pedersen <hjp@liab.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- Documentation/devicetree/bindings/mfd/mfd.txt |   41 ++++++++++++++++++++++++++
- drivers/of/platform.c                         |    1 
- 2 files changed, 42 insertions(+)
-
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mfd.txt
-@@ -0,0 +1,41 @@
-+Multi-Function Devices (MFD)
-+
-+These devices comprise a nexus for heterogeneous hardware blocks containing
-+more than one non-unique yet varying hardware functionality.
-+
-+A typical MFD can be:
-+
-+- A mixed signal ASIC on an external bus, sometimes a PMIC (Power Management
-+  Integrated Circuit) that is manufactured in a lower technology node (rough
-+  silicon) that handles analog drivers for things like audio amplifiers, LED
-+  drivers, level shifters, PHY (physical interfaces to things like USB or
-+  ethernet), regulators etc.
-+
-+- A range of memory registers containing "miscellaneous system registers" also
-+  known as a system controller "syscon" or any other memory range containing a
-+  mix of unrelated hardware devices.
-+
-+Optional properties:
-+
-+- compatible : "simple-mfd" - this signifies that the operating system should
-+  consider all subnodes of the MFD device as separate devices akin to how
-+  "simple-bus" inidicates when to see subnodes as children for a simple
-+  memory-mapped bus. For more complex devices, when the nexus driver has to
-+  probe registers to figure out what child devices exist etc, this should not
-+  be used. In the latter case the child devices will be determined by the
-+  operating system.
-+
-+Example:
-+
-+foo@1000 {
-+	compatible = "syscon", "simple-mfd";
-+	reg = <0x01000 0x1000>;
-+
-+	led@08.0 {
-+		compatible = "register-bit-led";
-+		offset = <0x08>;
-+		mask = <0x01>;
-+		label = "myled";
-+		default-state = "on";
-+	};
-+};
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -25,6 +25,7 @@
- 
- const struct of_device_id of_default_bus_match_table[] = {
- 	{ .compatible = "simple-bus", },
-+	{ .compatible = "simple-mfd", },
- #ifdef CONFIG_ARM_AMBA
- 	{ .compatible = "arm,amba-bus", },
- #endif /* CONFIG_ARM_AMBA */
-
-
-Patches currently in stable-queue which might be from linus.walleij@linaro.org are
-
-queue-4.1/iio-st_accel-fix-interrupt-handling-on-lis3lv02.patch
-queue-4.1/mfd-of-document-mfd-devices-and-handle-simple-mfd.patch
+Kind regards,
+Pavel Fedin
+Expert Engineer
+Samsung Electronics Research center Russia
