@@ -1,162 +1,29 @@
 From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] arm64: dts: Add the thermal data found on RK3368
-Date: Fri, 6 Nov 2015 11:14:50 -0800
-Message-ID: <20151106191449.GD8202@localhost.localdomain>
+Subject: Re: [PATCH v2 8/9] arm64: dts: Add main Thermal info to rk3368.dtsi
+Date: Fri, 6 Nov 2015 11:15:39 -0800
+Message-ID: <20151106191539.GE8202@localhost.localdomain>
 References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
- <1446700685-18017-8-git-send-email-wxt@rock-chips.com>
+ <1446700685-18017-9-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446700685-18017-8-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1446700685-18017-9-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 05, 2015 at 01:18:03PM +0800, Caesar Wang wrote:
-> This patchset add the thermal for RK3368 dts,
-> Since the two CPU clusters, with four CPU core for each cluster,
-> One cluster is optimized for high-performance(big cluster) and the othe
-> is optimized for low power(little cluster).
+On Thu, Nov 05, 2015 at 01:18:04PM +0800, Caesar Wang wrote:
+> This patch add the thermal needed info on RK3368.
+> Meanwhile, support the trips to throttle for thermal.
 > 
-> This patch adds the second order for thermal throttle, and the critical
-> temperature for thermal over-tempeature protection on Software.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
 Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
 > ---
-> 
-> Changes in v2: None
-> Changes in v1: None
-> 
->  arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi | 112 +++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
-> new file mode 100644
-> index 0000000..a10010f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
-> @@ -0,0 +1,112 @@
-> +/*
-> + * Device Tree Source for RK3368 SoC thermal
-> + *
-> + * Copyright (c) 2015, Fuzhou Rockchip Electronics Co., Ltd
-> + * Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include <dt-bindings/thermal/thermal.h>
-> +
-> +cpu_thermal: cpu_thermal {
-> +	polling-delay-passive = <100>; /* milliseconds */
-> +	polling-delay = <5000>; /* milliseconds */
-> +
-> +	thermal-sensors = <&tsadc 0>;
-> +
-> +	trips {
-> +		cpu_alert0: cpu_alert0 {
-> +			temperature = <75000>; /* millicelsius */
-> +			hysteresis = <2000>; /* millicelsius */
-> +			type = "passive";
-> +		};
-> +		cpu_alert1: cpu_alert1 {
-> +			temperature = <80000>; /* millicelsius */
-> +			hysteresis = <2000>; /* millicelsius */
-> +			type = "passive";
-> +		};
-> +		cpu_crit: cpu_crit {
-> +			temperature = <95000>; /* millicelsius */
-> +			hysteresis = <2000>; /* millicelsius */
-> +			type = "critical";
-> +		};
-> +	};
-> +
-> +	cooling-maps {
-> +		map0 {
-> +			trip = <&cpu_alert0>;
-> +			cooling-device =
-> +				<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +		};
-> +		map1 {
-> +			trip = <&cpu_alert1>;
-> +			cooling-device =
-> +				<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +		};
-> +	};
-> +};
-> +
-> +gpu_thermal: gpu_thermal {
-> +	polling-delay-passive = <100>; /* milliseconds */
-> +	polling-delay = <5000>; /* milliseconds */
-> +
-> +	thermal-sensors = <&tsadc 1>;
-> +
-> +	trips {
-> +		gpu_alert0: gpu_alert0 {
-> +			temperature = <80000>; /* millicelsius */
-> +			hysteresis = <2000>; /* millicelsius */
-> +			type = "passive";
-> +		};
-> +		gpu_crit: gpu_crit {
-> +			temperature = <1150000>; /* millicelsius */
-> +			hysteresis = <2000>; /* millicelsius */
-> +			type = "critical";
-> +		};
-> +	};
-> +
-> +	cooling-maps {
-> +		map0 {
-> +			trip = <&gpu_alert0>;
-> +			cooling-device =
-> +				<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
