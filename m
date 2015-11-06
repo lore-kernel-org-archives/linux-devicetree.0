@@ -1,74 +1,52 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
-Date: Fri, 6 Nov 2015 13:57:32 +0100
-Message-ID: <CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
-	<56261239.5030007@linaro.org>
-	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
-	<CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/3] [media] mt9v032: Do not unset master_mode
+Date: Fri,  6 Nov 2015 14:13:44 +0100
+Message-ID: <1446815625-18413-2-git-send-email-mpa@pengutronix.de>
+References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446815625-18413-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-10-22 14:35 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Tue, Oct 20, 2015 at 6:32 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->> 2015-10-20 12:06 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
->>> On 17/10/15 18:23, Maxime Coquelin wrote:
->
->>> I suggesting that, like with the clock driver, there is no need to the
->>> STM32F429_PAXX_FUNC_YYY macros at all.
->>>
->>> Given the way you can enumerate pin config options in stm32f429.dtsi then I
->>> think stm32f429.dtsi is the only file that will ever include this header? If
->>> so then why not just plug the values directly into the pinmux fields. Its
->>> not duplicative and is easier to map back to data sheets.
->>>
->>> ~~~
->>> #define PIN_NO(x) ...
->>> #define PIN_AF(x) ...
->>>
->>> usart1_pins_a: usart1@0 {
->>>                                 pins1 {
->>>                                         pinmux = PIN_NO(9) | PIN_AF(7);
->>>                                         bias-disable;
->>>                                         drive-push-pull;
->>>                                         slew-rate = <0>;
->>>                                 };
->>>                                 ...
->>>                         };
->>> ~~~
->>
->> The advantage with the defines is that you can see easily which pin we
->> are talking about.
->> Moreover, the defines are generated from the datasheet, so it is
->> painless to generate them.
->> And it will be consistent with Mediatek implementation, on which I
->> heavily inspired.
->>
->> Linus, what is your view?
->
-> I have no strong view of this at all.
->
-> I would ask the opinion of other people doing numbered muxes
-> to see what is generally best for everyone to use,
-> Sascha Hauer specifically, or the Mediatek people.
+The power_on function of the driver resets the chip and sets the
+CHIP_CONTROL register to 0. This switches the operating mode to slave.
+The s_stream function sets the correct mode. But this caused problems on
+a board where the camera chip is operated as master. The camera started
+after a random amount of time streaming an image, I observed between 10
+and 300 seconds.
 
-Thinking again at it, I persist to believe have the defines makes it
-easier to use.
-With auto-completion, it makes it faster and less error prone to
-select the right
-alternate function without parsing the datasheet.
+The STRFM_OUT and STLN_OUT pins are not connected on this board which
+may cause some issues in slave mode. I could not find any documentation
+about this.
 
-But as these defines are not actually used on driver side, maybe I
-could just move
-them to the dts directory?
+Keeping the chip in master mode after the reset helped to fix this
+issue for me.
 
-Regards,
-Maxime
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/media/i2c/mt9v032.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index 4aefde9634f5..943c3f39ea73 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -344,7 +344,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
++	return regmap_write(map, MT9V032_CHIP_CONTROL,
++			    MT9V032_CHIP_CONTROL_MASTER_MODE);
+ }
+ 
+ static void mt9v032_power_off(struct mt9v032 *mt9v032)
+-- 
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
