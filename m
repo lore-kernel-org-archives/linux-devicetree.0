@@ -1,50 +1,107 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 19/19] ARM: sun5i: chip: Enable the TV Encoder
-Date: Fri, 6 Nov 2015 11:37:41 -0800
-Message-ID: <20151106193741.GJ6114@lukather>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-20-git-send-email-maxime.ripard@free-electrons.com>
- <CAGb2v66vjp=5GtGD-0i3OOw-wK3H4bogfvPoNzuwYvY8vt4fMQ@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.1 72/86] MFD/OF: document MFD devices and handle simple-mfd
+Date: Fri,  6 Nov 2015 11:23:11 -0800
+Message-ID: <20151106192208.892194650@linuxfoundation.org>
+References: <20151106192205.351595349@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="C4ZO9l7mQWyMv5+Y"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCED6SYQKGQEJYHLKMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66vjp=5GtGD-0i3OOw-wK3H4bogfvPoNzuwYvY8vt4fMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151106192205.351595349@linuxfoundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Antoine Tenart <antoine.tenart@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Henrik Juul Pedersen <hjp@liab.dk>
 List-Id: devicetree@vger.kernel.org
 
---C4ZO9l7mQWyMv5+Y
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+4.1-stable review patch.  If anyone has any objections, please let me know.
 
-Hi Chen-Yu,
+------------------
 
-On Fri, Oct 30, 2015 at 11:20:41PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Oct 30, 2015 at 10:21 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > The TV encoder is used to drive VGA and composite display.
-> >
-> > Enable it on the CHIP
-> 
-> The commit message does not match the contents. Missing a patch? :)
+From: Linus Walleij <linus.walleij@linaro.org>
 
-No, I changed the commit a bit, and forgot to update the message :)
+commit 22869a9eca4ea5b534538d160b68c7aef44e378a upstream.
 
-Thanks!
-Maxime
+This defines a new compatible option for MFD devices "simple-mfd" that will
+make the OF core spawn child devices for all subnodes of that MFD device.
+It is optional but handy for things like syscon and possibly other
+simpler MFD devices.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---C4ZO9l7mQWyMv5+Y--
+Since there was no file to put the documentation in, I took this opportunity
+to make a small writeup on MFD devices and add the compatible definition
+there.
+
+Suggested-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Devicetree <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Henrik Juul Pedersen <hjp@liab.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Documentation/devicetree/bindings/mfd/mfd.txt |   41 ++++++++++++++++++++++++++
+ drivers/of/platform.c                         |    1 
+ 2 files changed, 42 insertions(+)
+
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/mfd.txt
+@@ -0,0 +1,41 @@
++Multi-Function Devices (MFD)
++
++These devices comprise a nexus for heterogeneous hardware blocks containing
++more than one non-unique yet varying hardware functionality.
++
++A typical MFD can be:
++
++- A mixed signal ASIC on an external bus, sometimes a PMIC (Power Management
++  Integrated Circuit) that is manufactured in a lower technology node (rough
++  silicon) that handles analog drivers for things like audio amplifiers, LED
++  drivers, level shifters, PHY (physical interfaces to things like USB or
++  ethernet), regulators etc.
++
++- A range of memory registers containing "miscellaneous system registers" also
++  known as a system controller "syscon" or any other memory range containing a
++  mix of unrelated hardware devices.
++
++Optional properties:
++
++- compatible : "simple-mfd" - this signifies that the operating system should
++  consider all subnodes of the MFD device as separate devices akin to how
++  "simple-bus" inidicates when to see subnodes as children for a simple
++  memory-mapped bus. For more complex devices, when the nexus driver has to
++  probe registers to figure out what child devices exist etc, this should not
++  be used. In the latter case the child devices will be determined by the
++  operating system.
++
++Example:
++
++foo@1000 {
++	compatible = "syscon", "simple-mfd";
++	reg = <0x01000 0x1000>;
++
++	led@08.0 {
++		compatible = "register-bit-led";
++		offset = <0x08>;
++		mask = <0x01>;
++		label = "myled";
++		default-state = "on";
++	};
++};
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -25,6 +25,7 @@
+ 
+ const struct of_device_id of_default_bus_match_table[] = {
+ 	{ .compatible = "simple-bus", },
++	{ .compatible = "simple-mfd", },
+ #ifdef CONFIG_ARM_AMBA
+ 	{ .compatible = "arm,amba-bus", },
+ #endif /* CONFIG_ARM_AMBA */
