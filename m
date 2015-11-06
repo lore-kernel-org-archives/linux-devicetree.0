@@ -1,59 +1,62 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] pwm: pwm-rcar: Revise the device tree binding document
- about compatible
-Date: Fri, 6 Nov 2015 15:18:18 +0100
-Message-ID: <20151106141818.GA4988@ulmo>
-References: <1444130908-8180-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 04/10] pwm: core: use bitops
+Date: Fri, 6 Nov 2015 15:46:35 +0100
+Message-ID: <20151106144635.GA8418@ulmo>
+References: <1445895161-2317-1-git-send-email-o.schinagl@ultimaker.com>
+ <1445895161-2317-5-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Return-path: <linux-sh-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1444130908-8180-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1445895161-2317-5-git-send-email-o.schinagl@ultimaker.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Olliver Schinagl <o.schinagl@ultimaker.com>
+Cc: Olliver Schinagl <oliver@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Joachim Eastwood <manabian@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Olliver Schinagl <oliver+list@schinagl.nl>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---bp/iNruPH9dso1Pn
+--tThc/1wpZn/ma/RB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 06, 2015 at 08:28:28PM +0900, Yoshihiro Shimoda wrote:
-> The compatible should be "renesas,pwm-rcar", and one the the SoC
-> specific string. So, this patch revises the documentation.
+On Mon, Oct 26, 2015 at 10:32:35PM +0100, Olliver Schinagl wrote:
+> From: Olliver Schinagl <oliver@schinagl.nl>
 >=20
-> Reported-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> The pwm header defines bits manually while there is a nice bitops.h with
+> a BIT() macro. Use the BIT() macro to set bits in pwm.h
+>=20
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
 > ---
->  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  include/linux/pwm.h | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 
-Applied, thanks.
+I don't think this is a useful change. The BIT() macro needs the same
+number of characters to type at the expense of requiring an additional
+include.
 
 Thierry
 
---bp/iNruPH9dso1Pn
+--tThc/1wpZn/ma/RB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJWPLaoAAoJEN0jrNd/PrOhRl0QAKwhgNrFcoxkgzj28F9fMUO0
-wmq30941HLS33kPxky9D/6u8D4pbBJmk58OM3meQ6XdkTFhhlIGE/BzlizsP/EjU
-8TWzvy7ViOnYp3J/jyK9FuGpaGsL8wRqBCTdG92ElaW4gpvdrmivCZze41XQ1PAD
-nQC+/fr/TK7dA55NNiIwMfwvhkVEXCYPuRWXNNyre3Fbly88lV7LaekpQccTsglO
-fL4z4CEnmW3IhUFm3/hXwncRSjs9YaPT3ZPNOAMWCnGLIc5O8HdEvg1hc7TK83YA
-yJoRERTN+dHr6ZDxgO6Uzdk6VnzKYCzpY4rAMjZTdIQOQO2pDWSBBJjJkCKefFAB
-ZJm5vbrzWe0UdBFzhlIcN95VXypLoR8nuz4aX86w+yH6pvrb6chkeKfX7aUhZyWd
-8Pc91edQaKNmp53JJEL16rPKAhoW4mOHth9LJCYpCHyUHjIdHw61hCYzegMGritn
-JcF/cCkuK7fBfZmFow7UeYGTxSbbZiAZB1p5UJGSJN1QW+gToutlB2N7sE5Ws1r8
-drJmJDcq1ThRRj8RhXVZFcJCZWH8lhBWXpueefcuLNLYObkw/0HIendBn0qFnDUk
-ijA6OlSlGQ516xJhjRPsom2PcR6JdxMH5g71BsORCewmVnC9BSxXQESmvY+ZEQBO
-hVvmd9QIFBTa6gdbcaZb
-=PAHa
+iQIcBAABCAAGBQJWPL1JAAoJEN0jrNd/PrOhT0EP/AlEOEZlkZ2reunUGpzm6GhX
+8szsuHF1TXHjB4dqV3BtFa6RmitWADEyAUK21NFRPLr5RWUO3IcqMMJM6SRcmpI9
+/aag+0xabrwEjtD6quOgb7+3MKhQoWKQcTIX2CiE2jBm931cQMSohVYwinCKN8l8
+5pdOtF1ZOmeStzzX8v+V2AnGvL1+ddtfWU7piDHdFGvX14tgQpdwvoyYOioTsObw
+FMD4nh6+qhS6zSNE9MarR0/k3w5lH82Pibc7Ap1CQlKBw5b33p+E07RHAxY5+8wk
+hbbHXl1Lfye5Ldqjgs5h8ORzATRU+RRj99lFtZLfgDuE6y/8gWR8HJkkLM3hSaCF
+yVBVfWNBCzSJSGKRA1IJKAUv9YZ2gCmOIB2Bx56FcwYLGne+i7lClkwwWe0eA9eE
+pLbfZVrMRiD1mxKg5FXZNmCkRQ3xc9gcZVk4HARozkhXU4oE0pMgzbfkicU7I6O2
+fWe128PvbtuXum+wlrxhlhItFr2H2pZLr4cUQkKrCfCxjszw6N5jsmJOYq352+zw
+dg6IHjiAkedaNvaonTqVpRrEaxQJpgbqggCFL1oYsZDiB6evwOZcxHE5ks1ckkGz
+Ptg7eBatLlW1BdQTWU5Jfcv1hfFBIpr2d8FPhjVXZg/0gGFU5NiqHToUk+hkagY2
+e23v/Eg8ED1gpyu+mJVM
+=Fv7C
 -----END PGP SIGNATURE-----
 
---bp/iNruPH9dso1Pn--
+--tThc/1wpZn/ma/RB--
