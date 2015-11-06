@@ -1,66 +1,52 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] thermal: mediatek: Add cpu power cooling model
-Date: Fri, 6 Nov 2015 08:50:46 +0530
-Message-ID: <20151106032046.GK3773@ubuntu>
-References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
- <20151028154449.GH3716@ubuntu>
- <1446461181.10039.28.camel@mtksdaap41>
- <20151102121034.GA3639@ubuntu>
- <1446721761.4016.56.camel@mtksdaap41>
-Mime-Version: 1.0
+From: Matthew McClintock <mmcclint@codeaurora.org>
+Subject: Re: [PATCH 1/5] pinctrl: qcom: ipq4019: Add IPQ4019 pinctrl support
+Date: Thu, 5 Nov 2015 21:24:22 -0600
+Message-ID: <837CDC90-83D6-4E94-9D04-C3CD5BBD628C@codeaurora.org>
+References: <1446761276-9111-1-git-send-email-mmcclint@codeaurora.org> <1446761276-9111-2-git-send-email-mmcclint@codeaurora.org> <20151106023411.GA17997@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446721761.4016.56.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dawei chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151106023411.GA17997@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com, Sricharan R <sricharan@codeaurora.org>, Mathieu Olivari <mathieu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05-11-15, 19:09, dawei chien wrote:
-> Thank you for your kindly explaining, now I could understand what I
-> miss, I will send device tree binding on next version such like
-> following description.
+
+> On Nov 5, 2015, at 8:34 PM, Rob Herring <robh@kernel.org> wrote:
 > 
-> --- a/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-> +++ b/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-> @@ -10,6 +10,17 @@ Required properties:
->         Please refer to
-> Documentation/devicetree/bindings/clk/clock-bindings.txt for
->         generic clock consumer properties.
->  - proc-supply: Regulator for Vproc of CPU cluster.
-> +- dynamic-power-coefficient:
-> +       Usage: optional
-> +       Value type: <prop-encoded-array>
-> +       Definition: A u32 value that represents an indicative
-> +       running time dynamic power coefficient in
-> +       fundamental units of mW/MHz/uVolt^2.
-> +       The dynamic energy consumption of the CPU
-> +       is proportional to the square of the
-> +       Voltage (V) and the clock frequency (f).
-> +       Pdyn = dynamic-power-coefficient * V^2 * f
-> +       where voltage is in uV, frequency is in MHz.
-
-Please check with Punit if he is planning to add the same..
-
-> Thank you for your kindly explaining, Now I know I should develop and
-> test on mainline branch since this is where I try to add code.
+> On Thu, Nov 05, 2015 at 04:07:52PM -0600, Matthew McClintock wrote:
+>> From: Varadarajan Narayanan <varada@codeaurora.org>
+>> 
+>> Add pinctrl driver support for IPQ4019 platform
+>> 
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+>> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+>> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
+>> ---
+>> .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt      |  116 ++
+>> drivers/pinctrl/qcom/Kconfig                       |    8 +
+>> drivers/pinctrl/qcom/Makefile                      |    1 +
+>> drivers/pinctrl/qcom/pinctrl-ipq4019.c             | 1280 ++++++++++++++++++++
+>> 4 files changed, 1405 insertions(+)
+>> create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+>> create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq4019.c
+>> 
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+>> new file mode 100644
+>> index 0000000..045c5aa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+>> @@ -0,0 +1,116 @@
+>> +Qualcomm Atheros IPQ4019 TLMM block
+>> +
+>> +Required properties:
+>> +- compatible: "qcom,ipq4019-pinctrl"
 > 
-> However, please understanding currently mt8173_cpufreq.c is not ready
-> for OPPV2 in mainline as far, that's the reason why currently I can't
-> reuse OPPV2 and extend for static power table. My propose is for adding
-> CPU cooling device for our own product.
+> Perhaps the name should have TLMM in it. Whatever that stands for.
 
-Firstly, we don't care. You are pushing something to mainline, you
-have to get it tested someway on mainline.
+Sure, this was a holdover from Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt mostly. Will elaborate on v2 though.
 
-Secondly, there are *almost* no changes required to the mtk cpufreq
-driver for OPPV2. Just update your DT in a similar way it is done for
-one of the exynos platforms and it should just work fine.
-
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-M
