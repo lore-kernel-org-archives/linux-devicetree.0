@@ -1,66 +1,74 @@
-From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH RESEND 0/4] SMP support for Broadcom NSP
-Date: Fri, 6 Nov 2015 17:55:02 +0530
-Message-ID: <563C9C1E.1080202@broadcom.com>
-References: <1446702681-45339-1-git-send-email-kapilh@broadcom.com>
- <20151105093443.GO8644@n2100.arm.linux.org.uk> <563BBB3A.6010605@hauke-m.de>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+Date: Fri, 6 Nov 2015 13:57:32 +0100
+Message-ID: <CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
+	<56261239.5030007@linaro.org>
+	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
+	<CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <563BBB3A.6010605-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/6/2015 1:55 AM, Hauke Mehrtens wrote:
-> On 11/05/2015 10:34 AM, Russell King - ARM Linux wrote:
->> On Thu, Nov 05, 2015 at 12:51:17AM -0500, Kapil Hali wrote:
->>> Hi,
+2015-10-22 14:35 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Tue, Oct 20, 2015 at 6:32 PM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
+>> 2015-10-20 12:06 GMT+02:00 Daniel Thompson <daniel.thompson@linaro.org>:
+>>> On 17/10/15 18:23, Maxime Coquelin wrote:
+>
+>>> I suggesting that, like with the clock driver, there is no need to the
+>>> STM32F429_PAXX_FUNC_YYY macros at all.
 >>>
->>> This series adds SMP support for Broadcom's Northstar Plus SoC.
+>>> Given the way you can enumerate pin config options in stm32f429.dtsi then I
+>>> think stm32f429.dtsi is the only file that will ever include this header? If
+>>> so then why not just plug the values directly into the pinmux fields. Its
+>>> not duplicative and is easier to map back to data sheets.
 >>>
->>> There are similar SMP enablement methods for many ARMv7 bsed SoCs.
->>> BCM NSP SoC, has a typical such mechanism - after power-on, the
->>> secondary core is held in a standby state, primary core provides a
->>> startup address for the secondary core and wakes it up. Booting of
->>> the secondary core is serialized using pen_release global variable.
+>>> ~~~
+>>> #define PIN_NO(x) ...
+>>> #define PIN_AF(x) ...
+>>>
+>>> usart1_pins_a: usart1@0 {
+>>>                                 pins1 {
+>>>                                         pinmux = PIN_NO(9) | PIN_AF(7);
+>>>                                         bias-disable;
+>>>                                         drive-push-pull;
+>>>                                         slew-rate = <0>;
+>>>                                 };
+>>>                                 ...
+>>>                         };
+>>> ~~~
 >>
->> Why do you need the pen_release stuff?  The above implies that you
->> have only one secondary core, and you can control when it comes out
->> of standby state.
+>> The advantage with the defines is that you can see easily which pin we
+>> are talking about.
+>> Moreover, the defines are generated from the datasheet, so it is
+>> painless to generate them.
+>> And it will be consistent with Mediatek implementation, on which I
+>> heavily inspired.
 >>
->> Please, don't assume that the pen_release stuff is any kind of recommended
->> or standardised system.  It isn't.  It's a hack for ARMs evaluation
->> platforms.
->>
-> 
-> I tried to remove the pen code because I also thought/hoped that it is
-> useless, but the 2. CPU did not boot any more after I removed it. I do
-> not know the internals of SoC, but it looks like this is needed.
-> 
-> I described it here:
-> http://www.spinics.net/lists/arm-kernel/msg452178.html
-> 
-> I removed this comparison and the jump afterwards ("cmp     r7, r0") and
-> the 2. CPU did not boot any more. Is this pen stuff some kind of
-> workaround for some bug in the silicon?
-> 
-pen stuff is not a work around for any bug in BCM NSP silicon. It was the
-mechanism to bring-up SMP on some of the ARM based SoCs and many silicon
-vendors seem to consider it as a generic mechanism for controlled bring-up
-of SMP. But as is clear from Russel King's comments, it is not a 
-standardized recommended method.
-Also, I removed the pen_release method and it works on BCM NSP SoCs. I 
-will add the changes in the next patch set.
-> Hauke
-> 
-Thanks,
-Kapil Hali
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Linus, what is your view?
+>
+> I have no strong view of this at all.
+>
+> I would ask the opinion of other people doing numbered muxes
+> to see what is generally best for everyone to use,
+> Sascha Hauer specifically, or the Mediatek people.
+
+Thinking again at it, I persist to believe have the defines makes it
+easier to use.
+With auto-completion, it makes it faster and less error prone to
+select the right
+alternate function without parsing the datasheet.
+
+But as these defines are not actually used on driver side, maybe I
+could just move
+them to the dts directory?
+
+Regards,
+Maxime
