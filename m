@@ -1,93 +1,72 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Added syscon-reboot node for FSL's LS2080A SoC
-Date: Fri, 6 Nov 2015 19:12:39 -0300
-Message-ID: <CABxcv=n6UTcdskBv8fqRzfes+nCjPaFbCTDGRRDt=MStdepwWA@mail.gmail.com>
-References: <1446846529-10613-1-git-send-email-German.Rivera@freescale.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 09/19] drm: sun4i: Add DT bindings documentation
+Date: Fri, 6 Nov 2015 14:32:29 -0800
+Message-ID: <20151106223229.GM6114@lukather>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-10-git-send-email-maxime.ripard@free-electrons.com>
+ <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446846529-10613-1-git-send-email-German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "J. German Rivera" <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cO2ZlOvi7VNgmdOy"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDGV6SYQKGQEFLWKZVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLuUUApGAgdw7U8EJ7p5yrYJg8AKFB32AE9Ufrf47=WpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello J. German,
+--cO2ZlOvi7VNgmdOy
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Fri, Nov 6, 2015 at 6:48 PM, J. German Rivera
-<German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Added sys-reboot node to the FSL's LS2080A SoC DT to leverage
-> the ARM-generic reboot mechanism for this SoC. This mechanism
-> is enabled through CONFIG_POWER_RESET_SYSCON.
->
+Hi Rob,
 
-What's in the changelog ends as a part of the commit message and
-usually the change history is not added there...
+On Fri, Oct 30, 2015 at 11:40:03AM -0500, Rob Herring wrote:
+> > +Display Engine Backend
+> > +----------------------
+> > +
+> > +The display engine backend exposes layers and sprites to the
+> > +system. It's split into two components, the frontend and backend, the
+> > +frontend doing formats conversion, scaling, deinterlacing, while the
+> > +backend actually manages the layers.
+> > +
+> > +Required properties:
+> > +  - compatible: value must be one of:
+> > +    * allwinner,sun5i-a13-display-engine
+> > +
+> > +  - reg: base address and size of the memory-mapped region. Two are needed:
+> > +    * backend0: registers of the display engine backend
+> > +    * frontend0: registers of the display engine frontend
+> 
+> Why the zeros? I think they should be dropped.
 
-> CHANGE HISTORY:
->
-> Changes in v3:
-> - Addressed comment from Stuart Yoder
->   * Fixed commit message to refer to LS2080A instead of LS2085A.
->
-> Changes in v2:
-> - Addressed comment form Stuart Yoder:
->   * Removed "@<address>" from reboot node
->
-> Changes in v3:
-> - Addressed comment form Stuart Yoder:
->   * Expose only the reset register
->
-> Changes in v4:
-> - Addressed comment from Arnd Bergmann:
->   * Changed compatible string to be more specific
->   * Changed node name to 'syscon' instead of 'rstcr'
->   * Changed address to lower case hex
-> - Addressed comment form Stuart Yoder:
->   * Rebase on top of branch arm-soc/for-next
->
-> Signed-off-by: J. German Rivera <German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
+We have SoCs that have two backends and two frontends, hence why I
+added 0. I guess I can also add several devices for them, but then I'd
+need to move to the component framework I guess (which was the plan anyway).
 
-...so the change history should be added here, between the '---'
-marker line and the patch diff since that section is omitted by tools
-like git-am when applying patches.
+> > +
+> > +  - allwinner,tcon: phandle to the TCON in our pipeline
+> 
+> Use of-graph or just let the relationship live in the driver. If there
+> is only 1 instance of the blocks, the latter is fine.
 
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index e81cd48..a790a90 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -153,6 +153,18 @@
->                 };
->         };
->
-> +       rstcr: syscon@1e60000 {
-> +               compatible = "fsl,ls2085a-rstcr", "syscon";
-> +               reg = <0x0 0x1e60000 0x0 0x4>;
-> +       };
-> +
-> +       reboot {
-> +               compatible ="syscon-reboot";
-> +               regmap = <&rstcr>;
-> +               offset = <0x0>;
-> +               mask = <0x2>;
-> +       };
-> +
->         timer {
->                 compatible = "arm,armv8-timer";
->                 interrupts = <1 13 0x8>, /* Physical Secure PPI, active-low */
-> --
+We can also have several TCON instances in the SoC, and even though
+you can on a theorical point of view use any TCON with any backend,
+usually you're tied because of how the pins are routed on the boards.
 
-The patch looks good to me though.
+Thanks!
+Maxime
 
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--cO2ZlOvi7VNgmdOy--
