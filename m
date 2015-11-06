@@ -1,54 +1,77 @@
-From: Zain <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: rockchip: Add Crypto drivers for rk3288
-Date: Fri, 6 Nov 2015 18:27:33 +0800
-Message-ID: <563C8095.30905@rock-chips.com>
-References: <1446772644-2352-1-git-send-email-zain.wang@rock-chips.com>
- <1446772644-2352-4-git-send-email-zain.wang@rock-chips.com>
- <4509145.eZ7GP0e6gb@phil>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: da7218: Add bindings documentation for DA7218
+ audio codec
+Date: Fri, 6 Nov 2015 10:30:32 +0000
+Message-ID: <20151106103032.GY18409@sirena.org.uk>
+References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <b7132781a4a41a20549e13b1835bb7f808f6be82.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <20151105145856.GM18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460C91F@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <4509145.eZ7GP0e6gb@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="B7FF+pnjRCrp0ISR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D460C91F@SW-EX-MBX01.diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE15bm0MTHmnIgwNuaXpSAxODoxMiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gQW0g
-RnJlaXRhZywgNi4gTm92ZW1iZXIgMjAxNSwgMDk6MTc6MjMgc2NocmllYiBaYWluIFdhbmc6Cj4+
-IEFkZCBDcnlwdG8gZHJpdmVycyBmb3IgcmszMjg4IGluY2x1ZGluZyBjcnlwdG8gY29udHJvbGxl
-ciBhbmQgZG1hIGNsay4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWmFpbiBXYW5nIDx6YWluLndhbmdA
-cm9jay1jaGlwcy5jb20+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VkIGluIHYyOgo+PiAtIE5vbmUKPj4K
-Pj4gQ2hhbmdlZCBpbiB2MToKPj4gLSByZW1vdmUgdGhlIF9jcnlwdG8gc3VmZml4Cj4+IC0gdXNl
-ICJyb2NrY2hpcCxyazMyODgtY3J5cHRvIiBpbnN0ZWFkIG9mICJyb2NrY2hpcCxyazMyODgiCj4+
-Cj4+ICBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSB8IDE1ICsrKysrKysrKysrKysrKwo+
-PiAgMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0
-c2kKPj4gaW5kZXggNmE3OWM5Yy4uN2I3OTE0ZSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvcmszMjg4LmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kK
-Pj4gQEAgLTE3MCw2ICsxNzAsMjEgQEAKPj4gIAkJfTsKPj4gIAl9Owo+PiAgCj4+ICsJY3J5cHRv
-OiBjeXB0by1jb250cm9sbGVyQGZmOGEwMDAwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hp
-cCxyazMyODgtY3J5cHRvIjsKPj4gKwkJcmVnID0gPDB4ZmY4YTAwMDAgMHg0MDAwPjsKPj4gKwkJ
-aW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ4IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+PiArCQljbG9j
-a3MgPSA8JmNydSBBQ0xLX0NSWVBUTz4sCj4+ICsJCQkgPCZjcnUgSENMS19DUllQVE8+LAo+PiAr
-CQkJIDwmY3J1IFNDTEtfQ1JZUFRPPiwKPj4gKwkJCSA8JmNydSBBQ0xLX0RNQUMxPjsKPj4gKwkJ
-Y2xvY2stbmFtZXMgPSAiYWNsayIsCj4+ICsJCQkgICAgICAiaGNsayIsCj4+ICsJCQkgICAgICAi
-c2NsayIsCj4+ICsJCQkgICAgICAiYXBiX3BjbGsiOwo+PiArCQlzdGF0dXMgPSAib2theSI7Cj4+
-ICsJfTsKPj4gKwo+IHBsZWFzZSBtb3ZlIHRoYXQgd2hvbGUgbm9kZSB0byB0aGUgcmlnaHQgbG9j
-YXRpb24uIEVudHJpZXMgYXJlIHNvcnRlZCBieSAKPiByZWdpc3RlciBhZGRyZXNzICh0aGUgZmY4
-YTAwMDAgc2hvdWxkIHRoZW4gb2YgY291cnNlIGJlIGJlbG93ICBpMnNAZmY4OTAwMDAgCj4gYW5k
-IGFib3ZlIHZvcEBmZjkzMDAwMCkKb2shIGRvbmUhCj4KPgo+PiAgCXJlc2VydmVkLW1lbW9yeSB7
-Cj4+ICAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAgCQkjc2l6ZS1jZWxscyA9IDwxPjsKPj4K
-Pgo+Cj4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-TGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1y
-b2NrY2hpcAo=
+
+--B7FF+pnjRCrp0ISR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Nov 05, 2015 at 05:59:29PM +0000, Opensource [Adam Thomson] wrote:
+> On November 05, 2015 14:59, Mark Brown wrote:
+
+> > > +- dlg,ldo-lvl : Required internal LDO voltage (mV) level
+> > > +	[<1050>, <1100>, <1200>, <1400>]
+
+> > Why would this ever be anything other than the minimum voltage, and
+> > might we not want to vary it at runtime?
+
+> Normally you are correct and you'll want minimum voltage for the digital engine
+> but there may be the possibility for certain platform scenarios that to meet
+> timings a higher voltage is required. Would prefer to leave this in in case it
+> is required in the future. As a side, the default setting is the lowest voltage,
+> if this binding is not provided.
+
+That doesn't make a huge degree of sense - your non-specific "certain
+platform scenarios" are almost certainly going to be DVFS things where
+you need to boost the voltage of the LDO when the device needs to
+operate at particularly high frequencies in which case the driver really
+ought to just manage the voltage appropriately as required (ideally only
+boosting it at the times where the extra load exists).
+
+Unless you can be more specific about what the intended use is this just
+doesn't seem like something we should be specifying in DT.
+
+> > These look like DSP coefficients which I would therefore expect to be
+> > configurable at runtime via a binary control rather than specified in
+> > the DT - why are they in the DT?
+
+> The expectation was these would be set once and left for a platform, which is
+> why I added them to the DT. However there's no reason they couldn't be moved
+> to binary control. Having looked at other codecs, I assume SND_SOC_BYTES* would
+> be the preferred method for setting this kind of data?
+
+Yes.
+
+--B7FF+pnjRCrp0ISR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWPIFHAAoJECTWi3JdVIfQt08H/0WkndFHZtEZogwh1UBOZbkX
+J7HuBti0sirozDtkzAc/rq2Su8x/yEjtnFMGFieBzT0vaHJtN3AW2g1R+PKw2Hxg
+gAfaFEZ4diZX4SPS7SPPQuDPi7tGt9leJ3u3bpKMsFMthaj2UUOgKJp+2246D2QM
+uUITga79ecLlPorHVacB5rBrU+0dkIbPVE0dN4E+MdOHT4x1q5B2yL6yzALT3hIx
+AFTcnQ65Cvs5wo2dHgryvcaK7YdKzeLOn6ZGJhu8Ce528tK7Uw3zD9jc4fMtGJpi
+8znVeLsNKX/C7cBoP6Ngk/PvLA82IDK75tJOyl/a0263fx+v7AbXkbSYN+BjMi0=
+=y5Uc
+-----END PGP SIGNATURE-----
+
+--B7FF+pnjRCrp0ISR--
