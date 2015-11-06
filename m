@@ -1,79 +1,25 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v2 0/4] Crypto: add crypto accelerator support for rk3288
-Date: Fri, 6 Nov 2015 09:36:48 +0800
-Message-ID: <563C0430.9000607@gmail.com>
-References: <1446772644-2352-1-git-send-email-zain.wang@rock-chips.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V2 0/5] PM / OPP: opp-supported-hw and <prop>-name
+ bindings
+Date: Fri, 6 Nov 2015 07:15:42 +0530
+Message-ID: <20151106014542.GE3773@ubuntu>
+References: <cover.1446687367.git.viresh.kumar@linaro.org>
+ <3673640.WbFJib59uF@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1446772644-2352-1-git-send-email-zain.wang@rock-chips.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Zain Wang <zain.wang@rock-chips.com>, zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, eddie.cai@rock-chips.com, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3673640.WbFJib59uF@vostro.rjw.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On 05-11-15, 23:31, Rafael J. Wysocki wrote:
+> So this clearly is a new feature and it clearly missed the merge window boundary
+> for v4.4.  I can queue it up for v4.5.
 
-=E5=9C=A8 2015=E5=B9=B411=E6=9C=8806=E6=97=A5 09:17, Zain Wang =E5=86=99=
-=E9=81=93:
-> This commit support three cipher(AES/DES/DES3) and two chainmode(ecb/=
-cbc),
-> and the more algorithms and new hash drivers will be added later on.
->
-> Changed in v2:
-> - remove some part about hash
-> - add weak key detection
-> - changed some variate's type
->
-> Changed in v1:
-> - modify some variate's name
-> - modify some variate's type
-> - modify some return value
-> - remove or modify some print info
-> - use more dev_xxx in probe
-> - modify the prio of cipher
-> - add Kconfig
->
-> Zain Wang (4):
->    Crypto: Crypto driver support aes/des/des3 for rk3288
->    clk: rockchip: set an id for crypto clk
->    ARM: dts: rockchip: Add Crypto drivers for rk3288
->    crypto: rockchip/crypto - add DT bindings documentation
-I guess the series patchs order should be:
+No issues as the relevant code is also going to get merged in 4.5 :)
 
-pacth 1/4 dt-binds/
-patch 2/4 clk id
-patch 3/4 crypto driver
-patch 4/4 dts
-
-
-
->
->   .../devicetree/bindings/crypto/rockchip-crypto.txt |  29 ++
->   arch/arm/boot/dts/rk3288.dtsi                      |  15 +
->   drivers/clk/rockchip/clk-rk3288.c                  |   2 +-
->   drivers/crypto/Kconfig                             |  11 +
->   drivers/crypto/Makefile                            |   1 +
->   drivers/crypto/rockchip/Makefile                   |   3 +
->   drivers/crypto/rockchip/rk3288_crypto.c            | 380 ++++++++++=
-+++++
->   drivers/crypto/rockchip/rk3288_crypto.h            | 222 +++++++++
->   drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c | 511 ++++++++++=
-+++++++++++
->   include/dt-bindings/clock/rk3288-cru.h             |   1 +
->   10 files changed, 1174 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/crypto/rockchi=
-p-crypto.txt
->   create mode 100644 drivers/crypto/rockchip/Makefile
->   create mode 100644 drivers/crypto/rockchip/rk3288_crypto.c
->   create mode 100644 drivers/crypto/rockchip/rk3288_crypto.h
->   create mode 100644 drivers/crypto/rockchip/rk3288_crypto_ablkcipher=
-=2Ec
->
-
-
---=20
-Thanks,
-Caesar
+-- 
+viresh
