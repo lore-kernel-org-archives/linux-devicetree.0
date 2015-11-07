@@ -1,109 +1,95 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: add SMP enable-method for Broadcom
- NSP
-Date: Sat, 7 Nov 2015 13:40:23 -0800
-Message-ID: <563E6FC7.6070700@gmail.com>
-References: <1446844273-6460-1-git-send-email-kapilh@broadcom.com>
- <1446844273-6460-2-git-send-email-kapilh@broadcom.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: Setup ethernet0 alias for u-boot
+Date: Sat, 07 Nov 2015 23:44:05 +0100
+Message-ID: <2126321.1P94dtJ1Xt@phil>
+References: <1446806797-20912-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446844273-6460-2-git-send-email-kapilh@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1446806797-20912-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 06/11/2015 13:11, Kapil Hali a =C3=A9crit :
-> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
-> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
-> documentation file and create a new binding documentation for
-> Northstar Plus CPU.
->=20
-> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
-> ---
->  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 36 ++++++++++++=
-++++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->  2 files changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,ns=
-p-cpu-method.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-m=
-ethod.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-meth=
-od.txt
-> new file mode 100644
-> index 0000000..8506da7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.t=
-xt
-> @@ -0,0 +1,36 @@
-> +Broadcom Northstar Plus SoC CPU Enable Method
-> +---------------------------------------------
-> +This binding defines the enable method used for starting secondary
-> +CPUs in the following Broadcom SoCs:
-> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM883=
-12
-> +
-> +The enable method is specified by defining the following required
-> +properties in the "cpus" device tree node:
-> +  - enable-method =3D "brcm,bcm-nsp-smp";
-> +  - secondary-boot-reg =3D <...>;
-> +
-> +The secondary-boot-reg property is a u32 value that specifies the
-> +physical address of the register used to request the ROM holding pen
-> +code release a secondary CPU.
+Am Freitag, 6. November 2015, 11:46:37 schrieb Sjoerd Simons:
+> Add an ethernet0 alias for the RK3288 mac interface so
+> that u-boot can find the device-node and fill in the mac address on
+> board that support a wired network interface.
+> 
+> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-Is it really how the ROM code is implemented, as a pen holding/release
-mechanism (which sounds like how this was implemented previously in the
-kernel actually) or should this be described in a more generic way as
-the physical address of the register where the secondary CPUs reset
-vector address must be written to? Or something along these lines.
+applied to me dts32 branch for 4.5
 
-> +
-> +Example:
-> +	cpus {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +		enable-method =3D "brcm,bcm-nsp-smp";
+while at it, I also added the alias for other supported Rockchip Socs
+the CortexA9 ones and the rk3368, like below:
 
-Just a nit, but if NSP and NS are sharing the same mechanism, would not
-a more "NS-centric" property be more appropriate because NS came before=
- NSP?
+------------ 8< --------------
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Date: Sat, 7 Nov 2015 22:37:26 +0100
+Subject: [PATCH] ARM: dts: rockchip: Setup rk3066/rk3188 ethernet0 alias for
+ u-boot
 
-> +		secondary-boot-reg =3D <0xffff042c>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type =3D "cpu";
-> +			compatible =3D "arm,cortex-a9";
-> +			next-level-cache =3D <&L2>;
-> +			reg =3D <0>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type =3D "cpu";
-> +			compatible =3D "arm,cortex-a9";
-> +			next-level-cache =3D <&L2>;
-> +			reg =3D <1>;
-> +		};
-> +	};
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documen=
-tation/devicetree/bindings/arm/cpus.txt
-> index 91e6e5c..6abe3f3 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -191,6 +191,7 @@ nodes to be present and contain the properties de=
-scribed below.
->  			    "allwinner,sun8i-a23"
->  			    "arm,psci"
->  			    "brcm,brahma-b15"
-> +			    "brcm,bcm-nsp-smp"
->  			    "marvell,armada-375-smp"
->  			    "marvell,armada-380-smp"
->  			    "marvell,armada-390-smp"
->=20
+Add an ethernet0 alias for the RK3066/RK3188 mac interface so
+that u-boot can find the device-node and fill in the mac address on
+boards that support a wired network interface.
 
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3xxx.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
---=20
-=46lorian
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 4497d28..99eeea7 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -49,6 +49,7 @@
+ 	interrupt-parent = <&gic>;
+ 
+ 	aliases {
++		ethernet0 = &emac;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+-- 
+2.6.2
+
+------------ 8< --------------
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Date: Sat, 7 Nov 2015 22:39:26 +0100
+Subject: [PATCH] arm64: dts: rockchip: Setup rk3368 ethernet0 alias for u-boot
+
+Add an ethernet0 alias for the RK3368 mac interface so
+that u-boot can find the device-node and fill in the mac address on
+boards that support a wired network interface.
+
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index cc093a4..1f10b85 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -53,6 +53,7 @@
+ 	#size-cells = <2>;
+ 
+ 	aliases {
++		ethernet0 = &gmac;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+-- 
+2.6.2
+
+------------ 8< --------------
