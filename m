@@ -1,57 +1,64 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 3/3] PCI: pcie-rcar: Add support for R-Car H3.
-Date: Sat, 7 Nov 2015 14:29:55 +0100
-Message-ID: <20151107132955.GB21726@katana>
-References: <1446482175-26507-1-git-send-email-phil.edworthy@renesas.com>
- <1446482175-26507-4-git-send-email-phil.edworthy@renesas.com>
+From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Better compatible for the rockchip thermal and
+ support RK3368 SoCs
+Date: Sat, 07 Nov 2015 23:47:45 +0800
+Message-ID: <563E1D21.8030502@gmail.com>
+References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com>
+ <20151106184739.GA8202@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446482175-26507-4-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20151106184739.GA8202-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---O5XBE6gyVG5Rl6Rj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 02, 2015 at 04:36:15PM +0000, Phil Edworthy wrote:
-> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
->=20
-> R-Car H3 device is r8a7795
->=20
-> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
-
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---O5XBE6gyVG5Rl6Rj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWPfzSAAoJEBQN5MwUoCm2+KcQAIBiwBnJFAwCjWPDggwNyvUQ
-ME02Do0BZKdxBBZwkYyoK/U51Rb9quRWX0ceNkYJ+wYKh0gkHg6/AZzEmDrs0nUA
-xWMCodnB2669smGmLr5aEwy+fmFSlC9HR6m7s8gHoxGJVHedT9scycHzGm3pz3d3
-OoyrGW5KPNHdCHMJOy3I887k/YfCY514AoHy0zhDFvbgDedhg3zIcw53aP1/Ycbg
-Qy0gmrRugecdRz1s8Q+NjmjfKRg3bKH3H+ffTM7T51XBy+2pslCEwrKx77yikexA
-VocmfMNJtitZNYFQAKxfltaUpfPgwDeHNaVYhpl2gtzwUTTxjAImbbyv/vo7zKG5
-1vNZfQ6rW/8ozbZYe7YsF8cWBVB2adHXu3tOwSmheuobVl7WkYnZNCl5D8Nfl9Jj
-Yo7ANPC6mjZUsljtmxv84n8XJhnx4XZ23Zl274LrFOdGADB097irmLAnz+CHZ3pP
-UmPcPVgZFcU/oN6a1LL0f4/zBaHGw8LhlNMBYhJUsGhQGtHR1CKrRVj63AUuoceH
-d2tUO7iDpE72K99m/ZwQCqGrVv5GMBytXlVwqn886NML+TuX92fqo9s/BXlx+YZO
-2IOLIiL9riSyXbAT8KQAwCe89O+MUlbzwG3IkdcYMQ1SUfa4c9bdihX0JQxV9mLT
-1X/JNwTeEvsqFT/NS4v7
-=Kzlj
------END PGP SIGNATURE-----
-
---O5XBE6gyVG5Rl6Rj--
+SGkgRWR1YXJkbywKCuWcqCAyMDE15bm0MTHmnIgwN+aXpSAwMjo0NywgRWR1YXJkbyBWYWxlbnRp
+biDlhpnpgZM6Cj4gQ2Flc2FyLAo+Cj4gT24gVGh1LCBOb3YgMDUsIDIwMTUgYXQgMDE6MTc6NTZQ
+TSArMDgwMCwgQ2Flc2FyIFdhbmcgd3JvdGU6Cj4+IFRoaXMgc2VyaWVzIHBhdGNocyBhcmUgd29y
+a2luZyBmb3IgUkszMzY4IG9uIFJvY2tjaGlwIHBsYXRmb3JtLgo+Pgo+IEdvb2QgdG8gc2VlIHRo
+ZSBwZXJzZXZlcmFuY2UhIDotKQoKSSB3aWxsIHNlbmQgdGggcGF0Y2ggWzQtNl0gIG5leHQgdmVy
+c2lvbiBhbmQgYW5vdGhlciBwYWN0aChmaXggdGhlIGxvbmcgCnRlbXAtPmludCB0ZW1wKSBvbiB0
+b21vcnJvdy4KTmVlZCB0aGUgdmVyaWZ5IGl0IG9uIG15IGJvYXJkIGZpcnN0bHkuOi1QCgoKPgo+
+PiBASGVpa28sCj4+ICAgICAgVGhlIFBBVENIIFs1LzZdIGlzIHdvcmtpbmcgYmFzZWQgb24gYmln
+L2xpdHRlbCBjbHVzdGVyIGNwdWZyZXEKPj4gICAgICBhZGRlZC4gQW55d2F5LCB0aGUgUEFUQ0gg
+WzUvNl0gYWxzbyB3b3JrIGZvciBuZXh0IGtlcm5lbC4KPj4KPj4gQEVkdWFyZG8sCj4+IFRoaXMg
+cGF0Y2hzZXQgYXJlIGJhc2VkIG9uIGxpbnVzIG1hc3RlciBicmFuY2guCj4+IE5vdGU6IE5lZWQg
+YWRkIHRoZSBmb2xsb3dpbmcgdGhlcm1hbCBwYXRjaHMgZm9yIHRoZXJtYWwgZHJpdmVyIGJlZm9y
+ZSBhcHBseQo+PiB0aGlzIHNlcmllcyBwYXRjaHMuCj4+Cj4+IDEpIHRoZXJtYWw6IHJvY2tjaGlw
+OiBmaXggaGFuZGxpbmcgb2YgaW52YWxpZCByZWFkaW5ncwo+PiAoaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wYXRjaC82OTczMTAxLykKPj4KPj4gMikgdGhlcm1hbDogcm9ja2hpcDogZml4
+IHNldHRpbmcgdGhlcm1hbCBzaHV0ZG93biBwb2xhcml0eQo+PiAoaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wYXRjaC82OTczMTMxLykKPj4KPj4gMykgZHQtYmluZGluZ3M6IHJvY2tjaGlw
+LXRoZXJtYWw6IEFkZCB0aGUgcGluY3RybCBzdGF0ZXMgaW4gdGhpcyBkb2N1bWVudAo+PiAoaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC83NDcyMDIxLykKPj4KPj4gNCkgdGhlcm1h
+bDogcm9ja2NoaXA6IHN1cHBvcnQgdGhlIHNsZWVwIHBpbmN0cmwgc3RhdGUgdG8gYXZvaWQgZ2xp
+dGNoZXMgaW4gczJyCj4+IChodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzc0NzIw
+NTEvKQo+Pgo+PiBJJ20gZ2xhZCB0aGVzZSBwYXRjaHMgaGF2ZSBtZXJnZWQgaW4gdGhlcm1hbC1z
+b2MgZ2l0IHRyZWUgd2hpY2ggY2FuIGJlIGZvdW5kIGF0Cj4+IGdpdDovL2dpdC5rZXJuZWwub3Jn
+L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9ldmFsZW50aS9saW51eC1zb2MtdGhlcm1hbC5naXQK
+PiBZZWFoLCBhcG9sb2dpemUgdGhlIGRlbGF5IG9uIGdpdmluZyB5b3UgYSBmZWVkYmFjayBvbiB5
+b3VyIGNvZGUuIEFzIEkKPiBtZW50aW9uZWQgYmVmb3JlLCBJIGhhZCBhIGNvdXBsZSBvZiBvdGhl
+ciB0aGluZ3MgaW4gcGFzdCB3ZWVrcyB0aGF0Cj4gY29uc3VtZWQgbXkgdGltZS4KCkkgc2VlLCB0
+aGF0IGhhdmUgYmVlbiBhIHZlcnkgcmVzcG9uc2UgZnJvbSB5b3UuClRoYW5rIHlvdSB0YWtpbmcg
+eW91ciB0aW1lIHRvIHJldmlldyB0aGlzIHNlcmllcyBwYXRjaHMuOi0pCgoKPiBBbnl3YXlzLCB0
+aGlzIHNwZWNpZmljIHBhdGNoIHNlcmllcyBsb29rcyB3YXkgYmV0dGVyIG5vdyB0aGF0IHlvdSBo
+YXZlCj4gc3BsaXQgaXQgZnVydGhlci4gSSB3aWxsIGhhdmUgYSBiZXR0ZXIgbG9vayBvbiBpdCBh
+Z2FpbiBhbmQgbGV0IHlvdQo+IGtub3cgd2hlbiBpdCB3aWxsIGxhbmQuCgpNYW55IHRoYW5rIGFn
+YWluLgoKPiBCUiwKPgo+IEVkdWFyZG8gVmFsZW50aW4KPgo+Cj4gX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlw
+IG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
