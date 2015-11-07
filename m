@@ -1,72 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/3] sound: soc: Add audio support for
- Broadcom Cygnus SoC
-Date: Sat, 7 Nov 2015 09:18:37 +0000
-Message-ID: <20151107091837.GA6746@sirena.org.uk>
-References: <1446862965-18667-1-git-send-email-ssimran@broadcom.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 3/3] PCI: pcie-rcar: Add support for R-Car H3.
+Date: Sat, 7 Nov 2015 14:29:55 +0100
+Message-ID: <20151107132955.GB21726@katana>
+References: <1446482175-26507-1-git-send-email-phil.edworthy@renesas.com>
+ <1446482175-26507-4-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3597635093032287145=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1446862965-18667-1-git-send-email-ssimran@broadcom.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Simran Rai <ssimran@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lori Hikichi <lhikichi@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Arun Parameswaran <arunp@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446482175-26507-4-git-send-email-phil.edworthy@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3597635093032287145==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Content-Disposition: inline
-
-
---gBBFr7Ir9EOA20Yy
+--O5XBE6gyVG5Rl6Rj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 06, 2015 at 06:22:42PM -0800, Simran Rai wrote:
+On Mon, Nov 02, 2015 at 04:36:15PM +0000, Phil Edworthy wrote:
+> From: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
+>=20
+> R-Car H3 device is r8a7795
+>=20
+> Signed-off-by: Harunobu Kurokawa <harunobu.kurokawa.dn@renesas.com>
 
-> Simran Rai (3):
->   dt-bindings: sound: Add DT bindings for Broadcom Cygnus audio
->   sound: soc: Add Cygnus audio DAI driver
->   sound: soc: Add Cygnus audio DMA driver
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-To repeat what I said last time:=20
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---gBBFr7Ir9EOA20Yy
+--O5XBE6gyVG5Rl6Rj
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBCAAGBQJWPcHqAAoJECTWi3JdVIfQNJ8H/A8sOR/q8oYbf3lirbLQvK12
-CcqIhsDAIwUlKXazo21OpxebXFikvRXMuPTixZKTezLYIte3QIac6W/3D7Arr25v
-nM0rFz1XcjyJ56ml9fDizIkeOkzyljJLeTqBsS5Wj+Az/mQQ+l0mR8PHK2nVBCf5
-2uXG57e+I7N1pXAFacdYgX1mDbl7WbQ7baF7pT784/RPTVyXRSBoXGHOpJPi4M9O
-O+x6Ot4EN7pk0EeFqnz5Y1E6/Xq2O8fIRgC4a2pS4Ogq/zch3V/W0QcHBCubJOi+
-U9oKRWFrMhU8xtgsxkKo7puiByhYV0kZtP0haZWdw54LgDMoL4apnh+A8Y3x0qA=
-=tQqf
+iQIcBAEBAgAGBQJWPfzSAAoJEBQN5MwUoCm2+KcQAIBiwBnJFAwCjWPDggwNyvUQ
+ME02Do0BZKdxBBZwkYyoK/U51Rb9quRWX0ceNkYJ+wYKh0gkHg6/AZzEmDrs0nUA
+xWMCodnB2669smGmLr5aEwy+fmFSlC9HR6m7s8gHoxGJVHedT9scycHzGm3pz3d3
+OoyrGW5KPNHdCHMJOy3I887k/YfCY514AoHy0zhDFvbgDedhg3zIcw53aP1/Ycbg
+Qy0gmrRugecdRz1s8Q+NjmjfKRg3bKH3H+ffTM7T51XBy+2pslCEwrKx77yikexA
+VocmfMNJtitZNYFQAKxfltaUpfPgwDeHNaVYhpl2gtzwUTTxjAImbbyv/vo7zKG5
+1vNZfQ6rW/8ozbZYe7YsF8cWBVB2adHXu3tOwSmheuobVl7WkYnZNCl5D8Nfl9Jj
+Yo7ANPC6mjZUsljtmxv84n8XJhnx4XZ23Zl274LrFOdGADB097irmLAnz+CHZ3pP
+UmPcPVgZFcU/oN6a1LL0f4/zBaHGw8LhlNMBYhJUsGhQGtHR1CKrRVj63AUuoceH
+d2tUO7iDpE72K99m/ZwQCqGrVv5GMBytXlVwqn886NML+TuX92fqo9s/BXlx+YZO
+2IOLIiL9riSyXbAT8KQAwCe89O+MUlbzwG3IkdcYMQ1SUfa4c9bdihX0JQxV9mLT
+1X/JNwTeEvsqFT/NS4v7
+=Kzlj
 -----END PGP SIGNATURE-----
 
---gBBFr7Ir9EOA20Yy--
-
---===============3597635093032287145==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3597635093032287145==--
+--O5XBE6gyVG5Rl6Rj--
