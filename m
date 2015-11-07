@@ -1,74 +1,49 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] of: Provide static inline function for of_translate_address if needed
-Date: Fri,  6 Nov 2015 19:28:22 -0800
-Message-ID: <1446866902-31492-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] of: Provide static inline function for of_translate_address if needed
+Date: Sat, 07 Nov 2015 10:02:20 +0100
+Message-ID: <3724502.6sHTjrfvab@wuerfel>
+References: <1446866902-31492-1-git-send-email-linux@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446866902-31492-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If OF_ADDRESS is not configured, builds can fail with errors such as
+On Friday 06 November 2015 19:28:22 Guenter Roeck wrote:
+> If OF_ADDRESS is not configured, builds can fail with errors such as
+> 
+> drivers/net/ethernet/hisilicon/hns_mdio.c:
+> 	In function 'hns_mdio_bus_name':
+> drivers/net/ethernet/hisilicon/hns_mdio.c:411:3:
+> 	error: implicit declaration of function 'of_translate_address'
+> 
+> as currently seen when building sparc:allmodconfig.
+> 
+> Introduce a static inline function if OF_ADDRESS is not configured to fix
+> the build failure. Return OF_BAD_ADDR in this case. For this to work, the
+> definition of OF_BAD_ADDR has to be moved outside CONFIG_OF conditional
+> code.
+> 
+> Fixes: 876133d3161d ("net: hisilicon: add OF dependency")
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-drivers/net/ethernet/hisilicon/hns_mdio.c:
-	In function 'hns_mdio_bus_name':
-drivers/net/ethernet/hisilicon/hns_mdio.c:411:3:
-	error: implicit declaration of function 'of_translate_address'
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-as currently seen when building sparc:allmodconfig.
+Thanks for the fix.
 
-Introduce a static inline function if OF_ADDRESS is not configured to fix
-the build failure. Return OF_BAD_ADDR in this case. For this to work, the
-definition of OF_BAD_ADDR has to be moved outside CONFIG_OF conditional
-code.
+Rob/Frank, any chance we get this into -rc1 through your tree?
 
-Fixes: 876133d3161d ("net: hisilicon: add OF dependency")
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- include/linux/of.h         | 4 ++--
- include/linux/of_address.h | 7 +++++++
- 2 files changed, 9 insertions(+), 2 deletions(-)
+The background is that a bugfix I did for a network driver started
+causing the build error on sparc allmodconfig, and it would be nice
+to have 4.4-rc1 build fine without having to back out my fix.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 2194b8ca41f9..dd10626a615f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -126,6 +126,8 @@ extern raw_spinlock_t devtree_lock;
- #define OF_POPULATED	3 /* device already created for the node */
- #define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
- 
-+#define OF_BAD_ADDR	((u64)-1)
-+
- #ifdef CONFIG_OF
- void of_core_init(void);
- 
-@@ -229,8 +231,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
- #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
- #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
- 
--#define OF_BAD_ADDR	((u64)-1)
--
- static inline const char *of_node_full_name(const struct device_node *np)
- {
- 	return np ? np->full_name : "<no-node>";
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index d88e81be6368..507daad0bc8d 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -57,6 +57,13 @@ extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- 				u64 *paddr, u64 *size);
- extern bool of_dma_is_coherent(struct device_node *np);
- #else /* CONFIG_OF_ADDRESS */
-+
-+static inline u64 of_translate_address(struct device_node *np,
-+				       const __be32 *addr)
-+{
-+	return OF_BAD_ADDR;
-+}
-+
- static inline struct device_node *of_find_matching_node_by_address(
- 					struct device_node *from,
- 					const struct of_device_id *matches,
--- 
-2.1.4
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
