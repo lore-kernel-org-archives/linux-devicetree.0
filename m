@@ -1,85 +1,74 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [rtc-linux] Re: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add
- documentation for s2mps15 PMIC
-Date: Sat, 7 Nov 2015 12:09:38 +0900
-Message-ID: <563D6B72.9010004@samsung.com>
-References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
- <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
- <20151106223339.GA22411@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] of: Provide static inline function for of_translate_address if needed
+Date: Fri,  6 Nov 2015 19:28:22 -0800
+Message-ID: <1446866902-31492-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151106223339.GA22411@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rtc-linux@googlegroups.com, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: k.kozlowski.k@gmail.com, lee.jones@linaro.org, broonie@kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 07.11.2015 o 07:33, Rob Herring pisze:
-> On Fri, Oct 30, 2015 at 11:55:31AM +0530, Alim Akhtar wrote:
->> From: Thomas Abraham <thomas.ab@samsung.com>
->>
->> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 device
->> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regulators.
->> This also supports RTC and three 32.768KHz clock outputs.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
->> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> ---
->>  Documentation/devicetree/bindings/mfd/s2mps11.txt |   21 ++++++++++++++-------
->>  1 file changed, 14 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
->> index 890f0b0e1643..4c0543ceec25 100644
->> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
->> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
->> @@ -1,5 +1,5 @@
->>  
->> -* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current Regulator
->> +* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
->>  
->>  The Samsung S2MPS11 is a multi-function device which includes voltage and
->>  current regulators, RTC, charger controller and other sub-blocks. It is
->> @@ -7,8 +7,12 @@ interfaced to the host controller using an I2C interface. Each sub-block is
->>  addressed by the host system using different I2C slave addresses.
->>  
->>  Required properties:
->> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-pmic"
->> -	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
->> +- compatible: Should be one of the following
->> +	- "samsung,s2mps11-pmic"
->> +	- "samsung,s2mps13-pmic"
->> +	- "samsung,s2mps14-pmic"
->> +	- "samsung,s2mps15-pmic"
->> +	- "samsung,s2mpu02-pmic".
->>  - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
->>  
->>  Optional properties:
->> @@ -24,7 +28,7 @@ Optional properties:
->>    unwanted buck warm reset (setting buck voltages to default values).
->>  
->>  Optional nodes:
->> -- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffered 32.768
->> +- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/BT) buffered 32.768
-> 
-> s5m8767 doesn't seem to be documented. Can you please fix or remove.
+If OF_ADDRESS is not configured, builds can fail with errors such as
 
-What exactly do you have in mind?
+drivers/net/ethernet/hisilicon/hns_mdio.c:
+	In function 'hns_mdio_bus_name':
+drivers/net/ethernet/hisilicon/hns_mdio.c:411:3:
+	error: implicit declaration of function 'of_translate_address'
 
-The s5m8767-clk is already documented as part of clk-s2mps11.c driver:
-Documentation/devicetree/bindings/mfd/s2mps11.txt
+as currently seen when building sparc:allmodconfig.
 
-The main s5m8767 MFD driver is documented as part of regulator driver:
-Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
+Introduce a static inline function if OF_ADDRESS is not configured to fix
+the build failure. Return OF_BAD_ADDR in this case. For this to work, the
+definition of OF_BAD_ADDR has to be moved outside CONFIG_OF conditional
+code.
 
-Yes, this may be confusing... They S2M and S5M family devices share:
- - main mfd driver,
- - rtc driver,
- - clk driver.
+Fixes: 876133d3161d ("net: hisilicon: add OF dependency")
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ include/linux/of.h         | 4 ++--
+ include/linux/of_address.h | 7 +++++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-but regulator drivers are separate.
-
-Best regards,
-Krzysztof
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 2194b8ca41f9..dd10626a615f 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -126,6 +126,8 @@ extern raw_spinlock_t devtree_lock;
+ #define OF_POPULATED	3 /* device already created for the node */
+ #define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
+ 
++#define OF_BAD_ADDR	((u64)-1)
++
+ #ifdef CONFIG_OF
+ void of_core_init(void);
+ 
+@@ -229,8 +231,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+ 
+-#define OF_BAD_ADDR	((u64)-1)
+-
+ static inline const char *of_node_full_name(const struct device_node *np)
+ {
+ 	return np ? np->full_name : "<no-node>";
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index d88e81be6368..507daad0bc8d 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -57,6 +57,13 @@ extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+ 				u64 *paddr, u64 *size);
+ extern bool of_dma_is_coherent(struct device_node *np);
+ #else /* CONFIG_OF_ADDRESS */
++
++static inline u64 of_translate_address(struct device_node *np,
++				       const __be32 *addr)
++{
++	return OF_BAD_ADDR;
++}
++
+ static inline struct device_node *of_find_matching_node_by_address(
+ 					struct device_node *from,
+ 					const struct of_device_id *matches,
+-- 
+2.1.4
