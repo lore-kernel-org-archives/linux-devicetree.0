@@ -1,44 +1,38 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v2 0/9] Better compatible for the rockchip thermal and
- support RK3368 SoCs
-Date: Sat, 07 Nov 2015 23:53:30 +0800
-Message-ID: <563E1E7A.6010503@gmail.com>
-References: <1446700685-18017-1-git-send-email-wxt@rock-chips.com> <20151106184739.GA8202@localhost.localdomain> <1509087.903MXQEqfv@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1509087.903MXQEqfv@phil>
-Sender: linux-pm-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jiri Kosina <trivial@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Zhang Rui <rui.zhang@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v2 0/3] dmaengine: Add supports for APM X-Gene SoC CRC32C accerlerator driver
+Date: Sat,  7 Nov 2015 22:07:03 +0530
+Message-ID: <1446914226-23402-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, kgondkar@apm.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+This patch implements support for APM X-Gene SoC CRC32C h/w accelerator driver
+and adds CRC32C computations support in dmaengine framework. APM X-Gene SoC has
+DMA engine capable of performing CRC32C computations.
 
-=E5=9C=A8 2015=E5=B9=B411=E6=9C=8807=E6=97=A5 03:03, Heiko Stuebner =E5=
-=86=99=E9=81=93:[]
+v2 changes:
+	1. Added helper function in dmaengine framework
+	2. Documented CRC32C support in Documentations/dmaengine/provider.txt
+	3. Fixed algo name
+	4. Fixed coding style issues
 
-[....]
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
 
-> I call dibs on the devicetree patches :-) .
->
-> Code and dt parts are very much separate, so I'd like to take the dt =
-parts
-> though my tree and arm-soc to keep further dts changes together.
-> Of course only once you are ok with the code parts :-)
->
-> Devicetree parts themselfs look ok to me.
+Rameshwar Prasad Sahu (3):
+  dmaengine: Add support for new feature CRC32C computations
+  dmaengine: xgene-dma: Add support for CRC32C computations via DMA
+    engine
+  Crypto: Add support for APM X-Gene SoC CRC32C h/w accelerator driver
 
-Many thanks, I guess that I don't need send the dts patch again.;-)
-the Code is still a bit change for thermal driver.
-
->
-> Heiko
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+ Documentation/dmaengine/provider.txt |    3 +
+ drivers/crypto/Kconfig               |    8 +
+ drivers/crypto/Makefile              |    1 +
+ drivers/crypto/xgene-crc32c.c        |  234 +++++++++++++++++++++++++
+ drivers/dma/dmaengine.c              |    2 +
+ drivers/dma/xgene-dma.c              |  314 ++++++++++++++++++++++++++++++++--
+ include/linux/dmaengine.h            |   13 ++
+ 7 files changed, 560 insertions(+), 15 deletions(-)
+ create mode 100755 drivers/crypto/xgene-crc32c.c
