@@ -1,13 +1,13 @@
 From: Julia Lawall <julia.lawall@lip6.fr>
 Subject: Re: [PATCH] dma: fix returnvar.cocci warnings
-Date: Sun, 8 Nov 2015 21:17:46 +0000 (GMT)
-Message-ID: <alpine.DEB.2.10.1511082117070.2583@hadrien>
+Date: Sun, 8 Nov 2015 21:19:04 +0000 (GMT)
+Message-ID: <alpine.DEB.2.10.1511082118220.2583@hadrien>
 References: <alpine.DEB.2.10.1511080843100.2637@hadrien> <CAHp75VdRN14EWUaTPzO45Z_mBzeQ=9sqzP3mMsMSQ2nXNi5QKg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <CAHp75VdRN14EWUaTPzO45Z_mBzeQ=9sqzP3mMsMSQ2nXNi5QKg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Julia Lawall <julia.lawall@lip6.fr>, Sinan Kaya <okaya@codeaurora.org>, Andy Gross <agross@codeaurora.org>, kbuild-all@01.org, dmaengine <dmaengine@vger.kernel.org>, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, linux-arm-msm@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
@@ -23,16 +23,15 @@ On Sun, 8 Nov 2015, Andy Shevchenko wrote:
 > >
 > > CC: Sinan Kaya <okaya@codeaurora.org>
 > > Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
-
-Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-
-Sorry for the oversight.
-
-julia
-
 >
 > Who is the author?
 > I suppose Fengguang is the reporter, right?
+
+There is no human author...  But normally when I check these I add a
+signed off by line to them.
+
+julia
+
 >
 > > ---
 > >
