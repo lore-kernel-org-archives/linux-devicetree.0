@@ -1,225 +1,171 @@
+Return-Path: <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v3 10/10] arm64: dts: Enable the Thermal on R88 board
+References: <201511082118.g4TUWjlz%fengguang.wu@intel.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Message-ID: <563F58BC.3050409@gmail.com>
+Date: Sun, 8 Nov 2015 22:14:20 +0800
 MIME-Version: 1.0
-In-Reply-To: <5641AC59.50204@samsung.com>
-References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
-	<1447046787-480-11-git-send-email-alim.akhtar@samsung.com>
-	<20151109162312.GA32748@rob-hp-laptop>
-	<5641AC59.50204@samsung.com>
-Date: Tue, 10 Nov 2015 07:18:56 -0600
-Message-ID: <CAL_Jsq+0CSkekH92wWcBOtfL7Dj_+uApaKzejqewtDU766Kb=g@mail.gmail.com>
-Subject: Re: [PATCH v5 10/11] Documentation: devicetree: ufs: Add DT bindings
- for exynos UFS host controller
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, gautam.vivek@samsung.com, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+In-Reply-To: <201511082118.g4TUWjlz%fengguang.wu@intel.com>
+Content-Type: multipart/alternative;
+ boundary="------------070707050606060407050601"
+To: kbuild test robot <lkp@intel.com>
+Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
+This is a multi-part message in MIME format.
+--------------070707050606060407050601
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On Tue, Nov 10, 2015 at 2:35 AM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
-> Hi Rob,
+
+在 2015年11月08日 21:42, kbuild test robot 写道:
+> Hi Caesar,
+>
+> [auto build test ERROR on: soc-thermal/next]
+> [also build test ERROR on: next-20151106]
+> [cannot apply to: rockchip/for-next v4.3]
+>
+> url:    https://github.com/0day-ci/linux/commits/Caesar-Wang/Better-compatible-for-the-rockchip-thermal-and-support-RK3368-SoCs/20151108-173308
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal next
+> config: arm64-defconfig (attached as .config)
+> reproduce:
+>          wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          make.cross ARCH=arm64
+>
+> All errors (new ones prefixed by >>):
+>
+>>> Error: arch/arm64/boot/dts/rockchip/rk3368-r88.dts:345.1-7 syntax error
+>     FATAL ERROR: Unable to parse input tree
+
+Missing a ';'
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -340,7 +340,7 @@
+         rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
+         rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
+         status = "okay";
+-}
++};
+
+Sorry for that,  my make scripts is rk3368-evb.dtsi（in local file for 
+sdk board) no include r88 to build.:-(
+
+Many thanks.
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> [attachment]
+>
+> .config.gz
+> download: http://u.163.com/t0/X4h6Ssaywr
 >
 >
-> On 11/09/2015 09:53 PM, Rob Herring wrote:
->>
->> On Mon, Nov 09, 2015 at 10:56:26AM +0530, Alim Akhtar wrote:
->>>
->>> From: Seungwon Jeon <essuuj@gmail.com>
->>>
->>> This adds Exynos Universal Flash Storage (UFS) Host Controller DT
->>> bindings.
->>>
->>> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> ---
->>>   .../devicetree/bindings/ufs/ufs-exynos.txt         |  104
->>> ++++++++++++++++++++
->>>   1 file changed, 104 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->>> b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->>> new file mode 100644
->>> index 000000000000..08e2d1497b1b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->>> @@ -0,0 +1,104 @@
->>> +* Exynos Universal Flash Storage (UFS) Host Controller
->>> +
->>> +UFSHC nodes are defined to describe on-chip UFS host controllers.
->>> +Each UFS controller instance should have its own node.
->>> +
->>> +Required properties:
->>> +- compatible        : compatible name, contains "samsung,exynos7-ufs"
->>> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
->>> +- reg               : Should contain HCI, vendor specific, UNIPRO and
->>> +                     UFS protector address space
->>> +- reg-names        : "hci", "vs_hci", "unipro", "ufsp";
->>
->>
->> No phy for MPHY?
->>
-> ufs-phy is documented, see 01/11 of this series.
->>>
->>> +
->>> +Optional properties:
->>> +- vdd-hba-supply        : phandle to UFS host controller supply
->>> regulator node
->>> +- vcc-supply            : phandle to VCC supply regulator node
->>> +- vccq-supply           : phandle to VCCQ supply regulator node
->>> +- vccq2-supply          : phandle to VCCQ2 supply regulator node
->>> +- vcc-supply-1p8        : For embedded UFS devices, valid VCC range is
->>> 1.7-1.95V
->>> +                          or 2.7-3.6V. This boolean property when set,
->>> specifies
->>> +                         to use low voltage range of 1.7-1.95V. Note for
->>> external
->>> +                         UFS cards this property is invalid and valid
->>> VCC range is
->>> +                         always 2.7-3.6V.
->>> +- vcc-max-microamp      : specifies max. load that can be drawn from vcc
->>> supply
->>> +- vccq-max-microamp     : specifies max. load that can be drawn from
->>> vccq supply
->>> +- vccq2-max-microamp    : specifies max. load that can be drawn from
->>> vccq2 supply
->>
->>
->> Some of these are supplies to the flash chip, so you should make
->> these common properties (in a common doc).
->>
-> Ah, yes these are duplicated, already documented in common ufshcd file
-> Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> What is the recommended way, do I need to include it here as well? or just
-> mentioning that "same as documented in ufshcd-pltfrm.txt"?
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
 
->
->>> +- <name>-fixed-regulator : boolean property specifying that
->>> <name>-supply is a fixed regulator
->>
->>
->> This should be determined from the regulator.
->>
-> Same as above already documented as part of ufshcd-pltfrm binding.
->>>
->>> +
->>> +- clocks                : List of phandle and clock specifier pairs
->>> +- clock-names           : List of clock input name strings sorted in the
->>> same
->>> +                          order as the clocks property.
->>> +                         "core", "sclk_unipro_main", "ref" and
->>> ref_parent
->>> +
->>> +- freq-table-hz                : Array of <min max> operating
->>> frequencies stored in the same
->>> +                         order as the clocks property. If this property
->>> is not
->>> +                         defined or a value in the array is "0" then it
->>> is assumed
->>> +                         that the frequency is set by the parent clock
->>> or a
->>> +                         fixed rate clock source.
->>> +- pclk-freq-avail-range : specifies available frequency range(min/max)
->>> for APB clock
->>> +- ufs,pwr-attr-mode : specifies mode value for power mode change,
->>> possible values are
->>> +                       "FAST", "SLOW", "FAST_auto" and "SLOW_auto"
->>
->>
->> ufs is not a vendor. Use a '-' rather than ','.
->>
-> Ok will change.
->>>
->>> +- ufs,pwr-attr-lane : specifies lane count value for power mode change
->>> +                     allowed values are 1 or 2
->>> +- ufs,pwr-attr-gear : specifies gear count value for power mode change
->>> +                     allowed values are 1 or 2
->>> +- ufs,pwr-attr-hs-series : specifies HS rate series for power mode
->>> change
->>> +                          can be one of "HS_rate_b" or "HS_rate_a"
->>> +- ufs,pwr-local-l2-timer : specifies array of local UNIPRO L2 timer
->>> values
->>> +                          3 timers supported
->>> +                          <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal,
->>> AFC0ReqTimeOutVal>
->>> +- ufs,pwr-remote-l2-timer : specifies array of remote UNIPRO L2 timer
->>> values
->>> +                          3 timers supported
->>> +                          <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal,
->>> AFC0ReqTimeOutVal>
->>> +- ufs-rx-adv-fine-gran-sup_en : specifies support of fine granularity of
->>> MPHY,
->>> +                             this is a boolean property.
->>> +- ufs-rx-adv-fine-gran-step : specifies granularity steps of MPHY,
->>> +                             allowed step size is 0 to 3
->>> +- ufs-rx-adv-min-activate-time-cap : specifies rx advanced minimum
->>> activate time of MPHY
->>> +                                    range is 1 to 9
->>> +- ufs-pa-granularity : specifies Granularity for PA_TActivate and
->>> PA_Hibern8Time
->>> +- ufs-pa-tacctivate : specifies time to wake-up remote M-RX
->>> +- ufs-pa-hibern8time : specifies minimum time to wait in HIBERN8 state
->>
->>
->> These are all M-PHY properties?
->>
-> These are UIC (ufs interconnect) attributes related to M-PHY and Unipro
-> blocks.
->
->>> +
->>> +Note: If above properties are not defined it can be assumed that the
->>> supply
->>> +regulators or clocks are always on.
->>> +
->>> +Example:
->>> +       ufshc@0x15570000 {
->>> +               compatible = "samsung,exynos7-ufs";
->>> +               reg = <0x15570000 0x100>,
->>> +                     <0x15570100 0x100>,
->>> +                     <0x15571000 0x200>,
->>> +                     <0x15572000 0x300>;
->>> +               reg-names = "hci", "vs_hci", "unipro", "ufsp";
->>> +               interrupts = <0 200 0>;
->>> +
->>> +               vdd-hba-supply = <&xxx_reg0>;
->>> +               vdd-hba-fixed-regulator;
->>> +               vcc-supply = <&xxx_reg1>;
->>> +               vcc-supply-1p8;
->>> +               vccq-supply = <&xxx_reg2>;
->>> +               vccq2-supply = <&xxx_reg3>;
->>> +               vcc-max-microamp = 500000;
->>> +               vccq-max-microamp = 200000;
->>> +               vccq2-max-microamp = 200000;
->>> +
->>> +               clocks = <&core 0>, <&ref 0>, <&iface 0>;
->>> +               clock-names = "core", "sclk_unipro_main", "ref",
->>> "ref_parent";
->>> +               freq-table-hz = <100000000 200000000>, <0 0>, <0 0>, <0
->>> 0>;
->>> +
->>> +               pclk-freq-avail-range = <70000000 133000000>;
->>> +
->>> +               ufs,pwr-attr-mode = "FAST";
->>> +               ufs,pwr-attr-lane = <2>;
->>> +               ufs,pwr-attr-gear = <2>;
->>> +               ufs,pwr-attr-hs-series = "HS_rate_b";
->>> +               ufs,pwr-local-l2-timer = <8000 28000 20000>;
->>> +               ufs,pwr-remote-l2-timer = <12000 32000 16000>;
->>> +               ufs-rx-adv-fine-gran-sup_en = <1>;
->>> +               ufs-rx-adv-fine-gran-step = <3>;
->>> +               ufs-rx-adv-min-activate-time-cap = <9>;
->>> +               ufs-pa-granularity = <6>;
->>> +               ufs-pa-tacctivate = <6>;
->>> +               ufs-pa-hibern8time = <20>;
->>> +       };
->>> --
->>> 1.7.10.4
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->
+-- 
+Thanks,
+Caesar
+
+
+--------------070707050606060407050601
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <br>
+    <br>
+    <div class="moz-cite-prefix">在 2015年11月08日 21:42, kbuild test robot
+      写道:<br>
+    </div>
+    <blockquote
+      cite="mid:201511082118.g4TUWjlz%25fengguang.wu@intel.com"
+      type="cite">
+      <pre wrap="">Hi Caesar,
+
+[auto build test ERROR on: soc-thermal/next]
+[also build test ERROR on: next-20151106]
+[cannot apply to: rockchip/for-next v4.3]
+
+url:    <a class="moz-txt-link-freetext" href="https://github.com/0day-ci/linux/commits/Caesar-Wang/Better-compatible-for-the-rockchip-thermal-and-support-RK3368-SoCs/20151108-173308">https://github.com/0day-ci/linux/commits/Caesar-Wang/Better-compatible-for-the-rockchip-thermal-and-support-RK3368-SoCs/20151108-173308</a>
+base:   <a class="moz-txt-link-freetext" href="https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal">https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal</a> next
+config: arm64-defconfig (attached as .config)
+reproduce:
+        wget <a class="moz-txt-link-freetext" href="https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross">https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross</a> -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=arm64 
+
+All errors (new ones prefixed by &gt;&gt;):
+
+</pre>
+      <blockquote type="cite">
+        <blockquote type="cite">
+          <pre wrap="">Error: arch/arm64/boot/dts/rockchip/rk3368-r88.dts:345.1-7 syntax error
+</pre>
+        </blockquote>
+      </blockquote>
+      <pre wrap="">   FATAL ERROR: Unable to parse input tree</pre>
+    </blockquote>
+    <br>
+    Missing a ';' <br>
+    --- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts<br>
+    +++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts<br>
+    @@ -340,7 +340,7 @@<br>
+            rockchip,hw-tshut-mode = &lt;0&gt;; /* tshut mode 0:CRU
+    1:GPIO */<br>
+            rockchip,hw-tshut-polarity = &lt;0&gt;; /* tshut polarity
+    0:LOW 1:HIGH */<br>
+            status = "okay";<br>
+    -}<br>
+    +};<br>
+    <br>
+    Sorry for that,  my make scripts is rk3368-evb.dtsi（in local file
+    for sdk board) no include r88 to build.<span class="moz-smiley-s2"><span>
+        :-( </span></span><br>
+    <br>
+    Many thanks.<br>
+    <blockquote
+      cite="mid:201511082118.g4TUWjlz%25fengguang.wu@intel.com"
+      type="cite">
+      <pre wrap="">
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+<a class="moz-txt-link-freetext" href="https://lists.01.org/pipermail/kbuild-all">https://lists.01.org/pipermail/kbuild-all</a>                   Intel Corporation
+[attachment]
+
+.config.gz
+download: <a class="moz-txt-link-freetext" href="http://u.163.com/t0/X4h6Ssaywr">http://u.163.com/t0/X4h6Ssaywr</a>
+
+</pre>
+      <br>
+      <fieldset class="mimeAttachmentHeader"></fieldset>
+      <br>
+      <pre wrap="">_______________________________________________
+Linux-rockchip mailing list
+<a class="moz-txt-link-abbreviated" href="mailto:Linux-rockchip@lists.infradead.org">Linux-rockchip@lists.infradead.org</a>
+<a class="moz-txt-link-freetext" href="http://lists.infradead.org/mailman/listinfo/linux-rockchip">http://lists.infradead.org/mailman/listinfo/linux-rockchip</a>
+</pre>
+    </blockquote>
+    <br>
+    <br>
+    <pre class="moz-signature" cols="72">-- 
+Thanks,
+Caesar</pre>
+  </body>
+</html>
+
+--------------070707050606060407050601--
