@@ -1,165 +1,158 @@
 From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 00/10] Better compatible for the rockchip thermal and
- support RK3368 SoCs
-Date: Mon,  9 Nov 2015 12:48:52 +0800
-Message-ID: <1447044542-30859-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Subject: [PATCH v4 08/10] arm64: dts: Add the thermal data found on RK3368
+Date: Mon,  9 Nov 2015 12:49:00 +0800
+Message-ID: <1447044542-30859-9-git-send-email-wxt@rock-chips.com>
+References: <1447044542-30859-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447044542-30859-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thank you all for providing inputs and comments on previous versions of
-this patchset.
-Especially thanks to the (Eduardo, Dmitry, Heiko,....).
+This patchset add the thermal for RK3368 dts,
+Since the two CPU clusters, with four CPU core for each cluster,
+One cluster is optimized for high-performance(big cluster) and the othe
+is optimized for low power(little cluster).
 
-This series patchs are working for RK3368 on Rockchip platform.
+This patch adds the second order for thermal throttle, and the critical
+temperature for thermal over-tempeature protection on Software.
 
------
-This patchset are based on linus master branch.
-Note: Need add the following thermal patchs for thermal driver before
-apply this series patchs.
-(the patchs 1) 2) 3) 4) have merged in thermal-soc git tree which can be found at
- git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git)
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-1) thermal: rockchip: fix handling of invalid readings
-(https://patchwork.kernel.org/patch/6973101/)
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+Changes in v1: None
 
-2) thermal: rockhip: fix setting thermal shutdown polarity
-(https://patchwork.kernel.org/patch/6973131/)
-
-3) dt-bindings: rockchip-thermal: Add the pinctrl states in this document
-(https://patchwork.kernel.org/patch/7472021/)
-
-4) thermal: rockchip: support the sleep pinctrl state to avoid glitches in s2r
-(https://patchwork.kernel.org/patch/7472051/)
-
-5) thermal: rockchip: fix compile error
-(https://patchwork.kernel.org/patch/7578271/)
-
-The git log oneline my local branch as follows:
-9a3d129 arm64: dts: Enable the Thermal on R88 board
-4299e7a arm64: dts: Add main Thermal info to rk3368.dtsi
-b95724c arm64: dts: Add the thermal data found on RK3368
-c76f603 thermal: rockchip: Support the RK3368 SoCs in thermal drivers
-a3f4fdd thermal: rockchip: consistently use int for temperatures
-558b4d1ce thermal: rockchip: Add the sort flag for adc value increment or decrement
-2438be4 thermal: rockchip: improve the conversion function
-74b701d thermal: rockchip: trivial: fix typo in commit
-2d85d32 thermal: rockchip: better to compatible the driver for different SoCs
-1f2ef67 dt-bindings: rockchip-thermal: Support the RK3368 SoCs compatible
-
-87d83ce thermal: rockchip: fix compile error
-c0a5991 thermal: rockchip: support the sleep pinctrl state to avoid glitches in s2r
-11e4d6c dt-bindings: rockchip-thermal: Add the pinctrl states in this document
-6d30517 thermal: rockhip: fix setting thermal shutdown polarity
-2b50ab8 thermal: rockchip: fix handling of invalid readings
-
-ce5c2d2 arm64: fixup for mm renames
-ad804a0 Merge branch 'akpm' (patches from Andrew)
-ab9f2fa Merge tag 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/dledford/rdma
-75021d2 Merge branch 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/jikos/trivial
-6f1da31 Merge branch 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/jikos/hid
-99aaa9c Merge branch 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/jikos/livepatching
-
-----
-This series are tested on RK3368 board.
-build on arm & x86, and tested the r88 board.
-Sorry for the v3 series patchs compiling error.
-
-root@rk3368_32:/ # cat proc/version
-Linux version 4.3.0+ (wxt@ubuntu) (gcc version 4.9 20140514 (prerelease) (GCC) ) #6 SMP PREEMPT Mon Nov 9 12:35:52 CST 2015
-
-while true;do ls >/dev/null; done&
-
-while true; do grep "" /sys/class/thermal/thermal_zone[0-1]/temp; sleep
-.5; done &
-
-You can get the temperature form sensors.
-
-/sys/class/thermal/thermal_zone1/temp:30000
-/sys/class/thermal/thermal_zone0/temp:22500
-/sys/class/thermal/thermal_zone1/temp:30000
-/sys/class/thermal/thermal_zone0/temp:25000
-/sys/class/thermal/thermal_zone1/temp:30000
-/sys/class/thermal/thermal_zone0/temp:25000
-/sys/class/thermal/thermal_zone1/temp:32500
-/sys/class/thermal/thermal_zone0/temp:25000
-/sys/class/thermal/thermal_zone1/temp:30000
-/sys/class/thermal/thermal_zone0/temp:27500
-/sys/class/thermal/thermal_zone1/temp:30000
-/sys/class/thermal/thermal_zone0/temp:27500
-/sys/class/thermal/thermal_zone1/temp:32500
-/sys/class/thermal/thermal_zone0/temp:27500
-....
-
-
-Changes in v4:
-- rename the flag as mode.
-- with enum type instead of bool type.
-- fix the warning from the print message.
-- :%s/sort_flag/mode.
-- rename the 'drivers' to 'driver' in subject.
-- Missing the ";" caused compile error.
-
-Changes in v3:
-- As Eduardo comments, let's change data_mask type with 'u32' instead of
-  'unsigned long'.
-- rename the flag-> sort_flag.
-- fix the indentation.
-- change the pr_err information.
-- As the Patch v2 comments, Add a new patch to fix it.
-- :%s/flag/sort_flag
-- fix the rk3368 sort_flag as increment mode.
-
-Changes in v2:
-- As Eduardo comments on patch v1, split in smaller changes.
-- make the conversion table in as a parameter both code_to_temp
-  and temp_to_code function.
-- remove some unused, completed on other patchs.
-- fix a copy wrong name.
-
-Changes in v1:
-- %s/thermal/rockchip-thermal in subject.
-- add a new patch for thermal driver to support more SoCs.
-- As Dmitry comment, make the conversion table in as a parameterm.
-- support the opt gpio pinctrl state.
-
-Caesar Wang (10):
-  dt-bindings: rockchip-thermal: Support the RK3368 SoCs compatible
-  thermal: rockchip: better to compatible the driver for different SoCs
-  thermal: rockchip: trivial: fix typo in commit
-  thermal: rockchip: improve the conversion function
-  thermal: rockchip: Add the sort mode for adc value increment or
-    decrement
-  thermal: rockchip: consistently use int for temperatures
-  thermal: rockchip: Support the RK3368 SoCs in thermal driver
-  arm64: dts: Add the thermal data found on RK3368
-  arm64: dts: Add main Thermal info to rk3368.dtsi
-  arm64: dts: Enable the Thermal on R88 board
-
- .../bindings/thermal/rockchip-thermal.txt          |   4 +-
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts        |   6 +
- arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi   | 112 +++++++
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  36 +++
- drivers/thermal/rockchip_thermal.c                 | 328 +++++++++++++++------
- 5 files changed, 397 insertions(+), 89 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi | 112 +++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
+new file mode 100644
+index 0000000..a10010f
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
+@@ -0,0 +1,112 @@
++/*
++ * Device Tree Source for RK3368 SoC thermal
++ *
++ * Copyright (c) 2015, Fuzhou Rockchip Electronics Co., Ltd
++ * Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/thermal/thermal.h>
++
++cpu_thermal: cpu_thermal {
++	polling-delay-passive = <100>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++	thermal-sensors = <&tsadc 0>;
++
++	trips {
++		cpu_alert0: cpu_alert0 {
++			temperature = <75000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_alert1: cpu_alert1 {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_crit: cpu_crit {
++			temperature = <95000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++				<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++		map1 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++				<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++gpu_thermal: gpu_thermal {
++	polling-delay-passive = <100>; /* milliseconds */
++	polling-delay = <5000>; /* milliseconds */
++
++	thermal-sensors = <&tsadc 1>;
++
++	trips {
++		gpu_alert0: gpu_alert0 {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		gpu_crit: gpu_crit {
++			temperature = <1150000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&gpu_alert0>;
++			cooling-device =
++				<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
