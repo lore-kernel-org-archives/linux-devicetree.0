@@ -1,171 +1,46 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/3] [media] mt9v032: Add reset and standby gpios
-Date: Mon, 09 Nov 2015 14:28:56 +0200
-Message-ID: <1763974.WDKlRvPG0G@avalon>
-References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Mon, 9 Nov 2015 12:28:39 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
+References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <20151105152736.GO18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
+ <20151106112141.GE18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
+ <20151106115451.GG18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
+ <20151108103429.GC6746@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1446815625-18413-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20151108103429.GC6746@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+On November 8, 2015 10:34, Mark Brown wrote:
 
-Thank you for the patch.
+> > > Hang on, is this just recording a DC value with the ADC and then looking
+> > > at that?
+> 
+> > The RMS of the Mic signal is taken and compared to the trigger level set. If
+> > it's above that level then an IRQ is raised.
+> 
+> What I'm trying to figure out here is if this depends on the audio
+> routing at runtime or if it's got dedicated configuration?
 
-On Friday 06 November 2015 14:13:43 Markus Pargmann wrote:
-> Add optional reset and standby gpios. The reset gpio is used to reset
-> the chip in power_on().
->=20
-> The standby gpio is not used currently. It is just unset, so the chip=
- is
-> not in standby.
-
-We could use a gpio hog for this, but given that the standby signal sho=
-uld=20
-eventually get used, and given that specifying it in DT is a good hardw=
-are=20
-description, that looks good to me.
-
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  .../devicetree/bindings/media/i2c/mt9v032.txt      |  2 ++
->  drivers/media/i2c/mt9v032.c                        | 23 ++++++++++++=
-+++++++
->  2 files changed, 25 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt index
-> 202565313e82..100f0ae43269 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> @@ -20,6 +20,8 @@ Optional Properties:
->=20
->  - link-frequencies: List of allowed link frequencies in Hz. Each fre=
-quency
-> is expressed as a 64-bit big-endian integer.
-> +- reset-gpios: GPIO handle which is connected to the reset pin of th=
-e chip.
-> +- standby-gpios: GPIO handle which is connected to the standby pin o=
-f the
-> chip.
->=20
->  For further reading on port node refer to
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.=
-c
-> index a68ce94ee097..4aefde9634f5 100644
-> --- a/drivers/media/i2c/mt9v032.c
-> +++ b/drivers/media/i2c/mt9v032.c
-> @@ -24,6 +24,7 @@
->  #include <linux/videodev2.h>
->  #include <linux/v4l2-mediabus.h>
->  #include <linux/module.h>
-> +#include <linux/gpio/consumer.h>
-
-module.h escaped my vigilance, but let's try to keep headers alphabetic=
-ally=20
-sorted.
->=20
->  #include <media/mt9v032.h>
->  #include <media/v4l2-ctrls.h>
-> @@ -251,6 +252,8 @@ struct mt9v032 {
->=20
->  	struct regmap *regmap;
->  	struct clk *clk;
-> +	struct gpio_desc *reset_gpio;
-> +	struct gpio_desc *standby_gpio;
->=20
->  	struct mt9v032_platform_data *pdata;
->  	const struct mt9v032_model_info *model;
-> @@ -312,16 +315,26 @@ static int mt9v032_power_on(struct mt9v032 *mt9=
-v032)
->  	struct regmap *map =3D mt9v032->regmap;
->  	int ret;
->=20
-> +	gpiod_set_value_cansleep(mt9v032->reset_gpio, 1);
-> +
->  	ret =3D clk_set_rate(mt9v032->clk, mt9v032->sysclk);
->  	if (ret < 0)
->  		return ret;
->=20
-> +	/* system clock has to be enabled before releasing the reset */
-
-Nitpicking, the driver capitalizes the first letter of comments.
-
->  	ret =3D clk_prepare_enable(mt9v032->clk);
->  	if (ret)
->  		return ret;
->=20
->  	udelay(1);
->=20
-> +	gpiod_set_value_cansleep(mt9v032->reset_gpio, 0);
-> +
-> +	/*
-> +	 * After releasing reset, it can take up to 1us until the chip is d=
-one
-> +	 */
-> +	udelay(1);
-> +
-
-The delay isn't necessary if there's no reset GPIO. How about
-
-	if (mt9v032->reset_gpio) {
-		gpiod_set_value_cansleep(mt9v032->reset_gpio, 0);
-
-		/* After releasing reset, it can take up to 1us until the
-		 * chip is done.
-		 */
-		udelay(1);
-	}
-
-And, according to the datasheet, the delay is 10 SYSCLK periods. 1=B5s =
-should be=20
-safe as the minimum SYSCLK frequency is 13 MHz. I'd still mention it in=
- a=20
-comment, maybe as
-
-		/* After releasing reset we need to wait 10 clock cycles
-		 * before accessing the sensor over I2C. As the minimum SYSCLK
-		 * frequency is 13MHz, waiting 1=B5s will be enough in the worst
-		 * case.
-		 */
-		udelay(1);
-
-If you're fine with these changes there's no need to resubmit the patch=
-, I can=20
-fix it when applying it to my tree.
-
->  	/* Reset the chip and stop data read out */
->  	ret =3D regmap_write(map, MT9V032_RESET, 1);
->  	if (ret < 0)
-> @@ -954,6 +967,16 @@ static int mt9v032_probe(struct i2c_client *clie=
-nt,
->  	if (IS_ERR(mt9v032->clk))
->  		return PTR_ERR(mt9v032->clk);
->=20
-> +	mt9v032->reset_gpio =3D devm_gpiod_get_optional(&client->dev, "rese=
-t",
-> +						      GPIOD_OUT_HIGH);
-> +	if (IS_ERR(mt9v032->reset_gpio))
-> +		return PTR_ERR(mt9v032->reset_gpio);
-> +
-> +	mt9v032->standby_gpio =3D devm_gpiod_get_optional(&client->dev, "st=
-andby",
-> +							GPIOD_OUT_LOW);
-> +	if (IS_ERR(mt9v032->standby_gpio))
-> +		return PTR_ERR(mt9v032->standby_gpio);
-> +
->  	mutex_init(&mt9v032->power_lock);
->  	mt9v032->pdata =3D pdata;
->  	mt9v032->model =3D (const void *)did->driver_data;
-
---=20
-Regards,
-
-Laurent Pinchart
+This feature is available for any/all mics connected. Which mics are enabled
+is a runtime configuration of routing, so to me it makes sense also that we can
+configure which channel triggers an event, based on our scenario at that time.
