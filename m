@@ -1,102 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC 2/3] pinctrl: e3xx: Adding support for NI Ettus Research
- USRP E3xx pinconf
-Date: Mon, 9 Nov 2015 11:21:22 +0100
-Message-ID: <CACRpkdaX8JyxMq_peUyXMfMq4xDzKiCWv62UbfKFxM_TyM-_wg@mail.gmail.com>
-References: <1446766883-25703-1-git-send-email-moritz.fischer@ettus.com>
-	<1446766883-25703-3-git-send-email-moritz.fischer@ettus.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 0/2] mmc: sdhci: potentially bad behavior when using vmmc
+ supply
+Date: Mon, 9 Nov 2015 11:25:55 +0100
+Message-ID: <20151109102555.GA15706@odux.rfo.atmel.com>
+References: <1446825570-30029-1-git-send-email-ludovic.desroches@atmel.com>
+ <CAPDyKFrNNyUrJemgA2OHL35EqpG74_1i9bCqkVkZZZMxNGrHgw@mail.gmail.com>
+ <20151109074104.GB27482@odux.rfo.atmel.com>
+ <CAPDyKFpC_mKXei14mdD=AYd6YBU0R4D1R=XWpf7BTgX4JDw24w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1446766883-25703-3-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFpC_mKXei14mdD=AYd6YBU0R4D1R=XWpf7BTgX4JDw24w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, pierre.samat@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 6, 2015 at 12:41 AM, Moritz Fischer
-<moritz.fischer@ettus.com> wrote:
+On Mon, Nov 09, 2015 at 10:38:03AM +0100, Ulf Hansson wrote:
+> [...]
+> 
+> >> > Is the regulator-gpio usage the right thing to do for vqmmc? In my case it is
+> >> > not really driven by a gpio but by a pio from the sdhci device. In the binding,
+> >>
+> >> What's a "pio"?
+> >>
+> >> What do you mean by the it's driven from the sdhci device?
+> >>
+> >
+> > Sorry I mean sdhci device from the SoC point of view, I should say
+> > controller. So yes the signal is driven by the controller.
+> >
+> >> Is it the internal HW logic of the sdhci controller that manages the
+> >> IO voltage? And this logic can be controlled via certain register bits
+> >> in the SDHCI controller?
+> >>
+> >
+> > Yes, it depends of the value of the '1.8V Signaling Enable' value in the
+> > host control 2 register.
+> >
+> >> > declaring the gpio is an option so I thought using this regulator fits my need.
+> >>
+> >> In quite many cases it makes sense to model this though a gpio
+> >> regulator. For example when you use a level shifter circuit. Those
+> >> normally have gpio pin routed to control the voltage level output for
+> >> the signals. For example switching between 1.8V and 2.9V.
+> >>
+> >
+> > I agree, my concern is to know if I can consider it as a 'general' pio
+> > since it is driven by the sdhci controller.
+> 
+> This doesn't seems like a case where a gpio regulator should be used
+> and I am not sure what problem it would solve. Beside to suppress the
+> log warnings (actually those aren't warnings but informations).
+> 
+> Isn't sdhci_do_start_signal_voltage_switch() doing what you need here?
+> 
 
-> The USRP E3XX series requires pinctrl to configure the idle state
-> FPGA image for minimizing power consumption.
-> This is required since different daughtercards have different uses
-> for pins on a common connector.
->
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
-(...)
+It is. I am only wondering the best way to describe the hardware:
+- No regulator but I have the 'no vqmmc regulator not found' message which
+  is a bit annoying and which can be interpreted as an issue for someone
+  who has no knowledge about this stuff.
+- Describe the regulator since there is one on my board. But it is not a
+  fixed regulator and even if it's close to a gpio one it is not.
 
-> +static const struct pinctrl_pin_desc e3xx_pins[] = {
-> +       /* pin0 doesn't exist */
-> +       PINCTRL_PIN(1, "DB_1"),
-> +       PINCTRL_PIN(2, "DB_2"),
-(...)
-> +       PINCTRL_PIN(119, "DB_119"),
-> +       PINCTRL_PIN(120, "DB_120"),
-> +};
+Regards
 
-These should be the names on the data sheet for the balls/pins on the ASIC.
-Is this the case? I saw some discussion with Arnd that indicated it was
-rather rail names for a certain board and that is not OK.
-
-> +static int e3xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
-> +{
-> +       return 0;
-> +}
-> +
-> +static const char *e3xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-> +                                              unsigned selector)
-> +{
-> +       return NULL;
-> +}
-> +
-> +static int e3xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-> +                                      unsigned selector,
-> +                                      const unsigned **pins,
-> +                                      unsigned *num_pins)
-> +{
-> +       return -ENOTSUPP;
-> +}
-
-Hm maybe we should make these group callbacks optional
-in the pinctrl core?
-
-> +static int e3xx_pinconf_cfg_set(struct pinctrl_dev *pctldev,
-> +                               unsigned pin,
-> +                               unsigned long *configs,
-> +                               unsigned num_configs)
-> +{
-> +       u32 reg, mask;
-> +       int i;
-> +       struct e3xx_pinctrl *pctrl;
-> +       unsigned int param, arg;
-> +
-> +       if (pin >= E3XX_NUM_DB_PINS)
-> +               return -ENOTSUPP;
-> +       mask = BIT(pin % E3XX_PINS_PER_REG);
-> +
-> +       pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +       clk_enable(pctrl->clk);
-
-Have you considered using pm_runtime_get_sync() etc with
-callbacks instead of hammering clk_enable/disable all the
-time? See
-drivers/hwtracing/coresight/coresight-replicator.c
-for an example of how to do it in the runtime PM ops
-callbacks. It requires some tweaks (look closely at all setup
-there) but it pays off.
-
-> +static int e3xx_pinconf_group_set(struct pinctrl_dev *pctldev,
-> +                                 unsigned selector,
-> +                                 unsigned long *configs,
-> +                                 unsigned num_configs)
-> +{
-> +       return -EAGAIN;
-> +}
-
-Maybe you should group this with the other group callbacks.
-
-Apart from these remarks it looks pretty nice.
-
-Yours,
-Linus Walleij
+Ludovic
