@@ -1,66 +1,101 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 2/4] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Mon, 9 Nov 2015 12:25:14 -0600
-Message-ID: <20151109182514.GA10896@rob-hp-laptop>
-References: <1446958380-23298-1-git-send-email-okaya@codeaurora.org>
- <1446958380-23298-3-git-send-email-okaya@codeaurora.org>
- <563ED8DF.6090307@codeaurora.org>
- <56400230.8030303@codeaurora.org>
+From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] devicetree: bindings: Add optional dynamic-power-coefficient property
+Date: Mon, 09 Nov 2015 18:39:35 +0000
+Message-ID: <9hhvb9b6mqg.fsf@e105922-lin.cambridge.arm.com>
+References: <1447090163-13700-1-git-send-email-punit.agrawal@arm.com>
+	<1447090163-13700-2-git-send-email-punit.agrawal@arm.com>
+	<20151109174542.GA19016@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56400230.8030303@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: Timur Tabi <timur@codeaurora.org>, dmaengine@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151109174542.GA19016@rob-hp-laptop> (Rob Herring's message of
+	"Mon, 9 Nov 2015 11:45:42 -0600")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 08, 2015 at 09:17:20PM -0500, Sinan Kaya wrote:
-> On 11/8/2015 12:08 AM, Timur Tabi wrote:
-> 
-> On 11/8/2015 12:08 AM, Timur Tabi wrote:
-> >Sinan Kaya wrote:
-> >>+    val = val & ~(MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS);
-> >>+    val = val | (mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS);
-> >>+    val = val & ~(MAX_BUS_REQ_LEN_MASK);
-> >>+    val = val | (mgmtdev->max_read_request);
-> >
-> >val &= ~MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS;
-> >val |= mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS;
-> >val &= ~MAX_BUS_REQ_LEN_MASK;
-> >val |= mgmtdev->max_read_request;
-> >
-> >>+static const struct of_device_id hidma_mgmt_match[] = {
-> >>+    { .compatible = "qcom,hidma-mgmt", },
-> >>+    { .compatible = "qcom,hidma-mgmt-1.0", },
-> >>+    { .compatible = "qcom,hidma-mgmt-1.1", },
-> >>+    {},
-> >>+};
-> >
-> >I thought Rob said that he did NOT want to use version numbers in
-> >compatible strings.  And what's the difference between these three
-> >versions anyway?
-> >
-> 
-> This was already discussed here.
-> 
-> https://lkml.org/lkml/2015/11/2/689
-> 
-> The agreement was to use
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-The suggestion...
- 
-> compatible = "qcom,hidma-mgmt-1.1", "qcom,hidma-mgmt-1.0",
-> "qcom,hidma-mgmt";
+> On Mon, Nov 09, 2015 at 05:29:21PM +0000, Punit Agrawal wrote:
+>> The dynamic power consumption of a device is proportional to the
+>> square of voltage (V) and the clock frequency (f). It can be expressed as
+>> 
+>> Pdyn = dynamic-power-coefficient * V^2 * f.
+>> 
+>> The coefficient represents the running time dynamic power consumption in
+>> units of mw/MHz/uVolt^2 and can be used in the above formula to
+>> calculate the dynamic power in mW.
+>
+> I have no issue with the binding, but I wonder if a single value is 
+> really sufficient to model this. Don't you also need a static
+> component?
 
-I don't really want to see 3 generic-ish strings.
- 
-> I'll be adding code for v1.1 specifically in the future.
+In general, power consumption does consist of the static and dynamic
+power. Here we are only modelling the dynamic component.
 
-Please drop "qcom,hidma-mgmt" altogether. It is already meaningless. 
-Then add the 1.1 compatible when you add the code for it. Hopefully you 
-all can decide on part number(s) by then.
+For CPUs, we found that a single-coefficient model using frequency and
+voltages gives a reasonable estimation of dynamic power consumption. For
+thermal management, because of using closed loop control providing the
+dynamic consumption is good enough as long as static power for your
+platform is not significant.
 
-Rob
+On the other hand, there isn't a generally applicable model for static
+power - it has complex relationships with temperature, voltages, etc
+which make it hard to express as a simple formula. For platforms where
+static power is significant, providing it via platform code is the only
+option for now.
+
+This patchset enables platforms where dynamic power works well to setup
+their power model for thermal management via device tree.
+
+>
+> Rob
+>
+>> 
+>> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/cpus.txt | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> index 91e6e5c..c33362d 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> @@ -240,6 +240,23 @@ nodes to be present and contain the properties described below.
+>>  		Definition: Specifies the syscon node controlling the cpu core
+>>  			    power domains.
+>>  
+>> +	- dynamic-power-coefficient
+>> +		Usage: optional
+>> +		Value type: <prop-encoded-array>
+>> +		Definition: A u32 value that represents the running time dynamic
+>> +			    power coefficient in units of mW/MHz/uVolt^2. The
+>> +			    coefficient can either be calculated from power
+>> +			    measurements or derived by analysis.
+>> +
+>> +			    The dynamic power consumption of the CPU  is
+>> +			    proportional to the square of the Voltage (V) and
+>> +			    the clock frequency (f). The coefficient is used to
+>> +			    calculate the dynamic power as below -
+>> +
+>> +			    Pdyn = dynamic-power-coefficient * V^2 * f
+>> +
+>> +			    where voltage is in uV, frequency is in MHz.
+>> +
+>>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+>>  
+>>  	cpus {
+>> -- 
+>> 2.5.3
+>> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
