@@ -1,53 +1,112 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH v2 4/4] ARM: dts: imx7d-sdb: add ADC support
-Date: Mon, 9 Nov 2015 21:28:24 +0800
-Message-ID: <1447075704-4605-5-git-send-email-haibo.chen@freescale.com>
-References: <1447075704-4605-1-git-send-email-haibo.chen@freescale.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH 2/3] [media] mt9v032: Do not unset master_mode
+Date: Mon, 09 Nov 2015 14:32:42 +0100
+Message-ID: <1705584.DjrTFzEFXW@adelgunde>
+References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de> <1446815625-18413-2-git-send-email-mpa@pengutronix.de> <1542250.4NFmqc20qx@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1447075704-4605-1-git-send-email-haibo.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, haibo.chen@freescale.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="nextPart2141150.UvXHX27rcF"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1542250.4NFmqc20qx@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add ADC support for imx7d-sdb board.
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
----
- arch/arm/boot/dts/imx7d-sdb.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+--nextPart2141150.UvXHX27rcF
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 432aaf5..b2c4536 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -97,6 +97,16 @@
- 	};
- };
- 
-+&adc1 {
-+	vref-supply = <&reg_vref_1v8>;
-+	status = "okay";
-+};
-+
-+&adc2 {
-+	vref-supply = <&reg_vref_1v8>;
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	arm-supply = <&sw1a_reg>;
- };
--- 
-1.9.1
+Hi Laurent,
+
+On Monday 09 November 2015 14:46:42 Laurent Pinchart wrote:
+> Hi Markus,
+>=20
+> Thank you for the patch.
+>=20
+> On Friday 06 November 2015 14:13:44 Markus Pargmann wrote:
+> > The power_on function of the driver resets the chip and sets the
+> > CHIP_CONTROL register to 0. This switches the operating mode to sla=
+ve.
+> > The s_stream function sets the correct mode. But this caused proble=
+ms on
+> > a board where the camera chip is operated as master. The camera sta=
+rted
+> > after a random amount of time streaming an image, I observed betwee=
+n 10
+> > and 300 seconds.
+> >=20
+> > The STRFM_OUT and STLN_OUT pins are not connected on this board whi=
+ch
+> > may cause some issues in slave mode. I could not find any documenta=
+tion
+> > about this.
+> >=20
+> > Keeping the chip in master mode after the reset helped to fix this
+> > issue for me.
+> >=20
+> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > ---
+> >  drivers/media/i2c/mt9v032.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v03=
+2.c
+> > index 4aefde9634f5..943c3f39ea73 100644
+> > --- a/drivers/media/i2c/mt9v032.c
+> > +++ b/drivers/media/i2c/mt9v032.c
+> > @@ -344,7 +344,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9=
+v032)
+> >  =09if (ret < 0)
+> >  =09=09return ret;
+> >=20
+> > -=09return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
+> > +=09return regmap_write(map, MT9V032_CHIP_CONTROL,
+> > +=09=09=09    MT9V032_CHIP_CONTROL_MASTER_MODE);
+>=20
+> This makes sense, but shouldn't you also fix the mt9v032_s_stream() f=
+unction=20
+> then ? It clears the MT9V032_CHIP_CONTROL_MASTER_MODE bit when turnin=
+g the=20
+> stream off.
+
+Oh yes, thanks. Will fix it for the next version.
+
+Best Regards,
+
+Markus
+
+=2D-=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
+
+--nextPart2141150.UvXHX27rcF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWQKB6AAoJEEpcgKtcEGQQWtgQAIz8EghM3Dx6wvJxwlsgIxHG
+V6sNuVi1nK2zU+1gLgGs9VwYpG2R95hH3WM90RjJmXebc7zyb2WxyQE9HL8yaq1U
+Vjub4Pvbka2Uaa+iG8DTyCr1iFh20Q8LCKeEqYoyfCUzLZi1UoQtk5UcxLYIiGqD
+r6bZvEJPP2qi8VCUfa4o5FQ1ZeUB3m0maLWoOi/HSIBkIZkK0k9raZQJk2eG10q8
+0dEkbkLnhdffphU80aMtWPPzUGSGT0TnJSHrm5hrBb6kHFiO+zJlcUutORwBwAYV
+qiMmMOvdoczcDc8a2N0sa1Fwg89TFPAhdgcO07eurf8OcqdqFuHsuKzcTecaimAq
+ED5o/4utSn1U2YiCWXanZe9J12M/jw4ZRxFufKYN/jCU7m1eApyLd+1thScN1NRh
+02AcBOYszP1J8TDD7wP3QXXyVbSmVDKYtWO2x3jHhKqyoGHtVlhc7KdIwwBr4XgE
+1L4Qv2B8apXy0CkPSj0ZaT4PlTW47rdRBA0hMIoheBbuV8/4IZ70FPtSnRUab5dJ
+/5QKWqNyeN2D6AAdN81LS5r7vJl9w4Q1QSjhap/0B49SkXVcO5OaSNNznW7Uo5Jz
+BHUZ/LQNe/H89VyECdn/jMKXeBLAc0eGGx+uDZjbNoko9epEwOQG9Nj1Q9qPgmFr
+b23P962mIagLI91eSpsZ
+=JFwC
+-----END PGP SIGNATURE-----
+
+--nextPart2141150.UvXHX27rcF--
