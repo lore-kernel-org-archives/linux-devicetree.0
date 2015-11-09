@@ -1,67 +1,55 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: [PATCH v3 2/3] Documentation: mailbox: Add APM X-Gene SLIMpro mailbox dts documentation
-Date: Mon,  9 Nov 2015 10:05:44 -0800
-Message-ID: <6be192528afbcc604653a318994ee30fa05a0e05.1447091626.git.dhdang@apm.com>
-References: <cover.1447091625.git.dhdang@apm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA channel
+ driver
+Date: Mon, 9 Nov 2015 12:19:24 -0600
+Message-ID: <20151109181924.GA5205@rob-hp-laptop>
+References: <1446958380-23298-1-git-send-email-okaya@codeaurora.org>
+ <1446958380-23298-5-git-send-email-okaya@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1447091625.git.dhdang@apm.com>
-In-Reply-To: <cover.1447091625.git.dhdang@apm.com>
-References: <1429863912.2927.43.camel@x220> <cover.1447091625.git.dhdang@apm.com>
+Content-Disposition: inline
+In-Reply-To: <1446958380-23298-5-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Paul Bolle <pebolle@tiscali.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, Duc Dang <dhdang@apm.com>, Feng Kan <fkan@apm.com>
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the APM X-Gene SLIMpro mailbox device tree
-node documentation.
+On Sat, Nov 07, 2015 at 11:53:00PM -0500, Sinan Kaya wrote:
+> This patch adds support for hidma engine. The driver
+> consists of two logical blocks. The DMA engine interface
+> and the low-level interface. The hardware only supports
+> memcpy/memset and this driver only support memcpy
+> interface. HW and driver doesn't support slave interface.
+> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  .../devicetree/bindings/dma/qcom_hidma.txt         |  18 +
+>  drivers/dma/qcom/Kconfig                           |   9 +
+>  drivers/dma/qcom/Makefile                          |   2 +
+>  drivers/dma/qcom/hidma.c                           | 743 ++++++++++++++++
+>  drivers/dma/qcom/hidma.h                           | 157 ++++
+>  drivers/dma/qcom/hidma_dbg.c                       | 225 +++++
+>  drivers/dma/qcom/hidma_ll.c                        | 944 +++++++++++++++++++++
+>  7 files changed, 2098 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma.txt
+>  create mode 100644 drivers/dma/qcom/hidma.c
+>  create mode 100644 drivers/dma/qcom/hidma.h
+>  create mode 100644 drivers/dma/qcom/hidma_dbg.c
+>  create mode 100644 drivers/dma/qcom/hidma_ll.c
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma.txt b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
+> new file mode 100644
+> index 0000000..c9fb2d44
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
+> @@ -0,0 +1,18 @@
+> +Qualcomm Technologies HIDMA Channel driver
+> +
+> +Required properties:
+> +- compatible: must contain "qcom,hidma"
 
-[dhdang: rebase over 4.3-rc5]
-Signed-off-by: Feng Kan <fkan@apm.com>
-Signed-off-by: Duc Dang <dhdang@apm.com>
----
- .../bindings/mailbox/xgene-slimpro-mailbox.txt     | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
+This should be "qcom,hidma-1.0" to match the example and driver. I 
+would drop "qcom,hidma" altogether.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
-new file mode 100644
-index 0000000..d02a3d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
-@@ -0,0 +1,34 @@
-+The APM X-Gene SLIMpro mailbox is used to communicate messages between
-+the ARM64 processors and the Cortex M3 (dubbed SLIMpro). It uses a simple
-+interrupt based door bell mechanism and can exchange simple messages using the
-+internal registers.
-+
-+There are total of 7 interrupts in this mailbox. Each used for an individual
-+door bell (or mailbox channel).
-+
-+Required properties:
-+- compatible:	Should be as "apm, xgene-slimpro-mbox".
-+
-+- reg:		Contain the mailbox register address range.
-+
-+- interrupts:	7 interrupts must start from 0 to 6, interrupt 0 define the
-+		the interrupt for mailbox channel 0 and interrupt 1 for
-+		mailbox channel 1 and so likewise for the reminder.
-+
-+- #mbox-cells:	only one to specify the mailbox channel number.
-+
-+Example:
-+
-+Mailbox Node:
-+		slimpro-mbox: slimpro-mbox@10540000 {
-+			compatible = "apm,xgene-slimpro-mbox";
-+			reg = <0x0 0x10540000 0x0 0xa000>;
-+			#mbox-cells = <1>;
-+			interrupts =  	<0x0 0x0 0x4>,
-+					<0x0 0x1 0x4>,
-+					<0x0 0x2 0x4>,
-+					<0x0 0x3 0x4>,
-+					<0x0 0x4 0x4>,
-+					<0x0 0x5 0x4>,
-+					<0x0 0x6 0x4>,
-+		};
--- 
-1.9.1
+Rob
