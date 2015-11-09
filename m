@@ -1,95 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 1/5] Documentation: add sbsa-gwdt driver documentation
-Date: Mon, 9 Nov 2015 10:13:28 -0600
-Message-ID: <20151109161328.GA27217@rob-hp-laptop>
-References: <1447054279-12470-1-git-send-email-fu.wei@linaro.org>
- <1447054279-12470-2-git-send-email-fu.wei@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/3] [media] mt9v032: Add reset and standby gpios
+Date: Mon, 09 Nov 2015 18:15:56 +0200
+Message-ID: <3310512.E4vEfn7BXV@avalon>
+References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de> <1763974.WDKlRvPG0G@avalon> <5144598.EqybrDukyg@adelgunde>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447054279-12470-2-git-send-email-fu.wei@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: fu.wei@linaro.org
-Cc: linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, dyoung@redhat.com, panand@redhat.com, Suravee.Suthikulpanit@amd.com, robherring2@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <5144598.EqybrDukyg@adelgunde>
+Sender: linux-media-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 09, 2015 at 03:31:15PM +0800, fu.wei@linaro.org wrote:
-> From: Fu Wei <fu.wei@linaro.org>
-> 
-> The sbsa-gwdt.txt documentation in devicetree/bindings/watchdog is for
-> introducing SBSA(Server Base System Architecture) Generic Watchdog
-> device node info into FDT.
-> 
-> Also add sbsa-gwdt introduction in watchdog-parameters.txt
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+Hi Markus,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Monday 09 November 2015 16:33:03 Markus Pargmann wrote:
+> On Monday 09 November 2015 14:28:56 Laurent Pinchart wrote:
+> > On Friday 06 November 2015 14:13:43 Markus Pargmann wrote:
+> >> Add optional reset and standby gpios. The reset gpio is used to reset
+> >> the chip in power_on().
+> >> 
+> >> The standby gpio is not used currently. It is just unset, so the chip is
+> >> not in standby.
+> > 
+> > We could use a gpio hog for this, but given that the standby signal should
+> > eventually get used, and given that specifying it in DT is a good hardware
+> > description, that looks good to me.
+> > 
+> >> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> >> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/media/i2c/mt9v032.txt      |  2 ++
+> >>  drivers/media/i2c/mt9v032.c                        | 23 +++++++++++++++
+> >>  2 files changed, 25 insertions(+)
 
-> ---
->  .../devicetree/bindings/watchdog/sbsa-gwdt.txt     | 34 ++++++++++++++++++++++
->  Documentation/watchdog/watchdog-parameters.txt     |  6 ++++
->  2 files changed, 40 insertions(+)
+[snip]
+
+> > If you're fine with these changes there's no need to resubmit the patch, I
+> > can fix it when applying it to my tree.
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
-> new file mode 100644
-> index 0000000..2da63db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
-> @@ -0,0 +1,34 @@
-> +* SBSA (Server Base System Architecture) Generic Watchdog
-> +
-> +The SBSA Generic Watchdog Timer is used to force a reset of the system
-> +after two stages of timeout have elapsed.  A detailed definition of the
-> +watchdog timer can be found in the ARM document: ARM-DEN-0029 - Server
-> +Base System Architecture (SBSA)
-> +
-> +Required properties:
-> +- compatible: Should at least contain "arm,sbsa-gwdt".
-> +
-> +- reg: Each entry specifies the base physical address of a register frame
-> +  and the length of that frame; currently, two frames must be defined,
-> +  in this order:
-> +  1: Watchdog control frame;
-> +  2: Refresh frame.
-> +
-> +- interrupts: Should contain the Watchdog Signal 0 (WS0) SPI (Shared
-> +  Peripheral Interrupt) number of SBSA Generic Watchdog.
-> +
-> +Optional properties
-> +- timeout-sec: Watchdog timeout and pre-timeout values.
-> +  If used, at least first timeout value (in seconds) must be provided.
-> +  A second optional value (in seconds) may also be provided and
-> +  will be used as the pre-timeout value, if it is given.
-> +
-> +Example for FVP Foundation Model v8:
-> +
-> +watchdog@2a440000 {
-> +	compatible = "arm,sbsa-gwdt";
-> +	reg = <0x0 0x2a440000 0 0x1000>,
-> +	      <0x0 0x2a450000 0 0x1000>;
-> +	interrupts = <0 27 4>;
-> +	timeout-sec = <60 30>;
-> +};
-> diff --git a/Documentation/watchdog/watchdog-parameters.txt b/Documentation/watchdog/watchdog-parameters.txt
-> index 9f9ec9f..e62c8c4 100644
-> --- a/Documentation/watchdog/watchdog-parameters.txt
-> +++ b/Documentation/watchdog/watchdog-parameters.txt
-> @@ -284,6 +284,12 @@ sbc_fitpc2_wdt:
->  margin: Watchdog margin in seconds (default 60s)
->  nowayout: Watchdog cannot be stopped once started
->  -------------------------------------------------
-> +sbsa_gwdt:
-> +timeout: Watchdog timeout in seconds. (default 60s)
-> +pretimeout: Watchdog pretimeout in seconds. (default 30s)
-> +nowayout: Watchdog cannot be stopped once started
-> +	(default=kernel config parameter)
-> +-------------------------------------------------
->  sc1200wdt:
->  isapnp: When set to 0 driver ISA PnP support will be disabled (default=1)
->  io: io port
-> -- 
-> 2.5.0
-> 
+> Thanks, I am fine with all your changes. But as there will be a v2 for the
+> other two patches I could as well send an updated version if you wish.
+
+As you wish, both options are fine with me.
+
+-- 
+Regards,
+
+Laurent Pinchart
