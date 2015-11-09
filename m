@@ -1,69 +1,38 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 1/2] mmc: sdhci: set bus voltage before enabling bus power
-Date: Mon, 9 Nov 2015 14:23:05 +0100
-Message-ID: <20151109132305.GC15706@odux.rfo.atmel.com>
-References: <1446825570-30029-1-git-send-email-ludovic.desroches@atmel.com>
- <1446825570-30029-2-git-send-email-ludovic.desroches@atmel.com>
+From: Haibo Chen <haibo.chen@freescale.com>
+Subject: [PATCH v2 0/4] Add i.mx7d adc driver support
+Date: Mon, 9 Nov 2015 21:28:20 +0800
+Message-ID: <1447075704-4605-1-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446825570-30029-2-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pierre.samat@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: haibo.chen@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 06, 2015 at 04:59:29PM +0100, Ludovic Desroches wrote:
-> When there is a vmmc regulator, only SD Bus Power is set to 1 in the
-> Power Control Register. It means SD Bus Voltage Select field is set to 0
-> that is a reserved value. The SD Host Controller specification says:
-> 'SD Bus Power: Before setting this bit, the SD Host Driver shall set SD
-> Bus Voltage Select.' and 'If the Host Driver selects an unsupported
-> voltage in the SD B?us Voltage Select field, the Host Controller may
-> ignore writes to SD Bus Power and keep its value at zero."
-> 
-> Having an external regulator means the SD Bus Voltage Select is useless
-> but if the Host Controller strictly follows the specification then we
-> need to set a valid value.
+This patch add imx7d adc driver support.
 
-Ulf,
+Changes in V2:
+-prefix defines with IMX7D_ for all the register
+-use BIT macro to define a single bit
+-remove the dma_en from struct adc_feature which is not support currently
+-use static const array to replace the switch case code
 
-What is your opinion about this patch?
+Haibo Chen (4):
+  iio: adc: add IMX7D ADC driver support
+  Documentation: add the binding file for Freescale imx7d ADC driver
+  ARM: dts: imx7d.dtsi: add ADC support
+  ARM: dts: imx7d-sdb: add ADC support
 
-If the 'no regulator found' message is turned in debug message, I can get
-rid of my vmmc regulator but I really think that writing only
-SDHCI_POWER_ON is opposite to the sdhci spec. I would say that not
-setting the bus voltage is a quirk!
+ .../devicetree/bindings/iio/adc/imx7d-adc.txt      |  26 +
+ arch/arm/boot/dts/imx7d-sdb.dts                    |  10 +
+ arch/arm/boot/dts/imx7d.dtsi                       |  20 +
+ drivers/iio/adc/Kconfig                            |   9 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/imx7d_adc.c                        | 571 +++++++++++++++++++++
+ 6 files changed, 637 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+ create mode 100644 drivers/iio/adc/imx7d_adc.c
 
-Regards
-
-Ludovic
-
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
->  drivers/mmc/host/sdhci.c | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index ac97b46..0cfd7b2 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1278,13 +1278,6 @@ static void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->  		spin_unlock_irq(&host->lock);
->  		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
->  		spin_lock_irq(&host->lock);
-> -
-> -		if (mode != MMC_POWER_OFF)
-> -			sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
-> -		else
-> -			sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
-> -
-> -		return;
->  	}
->  
->  	if (mode != MMC_POWER_OFF) {
-> -- 
-> 2.5.0
-> 
+-- 
+1.9.1
