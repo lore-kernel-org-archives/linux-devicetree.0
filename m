@@ -1,15 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 04/19] clk: sunxi: Add TCON channel1 clock
-Date: Mon, 9 Nov 2015 11:36:15 +0800
-Message-ID: <CAGb2v65MUrBKA=pAC95evdiSBMaewRcnLUhBcqCbx_Pc6Jutnw@mail.gmail.com>
+Subject: Re: [PATCH 00/19] drm: Add Allwinner A10 display engine support
+Date: Mon, 9 Nov 2015 11:43:44 +0800
+Message-ID: <CAGb2v678TOTbAcJMbdLsg1AB-ze_hchG0Yw4or1ENwu_YzQGfw@mail.gmail.com>
 References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-5-git-send-email-maxime.ripard@free-electrons.com>
- <CAGb2v650S8+8SNNBqx7u8k8wxHm2fSKdht=W3yA9Mh=rpU+hOA@mail.gmail.com> <20151107000139.GP6114@lukather>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBRVJQCZAKGQEPHIQ2BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151107000139.GP6114@lukather>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBVNQCZAKGQET4GM6FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1446214865-3972-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -18,70 +16,36 @@ List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 7, 2015 at 8:01 AM, Maxime Ripard
+Hi Maxime,
+
+On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
 <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Sat, Oct 31, 2015 at 05:53:26PM +0800, Chen-Yu Tsai wrote:
->> On Fri, Oct 30, 2015 at 10:20 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > The TCON is a controller generating the timings to output videos signals,
->> > acting like both a CRTC and an encoder.
->> >
->> > It has two channels depending on the output, each channel being driven by
->> > its own clock (and own clock controller).
->> >
->> > Add a driver for the channel 1 clock.
->> >
->> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> > ---
->> >  drivers/clk/sunxi/Makefile             |   1 +
->> >  drivers/clk/sunxi/clk-sun4i-tcon-ch1.c | 167 +++++++++++++++++++++++++++++++++
->> >  2 files changed, 168 insertions(+)
->> >  create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
->>
->> According to the documents I have, this variant of the TCON clock
->> is specific to sun5i. On sun4i/sun7i, TCON CH1 clock has the same
->> layout as TCON CH0 and the other display clocks.
->
-> At least for the A20, it's not true.
->
-> Make sure you do not confuse LCD1 CH0 (p79, which is a channel 0
-> clock), with LCD0 CH1 (p81, which is a channel 1 clock).
+> Maxime Ripard (19):
+>   clk: sunxi: Add display clock
+>   clk: sunxi: Add PLL3 clock
+>   clk: sunxi: Add TCON channel0 clock
+>   clk: sunxi: Add TCON channel1 clock
+>   clk: sunxi: add DRAM gates
+>   clk: sunxi: Add Allwinner R8 AHB gates support
+>   drm/panel: simple: Add timings for the Olimex LCD-OLinuXino-4.3TS
+>   drm: Add Allwinner A10 Display Engine support
+>   drm: sun4i: Add DT bindings documentation
+>   drm: sun4i: Add RGB output
+>   drm: sun4i: Add composite output
+>   drm: sun4i: tv: Add PAL output standard
+>   drm: sun4i: tv: Add NTSC output standard
+>   ARM: sun5i: dt: Add pll3 and pll7 clocks
+>   ARM: sun5i: dt: Add display and TCON clocks
+>   ARM: sun5i: dt: Add DRAM gates
+>   ARM: sun5i: dt: Add display blocks to the DTSI
+>   ARM: sun5i: r8: Add AHB gates to the DTSI
+>   ARM: sun5i: chip: Enable the TV Encoder
 
-Right. The names are great for confusing the reader. :(
+Can you add a patch adding the clock compatibles to
+Documentation/devicetree/bindings/clock/sunxi.txt?
 
->> > +       sclk1_parents[0] = sclk2_name;
->> > +       sclk1_parents[1] = sclk2d2_name;
->>
->> Is there any need to expose these 2 clocks via DT using of_clk_add_provider?
->
-> No, as far as I'm aware, there's no user external to this clock
-> driver.
->
->> Note that these complex clock trees within a clock node breaks the
->> assigned-clock-parents mechanism, as you can no longer specify the output
->> clock's direct parents.
->
-> There's no point of changing the parent either. Hardware blocks are
-> always connected to the leaf clock (sclk1). We could also model it as
-> an extra 1-bit divider, which would simplify a bit the logic though.
-
-Probably not. You still have a gate to handle. It's just moving the
-divider from 1 clock to the other. I think the current approach of
-modeling it like the hardware is better.
-
-About reparenting, what I meant was if sclk2 is not exposed through
-of_clk_add_provider, then we can't do assigned-clocks stuff on it,
-like setting a default parent or making each channel use a different
-source pll.
-
-What I'm saying is if it is not expected to work with another core
-binding, we should probably note it somewhere.
-
-
-Regards
+Thanks
 ChenYu
