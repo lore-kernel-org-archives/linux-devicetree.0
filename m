@@ -1,117 +1,342 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [rtc-linux] Re: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add
- documentation for s2mps15 PMIC
-Date: Mon, 09 Nov 2015 15:40:19 +0900
-Message-ID: <56403FD3.8000501@samsung.com>
-References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
- <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
- <20151106223339.GA22411@rob-hp-laptop> <563D6B72.9010004@samsung.com>
- <56403525.7000808@samsung.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v7 00/50] powerpc/powernv: PCI hotplug support
+Date: Mon, 09 Nov 2015 17:43:44 +1100
+Message-ID: <1447051424.31884.5.camel@kernel.crashing.org>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+	 <20151109030934.GA31009@gwshan>
+	 <EC714E5B-94E6-40B9-86B2-19FAB0E2D7E5@gmail.com>
+	 <20151109042959.GA9792@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <56403525.7000808@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, rtc-linux@googlegroups.com
-Cc: k.kozlowski.k@gmail.com, lee.jones@linaro.org, broonie@kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151109042959.GA9792@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, Pramod Sudheendra <prsuko@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 09.11.2015 14:54, Alim Akhtar wrote:
-> Hi Krzysztof,
-> 
-> On 11/07/2015 08:39 AM, Krzysztof Kozlowski wrote:
->> W dniu 07.11.2015 o 07:33, Rob Herring pisze:
->>> On Fri, Oct 30, 2015 at 11:55:31AM +0530, Alim Akhtar wrote:
->>>> From: Thomas Abraham <thomas.ab@samsung.com>
->>>>
->>>> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15
->>>> device
->>>> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck
->>>> regulators.
->>>> This also supports RTC and three 32.768KHz clock outputs.
->>>>
->>>> Cc: devicetree@vger.kernel.org
->>>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
->>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/mfd/s2mps11.txt |   21
->>>> ++++++++++++++-------
->>>>   1 file changed, 14 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt
->>>> b/Documentation/devicetree/bindings/mfd/s2mps11.txt
->>>> index 890f0b0e1643..4c0543ceec25 100644
->>>> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
->>>> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
->>>> @@ -1,5 +1,5 @@
->>>>
->>>> -* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current
->>>> Regulator
->>>> +* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
->>>>
->>>>   The Samsung S2MPS11 is a multi-function device which includes
->>>> voltage and
->>>>   current regulators, RTC, charger controller and other sub-blocks.
->>>> It is
->>>> @@ -7,8 +7,12 @@ interfaced to the host controller using an I2C
->>>> interface. Each sub-block is
->>>>   addressed by the host system using different I2C slave addresses.
->>>>
->>>>   Required properties:
->>>> -- compatible: Should be "samsung,s2mps11-pmic" or
->>>> "samsung,s2mps13-pmic"
->>>> -          or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
->>>> +- compatible: Should be one of the following
->>>> +    - "samsung,s2mps11-pmic"
->>>> +    - "samsung,s2mps13-pmic"
->>>> +    - "samsung,s2mps14-pmic"
->>>> +    - "samsung,s2mps15-pmic"
->>>> +    - "samsung,s2mpu02-pmic".
->>>>   - reg: Specifies the I2C slave address of the pmic block. It
->>>> should be 0x66.
->>>>
->>>>   Optional properties:
->>>> @@ -24,7 +28,7 @@ Optional properties:
->>>>     unwanted buck warm reset (setting buck voltages to default values).
->>>>
->>>>   Optional nodes:
->>>> -- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT)
->>>> buffered 32.768
->>>> +- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide
->>>> three(AP/CP/BT) buffered 32.768
->>>
->>> s5m8767 doesn't seem to be documented. Can you please fix or remove.
->>
->> What exactly do you have in mind?
->>
->> The s5m8767-clk is already documented as part of clk-s2mps11.c driver:
->> Documentation/devicetree/bindings/mfd/s2mps11.txt
->>
->> The main s5m8767 MFD driver is documented as part of regulator driver:
->> Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
->>
->> Yes, this may be confusing... They S2M and S5M family devices share:
->>   - main mfd driver,
->>   - rtc driver,
->>   - clk driver.
->>
->> but regulator drivers are separate.
->>
-> Indeed things are documented but in very confusing manners, e.g.
-> compatible name "samsung,s5m8767-pmic" belongs to MFD not regulator.
+On Mon, 2015-11-09 at 15:29 +1100, Gavin Shan wrote:
+>=C2=A0
+> Yeah, I dropped that before it's populated completely as I was told
+> it's disallowed
+> by my employer. I have to push it into IBM internal git server and
+> it's only visible
+> to IBM. Sorry for the inconvienence...
 
-The compatible itself belongs to MFD but in the same time the required
-properties for regulator driver (which expects to be child of that
-compatible) are stored next to it.
+I think that's a misinterpretation of the rule, I'll sort that out
+tomorrow, there should be no problem publishing that tree on github as
+long as you take a couple of precautions.
 
-> It should have being in */bindings/mfd/s2mps11.txt
-> Not sure if it make sense to change it though.
+Cheers,
+Ben.
 
-Then the naming would be confusing. :)
-
-Actually I have it on my todo list to fix things up. Truth is that all
-of these devices are tightly coupled.
-
-Best regards,
-Krzysztof
+> > >=20
+> > > > The series of patches intend to support PCI slot for PowerPC
+> > > > PowerNV platform,
+> > > > which is running on top of skiboot firmware. The patchset
+> > > > requires corresponding
+> > > > changes from skiboot firmware, which is sent to skiboot@lists.o
+> > > > zlabs.org
+> > > > for review. The PCI slots are exposed by skiboot with device
+> > > > node properties,
+> > > > and kernel utilizes those properties to populated PCI slots
+> > > > accordingly.
+> > > >=20
+> > > > The original PCI infrastructure on PowerNV platform can't
+> > > > support hotplug
+> > > > because the PE is assigned during PHB fixup time, which is
+> > > > called for once
+> > > > during system boot time. For this, the PCI infrastructure on
+> > > > PowerNV platform
+> > > > has been reworked for a lot. After that, the PE and its
+> > > > corresponding resources
+> > > > (IODT, M32DT, M64 segments, DMA32 and bypass window) are
+> > > > assigned upon updating
+> > > > PCI bridge's resources, which might decide PE# assigned to the
+> > > > PE (e.g. M64
+> > > > resources, on P8 strictly speaking). Each PE will maintain a
+> > > > reference count,
+> > > > which is (number of child PCI devices + 1). That indicates when
+> > > > last child PCI
+> > > > device leaves the PE, the PE and its included resources will be
+> > > > relased and put
+> > > > back into free pool again. With this design, the PE will be
+> > > > released when EEH PE
+> > > > is released. PATCH[1 - 27] are related to this part.
+> > > >=20
+> > > > > From skiboot perspective, PCI slot is providing
+> > > > > (hot/fundamental/complete)
+> > > > resets to EEH. The kernel gets to know if skiboot supports
+> > > > various reset on one
+> > > > particular PCI slot through device-tree node. If it does, EEH
+> > > > will utilize the
+> > > > functionality provided by skiboot. Besides, the device-tree
+> > > > nodes have to change
+> > > > in order to support PCI hotplug. For example, when one PCI
+> > > > adapter inserted to
+> > > > one slot, its device-tree node should be added to the system
+> > > > dynamically. Conversely,
+> > > > the device-tree node should be removed from the system when the
+> > > > PCI adapter is going
+> > > > to be offline. Since pci_dn and eeh_dev have same life cyle as
+> > > > PCI device nodes,
+> > > > they should be added/removed accordingly during PCI hotplug.
+> > > > PATCH[28 - 43] are
+> > > > doing the related work.
+> > > >=20
+> > > > The OF driver is changed to support unflattening FDT blob for
+> > > > sub-stree, which
+> > > > is covered by PATCH[44 - 49].
+> > > >=20
+> > > > The last one, PATCH[50], is the standalone PCI hotplug driver
+> > > > for PowerPC PowerNV
+> > > > platform.=20
+> > > >=20
+> > > > Changelog
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > v7:
+> > > > =C2=A0* Reworked revision to some extent.
+> > > > =C2=A0* Rebased to powerpc/next repository.
+> > > > =C2=A0* Reorder/split/merge/drop according - Alexey.
+> > > > =C2=A0* Defined macros and use array to track IO/M32/M64/DMA32
+> > > > segments - Alexey.
+> > > > =C2=A0* Merged 3 files to one for the hotplug driver - Alexey.
+> > > > =C2=A0* As part of OPAL API, defined macros for PCI slot power
+> > > > state, hotplug
+> > > > =C2=A0=C2=A0=C2=A0message type. Defined macros for PCI slot pow=
+er confirmed
+> > > > state in
+> > > > =C2=A0=C2=A0=C2=A0hotplug driver.
+> > > > =C2=A0* Misc comments from Alexey.
+> > > > =C2=A0* Reworked unflatten_dt_node() to avoid recursive functio=
+n
+> > > > calls.
+> > > > =C2=A0* Use EXPORT_SYMBOL_GPL() and document function's input/o=
+utput
+> > > > - Rob/Frank.
+> > > > v6:
+> > > > =C2=A0* Patch reorder, split, squash - Alexey.
+> > > > =C2=A0* Minor coding style - Alexey.
+> > > > =C2=A0* Better function names for pcibios_{add,remove}_pci_devi=
+ces -
+> > > > Bjorn
+> > > > =C2=A0* Replace pr_warn() with dev_warn() in PowerNV hotplug dr=
+iver
+> > > > - Bjorn
+> > > > =C2=A0* Concurrent depth as parameter passed to
+> > > > __unflatten_dt_node() - Grant / Alexey
+> > > > =C2=A0* Replace overlay with of_changeset - Grant
+> > > > v5:
+> > > > =C2=A0* Rebased to 4.1.rc6 and some unmerged patches as below:
+> > > > =C2=A0=C2=A0=C2=A0Alexey's DDW patchset (v11);
+> > > > =C2=A0=C2=A0=C2=A0Gavin's EEH error injection support (in mpe's=
+ next branch);
+> > > > =C2=A0=C2=A0=C2=A0Richard's EEH cleanup patches (in mpe's next =
+branch);
+> > > > =C2=A0=C2=A0=C2=A0Richard's EEH support for VF (v7);
+> > > > =C2=A0=C2=A0=C2=A0Gavin's misc EEH fixes for 4.2;
+> > > > =C2=A0* The revision bases on skiboot corresponding patches (v7=
+):
+> > > > =C2=A0=C2=A0=C2=A0https://patchwork.ozlabs.org/patch/480437/
+> > > > =C2=A0* Utilize OF overlay to update device-tree with help of n=
+ewly
+> > > > introduced
+> > > > =C2=A0=C2=A0=C2=A0OPAL API opal_get_overlay_dt().
+> > > > =C2=A0* Split patches for easy review according to aik's commen=
+ts.
+> > > > =C2=A0* Fix coding style from checkpatchc.pl as pointed by aik.
+> > > > =C2=A0* Code cleanup and misc fixup according to aik's input.
+> > > > v4:
+> > > > =C2=A0* Rebased to 4.1.RC1
+> > > > =C2=A0* Added API to unflatten FDT blob to device node sub-tree=
+,
+> > > > which is attached
+> > > > =C2=A0=C2=A0=C2=A0the indicated parent device node. The origina=
+l mechanism
+> > > > based on formatted
+> > > > =C2=A0=C2=A0=C2=A0string stream has been dropped.
+> > > > =C2=A0* The PATCH[v3 09/21] ("powerpc/eeh: Delay probing EEH de=
+vice
+> > > > during hotplug")
+> > > > =C2=A0=C2=A0=C2=A0was picked up sent to linux-ppc@ separately f=
+or review as
+> > > > Richard's "VF EEH
+> > > > =C2=A0=C2=A0=C2=A0Support" depends on that.
+> > > > v3:
+> > > > =C2=A0* Rebased to 4.1.RC0
+> > > > =C2=A0* PowerNV PCI infrasturcture is total refactored in order=
+ to
+> > > > support PCI
+> > > > =C2=A0=C2=A0=C2=A0hotplug. The PowerNV hotplug driver is also r=
+eworked a lot
+> > > > because of
+> > > > =C2=A0=C2=A0=C2=A0the changes in skiboot in order to support PC=
+I hotplug.
+> > > >=20
+> > > > Gavin Shan (50):
+> > > > PCI: Add pcibios_setup_bridge()
+> > > > powerpc/pci: Override pcibios_setup_bridge()
+> > > > powerpc/pci: Cleanup on struct pci_controller_ops
+> > > > powerpc/powernv: Cleanup on pnv_pci_ioda_controller_ops
+> > > > powerpc/powernv: Drop pnv_ioda_setup_dev_PE()
+> > > > powerpc/powernv: Drop phb->bdfn_to_pe()
+> > > > powerpc/powernv: Reorder fields in struct pnv_phb
+> > > > powerpc/powernv: Rename PE# fields in struct pnv_phb
+> > > > powerpc/powernv: Fix initial IO and M32 segmap
+> > > > powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
+> > > > powerpc/powernv: IO and M32 mapping based on PCI device
+> > > > resources
+> > > > powerpc/powernv: Track M64 segment consumption
+> > > > powerpc/powernv: Rename M64 related functions
+> > > > powerpc/powernv: M64 support on P7IOC
+> > > > powerpc/powernv: Rename pnv_pci_ioda_setup_dma_pe()
+> > > > powerpc/powernv: Define PNV_IODA1_DMA32_SEGSIZE
+> > > > powerpc/powernv: Avoid calculating DMA32 segments on PHB3
+> > > > powerpc/powernv: Remove DMA32 PE list
+> > > > powerpc/powernv: Track DMA32 segment consumption
+> > > > powerpc/powernv: Improve DMA32 segment calculation
+> > > > powerpc/powernv: Increase PE# capacity
+> > > > powerpc/powernv: Introduce pnv_ioda_init_pe()
+> > > > powerpc/powernv: Use PE instead of number during setup and
+> > > > release
+> > > > powerpc/powernv: Allocate PE# in reverse order
+> > > > powerpc/powernv: Reserve PE for root bus
+> > > > powerpc/powernv: Create PEs at PCI hot plugging time
+> > > > powerpc/powernv: Dynamically release PEs
+> > > > powerpc/pci: Rename pcibios_{add,remove}_pci_devices()
+> > > > powerpc/pci: Rename pcibios_find_pci_bus()
+> > > > powerpc/pci: Move pci_find_bus_by_node() around
+> > > > powerpc/pci: Export pci_add_device_node_info()
+> > > > powerpc/pci: Introduce pci_remove_device_node_info()
+> > > > powerpc/pci: Export pci_traverse_device_nodes()
+> > > > powerpc/pci: Delay populating pdn
+> > > > powerpc/pci: Don't scan empty slot
+> > > > powerpc/pci: Update bridge windows on PCI plug
+> > > > powerpc/powernv: Simplify pnv_eeh_reset()
+> > > > powerpc/powernv: Exclude root bus in
+> > > > pnv_pci_reset_secondary_bus()
+> > > > powerpc/powernv: Fundamental reset in
+> > > > pnv_pci_reset_secondary_bus()
+> > > > powerpc/powernv: Support PCI slot ID
+> > > > powerpc/powernv: Use firmware PCI slot reset infrastructure
+> > > > powerpc/powernv: Functions to get/set PCI slot status
+> > > > powerpc/powernv: Select OF_DYNAMIC
+> > > > drivers/of: Split unflatten_dt_node()
+> > > > drivers/of: Avoid recursively calling unflatten_dt_node()
+> > > > drivers/of: Rename unflatten_dt_node()
+> > > > drivers/of: Specify parent node in of_fdt_unflatten_tree()
+> > > > drivers/of: Return allocated memory from
+> > > > of_fdt_unflatten_tree()
+> > > > drivers/of: Export OF changeset functions
+> > > > PCI/hotplug: PowerPC PowerNV PCI hotplug driver
+> > > >=20
+> > > > MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A06 +
+> > > > arch/powerpc/include/asm/eeh.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=
+=A0=C2=A0=C2=A0=C2=A02 +-
+> > > > arch/powerpc/include/asm/opal-api.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A017 +-
+> > > > arch/powerpc/include/asm/opal.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=
+=A0=C2=A0=C2=A08 +-
+> > > > arch/powerpc/include/asm/pci-bridge.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A025 +-
+> > > > arch/powerpc/include/asm/pnv-pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A0=
+7 +
+> > > > arch/powerpc/include/asm/ppc-pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A0=
+8 +-
+> > > > arch/powerpc/kernel/eeh_dev.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+|=C2=A0=C2=A0=C2=A019 +-
+> > > > arch/powerpc/kernel/eeh_driver.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=
+=A012 +-
+> > > > arch/powerpc/kernel/pci-common.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=
+=A016 +-
+> > > > arch/powerpc/kernel/pci-hotplug.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=
+47 +-
+> > > > arch/powerpc/kernel/pci_dn.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0|=C2=A0=C2=A0=C2=A085 +-
+> > > > arch/powerpc/platforms/maple/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A034 +=
+-
+> > > > arch/powerpc/platforms/pasemi/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A03 -
+> > > > arch/powerpc/platforms/powermac/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A038 +-
+> > > > arch/powerpc/platforms/powernv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A01 +
+> > > > arch/powerpc/platforms/powernv/eeh-powernv.c=C2=A0=C2=A0=C2=A0|=
+=C2=A0=C2=A0173 ++--
+> > > > arch/powerpc/platforms/powernv/opal-wrappers.S |=C2=A0=C2=A0=C2=
+=A0=C2=A04 +
+> > > > arch/powerpc/platforms/powernv/pci-ioda.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0| 1251
+> > > > +++++++++++++++---------
+> > > > arch/powerpc/platforms/powernv/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A092 +-
+> > > > arch/powerpc/platforms/powernv/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A062 +-
+> > > > arch/powerpc/platforms/pseries/msi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A04 +-
+> > > > arch/powerpc/platforms/pseries/pci_dlpar.c=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0|=C2=A0=C2=A0=C2=A032 -
+> > > > arch/powerpc/platforms/pseries/setup.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A08 +-
+> > > > drivers/of/dynamic.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A065 +-
+> > > > drivers/of/fdt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=
+=C2=A0378 ++++---
+> > > > drivers/of/of_private.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A02 +
+> > > > drivers/of/overlay.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A08=
+ +-
+> > > > drivers/of/unittest.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A06 +-
+> > > > drivers/pci/hotplug/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A012 +
+> > > > drivers/pci/hotplug/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A03 +
+> > > > drivers/pci/hotplug/pnv_php.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+|=C2=A0=C2=A0866
+> > > > ++++++++++++++++
+> > > > drivers/pci/hotplug/rpadlpar_core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A08 +-
+> > > > drivers/pci/hotplug/rpaphp_core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=
+=C2=A04 +-
+> > > > drivers/pci/hotplug/rpaphp_pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=
+=A0=C2=A04 +-
+> > > > drivers/pci/setup-bus.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A05 +
+> > > > include/linux/of_fdt.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=A05 +-
+> > > > include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A0=C2=
+=A01 +
+> > > > 38 files changed, 2389 insertions(+), 932 deletions(-)
+> > > > create mode 100644 drivers/pci/hotplug/pnv_php.c
+> > > >=20
