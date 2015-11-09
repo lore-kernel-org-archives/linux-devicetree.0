@@ -1,51 +1,57 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v2 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Mon, 9 Nov 2015 18:56:57 +0200
-Message-ID: <5640D059.3000805@mm-sol.com>
-References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
- <1430743338-10441-5-git-send-email-svarbanov@mm-sol.com>
- <20151106205033.GH24668@usrtlx11787.corpusers.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V7 1/3] Documentation: DT: Add entry for Freescale
+ LS1043a-RDB board
+Date: Mon, 9 Nov 2015 11:24:27 -0600
+Message-ID: <20151109172427.GA9733@rob-hp-laptop>
+References: <1446153126-6219-1-git-send-email-leoli@freescale.com>
+ <1446153126-6219-2-git-send-email-leoli@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151106205033.GH24668@usrtlx11787.corpusers.net>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446153126-6219-2-git-send-email-leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On 11/06/2015 10:50 PM, Bjorn Andersson wrote:
-> On Mon 04 May 05:42 PDT 2015, Stanimir Varbanov wrote:
+On Thu, Oct 29, 2015 at 04:12:04PM -0500, Li Yang wrote:
+> From: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
->> The PCIe driver reuse the Designware common code for host
->> and MSI initialization, and also program the Qualcomm
->> application specific registers.
->>
-> 
-> I want to get the ethernet on the ifc6410 running and this seems like
-> the last patchset for the PCIe.
-> 
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> [..]
->> diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
->> new file mode 100644
->> index 0000000..4f083c6
->> --- /dev/null
->> +++ b/drivers/pci/host/pcie-qcom.c
->> @@ -0,0 +1,677 @@
->> +/*
->> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-> 
-> Bump the year, it's the future now :)
+> Signed-off-by: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> v2-v7: no change
 
-yep, thanks for the valuable comments I will address all of them on next
-version.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I will probably restart the work on the driver this week.
-
--- 
-regards,
-Stan
+> 
+>  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 34c88b0..752a685 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -131,6 +131,10 @@ Example:
+>  Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
+>  ----------------------------------------------------------------
+>  
+> +LS1043A ARMv8 based RDB Board
+> +Required root node properties:
+> +    - compatible = "fsl,ls1043a-rdb", "fsl,ls1043a";
+> +
+>  LS2080A ARMv8 based Simulator model
+>  Required root node properties:
+>      - compatible = "fsl,ls2080a-simu", "fsl,ls2080a";
+> -- 
+> 2.3.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
