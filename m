@@ -1,136 +1,95 @@
 From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v5 10/11] Documentation: devicetree: ufs: Add DT bindings for
- exynos UFS host controller
-Date: Mon, 09 Nov 2015 10:56:26 +0530
-Message-ID: <1447046787-480-11-git-send-email-alim.akhtar@samsung.com>
-References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: JBottomley@odin.com, vinholikatti@gmail.com, gautam.vivek@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org, kishon@ti.com
+Subject: Re: [rtc-linux] Re: [PATCH v5 1/4] dt-bindings: mfd: s2mps11: add
+ documentation for s2mps15 PMIC
+Date: Mon, 09 Nov 2015 11:24:45 +0530
+Message-ID: <56403525.7000808@samsung.com>
+References: <1446186334-16510-1-git-send-email-alim.akhtar@samsung.com>
+ <1446186334-16510-2-git-send-email-alim.akhtar@samsung.com>
+ <20151106223339.GA22411@rob-hp-laptop> <563D6B72.9010004@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <563D6B72.9010004@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com
+Cc: k.kozlowski.k@gmail.com, lee.jones@linaro.org, broonie@kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Seungwon Jeon <essuuj@gmail.com>
+Hi Krzysztof,
 
-This adds Exynos Universal Flash Storage (UFS) Host Controller DT bindings.
+On 11/07/2015 08:39 AM, Krzysztof Kozlowski wrote:
+> W dniu 07.11.2015 o 07:33, Rob Herring pisze:
+>> On Fri, Oct 30, 2015 at 11:55:31AM +0530, Alim Akhtar wrote:
+>>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>>
+>>> Add dt-binding documentation for s2mps15 PMIC device. The s2mps15 device
+>>> is similar to s2mps11/14 PMIC device and has 27 LDO and 10 buck regulators.
+>>> This also supports RTC and three 32.768KHz clock outputs.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/mfd/s2mps11.txt |   21 ++++++++++++++-------
+>>>   1 file changed, 14 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+>>> index 890f0b0e1643..4c0543ceec25 100644
+>>> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+>>> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+>>> @@ -1,5 +1,5 @@
+>>>
+>>> -* Samsung S2MPS11, S2MPS13, S2MPS14 and S2MPU02 Voltage and Current Regulator
+>>> +* Samsung S2MPS11/13/14/15 and S2MPU02 Voltage and Current Regulator
+>>>
+>>>   The Samsung S2MPS11 is a multi-function device which includes voltage and
+>>>   current regulators, RTC, charger controller and other sub-blocks. It is
+>>> @@ -7,8 +7,12 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+>>>   addressed by the host system using different I2C slave addresses.
+>>>
+>>>   Required properties:
+>>> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps13-pmic"
+>>> -	      or "samsung,s2mps14-pmic" or "samsung,s2mpu02-pmic".
+>>> +- compatible: Should be one of the following
+>>> +	- "samsung,s2mps11-pmic"
+>>> +	- "samsung,s2mps13-pmic"
+>>> +	- "samsung,s2mps14-pmic"
+>>> +	- "samsung,s2mps15-pmic"
+>>> +	- "samsung,s2mpu02-pmic".
+>>>   - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+>>>
+>>>   Optional properties:
+>>> @@ -24,7 +28,7 @@ Optional properties:
+>>>     unwanted buck warm reset (setting buck voltages to default values).
+>>>
+>>>   Optional nodes:
+>>> -- clocks: s2mps11, s2mps13 and s5m8767 provide three(AP/CP/BT) buffered 32.768
+>>> +- clocks: s2mps11, s2mps13, s2mps15 and s5m8767 provide three(AP/CP/BT) buffered 32.768
+>>
+>> s5m8767 doesn't seem to be documented. Can you please fix or remove.
+>
+> What exactly do you have in mind?
+>
+> The s5m8767-clk is already documented as part of clk-s2mps11.c driver:
+> Documentation/devicetree/bindings/mfd/s2mps11.txt
+>
+> The main s5m8767 MFD driver is documented as part of regulator driver:
+> Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
+>
+> Yes, this may be confusing... They S2M and S5M family devices share:
+>   - main mfd driver,
+>   - rtc driver,
+>   - clk driver.
+>
+> but regulator drivers are separate.
+>
+Indeed things are documented but in very confusing manners, e.g. 
+compatible name "samsung,s5m8767-pmic" belongs to MFD not regulator.
+It should have being in */bindings/mfd/s2mps11.txt
+Not sure if it make sense to change it though.
 
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- .../devicetree/bindings/ufs/ufs-exynos.txt         |  104 ++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
-
-diff --git a/Documentation/devicetree/bindings/ufs/ufs-exynos.txt b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
-new file mode 100644
-index 000000000000..08e2d1497b1b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
-@@ -0,0 +1,104 @@
-+* Exynos Universal Flash Storage (UFS) Host Controller
-+
-+UFSHC nodes are defined to describe on-chip UFS host controllers.
-+Each UFS controller instance should have its own node.
-+
-+Required properties:
-+- compatible        : compatible name, contains "samsung,exynos7-ufs"
-+- interrupts        : <interrupt mapping for UFS host controller IRQ>
-+- reg               : Should contain HCI, vendor specific, UNIPRO and
-+		      UFS protector address space
-+- reg-names	    : "hci", "vs_hci", "unipro", "ufsp";
-+
-+Optional properties:
-+- vdd-hba-supply        : phandle to UFS host controller supply regulator node
-+- vcc-supply            : phandle to VCC supply regulator node
-+- vccq-supply           : phandle to VCCQ supply regulator node
-+- vccq2-supply          : phandle to VCCQ2 supply regulator node
-+- vcc-supply-1p8        : For embedded UFS devices, valid VCC range is 1.7-1.95V
-+                          or 2.7-3.6V. This boolean property when set, specifies
-+			  to use low voltage range of 1.7-1.95V. Note for external
-+			  UFS cards this property is invalid and valid VCC range is
-+			  always 2.7-3.6V.
-+- vcc-max-microamp      : specifies max. load that can be drawn from vcc supply
-+- vccq-max-microamp     : specifies max. load that can be drawn from vccq supply
-+- vccq2-max-microamp    : specifies max. load that can be drawn from vccq2 supply
-+- <name>-fixed-regulator : boolean property specifying that <name>-supply is a fixed regulator
-+
-+- clocks                : List of phandle and clock specifier pairs
-+- clock-names           : List of clock input name strings sorted in the same
-+                          order as the clocks property.
-+			  "core", "sclk_unipro_main", "ref" and ref_parent
-+
-+- freq-table-hz		: Array of <min max> operating frequencies stored in the same
-+			  order as the clocks property. If this property is not
-+			  defined or a value in the array is "0" then it is assumed
-+			  that the frequency is set by the parent clock or a
-+			  fixed rate clock source.
-+- pclk-freq-avail-range : specifies available frequency range(min/max) for APB clock
-+- ufs,pwr-attr-mode : specifies mode value for power mode change, possible values are
-+			"FAST", "SLOW", "FAST_auto" and "SLOW_auto"
-+- ufs,pwr-attr-lane : specifies lane count value for power mode change
-+		      allowed values are 1 or 2
-+- ufs,pwr-attr-gear : specifies gear count value for power mode change
-+		      allowed values are 1 or 2
-+- ufs,pwr-attr-hs-series : specifies HS rate series for power mode change
-+			   can be one of "HS_rate_b" or "HS_rate_a"
-+- ufs,pwr-local-l2-timer : specifies array of local UNIPRO L2 timer values
-+			   3 timers supported
-+			   <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal, AFC0ReqTimeOutVal>
-+- ufs,pwr-remote-l2-timer : specifies array of remote UNIPRO L2 timer values
-+			   3 timers supported
-+			   <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal, AFC0ReqTimeOutVal>
-+- ufs-rx-adv-fine-gran-sup_en : specifies support of fine granularity of MPHY,
-+			      this is a boolean property.
-+- ufs-rx-adv-fine-gran-step : specifies granularity steps of MPHY,
-+			      allowed step size is 0 to 3
-+- ufs-rx-adv-min-activate-time-cap : specifies rx advanced minimum activate time of MPHY
-+				     range is 1 to 9
-+- ufs-pa-granularity : specifies Granularity for PA_TActivate and PA_Hibern8Time
-+- ufs-pa-tacctivate : specifies time to wake-up remote M-RX
-+- ufs-pa-hibern8time : specifies minimum time to wait in HIBERN8 state
-+
-+Note: If above properties are not defined it can be assumed that the supply
-+regulators or clocks are always on.
-+
-+Example:
-+	ufshc@0x15570000 {
-+		compatible = "samsung,exynos7-ufs";
-+		reg = <0x15570000 0x100>,
-+		      <0x15570100 0x100>,
-+		      <0x15571000 0x200>,
-+		      <0x15572000 0x300>;
-+		reg-names = "hci", "vs_hci", "unipro", "ufsp";
-+		interrupts = <0 200 0>;
-+
-+		vdd-hba-supply = <&xxx_reg0>;
-+		vdd-hba-fixed-regulator;
-+		vcc-supply = <&xxx_reg1>;
-+		vcc-supply-1p8;
-+		vccq-supply = <&xxx_reg2>;
-+		vccq2-supply = <&xxx_reg3>;
-+		vcc-max-microamp = 500000;
-+		vccq-max-microamp = 200000;
-+		vccq2-max-microamp = 200000;
-+
-+		clocks = <&core 0>, <&ref 0>, <&iface 0>;
-+		clock-names = "core", "sclk_unipro_main", "ref", "ref_parent";
-+		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>, <0 0>;
-+
-+		pclk-freq-avail-range = <70000000 133000000>;
-+
-+		ufs,pwr-attr-mode = "FAST";
-+		ufs,pwr-attr-lane = <2>;
-+		ufs,pwr-attr-gear = <2>;
-+		ufs,pwr-attr-hs-series = "HS_rate_b";
-+		ufs,pwr-local-l2-timer = <8000 28000 20000>;
-+		ufs,pwr-remote-l2-timer = <12000 32000 16000>;
-+		ufs-rx-adv-fine-gran-sup_en = <1>;
-+		ufs-rx-adv-fine-gran-step = <3>;
-+		ufs-rx-adv-min-activate-time-cap = <9>;
-+		ufs-pa-granularity = <6>;
-+		ufs-pa-tacctivate = <6>;
-+		ufs-pa-hibern8time = <20>;
-+	};
--- 
-1.7.10.4
+> Best regards,
+> Krzysztof
+>
+>
