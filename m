@@ -1,58 +1,54 @@
-From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH v6 2/2] iio: ti-ads8688: Add DT binding documentation
-Date: Mon, 9 Nov 2015 13:53:00 +0100
-Message-ID: <1447073580-17889-2-git-send-email-sean.nyekjaer@prevas.dk>
-References: <1447073580-17889-1-git-send-email-sean.nyekjaer@prevas.dk>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 0/2] mmc: sdhci: potentially bad behavior when using vmmc
+ supply
+Date: Mon, 9 Nov 2015 14:14:37 +0100
+Message-ID: <20151109131437.GB15706@odux.rfo.atmel.com>
+References: <1446825570-30029-1-git-send-email-ludovic.desroches@atmel.com>
+ <CAPDyKFrNNyUrJemgA2OHL35EqpG74_1i9bCqkVkZZZMxNGrHgw@mail.gmail.com>
+ <20151109074104.GB27482@odux.rfo.atmel.com>
+ <CAPDyKFpC_mKXei14mdD=AYd6YBU0R4D1R=XWpf7BTgX4JDw24w@mail.gmail.com>
+ <20151109102555.GA15706@odux.rfo.atmel.com>
+ <CAPDyKFqrPNPrJN=9G7MfA0hVhJMecN0DqbOxqk1J57L819Zm3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447073580-17889-1-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqrPNPrJN=9G7MfA0hVhJMecN0DqbOxqk1J57L819Zm3g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, pierre.samat@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding binding documentation for Texas Instruments ADS8688 ADC.
+On Mon, Nov 09, 2015 at 11:50:50AM +0100, Ulf Hansson wrote:
+> [...]
+> 
+> >>
+> >> This doesn't seems like a case where a gpio regulator should be used
+> >> and I am not sure what problem it would solve. Beside to suppress the
+> >> log warnings (actually those aren't warnings but informations).
+> >>
+> >> Isn't sdhci_do_start_signal_voltage_switch() doing what you need here?
+> >>
+> >
+> > It is. I am only wondering the best way to describe the hardware:
+> > - No regulator but I have the 'no vqmmc regulator not found' message which
+> >   is a bit annoying and which can be interpreted as an issue for someone
+> >   who has no knowledge about this stuff.
+> 
+> Hmm, should we turn them into debug messages? Both regulators are optional.
+> 
 
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
----
-Changes since v2:
-- Moved vref-supply to Optional properties
+I think so. From my point of view, it is useless to indicate that
+something optionnal is missing.
 
- .../devicetree/bindings/iio/adc/ti-ads8688.txt       | 20 ++++++++++++=
-++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads868=
-8.txt
+> > - Describe the regulator since there is one on my board. But it is not a
+> >   fixed regulator and even if it's close to a gpio one it is not.
+> 
+> If it's driven by SDHCI internal logic, I would leave it to that.
+> There are no need to describe it at all.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt b=
-/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
-new file mode 100644
-index 0000000..a02337d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
-@@ -0,0 +1,20 @@
-+* Texas Instruments' ADS8684 and ADS8688 ADC chip
-+
-+Required properties:
-+ - compatible: Should be "ti,ads8684" or "ti,ads8688"
-+ - reg: spi chip select number for the device
-+
-+Recommended properties:
-+ - spi-max-frequency: Definition as per
-+		Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional properties:
-+ - vref-supply: The regulator supply for ADC reference voltage
-+
-+Example:
-+adc@0 {
-+	compatible =3D "ti,ads8688";
-+	reg =3D <0>;
-+	vref-supply =3D <&vdd_supply>;
-+	spi-max-frequency =3D <1000000>;
-+};
---=20
-2.6.2
+Ok thanks for your help.
+
+> 
+> Kind regards
+> Uffe
