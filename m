@@ -1,54 +1,120 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RESEND v2 3/4] ARM: BCM: Add SMP support for Broadcom NSP
-Date: Mon, 9 Nov 2015 11:09:54 +0100
-Message-ID: <CACRpkdZN-iwdR_VwktdHsw+rGQLhCgmWnERYVDE+KaYOqJR30w@mail.gmail.com>
-References: <1446839371-22601-1-git-send-email-kapilh@broadcom.com>
-	<1446839371-22601-4-git-send-email-kapilh@broadcom.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v10] Add Mediatek thermal support
+Date: Mon,  9 Nov 2015 11:13:30 +0100
+Message-ID: <1447064013-13026-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1446839371-22601-4-git-send-email-kapilh@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kapil Hali <kapilh@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 6, 2015 at 8:49 PM, Kapil Hali <kapilh@broadcom.com> wrote:
 
-> Add SMP support for Broadcom's Northstar Plus SoC
-> cpu enable method. This changes also consolidates
-> iProc family's - BCM NSP and BCM Kona, platform
-> SMP handling in a common file.
->
-> Northstar Plus SoC is based on ARM Cortex-A9
-> revision r3p0 which requires configuration for ARM
-> Errata 764369 for SMP. This change adds the needed
-> configuration option.
->
-> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+This series adds support for the thermal sensors included in the
+MT8173 SoC. Currently only basic temperature reading is supported
+without any interrupt support.
 
-This version looks saner to me.
+The cpufreq driver for MT8173 is currently under review, so there's no
+real cooling device available in mainline. Until this is available the
+thermal driver can be tested with the following dts snippet. It creates
+a fake gpio fan and a fake trip point which is so low that it can easily
+be reached with a "cat /dev/zero > /dev/null" on the command line.
 
-> +static int nsp_write_lut(void)
-> +{
-> +       void __iomem *sku_rom_lut;
-> +       phys_addr_t secondary_startup_phy;
-> +
-> +       if (!secondary_boot) {
-> +               pr_warn("required secondary boot register not specified\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       sku_rom_lut = ioremap_nocache((phys_addr_t)secondary_boot,
-> +                                               sizeof(secondary_boot));
+Sascha
 
-Why is this address not just taken directly from the device tree?
+changes since v9:
+- rebase on v4.3
+- Add support for reading the calibration values from nvmem fuses
+- Only register a single thermal zone instead of four as it seems
+  that's everything needed
 
-If it is not in the device tree: why?
+changes since v8:
+- Add commit description to binding patch
+- rebase on v4.3-rc2
 
-Also give it a sane name, bcm_sec_boot_address or so.
-"secondary_boot" sounds like a function you call to boot
-the second core.
+changes since v7:
+- re-add some used defines removed in v5
+- Use MT8173_THERMAL_ZONE_* defines as array indices in static initializers
 
-Yours,
-Linus Walleij
+changes since v6:
+- remove dot in Hanyi Wus name
+
+changes since v5:
+- update copyright
+- remove unused defines
+
+Changes since v4:
+- give calibration constants more meaningful names (offset, slope)
+- Use define instead of 0x00c for register access.
+
+Changes since v3:
+- add include/dt-bindings/thermal/mt8173.h for to be able to use sensor names
+  in dts files
+- fix disabling wrong clock in error path
+- remove now unused reset-names property from binding document
+- rename MT8173_NUM_BANKS -> MT8173_NUM_ZONES
+- rename MT8173_NUM_SENSING_POINTS -> MT8173_NUM_SENSORS_PER_ZONE
+- rename struct thermal_zone_device *tz -> struct thermal_zone_device *tzd
+
+Changes since v2:
+- sort #includes alphabetically
+- Add prefix to register defines
+- drop some members from struct mtk_thermal
+- simplify raw_to_mcelsius()
+- add and use more register bit defines
+- use device_reset() instead of devm_reset_control_get()/reset_control_reset()
+- misc other stuff
+
+Changes since v1:
+- Use "mediatek," prefix for custom properties
+- Drop "thermal: consistently use int for temperatures" dependency
+
+-------------
+
+	fan: gpio_fan {
+		compatible = "gpio-fan";
+		gpios = <&pio 24 0>;
+		gpio-fan,speed-map = <0    0
+				      4500 1>;
+		#cooling-cells = <2>;
+	};
+
+	thermal-zones {
+			cpu_thermal: cpu_thermal {
+			polling-delay-passive = <1000>; /* milliseconds */
+			polling-delay = <1000>; /* milliseconds */
+
+			thermal-sensors = <&thermal>;
+
+			trips {
+				cpu_passive: cpu_passive {
+					temperature = <47000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "passive";
+				};
+
+				cpu_crit {
+					temperature = <90000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "critical";
+				};
+			};
+
+			cooling-maps {
+				map0 {
+					trip = <&cpu_passive>;
+					cooling-device = <&fan THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+				};
+			};
+		};
+	};
