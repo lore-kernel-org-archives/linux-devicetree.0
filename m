@@ -1,112 +1,68 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH 2/3] [media] mt9v032: Do not unset master_mode
-Date: Mon, 09 Nov 2015 14:32:42 +0100
-Message-ID: <1705584.DjrTFzEFXW@adelgunde>
-References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de> <1446815625-18413-2-git-send-email-mpa@pengutronix.de> <1542250.4NFmqc20qx@avalon>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Mon, 9 Nov 2015 14:02:25 +0000
+Message-ID: <20151109140225.GA26072@sirena.org.uk>
+References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
+ <20151105152736.GO18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
+ <20151106112141.GE18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
+ <20151106115451.GG18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
+ <20151108103429.GC6746@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2141150.UvXHX27rcF"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1542250.4NFmqc20qx@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D460CC6C-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---nextPart2141150.UvXHX27rcF
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Laurent,
+On Mon, Nov 09, 2015 at 12:28:39PM +0000, Opensource [Adam Thomson] wrote:
+> On November 8, 2015 10:34, Mark Brown wrote:
 
-On Monday 09 November 2015 14:46:42 Laurent Pinchart wrote:
-> Hi Markus,
->=20
-> Thank you for the patch.
->=20
-> On Friday 06 November 2015 14:13:44 Markus Pargmann wrote:
-> > The power_on function of the driver resets the chip and sets the
-> > CHIP_CONTROL register to 0. This switches the operating mode to sla=
-ve.
-> > The s_stream function sets the correct mode. But this caused proble=
-ms on
-> > a board where the camera chip is operated as master. The camera sta=
-rted
-> > after a random amount of time streaming an image, I observed betwee=
-n 10
-> > and 300 seconds.
-> >=20
-> > The STRFM_OUT and STLN_OUT pins are not connected on this board whi=
-ch
-> > may cause some issues in slave mode. I could not find any documenta=
-tion
-> > about this.
-> >=20
-> > Keeping the chip in master mode after the reset helped to fix this
-> > issue for me.
-> >=20
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > ---
-> >  drivers/media/i2c/mt9v032.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v03=
-2.c
-> > index 4aefde9634f5..943c3f39ea73 100644
-> > --- a/drivers/media/i2c/mt9v032.c
-> > +++ b/drivers/media/i2c/mt9v032.c
-> > @@ -344,7 +344,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9=
-v032)
-> >  =09if (ret < 0)
-> >  =09=09return ret;
-> >=20
-> > -=09return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
-> > +=09return regmap_write(map, MT9V032_CHIP_CONTROL,
-> > +=09=09=09    MT9V032_CHIP_CONTROL_MASTER_MODE);
->=20
-> This makes sense, but shouldn't you also fix the mt9v032_s_stream() f=
-unction=20
-> then ? It clears the MT9V032_CHIP_CONTROL_MASTER_MODE bit when turnin=
-g the=20
-> stream off.
+> > What I'm trying to figure out here is if this depends on the audio
+> > routing at runtime or if it's got dedicated configuration?
 
-Oh yes, thanks. Will fix it for the next version.
+> This feature is available for any/all mics connected. Which mics are enabled
+> is a runtime configuration of routing, so to me it makes sense also that we can
+> configure which channel triggers an event, based on our scenario at that time.
 
-Best Regards,
+The general userspace expectation is that the detection is always active
+and consistent rather than varying at runtime - runtime variability
+might be a bit surprising for it, and even then variability in what is
+detected based on other settings is a bit surprising.  If the hardware
+is that limited I guess it's about all that can be done but I'm still
+not clear what the use cases are for configuring the levels (as opposed
+ot the routing).
 
-Markus
-
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---nextPart2141150.UvXHX27rcF
+--u3/rZRmxL6MmkK24
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJWQKB6AAoJEEpcgKtcEGQQWtgQAIz8EghM3Dx6wvJxwlsgIxHG
-V6sNuVi1nK2zU+1gLgGs9VwYpG2R95hH3WM90RjJmXebc7zyb2WxyQE9HL8yaq1U
-Vjub4Pvbka2Uaa+iG8DTyCr1iFh20Q8LCKeEqYoyfCUzLZi1UoQtk5UcxLYIiGqD
-r6bZvEJPP2qi8VCUfa4o5FQ1ZeUB3m0maLWoOi/HSIBkIZkK0k9raZQJk2eG10q8
-0dEkbkLnhdffphU80aMtWPPzUGSGT0TnJSHrm5hrBb6kHFiO+zJlcUutORwBwAYV
-qiMmMOvdoczcDc8a2N0sa1Fwg89TFPAhdgcO07eurf8OcqdqFuHsuKzcTecaimAq
-ED5o/4utSn1U2YiCWXanZe9J12M/jw4ZRxFufKYN/jCU7m1eApyLd+1thScN1NRh
-02AcBOYszP1J8TDD7wP3QXXyVbSmVDKYtWO2x3jHhKqyoGHtVlhc7KdIwwBr4XgE
-1L4Qv2B8apXy0CkPSj0ZaT4PlTW47rdRBA0hMIoheBbuV8/4IZ70FPtSnRUab5dJ
-/5QKWqNyeN2D6AAdN81LS5r7vJl9w4Q1QSjhap/0B49SkXVcO5OaSNNznW7Uo5Jz
-BHUZ/LQNe/H89VyECdn/jMKXeBLAc0eGGx+uDZjbNoko9epEwOQG9Nj1Q9qPgmFr
-b23P962mIagLI91eSpsZ
-=JFwC
+iQEcBAEBCAAGBQJWQKdtAAoJECTWi3JdVIfQukQH/0UPcE6SnYsX8OCuFbuTTYqV
+xq8SW6lLVQnx2AavoQVlPu9bLvOpD73XzvI738Emh8DysF+kSWnxrVHhTYOkykoG
+uDYRm+LLoN0BFWDZ0pYHURgMotu3qr7xO2x3duO/serWwxcZIn1kIuHLgw/ygjAW
+eriSr9tzUYEm8Cp/actPWLBmEpfhrrQqg4RJYluJezW7OPYTOMCirdMzGCnr+7Wq
+8+gBn6bkkq9i7BaPCPIWGrib8eoakI6WihIYkKtSz5Zhxfq6AVPw9mhVlJ9EMvyX
+Rb52Ox7KkDrookIqtWf/Imrs4PQNvS3olLX6EUnr2aimUA58zVh0xXx2dB5GGwM=
+=g5xJ
 -----END PGP SIGNATURE-----
 
---nextPart2141150.UvXHX27rcF--
+--u3/rZRmxL6MmkK24--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
