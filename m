@@ -1,74 +1,60 @@
-From: "Interfax Service" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
-Subject: You have received a new fax, document 00803318
-Date: Mon, 9 Nov 2015 07:33:05 -0500
-Message-ID: <03350ebdda6e501c3aca34edf741b087@acanddcpowersystems.com>
-Reply-To: "Interfax Service" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4] Tegra: DT: add device tree binding doc for QSPI
+Date: Mon, 9 Nov 2015 13:45:47 +0100
+Message-ID: <20151109124545.GD23941@ulmo.nvidia.com>
+References: <1445898140-3561-1-git-send-email-twarren@nvidia.com>
+ <562EB11D.5040706@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="b1_39412986077222641d9962499d4057ee"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="at6+YcpfzWZg/htY"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <562EB11D.5040706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, tomcwarren3959-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, yelin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---b1_39412986077222641d9962499d4057ee
+--at6+YcpfzWZg/htY
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A new fax document for you.
+On Mon, Oct 26, 2015 at 05:02:53PM -0600, Stephen Warren wrote:
+> On 10/26/2015 04:22 PM, Tom Warren wrote:
+> >This patch adds the device tree binding doc for the Tegra
+> >QSPI controller on Tegra210.
+>=20
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> (I assume if others approve the binding, Thierry will take it through the
+> Tegra tree)
 
-Scanned fax document is attached to this email.
+Do we have a kernel driver and hardware where this can be tested? I'm
+slightly reluctant to merge a binding through the Tegra tree without a
+driver that implements it.
 
-Processed in:          19 seconds
-File size:             170 Kb
-File name:             fax_00803318.doc
-Scan quality:          200 DPI
-Pages scanned:         4
-Author:                Lester George
-Scan date:             Sun, 8 Nov 2015 20:49:52 +0300
+Thierry
 
-Thanks for using Interfax service!
+--at6+YcpfzWZg/htY
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
---b1_39412986077222641d9962499d4057ee
-Content-Type: application/zip; name="fax_00803318.zip"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=fax_00803318.zip
+iQIcBAABCAAGBQJWQJV2AAoJEN0jrNd/PrOhSqQP/jd+a4EU6v+/tV5CEjbj2us7
+t39LE6fN5ObNmwlpEsoBEAzApaaOu+N7fzDxvVgxMjwRBWQo6fHcubePolQMzx9d
+dLkY9bGC7ShSDc3wfhqx3+FgfBgXS4e8k2nzRogmKUh9JkZaYGaShhrRYySPuD0C
+WW5CbWoQEQ0lxcwSc9YXqJF/AxEldkaP0bZmxvs+lQjWLDPU+3OTRaEGM6abqhTO
+LSgE+lp74EGq7Mll6VCS6VmOiRYPAmbjbu5DzSrG4cNqaUsom3YQ1AzQH7+94x5P
+hueQ1fzonBz0KJ60/JYNvpZSXob+bNxYI4BjGdpfxXV/2tzMxeEcR3DmcwWuYwsU
+EEtUyDp/VLI3zZenvynO2ZhSh3EoG8sSP8nXOvRnQ7uwWF9tV0bkL8UoCP6JsfMH
+ourZ8KTr89TQBez6rZo2Um0RBy8RqTRFclzwJ3cLjNPK/MvVPxx8+bsU3KvPV7R5
+SUKuCHh2kYik/ldDYWhoTGHZ2OO4XLb54fE2NbkjgH4raLRqSJIszzRKLWsJoJ3k
+neEUWFjM/0TAWHFohxE4/Y5mfFK+0UzQmcLNLlmEFDxHYXpW71xlrUQ5eWbGVKKe
+xogOsQHlBnCJiVdRjUfPFDWKh6EqHh1QLgbqsIy7E+IHJhWeBa/Oe1uten3dm/Yx
+fbTId+WrxFCzcp5ePaD/
+=oMsO
+-----END PGP SIGNATURE-----
 
-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
-
-
---b1_39412986077222641d9962499d4057ee--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--at6+YcpfzWZg/htY--
