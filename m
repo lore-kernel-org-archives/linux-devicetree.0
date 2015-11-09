@@ -1,71 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] devicetree: bindings: Add optional
- dynamic-power-coefficient property
-Date: Mon, 9 Nov 2015 11:45:42 -0600
-Message-ID: <20151109174542.GA19016@rob-hp-laptop>
-References: <1447090163-13700-1-git-send-email-punit.agrawal@arm.com>
- <1447090163-13700-2-git-send-email-punit.agrawal@arm.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Mon, 9 Nov 2015 09:59:57 -0800
+Message-ID: <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	<1445843717.23888.1.camel@mtksdaap41>
+	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	<1445859610.26723.4.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447090163-13700-2-git-send-email-punit.agrawal@arm.com>
+In-Reply-To: <1445859610.26723.4.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: devicetree@vger.kernel.org, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, Mark Rutland <mark.rutland@arm.com>
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 09, 2015 at 05:29:21PM +0000, Punit Agrawal wrote:
-> The dynamic power consumption of a device is proportional to the
-> square of voltage (V) and the clock frequency (f). It can be expressed as
-> 
-> Pdyn = dynamic-power-coefficient * V^2 * f.
-> 
-> The coefficient represents the running time dynamic power consumption in
-> units of mw/MHz/uVolt^2 and can be used in the above formula to
-> calculate the dynamic power in mW.
+On Mon, Oct 26, 2015 at 4:40 AM, Eddie Huang <eddie.huang@mediatek.com> wrote:
+> Hi Kevin,
+>
+> On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
+>> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+>> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
+>> >> Hello,
+>> >>
+>> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+>> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
+>> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+>> >> > properties to workaround this.
+>> >> >
+>> >> > This also set cpu enable-method to enable SMP.
+>> >> >
+>> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+>> >>
+>> >> kernelci.org started detecting new boot failures for the mt8135-evb in
+>> >> the arm-soc tree[1], and the boot failures were bisected down to this
+>> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+>> >> dts: mt8135: enable basic SMP bringup for mt8135)
+>> >>
+>> >> Maybe this new SMP support requires updating the firmware on the board
+>> >> as well?  If so, the changelog should've been a bit more explicit
+>> >> about firmware dependencies.
+>> >
+>> > Kevin,
+>> >
+>> > Thanks for testing.
+>> >
+>> > No, it doesn't need new firmware. Will test to see what's going wrong.
+>>
+>> Thanks for following up.  I'll be glad to test any patches if you have
+>> anything you'd like me to test.
+>
+> You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
+> crash" (https://lkml.org/lkml/2015/8/24/803)
+>
+> Daniel Lezcano already applied this patch in his tree for 4.4.
+> (https://git.linaro.org/people/daniel.lezcano/linux.git)
 
-I have no issue with the binding, but I wonder if a single value is 
-really sufficient to model this. Don't you also need a static component? 
+The mt8135-evp board is still failing to boot in linux-next[1] (and
+has been since next-20151022.)  It appears the dependencies are not
+quite correct in linux-next either.
 
-Rob
+Kevin
 
-> 
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 91e6e5c..c33362d 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -240,6 +240,23 @@ nodes to be present and contain the properties described below.
->  		Definition: Specifies the syscon node controlling the cpu core
->  			    power domains.
->  
-> +	- dynamic-power-coefficient
-> +		Usage: optional
-> +		Value type: <prop-encoded-array>
-> +		Definition: A u32 value that represents the running time dynamic
-> +			    power coefficient in units of mW/MHz/uVolt^2. The
-> +			    coefficient can either be calculated from power
-> +			    measurements or derived by analysis.
-> +
-> +			    The dynamic power consumption of the CPU  is
-> +			    proportional to the square of the Voltage (V) and
-> +			    the clock frequency (f). The coefficient is used to
-> +			    calculate the dynamic power as below -
-> +
-> +			    Pdyn = dynamic-power-coefficient * V^2 * f
-> +
-> +			    where voltage is in uV, frequency is in MHz.
-> +
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
->  	cpus {
-> -- 
-> 2.5.3
-> 
+[1]
+http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151109/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=564037fe59b514b2f6091909
