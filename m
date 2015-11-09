@@ -1,68 +1,78 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
-Date: Mon, 9 Nov 2015 09:59:57 -0800
-Message-ID: <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	<1445843717.23888.1.camel@mtksdaap41>
-	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-	<1445859610.26723.4.camel@mtksdaap41>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 02/32] devicetree: bindings: scsi: HiSi SAS
+Date: Mon, 9 Nov 2015 12:01:33 -0600
+Message-ID: <20151109180133.GA23100@rob-hp-laptop>
+References: <1447086757-147706-1-git-send-email-john.garry@huawei.com>
+ <1447086757-147706-3-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1445859610.26723.4.camel@mtksdaap41>
+Content-Disposition: inline
+In-Reply-To: <1447086757-147706-3-git-send-email-john.garry@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: John Garry <john.garry@huawei.com>
+Cc: JBottomley@odin.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, john.garry2@mail.dcu.ie, hare@suse.de, xuwei5@hisilicon.com, zhangfei.gao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 4:40 AM, Eddie Huang <eddie.huang@mediatek.com> wrote:
-> Hi Kevin,
->
-> On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
->> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
->> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
->> >> Hello,
->> >>
->> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
->> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
->> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
->> >> > properties to workaround this.
->> >> >
->> >> > This also set cpu enable-method to enable SMP.
->> >> >
->> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
->> >>
->> >> kernelci.org started detecting new boot failures for the mt8135-evb in
->> >> the arm-soc tree[1], and the boot failures were bisected down to this
->> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
->> >> dts: mt8135: enable basic SMP bringup for mt8135)
->> >>
->> >> Maybe this new SMP support requires updating the firmware on the board
->> >> as well?  If so, the changelog should've been a bit more explicit
->> >> about firmware dependencies.
->> >
->> > Kevin,
->> >
->> > Thanks for testing.
->> >
->> > No, it doesn't need new firmware. Will test to see what's going wrong.
->>
->> Thanks for following up.  I'll be glad to test any patches if you have
->> anything you'd like me to test.
->
-> You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
-> crash" (https://lkml.org/lkml/2015/8/24/803)
->
-> Daniel Lezcano already applied this patch in his tree for 4.4.
-> (https://git.linaro.org/people/daniel.lezcano/linux.git)
+On Tue, Nov 10, 2015 at 12:32:07AM +0800, John Garry wrote:
+> Add devicetree bindings for HiSilicon SAS driver.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  .../devicetree/bindings/scsi/hisilicon-sas.txt     | 81 ++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> new file mode 100644
+> index 0000000..2333cc3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> @@ -0,0 +1,81 @@
+> +* HiSilicon SAS controller
+> +
+> +The HiSilicon SAS controller supports SAS/SATA.
+> +
+> +Main node required properties:
+> +  - compatible : value should be as follows:
+> +	(a) "hisilicon,sas-controller-v1" for v1 of HiSilicon SAS controller IP
 
-The mt8135-evp board is still failing to boot in linux-next[1] (and
-has been since next-20151022.)  It appears the dependencies are not
-quite correct in linux-next either.
+Please do a more specific compatible string with the SOC part number. 
+Same versions of IP blocks can have different integration/process 
+features/bugs.
 
-Kevin
+> +  - sas-addr : array of 8 bytes for host SAS address
+> +  - reg : Address and length of the SAS register
+> +  - hisilicon,sas-syscon: phandle of syscon used for sas control
+> +  - ctrl-reset-reg : offset to controller reset register in ctrl reg
+> +  - ctrl-reset-sts-reg : offset to controller reset status register in ctrl reg
+> +  - ctrl-clock-ena-reg : offset to controller clock enable register in ctrl reg
+> +  - queue-count : number of delivery and completion queues in the controller
+> +  - phy-count : number of phys accessible by the controller
+> +  - interrupts : Interrupts for phys, completion queues, and fatal
+> +		sources; the interrupts are ordered in 3 groups, as follows:
+> +		  - Phy interrupts
+> +		  - Completion queue interrupts
+> +		  - Fatal interrupts
+> +		Phy interrupts : Each phy has 3 interrupt sources:
+> +			- broadcast
+> +			- phyup
+> +			- abnormal
+> +		The phy interrupts are ordered into groups of 3 per phy
+> +		(broadcast, phyup, and abnormal) in increasing order.
+> +		Completion queue interrupts : each completion queue has 1
+> +			interrupt source. The interrupts are ordered in
+> +			increasing order.
+> +		Fatal interrupts : the fatal interrupts are ordered as follows:
+> +			- ECC
+> +			- AXI bus
+> +
+> +* HiSilicon SAS syscon
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,sas-ctrl", "syscon"
 
-[1]
-http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151109/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=564037fe59b514b2f6091909
+Please add a more specific compatible here too.
+
+Rob
