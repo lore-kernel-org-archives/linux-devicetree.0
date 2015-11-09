@@ -1,60 +1,104 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 5/7] drivers:input:ads7846(+tsc2046): add new common binding names, pre-calibration and flipping
-Date: Mon, 9 Nov 2015 18:36:48 +0100
-Message-ID: <C2304EBD-A75D-495A-9A90-5E2082E983B7@goldelico.com>
-References: <cover.1446822887.git.hns@goldelico.com> <49ae3bab17189684d046212e548d6d637618ee71.1446822887.git.hns@goldelico.com> <20151109173109.GA15192@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151109173109.GA15192@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gta04-owner@goldelico.com
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Mon, 9 Nov 2015 11:41:20 -0600
+Message-ID: <5640DAC0.9080008@ti.com>
+References: <1443731874-21362-1-git-send-email-afd@ti.com>
+ <1443731874-21362-5-git-send-email-afd@ti.com>
+ <20151022164724.GZ8232@sirena.org.uk> <563A25BE.90609@ti.com>
+ <20151105101417.GM1717@sirena.org.uk> <563B9A10.4020907@ti.com>
+ <20151106104322.GA18409@sirena.org.uk> <563CED25.6020405@ti.com>
+ <20151106211651.GJ18409@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151106211651.GJ18409-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/06/2015 03:16 PM, Mark Brown wrote:
+> On Fri, Nov 06, 2015 at 12:10:45PM -0600, Andrew F. Davis wrote:
+>> On 11/06/2015 04:43 AM, Mark Brown wrote:
+>
+>>> No, you need to fix the bug that is causing dev->of_node to be populated
+>>> for the MFD function device.  Probably the issue is that you have put
+>>> this pointless compatible string in your DT.
+>
+>> If it is pointless what is the reason we have .of_compatible in mfd_cell?
+>
+> There are cases where it's useful where we're abstracting something and
+> gaining some meaningful reuse.  This really does not appear to be one of
+> those cases, there are no parameters in the DT and the compatible string
+> is the full device name.
+>
 
-Am 09.11.2015 um 18:31 schrieb Rob Herring <robh@kernel.org>:
+As before I see no reason to make that call now and limit ourselves.
 
-> On Fri, Nov 06, 2015 at 04:14:47PM +0100, H. Nikolaus Schaller wrote:
->> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
->> introduced common DT bindings for touchscreens [1] and a helper function to
->> parse the DT.
->> 
->> This has been integrated and interpretation of the inversion (flipping)
->> properties for the x and y axis has been added to accommodate any
->> orientation of the touch in relation to the LCD.
->> 
->> By scaling the min/max ADC values to the screen size it is now possible to
->> pre-calibrate the touch so that is (almost) exactly matches the LCD it is
->> glued onto. This allows to well enough operate the touch before a user
->> space calibration can improve the precision.
->> 
->> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> .../devicetree/bindings/input/ads7846.txt          |  8 ++-
-> 
-> The binding change looks okay, but...
-> 
->> @@ -1213,7 +1259,7 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
->> 	of_property_read_u16(node, "ti,vref-mv", &pdata->vref_mv);
->> 	pdata->keep_vref_on = of_property_read_bool(node, "ti,keep-vref-on");
->> 
->> -	pdata->swap_xy = of_property_read_bool(node, "ti,swap-xy");
->> +	pdata->swap_xy = of_property_read_bool(node, "touchscreen-swapped-x-y");
-> 
-> This will break with old dtb's.
+>> How else do you want us to populate the sub-device dev->of_node? Looking
+>
+> You do not need to populate it.  There is no value in populating it and
+> as previously discussed putting the Linux driver model into DT can be
+> actively harmful if we change our idea of how we should model things.
+>
 
-We have a patch for all boards in tree (external dtbs must be modified by their maintainers).
+The dev passed to regulator_register needs to have of_node populated for
+your OF init_data helper to work. Devices with OF tables can just pass
+their own dev. Others have to use their parents' nodes, this is a
+workaround, OF devices should be probed with their of_node pre-populated.
 
-> The driver should look for either 
-> property.
+>>> Please stop this.  I don't understand why you are pushing so hard to put
+>>> the Linux device model representation of the device into DT but it's
+>>> getting very repetitive.
+>
+>> I'm not pushing anything, this is how other sub-nodes of MFD devices are
+>
+> Every time we go through this we finish the discussion and then you come
+> back with yet another excuse for trying to push the current Linux device
+> model into the DT or another version of the patch with the same problem.
+>
 
-It is easy to recognize either one.
+I keep finding different problems, do you expect me to ignore them?
 
-Noted for V2.
+>> represented, I'm not sure what you think I'm doing that is so wrong here.
+>
+> I am providing the same review feedback repeatedly, this is not good.
+>
+>> No one else seems to have an issue with the DT for this device, I see no
+>> reason the regulator node has to be different than the other sub-device
+>> nodes.
+>
+> I would prefer it if other areas where there's no reuse gained by
+> breaking things down and where we're just encoding the Linux driver
+> model into DT weren't done like that either.  Perhaps other people care
+> less here, perhaps they haven't been bitten by the problems that can
+> arise.  If I read such patches I'd probably comment on the issue but
+> I've got enough to do already without trying to review every single DT
+> binding.
+>
+>> It looks rather out of place to have regulators be singled out like this,
+>> for instance look at the mfd_cells for drivers/mfd/rt5033.c
+>
+> The fact that other people have merged imperfect code into the kernel is
+> not a good reason to merge even more of it when we have better tools.
+> Looking at that binding I'm seeing no reason why any of the subfunctions
+> should have compatible strings (and if we're going down the route you're
+> trying to go down we really ought to have something in the binding for
+> at least an interrupt controller in there as well...).
+>
 
-BR and thanks,
-Nikolaus
+These are not "subfunctions" they are full drivers, they only need
+register accessors passed in, they do not call the core and the core
+does not call them.
+
+If your problem is with the DT binding for this or other MFDs, then
+nack *them* and explain to everyone why what they are doing is wrong
+and why regulators should be special cases. Blocking the regulator
+drivers to force a change in DT is not going to fix this issue.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
