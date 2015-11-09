@@ -1,63 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/3] [media] mt9v032: Do not unset master_mode
-Date: Mon, 09 Nov 2015 14:46:42 +0200
-Message-ID: <1542250.4NFmqc20qx@avalon>
-References: <1446815625-18413-1-git-send-email-mpa@pengutronix.de> <1446815625-18413-2-git-send-email-mpa@pengutronix.de>
+From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: [PATCH v6 2/2] iio: ti-ads8688: Add DT binding documentation
+Date: Mon, 9 Nov 2015 13:53:00 +0100
+Message-ID: <1447073580-17889-2-git-send-email-sean.nyekjaer@prevas.dk>
+References: <1447073580-17889-1-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1446815625-18413-2-git-send-email-mpa@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447073580-17889-1-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+Adding binding documentation for Texas Instruments ADS8688 ADC.
 
-Thank you for the patch.
+Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Reviewed-by: Martin Hundeb=C3=B8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+---
+Changes since v2:
+- Moved vref-supply to Optional properties
 
-On Friday 06 November 2015 14:13:44 Markus Pargmann wrote:
-> The power_on function of the driver resets the chip and sets the
-> CHIP_CONTROL register to 0. This switches the operating mode to slave.
-> The s_stream function sets the correct mode. But this caused problems on
-> a board where the camera chip is operated as master. The camera started
-> after a random amount of time streaming an image, I observed between 10
-> and 300 seconds.
-> 
-> The STRFM_OUT and STLN_OUT pins are not connected on this board which
-> may cause some issues in slave mode. I could not find any documentation
-> about this.
-> 
-> Keeping the chip in master mode after the reset helped to fix this
-> issue for me.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->  drivers/media/i2c/mt9v032.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-> index 4aefde9634f5..943c3f39ea73 100644
-> --- a/drivers/media/i2c/mt9v032.c
-> +++ b/drivers/media/i2c/mt9v032.c
-> @@ -344,7 +344,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
->  	if (ret < 0)
->  		return ret;
-> 
-> -	return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
-> +	return regmap_write(map, MT9V032_CHIP_CONTROL,
-> +			    MT9V032_CHIP_CONTROL_MASTER_MODE);
+ .../devicetree/bindings/iio/adc/ti-ads8688.txt       | 20 ++++++++++++=
+++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads868=
+8.txt
 
-This makes sense, but shouldn't you also fix the mt9v032_s_stream() function 
-then ? It clears the MT9V032_CHIP_CONTROL_MASTER_MODE bit when turning the 
-stream off.
-
->  }
-> 
->  static void mt9v032_power_off(struct mt9v032 *mt9v032)
-
--- 
-Regards,
-
-Laurent Pinchart
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt b=
+/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+new file mode 100644
+index 0000000..a02337d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+@@ -0,0 +1,20 @@
++* Texas Instruments' ADS8684 and ADS8688 ADC chip
++
++Required properties:
++ - compatible: Should be "ti,ads8684" or "ti,ads8688"
++ - reg: spi chip select number for the device
++
++Recommended properties:
++ - spi-max-frequency: Definition as per
++		Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Optional properties:
++ - vref-supply: The regulator supply for ADC reference voltage
++
++Example:
++adc@0 {
++	compatible =3D "ti,ads8688";
++	reg =3D <0>;
++	vref-supply =3D <&vdd_supply>;
++	spi-max-frequency =3D <1000000>;
++};
+--=20
+2.6.2
