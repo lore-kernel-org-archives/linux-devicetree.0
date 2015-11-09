@@ -1,51 +1,51 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 11/32] scsi: hisi_sas: add phy SAS ADDR initialization
-Date: Mon, 9 Nov 2015 16:51:12 +0000
-Message-ID: <5640CF00.2030003@huawei.com>
-References: <1447086757-147706-1-git-send-email-john.garry@huawei.com>
- <1447086757-147706-12-git-send-email-john.garry@huawei.com>
- <4369607.QVA3rBnZUm@wuerfel>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v2 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
+Date: Mon, 9 Nov 2015 18:56:57 +0200
+Message-ID: <5640D059.3000805@mm-sol.com>
+References: <1430743338-10441-1-git-send-email-svarbanov@mm-sol.com>
+ <1430743338-10441-5-git-send-email-svarbanov@mm-sol.com>
+ <20151106205033.GH24668@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4369607.QVA3rBnZUm@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, hare-l3A5Bk7waGM@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151106205033.GH24668@usrtlx11787.corpusers.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2015 16:28, Arnd Bergmann wrote:
-> On Tuesday 10 November 2015 00:32:16 John Garry wrote:
->>   }
+Hi Bjorn,
+
+On 11/06/2015 10:50 PM, Bjorn Andersson wrote:
+> On Mon 04 May 05:42 PDT 2015, Stanimir Varbanov wrote:
+> 
+>> The PCIe driver reuse the Designware common code for host
+>> and MSI initialization, and also program the Qualcomm
+>> application specific registers.
 >>
->> +static void hisi_sas_init_add(struct hisi_hba *hisi_hba)
->> +{
->> +       int i;
->> +
->> +       for (i = 0; i < hisi_hba->n_phy; i++)
->> +               memcpy(&hisi_hba->phy[i].dev_sas_addr,
->> +                      hisi_hba->sas_addr,
->> +                      SAS_ADDR_SIZE);
->> +}
->
-> I don't know the background here, but I thought it would have to
-> be a different address on each phy. Are you sure this is not the
-> case?
->
-> 	Arnd
->
-> .
->
+> 
+> I want to get the ethernet on the ifc6410 running and this seems like
+> the last patchset for the PCIe.
+> 
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> [..]
+>> diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
+>> new file mode 100644
+>> index 0000000..4f083c6
+>> --- /dev/null
+>> +++ b/drivers/pci/host/pcie-qcom.c
+>> @@ -0,0 +1,677 @@
+>> +/*
+>> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+> 
+> Bump the year, it's the future now :)
 
-Hi,
+yep, thanks for the valuable comments I will address all of them on next
+version.
 
-Each controller should have a unique SAS addr but not each phy.
+I will probably restart the work on the driver this week.
 
-Regards,
-john
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
