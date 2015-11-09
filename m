@@ -1,84 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] doc: dt: add documentation for Mediatek spi-nor
- controller
-Date: Mon, 9 Nov 2015 10:39:22 -0600
-Message-ID: <20151109163922.GA13578@rob-hp-laptop>
-References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
- <1446824889-16144-2-git-send-email-bayi.cheng@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 00/32] HiSilicon SAS driver
+Date: Mon, 09 Nov 2015 17:40:18 +0100
+Message-ID: <7145880.UVekNWKRMt@wuerfel>
+References: <1447086757-147706-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446824889-16144-2-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1447086757-147706-1-git-send-email-john.garry@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: JBottomley@odin.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, john.garry2@mail.dcu.ie, hare@suse.de, xuwei5@hisilicon.com, zhangfei.gao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 06, 2015 at 11:48:07PM +0800, Bayi Cheng wrote:
-> Add device tree binding documentation for serial flash with
-> Mediatek serial flash controller
+On Tuesday 10 November 2015 00:32:05 John Garry wrote:
+> This is the driver patchset for the HiSilicon SAS driver. The driver
+> is a platform driver.
 > 
-> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> The driver will support multiple revisions of HW. Currently only "v1"
+> HW is supported.
+> 
+> The driver uses libsas framework within the SCSI framework.
+> 
+> The v1 HW supports SSP and SMP, but not STP/SATA.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I have one remaining comment that I now posted, all my previous comments
+have been addressed as far as I can tell.
 
-> ---
->  .../devicetree/bindings/mtd/mtk-quadspi.txt        | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> new file mode 100644
-> index 0000000..866b492
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> @@ -0,0 +1,41 @@
-> +* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
-> +
-> +Required properties:
-> +- compatible: 	  should be "mediatek,mt8173-nor";
-> +- reg: 		  physical base address and length of the controller's register
-> +- clocks: 	  the phandle of the clock needed by the nor controller
-> +- clock-names: 	  the name of the clocks
-> +		  the clocks needed "spi" and "sf". "spi" is used for spi bus,
-> +		  and "sf" is used for controller, these are the clocks witch
-> +		  hardware needs to enabling nor flash and nor flash controller.
-> +		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-> +- #address-cells: should be <1>
-> +- #size-cells:	  should be <0>
-> +
-> +The SPI Flash must be a child of the nor_flash node and must have a
-> +compatible property.
-> +
-> +Required properties:
-> +- compatible:	  May include a device-specific string consisting of the manufacturer
-> +		  and name of the chip. Must also include "jedec,spi-nor" for any
-> +		  SPI NOR flash that can be identified by the JEDEC READ ID opcode (0x9F).
-> +- reg :		  Chip-Select number
-> +
-> +Example:
-> +
-> +nor_flash: spi@1100d000 {
-> +	compatible = "mediatek,mt8173-nor";
-> +	reg = <0 0x1100d000 0 0xe0>;
-> +	clocks = <&pericfg CLK_PERI_SPI>,
-> +		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-> +	clock-names = "spi", "sf";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "disabled";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +	};
-> +};
-> +
-> -- 
-> 1.8.1.1.dirty
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Very nice work!
+
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+
+Note that my comments were mostly about general driver design, I have
+very little SAS specific knowledge and someone else should look over those
+parts.
