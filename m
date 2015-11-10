@@ -1,126 +1,91 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] extcon: add MAX3355 driver
-Date: Tue, 10 Nov 2015 14:03:21 +0300
-Message-ID: <5641CEF9.60103@cogentembedded.com>
-References: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
- <5490CEE2.1030900@samsung.com> <5491FC69.7090203@cogentembedded.com>
- <562685EF.7010504@cogentembedded.com> <5629CBFA.4020605@samsung.com>
- <5640E4D5.4020001@cogentembedded.com> <564131BA.9010809@samsung.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v3 02/32] devicetree: bindings: scsi: HiSi SAS
+Date: Tue, 10 Nov 2015 11:09:59 +0000
+Message-ID: <5641D087.8050502@huawei.com>
+References: <1447086757-147706-1-git-send-email-john.garry@huawei.com>
+ <1447086757-147706-3-git-send-email-john.garry@huawei.com>
+ <20151109180133.GA23100@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <564131BA.9010809@samsung.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151109180133.GA23100@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "JBottomley@odin.com" <JBottomley@odin.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, "john.garry2@mail.dcu.ie" <john.garry2@mail.dcu.ie>, "hare@suse.de" <hare@suse.de>, "xuwei (O)" <xuwei5@hisilicon.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 11/10/2015 2:52 AM, Chanwoo Choi wrote:
-
-> I received the reply from you after too long time (17~18day).
-> You better to reply it more a little more quickly
-> if you have the question or new patches.
-
-    I've replied as soon as I had my new idea.
-
->>>>>>> MAX3355E chip integrates a charge pump and comparators to enable a system with
->>>>>>> an integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
->>>>>>> device. In addition to sensing/controlling Vbus, the chip also passes thru the
->>>>>>> ID signal from the USB OTG connector.  On some Renesas boards, this signal  is
->>>>>>> just  fed into the SoC thru a GPIO pin -- there's no real OTG controller, only
->>>>>>> host and gadget USB controllers sharing the same USB bus; however,  we'd  like
->>>>>>> to allow host or gadget drivers to be loaded depending on the cable type,
->>>>>>> hence
->>>>>>> the need for the MAX3355 extcon driver. The Vbus status signals are also wired
->>>>>>> to GPIOs (however, we're not currently intested in them), the  OFFVBUS# signal
->>>>>>> is controlled  by the host controllers, there's also the SHDN# signal wired to
->>>>>>> GPIO, which should be high for normal operation.
->>>>>
->>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>>
->>>>>>> ---
->>>>>>> The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
->>>>>
->>>>>>>     Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 ++
->>>>>>>     drivers/extcon/Kconfig                                      |    6
->>>>>>>     drivers/extcon/Makefile                                     |    1
->>>>>>>     drivers/extcon/extcon-max3355.c                             |  122
->>>>>>> ++++++++++++
->>>>>>>     4 files changed, 150 insertions(+)
->>>>>
->>>>>>> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
->>>>>>> ===================================================================
->>>>>>> --- /dev/null
->>>>>>> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
->>>>>>> @@ -0,0 +1,21 @@
->>>>>>> +MAX3355 USB OTG chip
->>>>>
->>>>>> Need manufactor information as following :
->>>>>>      -> Maxim MAX3355
->>>>>
->>>>>       Would be Maxim enough? Or perhaps I should use Maxim Integrated [Products]?
->>>>
->>>>      You haven't replied to my questions.
->>>>
->>>>>>> +--------------------
->>>>>>> +
->>>>>>> +MAX3355 integrates a charge pump and comparators to enable a system with an
->>>>>>> +integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
->>>>>>> +device.
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +- compatible: should be "maxim,max3355";
->>>>>>> +- maxim,shdn-gpio: should contain a phandle and GPIO specifier for the
->>>>>>> GPIO pin
->>>>>>> +  connected to the MAX3355's SHDN# pin;
->>>>>>> +- maxim,id-gpio: should contain a phandle and GPIO specifier for the GPIO pin
->>>>>>> +  connected to the MAX3355's ID_OUT pin.
->>>>>>> +
->>>>>>> +Example (Koelsch board):
->>>>>>> +
->>>>>>> +    usb-otg {
->>>>>>> +        compatible = "maxim,max3355";
->>>>>>> +        maxim,shdn-gpio = <&gpio2 4 GPIO_ACTIVE_LOW>;
->>>>>>> +        maxim,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
->>>>>
->>>>>> Kernel already supported the gpio helper function to get gpio from devicetree.
->>>>>> I prefer use follwoing style by using of_get_gpio()/of_get_gpio_flags() in
->>>>>> include/linux/of_gpio.h.
->>>>>
->>>>>>           gpios = <&gpio2 4 GPIO_ACTIVE_LOW>, <&gpio5 31 GPIO_ACTIVE_HIGH>;
->>>>>
->>>>>       OK, though Documentation/devicetree/bindings/gpio/gpio.txt does not seem
->>>>> to insist on using this one...
->>>>
->>>>      Moreover, it now says "gpios" isn't allowed for the new bindings. So I have to strongly disagree here...
->>>
->>> OK. But, I recommend you use the 'gpiod' with devm_gpiod_get
->>> instead of using devm_gpio_request_one() directly as following:
->>> You can refer drivers/extcon/extcon-usb-gpio.c about using gpiod.
->>>
->>> For example,
->>>      data->shdn_gpiod = devm_gpiod_get(dev, "maxim,shdn", GPIOD_IN);
->>>      data->id_gpiod = devm_gpiod_get(dev, "maxim,id", GPIOD_IN);
+On 09/11/2015 18:01, Rob Herring wrote:
+> On Tue, Nov 10, 2015 at 12:32:07AM +0800, John Garry wrote:
+>> Add devicetree bindings for HiSilicon SAS driver.
 >>
->>     Thanks, done now. I just had another idea: how about I add an optional "enable-gpio" property to the 'extcon-usb-gpio' driver? I wouldn't need my own driver then at all... :-)
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>>   .../devicetree/bindings/scsi/hisilicon-sas.txt     | 81 ++++++++++++++++++++++
+>>   1 file changed, 81 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>> new file mode 100644
+>> index 0000000..2333cc3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>> @@ -0,0 +1,81 @@
+>> +* HiSilicon SAS controller
+>> +
+>> +The HiSilicon SAS controller supports SAS/SATA.
+>> +
+>> +Main node required properties:
+>> +  - compatible : value should be as follows:
+>> +	(a) "hisilicon,sas-controller-v1" for v1 of HiSilicon SAS controller IP
 >
-> What is meaning of 'enable-gpio' property?
-> You better to explain your goal about 'enable-gpio' property
+> Please do a more specific compatible string with the SOC part number.
+> Same versions of IP blocks can have different integration/process
+> features/bugs.
+>
 
-    This optional property would serve for enabling the valid signal on the ID 
-GPIO, the same way I'm using the SHDN# GPIO in the MAX3355 driver.
+How about "hisilicon,hip05-sas-v1"?
 
-> Also, If you think that it is generic way about
-> adding 'enable-gpio' property to extcon-usb-gpio.c,
-> you can try it.
+>> +  - sas-addr : array of 8 bytes for host SAS address
+>> +  - reg : Address and length of the SAS register
+>> +  - hisilicon,sas-syscon: phandle of syscon used for sas control
+>> +  - ctrl-reset-reg : offset to controller reset register in ctrl reg
+>> +  - ctrl-reset-sts-reg : offset to controller reset status register in ctrl reg
+>> +  - ctrl-clock-ena-reg : offset to controller clock enable register in ctrl reg
+>> +  - queue-count : number of delivery and completion queues in the controller
+>> +  - phy-count : number of phys accessible by the controller
+>> +  - interrupts : Interrupts for phys, completion queues, and fatal
+>> +		sources; the interrupts are ordered in 3 groups, as follows:
+>> +		  - Phy interrupts
+>> +		  - Completion queue interrupts
+>> +		  - Fatal interrupts
+>> +		Phy interrupts : Each phy has 3 interrupt sources:
+>> +			- broadcast
+>> +			- phyup
+>> +			- abnormal
+>> +		The phy interrupts are ordered into groups of 3 per phy
+>> +		(broadcast, phyup, and abnormal) in increasing order.
+>> +		Completion queue interrupts : each completion queue has 1
+>> +			interrupt source. The interrupts are ordered in
+>> +			increasing order.
+>> +		Fatal interrupts : the fatal interrupts are ordered as follows:
+>> +			- ECC
+>> +			- AXI bus
+>> +
+>> +* HiSilicon SAS syscon
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,sas-ctrl", "syscon"
+>
+> Please add a more specific compatible here too.
 
-    Yes, I think it would be generic enough.
+We plan to remove this node now as it will be defined in the platform dt 
+bindings:
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt#n174
 
-> Thanks,
-> Chanwoo Choi
-
-MBR, Sergei
-
+>
+> Rob
+>
+Thanks,
+John
