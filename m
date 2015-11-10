@@ -1,128 +1,55 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 1/4] Documentation: dt-bindings: Describe SROMc configuration
-Date: Tue, 10 Nov 2015 08:24:05 -0600
-Message-ID: <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com>
-References: <cover.1446799912.git.p.fedin@samsung.com> <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: RE: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Tue, 10 Nov 2015 14:24:13 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D460CED5@SW-EX-MBX01.diasemi.com>
+References: <20151105152736.GO18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
+ <20151106112141.GE18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
+ <20151106115451.GG18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
+ <20151108103429.GC6746@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
+ <20151109140225.GA26072@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CEA5@SW-EX-MBX01.diasemi.com>
+ <20151110141513.GF12392@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151110141513.GF12392@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 6, 2015 at 4:03 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
-> Add documentation for new subnode properties, allowing bank configuration.
-> Based on u-boot implementation, but heavily reworked.
->
-> Also, fix size of SROMc mapping in the example.
->
-> Signed-off-by: Pavel Fedin <p.fedin@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  .../bindings/arm/samsung/exynos-srom.txt           | 71 +++++++++++++++++++++-
->  1 file changed, 69 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> index 33886d5..3ff2950 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-srom.txt
-> @@ -5,8 +5,75 @@ Required properties:
->
->  - reg: offset and length of the register set
->
-> -Example:
-> +Optional properties:
-> +The SROM controller can be used to attach external peripherals. In this case
-> +extra properties, describing the bus behind it, should be specified as below:
-> +
-> +- #address-cells: Must be set to 2 to allow memory address translation
-
-2 is for CS# and offset.
-
-> +
-> +- #size-cells: Must be set to 1 to allow CS address passing
-
-size is the size, not the address.
-
-> +
-> +- ranges: Must be set up to reflect the memory layout with four integer values
-> +         per bank:
-> +               <bank-number> 0 <physical address of bank> <size>
-
-s/physical/parent/
-
-You could have another level of translation above for the parent.
-
-> +
-> +Sub-nodes:
-> +The actual device nodes should be added as subnodes to the SROMc node. These
-> +subnodes, except regular device specification, should contain the following
-> +properties, describing configuration of the relevant SROM bank:
-> +
-> +Required properties:
-> +- reg: bank number, base address (relative to start of the bank) and size of
-> +       the memory mapped for the device. Note that base address will be
-> +       typically 0 as this is the start of the bank.
-> +
-> +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
-> +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
-> +                        Each value is specified in cycles and has the following
-> +                        meaning and valid range:
-> +                        Tacp : Page mode access cycle at Page mode (0 - 15)
-> +                        Tcah : Address holding time after CSn (0 - 15)
-> +                        Tcoh : Chip selection hold on OEn (0 - 15)
-> +                        Tacc : Access cycle (0 - 31, the actual time is N + 1)
-> +                        Tcos : Chip selection set-up before OEn (0 - 15)
-> +                        Tacs : Address set-up before CSn (0 - 15)
-
-This is not easily extended. Perhaps a property per value instead.
-
-> +
-> +Optional properties:
-> +- reg-io-width : data width in bytes (1 or 2). If omitted, default of 1 is used.
-> +
-> +- samsung,srom-page-mode : page mode configuration for the bank:
-> +                          0 - normal (one data)
-> +                          1 - four data
-> +                          If omitted, default of 0 is used.
-> +
-> +Example: basic definition, no banks are configured
-> +       sromc@12570000 {
-> +               compatible = "samsung,exynos-srom";
-> +               reg = <0x12570000 0x14>;
-> +       };
-> +
-> +Example: SROMc with SMSC911x ethernet chip on bank 3
->         sromc@12570000 {
-> +               #address-cells = <2>;
-> +               #size-cells = <1>;
-> +               ranges = <0 0 0x04000000 0x20000   // Bank0
-> +                         1 0 0x05000000 0x20000   // Bank1
-> +                         2 0 0x06000000 0x20000   // Bank2
-> +                         3 0 0x07000000 0x20000>; // Bank3
-> +
->                 compatible = "samsung,exynos-srom";
-> -               reg = <0x12570000 0x10>;
-> +               reg = <0x12570000 0x14>;
-> +
-> +               ethernet@3 {
-> +                       compatible = "smsc,lan9115";
-> +                       reg = <3 0 0x10000>;       // Bank 3, offset = 0
-> +                       phy-mode = "mii";
-> +                       interrupt-parent = <&gpx0>;
-> +                       interrupts = <5 8>;
-> +                       reg-io-width = <2>;
-> +                       smsc,irq-push-pull;
-> +                       smsc,force-internal-phy;
-> +
-> +                       samsung,srom-config = <1 9 12 1 9 1 1>;
-
-This doesn't match the doc.
-
-> +               };
->         };
-> --
-> 2.4.4
->
+T24gTm92ZW1iZXIgMTAsIDIwMTUgMTQ6MTUsIE1hcmsgQnJvd24gd3JvdGU6DQoNCj4gPiA+IFRo
+ZSBnZW5lcmFsIHVzZXJzcGFjZSBleHBlY3RhdGlvbiBpcyB0aGF0IHRoZSBkZXRlY3Rpb24gaXMg
+YWx3YXlzIGFjdGl2ZQ0KPiA+ID4gYW5kIGNvbnNpc3RlbnQgcmF0aGVyIHRoYW4gdmFyeWluZyBh
+dCBydW50aW1lIC0gcnVudGltZSB2YXJpYWJpbGl0eQ0KPiA+ID4gbWlnaHQgYmUgYSBiaXQgc3Vy
+cHJpc2luZyBmb3IgaXQsIGFuZCBldmVuIHRoZW4gdmFyaWFiaWxpdHkgaW4gd2hhdCBpcw0KPiA+
+ID4gZGV0ZWN0ZWQgYmFzZWQgb24gb3RoZXIgc2V0dGluZ3MgaXMgYSBiaXQgc3VycHJpc2luZy4g
+IElmIHRoZSBoYXJkd2FyZQ0KPiA+ID4gaXMgdGhhdCBsaW1pdGVkIEkgZ3Vlc3MgaXQncyBhYm91
+dCBhbGwgdGhhdCBjYW4gYmUgZG9uZSBidXQgSSdtIHN0aWxsDQo+ID4gPiBub3QgY2xlYXIgd2hh
+dCB0aGUgdXNlIGNhc2VzIGFyZSBmb3IgY29uZmlndXJpbmcgdGhlIGxldmVscyAoYXMgb3Bwb3Nl
+ZA0KPiA+ID4gb3QgdGhlIHJvdXRpbmcpLg0KPiANCj4gPiBIb3cgYWJvdXQgdGhlIGV4YW1wbGUg
+b2YgYWx3YXlzIG9uIHZvaWNlIGluIEFuZHJvaWQsIHdoaWNoIGNhbiBiZSBlbmFibGVkIGFuZA0K
+PiA+IGRpc2FibGVkLCBkZXBlbmRpbmcgb24gdXNlciBzZXR0aW5ncywgYW5kIHJvdXRpbmcgd2ls
+bCB2YXJ5IGRlcGVuZGluZyBvbiB3aGljaA0KPiA+IG1pYyBpcyBpbiB1c2UgYXQgdGhlIHRpbWU/
+IEZvciB0aGUgbGV2ZWxsaW5nIGlzIGl0IG5vdCBwbGF1c2libGUgdGhhdCBhIHVzZXINCj4gPiBj
+b3VsZCBjb25maWd1cmUgdGhlIGxldmVsIGJhc2VkIG9uIHRoZWlyIGN1cnJlbnQgZW52aXJvbm1l
+bnQuIFlvdSBoYXZlDQo+ID4gbW9kZXJhdGVseSBsb3VkIGJhY2tncm91bmQgbm9pc2UsIHRoZW4g
+eW91ciB0aHJlc2hvbGQgd291bGQgd2FudCB0byBiZQ0KPiA+IGhpZ2hlciwgYnV0IGluIGEgcXVp
+ZXQgZW52aXJvbm1lbnQgdGhlIGxpa2VsaWhvb2QgaXMgeW91IHdvdWxkIHdhbnQgdG8gbG93ZXIN
+Cj4gPiB0aGF0IHRocmVzaG9sZD8NCj4gDQo+IFNvIHRoaXMgKmlzbid0KiBhIG5vcm1hbCBtaWMg
+ZGV0ZWN0aW9uIGZlYXR1cmU/ICBXaGF0J3MgdGhlIHVzZXJzcGFjZQ0KPiBpbnRlcmZhY2UgZm9y
+IHJlcG9ydGluZyB0aGVuPw0KDQpCeSBtaWMgZGV0ZWN0aW9uIHlvdSB0aG91Z2h0IHRoaXMgd2Fz
+IHRvIGRldGVjdCBpZiBhIG1pYyB3YXMgcHJlc2VudCBvciBub3Q/DQpJdCdzIHRvIGRldGVjdCB0
+aGUgbm9pc2UgbGV2ZWwgb24gYSBtaWMgYW5kIHJhaXNlIGFuIGV2ZW50IGlmIHRoZSBjYXB0dXJl
+ZA0Kc291bmQgaXMgYWJvdmUgYSBzcGVjaWZpYyB0aHJlc2hvbGQgbGV2ZWwuIEFwb2xvZ2llcyBp
+ZiB0aGF0IHdhc24ndCBjbGVhci4NCg0KSW4gdGhlIGRyaXZlciBjb2RlIEknbSB1c2luZyBLRVlf
+Vk9JQ0VDT01NQU5ELCBhbmQgc2ltdWxhdGluZyBhIHByZXNzIGFuZA0KcmVsZWFzZSBvZiB0aGlz
+IGtleSwgdG8gaW5kaWNhdGUgdG8gdXNlci1zcGFjZS4gVGhpcyBzZWVtZWQgbGlrZSB0aGUgb2J2
+aW91cw0KY2hvaWNlIGZvciB0aGlzIGZlYXR1cmUgdG8gbWUsIGFsdGhvdWdoIEknZCBoYXBwaWx5
+IGdldCB5b3VyIG9waW5pb24gb24gdGhpcy4NCg==
