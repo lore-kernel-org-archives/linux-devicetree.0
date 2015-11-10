@@ -1,95 +1,31 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
- mt8135
-Date: Tue, 10 Nov 2015 14:11:07 +0800
-Message-ID: <1447135867.14454.9.camel@mtksdaap41>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	 <1445843717.23888.1.camel@mtksdaap41>
-	 <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-	 <1445859610.26723.4.camel@mtksdaap41>
-	 <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH RESEND 04/16] Documentation: dt-bindings: leds: add LM3633
+ LED binding information
+Date: Tue, 10 Nov 2015 16:01:56 +0900
+Message-ID: <56419664.1080204@ti.com>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <1446441875-1256-5-git-send-email-milo.kim@ti.com>
+ <5638DD8A.5020105@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <5638DD8A.5020105@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-11-09 at 09:59 -0800, Kevin Hilman wrote:
-> On Mon, Oct 26, 2015 at 4:40 AM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > Hi Kevin,
-> >
-> > On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
-> >> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
-> >> >> Hello,
-> >> >>
-> >> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
-> >> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
-> >> >> > properties to workaround this.
-> >> >> >
-> >> >> > This also set cpu enable-method to enable SMP.
-> >> >> >
-> >> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> >>
-> >> >> kernelci.org started detecting new boot failures for the mt8135-evb in
-> >> >> the arm-soc tree[1], and the boot failures were bisected down to this
-> >> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
-> >> >> dts: mt8135: enable basic SMP bringup for mt8135)
-> >> >>
-> >> >> Maybe this new SMP support requires updating the firmware on the board
-> >> >> as well?  If so, the changelog should've been a bit more explicit
-> >> >> about firmware dependencies.
-> >> >
-> >> > Kevin,
-> >> >
-> >> > Thanks for testing.
-> >> >
-> >> > No, it doesn't need new firmware. Will test to see what's going wrong.
-> >>
-> >> Thanks for following up.  I'll be glad to test any patches if you have
-> >> anything you'd like me to test.
-> >
-> > You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
-> > crash" (https://lkml.org/lkml/2015/8/24/803)
-> >
-> > Daniel Lezcano already applied this patch in his tree for 4.4.
-> > (https://git.linaro.org/people/daniel.lezcano/linux.git)
-> 
-> The mt8135-evp board is still failing to boot in linux-next[1] (and
-> has been since next-20151022.)  It appears the dependencies are not
-> quite correct in linux-next either.
-> 
-> Kevin
-> 
-> [1]
-> http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151109/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=564037fe59b514b2f6091909
+Hi Jacek,
 
-Hi Kevin,
+On 11/4/2015 1:15 AM, Jacek Anaszewski wrote:
+>> +  - led-max-microamp: Max current setting. Type is <u32>.
+>> >+                      Unit is microampere. Range is from 5000 to 30000.
+> Could you specify also a step?
+>
 
-I check the log [0], it seems first time mt8135-evbp1 boot to kernel
-shell successfully, then boot again. In the second time, mt8135 stay in
-fastboot mode, waiting host send boot image, then timeout.
+Yep, step is 1000. Thanks for catching this.
+I'll update the binding in the next patch.
 
-I download zImage and dtb in [1], and kernel run to shell successfully
-on my platform.
-
-I don't know whether this issue caused by test environment or not.
-
-[0]
-http://storage.kernelci.org/next/next-20151109/arm-multi_v7_defconfig/lab-khilman/boot-mt8135-evbp1.txt
-[1]
-http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151109/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=564037fe59b514b2f6091909#bisect-content
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Milo
