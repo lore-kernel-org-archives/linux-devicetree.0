@@ -1,48 +1,63 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: [PATCH] of: Print rather than WARN'ing when overlap check fails
-Date: Tue, 10 Nov 2015 16:08:33 +1100
-Message-ID: <1447132113-31434-1-git-send-email-mpe@ellerman.id.au>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/5] Add memory mapped read support for ti-qspi
+Date: Tue, 10 Nov 2015 10:59:54 +0530
+Message-ID: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-__rmem_check_for_overlap() is called very early in boot, and on some
-powerpc systems it's not safe to call WARN that early in boot.
 
-If the overlap check fails the system will oops instead of printing a
-warning. Furthermore because it's so early in boot the console is not up
-and the user doesn't see the oops, they just get a dead system.
+Changes since v2:
+Remove mmap_lock_mutex.
+Optimize enable/disable of mmap mode.
 
-Fix it by printing an error instead of calling WARN.
+Changes since v1:
+Introduce API in SPI core that MTD flash driver can call for mmap read
+instead of directly calling spi-master driver callback. This API makes
+sure that SPI core msg queue is locked during mmap transfers.
+v1: https://lkml.org/lkml/2015/9/4/103
 
-Fixes: ae1add247bf8 ("of: Check for overlap in reserved memory regions")
-Signed-off-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
----
- drivers/of/of_reserved_mem.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 62f467b8ccae..49703916a30e 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -226,10 +226,9 @@ static void __init __rmem_check_for_overlap(void)
- 
- 			this_end = this->base + this->size;
- 			next_end = next->base + next->size;
--			WARN(1,
--			     "Reserved memory: OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
--			     this->name, &this->base, &this_end,
--			     next->name, &next->base, &next_end);
-+			pr_err("Reserved memory: OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
-+			       this->name, &this->base, &this_end,
-+			       next->name, &next->base, &next_end);
- 		}
- 	}
- }
+Cover letter:
+
+This patch series adds support for memory mapped read port of ti-qspi.
+ti-qspi has a special memory mapped port through which SPI flash
+memories can be accessed directly via SoC specific memory region.
+
+First patch adds a method to pass flash specific information like read
+opcode, dummy bytes etc and to request mmap read. Second patch
+implements mmap read method in ti-qspi driver. Patch 3 adapts m25p80 to
+use mmap read method before trying normal SPI transfer. Patch 4 and 5
+add memory map region DT entries for DRA7xx and AM43xx SoCs.
+
+This patch series is based on the discussions here:
+http://www.spinics.net/lists/linux-spi/msg04796.html
+
+Tested on DRA74 EVM and AM437x-SK.
+Read performance increases from ~100kB/s to ~2.5MB/s.
+
+Vignesh R (5):
+  spi: introduce mmap read support for spi flash devices
+  spi: spi-ti-qspi: add mmap mode read support
+  mtd: devices: m25p80: add support for mmap read request
+  ARM: dts: DRA7: add entry for qspi mmap region
+  ARM: dts: AM4372: add entry for qspi mmap region
+
+ Documentation/devicetree/bindings/spi/ti_qspi.txt | 19 ++++-
+ arch/arm/boot/dts/am4372.dtsi                     |  4 +-
+ arch/arm/boot/dts/dra7.dtsi                       |  7 +-
+ drivers/mtd/devices/m25p80.c                      |  5 ++
+ drivers/spi/spi-ti-qspi.c                         | 99 ++++++++++++++++++++++-
+ drivers/spi/spi.c                                 | 34 ++++++++
+ include/linux/spi/spi.h                           | 20 +++++
+ 7 files changed, 179 insertions(+), 9 deletions(-)
+
 -- 
-2.5.0
+2.6.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
