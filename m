@@ -1,32 +1,75 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] PCI: rcar (usb): DT can override default window settings
-Date: Tue, 10 Nov 2015 10:15:53 +0900
-Message-ID: <20151110011553.GH1040@verge.net.au>
-References: <1446567566-10952-1-git-send-email-phil.edworthy@renesas.com>
- <20151105134947.GA26919@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151105134947.GA26919@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Bjorn Helgaas <bhelgaas@google.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: [PATCH v4 1/2] leds: rt5033: Add DT binding for RT5033
+Date: Tue, 10 Nov 2015 11:17:43 +0900
+Message-ID: <1447121864-15460-2-git-send-email-ingi2.kim@samsung.com>
+References: <1447121864-15460-1-git-send-email-ingi2.kim@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1447121864-15460-1-git-send-email-ingi2.kim@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, j.anaszewski@samsung.com
+Cc: inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Ingi Kim <ingi2.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 05, 2015 at 07:49:47AM -0600, Rob Herring wrote:
-> On Tue, Nov 03, 2015 at 04:19:26PM +0000, Phil Edworthy wrote:
-> > If the dtb specifies dma-ranges, we use those values. Otherwise, we
-> > default to the values that were previously hardcoded into the driver.
-> > 
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |  6 ++
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+This patch adds the device tree bindings for RT5033 flash LEDs.
 
-Bjorn,
+Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/leds/leds-rt5033.txt       | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-rt5033.txt
 
-this looks good to me. Please feel free to apply.
-
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/Documentation/devicetree/bindings/leds/leds-rt5033.txt b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
+new file mode 100644
+index 0000000..17159d4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-rt5033.txt
+@@ -0,0 +1,46 @@
++* Richtek Technology Corporation - RT5033 Flash LED Driver
++
++The RT5033 Flash LED Circuit is designed for one or two LEDs driving
++for torch and strobe applications, it provides an I2C software command
++to trigger the torch and strobe operation.
++
++There are two LED outputs available - FLED1 and FLED2. Each of them can
++control a separate LED or they can be connected together to double
++the maximum current for a single connected LED. One LED is represented
++by one child node.
++
++Required properties:
++- compatible : Must be "richtek,rt5033-led".
++
++A discrete LED element connected to the device must be represented by a child
++node - see Documentation/devicetree/bindings/leds/common.txt.
++
++Required properties for the LED child node:
++  See Documentation/devicetree/bindings/leds/common.txt
++- led-sources : device current output identifiers:  0 - FLED1, 1 - FLED2
++- led-max-microamp : 12.5mA to 200mA, step by 12.5mA.
++- flash-max-microamp :
++	Turn on one LED channel : 50mA to 800mA, step by 25mA.
++	Turn on two LED channels : 50mA to 600mA, step by 25mA.
++- flash-max-timeout-us : 64ms to 1216ms, step by 32ms.
++
++Optional properties for the LED child node:
++- label : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++rt5033 {
++	compatible = "richtek,rt5033";
++
++	led {
++		compatible = "richtek,rt5033-led";
++
++		flash-led {
++			label = "rt5033-flash";
++			led-sources = <0>, <1>;
++			led-max-microamp = <200000>;
++			flash-max-microamp = <800000>;
++			flash-max-timeout-us = <1216000>;
++		};
++	};
++}
+-- 
+2.0.5
