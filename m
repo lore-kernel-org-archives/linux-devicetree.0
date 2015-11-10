@@ -1,11 +1,13 @@
 From: Akshay Bhat <akshay.bhat@timesys.com>
-Subject: [PATCH v3 0/7] ARM: dts: Add Advantech board support
-Date: Tue, 10 Nov 2015 13:00:01 -0500
-Message-ID: <1447178408-26982-1-git-send-email-akshay.bhat@timesys.com>
+Subject: [PATCH v3 5/7] ARM: dts: imx: Add support for Advantech/GE B450v3
+Date: Tue, 10 Nov 2015 13:00:06 -0500
+Message-ID: <1447178408-26982-6-git-send-email-akshay.bhat@timesys.com>
+References: <1447178408-26982-1-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1447178408-26982-1-git-send-email-akshay.bhat@timesys.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,44 +21,107 @@ To: devicetree@vger.kernel.org
 Cc: mark.rutland@arm.com, justin.waters@timesys.com, linux@arm.linux.org.uk, Akshay Bhat <akshay.bhat@timesys.com>, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, peter.stretz@advantech.com, kernel@pengutronix.de, galak@codeaurora.org, l.stach@pengutronix.de, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, martin.donnelly@ge.com
 List-Id: devicetree@vger.kernel.org
 
-This series aims to add Advantech BA-16 module (iMX6 based) and GE board support.
+Add support for Advantech/GE B450v3 board.
 
-This series has been tested against linux-next tag next-20151110.
-
-Modifications:
-v2->v3:
-- Change vendor prefix from adv to advantech as suggested by Rob Herring
-- Reorder patches and squash/fold v2 commits as suggested by Lucas Stash
-
-History:
---------
-[v1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/381872.html
-[v2]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/383276.html
-
-Akshay Bhat (5):
-  of: Add vendor prefix for Advantech Corporation
-  of: Add vendor prefix for General Electric Company
-  ARM: dts: imx: Add support for Advantech/GE B450v3
-  ARM: dts: imx: Add support for Advantech/GE B650v3
-  ARM: dts: imx: Add support for Advantech/GE B850v3
-
-Justin Waters (2):
-  ARM: dts: imx: Add Advantech BA-16 Qseven module
-  ARM: dts: imx: Add support for Advantech/GE Bx50v3
-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- arch/arm/boot/dts/Makefile                         |   3 +
- arch/arm/boot/dts/imx6q-b450v3.dts                 |  75 +++
- arch/arm/boot/dts/imx6q-b650v3.dts                 |  74 +++
- arch/arm/boot/dts/imx6q-b850v3.dts                 | 122 +++++
- arch/arm/boot/dts/imx6q-ba16.dtsi                  | 584 +++++++++++++++++++++
- arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 211 ++++++++
- 7 files changed, 1071 insertions(+)
+Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
+---
+ arch/arm/boot/dts/Makefile         |  1 +
+ arch/arm/boot/dts/imx6q-b450v3.dts | 75 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
  create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
- create mode 100644 arch/arm/boot/dts/imx6q-b650v3.dts
- create mode 100644 arch/arm/boot/dts/imx6q-b850v3.dts
- create mode 100644 arch/arm/boot/dts/imx6q-ba16.dtsi
- create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 30bbc37..b3330fe 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -310,6 +310,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-wandboard-revb1.dtb \
+ 	imx6q-apf6dev.dtb \
+ 	imx6q-arm2.dtb \
++	imx6q-b450v3.dtb \
+ 	imx6q-cm-fx6.dtb \
+ 	imx6q-cubox-i.dtb \
+ 	imx6q-dfi-fs700-m60.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
+new file mode 100644
+index 0000000..919e4a4
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
+@@ -0,0 +1,75 @@
++/*
++ * Copyright 2015 Timesys Corporation.
++ * Copyright 2015 General Electric Company
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++
++#include "imx6q-bx50v3.dtsi"
++
++/ {
++	model = "Advantech MX6Q B450V3 QSeven Board";
++	compatible = "ge,imx6q-b450v3", "advantech,imx6q-ba16", "fsl,imx6q";
++
++	chosen {
++		stdout-path = &uart3;
++	};
++};
++
++&ldb {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
++				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++	status = "okay";
++
++	lvds0: lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: G121X1-L03 {
++				clock-frequency = <65000000>;
++				hactive = <1024>;
++				vactive = <768>;
++				hback-porch = <320>;
++				hfront-porch = <0>;
++				vback-porch = <0>;
++				vfront-porch = <38>;
++				hsync-len = <1>;
++				vsync-len = <1>;
++			};
++		};
++	};
++
++	lvds1: lvds-channel@1 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		display-timings {
++			native-mode = <&timing1>;
++			timing1: G121X1-L03 {
++				clock-frequency = <65000000>;
++				hactive = <1024>;
++				vactive = <768>;
++				hback-porch = <320>;
++				hfront-porch = <0>;
++				vback-porch = <0>;
++				vfront-porch = <38>;
++				hsync-len = <1>;
++				vsync-len = <1>;
++			};
++		};
++	};
++
++};
 -- 
 2.6.3
