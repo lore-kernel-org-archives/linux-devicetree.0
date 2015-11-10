@@ -1,61 +1,76 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH RESEND v2 3/4] ARM: BCM: Add SMP support for Broadcom NSP
-Date: Mon, 9 Nov 2015 18:29:11 -0800
-Message-ID: <CAGVrzca34xrVznoEE2e26JyR11Q9L1sT4mJcNZ=NuprqUnZnjw@mail.gmail.com>
-References: <1446839371-22601-1-git-send-email-kapilh@broadcom.com>
- <1446839371-22601-4-git-send-email-kapilh@broadcom.com> <CACRpkdZN-iwdR_VwktdHsw+rGQLhCgmWnERYVDE+KaYOqJR30w@mail.gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v6 0/3] Mediatek SPI-NOR flash driver
+Date: Mon, 9 Nov 2015 18:46:11 -0800
+Message-ID: <20151110024611.GL12143@google.com>
+References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZN-iwdR_VwktdHsw+rGQLhCgmWnERYVDE+KaYOqJR30w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel>
+To: Bayi Cheng <bayi.cheng@mediatek.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-2015-11-09 2:09 GMT-08:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Fri, Nov 6, 2015 at 8:49 PM, Kapil Hali <kapilh@broadcom.com> wrote:
->
->> Add SMP support for Broadcom's Northstar Plus SoC
->> cpu enable method. This changes also consolidates
->> iProc family's - BCM NSP and BCM Kona, platform
->> SMP handling in a common file.
->>
->> Northstar Plus SoC is based on ARM Cortex-A9
->> revision r3p0 which requires configuration for ARM
->> Errata 764369 for SMP. This change adds the needed
->> configuration option.
->>
->> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
->
-> This version looks saner to me.
->
->> +static int nsp_write_lut(void)
->> +{
->> +       void __iomem *sku_rom_lut;
->> +       phys_addr_t secondary_startup_phy;
->> +
->> +       if (!secondary_boot) {
->> +               pr_warn("required secondary boot register not specified\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       sku_rom_lut = ioremap_nocache((phys_addr_t)secondary_boot,
->> +                                               sizeof(secondary_boot));
->
-> Why is this address not just taken directly from the device tree?
+Hi Bayi,
 
-It comes directly from DT, that's what bcm_smp_prepare_cpus() does
-read from Device Tree.
+On Fri, Nov 06, 2015 at 11:48:06PM +0800, Bayi Cheng wrote:
+> This series is based on v4.3-rc1 and l2-mtd.git [0] and erase_sector
+> implementation patch [1]
+> 
+> [0]: git://git.infradead.org/l2-mtd.git
+> [1]: http://lists.infradead.org/pipermail/linux-mtd/2015-October//062959.html
+> 
+> Change in v6:
+> 1: delete mt8173_nor_do_rx
+> 2: delete mt8173_nor_do_rx
+> 3: add mt8173_nor_do_tx_rx for general usage
+> 4: support nor flash with 6 IDs
+> 5: delete mt8173_nor_erase_sector and use "nor->erase_opcode"
+> 6: add mt8173_nor_set_addr to programming the address register
+> 7: initialize the ppdata in mtk_nor_init
 
->
-> If it is not in the device tree: why?
->
-> Also give it a sane name, bcm_sec_boot_address or so.
-> "secondary_boot" sounds like a function you call to boot
-> the second core.
+This series is looking a lot better to me. Thanks for incorporating (and
+I hope fully reviewing and testing!) my suggested changes. I have a just
+a few small comments that I might post to the driver patch, and if
+that's all that's outstanding, I can fix them up myself before applying.
 
-Agree with that, there could be a better name which better reflects
-this is a variable.
--- 
-Florian
+I believe you didn't completely answer all my questions from v5 though.
+I'll repeat a bit here. Particularly, refer to [1].
+I'll summarize; I understand that your common transmit/receive operation
+works something like this:
+
+Quoting from [1]:
+> (1) total number of bits to send/receive goes in the COUNT register (so
+>     far, as many as 7*8=56?)
+> (2) opcode is written to PRGDATA5
+> (3) other "transmit" data (like addresses), if any, are placed on PRGDATA4..0
+> (4) command is sent (execute_cmd())
+> (5) data is read back in SHREG{X..0}, if needed
+
+My questions were:
+
+(a) Why does mt8173_nor_set_read_mode() use PRGDATA3? That's not
+    mentioned in the SoC manual, and it doesn't really match any of the
+    steps above. Perhaps it's just a quirk of the controller's
+    programming model?
+
+(b) How do you determine X from step (5)?
+
+Right now, your code seems to answer that X is "rxlen - 1". Correct?
+
+If that's correct and if I put all of my understanding together
+correctly, this means that you can actually shift out (in PRGDATA) up to
+6 bytes (that is, 1 opcode and 5 tx bytes) and shift in (in SHREG) up to
+7 bytes, except that the first byte is received during the opcode cycle,
+and so it is discarded, and we effectively receive only 6 bytes.
+
+Is that all correct? If so, then I think you still need to adjust the
+boundary conditions in your do_tx_rx() function. (I'll comment on the
+driver to point out the specifics.)
+
+Regards,
+Brian
+
+[1] http://lists.infradead.org/pipermail/linux-mtd/2015-October/062951.html
