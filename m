@@ -1,69 +1,69 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of: Check for overlap in reserved memory regions
-Date: Mon, 9 Nov 2015 22:41:58 -0600
-Message-ID: <CAL_JsqLAxTF6DgwHNN94iQyds-rmchKS4Tx+8U7sSbAvGHMg9Q@mail.gmail.com>
-References: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
- <1447129784.13889.25.camel@ellerman.id.au>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA channel
+ driver
+Date: Mon, 9 Nov 2015 23:44:42 -0500
+Message-ID: <5641763A.1060505@codeaurora.org>
+References: <1446958380-23298-1-git-send-email-okaya@codeaurora.org>
+ <1446958380-23298-5-git-send-email-okaya@codeaurora.org>
+ <20151109181924.GA5205@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1447129784.13889.25.camel@ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mitchel Humpherys <mitchelh@codeaurora.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20151109181924.GA5205@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBOb3YgOSwgMjAxNSBhdCAxMDoyOSBQTSwgTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVs
-bGVybWFuLmlkLmF1PiB3cm90ZToKPiBPbiBUdWUsIDIwMTUtMDktMTUgYXQgMTg6MzAgLTA3MDAs
-IE1pdGNoZWwgSHVtcGhlcnlzIHdyb3RlOgo+Cj4+IEFueSBvdmVybGFwIGluIHRoZSByZXNlcnZl
-ZCBtZW1vcnkgcmVnaW9ucyAodGhvc2Ugc3BlY2lmaWVkIGluIHRoZQo+PiByZXNlcnZlZC1tZW1v
-cnkgRFQgbm9kZSkgaXMgYSBidWcuICBUaGVzZSBidWdzIG1pZ2h0IGdvIHVuZGV0ZWN0ZWQgYXMK
-Pj4gbG9uZyBhcyB0aGUgY29udGVzdGVkIHJlZ2lvbiBpc24ndCB1c2VkIHNpbXVsdGFuZW91c2x5
-IGJ5IG11bHRpcGxlCj4+IHNvZnR3YXJlIGFnZW50cywgd2hpY2ggbWFrZXMgc3VjaCBidWdzIGhh
-cmQgdG8gZGVidWcuICBGaXggdGhpcyBieQo+PiBwcmludGluZyBhIHNjYXJ5IHdhcm5pbmcgZHVy
-aW5nIGJvb3QgaWYgb3ZlcmxhcCBpcyBkZXRlY3RlZC4KPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVtLmMgYi9kcml2ZXJzL29mL29mX3Jlc2VydmVkX21lbS5jCj4+
-IGluZGV4IDcyNmViZTc5MjgxMy4uNjJmNDY3YjhjY2FlIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJz
-L29mL29mX3Jlc2VydmVkX21lbS5jCj4+ICsrKyBiL2RyaXZlcnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVt
-LmMKPj4gQEAgLTE5NywxMiArMTk4LDUyIEBAIHN0YXRpYyBpbnQgX19pbml0IF9fcmVzZXJ2ZWRf
-bWVtX2luaXRfbm9kZShzdHJ1Y3QgcmVzZXJ2ZWRfbWVtICpybWVtKQo+PiAgICAgICByZXR1cm4g
-LUVOT0VOVDsKPj4gIH0KPj4KPj4gK3N0YXRpYyBpbnQgX19pbml0IF9fcm1lbV9jbXAoY29uc3Qg
-dm9pZCAqYSwgY29uc3Qgdm9pZCAqYikKPj4gK3sKPj4gKyAgICAgY29uc3Qgc3RydWN0IHJlc2Vy
-dmVkX21lbSAqcmEgPSBhLCAqcmIgPSBiOwo+PiArCj4+ICsgICAgIHJldHVybiByYS0+YmFzZSAt
-IHJiLT5iYXNlOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgdm9pZCBfX2luaXQgX19ybWVtX2NoZWNr
-X2Zvcl9vdmVybGFwKHZvaWQpCj4+ICt7Cj4+ICsgICAgIGludCBpOwo+PiArCj4+ICsgICAgIGlm
-IChyZXNlcnZlZF9tZW1fY291bnQgPCAyKQo+PiArICAgICAgICAgICAgIHJldHVybjsKPj4gKwo+
-PiArICAgICBzb3J0KHJlc2VydmVkX21lbSwgcmVzZXJ2ZWRfbWVtX2NvdW50LCBzaXplb2YocmVz
-ZXJ2ZWRfbWVtWzBdKSwKPj4gKyAgICAgICAgICBfX3JtZW1fY21wLCBOVUxMKTsKPj4gKyAgICAg
-Zm9yIChpID0gMDsgaSA8IHJlc2VydmVkX21lbV9jb3VudCAtIDE7IGkrKykgewo+PiArICAgICAg
-ICAgICAgIHN0cnVjdCByZXNlcnZlZF9tZW0gKnRoaXMsICpuZXh0Owo+PiArCj4+ICsgICAgICAg
-ICAgICAgdGhpcyA9ICZyZXNlcnZlZF9tZW1baV07Cj4+ICsgICAgICAgICAgICAgbmV4dCA9ICZy
-ZXNlcnZlZF9tZW1baSArIDFdOwo+PiArICAgICAgICAgICAgIGlmICghKHRoaXMtPmJhc2UgJiYg
-bmV4dC0+YmFzZSkpCj4+ICsgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPj4gKyAgICAg
-ICAgICAgICBpZiAodGhpcy0+YmFzZSArIHRoaXMtPnNpemUgPiBuZXh0LT5iYXNlKSB7Cj4+ICsg
-ICAgICAgICAgICAgICAgICAgICBwaHlzX2FkZHJfdCB0aGlzX2VuZCwgbmV4dF9lbmQ7Cj4+ICsK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgIHRoaXNfZW5kID0gdGhpcy0+YmFzZSArIHRoaXMtPnNp
-emU7Cj4+ICsgICAgICAgICAgICAgICAgICAgICBuZXh0X2VuZCA9IG5leHQtPmJhc2UgKyBuZXh0
-LT5zaXplOwo+PiArICAgICAgICAgICAgICAgICAgICAgV0FSTigxLAo+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAiUmVzZXJ2ZWQgbWVtb3J5OiBPVkVSTEFQIERFVEVDVEVEIVxuJXMgKCVw
-YS0tJXBhKSBvdmVybGFwcyB3aXRoICVzICglcGEtLSVwYSlcbiIsCj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHRoaXMtPm5hbWUsICZ0aGlzLT5iYXNlLCAmdGhpc19lbmQsCj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgIG5leHQtPm5hbWUsICZuZXh0LT5iYXNlLCAmbmV4dF9lbmQp
-Owo+Cj4gVGhpcyBpcyBibG93aW5nIHVwIG9uIHNvbWUgcG93ZXJwYyBtYWNoaW5lcy4KPgo+IEl0
-J3MgdG9vIGVhcmx5IGluIGJvb3QgdG8gY2FsbCBXQVJOKCkgb24gdGhlc2Ugc3lzdGVtcy4KCkkg
-ZGlkbid0IHJlYWxpemUgV0FSTiBjb3VsZCBub3QgYmUgdXNlZCBlYXJseS4gR29vZCB0byBrbm93
-LgoKPiBDYW4gd2UgdHVybiBpdCBpbnRvIGEgcHJfZXJyKCkgZm9yIG5vdz8KClNvdW5kcyBmaW5l
-LgoKPiBJJ2xsIHNlbmQgYSBwYXRjaD8KCkdyZWF0LgoKUm9iCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGlu
-dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
-bmZvL2xpbnV4cHBjLWRldg==
+
+
+On 11/9/2015 1:19 PM, Rob Herring wrote:
+> On Sat, Nov 07, 2015 at 11:53:00PM -0500, Sinan Kaya wrote:
+>> This patch adds support for hidma engine. The driver
+>> consists of two logical blocks. The DMA engine interface
+>> and the low-level interface. The hardware only supports
+>> memcpy/memset and this driver only support memcpy
+>> interface. HW and driver doesn't support slave interface.
+>>
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/dma/qcom_hidma.txt         |  18 +
+>>   drivers/dma/qcom/Kconfig                           |   9 +
+>>   drivers/dma/qcom/Makefile                          |   2 +
+>>   drivers/dma/qcom/hidma.c                           | 743 ++++++++++++++++
+>>   drivers/dma/qcom/hidma.h                           | 157 ++++
+>>   drivers/dma/qcom/hidma_dbg.c                       | 225 +++++
+>>   drivers/dma/qcom/hidma_ll.c                        | 944 +++++++++++++++++++++
+>>   7 files changed, 2098 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma.txt
+>>   create mode 100644 drivers/dma/qcom/hidma.c
+>>   create mode 100644 drivers/dma/qcom/hidma.h
+>>   create mode 100644 drivers/dma/qcom/hidma_dbg.c
+>>   create mode 100644 drivers/dma/qcom/hidma_ll.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma.txt b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
+>> new file mode 100644
+>> index 0000000..c9fb2d44
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
+>> @@ -0,0 +1,18 @@
+>> +Qualcomm Technologies HIDMA Channel driver
+>> +
+>> +Required properties:
+>> +- compatible: must contain "qcom,hidma"
+>
+> This should be "qcom,hidma-1.0" to match the example and driver. I
+> would drop "qcom,hidma" altogether.
+
+I matched it.
+
+>
+> Rob
+>
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
