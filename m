@@ -1,52 +1,59 @@
-From: Jason Liu <r64343@freescale.com>
-Subject: [PATCH 1/1] drivers: of: of_reserved_mem: fixup the alignment with CMA setup
-Date: Tue, 10 Nov 2015 20:30:26 +0800
-Message-ID: <1447158626-7773-1-git-send-email-r64343@freescale.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 02/32] devicetree: bindings: scsi: HiSi SAS
+Date: Tue, 10 Nov 2015 07:16:03 -0600
+Message-ID: <CAL_JsqLbWWSLbe+7T=qbp-Y2DMngeUf3nnxytb8=+ceYxUcgrA@mail.gmail.com>
+References: <1447086757-147706-1-git-send-email-john.garry@huawei.com>
+ <1447086757-147706-3-git-send-email-john.garry@huawei.com>
+ <20151109180133.GA23100@rob-hp-laptop> <5641D087.8050502@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <5641D087.8050502@huawei.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: "JBottomley@odin.com" <JBottomley@odin.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, "john.garry2@mail.dcu.ie" <john.garry2@mail.dcu.ie>, "hare@suse.de" <hare@suse.de>, "xuwei (O)" <xuwei5@hisilicon.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-There is an alignment mismatch issue between the of_reserved_mem and
-the CMA setup requirement. The of_reserved_mem will try to get the
-alignment value from the DTS and pass it to __memblock_alloc_base to
-do the memory block base allocation, but the alignment value specified
-in the DTS may not satisfy the CAM setup requirement since CMA setup
-required the alignment as the following in the code:
+On Tue, Nov 10, 2015 at 5:09 AM, John Garry <john.garry@huawei.com> wrote:
+> On 09/11/2015 18:01, Rob Herring wrote:
+>>
+>> On Tue, Nov 10, 2015 at 12:32:07AM +0800, John Garry wrote:
+>>>
+>>> Add devicetree bindings for HiSilicon SAS driver.
+>>>
+>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>>> ---
+>>>   .../devicetree/bindings/scsi/hisilicon-sas.txt     | 81
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 81 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>>> b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>>> new file mode 100644
+>>> index 0000000..2333cc3
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+>>> @@ -0,0 +1,81 @@
+>>> +* HiSilicon SAS controller
+>>> +
+>>> +The HiSilicon SAS controller supports SAS/SATA.
+>>> +
+>>> +Main node required properties:
+>>> +  - compatible : value should be as follows:
+>>> +       (a) "hisilicon,sas-controller-v1" for v1 of HiSilicon SAS
+>>> controller IP
+>>
+>>
+>> Please do a more specific compatible string with the SOC part number.
+>> Same versions of IP blocks can have different integration/process
+>> features/bugs.
+>>
+>
+> How about "hisilicon,hip05-sas-v1"?
 
-align = PAGE_SIZE << max(MAX_ORDER - 1, pageblock_order);
+That's fine.
 
-The sanity check in the function of rmem_cma_setup will fail if the
-alignment does not setup correctly and thus CMA will fail to setup.
-
-This patch is to fixup the alignment to meet the CMA setup required.
-
-Mailing-list-thread: https://lkml.org/lkml/2015/11/9/138
-Signed-off-by: Jason Liu <r64343@freescale.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
----
- drivers/of/of_reserved_mem.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 62f467b..9394311 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -124,6 +124,10 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 		align = dt_mem_next_cell(dt_root_addr_cells, &prop);
- 	}
- 
-+	/* Need adjust the alignment to satisfy the CMA requirement */
-+	if (IS_ENABLED(CONFIG_CMA) && of_flat_dt_is_compatible(node, "shared-dma-pool"))
-+		align = max(align, (phys_addr_t)PAGE_SIZE << max(MAX_ORDER - 1, pageblock_order));
-+
- 	prop = of_get_flat_dt_prop(node, "alloc-ranges", &len);
- 	if (prop) {
- 
--- 
-1.8.3.2
+Rob
