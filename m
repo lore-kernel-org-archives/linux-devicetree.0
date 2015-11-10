@@ -1,209 +1,72 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 2/3] thermal: Add Mediatek thermal controller support
-Date: Tue, 10 Nov 2015 10:26:30 -0800
-Message-ID: <20151110182629.GA5240@localhost.localdomain>
-References: <1447064013-13026-1-git-send-email-s.hauer@pengutronix.de>
- <1447064013-13026-3-git-send-email-s.hauer@pengutronix.de>
- <20151110120554.GB3551@e104805>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-boneblack: Use pinctrl constants and
+ AM33XX_IOPAD macro
+Date: Tue, 10 Nov 2015 15:28:24 -0300
+Message-ID: <CABxcv=mTJzMBU44HKjW-mQasytUCXG4W=H2NSw5tLhkhmX1cKw@mail.gmail.com>
+References: <1445706313-14761-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151110120554.GB3551@e104805>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javi Merino <javi.merino@arm.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445706313-14761-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 10, 2015 at 12:05:54PM +0000, Javi Merino wrote:
-> On Mon, Nov 09, 2015 at 11:13:32AM +0100, Sascha Hauer wrote:
+Hello Andrew,
 
-<cut>
+On Sat, Oct 24, 2015 at 2:05 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> Using constants for pinctrl allows better readability and removes
+> redundancy with comments. AM33XX_IOPAD allows us to use part of the
+> pinctrl physical address as in the TRM instead of an offset.
+>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-boneblack.dts | 44 +++++++++++++++++-----------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+> index eadbba3..346f529 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -36,32 +36,32 @@
+>  &am33xx_pinmux {
+>         nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
+>                 pinctrl-single,pins = <
+> -                       0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+> -                       0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
+> -                       0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> -                       0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> -                       0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> -                       0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
+> +                       AM33XX_IOPAD(0x9b0, (PIN_OUTPUT_PULLDOWN | MUX_MODE3))  /* xdma_event_intr0 */
 
-> > +
-> > +/*
-> > + * The MT8173 thermal controller has four banks. Each bank can read up to
-> > + * four temperature sensors simultaneously. The MT8173 has a total of 5
-> > + * temperature sensors. We use each bank to measure a certain area of the
-> > + * SoC. Since TS2 is located centrally in the SoC it is influenced by multiple
-> > + * areas, hence is used in different banks.
-> > + */
-> > +static const struct mtk_thermal_bank_cfg bank_data[] = {
-> > +	{
-> > +		.num_sensors = 2,
-> > +		.sensors = { MT8173_TS2, MT8173_TS3 },
-> > +	}, {
-> > +		.num_sensors = 2,
-> > +		.sensors = { MT8173_TS2, MT8173_TS4 },
-> > +	}, {
-> > +		.num_sensors = 3,
-> > +		.sensors = { MT8173_TS1, MT8173_TS2, MT8173_TSABB },
-> > +	}, {
-> > +		.num_sensors = 1,
-> > +		.sensors = { MT8173_TS2 },
-> > +	},
-> > +};
+I missed when I first reviewed this patch but there is no need to
+enclose the padconf values into parenthesis, for example the following
+is easier to read and is preferred IMHO:
 
-Would it make sense to simply expose all sensors and let the
-configuration of their aggregation be done by DT?
+AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)  /* xdma_event_intr0 */
 
-There is already ongoing effort to get aggregation functions
-generalized.
+Same for all the other pinctrl lines.
 
-> > +
-> > +struct mtk_thermal_sense_point {
-> > +	int msr;
-> > +	int adcpnp;
-> > +};
-> > +
-> > +static const struct mtk_thermal_sense_point
-> > +		sensing_points[MT8173_NUM_SENSORS_PER_ZONE] = {
-> > +	{
-> > +		.msr = TEMP_MSR0,
-> > +		.adcpnp = TEMP_ADCPNP0,
-> > +	}, {
-> > +		.msr = TEMP_MSR1,
-> > +		.adcpnp = TEMP_ADCPNP1,
-> > +	}, {
-> > +		.msr = TEMP_MSR2,
-> > +		.adcpnp = TEMP_ADCPNP2,
-> > +	}, {
-> > +		.msr = TEMP_MSR3,
-> > +		.adcpnp = TEMP_ADCPNP3,
-> > +	},
-> > +};
-> > +
-> > +/**
-> > + * raw_to_mcelsius - convert a raw ADC value to mcelsius
-> > + * @mt:		The thermal controller
-> > + * @raw:	raw ADC value
-> > + *
-> > + * This converts the raw ADC value to mcelsius using the SoC specific
-> > + * calibration constants
-> > + */
-> > +static int raw_to_mcelsius(struct mtk_thermal *mt, int sensno, s32 raw)
-> > +{
-> > +	s32 tmp;
-> > +
-> > +	raw &= 0xfff;
-> > +
-> > +	tmp = 203450520 << 3;
-> > +	tmp /= 165 + mt->o_slope;
-> > +	tmp /= 10000 + mt->adc_ge;
-> > +	tmp *= raw - mt->vts[sensno] - 3350;
-> > +	tmp >>= 3;
-> > +
-> > +	return mt->degc_cali * 500 - tmp;
-> > +}
-> > +
-> > +/**
-> > + * mtk_thermal_get_bank - get bank
-> > + * @bank:	The bank
-> > + *
-> > + * The bank registers are banked, we have to select a bank in the
-> > + * PTPCORESEL register to access it.
-> > + */
-> > +static void mtk_thermal_get_bank(struct mtk_thermal_bank *bank)
-> > +{
-> > +	struct mtk_thermal *mt = bank->mt;
-> > +	u32 val;
-> > +
-> > +	mutex_lock(&mt->lock);
-> > +
-> > +	val = readl(mt->thermal_base + PTPCORESEL);
-> > +	val &= ~0xf;
-> > +	val |= bank->id;
-> > +	writel(val, mt->thermal_base + PTPCORESEL);
-> > +}
-> > +
-> > +/**
-> > + * mtk_thermal_put_bank - release bank
-> > + * @bank:	The bank
-> > + *
-> > + * release a bank previously taken with mtk_thermal_get_bank,
-> > + */
-> > +static void mtk_thermal_put_bank(struct mtk_thermal_bank *bank)
-> > +{
-> > +	struct mtk_thermal *mt = bank->mt;
-> > +
-> > +	mutex_unlock(&mt->lock);
-> > +}
-> > +
-> > +/**
-> > + * mtk_thermal_bank_temperature - get the temperature of a bank
-> > + * @bank:	The bank
-> > + *
-> > + * The temperature of a bank is considered the maximum temperature of
-> > + * the sensors associated to the bank.
-> > + */
-> > +static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
-> > +{
-> > +	struct mtk_thermal *mt = bank->mt;
-> > +	int temp, i, max;
-> > +	u32 raw;
-> > +
-> > +	temp = max = INT_MIN;
-> > +
-> > +	for (i = 0; i < bank_data[bank->id].num_sensors; i++) {
-> > +		raw = readl(mt->thermal_base + sensing_points[i].msr);
-> > +
-> > +		temp = raw_to_mcelsius(mt, bank_data[bank->id].sensors[i], raw);
-> > +
-> > +		/*
-> > +		 * The first read of a sensor often contains very high bogus
-> > +		 * temperature value. Filter these out so that the system does
-> > +		 * not immediately shut down.
-> > +		 */
-> > +		if (temp > 200000)
-> > +			temp = 0;
-> > +
-> > +		if (temp > max)
-> > +			max = temp;
-> > +	}
-> > +
-> > +	return max;
-> > +}
-> > +
-> > +static int mtk_read_temp(void *data, int *temperature)
-> > +{
-> > +	struct mtk_thermal *mt = data;
-> > +	int i;
-> > +	int tempmax = INT_MIN;
-> > +
-> > +	for (i = 0; i < MT8173_NUM_ZONES; i++) {
-> > +		struct mtk_thermal_bank *bank = &mt->banks[i];
-> > +		int t;
-> > +
-> > +		mtk_thermal_get_bank(bank);
-> > +
-> > +		t = mtk_thermal_bank_temperature(bank);
-> 
-> IIUIC, when you had multiple thermal zones
-> mtk_thermal_bank_temperature() made sense, but now it looks like
-> you're just doing the maximum of all sensors.  Why bother with the
-> banks any more?  Aren't you just calculating the maximum of all
-> sensors?  As TS2 is present in all banks, there's no point in reading
-> it four times just to get the maximum of all sensors.
-> 
-
-Yeah, agreed here. If that is your intention, maybe read each sensor one
-time, then compute the max of each subset from memory instead.
-
-> > +		mtk_thermal_put_bank(bank);
-> > +
-> > +		if (t > tempmax)
-> > +			tempmax = t;
-> > +	}
-> > +
-> > +	*temperature = tempmax;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct thermal_zone_of_device_ops mtk_thermal_ops = {
-> > +	.get_temp = mtk_read_temp,
-> > +};
-> 
-> Cheers,
-> Javi
-> 
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
