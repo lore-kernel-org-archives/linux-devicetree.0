@@ -1,58 +1,86 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
-Date: Tue, 10 Nov 2015 13:55:30 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D460CEA5@SW-EX-MBX01.diasemi.com>
-References: <cover.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
- <01a9b6e96b66327cf9a27781c13aa50545380acb.1446718490.git.Adam.Thomson.Opensource@diasemi.com>
- <20151105152736.GO18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
- <20151106112141.GE18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
- <20151106115451.GG18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
- <20151108103429.GC6746@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
- <20151109140225.GA26072@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] Documentation: mailbox: Add APM X-Gene SLIMpro
+ mailbox dts documentation
+Date: Tue, 10 Nov 2015 08:15:02 -0600
+Message-ID: <20151110141502.GA14092@rob-hp-laptop>
+References: <1429863912.2927.43.camel@x220>
+ <cover.1447091625.git.dhdang@apm.com>
+ <6be192528afbcc604653a318994ee30fa05a0e05.1447091626.git.dhdang@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20151109140225.GA26072@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6be192528afbcc604653a318994ee30fa05a0e05.1447091626.git.dhdang@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Duc Dang <dhdang@apm.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com, Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On November 9, 2015 14:02, Mark Brown wrote:
-
-> > > What I'm trying to figure out here is if this depends on the audio
-> > > routing at runtime or if it's got dedicated configuration?
+On Mon, Nov 09, 2015 at 10:05:44AM -0800, Duc Dang wrote:
+> This adds the APM X-Gene SLIMpro mailbox device tree
+> node documentation.
 > 
-> > This feature is available for any/all mics connected. Which mics are enabled
-> > is a runtime configuration of routing, so to me it makes sense also that we can
-> > configure which channel triggers an event, based on our scenario at that time.
+> [dhdang: rebase over 4.3-rc5]
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> Signed-off-by: Duc Dang <dhdang@apm.com>
+> ---
+>  .../bindings/mailbox/xgene-slimpro-mailbox.txt     | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
 > 
-> The general userspace expectation is that the detection is always active
-> and consistent rather than varying at runtime - runtime variability
-> might be a bit surprising for it, and even then variability in what is
-> detected based on other settings is a bit surprising.  If the hardware
-> is that limited I guess it's about all that can be done but I'm still
-> not clear what the use cases are for configuring the levels (as opposed
-> ot the routing).
+> diff --git a/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
+> new file mode 100644
+> index 0000000..d02a3d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
+> @@ -0,0 +1,34 @@
+> +The APM X-Gene SLIMpro mailbox is used to communicate messages between
+> +the ARM64 processors and the Cortex M3 (dubbed SLIMpro). It uses a simple
+> +interrupt based door bell mechanism and can exchange simple messages using the
+> +internal registers.
+> +
+> +There are total of 7 interrupts in this mailbox. Each used for an individual
+> +door bell (or mailbox channel).
+> +
+> +Required properties:
+> +- compatible:	Should be as "apm, xgene-slimpro-mbox".
+                                          ^
+remove the space
 
-How about the example of always on voice in Android, which can be enabled and
-disabled, depending on user settings, and routing will vary depending on which
-mic is in use at the time? For the levelling is it not plausible that a user
-could configure the level based on their current environment. You have
-moderately loud background noise, then your threshold would want to be
-higher, but in a quiet environment the likelihood is you would want to lower
-that threshold?
+> +
+> +- reg:		Contain the mailbox register address range.
+
+s/Contain/Contains/
+
+> +
+> +- interrupts:	7 interrupts must start from 0 to 6, interrupt 0 define the
+> +		the interrupt for mailbox channel 0 and interrupt 1 for
+> +		mailbox channel 1 and so likewise for the reminder.
+
+s/start/be/
+
+> +
+> +- #mbox-cells:	only one to specify the mailbox channel number.
+> +
+> +Example:
+> +
+> +Mailbox Node:
+> +		slimpro-mbox: slimpro-mbox@10540000 {
+> +			compatible = "apm,xgene-slimpro-mbox";
+> +			reg = <0x0 0x10540000 0x0 0xa000>;
+> +			#mbox-cells = <1>;
+> +			interrupts =  	<0x0 0x0 0x4>,
+> +					<0x0 0x1 0x4>,
+> +					<0x0 0x2 0x4>,
+> +					<0x0 0x3 0x4>,
+> +					<0x0 0x4 0x4>,
+> +					<0x0 0x5 0x4>,
+> +					<0x0 0x6 0x4>,
+> +		};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
