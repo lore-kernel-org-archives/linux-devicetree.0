@@ -1,66 +1,76 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA channel
+Subject: Re: [PATCH V3 2/4] dma: add Qualcomm Technologies HIDMA management
  driver
-Date: Mon, 9 Nov 2015 23:44:42 -0500
-Message-ID: <5641763A.1060505@codeaurora.org>
+Date: Mon, 9 Nov 2015 23:57:31 -0500
+Message-ID: <5641793B.6050902@codeaurora.org>
 References: <1446958380-23298-1-git-send-email-okaya@codeaurora.org>
- <1446958380-23298-5-git-send-email-okaya@codeaurora.org>
- <20151109181924.GA5205@rob-hp-laptop>
+ <1446958380-23298-3-git-send-email-okaya@codeaurora.org>
+ <563ED8DF.6090307@codeaurora.org> <56400230.8030303@codeaurora.org>
+ <20151109182514.GA10896@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151109181924.GA5205@rob-hp-laptop>
+In-Reply-To: <20151109182514.GA10896@rob-hp-laptop>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Timur Tabi <timur@codeaurora.org>, dmaengine@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/9/2015 1:19 PM, Rob Herring wrote:
-> On Sat, Nov 07, 2015 at 11:53:00PM -0500, Sinan Kaya wrote:
->> This patch adds support for hidma engine. The driver
->> consists of two logical blocks. The DMA engine interface
->> and the low-level interface. The hardware only supports
->> memcpy/memset and this driver only support memcpy
->> interface. HW and driver doesn't support slave interface.
+On 11/9/2015 1:25 PM, Rob Herring wrote:
+> On Sun, Nov 08, 2015 at 09:17:20PM -0500, Sinan Kaya wrote:
+>> On 11/8/2015 12:08 AM, Timur Tabi wrote:
 >>
->> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
->> ---
->>   .../devicetree/bindings/dma/qcom_hidma.txt         |  18 +
->>   drivers/dma/qcom/Kconfig                           |   9 +
->>   drivers/dma/qcom/Makefile                          |   2 +
->>   drivers/dma/qcom/hidma.c                           | 743 ++++++++++++++++
->>   drivers/dma/qcom/hidma.h                           | 157 ++++
->>   drivers/dma/qcom/hidma_dbg.c                       | 225 +++++
->>   drivers/dma/qcom/hidma_ll.c                        | 944 +++++++++++++++++++++
->>   7 files changed, 2098 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma.txt
->>   create mode 100644 drivers/dma/qcom/hidma.c
->>   create mode 100644 drivers/dma/qcom/hidma.h
->>   create mode 100644 drivers/dma/qcom/hidma_dbg.c
->>   create mode 100644 drivers/dma/qcom/hidma_ll.c
+>> On 11/8/2015 12:08 AM, Timur Tabi wrote:
+>>> Sinan Kaya wrote:
+>>>> +    val = val & ~(MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS);
+>>>> +    val = val | (mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS);
+>>>> +    val = val & ~(MAX_BUS_REQ_LEN_MASK);
+>>>> +    val = val | (mgmtdev->max_read_request);
+>>>
+>>> val &= ~MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS;
+>>> val |= mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS;
+>>> val &= ~MAX_BUS_REQ_LEN_MASK;
+>>> val |= mgmtdev->max_read_request;
+>>>
+>>>> +static const struct of_device_id hidma_mgmt_match[] = {
+>>>> +    { .compatible = "qcom,hidma-mgmt", },
+>>>> +    { .compatible = "qcom,hidma-mgmt-1.0", },
+>>>> +    { .compatible = "qcom,hidma-mgmt-1.1", },
+>>>> +    {},
+>>>> +};
+>>>
+>>> I thought Rob said that he did NOT want to use version numbers in
+>>> compatible strings.  And what's the difference between these three
+>>> versions anyway?
+>>>
 >>
->> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma.txt b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
->> new file mode 100644
->> index 0000000..c9fb2d44
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma.txt
->> @@ -0,0 +1,18 @@
->> +Qualcomm Technologies HIDMA Channel driver
->> +
->> +Required properties:
->> +- compatible: must contain "qcom,hidma"
+>> This was already discussed here.
+>>
+>> https://lkml.org/lkml/2015/11/2/689
+>>
+>> The agreement was to use
 >
-> This should be "qcom,hidma-1.0" to match the example and driver. I
-> would drop "qcom,hidma" altogether.
-
-I matched it.
-
+> The suggestion...
+>
+>> compatible = "qcom,hidma-mgmt-1.1", "qcom,hidma-mgmt-1.0",
+>> "qcom,hidma-mgmt";
+>
+> I don't really want to see 3 generic-ish strings.
+>
+>> I'll be adding code for v1.1 specifically in the future.
+>
+> Please drop "qcom,hidma-mgmt" altogether. It is already meaningless.
+> Then add the 1.1 compatible when you add the code for it. Hopefully you
+> all can decide on part number(s) by then.
 >
 > Rob
 >
+
+OK. I'll only have "qcom,hidma-mgmt-1.0" for now.
+
 
 -- 
 Sinan Kaya
