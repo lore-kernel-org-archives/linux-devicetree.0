@@ -1,78 +1,69 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
 Subject: Re: [PATCH v2] of: Check for overlap in reserved memory regions
-Date: Tue, 10 Nov 2015 15:29:44 +1100
-Message-ID: <1447129784.13889.25.camel@ellerman.id.au>
+Date: Mon, 9 Nov 2015 22:41:58 -0600
+Message-ID: <CAL_JsqLAxTF6DgwHNN94iQyds-rmchKS4Tx+8U7sSbAvGHMg9Q@mail.gmail.com>
 References: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
+ <1447129784.13889.25.camel@ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442367036-15205-1-git-send-email-mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1447129784.13889.25.camel@ellerman.id.au>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mitchel Humpherys <mitchelh@codeaurora.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-15 at 18:30 -0700, Mitchel Humpherys wrote:
-
-> Any overlap in the reserved memory regions (those specified in the
-> reserved-memory DT node) is a bug.  These bugs might go undetected as
-> long as the contested region isn't used simultaneously by multiple
-> software agents, which makes such bugs hard to debug.  Fix this by
-> printing a scary warning during boot if overlap is detected.
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 726ebe792813..62f467b8ccae 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -197,12 +198,52 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
->  	return -ENOENT;
->  }
->  
-> +static int __init __rmem_cmp(const void *a, const void *b)
-> +{
-> +	const struct reserved_mem *ra = a, *rb = b;
-> +
-> +	return ra->base - rb->base;
-> +}
-> +
-> +static void __init __rmem_check_for_overlap(void)
-> +{
-> +	int i;
-> +
-> +	if (reserved_mem_count < 2)
-> +		return;
-> +
-> +	sort(reserved_mem, reserved_mem_count, sizeof(reserved_mem[0]),
-> +	     __rmem_cmp, NULL);
-> +	for (i = 0; i < reserved_mem_count - 1; i++) {
-> +		struct reserved_mem *this, *next;
-> +
-> +		this = &reserved_mem[i];
-> +		next = &reserved_mem[i + 1];
-> +		if (!(this->base && next->base))
-> +			continue;
-> +		if (this->base + this->size > next->base) {
-> +			phys_addr_t this_end, next_end;
-> +
-> +			this_end = this->base + this->size;
-> +			next_end = next->base + next->size;
-> +			WARN(1,
-> +			     "Reserved memory: OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
-> +			     this->name, &this->base, &this_end,
-> +			     next->name, &next->base, &next_end);
-
-This is blowing up on some powerpc machines.
-
-It's too early in boot to call WARN() on these systems.
-
-Can we turn it into a pr_err() for now?
-
-I'll send a patch?
-
-cheers
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBOb3YgOSwgMjAxNSBhdCAxMDoyOSBQTSwgTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVs
+bGVybWFuLmlkLmF1PiB3cm90ZToKPiBPbiBUdWUsIDIwMTUtMDktMTUgYXQgMTg6MzAgLTA3MDAs
+IE1pdGNoZWwgSHVtcGhlcnlzIHdyb3RlOgo+Cj4+IEFueSBvdmVybGFwIGluIHRoZSByZXNlcnZl
+ZCBtZW1vcnkgcmVnaW9ucyAodGhvc2Ugc3BlY2lmaWVkIGluIHRoZQo+PiByZXNlcnZlZC1tZW1v
+cnkgRFQgbm9kZSkgaXMgYSBidWcuICBUaGVzZSBidWdzIG1pZ2h0IGdvIHVuZGV0ZWN0ZWQgYXMK
+Pj4gbG9uZyBhcyB0aGUgY29udGVzdGVkIHJlZ2lvbiBpc24ndCB1c2VkIHNpbXVsdGFuZW91c2x5
+IGJ5IG11bHRpcGxlCj4+IHNvZnR3YXJlIGFnZW50cywgd2hpY2ggbWFrZXMgc3VjaCBidWdzIGhh
+cmQgdG8gZGVidWcuICBGaXggdGhpcyBieQo+PiBwcmludGluZyBhIHNjYXJ5IHdhcm5pbmcgZHVy
+aW5nIGJvb3QgaWYgb3ZlcmxhcCBpcyBkZXRlY3RlZC4KPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVtLmMgYi9kcml2ZXJzL29mL29mX3Jlc2VydmVkX21lbS5jCj4+
+IGluZGV4IDcyNmViZTc5MjgxMy4uNjJmNDY3YjhjY2FlIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJz
+L29mL29mX3Jlc2VydmVkX21lbS5jCj4+ICsrKyBiL2RyaXZlcnMvb2Yvb2ZfcmVzZXJ2ZWRfbWVt
+LmMKPj4gQEAgLTE5NywxMiArMTk4LDUyIEBAIHN0YXRpYyBpbnQgX19pbml0IF9fcmVzZXJ2ZWRf
+bWVtX2luaXRfbm9kZShzdHJ1Y3QgcmVzZXJ2ZWRfbWVtICpybWVtKQo+PiAgICAgICByZXR1cm4g
+LUVOT0VOVDsKPj4gIH0KPj4KPj4gK3N0YXRpYyBpbnQgX19pbml0IF9fcm1lbV9jbXAoY29uc3Qg
+dm9pZCAqYSwgY29uc3Qgdm9pZCAqYikKPj4gK3sKPj4gKyAgICAgY29uc3Qgc3RydWN0IHJlc2Vy
+dmVkX21lbSAqcmEgPSBhLCAqcmIgPSBiOwo+PiArCj4+ICsgICAgIHJldHVybiByYS0+YmFzZSAt
+IHJiLT5iYXNlOwo+PiArfQo+PiArCj4+ICtzdGF0aWMgdm9pZCBfX2luaXQgX19ybWVtX2NoZWNr
+X2Zvcl9vdmVybGFwKHZvaWQpCj4+ICt7Cj4+ICsgICAgIGludCBpOwo+PiArCj4+ICsgICAgIGlm
+IChyZXNlcnZlZF9tZW1fY291bnQgPCAyKQo+PiArICAgICAgICAgICAgIHJldHVybjsKPj4gKwo+
+PiArICAgICBzb3J0KHJlc2VydmVkX21lbSwgcmVzZXJ2ZWRfbWVtX2NvdW50LCBzaXplb2YocmVz
+ZXJ2ZWRfbWVtWzBdKSwKPj4gKyAgICAgICAgICBfX3JtZW1fY21wLCBOVUxMKTsKPj4gKyAgICAg
+Zm9yIChpID0gMDsgaSA8IHJlc2VydmVkX21lbV9jb3VudCAtIDE7IGkrKykgewo+PiArICAgICAg
+ICAgICAgIHN0cnVjdCByZXNlcnZlZF9tZW0gKnRoaXMsICpuZXh0Owo+PiArCj4+ICsgICAgICAg
+ICAgICAgdGhpcyA9ICZyZXNlcnZlZF9tZW1baV07Cj4+ICsgICAgICAgICAgICAgbmV4dCA9ICZy
+ZXNlcnZlZF9tZW1baSArIDFdOwo+PiArICAgICAgICAgICAgIGlmICghKHRoaXMtPmJhc2UgJiYg
+bmV4dC0+YmFzZSkpCj4+ICsgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPj4gKyAgICAg
+ICAgICAgICBpZiAodGhpcy0+YmFzZSArIHRoaXMtPnNpemUgPiBuZXh0LT5iYXNlKSB7Cj4+ICsg
+ICAgICAgICAgICAgICAgICAgICBwaHlzX2FkZHJfdCB0aGlzX2VuZCwgbmV4dF9lbmQ7Cj4+ICsK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHRoaXNfZW5kID0gdGhpcy0+YmFzZSArIHRoaXMtPnNp
+emU7Cj4+ICsgICAgICAgICAgICAgICAgICAgICBuZXh0X2VuZCA9IG5leHQtPmJhc2UgKyBuZXh0
+LT5zaXplOwo+PiArICAgICAgICAgICAgICAgICAgICAgV0FSTigxLAo+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAiUmVzZXJ2ZWQgbWVtb3J5OiBPVkVSTEFQIERFVEVDVEVEIVxuJXMgKCVw
+YS0tJXBhKSBvdmVybGFwcyB3aXRoICVzICglcGEtLSVwYSlcbiIsCj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHRoaXMtPm5hbWUsICZ0aGlzLT5iYXNlLCAmdGhpc19lbmQsCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgIG5leHQtPm5hbWUsICZuZXh0LT5iYXNlLCAmbmV4dF9lbmQp
+Owo+Cj4gVGhpcyBpcyBibG93aW5nIHVwIG9uIHNvbWUgcG93ZXJwYyBtYWNoaW5lcy4KPgo+IEl0
+J3MgdG9vIGVhcmx5IGluIGJvb3QgdG8gY2FsbCBXQVJOKCkgb24gdGhlc2Ugc3lzdGVtcy4KCkkg
+ZGlkbid0IHJlYWxpemUgV0FSTiBjb3VsZCBub3QgYmUgdXNlZCBlYXJseS4gR29vZCB0byBrbm93
+LgoKPiBDYW4gd2UgdHVybiBpdCBpbnRvIGEgcHJfZXJyKCkgZm9yIG5vdz8KClNvdW5kcyBmaW5l
+LgoKPiBJJ2xsIHNlbmQgYSBwYXRjaD8KCkdyZWF0LgoKUm9iCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
+bmZvL2xpbnV4cHBjLWRldg==
