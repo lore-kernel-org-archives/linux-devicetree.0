@@ -1,93 +1,104 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RESEND 16/16] regulator: add LM363X driver
-Date: Tue, 10 Nov 2015 16:54:27 +0900
-Message-ID: <5641A2B3.20808@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-17-git-send-email-milo.kim@ti.com>
- <20151104135911.GC1717@sirena.org.uk>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 12/13] [media] omap3isp: Support for deferred probing when
+ requesting DMA channel
+Date: Tue, 10 Nov 2015 09:56:17 +0200
+Message-ID: <5641A321.2070209@ti.com>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+ <1432646768-12532-13-git-send-email-peter.ujfalusi@ti.com>
+ <11319647.puY9n5DpsR@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151104135911.GC1717-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11319647.puY9n5DpsR@avalon>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
-On 11/4/2015 10:59 PM, Mark Brown wrote:
-> On Mon, Nov 02, 2015 at 02:24:35PM +0900, Milo Kim wrote:
->
-> This looks mostly good, just a few fairly small things:
->
->> +lm363x_regulator_of_get_init_data(struct device *dev,
->> +			struct lm363x_regulator *lm363x_regulator, int id)
->> +{
->> +	struct device_node *np = dev->of_node;
->> +	int count;
+On 11/09/2015 09:50 PM, Laurent Pinchart wrote:
+> Hi Peter,
+>=20
+> Thank you for the patch.
+>=20
+> What happened to this patch series ? It looks like=20
+> dma_request_slave_channel_compat_reason() isn't in mainline, so I can=
+'t apply=20
+> this patch.
+>=20
+> I'll mark this patch as deferred in patchwork, please resubmit it if =
+you=20
+> resubmit the series
+
+The original series - containing this patch - generated a bit of discus=
+sion
+and it seams that I will need to do bigger change in the dmaengine API
+compared to this.
+I think this patch can be dropped as the dmaengine changes will not go =
+in as
+they were.
+
+(and by the look of it the issue you're trying to fix
+> still exists, so it would be nice if you could get it eventually fixe=
+d).
+
+Yes, the issue still valid for the OMAP/DaVinci driver the series was t=
+ouching.
+
+I will try to send a new series in the coming weeks.
+
+Thanks,
+P=E9ter
+>=20
+> On Tuesday 26 May 2015 16:26:07 Peter Ujfalusi wrote:
+>> Switch to use ma_request_slave_channel_compat_reason() to request th=
+e DMA
+>> channel. Only fall back to pio mode if the error code returned is no=
+t
+>> -EPROBE_DEFER, otherwise return from the probe with the -EPROBE_DEFE=
+R.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+>> CC: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> CC: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>> ---
+>>  drivers/media/platform/omap3isp/isphist.c | 12 +++++++++---
+>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/omap3isp/isphist.c
+>> b/drivers/media/platform/omap3isp/isphist.c index
+>> 7138b043a4aa..e690ca13af0e 100644
+>> --- a/drivers/media/platform/omap3isp/isphist.c
+>> +++ b/drivers/media/platform/omap3isp/isphist.c
+>> @@ -499,14 +499,20 @@ int omap3isp_hist_init(struct isp_device *isp)
+>>  		if (res)
+>>  			sig =3D res->start;
+>>
+>> -		hist->dma_ch =3D dma_request_slave_channel_compat(mask,
+>> +		hist->dma_ch =3D dma_request_slave_channel_compat_reason(mask,
+>>  				omap_dma_filter_fn, &sig, isp->dev, "hist");
+>> -		if (!hist->dma_ch)
+>> +		if (IS_ERR(hist->dma_ch)) {
+>> +			ret =3D PTR_ERR(hist->dma_ch);
+>> +			if (ret =3D=3D -EPROBE_DEFER)
+>> +				return ret;
 >> +
->> +	count = of_regulator_match(dev, np, &lm363x_regulator_matches[id], 1);
->> +	if (count <= 0)
->> +		return ERR_PTR(-ENODEV);
->> +
->> +	return lm363x_regulator_matches[id].init_data;
->> +}
->
-> Don't open code DT matching, use of_match in the regulator_desc and let
-> the core do it for you.
+>> +			hist->dma_ch =3D NULL;
+>>  			dev_warn(isp->dev,
+>>  				 "hist: DMA channel request failed, using PIO\n");
+>> -		else
+>> +		} else {
+>>  			dev_dbg(isp->dev, "hist: using DMA channel %s\n",
+>>  				dma_chan_name(hist->dma_ch));
+>> +		}
+>>  	}
+>>
+>>  	hist->ops =3D &hist_ops;
+>=20
 
-OK, good.
-I've also found wrong pointer reference of regulator_cfg.dev. It should 
-be pdev->dev instead of pdev->dev->parent.
-
--	cfg.dev = dev->parent;
-+	cfg.dev = dev;
-
-Old code affects wrong parsing from the DT. So, registered regulator has 
-different operation mask. In the end, regulators which has zero use 
-count never gonna be disabled in regulator_init_compelete().
-
->
->> +	/*
->> +	 * Check LCM_EN1/2_GPIO is configured.
->> +	 * Those pins are used for enabling VPOS/VNEG LDOs.
->> +	 */
->> +	if (id == LM3632_LDO_POS)
->> +		gpio = of_get_named_gpio(np, "ti,lcm-en1-gpio", 0);
->> +	else if (id == LM3632_LDO_NEG)
->> +		gpio = of_get_named_gpio(np, "ti,lcm-en2-gpio", 0);
->
-> This looks like it should be a switch statement.
-
-Yep!
-
->
->> +	rdev = regulator_register(&lm363x_regulator_desc[id], &cfg);
->> +	if (IS_ERR(rdev)) {
->
-> Use devm_regulator_register().
-
-OK.
-
->
->> +static const struct of_device_id lm363x_regulator_of_match[] = {
->> +	{ .compatible = "ti,lm363x-regulator" },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, lm363x_regulator_of_match);
->
-> You shouldn't need a compatible string for a device like this, the MFD
-> should just register a platform device based on the compatible string
-> for the MFD.
->
-
-Thanks for catching this.
-Let me apply all your comments in the next patch.
-
-Best regards,
-Milo
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
