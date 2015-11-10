@@ -1,196 +1,95 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v3 2/5] spi: spi-ti-qspi: add mmap mode read support
-Date: Tue, 10 Nov 2015 10:59:56 +0530
-Message-ID: <1447133399-25658-3-git-send-email-vigneshr@ti.com>
-References: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Tue, 10 Nov 2015 14:11:07 +0800
+Message-ID: <1447135867.14454.9.camel@mtksdaap41>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	 <1445843717.23888.1.camel@mtksdaap41>
+	 <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	 <1445859610.26723.4.camel@mtksdaap41>
+	 <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ti-qspi controller provides mmap port to read data from SPI flashes.
-mmap port is enabled in QSPI_SPI_SWITCH_REG. ctrl module register may
-also need to be accessed for some SoCs. The QSPI_SPI_SETUP_REGx needs to
-be populated with flash specific information like read opcode, read
-mode(quad, dual, normal), address width and dummy bytes. Once,
-controller is in mmap mode, the whole flash memory is available as a
-memory region at SoC specific address. This region can be accessed using
-normal memcpy() (or mem-to-mem dma copy). The ti-qspi controller hardware
-will internally communicate with SPI flash over SPI bus and get the
-requested data.
+On Mon, 2015-11-09 at 09:59 -0800, Kevin Hilman wrote:
+> On Mon, Oct 26, 2015 at 4:40 AM, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi Kevin,
+> >
+> > On Mon, 2015-10-26 at 17:06 +0900, Kevin Hilman wrote:
+> >> On Mon, Oct 26, 2015 at 4:15 PM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > On Mon, 2015-10-26 at 09:56 +0900, Kevin Hilman wrote:
+> >> >> Hello,
+> >> >>
+> >> >> On Sat, Oct 3, 2015 at 12:19 AM, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >> > Add arch timer node to enable arch-timer support. MT8135 firmware
+> >> >> > doesn't correctly setup arch-timer frequency and CNTVOFF, add
+> >> >> > properties to workaround this.
+> >> >> >
+> >> >> > This also set cpu enable-method to enable SMP.
+> >> >> >
+> >> >> > Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> >>
+> >> >> kernelci.org started detecting new boot failures for the mt8135-evb in
+> >> >> the arm-soc tree[1], and the boot failures were bisected down to this
+> >> >> patch, which landed upstream in the form of commit d186a394bb98 (ARM:
+> >> >> dts: mt8135: enable basic SMP bringup for mt8135)
+> >> >>
+> >> >> Maybe this new SMP support requires updating the firmware on the board
+> >> >> as well?  If so, the changelog should've been a bit more explicit
+> >> >> about firmware dependencies.
+> >> >
+> >> > Kevin,
+> >> >
+> >> > Thanks for testing.
+> >> >
+> >> > No, it doesn't need new firmware. Will test to see what's going wrong.
+> >>
+> >> Thanks for following up.  I'll be glad to test any patches if you have
+> >> anything you'd like me to test.
+> >
+> > You need "clockevents/drivers/mtk: Fix spurious interrupt leading to
+> > crash" (https://lkml.org/lkml/2015/8/24/803)
+> >
+> > Daniel Lezcano already applied this patch in his tree for 4.4.
+> > (https://git.linaro.org/people/daniel.lezcano/linux.git)
+> 
+> The mt8135-evp board is still failing to boot in linux-next[1] (and
+> has been since next-20151022.)  It appears the dependencies are not
+> quite correct in linux-next either.
+> 
+> Kevin
+> 
+> [1]
+> http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151109/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=564037fe59b514b2f6091909
 
-Implement spi_mtd_mmap_read() callback to support mmap read over SPI
-flash devices. With this, the read throughput increases from ~100kB/s to
-~2.5 MB/s.
+Hi Kevin,
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
+I check the log [0], it seems first time mt8135-evbp1 boot to kernel
+shell successfully, then boot again. In the second time, mt8135 stay in
+fastboot mode, waiting host send boot image, then timeout.
 
-v3:
- * optimize enable/disable of mmap mode
+I download zImage and dtb in [1], and kernel run to shell successfully
+on my platform.
 
- drivers/spi/spi-ti-qspi.c | 99 +++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 95 insertions(+), 4 deletions(-)
+I don't know whether this issue caused by test environment or not.
 
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 64318fcfacf2..295c11f48440 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -56,6 +56,7 @@ struct ti_qspi {
- 	u32 dc;
- 
- 	bool ctrl_mod;
-+	bool mmap_enabled;
- };
- 
- #define QSPI_PID			(0x0)
-@@ -65,11 +66,8 @@ struct ti_qspi {
- #define QSPI_SPI_CMD_REG		(0x48)
- #define QSPI_SPI_STATUS_REG		(0x4c)
- #define QSPI_SPI_DATA_REG		(0x50)
--#define QSPI_SPI_SETUP0_REG		(0x54)
-+#define QSPI_SPI_SETUP_REG(n)		((0x54 + 4 * n))
- #define QSPI_SPI_SWITCH_REG		(0x64)
--#define QSPI_SPI_SETUP1_REG		(0x58)
--#define QSPI_SPI_SETUP2_REG		(0x5c)
--#define QSPI_SPI_SETUP3_REG		(0x60)
- #define QSPI_SPI_DATA_REG_1		(0x68)
- #define QSPI_SPI_DATA_REG_2		(0x6c)
- #define QSPI_SPI_DATA_REG_3		(0x70)
-@@ -109,6 +107,16 @@ struct ti_qspi {
- 
- #define QSPI_AUTOSUSPEND_TIMEOUT         2000
- 
-+#define MEM_CS_EN(n)			((n + 1) << 8)
-+
-+#define MM_SWITCH			0x1
-+
-+#define QSPI_SETUP_RD_NORMAL		(0x0 << 12)
-+#define QSPI_SETUP_RD_DUAL		(0x1 << 12)
-+#define QSPI_SETUP_RD_QUAD		(0x3 << 12)
-+#define QSPI_SETUP_ADDR_SHIFT		8
-+#define QSPI_SETUP_DUMMY_SHIFT		10
-+
- static inline unsigned long ti_qspi_read(struct ti_qspi *qspi,
- 		unsigned long reg)
- {
-@@ -366,6 +374,84 @@ static int qspi_transfer_msg(struct ti_qspi *qspi, struct spi_transfer *t)
- 	return 0;
- }
- 
-+static void ti_qspi_enable_memory_map(struct spi_device *spi)
-+{
-+	struct ti_qspi  *qspi = spi_master_get_devdata(spi->master);
-+	u32 val;
-+
-+	ti_qspi_write(qspi, MM_SWITCH, QSPI_SPI_SWITCH_REG);
-+	if (qspi->ctrl_mod) {
-+		val = readl(qspi->ctrl_base);
-+		val |= MEM_CS_EN(spi->chip_select);
-+		writel(val, qspi->ctrl_base);
-+		/* dummy readl to ensure bus sync */
-+		readl(qspi->ctrl_base);
-+	}
-+	qspi->mmap_enabled = true;
-+}
-+
-+static void ti_qspi_disable_memory_map(struct spi_device *spi)
-+{
-+	struct ti_qspi  *qspi = spi_master_get_devdata(spi->master);
-+	u32 val;
-+
-+	ti_qspi_write(qspi, 0, QSPI_SPI_SWITCH_REG);
-+	if (qspi->ctrl_mod) {
-+		val = readl(qspi->ctrl_base);
-+		val &= ~MEM_CS_EN(spi->chip_select);
-+		writel(val, qspi->ctrl_base);
-+	}
-+	qspi->mmap_enabled = false;
-+}
-+
-+static void ti_qspi_setup_mmap_read(struct spi_device *spi,
-+				    u8 read_opcode, u8 addr_width,
-+				    u8 dummy_bytes)
-+{
-+	struct ti_qspi  *qspi = spi_master_get_devdata(spi->master);
-+	u32 mode = spi->mode & (SPI_RX_DUAL | SPI_RX_QUAD);
-+	u32 memval = read_opcode;
-+
-+	switch (mode) {
-+	case SPI_RX_QUAD:
-+		memval |= QSPI_SETUP_RD_QUAD;
-+		break;
-+	case SPI_RX_DUAL:
-+		memval |= QSPI_SETUP_RD_DUAL;
-+		break;
-+	default:
-+		memval |= QSPI_SETUP_RD_NORMAL;
-+		break;
-+	}
-+	memval |= ((addr_width - 1) << QSPI_SETUP_ADDR_SHIFT |
-+		   dummy_bytes << QSPI_SETUP_DUMMY_SHIFT);
-+	ti_qspi_write(qspi, memval,
-+		      QSPI_SPI_SETUP_REG(spi->chip_select));
-+}
-+
-+static int ti_qspi_spi_mtd_mmap_read(struct  spi_device *spi,
-+				     loff_t from, size_t len,
-+				     size_t *retlen, u_char *buf,
-+				     u8 read_opcode, u8 addr_width,
-+				     u8 dummy_bytes)
-+{
-+	struct ti_qspi *qspi = spi_master_get_devdata(spi->master);
-+	int ret = 0;
-+
-+	mutex_lock(&qspi->list_lock);
-+
-+	if (!qspi->mmap_enabled)
-+		ti_qspi_enable_memory_map(spi);
-+	ti_qspi_setup_mmap_read(spi, read_opcode, addr_width,
-+				dummy_bytes);
-+	memcpy_fromio(buf, qspi->mmap_base + from, len);
-+	*retlen = len;
-+
-+	mutex_unlock(&qspi->list_lock);
-+
-+	return ret;
-+}
-+
- static int ti_qspi_start_transfer_one(struct spi_master *master,
- 		struct spi_message *m)
- {
-@@ -398,6 +484,9 @@ static int ti_qspi_start_transfer_one(struct spi_master *master,
- 
- 	mutex_lock(&qspi->list_lock);
- 
-+	if (qspi->mmap_enabled)
-+		ti_qspi_disable_memory_map(spi);
-+
- 	list_for_each_entry(t, &m->transfers, transfer_list) {
- 		qspi->cmd |= QSPI_WLEN(t->bits_per_word);
- 
-@@ -526,7 +615,9 @@ static int ti_qspi_probe(struct platform_device *pdev)
- 			ret = PTR_ERR(qspi->mmap_base);
- 			goto free_master;
- 		}
-+		master->spi_mtd_mmap_read = ti_qspi_spi_mtd_mmap_read;
- 	}
-+	qspi->mmap_enabled = false;
- 
- 	qspi->fclk = devm_clk_get(&pdev->dev, "fck");
- 	if (IS_ERR(qspi->fclk)) {
--- 
-2.6.3
+[0]
+http://storage.kernelci.org/next/next-20151109/arm-multi_v7_defconfig/lab-khilman/boot-mt8135-evbp1.txt
+[1]
+http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151109/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=564037fe59b514b2f6091909#bisect-content
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
