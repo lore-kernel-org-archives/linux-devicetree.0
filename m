@@ -1,28 +1,41 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] mtd: ofpart: document the lock flag.
-Date: Tue, 10 Nov 2015 10:03:49 -0800
-Message-ID: <20151110180349.GO12143@google.com>
-References: <1446237240-10695-1-git-send-email-computersforpeace@gmail.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 08/10] ARM: dts: imx: Update vendor info for GE Bx50v3
+ boards
+Date: Tue, 10 Nov 2015 13:10:16 -0500
+Message-ID: <56423308.503@timesys.com>
+References: <1446747224-32514-1-git-send-email-akshay.bhat@timesys.com>
+ <1446747224-32514-9-git-send-email-akshay.bhat@timesys.com>
+ <1447154351.3142.15.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1446237240-10695-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1447154351.3142.15.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, peter.stretz-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 01:34:00PM -0700, Brian Norris wrote:
-> From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The lock flag of ofpart is undocumented. Add to binding doc.
-> 
-> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Pushed to l2-mtd.git
+
+On 11/10/2015 06:19 AM, Lucas Stach wrote:
+> Am Donnerstag, den 05.11.2015, 13:13 -0500 schrieb Akshay Bhat:
+>> Update vendor and copyright info for GE Bx50v3 boards
+>>
+>> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+>
+> This one and the following patches should be folded into the patches
+> introducing the files being patched here. They fix the original patches
+> and it makes no sense to merge patches with slightly wrong DTs, just to
+> immediately following up with patches to fix things.
+>
+> Regards,
+> Lucas
+>
+
+Fixed in v3.
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/384202.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
