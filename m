@@ -1,55 +1,108 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
-Date: Tue, 10 Nov 2015 14:24:13 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D460CED5@SW-EX-MBX01.diasemi.com>
-References: <20151105152736.GO18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CA0C@SW-EX-MBX01.diasemi.com>
- <20151106112141.GE18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
- <20151106115451.GG18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
- <20151108103429.GC6746@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
- <20151109140225.GA26072@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CEA5@SW-EX-MBX01.diasemi.com>
- <20151110141513.GF12392@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Documentation: dt: Add bindings for Secure-only devices
+Date: Tue, 10 Nov 2015 08:51:46 -0600
+Message-ID: <20151110145146.GA1551@rob-hp-laptop>
+References: <1446127303-5082-1-git-send-email-peter.maydell@linaro.org>
+ <CAL_JsqJz+w2SYEBLVGdZNS6J1tmt5VWV0q1G_Z2rgFfch6J=2A@mail.gmail.com>
+ <CAFEAcA8qgFFhrmXePtO_xQx=YEHK8dSA-1SacR5NsQWSNTwj-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151110141513.GF12392@sirena.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAFEAcA8qgFFhrmXePtO_xQx=YEHK8dSA-1SacR5NsQWSNTwj-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Peter Maydell <peter.maydell@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTm92ZW1iZXIgMTAsIDIwMTUgMTQ6MTUsIE1hcmsgQnJvd24gd3JvdGU6DQoNCj4gPiA+IFRo
-ZSBnZW5lcmFsIHVzZXJzcGFjZSBleHBlY3RhdGlvbiBpcyB0aGF0IHRoZSBkZXRlY3Rpb24gaXMg
-YWx3YXlzIGFjdGl2ZQ0KPiA+ID4gYW5kIGNvbnNpc3RlbnQgcmF0aGVyIHRoYW4gdmFyeWluZyBh
-dCBydW50aW1lIC0gcnVudGltZSB2YXJpYWJpbGl0eQ0KPiA+ID4gbWlnaHQgYmUgYSBiaXQgc3Vy
-cHJpc2luZyBmb3IgaXQsIGFuZCBldmVuIHRoZW4gdmFyaWFiaWxpdHkgaW4gd2hhdCBpcw0KPiA+
-ID4gZGV0ZWN0ZWQgYmFzZWQgb24gb3RoZXIgc2V0dGluZ3MgaXMgYSBiaXQgc3VycHJpc2luZy4g
-IElmIHRoZSBoYXJkd2FyZQ0KPiA+ID4gaXMgdGhhdCBsaW1pdGVkIEkgZ3Vlc3MgaXQncyBhYm91
-dCBhbGwgdGhhdCBjYW4gYmUgZG9uZSBidXQgSSdtIHN0aWxsDQo+ID4gPiBub3QgY2xlYXIgd2hh
-dCB0aGUgdXNlIGNhc2VzIGFyZSBmb3IgY29uZmlndXJpbmcgdGhlIGxldmVscyAoYXMgb3Bwb3Nl
-ZA0KPiA+ID4gb3QgdGhlIHJvdXRpbmcpLg0KPiANCj4gPiBIb3cgYWJvdXQgdGhlIGV4YW1wbGUg
-b2YgYWx3YXlzIG9uIHZvaWNlIGluIEFuZHJvaWQsIHdoaWNoIGNhbiBiZSBlbmFibGVkIGFuZA0K
-PiA+IGRpc2FibGVkLCBkZXBlbmRpbmcgb24gdXNlciBzZXR0aW5ncywgYW5kIHJvdXRpbmcgd2ls
-bCB2YXJ5IGRlcGVuZGluZyBvbiB3aGljaA0KPiA+IG1pYyBpcyBpbiB1c2UgYXQgdGhlIHRpbWU/
-IEZvciB0aGUgbGV2ZWxsaW5nIGlzIGl0IG5vdCBwbGF1c2libGUgdGhhdCBhIHVzZXINCj4gPiBj
-b3VsZCBjb25maWd1cmUgdGhlIGxldmVsIGJhc2VkIG9uIHRoZWlyIGN1cnJlbnQgZW52aXJvbm1l
-bnQuIFlvdSBoYXZlDQo+ID4gbW9kZXJhdGVseSBsb3VkIGJhY2tncm91bmQgbm9pc2UsIHRoZW4g
-eW91ciB0aHJlc2hvbGQgd291bGQgd2FudCB0byBiZQ0KPiA+IGhpZ2hlciwgYnV0IGluIGEgcXVp
-ZXQgZW52aXJvbm1lbnQgdGhlIGxpa2VsaWhvb2QgaXMgeW91IHdvdWxkIHdhbnQgdG8gbG93ZXIN
-Cj4gPiB0aGF0IHRocmVzaG9sZD8NCj4gDQo+IFNvIHRoaXMgKmlzbid0KiBhIG5vcm1hbCBtaWMg
-ZGV0ZWN0aW9uIGZlYXR1cmU/ICBXaGF0J3MgdGhlIHVzZXJzcGFjZQ0KPiBpbnRlcmZhY2UgZm9y
-IHJlcG9ydGluZyB0aGVuPw0KDQpCeSBtaWMgZGV0ZWN0aW9uIHlvdSB0aG91Z2h0IHRoaXMgd2Fz
-IHRvIGRldGVjdCBpZiBhIG1pYyB3YXMgcHJlc2VudCBvciBub3Q/DQpJdCdzIHRvIGRldGVjdCB0
-aGUgbm9pc2UgbGV2ZWwgb24gYSBtaWMgYW5kIHJhaXNlIGFuIGV2ZW50IGlmIHRoZSBjYXB0dXJl
-ZA0Kc291bmQgaXMgYWJvdmUgYSBzcGVjaWZpYyB0aHJlc2hvbGQgbGV2ZWwuIEFwb2xvZ2llcyBp
-ZiB0aGF0IHdhc24ndCBjbGVhci4NCg0KSW4gdGhlIGRyaXZlciBjb2RlIEknbSB1c2luZyBLRVlf
-Vk9JQ0VDT01NQU5ELCBhbmQgc2ltdWxhdGluZyBhIHByZXNzIGFuZA0KcmVsZWFzZSBvZiB0aGlz
-IGtleSwgdG8gaW5kaWNhdGUgdG8gdXNlci1zcGFjZS4gVGhpcyBzZWVtZWQgbGlrZSB0aGUgb2J2
-aW91cw0KY2hvaWNlIGZvciB0aGlzIGZlYXR1cmUgdG8gbWUsIGFsdGhvdWdoIEknZCBoYXBwaWx5
-IGdldCB5b3VyIG9waW5pb24gb24gdGhpcy4NCg==
+On Fri, Oct 30, 2015 at 08:07:34PM +0000, Peter Maydell wrote:
+> On 30 October 2015 at 18:28, Rob Herring <robh+dt@kernel.org> wrote:
+> > On Thu, Oct 29, 2015 at 9:01 AM, Peter Maydell <peter.maydell@linaro.org> wrote:
+> >> +Valid Secure world properties:
+> >> +
+> >> +- secure-status : specifies whether the device is present and usable
+> >> +  in the secure world. The combination of this with "status" allows
+> >> +  the various possible combinations of device visibility to be
+> >> +  specified:
+> >> +   status = "okay";                             // visible in S and NS
+> >
+> > I assume neither property present or both okay also mean the same.
+> >
+> > status = "okay"; secure-status = "okay";
+> >
+> > We should be explicit.
+> 
+> Yes; status defaults to "okay" (presumably this is listed in
+> the overal DT binding spec somewhere), and secure-status
+> defaults to "same as status, which might in turn be defaulted".
+> We can list the complete set of options (neither present,
+> both 'okay', status not present but secure-status present, etc),
+> though it gets a bit long-winded, especially if we later add
+> more secure- properties (they'd all have to have verbiage about
+> "if not present, same as non-prefixed property; if both not
+> present, both take the default the non-prefixed property takes
+> if it's not present; if prefixed property not present, it
+> defaults to same as non-prefixed property", which we already
+> say in the introductory section). Still, for just status it
+> would be easy enough to add a couple of lines:
+> 
+> +    status = "okay"; secure-status = "okay"; // ditto
+> +    secure-status = "okay";                  // ditto
+> +    // neither explicitly defined: ditto
+> 
+> (Do you want the full set of 9 options you get from multiplying
+> out "okay" vs "disabled" vs not-set for each property?)
+
+Better to err on completeness. The inheritance is easily missed.
+
+Also, one nit. Use C style comments so when people copy-n-paste this it 
+is the correct style.
+
+> 
+> >> +   status = "disabled"; secure-status = "okay"; // S-only
+> >> +   status = "okay"; secure-status = "disabled"; // NS-only
+> >
+> > In HKG when we discussed this, 'status = "secure"' was the proposal.
+> > That would be simpler:
+> >
+> > S world can use "okay" or "secure"
+> > NS world can use "okay" or no property.
+> >
+> > That leaves out the case of disabled in S and enabled for NS. We could
+> > want that for s/w reasons, but can we have h/w like that?
+> 
+> It's perfectly possible to design hardware like that (though
+> I can't think of a reason to do so offhand). I think it's the desire
+> to be able to describe all the possible valid h/w combinations
+> that brought us to this secure- prefix design. Plus it
+> extends nicely to cover other possibilities as we need it;
+> for instance "device A is at S-0x10000 but NS-0x20000" can be
+> done by specifying a device like:
+>    status = "okay";
+>    secure-status = "okay";
+>    reg = < 0x20000 0x1000 >;
+>    secure-regs = < 0x10000 0x1000 >;
+> (apologies if I've messed the syntax up there).
+> 
+> Just going for 'status=secure' would deal with the immediate
+> requirement, but my preference is for a description that
+> lets us describe all the possible configurations, not just
+> the ones we think are common, and secure-* is a neat way
+> of doing that (IIRC it was Grant's suggestion; speaking of
+> whom, I just noticed I forgot to cc him on the original patch).
+
+I don't really want to give blanket approval to use secure-* prefix, but 
+I'm okay with secure-status I guess.
+
+For secure-reg in particular, I would do something different and 
+similar to PCI where we add another address cell to define the address 
+space as secure or non-secure. So your example becomes:
+
+    reg = <0 0x20000 0x1000 >,
+          <1 0x10000 0x1000 >;
+
+The bus compatible would also have to be something like 
+"arm,secure-bus". No point in debating this now. We can worry about it 
+when we have an example.
+
+Rob
