@@ -1,72 +1,64 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: am335x-boneblack: Use pinctrl constants and
- AM33XX_IOPAD macro
-Date: Tue, 10 Nov 2015 15:28:24 -0300
-Message-ID: <CABxcv=mTJzMBU44HKjW-mQasytUCXG4W=H2NSw5tLhkhmX1cKw@mail.gmail.com>
-References: <1445706313-14761-1-git-send-email-afd@ti.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3 1/2] thermal: mediatek: Add cpu power cooling model.
+Date: Tue, 10 Nov 2015 10:41:22 -0800
+Message-ID: <20151110184121.GC5240@localhost.localdomain>
+References: <1445515359-8587-1-git-send-email-dawei.chien@mediatek.com>
+ <1445515359-8587-2-git-send-email-dawei.chien@mediatek.com>
+ <20151104193958.GC14127@localhost.localdomain>
+ <1446721837.4016.57.camel@mtksdaap41>
+ <20151106032433.GL3773@ubuntu>
+ <20151110112017.GA3551@e104805>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445706313-14761-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151110112017.GA3551@e104805>
+Sender: linux-pm-owner@vger.kernel.org
+To: Javi Merino <javi.merino@arm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, dawei chien <dawei.chien@mediatek.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrew,
+On Tue, Nov 10, 2015 at 11:20:18AM +0000, Javi Merino wrote:
+> On Fri, Nov 06, 2015 at 08:54:33AM +0530, Viresh Kumar wrote:
+> > Cc'ing Javi (which you should have as he wrote the power-thing for
+> > cpu-cooling).
+> > 
+> > On 05-11-15, 19:10, dawei chien wrote:
+> > > This is because our platform currently only support mt8173_cpufreq.c, so
+> > > that I only add static power model for our owner IC.
+> > 
+> > Bindings are (normally) supposed to be general than a platform
+> > specific.
+> > 
+> > > Please understanding that I wouldn't give a DT binding document since I
+> > > will remove static power table on next version, but I can try to explain
+> > > it.
+> > 
+> > Then just don't add things in the first place.
+> > 
+> > > As far as I know, static power is somewhat leakage of CPU clusters, so
+> > > that we hardly to find a formula, which can suitable all kinds of CPUs
+> > > since leakage is different. In ARM IPA framework, static power only need
+> > > to be defined by who register cpufreq_power_cooling_register. The
+> > > voltage/power table is just one way to present leakage power of CPUs.
+> > 
+> > The bindings don't fix the values for static power, but just provides
+> > a field for platforms to use. Everyone can then send its own power
+> > figures. Why do you thing it can't be generalized?
+> 
+> The way they are described here is useful only for this platform, but
+> it's not generic.  It only takes into account voltage as (I assume)
+> it's the only variable that affects it in this implementation.  A
+> generalized version of the static power should take into account the
+> temperature and the idle state.
 
-On Sat, Oct 24, 2015 at 2:05 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
-> Using constants for pinctrl allows better readability and removes
-> redundancy with comments. AM33XX_IOPAD allows us to use part of the
-> pinctrl physical address as in the TRM instead of an offset.
->
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am335x-boneblack.dts | 44 +++++++++++++++++-----------------
->  1 file changed, 22 insertions(+), 22 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-> index eadbba3..346f529 100644
-> --- a/arch/arm/boot/dts/am335x-boneblack.dts
-> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
-> @@ -36,32 +36,32 @@
->  &am33xx_pinmux {
->         nxp_hdmi_bonelt_pins: nxp_hdmi_bonelt_pins {
->                 pinctrl-single,pins = <
-> -                       0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
-> -                       0xa0 0x08       /* lcd_data0.lcd_data0, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xa4 0x08       /* lcd_data1.lcd_data1, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xa8 0x08       /* lcd_data2.lcd_data2, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xac 0x08       /* lcd_data3.lcd_data3, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xb0 0x08       /* lcd_data4.lcd_data4, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xb4 0x08       /* lcd_data5.lcd_data5, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xb8 0x08       /* lcd_data6.lcd_data6, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xbc 0x08       /* lcd_data7.lcd_data7, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xc0 0x08       /* lcd_data8.lcd_data8, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xc4 0x08       /* lcd_data9.lcd_data9, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xc8 0x08       /* lcd_data10.lcd_data10, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xcc 0x08       /* lcd_data11.lcd_data11, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xd0 0x08       /* lcd_data12.lcd_data12, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xd4 0x08       /* lcd_data13.lcd_data13, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xd8 0x08       /* lcd_data14.lcd_data14, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xdc 0x08       /* lcd_data15.lcd_data15, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT | AM33XX_PULL_DISA */
-> -                       0xe0 0x00       /* lcd_vsync.lcd_vsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
-> -                       0xe4 0x00       /* lcd_hsync.lcd_hsync, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
-> -                       0xe8 0x00       /* lcd_pclk.lcd_pclk, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
-> -                       0xec 0x00       /* lcd_ac_bias_en.lcd_ac_bias_en, OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT */
-> +                       AM33XX_IOPAD(0x9b0, (PIN_OUTPUT_PULLDOWN | MUX_MODE3))  /* xdma_event_intr0 */
+Still, why would we have one binding to describe static power per platform?
 
-I missed when I first reviewed this patch but there is no need to
-enclose the padconf values into parenthesis, for example the following
-is easier to read and is preferred IMHO:
+I would prefer we go towards a generalized binding description.
 
-AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)  /* xdma_event_intr0 */
+If temperature is not needed on all platforms, make it an optional
+property.
 
-Same for all the other pinctrl lines.
+BR,
 
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eduardo Valentin
