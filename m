@@ -1,38 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 2/5] PM / OPP: Add {opp-microvolt|opp-microamp|turbo-mode|opp-suspend}-<name>
- binding
-Date: Tue, 10 Nov 2015 09:37:32 -0600
-Message-ID: <CAL_JsqLtDi1V2vkJDcAHRRf1Nb05Xqc9euetLNeLoZqzOB0hqA@mail.gmail.com>
-References: <cover.1446687367.git.viresh.kumar@linaro.org> <17a4388be606f21fe1d31b23180d41f6cabdd4b5.1446687367.git.viresh.kumar@linaro.org>
- <20151105030245.GA20613@rob-hp-laptop> <20151105031913.GA29491@ubuntu>
- <CAL_Jsq+sKbn9Jsp6LjfwO59Ceps3zrL8eABXw74m3A25M8bjJg@mail.gmail.com>
- <20151106015321.GF3773@ubuntu> <20151110145505.GB5408@ubuntu>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Tue, 10 Nov 2015 15:44:34 +0000
+Message-ID: <20151110154434.GG12392@sirena.org.uk>
+References: <20151106112141.GE18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
+ <20151106115451.GG18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
+ <20151108103429.GC6746@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
+ <20151109140225.GA26072@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CEA5@SW-EX-MBX01.diasemi.com>
+ <20151110141513.GF12392@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CED5@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20151110145505.GB5408@ubuntu>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D460CED5@SW-EX-MBX01.diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 10, 2015 at 8:55 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 06-11-15, 07:23, Viresh Kumar wrote:
->> Yeah, but in that case 1200 *may* not be a turbo frequency anymore, as
->> the voltage constraints might have changed.
->>
->> So turbo frequency is something that should be used only in small
->> bursts, as they are consume lot of power. They aren't available to be
->> used freely. They may also have thermal side effects..
->>
->> In a similar way, for suspend-freq, we may or may not want the lowest
->> frequency to be used during suspend and so that can change as well.
->> And we shouldn't have suspend-freq set for two OPP nodes.
->
-> @Rob: Does my comments make any sense now? Or you still think we are
-> doing something wrong here?
 
-What you said could be possible, but I'm still doubtful. I would drop
-these until you have an actual user.
+--PyMzGVE0NRonI6bs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+On Tue, Nov 10, 2015 at 02:24:13PM +0000, Opensource [Adam Thomson] wrote:
+> On November 10, 2015 14:15, Mark Brown wrote:
+
+> > So this *isn't* a normal mic detection feature?  What's the userspace
+> > interface for reporting then?
+
+> By mic detection you thought this was to detect if a mic was present or not?
+
+That and button detection.
+
+> It's to detect the noise level on a mic and raise an event if the captured
+> sound is above a specific threshold level. Apologies if that wasn't clear.
+
+> In the driver code I'm using KEY_VOICECOMMAND, and simulating a press and
+> release of this key, to indicate to user-space. This seemed like the obvious
+> choice for this feature to me, although I'd happily get your opinion on this.
+
+That seems like a particularly unfortunate choice given that
+VOICECOMMAND is used in the standard Google headset mapping (see
+ts3a227e for an example, that's a device specifically aimed at providing
+accessory detection in Chromebooks).  There's also been some pushback
+against using the input devices due to the difficulty in enabling apps
+to access input devices - ALSA controls were preferred instead but
+that's less helpful for tinyalsa.  Perhaps that can be added relatively
+easily, or a uevent or something.
+
+Not sure what the best way forward here is, the other implementations of
+this that I'm aware of do more of the detection in offload and present
+streams of detected audio to userspace via normal capture.
+
+I would at least suggest moving this into a separate patch and doing
+the integration separately.
+
+--PyMzGVE0NRonI6bs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWQhDiAAoJECTWi3JdVIfQfIQH+wcvgWbd+D8nAGbZlmOEoLHw
+WtMKSQvPT1gVIcj5gViSLtQMTiQAaa/WV1y4tOxWKkNZx8saTY0ZqTbNBAnhXxSY
+ZSbMAiRvfpdUpGTEl1Lr+JkCYHKx8j3rNpRQgG6QVMaRCRzg6T+dAoNg7Mfx3JXq
+46StUzBx5zqxx3ZOir/n91olwl5P4bxqfQ45aXvWeZs6Hq7G7gwkpiVICapHo9Pu
+V3lExGWowVmvwWt1D4CfV4xiI8NfY5obLcpq+udvh8LGUzL1LWM1UPpT33SSLwCQ
+hJXc98ZKjRCOmobqrA9bBDCFFHTiTUuIYVQmSjMhyhKcoLBPMLLlS8frBHP2csE=
+=caOG
+-----END PGP SIGNATURE-----
+
+--PyMzGVE0NRonI6bs--
