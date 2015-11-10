@@ -1,87 +1,39 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
- TPS65912 PMIC
-Date: Tue, 10 Nov 2015 11:52:12 -0600
-Message-ID: <56422ECC.6070603@ti.com>
-References: <20151022164724.GZ8232@sirena.org.uk> <563A25BE.90609@ti.com>
- <20151105101417.GM1717@sirena.org.uk> <563B9A10.4020907@ti.com>
- <20151106104322.GA18409@sirena.org.uk> <563CED25.6020405@ti.com>
- <20151106211651.GJ18409@sirena.org.uk> <5640DAC0.9080008@ti.com>
- <20151110095719.GC12392@sirena.org.uk> <56421FA5.1020103@ti.com>
- <20151110170447.GI12392@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151110170447.GI12392@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 1/7] of: Add vendor prefix for Advantech Corporation
+Date: Tue, 10 Nov 2015 13:00:02 -0500
+Message-ID: <1447178408-26982-2-git-send-email-akshay.bhat@timesys.com>
+References: <1447178408-26982-1-git-send-email-akshay.bhat@timesys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447178408-26982-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, peter.stretz-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2015 11:04 AM, Mark Brown wrote:
-> On Tue, Nov 10, 2015 at 10:47:33AM -0600, Andrew F. Davis wrote:
->> On 11/10/2015 03:57 AM, Mark Brown wrote:
->
->>> Of course this is a negative review of the binding!  What on earth did
->>> you think my feedback meant?  The driver and the binding go together.
->
->> The bindings should be driver/platform/OS agnostic, changing the bindings
->> because the Linux regulator subsystem maintainer doesn't like them
->> in regulator drivers is then not correct.
->
->> If the binding is accepted then the regulator driver will just have
->> to deal with it, so as I said, why not nack the bindings patch, and
->> explain your objection where DT maintainers might see it.
->
-> If I'm not going to merge the driver because of issues in the DT code it
-> is vanishingly unlikely that I'm going to merge the regulator bindings
-> either.  I would have thought it should be clear that my review comments
-> cover both the manifestation of the bindings in the driver and the
-> bindings themselves.
->
+This patch adds vendor prefix for Advantech Corporation.
 
-Kind of an interesting situation, if I didn't have the regulator as a separate
-node like you want, then I wouldn't really need a separate regulator binding Doc,
-for you to merge, it could all be merged as a single MFD binding.
+Website: http://www.advantech.com/
+Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Anyway, All I'm trying to do here is keep things clean in the DT. We only have
-one consistent option:
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 55df1d4..5134b24 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -10,6 +10,7 @@ ad	Avionic Design GmbH
+ adapteva	Adapteva, Inc.
+ adh	AD Holdings Plc.
+ adi	Analog Devices, Inc.
++advantech	Advantech Corporation
+ aeroflexgaisler	Aeroflex Gaisler AB
+ al	Annapurna Labs
+ allwinner	Allwinner Technology Co., Ltd.
+-- 
+2.6.3
 
-Match all sub parts by compatible:
-
-tps65912: tps65912@2d {
-	compatible = "ti,tps65912";
-	reg = <0x58>;
-	interrupts ...
-
-	regulator {
-		compatible = "ti,tps65912-regulator";
-		dcdc1 {
-			regulator-name = "vdd_core";
-			regulator-min-microvolt = <912000>;
-			regulator-max-microvolt = <1144000>;
-		};
-		...
-	};
-
-	pwrbutton {
-		compatible = "ti,palmas-pwrbutton";
-		interrupt-parent = <&tps65912>;
-		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-		wakeup-source;
-		ti,palmas-long-press-seconds = <12>;
-	};
-
-	gpio {
-		compatible = "ti,palmas-gpio";
-		gpio-controller;
-		#gpio-cells = <2>;
-	};
-	...
-};
-
-Or we end up with some hybrid approach, matching some on node name, others
-on compatible when needed. Yes, the above matches Linux device model (still
-not sure why that is such a problem?), but it also matches modular functionality
-in the device.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
