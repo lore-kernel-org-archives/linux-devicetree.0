@@ -1,101 +1,102 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
-Date: Tue, 10 Nov 2015 16:42:02 +0000
-Message-ID: <20151110164202.GH12392@sirena.org.uk>
-References: <20151106115451.GG18409@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
- <20151108103429.GC6746@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
- <20151109140225.GA26072@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CEA5@SW-EX-MBX01.diasemi.com>
- <20151110141513.GF12392@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CED5@SW-EX-MBX01.diasemi.com>
- <20151110154434.GG12392@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A0337D460CF5D@SW-EX-MBX01.diasemi.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Tue, 10 Nov 2015 10:47:33 -0600
+Message-ID: <56421FA5.1020103@ti.com>
+References: <1443731874-21362-1-git-send-email-afd@ti.com>
+ <1443731874-21362-5-git-send-email-afd@ti.com>
+ <20151022164724.GZ8232@sirena.org.uk> <563A25BE.90609@ti.com>
+ <20151105101417.GM1717@sirena.org.uk> <563B9A10.4020907@ti.com>
+ <20151106104322.GA18409@sirena.org.uk> <563CED25.6020405@ti.com>
+ <20151106211651.GJ18409@sirena.org.uk> <5640DAC0.9080008@ti.com>
+ <20151110095719.GC12392@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xQmOcGOVkeO43v2v"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D460CF5D-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151110095719.GC12392@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/10/2015 03:57 AM, Mark Brown wrote:
+> On Mon, Nov 09, 2015 at 11:41:20AM -0600, Andrew F. Davis wrote:
+>> On 11/06/2015 03:16 PM, Mark Brown wrote:
+>
+>>> There are cases where it's useful where we're abstracting something and
+>>> gaining some meaningful reuse.  This really does not appear to be one of
+>>> those cases, there are no parameters in the DT and the compatible string
+>>> is the full device name.
+>
+>> As before I see no reason to make that call now and limit ourselves.
+>
+> To repeat *yet* *again* the point is that putting the current Linux
+> driver model into the DT is limiting our future selves.
+>
+>>> You do not need to populate it.  There is no value in populating it and
+>>> as previously discussed putting the Linux driver model into DT can be
+>>> actively harmful if we change our idea of how we should model things.
+>
+>> The dev passed to regulator_register needs to have of_node populated for
+>> your OF init_data helper to work. Devices with OF tables can just pass
+>> their own dev. Others have to use their parents' nodes, this is a
+>> workaround, OF devices should be probed with their of_node pre-populated.
+>
+> This is not a workaroud, the only reason you think it is a workaround is
+> the desire to directly represent the Linux device model in the DT.
+>
+>>>>> Please stop this.  I don't understand why you are pushing so hard to put
+>>>>> the Linux device model representation of the device into DT but it's
+>>>>> getting very repetitive.
+>
+>>>> I'm not pushing anything, this is how other sub-nodes of MFD devices are
+>
+>>> Every time we go through this we finish the discussion and then you come
+>>> back with yet another excuse for trying to push the current Linux device
+>>> model into the DT or another version of the patch with the same problem.
+>
+>> I keep finding different problems, do you expect me to ignore them?
+>
+> You are making minor restatements of the same thing over and over again
+> which ignore the main feedback.
+>
+>>> The fact that other people have merged imperfect code into the kernel is
+>>> not a good reason to merge even more of it when we have better tools.
+>>> Looking at that binding I'm seeing no reason why any of the subfunctions
+>>> should have compatible strings (and if we're going down the route you're
+>>> trying to go down we really ought to have something in the binding for
+>>> at least an interrupt controller in there as well...).
+>
+>> These are not "subfunctions" they are full drivers, they only need
+>> register accessors passed in, they do not call the core and the core
+>> does not call them.
+>
+> To repeat *yet* *again* they are groupings of functionality which happen
+> to represent the way Linux models devices right now.  There's no
+> generality in there, it's just a dump of the current Linux model of the
+> functions into the DT.
+>
 
---xQmOcGOVkeO43v2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've made different points every time, you are repeating yourself
+because you only have one counter, you don't like what you perceive as
+putting the "Linux device model representation of the device into DT".
+I understand this, I simply don't agree that is what is going on, or
+that this way will cause us any problems in the future.
 
-On Tue, Nov 10, 2015 at 04:21:04PM +0000, Opensource [Adam Thomson] wrote:
-> On November 10, 2015 15:45, Mark Brown wrote:
+>> If your problem is with the DT binding for this or other MFDs, then
+>> nack *them* and explain to everyone why what they are doing is wrong
+>> and why regulators should be special cases. Blocking the regulator
+>> drivers to force a change in DT is not going to fix this issue.
+>
+> Of course this is a negative review of the binding!  What on earth did
+> you think my feedback meant?  The driver and the binding go together.
+>
 
-> > That seems like a particularly unfortunate choice given that
-> > VOICECOMMAND is used in the standard Google headset mapping (see
-> > ts3a227e for an example, that's a device specifically aimed at providing
-> > accessory detection in Chromebooks).  There's also been some pushback
-> > against using the input devices due to the difficulty in enabling apps
-> > to access input devices - ALSA controls were preferred instead but
-> > that's less helpful for tinyalsa.  Perhaps that can be added relatively
-> > easily, or a uevent or something.
+The bindings should be driver/platform/OS agnostic, changing the bindings
+because the Linux regulator subsystem maintainer doesn't like them
+in regulator drivers is then not correct.
 
-> I chose VOICECOMMAND as I thought this kind of feature might offer the sa=
-me kind
-> of use as the physical button, but if this only for Google headset use th=
-en fair
-> enough.=20
-
-No, that's a generic button but the point is that the expected workflow
-=66rom userspace is going to be different if the user pressed a button to
-initiate a voice command compared to if they use an activation phrase.
-
-> > Not sure what the best way forward here is, the other implementations of
-> > this that I'm aware of do more of the detection in offload and present
-> > streams of detected audio to userspace via normal capture.
-
-> Yes, this is far more simplistic, and any voice processing or capture is =
-not
-> handled by the codec. It just an indication of above threshold noise leve=
-l at
-> the mic. For the implementations you know of, how are those events indica=
-ted to
-> user-space?
-
-I'm not aware of any implementations that just do the activity
-detection.  I've seen hardware with it but nobody using it in software.
-
-> > I would at least suggest moving this into a separate patch and doing
-> > the integration separately.
-
-> Are you happy for me to leave the actual controls for this feature in, wi=
-thout
-> the user-space reporting side? Otherwise it's a pain to strip that out, a=
-nd then
-> re-instate later. The event can be masked off until the user-space report=
-ing
-> is added in a subsequent patch.
-
-Possibly, let's see what the code looks like.
-
---xQmOcGOVkeO43v2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWQh5ZAAoJECTWi3JdVIfQuIUH/jPDxB0jpVqwXZxUtj7ZB3Hz
-G6SvrvGa1aC3AkMqDdJWF5xpBl44vRB+vO0oF2utzF06u8lzFYiDArQ7zGWDPH6V
-Xpwn+kzY/7UjO2HPMZMKXBBYy7/qtKAXsQK0XtoE1/LjrhHmiD5B6a6SJqrZcPxy
-N6gsWDpt++R1Fsldy1+WEZWiWMQDzlxvczVepO428yKlSf3T8Y9utL6BmQSL7zOs
-JhNbTZr1arzJCJLdLVoRB+UWVE8WPTjOXBAxLZVwmylimkBU9LGWqaE1ApFtFrXe
-qYzpUmoAYa8mrp66yZ3bkNT5VKnXvzzronCzHFi0m3oNwzI3SfOCrOcVPTifSpI=
-=PiIb
------END PGP SIGNATURE-----
-
---xQmOcGOVkeO43v2v--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If the binding is accepted then the regulator driver will just have
+to deal with it, so as I said, why not nack the bindings patch, and
+explain your objection where DT maintainers might see it.
