@@ -1,44 +1,74 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH v3 1/2] base: dma-coherent: Add DT property for non
- exclusive shared-dma-pool
-Date: Tue, 10 Nov 2015 17:18:30 +0100
-Message-ID: <564218D6.8050206@baylibre.com>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add da7218 codec driver
+Date: Tue, 10 Nov 2015 16:21:04 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D460CF5D@SW-EX-MBX01.diasemi.com>
+References: <20151106112141.GE18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CA3D@SW-EX-MBX01.diasemi.com>
+ <20151106115451.GG18409@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CAAD@SW-EX-MBX01.diasemi.com>
+ <20151108103429.GC6746@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CC6C@SW-EX-MBX01.diasemi.com>
+ <20151109140225.GA26072@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CEA5@SW-EX-MBX01.diasemi.com>
+ <20151110141513.GF12392@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A0337D460CED5@SW-EX-MBX01.diasemi.com>
+ <20151110154434.GG12392@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20151110154434.GG12392@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to have the ability to declare a non exclusive shared-dma-pool,
-i.e. without the DMA_MEMORY_EXCLUSIVE flag, add the 'no-exclusive' DT
-optional parameter to initialize the coherent memory without the flag.
+On November 10, 2015 15:45, Mark Brown wrote:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/base/dma-coherent.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> > It's to detect the noise level on a mic and raise an event if the captured
+> > sound is above a specific threshold level. Apologies if that wasn't clear.
+> 
+> > In the driver code I'm using KEY_VOICECOMMAND, and simulating a press and
+> > release of this key, to indicate to user-space. This seemed like the obvious
+> > choice for this feature to me, although I'd happily get your opinion on this.
+> 
+> That seems like a particularly unfortunate choice given that
+> VOICECOMMAND is used in the standard Google headset mapping (see
+> ts3a227e for an example, that's a device specifically aimed at providing
+> accessory detection in Chromebooks).  There's also been some pushback
+> against using the input devices due to the difficulty in enabling apps
+> to access input devices - ALSA controls were preferred instead but
+> that's less helpful for tinyalsa.  Perhaps that can be added relatively
+> easily, or a uevent or something.
+> 
 
-diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
-index 55b8398..b57478f 100644
---- a/drivers/base/dma-coherent.c
-+++ b/drivers/base/dma-coherent.c
-@@ -279,10 +279,14 @@ EXPORT_SYMBOL(dma_mmap_from_coherent);
- static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
- {
- 	struct dma_coherent_mem *mem = rmem->priv;
-+	unsigned flags = 0;
-+
-+	if (!of_get_flat_dt_prop(rmem->fdt_node, "no-exclusive", NULL))
-+		flags |= DMA_MEMORY_EXCLUSIVE;
+I chose VOICECOMMAND as I thought this kind of feature might offer the same kind
+of use as the physical button, but if this only for Google headset use then fair
+enough. 
 
- 	if (!mem &&
- 	    dma_init_coherent_memory(rmem->base, rmem->base, rmem->size,
--				     DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE,
-+				     DMA_MEMORY_MAP | flags,
- 				     &mem) != DMA_MEMORY_MAP) {
- 		pr_err("Reserved memory: failed to init DMA memory pool at %pa, size %ld MiB\n",
- 			&rmem->base, (unsigned long)rmem->size / SZ_1M);
--- 
-1.9.1
+> Not sure what the best way forward here is, the other implementations of
+> this that I'm aware of do more of the detection in offload and present
+> streams of detected audio to userspace via normal capture.
+> 
+
+Yes, this is far more simplistic, and any voice processing or capture is not
+handled by the codec. It just an indication of above threshold noise level at
+the mic. For the implementations you know of, how are those events indicated to
+user-space?
+
+> I would at least suggest moving this into a separate patch and doing
+> the integration separately.
+
+Are you happy for me to leave the actual controls for this feature in, without
+the user-space reporting side? Otherwise it's a pain to strip that out, and then
+re-instate later. The event can be masked off until the user-space reporting
+is added in a subsequent patch.
