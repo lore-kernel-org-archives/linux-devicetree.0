@@ -1,79 +1,91 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V3 2/4] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Mon, 9 Nov 2015 23:57:31 -0500
-Message-ID: <5641793B.6050902@codeaurora.org>
-References: <1446958380-23298-1-git-send-email-okaya@codeaurora.org>
- <1446958380-23298-3-git-send-email-okaya@codeaurora.org>
- <563ED8DF.6090307@codeaurora.org> <56400230.8030303@codeaurora.org>
- <20151109182514.GA10896@rob-hp-laptop>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2] of: Check for overlap in reserved memory regions
+Date: Tue, 10 Nov 2015 15:57:49 +1100
+Message-ID: <1447131469.13889.27.camel@ellerman.id.au>
+References: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
+	 <1447129784.13889.25.camel@ellerman.id.au>
+	 <CAL_JsqLAxTF6DgwHNN94iQyds-rmchKS4Tx+8U7sSbAvGHMg9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151109182514.GA10896@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Timur Tabi <timur@codeaurora.org>, dmaengine@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLAxTF6DgwHNN94iQyds-rmchKS4Tx+8U7sSbAvGHMg9Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mitchel Humpherys <mitchelh@codeaurora.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2015-11-09 at 22:41 -0600, Rob Herring wrote:
+> On Mon, Nov 9, 2015 at 10:29 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> > On Tue, 2015-09-15 at 18:30 -0700, Mitchel Humpherys wrote:
+> > > Any overlap in the reserved memory regions (those specified in the
+> > > reserved-memory DT node) is a bug.  These bugs might go undetected as
+> > > long as the contested region isn't used simultaneously by multiple
+> > > software agents, which makes such bugs hard to debug.  Fix this by
+> > > printing a scary warning during boot if overlap is detected.
+> > > 
+> > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> > > index 726ebe792813..62f467b8ccae 100644
+> > > --- a/drivers/of/of_reserved_mem.c
+> > > +++ b/drivers/of/of_reserved_mem.c
+> > > @@ -197,12 +198,52 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+> > >       return -ENOENT;
+> > >  }
+> > > 
+> > > +static int __init __rmem_cmp(const void *a, const void *b)
+> > > +{
+> > > +     const struct reserved_mem *ra = a, *rb = b;
+> > > +
+> > > +     return ra->base - rb->base;
+> > > +}
+> > > +
+> > > +static void __init __rmem_check_for_overlap(void)
+> > > +{
+> > > +     int i;
+> > > +
+> > > +     if (reserved_mem_count < 2)
+> > > +             return;
+> > > +
+> > > +     sort(reserved_mem, reserved_mem_count, sizeof(reserved_mem[0]),
+> > > +          __rmem_cmp, NULL);
+> > > +     for (i = 0; i < reserved_mem_count - 1; i++) {
+> > > +             struct reserved_mem *this, *next;
+> > > +
+> > > +             this = &reserved_mem[i];
+> > > +             next = &reserved_mem[i + 1];
+> > > +             if (!(this->base && next->base))
+> > > +                     continue;
+> > > +             if (this->base + this->size > next->base) {
+> > > +                     phys_addr_t this_end, next_end;
+> > > +
+> > > +                     this_end = this->base + this->size;
+> > > +                     next_end = next->base + next->size;
+> > > +                     WARN(1,
+> > > +                          "Reserved memory: OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
+> > > +                          this->name, &this->base, &this_end,
+> > > +                          next->name, &next->base, &next_end);
+> > 
+> > This is blowing up on some powerpc machines.
+> > 
+> > It's too early in boot to call WARN() on these systems.
+> 
+> I didn't realize WARN could not be used early. Good to know.
 
+Yeah, it's a bit horrible.
 
-On 11/9/2015 1:25 PM, Rob Herring wrote:
-> On Sun, Nov 08, 2015 at 09:17:20PM -0500, Sinan Kaya wrote:
->> On 11/8/2015 12:08 AM, Timur Tabi wrote:
->>
->> On 11/8/2015 12:08 AM, Timur Tabi wrote:
->>> Sinan Kaya wrote:
->>>> +    val = val & ~(MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS);
->>>> +    val = val | (mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS);
->>>> +    val = val & ~(MAX_BUS_REQ_LEN_MASK);
->>>> +    val = val | (mgmtdev->max_read_request);
->>>
->>> val &= ~MAX_BUS_REQ_LEN_MASK << MAX_BUS_WR_REQ_BIT_POS;
->>> val |= mgmtdev->max_write_request << MAX_BUS_WR_REQ_BIT_POS;
->>> val &= ~MAX_BUS_REQ_LEN_MASK;
->>> val |= mgmtdev->max_read_request;
->>>
->>>> +static const struct of_device_id hidma_mgmt_match[] = {
->>>> +    { .compatible = "qcom,hidma-mgmt", },
->>>> +    { .compatible = "qcom,hidma-mgmt-1.0", },
->>>> +    { .compatible = "qcom,hidma-mgmt-1.1", },
->>>> +    {},
->>>> +};
->>>
->>> I thought Rob said that he did NOT want to use version numbers in
->>> compatible strings.  And what's the difference between these three
->>> versions anyway?
->>>
->>
->> This was already discussed here.
->>
->> https://lkml.org/lkml/2015/11/2/689
->>
->> The agreement was to use
->
-> The suggestion...
->
->> compatible = "qcom,hidma-mgmt-1.1", "qcom,hidma-mgmt-1.0",
->> "qcom,hidma-mgmt";
->
-> I don't really want to see 3 generic-ish strings.
->
->> I'll be adding code for v1.1 specifically in the future.
->
-> Please drop "qcom,hidma-mgmt" altogether. It is already meaningless.
-> Then add the 1.1 compatible when you add the code for it. Hopefully you
-> all can decide on part number(s) by then.
->
-> Rob
->
+It used to be even worse, we'd take a recursive trap and you'd get nothing
+useful at all. Ben fixed that, which makes BUG work but not WARN, because WARN
+requires you to take the trap _and return_. We should be able to fix it in the
+medium term, but not immediately.
 
-OK. I'll only have "qcom,hidma-mgmt-1.0" for now.
+> > Can we turn it into a pr_err() for now?
+> 
+> Sounds fine.
 
+> > I'll send a patch?
+> 
+> Great.
 
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+Thanks. I'll just test the final version and then send.
+
+cheers
