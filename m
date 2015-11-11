@@ -1,101 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ASoC: da7218: Add bindings documentation for
- DA7218 audio codec
-Date: Wed, 11 Nov 2015 14:19:46 -0600
-Message-ID: <20151111201946.GA24618@rob-hp-laptop>
-References: <cover.1447254553.git.Adam.Thomson.Opensource@diasemi.com>
- <760d212f18efec816701f2b3e9fc549ca86d31ee.1447254553.git.Adam.Thomson.Opensource@diasemi.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for Innosilicon
+ HDMI on Rockchip platform
+Date: Wed, 11 Nov 2015 14:22:36 -0600
+Message-ID: <20151111202236.GA5629@rob-hp-laptop>
+References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
+ <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <760d212f18efec816701f2b3e9fc549ca86d31ee.1447254553.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, Zheng Yang <zhengyang@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ben Chan <benchan@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 03:40:22PM +0000, Adam Thomson wrote:
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/da7218.txt | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/da7218.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/da7218.txt b/Documentation/devicetree/bindings/sound/da7218.txt
-> new file mode 100644
-> index 0000000..35a53dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/da7218.txt
-> @@ -0,0 +1,106 @@
-> +Dialog Semiconductor DA7218 Audio Codec bindings
-> +
-> +DA7218 is an audio codec with HP detect feature.
-> +
-> +======
-> +
-> +Required properties:
-> +- compatible : Should be "dlg,da7217" or "dlg,da7218"
-> +- reg: Specifies the I2C slave address
-> +
-> +- VDD-supply: VDD power supply for the device
-> +- VDDMIC-supply: VDDMIC power supply for the device
-> +- VDDIO-supply: VDDIO power supply for the device
-> +  (See Documentation/devicetree/bindings/regulator/regulator.txt for further
-> +   information relating to regulators)
-> +
-> +Optional properties:
-> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
-> +  the IRQs from DA7218 are delivered to.
-> +- interrupts: IRQ line info for DA7218 chip.
-> +  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
-> +   further information relating to interrupt properties)
-> +- interrupt-names : Name associated with interrupt line. Should be "wakeup" if
-> +  interrupt is to be used to wake system, otherwise "irq" should be used.
-> +- wakeup-source: Flag to indicate this device can wake system (suspend/resume).
-> +
-> +- clocks : phandle and clock specifier for codec MCLK.
-> +- clock-names : Clock name string for 'clocks' attribute, should be "mclk".
-> +
-> +- dlg,micbias1-lvl : Voltage (mV) for Mic Bias 1
-> +	[<1200>, <1600>, <1800>, <2000>, <2200>, <2400>, <2600>, <2800>, <3000>]
-> +- dlg,micbias2-lvl : Voltage (mV) for Mic Bias 2
-> +	[<1200>, <1600>, <1800>, <2000>, <2200>, <2400>, <2600>, <2800>, <3000>]
-
-Units please (-microvolt).
-
-> +- dlg,mic1-amp-in-sel : Mic1 input source type
-> +	["diff", "se_p", "se_n"]
-> +- dlg,mic2-amp-in-sel : Mic2 input source type
-> +	["diff", "se_p", "se_n"]
-> +- dlg,dmic1-data-sel : DMIC1 channel select based on clock edge.
-> +	["lrise_rfall", "lfall_rrise"]
-> +- dlg,dmic1-samplephase : When to sample audio from DMIC1.
-> +	["on_clkedge", "between_clkedge"]
-> +- dlg,dmic1-clkrate : DMic1 clock frequency (Hz).
-> +	[<1500000>, <3000000>]
-> +- dlg,dmic2-data-sel : DMic2 channel select based on clock edge.
-> +	["lrise_rfall", "lfall_rrise"]
-> +- dlg,dmic2-samplephase : When to sample audio from DMic2.
-> +	["on_clkedge", "between_clkedge"]
-> +- dlg,dmic2-clkrate : DMic2 clock frequency (Hz).
-> +	[<1500000>, <3000000>]
-> +- dlg,hp-diff-single-supply : Boolean flag, use single supply for HP
-> +			      (DA7217 only)
-> +
-> +======
-> +
-> +Optional Child node - 'da7218_hpldet' (DA7218 only):
-> +
-> +Optional properties:
-> +- dlg,jack-rate : Time between jack detect measurements (us)
-> +	[<5>, <10>, <20>, <40>, <80>, <160>, <320>, <640>]
-
-Units
-
-Rob
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBOb3YgMTEsIDIwMTUgYXQgMDM6NDc6MzJQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90
+ZToKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+CgpBY2tl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCj4gLS0tCj4gIC4uLi9kaXNwbGF5
+L3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50eHQgICAgICAgIHwgNTAgKysrKysrKysrKysr
+KysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
+a2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2No
+aXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
+aXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
+MDAwMDAwMC4uMTg5ODQwOAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0
+Cj4gQEAgLTAsMCArMSw1MCBAQAo+ICtSb2NrY2hpcCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRo
+ZSBJbm5vc2lsaWNvbiBIRE1JCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4g
+Kwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6Cj4gKwkicm9ja2NoaXAs
+cmszMDM2LWR3LWhkbWkiOwo+ICstIHJlZzoKPiArCVBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQg
+bGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICstIGNsb2NrcywgY2xvY2st
+bmFtZXM6Cj4gKwlQaGFuZGxlIHRvIGhkbWkgY29udHJvbGxlciBjbG9jaywgbmFtZSBzaG91bGQg
+YmUgInBjbGsiCj4gKy0gaW50ZXJydXB0czoKPiArCUhETUkgaW50ZXJydXB0IG51bWJlcgo+ICst
+IHBvcnRzOgo+ICsJQ29udGFpbiBvbmUgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlv
+bnMgYXMgZGVmaW5lZCBpbgo+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dy
+YXBoLnR4dC4KPiArLSBwaW5jdHJsLTAsIHBpbmN0cmwtbmFtZToKPiArCVN3aXRjaCB0aGUgaW9t
+dXggb2YgSFBEL0NFQyBwaW5zIHRvIEhETUkgZnVuY3Rpb24uCj4gKwo+ICtFeGFtcGxlOgo+ICto
+ZG1pOiBoZG1pQDIwMDM0MDAwIHsKPiArCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMDM2LWlu
+bm8taGRtaSI7Cj4gKwlyZWcgPSA8MHgyMDAzNDAwMCAweDQwMDA+Owo+ICsJaW50ZXJydXB0cyA9
+IDxHSUNfU1BJIDQ1IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJY2xvY2tzID0gPCZjcnUgIFBD
+TEtfSERNST47Cj4gKwljbG9jay1uYW1lcyA9ICJwY2xrIjsKPiArCXBpbmN0cmwtbmFtZXMgPSAi
+ZGVmYXVsdCI7Cj4gKwlwaW5jdHJsLTAgPSA8JmhkbWlfY3RsPjsKPiArCXN0YXR1cyA9ICJkaXNh
+YmxlZCI7Cj4gKwo+ICsJaGRtaV9pbjogcG9ydCB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJaGRtaV9pbl9sY2RjOiBlbmRwb2ludEAwIHsK
+PiArCQkJcmVnID0gPDA+Owo+ICsJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZGNfb3V0X2hkbWk+
+Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsKPiArJnBpbmN0cmwgewo+ICsJaGRtaSB7Cj4gKwkJ
+aGRtaV9jdGw6IGhkbWktY3RsIHsKPiArCQkJcm9ja2NoaXAscGlucyA9IDwxIDggIFJLX0ZVTkNf
+MSAmcGNmZ19wdWxsX25vbmU+LAo+ICsJCQkJCTwxIDkgIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25v
+bmU+LAo+ICsJCQkJCTwxIDEwIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25vbmU+LAo+ICsJCQkJCTwx
+IDExIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25vbmU+Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArfTsK
+PiAtLSAKPiAxLjkuMQo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
