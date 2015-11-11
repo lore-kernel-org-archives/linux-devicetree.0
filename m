@@ -1,347 +1,104 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RESEND 01/16] Documentation: dt-bindings: mfd: add TI LMU
- device binding information
-Date: Wed, 11 Nov 2015 09:49:26 +0000
-Message-ID: <20151111094926.GC3307@x1>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-2-git-send-email-milo.kim@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 16/16] mmc: host: omap_hsmmc: use
+ "mmc_of_parse_voltage" to get ocr_avail
+Date: Wed, 11 Nov 2015 12:26:01 +0200
+Message-ID: <564317B9.8010502@ti.com>
+References: <1438604801-11823-1-git-send-email-kishon@ti.com>
+ <1438604801-11823-17-git-send-email-kishon@ti.com>
+ <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446441875-1256-2-git-send-email-milo.kim@ti.com>
+In-Reply-To: <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Andreas Fenkart <afenkart@gmail.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Nov 2015, Milo Kim wrote:
+Hi,
 
-> This patch describes overall binding for TI LMU MFD devices.
->=20
-> Cc: devicetree@vger.kernel.org
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
-> ---
->  Documentation/devicetree/bindings/mfd/ti-lmu.txt | 282 +++++++++++++=
-++++++++++
->  1 file changed, 282 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Docum=
-entation/devicetree/bindings/mfd/ti-lmu.txt
-> new file mode 100644
-> index 0000000..7ccf07e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> @@ -0,0 +1,282 @@
-> +TI LMU(Lighting Management Unit) device tree bindings
+On 25/08/15 17:50, Ulf Hansson wrote:
+> On 3 August 2015 at 14:26, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>>
+>> For platforms that doesn't have explicit regulator control in MMC,
+>> populate voltage-ranges in MMC device tree node and use
+>> mmc_of_parse_voltage to get ocr_avail
+> 
+> I don't like this.
+> 
+> If we are able to fetch the OCR mask via an external regulator, that
+> shall be done.
 
-' ' here -^
+Agreed.
+> 
+> I think the mmc_of_parse_voltage() API and the corresponding DT
+> binding it parses, should be used for those HW when we don't have an
+> external regulator to use. For example if the MMC controller itself
+> somehow controls the voltage levels. Is that really the case for you?
 
-> +TI LMU driver supports lighting devices belows.
+What shall be done if there is no software control of the external regulator
+and it is fixed at a certain voltage?
 
-s/belows./below:/
+cheers,
+-roger
 
-> +   Name              Child nodes
-> +  ------      -------------------------
-> +  LM3532       Backlight
-> +  LM3631       Backlight and regulator
-> +  LM3632       Backlight and regulator
-> +  LM3633       Backlight, LED and HWMON
-> +  LM3695       Backlight
-> +  LM3697       Backlight and HWMON
-> +
-> +Required properties:
-> +  - compatible: Should be one of lists below.
-
-s/ lists below./:/
-
-> +                "ti,lm3532"
-> +                "ti,lm3631"
-> +                "ti,lm3632"
-> +                "ti,lm3633"
-> +                "ti,lm3695"
-> +                "ti,lm3697"
-> +  - reg: I2C slave address.
-> +         0x11 is LM3632
-> +         0x29 is LM3631
-> +         0x36 is LM3633, LM3697
-> +         0x38 is LM3532
-> +         0x63 is LM3695
-
-s/is/for/
-
-> +Optional properties:
-> +  - enable-gpios: A GPIO specifier for hardware enable pin.
-> +
-> +Required node:
-> +  - backlight: All LMU devices have backlight child nodes.
-> +               For the properties, please refer to [1].
-> +
-> +Optional nodes:
-> +  - hwmon: Hardware fault monitoring driver for LM3633 and LM3697.
-> +           For the property, please refer to [2].
-> +  - leds: LED properties for LM3633. Please refer to [3].
-> +  - regulators: Regulator properties for LM3631 and LM3632.
-> +          Please refer to [4].
-> +
-> +[1] Documentation/devicetree/bindings/video/backlight/ti-lmu-backlig=
-ht.txt
-> +[2] Documentation/devicetree/bindings/hwm/ti-lmu-hwmon.txt
-> +[3] Documentation/devicetree/bindings/leds/leds-lm3633.txt
-> +[4] Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-
-s/Documentation/devicetree/bindings/../
-
-> +Examples:
-
-These aren't examples, they're actual DT entries.
-
-Please trim them down to just one, fully enabled node, only to be used
-as an 'example'.
-
-> +LM3532 has a backlight device. External GPIO is used for enabling LM=
-3532.
-> +
-> +lm3532@38 {
-> +	compatible =3D "ti,lm3532";
-> +	reg =3D <0x38>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3532-backlight";
-> +
-> +		lcd {
-> +			hvled1-used;
-> +			hvled2-used;
-> +			hvled3-used;
-> +
-> +			ramp-up-msec =3D <30>;
-> +			ramp-down-msec =3D <0>;
-> +
-> +			backlight-max-microamp =3D <5000>;
-> +		};
-> +	};
-> +};
-> +
-> +LM3631 has 5 regulators with one backlight device.
-> +
-> +lm3631@29 {
-> +	compatible =3D "ti,lm3631";
-> +	reg =3D <0x29>;
-> +
-> +	regulators {
-> +		compatible =3D "ti,lm363x-regulator";
-> +
-> +		vboost {
-> +			regulator-name =3D "lcd_boost";
-> +			regulator-min-microvolt =3D <4500000>;
-> +			regulator-max-microvolt =3D <6350000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcont {
-> +			regulator-name =3D "lcd_vcont";
-> +			regulator-min-microvolt =3D <1800000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +		};
-> +
-> +		voref {
-> +			regulator-name =3D "lcd_voref";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +		};
-> +
-> +		vpos {
-> +			regulator-name =3D "lcd_vpos";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		vneg {
-> +			regulator-name =3D "lcd_vneg";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3631-backlight";
-> +
-> +		lcd {
-> +			backlight-name =3D "lcd_bl";
-> +			hvled1-used;
-> +			hvled2-used;
-> +
-> +			ramp-up-msec =3D <300>;
-> +		};
-> +	};
-> +};
-> +
-> +LM3632 has 3 regulators with one backlight device. External GPIO is
-> +used for enabling LM3632.
-> +
-> +lm3632@11 {
-> +	compatible =3D "ti,lm3632";
-> +	reg =3D <0x11>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	regulators {
-> +		compatible =3D "ti,lm363x-regulator";
-> +
-> +		ti,lcm-en1-gpio =3D <&pioC 0 GPIO_ACTIVE_HIGH>;
-> +		ti,lcm-en2-gpio =3D <&pioC 1 GPIO_ACTIVE_HIGH>;
-> +
-> +		vboost {
-> +			regulator-name =3D "lcd_boost";
-> +			regulator-min-microvolt =3D <4500000>;
-> +			regulator-max-microvolt =3D <6400000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vpos {
-> +			regulator-name =3D "lcd_vpos";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +		};
-> +
-> +		vneg {
-> +			regulator-name =3D "lcd_vneg";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +		};
-> +	};
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3632-backlight";
-> +
-> +		lcd {
-> +			backlight-name =3D "lcd";
-> +			hvled1-used;
-> +			hvled2-used;
-> +		};
-> +	};
-> +};
-> +
-> +LM3633 has multiple backlight channels, LED channels and hardware fa=
-ult
-> +monitoring driver. External GPIO is used for enabling LM3633.
-> +
-> +lm3633@36 {
-> +	compatible =3D "ti,lm3633";
-> +	reg =3D <0x36>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3633-backlight";
-> +
-> +		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-> +		pwm-names =3D "lmu-backlight";
-> +
-> +		main {
-> +			backlight-name =3D "main_lcd";
-> +			hvled2-used;
-> +			hvled3-used;
-> +			backlight-max-microamp =3D <20000>;
-> +
-> +			ramp-up-msec =3D <500>;
-> +			ramp-down-msec =3D <500>;
-> +		};
-> +
-> +		front {
-> +			backlight-name =3D "front_lcd";
-> +			hvled1-used;
-> +
-> +			ramp-up-msec =3D <1000>;
-> +			ramp-down-msec =3D <0>;
-> +
-> +			pwm-period =3D <10000>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "ti,lm3633-leds";
-> +
-> +		chan2 {
-> +			channel-name =3D "status";
-> +			lvled2-used;
-> +			led-max-microamp =3D <6000>;
-> +		};
-> +
-> +		chan456 {
-> +			channel-name =3D "rgb";
-> +			lvled4-used;
-> +			lvled5-used;
-> +			lvled6-used;
-> +		};
-> +	};
-> +
-> +	hwmon {
-> +		compatible =3D "ti,lm3633-hwmon";
-> +	};
-> +};
-> +
-> +LM3695 is single backlight device.
-> +
-> +lm3695@63 {
-> +	compatible =3D "ti,lm3695";
-> +	reg =3D <0x63>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3695-backlight";
-> +
-> +		lcd {
-> +			hvled1-used;
-> +			hvled2-used;
-> +			backlight-max-microamp =3D <20000>;
-> +		};
-> +	};
-> +};
-> +
-> +LM3697 has one backlight device and hardware fault monitoring driver=
-=2E
-> +External GPIO is used for enabling LM3697.
-> +
-> +lm3697@36 {
-> +	compatible =3D "ti,lm3697";
-> +	reg =3D <0x36>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3697-backlight";
-> +
-> +		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-> +		pwm-names =3D "lmu-backlight";
-> +
-> +		lcd {
-> +			backlight-name =3D "bl";
-> +			hvled1-used;
-> +			hvled2-used;
-> +			hvled3-used;
-> +			backlight-max-microamp =3D <20000>;
-> +
-> +			ramp-up-msec =3D <500>;
-> +			ramp-down-msec =3D <500>;
-> +			pwm-period =3D <10000>;
-> +		};
-> +	};
-> +
-> +	hwmon {
-> +		compatible =3D "ti,lm3697-hwmon";
-> +	};
-> +};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> 
+> Kind regards
+> Uffe
+> 
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
+>>  drivers/mmc/host/omap_hsmmc.c                      |    9 ++++++++-
+>>  2 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> index 76bf087..2408e87 100644
+>> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> @@ -22,6 +22,8 @@ ti,dual-volt: boolean, supports dual voltage cards
+>>  ti,non-removable: non-removable slot (like eMMC)
+>>  ti,needs-special-reset: Requires a special softreset sequence
+>>  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+>> +voltage-ranges: Specify the voltage range supported if regulator framework
+>> +isn't enabled.
+>>  dmas: List of DMA specifiers with the controller specific format
+>>  as described in the generic DMA client binding. A tx and rx
+>>  specifier is required.
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 15973f1..d884d8f 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -2184,7 +2184,13 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>>                         goto err_irq;
+>>         }
+>>
+>> -       mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+>> +       if (!mmc_pdata(host)->ocr_mask) {
+>> +               ret = mmc_of_parse_voltage(pdev->dev.of_node, &mmc->ocr_avail);
+>> +               if (ret)
+>> +                       goto err_parse_voltage;
+>> +       } else {
+>> +               mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+>> +       }
+>>
+>>         omap_hsmmc_disable_irq(host);
+>>
+>> @@ -2224,6 +2230,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>>
+>>  err_slot_name:
+>>         mmc_remove_host(mmc);
+>> +err_parse_voltage:
+>>         omap_hsmmc_reg_put(host);
+>>  err_irq:
+>>         device_init_wakeup(&pdev->dev, false);
+>> --
+>> 1.7.9.5
+>>
