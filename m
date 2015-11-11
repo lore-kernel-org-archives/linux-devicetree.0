@@ -1,68 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] drm: arm: Add DT bindings documentation for HDLCD
- driver.
-Date: Wed, 11 Nov 2015 12:48:50 -0600
-Message-ID: <20151111184849.GA9172@rob-hp-laptop>
-References: <1447258010-2234-1-git-send-email-Liviu.Dudau@arm.com>
- <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: fsl-quadspi: add big-endian support
+Date: Wed, 11 Nov 2015 11:10:23 -0800
+Message-ID: <20151111191023.GF12143@google.com>
+References: <1445586797-38383-1-git-send-email-yao.yuan@freescale.com>
+ <CAOMZO5AAr30RM7dE-0BEZGH3Nw1j-QpM+qv2WCyyfK4ATrh=VA@mail.gmail.com>
+ <BLUPR03MB134C1F7A783914F4F1ACCDF832F0@BLUPR03MB134.namprd03.prod.outlook.com>
+ <20151111175112.GA30612@chopperman.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20151111175112.GA30612@chopperman.am.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Han Xu <han.xu@freescale.com>
+Cc: Yuan Yao-B46683 <yao.yuan@freescale.com>, Fabio Estevam <festevam@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Li Yang-Leo-R58472 <LeoLi@freescale.com>, Wood Scott-B07421 <scottwood@freescale.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMTEsIDIwMTUgYXQgMDQ6MDY6NDdQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3Jv
-dGU6Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gQ2M6IFBhd2VsIE1v
-bGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
-YXJtLmNvbT4KPiBDYzogSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51
-az4KPiBDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Cj4gCj4gU2lnbmVkLW9m
-Zi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+CgpMb29rcyBwcmV0dHkgZ29v
-ZCwgYnV0IGEgZmV3IGNvbW1lbnRzLgoKPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZHJtL2FybS9hcm0saGRsY2QudHh0ICAgICAgfCA3NCArKysrKysrKysrKysrKysrKysrKysrCj4g
-IDEgZmlsZSBjaGFuZ2VkLCA3NCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0Cj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXJt
-L2FybSxoZGxjZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2Fy
-bS9hcm0saGRsY2QudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5i
-NTdmMWI5Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kcm0vYXJtL2FybSxoZGxjZC50eHQKPiBAQCAtMCwwICsxLDc0IEBACj4gK0FSTSBI
-RExDRAo+ICsKPiArVGhpcyBpcyBhIGRpc3BsYXkgY29udHJvbGxlciBmb3VuZCBvbiBzZXZlcmFs
-IGRldmVsb3BtZW50IHBsYXRmb3JtcyBwcm9kdWNlZAo+ICtieSBBUk0gTHRkIGFuZCBpbiBtb3Jl
-IG1vZGVybiBvZiBpdHMnIEZhc3QgTW9kZWxzLiBUaGUgSERMQ0QgaXMgYW4gUkdCCj4gK3N0cmVh
-bWVyIHRoYXQgcmVhZHMgdGhlIGRhdGEgZnJvbSBhIGZyYW1lYnVmZmVyIGFuZCBzZW5kcyBpdCB0
-byBhIHNpbmdsZQo+ICtkaWdpdGFsIGVuY29kZXIgKERWSSBvciBIRE1JKS4KPiArCj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiAiYXJtLGhkbGNkIgoKS2luZCBvZiBn
-ZW5lcmljLiBTb21ldGhpbmcgbW9yZSBzcGVjaWZpYyBwbGVhc2UuCgo+ICsgIC0gcmVnOiBQaHlz
-aWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVy
-cy4KPiArICAgIElmIGEgc2Vjb25kIHBhaXIgb2YgYWRkcmVzcyBhbmQgbGVuZ3RoIHZhbHVlcyBp
-cyBwcmVzZW50IHRoaXMgc3BlY2lmaWVzCj4gKyAgICB0aGUgcHJlc2VuY2Ugb2YgYSBETUEgY29o
-ZXJlbnQgbWVtb3J5IGFyZWEgdGhhdCB0aGUgSERMQ0QgY2FuIHVzZSBhcwo+ICsgICAgZnJhbWVi
-dWZmZXIgaW5zdGVhZCBvZiBub3JtYWwgQ01BIG1lbW9yeS4KClRoaXMgaXMgb24tY2hpcCBSQU0g
-b3Igbm9ybmFsIHN5c3RlbSBSQU0/IFdlIGFscmVhZHkgaGF2ZSBiaW5kaW5ncyBmb3IgCmJvdGgu
-Cgo+ICsgIC0gaW50ZXJydXB0czogT25lIGludGVycnVwdCB1c2VkIGJ5IHRoZSBkaXNwbGF5IGNv
-bnRyb2xsZXIgdG8gbm90aWZ5IHRoZQo+ICsgICAgaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hlbiBh
-bnkgb2YgdGhlIGludGVycnVwdCBzb3VyY2VzIHByb2dyYW1tZWQgaW4KPiArICAgIHRoZSBpbnRl
-cnJ1cHQgbWFzayByZWdpc3RlciBoYXZlIGFjdGl2YXRlZC4KPiArICAtIGNsb2NrczogQSBsaXN0
-IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaAo+ICsgICAg
-ZW50cnkgaW4gJ2Nsb2NrLW5hbWVzJy4KPiArICAtIGNsb2NrLW5hbWVzOiBBIGxpc3Qgb2YgY2xv
-Y2sgbmFtZXMuIEZvciBIRExEIGl0IHNob3VsZCBjb250YWluOgo+ICsgICAgICAtICJweGxjbGsi
-IGZvciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUgY29udHJvbGxlci4K
-PiArICAtIHBvcnQ6IFRoZSBIRExDRCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4gVGhl
-IGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQKPiArICAgIHVzaW5nIHRoZSBPRiBncmFwaCBiaW5kaW5n
-cyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
-dC4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
++ devicetree
+
+On Wed, Nov 11, 2015 at 11:51:13AM -0600, Han Xu wrote:
+> On Fri, Oct 30, 2015 at 04:49:41AM -0500, Yuan Yao-B46683 wrote:
+
+(BTW Yuan, replying on top doesn't make the conversation as easy to
+follow)
+
+> > Although it is possible to add the endianness support in the
+> > regmap_mmio driver, we don't see too much value in using it
+> > especially 
+> > 
+> > So we think:
+> > static void qspi_writel(struct fsl_qspi *q, u32 val, void __iomem
+> > *addr) {
+> >       if (q->big_endian)
+> >               iowrite32be(val, addr);
+> >       else
+> >               iowrite32(val, addr);
+> > }
+> > This way is an easier, more effective solution to do the endian issue.
+> > 
+> > How about your think?
+> 
+> I think the implement is fine, but I prefer to use quirk rather than
+> read from dts? Please also rebase the patch to latest l2-mtd code.
+
+If it really is just a endianness difference, then I think it makes
+sense to use the existing DT bindings for it, rather than relying on a
+new compatible string / quirk option. That doesn't mean you can't have a
+new SoC-inspired compatible property in addition...
+
+> > Best Regards,
+> > Yuan Yao
+> > 
+> > On Sat, Oct 24, 2015 at 11:47 PM, Fabio Estevam <festevam@gmail.com> wrote:
+> > > I suggest you to implement regmap support for this driver instead.
+> > > 
+> > > Take a look at drivers/watchdog/imx2_wdt.c for a reference.
+> > > 
+> > > Then you only need to pass 'big-endian' as a property for the qspi in the .dtsi
+> > > file and regmap core will take care of endianness.
+
+To use the standard binding also means that whether or not you choose to
+use regmap right now, it's an easy option in the future, and the core
+code will already handle it for you. That's really one of the main
+reasons for using standardized bindings in the first place.
+
+Brian
