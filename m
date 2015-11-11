@@ -1,19 +1,48 @@
-From: "Lehman" <drlehman022-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: READ URGENT
-Date: Wed, 11 Nov 2015 05:23:45 +0800
-Message-ID: <20151110212221.M85565__14120.7847431817$1447241306$gmane$org@gmail.com>
-Reply-To: drlehman022-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 16/16] mmc: host: omap_hsmmc: use "mmc_of_parse_voltage"
+ to get ocr_avail
+Date: Wed, 11 Nov 2015 12:40:23 +0100
+Message-ID: <CAPDyKFqAknBT5nAsr27F8vA=Di4TDiKipY6eYttD+v7h3X7GUQ@mail.gmail.com>
+References: <1438604801-11823-1-git-send-email-kishon@ti.com>
+	<1438604801-11823-17-git-send-email-kishon@ti.com>
+	<CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
+	<564317B9.8010502@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <564317B9.8010502@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Andreas Fenkart <afenkart@gmail.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sir/Madam, I need your help to transfer the sum of Six.Million US Dollars 
-to your bank account, reply me if you are ready to receive this fund.
+On 11 November 2015 at 11:26, Roger Quadros <rogerq@ti.com> wrote:
+> Hi,
+>
+> On 25/08/15 17:50, Ulf Hansson wrote:
+>> On 3 August 2015 at 14:26, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>> From: Roger Quadros <rogerq@ti.com>
+>>>
+>>> For platforms that doesn't have explicit regulator control in MMC,
+>>> populate voltage-ranges in MMC device tree node and use
+>>> mmc_of_parse_voltage to get ocr_avail
+>>
+>> I don't like this.
+>>
+>> If we are able to fetch the OCR mask via an external regulator, that
+>> shall be done.
+>
+> Agreed.
+>>
+>> I think the mmc_of_parse_voltage() API and the corresponding DT
+>> binding it parses, should be used for those HW when we don't have an
+>> external regulator to use. For example if the MMC controller itself
+>> somehow controls the voltage levels. Is that really the case for you?
+>
+> What shall be done if there is no software control of the external regulator
+> and it is fixed at a certain voltage?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think you can model that as a so called fixed regulator.
+
+Kind regards
+Uffe
