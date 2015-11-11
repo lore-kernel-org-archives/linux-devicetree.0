@@ -1,54 +1,32 @@
-From: Zain Wang <zain.wang@rock-chips.com>
-Subject: [PATCH v3 4/4] ARM: dts: rockchip: Add Crypto node for rk3288
-Date: Wed, 11 Nov 2015 14:35:59 +0800
-Message-ID: <1447223759-20730-5-git-send-email-zain.wang@rock-chips.com>
-References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Zain Wang <zain.wang@rock-chips.com>
+From: Liu Gang <Gang.Liu@freescale.com>
+Subject: RE: [PATCH 2/2 V2] drivers/gpio: Port gpio driver to layerscape
+ platform
+Date: Wed, 11 Nov 2015 06:42:11 +0000
+Message-ID: <CY1PR0301MB0666EF877C9F44054645701288130@CY1PR0301MB0666.namprd03.prod.outlook.com>
+References: <1446691342-1943-1-git-send-email-Gang.Liu@freescale.com>
+ <1446691342-1943-2-git-send-email-Gang.Liu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1446691342-1943-2-git-send-email-Gang.Liu@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liu Gang <Gang.Liu@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leekha Shaveta <shaveta@freescale.com>, Sharma Bhupesh <bhupesh.sharma@freescale.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Scott Wood <scottwood@freescale.com>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Crypto node for rk3288 including crypto controller and dma clk.
+Hi, Arnd,
 
-Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
----
-Changed in v3:
-- add reset property
+Do you have more comments for the V2 patch, or could you please ack the patch?
 
-Changed in v2:
-- None
-
-Changed in v1:
-- remove the _crypto suffix
-- use "rockchip,rk3288-crypto" instead of "rockchip,rk3288"
-
- arch/arm/boot/dts/rk3288.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6a79c9c..f0d1217 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -778,6 +778,18 @@
- 		status = "disabled";
- 	};
- 
-+	crypto: cypto-controller@ff8a0000 {
-+		compatible = "rockchip,rk3288-crypto";
-+		reg = <0xff8a0000 0x4000>;
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_CRYPTO>, <&cru HCLK_CRYPTO>,
-+			 <&cru SCLK_CRYPTO>, <&cru ACLK_DMAC1>;
-+		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
-+		resets = <&cru SRST_CRYPTO>;
-+		reset-names = "crypto-rst";
-+		status = "okay";
-+	};
-+
- 	vopb: vop@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
- 		reg = <0xff930000 0x19c>;
--- 
-1.9.1
+Thanks!
+Liu Gang
