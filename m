@@ -1,62 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: add async_irq to
- msm_hsusb
-Date: Wed, 11 Nov 2015 14:33:38 -0600
-Message-ID: <20151111203338.GA12050@rob-hp-laptop>
-References: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFCv2 1/2] power: domain: add pm_genpd_uninit
+Date: Wed, 11 Nov 2015 21:33:40 +0100
+Message-ID: <CAPDyKFr2HdQWdrTD_E5s9cdU917mbn29DYk-Q1ydEd8ROoNHUg@mail.gmail.com>
+References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
+	<1446590711-18928-2-git-send-email-alex.aring@gmail.com>
+	<CAPDyKFrkzMZZjFRM7EbqDqmW8EXzV22O_tp8a45LVGQYSn6b3g@mail.gmail.com>
+	<20151105143445.GC599@omega>
+	<20151111180019.GB2621@omega>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447202811-3429-1-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151111180019.GB2621@omega>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 10, 2015 at 04:46:50PM -0800, Tim Bird wrote:
-> Add optional async_irq to msm_hsusb binding doc.
-> 
-> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On 11 November 2015 at 19:00, Alexander Aring <alex.aring@gmail.com> wrote:
+> Hi,
+>
+> On Thu, Nov 05, 2015 at 03:34:45PM +0100, Alexander Aring wrote:
+>>
+>> What do you suggest to me for e.g. the raspberrypi power domain driver,
+>> also simple ignore such error handling?
+>>
+>
+> ping, I also can add some WARN_ON_ONCE, if the list for sub-domains,
+> etc. are not empty. This would then report about wrong use of
+> pm_genpd_uninit.
+>
+> - Alex
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sorry for the delay.
 
-> ---
->  Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> index 8654a3e..7ba1dff 100644
-> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> @@ -23,7 +23,12 @@ Required properties:
->    "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
->  
->  - regs:         Offset and length of the register set in the memory map
-> -- interrupts:   interrupt-specifier for the OTG interrupt.
-> +- interrupts:   interrupt-specifier for the OTG interrupts
-> +
-> +- interrupt-names: Should contain the following:
-> +  "core_irq"    USB core interrupt
-> +  "async_irq"   Asynchronous interrupt to wake up from low power mode
-> +                (optional)
->  
->  - clocks:       A list of phandle + clock-specifier pairs for the
->                  clocks listed in clock-names
-> @@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
->      usb@f9a55000 {
->          compatible = "qcom,usb-otg-snps";
->          reg = <0xf9a55000 0x400>;
-> -        interrupts = <0 134 0>;
-> +        interrupts = <0 134 0>, <0 140 0>;
-> +        interrupt-names = "core_irq", "async_irq";
->          dr_mode = "peripheral";
->  
->          clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
-> -- 
-> 1.8.2.2
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think what you suggest would be an okay solution, at least it will
+improve the current behaviour.
+
+We should verify for sub-domains, attached devices, and if the genpd
+has an of-provider. That's all I can think of right now, but there may
+be other things as well.
+
+Kind regards
+Uffe
