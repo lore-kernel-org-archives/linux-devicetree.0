@@ -1,95 +1,63 @@
-From: Tim Bird <tim.bird@sonymobile.com>
-Subject: [PATCH 2/2] usb: phy: msm: fix connect/disconnect bug for dragonboard OTG port
-Date: Tue, 10 Nov 2015 16:46:51 -0800
-Message-ID: <1447202811-3429-2-git-send-email-tim.bird@sonymobile.com>
-References: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Tue, 10 Nov 2015 17:16:42 -0800
+Message-ID: <7h1tbx1gjp.fsf@deeprootsystems.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	<1445843717.23888.1.camel@mtksdaap41>
+	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	<1445859610.26723.4.camel@mtksdaap41>
+	<CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
+	<1447135867.14454.9.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
+In-Reply-To: <1447135867.14454.9.camel@mtksdaap41> (Eddie Huang's message of
+	"Tue, 10 Nov 2015 14:11:07 +0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter.Chen@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, Bjorn.Andersson@sonymobile.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, tbird20d@gmail.com, tim.bird@sonymobile.com
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This fixes a bug where if you disconnect and re-connect the USB cable,
-the gadget driver stops working.
+Hi Eddie,
 
-Add support for async_irq to wake up driver from low power mode.
-Without this, the power management code never calls resume.
-Also, have the phy driver kick the gadget driver (chipidea otg)
-by having the chipidea driver register with it, for vbus connect
-notifications.
+[...]
 
-Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
----
- drivers/usb/chipidea/udc.c    |  6 ++++++
- drivers/usb/phy/phy-msm-usb.c | 16 ++++++++++++++++
- include/linux/usb/msm_hsusb.h |  1 +
- 3 files changed, 23 insertions(+)
+> I check the log [0],
 
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index 8223fe7..06234cd 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -1890,6 +1890,12 @@ static int udc_start(struct ci_hdrc *ci)
- 
- 	ci->gadget.ep0 = &ci->ep0in->ep;
- 
-+	if (ci->usb_phy) {
-+		retval = otg_set_peripheral(ci->usb_phy->otg, &ci->gadget);
-+		if (retval)
-+			goto destroy_eps;
-+	}
-+
- 	retval = usb_add_gadget_udc(dev, &ci->gadget);
- 	if (retval)
- 		goto destroy_eps;
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 80eb991..eb80f92 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -1731,6 +1731,12 @@ static int msm_otg_probe(struct platform_device *pdev)
- 		return motg->irq;
- 	}
- 
-+	motg->async_irq = platform_get_irq_byname(pdev, "async_irq");
-+	if (motg->async_irq < 0) {
-+		dev_info(&pdev->dev, "platform_get_irq for async_irq failed\n");
-+		motg->async_irq = 0;
-+	}
-+
- 	regs[0].supply = "vddcx";
- 	regs[1].supply = "v3p3";
- 	regs[2].supply = "v1p8";
-@@ -1780,6 +1786,16 @@ static int msm_otg_probe(struct platform_device *pdev)
- 		goto disable_ldo;
- 	}
- 
-+	if (motg->async_irq) {
-+		ret = devm_request_irq(&pdev->dev, motg->async_irq,
-+				      msm_otg_irq, IRQF_TRIGGER_RISING,
-+				      "msm_otg", motg);
-+		if (ret) {
-+			dev_err(&pdev->dev, "request irq failed (ASYNC INT)\n");
-+			goto disable_ldo;
-+		}
-+	}
-+
- 	phy->init = msm_phy_init;
- 	phy->set_power = msm_otg_set_power;
- 	phy->notify_disconnect = msm_phy_notify_disconnect;
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 8c8f685..08c67a3 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -164,6 +164,7 @@ struct msm_otg {
- 	struct usb_phy phy;
- 	struct msm_otg_platform_data *pdata;
- 	int irq;
-+	int async_irq;
- 	struct clk *clk;
- 	struct clk *pclk;
- 	struct clk *core_clk;
--- 
-1.8.2.2
+Thanks for checking into this boot failure.
+
+> it seems first time mt8135-evbp1 boot to kernel
+> shell successfully, then boot again. In the second time, mt8135 stay in
+> fastboot mode, waiting host send boot image, then timeout.
+
+Actually, it never gets to a shell the first time.  If you look closely,
+the target reboots as soon as userspace starts.   Look for the PYBOOT
+line which says "finished booting, starting userspace"
+
+Later on, pyboot thinks it finds a root shell due to finding '#'
+characters, but clearly it never got to a shell.
+
+> I download zImage and dtb in [1], and kernel run to shell successfully
+> on my platform.
+
+Are you can you try using a ramdisk as well?  You can use the pre-built
+one here:
+http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
+
+Please check my boot logs to see how I'm generating the boot.img file
+(search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
+that the kernel image size with a ramdisk is breaking some of the
+assumptions in the fastboot mode.  I've seen problems like this on other
+platforms due to hard-coded sizes/addresses in the boot firmware.
+
+> I don't know whether this issue caused by test environment or not.
+
+I do not think it is the test environment, since as you can see from
+[1], it's booting just fine with mainline kernel, and was working fine
+until next-20151102.
+
+Kevin
+
+[1] http://kernelci.org/boot/mt8135-evbp1/job/next/kernel/next-20151110/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5642652759b5149878091908
