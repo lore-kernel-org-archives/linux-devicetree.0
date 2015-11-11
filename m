@@ -1,66 +1,112 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 15/17] drm: bridge: analogix/dp: try force hpd after
- plug in lookup failed
-Date: Wed, 11 Nov 2015 17:10:42 -0600
-Message-ID: <20151111231042.GA29893@rob-hp-laptop>
-References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
- <1446167355-6387-1-git-send-email-ykk@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv7 1/3] ARM: dts: Add Altera L2 Cache and OCRAM EDAC
+ entries
+Date: Wed, 11 Nov 2015 17:21:56 -0600
+Message-ID: <20151111232156.GA31910@rob-hp-laptop>
+References: <1445979483-8035-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446167355-6387-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
+In-Reply-To: <1445979483-8035-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 09:09:15AM +0800, Yakir Yang wrote:
-> Some edp screen do not have hpd signal, so we can't just return
-> failed when hpd plug in detect failed.
+On Tue, Oct 27, 2015 at 03:58:03PM -0500, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > 
-> This is an hardware property, so we need add a devicetree property
-> "analogix,need-force-hpd" to indicate this sutiation.
+> Adding the device tree entries and bindings needed to support
+> the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+> an earlier patch to declare and setup On-chip RAM properly.
+> http://www.spinics.net/lists/devicetree/msg51117.html
 > 
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > ---
-
-I didn't find this one in v10. Did it get dropped?
-
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
-> - Add "analogix,need-force-hpd" to indicate whether driver need foce
->   hpd when hpd detect failed.
+> v7: No Change
+> v6: Change to nested EDAC device nodes based on community
+>     feedback. Remove L2 syscon. Use consolidated binding.
+> v3-5: No Change
+> v2: Remove OCRAM declaration and reference prior patch.
+> ---
+>  .../bindings/arm/altera/socfpga-edac.txt           | 46 ++++++++++++++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     | 20 ++++++++++
+>  2 files changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
 > 
-> Changes in v2: None
-> 
->  .../bindings/display/bridge/analogix_dp.txt        |  4 ++-
->  .../bindings/display/exynos/exynos_dp.txt          |  1 +
->  .../display/rockchip/analogix_dp-rockchip.txt      |  1 +
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 36 +++++++++++++++++++---
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  2 ++
->  drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  |  9 ++++++
->  6 files changed, 47 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-> index 7659a7a..74f0e80 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
-> @@ -22,6 +22,9 @@ Required properties for dp-controller:
->  		from general PHY binding: Should be "dp".
->  
->  Optional properties for dp-controller:
-> +	-analogix,need-force-hpd:
-> +		Indicate driver need force hpd when hpd detect failed, this
-> +		is used for some eDP screen which don't have hpd signal.
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+> new file mode 100644
+> index 0000000..4bf32e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+> @@ -0,0 +1,46 @@
+> +Altera SoCFPGA Error Detection and Correction [EDAC]
+> +
+> +Required Properties:
+> +- compatible : Should be "altr,edac"
 
-This should be a generic property.
+What is the actual block name? I doubt it happens to match the kernel 
+subsystem.
 
-Rob
+> +- #address-cells: must be 1
+> +- #size-cells: must be 1
+> +- ranges : standard definition, should translate from local addresses
+
+What is the point of having 2 levels? I think you can remove it.
+
+> +
+> +Subcomponents:
+> +
+> +L2 Cache ECC
+> +Required Properties:
+> +- compatible : Should be "altr,l2-edac"
+
+Same comment about name. It should also have the chip name in it.
+
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +On Chip RAM ECC
+> +Required Properties:
+> +- compatible : Should be "altr,ocram-edac"
+
+Ditto.
+
+> +- reg : Address and size for ECC error interrupt clear registers.
+> +- iram : phandle to On-Chip RAM definition.
+
+This should probably be standardized and put into the SRAM binding. 
+There's 2 cases to consider: phandle to all of SRAM and phandle to 
+sub-node of SRAM.
+
+> +- interrupts : Should be single bit error interrupt, then double bit error
+> +	interrupt. Note the rising edge type.
+> +
+> +Example:
+> +
+> +	soc_ecc {
+> +		compatible = "altr,edac";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		l2edac@ffd08140 {
+> +			compatible = "altr,l2-edac";
+> +			reg = <0xffd08140 0x4>;
+> +			interrupts = <0 36 1>, <0 37 1>;
+> +		};
+> +
+> +		ocramedac@ffd08144 {
+> +			compatible = "altr,ocram-edac";
+> +			reg = <0xffd08144 0x4>;
+> +			iram = <&ocram>;
+> +			interrupts = <0 178 1>, <0 179 1>;
+> +		};
+> +	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
