@@ -1,117 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 2/5] PM / OPP: Add {opp-microvolt|opp-microamp}-<name>
- binding
-Date: Wed, 11 Nov 2015 14:31:00 -0600
-Message-ID: <20151111203100.GA10702@rob-hp-laptop>
-References: <cover.1447209519.git.viresh.kumar@linaro.org>
- <1f1d9dd73ff629504f3c730e4100dba800c6132a.1447209519.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt-bindings: add async_irq to
+ msm_hsusb
+Date: Wed, 11 Nov 2015 14:33:38 -0600
+Message-ID: <20151111203338.GA12050@rob-hp-laptop>
+References: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1f1d9dd73ff629504f3c730e4100dba800c6132a.1447209519.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+In-Reply-To: <1447202811-3429-1-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 08:10:55AM +0530, Viresh Kumar wrote:
-> Depending on the version of hardware or its properties, which are only
-> known at runtime, various properties of the OPP can change. For example,
-> an OPP with frequency 1.2 GHz, may have different voltage/current
-> requirements based on the version of the hardware it is running on.
+On Tue, Nov 10, 2015 at 04:46:50PM -0800, Tim Bird wrote:
+> Add optional async_irq to msm_hsusb binding doc.
 > 
-> In order to not replicate the same OPP tables for varying values of all
-> such fields, this commit introduces the concept of opp-property-<name>.
-> The <name> can be chosen by the platform at runtime, and OPPs will be
-> initialized depending on that name string. Currently support is extended
-> for the following properties:
-> - opp-microvolt-<name>
-> - opp-microamp-<name>
-> 
-> If the name string isn't provided by the platform, or if it is provided
-> but doesn't match the properties present in the OPP node, we will fall
-> back to the original properties without the -<name> string, if they are
-> available.
-> 
-> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  Documentation/devicetree/bindings/opp/opp.txt | 47 +++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
+>  Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index d072fa0ffbd4..a3e7f0d5e1fb 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -100,6 +100,14 @@ properties.
->    Entries for multiple regulators must be present in the same order as
->    regulators are specified in device's DT node.
+> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> index 8654a3e..7ba1dff 100644
+> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> @@ -23,7 +23,12 @@ Required properties:
+>    "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
 >  
-> +- opp-microvolt-<name>: Named opp-microvolt property. This is exactly similar to
-> +  the above opp-microvolt property, but allows multiple voltage ranges to be
-> +  provided for the same OPP. At runtime, the platform can pick a <name> and
-> +  matching opp-microvolt-<name> property will be enabled for all OPPs. If the
-> +  platform doesn't pick a specific <name> or the <name> doesn't match with any
-> +  opp-microvolt-<name> properties, then opp-microvolt property shall be used, if
-> +  present.
+>  - regs:         Offset and length of the register set in the memory map
+> -- interrupts:   interrupt-specifier for the OTG interrupt.
+> +- interrupts:   interrupt-specifier for the OTG interrupts
 > +
->  - opp-microamp: The maximum current drawn by the device in microamperes
->    considering system specific parameters (such as transients, process, aging,
->    maximum operating temperature range etc.) as necessary. This may be used to
-> @@ -112,6 +120,9 @@ properties.
->    for few regulators, then this should be marked as zero for them. If it isn't
->    required for any regulator, then this property need not be present.
+> +- interrupt-names: Should contain the following:
+> +  "core_irq"    USB core interrupt
+> +  "async_irq"   Asynchronous interrupt to wake up from low power mode
+> +                (optional)
 >  
-> +- opp-microamp-<name>: Named opp-microamp property. Similar to
-> +  opp-microvolt-<name> property, but for microamp instead.
-> +
->  - clock-latency-ns: Specifies the maximum possible transition latency (in
->    nanoseconds) for switching to this OPP from any other OPP.
+>  - clocks:       A list of phandle + clock-specifier pairs for the
+>                  clocks listed in clock-names
+> @@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
+>      usb@f9a55000 {
+>          compatible = "qcom,usb-otg-snps";
+>          reg = <0xf9a55000 0x400>;
+> -        interrupts = <0 134 0>;
+> +        interrupts = <0 134 0>, <0 140 0>;
+> +        interrupt-names = "core_irq", "async_irq";
+>          dr_mode = "peripheral";
 >  
-> @@ -528,3 +539,39 @@ Example 6: opp-supported-hw
->  		};
->  	};
->  };
-> +
-> +Example 7: opp-microvolt-<name>, opp-microamp-<name>:
-> +(example: device with two possible microvolt ranges: slow and fast)
-> +
- > +/ {
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "arm,cortex-a7";
-> +			...
-> +
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +		};
-> +	};
-> +
-> +	cpu0_opp_table: opp_table0 {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp00 {
-
-Thought we are doing frequency for unit address here.
-
-> +			opp-hz = /bits/ 64 <1000000000>;
-> +			opp-microvolt-slow = <900000 915000 925000>;
-> +			opp-microvolt-fast = <970000 975000 985000>;
-> +			opp-microamp-slow =  <70000>;
-> +			opp-microamp-fast =  <71000>;
-> +		};
-> +
-> +		opp01 {
-> +			opp-hz = /bits/ 64 <1200000000>;
-> +			opp-microvolt-slow = <900000 915000 925000>, /* Supply vcc0 */
-> +					      <910000 925000 935000>; /* Supply vcc1 */
-> +			opp-microvolt-fast = <970000 975000 985000>, /* Supply vcc0 */
-> +					     <960000 965000 975000>; /* Supply vcc1 */
-> +			opp-microamp =  <70000>; /* Will be used for both slow/fast */
-> +		};
-> +	};
-> +};
+>          clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
 > -- 
-> 2.6.2.198.g614a2ac
+> 1.8.2.2
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
