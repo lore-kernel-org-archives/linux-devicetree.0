@@ -1,29 +1,94 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 11 Nov 2015 14:29:19 -0600
-Message-ID: <20151111202919.GA7281@rob-hp-laptop>
-References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFCv2 1/2] power: domain: add pm_genpd_uninit
+Date: Wed, 11 Nov 2015 21:29:26 +0100
+Message-ID: <CAPDyKFqKExt0CdF6hccnm4Z1Q_r3N3+HoCnAH6rj904ARTzhpQ@mail.gmail.com>
+References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
+	<1446590711-18928-2-git-send-email-alex.aring@gmail.com>
+	<CAPDyKFrkzMZZjFRM7EbqDqmW8EXzV22O_tp8a45LVGQYSn6b3g@mail.gmail.com>
+	<20151105143445.GC599@omega>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447223619-30945-1-git-send-email-bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tinamdar-qTEPVZfXA3Y@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, dhdang-qTEPVZfXA3Y@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151105143445.GC599@omega>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 12:03:39PM +0530, Bharat Kumar Gogada wrote:
-> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+[...]
 
-I acked v7. Please add acks when sending a new version.
+>> >
+>> > +/**
+>> > + * pm_genpd_uninit - Uninitialize a generic I/O PM domain object.
+>> > + * @genpd: PM domain object to initialize.
+>> > + */
+>> > +void pm_genpd_uninit(struct generic_pm_domain *genpd)
+>> > +{
+>> > +       if (IS_ERR_OR_NULL(genpd))
+>> > +               return;
+>> > +
+>> > +       mutex_lock(&gpd_list_lock);
+>> > +       list_del(&genpd->gpd_list_node);
+>> > +       mutex_unlock(&gpd_list_lock);
+>>
+>> This is too fragile. You don't protect from the cases below.
+>>
+>> 1. The genpd may have devices attached to it.
+>> 2. The genpd may have subdomains.
+>>
+>> To deal with these case, that's when it becomes more complex which I
+>> guess is the reason to why nobody really cared until now.
+>>
+>
+> Can we not just undo the things which pm_genpd_init does, then let the
+> driver to deal with all other uninitialize of e.g. "subdomains" which might
+> the driver has initialize before? We know there are no slaves or something
+> else which is empty because pm_genpd_init runs INIT_LIST_HEAD, or not?
+>
+> To make such handling above I would add some:
+>
+> "pm_genpd_uninit_recursive" function, which cleanup everything from a
+> power domain, e.g. subdomains, etc and other lists.
+>
+> What do you suggest to me for e.g. the raspberrypi power domain driver,
+> also simple ignore such error handling?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No, let's give it try so see if can improve the situation.
+
+>
+>
+> For my current use-case I can remove the failure between pm_genpd_init by
+> simple getting all "power states" (the bool is_off for pm_genpd_init),
+> before calling pm_genpd_init. In this case I don't have any failure between
+> calling pm_genpd_init when another pm_genpd_init was before.
+>
+> Looks like this:
+>
+> 1. get all states from firmware to get parameter "is_off", which can fail.
+>    We should get here the states for the power domains which we want to
+>    register only.
+>
+> 2. Then call pm_genpd_init, which cannot be fail between another
+>    pm_genpd_init. (There are only void functions in the middle, which cannot
+>    fail). If I call pm_genpd_init, I use "is_off" variable from the step
+>    of "1.".
+>
+>
+> But then I have still the call of "of_genpd_add_provider_onecell" at the end
+> of probing which can fail. So this is also not a valid solution, because
+> I need to undo everything before.
+
+Okay, got it.
+
+>
+>> Moreover, I think there are some more structures to "uninitialize"
+>> besides just unlinking the genpd struct from the gpd list. For example
+>> a mutex_destroy() should be done.
+>>
+>
+> yes, of course.
+>
+> - Alex
+
+Kind regards
+Uffe
