@@ -1,119 +1,46 @@
-From: Fengguang Wu <lkp@intel.com>
-Subject: Re: [kbuild-all] [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA
- channel driver
-Date: Wed, 11 Nov 2015 10:21:03 +0800
-Message-ID: <20151111022103.GA29459@wfg-t540p.sh.intel.com>
-References: <201511090323.GmbQltpW%fengguang.wu@intel.com>
- <563FEC48.2010404@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <563FEC48.2010404@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vinod Koul <vinod.koul@intel.com>, jcm@redhat.com, timur@codeaurora.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, agross@codeaurora.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-msm@vger.kernel.org, cov@codeaurora.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V3 0/5] PM / OPP: opp-supported-hw and <prop>-name bindings
+Date: Wed, 11 Nov 2015 08:10:53 +0530
+Message-ID: <cover.1447209519.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
+Hi Rafael,
 
-Sorry please ignore this warning -- it's actually a problem specific
-to the mn10300 arch. I'll disable such warning in mn10300 in future.
+Rob only needs to Ack the modified 2/5 patch and then you can safely
+apply this series.
 
-Thanks,
-Fengguang
+The first patch enables us to select only a subset of OPPs from the
+bigger table, based on what version of the hardware we are running on.
 
-On Sun, Nov 08, 2015 at 07:43:52PM -0500, Sinan Kaya wrote:
-> 
-> 
-> On 11/8/2015 2:13 PM, kbuild test robot wrote:
-> >Hi Sinan,
-> >
-> >[auto build test WARNING on: robh/for-next]
-> >[also build test WARNING on: v4.3 next-20151106]
-> >
-> >url:    https://github.com/0day-ci/linux/commits/Sinan-Kaya/ma-add-Qualcomm-Technologies-HIDMA-driver/20151108-125824
-> >base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux for-next
-> >config: mn10300-allyesconfig (attached as .config)
-> >reproduce:
-> >         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         make.cross ARCH=mn10300
-> >
-> >All warnings (new ones prefixed by >>):
-> >
-> >    In file included from include/linux/printk.h:277:0,
-> >                     from include/linux/kernel.h:13,
-> >                     from include/linux/list.h:8,
-> >                     from include/linux/kobject.h:20,
-> >                     from include/linux/device.h:17,
-> >                     from include/linux/dmaengine.h:20,
-> >                     from drivers/dma/qcom/hidma.c:45:
-> >    drivers/dma/qcom/hidma.c: In function 'hidma_prep_dma_memcpy':
-> >    include/linux/dynamic_debug.h:64:16: warning: format '%zu' expects argument of type 'size_t', but argument 7 has type 'unsigned int' [-Wformat=]
-> >      static struct _ddebug  __aligned(8)   \
-> >                    ^
-> >    include/linux/dynamic_debug.h:84:2: note: in expansion of macro 'DEFINE_DYNAMIC_DEBUG_METADATA'
-> >      DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, fmt);  \
-> >      ^
-> >    include/linux/device.h:1171:2: note: in expansion of macro 'dynamic_dev_dbg'
-> >      dynamic_dev_dbg(dev, format, ##__VA_ARGS__); \
-> >      ^
-> >>>drivers/dma/qcom/hidma.c:391:2: note: in expansion of macro 'dev_dbg'
-> >      dev_dbg(mdma->ddev.dev,
-> >      ^
-> >
-> >vim +/dev_dbg +391 drivers/dma/qcom/hidma.c
-> >
-> >    375	
-> >    376		mchan->allocated = 0;
-> >    377		spin_unlock_irqrestore(&mchan->lock, irqflags);
-> >    378		dev_dbg(mdma->ddev.dev, "freed channel for %u\n", mchan->dma_sig);
-> >    379	}
-> >    380	
-> >    381	
-> >    382	static struct dma_async_tx_descriptor *
-> >    383	hidma_prep_dma_memcpy(struct dma_chan *dmach, dma_addr_t dma_dest,
-> >    384				dma_addr_t dma_src, size_t len, unsigned long flags)
-> >    385	{
-> >    386		struct hidma_chan *mchan = to_hidma_chan(dmach);
-> >    387		struct hidma_desc *mdesc = NULL;
-> >    388		struct hidma_dev *mdma = mchan->dmadev;
-> >    389		unsigned long irqflags;
-> >    390	
-> >  > 391		dev_dbg(mdma->ddev.dev,
-> >    392			"memcpy: chan:%p dest:%pad src:%pad len:%zu\n", mchan,
-> >    393			&dma_dest, &dma_src, len);
-> >    394	
-> 
-> What am I missing?
-> 
-> len is size_t. This page says use %zu for size_t.
-> 
-> https://www.kernel.org/doc/Documentation/printk-formats.txt
-> 
-> 
-> 
-> >    395		/* Get free descriptor */
-> >    396		spin_lock_irqsave(&mchan->lock, irqflags);
-> >    397		if (!list_empty(&mchan->free)) {
-> >    398			mdesc = list_first_entry(&mchan->free, struct hidma_desc,
-> >    399						node);
-> >
-> >---
-> >0-DAY kernel test infrastructure                Open Source Technology Center
-> >https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> >
-> 
-> 
-> 
-> -- 
-> Sinan Kaya
-> Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux
-> Foundation Collaborative Project
-> _______________________________________________
-> kbuild-all mailing list
-> kbuild-all@lists.01.org
-> https://lists.01.org/mailman/listinfo/kbuild-all
+The second one enables us to select slightly different values for
+multiple properties, based on what kind of hardware they are running on.
+
+The third one removes an (unused) binding, which is replaced by the
+second patch with a better solution.
+
+The fourth patch is based on what Stephen suggested (and then reviewed)
+in the earlier series, and the 5th one updates the existing users of
+these bindings for it.
+
+V2->V3:
+- dropped turbo/suspend named properties
+- Applied all the Acks
+
+Viresh Kumar (5):
+  PM / OPP: Add "opp-supported-hw" binding
+  PM / OPP: Add {opp-microvolt|opp-microamp}-<name> binding
+  PM / OPP: Remove 'operating-points-names' binding
+  PM / OPP: Rename OPP nodes as opp@<opp-hz>
+  ARM: dts: exynos4412: Rename OPP nodes as opp@<opp-hz>
+
+ Documentation/devicetree/bindings/opp/opp.txt | 132 ++++++++++++++++++--------
+ arch/arm/boot/dts/exynos4412.dtsi             |  28 +++---
+ 2 files changed, 107 insertions(+), 53 deletions(-)
+
+-- 
+2.6.2.198.g614a2ac
+
