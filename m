@@ -1,43 +1,67 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 1/4] Documentation: dt-bindings: Describe SROMc configuration
-Date: Wed, 11 Nov 2015 14:43:12 -0600
-Message-ID: <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
-References: <cover.1446799912.git.p.fedin@samsung.com> <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
- <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com> <009301d11c4c$6eaa1eb0$4bfe5c10$@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 4.4
+Date: Wed, 11 Nov 2015 14:51:24 -0600
+Message-ID: <CAL_Jsq+r6TEe8TXVddt3dAVeU9bNBbeahm3zAMkKKgH8GAqGpg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <009301d11c4c$6eaa1eb0$4bfe5c10$@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 12:44 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
->  Hello!
->
->> > +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
->> > +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
->> > +                        Each value is specified in cycles and has the following
->> > +                        meaning and valid range:
->> > +                        Tacp : Page mode access cycle at Page mode (0 - 15)
->> > +                        Tcah : Address holding time after CSn (0 - 15)
->> > +                        Tcoh : Chip selection hold on OEn (0 - 15)
->> > +                        Tacc : Access cycle (0 - 31, the actual time is N + 1)
->> > +                        Tcos : Chip selection set-up before OEn (0 - 15)
->> > +                        Tacs : Address set-up before CSn (0 - 15)
->>
->> This is not easily extended. Perhaps a property per value instead.
->
->  We had a discussion with Krzysztof about it, he agreed with this form of the property.
-> My concern was that it's just too much typing, and makes little sense because these
-> settings always go together. If register layout changes, or parameter set changes in
-> incompatible way, then it's another device, not exynos-srom anymore.
->  So would you agree with that, or is your position strong?
+Hi Linus,
 
-I'm thinking for a new version of the controller which could add (or
-remove) new timing parameters, but then I guess you can interpret the
-field differently based on the compatible string. Anyway, your problem
-to deal with.
+Please pull. Details below.
 
 Rob
+
+
+The following changes since commit 2d799dde8e69494e0234b8ecd5ce95cd06224329:
+
+  MAINTAINERS: update DT binding doc locations (2015-11-05 13:40:40 -0600)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.4
+
+for you to fetch changes up to b1d06b60e90cd5016798b9984f8e420e753f4846:
+
+  of: Provide static inline function for of_translate_address if
+needed (2015-11-10 17:27:12 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.4-rc1:
+
+- Add empty of_translate_address needed for HiSilicon network driver.
+
+- Fix alignment requirements for CMA regions in DT.
+
+- Fix booting on PPC systems which can't do WARN() early.
+
+- Rename ak4554 binding doc from .c to .txt.
+
+----------------------------------------------------------------
+Guenter Roeck (1):
+      of: Provide static inline function for of_translate_address if needed
+
+Jason Liu (1):
+      drivers: of: of_reserved_mem: fixup the alignment with CMA setup
+
+Michael Ellerman (1):
+      of: Print rather than WARN'ing when overlap check fails
+
+Raphael Poggi (1):
+      dt-bindings: ak4554: extension should be .txt
+
+ .../devicetree/bindings/sound/{ak4554.c => ak4554.txt}        |  0
+ drivers/of/of_reserved_mem.c                                  | 11 +++++++----
+ include/linux/of.h                                            |  4 ++--
+ include/linux/of_address.h                                    |  7 +++++++
+ 4 files changed, 16 insertions(+), 6 deletions(-)
+ rename Documentation/devicetree/bindings/sound/{ak4554.c => ak4554.txt} (100%)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
