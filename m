@@ -1,139 +1,66 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 08/19] drm: Add Allwinner A10 Display Engine support
-Date: Wed, 11 Nov 2015 14:14:12 -0800
-Message-ID: <20151111221412.GH6114@lukather>
-References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
- <1446214865-3972-9-git-send-email-maxime.ripard@free-electrons.com>
- <20151030144409.GZ16848@phenom.ffwll.local>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 15/17] drm: bridge: analogix/dp: try force hpd after
+ plug in lookup failed
+Date: Wed, 11 Nov 2015 17:10:42 -0600
+Message-ID: <20151111231042.GA29893@rob-hp-laptop>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+ <1446167355-6387-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qPhbOctOI3h5o759"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBN73R2ZAKGQEBFPFMHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151030144409.GZ16848-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1446167355-6387-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
---qPhbOctOI3h5o759
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi Daniel,
-
-Thanks for your review!
-
-On Fri, Oct 30, 2015 at 03:44:09PM +0100, Daniel Vetter wrote:
-> > +static void sun4i_crtc_disable(struct drm_crtc *crtc)
-> > +{
-> > +	struct sun4i_crtc *scrtc = drm_crtc_to_sun4i_crtc(crtc);
-> > +	struct sun4i_drv *drv = scrtc->drv;
-> > +
-> > +	DRM_DEBUG_DRIVER("Disabling the CRTC\n");
-> > +
-> > +	if (!scrtc->enabled)
-> > +		return;
+On Fri, Oct 30, 2015 at 09:09:15AM +0800, Yakir Yang wrote:
+> Some edp screen do not have hpd signal, so we can't just return
+> failed when hpd plug in detect failed.
 > 
-> Please don't do this - the atomic state should always reflect the true hw
-> state (fix that up with either hw state readout or reset in the ->reset
-> callbacks), and the atomic helpers guarantee that they'll never call you
-> when not needed. If you don't trust them do a WARN_ON at least, but no
-> early silent returns.
+> This is an hardware property, so we need add a devicetree property
+> "analogix,need-force-hpd" to indicate this sutiation.
 > 
-> Personally I'd just rip it out, it's too much trouble. And for debugging
-> the atomic helpers already trace it all (or at least should).
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
 
-Ok. Is there a preferred way to do HW state readout, or should I just
-add that to my probe?
+I didn't find this one in v10. Did it get dropped?
 
-> > +static int sun4i_drv_connector_plug_all(struct drm_device *drm)
+> Changes in v9: None
+> Changes in v8: None
+> Changes in v7: None
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3:
+> - Add "analogix,need-force-hpd" to indicate whether driver need foce
+>   hpd when hpd detect failed.
 > 
-> Laurent Pinchart has this as a rfc patch for drm core, please coordinate
-> with him and rebase on top of his patches.
-
-Ack, I will.
-
-> > +static int sun4i_drv_enable_vblank(struct drm_device *drm, int pipe)
-> > +{
-> > +	struct sun4i_drv *drv = drm->dev_private;
-> > +	struct sun4i_tcon *tcon = drv->tcon;
-> > +
-> > +	DRM_DEBUG_DRIVER("Enabling VBLANK on pipe %d\n", pipe);
-> > +
-> > +	sun4i_tcon_enable_vblank(tcon, true);
-> > +
-> > +	return 0;
+> Changes in v2: None
 > 
-> atomic helpers rely on enable_vblank failing correctly when the pipe is
-> off and vlbanks will never happen. You probably need a correct error code
-> here that checks crtc->state->active (well not that directly but something
-> derived from it, since the pointer chase would be racy).
-
-Ok.
-
-> I know it's a bit a mess since we don't have kms-native vblank driver
-> hooks yet and really the drm core should get this right for you. It'll
-> happen eventually, but drm_irq.c is a bit moldy ;-)
-
-I can't really use drm_irq anyway, since we don't have a single
-interrupt for the VBLANK, but two, that we have to use depending on
-the output.
-
-> > +static void sun4i_drv_disable_vblank(struct drm_device *drm, int pipe)
-> > +{
-> > +	struct sun4i_drv *drv = drm->dev_private;
-> > +	struct sun4i_tcon *tcon = drv->tcon;
-> > +
-> > +	DRM_DEBUG_DRIVER("Disabling VBLANK on pipe %d\n", pipe);
-> > +
-> > +	sun4i_tcon_enable_vblank(tcon, false);
-> > +}
-> > +
-> > +static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
+>  .../bindings/display/bridge/analogix_dp.txt        |  4 ++-
+>  .../bindings/display/exynos/exynos_dp.txt          |  1 +
+>  .../display/rockchip/analogix_dp-rockchip.txt      |  1 +
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 36 +++++++++++++++++++---
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  2 ++
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  |  9 ++++++
+>  6 files changed, 47 insertions(+), 6 deletions(-)
 > 
-> load/unload callbacks are depracated since fundamentally racy, and we
-> can't fix that due to the pile of legacy dri1 drivers. Please use
-> drm_dev_alloc/register/unregister/unref functions instead, with the
-> load/unload code placed in between to avoid races with userspace seeing
-> the device/driver (e.g. in sysfs) while it's in a partially defunct state.
-> 
-> Relevant kerneldoc has the details, at least in linux-next.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+> index 7659a7a..74f0e80 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+> @@ -22,6 +22,9 @@ Required properties for dp-controller:
+>  		from general PHY binding: Should be "dp".
+>  
+>  Optional properties for dp-controller:
+> +	-analogix,need-force-hpd:
+> +		Indicate driver need force hpd when hpd detect failed, this
+> +		is used for some eDP screen which don't have hpd signal.
 
-Ok.
+This should be a generic property.
 
-> > +static void sun4i_backend_layer_atomic_update(struct drm_plane *plane,
-> > +					      struct drm_plane_state *old_state)
-> > +{
-> > +	struct sun4i_layer *layer = plane_to_sun4i_layer(plane);
-> > +	struct sun4i_drv *drv = layer->drv;
-> > +	struct sun4i_backend *backend = drv->backend;
-> > +
-> > +	sun4i_backend_update_layer_coord(backend, layer->id, plane);
-> > +	sun4i_backend_update_layer_formats(backend, layer->id, plane);
-> > +	sun4i_backend_update_layer_buffer(backend, layer->id, plane);
-> > +	sun4i_backend_layer_enable(backend, layer->id, true);
-> > +	sun4i_backend_commit(backend);
-> 
-> Not idea how exactly your hw works, but the call to sun4i_backend_commit
-> probably should be in the crtc->atomic_flush function, to make sure that
-> plane updates across multiple planes are indeed atomic.
-
-The hardware will not take the register writes into account until a
-bit is set (in the _commit function), so I guess putting it in
-atomic_flush makes sense.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---qPhbOctOI3h5o759--
+Rob
