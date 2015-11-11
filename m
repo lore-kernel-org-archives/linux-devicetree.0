@@ -1,64 +1,118 @@
-From: Pavel Fedin <p.fedin@samsung.com>
-Subject: RE: [PATCH v7 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Wed, 11 Nov 2015 09:44:35 +0300
-Message-ID: <009301d11c4c$6eaa1eb0$4bfe5c10$@samsung.com>
-References: <cover.1446799912.git.p.fedin@samsung.com>
- <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
- <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com>
+From: "R, Vignesh" <vigneshr@ti.com>
+Subject: Re: [PATCH v3 1/5] spi: introduce mmap read support for spi flash
+ devices
+Date: Wed, 11 Nov 2015 12:20:46 +0530
+Message-ID: <5642E546.3040806@ti.com>
+References: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
+ <1447133399-25658-2-git-send-email-vigneshr@ti.com>
+ <20151110232341.GU12143@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com>
-Content-language: ru
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rob Herring' <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151110232341.GU12143@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
- Hello!
+Hi Brain,
 
-> > +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
-> > +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
-> > +                        Each value is specified in cycles and has the following
-> > +                        meaning and valid range:
-> > +                        Tacp : Page mode access cycle at Page mode (0 - 15)
-> > +                        Tcah : Address holding time after CSn (0 - 15)
-> > +                        Tcoh : Chip selection hold on OEn (0 - 15)
-> > +                        Tacc : Access cycle (0 - 31, the actual time is N + 1)
-> > +                        Tcos : Chip selection set-up before OEn (0 - 15)
-> > +                        Tacs : Address set-up before CSn (0 - 15)
+On 11/11/2015 4:53 AM, Brian Norris wrote:
+> Hi Vignesh,
 > 
-> This is not easily extended. Perhaps a property per value instead.
-
- We had a discussion with Krzysztof about it, he agreed with this form of the property.
-My concern was that it's just too much typing, and makes little sense because these
-settings always go together. If register layout changes, or parameter set changes in
-incompatible way, then it's another device, not exynos-srom anymore.
- So would you agree with that, or is your position strong?
-
-> >                 compatible = "samsung,exynos-srom";
-> > -               reg = <0x12570000 0x10>;
-> > +               reg = <0x12570000 0x14>;
-> > +
-> > +               ethernet@3 {
-> > +                       compatible = "smsc,lan9115";
-> > +                       reg = <3 0 0x10000>;       // Bank 3, offset = 0
-> > +                       phy-mode = "mii";
-> > +                       interrupt-parent = <&gpx0>;
-> > +                       interrupts = <5 8>;
-> > +                       reg-io-width = <2>;
-> > +                       smsc,irq-push-pull;
-> > +                       smsc,force-internal-phy;
-> > +
-> > +                       samsung,srom-config = <1 9 12 1 9 1 1>;
+> Sorry for the late review. I did not have time to review much back when
+> you submitted your first RFCs for this.
 > 
-> This doesn't match the doc.
+> On Tue, Nov 10, 2015 at 10:59:55AM +0530, Vignesh R wrote:
+>> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+>> index cce80e6dc7d1..2f2c431b8917 100644Hi
+>> --- a/include/linux/spi/spi.h
+>> +++ b/include/linux/spi/spi.h
+>> @@ -361,6 +361,11 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+>>   * @handle_err: the subsystem calls the driver to handle an error that occurs
+>>   *		in the generic implementation of transfer_one_message().
+>>   * @unprepare_message: undo any work done by prepare_message().
+>> + * @spi_mtd_mmap_read: some spi-controller hardwares provide memory.
+>> + *                     Flash drivers (like m25p80) can request memory
+>> + *                     mapped read via this method. This interface
+>> + *                     should only be used by mtd flashes and cannot be
+>> + *                     used by other spi devices.
+>>   * @cs_gpios: Array of GPIOs to use as chip select lines; one per CS
+>>   *	number. Any individual value may be -ENOENT for CS lines that
+>>   *	are not GPIOs (driven by the SPI controller itself).
+>> @@ -507,6 +512,11 @@ struct spi_master {
+>>  			       struct spi_message *message);
+>>  	int (*unprepare_message)(struct spi_master *master,
+>>  				 struct spi_message *message);
+>> +	int (*spi_mtd_mmap_read)(struct  spi_device *spi,
+>> +				 loff_t from, size_t len,
+>> +				 size_t *retlen, u_char *buf,
+>> +				 u8 read_opcode, u8 addr_width,
+>> +				 u8 dummy_bytes);
+> 
+> Is this API really sufficient? There are actually quite a few other
+> flash-related parameters that might be relevant to a controller. I
+> presume you happen not hit them because of the particular cases you're
+> using this for right now, but:
+> 
+>  * How many I/O lines are being used? These can vary depending on the
+>    type of flash and the number of I/O lines supported by the controller
+>    and connected on the board.
+> 
 
- Damn, overlooked. :(
+This API communicates whatever data is currently communicated via
+spi_message through spi_sync/transfer_one interfaces.
 
-Kind regards,
-Pavel Fedin
-Expert Engineer
-Samsung Electronics Research center Russia
+>  * The previous point can vary across parts of the message. There are
+>    various combinations of 1/2/4 lines used for opcode/address/data. We
+>    only support a few of those combinations in m25p80 right now, but
+>    you're not specifying any of that in this API. I guess you're just
+>    making assumptions? (BTW, I think there are others having problems
+>    with the difference between different "quad" modes on Micron flash; I
+>    haven't sorted through all the discussion there.)
+> 
+
+How is the spi controller currently being made aware of this via
+m25p80_read / spi_sync() interface? AFAIK, mode field of spi_device
+struct tell whether to do normal/dual/quad read but there is no info
+communicated wrt 1/2/4 opcode/address/data combinations. And there is no
+info indicating capabilities of spi-master wrt no of IO lines for
+opcode/address/data that it can support.
+
+>    There are typically both flash device and SPI controller constraints
+>    on this question, so there needs to be some kind of negotiation
+>    involved, I expect. Or at least, the SPI master needs to expose which
+>    modes it can support with this flash-read API.
+> 
+
+If spi-master capabilities are known then spi_mmap_read_supported() (or
+a new function perhaps) can be used for negotiation. These capabilities
+can be added incrementally once ability to specify spi-master
+capabilities are in place.
+
+> Also, this API doesn't actually have anything to do with memory mapping.
+> It has to do with the de facto standard flash protocol. So I don't think
+> mmap belongs in the name; it should be something about flash. (I know of
+> at least one other controller that could probably use this API, excpet
+> it doesn't use memory mapping to accomplish the accelerated flash read.)
+> 
+
+As far as TI QSPI controller is concerned, the accelerated read happens
+via mmap port whereby a predefined memory address space of SoC is
+exposed as QSPI mmap region. This region can be accessed like normal
+RAM(via memcpy()) and the QSPI controller interface takes care of
+fetching data from flash on SPI bus automatically hence, I named it as
+above. But, I have no hard feelings if it needs to be generalized to
+spi_mtd_read() or something else.
+
+Regards
+Vignesh
