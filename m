@@ -1,116 +1,119 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
-Date: Wed, 11 Nov 2015 11:16:01 +0900
-Message-ID: <5642A4E1.8060000@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-16-git-send-email-milo.kim@ti.com>
- <5638DD99.9070502@samsung.com> <56419F0C.90009@ti.com>
- <5641F4D3.7000800@samsung.com>
+From: Fengguang Wu <lkp@intel.com>
+Subject: Re: [kbuild-all] [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA
+ channel driver
+Date: Wed, 11 Nov 2015 10:21:03 +0800
+Message-ID: <20151111022103.GA29459@wfg-t540p.sh.intel.com>
+References: <201511090323.GmbQltpW%fengguang.wu@intel.com>
+ <563FEC48.2010404@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5641F4D3.7000800-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <563FEC48.2010404@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vinod Koul <vinod.koul@intel.com>, jcm@redhat.com, timur@codeaurora.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, agross@codeaurora.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-msm@vger.kernel.org, cov@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hi Sinan,
 
-On 11/10/2015 10:44 PM, Jacek Anaszewski wrote:
->>>> +static ssize_t lm3633_led_store_pattern_levels(struct device *dev,
->>>> >>>+                           struct device_attribute *attr,
->>>> >>>+                           const char *buf, size_t len)
->>>> >>>+{
->>>> >>>+    struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
->>>> >>>+    struct ti_lmu_led_chip *chip = lmu_led->chip;
->>>> >>>+    unsigned int low, high;
->>>> >>>+    u8 reg, offset, val;
->>>> >>>+    int ret;
->>>> >>>+
->>>> >>>+    /*
->>>> >>>+     * Sequence
->>>> >>>+     *
->>>> >>>+     * 1) Read pattern level data
->>>> >>>+     * 2) Disable a bank before programming a pattern
->>>> >>>+     * 3) Update LOW BRIGHTNESS register
->>>> >>>+     * 4) Update HIGH BRIGHTNESS register
->>>> >>>+     *
->>>> >>>+     * Level register addresses have offset number based on the LED
->>>> >>>bank.
->>>> >>>+     */
->>>> >>>+
->>>> >>>+    ret = sscanf(buf, "%u %u", &low, &high);
->>>> >>>+    if (ret != 2)
->>>> >>>+        return -EINVAL;
->>>> >>>+
->>>> >>>+    low = min_t(unsigned int, low, LM3633_LED_MAX_BRIGHTNESS);
->>> >>
->>> >>Why don't you take into account the value defined by led-max-microamp
->>> >>DT property here?
->> >
->> >'low' and 'high' are brightness value. The range is from 0 to 255. It is
->> >mostly related with LED sysfs -/sys/class/led/<led>/brightness.
->> >On the other hand, led-max-microamp is current limit. It is from 5mA to
->> >30mA. It's different configuration in this device.
-> Doesn't the current has direct influence on the LED brightness?
-> Are there other means for adjusting brightness than current setting?
-> I see in your enum ti_lmu_max_current, that there are 26 possible
-> current levels. I think that they should reflect 26 possible
-> brightness levels, so max_brightness can be at most 26.
+Sorry please ignore this warning -- it's actually a problem specific
+to the mn10300 arch. I'll disable such warning in mn10300 in future.
 
-Let me describe LM3633 in more details. I'd like to have your opinion 
-about led-max-microamp and max_brightness usages. Datasheet would be 
-better to figure out characteristics.
+Thanks,
+Fengguang
 
-	http://www.ti.com/lit/ds/symlink/lm3633.pdf
-
-Max current level is not same as brightness level in LM3633.
-LM3633 device has two parameters for output brightness control.
-One is brightness code(base register address is 0x44). The other is 
-current limit(base register address is 0x22). It also provides hardware 
-protection like excessive current.
-
-	0 <= brightness_code <= 0xff
-	0 <= current_limit_code <= 0x1f, it means
-	5mA <= current_limit <= 30mA.
-
-LM3633 device calculates the output current below.
-
-	(1) Linear brightness mode
-	Iout = current_limit * brightness_code/255
-
-	(2) Exponential brightness mode
-	Iout = current_limit * 0.85 ^ (44 - (brightness_code + 1)/5.18)
-
-So output current(Iout) can not be in excess of current_limit.
-
->
-> led-max-microamp was designed for defining max brightness limit.
-> It should be converted into max brightness level in the driver and
-> assigned to max_brightness property of struct led_classdev.
-> This attribute overrides legacy 0-255 brightness scale.
->
-
-It could be applied when brightness is determined by only one parameter 
-- current level. Flash/torch device would be a good example. In this 
-device, current setting is directly scaled to the output brightness.
-
-However, LM3633 has two parameters for the brightness control - current 
-limit and brightness level. Max current setting is one of brightness 
-control parameters. In this patch, 'led-max-microamp' from DT is 
-converted to 'current_limit_code'. Then, this value is written once when 
-the driver is initialized. On the other hand, 'brightness_code' can be 
-changed at run time. And 'max_brightness' of led_classdev is set to max 
-brightness register value, 0xff.
-
-It sounds 'led-max-microamp' property might not be a general usage in 
-LM3633. Do you have some idea?
-
-Best regards,
-Milo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sun, Nov 08, 2015 at 07:43:52PM -0500, Sinan Kaya wrote:
+> 
+> 
+> On 11/8/2015 2:13 PM, kbuild test robot wrote:
+> >Hi Sinan,
+> >
+> >[auto build test WARNING on: robh/for-next]
+> >[also build test WARNING on: v4.3 next-20151106]
+> >
+> >url:    https://github.com/0day-ci/linux/commits/Sinan-Kaya/ma-add-Qualcomm-Technologies-HIDMA-driver/20151108-125824
+> >base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux for-next
+> >config: mn10300-allyesconfig (attached as .config)
+> >reproduce:
+> >         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         make.cross ARCH=mn10300
+> >
+> >All warnings (new ones prefixed by >>):
+> >
+> >    In file included from include/linux/printk.h:277:0,
+> >                     from include/linux/kernel.h:13,
+> >                     from include/linux/list.h:8,
+> >                     from include/linux/kobject.h:20,
+> >                     from include/linux/device.h:17,
+> >                     from include/linux/dmaengine.h:20,
+> >                     from drivers/dma/qcom/hidma.c:45:
+> >    drivers/dma/qcom/hidma.c: In function 'hidma_prep_dma_memcpy':
+> >    include/linux/dynamic_debug.h:64:16: warning: format '%zu' expects argument of type 'size_t', but argument 7 has type 'unsigned int' [-Wformat=]
+> >      static struct _ddebug  __aligned(8)   \
+> >                    ^
+> >    include/linux/dynamic_debug.h:84:2: note: in expansion of macro 'DEFINE_DYNAMIC_DEBUG_METADATA'
+> >      DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, fmt);  \
+> >      ^
+> >    include/linux/device.h:1171:2: note: in expansion of macro 'dynamic_dev_dbg'
+> >      dynamic_dev_dbg(dev, format, ##__VA_ARGS__); \
+> >      ^
+> >>>drivers/dma/qcom/hidma.c:391:2: note: in expansion of macro 'dev_dbg'
+> >      dev_dbg(mdma->ddev.dev,
+> >      ^
+> >
+> >vim +/dev_dbg +391 drivers/dma/qcom/hidma.c
+> >
+> >    375	
+> >    376		mchan->allocated = 0;
+> >    377		spin_unlock_irqrestore(&mchan->lock, irqflags);
+> >    378		dev_dbg(mdma->ddev.dev, "freed channel for %u\n", mchan->dma_sig);
+> >    379	}
+> >    380	
+> >    381	
+> >    382	static struct dma_async_tx_descriptor *
+> >    383	hidma_prep_dma_memcpy(struct dma_chan *dmach, dma_addr_t dma_dest,
+> >    384				dma_addr_t dma_src, size_t len, unsigned long flags)
+> >    385	{
+> >    386		struct hidma_chan *mchan = to_hidma_chan(dmach);
+> >    387		struct hidma_desc *mdesc = NULL;
+> >    388		struct hidma_dev *mdma = mchan->dmadev;
+> >    389		unsigned long irqflags;
+> >    390	
+> >  > 391		dev_dbg(mdma->ddev.dev,
+> >    392			"memcpy: chan:%p dest:%pad src:%pad len:%zu\n", mchan,
+> >    393			&dma_dest, &dma_src, len);
+> >    394	
+> 
+> What am I missing?
+> 
+> len is size_t. This page says use %zu for size_t.
+> 
+> https://www.kernel.org/doc/Documentation/printk-formats.txt
+> 
+> 
+> 
+> >    395		/* Get free descriptor */
+> >    396		spin_lock_irqsave(&mchan->lock, irqflags);
+> >    397		if (!list_empty(&mchan->free)) {
+> >    398			mdesc = list_first_entry(&mchan->free, struct hidma_desc,
+> >    399						node);
+> >
+> >---
+> >0-DAY kernel test infrastructure                Open Source Technology Center
+> >https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> >
+> 
+> 
+> 
+> -- 
+> Sinan Kaya
+> Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux
+> Foundation Collaborative Project
+> _______________________________________________
+> kbuild-all mailing list
+> kbuild-all@lists.01.org
+> https://lists.01.org/mailman/listinfo/kbuild-all
