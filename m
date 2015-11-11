@@ -1,89 +1,68 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
-Date: Wed, 11 Nov 2015 15:50:05 -0800
-Message-ID: <7hpozgyu36.fsf@deeprootsystems.com>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	<1445843717.23888.1.camel@mtksdaap41>
-	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-	<1445859610.26723.4.camel@mtksdaap41>
-	<CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
-	<1447135867.14454.9.camel@mtksdaap41>
-	<7h1tbx1gjp.fsf@deeprootsystems.com>
-	<1447228557.20886.10.camel@mtksdaap41>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 2/4] clk: rockchip: set an ID for crypto clk
+Date: Thu, 12 Nov 2015 00:57:21 +0100
+Message-ID: <1790934.FgjVNmeB1J@phil>
+References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com> <1447223759-20730-3-git-send-email-zain.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447228557.20886.10.camel@mtksdaap41> (Eddie Huang's message of
-	"Wed, 11 Nov 2015 15:55:57 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1447223759-20730-3-git-send-email-zain.wang@rock-chips.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Zain Wang <zain.wang@rock-chips.com>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+Am Mittwoch, 11. November 2015, 14:35:57 schrieb Zain Wang:
+> Set an ID for crypto clk, so that it can be called in other part.
+> 
+> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
 
-Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
+this should go in together with patch4, the dts change, so an Ack from the
+clock-maintainers would be nice :-)
 
-> On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
->> Hi Eddie,
->> 
->> [...]
->> 
->> > I check the log [0],
->> 
->> Thanks for checking into this boot failure.
->> 
->> > it seems first time mt8135-evbp1 boot to kernel
->> > shell successfully, then boot again. In the second time, mt8135 stay in
->> > fastboot mode, waiting host send boot image, then timeout.
->> 
->> Actually, it never gets to a shell the first time.  If you look closely,
->> the target reboots as soon as userspace starts.   Look for the PYBOOT
->> line which says "finished booting, starting userspace"
->> 
->> Later on, pyboot thinks it finds a root shell due to finding '#'
->> characters, but clearly it never got to a shell.
->> 
->> > I download zImage and dtb in [1], and kernel run to shell successfully
->> > on my platform.
->> 
->> Are you can you try using a ramdisk as well?  You can use the pre-built
->> one here:
->> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
->> 
->
-> Yes, I tried this ramdisk, and I can reproduce fail issue.
->
 
-OK, good.   Thanks for looking into it.
+Heiko
 
->> Please check my boot logs to see how I'm generating the boot.img file
->> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
->> that the kernel image size with a ramdisk is breaking some of the
->> assumptions in the fastboot mode.  I've seen problems like this on other
->> platforms due to hard-coded sizes/addresses in the boot firmware.
->> 
->
-> MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
-> thus cause user space fail.
-
-Aha, I was right!  ;)
-
-> I will prepare new firmware that extend BOOT
-> partition to 16MB. and put new firmware on Howard's github. I will mail
-> to you when I am ready..
-
-Great, thanks for working on this.
-
-Any chance of making it even bigger?  We're working on running some more
-automated testing from a ramdisk, and those ramdisks will be easily
-30-50 Mb with modules included and a rootfs with extra tests.
-
-Kevin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> 
+> Changed in v3:
+> - None
+> 
+> Changed in v2: 
+> - None
+> 
+> Changed in v1:
+> - define SCLK_CRYPTO in rk3288-cru.h
+> - use SCLK_CRYPTO instead of SRST_CRYPTO
+> 
+>  drivers/clk/rockchip/clk-rk3288.c      | 2 +-
+>  include/dt-bindings/clock/rk3288-cru.h | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> index 9040878..3fceda1 100644
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
+> +	COMPOSITE_NOMUX(SCLK_CRYPTO, "crypto", "aclk_cpu_pre", 0,
+>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+> index c719aac..30dcd60 100644
+> --- a/include/dt-bindings/clock/rk3288-cru.h
+> +++ b/include/dt-bindings/clock/rk3288-cru.h
+> @@ -86,6 +86,7 @@
+>  #define SCLK_USBPHY480M_SRC	122
+>  #define SCLK_PVTM_CORE		123
+>  #define SCLK_PVTM_GPU		124
+> +#define SCLK_CRYPTO			125
+>  
+>  #define SCLK_MAC		151
+>  #define SCLK_MACREF_OUT		152
+> 
