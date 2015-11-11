@@ -1,43 +1,31 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: OMAP2+: dts: cm-t335: initial support
-Date: Wed, 11 Nov 2015 09:50:49 -0800
-Message-ID: <20151111175048.GG3218@atomide.com>
-References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
- <56437BA1.8030807@compulab.co.il>
+From: Alexander Aring <alex.aring@gmail.com>
+Subject: Re: [RFCv2 1/2] power: domain: add pm_genpd_uninit
+Date: Wed, 11 Nov 2015 19:00:21 +0100
+Message-ID: <20151111180019.GB2621@omega>
+References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
+ <1446590711-18928-2-git-send-email-alex.aring@gmail.com>
+ <CAPDyKFrkzMZZjFRM7EbqDqmW8EXzV22O_tp8a45LVGQYSn6b3g@mail.gmail.com>
+ <20151105143445.GC599@omega>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56437BA1.8030807-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, igor.grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org
+In-Reply-To: <20151105143445.GC599@omega>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-* Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org> [151111 09:32]:
-> Gentle ping
+On Thu, Nov 05, 2015 at 03:34:45PM +0100, Alexander Aring wrote:
+> 
+> What do you suggest to me for e.g. the raspberrypi power domain driver,
+> also simple ignore such error handling?
+> 
 
-Well the merge window is ongoing, and I'm not touching anything
-except fixes until they are all out of the way. And after that
-I'll start applying patches for v4.5 merge window, usually by
--rc2 except when things go wrong and we have regressions with
-the mainline kernel like we did during v4.3-rc cycle.
+ping, I also can add some WARN_ON_ONCE, if the list for sub-domains,
+etc. are not empty. This would then report about wrong use of
+pm_genpd_uninit.
 
-So for fixes, it's always a good time to send them. The sooner
-we have fixes out of the way after each merge window, the sooner
-I'll start applying new features.
-
-So for new features, between -rc1 and -rc4. We really want to
-have all the new code sit in Linux next for a few weeks before
-each merge window so in general I try to have things ready togo
-by -rc5 for most part and by -rc6 latest.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Alex
