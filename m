@@ -1,66 +1,60 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 4.4
-Date: Wed, 11 Nov 2015 14:51:24 -0600
-Message-ID: <CAL_Jsq+r6TEe8TXVddt3dAVeU9bNBbeahm3zAMkKKgH8GAqGpg@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] arm64: dts: mt8173: Add nor flash node
+Date: Wed, 11 Nov 2015 13:39:00 -0800
+Message-ID: <20151111213900.GK12143@google.com>
+References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
+ <1446824889-16144-4-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446824889-16144-4-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Fri, Nov 06, 2015 at 11:48:09PM +0800, Bayi Cheng wrote:
+> Add Mediatek nor flash node
+> 
+> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Please pull. Details below.
+Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Rob
-
-
-The following changes since commit 2d799dde8e69494e0234b8ecd5ce95cd06224329:
-
-  MAINTAINERS: update DT binding doc locations (2015-11-05 13:40:40 -0600)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.4
-
-for you to fetch changes up to b1d06b60e90cd5016798b9984f8e420e753f4846:
-
-  of: Provide static inline function for of_translate_address if
-needed (2015-11-10 17:27:12 -0600)
-
-----------------------------------------------------------------
-DeviceTree fixes for 4.4-rc1:
-
-- Add empty of_translate_address needed for HiSilicon network driver.
-
-- Fix alignment requirements for CMA regions in DT.
-
-- Fix booting on PPC systems which can't do WARN() early.
-
-- Rename ak4554 binding doc from .c to .txt.
-
-----------------------------------------------------------------
-Guenter Roeck (1):
-      of: Provide static inline function for of_translate_address if needed
-
-Jason Liu (1):
-      drivers: of: of_reserved_mem: fixup the alignment with CMA setup
-
-Michael Ellerman (1):
-      of: Print rather than WARN'ing when overlap check fails
-
-Raphael Poggi (1):
-      dt-bindings: ak4554: extension should be .txt
-
- .../devicetree/bindings/sound/{ak4554.c => ak4554.txt}        |  0
- drivers/of/of_reserved_mem.c                                  | 11 +++++++----
- include/linux/of.h                                            |  4 ++--
- include/linux/of_address.h                                    |  7 +++++++
- 4 files changed, 16 insertions(+), 6 deletions(-)
- rename Documentation/devicetree/bindings/sound/{ak4554.c => ak4554.txt} (100%)
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index d18ee42..f5f08eb 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -365,6 +365,22 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		nor_flash: spi@1100d000 {
+> +			compatible = "mediatek,mt8173-nor";
+> +			reg = <0 0x1100d000 0 0xe0>;
+> +			clocks = <&pericfg CLK_PERI_SPI>,
+> +				 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> +			clock-names = "spi", "sf";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +
+> +			flash@0 {
+> +				compatible = "jedec,spi-nor";
+> +				reg = <0>;
+> +			};
+> +		};
+> +
+>  		i2c3: i2c3@11010000 {
+>  			compatible = "mediatek,mt8173-i2c";
+>  			reg = <0 0x11010000 0 0x70>,
+> -- 
+> 1.8.1.1.dirty
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
