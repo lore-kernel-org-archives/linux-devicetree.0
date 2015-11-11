@@ -1,58 +1,51 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: rockchip: add eFuse node for rk3188 SoCs
-Date: Wed, 11 Nov 2015 15:34:31 +0800
-Message-ID: <1447227272-1728-5-git-send-email-wxt@rock-chips.com>
-References: <1447227272-1728-1-git-send-email-wxt@rock-chips.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [RFC PATCH v1 0/2] Introduce Innosilicon HDMI driver on Rockchip
+ platforms
+Date: Wed, 11 Nov 2015 15:45:52 +0800
+Message-ID: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1447227272-1728-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the eFuse dt node for rk3188 SoCs.
-
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
----
-
- arch/arm/boot/dts/rk3188.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 6399942..b01ef45 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -144,6 +144,19 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	efuse: efuse@20010000 {
-+		compatible = "rockchip,rockchip-efuse";
-+		reg = <0x20010000 0x4000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		clocks = <&cru PCLK_EFUSE>;
-+		clock-names = "pclk_efuse";
-+
-+		cpu_leakage: cpu_leakage {
-+			reg = <0x17 0x1>;
-+		};
-+	};
-+
- 	usbphy: phy {
- 		compatible = "rockchip,rk3188-usb-phy", "rockchip,rk3288-usb-phy";
- 		rockchip,grf = <&grf>;
--- 
-1.9.1
+SGkgZ3V5czoKCkhlcmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhE
+TUkgSVA6CiAtIFN1cHBvcnQgSERNSSAxLjRhLCBIRENQIDEuMiBhbmQgRFZJIDEuMCBzdGFuZGFy
+ZCBjb21wbGlhbnQgdHJhbnNtaXR0ZXIKIC0gU3VwcG9ydCBIRE1JMS40IGEvYiAzRCBmdW5jdGlv
+biBkZWZpbmVkIGluIEhETUkgMS40IGEvYiBzcGVjCiAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNl
+IHN1cHBvcnRzIGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IKICAgZGVw
+dGggaW4gUkdCCiAtIFMvUERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBEaWdpdGFsLCBE
+VFMgZGlnaXRhbCBhdWRpbyB0cmFuc21pc3Npb24KICAgKDMyLTE5MmtIeiBGcykgdXNpbmcgSUVD
+NjA5NTggYW5kIElFQyA2MTkzNwogLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNv
+IHN1cHBvcnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyCiAgIENvbnRyb2xsZQoK
+VGhpcyBJUCBoYXZlIGJlZW4gaW50ZWdyYXRlZCBvbiBzb21lIFJvY2tjaGlwIENQVXMgKGxpa2Ug
+UkszMDM2L1JLMzEyeCksIGR1ZQp0byB0aG9zZSBDUFVzIGhhdmVuJ3QgYmVlbiBsYW5kZWQgb24g
+bWFubGluZSBrZXJuZWwsIHNvIEkgY3JlYXQgYSBicmFuY2ggdG8KdmVyaWZ5IHRoaXMgc2VyaWVz
+IFtodHRwczovL2dpdGh1Yi5jb20vcm9ja2NoaXAtbGludXgva2VybmVsXS4KCi0gWWFraXIKCgpZ
+YWtpciBZYW5nICgyKToKICBkcm06IHJvY2tjaGlwL2hkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1J
+IHN1cHBvcnQKICBkdC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1J
+IG9uIFJvY2tjaGlwIHBsYXRmb3JtCgogLi4uL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJv
+Y2tjaGlwLnR4dCAgICAgICAgfCAgIDUwICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgIHwgICAgOCArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL2lubm9faGRtaS5jICAgICAgICAgICAgICAgfCAxMDA4ICsrKysrKysrKysrKysrKysrKysr
+CiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmggICAgICAgICAgICAgICB8ICAz
+NjQgKysrKysrKwogNSBmaWxlcyBjaGFuZ2VkLCAxNDMxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
+Y2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS5oCgotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
