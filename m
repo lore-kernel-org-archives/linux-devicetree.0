@@ -1,31 +1,68 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [RFCv2 1/2] power: domain: add pm_genpd_uninit
-Date: Wed, 11 Nov 2015 19:00:21 +0100
-Message-ID: <20151111180019.GB2621@omega>
-References: <1446590711-18928-1-git-send-email-alex.aring@gmail.com>
- <1446590711-18928-2-git-send-email-alex.aring@gmail.com>
- <CAPDyKFrkzMZZjFRM7EbqDqmW8EXzV22O_tp8a45LVGQYSn6b3g@mail.gmail.com>
- <20151105143445.GC599@omega>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] drm: arm: Add DT bindings documentation for HDLCD
+ driver.
+Date: Wed, 11 Nov 2015 12:48:50 -0600
+Message-ID: <20151111184849.GA9172@rob-hp-laptop>
+References: <1447258010-2234-1-git-send-email-Liviu.Dudau@arm.com>
+ <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20151105143445.GC599@omega>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+In-Reply-To: <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Nov 05, 2015 at 03:34:45PM +0100, Alexander Aring wrote:
-> 
-> What do you suggest to me for e.g. the raspberrypi power domain driver,
-> also simple ignore such error handling?
-> 
-
-ping, I also can add some WARN_ON_ONCE, if the list for sub-domains,
-etc. are not empty. This would then report about wrong use of
-pm_genpd_uninit.
-
-- Alex
+T24gV2VkLCBOb3YgMTEsIDIwMTUgYXQgMDQ6MDY6NDdQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3Jv
+dGU6Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gQ2M6IFBhd2VsIE1v
+bGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT4KPiBDYzogSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51
+az4KPiBDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Cj4gCj4gU2lnbmVkLW9m
+Zi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+CgpMb29rcyBwcmV0dHkgZ29v
+ZCwgYnV0IGEgZmV3IGNvbW1lbnRzLgoKPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZHJtL2FybS9hcm0saGRsY2QudHh0ICAgICAgfCA3NCArKysrKysrKysrKysrKysrKysrKysrCj4g
+IDEgZmlsZSBjaGFuZ2VkLCA3NCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0Cj4g
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXJt
+L2FybSxoZGxjZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2Fy
+bS9hcm0saGRsY2QudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5i
+NTdmMWI5Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kcm0vYXJtL2FybSxoZGxjZC50eHQKPiBAQCAtMCwwICsxLDc0IEBACj4gK0FSTSBI
+RExDRAo+ICsKPiArVGhpcyBpcyBhIGRpc3BsYXkgY29udHJvbGxlciBmb3VuZCBvbiBzZXZlcmFs
+IGRldmVsb3BtZW50IHBsYXRmb3JtcyBwcm9kdWNlZAo+ICtieSBBUk0gTHRkIGFuZCBpbiBtb3Jl
+IG1vZGVybiBvZiBpdHMnIEZhc3QgTW9kZWxzLiBUaGUgSERMQ0QgaXMgYW4gUkdCCj4gK3N0cmVh
+bWVyIHRoYXQgcmVhZHMgdGhlIGRhdGEgZnJvbSBhIGZyYW1lYnVmZmVyIGFuZCBzZW5kcyBpdCB0
+byBhIHNpbmdsZQo+ICtkaWdpdGFsIGVuY29kZXIgKERWSSBvciBIRE1JKS4KPiArCj4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiAiYXJtLGhkbGNkIgoKS2luZCBvZiBn
+ZW5lcmljLiBTb21ldGhpbmcgbW9yZSBzcGVjaWZpYyBwbGVhc2UuCgo+ICsgIC0gcmVnOiBQaHlz
+aWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVy
+cy4KPiArICAgIElmIGEgc2Vjb25kIHBhaXIgb2YgYWRkcmVzcyBhbmQgbGVuZ3RoIHZhbHVlcyBp
+cyBwcmVzZW50IHRoaXMgc3BlY2lmaWVzCj4gKyAgICB0aGUgcHJlc2VuY2Ugb2YgYSBETUEgY29o
+ZXJlbnQgbWVtb3J5IGFyZWEgdGhhdCB0aGUgSERMQ0QgY2FuIHVzZSBhcwo+ICsgICAgZnJhbWVi
+dWZmZXIgaW5zdGVhZCBvZiBub3JtYWwgQ01BIG1lbW9yeS4KClRoaXMgaXMgb24tY2hpcCBSQU0g
+b3Igbm9ybmFsIHN5c3RlbSBSQU0/IFdlIGFscmVhZHkgaGF2ZSBiaW5kaW5ncyBmb3IgCmJvdGgu
+Cgo+ICsgIC0gaW50ZXJydXB0czogT25lIGludGVycnVwdCB1c2VkIGJ5IHRoZSBkaXNwbGF5IGNv
+bnRyb2xsZXIgdG8gbm90aWZ5IHRoZQo+ICsgICAgaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hlbiBh
+bnkgb2YgdGhlIGludGVycnVwdCBzb3VyY2VzIHByb2dyYW1tZWQgaW4KPiArICAgIHRoZSBpbnRl
+cnJ1cHQgbWFzayByZWdpc3RlciBoYXZlIGFjdGl2YXRlZC4KPiArICAtIGNsb2NrczogQSBsaXN0
+IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaAo+ICsgICAg
+ZW50cnkgaW4gJ2Nsb2NrLW5hbWVzJy4KPiArICAtIGNsb2NrLW5hbWVzOiBBIGxpc3Qgb2YgY2xv
+Y2sgbmFtZXMuIEZvciBIRExEIGl0IHNob3VsZCBjb250YWluOgo+ICsgICAgICAtICJweGxjbGsi
+IGZvciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUgY29udHJvbGxlci4K
+PiArICAtIHBvcnQ6IFRoZSBIRExDRCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4gVGhl
+IGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQKPiArICAgIHVzaW5nIHRoZSBPRiBncmFwaCBiaW5kaW5n
+cyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
+dC4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
