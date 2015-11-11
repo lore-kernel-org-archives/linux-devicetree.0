@@ -1,69 +1,53 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
- mt8135
-Date: Wed, 11 Nov 2015 15:55:57 +0800
-Message-ID: <1447228557.20886.10.camel@mtksdaap41>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	 <1445843717.23888.1.camel@mtksdaap41>
-	 <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-	 <1445859610.26723.4.camel@mtksdaap41>
-	 <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
-	 <1447135867.14454.9.camel@mtksdaap41> <7h1tbx1gjp.fsf@deeprootsystems.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [kbuild-all] [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA channel driver
+Date: Wed, 11 Nov 2015 09:42 +0100
+Message-ID: <4119660.BobUIRMK6T@wuerfel>
+References: <201511090323.GmbQltpW%fengguang.wu@intel.com> <563FEC48.2010404@codeaurora.org> <20151111022103.GA29459@wfg-t540p.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7h1tbx1gjp.fsf@deeprootsystems.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151111022103.GA29459-q6ZYBFIlbFFi0tQiZxhdj1DQ4js95KgL@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fengguang Wu <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+On Wednesday 11 November 2015 10:21:03 Fengguang Wu wrote:
+> Hi Sinan,
+> 
+> Sorry please ignore this warning -- it's actually a problem specific
+> to the mn10300 arch. I'll disable such warning in mn10300 in future.
 
-On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
-> Hi Eddie,
-> 
-> [...]
-> 
-> > I check the log [0],
-> 
-> Thanks for checking into this boot failure.
-> 
-> > it seems first time mt8135-evbp1 boot to kernel
-> > shell successfully, then boot again. In the second time, mt8135 stay in
-> > fastboot mode, waiting host send boot image, then timeout.
-> 
-> Actually, it never gets to a shell the first time.  If you look closely,
-> the target reboots as soon as userspace starts.   Look for the PYBOOT
-> line which says "finished booting, starting userspace"
-> 
-> Later on, pyboot thinks it finds a root shell due to finding '#'
-> characters, but clearly it never got to a shell.
-> 
-> > I download zImage and dtb in [1], and kernel run to shell successfully
-> > on my platform.
-> 
-> Are you can you try using a ramdisk as well?  You can use the pre-built
-> one here:
-> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
-> 
+I just tried to find what happened here. mn10300 appears to define
+the type based on the gcc version:
 
-Yes, I tried this ramdisk, and I can reproduce fail issue.
+#if __GNUC__ == 4
+typedef unsigned int    __kernel_size_t;
+typedef signed int      __kernel_ssize_t;
+#else
+typedef unsigned long   __kernel_size_t;
+typedef signed long     __kernel_ssize_t;
+#endif
 
-> Please check my boot logs to see how I'm generating the boot.img file
-> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
-> that the kernel image size with a ramdisk is breaking some of the
-> assumptions in the fastboot mode.  I've seen problems like this on other
-> platforms due to hard-coded sizes/addresses in the boot firmware.
-> 
+while gcc defines it based on whether you are using a Linux targetted
+gcc or a bare-metal one:
 
-MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
-thus cause user space fail. I will prepare new firmware that extend BOOT
-partition to 16MB. and put new firmware on Howard's github. I will mail
-to you when I am ready..
+gcc/config/mn10300/linux.h:#undef SIZE_TYPE
+gcc/config/mn10300/mn10300.h:#undef  SIZE_TYPE
+gcc/config/mn10300/mn10300.h:#define SIZE_TYPE "unsigned int"
 
-Eddie
-Thanks
+I can think of two reasons why it went wrong here:
+
+a) You are using gcc-5.x, and the check in the kernel should be ">="
+   rather than "==". We should probably fix that regardless
+
+b) You are using a bare-metal gcc rather than a Linux version.
+
+I couldn't find an mn10300 gcc on kernel.org, which one do you use?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
