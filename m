@@ -1,7 +1,7 @@
 From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: rockchip: add eFuse node for rk3066a SoCs
-Date: Wed, 11 Nov 2015 15:34:30 +0800
-Message-ID: <1447227272-1728-4-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH 4/4] ARM: dts: rockchip: add eFuse node for rk3188 SoCs
+Date: Wed, 11 Nov 2015 15:34:31 +0800
+Message-ID: <1447227272-1728-5-git-send-email-wxt@rock-chips.com>
 References: <1447227272-1728-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,20 +21,21 @@ To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Srinivas Kan
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the eFuse dt node for rk3066a SoCs.
+This patch add the eFuse dt node for rk3188 SoCs.
 
 Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
 ---
 
- arch/arm/boot/dts/rk3066a.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/rk3188.dtsi | 13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 946f187..f61bb8a 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -153,6 +153,19 @@
- 		clock-names = "timer", "pclk";
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 6399942..b01ef45 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -144,6 +144,19 @@
+ 		#reset-cells = <1>;
  	};
  
 +	efuse: efuse@20010000 {
@@ -50,8 +51,8 @@ index 946f187..f61bb8a 100644
 +		};
 +	};
 +
- 	timer@20038000 {
- 		compatible = "snps,dw-apb-timer-osc";
- 		reg = <0x20038000 0x100>;
+ 	usbphy: phy {
+ 		compatible = "rockchip,rk3188-usb-phy", "rockchip,rk3288-usb-phy";
+ 		rockchip,grf = <&grf>;
 -- 
 1.9.1
