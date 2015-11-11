@@ -1,93 +1,140 @@
-From: bayi cheng <bayi.cheng@mediatek.com>
-Subject: Re: [PATCH v6 0/3] Mediatek SPI-NOR flash driver
-Date: Wed, 11 Nov 2015 22:04:14 +0800
-Message-ID: <1447250654.19991.15.camel@mhfsdcap03>
-References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
-	 <20151110024611.GL12143@google.com>
+From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/2] ASoC: da7218: Add bindings documentation for DA7218 audio
+ codec
+Date: Wed, 11 Nov 2015 15:40:22 +0000
+Message-ID: <760d212f18efec816701f2b3e9fc549ca86d31ee.1447254553.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1447254553.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151110024611.GL12143@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, srv_heupstream@mediatek.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1447254553.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-11-09 at 18:46 -0800, Brian Norris wrote:
-> Hi Bayi,
-> 
-> On Fri, Nov 06, 2015 at 11:48:06PM +0800, Bayi Cheng wrote:
-> > This series is based on v4.3-rc1 and l2-mtd.git [0] and erase_sector
-> > implementation patch [1]
-> > 
-> > [0]: git://git.infradead.org/l2-mtd.git
-> > [1]: http://lists.infradead.org/pipermail/linux-mtd/2015-October//062959.html
-> > 
-> > Change in v6:
-> > 1: delete mt8173_nor_do_rx
-> > 2: delete mt8173_nor_do_rx
-> > 3: add mt8173_nor_do_tx_rx for general usage
-> > 4: support nor flash with 6 IDs
-> > 5: delete mt8173_nor_erase_sector and use "nor->erase_opcode"
-> > 6: add mt8173_nor_set_addr to programming the address register
-> > 7: initialize the ppdata in mtk_nor_init
-> 
-> This series is looking a lot better to me. Thanks for incorporating (and
-> I hope fully reviewing and testing!) my suggested changes. I have a just
-> a few small comments that I might post to the driver patch, and if
-> that's all that's outstanding, I can fix them up myself before applying.
-> 
-> I believe you didn't completely answer all my questions from v5 though.
-> I'll repeat a bit here. Particularly, refer to [1].
-> I'll summarize; I understand that your common transmit/receive operation
-> works something like this:
-> 
-> Quoting from [1]:
-> > (1) total number of bits to send/receive goes in the COUNT register (so
-> >     far, as many as 7*8=56?)
-> > (2) opcode is written to PRGDATA5
-> > (3) other "transmit" data (like addresses), if any, are placed on PRGDATA4..0
-> > (4) command is sent (execute_cmd())
-> > (5) data is read back in SHREG{X..0}, if needed
-> 
-> My questions were:
-> 
-> (a) Why does mt8173_nor_set_read_mode() use PRGDATA3? That's not
->     mentioned in the SoC manual, and it doesn't really match any of the
->     steps above. Perhaps it's just a quirk of the controller's
->     programming model?
-> 
-yes, for this question, I have done some testes, If I change the
-PRGDATA3 to PRGDATA5 for mt8173_nor_set_read_mode() like others
-functions, then the controller will be hanged, and I have asked our
-designer for double confirm.
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/da7218.txt | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/da7218.txt
 
-> (b) How do you determine X from step (5)?
-> 
-> Right now, your code seems to answer that X is "rxlen - 1". Correct?
-> 
-yes, I have used "rxlen -1", because the first of nor flash output is
-located at SHREG[0], in the other words, the output data starts at
-SHREG[0] and go up to SHREG[relen -1]
+diff --git a/Documentation/devicetree/bindings/sound/da7218.txt b/Documentation/devicetree/bindings/sound/da7218.txt
+new file mode 100644
+index 0000000..35a53dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/da7218.txt
+@@ -0,0 +1,106 @@
++Dialog Semiconductor DA7218 Audio Codec bindings
++
++DA7218 is an audio codec with HP detect feature.
++
++======
++
++Required properties:
++- compatible : Should be "dlg,da7217" or "dlg,da7218"
++- reg: Specifies the I2C slave address
++
++- VDD-supply: VDD power supply for the device
++- VDDMIC-supply: VDDMIC power supply for the device
++- VDDIO-supply: VDDIO power supply for the device
++  (See Documentation/devicetree/bindings/regulator/regulator.txt for further
++   information relating to regulators)
++
++Optional properties:
++- interrupt-parent: Specifies the phandle of the interrupt controller to which
++  the IRQs from DA7218 are delivered to.
++- interrupts: IRQ line info for DA7218 chip.
++  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
++   further information relating to interrupt properties)
++- interrupt-names : Name associated with interrupt line. Should be "wakeup" if
++  interrupt is to be used to wake system, otherwise "irq" should be used.
++- wakeup-source: Flag to indicate this device can wake system (suspend/resume).
++
++- clocks : phandle and clock specifier for codec MCLK.
++- clock-names : Clock name string for 'clocks' attribute, should be "mclk".
++
++- dlg,micbias1-lvl : Voltage (mV) for Mic Bias 1
++	[<1200>, <1600>, <1800>, <2000>, <2200>, <2400>, <2600>, <2800>, <3000>]
++- dlg,micbias2-lvl : Voltage (mV) for Mic Bias 2
++	[<1200>, <1600>, <1800>, <2000>, <2200>, <2400>, <2600>, <2800>, <3000>]
++- dlg,mic1-amp-in-sel : Mic1 input source type
++	["diff", "se_p", "se_n"]
++- dlg,mic2-amp-in-sel : Mic2 input source type
++	["diff", "se_p", "se_n"]
++- dlg,dmic1-data-sel : DMIC1 channel select based on clock edge.
++	["lrise_rfall", "lfall_rrise"]
++- dlg,dmic1-samplephase : When to sample audio from DMIC1.
++	["on_clkedge", "between_clkedge"]
++- dlg,dmic1-clkrate : DMic1 clock frequency (Hz).
++	[<1500000>, <3000000>]
++- dlg,dmic2-data-sel : DMic2 channel select based on clock edge.
++	["lrise_rfall", "lfall_rrise"]
++- dlg,dmic2-samplephase : When to sample audio from DMic2.
++	["on_clkedge", "between_clkedge"]
++- dlg,dmic2-clkrate : DMic2 clock frequency (Hz).
++	[<1500000>, <3000000>]
++- dlg,hp-diff-single-supply : Boolean flag, use single supply for HP
++			      (DA7217 only)
++
++======
++
++Optional Child node - 'da7218_hpldet' (DA7218 only):
++
++Optional properties:
++- dlg,jack-rate : Time between jack detect measurements (us)
++	[<5>, <10>, <20>, <40>, <80>, <160>, <320>, <640>]
++- dlg,jack-debounce : Number of debounce measurements taken for jack detect
++	[<0>, <2>, <3>, <4>]
++- dlg,jack-threshold : Threshold level for jack detection (% of VDD)
++	[<84>, <88>, <92>, <96>]
++- dlg,comp-inv : Boolean flag, invert comparator output
++- dlg,hyst : Boolean flag, enable hysteresis
++- dlg,discharge : Boolean flag, auto discharge of Mic Bias on jack removal
++
++======
++
++Example:
++
++	codec: da7218@1a {
++		compatible = "dlg,da7218";
++		reg = <0x1a>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
++		wakeup-source;
++
++		VDD-supply = <&reg_audio>;
++		VDDMIC-supply = <&reg_audio>;
++		VDDIO-supply = <&reg_audio>;
++
++		clocks = <&clks 201>;
++		clock-names = "mclk";
++
++		dlg,ldo-lvl = <1200>;
++
++		dlg,micbias1-lvl = <2600>;
++		dlg,micbias2-lvl = <2600>;
++		dlg,mic1-amp-in-sel = "diff";
++		dlg,mic2-amp-in-sel = "diff";
++
++		dlg,dmic1-data-sel = "lrise_rfall";
++		dlg,dmic1-samplephase = "on_clkedge";
++		dlg,dmic1-clkrate = <3000000>;
++		dlg,dmic2-data-sel = "lrise_rfall";
++		dlg,dmic2-samplephase = "on_clkedge";
++		dlg,dmic2-clkrate = <3000000>;
++
++		da7218_hpldet {
++			dlg,jack-rate = <40>;
++			dlg,jack-debounce = <2>;
++			dlg,jack-threshold = <84>;
++			dlg,hyst;
++		};
++	};
+--
+1.9.3
 
-> If that's correct and if I put all of my understanding together
-> correctly, this means that you can actually shift out (in PRGDATA) up to
-> 6 bytes (that is, 1 opcode and 5 tx bytes) and shift in (in SHREG) up to
-> 7 bytes, except that the first byte is received during the opcode cycle,
-> and so it is discarded, and we effectively receive only 6 bytes.
-> 
-> Is that all correct? If so, then I think you still need to adjust the
-> boundary conditions in your do_tx_rx() function. (I'll comment on the
-> driver to point out the specifics.)
-
-Yes, you are right! and I will adjust the boundary conditions in
-do_tx_rx() function.
-
-By the way, could you tell me whether I need to publish a new patch? or
-you can fix them up directly?
-> 
-> Regards,
-> Brian
-> 
-> [1] http://lists.infradead.org/pipermail/linux-mtd/2015-October/062951.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
