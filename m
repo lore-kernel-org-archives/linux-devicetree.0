@@ -1,87 +1,89 @@
-From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: OMAP2+: dts: cm-t335: add support for PWM
- backlight
-Date: Wed, 11 Nov 2015 19:33:29 +0200
-Message-ID: <56437BE9.9050003@compulab.co.il>
-References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
- <1445948100-16446-7-git-send-email-uri.mashiach@compulab.co.il>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Wed, 11 Nov 2015 17:37:12 +0000
+Message-ID: <20151111173712.7dde8a42@arm.com>
+References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445948100-16446-7-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, igor.grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michals@xilinx.com, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, rjui@broadcom.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, dhdang@apm.com, sbranden@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Gentle ping
+On Wed, 11 Nov 2015 12:03:39 +0530
+Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
 
-On 27/10/15 14:15, Uri Mashiach wrote:
-> From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->
-> Add pinmux configuration for ECAP0 pin.
-> Add node for PWM backlight device.
-> Use PWM output from ecap0 as backlight source.
->
-> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 > ---
->   arch/arm/boot/dts/am335x-cm-t335.dts | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
-> index 0296d3f..571a453 100644
-> --- a/arch/arm/boot/dts/am335x-cm-t335.dts
-> +++ b/arch/arm/boot/dts/am335x-cm-t335.dts
-> @@ -39,6 +39,13 @@
->   		regulator-min-microvolt = <3300000>;
->   		regulator-max-microvolt = <3300000>;
->   	};
+> Added logic to allocate contiguous hwirq in nwl_irq_domain_alloc function.
+> Moved MSI functionality to separate functions.
+> Changed error return values.
+> ---
+>  .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
+>  drivers/pci/host/Kconfig                           |   16 +-
+>  drivers/pci/host/Makefile                          |    1 +
+>  drivers/pci/host/pcie-xilinx-nwl.c                 | 1062 ++++++++++++++++++++
+>  4 files changed, 1144 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
+> 
+> diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
+> new file mode 100644
+> index 0000000..8bc509c
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-xilinx-nwl.c
+
+[...]
+
+> +static struct msi_domain_info nwl_msi_domain_info = {
+> +	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +		  MSI_FLAG_MULTI_PCI_MSI),
+
+Given that you claim to support multi-MSI...
+
+[...]
+
+> +static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				unsigned int nr_irqs, void *args)
+> +{
+> +	struct nwl_pcie *pcie = domain->host_data;
+> +	struct nwl_msi *msi = &pcie->msi;
+> +	unsigned long bit;
+> +	int i;
 > +
-> +	backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&ecap0 0 50000 0>;
-> +		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-> +		default-brightness-level = <8>;
-> +	};
->   };
->
->   &am33xx_pinmux {
-> @@ -113,6 +120,13 @@
->   		>;
->   	};
->
-> +	ecap0_pins: pinmux_ecap0_pins {
-> +		pinctrl-single,pins = <
-> +			/* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out MODE0 */
-> +			0x164 0x0
-> +		>;
-> +	};
+> +	mutex_lock(&msi->lock);
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		bit = find_first_zero_bit(msi->used, INT_PCI_MSI_NR);
+> +		if (bit < INT_PCI_MSI_NR)
+> +			set_bit(bit, msi->used);
+> +		else
+> +			bit = -ENOSPC;
 > +
->   	cpsw_default: cpsw_default {
->   		pinctrl-single,pins = <
->   			/* Slave 1 */
-> @@ -222,6 +236,16 @@
->   	};
->   };
->
-> +&epwmss0 {
-> +	status = "okay";
+> +		if (bit < 0) {
+> +			mutex_unlock(&msi->lock);
+> +			return bit;
+> +		}
 > +
-> +	ecap0: ecap@48300100 {
-> +		status = "okay";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&ecap0_pins>;
-> +	};
-> +};
-> +
->   &gpmc {
->   	status = "okay";
->   	pinctrl-names = "default";
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		irq_domain_set_info(domain, virq, bit, &nwl_irq_chip,
+> +				domain->host_data, handle_simple_irq,
+> +				NULL, NULL);
+> +		virq = virq + 1;
+> +	}
+
+I really don't see how this allocator guarantees that all hwirqs are
+contiguous. I already mentioned this when reviewing v7, and you still
+haven't got it right. So either you allocate *contiguous* hwirqs in an
+atomic fashion, or you drop support for multi-MSI.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
