@@ -1,93 +1,139 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Wed, 11 Nov 2015 13:41:46 -0800
-Message-ID: <20151111214146.GL12143@google.com>
-References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
- <1446824889-16144-3-git-send-email-bayi.cheng@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/19] drm: Add Allwinner A10 Display Engine support
+Date: Wed, 11 Nov 2015 14:14:12 -0800
+Message-ID: <20151111221412.GH6114@lukather>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-9-git-send-email-maxime.ripard@free-electrons.com>
+ <20151030144409.GZ16848@phenom.ffwll.local>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qPhbOctOI3h5o759"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBN73R2ZAKGQEBFPFMHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446824889-16144-3-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+In-Reply-To: <20151030144409.GZ16848-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-One more small comment, since you're respinning this:
+--qPhbOctOI3h5o759
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Fri, Nov 06, 2015 at 11:48:08PM +0800, Bayi Cheng wrote:
-> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-> new file mode 100644
-> index 0000000..6582811
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
-> @@ -0,0 +1,475 @@
+Hi Daniel,
 
-...
+Thanks for your review!
 
-> +static int mtk_nor_drv_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *flash_np;
-> +	struct resource *res;
-> +	int ret;
-> +	struct mt8173_nor *mt8173_nor;
-> +
-> +	if (!pdev->dev.of_node) {
-> +		dev_err(&pdev->dev, "No DT found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	mt8173_nor = devm_kzalloc(&pdev->dev, sizeof(*mt8173_nor), GFP_KERNEL);
-> +	if (!mt8173_nor)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, mt8173_nor);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mt8173_nor->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(mt8173_nor->base))
-> +		return PTR_ERR(mt8173_nor->base);
-> +
-> +	mt8173_nor->spi_clk = devm_clk_get(&pdev->dev, "spi");
-> +	if (IS_ERR(mt8173_nor->spi_clk)) {
-> +		ret = PTR_ERR(mt8173_nor->spi_clk);
-> +		goto nor_free;
-> +	}
-> +
-> +	mt8173_nor->nor_clk = devm_clk_get(&pdev->dev, "sf");
-> +	if (IS_ERR(mt8173_nor->nor_clk)) {
-> +		ret = PTR_ERR(mt8173_nor->nor_clk);
-> +		goto nor_free;
-> +	}
-> +
-> +	mt8173_nor->dev = &pdev->dev;
-> +	clk_prepare_enable(mt8173_nor->spi_clk);
-> +	clk_prepare_enable(mt8173_nor->nor_clk);
+On Fri, Oct 30, 2015 at 03:44:09PM +0100, Daniel Vetter wrote:
+> > +static void sun4i_crtc_disable(struct drm_crtc *crtc)
+> > +{
+> > +	struct sun4i_crtc *scrtc = drm_crtc_to_sun4i_crtc(crtc);
+> > +	struct sun4i_drv *drv = scrtc->drv;
+> > +
+> > +	DRM_DEBUG_DRIVER("Disabling the CRTC\n");
+> > +
+> > +	if (!scrtc->enabled)
+> > +		return;
+> 
+> Please don't do this - the atomic state should always reflect the true hw
+> state (fix that up with either hw state readout or reset in the ->reset
+> callbacks), and the atomic helpers guarantee that they'll never call you
+> when not needed. If you don't trust them do a WARN_ON at least, but no
+> early silent returns.
+> 
+> Personally I'd just rip it out, it's too much trouble. And for debugging
+> the atomic helpers already trace it all (or at least should).
 
-You enable the clocks here, but...
+Ok. Is there a preferred way to do HW state readout, or should I just
+add that to my probe?
 
-> +
-> +	/* only support one attached flash */
-> +	flash_np = of_get_next_available_child(pdev->dev.of_node, NULL);
-> +	if (!flash_np) {
+> > +static int sun4i_drv_connector_plug_all(struct drm_device *drm)
+> 
+> Laurent Pinchart has this as a rfc patch for drm core, please coordinate
+> with him and rebase on top of his patches.
 
-... you might bail out here if there is no available flash node, and you
-never disable the clocks. (Same is true if we fail to detect the flash;
-you leave the no-longer-needed clocks enabled.) Seems like maybe you
-should disable clocks on failure.
+Ack, I will.
 
-> +		dev_err(&pdev->dev, "no SPI flash device to configure\n");
-> +		ret = -ENODEV;
-> +		goto nor_free;
-> +	}
-> +	ret = mtk_nor_init(mt8173_nor, flash_np);
-> +
-> +nor_free:
-> +	return ret;
-> +}
+> > +static int sun4i_drv_enable_vblank(struct drm_device *drm, int pipe)
+> > +{
+> > +	struct sun4i_drv *drv = drm->dev_private;
+> > +	struct sun4i_tcon *tcon = drv->tcon;
+> > +
+> > +	DRM_DEBUG_DRIVER("Enabling VBLANK on pipe %d\n", pipe);
+> > +
+> > +	sun4i_tcon_enable_vblank(tcon, true);
+> > +
+> > +	return 0;
+> 
+> atomic helpers rely on enable_vblank failing correctly when the pipe is
+> off and vlbanks will never happen. You probably need a correct error code
+> here that checks crtc->state->active (well not that directly but something
+> derived from it, since the pointer chase would be racy).
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+> I know it's a bit a mess since we don't have kms-native vblank driver
+> hooks yet and really the drm core should get this right for you. It'll
+> happen eventually, but drm_irq.c is a bit moldy ;-)
+
+I can't really use drm_irq anyway, since we don't have a single
+interrupt for the VBLANK, but two, that we have to use depending on
+the output.
+
+> > +static void sun4i_drv_disable_vblank(struct drm_device *drm, int pipe)
+> > +{
+> > +	struct sun4i_drv *drv = drm->dev_private;
+> > +	struct sun4i_tcon *tcon = drv->tcon;
+> > +
+> > +	DRM_DEBUG_DRIVER("Disabling VBLANK on pipe %d\n", pipe);
+> > +
+> > +	sun4i_tcon_enable_vblank(tcon, false);
+> > +}
+> > +
+> > +static int sun4i_drv_load(struct drm_device *drm, unsigned long flags)
+> 
+> load/unload callbacks are depracated since fundamentally racy, and we
+> can't fix that due to the pile of legacy dri1 drivers. Please use
+> drm_dev_alloc/register/unregister/unref functions instead, with the
+> load/unload code placed in between to avoid races with userspace seeing
+> the device/driver (e.g. in sysfs) while it's in a partially defunct state.
+> 
+> Relevant kerneldoc has the details, at least in linux-next.
+
+Ok.
+
+> > +static void sun4i_backend_layer_atomic_update(struct drm_plane *plane,
+> > +					      struct drm_plane_state *old_state)
+> > +{
+> > +	struct sun4i_layer *layer = plane_to_sun4i_layer(plane);
+> > +	struct sun4i_drv *drv = layer->drv;
+> > +	struct sun4i_backend *backend = drv->backend;
+> > +
+> > +	sun4i_backend_update_layer_coord(backend, layer->id, plane);
+> > +	sun4i_backend_update_layer_formats(backend, layer->id, plane);
+> > +	sun4i_backend_update_layer_buffer(backend, layer->id, plane);
+> > +	sun4i_backend_layer_enable(backend, layer->id, true);
+> > +	sun4i_backend_commit(backend);
+> 
+> Not idea how exactly your hw works, but the call to sun4i_backend_commit
+> probably should be in the crtc->atomic_flush function, to make sure that
+> plane updates across multiple planes are indeed atomic.
+
+The hardware will not take the register writes into account until a
+bit is set (in the _commit function), so I guess putting it in
+atomic_flush makes sense.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--qPhbOctOI3h5o759--
