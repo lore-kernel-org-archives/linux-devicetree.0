@@ -1,69 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for Innosilicon
- HDMI on Rockchip platform
-Date: Wed, 11 Nov 2015 14:22:36 -0600
-Message-ID: <20151111202236.GA5629@rob-hp-laptop>
-References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
- <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] crypto: rockchip/crypto - add DT bindings
+ documentation
+Date: Wed, 11 Nov 2015 14:24:05 -0600
+Message-ID: <20151111202405.GA6512@rob-hp-laptop>
+References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
+ <1447223759-20730-2-git-send-email-zain.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, Zheng Yang <zhengyang@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ben Chan <benchan@google.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1447223759-20730-2-git-send-email-zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMTEsIDIwMTUgYXQgMDM6NDc6MzJQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90
-ZToKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+CgpBY2tl
-ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCj4gLS0tCj4gIC4uLi9kaXNwbGF5
-L3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50eHQgICAgICAgIHwgNTAgKysrKysrKysrKysr
-KysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
-a2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2No
-aXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
-aXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-MDAwMDAwMC4uMTg5ODQwOAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0
-Cj4gQEAgLTAsMCArMSw1MCBAQAo+ICtSb2NrY2hpcCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRo
-ZSBJbm5vc2lsaWNvbiBIRE1JCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4g
-Kwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6Cj4gKwkicm9ja2NoaXAs
-cmszMDM2LWR3LWhkbWkiOwo+ICstIHJlZzoKPiArCVBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQg
-bGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICstIGNsb2NrcywgY2xvY2st
-bmFtZXM6Cj4gKwlQaGFuZGxlIHRvIGhkbWkgY29udHJvbGxlciBjbG9jaywgbmFtZSBzaG91bGQg
-YmUgInBjbGsiCj4gKy0gaW50ZXJydXB0czoKPiArCUhETUkgaW50ZXJydXB0IG51bWJlcgo+ICst
-IHBvcnRzOgo+ICsJQ29udGFpbiBvbmUgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlv
-bnMgYXMgZGVmaW5lZCBpbgo+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dy
-YXBoLnR4dC4KPiArLSBwaW5jdHJsLTAsIHBpbmN0cmwtbmFtZToKPiArCVN3aXRjaCB0aGUgaW9t
-dXggb2YgSFBEL0NFQyBwaW5zIHRvIEhETUkgZnVuY3Rpb24uCj4gKwo+ICtFeGFtcGxlOgo+ICto
-ZG1pOiBoZG1pQDIwMDM0MDAwIHsKPiArCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMDM2LWlu
-bm8taGRtaSI7Cj4gKwlyZWcgPSA8MHgyMDAzNDAwMCAweDQwMDA+Owo+ICsJaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDQ1IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJY2xvY2tzID0gPCZjcnUgIFBD
-TEtfSERNST47Cj4gKwljbG9jay1uYW1lcyA9ICJwY2xrIjsKPiArCXBpbmN0cmwtbmFtZXMgPSAi
-ZGVmYXVsdCI7Cj4gKwlwaW5jdHJsLTAgPSA8JmhkbWlfY3RsPjsKPiArCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7Cj4gKwo+ICsJaGRtaV9pbjogcG9ydCB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJaGRtaV9pbl9sY2RjOiBlbmRwb2ludEAwIHsK
-PiArCQkJcmVnID0gPDA+Owo+ICsJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZGNfb3V0X2hkbWk+
-Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsKPiArJnBpbmN0cmwgewo+ICsJaGRtaSB7Cj4gKwkJ
-aGRtaV9jdGw6IGhkbWktY3RsIHsKPiArCQkJcm9ja2NoaXAscGlucyA9IDwxIDggIFJLX0ZVTkNf
-MSAmcGNmZ19wdWxsX25vbmU+LAo+ICsJCQkJCTwxIDkgIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25v
-bmU+LAo+ICsJCQkJCTwxIDEwIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25vbmU+LAo+ICsJCQkJCTwx
-IDExIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25vbmU+Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArfTsK
-PiAtLSAKPiAxLjkuMQo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Wed, Nov 11, 2015 at 02:35:56PM +0800, Zain Wang wrote:
+> Add DT bindings documentation for the rk3288 crypto drivers.
+> 
+> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+> 
+> Changed in v3:
+> - add reset property
+> 
+> Changed in v2:
+> - None
+> 
+> Changed in v1:
+> - remove the _crypto suffix
+> - use "rockchip,rk3288-crypto" instead of "rockchip,rk3288"
+> - remove the description of status
+> 
+> 
+>  .../devicetree/bindings/crypto/rockchip-crypto.txt | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+> new file mode 100644
+> index 0000000..096df34
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+> @@ -0,0 +1,29 @@
+> +Rockchip Electronics And Security Accelerator
+> +
+> +Required properties:
+> +- compatible: Should be "rockchip,rk3288-crypto"
+> +- reg: Base physical address of the engine and length of memory mapped
+> +       region
+> +- interrupts: Interrupt number
+> +- clocks: Reference to the clocks about crypto
+> +- clock-names: "aclk" used to clock data
+> +	       "hclk" used to clock data
+> +	       "sclk" used to clock crypto accelerator
+> +	       "apb_pclk" used to clock dma
+> +- resets: Must contain an entry for each entry in reset-names.
+> +	  See ../reset/reset.txt for details.
+> +- reset-names: Must include the name "crypto-rst".
+> +
+> +Examples:
+> +
+> +	crypto: cypto-controller@ff8a0000 {
+> +		compatible = "rockchip,rk3288-crypto";
+> +		reg = <0xff8a0000 0x4000>;
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru ACLK_CRYPTO>, <&cru HCLK_CRYPTO>,
+> +			 <&cru SCLK_CRYPTO>, <&cru ACLK_DMAC1>;
+> +		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
+> +		resets = <&cru SRST_CRYPTO>;
+> +		reset-names = "crypto-rst";
+> +		status = "okay";
+> +	};
+> -- 
+> 1.9.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
