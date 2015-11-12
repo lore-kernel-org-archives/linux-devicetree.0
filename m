@@ -1,251 +1,103 @@
-From: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] pstore-ram: add Device Tree bindings
-Date: Thu, 12 Nov 2015 15:53:28 -0800
-Message-ID: <1447372408-25435-1-git-send-email-ghackmann@google.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Thu, 12 Nov 2015 15:56:26 -0800
+Message-ID: <7hd1vedb6d.fsf@deeprootsystems.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	<1445843717.23888.1.camel@mtksdaap41>
+	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	<1445859610.26723.4.camel@mtksdaap41>
+	<CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
+	<1447135867.14454.9.camel@mtksdaap41>
+	<7h1tbx1gjp.fsf@deeprootsystems.com>
+	<1447228557.20886.10.camel@mtksdaap41>
+	<7hpozgyu36.fsf@deeprootsystems.com>
+	<7hwptnddhs.fsf@deeprootsystems.com>
+	<1447332379.4156.5.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447332379.4156.5.camel@mtksdaap41> (Eddie Huang's message of
+	"Thu, 12 Nov 2015 20:46:19 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-ramoops is one of the remaining places where ARM vendors still rely on
-board-specific shims.  Device Tree lets us replace those shims with
-generic code.
+Eddie Huang <eddie.huang@mediatek.com> writes:
 
-These bindings mirror the ramoops module parameters, with two small
-differences:
+> On Wed, 2015-11-11 at 20:54 -0800, Kevin Hilman wrote:
+>> Hi Eddie,
+>> 
+>> Kevin Hilman <khilman@kernel.org> writes:
+>> 
+>> > Eddie Huang <eddie.huang@mediatek.com> writes:
+>> >
+>> >> On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
+>> >>> Hi Eddie,
+>> >>> 
+>> >>> [...]
+>> >>> 
+>> >>> > I check the log [0],
+>> >>> 
+>> >>> Thanks for checking into this boot failure.
+>> >>> 
+>> >>> > it seems first time mt8135-evbp1 boot to kernel
+>> >>> > shell successfully, then boot again. In the second time, mt8135 stay in
+>> >>> > fastboot mode, waiting host send boot image, then timeout.
+>> >>> 
+>> >>> Actually, it never gets to a shell the first time.  If you look closely,
+>> >>> the target reboots as soon as userspace starts.   Look for the PYBOOT
+>> >>> line which says "finished booting, starting userspace"
+>> >>> 
+>> >>> Later on, pyboot thinks it finds a root shell due to finding '#'
+>> >>> characters, but clearly it never got to a shell.
+>> >>> 
+>> >>> > I download zImage and dtb in [1], and kernel run to shell successfully
+>> >>> > on my platform.
+>> >>> 
+>> >>> Are you can you try using a ramdisk as well?  You can use the pre-built
+>> >>> one here:
+>> >>> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
+>> >>> 
+>> >>
+>> >> Yes, I tried this ramdisk, and I can reproduce fail issue.
+>> >>
+>> >
+>> > OK, good.   Thanks for looking into it.
+>> >
+>> >>> Please check my boot logs to see how I'm generating the boot.img file
+>> >>> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
+>> >>> that the kernel image size with a ramdisk is breaking some of the
+>> >>> assumptions in the fastboot mode.  I've seen problems like this on other
+>> >>> platforms due to hard-coded sizes/addresses in the boot firmware.
+>> >>> 
+>> >>
+>> >> MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
+>> >> thus cause user space fail.
+>> >
+>> > Aha, I was right!  ;)
+>> 
+>> Also notice in kernelci.org that the mt8173 board has also been failing
+>> to boot in mainline[1].  I wonder if this same limitation exists in the
+>> mt8173 boot firmware?
+>> 
+>
+> MT8173 is another case, the failure is due to following commit:
+> 67e56c5 arm64: dts: mt8173: Add subsystem clock controller device nodes
+>
+> It is because this commit register MM subsystem clock, but kernel don't
+> use MM clock yet, then CCF disable it. (My internal platform kernel
+> command include clk_ignore_unused parameter, so don't have this
+> problem).I will do further checking and release solution later. Thanks
+> your testing.
 
-(1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
-    sets dump_oops=1 by default.
+OK, thanks for looking into it.
 
-(2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
+However, since the merge window is very close to closing, unless you can
+git a fix out soon (and one that doesn't introduce other bugs),
+probablly the right solution is to just revert the above patch so things
+are fixed for mainline ASAP.
 
-Signed-off-by: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/misc/ramoops.txt |  30 ++++++
- Documentation/ramoops.txt                          |   6 +-
- fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
- 3 files changed, 142 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-new file mode 100644
-index 0000000..7b4cb01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/ramoops.txt
-@@ -0,0 +1,30 @@
-+Ramoops oops/panic logger
-+=========================
-+
-+See Documentation/ramoops.txt.  The bindings here are modelled after the ramoops
-+kernel module parameters.
-+
-+
-+Required properties:
-+
-+- compatible: must be "ramoops"
-+
-+- memory-region: phandle to a region of memory that is preserved between reboots
-+
-+
-+Optional properties:
-+
-+- ecc-size: enables ECC support and specifies ECC buffer size in bytes
-+
-+- record-size: size in bytes of each dump done on oops/panic
-+
-+- console-size: size in bytes of kernel console log
-+
-+- ftrace-size: size in bytes of ftrace log
-+
-+- pmsg-size: size in bytes of user space message log
-+
-+- unbuffered: if present, use pgprot_noncached to map reserved region
-+  (defaults to pgprot_writecombine)
-+
-+- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
-index 5d86756..9264bca 100644
---- a/Documentation/ramoops.txt
-+++ b/Documentation/ramoops.txt
-@@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
- 
- 2. Setting the parameters
- 
--Setting the ramoops parameters can be done in 2 different manners:
-+Setting the ramoops parameters can be done in 3 different manners:
-  1. Use the module parameters (which have the names of the variables described
-  as before).
-  For quick debugging, you can also reserve parts of memory during boot
-@@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
-  kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
-  region at 128 MB boundary:
-  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
-- 2. Use a platform device and set the platform data. The parameters can then
-+ 2. Use Device Tree bindings, as described in
-+ Documentation/device-tree/bindings/misc/ramoops.txt.
-+ 3. Use a platform device and set the platform data. The parameters can then
-  be set through that platform data. An example of doing that is:
- 
- #include <linux/pstore_ram.h>
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 319c3a6..ac29543 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -34,6 +34,8 @@
- #include <linux/slab.h>
- #include <linux/compiler.h>
- #include <linux/pstore_ram.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- 
- #define RAMOOPS_KERNMSG_HDR "===="
- #define MIN_MEM_SIZE 4096UL
-@@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
- 	return 0;
- }
- 
-+static int ramoops_parse_dt_size(struct platform_device *pdev,
-+		const char *propname, unsigned long *val)
-+{
-+	u64 val64;
-+	int ret;
-+
-+	ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
-+	if (ret == -EINVAL) {
-+		*val = 0;
-+		return 0;
-+	} else if (ret != 0) {
-+		dev_err(&pdev->dev, "failed to parse property %s: %d\n",
-+				propname, ret);
-+		return ret;
-+	}
-+
-+	if (val64 > ULONG_MAX) {
-+		dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
-+		return -EOVERFLOW;
-+	}
-+
-+	*val = val64;
-+	return 0;
-+}
-+
-+static int ramoops_parse_dt(struct platform_device *pdev,
-+		struct ramoops_platform_data *pdata)
-+{
-+	struct device_node *of_node = pdev->dev.of_node;
-+	struct device_node *mem_region;
-+	struct resource res;
-+	u32 ecc_size;
-+	int ret;
-+
-+	dev_dbg(&pdev->dev, "using Device Tree\n");
-+
-+	mem_region = of_parse_phandle(of_node, "memory-region", 0);
-+	if (!mem_region) {
-+		dev_err(&pdev->dev, "no memory-region phandle\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_address_to_resource(mem_region, 0, &res);
-+	of_node_put(mem_region);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	pdata->mem_size = resource_size(&res);
-+	pdata->mem_address = res.start;
-+	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-+	pdata->dump_oops = of_property_read_bool(of_node, "dump-oops");
-+
-+	ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
-+	if (ret == 0) {
-+		if (ecc_size > INT_MAX) {
-+			dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
-+			return -EOVERFLOW;
-+		}
-+		pdata->ecc_info.ecc_size = ecc_size;
-+	} else if (ret != -EINVAL) {
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ramoops_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct ramoops_platform_data *pdata = pdev->dev.platform_data;
-+	struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
- 	struct ramoops_context *cxt = &oops_cxt;
- 	size_t dump_mem_sz;
- 	phys_addr_t paddr;
- 	int err = -EINVAL;
- 
-+	if (dev->of_node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			err = -ENOMEM;
-+			goto fail_out;
-+		}
-+
-+		err = ramoops_parse_dt(pdev, pdata);
-+		if (err < 0)
-+			goto fail_out;
-+	}
-+
- 	/* Only a single ramoops area allowed at a time, so fail extra
- 	 * probes.
- 	 */
-@@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 		cxt->size, (unsigned long long)cxt->phys_addr,
- 		cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
- 
-+	platform_set_drvdata(pdev, pdata);
- 	return 0;
- 
- fail_buf:
-@@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dt_match[] = {
-+	{ .compatible = "ramoops" },
-+	{}
-+};
-+
- static struct platform_driver ramoops_driver = {
- 	.probe		= ramoops_probe,
- 	.remove		= ramoops_remove,
- 	.driver		= {
--		.name	= "ramoops",
-+		.name		= "ramoops",
-+		.of_match_table	= dt_match,
- 	},
- };
- 
--- 
-2.6.0.rc2.230.g3dd15c0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
