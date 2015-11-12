@@ -1,167 +1,188 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible
- format
-Date: Thu, 12 Nov 2015 10:49:48 -0600
-Message-ID: <20151112164948.GA24938@rob-hp-laptop>
-References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
- <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] Documentation: add Device tree bindings for
+ hwmon/nct7802
+Date: Thu, 12 Nov 2015 11:26:58 -0600
+Message-ID: <20151112172658.GA27337@rob-hp-laptop>
+References: <1445891057-1554-1-git-send-email-const@makelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+In-Reply-To: <1445891057-1554-1-git-send-email-const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 26, 2015 at 02:25:10PM -0700, Stephen Boyd wrote:
-> Some qcom based bootloaders identify the dtb blob based on a set
-> of device properties like SoC, platform, PMIC, and revisions of
-> those components. In downstream kernels, these values are added
-> to the different component dtsi files (i.e. pmic dtsi file, SoC
-> dtsi file, board dtsi file, etc.) via qcom specific DT
-> properties. The dtb files are parsed by a program called dtbTool
-> that picks out these properties and creates a table of contents
-> binary blob with the property information and some offsets into
-> the concatenation of all the dtbs (termed a QCDT image).
-
-Got a pointer to what these properties look like?
-
-> The suggestion is to do this via the board compatible string
-> instead, because these qcom specific properties are never used by
-> the kernel. Add a document describing the format of the
-> compatible string that encodes all this information that's
-> currently encoded in the qcom,{msm-id,board-id,pmic-id}
-> properties in downstream devicetrees. Future bootloaders may be
-> updated to look at the compatible field instead of looking for
-> the table of contents image. For non-updateable bootloaders, a
-> new dtbTool program will parse the compatible string and generate
-> a QCDT image from it.
+On Mon, Oct 26, 2015 at 10:24:17PM +0200, Constantine Shulyupin wrote:
+> From: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
 > 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Introduced subnodes sensor, fan and peci with properties.
+> 
+> Signed-off-by: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/qcom.txt | 86 ++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
+> Changed in v8:
+> - added senor type "local"
+> - Compatible nodes converted to senor types "vcore", "vcc"
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+> Changed in v7:
+> - sensors type (thermistor, thermistor, voltage) and pwm type
+> selected with type property instead of compatible property.
+> 
+> Changed in v6:
+> - Removed previous definition.
+> - Introduced subnodes sensor, fan and peci with properties.
+> 
+> Changed in v5:
+> - Fixed typos
+> 
+> Changed in v4:
+> - Removed registers initialization by names
+> - Added properties nuvoton,sensor*-type
+> 
+> Changed in v3:
+> - Fixed vendor prefix
+> - Added short registers description,
+>   full registers description is available at
+> https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+> 
+> Changed in v2:
+> - Removed nct7802,reg-init
+> - Added registers initialization by names
+> 
+> Introduced in v1:
+>  - nct7802,reg-init
+> ---
+>  .../devicetree/bindings/hwmon/nct7802.txt          | 102 +++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
 > new file mode 100644
-> index 000000000000..ed084367182d
+> index 0000000..8647783
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
-> @@ -0,0 +1,86 @@
-> +QCOM device tree bindings
-> +-------------------------
+> +++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> @@ -0,0 +1,102 @@
+> +Nuvoton NCT7802Y Hardware Monitoring IC
 > +
-> +Some qcom based bootloaders identify the dtb blob based on a set of
-> +device properties like SoC, platform, PMIC, and revisions of those components.
-> +To support this scheme, we encode this information into the board compatible
-> +string.
+> +Required node properties:
+> +
+> + - "compatible": must be "nuvoton,nct7802"
+> + - "reg": I2C bus address of the device
+> + - #address-cells=<1>;
+> + - #size-cells=<0>;
+> +
+> +Optional subnodes:
+> +
+> +Sensor subnodes properties:
+> + - "compatible", allowed values:
+> +	 - "nuvoton,nct7802"
 
-Why does all this need to be a single property?
+This should have -sensor appended?
 
-> +Each board must specify a top-level board compatible string with the following
-> +format:
-> +
-> +	compatible = "qcom,<SoC>(-<soc_version>)(-<foundry_id>)-<plat_type>(/<subtype>)(-<plat_version>)(-<mb>MB)(-<panel>-panel)(-boot-<boot>)(-<pmic>(-v<pmic_version>)){0-4}"
-> +
-> +where elements in parentheses "()" are optional and elements in brackets "<>"
+> + - "sensor-type", allowed values:
+> +	"thermal-diode"
+> +	"thermistor"
+> +	"voltage"
+> +	"local"
+> +	"vcore"
+> +	"vcc"
 
-[] brackets are more generally used for optional params.
+These are different connections to the same h/w block in the chip? If 
+so, then this is fine. If the h/w blocks are different, then it would be 
+better to go back to different compatible strings.
 
-> +are names of elements. Meaning only the 'SoC' and 'plat_type' elements are
-> +required.
+> +For sensors of types "thermal-diode", "thermistor" and "voltage" required
+> + - "reg": index in range 0 .. 2
 > +
-> +The 'SoC' element must be one of the following strings:
+> +Except sensor at address 2 can't be "thermal-diode".
 > +
-> +	apq8016
-> +	apq8074
-> +	apq8084
-> +	apq8096
-> +	msm8916
-> +	msm8974
-> +	msm8996
+> +Fan subnode:
 > +
-> +The 'plat_type' element must be one of the following strings:
-> +
-> +	cdp
-> +	liquid
-> +	dragonboard
-> +	mtp sbc
+> +Required properties:
+> + - "reg" :index of in range 0 .. 2.
 
-Platform is pretty overloaded meaning. Perhaps board_type would be more 
-clear.
+What does the numbering correspond to in the h/w?
 
+> + - "compatible", should be "nuvoton,nct7802-fan"
+> +Optional boolean properties:
+> + - "direct-current" :direct current powered fan instead default PWM
+> + - "invert" :inverted polarity
+> + - "open-drain" :open-drain output instead push pull
 > +
-> +The 'soc_version', 'plat_version' and 'pmic_version' elements take the form of
-> +v<Major>.<Minor> where the minor number may be omitted when it's zero, i.e.
-> +v1.0 is the same as v1. If all versions of the 'plat_version' element's match,
-> +then a wildcard '*' should be used, e.g. 'v*'.
+> +Subnode "peci" properties:
+> + - "reg" :index in range 0 .. 1
+> + - "compatible", should be "nuvoton,nct7802-peci"
 > +
-> +The 'foundry_id', 'subtype', and 'mb' elements are one or more digits from 0
-> +to 9.
+> +Not defined sensors, fans and PECI modules will be disabled.
+> +
+> +Example nct7802 node:
+> +
+> +nct7802-example@28 {
+> +	compatible = "nuvoton,nct7802";
+> +	reg = <0x28>;
+> +	#address-cells=<1>;
+> +	#size-cells=<0>;
+> +	local-sensor {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		sensor-type = "local";
+> +	};
+> +	sensor@0 {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		reg = <0>;
+> +		sensor-type = "thermal-diode";
+> +	};
+> +	sensor@1 {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		reg = <1>;
+> +		sensor-type = "thermistor";
+> +	};
+> +	sensor@2 {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		reg = <2>;
+> +		sensor-type = "voltage";
+> +	};
+> +	vcc {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		sensor-type = "vcc";
 
-Can you define what these are exactly. I gather mb is RAM size.
+No unit address?
 
-> +
-> +The 'panel' element must be one of the following strings:
-> +
-> +	720p
-> +	fWVGA
-> +	hd
-> +	qHD
-
-How is this used?
-
-
-> +The 'boot' element must be one of the following strings:
-> +
-> +	emmc_sdc1
-> +	ufs
-> +
-> +The 'pmic' element must be one of the following strings:
-> +
-> +	pm8841
-> +	pm8019
-> +	pm8110
-> +	pma8084
-> +	pmi8962
-> +	pmd9635
-> +	pm8994
-> +	pmi8994
-> +	pm8916
-> +	pm8004
-> +	pm8909
-> +
-> +The 'pmic' element is specified in order of ascending USID. The PMIC in USID0
-> +goes first, and then USID2, USID4, and finally USID6. Up to four PMICs may be
-> +specified and no holes in the USID number space are allowed.
-
-What is USID?
-
-> +
-> +Examples:
-> +
-> +	"qcom,msm8916-v1-cdp-pm8916-v2.1"
-> +
-> +A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
-> +2.1.
-> +
-> +	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1-512MB-panel-qHD-boot-emmc_sdc1-pm8941-v0.2-pm8909-v2.2-pma8084-v3-pm8110-v1"
-
-Which example is more common?
-
-> +
-> +A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
-> +foundry 2 with 512MB of memory and a qHD panel booting from emmc_sdc1, paired
-> +with a pm8941 PMIC version 0.2 at USID0, pm8909 PMIC version 2.2 at USID2,
-> +pma8084 version 3 at USID4 and a pm8110 version 1 at USID6.
+> +	};
+> +	vcore {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		sensor-type = "vcore";
+> +	};
+> +	pwm-fan@0 {
+> +		compatible = "nuvoton,nct7802-fan";
+> +		reg = <0>;
+> +	};
+> +	dc-fan@1 {
+> +		compatible = "nuvoton,nct7802-fan";
+> +		reg = <1>;
+> +		direct-current;
+> +		open-drain;
+> +		invert;
+> +	};
+> +	fan@2 {
+> +		compatible = "nuvoton,nct7802-fan";
+> +		reg = <2>;
+> +		open-drain;
+> +		invert;
+> +	};
+> +	peci@0 {
+> +		compatible = "nuvoton,nct7802-peci";
+> +		reg = <0>;
+> +	};
+> +	peci@1 {
+> +		compatible = "nuvoton,nct7802-peci";
+> +		reg = <1>;
+> +	};
+> +};
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
