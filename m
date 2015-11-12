@@ -1,53 +1,53 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v4 2/2] leds: rt5033: Add RT5033 Flash led device driver
-Date: Thu, 12 Nov 2015 10:21:02 +0100
-Message-ID: <564459FE.8020209@gmail.com>
-References: <1447121864-15460-1-git-send-email-ingi2.kim@samsung.com> <1447121864-15460-3-git-send-email-ingi2.kim@samsung.com> <56421B8F.6010107@samsung.com> <56444681.9020604@samsung.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v8 10/17] phy: Add driver for rockchip Display Port PHY
+Date: Thu, 12 Nov 2015 10:21:51 +0100
+Message-ID: <1942026.CO9sWmi7sq@phil>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com> <2368662.QeV0VQYq26@phil> <5643FB43.6090408@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <56444681.9020604@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5643FB43.6090408-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
-Hi Ingi,
+Hi Yakir,
 
-On 11/12/2015 08:57 AM, Ingi Kim wrote:
-[...]
->>> +        regmap_write(led->regmap, RT5033_REG_FLED_FUNCTION1, val);
->>> +    } else {
->>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION1,
->>> +                   RT5033_FLED_FUNC1_MASK, RT5033_FLED_PINCTRL |
->>> +                   rt5033_fled_used(led, fled_id));
->>> +        regmap_update_bits(led->regmap,    RT5033_REG_FLED_CTRL1,
->>> +                   RT5033_FLED_CTRL1_MASK,
->>> +                   (brightness - 1) << 4);
->>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION2,
->>> +                   RT5033_FLED_FUNC2_MASK, RT5033_FLED_ENFLED);
->>> +    }
->>
->> How are you distinguishing between setting brightness for iout_joint
->> case and for individual LEDs? Have you tested this use case?
->> Even if you don't have a board with two separate LEDs,
->> you should be able to test two LED class devices with a single
->> connected LED.
->>
->
-> Thanks, I missed a iout_joint case :(
-> I have tested a board with integrated single LED,
-> It looks fine and all feature works well even if it has limitation.
+Am Donnerstag, 12. November 2015, 10:36:51 schrieb Yakir Yang:
+> On 11/12/2015 07:23 AM, Heiko Stuebner wrote:
+> > Am Mittwoch, 28. Oktober 2015, 16:30:33 schrieb Yakir Yang:
+> >> Add phy driver for the Rockchip DisplayPort PHY module. This
+> >> is required to get DisplayPort working in Rockchip SoCs.
+> >>
+> >> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> >> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > a general thing I have been pondering, we should probably move the
+> > dp-phy under the GRF. Similar to the new power-domains being
+> > a full child of the PMU, the dp-phy is a full child-device of the GRF.
+> >
+> > That would include:
+> > - making the GRF a simply-mfd (just adding that property)
+> > - moving the dts node under it
+> > - making the driver get its regmap from its parent (just like
+> >    drivers/soc/rockchip/pm_domains.c does)
+> >
+> >
+> > The usbphy is another example of that, and I think I'll be moving it
+> > below the grf as well.
+> 
+> Sounds great, pretty cool to collect those scattered "GRF" driver,
+> if you want me do some rebase on your changes, please note me :)
 
-Please also test two separate LEDs case, by defining two child
-nodes in DT, and in a result you will get two LED class devices.
-After that you can set brightness separately for each LED class
-device, and you'll be able to verify that the driver works properly
-by observing the single LED connected to both outputs.
-In order to make the testing even more valuable, you can
-set triggers for both LEDs
+nope, that won't be necessary ... I'm currently doing some usbphy
+reorganization/cleanups for 4.5 first, so to keep conflicts down I'll do
+the move probably for 4.6. As I expect your edp series to make it into
+4.5 we'll also not have conflicts here then :-)
 
--- 
-Best Regards,
-Jacek Anaszewski
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
