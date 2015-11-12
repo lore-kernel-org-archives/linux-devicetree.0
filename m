@@ -1,88 +1,72 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] mtd: assign mtd->dev.of_node when creating partition
- devices
-Date: Wed, 11 Nov 2015 17:04:57 -0800
-Message-ID: <20151112010457.GE96199@google.com>
-References: <1447287964-63309-1-git-send-email-computersforpeace@gmail.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for Innosilicon HDMI
+ on Rockchip platform
+Date: Thu, 12 Nov 2015 09:07:34 +0800
+Message-ID: <5643E656.9000709@rock-chips.com>
+References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
+ <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
+ <20151111202236.GA5629@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447287964-63309-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151111202236.GA5629@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, Zheng Yang <zhengyang@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ben Chan <benchan@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-MTD partitions may have been created from a DT definition, and in this case
-the ->of_node of the struct device embedded in mtd_info should point to
-the DT node that was used to create the partition.
-
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-v2: drop most of the get/put node handling; allow the MTD core to do
-    this in {add,del}_mtd_device()
-
-    depends on: http://patchwork.ozlabs.org/patch/543159/
-
-v1: http://patchwork.ozlabs.org/patch/538838/
-
- drivers/mtd/mtdpart.c          | 1 +
- drivers/mtd/ofpart.c           | 2 +-
- include/linux/mtd/partitions.h | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index f8ba153f63bf..c2b6e967a160 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -391,6 +391,7 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
- 	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) ?
- 				&master->dev :
- 				master->dev.parent;
-+	mtd_set_of_node(&slave->mtd, part->of_node);
- 
- 	slave->mtd._read = part_read;
- 	slave->mtd._write = part_write;
-diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-index f78d2aea5545..dacf4c405dec 100644
---- a/drivers/mtd/ofpart.c
-+++ b/drivers/mtd/ofpart.c
-@@ -111,6 +111,7 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 		if (of_get_property(pp, "lock", &len))
- 			(*pparts)[i].mask_flags |= MTD_POWERUP_LOCK;
- 
-+		(*pparts)[i].of_node = pp;
- 		i++;
- 	}
- 
-@@ -124,7 +125,6 @@ ofpart_fail:
- 	       master->name, pp->full_name, mtd_node->full_name);
- 	ret = -EINVAL;
- ofpart_none:
--	of_node_put(pp);
- 	kfree(*pparts);
- 	*pparts = NULL;
- 	return ret;
-diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
-index 773975a3c9e6..282644c0c5c0 100644
---- a/include/linux/mtd/partitions.h
-+++ b/include/linux/mtd/partitions.h
-@@ -42,6 +42,7 @@ struct mtd_partition {
- 	uint64_t offset;		/* offset within the master MTD space */
- 	uint32_t mask_flags;		/* master MTD flags to mask out for this partition */
- 	struct nand_ecclayout *ecclayout;	/* out of band layout for this partition (NAND only) */
-+	struct device_node *of_node;	/* OF node attached to the partition */
- };
- 
- #define MTDPART_OFS_RETAIN	(-3)
--- 
-2.6.0.rc2.230.g3dd15c0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKT24gMTEvMTIvMjAxNSAwNDoyMiBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24g
+V2VkLCBOb3YgMTEsIDIwMTUgYXQgMDM6NDc6MzJQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90ZToK
+Pj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+IEFja2Vk
+LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKVGhhbmtzIHlvdSBmb3IgcmVzcG9u
+ZGluZyAgIDspCgotIFlha2lyCgo+PiAtLS0KPj4gICAuLi4vZGlzcGxheS9yb2NrY2hpcC9pbm5v
+X2hkbWktcm9ja2NoaXAudHh0ICAgICAgICB8IDUwICsrKysrKysrKysrKysrKysrKysrKysKPj4g
+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5v
+X2hkbWktcm9ja2NoaXAudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19o
+ZG1pLXJvY2tjaGlwLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
+Li4xODk4NDA4Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+PiBA
+QCAtMCwwICsxLDUwIEBACj4+ICtSb2NrY2hpcCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRoZSBJ
+bm5vc2lsaWNvbiBIRE1JCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiAr
+Cj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOgo+PiArCSJyb2NrY2hp
+cCxyazMwMzYtZHctaGRtaSI7Cj4+ICstIHJlZzoKPj4gKwlQaHlzaWNhbCBiYXNlIGFkZHJlc3Mg
+YW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPj4gKy0gY2xvY2tzLCBj
+bG9jay1uYW1lczoKPj4gKwlQaGFuZGxlIHRvIGhkbWkgY29udHJvbGxlciBjbG9jaywgbmFtZSBz
+aG91bGQgYmUgInBjbGsiCj4+ICstIGludGVycnVwdHM6Cj4+ICsJSERNSSBpbnRlcnJ1cHQgbnVt
+YmVyCj4+ICstIHBvcnRzOgo+PiArCUNvbnRhaW4gb25lIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50
+IGRlZmluaXRpb25zIGFzIGRlZmluZWQgaW4KPj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3JhcGgudHh0Lgo+PiArLSBwaW5jdHJsLTAsIHBpbmN0cmwtbmFtZToKPj4gKwlT
+d2l0Y2ggdGhlIGlvbXV4IG9mIEhQRC9DRUMgcGlucyB0byBIRE1JIGZ1bmN0aW9uLgo+PiArCj4+
+ICtFeGFtcGxlOgo+PiAraGRtaTogaGRtaUAyMDAzNDAwMCB7Cj4+ICsJY29tcGF0aWJsZSA9ICJy
+b2NrY2hpcCxyazMwMzYtaW5uby1oZG1pIjsKPj4gKwlyZWcgPSA8MHgyMDAzNDAwMCAweDQwMDA+
+Owo+PiArCWludGVycnVwdHMgPSA8R0lDX1NQSSA0NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4g
+KwljbG9ja3MgPSA8JmNydSAgUENMS19IRE1JPjsKPj4gKwljbG9jay1uYW1lcyA9ICJwY2xrIjsK
+Pj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCXBpbmN0cmwtMCA9IDwmaGRtaV9j
+dGw+Owo+PiArCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsKPj4gKwloZG1pX2luOiBwb3J0IHsK
+Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+PiAr
+CQloZG1pX2luX2xjZGM6IGVuZHBvaW50QDAgewo+PiArCQkJcmVnID0gPDA+Owo+PiArCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZsY2RjX291dF9oZG1pPjsKPj4gKwkJfTsKPj4gKwl9Owo+PiArfTsK
+Pj4gKwo+PiArJnBpbmN0cmwgewo+PiArCWhkbWkgewo+PiArCQloZG1pX2N0bDogaGRtaS1jdGwg
+ewo+PiArCQkJcm9ja2NoaXAscGlucyA9IDwxIDggIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25vbmU+
+LAo+PiArCQkJCQk8MSA5ICBSS19GVU5DXzEgJnBjZmdfcHVsbF9ub25lPiwKPj4gKwkJCQkJPDEg
+MTAgUktfRlVOQ18xICZwY2ZnX3B1bGxfbm9uZT4sCj4+ICsJCQkJCTwxIDExIFJLX0ZVTkNfMSAm
+cGNmZ19wdWxsX25vbmU+Owo+PiArCQl9Owo+PiArCX07Cj4+ICsKPj4gK307Cj4+IC0tIAo+PiAx
+LjkuMQo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwo+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKPj4gaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
