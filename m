@@ -1,146 +1,132 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
-Date: Thu, 12 Nov 2015 10:04:20 +0100
-Message-ID: <56445614.8020507@gmail.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com> <1446441875-1256-16-git-send-email-milo.kim@ti.com> <5638DD99.9070502@samsung.com> <56419F0C.90009@ti.com> <5641F4D3.7000800@samsung.com> <5642A4E1.8060000@ti.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/2] usb: phy: msm: fix connect/disconnect bug for
+ dragonboard OTG port
+Date: Thu, 12 Nov 2015 17:13:50 +0800
+Message-ID: <20151112091349.GA3402@shlinux2>
+References: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
+ <1447202811-3429-2-git-send-email-tim.bird@sonymobile.com>
+ <20151111031445.GA8826@shlinux2>
+ <56437F50.6050006@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <5642A4E1.8060000@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "Kim, Milo" <milo.kim@ti.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56437F50.6050006-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, =?iso-8859-1?Q?Andersson=2C_Bj=F6rn?= <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Milo,
+On Wed, Nov 11, 2015 at 09:48:00AM -0800, Tim Bird wrote:
+> 
+> 
+> On 11/10/2015 07:14 PM, Peter Chen wrote:
+> > On Tue, Nov 10, 2015 at 04:46:51PM -0800, Tim Bird wrote:
+> >> This fixes a bug where if you disconnect and re-connect the USB cable,
+> >> the gadget driver stops working.
+> >>
+> >> Add support for async_irq to wake up driver from low power mode.
+> >> Without this, the power management code never calls resume.
+> >> Also, have the phy driver kick the gadget driver (chipidea otg)
+> >> by having the chipidea driver register with it, for vbus connect
+> >> notifications.
+> >>
+> >> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> >> ---
+> >>  drivers/usb/chipidea/udc.c    |  6 ++++++
+> >>  drivers/usb/phy/phy-msm-usb.c | 16 ++++++++++++++++
+> >>  include/linux/usb/msm_hsusb.h |  1 +
+> >>  3 files changed, 23 insertions(+)
+> >>
+> >> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> >> index 8223fe7..06234cd 100644
+> >> --- a/drivers/usb/chipidea/udc.c
+> >> +++ b/drivers/usb/chipidea/udc.c
+> >> @@ -1890,6 +1890,12 @@ static int udc_start(struct ci_hdrc *ci)
+> >>  
+> >>  	ci->gadget.ep0 = &ci->ep0in->ep;
+> >>  
+> >> +	if (ci->usb_phy) {
+> >> +		retval = otg_set_peripheral(ci->usb_phy->otg, &ci->gadget);
+> >> +		if (retval)
+> >> +			goto destroy_eps;
+> >> +	}
+> >> +
+> >>  	retval = usb_add_gadget_udc(dev, &ci->gadget);
+> >>  	if (retval)
+> >>  		goto destroy_eps;
+> > 
+> > Although it looks no affect for other drivers, it is better you
+> > can split patches between controller and phy, then I can have a test.
+> 
+> OK.
+> 
+> > In fact, most of phy-msm-usb.c's implementations (except USB PHY related)
+> > are included in chipidea drivers, hope you can try it in future.
+> 
+> I would like to do this.  I'm pretty confused about the relationship between
+> ehci, chipidea and the phy code, with regard to managing the controller
+> hardware.
 
-On 11/11/2015 03:16 AM, Kim, Milo wrote:
-> Hi Jacek,
->
-> On 11/10/2015 10:44 PM, Jacek Anaszewski wrote:
->>>>> +static ssize_t lm3633_led_store_pattern_levels(struct device *dev,
->>>>> >>>+                           struct device_attribute *attr,
->>>>> >>>+                           const char *buf, size_t len)
->>>>> >>>+{
->>>>> >>>+    struct ti_lmu_led *lmu_led = to_ti_lmu_led(dev);
->>>>> >>>+    struct ti_lmu_led_chip *chip = lmu_led->chip;
->>>>> >>>+    unsigned int low, high;
->>>>> >>>+    u8 reg, offset, val;
->>>>> >>>+    int ret;
->>>>> >>>+
->>>>> >>>+    /*
->>>>> >>>+     * Sequence
->>>>> >>>+     *
->>>>> >>>+     * 1) Read pattern level data
->>>>> >>>+     * 2) Disable a bank before programming a pattern
->>>>> >>>+     * 3) Update LOW BRIGHTNESS register
->>>>> >>>+     * 4) Update HIGH BRIGHTNESS register
->>>>> >>>+     *
->>>>> >>>+     * Level register addresses have offset number based on the
->>>>> LED
->>>>> >>>bank.
->>>>> >>>+     */
->>>>> >>>+
->>>>> >>>+    ret = sscanf(buf, "%u %u", &low, &high);
->>>>> >>>+    if (ret != 2)
->>>>> >>>+        return -EINVAL;
->>>>> >>>+
->>>>> >>>+    low = min_t(unsigned int, low, LM3633_LED_MAX_BRIGHTNESS);
->>>> >>
->>>> >>Why don't you take into account the value defined by led-max-microamp
->>>> >>DT property here?
->>> >
->>> >'low' and 'high' are brightness value. The range is from 0 to 255.
->>> It is
->>> >mostly related with LED sysfs -/sys/class/led/<led>/brightness.
->>> >On the other hand, led-max-microamp is current limit. It is from 5mA to
->>> >30mA. It's different configuration in this device.
->> Doesn't the current has direct influence on the LED brightness?
->> Are there other means for adjusting brightness than current setting?
->> I see in your enum ti_lmu_max_current, that there are 26 possible
->> current levels. I think that they should reflect 26 possible
->> brightness levels, so max_brightness can be at most 26.
->
-> Let me describe LM3633 in more details. I'd like to have your opinion
-> about led-max-microamp and max_brightness usages. Datasheet would be
-> better to figure out characteristics.
->
->      http://www.ti.com/lit/ds/symlink/lm3633.pdf
->
-> Max current level is not same as brightness level in LM3633.
-> LM3633 device has two parameters for output brightness control.
-> One is brightness code(base register address is 0x44). The other is
-> current limit(base register address is 0x22). It also provides hardware
-> protection like excessive current.
->
->      0 <= brightness_code <= 0xff
->      0 <= current_limit_code <= 0x1f, it means
->      5mA <= current_limit <= 30mA.
->
-> LM3633 device calculates the output current below.
->
->      (1) Linear brightness mode
->      Iout = current_limit * brightness_code/255
->
->      (2) Exponential brightness mode
->      Iout = current_limit * 0.85 ^ (44 - (brightness_code + 1)/5.18)
->
-> So output current(Iout) can not be in excess of current_limit.
->
->>
->> led-max-microamp was designed for defining max brightness limit.
->> It should be converted into max brightness level in the driver and
->> assigned to max_brightness property of struct led_classdev.
->> This attribute overrides legacy 0-255 brightness scale.
->>
->
-> It could be applied when brightness is determined by only one parameter
-> - current level. Flash/torch device would be a good example. In this
-> device, current setting is directly scaled to the output brightness.
->
-> However, LM3633 has two parameters for the brightness control - current
-> limit and brightness level. Max current setting is one of brightness
-> control parameters. In this patch, 'led-max-microamp' from DT is
-> converted to 'current_limit_code'. Then, this value is written once when
-> the driver is initialized. On the other hand, 'brightness_code' can be
-> changed at run time. And 'max_brightness' of led_classdev is set to max
-> brightness register value, 0xff.
->
-> It sounds 'led-max-microamp' property might not be a general usage in
-> LM3633. Do you have some idea?
+Chipidea is controller driver, it manages ehci (host.c) , udc (udc.c),
+and otg (otg.c and otg-fsm.c), all controller related resources are
+managed by chipidea driver, and it calls usb_phy (or phy)'s API when
+it needs to access PHY.
 
-There are defined formulas for calculating the current for given
-combination of current_limit and brightness_code. If you made one
-of this parameters constant, then you'd be able to control the current
-with the other one. I propose to set current limit to max, i.e.
-"Full-Scale Current Setting" (base addr 0x22 for LVLEDn) should
-be set to 0x1F (29.8 mA). Then, you can control the output current
-with the registers "Control N Brightness" (base addr 0x44 for LVLEDn).
+The PHY code is another driver, and chipidea can get PHY through the
+dts, the PHY reference can be phandle in controler's node.
+(see arch/arm/boot/dts/imx6qdl.dts for reference).
 
-Taking above into account, you can set the led-max-microamp to the
-exact max current value you want for given LED. The driver will be
-responsible for clamping this to the greatest possible value of
-"Control N Brightness", which will be assigned to max_brightness
-property.
+> Is there a phy in mainline that is a good example of having most
+> of the controller support in the chipidea driver rather than in the phy?
+> 
 
-You can refer to drivers/leds/leds-aat1290.c, which presents
-the same approach.
+Many of them, in fact, the PHY driver should not include controller
+access, otherwise, there are two drivers access the same register
+region.
 
-Apart from the above considerations - in the beginning of the
-next week I will apply LED core optimizations to the for-next
-branch of LED git tree, which will remove the need for using
-work queues internally in LED class drivers. Please rebase your
-code on those changes, remove work queue use from your driver,
-and implement brightness_set_blocking op instead of brightness_set.
-You can refer to the patches on devel branch, which adjust
-flash drivers to those modifications.
+drivers/usb/phy/phy-mxs-usb.c
+drivers/phy/phy-berlin-usb.c
+drivers/usb/phy/phy-generic.c
 
-git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
-branch: devel
-base commit:
-26eb03b leds: core: Add two new LED_BLINK_ flags
+Just grep compatible string described at
+Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+at ARM dts folder, and find the PHY node at related
+dts, then you will know their PHY driver.
+
+Peter
+
+> Thanks!
+>  
+> >> diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+> >> index 80eb991..eb80f92 100644
+> >> --- a/drivers/usb/phy/phy-msm-usb.c
+> >> +++ b/drivers/usb/phy/phy-msm-usb.c
+> >> @@ -1731,6 +1731,12 @@ static int msm_otg_probe(struct platform_device *pdev)
+> >>  		return motg->irq;
+> >>  	}
+> >>  
+> >> +	motg->async_irq = platform_get_irq_byname(pdev, "async_irq");
+> >> +	if (motg->async_irq < 0) {
+> >> +		dev_info(&pdev->dev, "platform_get_irq for async_irq failed\n");
+> >> +		motg->async_irq = 0;
+> >> +	}
+> >> +
+> > 
+> > dev_err
+> 
+> OK - I'll change this.  I've listed the async_irq as optional in the binding doc,
+> so I don't actually error out, but I was unsure the appropriate error level for
+> this message.
+> 
+> Thanks for the feedback!
+>  -- Tim
 
 -- 
+
 Best Regards,
-Jacek Anaszewski
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
