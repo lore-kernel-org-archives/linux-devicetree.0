@@ -1,72 +1,82 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for Innosilicon HDMI
- on Rockchip platform
-Date: Thu, 12 Nov 2015 09:07:34 +0800
-Message-ID: <5643E656.9000709@rock-chips.com>
-References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
- <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
- <20151111202236.GA5629@rob-hp-laptop>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT "/chosen/linux,atags"
+ entry
+Date: Wed, 11 Nov 2015 17:10:46 -0800
+Message-ID: <5643E716.9080204@gmail.com>
+References: <1436214373-12969-1-git-send-email-pali.rohar@gmail.com> <20150713131902.GH26485@atomide.com> <20151012201640.GQ23801@atomide.com> <201510122225.12786@pali> <20151012204509.GT23801@atomide.com> <20151013143746.GJ23104@pali> <20151105114041.GC27908@pali> <20151105161756.GG3078@atomide.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151111202236.GA5629@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, Zheng Yang <zhengyang@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Ben Chan <benchan@google.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151105161756.GG3078@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMTEvMTIvMjAxNSAwNDoyMiBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24g
-V2VkLCBOb3YgMTEsIDIwMTUgYXQgMDM6NDc6MzJQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90ZToK
-Pj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+IEFja2Vk
-LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKVGhhbmtzIHlvdSBmb3IgcmVzcG9u
-ZGluZyAgIDspCgotIFlha2lyCgo+PiAtLS0KPj4gICAuLi4vZGlzcGxheS9yb2NrY2hpcC9pbm5v
-X2hkbWktcm9ja2NoaXAudHh0ICAgICAgICB8IDUwICsrKysrKysrKysrKysrKysrKysrKysKPj4g
-ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5v
-X2hkbWktcm9ja2NoaXAudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19o
-ZG1pLXJvY2tjaGlwLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
-Li4xODk4NDA4Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+PiBA
-QCAtMCwwICsxLDUwIEBACj4+ICtSb2NrY2hpcCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRoZSBJ
-bm5vc2lsaWNvbiBIRE1JCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiAr
-Cj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOgo+PiArCSJyb2NrY2hp
-cCxyazMwMzYtZHctaGRtaSI7Cj4+ICstIHJlZzoKPj4gKwlQaHlzaWNhbCBiYXNlIGFkZHJlc3Mg
-YW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPj4gKy0gY2xvY2tzLCBj
-bG9jay1uYW1lczoKPj4gKwlQaGFuZGxlIHRvIGhkbWkgY29udHJvbGxlciBjbG9jaywgbmFtZSBz
-aG91bGQgYmUgInBjbGsiCj4+ICstIGludGVycnVwdHM6Cj4+ICsJSERNSSBpbnRlcnJ1cHQgbnVt
-YmVyCj4+ICstIHBvcnRzOgo+PiArCUNvbnRhaW4gb25lIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50
-IGRlZmluaXRpb25zIGFzIGRlZmluZWQgaW4KPj4gKwlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZ3JhcGgudHh0Lgo+PiArLSBwaW5jdHJsLTAsIHBpbmN0cmwtbmFtZToKPj4gKwlT
-d2l0Y2ggdGhlIGlvbXV4IG9mIEhQRC9DRUMgcGlucyB0byBIRE1JIGZ1bmN0aW9uLgo+PiArCj4+
-ICtFeGFtcGxlOgo+PiAraGRtaTogaGRtaUAyMDAzNDAwMCB7Cj4+ICsJY29tcGF0aWJsZSA9ICJy
-b2NrY2hpcCxyazMwMzYtaW5uby1oZG1pIjsKPj4gKwlyZWcgPSA8MHgyMDAzNDAwMCAweDQwMDA+
-Owo+PiArCWludGVycnVwdHMgPSA8R0lDX1NQSSA0NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4g
-KwljbG9ja3MgPSA8JmNydSAgUENMS19IRE1JPjsKPj4gKwljbG9jay1uYW1lcyA9ICJwY2xrIjsK
-Pj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArCXBpbmN0cmwtMCA9IDwmaGRtaV9j
-dGw+Owo+PiArCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsKPj4gKwloZG1pX2luOiBwb3J0IHsK
-Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+PiAr
-CQloZG1pX2luX2xjZGM6IGVuZHBvaW50QDAgewo+PiArCQkJcmVnID0gPDA+Owo+PiArCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZsY2RjX291dF9oZG1pPjsKPj4gKwkJfTsKPj4gKwl9Owo+PiArfTsK
-Pj4gKwo+PiArJnBpbmN0cmwgewo+PiArCWhkbWkgewo+PiArCQloZG1pX2N0bDogaGRtaS1jdGwg
-ewo+PiArCQkJcm9ja2NoaXAscGlucyA9IDwxIDggIFJLX0ZVTkNfMSAmcGNmZ19wdWxsX25vbmU+
-LAo+PiArCQkJCQk8MSA5ICBSS19GVU5DXzEgJnBjZmdfcHVsbF9ub25lPiwKPj4gKwkJCQkJPDEg
-MTAgUktfRlVOQ18xICZwY2ZnX3B1bGxfbm9uZT4sCj4+ICsJCQkJCTwxIDExIFJLX0ZVTkNfMSAm
-cGNmZ19wdWxsX25vbmU+Owo+PiArCQl9Owo+PiArCX07Cj4+ICsKPj4gK307Cj4+IC0tIAo+PiAx
-LjkuMQo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKPj4gaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Adding devicetree list.
+
+Thread starts at
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/354459.=
+html
+
+On 11/5/2015 8:17 AM, Tony Lindgren wrote:
+> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [151105 03:41]:
+>> On Tuesday 13 October 2015 16:37:46 Pali Roh=C3=A1r wrote:
+>>> On Monday 12 October 2015 13:45:09 Tony Lindgren wrote:
+>>>> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [151012 13:29]:
+>>>>> On Monday 12 October 2015 22:16:40 Tony Lindgren wrote:
+>>>>>>
+>>>>>> Pali, any news on posting an updated series with the comments
+>>>>>> addressed in this thread? It seems that we all pretty much agree
+>>>>>> what needs to be done.
+
+I'm not real happy with the concept of patches 4 and 5 in this series.
+My concern is that those two patches are using the FDT as a transport
+mechanism for a binary blob (the atags object).
+
+Patches 1 and 2 do follow the spirit of atags_to_fdt() since an
+atags kernel already may set system_rev from an atag.
+
+-Frank
+
+
+>>>>>
+>>>>> Tony, I'm not really sure what to do. Just wrap 4 and 5 patches i=
+nto=20
+>>>>> CONFIG_KEXEC? Or something more?
+>>>>
+>>>> Well for most part your patches are fine, I think there were some
+>>>> minor comments on the series.
+>>>>
+>>>> For the CONFIG_KEXEC dependency, we should just keep the existing
+>>>> behavior and keep /proc/atags behind CONFIG_KEXEC. That's all
+>>>> I believe :)
+>>>>
+>>>> Regards,
+>>>>
+>>>> Tony
+>>>>
+>>>>
+>>>
+>>> Ok. I will add CONFIG_KEXEC into atag patches.
+>>>
+>>> And there is missing documentation for these two new DT properties
+>>> (marked as TODO in commit messages). Where to put them?
+>>>
+>>
+>> Tony (or somebody else) ^^^
+>=20
+> How about Documentation/devicetree/bindings/arm/atags.txt?
+>=20
+> Regards,
+>=20
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>=20
