@@ -1,59 +1,88 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v7 1/4] Documentation: dt-bindings: Describe SROMc
- configuration
-Date: Thu, 12 Nov 2015 09:32:10 +0900
-Message-ID: <5643DE0A.2060400@samsung.com>
-References: <cover.1446799912.git.p.fedin@samsung.com>
- <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
- <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com>
- <009301d11c4c$6eaa1eb0$4bfe5c10$@samsung.com>
- <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] mtd: assign mtd->dev.of_node when creating partition
+ devices
+Date: Wed, 11 Nov 2015 17:04:57 -0800
+Message-ID: <20151112010457.GE96199@google.com>
+References: <1447287964-63309-1-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pavel Fedin <p.fedin@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447287964-63309-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12.11.2015 05:43, Rob Herring wrote:
-> On Wed, Nov 11, 2015 at 12:44 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
->>  Hello!
->>
->>>> +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
->>>> +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
->>>> +                        Each value is specified in cycles and has the following
->>>> +                        meaning and valid range:
->>>> +                        Tacp : Page mode access cycle at Page mode (0 - 15)
->>>> +                        Tcah : Address holding time after CSn (0 - 15)
->>>> +                        Tcoh : Chip selection hold on OEn (0 - 15)
->>>> +                        Tacc : Access cycle (0 - 31, the actual time is N + 1)
->>>> +                        Tcos : Chip selection set-up before OEn (0 - 15)
->>>> +                        Tacs : Address set-up before CSn (0 - 15)
->>>
->>> This is not easily extended. Perhaps a property per value instead.
->>
->>  We had a discussion with Krzysztof about it, he agreed with this form of the property.
->> My concern was that it's just too much typing, and makes little sense because these
->> settings always go together. If register layout changes, or parameter set changes in
->> incompatible way, then it's another device, not exynos-srom anymore.
->>  So would you agree with that, or is your position strong?
-> 
-> I'm thinking for a new version of the controller which could add (or
-> remove) new timing parameters, but then I guess you can interpret the
-> field differently based on the compatible string. Anyway, your problem
-> to deal with.
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Actually I also preferred properties per one timing... but finally
-agreed on simpler approach.
+MTD partitions may have been created from a DT definition, and in this case
+the ->of_node of the struct device embedded in mtd_info should point to
+the DT node that was used to create the partition.
 
-Adding new parameters to the array is still possible (because the order
-matters) and removal as well (by ignoring some indices). All ARMv7
-Exynos SoCs have exactly the same registers for SROM controller
-(Exynos3250, Exynos4, Exynos5). On newer Exynos ARMv8 (Exynos5433 and
-Exynos7420) I don't know because it is not documented.
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v2: drop most of the get/put node handling; allow the MTD core to do
+    this in {add,del}_mtd_device()
 
-Best regards,
-Krzysztof
+    depends on: http://patchwork.ozlabs.org/patch/543159/
+
+v1: http://patchwork.ozlabs.org/patch/538838/
+
+ drivers/mtd/mtdpart.c          | 1 +
+ drivers/mtd/ofpart.c           | 2 +-
+ include/linux/mtd/partitions.h | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index f8ba153f63bf..c2b6e967a160 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -391,6 +391,7 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) ?
+ 				&master->dev :
+ 				master->dev.parent;
++	mtd_set_of_node(&slave->mtd, part->of_node);
+ 
+ 	slave->mtd._read = part_read;
+ 	slave->mtd._write = part_write;
+diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+index f78d2aea5545..dacf4c405dec 100644
+--- a/drivers/mtd/ofpart.c
++++ b/drivers/mtd/ofpart.c
+@@ -111,6 +111,7 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+ 		if (of_get_property(pp, "lock", &len))
+ 			(*pparts)[i].mask_flags |= MTD_POWERUP_LOCK;
+ 
++		(*pparts)[i].of_node = pp;
+ 		i++;
+ 	}
+ 
+@@ -124,7 +125,6 @@ ofpart_fail:
+ 	       master->name, pp->full_name, mtd_node->full_name);
+ 	ret = -EINVAL;
+ ofpart_none:
+-	of_node_put(pp);
+ 	kfree(*pparts);
+ 	*pparts = NULL;
+ 	return ret;
+diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
+index 773975a3c9e6..282644c0c5c0 100644
+--- a/include/linux/mtd/partitions.h
++++ b/include/linux/mtd/partitions.h
+@@ -42,6 +42,7 @@ struct mtd_partition {
+ 	uint64_t offset;		/* offset within the master MTD space */
+ 	uint32_t mask_flags;		/* master MTD flags to mask out for this partition */
+ 	struct nand_ecclayout *ecclayout;	/* out of band layout for this partition (NAND only) */
++	struct device_node *of_node;	/* OF node attached to the partition */
+ };
+ 
+ #define MTDPART_OFS_RETAIN	(-3)
+-- 
+2.6.0.rc2.230.g3dd15c0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
