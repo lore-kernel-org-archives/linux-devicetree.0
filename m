@@ -1,40 +1,73 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: koelsch: Move SPI FLASH partitions to
- subnode
-Date: Thu, 12 Nov 2015 10:15:26 +0900
-Message-ID: <20151112011522.GB19649@verge.net.au>
-References: <1447144506-20336-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
+Date: Thu, 12 Nov 2015 10:53:59 +0900
+Message-ID: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
 Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447144506-20336-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 10, 2015 at 09:35:06AM +0100, Geert Uytterhoeven wrote:
-> As of commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
-> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
-> partitions in a special 'partitions' subnode"), having partitions as
-> direct subnodes of an mtd device is discouraged:
-> 
->     spi0.0: 'partitions' subnode not found on /spi@e6b10000/flash@0. Trying to parse direct subnodes as partitions.
+In general Renesas hardware is not documented to the extent where the
+relationship between IP blocks on different SoCs can be assumed although
+they may appear to operate the same way. Furthermore the documentation
+typically does not specify a version for individual IP blocks. For these
+reasons a convention of using the SoC name in place of a version and
+providing SoC-specific compat strings has been adopted.
 
-I seem to see something else, perhaps I have a hardware problem?
+Although not universally liked this convention is used in the bindings for
+most drivers for Renesas hardware. The purpose of this patch is to
+update the Renesas R-Car DMA Controller driver to follow this convention.
 
-     m25p80 spi0.0: unrecognized JEDEC id bytes: 01,  2, 20
+Cc: devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-> Hence move the SPI FLASH partitions to a "partitions" subnode.
+Once this has been merged I intend to provide follow-up patches
+to use these new compat strings in the relevant dtsi files.
 
-Thanks, I will queue this up.
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+index 09daeef1ff22..5b902ac8d97e 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
++++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+@@ -14,7 +14,14 @@ not described in these device tree bindings.
+ 
+ Required Properties:
+ 
+-- compatible: must contain "renesas,rcar-dmac"
++- compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
++	      Examples with soctypes are:
++		- "renesas,dmac-r8a7790" (R-Car H2)
++		- "renesas,dmac-r8a7791" (R-Car M2-W)
++		- "renesas,dmac-r8a7792" (R-Car V2H)
++		- "renesas,dmac-r8a7793" (R-Car M2-N)
++		- "renesas,dmac-r8a7794" (R-Car E2)
++		- "renesas,dmac-r8a7795" (R-Car H3)
+ 
+ - reg: base address and length of the registers block for the DMAC
+ 
+@@ -35,7 +42,7 @@ Required Properties:
+ Example: R8A7790 (R-Car H2) SYS-DMACs
+ 
+ 	dmac0: dma-controller@e6700000 {
+-		compatible = "renesas,rcar-dmac";
++		compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
+ 		reg = <0 0xe6700000 0 0x20000>;
+ 		interrupts = <0 197 IRQ_TYPE_LEVEL_HIGH
+ 			      0 200 IRQ_TYPE_LEVEL_HIGH
+@@ -65,7 +72,7 @@ Example: R8A7790 (R-Car H2) SYS-DMACs
+ 	};
+ 
+ 	dmac1: dma-controller@e6720000 {
+-		compatible = "renesas,rcar-dmac";
++		compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
+ 		reg = <0 0xe6720000 0 0x20000>;
+ 		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH
+ 			      0 216 IRQ_TYPE_LEVEL_HIGH
+-- 
+2.1.4
 
-I assume we also need this for other boards with flash nodes
-in mainline: bockw, lager, porter, silk.
-
-I'm happy to prepare patches to do that if you want to pass.
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-[snip]
