@@ -1,59 +1,109 @@
-From: Vincent ABRIOU <vincent.abriou-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] MAINTAINERS: update DT binding doc locations
-Date: Thu, 12 Nov 2015 17:05:58 +0100
-Message-ID: <5644B8E6.5010507@st.com>
-References: <1446752475-2708-1-git-send-email-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] Documentation: dt: Add bindings for Secure-only devices
+Date: Thu, 12 Nov 2015 16:24:50 +0000
+Message-ID: <1447345490-29671-1-git-send-email-peter.maydell@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446752475-2708-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The existing device tree bindings assume that we are only trying to
+describe a single address space with a device tree (for ARM, either
+the Normal or the Secure world). Some uses for device tree need to
+describe both Normal and Secure worlds in a single device tree. Add
+documentation of how to do this, by adding extra properties which
+describe when a device appears differently in the two worlds or when
+it only appears in one of them.
 
+The binding describes the general principles for adding new
+properties describing the secure world, but for now we only need a
+single new property, "secure-status", which can be used to annotate
+devices to indicate that they are only visible in one of the two
+worlds.
 
-On 11/05/2015 08:41 PM, Rob Herring wrote:
-> After the recent moving of DT binding documents, some maintainers entries
-> are stale. Update them to the new locations.
->
-> In bindings/fb/, there were only 2 files and I'm assuming the FB
-> maintainers don't want to be copied on all of bindings/display/. So I've
-> dropped them.
->
-> Reported-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->   MAINTAINERS | 19 ++++++++++---------
->   1 file changed, 10 insertions(+), 9 deletions(-)
->
+The primary expected use of this binding is for a virtual machine
+like QEMU to describe the VM layout to a TrustZone aware firmware
+(which would then use the secure-only devices itself, and pass the DT
+on to a kernel running in the non-secure world, which ignores the
+secure-only devices and uses the rest).
 
->   DRM DRIVERS FOR STI
->   M:	Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> @@ -3656,7 +3656,7 @@ L:	dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
->   T:	git http://git.linaro.org/people/benjamin.gaignard/kernel.git
->   S:	Maintained
->   F:	drivers/gpu/drm/sti
-> -F:	Documentation/devicetree/bindings/gpu/st,stih4xx.txt
-> +F:	Documentation/devicetree/bindings/display/st,stih4xx.txt
->
+Signed-off-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+This binding doesn't affect the kernel itself, but the kernel
+Documentation/ tree is the de-facto current place where all DT
+bindings are documented, so Grant suggested this was the right
+place to send a doc patch.
 
-Acked-by: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>--
+Changes v1->v2:
+ * list all the status/secure-status combinations explicitly
+ * use /* */ comment syntax, not //
+
+ Documentation/devicetree/bindings/arm/secure.txt | 51 ++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+new file mode 100644
+index 0000000..7ed5ed6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/secure.txt
+@@ -0,0 +1,51 @@
++* ARM Secure world bindings
++
++ARM CPUs with TrustZone support have two distinct address spaces,
++"Normal" and "Secure". Most devicetree consumers (including the Linux
++kernel) are not TrustZone aware and run entirely in either the Normal
++world or the Secure world. However some devicetree consumers are
++TrustZone aware and need to be able to determine whether devices are
++visible only in the Secure address space, only in the Normal address
++space, or visible in both. (One example of that situation would be a
++virtual machine which boots Secure firmware and wants to tell the
++firmware about the layout of the machine via devicetree.)
++
++The general principle of the naming scheme for Secure world bindings
++is that any property that needs a different value in the Secure world
++can be supported by prefixing the property name with "secure-". So for
++instance "secure-reg" would override "reg". If there is no "secure-"
++property then the Secure world value is the same as specified for the
++Normal world by the non-prefixed property. However, only the
++properties listed below may validly have "secure-" versions; this list
++will be enlarged on a case-by-case basis.
++
++Defining the bindings in this way means that a device tree which has
++been annotated to indicate the presence of Secure-only devices can
++still be processed unmodified by existing Non-secure software (and in
++particular by the kernel).
++
++Note that it is still valid for bindings intended for purely Secure
++world consumers (like kernels that run entirely in Secure) to simply
++describe the view of Secure world using the standard bindings. These
++secure- bindings only need to be used where both the Secure and Normal
++world views need to be described in a single device tree.
++
++Valid Secure world properties:
++
++- secure-status : specifies whether the device is present and usable
++  in the secure world. The combination of this with "status" allows
++  the various possible combinations of device visibility to be
++  specified. If "secure-status" is not specified it defaults to the
++  same value as "status"; if "status" is not specified either then
++  both default to "okay". This means the following combinations are
++  possible:
++
++   /* Neither specified: default to visible in both S and NS */
++   secure-status = "okay";                          /* visible in both */
++   status = "okay";                                 /* visible in both */
++   status = "okay"; secure-status = "okay";         /* visible in both */
++   secure-status = "disabled";                      /* NS-only */
++   status = "okay"; secure-status = "disabled";     /* NS-only */
++   status = "disabled"; secure-status = "okay";     /* S-only */
++   status = "disabled";                             /* disabled in both */
++   status = "disabled"; secure-status = "disabled"; /* disabled in both */
+-- 
+1.9.1
+
+--
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
