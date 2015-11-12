@@ -1,62 +1,69 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: shmobile: koelsch: Move SPI FLASH partitions to subnode
-Date: Thu, 12 Nov 2015 11:03:33 +0100
-Message-ID: <CAMuHMdVaBXSNnf5k3Sxx=bz8CscsE85PozgBH82yXa3HBXC1sg@mail.gmail.com>
-References: <1447144506-20336-1-git-send-email-geert+renesas@glider.be>
-	<20151112011522.GB19649@verge.net.au>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v4 2/2] leds: rt5033: Add RT5033 Flash led device driver
+Date: Thu, 12 Nov 2015 19:07:33 +0900
+Message-ID: <564464E5.1080005@samsung.com>
+References: <1447121864-15460-1-git-send-email-ingi2.kim@samsung.com>
+ <1447121864-15460-3-git-send-email-ingi2.kim@samsung.com>
+ <56421B8F.6010107@samsung.com> <56444681.9020604@samsung.com>
+ <564459FE.8020209@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151112011522.GB19649-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <564459FE.8020209@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Jacek,
 
-On Thu, Nov 12, 2015 at 2:15 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Tue, Nov 10, 2015 at 09:35:06AM +0100, Geert Uytterhoeven wrote:
->> As of commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
->> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
->> partitions in a special 'partitions' subnode"), having partitions as
->> direct subnodes of an mtd device is discouraged:
+On 2015=EB=85=84 11=EC=9B=94 12=EC=9D=BC 18:21, Jacek Anaszewski wrote:
+> Hi Ingi,
+>=20
+> On 11/12/2015 08:57 AM, Ingi Kim wrote:
+> [...]
+>>>> +        regmap_write(led->regmap, RT5033_REG_FLED_FUNCTION1, val)=
+;
+>>>> +    } else {
+>>>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION1=
+,
+>>>> +                   RT5033_FLED_FUNC1_MASK, RT5033_FLED_PINCTRL |
+>>>> +                   rt5033_fled_used(led, fled_id));
+>>>> +        regmap_update_bits(led->regmap,    RT5033_REG_FLED_CTRL1,
+>>>> +                   RT5033_FLED_CTRL1_MASK,
+>>>> +                   (brightness - 1) << 4);
+>>>> +        regmap_update_bits(led->regmap, RT5033_REG_FLED_FUNCTION2=
+,
+>>>> +                   RT5033_FLED_FUNC2_MASK, RT5033_FLED_ENFLED);
+>>>> +    }
+>>>
+>>> How are you distinguishing between setting brightness for iout_join=
+t
+>>> case and for individual LEDs? Have you tested this use case?
+>>> Even if you don't have a board with two separate LEDs,
+>>> you should be able to test two LED class devices with a single
+>>> connected LED.
+>>>
 >>
->>     spi0.0: 'partitions' subnode not found on /spi@e6b10000/flash@0. Trying to parse direct subnodes as partitions.
->
-> I seem to see something else, perhaps I have a hardware problem?
->
->      m25p80 spi0.0: unrecognized JEDEC id bytes: 01,  2, 20
+>> Thanks, I missed a iout_joint case :(
+>> I have tested a board with integrated single LED,
+>> It looks fine and all feature works well even if it has limitation.
+>=20
+> Please also test two separate LEDs case, by defining two child
+> nodes in DT, and in a result you will get two LED class devices.
+> After that you can set brightness separately for each LED class
+> device, and you'll be able to verify that the driver works properly
+> by observing the single LED connected to both outputs.
+> In order to make the testing even more valuable, you can
+> set triggers for both LEDs
+>=20
 
-That indeed means QSPI doesn't work. Is it reproducible?
-Is this on Koelsch?
+Oh, I ask of you, please do not misconstrue.
+I'm sorry if my expression is rather misleading.
 
->> Hence move the SPI FLASH partitions to a "partitions" subnode.
->
-> Thanks, I will queue this up.
->
-> I assume we also need this for other boards with flash nodes
-> in mainline: bockw, lager, porter, silk.
+I have verified this driver works properly.
+It already tested with two child nodes and observed single LED
+that is connected to both outputs.
 
-Indeed. I converted Koelsch only to see if it works, and as a reminder for
-the other boards. But as you added more deprecated usage, I sent out what
-I had.
-
-> I'm happy to prepare patches to do that if you want to pass.
-
-Feel free to convert the other boards if you have time. Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I just wanted to say that it works properly as you said.
