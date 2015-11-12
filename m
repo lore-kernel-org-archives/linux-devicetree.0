@@ -1,61 +1,61 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2] of: Check for overlap in reserved memory regions
-Date: Thu, 12 Nov 2015 19:06:25 +1100
-Message-ID: <1447315585.31688.5.camel@ellerman.id.au>
-References: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
+From: Fengguang Wu <lkp@intel.com>
+Subject: Re: [kbuild-all] [PATCH V3 4/4] dma: add Qualcomm Technologies HIDMA
+ channel driver
+Date: Thu, 12 Nov 2015 16:20:15 +0800
+Message-ID: <20151112082015.GA9099@wfg-t540p.sh.intel.com>
+References: <201511090323.GmbQltpW%fengguang.wu@intel.com>
+ <563FEC48.2010404@codeaurora.org>
+ <20151111022103.GA29459@wfg-t540p.sh.intel.com>
+ <4119660.BobUIRMK6T@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442367036-15205-1-git-send-email-mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4119660.BobUIRMK6T@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vinod Koul <vinod.koul@intel.com>, jcm@redhat.com, timur@codeaurora.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org, cov@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-15 at 18:30 -0700, Mitchel Humpherys wrote:
+Hi Arnd,
 
-> Any overlap in the reserved memory regions (those specified in the
-> reserved-memory DT node) is a bug.  These bugs might go undetected as
-> long as the contested region isn't used simultaneously by multiple
-> software agents, which makes such bugs hard to debug.  Fix this by
-> printing a scary warning during boot if overlap is detected.
+On Wed, Nov 11, 2015 at 09:42:00AM +0100, Arnd Bergmann wrote:
+> On Wednesday 11 November 2015 10:21:03 Fengguang Wu wrote:
+> > Hi Sinan,
+> > 
+> > Sorry please ignore this warning -- it's actually a problem specific
+> > to the mn10300 arch. I'll disable such warning in mn10300 in future.
 > 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 726ebe792813..62f467b8ccae 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -197,12 +198,52 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
->  	return -ENOENT;
->  }
->  
-> +static int __init __rmem_cmp(const void *a, const void *b)
-> +{
-> +	const struct reserved_mem *ra = a, *rb = b;
-> +
-> +	return ra->base - rb->base;
-> +}
+> I just tried to find what happened here. mn10300 appears to define
+> the type based on the gcc version:
+> 
+> #if __GNUC__ == 4
+> typedef unsigned int    __kernel_size_t;
+> typedef signed int      __kernel_ssize_t;
+> #else
+> typedef unsigned long   __kernel_size_t;
+> typedef signed long     __kernel_ssize_t;
+> #endif
+> 
+> while gcc defines it based on whether you are using a Linux targetted
+> gcc or a bare-metal one:
+> 
+> gcc/config/mn10300/linux.h:#undef SIZE_TYPE
+> gcc/config/mn10300/mn10300.h:#undef  SIZE_TYPE
+> gcc/config/mn10300/mn10300.h:#define SIZE_TYPE "unsigned int"
+> 
+> I can think of two reasons why it went wrong here:
+> 
+> a) You are using gcc-5.x, and the check in the kernel should be ">="
+>    rather than "==". We should probably fix that regardless
+> 
+> b) You are using a bare-metal gcc rather than a Linux version.
 
-So on further inspection it seems this is really our problem.
+> I couldn't find an mn10300 gcc on kernel.org, which one do you use?
 
-The reserved_mem->base values are u64, so when the unsigned result of the
-substraction is converted to int we may or may not get the right value. That
-means the sort fails and the reserved mem check gives false positives.
+I used this mn10300 compiler:
 
-eg:
+https://www.kernel.org/pub/tools/crosstool/files/bin/x86_64/4.9.0/x86_64-gcc-4.9.0-nolibc_am33_2.0-linux.tar.xz
 
-  Reserved memory: OVERLAP DETECTED!
-  ibm,slw-image@1ffe600000 (0x0000001ffe600000--0x0000001ffe700000) overlaps with ibm,firmware-allocs-memory@1000000000 (0x0000001000000000--0x0000001000dc0200)
-
-Note there is no overlap:
-
-  0x0000001ffe600000--0x0000001ffe700000
-  vs
-  0x0000001000000000--0x0000001000dc0200
-
-cheers
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Fengguang
