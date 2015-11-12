@@ -1,56 +1,71 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 37/50] powerpc/powernv: Simplify pnv_eeh_reset()
-Date: Thu, 12 Nov 2015 17:11:48 +1100
-Message-ID: <20151112061148.GA17357@gwshan>
+Subject: Re: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in
+ pnv_pci_reset_secondary_bus()
+Date: Thu, 12 Nov 2015 17:15:25 +1100
+Message-ID: <20151112061525.GA18894@gwshan>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-38-git-send-email-gwshan@linux.vnet.ibm.com>
- <877flniyz3.fsf@gamma.ozlabs.ibm.com>
+ <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <877flniyz3.fsf@gamma.ozlabs.ibm.com>
+In-Reply-To: <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
-To: Daniel Axtens <dja@axtens.net>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 04:11:12PM +1100, Daniel Axtens wrote:
->> -			rc = opal_pci_reset(phb->opal_id,
->> -					    OPAL_RESET_PHB_ERROR,
->> -					    OPAL_ASSERT_RESET);
->> -			if (rc != OPAL_SUCCESS) {
->> -				pr_warn("%s: Failure %lld clearing "
->> -					"error injection registers\n",
->> -					__func__, rc);
+On Thu, Nov 05, 2015 at 12:12:39AM +1100, Gavin Shan wrote:
+>In pnv_pci_reset_secondary_bus(), we should issue fundamental
+>reset if any one subordinate device of the specified is requesting
+                                        ^^^^^^^^^^^^^^
+
+                                        the specified bus
+
+I put the note reminding me to admend the changelog in next revision.
+
+>that. Otherwise, the device might not come up after the reset.
 >
->This is very minor, but is there a good reason to change the error
->message from the one above to the one below? I just hesitate to change
->error messages that people might be grepping the source for without a
->good reason.
+>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>---
+> arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
+> 1 file changed, 20 insertions(+), 1 deletion(-)
 >
-
-About 3 years ago, I think the error message printed by pr_warn() can't
-exceed 80 lines each line. Otherwise, scripts/checkpatch.pl will report
-warnings. The error message spans multiple lines to avoid that. However,
-that turned to be wrong later. If people searchs the code from the error
-or warning message, it'd better to keep it in one line, not in multiple
-lines. That's the reason I merged them into one line since I have to
-refactor the function. At same time, the message is shortened as "Error"
-is shorter than "Failure" and "registers" in original message is meaningless.
-
->> +		if (rc != OPAL_SUCCESS) {
->> +			pr_warn("%s: Error %lld clearing error injection\n",
->> +				__func__, rc);
+>diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+>index c69b6a1..ab8b93e 100644
+>--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
+>+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+>@@ -878,9 +878,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+> 	return 0;
+> }
 >
->Apart from that this looks good, pending me actually testing it :)
+>+static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
+>+{
+>+	int *freset = data;
+>+
+>+	/*
+>+	 * Stop the iteration immediately if there has any one
+>+	 * PCI device requesting fundamental reset.
+>+	 */
+>+	*freset |= pdev->needs_freset;
+>+	return *freset;
+>+}
+>+
+> void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
+> {
+>-	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+>+	int option, freset = 0;
+>+
+>+	if (dev->subordinate)
+>+		pci_walk_bus(dev->subordinate,
+>+			     pnv_pci_dev_reset_type, &freset);
+>+
+>+	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
+>+	pnv_eeh_bridge_reset(dev, option);
+> 	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+> }
 >
-
-Thanks :-)
-
-Gavin
-
->Regards,
->Daniel
+>-- 
+>2.1.0
 >
