@@ -1,13 +1,13 @@
 From: Daniel Axtens <dja@axtens.net>
-Subject: Re: [PATCH v7 11/50] powerpc/powernv: IO and M32 mapping based on PCI device resources
-Date: Thu, 12 Nov 2015 14:30:27 +1100
-Message-ID: <87lha3j3n0.fsf@gamma.ozlabs.ibm.com>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-12-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 12/50] powerpc/powernv: Track M64 segment consumption
+Date: Thu, 12 Nov 2015 15:18:20 +1100
+Message-ID: <87io57j1f7.fsf@gamma.ozlabs.ibm.com>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-13-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-12-git-send-email-gwshan@linux.vnet.ibm.com>
+In-Reply-To: <1446642770-4681-13-git-send-email-gwshan@linux.vnet.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
@@ -17,140 +17,97 @@ List-Id: devicetree@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-Hi Gavin,
+Looks good.
 
-Sorry to have taken so long to resume these reviews!
-
-> Currently, the IO and M32 segments are mapped to the corresponding
-> PE based on the windows of the parent bridge of PE's primary bus.
-> It's not going to work when the windows of root port or upstream
-> port of the PCIe switch behind root port are extended to PHB's
-> aperatuses in order to support hotplug in subsequent patch.
-I'm not _entirely_ sure I understand this.
-
-I *think* you mean PHB's apertures (i.e. s/aperatuses/apertures/)?
-
-> This fixes the issue by mapping IO and M32 segments based on the
-> resources of the PCI devices included in the PE, instead of the
-> windows of the parent bridge of the PE's primary bus.
-
-This solution seems to make a lot of sense, but I don't have a very good
-understanding of PCI yet: why was it done that way and not this way
-originally? Looking at the code, it looks like the old way was simple
-but didn't support SR-IOV?
-
-There are a few comments inline as well.
-
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/pla=
-tforms/powernv/pci-ioda.c
-> index 553d3f3..4ab93f8 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -2741,71 +2741,90 @@ truncate_iov:
->  }
->  #endif /* CONFIG_PCI_IOV */
->=20=20
-> -/*
-> - * This function is supposed to be called on basis of PE from top
-> - * to bottom style. So the the I/O or MMIO segment assigned to
-> - * parent PE could be overrided by its child PEs if necessary.
-> - */
-> -static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
-> -				  struct pnv_ioda_pe *pe)
-> +static int pnv_ioda_setup_one_res(struct pnv_ioda_pe *pe,
-> +				  struct resource *res)
->  {
-> -	struct pnv_phb *phb =3D hose->private_data;
-> +	struct pnv_phb *phb =3D pe->phb;
->  	struct pci_bus_region region;
-> -	struct resource *res;
-> -	unsigned int segsize;
-> -	int *segmap, index, i;
-> +	unsigned int index, segsize;
-> +	int *segmap;
->  	uint16_t win;
->  	int64_t rc;
-
-s/int64_t/s64/;
-I think we might also want to change the uint16_t as well.
-
-> -	/*
-> -	 * NOTE: We only care PCI bus based PE for now. For PCI
-> -	 * device based PE, for example SRIOV sensitive VF should
-> -	 * be figured out later.
-> -	 */
-> -	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
-> +	if (!res->parent || !res->flags || res->start > res->end)
-> +		return 0;
->=20=20
-> -	pci_bus_for_each_resource(pe->pbus, res, i) {
-> -		if (!res || !res->flags ||
-> -		    res->start > res->end)
-> -			continue;
-> +	if (res->flags & IORESOURCE_IO) {
-> +		region.start =3D res->start - phb->ioda.io_pci_base;
-> +		region.end   =3D res->end - phb->ioda.io_pci_base;
-> +		segsize      =3D phb->ioda.io_segsize;
-> +		segmap       =3D phb->ioda.io_segmap;
-> +		win          =3D OPAL_IO_WINDOW_TYPE;
-> +	} else if ((res->flags & IORESOURCE_MEM) &&
-> +		   !pnv_pci_is_mem_pref_64(res->flags)) {
-> +		region.start =3D res->start -
-> +			       phb->hose->mem_offset[0] -
-> +			       phb->ioda.m32_pci_base;
-> +		region.end   =3D res->end -
-> +			       phb->hose->mem_offset[0] -
-> +			       phb->ioda.m32_pci_base;
-> +		segsize      =3D phb->ioda.m32_segsize;
-> +		segmap       =3D phb->ioda.m32_segmap;
-> +		win          =3D OPAL_M32_WINDOW_TYPE;
-> +	} else {
-> +		return 0;
-The return codes are currently unused, but should this get a more
-informative return code? Are there any invalid ones that should be
-flagged, or is it just safe to ignore stuff we don't recognise?
-
-> +	}
-
-
-> +static void pnv_ioda_setup_pe_seg(struct pnv_ioda_pe *pe)
-> +{
-> +	struct pci_dev *pdev;
-> +	struct resource *res;
-> +	int i;
-> +
-> +	/* This function only works for bus dependent PE */
-> +	WARN_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
-> +
-> +	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
-> +		for (i =3D 0; i <=3D PCI_ROM_RESOURCE; i++) {
-> +			res =3D &pdev->resource[i];
-> +			if (pnv_ioda_setup_one_res(pe, res))
-> +				return;
-As I mentioned earlier, setup_one_res can potentially return -EIO:
-should we be trying to propagate that up?
-> +		}
-> +
-> +		/*
-> +		 * If the PE contains all subordinate PCI buses, the
-> +		 * windows of the child bridges should be mapped to
-> +		 * the PE as well.
-> +		 */
-> +		if (!(pe->flags & PNV_IODA_PE_BUS_ALL && pci_is_bridge(pdev)))
-> +			continue;
->=20=20
-> -			region.start +=3D segsize;
-> -			index++;
-> +		for (i =3D 0; i <=3D PCI_BRIDGE_RESOURCE_NUM; i++) {
-> +			res =3D &pdev->resource[PCI_BRIDGE_RESOURCES + i];
-> +			if (pnv_ioda_setup_one_res(pe, res))
-> +				return;
->  		}
->  	}
->  }
+Will hold off on an official review until I can test the series.
 
 Regards,
 Daniel
+
+Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
+
+> As we track M32 segment consumption, this introduces an array to
+> the PHB to track the mapping between M64 segment and PE number.
+> The information is going to be used to find M64 segment from the
+> PE number during PCI unplugging time in subsequent patches.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/platforms/powernv/pci-ioda.c | 10 ++++++++--
+>  arch/powerpc/platforms/powernv/pci.h      |  3 ++-
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/pla=
+tforms/powernv/pci-ioda.c
+> index 4ab93f8..76ce694 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -315,6 +315,7 @@ static int pnv_ioda2_pick_m64_pe(struct pci_bus *bus,=
+ bool all)
+>  		phb->ioda.total_pe_num) {
+>  		pe =3D &phb->ioda.pe_array[i];
+>=20=20
+> +		phb->ioda.m64_segmap[pe->pe_number] =3D pe->pe_number;
+>  		if (!master_pe) {
+>  			pe->flags |=3D PNV_IODA_PE_MASTER;
+>  			INIT_LIST_HEAD(&pe->slaves);
+> @@ -3018,7 +3019,7 @@ static void __init pnv_pci_init_ioda_phb(struct dev=
+ice_node *np,
+>  {
+>  	struct pci_controller *hose;
+>  	struct pnv_phb *phb;
+> -	unsigned long size, m32map_off, pemap_off, iomap_off =3D 0;
+> +	unsigned long size, m64map_off, m32map_off, pemap_off, iomap_off =3D 0;
+>  	const __be64 *prop64;
+>  	const __be32 *prop32;
+>  	int i, len;
+> @@ -3103,6 +3104,8 @@ static void __init pnv_pci_init_ioda_phb(struct dev=
+ice_node *np,
+>=20=20
+>  	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
+>  	size =3D _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
+> +	m64map_off =3D size;
+> +	size +=3D phb->ioda.total_pe_num * sizeof(phb->ioda.m64_segmap[0]);
+>  	m32map_off =3D size;
+>  	size +=3D phb->ioda.total_pe_num * sizeof(phb->ioda.m32_segmap[0]);
+>  	if (phb->type =3D=3D PNV_PHB_IODA1) {
+> @@ -3113,9 +3116,12 @@ static void __init pnv_pci_init_ioda_phb(struct de=
+vice_node *np,
+>  	size +=3D phb->ioda.total_pe_num * sizeof(struct pnv_ioda_pe);
+>  	aux =3D memblock_virt_alloc(size, 0);
+>  	phb->ioda.pe_alloc =3D aux;
+> +	phb->ioda.m64_segmap =3D aux + m64map_off;
+>  	phb->ioda.m32_segmap =3D aux + m32map_off;
+> -	for (i =3D 0; i < phb->ioda.total_pe_num; i++)
+> +	for (i =3D 0; i < phb->ioda.total_pe_num; i++) {
+> +		phb->ioda.m64_segmap[i] =3D IODA_INVALID_PE;
+>  		phb->ioda.m32_segmap[i] =3D IODA_INVALID_PE;
+> +	}
+>  	if (phb->type =3D=3D PNV_PHB_IODA1) {
+>  		phb->ioda.io_segmap =3D aux + iomap_off;
+>  		for (i =3D 0; i < phb->ioda.total_pe_num; i++)
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platform=
+s/powernv/pci.h
+> index 2e01edd..671fd13 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -147,7 +147,8 @@ struct pnv_phb {
+>  			unsigned long		*pe_alloc;
+>  			struct pnv_ioda_pe	*pe_array;
+>=20=20
+> -			/* M32 & IO segment maps */
+> +			/* M64/M32/IO segment maps */
+> +			int			*m64_segmap;
+>  			int			*m32_segmap;
+>  			int			*io_segmap;
+>=20=20
+> --=20
+> 2.1.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -159,18 +116,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 Version: GnuPG v1
 Comment: GPGTools - https://gpgtools.org
 
-iQIcBAEBCgAGBQJWRAfTAAoJEPC3R3P2I92FtTYQAJw1vvFNRcSsXcDhZQZYAJ9X
-PpE5r9hSEthRHXanCuU4Zj90i/OxHW6OohP5+vjUNGzmyKvynUlc62YzMCKsiNN0
-udTFxeGdAzxTI8gdkVIau7mwEa21o8ZvQ0/EiEkWV3coQqm0DbupI2DDxilpNEw5
-0+68ruVsyzFuBZoLHMQO0Z7teVteQzSJ2xtmpGOdbIcd7BwHzi8HsFHgJ2qebL7H
-PdevaDa0t4O3x8SVKmwTJyePiUIidlK1AIsWVkVtvo2qvTYmva0N16yAFS8U6K21
-kPnHq+aJj8kJ36u2pqWNAEStzZq0kFXa3zrBWkkskAYpSNd2SyGcKYtvKfAwzb9p
-ITYTty/y+RKWMnBWVD1Z70Q81OHiJB6L//2ROB0NvFq5hGLQgh7e+U/ccfNQlzXP
-L37i0Ckmw+kxTQqNQlLeHgsu4D5q+OxMT10e4F+xZgxANgY6Yk3fX8GXefmL0Xu6
-SrDRSO21uQj2WSVZORfyYV9Er6BkZ0remgLaMDeDrEjBYYHdE3/qXeJ6qwtL0ytO
-Wn3dSRAZr8qg+JVK0kdpUotVFIj0cUsmp4K5k2ElRR/kW+HzBD80fbIL8m91Wx1I
-x/AlCjCt5ARF2w6oA49Dl8Jnm3EHketzZEiAn9jXgtPOtPXdODbXAwtU+00CALyo
-6uVIXZRMukbEfdBk10yw
-=L90z
+iQIcBAEBCgAGBQJWRBMNAAoJEPC3R3P2I92FVm8P/RuuqTklgw3NyjkrzxIly6Xd
+jbQV/STBvkuOtEaK7TDgYfeELKmCUkGeRxum1ZWuRRhGQmSSNtPIggmuLdwGACvI
+oMNJzbwQOodex2rBFX07qqJlsM0ywKf+slWtXdxj0jq99kfMeurnYm2Vaea6UdiP
+tNpfvUAWx//ZTQl/bIEkSHLNCVgu2szEYE1k1IsFjXPXvWgaPAG+p8fnzMb+1Sip
+zd+kjZ5WHkwP8C/QaIQa8DJQ0arV79jYf1EaxEYyC1Ja9dkI4Duf29UKEHQwUlbU
+mNU0HURvzh0loFRfjjCd9KoOjucUrpGzSKyQZbR/2fDyu8EXOD/217Xv0+uusbE3
+1sKtGqfvQNFvjNTAsc2dmulH1J6HnDO1a5NzQ1DhyqISKJHBDzStLnUUFWckYi8f
+o4h/RM3AYe5Gsn83FeweX/Fl1HFXB8uoec2eMQ9nkeL42CZuA36c0+vH23WyRZ09
+XrAgGOjogdQNPD2AoFd0uMih7XwWHHSQjrs6wFkrCiJoM30oeY1LvwPyK/Y+77sV
+CoLFh0yosI9mkQRuy4JjxsJEmH64e2VbZCTUyaxLaYOMFJZwOk/3ZcjWffWlCAub
+jn/8Jp0x5Dlwo5AJXUOdNInD1Aaw0FamaR91HpCSg2zLpVqtmmZ7g4XKMzbsh+61
+inR19LtpWxBV+XWhAzsu
+=dzip
 -----END PGP SIGNATURE-----
 --=-=-=--
