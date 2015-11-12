@@ -1,105 +1,57 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 38/50] powerpc/powernv: Exclude root bus in
- pnv_pci_reset_secondary_bus()
-Date: Fri, 13 Nov 2015 10:25:50 +1100
-Message-ID: <20151112232550.GA14719@gwshan>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-39-git-send-email-gwshan@linux.vnet.ibm.com>
- <87lha2zuwg.fsf@gamma.ozlabs.ibm.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
+Date: Thu, 12 Nov 2015 17:28:05 -0600
+Message-ID: <20151112232805.GA5562@rob-hp-laptop>
+References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87lha2zuwg.fsf@gamma.ozlabs.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Daniel Axtens <dja@axtens.net>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+In-Reply-To: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 13, 2015 at 09:59:27AM +1100, Daniel Axtens wrote:
->Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
->
->> When pnv_pci_reset_secondary_bus() is called to issue reset on
->> the indicated secondary bus, the bus can't be root bus. So we
->> needn't consider root bus in the function.
->
->It took me a while to convince myself that this is correct. For the
->record, this is why it's correct:
->
->pnv_pci_reset_secondary_bus fills the reset_secondary_bus callback in
->the pci_controller_ops structure, and isn't used elsewhere.
->
->In arch/powerpc/kernel/pci.c, that callback is called (if it exists) in 
->pcibios_reset_secondary_bus(). It's not called anywhere else.
->
->The PPC pcibios_reset_secondary_bus overrides the weak version in
->drivers/pci/pci.c. It's called from the same file by
->pci_reset_bridge_secondary_device() (and nowhere else).
->
->pci_reset_bridge_secondary_device() is nicely documented:
->
->/**
-> * pci_reset_bridge_secondary_bus - Reset the secondary bus on a PCI bridge.
-> * @dev: Bridge device
-> *
-> * Use the bridge control register to assert reset on the secondary bus.
-> * Devices on the secondary bus are left in power-on state.
-> */
->
->Therefore, by the definiton of pci_reset_bridge_secondary_bus,
->pnv_pci_reset_secondary_bus() can only be called with a bridge
->device. As such, a bridge reset only is appropriate. If this breaks
->anything, the caller is broken.
->
->It might be worth including a condensed version of this in the commit
->message.
->
+On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
+> In general Renesas hardware is not documented to the extent where the
+> relationship between IP blocks on different SoCs can be assumed although
+> they may appear to operate the same way. Furthermore the documentation
+> typically does not specify a version for individual IP blocks. For these
+> reasons a convention of using the SoC name in place of a version and
+> providing SoC-specific compat strings has been adopted.
 
-Right. I'll add more description to the changelog in next revision.
+Everyone learns this the hard way. :)
 
->Reviewed-by: Daniel Axtens <dja@axtens.net>
->
+> Although not universally liked this convention is used in the bindings for
+> most drivers for Renesas hardware. The purpose of this patch is to
+> update the Renesas R-Car DMA Controller driver to follow this convention.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> Once this has been merged I intend to provide follow-up patches
+> to use these new compat strings in the relevant dtsi files.
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> index 09daeef1ff22..5b902ac8d97e 100644
+> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> @@ -14,7 +14,14 @@ not described in these device tree bindings.
+>  
+>  Required Properties:
+>  
+> -- compatible: must contain "renesas,rcar-dmac"
+> +- compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
 
-Thanks,
-Gavin
+Somehow Renesas has ended up being backwards from everyone else that 
+does <vendor>,<chip>-<block>. Oh well...
 
->Regards,
->Daniel Axtens
->
->>
->> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->> ---
->>  arch/powerpc/platforms/powernv/eeh-powernv.c | 12 ++----------
->>  1 file changed, 2 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
->> index a7d84a4..c69b6a1 100644
->> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
->> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
->> @@ -880,16 +880,8 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
->>  
->>  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
->>  {
->> -	struct pci_controller *hose;
->> -
->> -	if (pci_is_root_bus(dev->bus)) {
->> -		hose = pci_bus_to_host(dev->bus);
->> -		pnv_eeh_root_reset(hose, EEH_RESET_HOT);
->> -		pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
->> -	} else {
->> -		pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
->> -		pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
->> -	}
->> +	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
->> +	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
->>  }
->>  
->>  /**
->> -- 
->> 2.1.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
