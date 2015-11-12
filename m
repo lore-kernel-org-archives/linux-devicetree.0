@@ -1,68 +1,341 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 2/4] clk: rockchip: set an ID for crypto clk
-Date: Thu, 12 Nov 2015 00:57:21 +0100
-Message-ID: <1790934.FgjVNmeB1J@phil>
-References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com> <1447223759-20730-3-git-send-email-zain.wang@rock-chips.com>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH RESEND 01/16] Documentation: dt-bindings: mfd: add TI LMU
+ device binding information
+Date: Thu, 12 Nov 2015 09:05:43 +0900
+Message-ID: <5643D7D7.5080509@ti.com>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <1446441875-1256-2-git-send-email-milo.kim@ti.com> <20151111094926.GC3307@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1447223759-20730-3-git-send-email-zain.wang@rock-chips.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Zain Wang <zain.wang@rock-chips.com>
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151111094926.GC3307@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 11. November 2015, 14:35:57 schrieb Zain Wang:
-> Set an ID for crypto clk, so that it can be called in other part.
-> 
-> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+Thanks for all your comments. I'll create the 2nd patch-set in few weeks.
 
-this should go in together with patch4, the dts change, so an Ack from the
-clock-maintainers would be nice :-)
+Best regards,
+Milo
 
-
-Heiko
-
-> ---
-> 
-> Changed in v3:
-> - None
-> 
-> Changed in v2: 
-> - None
-> 
-> Changed in v1:
-> - define SCLK_CRYPTO in rk3288-cru.h
-> - use SCLK_CRYPTO instead of SRST_CRYPTO
-> 
->  drivers/clk/rockchip/clk-rk3288.c      | 2 +-
->  include/dt-bindings/clock/rk3288-cru.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> index 9040878..3fceda1 100644
-> --- a/drivers/clk/rockchip/clk-rk3288.c
-> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
->  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
->  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
->  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
-> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
-> +	COMPOSITE_NOMUX(SCLK_CRYPTO, "crypto", "aclk_cpu_pre", 0,
->  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
->  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
->  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
-> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-> index c719aac..30dcd60 100644
-> --- a/include/dt-bindings/clock/rk3288-cru.h
-> +++ b/include/dt-bindings/clock/rk3288-cru.h
-> @@ -86,6 +86,7 @@
->  #define SCLK_USBPHY480M_SRC	122
->  #define SCLK_PVTM_CORE		123
->  #define SCLK_PVTM_GPU		124
-> +#define SCLK_CRYPTO			125
->  
->  #define SCLK_MAC		151
->  #define SCLK_MACREF_OUT		152
-> 
+On 11/11/2015 6:49 PM, Lee Jones wrote:
+> On Mon, 02 Nov 2015, Milo Kim wrote:
+>
+>> This patch describes overall binding for TI LMU MFD devices.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Milo Kim <milo.kim@ti.com>
+>> ---
+>>   Documentation/devicetree/bindings/mfd/ti-lmu.txt | 282 +++++++++++++++++++++++
+>>   1 file changed, 282 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+>> new file mode 100644
+>> index 0000000..7ccf07e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+>> @@ -0,0 +1,282 @@
+>> +TI LMU(Lighting Management Unit) device tree bindings
+>
+> ' ' here -^
+>
+>> +TI LMU driver supports lighting devices belows.
+>
+> s/belows./below:/
+>
+>> +   Name              Child nodes
+>> +  ------      -------------------------
+>> +  LM3532       Backlight
+>> +  LM3631       Backlight and regulator
+>> +  LM3632       Backlight and regulator
+>> +  LM3633       Backlight, LED and HWMON
+>> +  LM3695       Backlight
+>> +  LM3697       Backlight and HWMON
+>> +
+>> +Required properties:
+>> +  - compatible: Should be one of lists below.
+>
+> s/ lists below./:/
+>
+>> +                "ti,lm3532"
+>> +                "ti,lm3631"
+>> +                "ti,lm3632"
+>> +                "ti,lm3633"
+>> +                "ti,lm3695"
+>> +                "ti,lm3697"
+>> +  - reg: I2C slave address.
+>> +         0x11 is LM3632
+>> +         0x29 is LM3631
+>> +         0x36 is LM3633, LM3697
+>> +         0x38 is LM3532
+>> +         0x63 is LM3695
+>
+> s/is/for/
+>
+>> +Optional properties:
+>> +  - enable-gpios: A GPIO specifier for hardware enable pin.
+>> +
+>> +Required node:
+>> +  - backlight: All LMU devices have backlight child nodes.
+>> +               For the properties, please refer to [1].
+>> +
+>> +Optional nodes:
+>> +  - hwmon: Hardware fault monitoring driver for LM3633 and LM3697.
+>> +           For the property, please refer to [2].
+>> +  - leds: LED properties for LM3633. Please refer to [3].
+>> +  - regulators: Regulator properties for LM3631 and LM3632.
+>> +          Please refer to [4].
+>> +
+>> +[1] Documentation/devicetree/bindings/video/backlight/ti-lmu-backlight.txt
+>> +[2] Documentation/devicetree/bindings/hwm/ti-lmu-hwmon.txt
+>> +[3] Documentation/devicetree/bindings/leds/leds-lm3633.txt
+>> +[4] Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+>
+> s/Documentation/devicetree/bindings/../
+>
+>> +Examples:
+>
+> These aren't examples, they're actual DT entries.
+>
+> Please trim them down to just one, fully enabled node, only to be used
+> as an 'example'.
+>
+>> +LM3532 has a backlight device. External GPIO is used for enabling LM3532.
+>> +
+>> +lm3532@38 {
+>> +	compatible = "ti,lm3532";
+>> +	reg = <0x38>;
+>> +
+>> +	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+>> +
+>> +	backlight {
+>> +		compatible = "ti,lm3532-backlight";
+>> +
+>> +		lcd {
+>> +			hvled1-used;
+>> +			hvled2-used;
+>> +			hvled3-used;
+>> +
+>> +			ramp-up-msec = <30>;
+>> +			ramp-down-msec = <0>;
+>> +
+>> +			backlight-max-microamp = <5000>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +LM3631 has 5 regulators with one backlight device.
+>> +
+>> +lm3631@29 {
+>> +	compatible = "ti,lm3631";
+>> +	reg = <0x29>;
+>> +
+>> +	regulators {
+>> +		compatible = "ti,lm363x-regulator";
+>> +
+>> +		vboost {
+>> +			regulator-name = "lcd_boost";
+>> +			regulator-min-microvolt = <4500000>;
+>> +			regulator-max-microvolt = <6350000>;
+>> +			regulator-always-on;
+>> +		};
+>> +
+>> +		vcont {
+>> +			regulator-name = "lcd_vcont";
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <3300000>;
+>> +		};
+>> +
+>> +		voref {
+>> +			regulator-name = "lcd_voref";
+>> +			regulator-min-microvolt = <4000000>;
+>> +			regulator-max-microvolt = <6000000>;
+>> +		};
+>> +
+>> +		vpos {
+>> +			regulator-name = "lcd_vpos";
+>> +			regulator-min-microvolt = <4000000>;
+>> +			regulator-max-microvolt = <6000000>;
+>> +			regulator-boot-on;
+>> +		};
+>> +
+>> +		vneg {
+>> +			regulator-name = "lcd_vneg";
+>> +			regulator-min-microvolt = <4000000>;
+>> +			regulator-max-microvolt = <6000000>;
+>> +			regulator-boot-on;
+>> +		};
+>> +	};
+>> +
+>> +	backlight {
+>> +		compatible = "ti,lm3631-backlight";
+>> +
+>> +		lcd {
+>> +			backlight-name = "lcd_bl";
+>> +			hvled1-used;
+>> +			hvled2-used;
+>> +
+>> +			ramp-up-msec = <300>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +LM3632 has 3 regulators with one backlight device. External GPIO is
+>> +used for enabling LM3632.
+>> +
+>> +lm3632@11 {
+>> +	compatible = "ti,lm3632";
+>> +	reg = <0x11>;
+>> +
+>> +	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+>> +
+>> +	regulators {
+>> +		compatible = "ti,lm363x-regulator";
+>> +
+>> +		ti,lcm-en1-gpio = <&pioC 0 GPIO_ACTIVE_HIGH>;
+>> +		ti,lcm-en2-gpio = <&pioC 1 GPIO_ACTIVE_HIGH>;
+>> +
+>> +		vboost {
+>> +			regulator-name = "lcd_boost";
+>> +			regulator-min-microvolt = <4500000>;
+>> +			regulator-max-microvolt = <6400000>;
+>> +			regulator-always-on;
+>> +		};
+>> +
+>> +		vpos {
+>> +			regulator-name = "lcd_vpos";
+>> +			regulator-min-microvolt = <4000000>;
+>> +			regulator-max-microvolt = <6000000>;
+>> +		};
+>> +
+>> +		vneg {
+>> +			regulator-name = "lcd_vneg";
+>> +			regulator-min-microvolt = <4000000>;
+>> +			regulator-max-microvolt = <6000000>;
+>> +		};
+>> +	};
+>> +
+>> +	backlight {
+>> +		compatible = "ti,lm3632-backlight";
+>> +
+>> +		lcd {
+>> +			backlight-name = "lcd";
+>> +			hvled1-used;
+>> +			hvled2-used;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +LM3633 has multiple backlight channels, LED channels and hardware fault
+>> +monitoring driver. External GPIO is used for enabling LM3633.
+>> +
+>> +lm3633@36 {
+>> +	compatible = "ti,lm3633";
+>> +	reg = <0x36>;
+>> +
+>> +	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+>> +
+>> +	backlight {
+>> +		compatible = "ti,lm3633-backlight";
+>> +
+>> +		pwms = <&pwm0 0 10000 0>; /* pwm number, period, polarity */
+>> +		pwm-names = "lmu-backlight";
+>> +
+>> +		main {
+>> +			backlight-name = "main_lcd";
+>> +			hvled2-used;
+>> +			hvled3-used;
+>> +			backlight-max-microamp = <20000>;
+>> +
+>> +			ramp-up-msec = <500>;
+>> +			ramp-down-msec = <500>;
+>> +		};
+>> +
+>> +		front {
+>> +			backlight-name = "front_lcd";
+>> +			hvled1-used;
+>> +
+>> +			ramp-up-msec = <1000>;
+>> +			ramp-down-msec = <0>;
+>> +
+>> +			pwm-period = <10000>;
+>> +		};
+>> +	};
+>> +
+>> +	leds {
+>> +		compatible = "ti,lm3633-leds";
+>> +
+>> +		chan2 {
+>> +			channel-name = "status";
+>> +			lvled2-used;
+>> +			led-max-microamp = <6000>;
+>> +		};
+>> +
+>> +		chan456 {
+>> +			channel-name = "rgb";
+>> +			lvled4-used;
+>> +			lvled5-used;
+>> +			lvled6-used;
+>> +		};
+>> +	};
+>> +
+>> +	hwmon {
+>> +		compatible = "ti,lm3633-hwmon";
+>> +	};
+>> +};
+>> +
+>> +LM3695 is single backlight device.
+>> +
+>> +lm3695@63 {
+>> +	compatible = "ti,lm3695";
+>> +	reg = <0x63>;
+>> +
+>> +	backlight {
+>> +		compatible = "ti,lm3695-backlight";
+>> +
+>> +		lcd {
+>> +			hvled1-used;
+>> +			hvled2-used;
+>> +			backlight-max-microamp = <20000>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +LM3697 has one backlight device and hardware fault monitoring driver.
+>> +External GPIO is used for enabling LM3697.
+>> +
+>> +lm3697@36 {
+>> +	compatible = "ti,lm3697";
+>> +	reg = <0x36>;
+>> +
+>> +	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+>> +
+>> +	backlight {
+>> +		compatible = "ti,lm3697-backlight";
+>> +
+>> +		pwms = <&pwm0 0 10000 0>; /* pwm number, period, polarity */
+>> +		pwm-names = "lmu-backlight";
+>> +
+>> +		lcd {
+>> +			backlight-name = "bl";
+>> +			hvled1-used;
+>> +			hvled2-used;
+>> +			hvled3-used;
+>> +			backlight-max-microamp = <20000>;
+>> +
+>> +			ramp-up-msec = <500>;
+>> +			ramp-down-msec = <500>;
+>> +			pwm-period = <10000>;
+>> +		};
+>> +	};
+>> +
+>> +	hwmon {
+>> +		compatible = "ti,lm3697-hwmon";
+>> +	};
+>> +};
+>
