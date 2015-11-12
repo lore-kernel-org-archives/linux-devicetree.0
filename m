@@ -1,82 +1,81 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT "/chosen/linux,atags"
- entry
-Date: Wed, 11 Nov 2015 17:10:46 -0800
-Message-ID: <5643E716.9080204@gmail.com>
-References: <1436214373-12969-1-git-send-email-pali.rohar@gmail.com> <20150713131902.GH26485@atomide.com> <20151012201640.GQ23801@atomide.com> <201510122225.12786@pali> <20151012204509.GT23801@atomide.com> <20151013143746.GJ23104@pali> <20151105114041.GC27908@pali> <20151105161756.GG3078@atomide.com>
-Reply-To: frowand.list@gmail.com
+From: Zain <zain.wang@rock-chips.com>
+Subject: Re: [PATCH v3 2/4] clk: rockchip: set an ID for crypto clk
+Date: Thu, 12 Nov 2015 09:13:20 +0800
+Message-ID: <5643E7B0.2080901@rock-chips.com>
+References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
+ <1447223759-20730-3-git-send-email-zain.wang@rock-chips.com>
+ <1790934.FgjVNmeB1J@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151105161756.GG3078@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1790934.FgjVNmeB1J@phil>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Adding devicetree list.
-
-Thread starts at
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/354459.=
-html
-
-On 11/5/2015 8:17 AM, Tony Lindgren wrote:
-> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [151105 03:41]:
->> On Tuesday 13 October 2015 16:37:46 Pali Roh=C3=A1r wrote:
->>> On Monday 12 October 2015 13:45:09 Tony Lindgren wrote:
->>>> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [151012 13:29]:
->>>>> On Monday 12 October 2015 22:16:40 Tony Lindgren wrote:
->>>>>>
->>>>>> Pali, any news on posting an updated series with the comments
->>>>>> addressed in this thread? It seems that we all pretty much agree
->>>>>> what needs to be done.
-
-I'm not real happy with the concept of patches 4 and 5 in this series.
-My concern is that those two patches are using the FDT as a transport
-mechanism for a binary blob (the atags object).
-
-Patches 1 and 2 do follow the spirit of atags_to_fdt() since an
-atags kernel already may set system_rev from an atag.
-
--Frank
 
 
->>>>>
->>>>> Tony, I'm not really sure what to do. Just wrap 4 and 5 patches i=
-nto=20
->>>>> CONFIG_KEXEC? Or something more?
->>>>
->>>> Well for most part your patches are fine, I think there were some
->>>> minor comments on the series.
->>>>
->>>> For the CONFIG_KEXEC dependency, we should just keep the existing
->>>> behavior and keep /proc/atags behind CONFIG_KEXEC. That's all
->>>> I believe :)
->>>>
->>>> Regards,
->>>>
->>>> Tony
->>>>
->>>>
->>>
->>> Ok. I will add CONFIG_KEXEC into atag patches.
->>>
->>> And there is missing documentation for these two new DT properties
->>> (marked as TODO in commit messages). Where to put them?
->>>
+On 2015=E5=B9=B411=E6=9C=8812=E6=97=A5 07:57, Heiko Stuebner wrote:
+> Am Mittwoch, 11. November 2015, 14:35:57 schrieb Zain Wang:
+>> Set an ID for crypto clk, so that it can be called in other part.
 >>
->> Tony (or somebody else) ^^^
->=20
-> How about Documentation/devicetree/bindings/arm/atags.txt?
->=20
-> Regards,
->=20
-> Tony
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->=20
+>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+> this should go in together with patch4, the dts change, so an Ack fro=
+m the
+> clock-maintainers would be nice :-)
+>
+>
+> Heiko
+Ok! Done!
+Thanks.
+>
+>> ---
+>>
+>> Changed in v3:
+>> - None
+>>
+>> Changed in v2:=20
+>> - None
+>>
+>> Changed in v1:
+>> - define SCLK_CRYPTO in rk3288-cru.h
+>> - use SCLK_CRYPTO instead of SRST_CRYPTO
+>>
+>>  drivers/clk/rockchip/clk-rk3288.c      | 2 +-
+>>  include/dt-bindings/clock/rk3288-cru.h | 1 +
+>>  2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchi=
+p/clk-rk3288.c
+>> index 9040878..3fceda1 100644
+>> --- a/drivers/clk/rockchip/clk-rk3288.c
+>> +++ b/drivers/clk/rockchip/clk-rk3288.c
+>> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_bra=
+nches[] __initdata =3D {
+>>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+>>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+>>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+>> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
+>> +	COMPOSITE_NOMUX(SCLK_CRYPTO, "crypto", "aclk_cpu_pre", 0,
+>>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+>>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+>>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+>> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bin=
+dings/clock/rk3288-cru.h
+>> index c719aac..30dcd60 100644
+>> --- a/include/dt-bindings/clock/rk3288-cru.h
+>> +++ b/include/dt-bindings/clock/rk3288-cru.h
+>> @@ -86,6 +86,7 @@
+>>  #define SCLK_USBPHY480M_SRC	122
+>>  #define SCLK_PVTM_CORE		123
+>>  #define SCLK_PVTM_GPU		124
+>> +#define SCLK_CRYPTO			125
+>> =20
+>>  #define SCLK_MAC		151
+>>  #define SCLK_MACREF_OUT		152
+>>
+>
+>
+>
