@@ -1,83 +1,181 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
-Date: Wed, 11 Nov 2015 20:54:07 -0800
-Message-ID: <7hwptnddhs.fsf@deeprootsystems.com>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	<1445843717.23888.1.camel@mtksdaap41>
-	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-	<1445859610.26723.4.camel@mtksdaap41>
-	<CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
-	<1447135867.14454.9.camel@mtksdaap41>
-	<7h1tbx1gjp.fsf@deeprootsystems.com>
-	<1447228557.20886.10.camel@mtksdaap41>
-	<7hpozgyu36.fsf@deeprootsystems.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 11/50] powerpc/powernv: IO and M32 mapping based on
+ PCI device resources
+Date: Thu, 12 Nov 2015 15:55:25 +1100
+Message-ID: <20151112045525.GA6174@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-12-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87lha3j3n0.fsf@gamma.ozlabs.ibm.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hpozgyu36.fsf@deeprootsystems.com> (Kevin Hilman's message of
-	"Wed, 11 Nov 2015 15:50:05 -0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87lha3j3n0.fsf@gamma.ozlabs.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Daniel Axtens <dja@axtens.net>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
-
-Kevin Hilman <khilman@kernel.org> writes:
-
-> Eddie Huang <eddie.huang@mediatek.com> writes:
+On Thu, Nov 12, 2015 at 02:30:27PM +1100, Daniel Axtens wrote:
+>Hi Gavin,
 >
->> On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
->>> Hi Eddie,
->>> 
->>> [...]
->>> 
->>> > I check the log [0],
->>> 
->>> Thanks for checking into this boot failure.
->>> 
->>> > it seems first time mt8135-evbp1 boot to kernel
->>> > shell successfully, then boot again. In the second time, mt8135 stay in
->>> > fastboot mode, waiting host send boot image, then timeout.
->>> 
->>> Actually, it never gets to a shell the first time.  If you look closely,
->>> the target reboots as soon as userspace starts.   Look for the PYBOOT
->>> line which says "finished booting, starting userspace"
->>> 
->>> Later on, pyboot thinks it finds a root shell due to finding '#'
->>> characters, but clearly it never got to a shell.
->>> 
->>> > I download zImage and dtb in [1], and kernel run to shell successfully
->>> > on my platform.
->>> 
->>> Are you can you try using a ramdisk as well?  You can use the pre-built
->>> one here:
->>> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
->>> 
->>
->> Yes, I tried this ramdisk, and I can reproduce fail issue.
->>
+>Sorry to have taken so long to resume these reviews!
 >
-> OK, good.   Thanks for looking into it.
+
+Thanks for your review, Daniel!
+
+>> Currently, the IO and M32 segments are mapped to the corresponding
+>> PE based on the windows of the parent bridge of PE's primary bus.
+>> It's not going to work when the windows of root port or upstream
+>> port of the PCIe switch behind root port are extended to PHB's
+>> aperatuses in order to support hotplug in subsequent patch.
+>I'm not _entirely_ sure I understand this.
 >
->>> Please check my boot logs to see how I'm generating the boot.img file
->>> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
->>> that the kernel image size with a ramdisk is breaking some of the
->>> assumptions in the fastboot mode.  I've seen problems like this on other
->>> platforms due to hard-coded sizes/addresses in the boot firmware.
->>> 
->>
->> MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
->> thus cause user space fail.
+>I *think* you mean PHB's apertures (i.e. s/aperatuses/apertures/)?
 >
-> Aha, I was right!  ;)
 
-Also notice in kernelci.org that the mt8173 board has also been failing
-to boot in mainline[1].  I wonder if this same limitation exists in the
-mt8173 boot firmware?
+I'll fix the typo in next revision.
 
-Kevin
+>> This fixes the issue by mapping IO and M32 segments based on the
+>> resources of the PCI devices included in the PE, instead of the
+>> windows of the parent bridge of the PE's primary bus.
+>
+>This solution seems to make a lot of sense, but I don't have a very good
+>understanding of PCI yet: why was it done that way and not this way
+>originally? Looking at the code, it looks like the old way was simple
+>but didn't support SR-IOV?
+>
 
-[1] http://kernelci.org/boot/mt8173-evb/job/mainline/kernel/v4.3-11553-g8d3de01cfa37/defconfig/defconfig/lab/lab-khilman/?_id=5643bc3959b5145c9e0918f4
+It's not related to SRIOV. Originally, the IO or M32 segments are mapped
+according to the bridge's windows. The bridge windows on root port or the
+upstream port of the switch behind that will be extended to PHB's apertures.
+If we still use bridge's windows, all IO and M32 resources are mapped/assigned
+to the PE corresponding to PCI bus#1 or PCI bus#2. That's not correct any more.
+So the correct way is to do the mapping based on IO or M32 BARs of the devices
+included in the PE.
+
+>There are a few comments inline as well.
+>
+>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> index 553d3f3..4ab93f8 100644
+>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> @@ -2741,71 +2741,90 @@ truncate_iov:
+>>  }
+>>  #endif /* CONFIG_PCI_IOV */
+>>  
+>> -/*
+>> - * This function is supposed to be called on basis of PE from top
+>> - * to bottom style. So the the I/O or MMIO segment assigned to
+>> - * parent PE could be overrided by its child PEs if necessary.
+>> - */
+>> -static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>> -				  struct pnv_ioda_pe *pe)
+>> +static int pnv_ioda_setup_one_res(struct pnv_ioda_pe *pe,
+>> +				  struct resource *res)
+>>  {
+>> -	struct pnv_phb *phb = hose->private_data;
+>> +	struct pnv_phb *phb = pe->phb;
+>>  	struct pci_bus_region region;
+>> -	struct resource *res;
+>> -	unsigned int segsize;
+>> -	int *segmap, index, i;
+>> +	unsigned int index, segsize;
+>> +	int *segmap;
+>>  	uint16_t win;
+>>  	int64_t rc;
+>
+>s/int64_t/s64/;
+>I think we might also want to change the uint16_t as well.
+>
+
+As I explained before, I changed it from s64 to int64_t and I won't change it
+back since both of them are fine. Same situation to uint16 here. If we really
+want to clean it all at once, I can do that later, but not in this patchset.
+
+>> -	/*
+>> -	 * NOTE: We only care PCI bus based PE for now. For PCI
+>> -	 * device based PE, for example SRIOV sensitive VF should
+>> -	 * be figured out later.
+>> -	 */
+>> -	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
+>> +	if (!res->parent || !res->flags || res->start > res->end)
+>> +		return 0;
+>>  
+>> -	pci_bus_for_each_resource(pe->pbus, res, i) {
+>> -		if (!res || !res->flags ||
+>> -		    res->start > res->end)
+>> -			continue;
+>> +	if (res->flags & IORESOURCE_IO) {
+>> +		region.start = res->start - phb->ioda.io_pci_base;
+>> +		region.end   = res->end - phb->ioda.io_pci_base;
+>> +		segsize      = phb->ioda.io_segsize;
+>> +		segmap       = phb->ioda.io_segmap;
+>> +		win          = OPAL_IO_WINDOW_TYPE;
+>> +	} else if ((res->flags & IORESOURCE_MEM) &&
+>> +		   !pnv_pci_is_mem_pref_64(res->flags)) {
+>> +		region.start = res->start -
+>> +			       phb->hose->mem_offset[0] -
+>> +			       phb->ioda.m32_pci_base;
+>> +		region.end   = res->end -
+>> +			       phb->hose->mem_offset[0] -
+>> +			       phb->ioda.m32_pci_base;
+>> +		segsize      = phb->ioda.m32_segsize;
+>> +		segmap       = phb->ioda.m32_segmap;
+>> +		win          = OPAL_M32_WINDOW_TYPE;
+>> +	} else {
+>> +		return 0;
+>The return codes are currently unused, but should this get a more
+>informative return code? Are there any invalid ones that should be
+>flagged, or is it just safe to ignore stuff we don't recognise?
+>
+
+It's safe to ignore M64 (64-bits prefetchable BARs) whose mapping is
+done in different path.
+
+>> +	}
+>
+>
+>> +static void pnv_ioda_setup_pe_seg(struct pnv_ioda_pe *pe)
+>> +{
+>> +	struct pci_dev *pdev;
+>> +	struct resource *res;
+>> +	int i;
+>> +
+>> +	/* This function only works for bus dependent PE */
+>> +	WARN_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
+>> +
+>> +	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
+>> +		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
+>> +			res = &pdev->resource[i];
+>> +			if (pnv_ioda_setup_one_res(pe, res))
+>> +				return;
+>As I mentioned earlier, setup_one_res can potentially return -EIO:
+>should we be trying to propagate that up?
+
+I think it's a good idea. I'll do in next revision.
+
+>> +		}
+>> +
+>> +		/*
+>> +		 * If the PE contains all subordinate PCI buses, the
+>> +		 * windows of the child bridges should be mapped to
+>> +		 * the PE as well.
+>> +		 */
+>> +		if (!(pe->flags & PNV_IODA_PE_BUS_ALL && pci_is_bridge(pdev)))
+>> +			continue;
+>>  
+>> -			region.start += segsize;
+>> -			index++;
+>> +		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
+>> +			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
+>> +			if (pnv_ioda_setup_one_res(pe, res))
+>> +				return;
+>>  		}
+>>  	}
+>>  }
+>
+
+Thanks,
+Gavin
