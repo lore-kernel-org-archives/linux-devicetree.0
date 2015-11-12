@@ -1,89 +1,98 @@
-From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: add SMP enable-method for Broadcom
- NSP
-Date: Thu, 12 Nov 2015 18:07:13 +0530
-Message-ID: <564487F9.5000308@broadcom.com>
-References: <1446844273-6460-1-git-send-email-kapilh@broadcom.com>
- <1446844273-6460-2-git-send-email-kapilh@broadcom.com>
- <563E6FC7.6070700@gmail.com> <20151108173116.GV8644@n2100.arm.linux.org.uk>
- <56421540.1020303@broadcom.com>
- <20151110162553.GH8644@n2100.arm.linux.org.uk>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for
+ mt8135
+Date: Thu, 12 Nov 2015 20:46:19 +0800
+Message-ID: <1447332379.4156.5.camel@mtksdaap41>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	 <CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	 <1445843717.23888.1.camel@mtksdaap41>
+	 <CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	 <1445859610.26723.4.camel@mtksdaap41>
+	 <CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
+	 <1447135867.14454.9.camel@mtksdaap41> <7h1tbx1gjp.fsf@deeprootsystems.com>
+	 <1447228557.20886.10.camel@mtksdaap41> <7hpozgyu36.fsf@deeprootsystems.com>
+	 <7hwptnddhs.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151110162553.GH8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <7hwptnddhs.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On Wed, 2015-11-11 at 20:54 -0800, Kevin Hilman wrote:
+> Hi Eddie,
+> 
+> Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> 
+> > Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
+> >
+> >> On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
+> >>> Hi Eddie,
+> >>> 
+> >>> [...]
+> >>> 
+> >>> > I check the log [0],
+> >>> 
+> >>> Thanks for checking into this boot failure.
+> >>> 
+> >>> > it seems first time mt8135-evbp1 boot to kernel
+> >>> > shell successfully, then boot again. In the second time, mt8135 stay in
+> >>> > fastboot mode, waiting host send boot image, then timeout.
+> >>> 
+> >>> Actually, it never gets to a shell the first time.  If you look closely,
+> >>> the target reboots as soon as userspace starts.   Look for the PYBOOT
+> >>> line which says "finished booting, starting userspace"
+> >>> 
+> >>> Later on, pyboot thinks it finds a root shell due to finding '#'
+> >>> characters, but clearly it never got to a shell.
+> >>> 
+> >>> > I download zImage and dtb in [1], and kernel run to shell successfully
+> >>> > on my platform.
+> >>> 
+> >>> Are you can you try using a ramdisk as well?  You can use the pre-built
+> >>> one here:
+> >>> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
+> >>> 
+> >>
+> >> Yes, I tried this ramdisk, and I can reproduce fail issue.
+> >>
+> >
+> > OK, good.   Thanks for looking into it.
+> >
+> >>> Please check my boot logs to see how I'm generating the boot.img file
+> >>> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
+> >>> that the kernel image size with a ramdisk is breaking some of the
+> >>> assumptions in the fastboot mode.  I've seen problems like this on other
+> >>> platforms due to hard-coded sizes/addresses in the boot firmware.
+> >>> 
+> >>
+> >> MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
+> >> thus cause user space fail.
+> >
+> > Aha, I was right!  ;)
+> 
+> Also notice in kernelci.org that the mt8173 board has also been failing
+> to boot in mainline[1].  I wonder if this same limitation exists in the
+> mt8173 boot firmware?
+> 
 
-On 11/10/2015 9:55 PM, Russell King - ARM Linux wrote:
-> On Tue, Nov 10, 2015 at 09:33:12PM +0530, Kapil Hali wrote:
->> Hi Russel,
-> 
-> Wrong.  Look at my name as sent in the From: and as quoted in the very
-> next line.  As far as I'm concerned (and I don't care what other people
-> say) it's disrespectful to spell people's names incorrectly.
-> 
-I am sincerely apologetic about it. It was a deviation that will not 
-repeat again. 
->> It was clear the very first time itself as pointed out by you and the 
->> lead developers and hence the change was readily sent in the very next
->> patch set. I didn't change a comment in this patch, which is misleading 
->> about the SMP enable-method used in the patch set, it is my mistake and   
->> I apologies for the same. I will change it and send the next patch set.
-> 
-> Thanks.
-> 
->> Also, before sending out the patch set, I had asked for a clarification 
->> about the method: https://lkml.org/lkml/2015/11/6/234
-> 
-> Sorry, I don't read every single email irrespective of how it's marked.
-> There's way too much email, and way too much mail with improperly
-> classified recipient lists to be able to usefully sort this mail.
-> (If you do the math, the email rate during a 12 hour working day from
-> just linux-arm-kernel is one email every 2.5 minutes, assuming 300 emails
-> a day.  It takes way longer than that to compose a proper reply to an
-> email - I've spent around 15 minutes on this one alone.  Hence, if I'm
-> busy, I more or less totally ignore email now, and rarely bother to
-> "catch up" with missed emails.)
-> 
->> For my understanding, I am repeating my query- In case of simple method of 
->> waking up secondary core, smp_boot_secondary() will always return success 
->> indicating secondary core successfully started. I understand that in 
->> __cpu_up(), primary core waits for completion till secondary core comes 
->> online or time outs. However, is it appropriate to return successful start 
->> of secondary core without knowing if it really did?
-> 
-> Yes, because all that your smp_boot_secondary() should be doing is
-> trying to start the core.  If you encounter an error trying to do so,
-> that's what the error return is for.
-> 
-> If you just set a bit somewhere to tell the hardware to release the
-> secondary core's reset, then if you set the bit and return success,
-> that's prefectly acceptable.  The core ARM SMP code will then wait
-> up to one second for the secondary core to become known to the kernel
-> before declaring that the CPU failed to come online.
-> 
-> If it fails to appear, we assume that it will never appear - and
-> actually at that point the system is in an unknown state: if the
-> secondary CPU crashed during its boot, it could start scribbling
-> into memory or touching devices in an unpredictable way: the only
-> sane answer is to reboot the whole system to ensure that it's back
-> to a known good state.  Hence why we don't provide any cleanup at
-> the point of a failed secondary CPU (I've been debating about
-> tainting the kernel at that point, so we know when things have
-> gone bad.)
-> 
-> Hope this helps.
-> 
-Surely it has helped and many thanks for your detailed explanation.
+MT8173 is another case, the failure is due to following commit:
+67e56c5 arm64: dts: mt8173: Add subsystem clock controller device nodes
 
-Thanks,
-Kapil Hali
+It is because this commit register MM subsystem clock, but kernel don't
+use MM clock yet, then CCF disable it. (My internal platform kernel
+command include clk_ignore_unused parameter, so don't have this
+problem).I will do further checking and release solution later. Thanks
+your testing.
+
+Eddie
+Thanks
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
