@@ -1,149 +1,105 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible format
-Date: Thu, 12 Nov 2015 15:17:05 -0800
-Message-ID: <CAOesGMgud5qCdVy8ZM-bZfOksXrb3Wjynko_yRkkhfoQdh9CQg@mail.gmail.com>
-References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
-	<1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 38/50] powerpc/powernv: Exclude root bus in
+ pnv_pci_reset_secondary_bus()
+Date: Fri, 13 Nov 2015 10:25:50 +1100
+Message-ID: <20151112232550.GA14719@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-39-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87lha2zuwg.fsf@gamma.ozlabs.ibm.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87lha2zuwg.fsf@gamma.ozlabs.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Daniel Axtens <dja@axtens.net>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Oct 26, 2015 at 2:25 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> Some qcom based bootloaders identify the dtb blob based on a set
-> of device properties like SoC, platform, PMIC, and revisions of
-> those components. In downstream kernels, these values are added
-> to the different component dtsi files (i.e. pmic dtsi file, SoC
-> dtsi file, board dtsi file, etc.) via qcom specific DT
-> properties. The dtb files are parsed by a program called dtbTool
-> that picks out these properties and creates a table of contents
-> binary blob with the property information and some offsets into
-> the concatenation of all the dtbs (termed a QCDT image).
+On Fri, Nov 13, 2015 at 09:59:27AM +1100, Daniel Axtens wrote:
+>Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
 >
-> The suggestion is to do this via the board compatible string
-> instead, because these qcom specific properties are never used by
-> the kernel. Add a document describing the format of the
-> compatible string that encodes all this information that's
-> currently encoded in the qcom,{msm-id,board-id,pmic-id}
-> properties in downstream devicetrees. Future bootloaders may be
-> updated to look at the compatible field instead of looking for
-> the table of contents image. For non-updateable bootloaders, a
-> new dtbTool program will parse the compatible string and generate
-> a QCDT image from it.
+>> When pnv_pci_reset_secondary_bus() is called to issue reset on
+>> the indicated secondary bus, the bus can't be root bus. So we
+>> needn't consider root bus in the function.
 >
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.txt | 86 ++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
+>It took me a while to convince myself that this is correct. For the
+>record, this is why it's correct:
 >
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
-> new file mode 100644
-> index 000000000000..ed084367182d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
-> @@ -0,0 +1,86 @@
-> +QCOM device tree bindings
-> +-------------------------
-> +
-> +Some qcom based bootloaders identify the dtb blob based on a set of
-> +device properties like SoC, platform, PMIC, and revisions of those components.
-> +To support this scheme, we encode this information into the board compatible
-> +string.
-> +
-> +Each board must specify a top-level board compatible string with the following
-> +format:
-> +
-> +       compatible = "qcom,<SoC>(-<soc_version>)(-<foundry_id>)-<plat_type>(/<subtype>)(-<plat_version>)(-<mb>MB)(-<panel>-panel)(-boot-<boot>)(-<pmic>(-v<pmic_version>)){0-4}"
-> +
-> +where elements in parentheses "()" are optional and elements in brackets "<>"
-> +are names of elements. Meaning only the 'SoC' and 'plat_type' elements are
-> +required.
-> +
-> +The 'SoC' element must be one of the following strings:
-> +
-> +       apq8016
-> +       apq8074
-> +       apq8084
-> +       apq8096
-> +       msm8916
-> +       msm8974
-> +       msm8996
-> +
-> +The 'plat_type' element must be one of the following strings:
-> +
-> +       cdp
-> +       liquid
-> +       dragonboard
-> +       mtp sbc
-> +
-> +
-> +The 'soc_version', 'plat_version' and 'pmic_version' elements take the form of
-> +v<Major>.<Minor> where the minor number may be omitted when it's zero, i.e.
-> +v1.0 is the same as v1. If all versions of the 'plat_version' element's match,
-> +then a wildcard '*' should be used, e.g. 'v*'.
-> +
-> +The 'foundry_id', 'subtype', and 'mb' elements are one or more digits from 0
-> +to 9.
-> +
-> +The 'panel' element must be one of the following strings:
-> +
-> +       720p
-> +       fWVGA
-> +       hd
-> +       qHD
-> +
-> +The 'boot' element must be one of the following strings:
-> +
-> +       emmc_sdc1
-> +       ufs
-> +
-> +The 'pmic' element must be one of the following strings:
-> +
-> +       pm8841
-> +       pm8019
-> +       pm8110
-> +       pma8084
-> +       pmi8962
-> +       pmd9635
-> +       pm8994
-> +       pmi8994
-> +       pm8916
-> +       pm8004
-> +       pm8909
-> +
-> +The 'pmic' element is specified in order of ascending USID. The PMIC in USID0
-> +goes first, and then USID2, USID4, and finally USID6. Up to four PMICs may be
-> +specified and no holes in the USID number space are allowed.
-> +
-> +Examples:
-> +
-> +       "qcom,msm8916-v1-cdp-pm8916-v2.1"
+>pnv_pci_reset_secondary_bus fills the reset_secondary_bus callback in
+>the pci_controller_ops structure, and isn't used elsewhere.
+>
+>In arch/powerpc/kernel/pci.c, that callback is called (if it exists) in 
+>pcibios_reset_secondary_bus(). It's not called anywhere else.
+>
+>The PPC pcibios_reset_secondary_bus overrides the weak version in
+>drivers/pci/pci.c. It's called from the same file by
+>pci_reset_bridge_secondary_device() (and nowhere else).
+>
+>pci_reset_bridge_secondary_device() is nicely documented:
+>
+>/**
+> * pci_reset_bridge_secondary_bus - Reset the secondary bus on a PCI bridge.
+> * @dev: Bridge device
+> *
+> * Use the bridge control register to assert reset on the secondary bus.
+> * Devices on the secondary bus are left in power-on state.
+> */
+>
+>Therefore, by the definiton of pci_reset_bridge_secondary_bus,
+>pnv_pci_reset_secondary_bus() can only be called with a bridge
+>device. As such, a bridge reset only is appropriate. If this breaks
+>anything, the caller is broken.
+>
+>It might be worth including a condensed version of this in the commit
+>message.
+>
 
-This is just awkward, but this...
+Right. I'll add more description to the changelog in next revision.
 
-> +
-> +A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
-> +2.1.
-> +
-> +       "qcom,apq8074-v2.0-2-dragonboard/1-v0.1-512MB-panel-qHD-boot-emmc_sdc1-pm8941-v0.2-pm8909-v2.2-pma8084-v3-pm8110-v1"
+>Reviewed-by: Daniel Axtens <dja@axtens.net>
+>
 
-...this is just too much. It makes no sense to try to linearly
-describe pretty much the whole hardware in the compatible string like
-this when the information should be elsewhere in the DT.
+Thanks,
+Gavin
 
-If this is how it's done, why bother documenting the rest in device
-tree at all? Why not just do a depth-first traversal of the DT and
-create a string out of that and make that the compatible while you're
-at it?
-
-Consider this NAK:ed.
-
-
--Olof
+>Regards,
+>Daniel Axtens
+>
+>>
+>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>> ---
+>>  arch/powerpc/platforms/powernv/eeh-powernv.c | 12 ++----------
+>>  1 file changed, 2 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+>> index a7d84a4..c69b6a1 100644
+>> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
+>> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+>> @@ -880,16 +880,8 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+>>  
+>>  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
+>>  {
+>> -	struct pci_controller *hose;
+>> -
+>> -	if (pci_is_root_bus(dev->bus)) {
+>> -		hose = pci_bus_to_host(dev->bus);
+>> -		pnv_eeh_root_reset(hose, EEH_RESET_HOT);
+>> -		pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
+>> -	} else {
+>> -		pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+>> -		pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+>> -	}
+>> +	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+>> +	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
+>>  }
+>>  
+>>  /**
+>> -- 
+>> 2.1.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
