@@ -1,122 +1,143 @@
-From: Daniel Axtens <dja@axtens.net>
-Subject: Re: [PATCH v7 38/50] powerpc/powernv: Exclude root bus in pnv_pci_reset_secondary_bus()
-Date: Fri, 13 Nov 2015 09:59:27 +1100
-Message-ID: <87lha2zuwg.fsf@gamma.ozlabs.ibm.com>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-39-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible format
+Date: Thu, 12 Nov 2015 17:10:04 -0600
+Message-ID: <CAL_Jsq+5QD2Ce8snovw6vC31NvD5oB+Yos1VuZDjXfKa3fPvDQ@mail.gmail.com>
+References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
+ <1445894712-14350-2-git-send-email-sboyd@codeaurora.org> <20151112164948.GA24938@rob-hp-laptop>
+ <20151112194408.GC15032@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-39-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20151112194408.GC15032@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Gross <agross@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
-
-> When pnv_pci_reset_secondary_bus() is called to issue reset on
-> the indicated secondary bus, the bus can't be root bus. So we
-> needn't consider root bus in the function.
-
-It took me a while to convince myself that this is correct. For the
-record, this is why it's correct:
-
-pnv_pci_reset_secondary_bus fills the reset_secondary_bus callback in
-the pci_controller_ops structure, and isn't used elsewhere.
-
-In arch/powerpc/kernel/pci.c, that callback is called (if it exists) in=20
-pcibios_reset_secondary_bus(). It's not called anywhere else.
-
-The PPC pcibios_reset_secondary_bus overrides the weak version in
-drivers/pci/pci.c. It's called from the same file by
-pci_reset_bridge_secondary_device() (and nowhere else).
-
-pci_reset_bridge_secondary_device() is nicely documented:
-
-/**
- * pci_reset_bridge_secondary_bus - Reset the secondary bus on a PCI bridge.
- * @dev: Bridge device
- *
- * Use the bridge control register to assert reset on the secondary bus.
- * Devices on the secondary bus are left in power-on state.
- */
-
-Therefore, by the definiton of pci_reset_bridge_secondary_bus,
-pnv_pci_reset_secondary_bus() can only be called with a bridge
-device. As such, a bridge reset only is appropriate. If this breaks
-anything, the caller is broken.
-
-It might be worth including a condensed version of this in the commit
-message.
-
-Reviewed-by: Daniel Axtens <dja@axtens.net>
-
-Regards,
-Daniel Axtens
-
+On Thu, Nov 12, 2015 at 1:44 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 11/12, Rob Herring wrote:
+>> On Mon, Oct 26, 2015 at 02:25:10PM -0700, Stephen Boyd wrote:
+>> > Some qcom based bootloaders identify the dtb blob based on a set
+>> > of device properties like SoC, platform, PMIC, and revisions of
+>> > those components. In downstream kernels, these values are added
+>> > to the different component dtsi files (i.e. pmic dtsi file, SoC
+>> > dtsi file, board dtsi file, etc.) via qcom specific DT
+>> > properties. The dtb files are parsed by a program called dtbTool
+>> > that picks out these properties and creates a table of contents
+>> > binary blob with the property information and some offsets into
+>> > the concatenation of all the dtbs (termed a QCDT image).
+>>
+>> Got a pointer to what these properties look like?
 >
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/platforms/powernv/eeh-powernv.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
+> Do you mean the blob header format? You can see that described
+> in a text document next to the C file for dtbtool[1].
+
+Thanks.
+
+>> > +Some qcom based bootloaders identify the dtb blob based on a set of
+>> > +device properties like SoC, platform, PMIC, and revisions of those components.
+>> > +To support this scheme, we encode this information into the board compatible
+>> > +string.
+>>
+>> Why does all this need to be a single property?
 >
-> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/=
-platforms/powernv/eeh-powernv.c
-> index a7d84a4..c69b6a1 100644
-> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-> @@ -880,16 +880,8 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev,=
- int option)
->=20=20
->  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
->  {
-> -	struct pci_controller *hose;
-> -
-> -	if (pci_is_root_bus(dev->bus)) {
-> -		hose =3D pci_bus_to_host(dev->bus);
-> -		pnv_eeh_root_reset(hose, EEH_RESET_HOT);
-> -		pnv_eeh_root_reset(hose, EEH_RESET_DEACTIVATE);
-> -	} else {
-> -		pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
-> -		pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
-> -	}
-> +	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
-> +	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
->  }
->=20=20
->  /**
-> --=20
-> 2.1.0
+> Because the different vendor properties were rejected by arm-soc
+> maintainers and the board compatible string was suggested as the
+> place to put such information.
+
+I'm surprised an 80+ character compatible stream is okay. The parts
+giving me heartburn here are not mentioned in the previous discussion
+nor the QCDT format.
+
+As presented previously I agree with the push back. However, we could
+do standard properties for SOC and board versions rather than
+something vendor specific. Then the existing kernel support for
+versions could use it. We could also just make this compatible string
+formatting standard for more than just QC boards.
+
+>> > +
+>> > +The 'soc_version', 'plat_version' and 'pmic_version' elements take the form of
+>> > +v<Major>.<Minor> where the minor number may be omitted when it's zero, i.e.
+>> > +v1.0 is the same as v1. If all versions of the 'plat_version' element's match,
+>> > +then a wildcard '*' should be used, e.g. 'v*'.
+>> > +
+>> > +The 'foundry_id', 'subtype', and 'mb' elements are one or more digits from 0
+>> > +to 9.
+>>
+>> Can you define what these are exactly. I gather mb is RAM size.
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Not really, foundry_id is a number and so is subtype.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+For mb, can't the tool just parse the memory node to get ram size
+rather than parsing the compatible.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: GPGTools - https://gpgtools.org
+>> > +
+>> > +The 'panel' element must be one of the following strings:
+>> > +
+>> > +   720p
+>> > +   fWVGA
+>> > +   hd
+>> > +   qHD
+>>
+>> How is this used?
+>
+> I believe this was added so that we could have different dtbs for
+> devices that have different panels on them. I'm not sure this is
+> still used though. It could be legacy.
 
-iQIcBAEBCgAGBQJWRRnPAAoJEPC3R3P2I92F/boP/iIQ9pke3BKGqtBsAAZ8dDJG
-mHTNFOeC9/s1Ykh2Mru/Kp/7b/rVKxIuah5S8ODhUcu44Xf6e1tVU2O6+wAHF2nh
-h+McoeF1hxD6ZWq+0eJX/h1wmUC4H6CBQrSwoaOj1Zg3m/yiStXeG/06DEwDCGtM
-NJmieCPmNzIobt/I/RBkptx9vRajinZ2/kEtsSjZqwz6F65uQe3JAMsI2Vm9BNXx
-YpIYCSCTrnxuEKt+3D/nve2qeBdffUw0fLYOz76EqnJ3SsI/rgPbGnMFOGRrD9SE
-Bmpvhq7D9utw1BgjXvWbQAH0dLqqnL9lU12f0ouCGpaE/WCTohjF5pmvLDZvwVC8
-UKRdl9TVRNJjsXyVrygLKQNqHp4Nit8NHSHUxZOjDBnkb92N/Rk2W8loxk3YbO00
-kNkqBl3lVlND7ZIBOkbl0A3veVqxOai3GXwHqkgHOOxsr43fN7xlpSjBcd7U0CtC
-LJuy+O+xe76U7QGjpM9zHRIn44fDyTLGtw6NWWAUvTmw8NBvHssTvrub96eojHRL
-aspVRz7dyqJueX8GflbZ2cVZab1FwZP8vbMRIYFH4pcSfWEEBU6f0Lvn49tWMnwm
-HYiwSBPn2dnYSKVoVg4TbmvWaQxqHqxSRF7LSZrXTd3VEMwaR3Cg9GT5P8VdJqDK
-u3bhKVw2Zw4wJFJyxhd7
-=5Is4
------END PGP SIGNATURE-----
---=-=-=--
+Dealing with multiple panels is fairly common. I think you could use
+an alias to the panel node and match using its compatible or
+resolution.
+
+>> > +The 'boot' element must be one of the following strings:
+>> > +
+>> > +   emmc_sdc1
+>> > +   ufs
+>> > +
+
+Again, perhaps an alias would work here.
+
+>> > +The 'pmic' element must be one of the following strings:
+>> > +
+>> > +   pm8841
+>> > +   pm8019
+>> > +   pm8110
+>> > +   pma8084
+>> > +   pmi8962
+>> > +   pmd9635
+>> > +   pm8994
+>> > +   pmi8994
+>> > +   pm8916
+>> > +   pm8004
+>> > +   pm8909
+>> > +
+>> > +The 'pmic' element is specified in order of ascending USID. The PMIC in USID0
+>> > +goes first, and then USID2, USID4, and finally USID6. Up to four PMICs may be
+>> > +specified and no holes in the USID number space are allowed.
+>>
+>> What is USID?
+>
+> USID is Unique Slave IDentifier. It's an SPMI concept.
+
+Okay, then please say "SPMI USID" or something.
+
+>> > +Examples:
+>> > +
+>> > +   "qcom,msm8916-v1-cdp-pm8916-v2.1"
+>> > +
+>> > +A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
+>> > +2.1.
+>> > +
+>> > +   "qcom,apq8074-v2.0-2-dragonboard/1-v0.1-512MB-panel-qHD-boot-emmc_sdc1-pm8941-v0.2-pm8909-v2.2-pma8084-v3-pm8110-v1"
+>>
+>> Which example is more common?
+>>
+>
+> The former. I tried to make up the worst case example so we could
+> see how large the string may become.
+
+I'm generally okay with the former. It's the latter that I don't like
+so much. I'd like Arnd's thoughts here given he had many of the
+comments.
+
+Rob
