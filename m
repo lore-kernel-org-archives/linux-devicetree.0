@@ -1,71 +1,55 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in
- pnv_pci_reset_secondary_bus()
-Date: Thu, 12 Nov 2015 17:15:25 +1100
-Message-ID: <20151112061525.GA18894@gwshan>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Pavel Fedin <p.fedin@samsung.com>
+Subject: RE: [PATCH v7 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Thu, 12 Nov 2015 10:02:06 +0300
+Message-ID: <00f901d11d18$0b68e760$223ab620$@samsung.com>
+References: <cover.1446799912.git.p.fedin@samsung.com>
+ <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
+ <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com>
+ <009301d11c4c$6eaa1eb0$4bfe5c10$@samsung.com>
+ <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
+Content-language: ru
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Rob Herring' <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Kukjin Kim' <kgene@kernel.org>, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 05, 2015 at 12:12:39AM +1100, Gavin Shan wrote:
->In pnv_pci_reset_secondary_bus(), we should issue fundamental
->reset if any one subordinate device of the specified is requesting
-                                        ^^^^^^^^^^^^^^
+ Hello!
 
-                                        the specified bus
+> >> > +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
+> >> > +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
+> >> > +                        Each value is specified in cycles and has the following
+> >> > +                        meaning and valid range:
+> >> > +                        Tacp : Page mode access cycle at Page mode (0 - 15)
+> >> > +                        Tcah : Address holding time after CSn (0 - 15)
+> >> > +                        Tcoh : Chip selection hold on OEn (0 - 15)
+> >> > +                        Tacc : Access cycle (0 - 31, the actual time is N + 1)
+> >> > +                        Tcos : Chip selection set-up before OEn (0 - 15)
+> >> > +                        Tacs : Address set-up before CSn (0 - 15)
+> >>
+> >> This is not easily extended. Perhaps a property per value instead.
+> >
+> >  We had a discussion with Krzysztof about it, he agreed with this form of the property.
+> > My concern was that it's just too much typing, and makes little sense because these
+> > settings always go together. If register layout changes, or parameter set changes in
+> > incompatible way, then it's another device, not exynos-srom anymore.
+> >  So would you agree with that, or is your position strong?
+> 
+> I'm thinking for a new version of the controller which could add (or
+> remove) new timing parameters, but then I guess you can interpret the
+> field differently based on the compatible string. Anyway, your problem
+> to deal with.
 
-I put the note reminding me to admend the changelog in next revision.
+ Of course, my thought is that if compatible string is different,
+then it's already a different device. And of course it would have different parameters.
+ So, OK, i'll post new version with fixed documentation today.
 
->that. Otherwise, the device might not come up after the reset.
->
->Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->---
-> arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
-> 1 file changed, 20 insertions(+), 1 deletion(-)
->
->diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
->index c69b6a1..ab8b93e 100644
->--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
->+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
->@@ -878,9 +878,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
-> 	return 0;
-> }
->
->+static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
->+{
->+	int *freset = data;
->+
->+	/*
->+	 * Stop the iteration immediately if there has any one
->+	 * PCI device requesting fundamental reset.
->+	 */
->+	*freset |= pdev->needs_freset;
->+	return *freset;
->+}
->+
-> void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
-> {
->-	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
->+	int option, freset = 0;
->+
->+	if (dev->subordinate)
->+		pci_walk_bus(dev->subordinate,
->+			     pnv_pci_dev_reset_type, &freset);
->+
->+	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
->+	pnv_eeh_bridge_reset(dev, option);
-> 	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
-> }
->
->-- 
->2.1.0
->
+Kind regards,
+Pavel Fedin
+Expert Engineer
+Samsung Electronics Research center Russia
