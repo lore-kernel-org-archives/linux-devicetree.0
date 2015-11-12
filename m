@@ -1,214 +1,89 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] Crypto: rockchip/crypto - add crypto driver for rk3288
-Date: Thu, 12 Nov 2015 13:32:20 +0100
-Message-ID: <2127222.Jhf4CFAOsX@phil>
-References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com> <1447223759-20730-4-git-send-email-zain.wang@rock-chips.com>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: add SMP enable-method for Broadcom
+ NSP
+Date: Thu, 12 Nov 2015 18:07:13 +0530
+Message-ID: <564487F9.5000308@broadcom.com>
+References: <1446844273-6460-1-git-send-email-kapilh@broadcom.com>
+ <1446844273-6460-2-git-send-email-kapilh@broadcom.com>
+ <563E6FC7.6070700@gmail.com> <20151108173116.GV8644@n2100.arm.linux.org.uk>
+ <56421540.1020303@broadcom.com>
+ <20151110162553.GH8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447223759-20730-4-git-send-email-zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20151110162553.GH8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zain,
+Hi Russell,
 
-I was able to sucessfully test your crypto-driver, but have found some
-improvements below that should probably get looked at:
-
-Am Mittwoch, 11. November 2015, 14:35:58 schrieb Zain Wang:
-> Crypto driver support:
->      ecb(aes) cbc(aes) ecb(des) cbc(des) ecb(des3_ede) cbc(des3_ede)
-> You can alloc tags above in your case.
+On 11/10/2015 9:55 PM, Russell King - ARM Linux wrote:
+> On Tue, Nov 10, 2015 at 09:33:12PM +0530, Kapil Hali wrote:
+>> Hi Russel,
 > 
-> And other algorithms and platforms will be added later on.
+> Wrong.  Look at my name as sent in the From: and as quoted in the very
+> next line.  As far as I'm concerned (and I don't care what other people
+> say) it's disrespectful to spell people's names incorrectly.
 > 
-> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+I am sincerely apologetic about it. It was a deviation that will not 
+repeat again. 
+>> It was clear the very first time itself as pointed out by you and the 
+>> lead developers and hence the change was readily sent in the very next
+>> patch set. I didn't change a comment in this patch, which is misleading 
+>> about the SMP enable-method used in the patch set, it is my mistake and   
+>> I apologies for the same. I will change it and send the next patch set.
+> 
+> Thanks.
+> 
+>> Also, before sending out the patch set, I had asked for a clarification 
+>> about the method: https://lkml.org/lkml/2015/11/6/234
+> 
+> Sorry, I don't read every single email irrespective of how it's marked.
+> There's way too much email, and way too much mail with improperly
+> classified recipient lists to be able to usefully sort this mail.
+> (If you do the math, the email rate during a 12 hour working day from
+> just linux-arm-kernel is one email every 2.5 minutes, assuming 300 emails
+> a day.  It takes way longer than that to compose a proper reply to an
+> email - I've spent around 15 minutes on this one alone.  Hence, if I'm
+> busy, I more or less totally ignore email now, and rarely bother to
+> "catch up" with missed emails.)
+> 
+>> For my understanding, I am repeating my query- In case of simple method of 
+>> waking up secondary core, smp_boot_secondary() will always return success 
+>> indicating secondary core successfully started. I understand that in 
+>> __cpu_up(), primary core waits for completion till secondary core comes 
+>> online or time outs. However, is it appropriate to return successful start 
+>> of secondary core without knowing if it really did?
+> 
+> Yes, because all that your smp_boot_secondary() should be doing is
+> trying to start the core.  If you encounter an error trying to do so,
+> that's what the error return is for.
+> 
+> If you just set a bit somewhere to tell the hardware to release the
+> secondary core's reset, then if you set the bit and return success,
+> that's prefectly acceptable.  The core ARM SMP code will then wait
+> up to one second for the secondary core to become known to the kernel
+> before declaring that the CPU failed to come online.
+> 
+> If it fails to appear, we assume that it will never appear - and
+> actually at that point the system is in an unknown state: if the
+> secondary CPU crashed during its boot, it could start scribbling
+> into memory or touching devices in an unpredictable way: the only
+> sane answer is to reboot the whole system to ensure that it's back
+> to a known good state.  Hence why we don't provide any cleanup at
+> the point of a failed secondary CPU (I've been debating about
+> tainting the kernel at that point, so we know when things have
+> gone bad.)
+> 
+> Hope this helps.
+> 
+Surely it has helped and many thanks for your detailed explanation.
 
-[...]
-
-> diff --git a/drivers/crypto/rockchip/rk3288_crypto.c b/drivers/crypto/rockchip/rk3288_crypto.c
-> new file mode 100644
-> index 0000000..bb36baa
-> --- /dev/null
-> +++ b/drivers/crypto/rockchip/rk3288_crypto.c
-> @@ -0,0 +1,392 @@
-
-[...]
-
-> +static irqreturn_t crypto_irq_handle(int irq, void *dev_id)
-
-that function should probably also get a "rk_" prefix?
-
-> +{
-> +	struct rk_crypto_info *dev  = platform_get_drvdata(dev_id);
-> +	u32 interrupt_status;
-> +	int err = 0;
-> +
-> +	spin_lock(&dev->lock);
-> +
-> +	if (irq == dev->irq) {
-
-I'm not sure I understand that line. Interrupt handlers are only
-called for the interrupt they are registered for, which would be dev->irq
-in any case, so that should always be true and therefore be unnecessary?
-
-
-> +		interrupt_status = CRYPTO_READ(dev, RK_CRYPTO_INTSTS);
-> +		CRYPTO_WRITE(dev, RK_CRYPTO_INTSTS, interrupt_status);
-> +		if (interrupt_status & 0x0a) {
-> +			dev_warn(dev->dev, "DMA Error\n");
-> +			err = -EFAULT;
-> +		} else if (interrupt_status & 0x05) {
-> +			err = dev->update(dev);
-> +		}
-> +
-> +		if (err)
-> +			dev->complete(dev, err);
-> +	}
-> +	spin_unlock(&dev->lock);
-> +	return IRQ_HANDLED;
-> +}
-
-[...]
-
-> +static int rk_crypto_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct rk_crypto_info *crypto_info;
-> +	int err = 0;
-> +
-> +	crypto_info = devm_kzalloc(&pdev->dev,
-> +				   sizeof(*crypto_info), GFP_KERNEL);
-> +	if (!crypto_info) {
-> +		err = -ENOMEM;
-> +		goto err_crypto;
-> +	}
-> +
-> +	crypto_info->rst = devm_reset_control_get(dev, "crypto-rst");
-> +	if (IS_ERR(crypto_info->rst)) {
-> +		err = PTR_ERR(crypto_info->rst);
-> +		goto err_crypto;
-> +	}
-> +
-> +	reset_control_assert(crypto_info->rst);
-> +	usleep_range(10, 20);
-> +	reset_control_deassert(crypto_info->rst);
-> +
-> +	spin_lock_init(&crypto_info->lock);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	crypto_info->reg = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(crypto_info->reg)) {
-> +		err = PTR_ERR(crypto_info->reg);
-> +		goto err_ioremap;
-> +	}
-> +
-> +	crypto_info->aclk = devm_clk_get(&pdev->dev, "aclk");
-> +	if (IS_ERR(crypto_info->aclk)) {
-> +		err = PTR_ERR(crypto_info->aclk);
-> +		goto err_ioremap;
-> +	}
-> +
-> +	crypto_info->hclk = devm_clk_get(&pdev->dev, "hclk");
-> +	if (IS_ERR(crypto_info->hclk)) {
-> +		err = PTR_ERR(crypto_info->hclk);
-> +		goto err_ioremap;
-> +	}
-> +
-> +	crypto_info->sclk = devm_clk_get(&pdev->dev, "sclk");
-> +	if (IS_ERR(crypto_info->sclk)) {
-> +		err = PTR_ERR(crypto_info->sclk);
-> +		goto err_ioremap;
-> +	}
-> +
-> +	crypto_info->dmaclk = devm_clk_get(&pdev->dev, "apb_pclk");
-> +	if (IS_ERR(crypto_info->dmaclk)) {
-> +		err = PTR_ERR(crypto_info->dmaclk);
-> +		goto err_ioremap;
-> +	}
-> +
-> +	crypto_info->irq = platform_get_irq(pdev, 0);
-> +	if (crypto_info->irq < 0) {
-> +		dev_warn(crypto_info->dev,
-> +			 "control Interrupt is not available.\n");
-> +		err = crypto_info->irq;
-> +		goto err_ioremap;
-> +	}
-> +
-> +	err = devm_request_irq(&pdev->dev, crypto_info->irq, crypto_irq_handle,
-> +			       IRQF_SHARED, "rk-crypto", pdev);
-
-you are freeing the irq manually below and in _remove too. As it stands
-with putting the ip block in reset again on remove this should either loose
-the devm_ or you could add a devm_action that handles the reset assert
-like in [0] - registering the devm_action above where the reset is done.
-That way you could really use dev_request_irq and loose the free_irq
-calls here and in remove.
-
-[0] https://lkml.org/lkml/2015/11/8/159
-
-[...]
-
-> +static int rk_crypto_remove(struct platform_device *pdev)
-> +{
-> +	struct rk_crypto_info *crypto_tmp = platform_get_drvdata(pdev);
-> +
-> +	rk_crypto_unregister();
-> +	reset_control_assert(crypto_tmp->rst);
-
-mainly my comment from above applies, but in any case the reset-assert
-should definitly happen _after_ the tasklet is killed and the irq freed,
-to make sure nothing will want to access device-registers anymore.
-
-[devm works sequentially, so the devm_action would solve that automatically]
-
-
-> +	tasklet_kill(&crypto_tmp->crypto_tasklet);
-> +	free_irq(crypto_tmp->irq, crypto_tmp);
-> +
-> +	return 0;
-> +}
-
-[...]
-
-> diff --git a/drivers/crypto/rockchip/rk3288_crypto.h b/drivers/crypto/rockchip/rk3288_crypto.h
-> new file mode 100644
-> index 0000000..b5b949a
-> --- /dev/null
-> +++ b/drivers/crypto/rockchip/rk3288_crypto.h
-> @@ -0,0 +1,220 @@
-> +#define _SBF(v, f)			((v) << (f))
-
-you are using that macro in this header for simple value shifts like
-	#define RK_CYYPTO_HASHINSEL_BLOCK_CIPHER_INPUT		_SBF(0x01, 0)
-
-Removing that macro and doing the shift regularly without any macro, like
-	#define RK_CYYPTO_HASHINSEL_BLOCK_CIPHER_INPUT		(0x01 << 0)
-
- would improve future readability, because now you need to look up what
-the macro actually does and the _SBF macro also does not simplify anything.
-Also that name is quite generic so may conflict with something else easily.
-
- [...]
-
-> +#define CRYPTO_READ(dev, offset)		  \
-> +		readl_relaxed(((dev)->reg + (offset)))
-> +#define CRYPTO_WRITE(dev, offset, val)	  \
-> +		writel_relaxed((val), ((dev)->reg + (offset)))
-> +/* get register virt address */
-> +#define CRYPTO_GET_REG_VIRT(dev, offset)   ((dev)->reg + (offset))
-
-same argument as above about readability of the code. What do these
-macros improve from just doing the readl and writel calls normally?
-
-
-Thanks
-Heiko
+Thanks,
+Kapil Hali
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
