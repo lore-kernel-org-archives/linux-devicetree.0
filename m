@@ -1,41 +1,36 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/5] arm: dts: complete dm816x device tree
-Date: Thu, 12 Nov 2015 09:47:06 -0800
-Message-ID: <20151112174706.GN3218@atomide.com>
-References: <56449D1D.4030803@baylibre.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: grab a reference to the MTD of_node before
+ registering it
+Date: Thu, 12 Nov 2015 10:12:23 -0800
+Message-ID: <20151112181223.GA126029@google.com>
+References: <1447287964-63309-1-git-send-email-computersforpeace@gmail.com>
+ <20151112095120.5ae32efd@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56449D1D.4030803@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Paul Walmsley <paul@pwsan.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Brian Hutchinson <b.hutchman@gmail.com>, fisaksen@baylibre.com, devicetree@vger.kernel.org
+In-Reply-To: <20151112095120.5ae32efd@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Neil Armstrong <narmstrong@baylibre.com> [151112 06:08]:
-> In order to fix support for the dm816x platform, add missing bits in
-> the dm816x dtsi and cleanup OCP.
-
-Which ones are needed as fixes for the v4.4-rc kernel?
-
-Regards,
-
-Tony
-
-> The last patch adds support for the omap4-hwspinlock.
+On Thu, Nov 12, 2015 at 09:51:20AM +0100, Boris Brezillon wrote:
+> On Wed, 11 Nov 2015 16:26:04 -0800
+> Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> v2: add ocp hwmod cleanup
+> > We now stick the device node representing the current MTD (if any) into
+> > sysfs, so let's make sure we have a reference to it before doing that.
+> > 
+> > Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Neil Armstrong (5):
->   arm: dts: add dm816x missing #mbox-cells
->   arm: dts: add dm816x missing spi DT dma handles
->   arm: dts: add dm816x pwm property to timers
->   arm: dts: remove dm816x invalid DT l3_main hwmod
->   arm: dts: Add omap4-hwspinlock support in dm816x
+> Looks good to me,
 > 
->  arch/arm/boot/dts/dm816x.dtsi | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 1.9.1
+> Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Pushed to l2-mtd.git/next
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
