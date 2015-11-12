@@ -1,109 +1,167 @@
-From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] Documentation: dt: Add bindings for Secure-only devices
-Date: Thu, 12 Nov 2015 16:24:50 +0000
-Message-ID: <1447345490-29671-1-git-send-email-peter.maydell@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible
+ format
+Date: Thu, 12 Nov 2015 10:49:48 -0600
+Message-ID: <20151112164948.GA24938@rob-hp-laptop>
+References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
+ <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The existing device tree bindings assume that we are only trying to
-describe a single address space with a device tree (for ARM, either
-the Normal or the Secure world). Some uses for device tree need to
-describe both Normal and Secure worlds in a single device tree. Add
-documentation of how to do this, by adding extra properties which
-describe when a device appears differently in the two worlds or when
-it only appears in one of them.
+On Mon, Oct 26, 2015 at 02:25:10PM -0700, Stephen Boyd wrote:
+> Some qcom based bootloaders identify the dtb blob based on a set
+> of device properties like SoC, platform, PMIC, and revisions of
+> those components. In downstream kernels, these values are added
+> to the different component dtsi files (i.e. pmic dtsi file, SoC
+> dtsi file, board dtsi file, etc.) via qcom specific DT
+> properties. The dtb files are parsed by a program called dtbTool
+> that picks out these properties and creates a table of contents
+> binary blob with the property information and some offsets into
+> the concatenation of all the dtbs (termed a QCDT image).
 
-The binding describes the general principles for adding new
-properties describing the secure world, but for now we only need a
-single new property, "secure-status", which can be used to annotate
-devices to indicate that they are only visible in one of the two
-worlds.
+Got a pointer to what these properties look like?
 
-The primary expected use of this binding is for a virtual machine
-like QEMU to describe the VM layout to a TrustZone aware firmware
-(which would then use the secure-only devices itself, and pass the DT
-on to a kernel running in the non-secure world, which ignores the
-secure-only devices and uses the rest).
+> The suggestion is to do this via the board compatible string
+> instead, because these qcom specific properties are never used by
+> the kernel. Add a document describing the format of the
+> compatible string that encodes all this information that's
+> currently encoded in the qcom,{msm-id,board-id,pmic-id}
+> properties in downstream devicetrees. Future bootloaders may be
+> updated to look at the compatible field instead of looking for
+> the table of contents image. For non-updateable bootloaders, a
+> new dtbTool program will parse the compatible string and generate
+> a QCDT image from it.
+> 
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.txt | 86 ++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+> new file mode 100644
+> index 000000000000..ed084367182d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
+> @@ -0,0 +1,86 @@
+> +QCOM device tree bindings
+> +-------------------------
+> +
+> +Some qcom based bootloaders identify the dtb blob based on a set of
+> +device properties like SoC, platform, PMIC, and revisions of those components.
+> +To support this scheme, we encode this information into the board compatible
+> +string.
 
-Signed-off-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-This binding doesn't affect the kernel itself, but the kernel
-Documentation/ tree is the de-facto current place where all DT
-bindings are documented, so Grant suggested this was the right
-place to send a doc patch.
+Why does all this need to be a single property?
 
-Changes v1->v2:
- * list all the status/secure-status combinations explicitly
- * use /* */ comment syntax, not //
+> +Each board must specify a top-level board compatible string with the following
+> +format:
+> +
+> +	compatible = "qcom,<SoC>(-<soc_version>)(-<foundry_id>)-<plat_type>(/<subtype>)(-<plat_version>)(-<mb>MB)(-<panel>-panel)(-boot-<boot>)(-<pmic>(-v<pmic_version>)){0-4}"
+> +
+> +where elements in parentheses "()" are optional and elements in brackets "<>"
 
- Documentation/devicetree/bindings/arm/secure.txt | 51 ++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
+[] brackets are more generally used for optional params.
 
-diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
-new file mode 100644
-index 0000000..7ed5ed6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/secure.txt
-@@ -0,0 +1,51 @@
-+* ARM Secure world bindings
-+
-+ARM CPUs with TrustZone support have two distinct address spaces,
-+"Normal" and "Secure". Most devicetree consumers (including the Linux
-+kernel) are not TrustZone aware and run entirely in either the Normal
-+world or the Secure world. However some devicetree consumers are
-+TrustZone aware and need to be able to determine whether devices are
-+visible only in the Secure address space, only in the Normal address
-+space, or visible in both. (One example of that situation would be a
-+virtual machine which boots Secure firmware and wants to tell the
-+firmware about the layout of the machine via devicetree.)
-+
-+The general principle of the naming scheme for Secure world bindings
-+is that any property that needs a different value in the Secure world
-+can be supported by prefixing the property name with "secure-". So for
-+instance "secure-reg" would override "reg". If there is no "secure-"
-+property then the Secure world value is the same as specified for the
-+Normal world by the non-prefixed property. However, only the
-+properties listed below may validly have "secure-" versions; this list
-+will be enlarged on a case-by-case basis.
-+
-+Defining the bindings in this way means that a device tree which has
-+been annotated to indicate the presence of Secure-only devices can
-+still be processed unmodified by existing Non-secure software (and in
-+particular by the kernel).
-+
-+Note that it is still valid for bindings intended for purely Secure
-+world consumers (like kernels that run entirely in Secure) to simply
-+describe the view of Secure world using the standard bindings. These
-+secure- bindings only need to be used where both the Secure and Normal
-+world views need to be described in a single device tree.
-+
-+Valid Secure world properties:
-+
-+- secure-status : specifies whether the device is present and usable
-+  in the secure world. The combination of this with "status" allows
-+  the various possible combinations of device visibility to be
-+  specified. If "secure-status" is not specified it defaults to the
-+  same value as "status"; if "status" is not specified either then
-+  both default to "okay". This means the following combinations are
-+  possible:
-+
-+   /* Neither specified: default to visible in both S and NS */
-+   secure-status = "okay";                          /* visible in both */
-+   status = "okay";                                 /* visible in both */
-+   status = "okay"; secure-status = "okay";         /* visible in both */
-+   secure-status = "disabled";                      /* NS-only */
-+   status = "okay"; secure-status = "disabled";     /* NS-only */
-+   status = "disabled"; secure-status = "okay";     /* S-only */
-+   status = "disabled";                             /* disabled in both */
-+   status = "disabled"; secure-status = "disabled"; /* disabled in both */
--- 
-1.9.1
+> +are names of elements. Meaning only the 'SoC' and 'plat_type' elements are
+> +required.
+> +
+> +The 'SoC' element must be one of the following strings:
+> +
+> +	apq8016
+> +	apq8074
+> +	apq8084
+> +	apq8096
+> +	msm8916
+> +	msm8974
+> +	msm8996
+> +
+> +The 'plat_type' element must be one of the following strings:
+> +
+> +	cdp
+> +	liquid
+> +	dragonboard
+> +	mtp sbc
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Platform is pretty overloaded meaning. Perhaps board_type would be more 
+clear.
+
+> +
+> +The 'soc_version', 'plat_version' and 'pmic_version' elements take the form of
+> +v<Major>.<Minor> where the minor number may be omitted when it's zero, i.e.
+> +v1.0 is the same as v1. If all versions of the 'plat_version' element's match,
+> +then a wildcard '*' should be used, e.g. 'v*'.
+> +
+> +The 'foundry_id', 'subtype', and 'mb' elements are one or more digits from 0
+> +to 9.
+
+Can you define what these are exactly. I gather mb is RAM size.
+
+> +
+> +The 'panel' element must be one of the following strings:
+> +
+> +	720p
+> +	fWVGA
+> +	hd
+> +	qHD
+
+How is this used?
+
+
+> +The 'boot' element must be one of the following strings:
+> +
+> +	emmc_sdc1
+> +	ufs
+> +
+> +The 'pmic' element must be one of the following strings:
+> +
+> +	pm8841
+> +	pm8019
+> +	pm8110
+> +	pma8084
+> +	pmi8962
+> +	pmd9635
+> +	pm8994
+> +	pmi8994
+> +	pm8916
+> +	pm8004
+> +	pm8909
+> +
+> +The 'pmic' element is specified in order of ascending USID. The PMIC in USID0
+> +goes first, and then USID2, USID4, and finally USID6. Up to four PMICs may be
+> +specified and no holes in the USID number space are allowed.
+
+What is USID?
+
+> +
+> +Examples:
+> +
+> +	"qcom,msm8916-v1-cdp-pm8916-v2.1"
+> +
+> +A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
+> +2.1.
+> +
+> +	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1-512MB-panel-qHD-boot-emmc_sdc1-pm8941-v0.2-pm8909-v2.2-pma8084-v3-pm8110-v1"
+
+Which example is more common?
+
+> +
+> +A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
+> +foundry 2 with 512MB of memory and a qHD panel booting from emmc_sdc1, paired
+> +with a pm8941 PMIC version 0.2 at USID0, pm8909 PMIC version 2.2 at USID2,
+> +pma8084 version 3 at USID4 and a pm8110 version 1 at USID6.
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
