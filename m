@@ -1,62 +1,59 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] mtd: grab a reference to the MTD of_node before registering it
-Date: Wed, 11 Nov 2015 16:26:04 -0800
-Message-ID: <1447287964-63309-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v7 1/4] Documentation: dt-bindings: Describe SROMc
+ configuration
+Date: Thu, 12 Nov 2015 09:32:10 +0900
+Message-ID: <5643DE0A.2060400@samsung.com>
+References: <cover.1446799912.git.p.fedin@samsung.com>
+ <0bc58ce0fd39767834f486c4c0cfbbd70044caed.1446799912.git.p.fedin@samsung.com>
+ <CAL_JsqLsD9gA2-AWYGaHvOuZhhDmE2BHmPMU2nJjPYEvQJdNHQ@mail.gmail.com>
+ <009301d11c4c$6eaa1eb0$4bfe5c10$@samsung.com>
+ <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAL_JsqLtWwdGHKKfS8b6E0Urh6gYopZcwpdyvJGWCRm7x81YzA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pavel Fedin <p.fedin@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We now stick the device node representing the current MTD (if any) into
-sysfs, so let's make sure we have a reference to it before doing that.
+On 12.11.2015 05:43, Rob Herring wrote:
+> On Wed, Nov 11, 2015 at 12:44 AM, Pavel Fedin <p.fedin@samsung.com> wrote:
+>>  Hello!
+>>
+>>>> +- samsung,srom-timing : array of 6 integers, specifying bank timings in the
+>>>> +                        following order: Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
+>>>> +                        Each value is specified in cycles and has the following
+>>>> +                        meaning and valid range:
+>>>> +                        Tacp : Page mode access cycle at Page mode (0 - 15)
+>>>> +                        Tcah : Address holding time after CSn (0 - 15)
+>>>> +                        Tcoh : Chip selection hold on OEn (0 - 15)
+>>>> +                        Tacc : Access cycle (0 - 31, the actual time is N + 1)
+>>>> +                        Tcos : Chip selection set-up before OEn (0 - 15)
+>>>> +                        Tacs : Address set-up before CSn (0 - 15)
+>>>
+>>> This is not easily extended. Perhaps a property per value instead.
+>>
+>>  We had a discussion with Krzysztof about it, he agreed with this form of the property.
+>> My concern was that it's just too much typing, and makes little sense because these
+>> settings always go together. If register layout changes, or parameter set changes in
+>> incompatible way, then it's another device, not exynos-srom anymore.
+>>  So would you agree with that, or is your position strong?
+> 
+> I'm thinking for a new version of the controller which could add (or
+> remove) new timing parameters, but then I guess you can interpret the
+> field differently based on the compatible string. Anyway, your problem
+> to deal with.
 
-Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/mtd/mtdcore.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Actually I also preferred properties per one timing... but finally
+agreed on simpler approach.
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index a91cee90aef9..c393a1155376 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -32,6 +32,7 @@
- #include <linux/err.h>
- #include <linux/ioctl.h>
- #include <linux/init.h>
-+#include <linux/of.h>
- #include <linux/proc_fs.h>
- #include <linux/idr.h>
- #include <linux/backing-dev.h>
-@@ -454,6 +455,7 @@ int add_mtd_device(struct mtd_info *mtd)
- 	mtd->dev.devt = MTD_DEVT(i);
- 	dev_set_name(&mtd->dev, "mtd%d", i);
- 	dev_set_drvdata(&mtd->dev, mtd);
-+	of_node_get(mtd_get_of_node(mtd));
- 	error = device_register(&mtd->dev);
- 	if (error)
- 		goto fail_added;
-@@ -476,6 +478,7 @@ int add_mtd_device(struct mtd_info *mtd)
- 	return 0;
- 
- fail_added:
-+	of_node_put(mtd_get_of_node(mtd));
- 	idr_remove(&mtd_idr, i);
- fail_locked:
- 	mutex_unlock(&mtd_table_mutex);
-@@ -517,6 +520,7 @@ int del_mtd_device(struct mtd_info *mtd)
- 		device_unregister(&mtd->dev);
- 
- 		idr_remove(&mtd_idr, mtd->index);
-+		of_node_put(mtd_get_of_node(mtd));
- 
- 		module_put(THIS_MODULE);
- 		ret = 0;
--- 
-2.6.0.rc2.230.g3dd15c0
+Adding new parameters to the array is still possible (because the order
+matters) and removal as well (by ignoring some indices). All ARMv7
+Exynos SoCs have exactly the same registers for SROM controller
+(Exynos3250, Exynos4, Exynos5). On newer Exynos ARMv8 (Exynos5433 and
+Exynos7420) I don't know because it is not documented.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
