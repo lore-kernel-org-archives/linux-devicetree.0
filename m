@@ -1,69 +1,83 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 1/5] spi: introduce mmap read support for spi flash
- devices
-Date: Thu, 12 Nov 2015 10:02:56 +0530
-Message-ID: <56441678.6040504@ti.com>
-References: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
- <1447133399-25658-2-git-send-email-vigneshr@ti.com>
- <20151111192441.GG12143@google.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
+Date: Wed, 11 Nov 2015 20:54:07 -0800
+Message-ID: <7hwptnddhs.fsf@deeprootsystems.com>
+References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
+	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
+	<1445843717.23888.1.camel@mtksdaap41>
+	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
+	<1445859610.26723.4.camel@mtksdaap41>
+	<CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
+	<1447135867.14454.9.camel@mtksdaap41>
+	<7h1tbx1gjp.fsf@deeprootsystems.com>
+	<1447228557.20886.10.camel@mtksdaap41>
+	<7hpozgyu36.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151111192441.GG12143@google.com>
+In-Reply-To: <7hpozgyu36.fsf@deeprootsystems.com> (Kevin Hilman's message of
+	"Wed, 11 Nov 2015 15:50:05 -0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marex@denx.de>
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Eddie,
 
-On 11/12/2015 12:54 AM, Brian Norris wrote:
-> In addition to my other comments:
-> 
+Kevin Hilman <khilman@kernel.org> writes:
 
-[...]
+> Eddie Huang <eddie.huang@mediatek.com> writes:
+>
+>> On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
+>>> Hi Eddie,
+>>> 
+>>> [...]
+>>> 
+>>> > I check the log [0],
+>>> 
+>>> Thanks for checking into this boot failure.
+>>> 
+>>> > it seems first time mt8135-evbp1 boot to kernel
+>>> > shell successfully, then boot again. In the second time, mt8135 stay in
+>>> > fastboot mode, waiting host send boot image, then timeout.
+>>> 
+>>> Actually, it never gets to a shell the first time.  If you look closely,
+>>> the target reboots as soon as userspace starts.   Look for the PYBOOT
+>>> line which says "finished booting, starting userspace"
+>>> 
+>>> Later on, pyboot thinks it finds a root shell due to finding '#'
+>>> characters, but clearly it never got to a shell.
+>>> 
+>>> > I download zImage and dtb in [1], and kernel run to shell successfully
+>>> > on my platform.
+>>> 
+>>> Are you can you try using a ramdisk as well?  You can use the pre-built
+>>> one here:
+>>> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
+>>> 
+>>
+>> Yes, I tried this ramdisk, and I can reproduce fail issue.
+>>
+>
+> OK, good.   Thanks for looking into it.
+>
+>>> Please check my boot logs to see how I'm generating the boot.img file
+>>> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
+>>> that the kernel image size with a ramdisk is breaking some of the
+>>> assumptions in the fastboot mode.  I've seen problems like this on other
+>>> platforms due to hard-coded sizes/addresses in the boot firmware.
+>>> 
+>>
+>> MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
+>> thus cause user space fail.
+>
+> Aha, I was right!  ;)
 
->> +	int (*spi_mtd_mmap_read)(struct  spi_device *spi,
->> +				 loff_t from, size_t len,
->> +				 size_t *retlen, u_char *buf,
->> +				 u8 read_opcode, u8 addr_width,
->> +				 u8 dummy_bytes);
-> 
-> This is seeming to be a longer and longer list of arguments. I know MTD
-> has a bad habit of long argument lists (which then cause a ton of
-> unnecessary churn when things need changed in the API), but perhaps we
-> can limit the damage to the SPI layer. Perhaps this deserves a struct to
-> encapsulate all the flash read arguments? Like:
-> 
-> struct spi_flash_read_message {
-> 	loff_t from;
-> 	size_t len;
-> 	size_t *retlen;
-> 	void *buf;
-> 	u8 read_opcode;
-> 	u8 addr_width;
-> 	u8 dummy_bits;
-> 	// additional fields to describe rx_nbits for opcode/addr/data
-> };
-> 
-> struct spi_master {
-> 	...
-> 	int (*spi_flash_read)(struct spi_device *spi,
-> 			      struct spi_flash_message *msg);
-> };
+Also notice in kernelci.org that the mt8173 board has also been failing
+to boot in mainline[1].  I wonder if this same limitation exists in the
+mt8173 boot firmware?
 
+Kevin
 
-Yeah.. I think struct encapsulation helps, this can also be used to pass
-sg lists for dma in future. I will rework the series with your
-suggestion to include nbits for opcode/addr/data.
-Also, will add validation logic (similar to __spi_validate()) to check
-whether master supports dual/quad mode for opcode/addr/data. I am
-planning to add this validation code to spi_flash_read_validate(in place
-of spi_mmap_read_supported())
-Thanks!
-
-
--- 
-Regards
-Vignesh
+[1] http://kernelci.org/boot/mt8173-evb/job/mainline/kernel/v4.3-11553-g8d3de01cfa37/defconfig/defconfig/lab/lab-khilman/?_id=5643bc3959b5145c9e0918f4
