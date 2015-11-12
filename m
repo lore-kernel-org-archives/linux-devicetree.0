@@ -1,27 +1,63 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 2/5] PM / OPP: Add {opp-microvolt|opp-microamp}-<name>
- binding
-Date: Thu, 12 Nov 2015 10:38:14 +0530
-Message-ID: <20151112050814.GC5408@ubuntu>
-References: <cover.1447209519.git.viresh.kumar@linaro.org>
- <1f1d9dd73ff629504f3c730e4100dba800c6132a.1447209519.git.viresh.kumar@linaro.org>
- <20151111203100.GA10702@rob-hp-laptop>
+From: Daniel Axtens <dja@axtens.net>
+Subject: Re: [PATCH v7 37/50] powerpc/powernv: Simplify pnv_eeh_reset()
+Date: Thu, 12 Nov 2015 16:11:12 +1100
+Message-ID: <877flniyz3.fsf@gamma.ozlabs.ibm.com>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-38-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151111203100.GA10702@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-38-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11-11-15, 14:31, Rob Herring wrote:
-> > +		opp00 {
-> 
-> Thought we are doing frequency for unit address here.
+--=-=-=
+Content-Type: text/plain
 
-That's done by the (Already reviewed) 4th patch..
+> -			rc = opal_pci_reset(phb->opal_id,
+> -					    OPAL_RESET_PHB_ERROR,
+> -					    OPAL_ASSERT_RESET);
+> -			if (rc != OPAL_SUCCESS) {
+> -				pr_warn("%s: Failure %lld clearing "
+> -					"error injection registers\n",
+> -					__func__, rc);
 
--- 
-viresh
+This is very minor, but is there a good reason to change the error
+message from the one above to the one below? I just hesitate to change
+error messages that people might be grepping the source for without a
+good reason.
+
+> +		if (rc != OPAL_SUCCESS) {
+> +			pr_warn("%s: Error %lld clearing error injection\n",
+> +				__func__, rc);
+
+Apart from that this looks good, pending me actually testing it :)
+
+Regards,
+Daniel
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: GPGTools - https://gpgtools.org
+
+iQIcBAEBCgAGBQJWRB9xAAoJEPC3R3P2I92F6i8P/1nXJklQO2PGRqksurbhrbzf
+hgXkRkqK4MgbbsIdw4HCRkbdWF+2pqKl1qWT6CIoyxNe+uZ+RLiq60Z8+2zok650
+c5usDrSVMJZ1y8xwQrKe//W8C3sMIfWELvxpOpBKEu50thHXTKHpARzUA576PYYW
+epxrt5fwrNckW+Emcyu83c+tEiz3C+goQGM84xBjxIUr7O0wbghinEZ53Otl8BAf
+YfU21Z6a1V+qxNb/qaVn9AYp5QR5IBPC0dBqIngWZsPMH8sivb0mgQInaVtkwjET
+n04tc2uUcyQsHRmvyKvkOp1lIRzJ7Ho5pZzotLyO+Z8LlUuok1WAVRCKjBsuEav3
+Alfv/JKc5kewmo+1+I2P/ofAQQgBHykdrNIYEg3IWJrmHh4GjPDI3csxlILthR6F
+WQJiYDZy4DmnPFi9wg5aH8WjWlCw1B9scobAAcf06gafJ6O9tUjt/iYjHUvCjKqn
+UDhp4VtBJ2cfAuxXgBNcBzGmQCbRtzCfyRAjrZSKQqAKNE4OTlCuzwSUb9pxZ/+4
+C7lFWxLHGm0Eu5rsSh7rFCROt7s7Bg1lZD6cRWNGhGfU9I5vsAtG/i4dAcnNaDZr
+zFemBfb6Fghf7gNZm0GrUrXoYdWJFmAexNFiimwQGhQQN/BVgEFgOtHJhQ/Pj6NO
+18XJnCap7rqlbJZcmG+v
+=AiNj
+-----END PGP SIGNATURE-----
+--=-=-=--
