@@ -1,36 +1,32 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: grab a reference to the MTD of_node before
- registering it
-Date: Thu, 12 Nov 2015 10:12:23 -0800
-Message-ID: <20151112181223.GA126029@google.com>
-References: <1447287964-63309-1-git-send-email-computersforpeace@gmail.com>
- <20151112095120.5ae32efd@bbrezillon>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v4 00/10] Better compatible for the rockchip thermal and
+ support RK3368 SoCs
+Date: Thu, 12 Nov 2015 10:29:52 -0800
+Message-ID: <20151112182950.GB4361@localhost.localdomain>
+References: <1447044542-30859-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151112095120.5ae32efd@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1447044542-30859-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, lkp@intel.com, devicetree@vger.kernel.org, Jiri Kosina <trivial@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pm@vger.kernel.org, Olof Johansson <olof@lixom.net>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 09:51:20AM +0100, Boris Brezillon wrote:
-> On Wed, 11 Nov 2015 16:26:04 -0800
-> Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Mon, Nov 09, 2015 at 12:48:52PM +0800, Caesar Wang wrote:
+> Thank you all for providing inputs and comments on previous versions of
+> this patchset.
+> Especially thanks to the (Eduardo, Dmitry, Heiko,....).
 > 
-> > We now stick the device node representing the current MTD (if any) into
-> > sysfs, so let's make sure we have a reference to it before doing that.
-> > 
-> > Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Looks good to me,
-> 
-> Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> This series patchs are working for RK3368 on Rockchip platform.
 
-Pushed to l2-mtd.git/next
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you have any results on existing support? Is the driver still in one
+piece for rk3288?
+
+I am planing to send your series in next rc cycles. It won't appear in
+linux-next until merge window finishes.
+
+BR,
+
+Eduardo Valentin
