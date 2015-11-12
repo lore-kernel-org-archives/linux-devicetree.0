@@ -1,31 +1,62 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v3 0/3] Add support for kosagi novena
-Date: Thu, 12 Nov 2015 01:07:38 +0100
-Message-ID: <201511120107.38409.marex@denx.de>
-References: <1423650182-16865-1-git-send-email-xobs@kosagi.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1423650182-16865-1-git-send-email-xobs@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] mtd: grab a reference to the MTD of_node before registering it
+Date: Wed, 11 Nov 2015 16:26:04 -0800
+Message-ID: <1447287964-63309-1-git-send-email-computersforpeace@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, February 11, 2015 at 11:22:59 AM, Sean Cross wrote:
-> The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express
-> slot. This patchset adds device tree support for the Novena mainboard.
+We now stick the device node representing the current MTD (if any) into
+sysfs, so let's make sure we have a reference to it before doing that.
 
-Hi,
+Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/mtdcore.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-is there any reason why this series never got applied ?
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index a91cee90aef9..c393a1155376 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -32,6 +32,7 @@
+ #include <linux/err.h>
+ #include <linux/ioctl.h>
+ #include <linux/init.h>
++#include <linux/of.h>
+ #include <linux/proc_fs.h>
+ #include <linux/idr.h>
+ #include <linux/backing-dev.h>
+@@ -454,6 +455,7 @@ int add_mtd_device(struct mtd_info *mtd)
+ 	mtd->dev.devt = MTD_DEVT(i);
+ 	dev_set_name(&mtd->dev, "mtd%d", i);
+ 	dev_set_drvdata(&mtd->dev, mtd);
++	of_node_get(mtd_get_of_node(mtd));
+ 	error = device_register(&mtd->dev);
+ 	if (error)
+ 		goto fail_added;
+@@ -476,6 +478,7 @@ int add_mtd_device(struct mtd_info *mtd)
+ 	return 0;
+ 
+ fail_added:
++	of_node_put(mtd_get_of_node(mtd));
+ 	idr_remove(&mtd_idr, i);
+ fail_locked:
+ 	mutex_unlock(&mtd_table_mutex);
+@@ -517,6 +520,7 @@ int del_mtd_device(struct mtd_info *mtd)
+ 		device_unregister(&mtd->dev);
+ 
+ 		idr_remove(&mtd_idr, mtd->index);
++		of_node_put(mtd_get_of_node(mtd));
+ 
+ 		module_put(THIS_MODULE);
+ 		ret = 0;
+-- 
+2.6.0.rc2.230.g3dd15c0
 
-I'm planning to rebase and repost this series, but I'd like to know if there
-is some feedback which I should address first.
-
-Thanks!
-
-Best regards,
-Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
