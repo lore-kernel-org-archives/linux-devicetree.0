@@ -1,57 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
-Date: Thu, 12 Nov 2015 17:28:05 -0600
-Message-ID: <20151112232805.GA5562@rob-hp-laptop>
-References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+Subject: Re: [PATCH v9 15/17] drm: bridge: analogix/dp: try force hpd after
+ plug in lookup failed
+Date: Thu, 12 Nov 2015 17:38:07 -0600
+Message-ID: <20151112233807.GA9899@rob-hp-laptop>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+ <1446167355-6387-1-git-send-email-ykk@rock-chips.com>
+ <20151111231042.GA29893@rob-hp-laptop>
+ <5643EAF9.9020508@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <5643EAF9.9020508@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
-> In general Renesas hardware is not documented to the extent where the
-> relationship between IP blocks on different SoCs can be assumed although
-> they may appear to operate the same way. Furthermore the documentation
-> typically does not specify a version for individual IP blocks. For these
-> reasons a convention of using the SoC name in place of a version and
-> providing SoC-specific compat strings has been adopted.
-
-Everyone learns this the hard way. :)
-
-> Although not universally liked this convention is used in the bindings for
-> most drivers for Renesas hardware. The purpose of this patch is to
-> update the Renesas R-Car DMA Controller driver to follow this convention.
+On Thu, Nov 12, 2015 at 09:27:21AM +0800, Yakir Yang wrote:
+> Hi Rob,
 > 
-> Cc: devicetree@vger.kernel.org
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> On 11/12/2015 07:10 AM, Rob Herring wrote:
+> >On Fri, Oct 30, 2015 at 09:09:15AM +0800, Yakir Yang wrote:
+> >>Some edp screen do not have hpd signal, so we can't just return
+> >>failed when hpd plug in detect failed.
+> >>
+> >>This is an hardware property, so we need add a devicetree property
+> >>"analogix,need-force-hpd" to indicate this sutiation.
+> >>
+> >>Tested-by: Heiko Stuebner <heiko@sntech.de>
+> >>Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> >>Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> >>---
+> >I didn't find this one in v10. Did it get dropped?
 > 
-> Once this has been merged I intend to provide follow-up patches
-> to use these new compat strings in the relevant dtsi files.
+> You are in my 'to' list, but I haven't send the whole v10 out,
+> most of them don't need update :)
+
+Okay, it's just gmail's inability to follow threading...
+ 
+> This series should be:
+> ---- [v8 0/17 ...]
+>   |---- [v8 1/17 ...]
+>   |---- [v8 2/17 ...]
+>   |---- [v8 3/17 ...]
+>   |---- [...]
+>   |---- [v8 15/17 ...]
+>   |---- [v8 16/17 ...]
+>   |---- [v8 17/17 ...]
+>   |
+>   |---- [v9 10/17 ...]
+>   |---- [v9 15/17 ...]
+>      |---- We are here
+>   |---- [v9 09/17 ...]
+>   |---- [v10 09/17 ...]
+>      |---- Received an acked from you
+
+
+> >>diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+> >>index 7659a7a..74f0e80 100644
+> >>--- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+> >>+++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+> >>@@ -22,6 +22,9 @@ Required properties for dp-controller:
+> >>  		from general PHY binding: Should be "dp".
+> >>  Optional properties for dp-controller:
+> >>+	-analogix,need-force-hpd:
+> >>+		Indicate driver need force hpd when hpd detect failed, this
+> >>+		is used for some eDP screen which don't have hpd signal.
+> >This should be a generic property.
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> index 09daeef1ff22..5b902ac8d97e 100644
-> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> @@ -14,7 +14,14 @@ not described in these device tree bindings.
->  
->  Required Properties:
->  
-> -- compatible: must contain "renesas,rcar-dmac"
-> +- compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
+> This property would only need in some no-hpd case, it would be dropped if
+> panel keep the hotplug signal, that's why I thought it should be optional.
 
-Somehow Renesas has ended up being backwards from everyone else that 
-does <vendor>,<chip>-<block>. Oh well...
+I agree it is optional. I just mean drop the analogix and put in a 
+common binding doc (i.e. create a display/bridge/common.txt). Needing to 
+ignore HPD is probably a common problem.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> I thought if we put this a property to generic property, then we must need
+> to define it in normal device node, not sure whether it is right :)
+
+Sorry, I don't follow.
 
 Rob
