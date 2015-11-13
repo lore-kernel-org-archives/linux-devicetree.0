@@ -1,112 +1,69 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [v4 00/10] add support SATA for BMIPS_GENERIC
-Date: Fri, 13 Nov 2015 12:27:26 -0800
-Message-ID: <564647AE.7070805@gmail.com>
-References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jaedon Shin <jaedon.shin@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2 0/8] drivers: touchscreen: tsc2007 and ads7846/tsc2046 improvements (use common touchscreen bindings, pre-calibration, spi fix and provide iio raw values)
+Date: Fri, 13 Nov 2015 21:35:51 +0100
+Message-ID: <cover.1447446957.git.hns@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gta04-owner@goldelico.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/10/15 07:01, Jaedon Shin wrote:
-> Hi all,
-> 
-> This patch series add support SATA for BMIPS_GENERIC.
+Changes V2:
+* add a patch to make drivers still recognise the old "ti,swap-xy" property (suggested by Rob Herring)
 
-Sorry for the lag.
+2015-11-06 16:14:53: This patch series improves the drivers for the tsc2007 and
+ads7846/tsc2046 touchscreen controllers which are e.g. used by the GTA04
+OpenPandora and Pyra devices.
 
-Tested on 7425b2, there is a small mistake in the interrupt number for
-the AHCI controller in the 7425.dtsi file (40 -> 41, see below), after
-fixing that, I get both drives (external and internal ports) to be
-identified successfully:
+New common bindings have been defined by commit b98abe52fa8e:
 
-# dmesg | grep scsi
-<6>[    0.964097] scsi host0: brcm-ahci
-<6>[    0.967982] scsi host1: brcm-ahci
-<5>[    1.122386] scsi 0:0:0:0: Direct-Access     ATA      WDC
-WD2500AAKX-7 1H19 PQ: 0 ANSI: 5
-<5>[    1.124512] sd 0:0:0:0: Attached scsi generic sg0 type 0
-<5>[    1.411546] scsi 1:0:0:0: Direct-Access     ATA      WDC
-WD2500AAKX-7 1H19 PQ: 0 ANSI: 5
-<5>[    1.428870] sd 1:0:0:0: Attached scsi generic sg1 type 0
-#
+	Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
 
-And performance looks good:
+which also defines a helper function to parse the DT. These new parameters
+allow to specify the fuzz factors (jitter suppression), inversion of x or y axis and
+swapping of x and y to achieve inversion and rotation so that the touch
+coordinate axes match the natural orientation of the display panel.
 
-# hdparm -tT /dev/sda
+Another improvement is to better use the min/max ADC values and
+scale to the screen size as defined by the DT. This allows to coarsely
+calibrate the touch to match the LCD to which it is glued on so that the
+touch can quite precisely be operated before any user-space fine-calibration
+can be (and needs to be) started.
 
-/dev/sda:
-[   48.557068] random: nonblocking pool is initialized
-Timing buffer-cache reads:   524 MB in 0.50 seconds = 1052111 kB/s
-Timing buffered disk reads:  358 MB in 3.00 seconds = 122132 kB/s
-# hdparm -tT /dev/sdb
+For the adc7846 we fix an issue with the spi module table.
 
-/dev/sdb:
-Timing buffer-cache reads:   528 MB in 0.50 seconds = 1060559 kB/s
-Timing buffered disk reads:  374 MB in 3.00 seconds = 127496 kB/s
+Finally we add an iio interface for the AUX and temperature ADC channels of
+the tsc2007 and also provide the touch screen raw values. This allows to read
+an optional ambient light sensor installed on the gta04 board and improves
+calibration and hardware monitoring.
 
 
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+H. Nikolaus Schaller (8):
+  drivers:input:tsc2007: add new common binding names, pre-calibration,
+    flipping and rotation
+  drivers:input:tsc2007: send pendown and penup only once like
+    ads7846(+tsc2046) driver does
+  drivers:input:tsc2007: add iio interface to read external ADC input,
+    temperature and raw conversion values
+  DT:omap3+tsc2007: use new common touchscreen bindings
+  drivers:input:ads7846(+tsc2046): add new common binding names,
+    pre-calibration and flipping
+  drivers:input:ads7846(+tsc2046): recognise old binding for coordinate
+    flipping
+  drivers:input:ads7846(+tsc2046): fix spi module table
+  DT:omap3+ads7846: use new common touchscreen bindings
 
-For interrupt numbers, computing them from the HIF_CPU_INTR1 register
-works like this this:
-
-HW IRQ# = N * 32 + M
-
-where N ranges from 0->2 and M is the bit within the 32-bits word.
-
-Thanks!
-
-> 
-> Changes in v4:
-> - remove unused properties from bcm{7425,7342,7362}.dtsi
-> 
-> Changes in v3:
-> - fix typo quirk instead of quick
-> - disable NCQ before initialzing SATA controller endianness
-> - fix misnomer controlling phy interface
-> - remove brcm,broken-ncq and brcm,broken-phy properties from devicetree
-> - use compatible string for quirks
-> - use list for compatible strings
-> - add "Acked-by:" tags
-> 
-> Changes in v2:
-> - adds quirk for ncq
-> - adds quirk for phy interface control
-> - remove unused definitions in ahci_brcmstb
-> - combines compatible string
-> 
-> Jaedon Shin (10):
->   ata: ahci_brcmstb: add support MIPS-based platforms
->   ata: ahci_brcmstb: add quirk for broken ncq
->   ata: ahci_brcmstb: add quirk for different phy
->   ata: ahci_brcmstb: remove unused definitions
->   phy: phy_brcmstb_sata: remove duplicate definitions
->   phy: phy_brcmstb_sata: add data for phy version
->   phy: phy_brcmstb_sata: add support MIPS-based platforms
->   MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7425
->   MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7346
->   MIPS: BMIPS: brcmstb: add SATA/PHY nodes for bcm7362
-> 
->  .../devicetree/bindings/ata/brcm,sata-brcmstb.txt  |  4 +-
->  .../bindings/phy/brcm,brcmstb-sata-phy.txt         |  1 +
->  arch/mips/boot/dts/brcm/bcm7346.dtsi               | 40 +++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7362.dtsi               | 40 +++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7425.dtsi               | 40 +++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts          |  8 +++
->  arch/mips/boot/dts/brcm/bcm97362svmb.dts           |  8 +++
->  drivers/ata/Kconfig                                |  2 +-
->  drivers/ata/ahci_brcmstb.c                         | 58 +++++++++++++++++++++-
->  drivers/phy/Kconfig                                |  4 +-
->  drivers/phy/phy-brcmstb-sata.c                     | 47 ++++++++++++++----
->  11 files changed, 236 insertions(+), 16 deletions(-)
-> 
-
+ .../devicetree/bindings/input/ads7846.txt          |   8 +-
+ .../bindings/input/touchscreen/tsc2007.txt         |  20 +-
+ arch/arm/boot/dts/omap3-gta04.dtsi                 |  18 +-
+ arch/arm/boot/dts/omap3-lilly-a83x.dtsi            |   2 +-
+ arch/arm/boot/dts/omap3-pandora-common.dtsi        |  17 +-
+ .../boot/dts/omap3-panel-sharp-ls037v7dw01.dtsi    |   2 +-
+ drivers/input/touchscreen/Kconfig                  |   1 +
+ drivers/input/touchscreen/ads7846.c                |  85 +++++-
+ drivers/input/touchscreen/tsc2007.c                | 286 +++++++++++++++++++--
+ include/linux/i2c/tsc2007.h                        |   8 +
+ 10 files changed, 401 insertions(+), 46 deletions(-)
 
 -- 
-Florian
+2.5.1
