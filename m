@@ -1,54 +1,57 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCHv5 1/3] of: Add vendor prefix for Analogix Semiconductor,
- Inc.
-Date: Fri, 13 Nov 2015 16:12:30 +0100
-Message-ID: <CAFqH_51ttX-vS51LS-dXYvkj_irND93kSzgwsDHjgO5EdCdGaQ@mail.gmail.com>
-References: <1447416064-24989-1-git-send-email-enric.balletbo@collabora.com>
- <1447416064-24989-2-git-send-email-enric.balletbo@collabora.com>
- <20151113143835.GA17008@rob-hp-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 1/4] Documentation: dt-bindings: Describe SROMc configuration
+Date: Fri, 13 Nov 2015 10:02:52 -0600
+Message-ID: <CAL_JsqLfzGjNwH=kqwcZXvPRSc_m1NgxhFcenu6L1Efva+k9Fw@mail.gmail.com>
+References: <cover.1447333689.git.p.fedin@samsung.com> <e9e18ab5aa7a147aaa63d1900ad52174413e86d9.1447333689.git.p.fedin@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151113143835.GA17008@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, drinkcat@chromium.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, jb.tsai@mediatek.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cjiao@analogixsemi.com, linux-kernel@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, cawa.cheng@mediatek.com, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Nathan Chung <nathan.chung@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, eddie.huang@mediatek.com, Javier Martinez Canillas <javier@dowhile0.org>, dan.carpenter@oracle.com, span@analogixsemi.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e9e18ab5aa7a147aaa63d1900ad52174413e86d9.1447333689.git.p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKMjAxNS0xMS0xMyAxNTozOCBHTVQrMDE6MDAgUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz46Cj4gT24gRnJpLCBOb3YgMTMsIDIwMTUgYXQgMDE6MDE6MDJQTSArMDEwMCwgRW5y
-aWMgQmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToKPj4gQW5hbG9naXggU2VtaWNvbmR1Y3RvciBkZXZl
-bG9wcyBhbmFsb2cgYW5kIG1peGVkLXNpZ25hbCBkZXZpY2VzIGZvciBkaWdpdGFsCj4+IG1lZGlh
-IGFuZCBjb21tdW5pY2F0aW9ucyBpbnRlcmNvbm5lY3QgYXBwbGljYXRpb25zLgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBFbnJpYyBCYWxsZXRibyBpIFNlcnJhIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJv
-cmEuY29tPgo+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4gLS0t
-Cj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4
-dCB8IDEgKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4+Cj4+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0
-Cj4+IGluZGV4IDgyZDJhYzkuLjg5ODdlZTggMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0Cj4+IEBAIC0yMiw2
-ICsyMiw3IEBAIGFtcGlyZSAgICAgIEFtcGlyZSBDby4sIEx0ZC4KPj4gIGFtcyAgQU1TIEFHCj4+
-ICBhbXN0YW9zICAgICAgQU1TLVRhb3MgSW5jLgo+PiAgYXBtICBBcHBsaWVkIE1pY3JvIENpcmN1
-aXRzIENvcnBvcmF0aW9uIChBUE0pCj4+ICthbmFsb2dpeCAgICAgQW5hbG9naXggU2VtaWNvbmR1
-Y3RvciwgSW5jLgo+Cj4gTm90IHF1aXRlIGFscGhhYmV0aWNhbCBvcmRlci4KPgoKWWVwLCBzb3Jy
-eSwgSSB0aGluayBJIGludHJvZHVjZWQgdGhpcyBtaXN0YWtlIHJlYmFzaW5nIG15IHBhdGNoZXMg
-IC4uLgpJIHdpbGwgZml4IGluIG5leHQgdmVyc2lvbiwgdGhhbmtzLgoKPj4gIGFwdGluYSAgICAg
-ICBBcHRpbmEgSW1hZ2luZwo+PiAgYXJhc2FuICAgICAgIEFyYXNhbiBDaGlwIFN5c3RlbXMKPj4g
-IGFybSAgQVJNIEx0ZC4KPj4gLS0KPj4gMi4xLjAKPj4KPj4gX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KPj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+PiBk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+IGh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Nov 12, 2015 at 7:12 AM, Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Add documentation for new subnode properties, allowing bank configuration.
+> Based on u-boot implementation, but heavily reworked.
+>
+> Also, fix size of SROMc mapping in the example.
+>
+> Signed-off-by: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+One nit below.
+
+>                 compatible = "samsung,exynos-srom";
+> -               reg = <0x12570000 0x10>;
+> +               reg = <0x12570000 0x14>;
+> +
+> +               ethernet@3 {
+
+This should actually be "ethernet@3,0"
+
+Fields (not cells) in the unit address should be separated by commas.
+
+> +                       compatible = "smsc,lan9115";
+> +                       reg = <3 0 0x10000>;       // Bank 3, offset = 0
+> +                       phy-mode = "mii";
+> +                       interrupt-parent = <&gpx0>;
+> +                       interrupts = <5 8>;
+> +                       reg-io-width = <2>;
+> +                       smsc,irq-push-pull;
+> +                       smsc,force-internal-phy;
+> +
+> +                       samsung,srom-page-mode = <1>;
+> +                       samsung,srom-timing = <9 12 1 9 1 1>;
+> +               };
+>         };
+> --
+> 2.4.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
