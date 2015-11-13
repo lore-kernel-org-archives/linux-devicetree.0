@@ -1,254 +1,278 @@
-From: Zain <zain.wang@rock-chips.com>
-Subject: Re: [PATCH v3 3/4] Crypto: rockchip/crypto - add crypto driver for
- rk3288
-Date: Mon, 16 Nov 2015 09:49:54 +0800
-Message-ID: <56493642.9010400@rock-chips.com>
-References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
- <2127222.Jhf4CFAOsX@phil> <564586DB.1020401@rock-chips.com>
- <18560338.ihuYOPNcR6@phil>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v9 15/17] drm: bridge: analogix/dp: try force hpd after
+ plug in lookup failed
+Date: Fri, 13 Nov 2015 15:31:19 +0800
+Message-ID: <564591C7.3090704@rock-chips.com>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+ <1446167355-6387-1-git-send-email-ykk@rock-chips.com>
+ <20151111231042.GA29893@rob-hp-laptop> <5643EAF9.9020508@rock-chips.com>
+ <20151112233807.GA9899@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <18560338.ihuYOPNcR6@phil>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
+Content-Type: multipart/mixed; boundary="===============0380717367=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151112233807.GA9899@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Kukjin Kim <kgene@kernel.org>, robherring2@gmail.com, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, dianders@chromium.org, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--===============0380717367==
+Content-Type: multipart/alternative;
+ boundary="------------080409030505040202090008"
+
+This is a multi-part message in MIME format.
+--------------080409030505040202090008
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-On 2015=E5=B9=B411=E6=9C=8815=E6=97=A5 06:41, Heiko Stuebner wrote:
-> Hi Zain,
->
-> Am Freitag, 13. November 2015, 14:44:43 schrieb Zain:
->> On 2015=E5=B9=B411=E6=9C=8812=E6=97=A5 20:32, Heiko Stuebner wrote:
->>> Hi Zain,
->>>
->>> I was able to sucessfully test your crypto-driver, but have found s=
-ome
->>> improvements below that should probably get looked at:
->>>
->>> Am Mittwoch, 11. November 2015, 14:35:58 schrieb Zain Wang:
->>>> Crypto driver support:
->>>>      ecb(aes) cbc(aes) ecb(des) cbc(des) ecb(des3_ede) cbc(des3_ed=
-e)
->>>> You can alloc tags above in your case.
+On 11/13/2015 07:38 AM, Rob Herring wrote:
+> On Thu, Nov 12, 2015 at 09:27:21AM +0800, Yakir Yang wrote:
+>> Hi Rob,
+>>
+>> On 11/12/2015 07:10 AM, Rob Herring wrote:
+>>> On Fri, Oct 30, 2015 at 09:09:15AM +0800, Yakir Yang wrote:
+>>>> Some edp screen do not have hpd signal, so we can't just return
+>>>> failed when hpd plug in detect failed.
 >>>>
->>>> And other algorithms and platforms will be added later on.
+>>>> This is an hardware property, so we need add a devicetree property
+>>>> "analogix,need-force-hpd" to indicate this sutiation.
 >>>>
->>>> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+>>>> Tested-by: Heiko Stuebner <heiko@sntech.de>
+>>>> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 >>>> ---
->>> [...]
->>>
->>>> diff --git a/drivers/crypto/rockchip/rk3288_crypto.c b/drivers/cry=
-pto/rockchip/rk3288_crypto.c
->>>> new file mode 100644
->>>> index 0000000..bb36baa
->>>> --- /dev/null
->>>> +++ b/drivers/crypto/rockchip/rk3288_crypto.c
->>>> @@ -0,0 +1,392 @@
-> [...]
+>>> I didn't find this one in v10. Did it get dropped?
+>> You are in my 'to' list, but I haven't send the whole v10 out,
+>> most of them don't need update :)
+> Okay, it's just gmail's inability to follow threading...
+>   
+>> This series should be:
+>> ---- [v8 0/17 ...]
+>>    |---- [v8 1/17 ...]
+>>    |---- [v8 2/17 ...]
+>>    |---- [v8 3/17 ...]
+>>    |---- [...]
+>>    |---- [v8 15/17 ...]
+>>    |---- [v8 16/17 ...]
+>>    |---- [v8 17/17 ...]
+>>    |
+>>    |---- [v9 10/17 ...]
+>>    |---- [v9 15/17 ...]
+>>       |---- We are here
+>>    |---- [v9 09/17 ...]
+>>    |---- [v10 09/17 ...]
+>>       |---- Received an acked from you
 >
-> static void rk_crypto_action(void *data)
-> {
-> 	struct rk_crypto_info *crypto_info =3D data;
->
-> 	reset_control_assert(crypto_info->rst);
-> }
->
->>>> +static int rk_crypto_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct resource *res;
->>>> +	struct device *dev =3D &pdev->dev;
->>>> +	struct rk_crypto_info *crypto_info;
->>>> +	int err =3D 0;
->>>> +
->>>> +	crypto_info =3D devm_kzalloc(&pdev->dev,
->>>> +				   sizeof(*crypto_info), GFP_KERNEL);
->>>> +	if (!crypto_info) {
->>>> +		err =3D -ENOMEM;
->>>> +		goto err_crypto;
->>>> +	}
->>>> +
->>>> +	crypto_info->rst =3D devm_reset_control_get(dev, "crypto-rst");
->>>> +	if (IS_ERR(crypto_info->rst)) {
->>>> +		err =3D PTR_ERR(crypto_info->rst);
->>>> +		goto err_crypto;
->>>> +	}
->>>> +
->>>> +	reset_control_assert(crypto_info->rst);
->>>> +	usleep_range(10, 20);
->>>> +	reset_control_deassert(crypto_info->rst);
-> 	err =3D devm_add_action(dev, rk_crypto_action, crypto_info);
-> 	if (err) {
-> 		reset_control_assert(crypto_info->rst);
-> 		return err;
-> 	}
->
-> from here onwards the devm_action will always be executed when either
-> _probe fails, or after remove finishes, so no need to assert the rese=
-t
-> manually.
-I have known this function,
-rk_crypto_action will be executed next to either failed _probe, or
-_remove automatically.
-It also make sure reset_control_assert can be executed after tasklet_ki=
-ll.
+>>>> diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+>>>> index 7659a7a..74f0e80 100644
+>>>> --- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+>>>> +++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+>>>> @@ -22,6 +22,9 @@ Required properties for dp-controller:
+>>>>   		from general PHY binding: Should be "dp".
+>>>>   Optional properties for dp-controller:
+>>>> +	-analogix,need-force-hpd:
+>>>> +		Indicate driver need force hpd when hpd detect failed, this
+>>>> +		is used for some eDP screen which don't have hpd signal.
+>>> This should be a generic property.
+>> This property would only need in some no-hpd case, it would be dropped if
+>> panel keep the hotplug signal, that's why I thought it should be optional.
+> I agree it is optional. I just mean drop the analogix and put in a
+> common binding doc (i.e. create a display/bridge/common.txt). Needing to
+> ignore HPD is probably a common problem.
 
-OK! Done!
->
->>>> +
->>>> +	spin_lock_init(&crypto_info->lock);
->>>> +
->>>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +	crypto_info->reg =3D devm_ioremap_resource(&pdev->dev, res);
->>>> +	if (IS_ERR(crypto_info->reg)) {
->>>> +		err =3D PTR_ERR(crypto_info->reg);
->>>> +		goto err_ioremap;
->>>> +	}
->>>> +
->>>> +	crypto_info->aclk =3D devm_clk_get(&pdev->dev, "aclk");
->>>> +	if (IS_ERR(crypto_info->aclk)) {
->>>> +		err =3D PTR_ERR(crypto_info->aclk);
->>>> +		goto err_ioremap;
->>>> +	}
->>>> +
->>>> +	crypto_info->hclk =3D devm_clk_get(&pdev->dev, "hclk");
->>>> +	if (IS_ERR(crypto_info->hclk)) {
->>>> +		err =3D PTR_ERR(crypto_info->hclk);
->>>> +		goto err_ioremap;
->>>> +	}
->>>> +
->>>> +	crypto_info->sclk =3D devm_clk_get(&pdev->dev, "sclk");
->>>> +	if (IS_ERR(crypto_info->sclk)) {
->>>> +		err =3D PTR_ERR(crypto_info->sclk);
->>>> +		goto err_ioremap;
->>>> +	}
->>>> +
->>>> +	crypto_info->dmaclk =3D devm_clk_get(&pdev->dev, "apb_pclk");
->>>> +	if (IS_ERR(crypto_info->dmaclk)) {
->>>> +		err =3D PTR_ERR(crypto_info->dmaclk);
->>>> +		goto err_ioremap;
->>>> +	}
->>>> +
->>>> +	crypto_info->irq =3D platform_get_irq(pdev, 0);
->>>> +	if (crypto_info->irq < 0) {
->>>> +		dev_warn(crypto_info->dev,
->>>> +			 "control Interrupt is not available.\n");
->>>> +		err =3D crypto_info->irq;
->>>> +		goto err_ioremap;
->>>> +	}
->>>> +
->>>> +	err =3D devm_request_irq(&pdev->dev, crypto_info->irq, crypto_ir=
-q_handle,
->>>> +			       IRQF_SHARED, "rk-crypto", pdev);
->>> you are freeing the irq manually below and in _remove too. As it st=
-ands
->>> with putting the ip block in reset again on remove this should eith=
-er loose
->>> the devm_ or you could add a devm_action that handles the reset ass=
-ert
->>> like in [0] - registering the devm_action above where the reset is =
-done.
->>> That way you could really use dev_request_irq and loose the free_ir=
-q
->>> calls here and in remove.
->>>
->>> [0] https://lkml.org/lkml/2015/11/8/159
->> I made a mistake here. I did not remove free_irq when using
->> devm_request_irq.
->>
->> As I do not konw enough about devm_action and reset-assert , can I
->> remove free_irq
->> simply like drivers/i2c/buses/i2c-sun6i-p2wi.c used devm_request_irq=
- and
->> reset_assert?
-> I did insert suitable code on how that could look a bit above :-)
-Thanks, done!
->
->>> [...]
->>>
->>>> +static int rk_crypto_remove(struct platform_device *pdev)
->>>> +{
->>>> +	struct rk_crypto_info *crypto_tmp =3D platform_get_drvdata(pdev)=
-;
->>>> +
->>>> +	rk_crypto_unregister();
->>>> +	reset_control_assert(crypto_tmp->rst);
->>> mainly my comment from above applies, but in any case the reset-ass=
-ert
->>> should definitly happen _after_ the tasklet is killed and the irq f=
-reed,
->>> to make sure nothing will want to access device-registers anymore.
->>>
->>> [devm works sequentially, so the devm_action would solve that autom=
-atically]
->> As I said above, it seem unnecessary to add devm_action.
->>
->> And if modification above is good, I will push tasklet_kill before
->> reset_control_assert in next version.
-> I'm unsure ... but I guess if you move the reset-assert after the
-> tasklet_kill it might be ok.
-I guess I can remove it if I added code you provided above since
-reset-assert will be
-executed after _remove by rk_crypto_action.
->
->>>> +	tasklet_kill(&crypto_tmp->crypto_tasklet);
->>>> +	free_irq(crypto_tmp->irq, crypto_tmp);
->>>> +
->>>> +	return 0;
->>>> +}
->>> [...]
->>>
->>>> diff --git a/drivers/crypto/rockchip/rk3288_crypto.h b/drivers/cry=
-pto/rockchip/rk3288_crypto.h
->>>> new file mode 100644
->>>> index 0000000..b5b949a
->>>> --- /dev/null
->>>> +++ b/drivers/crypto/rockchip/rk3288_crypto.h
->>>> @@ -0,0 +1,220 @@
->>>> +#define _SBF(v, f)			((v) << (f))
->>> you are using that macro in this header for simple value shifts lik=
-e
->>> 	#define RK_CYYPTO_HASHINSEL_BLOCK_CIPHER_INPUT		_SBF(0x01, 0)
->>>
->>> Removing that macro and doing the shift regularly without any macro=
-, like
->>> 	#define RK_CYYPTO_HASHINSEL_BLOCK_CIPHER_INPUT		(0x01 << 0)
->>>
->>>  would improve future readability, because now you need to look up =
-what
->>> the macro actually does and the _SBF macro also does not simplify a=
-nything.
->>> Also that name is quite generic so may conflict with something else=
- easily.
->> Ok! Done!
->>>  [...]
->>>
->>>> +#define CRYPTO_READ(dev, offset)		  \
->>>> +		readl_relaxed(((dev)->reg + (offset)))
->>>> +#define CRYPTO_WRITE(dev, offset, val)	  \
->>>> +		writel_relaxed((val), ((dev)->reg + (offset)))
->>>> +/* get register virt address */
->>>> +#define CRYPTO_GET_REG_VIRT(dev, offset)   ((dev)->reg + (offset)=
-)
->>> same argument as above about readability of the code. What do these
->>> macros improve from just doing the readl and writel calls normally?
->> I am sorry that this macro is define for hash and not be used here.
->> because there are some continuous registers in hash,
->> I think we can use this macro with memcpy like
->>         output =3D CRYPTO_GET_REG_VIRT(dev, RK_CRYPTO_HASH_DOUT_0);
->>         memcpy(dev->ahash_req->result, output,
->> crypto_ahash_digestsize(tfm));
->> instead of multiple readl.
->>
->> I will remove it in next version and add it to hash patch later on.
-> I actuall meant all 3 of those macros :-) ... all of them just diguis=
-e
-> what the code actually does, so don't provide additional value over
-> just using readl_relaxed etc directly.
-Right.
+Oops, okay, I misunderstand what you mean. I thought you want me to put the
+"analogix,need-force-hpd" to required property, not an optional property :)
 
-Thanks
-Zain
+I thought this should be a common property of connect, so the common 
+document
+in bridge is not very good, I should be in display/connector/, but I 
+don't know what
+else could I collect for that common document, would like to share more 
+on this point
+
+- Yakir
+
+>
+>> I thought if we put this a property to generic property, then we must need
+>> to define it in normal device node, not sure whether it is right :)
+> Sorry, I don't follow.
+>
+> Rob
+>
+>
+>
+
+
+--------------080409030505040202090008
+Content-Type: text/html; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <br>
+    <div class="moz-cite-prefix">On 11/13/2015 07:38 AM, Rob Herring
+      wrote:<br>
+    </div>
+    <blockquote cite="mid:20151112233807.GA9899@rob-hp-laptop"
+      type="cite">
+      <pre wrap="">On Thu, Nov 12, 2015 at 09:27:21AM +0800, Yakir Yang wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">Hi Rob,
+
+On 11/12/2015 07:10 AM, Rob Herring wrote:
+</pre>
+        <blockquote type="cite">
+          <pre wrap="">On Fri, Oct 30, 2015 at 09:09:15AM +0800, Yakir Yang wrote:
+</pre>
+          <blockquote type="cite">
+            <pre wrap="">Some edp screen do not have hpd signal, so we can't just return
+failed when hpd plug in detect failed.
+
+This is an hardware property, so we need add a devicetree property
+"analogix,need-force-hpd" to indicate this sutiation.
+
+Tested-by: Heiko Stuebner <a class="moz-txt-link-rfc2396E" href="mailto:heiko@sntech.de">&lt;heiko@sntech.de&gt;</a>
+Tested-by: Javier Martinez Canillas <a class="moz-txt-link-rfc2396E" href="mailto:javier@osg.samsung.com">&lt;javier@osg.samsung.com&gt;</a>
+Signed-off-by: Yakir Yang <a class="moz-txt-link-rfc2396E" href="mailto:ykk@rock-chips.com">&lt;ykk@rock-chips.com&gt;</a>
+---
+</pre>
+          </blockquote>
+          <pre wrap="">I didn't find this one in v10. Did it get dropped?
+</pre>
+        </blockquote>
+        <pre wrap="">
+You are in my 'to' list, but I haven't send the whole v10 out,
+most of them don't need update :)
+</pre>
+      </blockquote>
+      <pre wrap="">
+Okay, it's just gmail's inability to follow threading...
+ 
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">This series should be:
+---- [v8 0/17 ...]
+  |---- [v8 1/17 ...]
+  |---- [v8 2/17 ...]
+  |---- [v8 3/17 ...]
+  |---- [...]
+  |---- [v8 15/17 ...]
+  |---- [v8 16/17 ...]
+  |---- [v8 17/17 ...]
+  |
+  |---- [v9 10/17 ...]
+  |---- [v9 15/17 ...]
+     |---- We are here
+  |---- [v9 09/17 ...]
+  |---- [v10 09/17 ...]
+     |---- Received an acked from you
+</pre>
+      </blockquote>
+      <pre wrap="">
+
+</pre>
+      <blockquote type="cite">
+        <blockquote type="cite">
+          <blockquote type="cite">
+            <pre wrap="">diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+index 7659a7a..74f0e80 100644
+--- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
++++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+@@ -22,6 +22,9 @@ Required properties for dp-controller:
+ 		from general PHY binding: Should be "dp".
+ Optional properties for dp-controller:
++	-analogix,need-force-hpd:
++		Indicate driver need force hpd when hpd detect failed, this
++		is used for some eDP screen which don't have hpd signal.
+</pre>
+          </blockquote>
+          <pre wrap="">This should be a generic property.
+</pre>
+        </blockquote>
+        <pre wrap="">
+This property would only need in some no-hpd case, it would be dropped if
+panel keep the hotplug signal, that's why I thought it should be optional.
+</pre>
+      </blockquote>
+      <pre wrap="">
+I agree it is optional. I just mean drop the analogix and put in a 
+common binding doc (i.e. create a display/bridge/common.txt). Needing to 
+ignore HPD is probably a common problem.</pre>
+    </blockquote>
+    <br>
+    Oops, okay,
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <span style="color: rgb(51, 51, 51); font-family: arial; font-size:
+      18px; font-style: normal; font-variant: normal; font-weight:
+      normal; letter-spacing: normal; line-height: 20px; orphans: auto;
+      text-align: start; text-indent: 0px; text-transform: none;
+      white-space: normal; widows: 1; word-spacing: 0px;
+      -webkit-text-stroke-width: 0px; display: inline !important; float:
+      none; background-color: rgb(255, 255, 255);">I misunderstand what
+      you mean. I thought you want me to put the<br>
+      "analogix,need-force-hpd" to required property, not an optional
+      property :)<br>
+      <br>
+      I thought this should be a common property of connect, so the
+      common document<br>
+      in bridge is not very good, I should be in display/connector/, but
+      I don't know what<br>
+      else could I collect for that common document, would like to share
+      more on this point <br>
+      <br>
+      - Yakir<br>
+      <br>
+    </span>
+    <blockquote cite="mid:20151112233807.GA9899@rob-hp-laptop"
+      type="cite">
+      <pre wrap="">
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">I thought if we put this a property to generic property, then we must need
+to define it in normal device node, not sure whether it is right :)
+</pre>
+      </blockquote>
+      <pre wrap="">
+Sorry, I don't follow.
+
+Rob
+
+
+
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------080409030505040202090008--
+
+
+--===============0380717367==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0380717367==--
