@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 1/9] mfd: axp20x: Add AXP223 to list of
- supported PMICs in DT bindings
-Date: Fri, 13 Nov 2015 12:04:06 +0800
-Message-ID: <1447387456-9912-2-git-send-email-wens@csie.org>
+Subject: [PATCH v2 7/9] ARM: dts: sun8i: q8-common: Add AXP223
+ PMIC device and regulator nodes
+Date: Fri, 13 Nov 2015 12:04:12 +0800
+Message-ID: <1447387456-9912-8-git-send-email-wens@csie.org>
 References: <1447387456-9912-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBRWCSWZAKGQE5U3NHUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBR6CSWZAKGQEFC6333Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1447387456-9912-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,43 +20,131 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-It is functionally identical to AXP221; only the regulator default
-voltage/status and the external host interface are different.
+A23/A33 Q8 tablets have an X-Powers AXP223 PMIC connected via RSB. It's
+regulators provide power to various parts of the SoC and the board.
+
+Also add lcd regulator supply for simplefb and update the existing
+vmmc-supply for mmc0.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-q8-common.dtsi | 86 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 84 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index a474359dd206..fd39fa54571b 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -5,11 +5,12 @@ axp152 (X-Powers)
- axp202 (X-Powers)
- axp209 (X-Powers)
- axp221 (X-Powers)
-+axp223 (X-Powers)
+diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
+index 1a69231d2da5..01ab47b32d8d 100644
+--- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
++++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
+@@ -56,7 +56,6 @@
+ 		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+ 		default-brightness-level = <8>;
+ 		enable-gpios = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
+-		/* backlight is powered by AXP223 DC1SW */
+ 	};
  
- Required properties:
- - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
--	      "x-powers,axp221"
--- reg: The I2C slave address for the AXP chip
-+	      "x-powers,axp221", "x-powers,axp223"
-+- reg: The I2C slave address or RSB hardware address for the AXP chip
- - interrupt-parent: The parent interrupt controller
- - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
- - interrupt-controller: The PMIC has its own internal IRQs
-@@ -51,7 +52,7 @@ LDO3		: LDO		: ldo3in-supply
- LDO4		: LDO		: ldo24in-supply	: shared supply
- LDO5		: LDO		: ldo5in-supply
+ 	chosen {
+@@ -67,7 +66,7 @@
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+ 	cd-inverted;
+@@ -92,6 +91,85 @@
  
--AXP221 regulators, type, and corresponding input supply names:
-+AXP221/AXP223 regulators, type, and corresponding input supply names:
+ &r_rsb {
+ 	status = "okay";
++
++	axp22x: pmic@3e3 {
++		compatible = "x-powers,axp223";
++		reg = <0x3e3>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		eldoin-supply = <&reg_dcdc1>;
++	};
++};
++
++#include "axp22x.dtsi"
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-io";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <2350000>;
++	regulator-max-microvolt = <2650000>;
++	regulator-name = "vdd-dll";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2700000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_dc1sw {
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-lcd";
++};
++
++&reg_dc5ldo {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpus";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-3v0";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-sys";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram";
++};
++
++&reg_rtc_ldo {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-rtc";
+ };
  
- Regulator	  Type		  Supply Name		  Notes
- ---------	  ----		  -----------		  -----
+ &r_uart {
+@@ -99,3 +177,7 @@
+ 	pinctrl-0 = <&r_uart_pins_a>;
+ 	status = "okay";
+ };
++
++&simplefb_lcd {
++	vcc-lcd-supply = <&reg_dc1sw>;
++};
 -- 
 2.6.2
