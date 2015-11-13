@@ -1,39 +1,67 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [RFC PATCH v3 0/2] Expose DMA_MEMORY_EXCLUSIVE through
- shared-dma-pool
-Date: Fri, 13 Nov 2015 14:45:28 +0100
-Message-ID: <5645E978.9030603@samsung.com>
-References: <564218D1.2030008@baylibre.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v3 1/5] spi: introduce mmap read support for spi flash
+ devices
+Date: Fri, 13 Nov 2015 15:06:55 +0100
+Message-ID: <5645EE7F.5040101@topic.nl>
+References: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
+ <1447133399-25658-2-git-send-email-vigneshr@ti.com>
+ <20151110232341.GU12143@google.com> <5642E546.3040806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <564218D1.2030008@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5642E546.3040806@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "R, Vignesh" <vigneshr@ti.com>, Brian Norris <computersforpeace@gmail.com>
+Cc: devicetree@vger.kernel.org, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On 2015-11-10 17:18, Neil Armstrong wrote:
-> The shared-dma-pool dt node only exposes exclusive memory, but in order to export
-> non-exclusive coherent memory, add the no-exclusive property and document it.
->
-> v3: use correct of_get_flat_dt_prop helper
-> v2: simplify patch by looking for DT attribute in callback
->
-> Neil Armstrong (2):
->    base: dma-coherent: Add DT property for non exclusive shared-dma-pool
->    devicetree: reserved-memory: document the optional no-exclusive parameter
->
->   .../devicetree/bindings/reserved-memory/reserved-memory.txt         | 3 +++
->   drivers/base/dma-coherent.c                                         | 6 +++++-
->   2 files changed, 8 insertions(+), 1 deletion(-)
->
-
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+77u/T24gMTEtMTEtMTUgMDc6NTAsIFIsIFZpZ25lc2ggd3JvdGU6Cj4gSGkgQnJhaW4sCj4KPiBP
+biAxMS8xMS8yMDE1IDQ6NTMgQU0sIEJyaWFuIE5vcnJpcyB3cm90ZToKPj4gSGkgVmlnbmVzaCwK
+Li4uCgo+PiBBbHNvLCB0aGlzIEFQSSBkb2Vzbid0IGFjdHVhbGx5IGhhdmUgYW55dGhpbmcgdG8g
+ZG8gd2l0aCBtZW1vcnkgbWFwcGluZy4KPj4gSXQgaGFzIHRvIGRvIHdpdGggdGhlIGRlIGZhY3Rv
+IHN0YW5kYXJkIGZsYXNoIHByb3RvY29sLiBTbyBJIGRvbid0IHRoaW5rCj4+IG1tYXAgYmVsb25n
+cyBpbiB0aGUgbmFtZTsgaXQgc2hvdWxkIGJlIHNvbWV0aGluZyBhYm91dCBmbGFzaC4gKEkga25v
+dyBvZgo+PiBhdCBsZWFzdCBvbmUgb3RoZXIgY29udHJvbGxlciB0aGF0IGNvdWxkIHByb2JhYmx5
+IHVzZSB0aGlzIEFQSSwgZXhjcGV0Cj4+IGl0IGRvZXNuJ3QgdXNlIG1lbW9yeSBtYXBwaW5nIHRv
+IGFjY29tcGxpc2ggdGhlIGFjY2VsZXJhdGVkIGZsYXNoIHJlYWQuKQoKVGhlIFp5bnEgaGFzIGEg
+c2ltaWxhciB3YXkgb2YgYWNjZXNzaW5nIFFTUEkgZmxhc2ggdGhyb3VnaCBhIG1lbW9yeSBtYXAu
+IFRoZSAKbWVtb3J5IHdpbmRvdyBpcyBvbmx5IDE2TUIsIHNvIHNvbWUgZm9ybSBvZiBwYWdpbmcg
+d291bGQgYmUgbmVlZGVkLgoKSXQncyB3aHkgSSBoYXZlIGJlZW4gZm9sbG93aW5nIHRoaXMgdGhy
+ZWFkIHdpdGggZ3JlYXQgaW50ZXJlc3QsIHNpbmNlIHRoZSBRU1BJIApwZXJmb3JtYW5jZSBvbiB0
+aGUgWnlucSBpcyB3YXkgYmVsb3cgd2hhdCBpdCBjb3VsZCBwb3RlbnRpYWxseSBiZS4KCj4gQXMg
+ZmFyIGFzIFRJIFFTUEkgY29udHJvbGxlciBpcyBjb25jZXJuZWQsIHRoZSBhY2NlbGVyYXRlZCBy
+ZWFkIGhhcHBlbnMKPiB2aWEgbW1hcCBwb3J0IHdoZXJlYnkgYSBwcmVkZWZpbmVkIG1lbW9yeSBh
+ZGRyZXNzIHNwYWNlIG9mIFNvQyBpcwo+IGV4cG9zZWQgYXMgUVNQSSBtbWFwIHJlZ2lvbi4gVGhp
+cyByZWdpb24gY2FuIGJlIGFjY2Vzc2VkIGxpa2Ugbm9ybWFsCj4gUkFNKHZpYSBtZW1jcHkoKSkg
+YW5kIHRoZSBRU1BJIGNvbnRyb2xsZXIgaW50ZXJmYWNlIHRha2VzIGNhcmUgb2YKPiBmZXRjaGlu
+ZyBkYXRhIGZyb20gZmxhc2ggb24gU1BJIGJ1cyBhdXRvbWF0aWNhbGx5IGhlbmNlLCBJIG5hbWVk
+IGl0IGFzCj4gYWJvdmUuIEJ1dCwgSSBoYXZlIG5vIGhhcmQgZmVlbGluZ3MgaWYgaXQgbmVlZHMg
+dG8gYmUgZ2VuZXJhbGl6ZWQgdG8KPiBzcGlfbXRkX3JlYWQoKSBvciBzb21ldGhpbmcgZWxzZS4K
+Ckkga25vdyB0aGF0IG9uIHRoZSBaeW5xLCB5b3UgY2FuIGV2ZW4gbGV0IHRoZSBETUEgY29udHJv
+bGxlciBhY2Nlc3MgdGhlIFFTUEkgCmZsYXNoIHZpYSB0aGlzIG1lbW9yeSBtYXBwaW5nLiBUaGUg
+UVNQSSBjb250cm9sbGVyIGl0c2VsZiBkb2Vzbid0IHN1cHBvcnQgYW55IApETUEgYXQgYWxsLgoK
+SWYgc29tZXRoaW5nIHNpbWlsYXIgYXBwbGllcyB0byB0aGUgVEkgcGxhdGZvcm0gKG1vc3Qgb2Yg
+dGhlIFRJIHByb2NzIGhhdmUgCm5pY2UgRE1BIGNvbnRyb2xsZXJzKSBvbmUgY291bGQgZ28gb25l
+IHN0ZXAgZnVydGhlciBhbmQgaW1wbGVtZW50IGEgZ2VuZXJpYyAKRE1BLXRocm91Z2gtbW1hcCBh
+Y2Nlc3MgdG8gUVNQSSBmbGFzaC4KCk1pa2UuCgoKS2luZCByZWdhcmRzLAoKTWlrZSBMb29pam1h
+bnMKU3lzdGVtIEV4cGVydAoKVE9QSUMgRW1iZWRkZWQgUHJvZHVjdHMKRWluZGhvdmVuc2V3ZWcg
+MzItQywgTkwtNTY4MyBLSCBCZXN0ClBvc3RidXMgNDQwLCBOTC01NjgwIEFLIEJlc3QKVGVsZWZv
+b246ICszMSAoMCkgNDk5IDMzIDY5IDc5ClRlbGVmYXg6ICszMSAoMCkgNDk5IDMzIDY5IDcwCkUt
+bWFpbDogbWlrZS5sb29pam1hbnNAdG9waWNwcm9kdWN0cy5jb20KV2Vic2l0ZTogd3d3LnRvcGlj
+cHJvZHVjdHMuY29tCgpQbGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBwcmlu
+dGluZyB0aGlzIGUtbWFpbAoKVmlzaXQgdXMgYXQgOiBBZXJvc3BhY2UgRWxlY3RyaWNhbCBTeXN0
+ZW1zIEV4cG8gRXVyb3BlIHdoaWNoIHdpbGwgYmUgaGVsZCBmcm9tIDE3LjExLjIwMTUgdGlsbCAx
+OS4xMS4yMDE1LCBGaW5kb3JmZnN0cmFzc2UgMTAxIEJyZW1lbiwgR2VybWFueSwgSGFsbCA1LCBz
+dGFuZCBudW1iZXIgQzY1Cmh0dHA6Ly93d3cuYWVzZXhwby5ldQoKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
