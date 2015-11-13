@@ -1,67 +1,172 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v3 1/5] spi: introduce mmap read support for spi flash
- devices
-Date: Fri, 13 Nov 2015 15:06:55 +0100
-Message-ID: <5645EE7F.5040101@topic.nl>
-References: <1447133399-25658-1-git-send-email-vigneshr@ti.com>
- <1447133399-25658-2-git-send-email-vigneshr@ti.com>
- <20151110232341.GU12143@google.com> <5642E546.3040806@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drivers: ata: Move vendor specific sata port phy oob
+ settings to device-tree
+Date: Fri, 13 Nov 2015 08:32:06 -0600
+Message-ID: <20151113143206.GA8215@rob-hp-laptop>
+References: <1447410743-36086-1-git-send-email-anuragku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5642E546.3040806@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "R, Vignesh" <vigneshr@ti.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: devicetree@vger.kernel.org, Michal Suchanek <hramrach@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447410743-36086-1-git-send-email-anuragku@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tj@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, michals@xilinx.com, punnaia@xilinx.com, anirudh@xilinx.com, svemula@xilinx.com, Anurag Kumar Vulisha <anuragku@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-77u/T24gMTEtMTEtMTUgMDc6NTAsIFIsIFZpZ25lc2ggd3JvdGU6Cj4gSGkgQnJhaW4sCj4KPiBP
-biAxMS8xMS8yMDE1IDQ6NTMgQU0sIEJyaWFuIE5vcnJpcyB3cm90ZToKPj4gSGkgVmlnbmVzaCwK
-Li4uCgo+PiBBbHNvLCB0aGlzIEFQSSBkb2Vzbid0IGFjdHVhbGx5IGhhdmUgYW55dGhpbmcgdG8g
-ZG8gd2l0aCBtZW1vcnkgbWFwcGluZy4KPj4gSXQgaGFzIHRvIGRvIHdpdGggdGhlIGRlIGZhY3Rv
-IHN0YW5kYXJkIGZsYXNoIHByb3RvY29sLiBTbyBJIGRvbid0IHRoaW5rCj4+IG1tYXAgYmVsb25n
-cyBpbiB0aGUgbmFtZTsgaXQgc2hvdWxkIGJlIHNvbWV0aGluZyBhYm91dCBmbGFzaC4gKEkga25v
-dyBvZgo+PiBhdCBsZWFzdCBvbmUgb3RoZXIgY29udHJvbGxlciB0aGF0IGNvdWxkIHByb2JhYmx5
-IHVzZSB0aGlzIEFQSSwgZXhjcGV0Cj4+IGl0IGRvZXNuJ3QgdXNlIG1lbW9yeSBtYXBwaW5nIHRv
-IGFjY29tcGxpc2ggdGhlIGFjY2VsZXJhdGVkIGZsYXNoIHJlYWQuKQoKVGhlIFp5bnEgaGFzIGEg
-c2ltaWxhciB3YXkgb2YgYWNjZXNzaW5nIFFTUEkgZmxhc2ggdGhyb3VnaCBhIG1lbW9yeSBtYXAu
-IFRoZSAKbWVtb3J5IHdpbmRvdyBpcyBvbmx5IDE2TUIsIHNvIHNvbWUgZm9ybSBvZiBwYWdpbmcg
-d291bGQgYmUgbmVlZGVkLgoKSXQncyB3aHkgSSBoYXZlIGJlZW4gZm9sbG93aW5nIHRoaXMgdGhy
-ZWFkIHdpdGggZ3JlYXQgaW50ZXJlc3QsIHNpbmNlIHRoZSBRU1BJIApwZXJmb3JtYW5jZSBvbiB0
-aGUgWnlucSBpcyB3YXkgYmVsb3cgd2hhdCBpdCBjb3VsZCBwb3RlbnRpYWxseSBiZS4KCj4gQXMg
-ZmFyIGFzIFRJIFFTUEkgY29udHJvbGxlciBpcyBjb25jZXJuZWQsIHRoZSBhY2NlbGVyYXRlZCBy
-ZWFkIGhhcHBlbnMKPiB2aWEgbW1hcCBwb3J0IHdoZXJlYnkgYSBwcmVkZWZpbmVkIG1lbW9yeSBh
-ZGRyZXNzIHNwYWNlIG9mIFNvQyBpcwo+IGV4cG9zZWQgYXMgUVNQSSBtbWFwIHJlZ2lvbi4gVGhp
-cyByZWdpb24gY2FuIGJlIGFjY2Vzc2VkIGxpa2Ugbm9ybWFsCj4gUkFNKHZpYSBtZW1jcHkoKSkg
-YW5kIHRoZSBRU1BJIGNvbnRyb2xsZXIgaW50ZXJmYWNlIHRha2VzIGNhcmUgb2YKPiBmZXRjaGlu
-ZyBkYXRhIGZyb20gZmxhc2ggb24gU1BJIGJ1cyBhdXRvbWF0aWNhbGx5IGhlbmNlLCBJIG5hbWVk
-IGl0IGFzCj4gYWJvdmUuIEJ1dCwgSSBoYXZlIG5vIGhhcmQgZmVlbGluZ3MgaWYgaXQgbmVlZHMg
-dG8gYmUgZ2VuZXJhbGl6ZWQgdG8KPiBzcGlfbXRkX3JlYWQoKSBvciBzb21ldGhpbmcgZWxzZS4K
-Ckkga25vdyB0aGF0IG9uIHRoZSBaeW5xLCB5b3UgY2FuIGV2ZW4gbGV0IHRoZSBETUEgY29udHJv
-bGxlciBhY2Nlc3MgdGhlIFFTUEkgCmZsYXNoIHZpYSB0aGlzIG1lbW9yeSBtYXBwaW5nLiBUaGUg
-UVNQSSBjb250cm9sbGVyIGl0c2VsZiBkb2Vzbid0IHN1cHBvcnQgYW55IApETUEgYXQgYWxsLgoK
-SWYgc29tZXRoaW5nIHNpbWlsYXIgYXBwbGllcyB0byB0aGUgVEkgcGxhdGZvcm0gKG1vc3Qgb2Yg
-dGhlIFRJIHByb2NzIGhhdmUgCm5pY2UgRE1BIGNvbnRyb2xsZXJzKSBvbmUgY291bGQgZ28gb25l
-IHN0ZXAgZnVydGhlciBhbmQgaW1wbGVtZW50IGEgZ2VuZXJpYyAKRE1BLXRocm91Z2gtbW1hcCBh
-Y2Nlc3MgdG8gUVNQSSBmbGFzaC4KCk1pa2UuCgoKS2luZCByZWdhcmRzLAoKTWlrZSBMb29pam1h
-bnMKU3lzdGVtIEV4cGVydAoKVE9QSUMgRW1iZWRkZWQgUHJvZHVjdHMKRWluZGhvdmVuc2V3ZWcg
-MzItQywgTkwtNTY4MyBLSCBCZXN0ClBvc3RidXMgNDQwLCBOTC01NjgwIEFLIEJlc3QKVGVsZWZv
-b246ICszMSAoMCkgNDk5IDMzIDY5IDc5ClRlbGVmYXg6ICszMSAoMCkgNDk5IDMzIDY5IDcwCkUt
-bWFpbDogbWlrZS5sb29pam1hbnNAdG9waWNwcm9kdWN0cy5jb20KV2Vic2l0ZTogd3d3LnRvcGlj
-cHJvZHVjdHMuY29tCgpQbGVhc2UgY29uc2lkZXIgdGhlIGVudmlyb25tZW50IGJlZm9yZSBwcmlu
-dGluZyB0aGlzIGUtbWFpbAoKVmlzaXQgdXMgYXQgOiBBZXJvc3BhY2UgRWxlY3RyaWNhbCBTeXN0
-ZW1zIEV4cG8gRXVyb3BlIHdoaWNoIHdpbGwgYmUgaGVsZCBmcm9tIDE3LjExLjIwMTUgdGlsbCAx
-OS4xMS4yMDE1LCBGaW5kb3JmZnN0cmFzc2UgMTAxIEJyZW1lbiwgR2VybWFueSwgSGFsbCA1LCBz
-dGFuZCBudW1iZXIgQzY1Cmh0dHA6Ly93d3cuYWVzZXhwby5ldQoKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Nov 13, 2015 at 04:02:23PM +0530, Anurag Kumar Vulisha wrote:
+> In SATA, speed negotiation happens with  OOB(Out of Band) signals. These OOB
+> signal timing values are configured through vendor specific registers in the
+> SATA controller. These OOB timings depends on the generator and detector clock
+> frequency, which varies from board to board (ex: ep108, zcu102 and zc1751 has
+> different clock frequencies).
+
+Could you calculate the timings based on the frequency instead? 
+
+> Since to make ahci_ceva driver generic, it would be better to move these
+> settings to the device-tree node and read them from driver.
+> 
+> This patch does the same.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
+> ---
+>  .../devicetree/bindings/ata/ahci-ceva.txt          |   38 +++++++++
+>  drivers/ata/ahci_ceva.c                            |   84 ++++++++++++++------
+>  2 files changed, 99 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> index 7ca8b97..66fcd10 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> @@ -5,6 +5,36 @@ Required properties:
+>    - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
+>    - clocks: Input clock specifier. Refer to common clock bindings.
+>    - interrupts: Interrupt specifier. Refer to interrupt binding.
+> +    - ceva,p0-cominit-params: OOB timing value for COMINIT parameter for port 0.
+> +    - ceva,p1-cominit-params: OOB timing value for COMINIT parameter for port 1.
+
+This doesn't really scale when you have more than 2 ports. Given that 
+you know the length for each port, just make it a single property (i.e. 
+an array of ports).
+
+> +  			The fields for the above parameter must be as shown below:
+> +  			ceva,phy-cominit-params = /bits/ 8 <CIBGMN CIBGMX CIBGN CINMP>;
+> +  			CINMP : COMINIT Negate Minimum Period.
+> +  			CIBGN : COMINIT Burst Gap Nominal.
+> +  			CIBGMX: COMINIT Burst Gap Maximum.
+> +  			CIBGMN: COMINIT Burst Gap Minimum.
+> +    - ceva,p0-comwake-params: OOB timing value for COMWAKE parameter for port 0.
+> +    - ceva,p1-comwake-params: OOB timing value for COMWAKE parameter for port 1.
+> +  			The fields for the above parameter must be as shown below:
+> +  			ceva,phy-comwake-params = /bits/ 8 <CWBGMN CWBGMX CWBGN CWNMP>;
+> +  			CWBGMN: COMWAKE Burst Gap Minimum.
+> +  			CWBGMX: COMWAKE Burst Gap Maximum.
+> +  			CWBGN: COMWAKE Burst Gap Nominal.
+> +  			CWNMP: COMWAKE Negate Minimum Period.
+> +    - ceva,p0-burst-params: Burst timing value for COM parameter for port 0.
+> +    - ceva,p1-burst-params: Burst timing value for COM parameter for port 1.
+> +  			The fields for the above parameter must be as shown below:
+> +			ceva,phy-burst-params = /bits/ 8 <BMX BNM SFD PTST>;
+> +  			BMX: COM Burst Maximum.
+> +  			BNM: COM Burst Nominal.
+> +  			SFD: Signal Failure Detection value.
+> +  			PTST: Partial to Slumber timer value.
+> +    - ceva,p0-retry-params: Retry interval timing value for port 0.
+> +    - ceva,p1-retry-params: Retry interval timing value for port 1.
+> +  			The fields for the above parameter must be as shown below:
+> +  			ceva,phy-retry-params = /bits/ 16 <RIT RCT>;
+> +  			RIT:  Retry Interval Timer.
+> +  			RCT:  Rate Change Timer.
+>  
+>  Optional properties:
+>    - ceva,broken-gen2: limit to gen1 speed instead of gen2.
+> @@ -17,4 +47,12 @@ Examples:
+>  		interrupts = <0 133 4>;
+>  		clocks = <&clkc SATA_CLK_ID>;
+>  		ceva,broken-gen2;
+> +		ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+> +		ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+> +		ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+> +		ceva,p0-retry-params = /bits/ 16 <0x0216 0x7F06>;
+> +		ceva,p1-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+> +		ceva,p1-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+> +		ceva,p1-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+> +		ceva,p1-retry-params = /bits/ 16 <0x0216 0x7F06>;
+>  	};
+> diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
+> index 207649d..59de2ca 100644
+> --- a/drivers/ata/ahci_ceva.c
+> +++ b/drivers/ata/ahci_ceva.c
+> @@ -50,21 +50,6 @@
+>  #define PPCFG_PSS_EN	(1 << 29)
+>  #define PPCFG_ESDF_EN	(1 << 31)
+>  
+> -#define PP2C_CIBGMN	0x0F
+> -#define PP2C_CIBGMX	(0x25 << 8)
+> -#define PP2C_CIBGN	(0x18 << 16)
+> -#define PP2C_CINMP	(0x29 << 24)
+> -
+> -#define PP3C_CWBGMN	0x04
+> -#define PP3C_CWBGMX	(0x0B << 8)
+> -#define PP3C_CWBGN	(0x08 << 16)
+> -#define PP3C_CWNMP	(0x0F << 24)
+> -
+> -#define PP4C_BMX	0x0a
+> -#define PP4C_BNM	(0x08 << 8)
+> -#define PP4C_SFD	(0x4a << 16)
+> -#define PP4C_PTST	(0x06 << 24)
+> -
+>  #define PP5C_RIT	0x60216
+>  #define PP5C_RCT	(0x7f0 << 20)
+>  
+> @@ -87,6 +72,11 @@
+>  
+>  struct ceva_ahci_priv {
+>  	struct platform_device *ahci_pdev;
+> +	/* Port Phy2Cfg Register */
+> +	u32 pp2c[NR_PORTS];
+> +	u32 pp3c[NR_PORTS];
+> +	u32 pp4c[NR_PORTS];
+> +	u32 pp5c[NR_PORTS];
+>  	int flags;
+>  };
+>  
+> @@ -131,20 +121,16 @@ static void ahci_ceva_setup(struct ahci_host_priv *hpriv)
+>  		writel(tmp, mmio + AHCI_VEND_PPCFG);
+>  
+>  		/* Phy Control OOB timing parameters COMINIT */
+> -		tmp = PP2C_CIBGMN | PP2C_CIBGMX | PP2C_CIBGN | PP2C_CINMP;
+> -		writel(tmp, mmio + AHCI_VEND_PP2C);
+> +		writel(cevapriv->pp2c[i], mmio + AHCI_VEND_PP2C);
+>  
+>  		/* Phy Control OOB timing parameters COMWAKE */
+> -		tmp = PP3C_CWBGMN | PP3C_CWBGMX | PP3C_CWBGN | PP3C_CWNMP;
+> -		writel(tmp, mmio + AHCI_VEND_PP3C);
+> +		writel(cevapriv->pp3c[i], mmio + AHCI_VEND_PP3C);
+>  
+>  		/* Phy Control Burst timing setting */
+> -		tmp = PP4C_BMX | PP4C_BNM | PP4C_SFD | PP4C_PTST;
+> -		writel(tmp, mmio + AHCI_VEND_PP4C);
+> +		writel(cevapriv->pp4c[i], mmio + AHCI_VEND_PP4C);
+>  
+>  		/* Rate Change Timer and Retry Interval Timer setting */
+> -		tmp = PP5C_RIT | PP5C_RCT;
+> -		writel(tmp, mmio + AHCI_VEND_PP5C);
+> +		writel(cevapriv->pp5c[i], mmio + AHCI_VEND_PP5C);
+>  
+>  		/* Rx Watermark setting  */
+>  		tmp = PTC_RX_WM_VAL | PTC_RSVD;
+> @@ -187,6 +173,58 @@ static int ceva_ahci_probe(struct platform_device *pdev)
+>  	if (of_property_read_bool(np, "ceva,broken-gen2"))
+>  		cevapriv->flags = CEVA_FLAG_BROKEN_GEN2;
+>  
+> +	/* Read OOB timing value for COMINIT from device-tree */
+> +	if (of_property_read_u8_array(np, "ceva,p0-cominit-params",
+> +					(u8 *)&cevapriv->pp2c[0], 4) < 0) {
+> +		dev_warn(dev, "ceva,p0-cominit-params property not defined\n");
+
+I'd really like to move all the error prints into the of_property_* 
+functions instead, but then we'd probably need *_optional variants to 
+avoid spewing to the console.
+
+Rob
