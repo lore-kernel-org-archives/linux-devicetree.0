@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 4/9] regulator: axp20x: Support new AXP223 PMIC
-Date: Fri, 13 Nov 2015 12:04:09 +0800
-Message-ID: <1447387456-9912-5-git-send-email-wens@csie.org>
+Subject: [PATCH v2 8/9] ARM: sunxi_defconfig: Update MFD_AXP20X
+ symbol and enable MFD_AXP20X_RSB
+Date: Fri, 13 Nov 2015 12:04:14 +0800
+Message-ID: <1447387456-9912-10-git-send-email-wens@csie.org>
 References: <1447387456-9912-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -19,43 +20,33 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-It is functionally identical to AXP221; only the regulator default
-voltage/status and the external host interface are different.
+axp20x support has been split into 2 parts, I2C and RSB interface
+variants.
+
+Update the MFD_AXP20X symbol for I2C support, and also enable
+MFD_AXP20X_RSB to support RSB variants.
+
+Keep MFD_AXP20X enabled for now, to ease migration for automated boot
+farms while the patches are being merged. This should be removed in the
+next release.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/regulator/axp20x-regulator.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/configs/sunxi_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 35de22fdb7a0..55cce8125716 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -244,6 +244,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 		step = 75;
- 		break;
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		min = 1800;
- 		max = 4050;
- 		def = 3000;
-@@ -322,6 +323,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- 		break;
- 
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		if (id < AXP22X_DCDC1 || id > AXP22X_DCDC5)
- 			return -EINVAL;
- 
-@@ -360,6 +362,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		nregulators = AXP20X_REG_ID_MAX;
- 		break;
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		regulators = axp22x_regulators;
- 		nregulators = AXP22X_REG_ID_MAX;
- 		break;
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index 3c36e16fcacf..18dbfaddb727 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -89,6 +89,8 @@ CONFIG_CPU_THERMAL=y
+ CONFIG_WATCHDOG=y
+ CONFIG_SUNXI_WATCHDOG=y
+ CONFIG_MFD_AXP20X=y
++CONFIG_MFD_AXP20X_I2C=y
++CONFIG_MFD_AXP20X_RSB=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_AXP20X=y
 -- 
 2.6.2
