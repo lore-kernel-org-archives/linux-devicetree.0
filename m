@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 6/9] ARM: dts: sun8i: Add simplefb node
- labels to reference at board level
-Date: Fri, 13 Nov 2015 12:04:11 +0800
-Message-ID: <1447387456-9912-7-git-send-email-wens@csie.org>
+Subject: [PATCH v2 1/9] mfd: axp20x: Add AXP223 to list of
+ supported PMICs in DT bindings
+Date: Fri, 13 Nov 2015 12:04:06 +0800
+Message-ID: <1447387456-9912-2-git-send-email-wens@csie.org>
 References: <1447387456-9912-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBR6CSWZAKGQEFC6333Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRWCSWZAKGQE5U3NHUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1447387456-9912-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,29 +20,43 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some boards, such as tablets, have regulators providing power to parts
-of the display pipeline, like signal converters and LCD panels.
-
-Add labels to the simplefb device nodes so that we can reference them
-in the board dts files to add regulator supply properties.
+The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+It is functionally identical to AXP221; only the regulator default
+voltage/status and the external host interface are different.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 0c0964d4fa1f..6f88fb0ddbc7 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -56,7 +56,7 @@
- 		#size-cells = <1>;
- 		ranges;
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index a474359dd206..fd39fa54571b 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -5,11 +5,12 @@ axp152 (X-Powers)
+ axp202 (X-Powers)
+ axp209 (X-Powers)
+ axp221 (X-Powers)
++axp223 (X-Powers)
  
--		framebuffer@0 {
-+		simplefb_lcd: framebuffer@0 {
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
+ Required properties:
+ - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+-	      "x-powers,axp221"
+-- reg: The I2C slave address for the AXP chip
++	      "x-powers,axp221", "x-powers,axp223"
++- reg: The I2C slave address or RSB hardware address for the AXP chip
+ - interrupt-parent: The parent interrupt controller
+ - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+ - interrupt-controller: The PMIC has its own internal IRQs
+@@ -51,7 +52,7 @@ LDO3		: LDO		: ldo3in-supply
+ LDO4		: LDO		: ldo24in-supply	: shared supply
+ LDO5		: LDO		: ldo5in-supply
+ 
+-AXP221 regulators, type, and corresponding input supply names:
++AXP221/AXP223 regulators, type, and corresponding input supply names:
+ 
+ Regulator	  Type		  Supply Name		  Notes
+ ---------	  ----		  -----------		  -----
 -- 
 2.6.2
