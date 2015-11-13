@@ -1,140 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible format
-Date: Thu, 12 Nov 2015 19:38:23 -0600
-Message-ID: <CAL_Jsq+F+bxTmb_ShRmygf+NtoYeOMg5UawVXD8Ffks_EAFLcQ@mail.gmail.com>
-References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
- <1445894712-14350-2-git-send-email-sboyd@codeaurora.org> <20151112164948.GA24938@rob-hp-laptop>
- <20151112194408.GC15032@codeaurora.org> <CAL_Jsq+5QD2Ce8snovw6vC31NvD5oB+Yos1VuZDjXfKa3fPvDQ@mail.gmail.com>
- <20151113001102.GF15032@codeaurora.org>
+From: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH] net: hisilicon: fix binding document of mdio
+Date: Fri, 13 Nov 2015 10:23:44 +0800
+Message-ID: <1447381424-107248-1-git-send-email-huangdaode@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151113001102.GF15032@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 6:11 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 11/12, Rob Herring wrote:
->> On Thu, Nov 12, 2015 at 1:44 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> > On 11/12, Rob Herring wrote:
->> >> On Mon, Oct 26, 2015 at 02:25:10PM -0700, Stephen Boyd wrote:
->>
->> >> > +Some qcom based bootloaders identify the dtb blob based on a set of
->> >> > +device properties like SoC, platform, PMIC, and revisions of those components.
->> >> > +To support this scheme, we encode this information into the board compatible
->> >> > +string.
->> >>
->> >> Why does all this need to be a single property?
->> >
->> > Because the different vendor properties were rejected by arm-soc
->> > maintainers and the board compatible string was suggested as the
->> > place to put such information.
->>
->> I'm surprised an 80+ character compatible stream is okay. The parts
->> giving me heartburn here are not mentioned in the previous discussion
->> nor the QCDT format.
->>
->> As presented previously I agree with the push back. However, we could
->> do standard properties for SOC and board versions rather than
->> something vendor specific. Then the existing kernel support for
->> versions could use it. We could also just make this compatible string
->> formatting standard for more than just QC boards.
->
-> Some standard properties for these things sounds good to me.
-> What's the existing kernel support for versions though? Is that
-> just compatible string matching, or something else?
+This patch fixes explain the occasion of "hisilcon,mdio" according to
+Arnd's comments. specify it is only used for hip04.
 
-The soc_device stuff (and arm32 cpuinfo has a h/w version). Today I
-think users are pulling version info from h/w registers, but if you
-don't have h/w registers, then getting it from DT would make sense.
+First, please give your commnents.
 
+Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->> For mb, can't the tool just parse the memory node to get ram size
->> rather than parsing the compatible.
->
-> Sure. Right now the bootloader injects the memory information
-> during boot. I think it should work if we already have the memory
-> information there. I don't have any usage of mb at the moment
-> though, so if you want we can drop this field until a time that
-> we need it.
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+index 9c23fdf..f650e78 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+@@ -1,7 +1,9 @@
+ Hisilicon MDIO bus controller
+ 
+ Properties:
+-- compatible: "hisilicon,mdio","hisilicon,hns-mdio".
++- compatible: can be one of "hisilicon,hns-mdio","hisilicon,mdio",
++  for hip04 board, please use "hisilicon,mdio",
++  other boards, "hisilicon,hns-mdio" is OK.
+ - reg: The base address of the MDIO bus controller register bank.
+ - #address-cells: Must be <1>.
+ - #size-cells: Must be <0>.  MDIO addresses have no size component.
+-- 
+1.9.1
 
-If the bootloader injects it, then how do you know what to put into
-the compatible string?
-
->> >> > +The 'panel' element must be one of the following strings:
->> >> > +
->> >> > +   720p
->> >> > +   fWVGA
->> >> > +   hd
->> >> > +   qHD
->> >>
->> >> How is this used?
->> >
->> > I believe this was added so that we could have different dtbs for
->> > devices that have different panels on them. I'm not sure this is
->> > still used though. It could be legacy.
->>
->> Dealing with multiple panels is fairly common. I think you could use
->> an alias to the panel node and match using its compatible or
->> resolution.
->
-> So dtbtool will need to resolve the alias and then figure out
-> which type of panel it is from compatible? Ok. I'd rather not
-> write that code unless it's needed, so I hope this field is not
-> used either.
-
-Certainly better to figure out if it is needed first.
-
->> >> > +The 'boot' element must be one of the following strings:
->> >> > +
->> >> > +   emmc_sdc1
->> >> > +   ufs
->> >> > +
->>
->> Again, perhaps an alias would work here.
->>
->> >> > +The 'pmic' element must be one of the following strings:
->> >> > +
->> >> > +   pm8841
->> >> > +   pm8019
->> >> > +   pm8110
->> >> > +   pma8084
->> >> > +   pmi8962
->> >> > +   pmd9635
->> >> > +   pm8994
->> >> > +   pmi8994
->> >> > +   pm8916
->> >> > +   pm8004
->> >> > +   pm8909
->> >> > +
->> >> > +The 'pmic' element is specified in order of ascending USID. The PMIC in USID0
->> >> > +goes first, and then USID2, USID4, and finally USID6. Up to four PMICs may be
->> >> > +specified and no holes in the USID number space are allowed.
->> >>
->> >> What is USID?
->> >
->> > USID is Unique Slave IDentifier. It's an SPMI concept.
->>
->> Okay, then please say "SPMI USID" or something.
->
-> Ok.
->
-> In attempts to shorten the compatible string, we could use
-> aliases for the USIDs too. Then it should be possible to pull out
-> the information from the compatible fields of the PMIC nodes to
-> construct the PMIC part of the string. I'd like to avoid having
-> to go down the path of / -> soc -> spmi controller -> usidx,y,z
-> and just go straight to the usid node from a phandle.
-
-Yes. I was willing to draw the line after the PMIC, but seems Olof is less so.
-
-> With that in mind, right now I'm using fdtget from python to grab
-> the compatible string and parse it with a regex. If things need
-> to become more complicated to start following phandles, etc. are
-> there some python bindings to libfdt somewhere?
-
-Not that I'm aware of. C is the only language you need. ;)
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
