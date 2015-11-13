@@ -1,100 +1,56 @@
-From: bayi cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Fri, 13 Nov 2015 15:25:37 +0800
-Message-ID: <1447399537.9118.18.camel@mhfsdcap03>
-References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
-	 <1446824889-16144-3-git-send-email-bayi.cheng@mediatek.com>
-	 <20151111214146.GL12143@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: shmobile: koelsch: Move SPI FLASH partitions to subnode
+Date: Fri, 13 Nov 2015 08:56:18 +0100
+Message-ID: <CAMuHMdW4jOYJJvk8RX+uZRhsa=eT3hg+by_3rbKP96M1mrLjPQ@mail.gmail.com>
+References: <1447144506-20336-1-git-send-email-geert+renesas@glider.be>
+	<20151112011522.GB19649@verge.net.au>
+	<CAMuHMdVaBXSNnf5k3Sxx=bz8CscsE85PozgBH82yXa3HBXC1sg@mail.gmail.com>
+	<20151113002820.GE20462@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151111214146.GL12143-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151113002820.GE20462@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mtd@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-11-11 at 13:41 -0800, Brian Norris wrote:
-> One more small comment, since you're respinning this:
-> 
-> On Fri, Nov 06, 2015 at 11:48:08PM +0800, Bayi Cheng wrote:
-> > diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-> > new file mode 100644
-> > index 0000000..6582811
-> > --- /dev/null
-> > +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
-> > @@ -0,0 +1,475 @@
-> 
-> ...
-> 
-> > +static int mtk_nor_drv_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *flash_np;
-> > +	struct resource *res;
-> > +	int ret;
-> > +	struct mt8173_nor *mt8173_nor;
-> > +
-> > +	if (!pdev->dev.of_node) {
-> > +		dev_err(&pdev->dev, "No DT found\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	mt8173_nor = devm_kzalloc(&pdev->dev, sizeof(*mt8173_nor), GFP_KERNEL);
-> > +	if (!mt8173_nor)
-> > +		return -ENOMEM;
-> > +	platform_set_drvdata(pdev, mt8173_nor);
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	mt8173_nor->base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(mt8173_nor->base))
-> > +		return PTR_ERR(mt8173_nor->base);
-> > +
-> > +	mt8173_nor->spi_clk = devm_clk_get(&pdev->dev, "spi");
-> > +	if (IS_ERR(mt8173_nor->spi_clk)) {
-> > +		ret = PTR_ERR(mt8173_nor->spi_clk);
-> > +		goto nor_free;
-> > +	}
-> > +
-> > +	mt8173_nor->nor_clk = devm_clk_get(&pdev->dev, "sf");
-> > +	if (IS_ERR(mt8173_nor->nor_clk)) {
-> > +		ret = PTR_ERR(mt8173_nor->nor_clk);
-> > +		goto nor_free;
-> > +	}
-> > +
-> > +	mt8173_nor->dev = &pdev->dev;
-> > +	clk_prepare_enable(mt8173_nor->spi_clk);
-> > +	clk_prepare_enable(mt8173_nor->nor_clk);
-> 
-> You enable the clocks here, but...
-> 
-> > +
-> > +	/* only support one attached flash */
-> > +	flash_np = of_get_next_available_child(pdev->dev.of_node, NULL);
-> > +	if (!flash_np) {
-> 
-> ... you might bail out here if there is no available flash node, and you
-> never disable the clocks. (Same is true if we fail to detect the flash;
-> you leave the no-longer-needed clocks enabled.) Seems like maybe you
-> should disable clocks on failure.
+Hi Simon,
 
-Yes, I have forgot to disable these clocks on failure. and I will fix it
-in the next patch! Thanks!
-> 
-> > +		dev_err(&pdev->dev, "no SPI flash device to configure\n");
-> > +		ret = -ENODEV;
-> > +		goto nor_free;
-> > +	}
-> > +	ret = mtk_nor_init(mt8173_nor, flash_np);
-> > +
-> > +nor_free:
-> > +	return ret;
-> > +}
-> 
-> Brian
+On Fri, Nov 13, 2015 at 1:28 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Nov 12, 2015 at 11:03:33AM +0100, Geert Uytterhoeven wrote:
+>> On Thu, Nov 12, 2015 at 2:15 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > On Tue, Nov 10, 2015 at 09:35:06AM +0100, Geert Uytterhoeven wrote:
+>> >> As of commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
+>> >> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
+>> >> partitions in a special 'partitions' subnode"), having partitions as
+>> >> direct subnodes of an mtd device is discouraged:
+>> >>
+>> >>     spi0.0: 'partitions' subnode not found on /spi@e6b10000/flash@0. Trying to parse direct subnodes as partitions.
+>> >
+>> > I seem to see something else, perhaps I have a hardware problem?
+>> >
+>> >      m25p80 spi0.0: unrecognized JEDEC id bytes: 01,  2, 20
+>>
+>> That indeed means QSPI doesn't work. Is it reproducible?
+>> Is this on Koelsch?
+>
+> Yes. It appears to happy reliably in my Koelsch.
 
+Which tree / config?
+
+I've just tried renesas-devel-20151113-v4.3 and topic/gen3-latest with
+shmobile_defconfig, and the QSPI flash was detected correctly on both (the
+former failed to parse partitions, as the code for the partitions subnode is
+not yet in v4.3).
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
