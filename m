@@ -1,108 +1,132 @@
-From: Zain <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] clk: rockchip: set an ID for crypto clk
-Date: Fri, 13 Nov 2015 14:53:00 +0800
-Message-ID: <564588CC.8030300@rock-chips.com>
-References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
- <1790934.FgjVNmeB1J@phil> <5643E7B0.2080901@rock-chips.com>
- <1838616.4qxqO6ir89@phil>
+From: bayi cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] doc: dt: add documentation for Mediatek spi-nor
+ controller
+Date: Fri, 13 Nov 2015 15:20:45 +0800
+Message-ID: <1447399245.9118.14.camel@mhfsdcap03>
+References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
+	 <1446824889-16144-2-git-send-email-bayi.cheng@mediatek.com>
+	 <20151111203823.GJ12143@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1838616.4qxqO6ir89@phil>
+In-Reply-To: <20151111203823.GJ12143-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2015-11-11 at 12:38 -0800, Brian Norris wrote:
+> On Fri, Nov 06, 2015 at 11:48:07PM +0800, Bayi Cheng wrote:
+> > Add device tree binding documentation for serial flash with
+> > Mediatek serial flash controller
+> > 
+> > Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> 
+> Applied to l2-mtd.git/next (for 4.5). This will show up in
+> linux-next.git after the merge window.
+> 
+> Also squashed in a small diff (below), to fix up some language issues
+> and to refer the reader to the jedec,spi-nor.txt document.
+> 
 
+OK, I will fix it in next patch!
 
-On 2015=E5=B9=B411=E6=9C=8812=E6=97=A5 16:40, Heiko Stuebner wrote:
-> Am Donnerstag, 12. November 2015, 09:13:20 schrieb Zain:
->> On 2015=E5=B9=B411=E6=9C=8812=E6=97=A5 07:57, Heiko Stuebner wrote:
->>> Am Mittwoch, 11. November 2015, 14:35:57 schrieb Zain Wang:
->>>> Set an ID for crypto clk, so that it can be called in other part.
->>>>
->>>> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> this should go in together with patch4, the dts change, so an Ack f=
-rom the
->>> clock-maintainers would be nice :-)
->>>
->>>
->>> Heiko
->> Ok! Done!
->> Thanks.
-> I'm not sure I understand that.
->
-> There is nothing to do for you here, I was merely stating the fact th=
-at
-> we will need to get an Acked-by from the clock maintainers, to allow
-> me to take both this and the devicetree patch :-)
->
->
-> Heiko
-I am sorry that I think you told me to put the two patches together in
-next version at first.
-Thanks for your writing back.
+> >  .../devicetree/bindings/mtd/mtk-quadspi.txt        | 41 ++++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > new file mode 100644
+> > index 0000000..866b492
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > @@ -0,0 +1,41 @@
+> > +* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
+> 
+> The DT binding document shouldn't be talking about software (i.e.,
+> shouldn't be talking about "drivers").
+> 
 
-Zain
->
->>>> ---
->>>>
->>>> Changed in v3:
->>>> - None
->>>>
->>>> Changed in v2:=20
->>>> - None
->>>>
->>>> Changed in v1:
->>>> - define SCLK_CRYPTO in rk3288-cru.h
->>>> - use SCLK_CRYPTO instead of SRST_CRYPTO
->>>>
->>>>  drivers/clk/rockchip/clk-rk3288.c      | 2 +-
->>>>  include/dt-bindings/clock/rk3288-cru.h | 1 +
->>>>  2 files changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockc=
-hip/clk-rk3288.c
->>>> index 9040878..3fceda1 100644
->>>> --- a/drivers/clk/rockchip/clk-rk3288.c
->>>> +++ b/drivers/clk/rockchip/clk-rk3288.c
->>>> @@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_b=
-ranches[] __initdata =3D {
->>>>  			RK3288_CLKGATE_CON(0), 4, GFLAGS),
->>>>  	GATE(0, "c2c_host", "aclk_cpu_src", 0,
->>>>  			RK3288_CLKGATE_CON(13), 8, GFLAGS),
->>>> -	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
->>>> +	COMPOSITE_NOMUX(SCLK_CRYPTO, "crypto", "aclk_cpu_pre", 0,
->>>>  			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
->>>>  			RK3288_CLKGATE_CON(5), 4, GFLAGS),
->>>>  	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
->>>> diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-b=
-indings/clock/rk3288-cru.h
->>>> index c719aac..30dcd60 100644
->>>> --- a/include/dt-bindings/clock/rk3288-cru.h
->>>> +++ b/include/dt-bindings/clock/rk3288-cru.h
->>>> @@ -86,6 +86,7 @@
->>>>  #define SCLK_USBPHY480M_SRC	122
->>>>  #define SCLK_PVTM_CORE		123
->>>>  #define SCLK_PVTM_GPU		124
->>>> +#define SCLK_CRYPTO			125
->>>> =20
->>>>  #define SCLK_MAC		151
->>>>  #define SCLK_MACREF_OUT		152
->>>>
->>>
->>>
->>
->>
->
->
->
+OK, I will fix it.
+
+> > +
+> > +Required properties:
+> > +- compatible: 	  should be "mediatek,mt8173-nor";
+> > +- reg: 		  physical base address and length of the controller's register
+> > +- clocks: 	  the phandle of the clock needed by the nor controller
+> > +- clock-names: 	  the name of the clocks
+> > +		  the clocks needed "spi" and "sf". "spi" is used for spi bus,
+> > +		  and "sf" is used for controller, these are the clocks witch
+> > +		  hardware needs to enabling nor flash and nor flash controller.
+> > +		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> > +- #address-cells: should be <1>
+> > +- #size-cells:	  should be <0>
+> > +
+> > +The SPI Flash must be a child of the nor_flash node and must have a
+> > +compatible property.
+> > +
+> > +Required properties:
+> > +- compatible:	  May include a device-specific string consisting of the manufacturer
+> > +		  and name of the chip. Must also include "jedec,spi-nor" for any
+> > +		  SPI NOR flash that can be identified by the JEDEC READ ID opcode (0x9F).
+> > +- reg :		  Chip-Select number
+> > +
+> > +Example:
+> > +
+> > +nor_flash: spi@1100d000 {
+> > +	compatible = "mediatek,mt8173-nor";
+> > +	reg = <0 0x1100d000 0 0xe0>;
+> > +	clocks = <&pericfg CLK_PERI_SPI>,
+> > +		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> > +	clock-names = "spi", "sf";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	status = "disabled";
+> > +
+> > +	flash@0 {
+> > +		compatible = "jedec,spi-nor";
+> > +		reg = <0>;
+> > +	};
+> > +};
+> > +
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> index 866b492c38d2..fb314f09861b 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> @@ -1,19 +1,19 @@
+> -* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
+> +* Serial NOR flash controller for MTK MT81xx (and similar)
+>  
+>  Required properties:
+>  - compatible: 	  should be "mediatek,mt8173-nor";
+>  - reg: 		  physical base address and length of the controller's register
+> -- clocks: 	  the phandle of the clock needed by the nor controller
+> -- clock-names: 	  the name of the clocks
+> -		  the clocks needed "spi" and "sf". "spi" is used for spi bus,
+> +- clocks: 	  the phandle of the clocks needed by the nor controller
+> +- clock-names: 	  the names of the clocks
+> +		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
+>  		  and "sf" is used for controller, these are the clocks witch
+>  		  hardware needs to enabling nor flash and nor flash controller.
+>  		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+>  - #address-cells: should be <1>
+>  - #size-cells:	  should be <0>
+>  
+> -The SPI Flash must be a child of the nor_flash node and must have a
+> -compatible property.
+> +The SPI flash must be a child of the nor_flash node and must have a
+> +compatible property. Also see jedec,spi-nor.txt.
+>  
+>  Required properties:
+>  - compatible:	  May include a device-specific string consisting of the manufacturer
+
+Thanks for your instruction! and I will fix it in the next patch!
 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
