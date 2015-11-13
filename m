@@ -1,56 +1,55 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in
- pnv_pci_reset_secondary_bus()
-Date: Fri, 13 Nov 2015 11:20:15 +1100
-Message-ID: <20151113002015.GA21341@gwshan>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
- <87fv0azrpe.fsf@gamma.ozlabs.ibm.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible
+ format
+Date: Thu, 12 Nov 2015 16:23:02 -0800
+Message-ID: <20151113002301.GG15032@codeaurora.org>
+References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
+ <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
+ <CAOesGMgud5qCdVy8ZM-bZfOksXrb3Wjynko_yRkkhfoQdh9CQg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87fv0azrpe.fsf@gamma.ozlabs.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Daniel Axtens <dja@axtens.net>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+In-Reply-To: <CAOesGMgud5qCdVy8ZM-bZfOksXrb3Wjynko_yRkkhfoQdh9CQg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Andy Gross <agross@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 13, 2015 at 11:08:29AM +1100, Daniel Axtens wrote:
->Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
->
->>  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
->>  {
->> -	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
->> +	int option, freset = 0;
->> +
->> +	if (dev->subordinate)
->> +		pci_walk_bus(dev->subordinate,
->> +			     pnv_pci_dev_reset_type, &freset);
->> +
->> +	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
->> +	pnv_eeh_bridge_reset(dev, option);
->
->According to the skiboot sources, fundamental reset isn't supported on
->p5ioc2. As far as I can tell from your corresponding skiboot patches,
->this is still the case after they are applied. Do we need a fallback to
->EEH_RESET_HOT in this case? Otherwise there will be no reset performed
->at all.
->
->Likewise, if the FUNDAMENTAL reset fails for any reason, should we fall
->back to a HOT reset?
->
+On 11/12, Olof Johansson wrote:
+> On Mon, Oct 26, 2015 at 2:25 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > +Examples:
+> > +
+> > +       "qcom,msm8916-v1-cdp-pm8916-v2.1"
+> 
+> This is just awkward, but this...
+> 
+> > +
+> > +A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
+> > +2.1.
+> > +
+> > +       "qcom,apq8074-v2.0-2-dragonboard/1-v0.1-512MB-panel-qHD-boot-emmc_sdc1-pm8941-v0.2-pm8909-v2.2-pma8084-v3-pm8110-v1"
+> 
+> ...this is just too much. It makes no sense to try to linearly
+> describe pretty much the whole hardware in the compatible string like
+> this when the information should be elsewhere in the DT.
+> 
+> If this is how it's done, why bother documenting the rest in device
+> tree at all? Why not just do a depth-first traversal of the DT and
+> create a string out of that and make that the compatible while you're
+> at it?
 
-P5IOC2 won't export any PCI slots. So kernel won't issue fundamental reset
-to PCI buses on P5IOC2.
+Haha. The entire device is just one big compatible string! I love
+it! </sarcasm>
 
-We had the failback: hot reset is picked if fundamental reset can't be
-supported on the target PCI bus. In case fundamental reset fails, we
-shouldn't go ahead try hot reset.
+Seriously though, once the PMIC stuff appeared I started thinking
+about some way to detect that dynamically because you're right,
+it's already in DT somewhere and these huge compatible strings
+are gross. Using aliases as Rob suggests should work nicely so
+that we can find most of the elements with some simple tree
+traversal. In the example above we would be left with
+apq8074-v2.0-2-dragonboard/1-v0.1. Is that palatable?
 
-Thanks,
-Gavin
-
->Regards,
->Daniel
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
