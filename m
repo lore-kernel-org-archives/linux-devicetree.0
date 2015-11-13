@@ -1,250 +1,113 @@
-From: Zain <zain.wang@rock-chips.com>
-Subject: Re: [PATCH v3 3/4] Crypto: rockchip/crypto - add crypto driver for
- rk3288
-Date: Fri, 13 Nov 2015 14:44:43 +0800
-Message-ID: <564586DB.1020401@rock-chips.com>
-References: <1447223759-20730-1-git-send-email-zain.wang@rock-chips.com>
- <1447223759-20730-4-git-send-email-zain.wang@rock-chips.com>
- <2127222.Jhf4CFAOsX@phil>
+From: bayi cheng <bayi.cheng@mediatek.com>
+Subject: Re: [PATCH v6 0/3] Mediatek SPI-NOR flash driver
+Date: Fri, 13 Nov 2015 14:45:07 +0800
+Message-ID: <1447397107.9118.10.camel@mhfsdcap03>
+References: <1446824889-16144-1-git-send-email-bayi.cheng@mediatek.com>
+	 <20151110024611.GL12143@google.com> <1447250654.19991.15.camel@mhfsdcap03>
+	 <20151111202621.GI12143@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <2127222.Jhf4CFAOsX@phil>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151111202621.GI12143@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, jteki@openedev.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, ezequiel@vanguardiasur.com.ar, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2015-11-11 at 12:26 -0800, Brian Norris wrote:
+> On Wed, Nov 11, 2015 at 10:04:14PM +0800, Bayi Cheng wrote:
+> > On Mon, 2015-11-09 at 18:46 -0800, Brian Norris wrote:
+> > > I believe you didn't completely answer all my questions from v5 though.
+> > > I'll repeat a bit here. Particularly, refer to [1].
+> > > I'll summarize; I understand that your common transmit/receive operation
+> > > works something like this:
+> > > 
+> > > Quoting from [1]:
+> > > > (1) total number of bits to send/receive goes in the COUNT register (so
+> > > >     far, as many as 7*8=56?)
+> > > > (2) opcode is written to PRGDATA5
+> > > > (3) other "transmit" data (like addresses), if any, are placed on PRGDATA4..0
+> > > > (4) command is sent (execute_cmd())
+> > > > (5) data is read back in SHREG{X..0}, if needed
+> > > 
+> > > My questions were:
+> > > 
+> > > (a) Why does mt8173_nor_set_read_mode() use PRGDATA3? That's not
+> > >     mentioned in the SoC manual, and it doesn't really match any of the
+> > >     steps above. Perhaps it's just a quirk of the controller's
+> > >     programming model?
+> > > 
+> > yes, for this question, I have done some testes, If I change the
+> > PRGDATA3 to PRGDATA5 for mt8173_nor_set_read_mode() like others
+> > functions, then the controller will be hanged, and I have asked our
+> > designer for double confirm.
+> 
+> I wasn't suggesting to change this to PRGDATA5. I just was wondering why
+> the difference. It's not documented. (I suppose an acceptable answer is
+> just "because that's how the HW works.")
+> 
+I have synced with our designer, and just as you said, that's how the HW
+works, and the read operation is different is different from other
+operation. By the way, I have double confirm our driver code, and I have
+made a mistake for quad read operation, the quad command need use
+PRGDATA4 Instead PRGDATA3.
+PS: write PRGDATA4 0xEB(4bit I/O read mode) or 0x6B(4 bit output mode),
+So I will modify mt8173_nor_set_read_mode function in next patch.
 
 
-On 2015=E5=B9=B411=E6=9C=8812=E6=97=A5 20:32, Heiko Stuebner wrote:
-> Hi Zain,
->
-> I was able to sucessfully test your crypto-driver, but have found som=
-e
-> improvements below that should probably get looked at:
->
-> Am Mittwoch, 11. November 2015, 14:35:58 schrieb Zain Wang:
->> Crypto driver support:
->>      ecb(aes) cbc(aes) ecb(des) cbc(des) ecb(des3_ede) cbc(des3_ede)
->> You can alloc tags above in your case.
->>
->> And other algorithms and platforms will be added later on.
->>
->> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
->> ---
-> [...]
->
->> diff --git a/drivers/crypto/rockchip/rk3288_crypto.c b/drivers/crypt=
-o/rockchip/rk3288_crypto.c
->> new file mode 100644
->> index 0000000..bb36baa
->> --- /dev/null
->> +++ b/drivers/crypto/rockchip/rk3288_crypto.c
->> @@ -0,0 +1,392 @@
-> [...]
->
->> +static irqreturn_t crypto_irq_handle(int irq, void *dev_id)
-> that function should probably also get a "rk_" prefix?
-OK! good idea.
-I will add it to next version.
->> +{
->> +	struct rk_crypto_info *dev  =3D platform_get_drvdata(dev_id);
->> +	u32 interrupt_status;
->> +	int err =3D 0;
->> +
->> +	spin_lock(&dev->lock);
->> +
->> +	if (irq =3D=3D dev->irq) {
-> I'm not sure I understand that line. Interrupt handlers are only
-> called for the interrupt they are registered for, which would be dev-=
->irq
-> in any case, so that should always be true and therefore be unnecessa=
-ry?
-You are right, it is unnecessary.
- It will be remove in next version.
->
->> +		interrupt_status =3D CRYPTO_READ(dev, RK_CRYPTO_INTSTS);
->> +		CRYPTO_WRITE(dev, RK_CRYPTO_INTSTS, interrupt_status);
->> +		if (interrupt_status & 0x0a) {
->> +			dev_warn(dev->dev, "DMA Error\n");
->> +			err =3D -EFAULT;
->> +		} else if (interrupt_status & 0x05) {
->> +			err =3D dev->update(dev);
->> +		}
->> +
->> +		if (err)
->> +			dev->complete(dev, err);
->> +	}
->> +	spin_unlock(&dev->lock);
->> +	return IRQ_HANDLED;
->> +}
-> [...]
->
->> +static int rk_crypto_probe(struct platform_device *pdev)
->> +{
->> +	struct resource *res;
->> +	struct device *dev =3D &pdev->dev;
->> +	struct rk_crypto_info *crypto_info;
->> +	int err =3D 0;
->> +
->> +	crypto_info =3D devm_kzalloc(&pdev->dev,
->> +				   sizeof(*crypto_info), GFP_KERNEL);
->> +	if (!crypto_info) {
->> +		err =3D -ENOMEM;
->> +		goto err_crypto;
->> +	}
->> +
->> +	crypto_info->rst =3D devm_reset_control_get(dev, "crypto-rst");
->> +	if (IS_ERR(crypto_info->rst)) {
->> +		err =3D PTR_ERR(crypto_info->rst);
->> +		goto err_crypto;
->> +	}
->> +
->> +	reset_control_assert(crypto_info->rst);
->> +	usleep_range(10, 20);
->> +	reset_control_deassert(crypto_info->rst);
->> +
->> +	spin_lock_init(&crypto_info->lock);
->> +
->> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	crypto_info->reg =3D devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(crypto_info->reg)) {
->> +		err =3D PTR_ERR(crypto_info->reg);
->> +		goto err_ioremap;
->> +	}
->> +
->> +	crypto_info->aclk =3D devm_clk_get(&pdev->dev, "aclk");
->> +	if (IS_ERR(crypto_info->aclk)) {
->> +		err =3D PTR_ERR(crypto_info->aclk);
->> +		goto err_ioremap;
->> +	}
->> +
->> +	crypto_info->hclk =3D devm_clk_get(&pdev->dev, "hclk");
->> +	if (IS_ERR(crypto_info->hclk)) {
->> +		err =3D PTR_ERR(crypto_info->hclk);
->> +		goto err_ioremap;
->> +	}
->> +
->> +	crypto_info->sclk =3D devm_clk_get(&pdev->dev, "sclk");
->> +	if (IS_ERR(crypto_info->sclk)) {
->> +		err =3D PTR_ERR(crypto_info->sclk);
->> +		goto err_ioremap;
->> +	}
->> +
->> +	crypto_info->dmaclk =3D devm_clk_get(&pdev->dev, "apb_pclk");
->> +	if (IS_ERR(crypto_info->dmaclk)) {
->> +		err =3D PTR_ERR(crypto_info->dmaclk);
->> +		goto err_ioremap;
->> +	}
->> +
->> +	crypto_info->irq =3D platform_get_irq(pdev, 0);
->> +	if (crypto_info->irq < 0) {
->> +		dev_warn(crypto_info->dev,
->> +			 "control Interrupt is not available.\n");
->> +		err =3D crypto_info->irq;
->> +		goto err_ioremap;
->> +	}
->> +
->> +	err =3D devm_request_irq(&pdev->dev, crypto_info->irq, crypto_irq_=
-handle,
->> +			       IRQF_SHARED, "rk-crypto", pdev);
-> you are freeing the irq manually below and in _remove too. As it stan=
-ds
-> with putting the ip block in reset again on remove this should either=
- loose
-> the devm_ or you could add a devm_action that handles the reset asser=
-t
-> like in [0] - registering the devm_action above where the reset is do=
-ne.
-> That way you could really use dev_request_irq and loose the free_irq
-> calls here and in remove.
->
-> [0] https://lkml.org/lkml/2015/11/8/159
-I made a mistake here. I did not remove free_irq when using
-devm_request_irq.
+> > > (b) How do you determine X from step (5)?
+> > > 
+> > > Right now, your code seems to answer that X is "rxlen - 1". Correct?
+> > > 
+> > yes, I have used "rxlen -1", because the first of nor flash output is
+> > located at SHREG[0], in the other words, the output data starts at
+> > SHREG[0] and go up to SHREG[relen -1]
+> 
+> But, we aren't reading from SHREG[0] first; we're reading backwards from
+> SHREG[rxlen - 1] down to SHREG[0]. It seems that's correct, right?
 
-As I do not konw enough about devm_action and reset-assert , can I
-remove free_irq
-simply like drivers/i2c/buses/i2c-sun6i-p2wi.c used devm_request_irq an=
-d
-reset_assert?
->
-> [...]
->
->> +static int rk_crypto_remove(struct platform_device *pdev)
->> +{
->> +	struct rk_crypto_info *crypto_tmp =3D platform_get_drvdata(pdev);
->> +
->> +	rk_crypto_unregister();
->> +	reset_control_assert(crypto_tmp->rst);
-> mainly my comment from above applies, but in any case the reset-asser=
-t
-> should definitly happen _after_ the tasklet is killed and the irq fre=
-ed,
-> to make sure nothing will want to access device-registers anymore.
->
-> [devm works sequentially, so the devm_action would solve that automat=
-ically]
-As I said above, it seem unnecessary to add devm_action.
+Yes, You are right!
+> 
+> > > If that's correct and if I put all of my understanding together
+> > > correctly, this means that you can actually shift out (in PRGDATA) up to
+> > > 6 bytes (that is, 1 opcode and 5 tx bytes) and shift in (in SHREG) up to
+> > > 7 bytes, except that the first byte is received during the opcode cycle,
+> > > and so it is discarded, and we effectively receive only 6 bytes.
+> > > 
+> > > Is that all correct? If so, then I think you still need to adjust the
+> > > boundary conditions in your do_tx_rx() function. (I'll comment on the
+> > > driver to point out the specifics.)
+> > 
+> > Yes, you are right! and I will adjust the boundary conditions in
+> > do_tx_rx() function.
+> 
+> OK, good. BTW, can you make sure to rewrite the appropriate MAX macro(s)
+> to reflect the right values? It seems like maybe you'll want separate
+> macros for the maximum TX and RX -- and total (?), or is this just the
+> same as RX? -- since they seem to have different limits.
+> 
 
-And if modification above is good, I will push tasklet_kill before
-reset_control_assert in next version.
->
->> +	tasklet_kill(&crypto_tmp->crypto_tasklet);
->> +	free_irq(crypto_tmp->irq, crypto_tmp);
->> +
->> +	return 0;
->> +}
-> [...]
->
->> diff --git a/drivers/crypto/rockchip/rk3288_crypto.h b/drivers/crypt=
-o/rockchip/rk3288_crypto.h
->> new file mode 100644
->> index 0000000..b5b949a
->> --- /dev/null
->> +++ b/drivers/crypto/rockchip/rk3288_crypto.h
->> @@ -0,0 +1,220 @@
->> +#define _SBF(v, f)			((v) << (f))
-> you are using that macro in this header for simple value shifts like
-> 	#define RK_CYYPTO_HASHINSEL_BLOCK_CIPHER_INPUT		_SBF(0x01, 0)
->
-> Removing that macro and doing the shift regularly without any macro, =
-like
-> 	#define RK_CYYPTO_HASHINSEL_BLOCK_CIPHER_INPUT		(0x01 << 0)
->
->  would improve future readability, because now you need to look up wh=
-at
-> the macro actually does and the _SBF macro also does not simplify any=
-thing.
-> Also that name is quite generic so may conflict with something else e=
-asily.
-Ok! Done!
->  [...]
->
->> +#define CRYPTO_READ(dev, offset)		  \
->> +		readl_relaxed(((dev)->reg + (offset)))
->> +#define CRYPTO_WRITE(dev, offset, val)	  \
->> +		writel_relaxed((val), ((dev)->reg + (offset)))
->> +/* get register virt address */
->> +#define CRYPTO_GET_REG_VIRT(dev, offset)   ((dev)->reg + (offset))
-> same argument as above about readability of the code. What do these
-> macros improve from just doing the readl and writel calls normally?
-I am sorry that this macro is define for hash and not be used here.
-because there are some continuous registers in hash,
-I think we can use this macro with memcpy like
-        output =3D CRYPTO_GET_REG_VIRT(dev, RK_CRYPTO_HASH_DOUT_0);
-        memcpy(dev->ahash_req->result, output,
-crypto_ahash_digestsize(tfm));
-instead of multiple readl.
+OK, I will use two MAX macros, one is for TX&RX, and the other is for 
+the total.
 
-I will remove it in next version and add it to hash patch later on.
->
-> Thanks
-> Heiko
->
->
->
-Thanks
-Zain
+> > By the way, could you tell me whether I need to publish a new patch? or
+> > you can fix them up directly?
+> 
+> I think there are a few more adjustments to make, so please just post a
+> new version of the driver only. The DT binding and DTS changes look good
+> to go now.
+
+Yes, I will publish a new patch next week, and Thanks again for your
+grate help and support!
+
+> 
+> Regards,
+> Brian
+> 
+> > > [1] http://lists.infradead.org/pipermail/linux-mtd/2015-October/062951.html
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
