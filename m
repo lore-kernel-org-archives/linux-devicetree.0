@@ -1,85 +1,102 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/3] thermal: Add Mediatek thermal controller support
-Date: Fri, 13 Nov 2015 11:09:12 +0100
-Message-ID: <20151113100912.GE8526@pengutronix.de>
-References: <1447064013-13026-1-git-send-email-s.hauer@pengutronix.de>
- <1447064013-13026-3-git-send-email-s.hauer@pengutronix.de>
- <20151110120554.GB3551@e104805>
- <20151110182629.GA5240@localhost.localdomain>
- <20151111072747.GI8526@pengutronix.de>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v2 1/4] drm: arm: Add DT bindings documentation for HDLCD
+ driver.
+Date: Fri, 13 Nov 2015 10:11:56 +0000
+Message-ID: <20151113101156.GE963@e106497-lin.cambridge.arm.com>
+References: <1447258010-2234-1-git-send-email-Liviu.Dudau@arm.com>
+ <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
+ <20151111184849.GA9172@rob-hp-laptop>
+ <20151112104210.GZ963@e106497-lin.cambridge.arm.com>
+ <CAL_Jsq+M8cEgLpRJ9j_ULRaGcLgaTZ8rr2F1nv7wUxfEEpZinw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20151111072747.GI8526@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Javi Merino <javi.merino@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAL_Jsq+M8cEgLpRJ9j_ULRaGcLgaTZ8rr2F1nv7wUxfEEpZinw@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 08:27:47AM +0100, Sascha Hauer wrote:
-> On Tue, Nov 10, 2015 at 10:26:30AM -0800, Eduardo Valentin wrote:
-> > On Tue, Nov 10, 2015 at 12:05:54PM +0000, Javi Merino wrote:
-> > > On Mon, Nov 09, 2015 at 11:13:32AM +0100, Sascha Hauer wrote:
-> > 
-> > <cut>
-> > 
-> > > > +
-> > > > +/*
-> > > > + * The MT8173 thermal controller has four banks. Each bank can read up to
-> > > > + * four temperature sensors simultaneously. The MT8173 has a total of 5
-> > > > + * temperature sensors. We use each bank to measure a certain area of the
-> > > > + * SoC. Since TS2 is located centrally in the SoC it is influenced by multiple
-> > > > + * areas, hence is used in different banks.
-> > > > + */
-> > > > +static const struct mtk_thermal_bank_cfg bank_data[] = {
-> > > > +	{
-> > > > +		.num_sensors = 2,
-> > > > +		.sensors = { MT8173_TS2, MT8173_TS3 },
-> > > > +	}, {
-> > > > +		.num_sensors = 2,
-> > > > +		.sensors = { MT8173_TS2, MT8173_TS4 },
-> > > > +	}, {
-> > > > +		.num_sensors = 3,
-> > > > +		.sensors = { MT8173_TS1, MT8173_TS2, MT8173_TSABB },
-> > > > +	}, {
-> > > > +		.num_sensors = 1,
-> > > > +		.sensors = { MT8173_TS2 },
-> > > > +	},
-> > > > +};
-> > 
-> > Would it make sense to simply expose all sensors and let the
-> > configuration of their aggregation be done by DT?
-> 
-> This particular layout has been chosen because there's also the Smart
-> Voltage Scaler (SVS) in the SoC. The SVS uses the same banks for
-> measuring temperatures. I don't know the details yet, I just asked the
-> Mediatek guys.
-
-Ok, the job of the SVS is to always pick the best voltage for a given
-CPU frequency based on the temperature of the CPU cluster. How I
-understand it the SVS engine automatically reads temperatures from bank0
-for the first CPU cluster and from bank1 for the second CPU cluster. For
-this to work we are not free to assign the sensors to the banks
-arbitrarily.
-
-I was told that controlling the CPU frequency the performance is better
-if we use the maximum temperature of the whole die rather than the
-temperature of individual clusters.
-
-I would prefer to keep the sensor/bank association like it currently is
-as it allows for easy SVS engine integration. Also I would prefer to
-expose a single thermal zone for now, it will be easier to add
-additional zones later than it is to remove them later once we have
-exposed them to the device tree.
-
-Is that ok with you?
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gVGh1LCBOb3YgMTIsIDIwMTUgYXQgMDk6MzA6MzFQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gVGh1LCBOb3YgMTIsIDIwMTUgYXQgNDo0MiBBTSwgTGl2aXUgRHVkYXUgPExpdml1
+LkR1ZGF1QGFybS5jb20+IHdyb3RlOgo+ID4gT24gV2VkLCBOb3YgMTEsIDIwMTUgYXQgMTI6NDg6
+NTBQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPj4gT24gV2VkLCBOb3YgMTEsIDIwMTUg
+YXQgMDQ6MDY6NDdQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3JvdGU6Cj4gPj4gPiBDYzogUm9iIEhl
+cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiA+PiA+IENjOiBQYXdlbCBNb2xsIDxwYXdlbC5t
+b2xsQGFybS5jb20+Cj4gPj4gPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
+bT4KPiA+PiA+IENjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
+Pgo+ID4+ID4gQ2M6IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPgo+ID4+ID4KPiA+
+PiA+IFNpZ25lZC1vZmYtYnk6IExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+ID4+
+Cj4gPj4gTG9va3MgcHJldHR5IGdvb2QsIGJ1dCBhIGZldyBjb21tZW50cy4KPiA+Pgo+ID4+ID4g
+LS0tCj4gPj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0
+ICAgICAgfCA3NCArKysrKysrKysrKysrKysrKysrKysrCj4gPj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDc0IGluc2VydGlvbnMoKykKPiA+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9hcm0vYXJtLGhkbGNkLnR4dAo+ID4+ID4KPiA+PiA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9h
+cm0saGRsY2QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9hcm0v
+YXJtLGhkbGNkLnR4dAo+ID4+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiA+IGluZGV4IDAw
+MDAwMDAuLmI1N2YxYjkKPiA+PiA+IC0tLSAvZGV2L251bGwKPiA+PiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXJtL2FybSxoZGxjZC50eHQKPiA+PiA+IEBA
+IC0wLDAgKzEsNzQgQEAKPiA+PiA+ICtBUk0gSERMQ0QKPiA+PiA+ICsKPiA+PiA+ICtUaGlzIGlz
+IGEgZGlzcGxheSBjb250cm9sbGVyIGZvdW5kIG9uIHNldmVyYWwgZGV2ZWxvcG1lbnQgcGxhdGZv
+cm1zIHByb2R1Y2VkCj4gPj4gPiArYnkgQVJNIEx0ZCBhbmQgaW4gbW9yZSBtb2Rlcm4gb2YgaXRz
+JyBGYXN0IE1vZGVscy4gVGhlIEhETENEIGlzIGFuIFJHQgo+ID4+ID4gK3N0cmVhbWVyIHRoYXQg
+cmVhZHMgdGhlIGRhdGEgZnJvbSBhIGZyYW1lYnVmZmVyIGFuZCBzZW5kcyBpdCB0byBhIHNpbmds
+ZQo+ID4+ID4gK2RpZ2l0YWwgZW5jb2RlciAoRFZJIG9yIEhETUkpLgo+ID4+ID4gKwo+ID4+ID4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gPiArICAtIGNvbXBhdGlibGU6ICJhcm0saGRsY2Qi
+Cj4gPj4KPiA+PiBLaW5kIG9mIGdlbmVyaWMuIFNvbWV0aGluZyBtb3JlIHNwZWNpZmljIHBsZWFz
+ZS4KPiA+Cj4gPiAiVGhlcmUgY2FuIGJlIG9ubHkgb25lISIgKGhkbGNkKSA6KSBUaGlzIGlzIGdv
+aW5nIHRvIGJlIGEgIm9uZSB2ZXJzaW9uIG9ubHkiIEhXIHBhcnQuCj4gPiBBUk0gaGFzIG5vdyBz
+d2l0Y2hlZCB0byBhIG5ldyBkaXNwbGF5IGhhcmR3YXJlIHRoYXQgaGFzIG1vcmUgZmVhdHVyZXMg
+YW5kIGEgbmV3IG5hbWUsCj4gPiBhbmQgd29yayBvbiBtYWlubGluaW5nIHN1cHBvcnQgZm9yIHRo
+YXQgd2lsbCBzdGFydCBvbmNlIEkgZ2V0IHRoZSBIRExDRCBkcml2ZXIgYWNjZXB0ZWQuCj4gCj4g
+U28gdGhlcmUgaXMgbmV2ZXIgZ29pbmcgdG8gYmUgYSBzaW5nbGUgZGlmZmVyZW5jZSBhY3Jvc3Mg
+cGxhdGZvcm1zLgoKQ29ycmVjdCwgdGhlcmUgaXMgb25seSBvbmUgaW1wbGVtZW50YXRpb24gYXZh
+aWxhYmxlLiBBRkFJSyB0aGVyZSBhcmUgbm8gcGxhbnMgdG8gbWFrZSBjaGFuZ2VzIHRvIGl0LgoK
+PiBWYXJpYXRpb25zIGluIG1heCBjbG9jayBmb3IgZGlmZmVyZW50IEZQR0FzPwoKVGhlIGNsb2Nr
+IGlzIGV4dGVybmFsIHRvIHRoZSBwYXJ0IGFuZCB0aGVyZSBpcyBhIGNoZWNrIGluIHRoZSBkcml2
+ZXIgaWYgd2UgY2FuIHNldCB0aGUgZnJlcXVlbmN5CnRvIG1hdGNoIHRoZSByZXF1ZXN0ZWQgZG90
+Y2xvY2sgYnkgdGhlIHZpZGVvX21vZGUuIEl0IGRvZXMgbm90IGFmZmVjdCB0aGUgaGFyZHdhcmUg
+b3IgaG93IGl0IHByZXNlbnRzCml0c2VsZiB0byB0aGUgZHJpdmVyLgoKPiAKPiAKPiA+PiA+ICsg
+IC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxl
+cidzIHJlZ2lzdGVycy4KPiA+PiA+ICsgICAgSWYgYSBzZWNvbmQgcGFpciBvZiBhZGRyZXNzIGFu
+ZCBsZW5ndGggdmFsdWVzIGlzIHByZXNlbnQgdGhpcyBzcGVjaWZpZXMKPiA+PiA+ICsgICAgdGhl
+IHByZXNlbmNlIG9mIGEgRE1BIGNvaGVyZW50IG1lbW9yeSBhcmVhIHRoYXQgdGhlIEhETENEIGNh
+biB1c2UgYXMKPiA+PiA+ICsgICAgZnJhbWVidWZmZXIgaW5zdGVhZCBvZiBub3JtYWwgQ01BIG1l
+bW9yeS4KPiA+Pgo+ID4+IFRoaXMgaXMgb24tY2hpcCBSQU0gb3Igbm9ybmFsIHN5c3RlbSBSQU0/
+IFdlIGFscmVhZHkgaGF2ZSBiaW5kaW5ncyBmb3IKPiA+PiBib3RoLgo+ID4KPiA+IEp1bm8gaGFz
+IGEgc2V0IG9mIFRMWCAoVGhpbkxpbmtzKSBjb25uZWN0b3JzIG9uIHRoZSBib2FyZCB3aGVyZSBh
+biBGUEdBIGNhbiBiZSBhdHRhY2hlZC4gT24gcjEKPiA+IHRoZSBjb2RlIHJ1bm5pbmcgb24gRlBH
+QSBjYW4gZXZlbiBwYXJ0aWNpcGF0ZSBhcyBhbiBBWEkgbWFzdGVyIHdpdGggZnVsbCBjb2hlcmVu
+Y3kuIFRoZSBGUEdBCj4gPiBoYXMgbG9jYWwgbWVtb3J5IHRoYXQgd2Ugd2FudCB0byBzaGFyZSB3
+aXRoIHRoZSBIRExDRCB0byBiZSB1c2VkIGFzIGEgZnJhbWVidWZmZXIuCj4gCj4gU28gZGVzY3Jp
+YmUgdGhlIG1lbW9yeSByZWdpb24gYW5kIHRoZW4gdXNlIGEgbWVtb3J5LXJlZ2lvbiBwaGFuZGxl
+IHRvCj4gdGhlIG1lbW9yeSBoZXJlLgoKT0ssIEkgd2lsbC4KCj4gCj4gPj4gPiArICAtIGludGVy
+cnVwdHM6IE9uZSBpbnRlcnJ1cHQgdXNlZCBieSB0aGUgZGlzcGxheSBjb250cm9sbGVyIHRvIG5v
+dGlmeSB0aGUKPiA+PiA+ICsgICAgaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hlbiBhbnkgb2YgdGhl
+IGludGVycnVwdCBzb3VyY2VzIHByb2dyYW1tZWQgaW4KPiA+PiA+ICsgICAgdGhlIGludGVycnVw
+dCBtYXNrIHJlZ2lzdGVyIGhhdmUgYWN0aXZhdGVkLgo+ID4+ID4gKyAgLSBjbG9ja3M6IEEgbGlz
+dCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2gKPiA+PiA+
+ICsgICAgZW50cnkgaW4gJ2Nsb2NrLW5hbWVzJy4KPiA+PiA+ICsgIC0gY2xvY2stbmFtZXM6IEEg
+bGlzdCBvZiBjbG9jayBuYW1lcy4gRm9yIEhETEQgaXQgc2hvdWxkIGNvbnRhaW46Cj4gCj4gdHlw
+bzogSERMRAoKb29wcywgdGhhbmtzLCB3aWxsIGZpeC4KCj4gCj4gPj4gPiArICAgICAgLSAicHhs
+Y2xrIiBmb3IgdGhlIGNsb2NrIGZlZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIGNvbnRyb2xs
+ZXIuCj4gPj4gPiArICAtIHBvcnQ6IFRoZSBIRExDRCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIg
+Y2hpcC4gVGhlIGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQKPiAKPiBzL21vZGVsbGVkL21vZGVsZWQv
+CgpkaXR0by4KClRoYW5rcyBmb3IgcmV2aWV3aW5nIGl0LApMaXZpdQoKPiAKPiBSb2IKPiAKCi0t
+IAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3Js
+ZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBj
+b2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
