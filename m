@@ -1,308 +1,90 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] iio: st_sensors: support open drain mode
-Date: Fri, 13 Nov 2015 21:18:35 +0100
-Message-ID: <1447445915-12704-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] arm: dts: lpc32xx: updates to LPC32xx SoC and
+ boards
+Date: Fri, 13 Nov 2015 22:20:26 +0200
+Message-ID: <5646460A.4080207@mleia.com>
+References: <1445117757-8073-1-git-send-email-vz@mleia.com> <3973745.SoYxz6UFdV@wuerfel> <563F6CC7.3050704@mleia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <563F6CC7.3050704-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some types of ST Sensors can be connected to the same IRQ line
-as other peripherals using open drain. Add a device tree binding
-and a sensor data property to flip the right bit in the interrupt
-control register to enable open drain mode on the INT line.
+Hello Arnd,
 
-If the line is set to be open drain, also tag on IRQF_SHARED
-to the IRQ flags when requesting the interrupt, as the whole
-point of using open drain interrupt lines is to share them with
-more than one peripheral (wire-or).
+On 08.11.2015 17:39, Vladimir Zapolskiy wrote:
+> Hi Arnd,
+> 
+> On 21.10.2015 17:45, Arnd Bergmann wrote:
+>> On Sunday 18 October 2015 00:35:49 Vladimir Zapolskiy wrote:
+>>> The change improves description of NXP LPC32xx hardware, among
+>>> important changes it adds standard timers and external memory
+>>> controller nodes, splits PWM device node into two,
+>>>
+>>> Changes from v1 to v2:
+>>> - removed v1 2/5 "arm: dts: lpc32xx: fix improper usage of ranges property"
+>>> - v1 4/5 "arm: dts: lpc32xx: remove unneeded cell settings from cpus"
+>>>   is replaced by v2 3/8 "arm: dts: lpc32xx: add reg property to cpu device node"
+>>> - new change, sets physical memory offset for EA3250 and PHY3250 v5/8
+>>> - new change, added EMC device node v2 6/8
+>>> - new change, added standard timer nodes v2 7/8
+>>> - new change, grouped USB subdevices together v2 8/8
+>>
+>> Looks ok to me. Who should pick them up? I haven't seen pull requests from
+>> Roland in a while. If he's still interested in the port, I think it would be
+>> best if he could create a branch here.
+>>
+>> If not, we can pick them up directly this time into arm-soc, but then we
+>> should find a new maintainer.
+>>
+>> 	Arnd 
+> 
+> please pick this series up for v4.3, if it is still possible.
+> 
+> Thank you.
+> 
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>
-Cc: Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/st-sensors.txt |  3 +++
- drivers/iio/accel/st_accel_core.c                    |  8 ++++++++
- drivers/iio/common/st_sensors/st_sensors_core.c      | 20 ++++++++++++++++++++
- drivers/iio/common/st_sensors/st_sensors_trigger.c   |  9 +++++++++
- drivers/iio/gyro/st_gyro_core.c                      | 12 ++++++++++++
- drivers/iio/pressure/st_pressure_core.c              |  8 ++++++++
- include/linux/iio/common/st_sensors.h                |  6 ++++++
- include/linux/platform_data/st_sensors_pdata.h       |  2 ++
- 8 files changed, 68 insertions(+)
+in connection to previous discussion started here [1] I want to ask your
+opinion, does it make sense to support non-DT LPC32xx platforms (by the
+way there is no such platforms in vanilla)?
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index d3ccdb190c53..4ac20cb2ae8d 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -16,6 +16,9 @@ Optional properties:
- - st,drdy-int-pin: the pin on the package that will be used to signal
-   "data ready" (valid values: 1 or 2). This property is not configurable
-   on all sensors.
-+- st,int-pin-open-drain: the interrupt/data ready line will be configured
-+  as open drain, which is useful if several sensors share the same
-+  interrupt line.
- 
- Sensors may also have applicable pin control settings, those use the
- standard bindings from pinctrl/pinctrl-bindings.txt.
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 1132224cbc10..888682b95693 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -96,6 +96,8 @@
- #define ST_ACCEL_2_DRDY_IRQ_INT2_MASK		0x10
- #define ST_ACCEL_2_IHL_IRQ_ADDR			0x22
- #define ST_ACCEL_2_IHL_IRQ_MASK			0x80
-+#define ST_ACCEL_2_OD_IRQ_ADDR			0x22
-+#define ST_ACCEL_2_OD_IRQ_MASK			0x40
- #define ST_ACCEL_2_MULTIREAD_BIT		true
- 
- /* CUSTOM VALUES FOR SENSOR 3 */
-@@ -177,6 +179,8 @@
- #define ST_ACCEL_5_DRDY_IRQ_INT2_MASK		0x20
- #define ST_ACCEL_5_IHL_IRQ_ADDR			0x22
- #define ST_ACCEL_5_IHL_IRQ_MASK			0x80
-+#define ST_ACCEL_5_OD_IRQ_ADDR			0x22
-+#define ST_ACCEL_5_OD_IRQ_MASK			0x40
- #define ST_ACCEL_5_IG1_EN_ADDR			0x21
- #define ST_ACCEL_5_IG1_EN_MASK			0x08
- #define ST_ACCEL_5_MULTIREAD_BIT		false
-@@ -366,6 +370,8 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask_int2 = ST_ACCEL_2_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_ACCEL_2_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_ACCEL_2_IHL_IRQ_MASK,
-+			.addr_od = ST_ACCEL_2_OD_IRQ_ADDR,
-+			.mask_od = ST_ACCEL_2_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_ACCEL_2_MULTIREAD_BIT,
- 		.bootime = 2,
-@@ -552,6 +558,8 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask_int2 = ST_ACCEL_5_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_ACCEL_5_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_ACCEL_5_IHL_IRQ_MASK,
-+			.addr_od = ST_ACCEL_5_OD_IRQ_ADDR,
-+			.mask_od = ST_ACCEL_5_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_ACCEL_5_MULTIREAD_BIT,
- 		.bootime = 2, /* guess */
-diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
-index ed6f54d5c932..bff469dd9583 100644
---- a/drivers/iio/common/st_sensors/st_sensors_core.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-@@ -302,6 +302,14 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 		return -EINVAL;
- 	}
- 
-+	if (pdata->open_drain) {
-+		if (!sdata->sensor_settings->drdy_irq.addr_od)
-+			dev_err(&indio_dev->dev,
-+				"open drain requested but unsupported.\n");
-+		else
-+			sdata->int_pin_open_drain = true;
-+	}
-+
- 	return 0;
- }
- 
-@@ -322,6 +330,8 @@ static struct st_sensors_platform_data *st_sensors_of_probe(struct device *dev,
- 	else
- 		pdata->drdy_int_pin = defdata ? defdata->drdy_int_pin : 0;
- 
-+	pdata->open_drain = of_property_read_bool(np, "st,int-pin-open-drain");
-+
- 	return pdata;
- }
- #else
-@@ -375,6 +385,16 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
- 			return err;
- 	}
- 
-+	if (sdata->int_pin_open_drain) {
-+		dev_info(&indio_dev->dev,
-+			 "set interrupt line to open drain mode\n");
-+		err = st_sensors_write_data_with_mask(indio_dev,
-+				sdata->sensor_settings->drdy_irq.addr_od,
-+				sdata->sensor_settings->drdy_irq.mask_od, 1);
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
- 
- 	return err;
-diff --git a/drivers/iio/common/st_sensors/st_sensors_trigger.c b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-index cb53d14aca94..4283468fd502 100644
---- a/drivers/iio/common/st_sensors/st_sensors_trigger.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-@@ -67,6 +67,15 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 			"rising edge\n", irq_trig);
- 		irq_trig = IRQF_TRIGGER_RISING;
- 	}
-+
-+	/*
-+	 * If the interrupt pin is Open Drain, by definition this
-+	 * means that the interrupt line may be shared with other
-+	 * peripherals.
-+	 */
-+	if (sdata->int_pin_open_drain)
-+		irq_trig |= IRQF_SHARED;
-+
- 	err = request_any_context_irq(irq,
- 			iio_trigger_generic_data_rdy_poll,
- 			irq_trig,
-diff --git a/drivers/iio/gyro/st_gyro_core.c b/drivers/iio/gyro/st_gyro_core.c
-index 260bfe021904..d53622b0e430 100644
---- a/drivers/iio/gyro/st_gyro_core.c
-+++ b/drivers/iio/gyro/st_gyro_core.c
-@@ -63,6 +63,8 @@
- #define ST_GYRO_1_DRDY_IRQ_INT2_MASK		0x08
- #define ST_GYRO_1_IHL_IRQ_ADDR			0x22
- #define ST_GYRO_1_IHL_IRQ_MASK			0x20
-+#define ST_GYRO_1_OD_IRQ_ADDR			0x22
-+#define ST_GYRO_1_OD_IRQ_MASK			0x10
- #define ST_GYRO_1_MULTIREAD_BIT			true
- 
- /* CUSTOM VALUES FOR SENSOR 2 */
-@@ -89,6 +91,8 @@
- #define ST_GYRO_2_DRDY_IRQ_INT2_MASK		0x08
- #define ST_GYRO_2_IHL_IRQ_ADDR			0x22
- #define ST_GYRO_2_IHL_IRQ_MASK			0x20
-+#define ST_GYRO_2_OD_IRQ_ADDR			0x22
-+#define ST_GYRO_2_OD_IRQ_MASK			0x10
- #define ST_GYRO_2_MULTIREAD_BIT			true
- 
- /* CUSTOM VALUES FOR SENSOR 3 */
-@@ -115,6 +119,8 @@
- #define ST_GYRO_3_DRDY_IRQ_INT2_MASK		0x08
- #define ST_GYRO_3_IHL_IRQ_ADDR			0x22
- #define ST_GYRO_3_IHL_IRQ_MASK			0x20
-+#define ST_GYRO_3_OD_IRQ_ADDR			0x22
-+#define ST_GYRO_3_OD_IRQ_MASK			0x10
- #define ST_GYRO_3_MULTIREAD_BIT			true
- 
- 
-@@ -193,6 +199,8 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask_int2 = ST_GYRO_1_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_GYRO_1_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_GYRO_1_IHL_IRQ_MASK,
-+			.addr_od = ST_GYRO_1_OD_IRQ_ADDR,
-+			.mask_od = ST_GYRO_1_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_GYRO_1_MULTIREAD_BIT,
- 		.bootime = 2,
-@@ -258,6 +266,8 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask_int2 = ST_GYRO_2_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_GYRO_2_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_GYRO_2_IHL_IRQ_MASK,
-+			.addr_od = ST_GYRO_2_OD_IRQ_ADDR,
-+			.mask_od = ST_GYRO_2_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_GYRO_2_MULTIREAD_BIT,
- 		.bootime = 2,
-@@ -319,6 +329,8 @@ static const struct st_sensor_settings st_gyro_sensors_settings[] = {
- 			.mask_int2 = ST_GYRO_3_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_GYRO_3_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_GYRO_3_IHL_IRQ_MASK,
-+			.addr_od = ST_GYRO_3_OD_IRQ_ADDR,
-+			.mask_od = ST_GYRO_3_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_GYRO_3_MULTIREAD_BIT,
- 		.bootime = 2,
-diff --git a/drivers/iio/pressure/st_pressure_core.c b/drivers/iio/pressure/st_pressure_core.c
-index 172393ad34af..38186288f79c 100644
---- a/drivers/iio/pressure/st_pressure_core.c
-+++ b/drivers/iio/pressure/st_pressure_core.c
-@@ -64,6 +64,8 @@
- #define ST_PRESS_LPS331AP_DRDY_IRQ_INT2_MASK	0x20
- #define ST_PRESS_LPS331AP_IHL_IRQ_ADDR		0x22
- #define ST_PRESS_LPS331AP_IHL_IRQ_MASK		0x80
-+#define ST_PRESS_LPS331AP_OD_IRQ_ADDR		0x22
-+#define ST_PRESS_LPS331AP_OD_IRQ_MASK		0x40
- #define ST_PRESS_LPS331AP_MULTIREAD_BIT		true
- #define ST_PRESS_LPS331AP_TEMP_OFFSET		42500
- 
-@@ -104,6 +106,8 @@
- #define ST_PRESS_LPS25H_DRDY_IRQ_INT2_MASK	0x10
- #define ST_PRESS_LPS25H_IHL_IRQ_ADDR		0x22
- #define ST_PRESS_LPS25H_IHL_IRQ_MASK		0x80
-+#define ST_PRESS_LPS25H_OD_IRQ_ADDR		0x22
-+#define ST_PRESS_LPS25H_OD_IRQ_MASK		0x40
- #define ST_PRESS_LPS25H_MULTIREAD_BIT		true
- #define ST_PRESS_LPS25H_TEMP_OFFSET		42500
- #define ST_PRESS_LPS25H_OUT_XL_ADDR		0x28
-@@ -226,6 +230,8 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask_int2 = ST_PRESS_LPS331AP_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_PRESS_LPS331AP_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_PRESS_LPS331AP_IHL_IRQ_MASK,
-+			.addr_od = ST_PRESS_LPS331AP_OD_IRQ_ADDR,
-+			.mask_od = ST_PRESS_LPS331AP_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_PRESS_LPS331AP_MULTIREAD_BIT,
- 		.bootime = 2,
-@@ -312,6 +318,8 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask_int2 = ST_PRESS_LPS25H_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_PRESS_LPS25H_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_PRESS_LPS25H_IHL_IRQ_MASK,
-+			.addr_od = ST_PRESS_LPS25H_OD_IRQ_ADDR,
-+			.mask_od = ST_PRESS_LPS25H_OD_IRQ_MASK,
- 		},
- 		.multi_read_bit = ST_PRESS_LPS25H_MULTIREAD_BIT,
- 		.bootime = 2,
-diff --git a/include/linux/iio/common/st_sensors.h b/include/linux/iio/common/st_sensors.h
-index 6670c3d25c58..8972101224d9 100644
---- a/include/linux/iio/common/st_sensors.h
-+++ b/include/linux/iio/common/st_sensors.h
-@@ -121,6 +121,8 @@ struct st_sensor_bdu {
-  * @mask_int2: mask to enable/disable IRQ on INT2 pin.
-  * @addr_ihl: address to enable/disable active low on the INT lines.
-  * @mask_ihl: mask to enable/disable active low on the INT lines.
-+ * @addr_od: address to enable/disable Open Drain on the INT lines.
-+ * @mask_od: mask to enable/disable Open Drain on the INT lines.
-  * struct ig1 - represents the Interrupt Generator 1 of sensors.
-  * @en_addr: address of the enable ig1 register.
-  * @en_mask: mask to write the on/off value for enable.
-@@ -131,6 +133,8 @@ struct st_sensor_data_ready_irq {
- 	u8 mask_int2;
- 	u8 addr_ihl;
- 	u8 mask_ihl;
-+	u8 addr_od;
-+	u8 mask_od;
- 	struct {
- 		u8 en_addr;
- 		u8 en_mask;
-@@ -212,6 +216,7 @@ struct st_sensor_settings {
-  * @odr: Output data rate of the sensor [Hz].
-  * num_data_channels: Number of data channels used in buffer.
-  * @drdy_int_pin: Redirect DRDY on pin 1 (1) or pin 2 (2).
-+ * @int_pin_open_drain: Set the interrupt/DRDY to open drain.
-  * @get_irq_data_ready: Function to get the IRQ used for data ready signal.
-  * @tf: Transfer function structure used by I/O operations.
-  * @tb: Transfer buffers and mutex used by I/O operations.
-@@ -233,6 +238,7 @@ struct st_sensor_data {
- 	unsigned int num_data_channels;
- 
- 	u8 drdy_int_pin;
-+	bool int_pin_open_drain;
- 
- 	unsigned int (*get_irq_data_ready) (struct iio_dev *indio_dev);
- 
-diff --git a/include/linux/platform_data/st_sensors_pdata.h b/include/linux/platform_data/st_sensors_pdata.h
-index 753839187ba0..79b0e4cdb814 100644
---- a/include/linux/platform_data/st_sensors_pdata.h
-+++ b/include/linux/platform_data/st_sensors_pdata.h
-@@ -16,9 +16,11 @@
-  * @drdy_int_pin: Redirect DRDY on pin 1 (1) or pin 2 (2).
-  *	Available only for accelerometer and pressure sensors.
-  *	Accelerometer DRDY on LSM330 available only on pin 1 (see datasheet).
-+ * @open_drain: set the interrupt line to be open drain if possible.
-  */
- struct st_sensors_platform_data {
- 	u8 drdy_int_pin;
-+	bool open_drain;
- };
- 
- #endif /* ST_SENSORS_PDATA_H */
--- 
-2.4.3
+In particular I'd like to remove legacy platform data support and
+clean-up mach-lpc32xx, e.g. remove duplicated timer driver etc.
+
+At the moment I've completed development and tested:
+* common clock framework driver (no review comments from maintainers so
+far),
+* irqchip driver (SPARSE_IRQ is supported),
+* as a dependency to IRQ changes I developed a wakeup controller driver,
+* as a dependency to IRQ changes GPIO driver is rewritten -- at the
+moment it strictly depends on hwirq plus its current version breaks
+board boot in v4.4, see [2].
+
+In general the platform is broken since commit 76ba59f8366 ("genirq: Add
+irq_domain-aware core IRQ handler"), dated Aug 26 2014 (!), because the
+platform is based on legacy irq domain and hwirq 0 is actively exploited
+-- this is a cascaded irq to one of the sub-irq controllers.
+
+All done work allows to remove thousands of LoCs and make LPC32xx boot
+and work again at the price of discontinued legacy DTB to new kernel
+compatibility (for example due to missed clocks properties etc.) and
+removed platform_data hooks.
+
+I can continue to improve LPC32xx platform, but I believe I need some
+kind of approval from ARM maintainers to convince clk/irqchip/gpio
+maintainers to accept my work. What would be your opinion on this subject?
+
+[1] http://www.spinics.net/lists/arm-kernel/msg452447.html
+[2] https://www.mail-archive.com/linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg11028.html
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
