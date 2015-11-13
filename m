@@ -1,103 +1,121 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: mt8135: enable basic SMP bringup for mt8135
-Date: Thu, 12 Nov 2015 15:56:26 -0800
-Message-ID: <7hd1vedb6d.fsf@deeprootsystems.com>
-References: <1443799181-50409-1-git-send-email-yingjoe.chen@mediatek.com>
-	<1443799181-50409-5-git-send-email-yingjoe.chen@mediatek.com>
-	<CAMAWPa-Ed2FJY2pW67EHHKBH3_eBZx0+oWfMJwc_DhEjrf7aMg@mail.gmail.com>
-	<1445843717.23888.1.camel@mtksdaap41>
-	<CAMAWPa_Gyq7H0qUJ32PAJh_ELdHeKWMPyHud4gaT8=Ootcu1+g@mail.gmail.com>
-	<1445859610.26723.4.camel@mtksdaap41>
-	<CAMAWPa_13j88SMBbYEBg2WHFEhkhR_gVZkkU_x-U5NJay05AxA@mail.gmail.com>
-	<1447135867.14454.9.camel@mtksdaap41>
-	<7h1tbx1gjp.fsf@deeprootsystems.com>
-	<1447228557.20886.10.camel@mtksdaap41>
-	<7hpozgyu36.fsf@deeprootsystems.com>
-	<7hwptnddhs.fsf@deeprootsystems.com>
-	<1447332379.4156.5.camel@mtksdaap41>
+From: Al Stone <al.stone@linaro.org>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Thu, 12 Nov 2015 17:06:08 -0700
+Message-ID: <56452970.4070209@linaro.org>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+ <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+ <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
+ <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
+ <563B62F7.3050307@codeaurora.org>
+ <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
+ <563B6A4B.7090400@codeaurora.org>
+ <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
+ <563B869F.2010004@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447332379.4156.5.camel@mtksdaap41> (Eddie Huang's message of
-	"Thu, 12 Nov 2015 20:46:19 +0800")
+In-Reply-To: <563B869F.2010004@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Tyler Baker <tyler.baker@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, lkml <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Guenter Roeck <linux@roeck-us.net>, Fu Wei <fu.wei@linaro.org>, Timur Tabi <timur@codeaurora.org>
+Cc: Pratyush Anand <panand@redhat.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jon Masters <jcm@redhat.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robherring2@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Dave Young <dyoung@redhat.com>, Vipul Gandhi <vgandhi@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Eddie Huang <eddie.huang@mediatek.com> writes:
+On 11/05/2015 09:41 AM, Guenter Roeck wrote:
+> On 11/05/2015 07:00 AM, Fu Wei wrote:
+>> Hi Timur,
+>>
+>> On 5 November 2015 at 22:40, Timur Tabi <timur@codeaurora.org> wrote:
+>>> Fu Wei wrote:
+>>>>
+>>>> Did you really read the "Note" above???????? OK, let me paste it again
+>>>> and again:
+>>>>
+>>>> SBSA 2.3 Page 23 :
+>>>> If a larger watch period is required then the compare value can be
+>>>> programmed directly into the compare value register.
+>>>
+>>>
+>>> Well, okay.  Sorry, I should have read what you pasted more closely. But I
+>>
+>> Thanks for reading it again.
+>>
+>>> think that means during initialization, not during the WS0 timeout.
+>>
+>> I really don't see SBSA say "during initialization, not during the WS0 timeout",
+>> please point it out the page number and the line number in SBSA spec.
+>> maybe I miss it?
+>> Thanks for your help in advance.
+>>
+>>>
+>>> Anyway, I still don't like the fact that you're programming WCV in the
+>>
+>> "you don't like" doesn't mean "it is wrong" or "we can't do this", so
+>> I will keep this way unless we have better idea to extend second stage
+>> timeout.
+>>
+>>> interrupt handler, but I'm not going to make a big deal about it any more.
+>>
+>> Deal, Thanks a lot.
+>>
+> 
+> The problem with your driver, as I see it, is that dealing with WS0/WS1
+> and pretimeout makes the driver so complex that, at least for my part,
+> I am very wary about it. The driver could long since have been accepted
+> if it were not for that. Besides that, I really believe that any system designer
+> using the highest permitted frequency should be willing to live with the
+> consequences, and not force the implementation of a a complex driver.
+> 
+> Ultimately, you'll have to decide if you want a simple driver accepted, or
+> a complex driver hanging in the review queue forever.
+> 
+> Thanks,
+> Guenter
 
-> On Wed, 2015-11-11 at 20:54 -0800, Kevin Hilman wrote:
->> Hi Eddie,
->> 
->> Kevin Hilman <khilman@kernel.org> writes:
->> 
->> > Eddie Huang <eddie.huang@mediatek.com> writes:
->> >
->> >> On Tue, 2015-11-10 at 17:16 -0800, Kevin Hilman wrote:
->> >>> Hi Eddie,
->> >>> 
->> >>> [...]
->> >>> 
->> >>> > I check the log [0],
->> >>> 
->> >>> Thanks for checking into this boot failure.
->> >>> 
->> >>> > it seems first time mt8135-evbp1 boot to kernel
->> >>> > shell successfully, then boot again. In the second time, mt8135 stay in
->> >>> > fastboot mode, waiting host send boot image, then timeout.
->> >>> 
->> >>> Actually, it never gets to a shell the first time.  If you look closely,
->> >>> the target reboots as soon as userspace starts.   Look for the PYBOOT
->> >>> line which says "finished booting, starting userspace"
->> >>> 
->> >>> Later on, pyboot thinks it finds a root shell due to finding '#'
->> >>> characters, but clearly it never got to a shell.
->> >>> 
->> >>> > I download zImage and dtb in [1], and kernel run to shell successfully
->> >>> > on my platform.
->> >>> 
->> >>> Are you can you try using a ramdisk as well?  You can use the pre-built
->> >>> one here:
->> >>> http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz
->> >>> 
->> >>
->> >> Yes, I tried this ramdisk, and I can reproduce fail issue.
->> >>
->> >
->> > OK, good.   Thanks for looking into it.
->> >
->> >>> Please check my boot logs to see how I'm generating the boot.img file
->> >>> (search for mkbootimg) with a kernel/dtb/ramdisk.  It may be possible
->> >>> that the kernel image size with a ramdisk is breaking some of the
->> >>> assumptions in the fastboot mode.  I've seen problems like this on other
->> >>> platforms due to hard-coded sizes/addresses in the boot firmware.
->> >>> 
->> >>
->> >> MT8135 allocate 10MB for BOOT partition, but the test boot.img is 11MB,
->> >> thus cause user space fail.
->> >
->> > Aha, I was right!  ;)
->> 
->> Also notice in kernelci.org that the mt8173 board has also been failing
->> to boot in mainline[1].  I wonder if this same limitation exists in the
->> mt8173 boot firmware?
->> 
->
-> MT8173 is another case, the failure is due to following commit:
-> 67e56c5 arm64: dts: mt8173: Add subsystem clock controller device nodes
->
-> It is because this commit register MM subsystem clock, but kernel don't
-> use MM clock yet, then CCF disable it. (My internal platform kernel
-> command include clk_ignore_unused parameter, so don't have this
-> problem).I will do further checking and release solution later. Thanks
-> your testing.
+Sorry to poke my head in late like this, but I do have a vested interest in the
+outcome so I'm very curious.  For my work, I need to have an ACPI-supported,
+SBSA-compliant watchdog timer for arm64, and this series is one of the key
+pieces to getting there.  The plan for me has been: (1) get an FDT based SBSA
+watchdog timer, (2) add in kernel code to handle the ACPI GTDT table describing
+timers, then (3) munge the SBSA watchdog timer for use by ACPI.
 
-OK, thanks for looking into it.
+So, is this an actual NAK of the patch series as is?  I think it is, but I want
+it to be clear, and it has not been explicit yet.
 
-However, since the merge window is very close to closing, unless you can
-git a fix out soon (and one that doesn't introduce other bugs),
-probablly the right solution is to just revert the above patch so things
-are fixed for mainline ASAP.
+If it is a NAK, that's fine, but I also want to be sure I understand what the
+objections are.  Based on my understanding of the discussion so far over the
+multiple versions, I think the primary objection is that the use of pretimeout
+makes this driver too complex, and indeed complex enough that there is some
+concern that it could destabilize a running system.  Do I have that right?
 
-Kevin
+The other possible item I could conclude out of the discussion is that we do
+not want to have the pretimeout code as part of the watchdog framework; is that
+also the case or did I misunderstand?
+
+And finally, a simpler, single stage timeout watchdog driver would be a
+reasonable thing to accept, yes?  I can see where that would make sense.
+
+The issue for me in that case is that the SBSA requires a two stage timeout,
+so a single stage driver has no real value for me.  Now, if I can later add in
+changes to make the driver into a two stage driver so it is SBSA-compliant,
+that would also work, but it will make the driver more complex again.  At that
+point, I think I've now gone in a logical circle and the changes would not be
+accepted so I could never get to my goal of an SBSA-compliant driver.  I don't
+think that's what was meant, so what did I miss?
+
+Thanks in advance for any clarifications that can be provided.....I really do
+appreciate it.  Email is not always the clearest mechanism for communication
+so sometimes I have to ask odd questions like these so I can understand what
+is happening.
+
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Linaro Enterprise Group
+al.stone@linaro.org
+-----------------------------------
