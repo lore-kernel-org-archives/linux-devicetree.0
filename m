@@ -1,121 +1,270 @@
-From: Al Stone <al.stone@linaro.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Thu, 12 Nov 2015 17:06:08 -0700
-Message-ID: <56452970.4070209@linaro.org>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
- <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
- <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
- <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
- <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
- <563B62F7.3050307@codeaurora.org>
- <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
- <563B6A4B.7090400@codeaurora.org>
- <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
- <563B869F.2010004@roeck-us.net>
+From: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] pstore-ram: add Device Tree bindings
+Date: Thu, 12 Nov 2015 16:05:46 -0800
+Message-ID: <CAGXu5jKZ9gdfJce-e3MM_QxD5oAz5U3ah3K_Lmq-rrGhwt24cw@mail.gmail.com>
+References: <1447372408-25435-1-git-send-email-ghackmann@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <563B869F.2010004@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Fu Wei <fu.wei@linaro.org>, Timur Tabi <timur@codeaurora.org>
-Cc: Pratyush Anand <panand@redhat.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jon Masters <jcm@redhat.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robherring2@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Dave Young <dyoung@redhat.com>, Vipul Gandhi <vgandhi@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447372408-25435-1-git-send-email-ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 09:41 AM, Guenter Roeck wrote:
-> On 11/05/2015 07:00 AM, Fu Wei wrote:
->> Hi Timur,
->>
->> On 5 November 2015 at 22:40, Timur Tabi <timur@codeaurora.org> wrote:
->>> Fu Wei wrote:
->>>>
->>>> Did you really read the "Note" above???????? OK, let me paste it again
->>>> and again:
->>>>
->>>> SBSA 2.3 Page 23 :
->>>> If a larger watch period is required then the compare value can be
->>>> programmed directly into the compare value register.
->>>
->>>
->>> Well, okay.  Sorry, I should have read what you pasted more closely. But I
->>
->> Thanks for reading it again.
->>
->>> think that means during initialization, not during the WS0 timeout.
->>
->> I really don't see SBSA say "during initialization, not during the WS0 timeout",
->> please point it out the page number and the line number in SBSA spec.
->> maybe I miss it?
->> Thanks for your help in advance.
->>
->>>
->>> Anyway, I still don't like the fact that you're programming WCV in the
->>
->> "you don't like" doesn't mean "it is wrong" or "we can't do this", so
->> I will keep this way unless we have better idea to extend second stage
->> timeout.
->>
->>> interrupt handler, but I'm not going to make a big deal about it any more.
->>
->> Deal, Thanks a lot.
->>
-> 
-> The problem with your driver, as I see it, is that dealing with WS0/WS1
-> and pretimeout makes the driver so complex that, at least for my part,
-> I am very wary about it. The driver could long since have been accepted
-> if it were not for that. Besides that, I really believe that any system designer
-> using the highest permitted frequency should be willing to live with the
-> consequences, and not force the implementation of a a complex driver.
-> 
-> Ultimately, you'll have to decide if you want a simple driver accepted, or
-> a complex driver hanging in the review queue forever.
-> 
-> Thanks,
-> Guenter
+On Thu, Nov 12, 2015 at 3:53 PM, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> ramoops is one of the remaining places where ARM vendors still rely on
+> board-specific shims.  Device Tree lets us replace those shims with
+> generic code.
+>
+> These bindings mirror the ramoops module parameters, with two small
+> differences:
+>
+> (1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
+>     sets dump_oops=1 by default.
+>
+> (2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
+>
+> Signed-off-by: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 
-Sorry to poke my head in late like this, but I do have a vested interest in the
-outcome so I'm very curious.  For my work, I need to have an ACPI-supported,
-SBSA-compliant watchdog timer for arm64, and this series is one of the key
-pieces to getting there.  The plan for me has been: (1) get an FDT based SBSA
-watchdog timer, (2) add in kernel code to handle the ACPI GTDT table describing
-timers, then (3) munge the SBSA watchdog timer for use by ACPI.
+This seems good to me! If device-tree people are happy with this, I'm
+all for it.
 
-So, is this an actual NAK of the patch series as is?  I think it is, but I want
-it to be clear, and it has not been explicit yet.
+Reviewed-by: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-If it is a NAK, that's fine, but I also want to be sure I understand what the
-objections are.  Based on my understanding of the discussion so far over the
-multiple versions, I think the primary objection is that the use of pretimeout
-makes this driver too complex, and indeed complex enough that there is some
-concern that it could destabilize a running system.  Do I have that right?
+-Kees
 
-The other possible item I could conclude out of the discussion is that we do
-not want to have the pretimeout code as part of the watchdog framework; is that
-also the case or did I misunderstand?
+> ---
+>  Documentation/devicetree/bindings/misc/ramoops.txt |  30 ++++++
+>  Documentation/ramoops.txt                          |   6 +-
+>  fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
+>  3 files changed, 142 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+>
+> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+> new file mode 100644
+> index 0000000..7b4cb01
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/ramoops.txt
+> @@ -0,0 +1,30 @@
+> +Ramoops oops/panic logger
+> +=========================
+> +
+> +See Documentation/ramoops.txt.  The bindings here are modelled after the ramoops
+> +kernel module parameters.
+> +
+> +
+> +Required properties:
+> +
+> +- compatible: must be "ramoops"
+> +
+> +- memory-region: phandle to a region of memory that is preserved between reboots
+> +
+> +
+> +Optional properties:
+> +
+> +- ecc-size: enables ECC support and specifies ECC buffer size in bytes
+> +
+> +- record-size: size in bytes of each dump done on oops/panic
+> +
+> +- console-size: size in bytes of kernel console log
+> +
+> +- ftrace-size: size in bytes of ftrace log
+> +
+> +- pmsg-size: size in bytes of user space message log
+> +
+> +- unbuffered: if present, use pgprot_noncached to map reserved region
+> +  (defaults to pgprot_writecombine)
+> +
+> +- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+> diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
+> index 5d86756..9264bca 100644
+> --- a/Documentation/ramoops.txt
+> +++ b/Documentation/ramoops.txt
+> @@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
+>
+>  2. Setting the parameters
+>
+> -Setting the ramoops parameters can be done in 2 different manners:
+> +Setting the ramoops parameters can be done in 3 different manners:
+>   1. Use the module parameters (which have the names of the variables described
+>   as before).
+>   For quick debugging, you can also reserve parts of memory during boot
+> @@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
+>   kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
+>   region at 128 MB boundary:
+>   "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
+> - 2. Use a platform device and set the platform data. The parameters can then
+> + 2. Use Device Tree bindings, as described in
+> + Documentation/device-tree/bindings/misc/ramoops.txt.
+> + 3. Use a platform device and set the platform data. The parameters can then
+>   be set through that platform data. An example of doing that is:
+>
+>  #include <linux/pstore_ram.h>
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 319c3a6..ac29543 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -34,6 +34,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/compiler.h>
+>  #include <linux/pstore_ram.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>
+>  #define RAMOOPS_KERNMSG_HDR "===="
+>  #define MIN_MEM_SIZE 4096UL
+> @@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
+>         return 0;
+>  }
+>
+> +static int ramoops_parse_dt_size(struct platform_device *pdev,
+> +               const char *propname, unsigned long *val)
+> +{
+> +       u64 val64;
+> +       int ret;
+> +
+> +       ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
+> +       if (ret == -EINVAL) {
+> +               *val = 0;
+> +               return 0;
+> +       } else if (ret != 0) {
+> +               dev_err(&pdev->dev, "failed to parse property %s: %d\n",
+> +                               propname, ret);
+> +               return ret;
+> +       }
+> +
+> +       if (val64 > ULONG_MAX) {
+> +               dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
+> +               return -EOVERFLOW;
+> +       }
+> +
+> +       *val = val64;
+> +       return 0;
+> +}
+> +
+> +static int ramoops_parse_dt(struct platform_device *pdev,
+> +               struct ramoops_platform_data *pdata)
+> +{
+> +       struct device_node *of_node = pdev->dev.of_node;
+> +       struct device_node *mem_region;
+> +       struct resource res;
+> +       u32 ecc_size;
+> +       int ret;
+> +
+> +       dev_dbg(&pdev->dev, "using Device Tree\n");
+> +
+> +       mem_region = of_parse_phandle(of_node, "memory-region", 0);
+> +       if (!mem_region) {
+> +               dev_err(&pdev->dev, "no memory-region phandle\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret = of_address_to_resource(mem_region, 0, &res);
+> +       of_node_put(mem_region);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
+> +                               ret);
+> +               return ret;
+> +       }
+> +
+> +       pdata->mem_size = resource_size(&res);
+> +       pdata->mem_address = res.start;
+> +       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+> +       pdata->dump_oops = of_property_read_bool(of_node, "dump-oops");
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
+> +       if (ret == 0) {
+> +               if (ecc_size > INT_MAX) {
+> +                       dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
+> +                       return -EOVERFLOW;
+> +               }
+> +               pdata->ecc_info.ecc_size = ecc_size;
+> +       } else if (ret != -EINVAL) {
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int ramoops_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> -       struct ramoops_platform_data *pdata = pdev->dev.platform_data;
+> +       struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
+>         struct ramoops_context *cxt = &oops_cxt;
+>         size_t dump_mem_sz;
+>         phys_addr_t paddr;
+>         int err = -EINVAL;
+>
+> +       if (dev->of_node && !pdata) {
+> +               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +               if (!pdata) {
+> +                       err = -ENOMEM;
+> +                       goto fail_out;
+> +               }
+> +
+> +               err = ramoops_parse_dt(pdev, pdata);
+> +               if (err < 0)
+> +                       goto fail_out;
+> +       }
+> +
+>         /* Only a single ramoops area allowed at a time, so fail extra
+>          * probes.
+>          */
+> @@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
+>                 cxt->size, (unsigned long long)cxt->phys_addr,
+>                 cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
+>
+> +       platform_set_drvdata(pdev, pdata);
+>         return 0;
+>
+>  fail_buf:
+> @@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static const struct of_device_id dt_match[] = {
+> +       { .compatible = "ramoops" },
+> +       {}
+> +};
+> +
+>  static struct platform_driver ramoops_driver = {
+>         .probe          = ramoops_probe,
+>         .remove         = ramoops_remove,
+>         .driver         = {
+> -               .name   = "ramoops",
+> +               .name           = "ramoops",
+> +               .of_match_table = dt_match,
+>         },
+>  };
+>
+> --
+> 2.6.0.rc2.230.g3dd15c0
+>
 
-And finally, a simpler, single stage timeout watchdog driver would be a
-reasonable thing to accept, yes?  I can see where that would make sense.
 
-The issue for me in that case is that the SBSA requires a two stage timeout,
-so a single stage driver has no real value for me.  Now, if I can later add in
-changes to make the driver into a two stage driver so it is SBSA-compliant,
-that would also work, but it will make the driver more complex again.  At that
-point, I think I've now gone in a logical circle and the changes would not be
-accepted so I could never get to my goal of an SBSA-compliant driver.  I don't
-think that's what was meant, so what did I miss?
-
-Thanks in advance for any clarifications that can be provided.....I really do
-appreciate it.  Email is not always the clearest mechanism for communication
-so sometimes I have to ask odd questions like these so I can understand what
-is happening.
 
 -- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Linaro Enterprise Group
-al.stone@linaro.org
------------------------------------
+Kees Cook
+Chrome OS Security
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
