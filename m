@@ -1,48 +1,41 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: shmobile: koelsch: Move SPI FLASH partitions to subnode
-Date: Fri, 13 Nov 2015 08:56:18 +0100
-Message-ID: <CAMuHMdW4jOYJJvk8RX+uZRhsa=eT3hg+by_3rbKP96M1mrLjPQ@mail.gmail.com>
-References: <1447144506-20336-1-git-send-email-geert+renesas@glider.be>
-	<20151112011522.GB19649@verge.net.au>
-	<CAMuHMdVaBXSNnf5k3Sxx=bz8CscsE85PozgBH82yXa3HBXC1sg@mail.gmail.com>
-	<20151113002820.GE20462@verge.net.au>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
+Date: Fri, 13 Nov 2015 09:08:06 +0100
+Message-ID: <CAMuHMdWA6G+9YtGCnUx5iUUuC8HVJt9LPev82f5dCdCuVer9Fw@mail.gmail.com>
+References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+	<20151112232805.GA5562@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151113002820.GE20462@verge.net.au>
+In-Reply-To: <20151112232805.GA5562@rob-hp-laptop>
 Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mtd@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Rob,
 
-On Fri, Nov 13, 2015 at 1:28 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, Nov 12, 2015 at 11:03:33AM +0100, Geert Uytterhoeven wrote:
->> On Thu, Nov 12, 2015 at 2:15 AM, Simon Horman <horms@verge.net.au> wrote:
->> > On Tue, Nov 10, 2015 at 09:35:06AM +0100, Geert Uytterhoeven wrote:
->> >> As of commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
->> >> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
->> >> partitions in a special 'partitions' subnode"), having partitions as
->> >> direct subnodes of an mtd device is discouraged:
->> >>
->> >>     spi0.0: 'partitions' subnode not found on /spi@e6b10000/flash@0. Trying to parse direct subnodes as partitions.
->> >
->> > I seem to see something else, perhaps I have a hardware problem?
->> >
->> >      m25p80 spi0.0: unrecognized JEDEC id bytes: 01,  2, 20
+On Fri, Nov 13, 2015 at 12:28 AM, Rob Herring <robh@kernel.org> wrote:
+>> diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+>> index 09daeef1ff22..5b902ac8d97e 100644
+>> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+>> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+>> @@ -14,7 +14,14 @@ not described in these device tree bindings.
 >>
->> That indeed means QSPI doesn't work. Is it reproducible?
->> Is this on Koelsch?
+>>  Required Properties:
+>>
+>> -- compatible: must contain "renesas,rcar-dmac"
+>> +- compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
 >
-> Yes. It appears to happy reliably in my Koelsch.
+> Somehow Renesas has ended up being backwards from everyone else that
+> does <vendor>,<chip>-<block>. Oh well...
 
-Which tree / config?
+I know. Renesas has a mix of both :-(
 
-I've just tried renesas-devel-20151113-v4.3 and topic/gen3-latest with
-shmobile_defconfig, and the QSPI flash was detected correctly on both (the
-former failed to parse partitions, as the code for the partitions subnode is
-not yet in v4.3).
+As in this case the generic one does follow the "<vendor>,<family>-<block>"
+pattern ("renesas,rcar-dmac"), it may make sense to use
+"renesas,<soctype>-dmac", to avoid having a mix in the bindings for the same
+block.
 
 Gr{oetje,eeting}s,
 
