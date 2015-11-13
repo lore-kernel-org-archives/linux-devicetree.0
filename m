@@ -1,270 +1,66 @@
-From: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] pstore-ram: add Device Tree bindings
-Date: Thu, 12 Nov 2015 16:05:46 -0800
-Message-ID: <CAGXu5jKZ9gdfJce-e3MM_QxD5oAz5U3ah3K_Lmq-rrGhwt24cw@mail.gmail.com>
-References: <1447372408-25435-1-git-send-email-ghackmann@google.com>
+From: Daniel Axtens <dja@axtens.net>
+Subject: Re: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in pnv_pci_reset_secondary_bus()
+Date: Fri, 13 Nov 2015 11:08:29 +1100
+Message-ID: <87fv0azrpe.fsf@gamma.ozlabs.ibm.com>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447372408-25435-1-git-send-email-ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 3:53 PM, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> ramoops is one of the remaining places where ARM vendors still rely on
-> board-specific shims.  Device Tree lets us replace those shims with
-> generic code.
->
-> These bindings mirror the ramoops module parameters, with two small
-> differences:
->
-> (1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
->     sets dump_oops=1 by default.
->
-> (2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
->
-> Signed-off-by: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+--=-=-=
+Content-Type: text/plain
 
-This seems good to me! If device-tree people are happy with this, I'm
-all for it.
+Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
 
-Reviewed-by: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
--Kees
-
-> ---
->  Documentation/devicetree/bindings/misc/ramoops.txt |  30 ++++++
->  Documentation/ramoops.txt                          |   6 +-
->  fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
->  3 files changed, 142 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
->
-> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-> new file mode 100644
-> index 0000000..7b4cb01
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/ramoops.txt
-> @@ -0,0 +1,30 @@
-> +Ramoops oops/panic logger
-> +=========================
-> +
-> +See Documentation/ramoops.txt.  The bindings here are modelled after the ramoops
-> +kernel module parameters.
-> +
-> +
-> +Required properties:
-> +
-> +- compatible: must be "ramoops"
-> +
-> +- memory-region: phandle to a region of memory that is preserved between reboots
-> +
-> +
-> +Optional properties:
-> +
-> +- ecc-size: enables ECC support and specifies ECC buffer size in bytes
-> +
-> +- record-size: size in bytes of each dump done on oops/panic
-> +
-> +- console-size: size in bytes of kernel console log
-> +
-> +- ftrace-size: size in bytes of ftrace log
-> +
-> +- pmsg-size: size in bytes of user space message log
-> +
-> +- unbuffered: if present, use pgprot_noncached to map reserved region
-> +  (defaults to pgprot_writecombine)
-> +
-> +- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-> diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
-> index 5d86756..9264bca 100644
-> --- a/Documentation/ramoops.txt
-> +++ b/Documentation/ramoops.txt
-> @@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
->
->  2. Setting the parameters
->
-> -Setting the ramoops parameters can be done in 2 different manners:
-> +Setting the ramoops parameters can be done in 3 different manners:
->   1. Use the module parameters (which have the names of the variables described
->   as before).
->   For quick debugging, you can also reserve parts of memory during boot
-> @@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
->   kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
->   region at 128 MB boundary:
->   "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
-> - 2. Use a platform device and set the platform data. The parameters can then
-> + 2. Use Device Tree bindings, as described in
-> + Documentation/device-tree/bindings/misc/ramoops.txt.
-> + 3. Use a platform device and set the platform data. The parameters can then
->   be set through that platform data. An example of doing that is:
->
->  #include <linux/pstore_ram.h>
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index 319c3a6..ac29543 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -34,6 +34,8 @@
->  #include <linux/slab.h>
->  #include <linux/compiler.h>
->  #include <linux/pstore_ram.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->
->  #define RAMOOPS_KERNMSG_HDR "===="
->  #define MIN_MEM_SIZE 4096UL
-> @@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
->         return 0;
->  }
->
-> +static int ramoops_parse_dt_size(struct platform_device *pdev,
-> +               const char *propname, unsigned long *val)
-> +{
-> +       u64 val64;
-> +       int ret;
-> +
-> +       ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
-> +       if (ret == -EINVAL) {
-> +               *val = 0;
-> +               return 0;
-> +       } else if (ret != 0) {
-> +               dev_err(&pdev->dev, "failed to parse property %s: %d\n",
-> +                               propname, ret);
-> +               return ret;
-> +       }
-> +
-> +       if (val64 > ULONG_MAX) {
-> +               dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
-> +               return -EOVERFLOW;
-> +       }
-> +
-> +       *val = val64;
-> +       return 0;
-> +}
-> +
-> +static int ramoops_parse_dt(struct platform_device *pdev,
-> +               struct ramoops_platform_data *pdata)
-> +{
-> +       struct device_node *of_node = pdev->dev.of_node;
-> +       struct device_node *mem_region;
-> +       struct resource res;
-> +       u32 ecc_size;
-> +       int ret;
-> +
-> +       dev_dbg(&pdev->dev, "using Device Tree\n");
-> +
-> +       mem_region = of_parse_phandle(of_node, "memory-region", 0);
-> +       if (!mem_region) {
-> +               dev_err(&pdev->dev, "no memory-region phandle\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       ret = of_address_to_resource(mem_region, 0, &res);
-> +       of_node_put(mem_region);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
-> +                               ret);
-> +               return ret;
-> +       }
-> +
-> +       pdata->mem_size = resource_size(&res);
-> +       pdata->mem_address = res.start;
-> +       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-> +       pdata->dump_oops = of_property_read_bool(of_node, "dump-oops");
-> +
-> +       ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
-> +       if (ret == 0) {
-> +               if (ecc_size > INT_MAX) {
-> +                       dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
-> +                       return -EOVERFLOW;
-> +               }
-> +               pdata->ecc_info.ecc_size = ecc_size;
-> +       } else if (ret != -EINVAL) {
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int ramoops_probe(struct platform_device *pdev)
+>  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
 >  {
->         struct device *dev = &pdev->dev;
-> -       struct ramoops_platform_data *pdata = pdev->dev.platform_data;
-> +       struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
->         struct ramoops_context *cxt = &oops_cxt;
->         size_t dump_mem_sz;
->         phys_addr_t paddr;
->         int err = -EINVAL;
->
-> +       if (dev->of_node && !pdata) {
-> +               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +               if (!pdata) {
-> +                       err = -ENOMEM;
-> +                       goto fail_out;
-> +               }
+> -	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+> +	int option, freset = 0;
 > +
-> +               err = ramoops_parse_dt(pdev, pdata);
-> +               if (err < 0)
-> +                       goto fail_out;
-> +       }
+> +	if (dev->subordinate)
+> +		pci_walk_bus(dev->subordinate,
+> +			     pnv_pci_dev_reset_type, &freset);
 > +
->         /* Only a single ramoops area allowed at a time, so fail extra
->          * probes.
->          */
-> @@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
->                 cxt->size, (unsigned long long)cxt->phys_addr,
->                 cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
->
-> +       platform_set_drvdata(pdev, pdata);
->         return 0;
->
->  fail_buf:
-> @@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static const struct of_device_id dt_match[] = {
-> +       { .compatible = "ramoops" },
-> +       {}
-> +};
-> +
->  static struct platform_driver ramoops_driver = {
->         .probe          = ramoops_probe,
->         .remove         = ramoops_remove,
->         .driver         = {
-> -               .name   = "ramoops",
-> +               .name           = "ramoops",
-> +               .of_match_table = dt_match,
->         },
->  };
->
-> --
-> 2.6.0.rc2.230.g3dd15c0
->
+> +	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
+> +	pnv_eeh_bridge_reset(dev, option);
 
+According to the skiboot sources, fundamental reset isn't supported on
+p5ioc2. As far as I can tell from your corresponding skiboot patches,
+this is still the case after they are applied. Do we need a fallback to
+EEH_RESET_HOT in this case? Otherwise there will be no reset performed
+at all.
 
+Likewise, if the FUNDAMENTAL reset fails for any reason, should we fall
+back to a HOT reset?
 
--- 
-Kees Cook
-Chrome OS Security
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Daniel
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: GPGTools - https://gpgtools.org
+
+iQIcBAEBCgAGBQJWRSn9AAoJEPC3R3P2I92F3RUP/jc0/8Sbqd6/Z5ujsQAyKqwK
+T+k5ZQ9rXRJzgM4V0ZnIhhTtAPQmmX0WrJgRRJ1lO+JXoNnsxeSrCtvaIfDaHpMt
+24Ax64agoITWe7txLk7Jk+MUflWePSpD4SxpTwAeJdB/izJs++K1OLWTP3iAul9t
+yTJPTMiKZT+cfnJ0DNVtDppIt3iNXyPgOF6x/99SBSTPAc4FBoTjvHO4eqPv14fU
+a5LDPbG0q2HykRveRpt5Tj25DoxrbumLEg0ZrvPet7AgAhyFZ4oFd9Eu4Y0YycL+
+y55706qPAkU2tA37oOvkgsLsXyec3lb6nhY55XkhKZ2rfxunYpN49qWLIFKrtA+7
+6tD/Pjj9eskJRNLvgBcT8vFU539boegpvUQ/MF9W7VhtWVw7nB9yJAKhDw+hH4/Y
+/g9s+U3l0JBRvzk2vs34cQ/0YEFd8+5CIyHyrNbTqeqcWk3j01E8JgUXEYpr1BI+
+Dil/2vuP2yJFwAYdYtEI4MAB3KvlCs87m/iEvTrfU1w/d3HzsfRAVRof7+NcaSkk
+o2+9AT0OFQOnj0GKcH9XqQHK8+J3Yx2d342aojWfAu40HbcVy10J57t1zzX3cEW6
+4CrHvAEQ/wqcYSbISUZtirv2VkgxZbg8cR5ZOGEGGvNLM/x1rqeHCV+wuXIhjFz+
+GEmyhs00IB78K7wi2pv8
+=sJAY
+-----END PGP SIGNATURE-----
+--=-=-=--
