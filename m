@@ -1,44 +1,118 @@
-From: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH] net: hisilicon: fix binding document of mdio
-Date: Fri, 13 Nov 2015 10:23:44 +0800
-Message-ID: <1447381424-107248-1-git-send-email-huangdaode@hisilicon.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/3] devicetree: bindings: Document qcom board compatible
+ format
+Date: Thu, 12 Nov 2015 18:09:21 -0800
+Message-ID: <20151113020921.GH15032@codeaurora.org>
+References: <1445894712-14350-1-git-send-email-sboyd@codeaurora.org>
+ <1445894712-14350-2-git-send-email-sboyd@codeaurora.org>
+ <20151112164948.GA24938@rob-hp-laptop>
+ <20151112194408.GC15032@codeaurora.org>
+ <CAL_Jsq+5QD2Ce8snovw6vC31NvD5oB+Yos1VuZDjXfKa3fPvDQ@mail.gmail.com>
+ <20151113001102.GF15032@codeaurora.org>
+ <CAL_Jsq+F+bxTmb_ShRmygf+NtoYeOMg5UawVXD8Ffks_EAFLcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+F+bxTmb_ShRmygf+NtoYeOMg5UawVXD8Ffks_EAFLcQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes explain the occasion of "hisilcon,mdio" according to
-Arnd's comments. specify it is only used for hip04.
+On 11/12, Rob Herring wrote:
+> On Thu, Nov 12, 2015 at 6:11 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > On 11/12, Rob Herring wrote:
+> >> On Thu, Nov 12, 2015 at 1:44 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >> > On 11/12, Rob Herring wrote:
+> >> >> On Mon, Oct 26, 2015 at 02:25:10PM -0700, Stephen Boyd wrote:
+> >>
+> >> >> > +Some qcom based bootloaders identify the dtb blob based on a set of
+> >> >> > +device properties like SoC, platform, PMIC, and revisions of those components.
+> >> >> > +To support this scheme, we encode this information into the board compatible
+> >> >> > +string.
+> >> >>
+> >> >> Why does all this need to be a single property?
+> >> >
+> >> > Because the different vendor properties were rejected by arm-soc
+> >> > maintainers and the board compatible string was suggested as the
+> >> > place to put such information.
+> >>
+> >> I'm surprised an 80+ character compatible stream is okay. The parts
+> >> giving me heartburn here are not mentioned in the previous discussion
+> >> nor the QCDT format.
+> >>
+> >> As presented previously I agree with the push back. However, we could
+> >> do standard properties for SOC and board versions rather than
+> >> something vendor specific. Then the existing kernel support for
+> >> versions could use it. We could also just make this compatible string
+> >> formatting standard for more than just QC boards.
+> >
+> > Some standard properties for these things sounds good to me.
+> > What's the existing kernel support for versions though? Is that
+> > just compatible string matching, or something else?
+> 
+> The soc_device stuff (and arm32 cpuinfo has a h/w version). Today I
+> think users are pulling version info from h/w registers, but if you
+> don't have h/w registers, then getting it from DT would make sense.
 
-First, please give your commnents.
+Ah ok. The version here is mostly about specifying some minimum
+version or greater that the dtb matches against. If we were to
+actually put the real version we may need more blobs for the
+different combinations of board and SoC versions. So perhaps
+leaving that in compatible string is the right way to go?
 
-Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> 
+> >> For mb, can't the tool just parse the memory node to get ram size
+> >> rather than parsing the compatible.
+> >
+> > Sure. Right now the bootloader injects the memory information
+> > during boot. I think it should work if we already have the memory
+> > information there. I don't have any usage of mb at the moment
+> > though, so if you want we can drop this field until a time that
+> > we need it.
+> 
+> If the bootloader injects it, then how do you know what to put into
+> the compatible string?
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-index 9c23fdf..f650e78 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-@@ -1,7 +1,9 @@
- Hisilicon MDIO bus controller
- 
- Properties:
--- compatible: "hisilicon,mdio","hisilicon,hns-mdio".
-+- compatible: can be one of "hisilicon,hns-mdio","hisilicon,mdio",
-+  for hip04 board, please use "hisilicon,mdio",
-+  other boards, "hisilicon,hns-mdio" is OK.
- - reg: The base address of the MDIO bus controller register bank.
- - #address-cells: Must be <1>.
- - #size-cells: Must be <0>.  MDIO addresses have no size component.
+Presumably the bootloader finds the matching size compatible
+element and then populates the memory info that just happens to
+match the same size. I don't know if this is happening, but it
+certainly seems possible to have the same memory size at
+different starting addresses. So we could simplify that situation
+by having one size in the compatible that works for either
+starting address. In summary, I don't 
+
+> 
+> > With that in mind, right now I'm using fdtget from python to grab
+> > the compatible string and parse it with a regex. If things need
+> > to become more complicated to start following phandles, etc. are
+> > there some python bindings to libfdt somewhere?
+> 
+> Not that I'm aware of. C is the only language you need. ;)
+
+Urgh. I converted dtbtool to python to make it simpler and avoid
+that compilation step. I guess I'll explore wrapping some calls
+to the C library inside dtbtool itself for this particular
+purpose. It would be nice though if I could get a python object
+for the root of the unflattened dtb that could be iterated and
+inspected. I'll take a look at doing that sometime.
+
+I'm thinking the aliases would be something like this:
+
+	usid0 = <&pmic0>;
+	usid2 = <&pmic1>;
+	usid4 = <&pmic2>;
+	usid6 = <&pmic3>;
+
+We could specify usid1,3,5,7 too, but they're the same as the
+0,2,4,6 ones.
+
+So far I think all that will change is dropping the mb/panel
+elements and parsing the PMIC ids from compatible strings and DT
+traversal. Sounds right?
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
