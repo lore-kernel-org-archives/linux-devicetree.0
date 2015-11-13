@@ -1,79 +1,101 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
-Date: Fri, 13 Nov 2015 14:00:39 -0800
-Message-ID: <20151113220039.GA74382@google.com>
-References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
- <20151029162908.GA13275@localhost>
- <CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg@mail.gmail.com>
- <20151030175145.GF13239@google.com>
- <CAL_JsqL2F3p7qBPbOiGytVyzF_aNLWbrCT0mAX1WZo6SxE3JoA@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 5/8] drivers:input:ads7846(+tsc2046): add new common
+ binding names, pre-calibration and flipping
+Date: Fri, 13 Nov 2015 23:29:52 +0100
+Message-ID: <20151113222952.GB24590@earth>
+References: <cover.1447446957.git.hns@goldelico.com>
+ <7e66c363a6bacc33a77ca7bd577db24f603c5b1a.1447446957.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL2F3p7qBPbOiGytVyzF_aNLWbrCT0mAX1WZo6SxE3JoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <7e66c363a6bacc33a77ca7bd577db24f603c5b1a.1447446957.git.hns@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gta04-owner@goldelico.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 06, 2015 at 08:13:13AM -0600, Rob Herring wrote:
-> Since we now have partitions contained in a sub node, how about using
-> compatible for that sub node instead.
 
-I see that Linus and I spoke up in agreement on this one.
+--4bRzO86E/ozDv8r1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I took a little look at adding of_match_table support to the core MTD
-partitioning code (not sure if that's duplicating anything Linus was
-attempting on his own?), and I'm observing that there's potential for
-conflict with the new binding [1]. If we're going to start overloading
-the 'partitions' node to support other partitioning types via
-'compatible' property, then we either need to:
+Hi,
 
- (1) go back to specifying that full ofpart specifications must have
- *no* compatible property or
+On Fri, Nov 13, 2015 at 09:35:56PM +0100, H. Nikolaus Schaller wrote:
+> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
+> introduced common DT bindings for touchscreens [1] and a helper function =
+to
+> parse the DT.
+>=20
+> This has been integrated and interpretation of the inversion (flipping)
+> properties for the x and y axis has been added to accommodate any
+> orientation of the touch in relation to the LCD.
+>=20
+> By scaling the min/max ADC values to the screen size it is now possible to
+> pre-calibrate the touch so that is (almost) exactly matches the LCD it is
+> glued onto. This allows to well enough operate the touch before a user
+> space calibration can improve the precision.
+>=20
+> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/input/ads7846.txt          |  8 ++-
+>  drivers/input/touchscreen/ads7846.c                | 72 ++++++++++++++++=
+++++--
+>  2 files changed, 74 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/ads7846.txt b/Docume=
+ntation/devicetree/bindings/input/ads7846.txt
+> index df8b127..ae56355 100644
+> --- a/Documentation/devicetree/bindings/input/ads7846.txt
+> +++ b/Documentation/devicetree/bindings/input/ads7846.txt
+> @@ -26,12 +26,17 @@ Additional required properties:
+> =20
+>  Optional properties:
+> =20
+> +You can optionally specify any of the touchscreen parameters described in
+> +
+> +	Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> +
+> +This allows to scale, invert or swap coordinates and define the fuzz fac=
+tors.
+> +
+>  	ti,vref-delay-usecs		vref supply delay in usecs, 0 for
+>  					external vref (u16).
+>  	ti,vref-mv			The VREF voltage, in millivolts (u16).
+>  	ti,keep-vref-on			set to keep vref on for differential
+>  					measurements as well
+> -	ti,swap-xy			swap x and y axis
 
- (2) we should define a comptible property for the hard-coded
- partitioning case (e.g., compatible = "partitions")
+I guess this should be:
 
-IOW, I could imagine a new partition parser that needs a DT like this:
+ti,swap-xy: deprecated name for touchscreen-swapped-x-y
 
-	flash@xxx {
-		compatible = "vendor,flash-type";
-		...
-		partitions {
-			compatible = "some-new-partition-parser";
-			...
-			subnode {
-				// "some-new-partition-parser" might
-				// need to put something here
-			};
-		};
-	};
+-- Sebastian
 
-But currently, the binding would say that 'subnode' must be a partition,
-even if it's really something else auxiliary to
-"some-new-partition-parser" [2].
+--4bRzO86E/ozDv8r1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If we went with option (1), then we'd just have ofpart.c see that
-'partitions' has a compatible property and bail out. That seems kinda
-hacky.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-If we went with option (2), then ofpart.c could just check only for
-'compatible = "partitions"' (or similar), and if not found bail out.
+iQIcBAEBCgAGBQJWRmRdAAoJENju1/PIO/qazM0P/2/cCfeZPQrBcMlN1g0zx1Pd
+YLAYu9CKwWAa8aO9ecn11RMm2acm9Yboqd5l5v47+GVnC4gueehMMLhm6ViJklCd
+PCstp+gB8BmMnOHEgCeiSUwvzvOhJG/FdtNDayL2TmfZQMFya2xBE1AKlWJqVl47
++N912tLmmbePRazzsTwNslMjQK8UMG1fe84jhFIv0YJCWeT65VnFkrsKXEFAODev
+6grtf6giRmHcfvPjBOcB7AzUPfrnm0FDU49YzX6ufHkw1jlUQr4zotOZ9Ry93Hnq
+4EUVYwewCf7chtv3pYRFd6+vOcotyoWS5Z/BtkiSxU8ggFN65AloAHFeYfyWwPSR
+x/a6yCCWp3ooP+6mhF2Us2c+EFUhdtuJHWrTCrLU5ySOl4eaLdYaXh4KElpLgOFg
+FXndGxchpSKXcuRK2ecQlNGVK4FmkeyJe0hBN/R+QlJX/JuoK6JT5j0jOEj2GOOZ
+4NIHH2DAvXDiG7hUEzVvckjBnlCxlKhKSZP0/D+NucQ7pCaQSgSG+zFi0yjnFFnB
+kDYnMgTNMLP7ce734uQyu+FVilCSOpwYRnbNf9GMK2PKnUzCpVLXbtf/m28esgTr
+mbUQjzjVb+TOikRyOnRuEYAs5sS2J0ABt4pOtoykRpiNWjeF5TWgiZFyWYrcixA+
+Rmzl08gNcMI2R+x57pIG
+=18pb
+-----END PGP SIGNATURE-----
 
-I think option (2) makes more sense. But it would require an update to
-the binding and code for 4.4, since [1] was only introduced during this
-release cycle.
-
-Brian
-
-[1] fe2585e9c29a ("doc: dt: mtd: support partitions in a special 'partitions' subnode")
-
-[2] Possibilities: something relevant to partition splitting. See some
-previous work, which I haven't gotten around to fully addressing yet,
-but can hopefully be rolled into this work:
-
-http://patchwork.ozlabs.org/patch/476373/
-http://patchwork.ozlabs.org/patch/473364/
-http://patchwork.ozlabs.org/patch/475988/
+--4bRzO86E/ozDv8r1--
