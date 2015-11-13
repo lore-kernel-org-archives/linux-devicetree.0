@@ -1,72 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] Documentation: dt: Add bindings for Secure-only devices
-Date: Thu, 12 Nov 2015 21:22:27 -0600
-Message-ID: <CAL_Jsq+G8ObDqHKRG+ghN4gPaGMcSTUOp4W9-r4imzuF1W=RGw@mail.gmail.com>
-References: <1447345490-29671-1-git-send-email-peter.maydell@linaro.org>
- <20151112213343.GA28588@rob-hp-laptop> <CAFEAcA-JU=W2bHh4kUxuYFhehGi=WaE-tkoA82jRxen5t0a1EQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] drm: arm: Add DT bindings documentation for HDLCD
+ driver.
+Date: Thu, 12 Nov 2015 21:30:31 -0600
+Message-ID: <CAL_Jsq+M8cEgLpRJ9j_ULRaGcLgaTZ8rr2F1nv7wUxfEEpZinw@mail.gmail.com>
+References: <1447258010-2234-1-git-send-email-Liviu.Dudau@arm.com>
+ <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
+ <20151111184849.GA9172@rob-hp-laptop>
+ <20151112104210.GZ963@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFEAcA-JU=W2bHh4kUxuYFhehGi=WaE-tkoA82jRxen5t0a1EQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Maydell <peter.maydell@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@linaro.org>, arm-mail-list <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151112104210.GZ963@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 3:42 PM, Peter Maydell <peter.maydell@linaro.org> wrote:
-> On 12 November 2015 at 21:33, Rob Herring <robh@kernel.org> wrote:
->> On Thu, Nov 12, 2015 at 04:24:50PM +0000, Peter Maydell wrote:
->>> The existing device tree bindings assume that we are only trying to
->>> describe a single address space with a device tree (for ARM, either
->>> the Normal or the Secure world). Some uses for device tree need to
->>> describe both Normal and Secure worlds in a single device tree. Add
->>> documentation of how to do this, by adding extra properties which
->>> describe when a device appears differently in the two worlds or when
->>> it only appears in one of them.
->>>
->>> The binding describes the general principles for adding new
->>> properties describing the secure world, but for now we only need a
->>> single new property, "secure-status", which can be used to annotate
->>> devices to indicate that they are only visible in one of the two
->>> worlds.
->>>
->>> The primary expected use of this binding is for a virtual machine
->>> like QEMU to describe the VM layout to a TrustZone aware firmware
->>> (which would then use the secure-only devices itself, and pass the DT
->>> on to a kernel running in the non-secure world, which ignores the
->>> secure-only devices and uses the rest).
->>>
->>> Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
->>
->> I'd specifically like Mark's ack on this one.
-
-
->>> +The general principle of the naming scheme for Secure world bindings
->>> +is that any property that needs a different value in the Secure world
->>> +can be supported by prefixing the property name with "secure-". So for
->>> +instance "secure-reg" would override "reg". If there is no "secure-"
->>
->> I'd prefer this be "secure-foo" and "foo", rather than reg given I
->> specifically have a differing opinion on how to support reg.
->>
->> Also, would it be secure-vendor,foo or vendor,secure-foo for properties
->> with vendor prefix? The latter looks more correct to me, but the former
->> would be easier to search for both variants of the property. I'd lean
->> towards the latter.
->
-> OK, so how about making that para read:
->
-> + The general principle of the naming scheme for Secure world bindings
-> + is that any property that needs a different value in the Secure world
-> + can be supported by prefixing the property name with "secure-". So for
-> + instance "secure-foo" would override "foo". For property names with
-> + a vendor prefix, the Secure variant of "vendor,foo" would be
-> + "vendor,secure-foo". If there is no "secure-" property then the Secure
-> + world value is the same as specified for the Normal world by the
-> + non-prefixed property. However, only the properties listed below may
-> + validly have "secure-" versions; this list will be enlarged on a
-> + case-by-case basis.
-
-Looks good.
-
-Rob
+T24gVGh1LCBOb3YgMTIsIDIwMTUgYXQgNDo0MiBBTSwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1
+QGFybS5jb20+IHdyb3RlOgo+IE9uIFdlZCwgTm92IDExLCAyMDE1IGF0IDEyOjQ4OjUwUE0gLTA2
+MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBXZWQsIE5vdiAxMSwgMjAxNSBhdCAwNDowNjo0
+N1BNICswMDAwLCBMaXZpdSBEdWRhdSB3cm90ZToKPj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgr
+ZHRAa2VybmVsLm9yZz4KPj4gPiBDYzogUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPgo+
+PiA+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgo+PiA+IENjOiBJYW4g
+Q2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPgo+PiA+IENjOiBLdW1hciBH
+YWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IExpdml1
+IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+Pgo+PiBMb29rcyBwcmV0dHkgZ29vZCwgYnV0
+IGEgZmV3IGNvbW1lbnRzLgo+Pgo+PiA+IC0tLQo+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kcm0vYXJtL2FybSxoZGxjZC50eHQgICAgICB8IDc0ICsrKysrKysrKysrKysrKysrKysrKysK
+Pj4gPiAgMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKykKPj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXJtL2FybSxoZGxj
+ZC50eHQKPj4gPgo+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2RybS9hcm0vYXJtLGhkbGNkLnR4dAo+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+
+ID4gaW5kZXggMDAwMDAwMC4uYjU3ZjFiOQo+PiA+IC0tLSAvZGV2L251bGwKPj4gPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0Cj4+
+ID4gQEAgLTAsMCArMSw3NCBAQAo+PiA+ICtBUk0gSERMQ0QKPj4gPiArCj4+ID4gK1RoaXMgaXMg
+YSBkaXNwbGF5IGNvbnRyb2xsZXIgZm91bmQgb24gc2V2ZXJhbCBkZXZlbG9wbWVudCBwbGF0Zm9y
+bXMgcHJvZHVjZWQKPj4gPiArYnkgQVJNIEx0ZCBhbmQgaW4gbW9yZSBtb2Rlcm4gb2YgaXRzJyBG
+YXN0IE1vZGVscy4gVGhlIEhETENEIGlzIGFuIFJHQgo+PiA+ICtzdHJlYW1lciB0aGF0IHJlYWRz
+IHRoZSBkYXRhIGZyb20gYSBmcmFtZWJ1ZmZlciBhbmQgc2VuZHMgaXQgdG8gYSBzaW5nbGUKPj4g
+PiArZGlnaXRhbCBlbmNvZGVyIChEVkkgb3IgSERNSSkuCj4+ID4gKwo+PiA+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+PiA+ICsgIC0gY29tcGF0aWJsZTogImFybSxoZGxjZCIKPj4KPj4gS2luZCBv
+ZiBnZW5lcmljLiBTb21ldGhpbmcgbW9yZSBzcGVjaWZpYyBwbGVhc2UuCj4KPiAiVGhlcmUgY2Fu
+IGJlIG9ubHkgb25lISIgKGhkbGNkKSA6KSBUaGlzIGlzIGdvaW5nIHRvIGJlIGEgIm9uZSB2ZXJz
+aW9uIG9ubHkiIEhXIHBhcnQuCj4gQVJNIGhhcyBub3cgc3dpdGNoZWQgdG8gYSBuZXcgZGlzcGxh
+eSBoYXJkd2FyZSB0aGF0IGhhcyBtb3JlIGZlYXR1cmVzIGFuZCBhIG5ldyBuYW1lLAo+IGFuZCB3
+b3JrIG9uIG1haW5saW5pbmcgc3VwcG9ydCBmb3IgdGhhdCB3aWxsIHN0YXJ0IG9uY2UgSSBnZXQg
+dGhlIEhETENEIGRyaXZlciBhY2NlcHRlZC4KClNvIHRoZXJlIGlzIG5ldmVyIGdvaW5nIHRvIGJl
+IGEgc2luZ2xlIGRpZmZlcmVuY2UgYWNyb3NzIHBsYXRmb3Jtcy4KVmFyaWF0aW9ucyBpbiBtYXgg
+Y2xvY2sgZm9yIGRpZmZlcmVudCBGUEdBcz8KCgo+PiA+ICsgIC0gcmVnOiBQaHlzaWNhbCBiYXNl
+IGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPj4gPiAr
+ICAgIElmIGEgc2Vjb25kIHBhaXIgb2YgYWRkcmVzcyBhbmQgbGVuZ3RoIHZhbHVlcyBpcyBwcmVz
+ZW50IHRoaXMgc3BlY2lmaWVzCj4+ID4gKyAgICB0aGUgcHJlc2VuY2Ugb2YgYSBETUEgY29oZXJl
+bnQgbWVtb3J5IGFyZWEgdGhhdCB0aGUgSERMQ0QgY2FuIHVzZSBhcwo+PiA+ICsgICAgZnJhbWVi
+dWZmZXIgaW5zdGVhZCBvZiBub3JtYWwgQ01BIG1lbW9yeS4KPj4KPj4gVGhpcyBpcyBvbi1jaGlw
+IFJBTSBvciBub3JuYWwgc3lzdGVtIFJBTT8gV2UgYWxyZWFkeSBoYXZlIGJpbmRpbmdzIGZvcgo+
+PiBib3RoLgo+Cj4gSnVubyBoYXMgYSBzZXQgb2YgVExYIChUaGluTGlua3MpIGNvbm5lY3RvcnMg
+b24gdGhlIGJvYXJkIHdoZXJlIGFuIEZQR0EgY2FuIGJlIGF0dGFjaGVkLiBPbiByMQo+IHRoZSBj
+b2RlIHJ1bm5pbmcgb24gRlBHQSBjYW4gZXZlbiBwYXJ0aWNpcGF0ZSBhcyBhbiBBWEkgbWFzdGVy
+IHdpdGggZnVsbCBjb2hlcmVuY3kuIFRoZSBGUEdBCj4gaGFzIGxvY2FsIG1lbW9yeSB0aGF0IHdl
+IHdhbnQgdG8gc2hhcmUgd2l0aCB0aGUgSERMQ0QgdG8gYmUgdXNlZCBhcyBhIGZyYW1lYnVmZmVy
+LgoKU28gZGVzY3JpYmUgdGhlIG1lbW9yeSByZWdpb24gYW5kIHRoZW4gdXNlIGEgbWVtb3J5LXJl
+Z2lvbiBwaGFuZGxlIHRvCnRoZSBtZW1vcnkgaGVyZS4KCj4+ID4gKyAgLSBpbnRlcnJ1cHRzOiBP
+bmUgaW50ZXJydXB0IHVzZWQgYnkgdGhlIGRpc3BsYXkgY29udHJvbGxlciB0byBub3RpZnkgdGhl
+Cj4+ID4gKyAgICBpbnRlcnJ1cHQgY29udHJvbGxlciB3aGVuIGFueSBvZiB0aGUgaW50ZXJydXB0
+IHNvdXJjZXMgcHJvZ3JhbW1lZCBpbgo+PiA+ICsgICAgdGhlIGludGVycnVwdCBtYXNrIHJlZ2lz
+dGVyIGhhdmUgYWN0aXZhdGVkLgo+PiA+ICsgIC0gY2xvY2tzOiBBIGxpc3Qgb2YgcGhhbmRsZSAr
+IGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoCj4+ID4gKyAgICBlbnRyeSBpbiAn
+Y2xvY2stbmFtZXMnLgo+PiA+ICsgIC0gY2xvY2stbmFtZXM6IEEgbGlzdCBvZiBjbG9jayBuYW1l
+cy4gRm9yIEhETEQgaXQgc2hvdWxkIGNvbnRhaW46Cgp0eXBvOiBIRExECgo+PiA+ICsgICAgICAt
+ICJweGxjbGsiIGZvciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUgY29u
+dHJvbGxlci4KPj4gPiArICAtIHBvcnQ6IFRoZSBIRExDRCBjb25uZWN0aW9uIHRvIGFuIGVuY29k
+ZXIgY2hpcC4gVGhlIGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQKCnMvbW9kZWxsZWQvbW9kZWxlZC8K
+ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
