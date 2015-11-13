@@ -1,102 +1,77 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v2 1/4] drm: arm: Add DT bindings documentation for HDLCD
- driver.
-Date: Fri, 13 Nov 2015 10:11:56 +0000
-Message-ID: <20151113101156.GE963@e106497-lin.cambridge.arm.com>
-References: <1447258010-2234-1-git-send-email-Liviu.Dudau@arm.com>
- <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
- <20151111184849.GA9172@rob-hp-laptop>
- <20151112104210.GZ963@e106497-lin.cambridge.arm.com>
- <CAL_Jsq+M8cEgLpRJ9j_ULRaGcLgaTZ8rr2F1nv7wUxfEEpZinw@mail.gmail.com>
+From: Igor Grinberg <igor.grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: OMAP2+: dts: cm-t335: add initial support
+Date: Fri, 13 Nov 2015 12:19:19 +0200
+Message-ID: <5645B927.5020001@compulab.co.il>
+References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1445948100-16446-2-git-send-email-uri.mashiach@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+M8cEgLpRJ9j_ULRaGcLgaTZ8rr2F1nv7wUxfEEpZinw@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445948100-16446-2-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBOb3YgMTIsIDIwMTUgYXQgMDk6MzA6MzFQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gVGh1LCBOb3YgMTIsIDIwMTUgYXQgNDo0MiBBTSwgTGl2aXUgRHVkYXUgPExpdml1
-LkR1ZGF1QGFybS5jb20+IHdyb3RlOgo+ID4gT24gV2VkLCBOb3YgMTEsIDIwMTUgYXQgMTI6NDg6
-NTBQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPj4gT24gV2VkLCBOb3YgMTEsIDIwMTUg
-YXQgMDQ6MDY6NDdQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3JvdGU6Cj4gPj4gPiBDYzogUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiA+PiA+IENjOiBQYXdlbCBNb2xsIDxwYXdlbC5t
-b2xsQGFybS5jb20+Cj4gPj4gPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT4KPiA+PiA+IENjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
-Pgo+ID4+ID4gQ2M6IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPgo+ID4+ID4KPiA+
-PiA+IFNpZ25lZC1vZmYtYnk6IExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+ID4+
-Cj4gPj4gTG9va3MgcHJldHR5IGdvb2QsIGJ1dCBhIGZldyBjb21tZW50cy4KPiA+Pgo+ID4+ID4g
-LS0tCj4gPj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0
-ICAgICAgfCA3NCArKysrKysrKysrKysrKysrKysrKysrCj4gPj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDc0IGluc2VydGlvbnMoKykKPiA+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9hcm0vYXJtLGhkbGNkLnR4dAo+ID4+ID4KPiA+PiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9h
-cm0saGRsY2QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9hcm0v
-YXJtLGhkbGNkLnR4dAo+ID4+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiA+IGluZGV4IDAw
-MDAwMDAuLmI1N2YxYjkKPiA+PiA+IC0tLSAvZGV2L251bGwKPiA+PiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXJtL2FybSxoZGxjZC50eHQKPiA+PiA+IEBA
-IC0wLDAgKzEsNzQgQEAKPiA+PiA+ICtBUk0gSERMQ0QKPiA+PiA+ICsKPiA+PiA+ICtUaGlzIGlz
-IGEgZGlzcGxheSBjb250cm9sbGVyIGZvdW5kIG9uIHNldmVyYWwgZGV2ZWxvcG1lbnQgcGxhdGZv
-cm1zIHByb2R1Y2VkCj4gPj4gPiArYnkgQVJNIEx0ZCBhbmQgaW4gbW9yZSBtb2Rlcm4gb2YgaXRz
-JyBGYXN0IE1vZGVscy4gVGhlIEhETENEIGlzIGFuIFJHQgo+ID4+ID4gK3N0cmVhbWVyIHRoYXQg
-cmVhZHMgdGhlIGRhdGEgZnJvbSBhIGZyYW1lYnVmZmVyIGFuZCBzZW5kcyBpdCB0byBhIHNpbmds
-ZQo+ID4+ID4gK2RpZ2l0YWwgZW5jb2RlciAoRFZJIG9yIEhETUkpLgo+ID4+ID4gKwo+ID4+ID4g
-K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gPiArICAtIGNvbXBhdGlibGU6ICJhcm0saGRsY2Qi
-Cj4gPj4KPiA+PiBLaW5kIG9mIGdlbmVyaWMuIFNvbWV0aGluZyBtb3JlIHNwZWNpZmljIHBsZWFz
-ZS4KPiA+Cj4gPiAiVGhlcmUgY2FuIGJlIG9ubHkgb25lISIgKGhkbGNkKSA6KSBUaGlzIGlzIGdv
-aW5nIHRvIGJlIGEgIm9uZSB2ZXJzaW9uIG9ubHkiIEhXIHBhcnQuCj4gPiBBUk0gaGFzIG5vdyBz
-d2l0Y2hlZCB0byBhIG5ldyBkaXNwbGF5IGhhcmR3YXJlIHRoYXQgaGFzIG1vcmUgZmVhdHVyZXMg
-YW5kIGEgbmV3IG5hbWUsCj4gPiBhbmQgd29yayBvbiBtYWlubGluaW5nIHN1cHBvcnQgZm9yIHRo
-YXQgd2lsbCBzdGFydCBvbmNlIEkgZ2V0IHRoZSBIRExDRCBkcml2ZXIgYWNjZXB0ZWQuCj4gCj4g
-U28gdGhlcmUgaXMgbmV2ZXIgZ29pbmcgdG8gYmUgYSBzaW5nbGUgZGlmZmVyZW5jZSBhY3Jvc3Mg
-cGxhdGZvcm1zLgoKQ29ycmVjdCwgdGhlcmUgaXMgb25seSBvbmUgaW1wbGVtZW50YXRpb24gYXZh
-aWxhYmxlLiBBRkFJSyB0aGVyZSBhcmUgbm8gcGxhbnMgdG8gbWFrZSBjaGFuZ2VzIHRvIGl0LgoK
-PiBWYXJpYXRpb25zIGluIG1heCBjbG9jayBmb3IgZGlmZmVyZW50IEZQR0FzPwoKVGhlIGNsb2Nr
-IGlzIGV4dGVybmFsIHRvIHRoZSBwYXJ0IGFuZCB0aGVyZSBpcyBhIGNoZWNrIGluIHRoZSBkcml2
-ZXIgaWYgd2UgY2FuIHNldCB0aGUgZnJlcXVlbmN5CnRvIG1hdGNoIHRoZSByZXF1ZXN0ZWQgZG90
-Y2xvY2sgYnkgdGhlIHZpZGVvX21vZGUuIEl0IGRvZXMgbm90IGFmZmVjdCB0aGUgaGFyZHdhcmUg
-b3IgaG93IGl0IHByZXNlbnRzCml0c2VsZiB0byB0aGUgZHJpdmVyLgoKPiAKPiAKPiA+PiA+ICsg
-IC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxl
-cidzIHJlZ2lzdGVycy4KPiA+PiA+ICsgICAgSWYgYSBzZWNvbmQgcGFpciBvZiBhZGRyZXNzIGFu
-ZCBsZW5ndGggdmFsdWVzIGlzIHByZXNlbnQgdGhpcyBzcGVjaWZpZXMKPiA+PiA+ICsgICAgdGhl
-IHByZXNlbmNlIG9mIGEgRE1BIGNvaGVyZW50IG1lbW9yeSBhcmVhIHRoYXQgdGhlIEhETENEIGNh
-biB1c2UgYXMKPiA+PiA+ICsgICAgZnJhbWVidWZmZXIgaW5zdGVhZCBvZiBub3JtYWwgQ01BIG1l
-bW9yeS4KPiA+Pgo+ID4+IFRoaXMgaXMgb24tY2hpcCBSQU0gb3Igbm9ybmFsIHN5c3RlbSBSQU0/
-IFdlIGFscmVhZHkgaGF2ZSBiaW5kaW5ncyBmb3IKPiA+PiBib3RoLgo+ID4KPiA+IEp1bm8gaGFz
-IGEgc2V0IG9mIFRMWCAoVGhpbkxpbmtzKSBjb25uZWN0b3JzIG9uIHRoZSBib2FyZCB3aGVyZSBh
-biBGUEdBIGNhbiBiZSBhdHRhY2hlZC4gT24gcjEKPiA+IHRoZSBjb2RlIHJ1bm5pbmcgb24gRlBH
-QSBjYW4gZXZlbiBwYXJ0aWNpcGF0ZSBhcyBhbiBBWEkgbWFzdGVyIHdpdGggZnVsbCBjb2hlcmVu
-Y3kuIFRoZSBGUEdBCj4gPiBoYXMgbG9jYWwgbWVtb3J5IHRoYXQgd2Ugd2FudCB0byBzaGFyZSB3
-aXRoIHRoZSBIRExDRCB0byBiZSB1c2VkIGFzIGEgZnJhbWVidWZmZXIuCj4gCj4gU28gZGVzY3Jp
-YmUgdGhlIG1lbW9yeSByZWdpb24gYW5kIHRoZW4gdXNlIGEgbWVtb3J5LXJlZ2lvbiBwaGFuZGxl
-IHRvCj4gdGhlIG1lbW9yeSBoZXJlLgoKT0ssIEkgd2lsbC4KCj4gCj4gPj4gPiArICAtIGludGVy
-cnVwdHM6IE9uZSBpbnRlcnJ1cHQgdXNlZCBieSB0aGUgZGlzcGxheSBjb250cm9sbGVyIHRvIG5v
-dGlmeSB0aGUKPiA+PiA+ICsgICAgaW50ZXJydXB0IGNvbnRyb2xsZXIgd2hlbiBhbnkgb2YgdGhl
-IGludGVycnVwdCBzb3VyY2VzIHByb2dyYW1tZWQgaW4KPiA+PiA+ICsgICAgdGhlIGludGVycnVw
-dCBtYXNrIHJlZ2lzdGVyIGhhdmUgYWN0aXZhdGVkLgo+ID4+ID4gKyAgLSBjbG9ja3M6IEEgbGlz
-dCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2gKPiA+PiA+
-ICsgICAgZW50cnkgaW4gJ2Nsb2NrLW5hbWVzJy4KPiA+PiA+ICsgIC0gY2xvY2stbmFtZXM6IEEg
-bGlzdCBvZiBjbG9jayBuYW1lcy4gRm9yIEhETEQgaXQgc2hvdWxkIGNvbnRhaW46Cj4gCj4gdHlw
-bzogSERMRAoKb29wcywgdGhhbmtzLCB3aWxsIGZpeC4KCj4gCj4gPj4gPiArICAgICAgLSAicHhs
-Y2xrIiBmb3IgdGhlIGNsb2NrIGZlZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIGNvbnRyb2xs
-ZXIuCj4gPj4gPiArICAtIHBvcnQ6IFRoZSBIRExDRCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIg
-Y2hpcC4gVGhlIGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQKPiAKPiBzL21vZGVsbGVkL21vZGVsZWQv
-CgpkaXR0by4KClRoYW5rcyBmb3IgcmV2aWV3aW5nIGl0LApMaXZpdQoKPiAKPiBSb2IKPiAKCi0t
-IAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3Js
-ZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBj
-b2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Uri,
+
+On 10/27/15 14:14, Uri Mashiach wrote:
+> From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> 
+> Add basic support for CompuLab cm-t335 module based on AM335X SoC.
+> 
+> CM-T335 is a tiny computer-on-module (CoM) / system-on-module (SoM)
+> The module is built around the Texas Instruments Sitara AM3352/4
+> system-on-chip.
+> 
+> The CPU is supplemented with up-to 512MB DDR3 and up-to 1GB of on-board
+> NAND storage, WiFi connected to SPI, Bluetooth, Analog audio, Gigabit
+> Ethernet, CAN bus.
+> 
+> Current patch adds support:
+> UART0 and GPIO LED
+> 
+> Detailed description can be found at the module site:
+> http://www.compulab.co.il/products/computer-on-modules/cm-t335/
+
+[...]
+
+> diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
+> new file mode 100644
+> index 0000000..197d5ce
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-cm-t335.dts
+> @@ -0,0 +1,62 @@
+
+[...]
+
+> +&am33xx_pinmux {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <>;
+> +
+> +	gpio_led_pins: pinmux_gpio_led_pins {
+> +		pinctrl-single,pins = <
+> +			0x88 (PIN_OUTPUT | MUX_MODE7)	/* gpmc_csn3.gpio2_0 */
+> +		>;
+> +	};
+> +
+> +	uart0_pins: pinmux_uart0_pins {
+> +		pinctrl-single,pins = <
+> +			/* uart0_rxd.uart0_rxd */
+> +			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)
+> +			/* uart0_txd.uart0_txd */
+> +			0x174 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)
+
+Can we use AM33XX_IOPAD macro here?
+and may be other patches too?
+
+[...]
+
+-- 
+Regards,
+Igor.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
