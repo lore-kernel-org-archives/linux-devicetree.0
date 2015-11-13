@@ -1,59 +1,149 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v7 39/50] powerpc/powernv: Fundamental reset in
- pnv_pci_reset_secondary_bus()
-Date: Fri, 13 Nov 2015 11:23:23 +1100
-Message-ID: <1447374203.3081.12.camel@kernel.crashing.org>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1446642770-4681-40-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <87fv0azrpe.fsf@gamma.ozlabs.ibm.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Thu, 12 Nov 2015 16:25:52 -0800
+Message-ID: <56452E10.5060705@roeck-us.net>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+ <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+ <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
+ <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
+ <563B62F7.3050307@codeaurora.org>
+ <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
+ <563B6A4B.7090400@codeaurora.org>
+ <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
+ <563B869F.2010004@roeck-us.net> <56452970.4070209@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fv0azrpe.fsf-lvn/ZZ/ogF85kJ7NmlRacFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <56452970.4070209-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Axtens <dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org>, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-11-13 at 11:08 +1100, Daniel Axtens wrote:
-> Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> writes:
->=20
-> > =C2=A0void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
-> > =C2=A0{
-> > -> > 	> > pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
-> > +> > 	> > int option, freset =3D 0;
-> > +
-> > +> > 	> > if (dev->subordinate)
-> > +> > 	> > 	> > pci_walk_bus(dev->subordinate,
-> > +> > 	> > 	> > 	> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pnv_pci_dev_reset=
-_type, &freset);
-> > +
-> > +> > 	> > option =3D freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT=
-;
-> > +> > 	> > pnv_eeh_bridge_reset(dev, option);
->=20
-> According to the skiboot sources, fundamental reset isn't supported o=
-n
-> p5ioc2. As far as I can tell from your corresponding skiboot patches,
-> this is still the case after they are applied. Do we need a fallback =
-to
-> EEH_RESET_HOT in this case? Otherwise there will be no reset performe=
-d
-> at all.
+On 11/12/2015 04:06 PM, Al Stone wrote:
+> On 11/05/2015 09:41 AM, Guenter Roeck wrote:
+>> On 11/05/2015 07:00 AM, Fu Wei wrote:
+>>> Hi Timur,
+>>>
+>>> On 5 November 2015 at 22:40, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>> Fu Wei wrote:
+>>>>>
+>>>>> Did you really read the "Note" above???????? OK, let me paste it again
+>>>>> and again:
+>>>>>
+>>>>> SBSA 2.3 Page 23 :
+>>>>> If a larger watch period is required then the compare value can be
+>>>>> programmed directly into the compare value register.
+>>>>
+>>>>
+>>>> Well, okay.  Sorry, I should have read what you pasted more closely. But I
+>>>
+>>> Thanks for reading it again.
+>>>
+>>>> think that means during initialization, not during the WS0 timeout.
+>>>
+>>> I really don't see SBSA say "during initialization, not during the WS0 timeout",
+>>> please point it out the page number and the line number in SBSA spec.
+>>> maybe I miss it?
+>>> Thanks for your help in advance.
+>>>
+>>>>
+>>>> Anyway, I still don't like the fact that you're programming WCV in the
+>>>
+>>> "you don't like" doesn't mean "it is wrong" or "we can't do this", so
+>>> I will keep this way unless we have better idea to extend second stage
+>>> timeout.
+>>>
+>>>> interrupt handler, but I'm not going to make a big deal about it any more.
+>>>
+>>> Deal, Thanks a lot.
+>>>
+>>
+>> The problem with your driver, as I see it, is that dealing with WS0/WS1
+>> and pretimeout makes the driver so complex that, at least for my part,
+>> I am very wary about it. The driver could long since have been accepted
+>> if it were not for that. Besides that, I really believe that any system designer
+>> using the highest permitted frequency should be willing to live with the
+>> consequences, and not force the implementation of a a complex driver.
+>>
+>> Ultimately, you'll have to decide if you want a simple driver accepted, or
+>> a complex driver hanging in the review queue forever.
+>>
+>> Thanks,
+>> Guenter
+>
+> Sorry to poke my head in late like this, but I do have a vested interest in the
+> outcome so I'm very curious.  For my work, I need to have an ACPI-supported,
+> SBSA-compliant watchdog timer for arm64, and this series is one of the key
+> pieces to getting there.  The plan for me has been: (1) get an FDT based SBSA
+> watchdog timer, (2) add in kernel code to handle the ACPI GTDT table describing
+> timers, then (3) munge the SBSA watchdog timer for use by ACPI.
+>
+> So, is this an actual NAK of the patch series as is?  I think it is, but I want
+> it to be clear, and it has not been explicit yet.
+>
+I am not the maintainer, so I don't make the call. All I am saying is that I don't
+feel comfortable with the code as is. Part of it is due to the the specification's
+complexity, which leaves space for (mis)interpretations and bad implementations.
 
-We don't really care that much about what happens on p5ioc2 :-)
+Either case, this is just my personal opinion. All you'll have to do is to convince
+Wim to accept your patch.
 
-> Likewise, if the FUNDAMENTAL reset fails for any reason, should we fa=
-ll
-> back to a HOT reset?
+> If it is a NAK, that's fine, but I also want to be sure I understand what the
+> objections are.  Based on my understanding of the discussion so far over the
+> multiple versions, I think the primary objection is that the use of pretimeout
+> makes this driver too complex, and indeed complex enough that there is some
+> concern that it could destabilize a running system.  Do I have that right?
+>
+> The other possible item I could conclude out of the discussion is that we do
+> not want to have the pretimeout code as part of the watchdog framework; is that
+> also the case or did I misunderstand?
+>
+Nothing really to do with pretimeout, but with the complexity of implementing it
+for this driver.
 
-Probably.
+As for pretimeout, it does have its issues. Some people say that hitting
+a pretimeout should result in a panic, others just as strongly say that it
+should just dump a message to the console. Which does make me a bit wary, since
+it means that it may be implemented differently in different drivers, which
+I consider highly undesirable.
 
-Cheers,
-Ben.
+> And finally, a simpler, single stage timeout watchdog driver would be a
+> reasonable thing to accept, yes?  I can see where that would make sense.
+>
+I am quite sure that such a driver would long since have been accepted.
+
+> The issue for me in that case is that the SBSA requires a two stage timeout,
+
+Hmm - really ? This makes me want to step back a bit and re-read the specification
+to understand where it says that, and what the reasoning might be for such a
+requirement.
+
+> so a single stage driver has no real value for me.  Now, if I can later add in
+> changes to make the driver into a two stage driver so it is SBSA-compliant,
+> that would also work, but it will make the driver more complex again.  At that
+> point, I think I've now gone in a logical circle and the changes would not be
+> accepted so I could never get to my goal of an SBSA-compliant driver.  I don't
+> think that's what was meant, so what did I miss?
+>
+> Thanks in advance for any clarifications that can be provided.....I really do
+> appreciate it.  Email is not always the clearest mechanism for communication
+> so sometimes I have to ask odd questions like these so I can understand what
+> is happening.
+>
+
+I don't really follow the logic here. Why ask if a single stage driver would
+have been accepted just to point out that it would have no value for you ?
+
+Really, just convince Wim to accept the driver.
+
+Thanks,
+Guenter
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
