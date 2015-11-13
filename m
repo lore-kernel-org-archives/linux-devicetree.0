@@ -1,147 +1,85 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: add IMX7D ADC driver support
-Date: Fri, 13 Nov 2015 10:52:40 +0100
-Message-ID: <5645B2E8.8070906@metafoo.de>
-References: <1447075704-4605-1-git-send-email-haibo.chen@freescale.com> <1447075704-4605-2-git-send-email-haibo.chen@freescale.com> <56420606.4070505@metafoo.de> <20151113093934.GA21068@b51421-server.ap.freescale.net>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/3] thermal: Add Mediatek thermal controller support
+Date: Fri, 13 Nov 2015 11:09:12 +0100
+Message-ID: <20151113100912.GE8526@pengutronix.de>
+References: <1447064013-13026-1-git-send-email-s.hauer@pengutronix.de>
+ <1447064013-13026-3-git-send-email-s.hauer@pengutronix.de>
+ <20151110120554.GB3551@e104805>
+ <20151110182629.GA5240@localhost.localdomain>
+ <20151111072747.GI8526@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151113093934.GA21068-0hoPBdXlkGnubeEdi54fhJw8bAJnxEghJq6Ak5r1//4@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151111072747.GI8526@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Javi Merino <javi.merino@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2015 10:39 AM, Haibo Chen wrote:
-[...]
->>> +static void imx7d_adc_feature_config(struct imx7d_adc *info)
->>> +{
->>> +	info->adc_feature.clk_pre_div = IMX7D_ADC_ANALOG_CLK_PRE_DIV_4;
->>> +	info->adc_feature.avg_num = IMX7D_ADC_AVERAGE_NUM_32;
->>> +	info->adc_feature.core_time_unit = 1;
->>> +	info->adc_feature.average_en = true;
->>
->> What's the plan for these? Right now they are always initialized to the same
->> static value.
->>
+On Wed, Nov 11, 2015 at 08:27:47AM +0100, Sascha Hauer wrote:
+> On Tue, Nov 10, 2015 at 10:26:30AM -0800, Eduardo Valentin wrote:
+> > On Tue, Nov 10, 2015 at 12:05:54PM +0000, Javi Merino wrote:
+> > > On Mon, Nov 09, 2015 at 11:13:32AM +0100, Sascha Hauer wrote:
+> > 
+> > <cut>
+> > 
+> > > > +
+> > > > +/*
+> > > > + * The MT8173 thermal controller has four banks. Each bank can read up to
+> > > > + * four temperature sensors simultaneously. The MT8173 has a total of 5
+> > > > + * temperature sensors. We use each bank to measure a certain area of the
+> > > > + * SoC. Since TS2 is located centrally in the SoC it is influenced by multiple
+> > > > + * areas, hence is used in different banks.
+> > > > + */
+> > > > +static const struct mtk_thermal_bank_cfg bank_data[] = {
+> > > > +	{
+> > > > +		.num_sensors = 2,
+> > > > +		.sensors = { MT8173_TS2, MT8173_TS3 },
+> > > > +	}, {
+> > > > +		.num_sensors = 2,
+> > > > +		.sensors = { MT8173_TS2, MT8173_TS4 },
+> > > > +	}, {
+> > > > +		.num_sensors = 3,
+> > > > +		.sensors = { MT8173_TS1, MT8173_TS2, MT8173_TSABB },
+> > > > +	}, {
+> > > > +		.num_sensors = 1,
+> > > > +		.sensors = { MT8173_TS2 },
+> > > > +	},
+> > > > +};
+> > 
+> > Would it make sense to simply expose all sensors and let the
+> > configuration of their aggregation be done by DT?
 > 
-> In future, we can get these values from dts file, currently we just use the static value.
+> This particular layout has been chosen because there's also the Smart
+> Voltage Scaler (SVS) in the SoC. The SVS uses the same banks for
+> measuring temperatures. I don't know the details yet, I just asked the
+> Mediatek guys.
 
-Those seem to be software configuration values though, not part of hardware
-description.
+Ok, the job of the SVS is to always pick the best voltage for a given
+CPU frequency based on the temperature of the CPU cluster. How I
+understand it the SVS engine automatically reads temperatures from bank0
+for the first CPU cluster and from bank1 for the second CPU cluster. For
+this to work we are not free to assign the sensors to the banks
+arbitrarily.
 
-> 
->>
->>> +}
->> [...]
->>> +static int imx7d_adc_read_raw(struct iio_dev *indio_dev,
->>> +			struct iio_chan_spec const *chan,
->>> +			int *val,
->>> +			int *val2,
->>> +			long mask)
->>> +{
->>> +	struct imx7d_adc *info = iio_priv(indio_dev);
->>> +
->>> +	u32 channel;
->>> +	long ret;
->>> +
->>> +	switch (mask) {
->>> +	case IIO_CHAN_INFO_RAW:
->>> +		mutex_lock(&indio_dev->mlock);
->>> +		reinit_completion(&info->completion);
->>> +
->>> +		channel = (chan->channel) & 0x0f;
->>> +		info->channel = channel;
->>> +		imx7d_adc_channel_set(info);
->>
->> How about just passing channel directy adc_channel_set() instead of doing it
->> implicitly through the info struct?
->>
-> 
-> I think there is no difference, besides, using this parameter info struct can keep align with other functions.
-> eg.  imx7d_adc_sample_set(), imx7d_adc_hw_init(), imx7d_adc_get_sample_rate(), all these functions have the same parameter.
-> 
->> [...]
->>> +static irqreturn_t imx7d_adc_isr(int irq, void *dev_id)
->>> +{
->>> +	struct imx7d_adc *info = (struct imx7d_adc *)dev_id;
->>> +	int status;
->>> +
->>> +	status = readl(info->regs + IMX7D_REG_ADC_INT_STATUS);
->>> +	if (status & IMX7D_REG_ADC_INT_STATUS_CHANNEL_INT_STATUS) {
->>> +		info->value = imx7d_adc_read_data(info);
->>> +		complete(&info->completion);
->>> +	}
->>> +	writel(0, info->regs + IMX7D_REG_ADC_INT_STATUS);
->>
->> Is the hardware really this broken? If the interrupt happens between reading
->> the status register and clearing it here it will be missed.
->>
-> 
-> I think interrupt can't happen between reading the status register and clearing it.
-> Because in function imx7d_adc_read_raw(), we call the function 
-> imx7d_adc_channel_set(info), in this function, we config the register
-> REG_ADC_CH_A\B\C\D_CFG1 and REG_ADC_CH_A\B\C\D_CFG2, only when these registers
-> is configed, ADC start a conversion. Once the conversion complete, ADC trigger an 
-> interrupt, and call the imx7d_adc_isr().
+I was told that controlling the CPU frequency the performance is better
+if we use the maximum temperature of the whole die rather than the
+temperature of individual clusters.
 
-Well an interrupt can always happen, its running fully asynchronous to the
-CPU. If you have multiple interrupt sources enabled and the first one fires
-and you run then start the irq handler, read the status register, now the
-second irq sources fires, and then you clear the status interrupt register.
-This means the driver will not see the irq from the second source.
+I would prefer to keep the sensor/bank association like it currently is
+as it allows for easy SVS engine integration. Also I would prefer to
+expose a single thermal zone for now, it will be easier to add
+additional zones later than it is to remove them later once we have
+exposed them to the device tree.
 
-> 
->>> +
->>> +	return IRQ_HANDLED;
->>
->> You should only return IRQ_HANDLED if you actually handled are interrupt.
->>
-> 
-> Here in the interrupt, we just handle the channel conversion finished flag, for
-> other flag, ignore them this time, Will add other flag in future.
+Is that ok with you?
 
-Yeah, but if you don't handle any interrupt you should return IRQ_NONE. This
-will make sure that the system can recover in case the hardware (or the
-driver) is broken and generates unexpected interrupts. If there are a 1000
-or so IRQ_NONEs in a row in a short time frame the kernel will disable the IRQ.
+Sascha
 
->> [...]
->>> +	ret  = of_property_read_u32(pdev->dev.of_node,
->>
->> Extra space.
->>
->>> +					"num-channels", &channels);
->>
->> What decides how many channels are in use?
->>
-> 
-> The board decides the channel number.
-> In dts file, there is a line:     num-channels = <4>;
 
-Yes, but what decides how this property should be configured?
-
-> 
-> 
->>> +	if (ret)
->>> +		channels = ARRAY_SIZE(imx7d_adc_iio_channels);
->>> +
->>> +	indio_dev->name = dev_name(&pdev->dev);
->>> +	indio_dev->dev.parent = &pdev->dev;
->>> +	indio_dev->dev.of_node = pdev->dev.of_node;
->>> +	indio_dev->info = &imx7d_adc_iio_info;
->>> +	indio_dev->modes = INDIO_DIRECT_MODE;
->>> +	indio_dev->channels = imx7d_adc_iio_channels;
->>> +	indio_dev->num_channels = (int)channels;
->>
->> I don't think you need the case here.
->>
-> 
-> Sorry, can't get your point, you mean I should not indio_dev-> ?
-
-Sorry, I meant the (int) cast.
-
-> 
->>> [...]
-> 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
