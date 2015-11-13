@@ -1,86 +1,203 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] drm: arm: Add DT bindings documentation for HDLCD
- driver.
-Date: Thu, 12 Nov 2015 21:30:31 -0600
-Message-ID: <CAL_Jsq+M8cEgLpRJ9j_ULRaGcLgaTZ8rr2F1nv7wUxfEEpZinw@mail.gmail.com>
-References: <1447258010-2234-1-git-send-email-Liviu.Dudau@arm.com>
- <1447258010-2234-2-git-send-email-Liviu.Dudau@arm.com>
- <20151111184849.GA9172@rob-hp-laptop>
- <20151112104210.GZ963@e106497-lin.cambridge.arm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 3/9] mfd: axp20x: Add support for RSB based
+ AXP223 PMIC
+Date: Fri, 13 Nov 2015 12:04:08 +0800
+Message-ID: <1447387456-9912-4-git-send-email-wens@csie.org>
+References: <1447387456-9912-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151112104210.GZ963@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRWCSWZAKGQE5U3NHUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1447387456-9912-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBOb3YgMTIsIDIwMTUgYXQgNDo0MiBBTSwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1
-QGFybS5jb20+IHdyb3RlOgo+IE9uIFdlZCwgTm92IDExLCAyMDE1IGF0IDEyOjQ4OjUwUE0gLTA2
-MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBXZWQsIE5vdiAxMSwgMjAxNSBhdCAwNDowNjo0
-N1BNICswMDAwLCBMaXZpdSBEdWRhdSB3cm90ZToKPj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgr
-ZHRAa2VybmVsLm9yZz4KPj4gPiBDYzogUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPgo+
-PiA+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgo+PiA+IENjOiBJYW4g
-Q2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPgo+PiA+IENjOiBLdW1hciBH
-YWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IExpdml1
-IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+Pgo+PiBMb29rcyBwcmV0dHkgZ29vZCwgYnV0
-IGEgZmV3IGNvbW1lbnRzLgo+Pgo+PiA+IC0tLQo+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kcm0vYXJtL2FybSxoZGxjZC50eHQgICAgICB8IDc0ICsrKysrKysrKysrKysrKysrKysrKysK
-Pj4gPiAgMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKykKPj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYXJtL2FybSxoZGxj
-ZC50eHQKPj4gPgo+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2RybS9hcm0vYXJtLGhkbGNkLnR4dAo+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+
-ID4gaW5kZXggMDAwMDAwMC4uYjU3ZjFiOQo+PiA+IC0tLSAvZGV2L251bGwKPj4gPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2FybS9hcm0saGRsY2QudHh0Cj4+
-ID4gQEAgLTAsMCArMSw3NCBAQAo+PiA+ICtBUk0gSERMQ0QKPj4gPiArCj4+ID4gK1RoaXMgaXMg
-YSBkaXNwbGF5IGNvbnRyb2xsZXIgZm91bmQgb24gc2V2ZXJhbCBkZXZlbG9wbWVudCBwbGF0Zm9y
-bXMgcHJvZHVjZWQKPj4gPiArYnkgQVJNIEx0ZCBhbmQgaW4gbW9yZSBtb2Rlcm4gb2YgaXRzJyBG
-YXN0IE1vZGVscy4gVGhlIEhETENEIGlzIGFuIFJHQgo+PiA+ICtzdHJlYW1lciB0aGF0IHJlYWRz
-IHRoZSBkYXRhIGZyb20gYSBmcmFtZWJ1ZmZlciBhbmQgc2VuZHMgaXQgdG8gYSBzaW5nbGUKPj4g
-PiArZGlnaXRhbCBlbmNvZGVyIChEVkkgb3IgSERNSSkuCj4+ID4gKwo+PiA+ICtSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+PiA+ICsgIC0gY29tcGF0aWJsZTogImFybSxoZGxjZCIKPj4KPj4gS2luZCBv
-ZiBnZW5lcmljLiBTb21ldGhpbmcgbW9yZSBzcGVjaWZpYyBwbGVhc2UuCj4KPiAiVGhlcmUgY2Fu
-IGJlIG9ubHkgb25lISIgKGhkbGNkKSA6KSBUaGlzIGlzIGdvaW5nIHRvIGJlIGEgIm9uZSB2ZXJz
-aW9uIG9ubHkiIEhXIHBhcnQuCj4gQVJNIGhhcyBub3cgc3dpdGNoZWQgdG8gYSBuZXcgZGlzcGxh
-eSBoYXJkd2FyZSB0aGF0IGhhcyBtb3JlIGZlYXR1cmVzIGFuZCBhIG5ldyBuYW1lLAo+IGFuZCB3
-b3JrIG9uIG1haW5saW5pbmcgc3VwcG9ydCBmb3IgdGhhdCB3aWxsIHN0YXJ0IG9uY2UgSSBnZXQg
-dGhlIEhETENEIGRyaXZlciBhY2NlcHRlZC4KClNvIHRoZXJlIGlzIG5ldmVyIGdvaW5nIHRvIGJl
-IGEgc2luZ2xlIGRpZmZlcmVuY2UgYWNyb3NzIHBsYXRmb3Jtcy4KVmFyaWF0aW9ucyBpbiBtYXgg
-Y2xvY2sgZm9yIGRpZmZlcmVudCBGUEdBcz8KCgo+PiA+ICsgIC0gcmVnOiBQaHlzaWNhbCBiYXNl
-IGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPj4gPiAr
-ICAgIElmIGEgc2Vjb25kIHBhaXIgb2YgYWRkcmVzcyBhbmQgbGVuZ3RoIHZhbHVlcyBpcyBwcmVz
-ZW50IHRoaXMgc3BlY2lmaWVzCj4+ID4gKyAgICB0aGUgcHJlc2VuY2Ugb2YgYSBETUEgY29oZXJl
-bnQgbWVtb3J5IGFyZWEgdGhhdCB0aGUgSERMQ0QgY2FuIHVzZSBhcwo+PiA+ICsgICAgZnJhbWVi
-dWZmZXIgaW5zdGVhZCBvZiBub3JtYWwgQ01BIG1lbW9yeS4KPj4KPj4gVGhpcyBpcyBvbi1jaGlw
-IFJBTSBvciBub3JuYWwgc3lzdGVtIFJBTT8gV2UgYWxyZWFkeSBoYXZlIGJpbmRpbmdzIGZvcgo+
-PiBib3RoLgo+Cj4gSnVubyBoYXMgYSBzZXQgb2YgVExYIChUaGluTGlua3MpIGNvbm5lY3RvcnMg
-b24gdGhlIGJvYXJkIHdoZXJlIGFuIEZQR0EgY2FuIGJlIGF0dGFjaGVkLiBPbiByMQo+IHRoZSBj
-b2RlIHJ1bm5pbmcgb24gRlBHQSBjYW4gZXZlbiBwYXJ0aWNpcGF0ZSBhcyBhbiBBWEkgbWFzdGVy
-IHdpdGggZnVsbCBjb2hlcmVuY3kuIFRoZSBGUEdBCj4gaGFzIGxvY2FsIG1lbW9yeSB0aGF0IHdl
-IHdhbnQgdG8gc2hhcmUgd2l0aCB0aGUgSERMQ0QgdG8gYmUgdXNlZCBhcyBhIGZyYW1lYnVmZmVy
-LgoKU28gZGVzY3JpYmUgdGhlIG1lbW9yeSByZWdpb24gYW5kIHRoZW4gdXNlIGEgbWVtb3J5LXJl
-Z2lvbiBwaGFuZGxlIHRvCnRoZSBtZW1vcnkgaGVyZS4KCj4+ID4gKyAgLSBpbnRlcnJ1cHRzOiBP
-bmUgaW50ZXJydXB0IHVzZWQgYnkgdGhlIGRpc3BsYXkgY29udHJvbGxlciB0byBub3RpZnkgdGhl
-Cj4+ID4gKyAgICBpbnRlcnJ1cHQgY29udHJvbGxlciB3aGVuIGFueSBvZiB0aGUgaW50ZXJydXB0
-IHNvdXJjZXMgcHJvZ3JhbW1lZCBpbgo+PiA+ICsgICAgdGhlIGludGVycnVwdCBtYXNrIHJlZ2lz
-dGVyIGhhdmUgYWN0aXZhdGVkLgo+PiA+ICsgIC0gY2xvY2tzOiBBIGxpc3Qgb2YgcGhhbmRsZSAr
-IGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoCj4+ID4gKyAgICBlbnRyeSBpbiAn
-Y2xvY2stbmFtZXMnLgo+PiA+ICsgIC0gY2xvY2stbmFtZXM6IEEgbGlzdCBvZiBjbG9jayBuYW1l
-cy4gRm9yIEhETEQgaXQgc2hvdWxkIGNvbnRhaW46Cgp0eXBvOiBIRExECgo+PiA+ICsgICAgICAt
-ICJweGxjbGsiIGZvciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUgY29u
-dHJvbGxlci4KPj4gPiArICAtIHBvcnQ6IFRoZSBIRExDRCBjb25uZWN0aW9uIHRvIGFuIGVuY29k
-ZXIgY2hpcC4gVGhlIGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQKCnMvbW9kZWxsZWQvbW9kZWxlZC8K
-ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+It is functionally identical to AXP221; only the regulator default
+voltage/status and the external host interface are different.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/mfd/Kconfig        | 11 ++++++
+ drivers/mfd/Makefile       |  1 +
+ drivers/mfd/axp20x-rsb.c   | 93 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/mfd/axp20x.c       |  2 +
+ include/linux/mfd/axp20x.h |  1 +
+ 5 files changed, 108 insertions(+)
+ create mode 100644 drivers/mfd/axp20x-rsb.c
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index d8ed822d243e..3d515502d732 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -96,6 +96,17 @@ config MFD_AXP20X_I2C
+ 	  components like regulators or the PEK (Power Enable Key) under the
+ 	  corresponding menus.
+ 
++config MFD_AXP20X_RSB
++	tristate "X-Powers AXP series PMICs with RSB"
++	select MFD_AXP20X
++	depends on SUNXI_RSB
++	help
++	  If you say Y here you get support for the X-Powers AXP series power
++	  management ICs (PMICs) controlled with RSB.
++	  This driver include only the core APIs. You have to select individual
++	  components like regulators or the PEK (Power Enable Key) under the
++	  corresponding menus.
++
+ config MFD_CROS_EC
+ 	tristate "ChromeOS Embedded Controller"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index c13e08429ee0..d3a5e699331c 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -108,6 +108,7 @@ obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
+ obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
+ obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
+ obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
++obj-$(CONFIG_MFD_AXP20X_RSB)	+= axp20x-rsb.o
+ 
+ obj-$(CONFIG_MFD_LP3943)	+= lp3943.o
+ obj-$(CONFIG_MFD_LP8788)	+= lp8788.o lp8788-irq.o
+diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+new file mode 100644
+index 000000000000..3ea0d5db37d0
+--- /dev/null
++++ b/drivers/mfd/axp20x-rsb.c
+@@ -0,0 +1,93 @@
++/*
++ * axp20x-rsb.c - RSB driver for the X-Powers' Power Management ICs
++ *
++ * AXP20x typically comprises an adaptive USB-Compatible PWM charger, BUCK DC-DC
++ * converters, LDOs, multiple 12-bit ADCs of voltage, current and temperature
++ * as well as configurable GPIOs.
++ *
++ * This driver supports the RSB variants.
++ *
++ * Author: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/acpi.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/mfd/axp20x.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/sunxi-rsb.h>
++
++static const struct of_device_id axp20x_rsb_of_match[] = {
++	{ .compatible = "x-powers,axp223", .data = (void *) AXP223_ID },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
++
++static int axp20x_rsb_match_device(struct axp20x_dev *axp20x,
++					 struct device *dev)
++{
++	const struct of_device_id *of_id;
++
++	of_id = of_match_device(axp20x_rsb_of_match, dev);
++	if (!of_id) {
++		dev_err(dev, "Unable to match OF ID\n");
++		return -ENODEV;
++	}
++	axp20x->variant = (long) of_id->data;
++
++	return axp20x_match_device(axp20x, dev);
++}
++
++static int axp20x_rsb_probe(struct sunxi_rsb_device *rdev)
++{
++	struct axp20x_dev *axp20x;
++	int ret;
++
++	axp20x = devm_kzalloc(&rdev->dev, sizeof(*axp20x), GFP_KERNEL);
++	if (!axp20x)
++		return -ENOMEM;
++
++	ret = axp20x_rsb_match_device(axp20x, &rdev->dev);
++	if (ret)
++		return ret;
++
++	axp20x->dev = &rdev->dev;
++	axp20x->irq = rdev->irq;
++	sunxi_rsb_device_set_drvdata(rdev, axp20x);
++
++	axp20x->regmap = devm_regmap_init_sunxi_rsb(rdev, axp20x->regmap_cfg);
++	if (IS_ERR(axp20x->regmap)) {
++		ret = PTR_ERR(axp20x->regmap);
++		dev_err(&rdev->dev, "regmap init failed: %d\n", ret);
++		return ret;
++	}
++
++	return axp20x_device_probe(axp20x);
++}
++
++static int axp20x_rsb_remove(struct sunxi_rsb_device *rdev)
++{
++	struct axp20x_dev *axp20x = sunxi_rsb_device_get_drvdata(rdev);
++
++	return axp20x_device_remove(axp20x);
++}
++
++static struct sunxi_rsb_driver axp20x_rsb_driver = {
++	.driver = {
++		.name	= "axp20x-rsb",
++		.of_match_table	= of_match_ptr(axp20x_rsb_of_match),
++	},
++	.probe	= axp20x_rsb_probe,
++	.remove	= axp20x_rsb_remove,
++};
++module_sunxi_rsb_driver(axp20x_rsb_driver);
++
++MODULE_DESCRIPTION("PMIC MFD sunXi RSB driver for AXP20X");
++MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index ca0b02cc2d3c..5c800be5c956 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -32,6 +32,7 @@ static const char * const axp20x_model_names[] = {
+ 	"AXP202",
+ 	"AXP209",
+ 	"AXP221",
++	"AXP223",
+ 	"AXP288",
+ };
+ 
+@@ -575,6 +576,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x, struct device *dev)
+ 		axp20x->regmap_irq_chip = &axp20x_regmap_irq_chip;
+ 		break;
+ 	case AXP221_ID:
++	case AXP223_ID:
+ 		axp20x->nr_cells = ARRAY_SIZE(axp22x_cells);
+ 		axp20x->cells = axp22x_cells;
+ 		axp20x->regmap_cfg = &axp22x_regmap_config;
+diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+index 908f97f6e2d7..fef8dea18e66 100644
+--- a/include/linux/mfd/axp20x.h
++++ b/include/linux/mfd/axp20x.h
+@@ -18,6 +18,7 @@ enum {
+ 	AXP202_ID,
+ 	AXP209_ID,
+ 	AXP221_ID,
++	AXP223_ID,
+ 	AXP288_ID,
+ 	NR_AXP20X_VARIANTS,
+ };
+-- 
+2.6.2
