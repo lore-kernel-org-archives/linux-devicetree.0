@@ -1,53 +1,116 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
-Date: Sat, 14 Nov 2015 11:46:59 +0100
-Message-ID: <CACRpkdakyae95f_Lc-R7Uf7wndj5hyfCqqHziwmZjwm-uNkGAg@mail.gmail.com>
-References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
-	<20151029162908.GA13275@localhost>
-	<CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg@mail.gmail.com>
-	<20151030175145.GF13239@google.com>
-	<CAL_JsqL2F3p7qBPbOiGytVyzF_aNLWbrCT0mAX1WZo6SxE3JoA@mail.gmail.com>
-	<20151113220039.GA74382@google.com>
+From: "Interfax Service" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
+Subject: You have new fax, document 000352304
+Date: Sun, 15 Nov 2015 02:52:25 +1100
+Message-ID: <4cc016905912d680fa47ec9300e4ed80@airconditioningpodcast.com>
+Reply-To: "Interfax Service" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151113220039.GA74382-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed;
+	boundary="b1_fbc2ab814a46619c7aad527dfb065129"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 13, 2015 at 11:00 PM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+--b1_fbc2ab814a46619c7aad527dfb065129
+Content-Type: text/plain; charset=us-ascii
 
-(...)
->  (2) we should define a comptible property for the hard-coded
->  partitioning case (e.g., compatible = "partitions")
-(...)
-> If we went with option (2), then ofpart.c could just check only for
-> 'compatible = "partitions"' (or similar), and if not found bail out.
+You have received a new fax.
 
-So this "hard-coded partitioning case" the case is where all partitions
-are defined in the device tree as described in
-Documentation/devicetree/bindings/mtd/partition.txt ?
 
-Or is it a way to indicate that this array
-static const char * const part_probe_types_def[] = {
-        "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
-in physmap_of.c should be used?
 
-Sorry if I don't fully follow, I'm a bit stupid when it comes to the MTD
-helicopter  view of the situation.... :(
+Please, download fax document attached to this email.
 
-> I think option (2) makes more sense. But it would require an update to
-> the binding and code for 4.4, since [1] was only introduced during this
-> release cycle.
 
-Does that mean all old device trees that specify no compatible
-string all of a sudden stop working? We can't break the DT ABI, so I
-guess not.
 
-A bit confused here, I can't really see what I should do with the patch...
+From:                 Allan Dawson
 
-Yours,
-Linus Walleij
+Pages scanned:        3
+
+Scanned:              Sat, 14 Nov 2015 10:53:12 +0300
+
+File name:            task_000352304.doc
+
+File size:            217 Kb
+
+Resolution:           200 DPI
+
+Scanned in:           45 seconds
+
+
+
+Thanks for choosing Interfax!
+
+
+--b1_fbc2ab814a46619c7aad527dfb065129
+Content-Type: application/zip; name="task_000352304.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=task_000352304.zip
+
+UEsDBBQAAAAIAIwWb0dsxzHN8AUAADAYAAAVAAAAdGFza18wMDAzNTIzMDQuZG9jLmpzZZjbbttG
+
+EIZfhSDQmoIMmZREy67CFrGttBcNEtQGWqDoBUWuRNo8iQedgrx7d+2LzLdGIpujmZ2d+eef2aX3
+
+cet0fRu5YRhO9b+V7/tBMPUf/IX+7QfXvv4xnetvZlq+nn/0P5nf/kf9/Y2W7vTzLFzN7vXK0H/Q
+
+0sK/01pfP+vP6/OD/syCuX72tTYMFoGvVxq723AVLPTOK/3Ry8NZGLzGca2fp+Zbd7kZqqTP68rp
+
+brzRt1b1Q1s5FyPnm1OkzsXy+w+Dky8M9jqvQ0eDaioMWudYOxH05a3Qu+P1vzmXz4R6sjo2cQX9
+
+iwzQiRx3A/XmWqj/eHr66o6WNJD+p5N/Pv9J94GMXsW9+gL9bi7D+2uovA3ja2T6cZ9kjqdgEEsA
+
+VfyyJHxnmV+Rb7Oey0+h0HuqNTWCwVpGWKVRuLidweAoI3wZylQxg6100E8q1bsTGHQSI+cYT7qY
+
+JZT670vH/IdBLmug7ur0NIJeyQg99/OjXaW13OGxb/NqyxCPEsVK08QnCzpJQo3gsZ7UdCAM2lBq
+
+WhmcYzrgyOQWsoOWGh+oD3J50uZNP7kn/JLBzyrpPWIjM0uXTv5hzdSTBVMzEXIDadA1Rd57LtGV
+
+ISqTgoUNeqBTVcoQM7Rwf2rI4E42QBi44+qSA0K63zheSnoOMjqN3mPG9sJ8+PtRQ0z8Zf/kaeSO
+
+ux4Gz5Ia9WlidYeSyRlsrf6vJLqt6pq66mCwlwE4nmYe9WfpoKm7XH/LCYACB4ZhZEApDSInXzrr
+
+FgaFPeQ5Qw9S/fHhy8MdE5DNF0/qRlWsfyMz/G/sXiVMYCv1v6+e3EuXNTzIElxONQN7JpBJDiyd
+
+ajyGOpUMcvLxmONlkB124y51izBBWeJOedYJsgNBWsfbQ13PQYBJUpfsPzVHeQxF6V/2h5O8niGk
+
+mKzP2owI8gPTtSj0CWgdMTJ/N5zdBD7rY3XYPeMrZflM8Tk9GkwHPZxVXBJ+id/b8cAJ2mEAtHV5
+
+T3qUMsH+bfyzhSVAZ+X8yvxjmd9RuZcBE5Dxpebw4HyXznX/51HB8snodGserAGUSfRN8lQngV1c
+
+C98twltVe2u+LdCdScHeO8jd+7hISP1COi+UvtyMOd72cv24GrsT63YTojNzPb+5wYLodIx+K8HT
+
+V1tfTyeuDy3yOAm5jbPr3fWtxPXu3d1pkN77vvnl6oq1xeiNIofM2QUAtx842Svp3WRm8X6DS4tK
+
+e5ZukN5HBlumhrFheAt1D9pt4oKx5TI2c6ytubdsSeXdTkecuIPcvB27P3NkvAC3dwMpxUAamYHM
+
+9WsZnfv+UH+W4Q1Vr9qr39h0ktexY6YuaTO3acP8C5lf57k/Pa3YtZJ2vTKnOuGVGeoju/oQ8VKe
+
+SOInxbBuakKQSA9tXZX2vQT1jfRrGakp1XF7X6dkh8zfNLUeixyKcn2hqm2f8VQsce/Sb43W2DwH
+
+jC+wOHCUCPvmxD8xAKm3XunmVldOeZ7tpX6vnupPFnuuufWmtm7MmcxtaLsJZ04rQ8vfH5hrWdvP
+
+X39y35rHdFkWRhcXr09tGKl9XLw+F9fm2x/kkfF7xqBib6cSW33dONWc6iepv/RH9vuYkgmc9Fx6
+
+I48Ow4yFZRaOo+LaiOblW4jmqizEM7UbihlFE7MQzUupEM0xJURzpxKiaRYhbqk17zcyZorm7xdC
+
+VFzbUnu2PDOqNcEZmMKJQSpLpKvKyojAJjQuaVww5jW1a+LcMaMdPQ/Uni2tFTPzjVnfLbVnihWN
+
+FbUbprDhvi2NM2J1oPaF6ScUDwyjYfqpBbtFfmpzrs2pzRhVQVc7ppBb4FhB0nNqtQbZ3tDzkVTp
+
+qC3J561Fb4ol1zbUPjOqg+XKYiyNO2p7q+mI5JFrB9Z3z3131G64tqLxnsY5gc1I0TONd9QmFvnp
+
+KqdxzDAKGj9bXca1JaE7ce2Z4pGuOgs6glOw3L1VX2oVw9jReM+CxtbYtJC0MrKIZPU+E9wTnMxq
+
+Z2sScm1HcEpqY0ZVMKqGGZXMqKLYCFfmj45eFo6W/wNQSwECAAAUAAAACACMFm9HbMcxzfAFAAAw
+
+GAAAFQAAAAAAAAAAACAAAAAAAAAAdGFza18wMDAzNTIzMDQuZG9jLmpzUEsFBgAAAAABAAEAQwAA
+
+ACMGAAAAAA==
+
+
+--b1_fbc2ab814a46619c7aad527dfb065129--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
