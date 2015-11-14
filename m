@@ -1,36 +1,83 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Add support for kosagi novena
-Date: Sat, 14 Nov 2015 17:11:25 -0200
-Message-ID: <CAOMZO5CRHanbfHj51Udvgez0dkX-p3Dna3ZDnOFSp+-eHVWy+w@mail.gmail.com>
-References: <1423650182-16865-1-git-send-email-xobs@kosagi.com>
-	<201511120107.38409.marex@denx.de>
+From: Constantine Shulyupin <const@makelinux.com>
+Subject: Re: [PATCH v8] Documentation: add Device tree bindings for hwmon/nct7802
+Date: Sat, 14 Nov 2015 21:35:55 +0200
+Message-ID: <CAE7jHC-63Gvp4An55TGx5ZG_Yk0ijt6-XzDNp_MXjbaUn3NNkA@mail.gmail.com>
+References: <1445891057-1554-1-git-send-email-const@makelinux.com>
+	<20151112172658.GA27337@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201511120107.38409.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151112172658.GA27337@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 10:07 PM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> On Wednesday, February 11, 2015 at 11:22:59 AM, Sean Cross wrote:
->> The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express
->> slot. This patchset adds device tree support for the Novena mainboard.
+On Thu, Nov 12, 2015 at 7:26 PM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Oct 26, 2015 at 10:24:17PM +0200, Constantine Shulyupin wrote:
+>> From: Constantine Shulyupin <const@MakeLinux.com>
+>> +Optional subnodes:
+>> +
+>> +Sensor subnodes properties:
+>> + - "compatible", allowed values:
+>> +      - "nuvoton,nct7802"
 >
-> Hi,
+> This should have -sensor appended?
+
+Right.
+
+>> + - "sensor-type", allowed values:
+>> +     "thermal-diode"
+>> +     "thermistor"
+>> +     "voltage"
+>> +     "local"
+>> +     "vcore"
+>> +     "vcc"
 >
-> is there any reason why this series never got applied ?
+> These are different connections to the same h/w block in the chip? If
+> so, then this is fine. If the h/w blocks are different, then it would be
+> better to go back to different compatible strings.
+
+"thermal-diode", "thermistor", "voltage",  "local" - is one H/W block
+(7.2.32 Mode Selection Register, 22h)
+One of above "local" - is single input, enables by one bit EnLTD
+
+ "vcore", "vcc" - another H/W block (7.2.35 Voltage Monitor Enable
+Register, 25h), each of them is different input.
+
+I'll divide them in the next patch.
+
 >
-> I'm planning to rebase and repost this series, but I'd like to know if there
-> is some feedback which I should address first.
+>> +For sensors of types "thermal-diode", "thermistor" and "voltage" required
+>> + - "reg": index in range 0 .. 2
+>> +
+>> +Except sensor at address 2 can't be "thermal-diode".
+>> +
+>> +Fan subnode:
+>> +
+>> +Required properties:
+>> + - "reg" :index of in range 0 .. 2.
+>
+> What does the numbering correspond to in the h/w?
+The numberring corresponds to the three different temperature/voltage
+inputs (RTD1_MD, RTD2_MD, RTD3_MD) and three different fans (EnFan1,
+EnFan2, EnFan3, EnDCFAN*, etc)
 
-Yes, please repost it and make sure to use Shawn's new email address.
+>> +     vcc {
+>> +             compatible = "nuvoton,nct7802-sensor";
+>> +             sensor-type = "vcc";
+>
+> No unit address?
+>
+>> +     };
+>> +     vcore {
+>> +             compatible = "nuvoton,nct7802-sensor";
+>> +             sensor-type = "vcore";
+>> +     };
 
-Regards,
+There is only one vcc anv vcore input.
 
-Fabio Estevam
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Thanks
+Constantine
