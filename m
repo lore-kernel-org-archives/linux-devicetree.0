@@ -1,166 +1,141 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: add IMX7D ADC driver support
-Date: Sat, 14 Nov 2015 17:49:14 +0000
-Message-ID: <5647741A.1010905@kernel.org>
-References: <1447075704-4605-1-git-send-email-haibo.chen@freescale.com>
- <1447075704-4605-2-git-send-email-haibo.chen@freescale.com>
- <56420606.4070505@metafoo.de>
- <20151113093934.GA21068@b51421-server.ap.freescale.net>
- <5645B2E8.8070906@metafoo.de>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] MAINTAINERS: update DT binding doc locations
+Date: Sat, 14 Nov 2015 19:17:54 +0100
+Message-ID: <CA+M3ks44jf0gHjrK3qThNoiM+KfC+0Od5LnjZoM3o5ttYNArQA@mail.gmail.com>
+References: <1446752475-2708-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5645B2E8.8070906@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Haibo Chen <haibo.chen@freescale.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, knaack.h@gmx.de, pmeerw@pmeerw.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446752475-2708-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/11/15 09:52, Lars-Peter Clausen wrote:
-> On 11/13/2015 10:39 AM, Haibo Chen wrote:
-> [...]
->>>> +static void imx7d_adc_feature_config(struct imx7d_adc *info)
->>>> +{
->>>> +	info->adc_feature.clk_pre_div = IMX7D_ADC_ANALOG_CLK_PRE_DIV_4;
->>>> +	info->adc_feature.avg_num = IMX7D_ADC_AVERAGE_NUM_32;
->>>> +	info->adc_feature.core_time_unit = 1;
->>>> +	info->adc_feature.average_en = true;
->>>
->>> What's the plan for these? Right now they are always initialized to the same
->>> static value.
->>>
->>
->> In future, we can get these values from dts file, currently we just use the static value.
-> 
-> Those seem to be software configuration values though, not part of hardware
-> description.
-> 
->>
->>>
->>>> +}
->>> [...]
->>>> +static int imx7d_adc_read_raw(struct iio_dev *indio_dev,
->>>> +			struct iio_chan_spec const *chan,
->>>> +			int *val,
->>>> +			int *val2,
->>>> +			long mask)
->>>> +{
->>>> +	struct imx7d_adc *info = iio_priv(indio_dev);
->>>> +
->>>> +	u32 channel;
->>>> +	long ret;
->>>> +
->>>> +	switch (mask) {
->>>> +	case IIO_CHAN_INFO_RAW:
->>>> +		mutex_lock(&indio_dev->mlock);
->>>> +		reinit_completion(&info->completion);
->>>> +
->>>> +		channel = (chan->channel) & 0x0f;
->>>> +		info->channel = channel;
->>>> +		imx7d_adc_channel_set(info);
->>>
->>> How about just passing channel directy adc_channel_set() instead of doing it
->>> implicitly through the info struct?
->>>
->>
->> I think there is no difference, besides, using this parameter info struct can keep align with other functions.
->> eg.  imx7d_adc_sample_set(), imx7d_adc_hw_init(), imx7d_adc_get_sample_rate(), all these functions have the same parameter.
->>
->>> [...]
->>>> +static irqreturn_t imx7d_adc_isr(int irq, void *dev_id)
->>>> +{
->>>> +	struct imx7d_adc *info = (struct imx7d_adc *)dev_id;
->>>> +	int status;
->>>> +
->>>> +	status = readl(info->regs + IMX7D_REG_ADC_INT_STATUS);
->>>> +	if (status & IMX7D_REG_ADC_INT_STATUS_CHANNEL_INT_STATUS) {
->>>> +		info->value = imx7d_adc_read_data(info);
->>>> +		complete(&info->completion);
->>>> +	}
->>>> +	writel(0, info->regs + IMX7D_REG_ADC_INT_STATUS);
->>>
->>> Is the hardware really this broken? If the interrupt happens between reading
->>> the status register and clearing it here it will be missed.
->>>
->>
->> I think interrupt can't happen between reading the status register and clearing it.
->> Because in function imx7d_adc_read_raw(), we call the function 
->> imx7d_adc_channel_set(info), in this function, we config the register
->> REG_ADC_CH_A\B\C\D_CFG1 and REG_ADC_CH_A\B\C\D_CFG2, only when these registers
->> is configed, ADC start a conversion. Once the conversion complete, ADC trigger an 
->> interrupt, and call the imx7d_adc_isr().
-> 
-> Well an interrupt can always happen, its running fully asynchronous to the
-> CPU. If you have multiple interrupt sources enabled and the first one fires
-> and you run then start the irq handler, read the status register, now the
-> second irq sources fires, and then you clear the status interrupt register.
-> This means the driver will not see the irq from the second source.
-I'd agree with this, would normally expect to see only the relevant parts of the
-register 'cleared'.  Usually this is done by explicitly picking those bits
-out (normally writing 1 to the bit to clear the interrupt source).
+2015-11-05 20:41 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> After the recent moving of DT binding documents, some maintainers entries
+> are stale. Update them to the new locations.
+>
+> In bindings/fb/, there were only 2 files and I'm assuming the FB
+> maintainers don't want to be copied on all of bindings/display/. So I've
+> dropped them.
+>
+> Reported-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
+> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+> Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  MAINTAINERS | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9f6685f..e2aa973 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3577,7 +3577,7 @@ S:        Maintained
+>  F:     drivers/gpu/drm/drm_panel.c
+>  F:     drivers/gpu/drm/panel/
+>  F:     include/drm/drm_panel.h
+> -F:     Documentation/devicetree/bindings/panel/
+> +F:     Documentation/devicetree/bindings/display/panel/
+>
+>  INTEL DRM DRIVERS (excluding Poulsbo, Moorestown and derivative chipsets)
+>  M:     Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> @@ -3609,15 +3609,15 @@ M:      Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>  L:     dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>  S:     Supported
+>  F:     drivers/gpu/drm/fsl-dcu/
+> -F:     Documentation/devicetree/bindings/video/fsl,dcu.txt
+> -F:     Documentation/devicetree/bindings/panel/nec,nl4827hc19_05b.txt
+> +F:     Documentation/devicetree/bindings/display/fsl,dcu.txt
+> +F:     Documentation/devicetree/bindings/display/panel/nec,nl4827hc19_05b.txt
+>
+>  DRM DRIVERS FOR FREESCALE IMX
+>  M:     Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>  L:     dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>  S:     Maintained
+>  F:     drivers/gpu/drm/imx/
+> -F:     Documentation/devicetree/bindings/drm/imx/
+> +F:     Documentation/devicetree/bindings/display/imx/
+>
+>  DRM DRIVERS FOR NVIDIA TEGRA
+>  M:     Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> @@ -3630,7 +3630,7 @@ F:        drivers/gpu/drm/tegra/
+>  F:     drivers/gpu/host1x/
+>  F:     include/linux/host1x.h
+>  F:     include/uapi/drm/tegra_drm.h
+> -F:     Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> +F:     Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>
+>  DRM DRIVERS FOR RENESAS
+>  M:     Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> @@ -3647,7 +3647,7 @@ M:        Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>  L:     dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>  S:     Maintained
+>  F:     drivers/gpu/drm/rockchip/
+> -F:     Documentation/devicetree/bindings/video/rockchip*
+> +F:     Documentation/devicetree/bindings/display/rockchip*
+>
+>  DRM DRIVERS FOR STI
+>  M:     Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> @@ -3656,7 +3656,7 @@ L:        dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>  T:     git http://git.linaro.org/people/benjamin.gaignard/kernel.git
+>  S:     Maintained
+>  F:     drivers/gpu/drm/sti
+> -F:     Documentation/devicetree/bindings/gpu/st,stih4xx.txt
+> +F:     Documentation/devicetree/bindings/display/st,stih4xx.txt
+>
+>  DSBR100 USB FM RADIO DRIVER
+>  M:     Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> @@ -4342,7 +4342,6 @@ Q:        http://patchwork.kernel.org/project/linux-fbdev/list/
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/plagnioj/linux-fbdev.git
+>  S:     Maintained
+>  F:     Documentation/fb/
+> -F:     Documentation/devicetree/bindings/fb/
+>  F:     drivers/video/
+>  F:     include/video/
+>  F:     include/linux/fb.h
+> @@ -6855,6 +6854,7 @@ S:        Supported
+>  F:     arch/metag/
+>  F:     Documentation/metag/
+>  F:     Documentation/devicetree/bindings/metag/
+> +F:     Documentation/devicetree/bindings/interrupt-controller/img,*
+>  F:     drivers/clocksource/metag_generic.c
+>  F:     drivers/irqchip/irq-metag.c
+>  F:     drivers/irqchip/irq-metag-ext.c
+> @@ -9443,7 +9443,7 @@ SIMPLEFB FB DRIVER
+>  M:     Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>  L:     linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  S:     Maintained
+> -F:     Documentation/devicetree/bindings/video/simple-framebuffer.txt
+> +F:     Documentation/devicetree/bindings/display/simple-framebuffer.txt
+>  F:     drivers/video/fbdev/simplefb.c
+>  F:     include/linux/platform_data/simplefb.h
+>
+> @@ -10072,6 +10072,7 @@ M:      Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>  S:     Supported
+>  F:     arch/arc/
+>  F:     Documentation/devicetree/bindings/arc/*
+> +F:     Documentation/devicetree/bindings/interrupt-controller/snps,arc*
+>  F:     drivers/tty/serial/arc_uart.c
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git
+>
+> --
+> 2.5.0
+>
 
-If there is anything else of interest in that register this is nasty!
-
-Hmm. looking at the bits you have defined and the way it is used you only
-ever have one interrupt at a time possibly occurring at the moment?
-
-If this is actually the case, then why read the register at all?
-
-If there is anything in the other bits of that register it would be interesting to
-know what is there!
-> 
->>
->>>> +
->>>> +	return IRQ_HANDLED;
->>>
->>> You should only return IRQ_HANDLED if you actually handled are interrupt.
->>>
->>
->> Here in the interrupt, we just handle the channel conversion finished flag, for
->> other flag, ignore them this time, Will add other flag in future.
-> 
-> Yeah, but if you don't handle any interrupt you should return IRQ_NONE. This
-> will make sure that the system can recover in case the hardware (or the
-> driver) is broken and generates unexpected interrupts. If there are a 1000
-> or so IRQ_NONEs in a row in a short time frame the kernel will disable the IRQ.
-> 
->>> [...]
->>>> +	ret  = of_property_read_u32(pdev->dev.of_node,
->>>
->>> Extra space.
->>>
->>>> +					"num-channels", &channels);
->>>
->>> What decides how many channels are in use?
->>>
->>
->> The board decides the channel number.
->> In dts file, there is a line:     num-channels = <4>;
-> 
-> Yes, but what decides how this property should be configured?
-> 
->>
->>
->>>> +	if (ret)
->>>> +		channels = ARRAY_SIZE(imx7d_adc_iio_channels);
->>>> +
->>>> +	indio_dev->name = dev_name(&pdev->dev);
->>>> +	indio_dev->dev.parent = &pdev->dev;
->>>> +	indio_dev->dev.of_node = pdev->dev.of_node;
->>>> +	indio_dev->info = &imx7d_adc_iio_info;
->>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
->>>> +	indio_dev->channels = imx7d_adc_iio_channels;
->>>> +	indio_dev->num_channels = (int)channels;
->>>
->>> I don't think you need the case here.
->>>
->>
->> Sorry, can't get your point, you mean I should not indio_dev-> ?
-> 
-> Sorry, I meant the (int) cast.
-> 
->>
->>>> [...]
->>
-> 
+Acked-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
