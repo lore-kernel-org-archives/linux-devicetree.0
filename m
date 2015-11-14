@@ -1,51 +1,53 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH v4 00/10] Better compatible for the rockchip thermal and
- support RK3368 SoCs
-Date: Sat, 14 Nov 2015 14:31:50 +0800
-Message-ID: <5646D556.1010803@rock-chips.com>
-References: <1447044542-30859-1-git-send-email-wxt@rock-chips.com>
- <20151112182950.GB4361@localhost.localdomain> <3751572.i2tVkgaN1o@phil>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
+Date: Sat, 14 Nov 2015 11:46:59 +0100
+Message-ID: <CACRpkdakyae95f_Lc-R7Uf7wndj5hyfCqqHziwmZjwm-uNkGAg@mail.gmail.com>
+References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
+	<20151029162908.GA13275@localhost>
+	<CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg@mail.gmail.com>
+	<20151030175145.GF13239@google.com>
+	<CAL_JsqL2F3p7qBPbOiGytVyzF_aNLWbrCT0mAX1WZo6SxE3JoA@mail.gmail.com>
+	<20151113220039.GA74382@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3751572.i2tVkgaN1o@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jiri Kosina <trivial@kernel.org>, lkp@intel.com, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Zhang Rui <rui.zhang@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151113220039.GA74382-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 13, 2015 at 11:00 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
+(...)
+>  (2) we should define a comptible property for the hard-coded
+>  partitioning case (e.g., compatible = "partitions")
+(...)
+> If we went with option (2), then ofpart.c could just check only for
+> 'compatible = "partitions"' (or similar), and if not found bail out.
 
-=E5=9C=A8 2015=E5=B9=B411=E6=9C=8813=E6=97=A5 06:14, Heiko Stuebner =E5=
-=86=99=E9=81=93:
-> Hi Eduardo,
->
-> Am Donnerstag, 12. November 2015, 10:29:52 schrieb Eduardo Valentin:
->> On Mon, Nov 09, 2015 at 12:48:52PM +0800, Caesar Wang wrote:
->>> Thank you all for providing inputs and comments on previous version=
-s of
->>> this patchset.
->>> Especially thanks to the (Eduardo, Dmitry, Heiko,....).
->>>
->>> This series patchs are working for RK3368 on Rockchip platform.
->> Do you have any results on existing support? Is the driver still in =
-one
->> piece for rk3288?
-> I've tested this series on a rk3288-veyron-jerry and everything still
-> runs just fine, so
->
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
+So this "hard-coded partitioning case" the case is where all partitions
+are defined in the device tree as described in
+Documentation/devicetree/bindings/mtd/partition.txt ?
 
-Thanks Heiko for testing.:-)
+Or is it a way to indicate that this array
+static const char * const part_probe_types_def[] = {
+        "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
+in physmap_of.c should be used?
 
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+Sorry if I don't fully follow, I'm a bit stupid when it comes to the MTD
+helicopter  view of the situation.... :(
 
+> I think option (2) makes more sense. But it would require an update to
+> the binding and code for 4.4, since [1] was only introduced during this
+> release cycle.
 
---=20
-caesar wang | software engineer | wxt@rock-chip.com
+Does that mean all old device trees that specify no compatible
+string all of a sudden stop working? We can't break the DT ABI, so I
+guess not.
+
+A bit confused here, I can't really see what I should do with the patch...
+
+Yours,
+Linus Walleij
