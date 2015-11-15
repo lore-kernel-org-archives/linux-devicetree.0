@@ -1,91 +1,365 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [Qemu-devel] [PATCH v4 4/4] devicetree: update documentation for
- fw_cfg ARM bindings
-Date: Sat, 14 Nov 2015 20:07:54 -0600
-Message-ID: <20151115020754.GA21323@rob-hp-laptop>
-References: <1447470235-13643-1-git-send-email-somlo@cmu.edu>
- <1447470235-13643-5-git-send-email-somlo@cmu.edu>
+Subject: Re: [PATCH v2 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Sat, 14 Nov 2015 20:14:37 -0600
+Message-ID: <20151115021437.GA23287@rob-hp-laptop>
+References: <cover.1447446957.git.hns@goldelico.com>
+ <ad1d3042c80142a59ab883fe17fe950dea734d94.1447446957.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447470235-13643-5-git-send-email-somlo@cmu.edu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Gabriel L. Somlo" <somlo@cmu.edu>
-Cc: gregkh@linuxfoundation.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, lersek@redhat.com, ralf@linux-mips.org, rmk+kernel@arm.linux.org.uk, eric@anholt.net, hanjun.guo@linaro.org, zajec5@gmail.com, sudeep.holla@arm.com, agross@codeaurora.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, peter.maydell@linaro.org, matt.fleming@intel.com, mst@redhat.com, jordan.l.justen@intel.com, kernelnewbies@kernelnewbies.org, qemu-devel@nongnu.org, leif.lindholm@linaro.org, luto@amacapital.net, ard.biesheuvel@linaro.org, kraxel@redhat.com, stefanha@gmail.com, pbonzini@redhat.com
+In-Reply-To: <ad1d3042c80142a59ab883fe17fe950dea734d94.1447446957.git.hns@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gta04-owner@goldelico.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 13, 2015 at 10:03:55PM -0500, Gabriel L. Somlo wrote:
-> From: Gabriel Somlo <somlo@cmu.edu>
+On Fri, Nov 13, 2015 at 09:35:52PM +0100, H. Nikolaus Schaller wrote:
+> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
+> introduced common DT bindings for touchscreens [1] and a helper function to
+> parse the DT.
 > 
-> Remove redundant details from
-> Documentation/devicetree/bindings/arm/fw-cfg.txt,
-> and replace them with a pointer to the more comprehensive
-> fw_cfg documentation privided by
-> Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg,
-> leaving the specific ARM DTB node description in place.
+> This has been integrated and interpretation of the inversion (flipping)
+> properties for the x and y axis has been added to accommodate any
+> orientation of the touch in relation to the LCD.
+> 
+> By scaling the min/max ADC values to the screen size it is now possible to
+> pre-calibrate the touch so that is (almost) exactly matches the LCD it is
+> glued onto. This allows to well enough operate the touch before a user
+> space calibration can improve the precision.
+> 
+> calculate_pressure has been renamed to calculate_resistance because
+> that is what it is doing.
+> 
+> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
 
-We generally don't want DT docs to depend on other kernel documentation. 
-That will make separating them harder.
+This still looks like it will break with old dtbs. It doesn't matter if 
+you update the in tree dts files, you should not force users to update 
+their dtb.
+
+Rob
 
 > 
-> Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
-> Cc: Laszlo Ersek <lersek@redhat.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  Documentation/devicetree/bindings/arm/fw-cfg.txt | 37 ++----------------------
->  1 file changed, 2 insertions(+), 35 deletions(-)
+>  .../bindings/input/touchscreen/tsc2007.txt         |  20 +--
+>  drivers/input/touchscreen/tsc2007.c                | 135 +++++++++++++++++----
+>  include/linux/i2c/tsc2007.h                        |   8 ++
+>  3 files changed, 135 insertions(+), 28 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-> index 953fb64..7aeb48a 100644
-> --- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
-> +++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-> @@ -11,43 +11,10 @@ QEMU exposes the control and data register to ARM guests as memory mapped
->  registers; their location is communicated to the guest's UEFI firmware in the
->  DTB that QEMU places at the bottom of the guest's DRAM.
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> index ec365e1..6e9fd55 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>  - ti,x-plate-ohms: X-plate resistance in ohms.
 >  
-> -The guest writes a selector value (a key) to the selector register, and then
-> -can read the corresponding data (produced by QEMU) via the data register. If
-> -the selected entry is writable, the guest can rewrite it through the data
-> -register.
+>  Optional properties:
+> +- generic touch screen properties: see touchscreen binding [2].
+>  - gpios: the interrupt gpio the chip is connected to (trough the penirq pin).
+>    The penirq pin goes to low when the panel is touched.
+>    (see GPIO binding[1] for more details).
+> @@ -13,17 +14,20 @@ Optional properties:
+>    (see interrupt binding[0]).
+>  - interrupts: (gpio) interrupt to which the chip is connected
+>    (see interrupt binding[0]).
+> -- ti,max-rt: maximum pressure.
+> -- ti,fuzzx: specifies the absolute input fuzz x value.
+> -  If set, it will permit noise in the data up to +- the value given to the fuzz
+> -  parameter, that is used to filter noise from the event stream.
+> -- ti,fuzzy: specifies the absolute input fuzz y value.
+> -- ti,fuzzz: specifies the absolute input fuzz z value.
+> +- ti,max-rt: maximum pressure resistance above which samples are ignored
+> +  (default: 4095).
+> +- ti,report-resistance: report resistance (no pressure = max_rt) instead
+> +  of pressure (no pressure = 0).
+> +- ti,min-x: minimum value reported by X axis ADC (default 0).
+> +- ti,max-x: maximum value reported by X axis ADC (default 4095).
+> +- ti,min-y: minimum value reported by Y axis ADC (default 0).
+> +- ti,max-y: maximum value reported by Y axis ADC (default 4095).
+>  - ti,poll-period: how much time to wait (in milliseconds) before reading again the
+> -  values from the tsc2007.
+> +  values from the tsc2007 (default 1).
 >  
-> -The selector register takes keys in big endian byte order.
-> +For a comprehensive description of the behavior of fw_cfg, please see
-> +Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg.
+>  [0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+> +[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
 >  
-> -The data register allows accesses with 8, 16, 32 and 64-bit width (only at
-> -offset 0 of the register). Accesses larger than a byte are interpreted as
-> -arrays, bundled together only for better performance. The bytes constituting
-> -such a word, in increasing address order, correspond to the bytes that would
-> -have been transferred by byte-wide accesses in chronological order.
-> -
-> -The interface allows guest firmware to download various parameters and blobs
-> -that affect how the firmware works and what tables it installs for the guest
-> -OS. For example, boot order of devices, ACPI tables, SMBIOS tables, kernel and
-> -initrd images for direct kernel booting, virtual machine UUID, SMP information,
-> -virtual NUMA topology, and so on.
-> -
-> -The authoritative registry of the valid selector values and their meanings is
-> -the QEMU source code; the structure of the data blobs corresponding to the
-> -individual key values is also defined in the QEMU source code.
-> -
-> -The presence of the registers can be verified by selecting the "signature" blob
-> -with key 0x0000, and reading four bytes from the data register. The returned
-> -signature is "QEMU".
-> -
-> -The outermost protocol (involving the write / read sequences of the control and
-> -data registers) is expected to be versioned, and/or described by feature bits.
-> -The interface revision / feature bitmap can be retrieved with key 0x0001. The
-> -blob to be read from the data register has size 4, and it is to be interpreted
-> -as a uint32_t value in little endian byte order. The current value
-> -(corresponding to the above outer protocol) is zero.
-> -
-> -The guest kernel is not expected to use these registers (although it is
-> -certainly allowed to); the device tree bindings are documented here because
-> -this is where device tree bindings reside in general.
+>  Example:
+>  	&i2c1 {
+> @@ -35,6 +39,8 @@ Example:
+>  			interrupts = <0x0 0x8>;
+>  			gpios = <&gpio4 0 0>;
+>  			ti,x-plate-ohms = <180>;
+> +			touchscreen-size-x = <640>;
+> +			touchscreen-size-y = <480>;
+>  		};
 >  
->  Required properties:
+>  		/* ... */
+> diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007.c
+> index 5d0cd51..e0c7173 100644
+> --- a/drivers/input/touchscreen/tsc2007.c
+> +++ b/drivers/input/touchscreen/tsc2007.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of.h>
+>  #include <linux/of_gpio.h>
+> +#include <linux/input/touchscreen.h>
 >  
+>  #define TSC2007_MEASURE_TEMP0		(0x0 << 4)
+>  #define TSC2007_MEASURE_AUX		(0x2 << 4)
+> @@ -74,6 +75,14 @@ struct tsc2007 {
+>  
+>  	u16			model;
+>  	u16			x_plate_ohms;
+> +	bool			swap_xy;
+> +	bool			invert_x;
+> +	bool			invert_y;
+> +	bool			report_resistance;
+> +	u16			min_x;
+> +	u16			min_y;
+> +	u16			max_x;
+> +	u16			max_y;
+>  	u16			max_rt;
+>  	unsigned long		poll_period; /* in jiffies */
+>  	int			fuzzx;
+> @@ -128,7 +137,8 @@ static void tsc2007_read_values(struct tsc2007 *tsc, struct ts_event *tc)
+>  	tsc2007_xfer(tsc, PWRDOWN);
+>  }
+>  
+> -static u32 tsc2007_calculate_pressure(struct tsc2007 *tsc, struct ts_event *tc)
+> +static u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
+> +					struct ts_event *tc)
+>  {
+>  	u32 rt = 0;
+>  
+> @@ -177,12 +187,13 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
+>  	struct ts_event tc;
+>  	u32 rt;
+>  
+> +	dev_dbg(&ts->client->dev, "soft irq %d\n", irq);
+>  	while (!ts->stopped && tsc2007_is_pen_down(ts)) {
+>  
+>  		/* pen is down, continue with the measurement */
+>  		tsc2007_read_values(ts, &tc);
+>  
+> -		rt = tsc2007_calculate_pressure(ts, &tc);
+> +		rt = tsc2007_calculate_resistance(ts, &tc);
+>  
+>  		if (!rt && !ts->get_pendown_state) {
+>  			/*
+> @@ -198,6 +209,48 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
+>  				"DOWN point(%4d,%4d), pressure (%4u)\n",
+>  				tc.x, tc.y, rt);
+>  
+> +			/* clamp to expected ADC range */
+> +			if (tc.x < ts->min_x)
+> +				tc.x = ts->min_x;
+> +			if (tc.x > ts->max_x)
+> +				tc.x = ts->max_x;
+> +			if (tc.y < ts->min_y)
+> +				tc.y = ts->min_y;
+> +			if (tc.y > ts->max_y)
+> +				tc.y = ts->max_y;
+> +
+> +			dev_dbg(&ts->client->dev,
+> +					"Clamped point(%4d,%4d), pressure (%4u)\n",
+> +					tc.x, tc.y, rt);
+> +
+> +			/* flip */
+> +			if (ts->invert_x)
+> +				tc.x = (ts->max_x - tc.x) + ts->min_x;
+> +			if (ts->invert_y)
+> +				tc.y = (ts->max_y - tc.y) + ts->min_y;
+> +			if (!ts->report_resistance)
+> +				rt = ts->max_rt - rt;
+> +
+> +			dev_dbg(&ts->client->dev,
+> +					"Flipped point(%4d,%4d), pressure (%4u)\n",
+> +					tc.x, tc.y, rt);
+> +
+> +			/* scale to desired output range */
+> +			tc.x = (input->absinfo[ABS_X].maximum *
+> +				(tc.x - ts->min_x)) / (ts->max_x - ts->min_x);
+> +			tc.y = (input->absinfo[ABS_Y].maximum *
+> +				(tc.y - ts->min_y)) / (ts->max_y - ts->min_y);
+> +			rt = (input->absinfo[ABS_PRESSURE].maximum * rt)
+> +				/ ts->max_rt;
+> +
+> +			/* swap x and y */
+> +			if (ts->swap_xy)
+> +				swap(tc.x, tc.y);
+> +
+> +			/* report event */
+> +			dev_dbg(&ts->client->dev,
+> +					"shaped point(%4d,%4d), pressure (%4u)\n",
+> +					tc.x, tc.y, rt);
+>  			input_report_key(input, BTN_TOUCH, 1);
+>  			input_report_abs(input, ABS_X, tc.x);
+>  			input_report_abs(input, ABS_Y, tc.y);
+> @@ -207,8 +260,8 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
+>  
+>  		} else {
+>  			/*
+> -			 * Sample found inconsistent by debouncing or pressure is
+> -			 * beyond the maximum. Don't report it to user space,
+> +			 * Sample found inconsistent by debouncing or resistance
+> +			 * is beyond the maximum. Don't report it to user space,
+>  			 * repeat at least once more the measurement.
+>  			 */
+>  			dev_dbg(&ts->client->dev, "ignored pressure %d\n", rt);
+> @@ -233,6 +286,7 @@ static irqreturn_t tsc2007_hard_irq(int irq, void *handle)
+>  {
+>  	struct tsc2007 *ts = handle;
+>  
+> +	dev_dbg(&ts->client->dev, "hard irq %d\n", irq);
+>  	if (tsc2007_is_pen_down(ts))
+>  		return IRQ_WAKE_THREAD;
+>  
+> @@ -303,14 +357,25 @@ static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
+>  	else
+>  		ts->max_rt = MAX_12BIT;
+>  
+> -	if (!of_property_read_u32(np, "ti,fuzzx", &val32))
+> -		ts->fuzzx = val32;
+> +	ts->swap_xy = of_property_read_bool(np, "touchscreen-swapped-x-y");
+> +	ts->invert_x = of_property_read_bool(np, "touchscreen-inverted-x");
+> +	ts->invert_y = of_property_read_bool(np, "touchscreen-inverted-y");
+> +	ts->report_resistance =
+> +		       of_property_read_bool(np, "ti,report-resistance");
+>  
+> -	if (!of_property_read_u32(np, "ti,fuzzy", &val32))
+> -		ts->fuzzy = val32;
+> +	if (!of_property_read_u32(np, "ti,min-x", &val32))
+> +		ts->min_x = val32;
+> +	if (!of_property_read_u32(np, "ti,max-x", &val32))
+> +		ts->max_x = val32;
+> +	else
+> +		ts->max_x = MAX_12BIT;
+>  
+> -	if (!of_property_read_u32(np, "ti,fuzzz", &val32))
+> -		ts->fuzzz = val32;
+> +	if (!of_property_read_u32(np, "ti,min-y", &val32))
+> +		ts->min_y = val32;
+> +	if (!of_property_read_u32(np, "ti,max-y", &val32))
+> +		ts->max_y = val32;
+> +	else
+> +		ts->max_y = MAX_12BIT;
+>  
+>  	if (!of_property_read_u64(np, "ti,poll-period", &val64))
+>  		ts->poll_period = msecs_to_jiffies(val64);
+> @@ -324,6 +389,16 @@ static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
+>  		return -EINVAL;
+>  	}
+>  
+> +	dev_dbg(&client->dev,
+> +			"min/max_x (%4d,%4d)\n",
+> +			ts->min_x, ts->max_x);
+> +	dev_dbg(&client->dev,
+> +			"min/max_y (%4d,%4d)\n",
+> +			ts->min_y, ts->max_y);
+> +	dev_dbg(&client->dev,
+> +			"max_rt (%4d)\n",
+> +			ts->max_rt);
+> +
+>  	ts->gpio = of_get_gpio(np, 0);
+>  	if (gpio_is_valid(ts->gpio))
+>  		ts->get_pendown_state = tsc2007_get_pendown_state_gpio;
+> @@ -332,6 +407,10 @@ static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
+>  			 "GPIO not specified in DT (of_get_gpio returned %d)\n",
+>  			 ts->gpio);
+>  
+> +	dev_dbg(&client->dev,
+> +			"ts-gpio: %d\n",
+> +			ts->gpio);
+> +
+>  	return 0;
+>  }
+>  #else
+> @@ -349,6 +428,14 @@ static int tsc2007_probe_pdev(struct i2c_client *client, struct tsc2007 *ts,
+>  	ts->model             = pdata->model;
+>  	ts->x_plate_ohms      = pdata->x_plate_ohms;
+>  	ts->max_rt            = pdata->max_rt ? : MAX_12BIT;
+> +	ts->swap_xy           = pdata->swap_xy;
+> +	ts->invert_x          = pdata->invert_x;
+> +	ts->invert_y          = pdata->invert_y;
+> +	ts->report_resistance = pdata->report_resistance;
+> +	ts->min_x             = pdata->min_x ? : 0;
+> +	ts->min_y             = pdata->min_y ? : 0;
+> +	ts->max_x             = pdata->max_x ? : MAX_12BIT;
+> +	ts->max_y             = pdata->max_y ? : MAX_12BIT;
+>  	ts->poll_period       = msecs_to_jiffies(pdata->poll_period ? : 1);
+>  	ts->get_pendown_state = pdata->get_pendown_state;
+>  	ts->clear_penirq      = pdata->clear_penirq;
+> @@ -388,13 +475,6 @@ static int tsc2007_probe(struct i2c_client *client,
+>  	if (!ts)
+>  		return -ENOMEM;
+>  
+> -	if (pdata)
+> -		err = tsc2007_probe_pdev(client, ts, pdata, id);
+> -	else
+> -		err = tsc2007_probe_dt(client, ts);
+> -	if (err)
+> -		return err;
+> -
+>  	input_dev = devm_input_allocate_device(&client->dev);
+>  	if (!input_dev)
+>  		return -ENOMEM;
+> @@ -421,10 +501,21 @@ static int tsc2007_probe(struct i2c_client *client,
+>  	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
+>  	input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
+>  
+> -	input_set_abs_params(input_dev, ABS_X, 0, MAX_12BIT, ts->fuzzx, 0);
+> -	input_set_abs_params(input_dev, ABS_Y, 0, MAX_12BIT, ts->fuzzy, 0);
+> -	input_set_abs_params(input_dev, ABS_PRESSURE, 0, MAX_12BIT,
+> -			     ts->fuzzz, 0);
+> +	if (pdata)
+> +		err = tsc2007_probe_pdev(client, ts, pdata, id);
+> +	else
+> +		err = tsc2007_probe_dt(client, ts);
+> +	if (err)
+> +		return err;
+> +
+> +	input_set_abs_params(input_dev, ABS_X, 0, ts->max_x-ts->min_x,
+> +						  ts->fuzzx, 0);
+> +	input_set_abs_params(input_dev, ABS_Y, 0, ts->max_y-ts->min_y,
+> +						  ts->fuzzy, 0);
+> +	input_set_abs_params(input_dev, ABS_PRESSURE, 0, ts->max_rt,
+> +						  ts->fuzzz, 0);
+> +
+> +	touchscreen_parse_properties(input_dev, false);
+>  
+>  	if (pdata) {
+>  		if (pdata->exit_platform_hw) {
+> @@ -443,6 +534,8 @@ static int tsc2007_probe(struct i2c_client *client,
+>  			pdata->init_platform_hw();
+>  	}
+>  
+> +	dev_dbg(&client->dev, "request irq %d\n",
+> +			ts->irq);
+>  	err = devm_request_threaded_irq(&client->dev, ts->irq,
+>  					tsc2007_hard_irq, tsc2007_soft_irq,
+>  					IRQF_ONESHOT,
+> diff --git a/include/linux/i2c/tsc2007.h b/include/linux/i2c/tsc2007.h
+> index 4f35b6a..632db20 100644
+> --- a/include/linux/i2c/tsc2007.h
+> +++ b/include/linux/i2c/tsc2007.h
+> @@ -6,6 +6,14 @@
+>  struct tsc2007_platform_data {
+>  	u16	model;				/* 2007. */
+>  	u16	x_plate_ohms;	/* must be non-zero value */
+> +	bool	swap_xy;	/* swap x and y axis */
+> +	bool	invert_x;
+> +	bool	invert_y;
+> +	bool	report_resistance;
+> +	u16	min_x;	/* min and max values reported by ADC */
+> +	u16	min_y;
+> +	u16	max_x;
+> +	u16	max_y;
+>  	u16	max_rt; /* max. resistance above which samples are ignored */
+>  	unsigned long poll_period; /* time (in ms) between samples */
+>  	int	fuzzx; /* fuzz factor for X, Y and pressure axes */
 > -- 
-> 2.4.3
-> 
+> 2.5.1
 > 
