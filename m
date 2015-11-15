@@ -1,460 +1,65 @@
-From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support
-Date: Sun, 15 Nov 2015 11:54:13 +0100
-Message-ID: <1447584853-12560-1-git-send-email-michael@amarulasolutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 6/8] drivers:input:ads7846(+tsc2046): recognise old binding for coordinate flipping
+Date: Sun, 15 Nov 2015 11:54:20 +0100
+Message-ID: <7F9F737C-A183-4D23-AFAE-90F4ADE8D1E3@goldelico.com>
+References: <cover.1447446957.git.hns@goldelico.com> <f036e0d2b019ae9463e108f48643c16a80936ddb.1447446957.git.hns@goldelico.com> <CAL_JsqKXN1J-vkZm1f-4en4oa8Dz3c=xN_POCnDvzbAWqsPGfA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKXN1J-vkZm1f-4en4oa8Dz3c=xN_POCnDvzbAWqsPGfA@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, List for communicating with real GTA04 owners <gta0>
 List-Id: devicetree@vger.kernel.org
 
-www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
 
-Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/imx6q-icore-rqs.dts    |  36 +++
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 372 +++++++++++++++++++++++++++++++
- 3 files changed, 409 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-icore-rqs.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+Am 15.11.2015 um 03:19 schrieb Rob Herring <robh+dt@kernel.org>:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bb8fa02..7c4706d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -284,6 +284,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw551x.dtb \
- 	imx6dl-gw552x.dtb \
- 	imx6dl-hummingboard.dtb \
-+	imx6q-icore-rqs.dtb \
- 	imx6dl-nitrogen6x.dtb \
- 	imx6dl-phytec-pbab01.dtb \
- 	imx6dl-rex-basic.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-new file mode 100644
-index 0000000..cded07d
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
-@@ -0,0 +1,36 @@
-+/*
-+ * Copyright (C) 2015 Amarula Solutions B.V.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-icore-rqs.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 Quad SOM";
-+	compatible = "fsl,imx6-icore-rqs", "fsl,imx6q";
-+	cpus {
-+		cpu@0 {
-+			operating-points = <
-+				/* kHz    uV */
-+				792000  1150000
-+				396000  1150000
-+			>;
-+
-+			fsl,soc-operating-points = <
-+				/* ARM kHz  SOC-PU uV */
-+				792000        1175000
-+				396000        1175000
-+			>;
-+		};
-+	};
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-new file mode 100644
-index 0000000..59c416e
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -0,0 +1,372 @@
-+/*
-+ * Copyright 2015 Amarula Solutions B.V.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/imx6qdl-clock.h>
-+
-+/ {
-+	memory {
-+		reg = <0x10000000 0x80000000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		reg_usb_h1_vbus: usb_h1_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_h1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_3p3v: 3p3v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "3P3V";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_2p5v: 2p5v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "2P5V";
-+			regulator-min-microvolt = <2500000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_1p8v: 1p8v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "1P8V";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_sd4_vmmc: sd4_vmmc {
-+			compatible = "regulator-fixed";
-+			regulator-name = "P3V3_SD4_SWITCHED";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		reg_sd3_vmmc: sd3_vmmc {
-+			compatible = "regulator-fixed";
-+			regulator-name = "P3V3_SD3_SWITCHED";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+	};
-+
-+	usb_hub: usb-hub {
-+		compatible = "smsc,usb3503a";
-+		clocks = <&clks IMX6QDL_CLK_LVDS2_GATE>;
-+		clock-names = "refclk";
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	imx6qdl-icore-rqs {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1f059		/* PCIe Reset */
-+				MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1f059		/* SD3_CD */
-+				MX6QDL_PAD_GPIO_4__GPIO1_IO04  0x1f059		/* SD3_PWR */
-+				MX6QDL_PAD_GPIO_6__GPIO1_IO06  0x1f059		/* HUB USB Reset */
-+			>;
-+		};
-+
-+		pinctrl_audmux_4: audmux-4 {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
-+				MX6QDL_PAD_DISP0_DAT21__AUD4_TXD 0x110b0
-+				MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS  0x130b0
-+				MX6QDL_PAD_DISP0_DAT23__AUD4_RXD  0x130b0
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_1: usdhc1grp-1 {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17071
-+				MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10071
-+				MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17071
-+				MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17071
-+				MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17071
-+				MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17071
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_2: usdhc3grp-2 {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17070
-+				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10070
-+				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17070
-+				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17070
-+				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17070
-+				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17070
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_2_100mhz: usdhc3grp-2_100mhz {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170B1
-+				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100B1
-+				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170B1
-+				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170B1
-+				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170B1
-+				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170B1
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_2_200mhz: usdhc3grp-2_200mhz {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170F9
-+				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100F9
-+				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170F9
-+				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170F9
-+				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170F9
-+				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170F9
-+			>;
-+		};
-+
-+		pinctrl_usdhc4_1: usdhc4grp-1 {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD4_CMD__SD4_CMD    0x17070
-+				MX6QDL_PAD_SD4_CLK__SD4_CLK    0x10070
-+				MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x17070
-+				MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x17070
-+				MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x17070
-+				MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x17070
-+				MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x17070
-+				MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x17070
-+				MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x17070
-+				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17070
-+			>;
-+		};
-+
-+		pinctrl_usdhc4_1_100mhz: usdhc4grp-1_100mhz {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170B1
-+				MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100B1
-+				MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170B1
-+				MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170B1
-+				MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170B1
-+				MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170B1
-+				MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170B1
-+				MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170B1
-+				MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170B1
-+				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170B1
-+			>;
-+		};
-+
-+		pinctrl_usdhc4_1_200mhz: usdhc4grp-2_200mhz {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170F9
-+				MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100F9
-+				MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170F9
-+				MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170F9
-+				MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170F9
-+				MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170F9
-+				MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170F9
-+				MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170F9
-+				MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170F9
-+				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170F9
-+			>;
-+		};
-+
-+		pinctrl_enet_3: enetgrp-3 {
-+			fsl,pins = <
-+				MX6QDL_PAD_ENET_MDIO__ENET_MDIO       0x1b0b0
-+				MX6QDL_PAD_ENET_MDC__ENET_MDC         0x1b0b0
-+				MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
-+				MX6QDL_PAD_RGMII_TD0__RGMII_TD0       0x1b0b0
-+				MX6QDL_PAD_RGMII_TD1__RGMII_TD1       0x1b0b0
-+				MX6QDL_PAD_RGMII_TD2__RGMII_TD2       0x1b0b0
-+				MX6QDL_PAD_RGMII_TD3__RGMII_TD3       0x1b0b0
-+				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
-+				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK  0x1b0b0
-+				MX6QDL_PAD_RGMII_RXC__RGMII_RXC       0x1b0b0
-+				MX6QDL_PAD_RGMII_RD0__RGMII_RD0       0x1b0b0
-+				MX6QDL_PAD_RGMII_RD1__RGMII_RD1       0x1b0b0
-+				MX6QDL_PAD_RGMII_RD2__RGMII_RD2       0x1b0b0
-+				MX6QDL_PAD_RGMII_RD3__RGMII_RD3       0x1b0b0
-+				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
-+				MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN     0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_i2c1_1: i2c1grp-1 {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
-+				MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c2_2: i2c2grp-2 {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
-+				MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c3_4: i2c3grp-4 {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_5__I2C3_SCL  0x4001b8b1
-+				MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
-+				MX6QDL_PAD_GPIO_0__CCM_CLKO1    0x130b0
-+			>;
-+		};
-+
-+		pinctrl_uart4_1: uart4grp-1 {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
-+				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usbotg_1: usbotggrp-1 {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			>;
-+		};
-+
-+		pinctrl_usbotg_2: usbotggrp-2 {
-+			fsl,pins = <
-+				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
-+			>;
-+		};
-+	};
-+};
-+
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux_4>;
-+	status = "okay";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet_3>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+};
-+
-+&gpc {
-+	fsl,cpu_pupscr_sw2iso = <0xf>;
-+	fsl,cpu_pupscr_sw = <0xf>;
-+	fsl,cpu_pdnscr_iso2sw = <0x1>;
-+	fsl,cpu_pdnscr_iso = <0x1>;
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1_1>;
-+
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2_2>;
-+	status = "okay";
-+
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3_4>;
-+	status = "okay";
-+};
-+
-+&pcie {
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4_1>;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
-+	disable-over-current;
-+	clocks = <&clks IMX6QDL_CLK_USBOH3>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg_2>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1_1>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3_2>;
-+	pinctrl-1 = <&pinctrl_usdhc3_2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_2_200mhz>;
-+	vmcc-supply = <&reg_sd3_vmmc>;
-+	bus-witdh=<4>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc4_1>;
-+	pinctrl-1 = <&pinctrl_usdhc4_1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc4_1_200mhz>;
-+	vmcc-supply = <&reg_sd4_vmmc>;
-+	bus-witdh=<8>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "okay";
-+};
--- 
-2.6.3
+> On Fri, Nov 13, 2015 at 2:35 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>> By this patch we still recognise the old binding ti,swap-xy in parallel to
+>> the common binding touchscreen-swapped-x-y. This keeps compatibility
+>> to older (out-of-tree) device tree binaries.
+>> 
+>> We do this in a separate patch so that it can be easily reverted in the
+>> future to retire the old API. A notice is printed to remind developers
+>> of using old API.
+>> 
+>> We also fix the bindings name for all in-tree device tree sources in
+>> a separate patch.
+> 
+> This one and patch 5 should be combined, so the series is bisectable.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok. We will loose the easy "revert single patch" option, but you are right that it is simpler if combined.
+I will add a comment to source code that ti,swap-xy is deprecated and should be removed in the future.
+
+> 
+> Rob
+> 
+>> 
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> drivers/input/touchscreen/ads7846.c | 6 +++++-
+>> 1 file changed, 5 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+>> index 4525f00..b9896fd 100644
+>> --- a/drivers/input/touchscreen/ads7846.c
+>> +++ b/drivers/input/touchscreen/ads7846.c
+>> @@ -1259,7 +1259,11 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
+>>        of_property_read_u16(node, "ti,vref-mv", &pdata->vref_mv);
+>>        pdata->keep_vref_on = of_property_read_bool(node, "ti,keep-vref-on");
+>> 
+>> -       pdata->swap_xy = of_property_read_bool(node, "touchscreen-swapped-x-y");
+>> +       pdata->swap_xy = of_property_read_bool(node, "ti,swap-xy");
+>> +       if (pdata->swap_xy)
+>> +               dev_notice(dev, "please update device tree to use touchscreen-swapped-x-y");
+>> +       pdata->swap_xy |= of_property_read_bool(node,
+>> +                                               "touchscreen-swapped-x-y");
+>> 
+>>        of_property_read_u16(node, "ti,settle-delay-usec",
+>>                             &pdata->settle_delay_usecs);
+>> --
+>> 2.5.1
+>> 
+
