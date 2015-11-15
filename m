@@ -1,251 +1,316 @@
-From: "U / N" <support-+A+NXS4K1eXQT0dZR+AlfA@public.gmane.org>
-Subject: {{ U.N.O/W.B.O/11/15/82/05/9 }}
-Date: Sun, 15 Nov 2015 23:16:06 +0000
-Message-ID: <201511152247.FFX43423@c2beaomr07.btconnect.com>
-Reply-To: jimovia.zenithgroup-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 0/2] media: v4l: ti-vpe: Add CAL v4l2 camera capture driver
+Date: Sun, 15 Nov 2015 17:53:46 -0600
+Message-ID: <1447631628-9459-1-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1094070932=="
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <support-+A+NXS4K1eXQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-You will not see this in a MIME-aware mail reader.
---===============1094070932==
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
+The Camera Adaptation Layer (CAL) is a block which consists of a dual
+port CSI2/MIPI camera capture engine.
+This camera engine is currently found on DRA72xx family of devices.
 
-Please view the attached file for your compensation code.
---===============1094070932==
-Content-Type: application/octet-stream
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
-	filename="United Nations Compensation Unit.docx"
+Port #0 can handle CSI2 camera connected to up to 4 data lanes.
+Port #1 can handle CSI2 camera connected to up to 2 data lanes.
 
-UEsDBBQABgAIAAAAIQDd/JU3ZgEAACAFAAATAAgCW0NvbnRlbnRfVHlwZXNdLnhtbCCiBAIooAAC
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC0
-VMtuwjAQvFfqP0S+Vomhh6qqCBz6OLZIpR9g7A1Y9Uv28vr7bgJEVQtBKuUSKVnvzOzsxIPR2pps
-CTFp70rWL3osAye90m5Wso/JS37PsoTCKWG8g5JtILHR8PpqMNkESBl1u1SyOWJ44DzJOViRCh/A
-UaXy0Qqk1zjjQchPMQN+2+vdcekdgsMcaww2HDxBJRYGs+c1fd4qiWASyx63B2uukokQjJYCSSlf
-OvWDJd8xFNTZnElzHdINyWD8IENdOU6w63sja6JWkI1FxFdhSQZf+ai48nJhaYaiG+aATl9VWkLb
-X6OF6CWkRJ5bU7QVK7Tb6z+qI+HGQPp/FVvcLnrSOY4+JE57OZsf6s0rUDlZESCihnZ1x0cHRLLs
-EsPvkLvGb1KAlHfgzbN/tgcNzEnKin6JiZgaOJvvV/Ja6JMiVjB9v5j738C7hLT5kz7+wYz9dVF3
-H0gdb+634RcAAAD//wMAUEsDBBQABgAIAAAAIQAekRq38wAAAE4CAAALAAgCX3JlbHMvLnJlbHMg
-ogQCKKAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAjJLbSgNBDIbvBd9hyH032woi0tneSKF3IusDhJnsAXcOzKTavr2jILpQ217m9OfLT9ab
-g5vUO6c8Bq9hWdWg2JtgR99reG23iwdQWchbmoJnDUfOsGlub9YvPJGUoTyMMaui4rOGQSQ+ImYz
-sKNchci+VLqQHEkJU4+RzBv1jKu6vsf0VwOamabaWQ1pZ+9AtcdYNl/WDl03Gn4KZu/Yy4kVyAdh
-b9kuYipsScZyjWop9SwabDDPJZ2RYqwKNuBpotX1RP9fi46FLAmhCYnP83x1nANaXg902aJ5x687
-HyFZLBZ9e/tDg7MvaD4BAAD//wMAUEsDBBQABgAIAAAAIQDWZLNR+gAAADEDAAAcAAgBd29yZC9f
-cmVscy9kb2N1bWVudC54bWwucmVscyCiBAEooAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-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
---===============1094070932==--
+The driver implements the required API/ioctls to be V4L2 compliant.
+Driver supports the following:
+    - V4L2 API using DMABUF/MMAP buffer access based on videobuf2 api
+    - Asynchronous sensor sub device registration
+    - DT support
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Currently each port is designed to connect to a single sub-device.
+In other words port aggregation is not currently supported.
+
+Changes since v3:
+- Nothing really I messed up the previous format-patch with the
+  wrong commit-id. Sorry about the repeat.
+
+Changes since v2:
+- Rework Kconfig options and added COMPILE_TEST
+- Merged in provided vb2 buffer rework
+- Rebase on tip of lmm master and fixe vb2 split related changes
+
+Changes since v1:
+- Remove unnecessary format description
+- Reworked how transient frame format is maintained
+  in order to make it easier to use the fill helper functions
+- Added a per port list of active frame format
+- Reworked an added missing vb2 cleanup code
+- Fix a module load/unload kernel oops
+- Switch to use proper int64 get function for pixel rate control
+
+=====
+
+Here is a sample output of the v4l2-compliance tool:
+
+# ./v4l2-compliance -f -s -v -d /dev/video0 
+Driver Info:
+	Driver name   : cal
+	Card type     : cal
+	Bus info : platform:cal-000
+
+	Capabilities  : 0x85200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps   : 0x05200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second video open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+	Control ioctls:
+		info: checking v4l2_queryctrl of control 'User Controls' (0x00980001)
+		info: checking v4l2_queryctrl of control 'Horizontal Flip' (0x00980914)
+		info: checking v4l2_queryctrl of control 'Vertical Flip' (0x00980915)
+		info: checking v4l2_queryctrl of control 'Image Processing Controls' (0x009f0001)
+		info: checking v4l2_queryctrl of control 'Pixel Rate' (0x009f0902)
+		info: checking v4l2_queryctrl of control 'Horizontal Flip' (0x00980914)
+		info: checking v4l2_queryctrl of control 'Vertical Flip' (0x00980915)
+		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+		test VIDIOC_QUERYCTRL: OK
+		info: checking control 'User Controls' (0x00980001)
+		info: checking control 'Horizontal Flip' (0x00980914)
+		info: checking control 'Vertical Flip' (0x00980915)
+		info: checking control 'Image Processing Controls' (0x009f0001)
+		info: checking control 'Pixel Rate' (0x009f0902)
+		test VIDIOC_G/S_CTRL: OK
+		info: checking extended control 'User Controls' (0x00980001)
+		info: checking extended control 'Horizontal Flip' (0x00980914)
+		info: checking extended control 'Vertical Flip' (0x00980915)
+		info: checking extended control 'Image Processing Controls' (0x009f0001)
+		info: checking extended control 'Pixel Rate' (0x009f0902)
+		test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+		info: checking control event 'User Controls' (0x00980001)
+		info: checking control event 'Horizontal Flip' (0x00980914)
+		info: checking control event 'Vertical Flip' (0x00980915)
+		info: checking control event 'Image Processing Controls' (0x009f0001)
+		info: checking control event 'Pixel Rate' (0x009f0902)
+		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+		Standard Controls: 5 Private Controls: 0
+
+	Format ioctls:
+		info: found 1 frameintervals for pixel format 47425247 and size 1920x1080
+		info: found 1 framesizes for pixel format 47425247
+		info: found 1 formats for buftype 1
+		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+		test VIDIOC_G/S_PARM: OK (Not Supported)
+		test VIDIOC_G_FBUF: OK (Not Supported)
+		test VIDIOC_G_FMT: OK
+		test VIDIOC_TRY_FMT: OK
+		test VIDIOC_S_FMT: OK
+		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		test Cropping: OK (Not Supported)
+		test Composing: OK (Not Supported)
+		test Scaling: OK (Not Supported)
+
+	Codec ioctls:
+		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+	Buffer ioctls:
+		info: test buftype Video Capture
+		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+		test VIDIOC_EXPBUF: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	    Video Capture:
+		Buffer: 0 Sequence: 0 Field: None Timestamp: 353.276293s
+		Buffer: 1 Sequence: 1 Field: None Timestamp: 353.298270s
+		Buffer: 2 Sequence: 2 Field: None Timestamp: 353.320238s
+		Buffer: 0 Sequence: 3 Field: None Timestamp: 353.342223s
+		Buffer: 1 Sequence: 4 Field: None Timestamp: 353.364199s
+		Buffer: 2 Sequence: 5 Field: None Timestamp: 353.386175s
+		Buffer: 0 Sequence: 6 Field: None Timestamp: 353.408152s
+		Buffer: 1 Sequence: 7 Field: None Timestamp: 353.430128s
+		Buffer: 2 Sequence: 8 Field: None Timestamp: 353.452105s
+		Buffer: 0 Sequence: 9 Field: None Timestamp: 353.474074s
+		Buffer: 1 Sequence: 10 Field: None Timestamp: 353.496058s
+		Buffer: 2 Sequence: 11 Field: None Timestamp: 353.518034s
+		Buffer: 0 Sequence: 12 Field: None Timestamp: 353.540010s
+		Buffer: 1 Sequence: 13 Field: None Timestamp: 353.561978s
+		Buffer: 2 Sequence: 14 Field: None Timestamp: 353.583963s
+		Buffer: 0 Sequence: 15 Field: None Timestamp: 353.605940s
+		Buffer: 1 Sequence: 16 Field: None Timestamp: 353.627916s
+		Buffer: 2 Sequence: 17 Field: None Timestamp: 353.649893s
+		Buffer: 0 Sequence: 18 Field: None Timestamp: 353.671869s
+		Buffer: 1 Sequence: 19 Field: None Timestamp: 353.693846s
+		Buffer: 2 Sequence: 20 Field: None Timestamp: 353.715815s
+		Buffer: 0 Sequence: 21 Field: None Timestamp: 353.737799s
+		Buffer: 1 Sequence: 22 Field: None Timestamp: 353.759775s
+		Buffer: 2 Sequence: 23 Field: None Timestamp: 353.781751s
+		Buffer: 0 Sequence: 24 Field: None Timestamp: 353.803728s
+		Buffer: 1 Sequence: 25 Field: None Timestamp: 353.825698s
+		Buffer: 2 Sequence: 26 Field: None Timestamp: 353.847681s
+		Buffer: 0 Sequence: 27 Field: None Timestamp: 353.869658s
+		Buffer: 1 Sequence: 28 Field: None Timestamp: 353.891634s
+		Buffer: 2 Sequence: 29 Field: None Timestamp: 353.913610s
+		Buffer: 0 Sequence: 30 Field: None Timestamp: 353.935587s
+		Buffer: 1 Sequence: 31 Field: None Timestamp: 353.957564s
+		Buffer: 2 Sequence: 32 Field: None Timestamp: 353.979533s
+		Buffer: 0 Sequence: 33 Field: None Timestamp: 354.001510s
+		Buffer: 1 Sequence: 34 Field: None Timestamp: 354.023493s
+		Buffer: 2 Sequence: 35 Field: None Timestamp: 354.045469s
+		Buffer: 0 Sequence: 36 Field: None Timestamp: 354.067446s
+		Buffer: 1 Sequence: 37 Field: None Timestamp: 354.089422s
+		Buffer: 2 Sequence: 38 Field: None Timestamp: 354.111399s
+		Buffer: 0 Sequence: 39 Field: None Timestamp: 354.133375s
+		Buffer: 1 Sequence: 40 Field: None Timestamp: 354.155351s
+		Buffer: 2 Sequence: 41 Field: None Timestamp: 354.177328s
+		Buffer: 0 Sequence: 42 Field: None Timestamp: 354.199304s
+		Buffer: 1 Sequence: 43 Field: None Timestamp: 354.221274s
+		Buffer: 2 Sequence: 44 Field: None Timestamp: 354.243257s
+		Buffer: 0 Sequence: 45 Field: None Timestamp: 354.265234s
+		Buffer: 1 Sequence: 46 Field: None Timestamp: 354.287210s
+		Buffer: 2 Sequence: 47 Field: None Timestamp: 354.309187s
+		Buffer: 0 Sequence: 48 Field: None Timestamp: 354.331163s
+		Buffer: 1 Sequence: 49 Field: None Timestamp: 354.353140s
+		Buffer: 2 Sequence: 50 Field: None Timestamp: 354.375116s
+		Buffer: 0 Sequence: 51 Field: None Timestamp: 354.397093s
+		Buffer: 1 Sequence: 52 Field: None Timestamp: 354.419069s
+		Buffer: 2 Sequence: 53 Field: None Timestamp: 354.441038s
+		Buffer: 0 Sequence: 54 Field: None Timestamp: 354.463022s
+		Buffer: 1 Sequence: 55 Field: None Timestamp: 354.484998s
+		Buffer: 2 Sequence: 56 Field: None Timestamp: 354.506975s
+		Buffer: 0 Sequence: 57 Field: None Timestamp: 354.528952s
+		Buffer: 1 Sequence: 58 Field: None Timestamp: 354.550928s
+		Buffer: 2 Sequence: 59 Field: None Timestamp: 354.572904s
+	    Video Capture (polling):
+		Buffer: 0 Sequence: 60 Field: None Timestamp: 354.594881s
+		Buffer: 1 Sequence: 61 Field: None Timestamp: 354.616857s
+		Buffer: 2 Sequence: 62 Field: None Timestamp: 354.638834s
+		Buffer: 0 Sequence: 63 Field: None Timestamp: 354.660810s
+		Buffer: 1 Sequence: 64 Field: None Timestamp: 354.682787s
+		Buffer: 2 Sequence: 65 Field: None Timestamp: 354.704764s
+		Buffer: 0 Sequence: 66 Field: None Timestamp: 354.726733s
+		Buffer: 1 Sequence: 67 Field: None Timestamp: 354.748716s
+		Buffer: 2 Sequence: 68 Field: None Timestamp: 354.770693s
+		Buffer: 0 Sequence: 69 Field: None Timestamp: 354.792669s
+		Buffer: 1 Sequence: 70 Field: None Timestamp: 354.814645s
+		Buffer: 2 Sequence: 71 Field: None Timestamp: 354.836615s
+		Buffer: 0 Sequence: 72 Field: None Timestamp: 354.858591s
+		Buffer: 1 Sequence: 73 Field: None Timestamp: 354.880575s
+		Buffer: 2 Sequence: 74 Field: None Timestamp: 354.902552s
+		Buffer: 0 Sequence: 75 Field: None Timestamp: 354.924528s
+		Buffer: 1 Sequence: 76 Field: None Timestamp: 354.946505s
+		Buffer: 2 Sequence: 77 Field: None Timestamp: 354.968481s
+		Buffer: 0 Sequence: 78 Field: None Timestamp: 354.990457s
+		Buffer: 1 Sequence: 79 Field: None Timestamp: 355.012434s
+		Buffer: 2 Sequence: 80 Field: None Timestamp: 355.034411s
+		Buffer: 0 Sequence: 81 Field: None Timestamp: 355.056387s
+		Buffer: 1 Sequence: 82 Field: None Timestamp: 355.078364s
+		Buffer: 2 Sequence: 83 Field: None Timestamp: 355.100340s
+		Buffer: 0 Sequence: 84 Field: None Timestamp: 355.122316s
+		Buffer: 1 Sequence: 85 Field: None Timestamp: 355.144293s
+		Buffer: 2 Sequence: 86 Field: None Timestamp: 355.166269s
+		Buffer: 0 Sequence: 87 Field: None Timestamp: 355.188246s
+		Buffer: 1 Sequence: 88 Field: None Timestamp: 355.210223s
+		Buffer: 2 Sequence: 89 Field: None Timestamp: 355.232199s
+		Buffer: 0 Sequence: 90 Field: None Timestamp: 355.254176s
+		Buffer: 1 Sequence: 91 Field: None Timestamp: 355.276152s
+		Buffer: 2 Sequence: 92 Field: None Timestamp: 355.298128s
+		Buffer: 0 Sequence: 93 Field: None Timestamp: 355.320096s
+		Buffer: 1 Sequence: 94 Field: None Timestamp: 355.342081s
+		Buffer: 2 Sequence: 95 Field: None Timestamp: 355.364058s
+		Buffer: 0 Sequence: 96 Field: None Timestamp: 355.386035s
+		Buffer: 1 Sequence: 97 Field: None Timestamp: 355.408011s
+		Buffer: 2 Sequence: 98 Field: None Timestamp: 355.429987s
+		Buffer: 0 Sequence: 99 Field: None Timestamp: 355.451964s
+		Buffer: 1 Sequence: 100 Field: None Timestamp: 355.473933s
+		Buffer: 2 Sequence: 101 Field: None Timestamp: 355.495917s
+		Buffer: 0 Sequence: 102 Field: None Timestamp: 355.517893s
+		Buffer: 1 Sequence: 103 Field: None Timestamp: 355.539870s
+		Buffer: 2 Sequence: 104 Field: None Timestamp: 355.561837s
+		Buffer: 0 Sequence: 105 Field: None Timestamp: 355.583823s
+		Buffer: 1 Sequence: 106 Field: None Timestamp: 355.605799s
+		Buffer: 2 Sequence: 107 Field: None Timestamp: 355.627775s
+		Buffer: 0 Sequence: 108 Field: None Timestamp: 355.649752s
+		Buffer: 1 Sequence: 109 Field: None Timestamp: 355.671729s
+		Buffer: 2 Sequence: 110 Field: None Timestamp: 355.693705s
+		Buffer: 0 Sequence: 111 Field: None Timestamp: 355.715681s
+		Buffer: 1 Sequence: 112 Field: None Timestamp: 355.737657s
+		Buffer: 2 Sequence: 113 Field: None Timestamp: 355.759634s
+		Buffer: 0 Sequence: 114 Field: None Timestamp: 355.781610s
+		Buffer: 1 Sequence: 115 Field: None Timestamp: 355.803580s
+		Buffer: 2 Sequence: 116 Field: None Timestamp: 355.825556s
+		Buffer: 0 Sequence: 117 Field: None Timestamp: 355.847541s
+		Buffer: 1 Sequence: 118 Field: None Timestamp: 355.869517s
+		Buffer: 2 Sequence: 119 Field: None Timestamp: 355.891493s
+	test MMAP: OK
+	test USERPTR: OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Stream using all formats:
+	test MMAP for Format GRBG, Frame Size 1920x1080@30.00 Hz:
+		Stride 1920, Field None: OK                                 
+
+Total: 46, Succeeded: 46, Failed: 0, Warnings: 0
+
+Benoit Parrot (2):
+  media: v4l: ti-vpe: Add CAL v4l2 camera capture driver
+  media: v4l: ti-vpe: Document CAL driver
+
+ Documentation/devicetree/bindings/media/ti-cal.txt |   70 +
+ drivers/media/platform/Kconfig                     |   12 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/ti-vpe/Makefile             |    4 +
+ drivers/media/platform/ti-vpe/cal.c                | 2164 ++++++++++++++++++++
+ drivers/media/platform/ti-vpe/cal_regs.h           |  779 +++++++
+ 6 files changed, 3031 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
+ create mode 100644 drivers/media/platform/ti-vpe/cal.c
+ create mode 100644 drivers/media/platform/ti-vpe/cal_regs.h
+
+-- 
+1.8.5.1
