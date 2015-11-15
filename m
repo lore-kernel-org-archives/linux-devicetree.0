@@ -1,65 +1,83 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 6/8] drivers:input:ads7846(+tsc2046): recognise old binding for coordinate flipping
-Date: Sun, 15 Nov 2015 11:54:20 +0100
-Message-ID: <7F9F737C-A183-4D23-AFAE-90F4ADE8D1E3@goldelico.com>
-References: <cover.1447446957.git.hns@goldelico.com> <f036e0d2b019ae9463e108f48643c16a80936ddb.1447446957.git.hns@goldelico.com> <CAL_JsqKXN1J-vkZm1f-4en4oa8Dz3c=xN_POCnDvzbAWqsPGfA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKXN1J-vkZm1f-4en4oa8Dz3c=xN_POCnDvzbAWqsPGfA@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, List for communicating with real GTA04 owners <gta0>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] iio: ti-ads8688: Add DT binding documentation
+Date: Sun, 15 Nov 2015 10:57:04 +0000
+Message-ID: <56486500.6040707@kernel.org>
+References: <1447073580-17889-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <1447073580-17889-2-git-send-email-sean.nyekjaer@prevas.dk>
+ <20151109155759.GA23092@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151109155759.GA23092@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/11/15 15:57, Rob Herring wrote:
+> On Mon, Nov 09, 2015 at 01:53:00PM +0100, Sean Nyekjaer wrote:
+>> Adding binding documentation for Texas Instruments ADS8688 ADC.
+>>
+>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>> Reviewed-by: Martin Hundeb=F8ll <martin.hundeboll-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git - initially pushed out
+as testing to let the autobuilders work their magic.
 
-Am 15.11.2015 um 03:19 schrieb Rob Herring <robh+dt@kernel.org>:
+Thanks and thanks Rob for reviewing these bindings!
 
-> On Fri, Nov 13, 2015 at 2:35 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->> By this patch we still recognise the old binding ti,swap-xy in parallel to
->> the common binding touchscreen-swapped-x-y. This keeps compatibility
->> to older (out-of-tree) device tree binaries.
->> 
->> We do this in a separate patch so that it can be easily reverted in the
->> future to retire the old API. A notice is printed to remind developers
->> of using old API.
->> 
->> We also fix the bindings name for all in-tree device tree sources in
->> a separate patch.
-> 
-> This one and patch 5 should be combined, so the series is bisectable.
-
-Ok. We will loose the easy "revert single patch" option, but you are right that it is simpler if combined.
-I will add a comment to source code that ti,swap-xy is deprecated and should be removed in the future.
-
-> 
-> Rob
-> 
->> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Jonathan
+>=20
 >> ---
->> drivers/input/touchscreen/ads7846.c | 6 +++++-
->> 1 file changed, 5 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
->> index 4525f00..b9896fd 100644
->> --- a/drivers/input/touchscreen/ads7846.c
->> +++ b/drivers/input/touchscreen/ads7846.c
->> @@ -1259,7 +1259,11 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
->>        of_property_read_u16(node, "ti,vref-mv", &pdata->vref_mv);
->>        pdata->keep_vref_on = of_property_read_bool(node, "ti,keep-vref-on");
->> 
->> -       pdata->swap_xy = of_property_read_bool(node, "touchscreen-swapped-x-y");
->> +       pdata->swap_xy = of_property_read_bool(node, "ti,swap-xy");
->> +       if (pdata->swap_xy)
->> +               dev_notice(dev, "please update device tree to use touchscreen-swapped-x-y");
->> +       pdata->swap_xy |= of_property_read_bool(node,
->> +                                               "touchscreen-swapped-x-y");
->> 
->>        of_property_read_u16(node, "ti,settle-delay-usec",
->>                             &pdata->settle_delay_usecs);
+>> Changes since v2:
+>> - Moved vref-supply to Optional properties
+>>
+>>  .../devicetree/bindings/iio/adc/ti-ads8688.txt       | 20 +++++++++=
++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads=
+8688.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8688.tx=
+t b/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+>> new file mode 100644
+>> index 0000000..a02337d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+>> @@ -0,0 +1,20 @@
+>> +* Texas Instruments' ADS8684 and ADS8688 ADC chip
+>> +
+>> +Required properties:
+>> + - compatible: Should be "ti,ads8684" or "ti,ads8688"
+>> + - reg: spi chip select number for the device
+>> +
+>> +Recommended properties:
+>> + - spi-max-frequency: Definition as per
+>> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +
+>> +Optional properties:
+>> + - vref-supply: The regulator supply for ADC reference voltage
+>> +
+>> +Example:
+>> +adc@0 {
+>> +	compatible =3D "ti,ads8688";
+>> +	reg =3D <0>;
+>> +	vref-supply =3D <&vdd_supply>;
+>> +	spi-max-frequency =3D <1000000>;
+>> +};
+>> --=20
+>> 2.6.2
+>>
 >> --
->> 2.5.1
->> 
-
+>> To unsubscribe from this list: send the line "unsubscribe devicetree=
+" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" =
+in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
