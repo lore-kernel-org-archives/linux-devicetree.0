@@ -1,105 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 01/13 v2] ARM: add some L220 DT settings
-Date: Mon, 16 Nov 2015 11:48:25 -0600
-Message-ID: <20151116174825.GA14634@rob-hp-laptop>
+Date: Mon, 16 Nov 2015 18:02:11 +0000
+Message-ID: <20151116180210.GV8644@n2100.arm.linux.org.uk>
 References: <1445521493-21509-1-git-send-email-linus.walleij@linaro.org>
+ <20151116174825.GA14634@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445521493-21509-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20151116174825.GA14634@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 22, 2015 at 03:44:53PM +0200, Linus Walleij wrote:
-> The RealView ARM11MPCore enables parity, eventmon and shared
-> override in the cache controller through its current boardfile,
-> but the code and DT bindings for the ARM L220 is currently
-> lacking the ability to set this up from DT. Add the required
-> bool parameters for parity and shared override, but keep
-> eventmon out of it: this should be enabled by the event
-> monitor code.
+On Mon, Nov 16, 2015 at 11:48:25AM -0600, Rob Herring wrote:
+> On Thu, Oct 22, 2015 at 03:44:53PM +0200, Linus Walleij wrote:
+> > The RealView ARM11MPCore enables parity, eventmon and shared
+> > override in the cache controller through its current boardfile,
+> > but the code and DT bindings for the ARM L220 is currently
+> > lacking the ability to set this up from DT. Add the required
+> > bool parameters for parity and shared override, but keep
+> > eventmon out of it: this should be enabled by the event
+> > monitor code.
+> > 
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> > ChangeLog v1->v2:
+> > - Drop event monitor setup.
+> > - Support both parity enable and disable: could be useful.
+> > ---
+> >  Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
-> - Drop event monitor setup.
-> - Support both parity enable and disable: could be useful.
-> ---
->  Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Thanks Rob, this has been in the patch system since the 27th October,
+but as DT people hadn't acked it, I didn't take it into my tree.  We're
+now too late for this merge window, so it's going to wait for the 4.5
+window.
 
->  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
->  2 files changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index 06c88a4d28ac..d181b7c4c522 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -67,12 +67,14 @@ Optional properties:
->    disable if zero.
->  - arm,prefetch-offset : Override prefetch offset value. Valid values are
->    0-7, 15, 23, and 31.
-> -- arm,shared-override : The default behavior of the pl310 cache controller with
-> -  respect to the shareable attribute is to transform "normal memory
-> -  non-cacheable transactions" into "cacheable no allocate" (for reads) or
-> -  "write through no write allocate" (for writes).
-> +- arm,shared-override : The default behavior of the L220 or PL310 cache
-> +  controllers with respect to the shareable attribute is to transform "normal
-> +  memory non-cacheable transactions" into "cacheable no allocate" (for reads)
-> +  or "write through no write allocate" (for writes).
->    On systems where this may cause DMA buffer corruption, this property must be
->    specified to indicate that such transforms are precluded.
-> +- arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
-> +- arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
->  - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
->    (forcibly enable), property absent (retain settings set by firmware)
->  - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index 493692d838c6..3f3008e5c662 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1060,6 +1060,18 @@ static void __init l2x0_of_parse(const struct device_node *np,
->  		val |= (dirty - 1) << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
->  	}
->  
-> +	if (of_property_read_bool(np, "arm,parity-enable")) {
-> +		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-> +		val |= L2C_AUX_CTRL_PARITY_ENABLE;
-> +	} else if (of_property_read_bool(np, "arm,parity-disable")) {
-> +		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-> +	}
-> +
-> +	if (of_property_read_bool(np, "arm,shared-override")) {
-> +		mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
-> +		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
-> +	}
-> +
->  	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
->  	if (ret)
->  		return;
-> @@ -1176,6 +1188,14 @@ static void __init l2c310_of_parse(const struct device_node *np,
->  		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
->  	}
->  
-> +	if (of_property_read_bool(np, "arm,parity-enable")) {
-> +		*aux_val |= L2C_AUX_CTRL_PARITY_ENABLE;
-> +		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-> +	} else if (of_property_read_bool(np, "arm,parity-disable")) {
-> +		*aux_val &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-> +		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
-> +	}
-> +
->  	prefetch = l2x0_saved_regs.prefetch_ctrl;
->  
->  	ret = of_property_read_u32(np, "arm,double-linefill", &val);
-> -- 
-> 2.4.3
-> 
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
