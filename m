@@ -1,69 +1,217 @@
-From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] cpufreq: arm_big_little: Add support to register a cpufreq cooling device
-Date: Mon, 16 Nov 2015 15:29:09 +0000
-Message-ID: <9hha8qeq7y2.fsf@e105922-lin.cambridge.arm.com>
-References: <1447090163-13700-1-git-send-email-punit.agrawal@arm.com>
-	<1447090163-13700-4-git-send-email-punit.agrawal@arm.com>
-	<20151113045610.GC3576@ubuntu>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] phy-sun4i-usb: Add support for the host usb-phys
+ found on the H3 SoC
+Date: Mon, 16 Nov 2015 09:29:10 -0600
+Message-ID: <20151116152910.GA12210@rob-hp-laptop>
+References: <1447616777-24660-1-git-send-email-hdegoede@redhat.com>
+ <1447616777-24660-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151113045610.GC3576@ubuntu> (Viresh Kumar's message of "Fri,
-	13 Nov 2015 10:26:10 +0530")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447616777-24660-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+On Sun, Nov 15, 2015 at 08:46:14PM +0100, Hans de Goede wrote:
+> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> 
+> Note this commit only adds support for phys 1-3, phy 0, the otg phy, is
+> not yet (fully) supported after this commit.
+> 
+> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
 
-> On 09-11-15, 17:29, Punit Agrawal wrote:
->> Register passive cooling devices when initialising cpufreq on
->> big.LITTLE systems. If the device tree provides a dynamic power
->> coefficient for the CPUs then the bound cooling device will support
->> the extensions that allow it to be used with all the existing thermal
->> governors including the power allocator governor.
->> 
->> A cooling device will be created per individual frequency domain and
->> can be bound to thermal zones via the thermal DT bindings.
->> 
->> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
->> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/cpufreq/arm_big_little.c | 52 ++++++++++++++++++++++++++++++++++++++--
->>  1 file changed, 50 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
->> index f1e42f8..72a2777 100644
->> --- a/drivers/cpufreq/arm_big_little.c
->> +++ b/drivers/cpufreq/arm_big_little.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/cpu.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/cpumask.h>
->> +#include <linux/cpu_cooling.h>
->>  #include <linux/export.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->> @@ -55,6 +56,10 @@ static bool bL_switching_enabled;
->>  #define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
->>  #define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
->>  
->> +struct private_data {
->> +	struct thermal_cooling_device *cdev;
->> +};
->
-> I think we need to be consistent within the driver, and so this must
-> be stored in a similar way to what we do for other structures. We have
-> static arrays for them, please do it that way only OR first change all
-> of them to be part of a bigger private_data structure.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Sure, I'll switch to using static arrays. There seem to be a lot of
-assumptions that might be easily broken in moving all the data into a
-single structure. I'll leave that as a later change.
+>  drivers/phy/phy-sun4i-usb.c                        | 67 +++++++++++++++++-----
+>  2 files changed, 53 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> index 0cebf74..95736d7 100644
+> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>    * allwinner,sun7i-a20-usb-phy
+>    * allwinner,sun8i-a23-usb-phy
+>    * allwinner,sun8i-a33-usb-phy
+> +  * allwinner,sun8i-h3-usb-phy
+>  - reg : a list of offset + length pairs
+>  - reg-names :
+>    * "phy_ctrl"
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index b12964b..17f97ab 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -46,6 +46,9 @@
+>  #define REG_PHYBIST			0x08
+>  #define REG_PHYTUNE			0x0c
+>  #define REG_PHYCTL_A33			0x10
+> +#define REG_PHY_UNK_H3			0x20
+> +
+> +#define REG_PMU_UNK_H3			0x10
+>  
+>  #define PHYCTL_DATA			BIT(7)
+>  
+> @@ -79,7 +82,7 @@
+>  #define PHY_DISCON_TH_SEL		0x2a
+>  #define PHY_SQUELCH_DETECT		0x3c
+>  
+> -#define MAX_PHYS			3
+> +#define MAX_PHYS			4
+>  
+>  /*
+>   * Note do not raise the debounce time, we must report Vusb high within 100ms
+> @@ -88,12 +91,19 @@
+>  #define DEBOUNCE_TIME			msecs_to_jiffies(50)
+>  #define POLL_TIME			msecs_to_jiffies(250)
+>  
+> +enum sun4i_usb_phy_type {
+> +	sun4i_a10_phy,
+> +	sun8i_a33_phy,
+> +	sun8i_h3_phy
+> +};
+> +
+>  struct sun4i_usb_phy_data {
+> +	struct device *dev;
+>  	void __iomem *base;
+>  	struct mutex mutex;
+>  	int num_phys;
+>  	u32 disc_thresh;
+> -	bool has_a33_phyctl;
+> +	enum sun4i_usb_phy_type type;
+>  	struct sun4i_usb_phy {
+>  		struct phy *phy;
+>  		void __iomem *pmu;
+> @@ -164,12 +174,18 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+>  
+>  	mutex_lock(&phy_data->mutex);
+>  
+> -	if (phy_data->has_a33_phyctl) {
+> +	switch (phy_data->type) {
+> +	case sun4i_a10_phy:
+> +		phyctl = phy_data->base + REG_PHYCTL_A10;
+> +		break;
+> +	case sun8i_a33_phy:
+>  		phyctl = phy_data->base + REG_PHYCTL_A33;
+>  		/* A33 needs us to set phyctl to 0 explicitly */
+>  		writel(0, phyctl);
+> -	} else {
+> -		phyctl = phy_data->base + REG_PHYCTL_A10;
+> +		break;
+> +	case sun8i_h3_phy:
+> +		dev_err(phy_data->dev, "H3 usb_phy_write is not supported\n");
+> +		break;
+>  	}
+>  
+>  	for (i = 0; i < len; i++) {
+> @@ -230,6 +246,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>  	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>  	int ret;
+> +	u32 val;
+>  
+>  	ret = clk_prepare_enable(phy->clk);
+>  	if (ret)
+> @@ -241,15 +258,26 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  		return ret;
+>  	}
+>  
+> -	/* Enable USB 45 Ohm resistor calibration */
+> -	if (phy->index == 0)
+> -		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+> +	if (data->type == sun8i_h3_phy) {
+> +		if (phy->index == 0) {
+> +			val = readl(data->base + REG_PHY_UNK_H3);
+> +			writel(val & ~1, data->base + REG_PHY_UNK_H3);
+> +		}
+> +
+> +		val = readl(phy->pmu + REG_PMU_UNK_H3);
+> +		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
+> +	} else {
+> +		/* Enable USB 45 Ohm resistor calibration */
+> +		if (phy->index == 0)
+> +			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+>  
+> -	/* Adjust PHY's magnitude and rate */
+> -	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+> +		/* Adjust PHY's magnitude and rate */
+> +		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+>  
+> -	/* Disconnect threshold adjustment */
+> -	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
+> +		/* Disconnect threshold adjustment */
+> +		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
+> +				    data->disc_thresh, 2);
+> +	}
+>  
+>  	sun4i_usb_phy_passby(phy, 1);
+>  
+> @@ -522,11 +550,14 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  	mutex_init(&data->mutex);
+>  	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+>  	dev_set_drvdata(dev, data);
+> +	data->dev = dev;
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+>  		data->num_phys = 2;
+> +	else if (of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+> +		data->num_phys = 4;
+>  	else
+>  		data->num_phys = 3;
+>  
+> @@ -538,13 +569,18 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+> -	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+> +	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy") ||
+> +	    of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+>  		dedicated_clocks = true;
+>  	else
+>  		dedicated_clocks = false;
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+> -		data->has_a33_phyctl = true;
+> +		data->type = sun8i_a33_phy;
+> +	else if (of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+> +		data->type = sun8i_h3_phy;
+> +	else
+> +		data->type = sun4i_a10_phy;
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
+>  	data->base = devm_ioremap_resource(dev, res);
+> @@ -620,7 +656,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  			return PTR_ERR(phy->reset);
+>  		}
+>  
+> -		if (i) { /* No pmu for usbc0 */
+> +		if (data->type == sun8i_h3_phy || i != 0) {
+>  			snprintf(name, sizeof(name), "pmu%d", i);
+>  			res = platform_get_resource_byname(pdev,
+>  							IORESOURCE_MEM, name);
+> @@ -696,6 +732,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
+>  	{ .compatible = "allwinner,sun7i-a20-usb-phy" },
+>  	{ .compatible = "allwinner,sun8i-a23-usb-phy" },
+>  	{ .compatible = "allwinner,sun8i-a33-usb-phy" },
+> +	{ .compatible = "allwinner,sun8i-h3-usb-phy" },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+> -- 
+> 2.5.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
