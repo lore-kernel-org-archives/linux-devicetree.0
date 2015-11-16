@@ -1,79 +1,92 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] clk: sunxi: Add support for the H3 usb
- phy clocks
-Date: Mon, 16 Nov 2015 09:30:24 -0600
-Message-ID: <20151116153024.GA13168@rob-hp-laptop>
-References: <1447616777-24660-1-git-send-email-hdegoede@redhat.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBFXNU6ZAKGQEEERFS4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447616777-24660-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 8/8] DT:omap3+ads7846: use new common touchscreen bindings
+Date: Mon, 16 Nov 2015 16:31:24 +0100
+Message-ID: <28AFB27C-1D97-49E1-80B2-79000AD426D2@goldelico.com>
+References: <cover.1447446957.git.hns@goldelico.com> <df5bd5fdcc2284a7d8e2d5132bc865701a8ca38f.1447446957.git.hns@goldelico.com> <CANOLnOO=J=se7K7GnJZPrkXJpm-_+vshsRUCeWo1GVsum8jyeg@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANOLnOO=J=se7K7GnJZPrkXJpm-_+vshsRUCeWo1GVsum8jyeg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grazvydas Ignotas <notasas@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, gta04-owner@goldelico.comlinux
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 15, 2015 at 08:46:13PM +0100, Hans de Goede wrote:
-> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> 
-> The H3 has a usb-phy clk register which is similar to that of earlier
-> SoCs, but with support for a larger number of phys. So we can simply add
-> a new set of clk-data and a new compatible and be done with it.
-> 
-> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+HI,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Am 16.11.2015 um 15:37 schrieb Grazvydas Ignotas <notasas@gmail.com>:
 
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->  drivers/clk/sunxi/clk-usb.c                       | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> index d303dec..23e7bce 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -70,6 +70,7 @@ Required properties:
->  	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
->  	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
->  	"allwinner,sun8i-a23-usb-clk" - for usb gates + resets on A23
-> +	"allwinner,sun8i-h3-usb-clk" - for usb gates + resets on H3
->  	"allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
->  	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
->  
-> diff --git a/drivers/clk/sunxi/clk-usb.c b/drivers/clk/sunxi/clk-usb.c
-> index 1a72cd6..67b8e38 100644
-> --- a/drivers/clk/sunxi/clk-usb.c
-> +++ b/drivers/clk/sunxi/clk-usb.c
-> @@ -243,3 +243,15 @@ static void __init sun9i_a80_usb_phy_setup(struct device_node *node)
->  	sunxi_usb_clk_setup(node, &sun9i_a80_usb_phy_data, &a80_usb_phy_lock);
->  }
->  CLK_OF_DECLARE(sun9i_a80_usb_phy, "allwinner,sun9i-a80-usb-phy-clk", sun9i_a80_usb_phy_setup);
-> +
-> +static const struct usb_clk_data sun8i_h3_usb_clk_data __initconst = {
-> +	.clk_mask =  BIT(19) | BIT(18) | BIT(17) | BIT(16) |
-> +		     BIT(11) | BIT(10) | BIT(9) | BIT(8),
-> +	.reset_mask = BIT(3) | BIT(2) | BIT(1) | BIT(0),
-> +};
-> +
-> +static void __init sun8i_h3_usb_setup(struct device_node *node)
-> +{
-> +	sunxi_usb_clk_setup(node, &sun8i_h3_usb_clk_data, &sun4i_a10_usb_lock);
-> +}
-> +CLK_OF_DECLARE(sun8i_h3_usb, "allwinner,sun8i-h3-usb-clk", sun8i_h3_usb_setup);
-> -- 
-> 2.5.0
+> On Fri, Nov 13, 2015 at 10:35 PM, H. Nikolaus Schaller
+> <hns@goldelico.com> wrote:
+>> The standard touch screen bindings [1] replace the private ti,swap-xy
+>> with touchscreen-swaped-x-y. And for the Openpandora we use
+>> touchscreen-size etc. to match the LCD screen size.
+>> 
+>> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>> 
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/arm/boot/dts/omap3-lilly-a83x.dtsi              |  2 +-
+>> arch/arm/boot/dts/omap3-pandora-common.dtsi          | 17 +++++++++++++----
+>> arch/arm/boot/dts/omap3-panel-sharp-ls037v7dw01.dtsi |  2 +-
+>> 3 files changed, 15 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+>> index d0dd036..01dae66 100644
+>> --- a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+>> +++ b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+>> @@ -325,7 +325,7 @@
+>>                ti,y-max = /bits/ 16 <3600>;
+>>                ti,x-plate-ohms = /bits/ 16 <80>;
+>>                ti,pressure-max = /bits/ 16 <255>;
+>> -               ti,swap-xy;
+>> +               touchscreen-swapped-x-y;
+>> 
+>>                linux,wakeup;
+>>        };
+>> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+>> index f672a04..9497cc6 100644
+>> --- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
+>> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+>> @@ -696,10 +696,19 @@
+>>                pendown-gpio = <&gpio3 30 0>;
+>>                vcc-supply = <&vaux4>;
+>> 
+>> -               ti,x-min = /bits/ 16 <0>;
+>> -               ti,x-max = /bits/ 16 <8000>;
+>> -               ti,y-min = /bits/ 16 <0>;
+>> -               ti,y-max = /bits/ 16 <4800>;
+>> +               touchscreen-size-x = <800>;
+>> +               touchscreen-size-y = <480>;
+>> +               touchscreen-max-pressure = <1000>;
+>> +               touchscreen-fuzz-x = <16>;
+>> +               touchscreen-fuzz-y = <16>;
+>> +               touchscreen-fuzz-pressure = <10>;
+>> +               touchscreen-inverted-x;
+>> +               touchscreen-inverted-y;
+>> +
+>> +               ti,x-min = /bits/ 16 <160>;
+>> +               ti,x-max = /bits/ 16 <3900>;
+>> +               ti,y-min = /bits/ 16 <220>;
+>> +               ti,y-max = /bits/ 16 <3750>;
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I'm not sure this is a good idea, there have been at least 3 different
+> batches of LCDs which slightly different touchscreens attached, with
+> such thresholds we might end up with unreachable touchscreen points on
+> some units. If I understand right, calibration won't help if for some
+> screen locations ADC reading goes below/above these min/max thresholds
+> on some specific units? If so there should probably be at least 10%
+> margin in either case to make calibration useful.
+
+Ok, then someone owning all variants should test and we should use the
+min/max values we find. I.e. the touch with the biggest ADC value range.
+All others have smaller screens which can be calibrated in user space.
+But 10% is good enough to boot and start manual calibration.
+
+Alternatively, we can set them to 0 and 4095 (or remove them to use defaults).
+
+BR and thanks,
+Nikolaus
