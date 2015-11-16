@@ -1,82 +1,166 @@
-Return-Path: <devicetree-owner@kernel.org>
-Received: from mail-bn1bon0132.outbound.protection.outlook.com ([157.56.111.132]:7488
-	"EHLO na01-bn1-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751166AbbKVJUB convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sun, 22 Nov 2015 04:20:01 -0500
-From: Yuval Mintz <Yuval.Mintz@qlogic.com>
-Subject: RE: [PATCH V3 net-next 1/5] net:hns: Add support of Hip06 SoC to the
- Hislicon Network Subsystem
-Date: Sun, 22 Nov 2015 09:19:55 +0000
-Message-ID: <CO2PR11MB0088145308CE8BF0C504C9C497180@CO2PR11MB0088.namprd11.prod.outlook.com>
-References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
- <1447966706-16219-2-git-send-email-salil.mehta@huawei.com>
-In-Reply-To: <1447966706-16219-2-git-send-email-salil.mehta@huawei.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Return-Path: <cedric.madianga@gmail.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Salil Mehta <salil.mehta@huawei.com>, David Miller <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>, "dingtianhong@huawei.com" <dingtianhong@huawei.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "huangdaode@hisilicon.com" <huangdaode@hisilicon.com>, "kenneth-lee-2012@foxmail.com" <kenneth-lee-2012@foxmail.com>, "mehta.salil.lnk@gmail.com" <mehta.salil.lnk@gmail.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "lisheng011@huawei.com" <lisheng011@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>
-Cc: yankejian <yankejian@huawei.com>, lipeng <lipeng321@huawei.com>, Fengguang Wu <fengguang.wu@intel.com>
+In-Reply-To: <20151116032758.GS25173@localhost>
+References: <1445003956-9150-1-git-send-email-cedric.madianga@gmail.com>
+	<1445003956-9150-4-git-send-email-cedric.madianga@gmail.com>
+	<20151116032758.GS25173@localhost>
+Date: Mon, 16 Nov 2015 13:16:56 +0100
+Message-ID: <CAOAejn01G+HKOfvxfGNzimqeOSQXidD9yY=eShkeW_fFDAC4Zw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] ARM: dts: Add STM32 DMA support for STM32F429 MCU
+From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
+Content-Type: multipart/alternative; boundary=001a1134ae6ca54b4e0524a76235
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: linux@arm.linux.org.uk, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pawel.moll@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-> +void hns_rcbv2_int_ctrl_hw(struct hnae_queue *q, u32 flag, u32 mask)
-> +{
-> +	u32 int_mask_en = !!mask;
-> +
-> +	if (flag & RCB_INT_FLAG_TX)
-> +		dsaf_write_dev(q, RCB_RING_INTMSK_TXWL_REG,
-> int_mask_en);
-> +
-> +	if (flag & RCB_INT_FLAG_RX)
-> +		dsaf_write_dev(q, RCB_RING_INTMSK_RXWL_REG,
-> int_mask_en);
-> +}
-> +
-> +void hns_rcbv2_int_clr_hw(struct hnae_queue *q, u32 flag)
-> +{
-> +	u32 clr = 1;
-> +
-> +	if (flag & RCB_INT_FLAG_TX)
-> +		dsaf_write_dev(q, RCBV2_TX_RING_INT_STS_REG, clr);
-> +
-> +	if (flag & RCB_INT_FLAG_RX)
-> +		dsaf_write_dev(q, RCBV2_RX_RING_INT_STS_REG, clr);
-> +}
-> +
+--001a1134ae6ca54b4e0524a76235
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Why do you need the int_mask_en, clr variables? Why not directly use values?
+Hi Vinod,
 
-> +static void fill_v2_desc(struct hnae_ring *ring, void *priv,
-....
-> +	hnae_set_field(bn_pid, 0x7, 0, buf_num - 1);
+Le 16 nov. 2015 04:24, "Vinod Koul" <vinod.koul@intel.com> a =C3=A9crit :
+>
+> On Fri, Oct 16, 2015 at 03:59:15PM +0200, M'boumba Cedric Madianga wrote:
+> > This patch adds STM32 DMA bindings for STM32F429.
+>
+> I need an ACK from ARM folks on this one, and I suspect this might need
+> rebase on 4.4-rc1
 
-Magic values?
+Maxime will take this patch and the other one about defconfig as he is the
+maintainer of STM32 machine.
 
-> +int hns_nic_net_xmit_hw(struct net_device *ndev,
-> +			struct sk_buff *skb,
-> +			struct hns_nic_ring_data *ring_data)
-> +{
+I think you don't need to take it into account..
 
-> -	/* If everything has gone correctly network should be the
-> +	/**
-> +	 * If everything has gone correctly network should be the
->  	 * data section of the packet and will be the end of the header.
->  	 * If not then it probably represents the end of the last recognized
->  	 * header.
+BR,
+Cedric
+>
+> >
+> > Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/stm32f429.dtsi | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/stm32f429.dtsi
+b/arch/arm/boot/dts/stm32f429.dtsi
+> > index d78a481..037eb29 100644
+> > --- a/arch/arm/boot/dts/stm32f429.dtsi
+> > +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> > @@ -174,6 +174,37 @@
+> >                       reg =3D <0x40023800 0x400>;
+> >                       clocks =3D <&clk_hse>;
+> >               };
+> > +
+> > +             dma1: dma-controller@40026000 {
+> > +                     compatible =3D "st,stm32-dma";
+> > +                     reg =3D <0x40026000 0x400>;
+> > +                     interrupts =3D <11>,
+> > +                                  <12>,
+> > +                                  <13>,
+> > +                                  <14>,
+> > +                                  <15>,
+> > +                                  <16>,
+> > +                                  <17>,
+> > +                                  <47>;
+> > +                     clocks =3D <&rcc 0 21>;
+> > +                     #dma-cells =3D <4>;
+> > +             };
+> > +
+> > +             dma2: dma-controller@40026400 {
+> > +                     compatible =3D "st,stm32-dma";
+> > +                     reg =3D <0x40026400 0x400>;
+> > +                     interrupts =3D <56>,
+> > +                                  <57>,
+> > +                                  <58>,
+> > +                                  <59>,
+> > +                                  <60>,
+> > +                                  <68>,
+> > +                                  <69>,
+> > +                                  <70>;
+> > +                     clocks =3D <&rcc 0 22>;
+> > +                     #dma-cells =3D <4>;
+> > +                     st,mem2mem;
+> > +             };
+> >       };
+> >  };
+> >
+> > --
+> > 1.9.1
+> >
+>
+> --
+> ~Vinod
 
-What happened to the network style comments?
+--001a1134ae6ca54b4e0524a76235
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
 
->  static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
->  			       struct sk_buff **out_skb, int *out_bnum)
-> +	/**
-> +	 * we will be copying header into skb->data in
-> +	 * pskb_may_pull so it is in our interest to prefetch
-> +	 * it now to avoid a possible cache miss
-> +	 */
-> +	prefetchw(skb->data);
-> +
-
-Likewise
-
+PHAgZGlyPSJsdHIiPkhpIFZpbm9kLDwvcD4NCjxwIGRpcj0ibHRyIj5MZcKgMTYgbm92LiAyMDE1
+IDA0OjI0LCAmcXVvdDtWaW5vZCBLb3VsJnF1b3Q7ICZsdDs8YSBocmVmPSJtYWlsdG86dmlub2Qu
+a291bEBpbnRlbC5jb20iPnZpbm9kLmtvdWxAaW50ZWwuY29tPC9hPiZndDsgYSDDqWNyaXTCoDo8
+YnI+DQomZ3Q7PGJyPg0KJmd0OyBPbiBGcmksIE9jdCAxNiwgMjAxNSBhdCAwMzo1OToxNVBNICsw
+MjAwLCBNJiMzOTtib3VtYmEgQ2VkcmljIE1hZGlhbmdhIHdyb3RlOjxicj4NCiZndDsgJmd0OyBU
+aGlzIHBhdGNoIGFkZHMgU1RNMzIgRE1BIGJpbmRpbmdzIGZvciBTVE0zMkY0MjkuPGJyPg0KJmd0
+Ozxicj4NCiZndDsgSSBuZWVkIGFuIEFDSyBmcm9tIEFSTSBmb2xrcyBvbiB0aGlzIG9uZSwgYW5k
+IEkgc3VzcGVjdCB0aGlzIG1pZ2h0IG5lZWQ8YnI+DQomZ3Q7IHJlYmFzZSBvbiA0LjQtcmMxPC9w
+Pg0KPHAgZGlyPSJsdHIiPk1heGltZSB3aWxsIHRha2UgdGhpcyBwYXRjaCBhbmQgdGhlIG90aGVy
+IG9uZSBhYm91dCBkZWZjb25maWcgYXMgaGUgaXMgdGhlIG1haW50YWluZXIgb2YgU1RNMzIgbWFj
+aGluZS48L3A+DQo8cCBkaXI9Imx0ciI+SSB0aGluayB5b3UgZG9uJiMzOTt0IG5lZWQgdG8gdGFr
+ZSBpdCBpbnRvIGFjY291bnQuLiA8L3A+DQo8cCBkaXI9Imx0ciI+QlIsPGJyPg0KQ2VkcmljPGJy
+Pg0KJmd0Ozxicj4NCiZndDsgJmd0Ozxicj4NCiZndDsgJmd0OyBTaWduZWQtb2ZmLWJ5OiBNJiMz
+OTtib3VtYmEgQ2VkcmljIE1hZGlhbmdhICZsdDs8YSBocmVmPSJtYWlsdG86Y2VkcmljLm1hZGlh
+bmdhQGdtYWlsLmNvbSI+Y2VkcmljLm1hZGlhbmdhQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyPg0KJmd0
+OyAmZ3Q7IC0tLTxicj4NCiZndDsgJmd0O8KgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5k
+dHNpIHwgMzEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKzxicj4NCiZndDsgJmd0O8Kg
+IDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspPGJyPg0KJmd0OyAmZ3Q7PGJyPg0KJmd0
+OyAmZ3Q7IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5kdHNpPGJyPg0KJmd0OyAmZ3Q7IGluZGV4IGQ3OGE0
+ODEuLjAzN2ViMjkgMTAwNjQ0PGJyPg0KJmd0OyAmZ3Q7IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L3N0bTMyZjQyOS5kdHNpPGJyPg0KJmd0OyAmZ3Q7ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
+bTMyZjQyOS5kdHNpPGJyPg0KJmd0OyAmZ3Q7IEBAIC0xNzQsNiArMTc0LDM3IEBAPGJyPg0KJmd0
+OyAmZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHg0MDAy
+MzgwMCAweDQwMCZndDs7PGJyPg0KJmd0OyAmZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqBjbG9ja3MgPSAmbHQ7JmFtcDtjbGtfaHNlJmd0Ozs8YnI+DQomZ3Q7ICZndDvCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoH07PGJyPg0KJmd0OyAmZ3Q7ICs8YnI+DQomZ3Q7ICZndDsgK8Kg
+IMKgIMKgIMKgIMKgIMKgIMKgZG1hMTogZG1hLWNvbnRyb2xsZXJANDAwMjYwMDAgezxicj4NCiZn
+dDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb21wYXRpYmxlID0gJnF1
+b3Q7c3Qsc3RtMzItZG1hJnF1b3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHg0MDAyNjAwMCAweDQwMCZndDs7PGJyPg0KJmd0OyAm
+Z3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGludGVycnVwdHMgPSAmbHQ7MTEm
+Z3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgJmx0OzEyJmd0Oyw8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICZsdDsxMyZndDssPGJyPg0KJmd0
+OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCAmbHQ7MTQmZ3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0OzE1Jmd0Oyw8YnI+DQomZ3Q7ICZndDsgK8KgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICZsdDsxNiZndDss
+PGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCAmbHQ7MTcmZ3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0OzQ3Jmd0Ozs8YnI+DQomZ3Q7ICZn
+dDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY2xvY2tzID0gJmx0OyZhbXA7cmNj
+IDAgMjEmZ3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAjZG1hLWNlbGxzID0gJmx0OzQmZ3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAgwqAgwqAg
+wqAgwqB9Ozxicj4NCiZndDsgJmd0OyArPGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDC
+oCDCoGRtYTI6IGRtYS1jb250cm9sbGVyQDQwMDI2NDAwIHs8YnI+DQomZ3Q7ICZndDsgK8KgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY29tcGF0aWJsZSA9ICZxdW90O3N0LHN0bTMyLWRt
+YSZxdW90Ozs8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+cmVnID0gJmx0OzB4NDAwMjY0MDAgMHg0MDAmZ3Q7Ozxicj4NCiZndDsgJmd0OyArwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnRlcnJ1cHRzID0gJmx0OzU2Jmd0Oyw8YnI+DQomZ3Q7
+ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+ICZsdDs1NyZndDssPGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAmbHQ7NTgmZ3Q7LDxicj4NCiZndDsgJmd0OyArwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0OzU5Jmd0Oyw8
+YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgICZsdDs2MCZndDssPGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAmbHQ7NjgmZ3Q7LDxicj4NCiZndDsgJmd0
+OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgJmx0
+OzY5Jmd0Oyw8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgICZsdDs3MCZndDs7PGJyPg0KJmd0OyAmZ3Q7ICvCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNsb2NrcyA9ICZsdDsmYW1wO3JjYyAwIDIyJmd0Ozs8YnI+
+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgI2RtYS1jZWxscyA9
+ICZsdDs0Jmd0Ozs8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgc3QsbWVtMm1lbTs8YnI+DQomZ3Q7ICZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+
+DQomZ3Q7ICZndDvCoCDCoCDCoCDCoH07PGJyPg0KJmd0OyAmZ3Q7wqAgfTs8YnI+DQomZ3Q7ICZn
+dDs8YnI+DQomZ3Q7ICZndDsgLS08YnI+DQomZ3Q7ICZndDsgMS45LjE8YnI+DQomZ3Q7ICZndDs8
+YnI+DQomZ3Q7PGJyPg0KJmd0OyAtLTxicj4NCiZndDsgflZpbm9kPGJyPg0KPC9wPg0K
+--001a1134ae6ca54b4e0524a76235--
