@@ -1,73 +1,93 @@
-From: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: leds-bcm6328: add more init configuration options
-Date: Mon, 16 Nov 2015 22:35:55 +0100
-Message-ID: <564A4C3B.6090806@gmail.com>
-References: <5648C090.9060904@simon.arlott.org.uk>
- <5649F040.6090002@samsung.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Mon, 16 Nov 2015 14:01:57 -0800
+Message-ID: <564A5255.3020603@broadcom.com>
+References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
+ <5649F2D9.7070902@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5649F040.6090002-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5649F2D9.7070902@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michals@xilinx.com, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, dhdang@apm.com, sbranden@broadcom.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon and Jacek,
 
-This is done on purpose because not every BCM63268 device has serial=20
-LEDs and we should be able to enable/disable those options in order to=20
-avoid depending on the bootloader setting the registers correctly.
 
-Regards,
-=C3=81lvaro.
-
-El 16/11/2015 a las 16:03, Jacek Anaszewski escribi=C3=B3:
-> Hi Simon,
->
-> On 11/15/2015 06:27 PM, Simon Arlott wrote:
->> commit 1d3ff22d633d35048c35c3deeead7ab116cebc32
->> Author: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Date:   Thu Oct 8 12:35:55 2015 +0200
+On 11/16/2015 7:14 AM, Marc Zyngier wrote:
+> On 11/11/15 06:33, Bharat Kumar Gogada wrote:
+>> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
 >>
->>      Documentation: leds: update DT bindings for leds-bcm6328
->>
->>      This patch adds latest DT bindings for leds-bcm6328 init regist=
-er
->>      configuration.
->>
->> commit 9f82c778ce17789a038351a411ff65cd41033c7a
->> Author: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Date:   Thu Oct 8 12:35:54 2015 +0200
->>
->>      leds-bcm6328: add more init configuration options
->>
->>      This patch adds more init register configuration options:
->>      - Serial LEDs multiplexing.
->>      - Serial LEDs clock signal low/high polarity.
->>      - Serial LEDs data signal low/high polarity.
->>      - Serial LEDs shift direction inverted/normal.
->>
->> This was not a backwards-compatible change, because the driver is no=
-w
->> turning off all of the serial LED options by default when previously
->> it only turned off brcm,serial-leds and left the other options
->> unchanged.
->>
->> There are currently no in-tree users of this binding, so any existin=
-g
->> users will be broken by this change.
+>> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+>> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+>> ---
+>> Added logic to allocate contiguous hwirq in nwl_irq_domain_alloc function.
+>> Moved MSI functionality to separate functions.
+>> Changed error return values.
+>> ---
+>>   .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
+>>   drivers/pci/host/Kconfig                           |   16 +-
+>>   drivers/pci/host/Makefile                          |    1 +
+>>   drivers/pci/host/pcie-xilinx-nwl.c                 | 1062 ++++++++++++++++++++
+>>   4 files changed, 1144 insertions(+), 3 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
+>>   create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
 >>
 >
-> Please submit a patch fixing the issue in such cases, so that we coul=
-d
-> discuss possible solutions to the problem.
+> [...]
 >
+>> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus *bus)
+>> +{
+>> +	struct platform_device *pdev = to_platform_device(pcie->dev);
+>> +	struct nwl_msi *msi = &pcie->msi;
+>> +	unsigned long base;
+>> +	int ret;
+>> +
+>> +	mutex_init(&msi->lock);
+>> +
+>> +	/* Check for msii_present bit */
+>> +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
+>> +	if (!ret) {
+>> +		dev_err(pcie->dev, "MSI not present\n");
+>> +		ret = -EIO;
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* Enable MSII */
+>> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
+>> +			  MSII_ENABLE, I_MSII_CONTROL);
+>> +
+>> +	/* Enable MSII status */
+>> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
+>> +			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
+>> +
+>> +	/* setup AFI/FPCI range */
+>> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
+>> +	base = virt_to_phys((void *)msi->pages);
+>> +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
+>> +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
+>
+> BTW, you still haven't answered my question as to why you need to waste
+> a page of memory here, and why putting a device address doesn't work.
+>
+> As this is (to the best of my knowledge) the only driver doing so, I'd
+> really like you to explain the rational behind this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Might not be the only driver doing so after I start sending out patches 
+for the iProc MSI support (soon), :)
+
+I'm not sure how it works for the Xilinx NWL controller, which Bharat 
+should be able to help to explain. But for the iProc MSI controller, 
+there's no device I/O memory reserved for MSI posted writes in the ASIC. 
+Therefore one needs to reserve host memory for these writes.
+
+Ray
+
+>
+> Thanks,
+>
+> 	M.
+>
