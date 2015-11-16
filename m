@@ -1,92 +1,159 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 8/8] DT:omap3+ads7846: use new common touchscreen bindings
-Date: Mon, 16 Nov 2015 16:31:24 +0100
-Message-ID: <28AFB27C-1D97-49E1-80B2-79000AD426D2@goldelico.com>
-References: <cover.1447446957.git.hns@goldelico.com> <df5bd5fdcc2284a7d8e2d5132bc865701a8ca38f.1447446957.git.hns@goldelico.com> <CANOLnOO=J=se7K7GnJZPrkXJpm-_+vshsRUCeWo1GVsum8jyeg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANOLnOO=J=se7K7GnJZPrkXJpm-_+vshsRUCeWo1GVsum8jyeg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grazvydas Ignotas <notasas@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Haibo Chen <haibo.chen@freescale.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Aaron Sierra <asierra@xes-inc.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, gta04-owner@goldelico.comlinux
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Mon, 16 Nov 2015 12:33:30 -0300
+Message-ID: <5649F74A.9020706@vanguardiasur.com.ar>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+ <CAGhQ9Vyg6sScq7yM=7judsMPHOc5VF2zf=7LPxmbmL7wF=vvgw@mail.gmail.com>
+ <562E2CB1.80706@linaro.org> <563385B2.90403@vanguardiasur.com.ar>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <563385B2.90403-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HI,
+Srinivas,
 
-Am 16.11.2015 um 15:37 schrieb Grazvydas Ignotas <notasas@gmail.com>:
+Sorry for the delay, I finally got the hardware again.
 
-> Hi,
-> 
-> On Fri, Nov 13, 2015 at 10:35 PM, H. Nikolaus Schaller
-> <hns@goldelico.com> wrote:
->> The standard touch screen bindings [1] replace the private ti,swap-xy
->> with touchscreen-swaped-x-y. And for the Openpandora we use
->> touchscreen-size etc. to match the LCD screen size.
->> 
->> [1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+El 30/10/15 a las 11:58, Ariel D'Alessandro escribi=C3=B3:
+> Srinivas,
+>=20
+> El 26/10/15 a las 10:37, Srinivas Kandagatla escribi=C3=B3:
+>>
+>>
+>> On 24/10/15 23:04, Joachim Eastwood wrote:
+>>> Hi Ariel,
+>>>
+>>> On 19 October 2015 at 19:32, Ariel D'Alessandro
+>>> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>>>> This commit adds support for NXP LPC18xx EEPROM memory found in NX=
+P
+>>>> LPC185x/3x and LPC435x/3x/2x/1x devices.
+>>>>
+>>>> EEPROM size is 16384 bytes and it can be entirely read and
+>>>> written/erased with 1 word (4 bytes) granularity. The last page
+>>>> (128 bytes) contains the EEPROM initialization data and is not wri=
+table.
+>>>>
+>>>> Erase/program time is less than 3ms. The EEPROM device requires a
+>>>> ~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated divi=
+ding
+>>>> the system bus clock by the division factor, contained in the divi=
+der
+>>>> register (minus 1 encoded).
+>>>>
+>>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>>>> ---
+>>>>   drivers/nvmem/Kconfig          |   9 ++
+>>>>   drivers/nvmem/Makefile         |   2 +
+>>>>   drivers/nvmem/lpc18xx_eeprom.c | 266
+>>>> +++++++++++++++++++++++++++++++++++++++++
+>>>>   3 files changed, 277 insertions(+)
+>>>>   create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
+>>>
+>>>> +static int lpc18xx_eeprom_gather_write(void *context, const void =
+*reg,
+>>>> +                                      size_t reg_size, const void=
+ *val,
+>>>> +                                      size_t val_size)
+>>>> +{
+>>>> +       struct lpc18xx_eeprom_dev *eeprom =3D context;
+>>>> +       unsigned int offset =3D *(u32 *)reg;
+>>>> +
+>>>> +       /* 3 ms of erase/program time between each writing */
+>>>> +       while (val_size) {
+>>>> +               writel(*(u32 *)val, eeprom->mem_base + offset);
+>>>> +               usleep_range(3000, 4000);
+>>>> +               val_size -=3D eeprom->val_bytes;
+>>>> +               val +=3D eeprom->val_bytes;
+>>>> +               offset +=3D eeprom->val_bytes;
+>>>> +       }
+>>>
+>>> What happens here if 'val_size' is less than 4 or not dividable by =
+4?
+>>> Same thing for 'offset'.
+>>>
+>>> I tested the driver from sysfs by writing strings into the nvmem-fi=
+le
+>>> with echo. Writing a string not dividable by 4 seems to hang the
+>>> system.
+>>>
+>>
+>> I think I know the issue here:
+>> Could you try this patch:
+>>
+>> -------------------------------->cut<-------------------------------=
+---
+>> From 8cae10eff8ea8da9c5a8058ff75abeeddd8a8224 Mon Sep 17 00:00:00 20=
+01
+>> From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Date: Mon, 26 Oct 2015 13:30:24 +0000
+>> Subject: [PATCH] nvmem: core: return error for non word aligned byte=
+s
+>>
+>> nvmem providers have restrictions on register strides, so return err=
+or
+>> code when users attempt to read/write buffers with sizes which are n=
+ot
+>> aligned to the word boundary.
+>>
+>> Without this patch the userspace would continue to try as it does no=
+t
+>> get any error from the nvmem core, resulting in a hang.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >> ---
->> arch/arm/boot/dts/omap3-lilly-a83x.dtsi              |  2 +-
->> arch/arm/boot/dts/omap3-pandora-common.dtsi          | 17 +++++++++++++----
->> arch/arm/boot/dts/omap3-panel-sharp-ls037v7dw01.dtsi |  2 +-
->> 3 files changed, 15 insertions(+), 6 deletions(-)
->> 
->> diff --git a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
->> index d0dd036..01dae66 100644
->> --- a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
->> +++ b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
->> @@ -325,7 +325,7 @@
->>                ti,y-max = /bits/ 16 <3600>;
->>                ti,x-plate-ohms = /bits/ 16 <80>;
->>                ti,pressure-max = /bits/ 16 <255>;
->> -               ti,swap-xy;
->> +               touchscreen-swapped-x-y;
->> 
->>                linux,wakeup;
->>        };
->> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
->> index f672a04..9497cc6 100644
->> --- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
->> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
->> @@ -696,10 +696,19 @@
->>                pendown-gpio = <&gpio3 30 0>;
->>                vcc-supply = <&vaux4>;
->> 
->> -               ti,x-min = /bits/ 16 <0>;
->> -               ti,x-max = /bits/ 16 <8000>;
->> -               ti,y-min = /bits/ 16 <0>;
->> -               ti,y-max = /bits/ 16 <4800>;
->> +               touchscreen-size-x = <800>;
->> +               touchscreen-size-y = <480>;
->> +               touchscreen-max-pressure = <1000>;
->> +               touchscreen-fuzz-x = <16>;
->> +               touchscreen-fuzz-y = <16>;
->> +               touchscreen-fuzz-pressure = <10>;
->> +               touchscreen-inverted-x;
->> +               touchscreen-inverted-y;
+>>  drivers/nvmem/core.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>> index 6fd4e5a..9d11d98 100644
+>> --- a/drivers/nvmem/core.c
+>> +++ b/drivers/nvmem/core.c
+>> @@ -70,6 +70,9 @@ static ssize_t bin_attr_nvmem_read(struct file *fi=
+lp,
+>> struct kobject *kobj,
+>>      if (pos >=3D nvmem->size)
+>>          return 0;
+>>
+>> +    if (count < nvmem->word_size)
+>> +        return -EINVAL;
 >> +
->> +               ti,x-min = /bits/ 16 <160>;
->> +               ti,x-max = /bits/ 16 <3900>;
->> +               ti,y-min = /bits/ 16 <220>;
->> +               ti,y-max = /bits/ 16 <3750>;
-> 
-> I'm not sure this is a good idea, there have been at least 3 different
-> batches of LCDs which slightly different touchscreens attached, with
-> such thresholds we might end up with unreachable touchscreen points on
-> some units. If I understand right, calibration won't help if for some
-> screen locations ADC reading goes below/above these min/max thresholds
-> on some specific units? If so there should probably be at least 10%
-> margin in either case to make calibration useful.
+>>      if (pos + count > nvmem->size)
+>>          count =3D nvmem->size - pos;
+>>
+>> @@ -95,6 +98,9 @@ static ssize_t bin_attr_nvmem_write(struct file *f=
+ilp,
+>> struct kobject *kobj,
+>>      if (pos >=3D nvmem->size)
+>>          return 0;
+>>
+>> +    if (count < nvmem->word_size)
+>> +        return -EINVAL;
+>> +
+>>      if (pos + count > nvmem->size)
+>>          count =3D nvmem->size - pos;
+>>
+>=20
+> Patch looks good to me. I think that it solves the issue.
+> I don't have the board here right now, so I'll check it ASAP and give
+> some feedback.
 
-Ok, then someone owning all variants should test and we should use the
-min/max values we find. I.e. the touch with the biggest ADC value range.
-All others have smaller screens which can be calibrated in user space.
-But 10% is good enough to boot and start manual calibration.
+=46inally tested this. As it seemed, it solved the issue.
+Are you submitting a patch for this?
 
-Alternatively, we can set them to 0 and 4095 (or remove them to use defaults).
+Thanks again.
 
-BR and thanks,
-Nikolaus
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
