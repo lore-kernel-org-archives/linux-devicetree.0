@@ -1,118 +1,56 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] doc: dt: mtd: stop referring to driver code for
- spi-nor IDs
-Date: Mon, 16 Nov 2015 17:16:50 -0600
-Message-ID: <20151116231650.GA32557@rob-hp-laptop>
-References: <1447713292-91525-1-git-send-email-computersforpeace@gmail.com>
- <1447713292-91525-4-git-send-email-computersforpeace@gmail.com>
+Subject: Re: [PATCH v2 2/5] devicetree: Add bindings for the ATH79 USB phy
+Date: Mon, 16 Nov 2015 17:18:25 -0600
+Message-ID: <20151116231825.GA18204@rob-hp-laptop>
+References: <1447708924-15076-1-git-send-email-albeu@free.fr>
+ <1447708924-15076-3-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447713292-91525-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1447708924-15076-3-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 02:34:52PM -0800, Brian Norris wrote:
-> Pull the supported chip names from drivers/mtd/devices/m25p80.c and stop
-> pointing readers to Linux code.
-> 
-> Also (although I see this habit repeated throughout the
-> Documentation/devicetree/bindings/ tree), stop using the title "driver"
-> in this file, when we're trying explicitly to describe hardware, not
-> software.
-> 
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-
-Thanks for the clean-up.
+On Mon, Nov 16, 2015 at 10:22:01PM +0100, Alban Bedel wrote:
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  .../devicetree/bindings/mtd/jedec,spi-nor.txt      | 56 ++++++++++++++++++++--
->  1 file changed, 51 insertions(+), 5 deletions(-)
+>  .../devicetree/bindings/phy/phy-ath79-usb.txt          | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index 2bee68103b01..2c91c03e7eb0 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -1,15 +1,61 @@
-> -* MTD SPI driver for ST M25Pxx (and similar) serial flash chips
-> +* SPI NOR flash: ST M25Pxx (and similar) serial flash chips
->  
->  Required properties:
->  - #address-cells, #size-cells : Must be present if the device has sub-nodes
->    representing partitions.
->  - compatible : May include a device-specific string consisting of the
-> -               manufacturer and name of the chip. Bear in mind the DT binding
-> -               is not Linux-only, but in case of Linux, see the "m25p_ids"
-> -               table in drivers/mtd/devices/m25p80.c for the list of supported
-> -               chips.
-> +               manufacturer and name of the chip. A list of supported chip
-> +               names follows.
->                 Must also include "jedec,spi-nor" for any SPI NOR flash that can
->                 be identified by the JEDEC READ ID opcode (0x9F).
+> diff --git a/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+> new file mode 100644
+> index 0000000..cafe219
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+> @@ -0,0 +1,18 @@
+> +* Atheros AR71XX/9XXX USB PHY
 > +
-> +               Supported chip names:
-> +                 at25df321a
-> +                 at25df641
-> +                 at26df081a
-> +                 mr25h256
-> +                 mx25l4005a
-> +                 mx25l1606e
-> +                 mx25l6405d
-> +                 mx25l12805d
-> +                 mx25l25635e
-> +                 n25q064
-> +                 n25q128a11
-> +                 n25q128a13
-> +                 n25q512a
-> +                 s25fl256s1
-> +                 s25fl512s
-> +                 s25sl12801
-> +                 s25fl008k
-> +                 s25fl064k
-> +                 sst25vf040b
-> +                 m25p40
-> +                 m25p80
-> +                 m25p16
-> +                 m25p32
-> +                 m25p64
-> +                 m25p128
-> +                 w25x80
-> +                 w25x32
-> +                 w25q32
-> +                 w25q32dw
-> +                 w25q80bl
-> +                 w25q128
-> +                 w25q256
+> +Required properties:
+> +- compatible: "qca,ar7100-usb-phy"
+> +- #phys-cells: should be 0
+> +- reset-names: "usb-phy"[, "usb-suspend-override"]
+> +- resets: references to the reset controllers
 > +
-> +               The following chip names have been used historically to
-> +               designate quirky versions of flash chips that do not support the
-> +               JEDEC READ ID opcode (0x9F):
-> +                 m25p05-nonjedec
-> +                 m25p10-nonjedec
-> +                 m25p20-nonjedec
-> +                 m25p40-nonjedec
-> +                 m25p80-nonjedec
-> +                 m25p16-nonjedec
-> +                 m25p32-nonjedec
-> +                 m25p64-nonjedec
-> +                 m25p128-nonjedec
+> +Example:
 > +
->  - reg : Chip-Select number
->  - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
->  
+> +	usb-phy {
+> +		compatible = "qca,ar7100-usb-phy";
+> +
+> +		reset-names = "usb-phy", "usb-suspend-override";
+> +		resets = <&rst 4>, <&rst 3>;
+> +
+> +		#phy-cells = <0>;
+> +	};
 > -- 
-> 2.6.0.rc2.230.g3dd15c0
+> 2.0.0
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
