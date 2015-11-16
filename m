@@ -1,22 +1,29 @@
 From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] dmaengine: of_dma: Correct return code for
- of_dma_request_slave_channel in case !CONFIG_OF
-Date: Mon, 16 Nov 2015 09:03:53 +0530
-Message-ID: <20151116033353.GU25173@localhost>
-References: <1446546490-7432-1-git-send-email-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
+Date: Mon, 16 Nov 2015 09:25:33 +0530
+Message-ID: <20151116035533.GC25173@localhost>
+References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446546490-7432-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org
+In-Reply-To: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 03, 2015 at 12:28:10PM +0200, Peter Ujfalusi wrote:
-> of_dma_request_slave_channel should return either pointer for valid
-> dma_chan or ERR_PTR() error code, NULL is not expected to be returned.
+On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
+> In general Renesas hardware is not documented to the extent where the
+> relationship between IP blocks on different SoCs can be assumed although
+> they may appear to operate the same way. Furthermore the documentation
+> typically does not specify a version for individual IP blocks. For these
+> reasons a convention of using the SoC name in place of a version and
+> providing SoC-specific compat strings has been adopted.
+> 
+> Although not universally liked this convention is used in the bindings for
+> most drivers for Renesas hardware. The purpose of this patch is to
+> update the Renesas R-Car DMA Controller driver to follow this convention.
 
 Applied, thanks
 
