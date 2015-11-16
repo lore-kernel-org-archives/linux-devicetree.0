@@ -1,60 +1,524 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] ARM: multi_v7_defconfig: Build
- AXP20X related drivers as modules
-Date: Mon, 16 Nov 2015 12:52:51 +0000
-Message-ID: <20151116125251.GD17829@x1>
-References: <1447387456-9912-1-git-send-email-wens@csie.org>
- <1447387456-9912-11-git-send-email-wens@csie.org>
- <CAGb2v66WEiqgmx-3rL6ksuu-Zq+iridUcpu-Nshbnqcp7Pgfaw@mail.gmail.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 2/2] MIPS: bmips: Add bcm63168-l1 interrupt controller
+Date: Mon, 16 Nov 2015 13:56:36 +0100
+Message-ID: <CAOiHx=nNN1XhAihNtFhWEozvA6KpV0BBexf2W3CuB4PX4U_zyw@mail.gmail.com>
+References: <5648B804.40806@simon.arlott.org.uk> <5648B89A.8080203@simon.arlott.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBJVDU6ZAKGQEOMSDBOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66WEiqgmx-3rL6ksuu-Zq+iridUcpu-Nshbnqcp7Pgfaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5648B89A.8080203-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Nov 2015, Chen-Yu Tsai wrote:
+On Sun, Nov 15, 2015 at 5:53 PM, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org> wrote:
+> Add the BCM63168 interrupt controller based on the SMP-capable BCM7038
+> and the BCM3380 but with packed interrupt registers.
+>
+> Add the BCM63168 interrupt controller to a list with the existing BCM7038
+> so that interrupts on CPU1 are not ignored.
+>
+> Update the maintainers file list for BMIPS to include this driver.
+>
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+> ---
+>  MAINTAINERS                       |   1 +
+>  arch/mips/Kconfig                 |   1 +
+>  arch/mips/bmips/irq.c             |  10 +-
+>  drivers/irqchip/Kconfig           |   5 +
+>  drivers/irqchip/Makefile          |   1 +
+>  drivers/irqchip/irq-bcm63168-l1.c | 372 ++++++++++++++++++++++++++++++++++++++
+>  6 files changed, 388 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/irqchip/irq-bcm63168-l1.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e9caa4b..63bf54a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2373,6 +2373,7 @@ F:        arch/mips/bmips/*
+>  F:     arch/mips/include/asm/mach-bmips/*
+>  F:     arch/mips/kernel/*bmips*
+>  F:     arch/mips/boot/dts/brcm/bcm*.dts*
+> +F:     drivers/irqchip/irq-bcm63*
+>  F:     drivers/irqchip/irq-bcm7*
+>  F:     drivers/irqchip/irq-brcmstb*
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index e3aa5b0..1a8decd 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -149,6 +149,7 @@ config BMIPS_GENERIC
+>         select CSRC_R4K
+>         select SYNC_R4K
+>         select COMMON_CLK
+> +       select BCM63168_L1_IRQ
+>         select BCM7038_L1_IRQ
+>         select BCM7120_L2_IRQ
+>         select BRCMSTB_L2_IRQ
+> diff --git a/arch/mips/bmips/irq.c b/arch/mips/bmips/irq.c
+> index e7fc6f934..7983cef 100644
+> --- a/arch/mips/bmips/irq.c
+> +++ b/arch/mips/bmips/irq.c
+> @@ -15,6 +15,12 @@
+>  #include <asm/irq_cpu.h>
+>  #include <asm/time.h>
+>
+> +static const struct of_device_id smp_intc_dt_match[] = {
+> +       { .compatible = "brcm,bcm7038-l1-intc" },
+> +       { .compatible = "brcm,bcm63168-l1-intc" },
+> +       {}
+> +};
+> +
+>  unsigned int get_c0_compare_int(void)
+>  {
+>         return CP0_LEGACY_COMPARE_IRQ;
+> @@ -24,8 +30,8 @@ void __init arch_init_irq(void)
+>  {
+>         struct device_node *dn;
+>
+> -       /* Only the STB (bcm7038) controller supports SMP IRQ affinity */
+> -       dn = of_find_compatible_node(NULL, NULL, "brcm,bcm7038-l1-intc");
+> +       /* Only these controllers support SMP IRQ affinity */
+> +       dn = of_find_matching_node(NULL, smp_intc_dt_match);
+>         if (dn)
+>                 of_node_put(dn);
+>         else
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 4d7294e..82ce318 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -65,6 +65,11 @@ config I8259
+>         bool
+>         select IRQ_DOMAIN
+>
+> +config BCM63168_L1_IRQ
+> +       bool
+> +       select GENERIC_IRQ_CHIP
+> +       select IRQ_DOMAIN
+> +
+>  config BCM7038_L1_IRQ
+>         bool
+>         select GENERIC_IRQ_CHIP
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 177f78f..a3a21e2 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_XTENSA)                  += irq-xtensa-pic.o
+>  obj-$(CONFIG_XTENSA_MX)                        += irq-xtensa-mx.o
+>  obj-$(CONFIG_IRQ_CROSSBAR)             += irq-crossbar.o
+>  obj-$(CONFIG_SOC_VF610)                        += irq-vf610-mscm-ir.o
+> +obj-$(CONFIG_BCM63168_L1_IRQ)          += irq-bcm63168-l1.o
+>  obj-$(CONFIG_BCM7038_L1_IRQ)           += irq-bcm7038-l1.o
+>  obj-$(CONFIG_BCM7120_L2_IRQ)           += irq-bcm7120-l2.o
+>  obj-$(CONFIG_BRCMSTB_L2_IRQ)           += irq-brcmstb-l2.o
+> diff --git a/drivers/irqchip/irq-bcm63168-l1.c b/drivers/irqchip/irq-bcm63168-l1.c
+> new file mode 100644
+> index 0000000..5a144af
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-bcm63168-l1.c
+> @@ -0,0 +1,372 @@
+> +/*
+> + * Broadcom BCM63168 style Level 1 interrupt controller driver
+> + *
+> + * Copyright (C) 2014 Broadcom Corporation
+> + * Copyright 2015 Simon Arlott
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This is based on the BCM7038 (which supports SMP) but with a single
+> + * enable register instead of separate mask/set/clear registers.
+> + *
+> + * The BCM3380 has a similar mask/status register layout, but each pair
+> + * of words is at separate locations (and SMP is not supported).
+> + *
+> + * ENABLE/STATUS words are packed next to each other for each CPU:
+> + *
+> + * 6368:
+> + *   0x1000_0020: CPU0_W0_ENABLE
+> + *   0x1000_0024: CPU0_W1_ENABLE
+> + *   0x1000_0028: CPU0_W0_STATUS               IRQs 31-63
+> + *   0x1000_002c: CPU0_W1_STATUS               IRQs 0-31
+> + *   0x1000_0030: CPU1_W0_ENABLE
+> + *   0x1000_0034: CPU1_W1_ENABLE
+> + *   0x1000_0038: CPU1_W0_STATUS               IRQs 31-63
+> + *   0x1000_003c: CPU1_W1_STATUS               IRQs 0-31
+> + *
+> + * 63168:
+> + *   0x1000_0020: CPU0_W0_ENABLE
+> + *   0x1000_0024: CPU0_W1_ENABLE
+> + *   0x1000_0028: CPU0_W2_ENABLE
+> + *   0x1000_002c: CPU0_W3_ENABLE
+> + *   0x1000_0030: CPU0_W0_STATUS       IRQs 96-127
+> + *   0x1000_0034: CPU0_W1_STATUS       IRQs 64-95
+> + *   0x1000_0038: CPU0_W2_STATUS       IRQs 32-63
+> + *   0x1000_003c: CPU0_W3_STATUS       IRQs 0-31
+> + *   0x1000_0040: CPU1_W0_ENABLE
+> + *   0x1000_0044: CPU1_W1_ENABLE
+> + *   0x1000_0048: CPU1_W2_ENABLE
+> + *   0x1000_004c: CPU1_W3_ENABLE
+> + *   0x1000_0050: CPU1_W0_STATUS       IRQs 96-127
+> + *   0x1000_0054: CPU1_W1_STATUS       IRQs 64-95
+> + *   0x1000_0058: CPU1_W2_STATUS       IRQs 32-63
+> + *   0x1000_005c: CPU1_W3_STATUS       IRQs 0-31
+> + *
+> + * IRQs are numbered in CPU native endian order
+> + * (which is big-endian in these examples)
+> + */
+> +
+> +#define pr_fmt(fmt)    KBUILD_MODNAME  ": " fmt
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/kconfig.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/ioport.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/smp.h>
+> +#include <linux/types.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +
+> +#define IRQS_PER_WORD          32
+> +#define REG_BYTES_PER_IRQ_WORD (sizeof(u32) * 2)
+> +#define MAX_WORDS              4
+> +
+> +struct bcm63168_l1_cpu;
+> +
+> +struct bcm63168_l1_chip {
+> +       raw_spinlock_t          lock[MAX_WORDS];
+> +       unsigned int            n_words;
+> +       struct irq_domain       *domain;
+> +       struct cpumask          cpumask;
+> +       struct bcm63168_l1_cpu  *cpus[NR_CPUS];
+> +};
+> +
+> +struct bcm63168_l1_cpu {
+> +       void __iomem            *map_base;
+> +       unsigned int            parent_irq;
+> +       u32                     enable_cache[];
+> +};
+> +
+> +static inline unsigned int reg_enable(struct bcm63168_l1_chip *intc,
+> +                                          unsigned int word)
+> +{
+> +#ifdef __BIG_ENDIAN
+> +       return (1 * intc->n_words - word - 1) * sizeof(u32);
+> +#else
+> +       return (0 * intc->n_words + word) * sizeof(u32);
 
-> On Fri, Nov 13, 2015 at 12:04 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > axp20x support has been split into 2 parts, I2C and RSB interface
-> > variants.
-> >
-> > Update the MFD_AXP20X symbol for I2C support, and also enable
-> > MFD_AXP20X_RSB to support RSB variants. Build these drivers as
-> > modules.
-> >
-> > Keep MFD_AXP20X enabled for now, to ease migration for automated
-> > boot farms while the patches are being merged. This should be
-> > removed in the next release.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->=20
-> Sorry. This is an old file with an old commit message. Please see the
-> other patch 9 ("ARM: multi_v7_defconfig: Enable RSB and AXP20X related
-> drivers as modules").
+Huh, do the words really change the order when running in LE? I would
+have expected
+to each 32-bit word to contain the same interrupts, just bit-order reversed.
 
-Can you re-submit the set please?
+> +#endif
+> +}
+> +
+> +static inline unsigned int reg_status(struct bcm63168_l1_chip *intc,
+> +                                     unsigned int word)
+> +{
+> +#ifdef __BIG_ENDIAN
+> +       return (2 * intc->n_words - word - 1) * sizeof(u32);
+> +#else
+> +       return (1 * intc->n_words + word) * sizeof(u32);
+> +#endif
+> +}
+> +
+> +static inline unsigned int cpu_for_irq(struct bcm63168_l1_chip *intc,
+> +                                       struct irq_data *d)
+> +{
+> +       return cpumask_first_and(&intc->cpumask, irq_data_get_affinity_mask(d));
+> +}
+> +
+> +static void bcm63168_l1_irq_handle(struct irq_desc *desc)
+> +{
+> +       struct bcm63168_l1_chip *intc = irq_desc_get_handler_data(desc);
+> +       struct bcm63168_l1_cpu *cpu;
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       unsigned int idx;
+> +
+> +#ifdef CONFIG_SMP
+> +       cpu = intc->cpus[cpu_logical_map(smp_processor_id())];
+> +#else
+> +       cpu = intc->cpus[0];
+> +#endif
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+This looks expensive, can they change during runtime? If not, maybe
+just assign intc->cpus[] accordingly at probe time, so you can just do
+intc->cpus[smp_processor_id()] without any #ifdefs.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> +
+> +       chained_irq_enter(chip, desc);
+> +
+> +       for (idx = 0; idx < intc->n_words; idx++) {
+> +               int base = idx * IRQS_PER_WORD;
+> +               unsigned long pending;
+> +               irq_hw_number_t hwirq;
+> +               unsigned int irq;
+> +
+> +               pending = __raw_readl(cpu->map_base + reg_status(intc, idx));
+> +               pending &= __raw_readl(cpu->map_base + reg_enable(intc, idx));
+
+Is it save to access the registers without any locking? 7038-l1
+doesn't think so.
+
+> +
+> +               for_each_set_bit(hwirq, &pending, IRQS_PER_WORD) {
+> +                       irq = irq_linear_revmap(intc->domain, base + hwirq);
+> +                       if (irq)
+> +                               do_IRQ(irq);
+> +                       else
+> +                               spurious_interrupt();
+> +               }
+> +       }
+> +
+> +       chained_irq_exit(chip, desc);
+> +}
+> +
+> +static inline void __bcm63168_l1_unmask(struct irq_data *d)
+> +{
+> +       struct bcm63168_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +       u32 word = d->hwirq / IRQS_PER_WORD;
+> +       u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
+> +       unsigned int cpu_idx = cpu_for_irq(intc, d);
+> +
+> +       intc->cpus[cpu_idx]->enable_cache[word] |= mask;
+> +       __raw_writel(intc->cpus[cpu_idx]->enable_cache[word],
+> +               intc->cpus[cpu_idx]->map_base + reg_enable(intc, word));
+> +}
+> +
+> +static inline void __bcm63168_l1_mask(struct irq_data *d)
+> +{
+> +       struct bcm63168_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +       u32 word = d->hwirq / IRQS_PER_WORD;
+> +       u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
+> +       unsigned int cpu_idx = cpu_for_irq(intc, d);
+> +
+> +       intc->cpus[cpu_idx]->enable_cache[word] &= ~mask;
+> +       __raw_writel(intc->cpus[cpu_idx]->enable_cache[word],
+> +               intc->cpus[cpu_idx]->map_base + reg_enable(intc, word));
+> +}
+> +
+> +static void bcm63168_l1_unmask(struct irq_data *d)
+> +{
+> +       struct bcm63168_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +       u32 word = d->hwirq / IRQS_PER_WORD;
+> +       unsigned long flags;
+> +
+> +       raw_spin_lock_irqsave(&intc->lock[word], flags);
+> +       __bcm63168_l1_unmask(d);
+> +       raw_spin_unlock_irqrestore(&intc->lock[word], flags);
+> +}
+> +
+> +static void bcm63168_l1_mask(struct irq_data *d)
+> +{
+> +       struct bcm63168_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +       u32 word = d->hwirq / IRQS_PER_WORD;
+> +       unsigned long flags;
+> +
+> +       raw_spin_lock_irqsave(&intc->lock[word], flags);
+> +       __bcm63168_l1_mask(d);
+> +       raw_spin_unlock_irqrestore(&intc->lock[word], flags);
+> +}
+> +
+> +static int bcm63168_l1_set_affinity(struct irq_data *d,
+> +                                  const struct cpumask *dest,
+> +                                  bool force)
+> +{
+> +       struct bcm63168_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +       u32 word = d->hwirq / IRQS_PER_WORD;
+> +       u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
+> +       unsigned int old_cpu = cpu_for_irq(intc, d);
+> +       unsigned int new_cpu;
+> +       struct cpumask valid;
+> +       unsigned long flags;
+> +       bool enabled;
+> +
+> +       if (!cpumask_and(&valid, &intc->cpumask, dest))
+> +               return -EINVAL;
+> +
+> +       new_cpu = cpumask_any_and(&valid, cpu_online_mask);
+> +       if (new_cpu >= nr_cpu_ids)
+> +               return -EINVAL;
+> +
+> +       dest = cpumask_of(new_cpu);
+> +
+> +       raw_spin_lock_irqsave(&intc->lock[word], flags);
+> +       if (old_cpu != new_cpu) {
+> +               enabled = intc->cpus[old_cpu]->enable_cache[word] & mask;
+> +               if (enabled)
+> +                       __bcm63168_l1_mask(d);
+> +               cpumask_copy(irq_data_get_affinity_mask(d), dest);
+> +               if (enabled)
+> +                       __bcm63168_l1_unmask(d);
+> +       } else {
+> +               cpumask_copy(irq_data_get_affinity_mask(d), dest);
+> +       }
+> +       raw_spin_unlock_irqrestore(&intc->lock[word], flags);
+> +
+> +       return IRQ_SET_MASK_OK_NOCOPY;
+> +}
+> +
+> +static int __init bcm63168_l1_init_one(struct device_node *dn,
+> +                                     unsigned int idx,
+> +                                     struct bcm63168_l1_chip *intc)
+> +{
+> +       struct resource res;
+> +       resource_size_t sz;
+> +       struct bcm63168_l1_cpu *cpu;
+> +       unsigned int i, n_words;
+> +
+> +       if (of_address_to_resource(dn, idx, &res))
+> +               return -EINVAL;
+> +       sz = resource_size(&res);
+> +       n_words = sz / REG_BYTES_PER_IRQ_WORD;
+> +
+> +       if (n_words > MAX_WORDS)
+> +               return -EINVAL;
+> +       else if (!intc->n_words)
+> +               intc->n_words = n_words;
+> +       else if (intc->n_words != n_words)
+> +               return -EINVAL;
+> +
+> +       cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
+> +                                       GFP_KERNEL);
+> +       if (!cpu)
+> +               return -ENOMEM;
+> +
+> +       cpu->map_base = ioremap(res.start, sz);
+> +       if (!cpu->map_base)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < n_words; i++) {
+> +               cpu->enable_cache[i] = 0;
+> +               __raw_writel(0, cpu->map_base + reg_enable(intc, i));
+> +       }
+> +
+> +       cpu->parent_irq = irq_of_parse_and_map(dn, idx);
+> +       if (!cpu->parent_irq) {
+> +               pr_err("failed to map parent interrupt %d\n", cpu->parent_irq);
+> +               return -EINVAL;
+> +       }
+> +       irq_set_chained_handler_and_data(cpu->parent_irq,
+> +                                               bcm63168_l1_irq_handle, intc);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct irq_chip bcm63168_l1_irq_chip = {
+> +       .name                   = "bcm63168-l1",
+> +       .irq_mask               = bcm63168_l1_mask,
+> +       .irq_unmask             = bcm63168_l1_unmask,
+> +       .irq_set_affinity       = bcm63168_l1_set_affinity,
+> +};
+
+You are already allocing memory, why not alloc this one as well?
+
+> +
+> +static int bcm63168_l1_map(struct irq_domain *d, unsigned int virq,
+> +                         irq_hw_number_t hw_irq)
+> +{
+> +       irq_set_chip_and_handler(virq,
+> +               &bcm63168_l1_irq_chip, handle_percpu_irq);
+> +       irq_set_chip_data(virq, d->host_data);
+> +       return 0;
+> +}
+> +
+> +static const struct irq_domain_ops bcm63168_l1_domain_ops = {
+> +       .xlate                  = irq_domain_xlate_onecell,
+> +       .map                    = bcm63168_l1_map,
+> +};
+> +
+> +static int __init bcm63168_l1_of_init(struct device_node *dn,
+> +                             struct device_node *parent)
+> +{
+> +       struct bcm63168_l1_chip *intc;
+> +       unsigned int idx;
+> +       int ret;
+> +
+> +       intc = kzalloc(sizeof(*intc), GFP_KERNEL);
+> +       if (!intc)
+> +               return -ENOMEM;
+> +
+> +       cpumask_clear(&intc->cpumask);
+
+intc->cpumask is already cleared since kzalloc'd.
+
+> +
+> +       for_each_possible_cpu(idx) {
+> +               ret = bcm63168_l1_init_one(dn, idx, intc);
+> +               if (ret)
+> +                       pr_err("failed to init intc L1 for cpu %d: %d\n",
+> +                               idx, ret);
+> +               else
+> +                       cpumask_set_cpu(idx, &intc->cpumask);
+> +       }
+> +
+> +       if (!cpumask_weight(&intc->cpumask)) {
+> +               ret = -ENODEV;
+> +               goto out_free;
+> +       }
+> +
+> +       for (idx = 0; idx < intc->n_words; idx++)
+> +               raw_spin_lock_init(&intc->lock[idx]);
+
+Do you really need a spinlock for each word?
+
+> +
+> +       intc->domain = irq_domain_add_linear(dn, IRQS_PER_WORD * intc->n_words,
+> +                                            &bcm63168_l1_domain_ops,
+> +                                            intc);
+> +       if (!intc->domain) {
+> +               ret = -ENOMEM;
+> +               goto out_unmap;
+> +       }
+> +
+> +       pr_info("registered BCM63168 L1 intc (IRQs: %d)\n",
+> +                       IRQS_PER_WORD * intc->n_words);
+> +       for_each_cpu(idx, &intc->cpumask) {
+> +               struct bcm63168_l1_cpu *cpu = intc->cpus[idx];
+> +
+> +               pr_info("  CPU%u at MMIO 0x%p (irq = %d)\n", idx,
+> +                               cpu->map_base, cpu->parent_irq);
+> +       }
+> +
+> +       return 0;
+> +
+> +out_unmap:
+> +       for_each_possible_cpu(idx) {
+> +               struct bcm63168_l1_cpu *cpu = intc->cpus[idx];
+> +
+> +               if (cpu) {
+> +                       if (cpu->map_base)
+> +                               iounmap(cpu->map_base);
+> +                       kfree(cpu);
+> +               }
+> +       }
+> +out_free:
+> +       kfree(intc);
+> +       return ret;
+> +}
+> +
+> +IRQCHIP_DECLARE(bcm63168_l1, "brcm,bcm63168-l1-intc", bcm63168_l1_of_init);
+> --
+> 2.1.4
+
+
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
