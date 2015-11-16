@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 6/9] ARM: dts: sun8i: Add simplefb node
- labels to reference at board level
-Date: Tue, 17 Nov 2015 00:38:25 +0800
-Message-ID: <1447691908-25456-7-git-send-email-wens@csie.org>
+Subject: [PATCH v3 8/9] ARM: sunxi_defconfig: Update MFD_AXP20X
+ symbol and enable MFD_AXP20X_RSB
+Date: Tue, 17 Nov 2015 00:38:27 +0800
+Message-ID: <1447691908-25456-9-git-send-email-wens@csie.org>
 References: <1447691908-25456-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,29 +20,33 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some boards, such as tablets, have regulators providing power to parts
-of the display pipeline, like signal converters and LCD panels.
+axp20x support has been split into 2 parts, I2C and RSB interface
+variants.
 
-Add labels to the simplefb device nodes so that we can reference them
-in the board dts files to add regulator supply properties.
+Update the MFD_AXP20X symbol for I2C support, and also enable
+MFD_AXP20X_RSB to support RSB variants.
+
+Keep MFD_AXP20X enabled for now, to ease migration for automated boot
+farms while the patches are being merged. This should be removed in the
+next release.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/configs/sunxi_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 0c0964d4fa1f..6f88fb0ddbc7 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -56,7 +56,7 @@
- 		#size-cells = <1>;
- 		ranges;
- 
--		framebuffer@0 {
-+		simplefb_lcd: framebuffer@0 {
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index 3c36e16fcacf..18dbfaddb727 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -89,6 +89,8 @@ CONFIG_CPU_THERMAL=y
+ CONFIG_WATCHDOG=y
+ CONFIG_SUNXI_WATCHDOG=y
+ CONFIG_MFD_AXP20X=y
++CONFIG_MFD_AXP20X_I2C=y
++CONFIG_MFD_AXP20X_RSB=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_AXP20X=y
 -- 
 2.6.2
