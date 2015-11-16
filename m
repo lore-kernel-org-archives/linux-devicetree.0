@@ -1,55 +1,61 @@
-From: Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] mailbox: Add APM X-Gene platform mailbox driver
-Date: Mon, 16 Nov 2015 11:22:01 -0800
-Message-ID: <CADaLNDkjS+LstNcgKoLWHrMdgU9cmZ7vrCSp-du=FNoCTKFJ0w@mail.gmail.com>
-References: <1429863912.2927.43.camel@x220> <cover.1447091625.git.dhdang@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1447091625.git.dhdang-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: [PATCH v4 0/3] Dynamic power model from device tree
+Date: Mon, 16 Nov 2015 19:30:22 +0000
+Message-ID: <1447702225-13323-1-git-send-email-punit.agrawal@arm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Punit Agrawal <punit.agrawal@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 9, 2015 at 10:05 AM, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org> wrote:
-> APM X-Gene SoC has a mailbox controller that provides
-> communication mechanism for X-Gene Arm64 cores to communicate
-> with X-Gene SoC's Cortex M3 (SLIMpro) processor.
->
-> X-Gene mailbox controller provides 8 mailbox channels, with
-> each channel has a dedicated interrupt line.
->
-> Changes since v2:
->         - Rebase Feng's patch set over v4.3-rc5
->         - Remove uneccessary 'inline' in function definition
->         - Use module_platform_driver instead of subsys_initcall
->         - Minor coding stype clean up
->
-> Changes since v1:
->         - Add ACPI support
->         - Use defines for reg offset
->
->  .../bindings/mailbox/xgene-slimpro-mailbox.txt     |  34 +++
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |  14 ++
->  drivers/mailbox/Kconfig                            |   9 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/mailbox-xgene-slimpro.c            | 264 +++++++++++++++++++++
->  5 files changed, 323 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/xgene-slimpro-mailbox.txt
->  create mode 100644 drivers/mailbox/mailbox-xgene-slimpro.c
->
+Hi,
 
-Hi Jassi, Paul,
+This patchset adds support to build a single-coefficient dynamic power
+model for a CPU. The model is used by the CPU cooling device to
+provide an estimate of power consumption and also translate allocated
+power to performance cap.
 
-Do you have any comment on this patch set?
+Changes from previous posting -
 
-> --
-> 1.9.1
->
-Regards,
-Duc dang.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v3 -> v4:
+arm_big_little: Migrated to using static arrays
+arm_big_little: Updated Kconfig to support building thermal as module
+
+Patch 1 extends the CPU nodes binding to provide an optional dynamic
+power coefficient which can be used to create a dynamic power model
+for the CPUs. This model is used to constrain device power consumption
+(using power_allocator governor) when the system is thermally
+constrained.
+
+Patches 2-3 extends the cpufreq-dt and arm_big_little driver to
+register cpu cooling devices with the dynamic coefficient when
+provided.
+
+The patches were previously posted at [0][1][2]. Mediatek platform
+8173 builds on these bindings to build the power model.
+
+If there are no objections, I'd appreciate Acks from device tree
+bindings maintainers.
+
+Thanks,
+Punit
+
+[0] http://thread.gmane.org/gmane.linux.kernel/2002152
+[1] http://thread.gmane.org/gmane.linux.kernel/2011466
+[2] http://marc.info/?l=linux-kernel&m=144709020014884&w=2
+
+Punit Agrawal (3):
+  devicetree: bindings: Add optional dynamic-power-coefficient property
+  cpufreq-dt: Supply power coefficient when registering cooling devices
+  cpufreq: arm_big_little: Add support to register a cpufreq cooling
+    device
+
+ Documentation/devicetree/bindings/arm/cpus.txt | 17 +++++++++++++
+ drivers/cpufreq/Kconfig.arm                    |  2 ++
+ drivers/cpufreq/arm_big_little.c               | 35 ++++++++++++++++++++++++++
+ drivers/cpufreq/cpufreq-dt.c                   |  9 +++++--
+ 4 files changed, 61 insertions(+), 2 deletions(-)
+
+-- 
+2.6.2
+
