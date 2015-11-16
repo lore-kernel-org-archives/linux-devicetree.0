@@ -1,51 +1,125 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v8 8/8] ARM: imx_v4_v5_defconfig: Add I.MX25 Touchscreen controller and ADC support.
-Date: Mon, 16 Nov 2015 13:01:09 +0100
-Message-ID: <1447675269-8831-9-git-send-email-mpa@pengutronix.de>
-References: <1447675269-8831-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447675269-8831-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH 1/2] MIPS: bmips: Add bcm63168-l1 interrupt controller
+Date: Mon, 16 Nov 2015 13:35:10 +0100
+Message-ID: <CAOiHx=kM8b5+1HWPOYFUABUH6LCL85K+pqe7fK_beQQpEYfR4Q@mail.gmail.com>
+References: <5648B804.40806@simon.arlott.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5648B804.40806@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Hi,
 
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/configs/imx_v4_v5_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/configs/imx_v4_v5_defconfig b/arch/arm/configs/imx_v4_v5_defconfig
-index d3a8018639de..d6754ac47788 100644
---- a/arch/arm/configs/imx_v4_v5_defconfig
-+++ b/arch/arm/configs/imx_v4_v5_defconfig
-@@ -88,6 +88,7 @@ CONFIG_KEYBOARD_IMX=y
- # CONFIG_INPUT_MOUSE is not set
- CONFIG_INPUT_TOUCHSCREEN=y
- CONFIG_TOUCHSCREEN_ADS7846=m
-+CONFIG_TOUCHSCREEN_MX25=y
- CONFIG_TOUCHSCREEN_MC13783=y
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_8250=m
-@@ -107,6 +108,7 @@ CONFIG_HWMON=m
- CONFIG_SENSORS_MC13783_ADC=m
- CONFIG_WATCHDOG=y
- CONFIG_IMX2_WDT=y
-+CONFIG_MFD_MX25_TSADC=y
- CONFIG_MFD_MC13XXX_SPI=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-@@ -172,6 +174,8 @@ CONFIG_DMADEVICES=y
- CONFIG_IMX_SDMA=y
- CONFIG_IMX_DMA=y
- # CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_IIO=y
-+CONFIG_FSL_MX25_ADC=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT3_FS=y
- CONFIG_EXT4_FS=y
--- 
-2.6.1
+On Sun, Nov 15, 2015 at 5:51 PM, Simon Arlott <simon@fire.lp0.eu> wrote:
+> Add device tree binding for the BCM63168 interrupt controller.
+
+Well, that's what I get for waiting for -rc1, I also planned to submit
+irqchip drivers[1] for bcm63xx/bmips for the next window ;p.
+
+>
+> This controller is similar to the SMP-capable BCM7038 and
+> the BCM3380 but with packed interrupt registers.
+>
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> ---
+>  .../interrupt-controller/brcm,bcm63168-l1-intc.txt | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm63168-l1-intc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm63168-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm63168-l1-intc.txt
+> new file mode 100644
+> index 0000000..636a6db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm63168-l1-intc.txt
+> @@ -0,0 +1,57 @@
+> +Broadcom BCM63168-style Level 1 interrupt controller
+
+Usually I would go by which SoC introduced it, and AFAICT tell BCM6358
+was the first with per-CPU irq blocks, but since I don't see anything
+preventing it to be used with the older, single thread SoCs, the
+driver/binding would even support BCM6345's one.
+
+> +
+> +This block is a first level interrupt controller that is typically connected
+> +directly to one of the HW INT lines on each CPU.
+> +
+> +Key elements of the hardware design include:
+> +
+> +- 64 or 128 incoming level IRQ lines
+
+Which, in this case, has 32 incoming IRQ lines.
+
+> +
+> +- Most onchip peripherals are wired directly to an L1 input
+> +
+> +- A separate instance of the register set for each CPU, allowing individual
+> +  peripheral IRQs to be routed to any CPU
+> +
+> +- Contains one or more enable/status word pairs per CPU
+> +
+> +- No atomic set/clear operations
+> +
+> +- No polarity/level/edge settings
+> +
+> +- No FIFO or priority encoder logic; software is expected to read all
+> +  2-4 status words to determine which IRQs are pending
+> +
+> +Required properties:
+> +
+> +- compatible: should be "brcm,bcm63168-l1-intc"
+
+It's a bit strange using the newer chip name for older chips, so I
+suggest using brcm,bcm6345-l1-intc or brcm,bcm6358-l1-intc (I went
+with bcm6345-periph-intc, to avoid the l1/l2 discussion).
+
+Also I'm not sure whether BCM63168 or BCM63268 is the right name for
+the family, as Broadcom seems to use the latter in their LDKs.
+
+Furthermore, it's always good to specify that it should contain a
+brcm,bcm<soc>-l1-intc, in case one ever needs to tell them apart.
+
+> +- reg: specifies the base physical address and size of the registers;
+> +  the number of supported IRQs is inferred from the size argument
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
+> +  source, should be 1.
+> +- interrupt-parent: specifies the phandle to the parent interrupt controller(s)
+> +  this one is cascaded from
+> +- interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+> +  node; valid values depend on the type of parent interrupt controller
+> +
+> +If multiple reg ranges and interrupt-parent entries are present on an SMP
+> +system, the driver will allow IRQ SMP affinity to be set up through the
+> +/proc/irq/ interface.  In the simplest possible configuration, only one
+> +reg range and one interrupt-parent is needed.
+> +
+> +The driver operates in native CPU endian by default, there is no support for
+> +specifying an alternative endianness.
+> +
+> +Example:
+> +
+> +periph_intc: periph_intc@10000000 {
+
+interrupt-controller@10000020
+
+> +        compatible = "brcm,bcm63168-l1-intc";
+> +        reg = <0x10000020 0x20>,
+> +              <0x10000040 0x20>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +
+> +        interrupt-parent = <&cpu_intc>;
+> +        interrupts = <2>, <3>;
+> +};
+
+
+Regards
+Jonas
+
+[1] https://github.com/openwrt/openwrt/blob/master/target/linux/brcm63xx/patches-4.1/320-irqchip-add-support-for-bcm6345-style-periphery-irq-.patch
