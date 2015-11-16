@@ -1,7 +1,7 @@
 From: Alban Bedel <albeu@free.fr>
-Subject: [PATCH v2 4/5] MIPS: ath79: Add the EHCI controller and USB phy to the AR9132 dtsi
-Date: Mon, 16 Nov 2015 22:22:03 +0100
-Message-ID: <1447708924-15076-5-git-send-email-albeu@free.fr>
+Subject: [PATCH v2 5/5] MIPS: ath79: Enable the USB port on the TL-WR1043ND
+Date: Mon, 16 Nov 2015 22:22:04 +0100
+Message-ID: <1447708924-15076-6-git-send-email-albeu@free.fr>
 References: <1447708924-15076-1-git-send-email-albeu@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1447708924-15076-1-git-send-email-albeu@free.fr>
@@ -14,52 +14,36 @@ Signed-off-by: Alban Bedel <albeu@free.fr>
 ---
 Changelog:
 v2: * Fix the USB controller node name to follow ePAPR
-    * Set the USB phy as disabled like the USB controller
+    * Enable the USB phy as it is now disabled per default
 ---
- arch/mips/boot/dts/qca/ar9132.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-index fb7734e..857ca48 100644
---- a/arch/mips/boot/dts/qca/ar9132.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-@@ -125,6 +125,21 @@
+diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+index 003015a..e535ee3 100644
+--- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
++++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+@@ -35,6 +35,10 @@
  			};
  		};
  
 +		usb@1b000100 {
-+			compatible = "qca,ar7100-ehci", "generic-ehci";
-+			reg = <0x1b000100 0x100>;
-+
-+			interrupts = <3>;
-+			resets = <&rst 5>;
-+
-+			has-transaction-translator;
-+
-+			phy-names = "usb";
-+			phys = <&usb_phy>;
-+
-+			status = "disabled";
++			status = "okay";
 +		};
 +
  		spi@1f000000 {
- 			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
- 			reg = <0x1f000000 0x10>;
-@@ -138,4 +153,15 @@
- 			#size-cells = <0>;
+ 			status = "okay";
+ 			num-cs = <1>;
+@@ -65,6 +69,10 @@
  		};
  	};
-+
-+	usb_phy: usb-phy {
-+		compatible = "qca,ar7100-usb-phy";
-+
-+		reset-names = "usb-phy", "usb-suspend-override";
-+		resets = <&rst 4>, <&rst 3>;
-+
-+		#phy-cells = <0>;
-+
-+		status = "disabled";
+ 
++	usb-phy {
++		status = "okay";
 +	};
- };
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys-polled";
+ 		#address-cells = <1>;
 -- 
 2.0.0
