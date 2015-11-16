@@ -1,7 +1,7 @@
 From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RESEND 7/8] arm: dts: berlin: enable wdt0 on the Marvell BG2Q DMP
-Date: Mon, 16 Nov 2015 19:09:53 +0800
-Message-ID: <1447672194-483-8-git-send-email-jszhang@marvell.com>
+Subject: [PATCH RESEND 2/8] arm: dts: berlin2cd: add watchdog nodes
+Date: Mon, 16 Nov 2015 19:09:48 +0800
+Message-ID: <1447672194-483-3-git-send-email-jszhang@marvell.com>
 References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,26 +12,53 @@ To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable wdt0 on the Marvell BG2Q DMP board to make use of the watchdog
-functionality.
+The Marvell Berlin BG2CD has 3 watchdogs which are compatible with the
+snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
+corresponding device tree nodes.
+
+NOTE: although BG2CD doesn't have a HW sysmgr, but the sysmgr domain
+exists.
 
 Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/berlin2cd.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-index 0fa8f1e..e60f53a 100644
---- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-+++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-@@ -139,3 +139,7 @@
- &sata_phy {
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+index 900213d..9108180 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -376,6 +376,30 @@
+ 			ranges = <0 0xfc0000 0x10000>;
+ 			interrupt-parent = <&sic>;
+ 
++			wdt0: watchdog@1000 {
++				compatible = "snps,dw-wdt";
++				reg = <0x1000 0x100>;
++				clocks = <&refclk>;
++				interrupts = <0>;
++				status = "disabled";
++			};
 +
-+&wdt0 {
-+	status = "okay";
-+};
++			wdt1: watchdog@2000 {
++				compatible = "snps,dw-wdt";
++				reg = <0x2000 0x100>;
++				clocks = <&refclk>;
++				interrupts = <1>;
++				status = "disabled";
++			};
++
++			wdt2: watchdog@3000 {
++				compatible = "snps,dw-wdt";
++				reg = <0x3000 0x100>;
++				clocks = <&refclk>;
++				interrupts = <2>;
++				status = "disabled";
++			};
++
+ 			sm_gpio1: gpio@5000 {
+ 				compatible = "snps,dw-apb-gpio";
+ 				reg = <0x5000 0x400>;
 -- 
 2.6.1
 
