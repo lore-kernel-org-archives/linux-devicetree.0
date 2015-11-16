@@ -1,63 +1,105 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip/gic: fix ARM11MPCore GIC bindings
-Date: Mon, 16 Nov 2015 11:39:20 -0600
-Message-ID: <20151116173920.GA10244@rob-hp-laptop>
-References: <1445638553-8825-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH 01/13 v2] ARM: add some L220 DT settings
+Date: Mon, 16 Nov 2015 11:48:25 -0600
+Message-ID: <20151116174825.GA14634@rob-hp-laptop>
+References: <1445521493-21509-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445638553-8825-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1445521493-21509-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 24, 2015 at 12:15:51AM +0200, Linus Walleij wrote:
-> The GIC bindings for the ARM11MPCore need to differentiate between
-> the GIC on the Test Chip and the one on the evaluation baseboard.
-> Split the binding in two and define new compatible-strings.
+On Thu, Oct 22, 2015 at 03:44:53PM +0200, Linus Walleij wrote:
+> The RealView ARM11MPCore enables parity, eventmon and shared
+> override in the cache controller through its current boardfile,
+> but the code and DT bindings for the ARM L220 is currently
+> lacking the ability to set this up from DT. Add the required
+> bool parameters for parity and shared override, but keep
+> eventmon out of it: this should be enabled by the event
+> monitor code.
 > 
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v1->v2:
+> - Drop event monitor setup.
+> - Support both parity enable and disable: could be useful.
+> ---
+>  Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> ---
-> ChangeLog v1->v2:
-> - Make this a pure devicetree bindings patch.
-> - Keep the old binding arm,arm11mp-gic for the "normal" GIC on
->   the PB11MPCore as it is probably similar to other ARM11MPCore
->   systems.
-> - Broke out this irqchip stuff from the rest of the series so as
->   not to stress the irqchip maintainers. It has no dependencies
->   on the other patches anyways, and can be merged stand-alone.
-> ---
->  Documentation/devicetree/bindings/arm/gic.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm/mm/cache-l2x0.c                       | 20 ++++++++++++++++++++
+>  2 files changed, 26 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> index 2da059a4790c..0ffa69755d5e 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -16,6 +16,7 @@ Main node required properties:
->  	"arm,cortex-a9-gic"
->  	"arm,cortex-a7-gic"
->  	"arm,arm11mp-gic"
-> +	"arm,tc11mp-gic"
->  	"brcm,brahma-b15-gic"
->  	"arm,arm1176jzf-devchip-gic"
->  	"qcom,msm-8660-qgic"
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index 06c88a4d28ac..d181b7c4c522 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -67,12 +67,14 @@ Optional properties:
+>    disable if zero.
+>  - arm,prefetch-offset : Override prefetch offset value. Valid values are
+>    0-7, 15, 23, and 31.
+> -- arm,shared-override : The default behavior of the pl310 cache controller with
+> -  respect to the shareable attribute is to transform "normal memory
+> -  non-cacheable transactions" into "cacheable no allocate" (for reads) or
+> -  "write through no write allocate" (for writes).
+> +- arm,shared-override : The default behavior of the L220 or PL310 cache
+> +  controllers with respect to the shareable attribute is to transform "normal
+> +  memory non-cacheable transactions" into "cacheable no allocate" (for reads)
+> +  or "write through no write allocate" (for writes).
+>    On systems where this may cause DMA buffer corruption, this property must be
+>    specified to indicate that such transforms are precluded.
+> +- arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
+> +- arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
+>  - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
+>    (forcibly enable), property absent (retain settings set by firmware)
+>  - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index 493692d838c6..3f3008e5c662 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1060,6 +1060,18 @@ static void __init l2x0_of_parse(const struct device_node *np,
+>  		val |= (dirty - 1) << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
+>  	}
+>  
+> +	if (of_property_read_bool(np, "arm,parity-enable")) {
+> +		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
+> +		val |= L2C_AUX_CTRL_PARITY_ENABLE;
+> +	} else if (of_property_read_bool(np, "arm,parity-disable")) {
+> +		mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
+> +	}
+> +
+> +	if (of_property_read_bool(np, "arm,shared-override")) {
+> +		mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
+> +		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
+> +	}
+> +
+>  	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
+>  	if (ret)
+>  		return;
+> @@ -1176,6 +1188,14 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>  		*aux_mask &= ~L2C_AUX_CTRL_SHARED_OVERRIDE;
+>  	}
+>  
+> +	if (of_property_read_bool(np, "arm,parity-enable")) {
+> +		*aux_val |= L2C_AUX_CTRL_PARITY_ENABLE;
+> +		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
+> +	} else if (of_property_read_bool(np, "arm,parity-disable")) {
+> +		*aux_val &= ~L2C_AUX_CTRL_PARITY_ENABLE;
+> +		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
+> +	}
+> +
+>  	prefetch = l2x0_saved_regs.prefetch_ctrl;
+>  
+>  	ret = of_property_read_u32(np, "arm,double-linefill", &val);
 > -- 
 > 2.4.3
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
