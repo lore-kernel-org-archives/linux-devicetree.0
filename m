@@ -1,123 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch v4 2/2] media: v4l: ti-vpe: Document CAL driver
-Date: Mon, 16 Nov 2015 09:26:16 -0600
-Message-ID: <20151116152615.GA9256@rob-hp-laptop>
-References: <1447631628-9459-1-git-send-email-bparrot@ti.com>
- <1447631628-9459-3-git-send-email-bparrot@ti.com>
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Mon, 16 Nov 2015 12:29:15 -0300
+Message-ID: <5649F64B.5050407@vanguardiasur.com.ar>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+ <56386E30.4060905@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447631628-9459-3-git-send-email-bparrot@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56386E30.4060905-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 15, 2015 at 05:53:48PM -0600, Benoit Parrot wrote:
-> Device Tree bindings for the Camera Adaptation Layer (CAL) driver
+Hi Stefan,
 
-Bindings are for h/w blocks, not drivers...
+Sorry for the delay.
 
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  Documentation/devicetree/bindings/media/ti-cal.txt | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-> new file mode 100644
-> index 000000000000..680efadb6208
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-> @@ -0,0 +1,70 @@
-> +Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL)
-> +------------------------------------------------------
-> +
-> +The Camera Adaptation Layer (CAL) is a key component for image capture
-> +applications. The capture module provides the system interface and the
-> +processing capability to connect CSI2 image-sensor modules to the
-> +DRA72x device.
-> +
-> +Required properties:
-> +- compatible: must be "ti,cal"
+El 03/11/15 a las 05:20, Stefan Wahren escribi=F3:
+> Hi Ariel,
+>=20
+> Am 19.10.2015 um 19:32 schrieb Ariel D'Alessandro:
+>> This commit adds support for NXP LPC18xx EEPROM memory found in NXP
+>> LPC185x/3x and LPC435x/3x/2x/1x devices.
+>>
+>> EEPROM size is 16384 bytes and it can be entirely read and
+>> written/erased with 1 word (4 bytes) granularity. The last page
+>> (128 bytes) contains the EEPROM initialization data and is not writa=
+ble.
+>>
+>> Erase/program time is less than 3ms. The EEPROM device requires a
+>> ~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated dividi=
+ng
+>> the system bus clock by the division factor, contained in the divide=
+r
+>> register (minus 1 encoded).
+>>
+>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>> ---
+>>  drivers/nvmem/Kconfig          |   9 ++
+>>  drivers/nvmem/Makefile         |   2 +
+>>  drivers/nvmem/lpc18xx_eeprom.c | 266 ++++++++++++++++++++++++++++++=
++++++++++++
+>>  3 files changed, 277 insertions(+)
+>>  create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
+>> [...]
+>> +
+>> +static int lpc18xx_eeprom_gather_write(void *context, const void *r=
+eg,
+>> +				       size_t reg_size, const void *val,
+>> +				       size_t val_size)
+>> +{
+>> +	struct lpc18xx_eeprom_dev *eeprom =3D context;
+>> +	unsigned int offset =3D *(u32 *)reg;
+>> +
+>> +	/* 3 ms of erase/program time between each writing */
+>> +	while (val_size) {
+>> +		writel(*(u32 *)val, eeprom->mem_base + offset);
+>> +		usleep_range(3000, 4000);
+>=20
+> i think it would be good to verify that the EEPROM write operation ha=
+s
+> really finished.
 
-Needs to be more specific.
+I'm not sure what are you proposing. Why could the write operation not
+finish?
 
-> +- reg:	physical base address and length of the registers set for the 4
-> +	memory regions required;
-
-Please list what the 4 regions are.
-
-> +- reg-names: name associated with the memory regions described is <reg>;
-
-Please list the names.
-
-> +- interrupts: should contain IRQ line for the CAL;
-> +
-> +CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
-> +should contain a 'port' child node with child 'endpoint' node. Please
-> +refer to the bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +	cal: cal@4845b000 {
-> +		compatible = "ti,cal";
-> +		ti,hwmods = "cal";
-> +		reg = <0x4845B000 0x400>,
-> +		      <0x4845B800 0x40>,
-> +		      <0x4845B900 0x40>,
-> +		      <0x4A002e94 0x4>;
-> +		reg-names = "cal_top",
-> +			    "cal_rx_core0",
-> +			    "cal_rx_core1",
-> +			    "camerrx_control";
-> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		csi2_0: port@0 {
-
-Multiple ports should be under a ports node.
-
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +			endpoint {
-> +				slave-mode;
-> +				remote-endpoint = <&ar0330_1>;
-> +			};
-> +		};
-> +		csi2_1: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +	};
-> +
-> +	i2c5: i2c@4807c000 {
-> +		ar0330@10 {
-> +			compatible = "ti,ar0330";
-> +			reg = <0x10>;
-> +
-> +			port {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				ar0330_1: endpoint {
-> +					reg = <0>;
-> +					clock-lanes = <1>;
-> +					data-lanes = <0 2 3 4>;
-> +					remote-endpoint = <&csi2_0>;
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 1.8.5.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
