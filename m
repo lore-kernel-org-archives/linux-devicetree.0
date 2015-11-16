@@ -1,60 +1,39 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH RESEND 3/8] arm: dts: berlin2: add watchdog nodes
-Date: Mon, 16 Nov 2015 19:09:49 +0800
-Message-ID: <1447672194-483-4-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RESEND 6/8] ARM: dts: berlin: enable wdt0 on the Google Chromecast
+Date: Mon, 16 Nov 2015 19:09:52 +0800
+Message-ID: <1447672194-483-7-git-send-email-jszhang@marvell.com>
 References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447672194-483-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447672194-483-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Berlin BG2 has 3 watchdogs which are compatible with the
-snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
-corresponding device tree nodes.
+Enable wdt0 on the Google Chromecast to make use of the watchdog
+functionality.
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index ef811de..7e35de2 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -412,6 +412,30 @@
- 			ranges = <0 0xfc0000 0x10000>;
- 			interrupt-parent = <&sic>;
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index 772165a..a17c850 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -85,3 +85,5 @@
+ &usb_phy1 { status = "okay"; };
  
-+			wdt0: watchdog@1000 {
-+				compatible = "snps,dw-wdt";
-+				reg = <0x1000 0x100>;
-+				clocks = <&refclk>;
-+				interrupts = <0>;
-+				status = "disabled";
-+			};
+ &usb1 { status = "okay"; };
 +
-+			wdt1: watchdog@2000 {
-+				compatible = "snps,dw-wdt";
-+				reg = <0x2000 0x100>;
-+				clocks = <&refclk>;
-+				interrupts = <1>;
-+				status = "disabled";
-+			};
-+
-+			wdt2: watchdog@3000 {
-+				compatible = "snps,dw-wdt";
-+				reg = <0x3000 0x100>;
-+				clocks = <&refclk>;
-+				interrupts = <2>;
-+				status = "disabled";
-+			};
-+
- 			sm_gpio1: gpio@5000 {
- 				compatible = "snps,dw-apb-gpio";
- 				reg = <0x5000 0x400>;
++&wdt0 { status = "okay"; };
 -- 
 2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
