@@ -1,31 +1,119 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] dmaengine: rcar-dmac: Document SoC specific bindings
-Date: Mon, 16 Nov 2015 09:25:33 +0530
-Message-ID: <20151116035533.GC25173@localhost>
-References: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: create a partition type device tree binding
+Date: Sun, 15 Nov 2015 20:12:44 -0800
+Message-ID: <20151116041244.GA4021@brian-ubuntu>
+References: <1446123152-22666-1-git-send-email-linus.walleij@linaro.org>
+ <20151029162908.GA13275@localhost>
+ <CACRpkdYS5Jf8UC2K0bNdEQZDjTeZZx44Uu-kkof+9E=4Ny0oDg@mail.gmail.com>
+ <20151030175145.GF13239@google.com>
+ <CAL_JsqL2F3p7qBPbOiGytVyzF_aNLWbrCT0mAX1WZo6SxE3JoA@mail.gmail.com>
+ <20151113220039.GA74382@google.com>
+ <CACRpkdakyae95f_Lc-R7Uf7wndj5hyfCqqHziwmZjwm-uNkGAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447293239-8554-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <CACRpkdakyae95f_Lc-R7Uf7wndj5hyfCqqHziwmZjwm-uNkGAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12, 2015 at 10:53:59AM +0900, Simon Horman wrote:
-> In general Renesas hardware is not documented to the extent where the
-> relationship between IP blocks on different SoCs can be assumed although
-> they may appear to operate the same way. Furthermore the documentation
-> typically does not specify a version for individual IP blocks. For these
-> reasons a convention of using the SoC name in place of a version and
-> providing SoC-specific compat strings has been adopted.
+On Sat, Nov 14, 2015 at 11:46:59AM +0100, Linus Walleij wrote:
+> On Fri, Nov 13, 2015 at 11:00 PM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> Although not universally liked this convention is used in the bindings for
-> most drivers for Renesas hardware. The purpose of this patch is to
-> update the Renesas R-Car DMA Controller driver to follow this convention.
+> (...)
+> >  (2) we should define a comptible property for the hard-coded
+> >  partitioning case (e.g., compatible = "partitions")
+> (...)
+> > If we went with option (2), then ofpart.c could just check only for
+> > 'compatible = "partitions"' (or similar), and if not found bail out.
+> 
+> So this "hard-coded partitioning case" the case is where all partitions
+> are defined in the device tree as described in
+> Documentation/devicetree/bindings/mtd/partition.txt ?
 
-Applied, thanks
+Right.
 
--- 
-~Vinod
+> Or is it a way to indicate that this array
+> static const char * const part_probe_types_def[] = {
+>         "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
+> in physmap_of.c should be used?
+
+No. At this point, I would consider that to be a legacy method. We still
+have to support this for many cases (including the non-DT case; but
+hopefully we can do better than that soon), and that would be an option.
+
+> Sorry if I don't fully follow, I'm a bit stupid when it comes to the MTD
+> helicopter  view of the situation.... :(
+
+Yeah...sorry if I wasn't too clear. And I definitely don't blame you for
+not understanding the mess that MTD often is :(
+
+> > I think option (2) makes more sense. But it would require an update to
+> > the binding and code for 4.4, since [1] was only introduced during this
+> > release cycle.
+> 
+> Does that mean all old device trees that specify no compatible
+> string all of a sudden stop working? We can't break the DT ABI, so I
+> guess not.
+
+No, that's not what I was intending. The binding before commmit
+fe2585e9c29a ("doc: dt: mtd: support partitions in a special
+'partitions' subnode") should still stay working as-is. That is, we
+don't mess with the way things worked for anything that doesn't have a
+'partitions' subnode. But now that we have a 'partitions' subnode (in
+4.4-rc1), I'm just suggesting that we enforce this always have a
+compatible property, so we can be more clear on the difference between:
+
+	partitions {
+		// do I have a
+		// compatible = "partitons";
+		// here?
+
+		partition@0 {
+			label = "foo-partition";
+			reg = <0 0x100000>;
+		};
+	};
+
+and
+
+	partitions {
+		compatible = "arm,arm-flash-structure";
+
+		subnode {
+			// what if we need something here eventually?
+		};
+	};
+
+This would require some modifications to partitions.txt and to
+drivers/mtd/ofpart.c.
+
+> A bit confused here, I can't really see what I should do with the patch...
+
+Hopefully that cleared up a bit? The code changes for my suggestion
+would just be something like this, I think. (Not tested in any way.)
+
+diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+index 669c3452f278..6811bc5440a4 100644
+--- a/drivers/mtd/ofpart.c
++++ b/drivers/mtd/ofpart.c
+@@ -50,6 +50,10 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+ 			master->name, mtd_node->full_name);
+ 		ofpart_node = mtd_node;
+ 		dedicated = false;
++	} else {
++		/* The "partitions" subnode may belong to some other parser */
++		if (!of_device_is_compatible(ofpart_node, "partitions"))
++			return 0;
+ 	}
+ 
+ 	/* First count the subnodes */
+
+I was just bringing this up for discussion, since it's related to
+your/Rob's new proposal. I'll send a proper (and tested) patch, along
+with a doc update, if that looks reasonable.
+
+Brian
