@@ -1,48 +1,66 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 01/13 v2] ARM: add some L220 DT settings
-Date: Mon, 16 Nov 2015 18:02:11 +0000
-Message-ID: <20151116180210.GV8644@n2100.arm.linux.org.uk>
-References: <1445521493-21509-1-git-send-email-linus.walleij@linaro.org>
- <20151116174825.GA14634@rob-hp-laptop>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] regulator: tps65912: Add regulator driver for the
+ TPS65912 PMIC
+Date: Mon, 16 Nov 2015 18:23:54 +0000
+Message-ID: <20151116182354.GI31303@sirena.org.uk>
+References: <20151106104322.GA18409@sirena.org.uk>
+ <563CED25.6020405@ti.com>
+ <20151106211651.GJ18409@sirena.org.uk>
+ <5640DAC0.9080008@ti.com>
+ <20151110095719.GC12392@sirena.org.uk>
+ <56421FA5.1020103@ti.com>
+ <20151110170447.GI12392@sirena.org.uk>
+ <56422ECC.6070603@ti.com>
+ <20151110184408.GJ12392@sirena.org.uk>
+ <56424836.7000608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="J+eNKFoVC4T1DV3f"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151116174825.GA14634@rob-hp-laptop>
+In-Reply-To: <56424836.7000608-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 11:48:25AM -0600, Rob Herring wrote:
-> On Thu, Oct 22, 2015 at 03:44:53PM +0200, Linus Walleij wrote:
-> > The RealView ARM11MPCore enables parity, eventmon and shared
-> > override in the cache controller through its current boardfile,
-> > but the code and DT bindings for the ARM L220 is currently
-> > lacking the ability to set this up from DT. Add the required
-> > bool parameters for parity and shared override, but keep
-> > eventmon out of it: this should be enabled by the event
-> > monitor code.
-> > 
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > ChangeLog v1->v2:
-> > - Drop event monitor setup.
-> > - Support both parity enable and disable: could be useful.
-> > ---
-> >  Documentation/devicetree/bindings/arm/l2cc.txt | 10 ++++++----
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Thanks Rob, this has been in the patch system since the 27th October,
-but as DT people hadn't acked it, I didn't take it into my tree.  We're
-now too late for this merge window, so it's going to wait for the 4.5
-window.
+--J+eNKFoVC4T1DV3f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+On Tue, Nov 10, 2015 at 01:40:38PM -0600, Andrew F. Davis wrote:
+> On 11/10/2015 12:44 PM, Mark Brown wrote:
+
+> >There's also the third option where we don't have any compatible strings
+> >in the subnodes at all.
+
+> Ok, two, but would you really want to go that way? Matching by node name costs
+> us all of the flexibility of DT sub-device selection. Still don't see an upside
+> as we would now be locked to node names instead of compatible strings to declare
+> component type compatibility (what they are for).
+
+Yes, we should go that way.  No, there is nothing meaningful being lost
+- the fact that there is zero paramterisation in the bindings and each
+subfunction has the full device name as a compatible string ought to be
+a big red flag here.
+
+--J+eNKFoVC4T1DV3f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWSh86AAoJECTWi3JdVIfQkkUH/0a+ejxdEMwuTceJ0M1D/OX3
+yKUf1LkhZJRe4Yx3jwXBWFu/+jCBW22/38XZUk584twlj28dYJN6AosUlAhwww2u
+Bj5QEueDGbX95jfMhIokgzhudHjEnlLU6PqmUxgXI/lYxDSbktBZw14m7YqqMvaG
+T7Jhtu+duapKXJ+TlkVUhpv18CoDeBN4JcZOq56keT7wP2cKbrqRueddXUEkJz7K
+eCZM7hzy9sJCu/BecnNl934WpPUfyIDrQhXs0h4RiEF+Yrz0XFDJEc7s6/1VxuN1
+F5sjgsNEvc+bBfE4YL5mOb6MR2kDKqrN6z72u4SdskaY8Gjz0B5o8H4b3rZ07ww=
+=Tl/0
+-----END PGP SIGNATURE-----
+
+--J+eNKFoVC4T1DV3f--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
