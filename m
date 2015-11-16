@@ -1,59 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 net-next] net: hisilicon: fix binding document of mdio
-Date: Mon, 16 Nov 2015 10:38:54 +0100
-Message-ID: <6897029.2fyR9qGpEn@wuerfel>
-References: <1447666704-200773-1-git-send-email-huangdaode@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447666704-200773-1-git-send-email-huangdaode@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: huangdaode <huangdaode@hisilicon.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, liguozhu@hisilicon.com, Yisen.Zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com
+From: rsahu@apm.com
+Subject: [PATCH v2 1/3] dmaengine: Add support for new feature CRC32C computations
+Date: Mon, 16 Nov 2015 14:42:47 +0530
+Message-ID: <1447665169-14003-2-git-send-email-rsahu@apm.com>
+References: <rsahu@apm.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <rsahu@apm.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, davem@davemloft.net, vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, linux-crypto@vger.kernel.org, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 November 2015 17:38:24 huangdaode wrote:
-> This patch explains the occasion of "hisilcon,mdio" and
-> "hisilicon,hns-mdio" according to Arnd's comments.
-> and reformat it according to comments from Rob<robh@kernel.org>.
-> 
-> chang log:
-> 
-> v2:
->   1) reformat the style.
->   2) make it more clearity.
-> 
-> v1:
->   initial version.
-> 
-> Signed-off-by: huangdaode <huangdaode@hisilicon.com>
-> ---
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
 
-The new version looks ok, but your changelog above is formatted
-incorrectly. Please put only the contents you want in the git history
-above the '---' line and your Signed-off-by, but put the parts that
-refer to previous versions of the submission below the ---.
+This patch adds support for new feature CRC32C computations in
+dmaengine framework.
 
->  Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-> index 9c23fdf..4942d20 100644
-> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-> @@ -1,7 +1,12 @@
->  Hisilicon MDIO bus controller
->  
->  Properties:
-> -- compatible: "hisilicon,mdio","hisilicon,hns-mdio".
-> +- compatible: can be one of:
-> +	"hisilicon,hns-mdio"
-> +	"hisilicon,mdio"
-> +  "hisilicon,hns-mdio" is recommendly to be used for hip05 and later SOCs,
-> +  while "hisilicon,mdio" is optional for backwards compatibility, only
-> +  support for hip04 Soc.
->  - reg: The base address of the MDIO bus controller register bank.
->  - #address-cells: Must be <1>.
->  - #size-cells: Must be <0>.  MDIO addresses have no size component.
-> 
+Signed-of-by: Rameshwar Prasad Sahu<rsahu@apm.com>
+---
+ Documentation/dmaengine/provider.txt |    3 +++
+ drivers/dma/dmaengine.c              |    2 ++
+ include/linux/dmaengine.h            |   13 +++++++++++++
+ 3 files changed, 18 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/dmaengine/provider.txt b/Documentation/dmaengine/provider.txt
+index 67d4ce4..2399d6f 100644
+--- a/Documentation/dmaengine/provider.txt
++++ b/Documentation/dmaengine/provider.txt
+@@ -224,6 +224,9 @@ Currently, the types available are:
+       want to transfer a portion of uncompressed data directly to the
+       display to print it
+
++  * DMA_CRC32C
++    - The device is able to perform CRC32C computations
++
+ These various types will also affect how the source and destination
+ addresses change over time.
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 09479d4..8cd0365 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -865,6 +865,8 @@ int dma_async_device_register(struct dma_device *device)
+ 		!device->device_prep_dma_cyclic);
+ 	BUG_ON(dma_has_cap(DMA_INTERLEAVE, device->cap_mask) &&
+ 		!device->device_prep_interleaved_dma);
++	BUG_ON(dma_has_cap(DMA_CRC32C, device->cap_mask) &&
++		!device->device_prep_dma_crc32c);
+
+ 	BUG_ON(!device->device_tx_status);
+ 	BUG_ON(!device->device_issue_pending);
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 7ea9184..7108d7c 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -74,6 +74,7 @@ enum dma_transaction_type {
+ 	DMA_SLAVE,
+ 	DMA_CYCLIC,
+ 	DMA_INTERLEAVE,
++	DMA_CRC32C,
+ /* last transaction type for creation of the capabilities mask */
+ 	DMA_TX_TYPE_END,
+ };
+@@ -645,6 +646,7 @@ enum dmaengine_alignment {
+  *	The function takes a buffer of size buf_len. The callback function will
+  *	be called after period_len bytes have been transferred.
+  * @device_prep_interleaved_dma: Transfer expression in a generic way.
++ * @device_prep_dma_crc32c: prepares a crc32c operation
+  * @device_config: Pushes a new configuration to a channel, return 0 or an error
+  *	code
+  * @device_pause: Pauses any transfer happening on a channel. Returns
+@@ -727,6 +729,9 @@ struct dma_device {
+ 	struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+ 		struct dma_chan *chan, struct dma_interleaved_template *xt,
+ 		unsigned long flags);
++	struct dma_async_tx_descriptor *(*device_prep_dma_crc32c)(
++		struct dma_chan *chan, struct scatterlist *src_sg, size_t len,
++		unsigned int seed, u8 *result, unsigned long flags);
+
+ 	int (*device_config)(struct dma_chan *chan,
+ 			     struct dma_slave_config *config);
+@@ -824,6 +829,14 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_sg(
+ 			src_sg, src_nents, flags);
+ }
+
++static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_crc3c(
++		struct dma_chan *chan, struct scatterlist *src_sg,
++		size_t len, unsigned int seed, u8 *result, unsigned long flags)
++{
++	return chan->device->device_prep_dma_crc32c(chan, src_sg, len,
++						    seed, result, flags);
++}
++
+ static inline int dmaengine_terminate_all(struct dma_chan *chan)
+ {
+ 	if (chan->device->device_terminate_all)
+--
+1.7.1
