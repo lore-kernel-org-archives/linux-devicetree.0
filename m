@@ -1,79 +1,65 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Mon, 16 Nov 2015 15:14:33 +0000
-Message-ID: <5649F2D9.7070902@arm.com>
-References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 net-next] net: hisilicon: fix binding document of mdio
+Date: Mon, 16 Nov 2015 09:20:51 -0600
+Message-ID: <20151116152051.GA7183@rob-hp-laptop>
+References: <1447666704-200773-1-git-send-email-huangdaode@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michals@xilinx.com, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, rjui@broadcom.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, dhdang@apm.com, sbranden@broadcom.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447666704-200773-1-git-send-email-huangdaode@hisilicon.com>
+Sender: netdev-owner@vger.kernel.org
+To: huangdaode <huangdaode@hisilicon.com>
+Cc: davem@davemloft.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, liguozhu@hisilicon.com, Yisen.Zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/15 06:33, Bharat Kumar Gogada wrote:
-> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+On Mon, Nov 16, 2015 at 05:38:24PM +0800, huangdaode wrote:
+> This patch explains the occasion of "hisilcon,mdio" and
+> "hisilicon,hns-mdio" according to Arnd's comments.
+> and reformat it according to comments from Rob<robh@kernel.org>.
 > 
-> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> ---
-> Added logic to allocate contiguous hwirq in nwl_irq_domain_alloc function.
-> Moved MSI functionality to separate functions.
-> Changed error return values.
-> ---
->  .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
->  drivers/pci/host/Kconfig                           |   16 +-
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pcie-xilinx-nwl.c                 | 1062 ++++++++++++++++++++
->  4 files changed, 1144 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
->  create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
+> chang log:
 > 
+> v2:
+>   1) reformat the style.
+>   2) make it more clearity.
+> 
+> v1:
+>   initial version.
+> 
+> Signed-off-by: huangdaode <huangdaode@hisilicon.com>
+> ---
+>  Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+> index 9c23fdf..4942d20 100644
+> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
+> @@ -1,7 +1,12 @@
+>  Hisilicon MDIO bus controller
+>  
+>  Properties:
+> -- compatible: "hisilicon,mdio","hisilicon,hns-mdio".
+> +- compatible: can be one of:
+> +	"hisilicon,hns-mdio"
+> +	"hisilicon,mdio"
+> +  "hisilicon,hns-mdio" is recommendly to be used for hip05 and later SOCs,
 
-[...]
+s/recommendly/recommended/
 
-> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus *bus)
-> +{
-> +	struct platform_device *pdev = to_platform_device(pcie->dev);
-> +	struct nwl_msi *msi = &pcie->msi;
-> +	unsigned long base;
-> +	int ret;
-> +
-> +	mutex_init(&msi->lock);
-> +
-> +	/* Check for msii_present bit */
-> +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
-> +	if (!ret) {
-> +		dev_err(pcie->dev, "MSI not present\n");
-> +		ret = -EIO;
-> +		goto err;
-> +	}
-> +
-> +	/* Enable MSII */
-> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
-> +			  MSII_ENABLE, I_MSII_CONTROL);
-> +
-> +	/* Enable MSII status */
-> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
-> +			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
-> +
-> +	/* setup AFI/FPCI range */
-> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> +	base = virt_to_phys((void *)msi->pages);
-> +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
-> +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
+> +  while "hisilicon,mdio" is optional for backwards compatibility, only
+> +  support for hip04 Soc.
 
-BTW, you still haven't answered my question as to why you need to waste
-a page of memory here, and why putting a device address doesn't work.
+...compatibility only on hip04 SOC.
 
-As this is (to the best of my knowledge) the only driver doing so, I'd
-really like you to explain the rational behind this.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>  - reg: The base address of the MDIO bus controller register bank.
+>  - #address-cells: Must be <1>.
+>  - #size-cells: Must be <0>.  MDIO addresses have no size component.
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
