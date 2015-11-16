@@ -1,67 +1,63 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 1/5] clk: sunxi: Add support for the H3 usb
- phy clocks
-Date: Mon, 16 Nov 2015 10:36:02 +0800
-Message-ID: <CAGb2v65x5z4Svn+PAmm1W6xZKxP0iFjCodeA0xbf0VLxx5qiWA@mail.gmail.com>
-References: <1447616777-24660-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH 3/5] ARM: dts: sun8i: Add support for H3 usb clocks
+Date: Mon, 16 Nov 2015 10:41:45 +0800
+Message-ID: <CAGb2v65H0FbyeX4KuymuCQpYEZsv=GfigVkD4bA0_OGxyX2gVQ@mail.gmail.com>
+References: <1447616777-24660-1-git-send-email-hdegoede@redhat.com> <1447616777-24660-3-git-send-email-hdegoede@redhat.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447616777-24660-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB74EUWZAKGQELRSMQZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1447616777-24660-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Nov 16, 2015 at 3:46 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 > From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 >
-> The H3 has a usb-phy clk register which is similar to that of earlier
-> SoCs, but with support for a larger number of phys. So we can simply add
-> a new set of clk-data and a new compatible and be done with it.
+> Add a node describing the usb-clks found on the H3.
 >
 > Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
 Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
+(Also updated Mike's email in my reply.)
+
 > ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->  drivers/clk/sunxi/clk-usb.c                       | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> index d303dec..23e7bce 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -70,6 +70,7 @@ Required properties:
->         "allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
->         "allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
->         "allwinner,sun8i-a23-usb-clk" - for usb gates + resets on A23
-> +       "allwinner,sun8i-h3-usb-clk" - for usb gates + resets on H3
->         "allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
->         "allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> index c18b5f7..22ff593 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -266,6 +266,18 @@
+>                                              "mmc2_sample";
+>                 };
 >
-> diff --git a/drivers/clk/sunxi/clk-usb.c b/drivers/clk/sunxi/clk-usb.c
-> index 1a72cd6..67b8e38 100644
-> --- a/drivers/clk/sunxi/clk-usb.c
-> +++ b/drivers/clk/sunxi/clk-usb.c
-> @@ -243,3 +243,15 @@ static void __init sun9i_a80_usb_phy_setup(struct device_node *node)
->         sunxi_usb_clk_setup(node, &sun9i_a80_usb_phy_data, &a80_usb_phy_lock);
->  }
->  CLK_OF_DECLARE(sun9i_a80_usb_phy, "allwinner,sun9i-a80-usb-phy-clk", sun9i_a80_usb_phy_setup);
+> +               usb_clk: clk@01c200cc {
+> +                       #clock-cells = <1>;
+> +                       #reset-cells = <1>;
+> +                       compatible = "allwinner,sun8i-h3-usb-clk";
+> +                       reg = <0x01c200cc 0x4>;
+> +                       clocks = <&osc24M>;
+> +                       clock-output-names = "usb_phy0", "usb_phy1",
+> +                                            "usb_phy2", "usb_phy3",
+> +                                            "usb_ohci0", "usb_ohci1",
+> +                                            "usb_ohci2", "usb_ohci3";
+> +               };
 > +
-> +static const struct usb_clk_data sun8i_h3_usb_clk_data __initconst = {
-> +       .clk_mask =  BIT(19) | BIT(18) | BIT(17) | BIT(16) |
-> +                    BIT(11) | BIT(10) | BIT(9) | BIT(8),
-> +       .reset_mask = BIT(3) | BIT(2) | BIT(1) | BIT(0),
-> +};
-> +
-> +static void __init sun8i_h3_usb_setup(struct device_node *node)
-> +{
-> +       sunxi_usb_clk_setup(node, &sun8i_h3_usb_clk_data, &sun4i_a10_usb_lock);
-> +}
-> +CLK_OF_DECLARE(sun8i_h3_usb, "allwinner,sun8i-h3-usb-clk", sun8i_h3_usb_setup);
+>                 mbus_clk: clk@01c2015c {
+>                         #clock-cells = <0>;
+>                         compatible = "allwinner,sun8i-a23-mbus-clk";
 > --
 > 2.5.0
 >
@@ -69,7 +65,3 @@ Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 > For more options, visit https://groups.google.com/d/optout.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
