@@ -1,68 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] devicetree: bindings: Add optional
- dynamic-power-coefficient property
-Date: Mon, 16 Nov 2015 17:23:01 -0600
-Message-ID: <20151116232301.GA3223@rob-hp-laptop>
-References: <1447702225-13323-1-git-send-email-punit.agrawal@arm.com>
- <1447702225-13323-2-git-send-email-punit.agrawal@arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: phy: tegra-xusb-padctl: Add Tegra210
+ support
+Date: Mon, 16 Nov 2015 16:35:14 -0700
+Message-ID: <564A6832.8090205@wwwdotorg.org>
+References: <1446657109-15568-1-git-send-email-thierry.reding@gmail.com>
+ <1446657109-15568-3-git-send-email-thierry.reding@gmail.com>
+ <563A71C7.9030002@wwwdotorg.org> <20151113163239.GB7219@ulmo>
+ <CAL1qeaEj=sihAxxw26aDkrzOO6F0GzmVfBs2dv2ch+4p0=AuXA@mail.gmail.com>
+ <564A3D03.70001@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447702225-13323-2-git-send-email-punit.agrawal@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564A3D03.70001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 07:30:23PM +0000, Punit Agrawal wrote:
-> The dynamic power consumption of a device is proportional to the
-> square of voltage (V) and the clock frequency (f). It can be expressed as
-> 
-> Pdyn = dynamic-power-coefficient * V^2 * f.
-> 
-> The coefficient represents the running time dynamic power consumption in
-> units of mw/MHz/uVolt^2 and can be used in the above formula to
-> calculate the dynamic power in mW.
-> 
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
+On 11/16/2015 01:30 PM, Stephen Warren wrote:
+> On 11/13/2015 10:58 AM, Andrew Bresticker wrote:
+>> On Fri, Nov 13, 2015 at 8:32 AM, Thierry Reding
+>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Wed, Nov 04, 2015 at 01:59:51PM -0700, Stephen Warren wrote:
+>>>> On 11/04/2015 10:11 AM, Thierry Reding wrote:
+>>>>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>
+>>>>> Extend the binding to cover the set of feature found in Tegra210.
+>>>>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/phy/nvidia,tegra-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra-xusb-padctl.txt
+>>>>>
+>>>>
+>>>>> +For Tegra210, the list of valid PHY nodes is given below:
+>>>>> +- utmi: utmi-0, utmi-1, utmi-2, utmi-3
+>>>>> +  - functions: "snps", "xusb", "uart"
+>>>>> +- hsic: hsic-0, hsic-1
+>>>>> +  - functions: "snps", "xusb"
+>>>>> +- pcie: pcie-0, pcie-1, pcie-2, pcie-3, pcie-4, pcie-5, pcie-6
+>>>>> +  - functions: "pcie-x1", "usb3-ss", "pcie-x4"
+>>>>> +- sata: sata-0
+>>>>> +  - functions: "usb3-ss", "sata"
+>>>>
+>>>> usb2-bias also needs to be present.
+>>>
+>>> I'm not sure about this. All of the driver code that I've looked deals
+>>> with the usb2-bias pad internally. As far as I can tell, this pad needs
+>>> to be configured to whatever any of the other pads is configured for. I
+>>> think that means if any of the UTMI pads is configured for XUSB then the
+>>> usb2-bias pad must also be configured for XUSB. Which would also imply
+>>> that if one of the UTMI pads is configured for XUSB, all of them must be
+>>> configured for XUSB.
+>>
+>> I was told by hardware engineers at NVIDIA that (at least on
+>> Tegra124/Tegra132) the usb2-bias pad must be configured in the
+>> XUSB_PADCTL register space if UTMI pad 0 is muxed to XUSB.  If UTMI
+>> pad 0 is muxed to SNPS, then the usb2-bias pad is configured in the
+>> USB register space (base 0x7d000000).  You may want to follow up
+>> internally to confirm this.  If it's true, that could make things here
+>> a bit nastier, especially if we want to support configurations where
+>> some pads are muxed to XUSB while others are muxed to SNPS.
+>
+> Hmm. I've certainly successfully tested a configuration where UTMI pad 0
+> was handled by the SNPS controller and other pads by the XUSB controller
+> *and* where I set the usb2-bias "pad"'s muxing and configuration via the
+> XUSB PADCTL module. In that case, I /had/ to configure usb2-bias via
+> XUSB PADCTL or the other XUSB pads didn't work. However, perhaps that
+> was because the XUSB controller driver probed before the SNPS driver;
+> perhaps if they'd probed the other way around and the SNPS driver
+> configured the bias pad, then everything would have worked without
+> configuring the bias pad via XUSB PADCTL.
+>
+> I suppose I'll have to start another internal thread to get the full
+> details, and differentiate between "recommended" and "supported" and
+> "must" vs. "can"/"should".
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 3a07a87..6aca64f 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -242,6 +242,23 @@ nodes to be present and contain the properties described below.
->  		Definition: Specifies the syscon node controlling the cpu core
->  			    power domains.
->  
-> +	- dynamic-power-coefficient
-> +		Usage: optional
-> +		Value type: <prop-encoded-array>
-> +		Definition: A u32 value that represents the running time dynamic
-> +			    power coefficient in units of mW/MHz/uVolt^2. The
-> +			    coefficient can either be calculated from power
-> +			    measurements or derived by analysis.
-> +
-> +			    The dynamic power consumption of the CPU  is
-> +			    proportional to the square of the Voltage (V) and
-> +			    the clock frequency (f). The coefficient is used to
-> +			    calculate the dynamic power as below -
-> +
-> +			    Pdyn = dynamic-power-coefficient * V^2 * f
-> +
-> +			    where voltage is in uV, frequency is in MHz.
-> +
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
->  	cpus {
-> -- 
-> 2.6.2
-> 
+I've discussed this with a HW engineer, and apparently this rule is 
+simply a recommendation, with the acknowledgement that everything will 
+work perfectly fine if we ignore it.
