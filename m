@@ -1,21 +1,21 @@
-From: rsahu-qTEPVZfXA3Y@public.gmane.org
+From: rsahu@apm.com
 Subject: [PATCH v2 2/3] dmaengine: xgene-dma: Add support for CRC32C computations via DMA engine
-Date: Mon, 16 Nov 2015 14:38:36 +0530
-Message-ID: <1447664917-12574-3-git-send-email-rsahu@apm.com>
+Date: Mon, 16 Nov 2015 14:42:48 +0530
+Message-ID: <1447665169-14003-3-git-send-email-rsahu@apm.com>
 References: <rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <rsahu@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, davem@davemloft.net, vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, linux-crypto@vger.kernel.org, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
 
 This patch implements CRC32C support to APM X-Gene SoC DMA engine driver.
 Basically we have DMA engine in SoC capable of doing CRC32C computations.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
 ---
  drivers/dma/xgene-dma.c |  314 ++++++++++++++++++++++++++++++++++++++++++++---
  1 files changed, 299 insertions(+), 15 deletions(-)
@@ -587,7 +587,3 @@ index 9dfa2b0..d95dc72 100644
  }
 --
 1.7.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
