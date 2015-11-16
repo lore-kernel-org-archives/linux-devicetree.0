@@ -1,7 +1,7 @@
 From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RESEND 6/8] ARM: dts: berlin: enable wdt0 on the Google Chromecast
-Date: Mon, 16 Nov 2015 19:09:52 +0800
-Message-ID: <1447672194-483-7-git-send-email-jszhang@marvell.com>
+Subject: [PATCH RESEND 7/8] arm: dts: berlin: enable wdt0 on the Marvell BG2Q DMP
+Date: Mon, 16 Nov 2015 19:09:53 +0800
+Message-ID: <1447672194-483-8-git-send-email-jszhang@marvell.com>
 References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,24 +12,26 @@ To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable wdt0 on the Google Chromecast to make use of the watchdog
+Enable wdt0 on the Marvell BG2Q DMP board to make use of the watchdog
 functionality.
 
 Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-index 772165a..a17c850 100644
---- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-+++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
-@@ -85,3 +85,5 @@
- &usb_phy1 { status = "okay"; };
- 
- &usb1 { status = "okay"; };
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+index 0fa8f1e..e60f53a 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+@@ -139,3 +139,7 @@
+ &sata_phy {
+ 	status = "okay";
+ };
 +
-+&wdt0 { status = "okay"; };
++&wdt0 {
++	status = "okay";
++};
 -- 
 2.6.1
 
