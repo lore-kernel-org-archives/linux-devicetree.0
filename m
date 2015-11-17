@@ -1,426 +1,490 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v7 26/50] powerpc/powernv: Create PEs at PCI hot plugging
- time
-Date: Tue, 17 Nov 2015 18:57:20 +1100
-Message-ID: <564ADDE0.8030904@ozlabs.ru>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-27-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v5 02/11] phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
+Date: Tue, 17 Nov 2015 13:41:11 +0530
+Message-ID: <564AE11F.50908@samsung.com>
+References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
+ <1447046787-480-3-git-send-email-alim.akhtar@samsung.com>
+ <564AC63F.1000508@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-27-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <564AC63F.1000508@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: JBottomley@odin.com, vinholikatti@gmail.com, gautam.vivek@samsung.com, essuuj@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 12:12 AM, Gavin Shan wrote:
-> Currently, the PEs and their associated resources are assigned
-> in ppc_md.pcibios_fixup() except those used by SRIOV VFs. The
-> function is called for once after PCI probing and resources
-> assignment is completed. So it isn't hotplug friendly.
+Hi
+Thanks again for looking into this.
+
+On 11/17/2015 11:46 AM, Kishon Vijay Abraham I wrote:
+> Hi,
 >
-> This creates PEs dynamically by ppc_md.pcibios_setup_bridge(), which
-> is called on the event during system bootup and PCI hotplug: updating
-> PCI bridge's windows after resource assignment/reassignment are done.
-> For partial hotplug case, where not all PCI devices belonging to the
-> PE are unplugged and plugged again, we just need unbinding/binding
-> the affected PCI devices with the corresponding PE without creating
-> new one.
+> On Monday 09 November 2015 10:56 AM, Alim Akhtar wrote:
+>> From: Seungwon Jeon <essuuj@gmail.com>
+>>
+>> This patch introduces Exynos UFS PHY driver. This driver
+>> supports to deal with phy calibration and power control
+>> according to UFS host driver's behavior.
+>>
+>> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   drivers/phy/Kconfig                |    7 ++
+>>   drivers/phy/Makefile               |    1 +
+>>   drivers/phy/phy-exynos-ufs.c       |  241 ++++++++++++++++++++++++++++++++++++
+>>   drivers/phy/phy-exynos-ufs.h       |   85 +++++++++++++
+>>   drivers/phy/phy-exynos7-ufs.h      |   89 +++++++++++++
+>>   include/linux/phy/phy-exynos-ufs.h |   85 +++++++++++++
+>>   6 files changed, 508 insertions(+)
+>>   create mode 100644 drivers/phy/phy-exynos-ufs.c
+>>   create mode 100644 drivers/phy/phy-exynos-ufs.h
+>>   create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>>   create mode 100644 include/linux/phy/phy-exynos-ufs.h
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 7eb5859dd035..7d38a92e0297 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -389,4 +389,11 @@ config PHY_CYGNUS_PCIE
+>>   	  Enable this to support the Broadcom Cygnus PCIe PHY.
+>>   	  If unsure, say N.
+>>
+>> +config PHY_EXYNOS_UFS
+>> +	tristate "EXYNOS SoC series UFS PHY driver"
+>> +	depends on OF && ARCH_EXYNOS || COMPILE_TEST
+>> +	select GENERIC_PHY
+>> +	help
+>> +	  Support for UFS PHY on Samsung EXYNOS chipsets.
+>> +
+>>   endmenu
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index 075db1a81aa5..9bec4d1a89e1 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>>   obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>> +obj-$(CONFIG_PHY_EXYNOS_UFS)	+= phy-exynos-ufs.o
+>>   obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
+>>   obj-$(CONFIG_PHY_PXA_28NM_USB2)		+= phy-pxa-28nm-usb2.o
+>>   obj-$(CONFIG_PHY_PXA_28NM_HSIC)		+= phy-pxa-28nm-hsic.o
+>> diff --git a/drivers/phy/phy-exynos-ufs.c b/drivers/phy/phy-exynos-ufs.c
+>> new file mode 100644
+>> index 000000000000..cb1aeaa3d4eb
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-exynos-ufs.c
+>> @@ -0,0 +1,241 @@
+>> +/*
+>> + * UFS PHY driver for Samsung EXYNOS SoC
+>> + *
+>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
+>> + * Author: Seungwon Jeon <essuuj@gmail.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/phy/phy-exynos-ufs.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include "phy-exynos-ufs.h"
+>> +
+>> +#define for_each_phy_lane(phy, i) \
+>> +	for (i = 0; i < (phy)->lane_cnt; i++)
+>> +#define for_each_phy_cfg(cfg) \
+>> +	for (; (cfg)->id; (cfg)++)
+>> +
+>> +#define PHY_DEF_LANE_CNT	1
+>> +
+>> +static void exynos_ufs_phy_config(struct exynos_ufs_phy *phy,
+>> +			const struct exynos_ufs_phy_cfg *cfg, u8 lane)
+>> +{
+>> +	enum {LANE_0, LANE_1}; /* lane index */
+>> +
+>> +	switch (lane) {
+>> +	case LANE_0:
+>> +		writel(cfg->val, (phy)->reg_pma + cfg->off_0);
+>> +		break;
+>> +	case LANE_1:
+>> +		if (cfg->id == PHY_TRSV_BLK)
+>> +			writel(cfg->val, (phy)->reg_pma + cfg->off_1);
+>> +		break;
+>> +	}
+>> +}
+>> +
+>> +static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
+>> +{
+>> +	if (IS_PWR_MODE_ANY(desc))
+>> +		return true;
+>> +
+>> +	if (IS_PWR_MODE_HS(required_pwr) && IS_PWR_MODE_HS_ANY(desc))
+>> +		return true;
+>> +
+>> +	if (COMP_PWR_MODE(required_pwr, desc))
+>> +		return true;
+>> +
+>> +	if (COMP_PWR_MODE_MD(required_pwr, desc) &&
+>> +	    COMP_PWR_MODE_GEAR(required_pwr, desc) &&
+>> +	    COMP_PWR_MODE_SER(required_pwr, desc))
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +int exynos_ufs_phy_calibrate(struct phy *phy,
+>> +				    enum phy_cfg_tag tag, u8 pwr)
 >
-> As there is no upstream bridge for root bus that needs to be covered
-> by PE,
-
-
-Does "that needs" part relate to a root bus or a an upstream bridge?
-
-
-> we have to create PE for root bus in ppc_md.pcibios_setup_bridge()
-> before any other PEs can be created, as PE for root bus is the ancestor
-> to anyone else.
+> This is similar to the first version of your patch without EXPORT_SYMBOL.
 >
-> On the other hand, the windows of root port or the upstream port
-
-s/On the other hand, /Also/ ?
-
-> of PCIe switch behind root port are extended to be PHB's aperatuses
-
-apertures?
-
-
-> to accommodate the additonal resources needed by newly plugged devices
-
-s/additonal/additional
-
-
-> based on the fact: hotpluggable slot is behind root port or downstream
-> port of the PCIe switch behind root port. The extension for those
-> PCI brdiges' windows is done in ppc_md.pcibios_setup_bridge() as
-> well.
-
-
-I find it quite difficult to separate "cut-n-paste" changes from functional 
-changes... May be it is just me.
-I would suggest splitting this patch into several. First define the 
-setup_bridge() callback, then rework pnv_pci_ioda_setup_PEs(),
-pnv_pci_ioda_setup_seg(), pnv_pci_ioda_setup_DMA(), and then add "partial 
-hotplug" handling may be.
-
-Or just get "reviewed-by" from Ben :)
-
-
+> I think you have to create a new generic PHY_OPS for calibrate PHY while making
+> sure that it is as generic as possible (which means calibrate_phy shouldn't
+> have tag and pwr arguments or a strong justification as to why those arguments
+> are required in a generic API).
+I don't see the advantage to making this a generic phy_ops, this is 
+exynos specific ufs-phy, please have a look at other implementations
+drivers/phy/phy-qcom-ufs.c (which I belive mereged recently)
+may be other vendors might come with there own implementation of phy.
+I am using what is currently provided by the generic phy framework.
+>> +{
+>> +	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+>> +	struct exynos_ufs_phy_cfg **cfgs = ufs_phy->cfg;
+>> +	const struct exynos_ufs_phy_cfg *cfg;
+>> +	int i;
+>> +
+>> +	if (unlikely(tag < CFG_PRE_INIT || tag >= CFG_TAG_MAX)) {
+>> +		dev_err(ufs_phy->dev, "invalid phy config index %d\n", tag);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	cfg = cfgs[tag];
+>> +	if (!cfg)
+>> +		goto out;
+>> +
+>> +	for_each_phy_cfg(cfg) {
+>> +		for_each_phy_lane(ufs_phy, i) {
+>> +			if (match_cfg_to_pwr_mode(cfg->desc, pwr))
+>> +				exynos_ufs_phy_config(ufs_phy, cfg, i);
+>> +		}
+>> +	}
+>> +
+>> +out:
+>> +	return 0;
+>> +}
+>> +
+>> +void exynos_ufs_phy_set_lane_cnt(struct phy *phy, u8 lane_cnt)
 >
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 240 +++++++++++++++++-------------
->   arch/powerpc/platforms/powernv/pci.h      |   1 +
->   2 files changed, 138 insertions(+), 103 deletions(-)
+> why can't phy_set_bus_width be reused here?
+Ah..I missed that, will take a look.
+>> +{
+>> +	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+>> +
+>> +	ufs_phy->lane_cnt = lane_cnt;
+>> +}
+>> +
+>> +int exynos_ufs_phy_wait_for_lock_acq(struct phy *phy)
+>> +{
 >
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 5e6745f..0bb0056 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -975,6 +975,15 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
->   				pci_name(dev));
->   			continue;
->   		}
-> +
-> +		/*
-> +		 * In partial hotplug case, the PCI device might be still
-> +		 * associated with the PE and needn't be attached to the
-> +		 * PE again.
-> +		 */
-> +		if (pdn->pe_number != IODA_INVALID_PE)
-> +			continue;
-> +
->   		pdn->pe_number = pe->pe_number;
->   		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
->   			pnv_ioda_setup_same_PE(dev->subordinate, pe);
-> @@ -992,9 +1001,26 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->   	struct pci_controller *hose = pci_bus_to_host(bus);
->   	struct pnv_phb *phb = hose->private_data;
->   	struct pnv_ioda_pe *pe = NULL;
-> +	int pe_num;
-> +
-> +	/*
-> +	 * In partial hotplug case, the PE instance might be still alive.
-> +	 * We should reuse it instead of allocating a new one.
-> +	 */
-> +	pe_num = phb->ioda.pe_rmap[bus->number << 8];
-> +	if (pe_num != IODA_INVALID_PE) {
-> +		pe = &phb->ioda.pe_array[pe_num];
-> +		pnv_ioda_setup_same_PE(bus, pe);
-> +		return NULL;
-> +	}
-> +
-> +	/* PE number for root bus should have been reserved */
-> +	if (pci_is_root_bus(bus) &&
-> +	    phb->ioda.root_pe_idx != IODA_INVALID_PE)
-> +		pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx];
+> As I mentioned before the only interface to the PHY driver should be using PHY
+> ops. So ideally the PHY driver should have only static functions.
+>> +	struct exynos_ufs_phy *ufs_phy = get_exynos_ufs_phy(phy);
+>> +	const unsigned int timeout_us = 100000;
+>> +	const unsigned int sleep_us = 10;
+>> +	u32 val;
+>> +	int err;
+>> +
+>> +	err = readl_poll_timeout(
+>> +			ufs_phy->reg_pma + PHY_APB_ADDR(PHY_PLL_LOCK_STATUS),
+>> +			val, (val & PHY_PLL_LOCK_BIT), sleep_us, timeout_us);
+>> +	if (err) {
+>> +		dev_err(ufs_phy->dev,
+>> +			"failed to get phy pll lock acquisition %d\n", err);
+>> +		goto out;
+>> +	}
+>> +
+>> +	err = readl_poll_timeout(
+>> +			ufs_phy->reg_pma + PHY_APB_ADDR(PHY_CDR_LOCK_STATUS),
+>> +			val, (val & PHY_CDR_LOCK_BIT), sleep_us, timeout_us);
+>> +	if (err) {
+>> +		dev_err(ufs_phy->dev,
+>> +			"failed to get phy cdr lock acquisition %d\n", err);
+>> +		goto out;
+>> +	}
+>> +
+>> +out:
+>> +	return err;
+>> +}
+>> +
+>> +static int exynos_ufs_phy_power_on(struct phy *phy)
+>> +{
+>> +	struct exynos_ufs_phy *_phy = get_exynos_ufs_phy(phy);
+>> +
+>> +	exynos_ufs_phy_ctrl_isol(_phy, false);
+>> +	return 0;
+>> +}
+>> +
+>> +static int exynos_ufs_phy_power_off(struct phy *phy)
+>> +{
+>> +	struct exynos_ufs_phy *_phy = get_exynos_ufs_phy(phy);
+>> +
+>> +	exynos_ufs_phy_ctrl_isol(_phy, true);
+>> +	return 0;
+>> +}
+>> +
+>> +static struct phy_ops exynos_ufs_phy_ops = {
+>> +	.power_on	= exynos_ufs_phy_power_on,
+>> +	.power_off	= exynos_ufs_phy_power_off,
+> .owner is required for phy_ops.
+ok
+>> +}
+>> +;
+>> +static const struct of_device_id exynos_ufs_phy_match[];
+>> +
+>> +static int exynos_ufs_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +	const struct of_device_id *match;
+>> +	struct exynos_ufs_phy *phy;
+>> +	struct phy *gen_phy;
+>> +	struct phy_provider *phy_provider;
+>> +	const struct exynos_ufs_phy_drvdata *drvdata;
+>> +	int err = 0;
+>> +
+>> +	match = of_match_node(exynos_ufs_phy_match, dev->of_node);
+>> +	if (!match) {
+>> +		err = -EINVAL;
+>> +		dev_err(dev, "failed to get match_node\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+>> +	if (!phy) {
+>> +		err = -ENOMEM;
+>> +		goto out;
+>> +	}
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy-pma");
+>> +	phy->reg_pma = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(phy->reg_pma)) {
+>> +		err = PTR_ERR(phy->reg_pma);
+>> +		goto out;
+>> +	}
+>> +
+>> +	phy->reg_pmu = syscon_regmap_lookup_by_phandle(
+>> +				dev->of_node, "samsung,pmu-syscon");
+>> +	if (IS_ERR(phy->reg_pmu)) {
+>> +		err = PTR_ERR(phy->reg_pmu);
+>> +		dev_err(dev, "failed syscon remap for pmu\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	gen_phy = devm_phy_create(dev, NULL, &exynos_ufs_phy_ops);
+>> +	if (IS_ERR(gen_phy)) {
+>> +		err = PTR_ERR(gen_phy);
+>> +		dev_err(dev, "failed to create PHY for ufs-phy\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	drvdata = match->data;
+>> +	phy->dev = dev;
+>> +	phy->drvdata = drvdata;
+>> +	phy->cfg = (struct exynos_ufs_phy_cfg **)drvdata->cfg;
+>> +	phy->isol = &drvdata->isol;
+>> +	phy->lane_cnt = PHY_DEF_LANE_CNT;
+>> +
+>> +	phy_set_drvdata(gen_phy, phy);
+>> +
+>> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>> +	if (IS_ERR(phy_provider)) {
+>> +		err = PTR_ERR(phy_provider);
+>> +		dev_err(dev, "failed to register phy-provider\n");
+>> +		goto out;
+>> +	}
+>> +out:
+>> +	return err;
+>> +}
+>> +
+>> +static const struct of_device_id exynos_ufs_phy_match[] = {
+>> +	{
+>> +		.compatible = "samsung,exynos7-ufs-phy",
+>> +		.data = &exynos7_ufs_phy,
+>> +	},
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, exynos_ufs_phy_match);
+>> +
+>> +static struct platform_driver exynos_ufs_phy_driver = {
+>> +	.probe  = exynos_ufs_phy_probe,
+>> +	.driver = {
+>> +		.name = "exynos-ufs-phy",
+>> +		.of_match_table = exynos_ufs_phy_match,
+>> +	},
+>> +};
+>> +module_platform_driver(exynos_ufs_phy_driver);
+>> +MODULE_DESCRIPTION("EXYNOS SoC UFS PHY Driver");
+>> +MODULE_AUTHOR("Seungwon Jeon <essuuj@gmail.com>");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/phy/phy-exynos-ufs.h b/drivers/phy/phy-exynos-ufs.h
+>> new file mode 100644
+>> index 000000000000..820d879f393c
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-exynos-ufs.h
+>> @@ -0,0 +1,85 @@
+>> +/*
+>> + * UFS PHY driver for Samsung EXYNOS SoC
+>> + *
+>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
+>> + * Author: Seungwon Jeon <essuuj@gmail.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#ifndef _PHY_EXYNOS_UFS_
+>> +#define _PHY_EXYNOS_UFS_
+>> +
+>> +#define PHY_COMN_BLK	1
+>> +#define PHY_TRSV_BLK	2
+>> +#define END_UFS_PHY_CFG { 0 }
+>> +#define PHY_TRSV_CH_OFFSET	0x30
+>> +#define PHY_APB_ADDR(off)	((off) << 2)
+>> +
+>> +#define PHY_COMN_REG_CFG(o, v, d) {	\
+>> +	.off_0 = PHY_APB_ADDR((o)),	\
+>> +	.off_1 = 0,		\
+>> +	.val = (v),		\
+>> +	.desc = (d),		\
+>> +	.id = PHY_COMN_BLK,	\
+>> +}
+>> +
+>> +#define PHY_TRSV_REG_CFG(o, v, d) {	\
+>> +	.off_0 = PHY_APB_ADDR((o)),	\
+>> +	.off_1 = PHY_APB_ADDR((o) + PHY_TRSV_CH_OFFSET),	\
+>> +	.val = (v),		\
+>> +	.desc = (d),		\
+>> +	.id = PHY_TRSV_BLK,	\
+>> +}
+>> +
+>> +/* UFS PHY registers */
+>> +#define PHY_PLL_LOCK_STATUS	0x1e
+>> +#define PHY_CDR_LOCK_STATUS	0x5e
+>> +
+>> +#define PHY_PLL_LOCK_BIT	BIT(5)
+>> +#define PHY_CDR_LOCK_BIT	BIT(4)
+>> +
+>> +struct exynos_ufs_phy_cfg {
+>> +	u32 off_0;
+>> +	u32 off_1;
+>> +	u32 val;
+>> +	u8 desc;
+>> +	u8 id;
+>> +};
+>> +
+>> +struct exynos_ufs_phy_drvdata {
+>> +	const struct exynos_ufs_phy_cfg **cfg;
+>> +	struct pmu_isol {
+>> +		u32 offset;
+>> +		u32 mask;
+>> +		u32 en;
+>> +	} isol;
+>> +};
+>> +
+>> +struct exynos_ufs_phy {
+>> +	struct device *dev;
+>> +	void __iomem *reg_pma;
+>> +	struct regmap *reg_pmu;
+>> +	const struct exynos_ufs_phy_drvdata *drvdata;
+>> +	struct exynos_ufs_phy_cfg **cfg;
+>> +	const struct pmu_isol *isol;
+>> +	u8 lane_cnt;
+>> +};
+>> +
+>> +static inline struct exynos_ufs_phy *get_exynos_ufs_phy(struct phy *phy)
+>> +{
+>> +	return (struct exynos_ufs_phy *)phy_get_drvdata(phy);
+>> +}
 >
->   	/* Check if PE is determined by M64 */
-> -	if (phb->pick_m64_pe)
-> +	if (!pe && phb->pick_m64_pe)
->   		pe = phb->pick_m64_pe(bus, all);
+> This wrapper function for phy_get_drvdata is unnecessary.
+>> +
+>> +static inline void exynos_ufs_phy_ctrl_isol(
+>> +		struct exynos_ufs_phy *phy, u32 isol)
+>> +{
+>> +	regmap_update_bits(phy->reg_pmu, phy->isol->offset,
+>> +			phy->isol->mask, isol ? 0 : phy->isol->en);
+>> +}
+>> +
+>> +#include "phy-exynos7-ufs.h"
+>> +
+>> +#endif /* _PHY_EXYNOS_UFS_ */
+>> diff --git a/drivers/phy/phy-exynos7-ufs.h b/drivers/phy/phy-exynos7-ufs.h
+>> new file mode 100644
+>> index 000000000000..6cd29d7fb200
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-exynos7-ufs.h
+>> @@ -0,0 +1,89 @@
+>> +/*
+>> + * UFS PHY driver for Samsung EXYNOS SoC
+>> + *
+>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +#ifndef _PHY_EXYNOS7_UFS_H_
+>> +#define _PHY_EXYNOS7_UFS_H_
+>> +
+>> +#include "phy-exynos-ufs.h"
+>> +
+>> +#define EXYNOS7_EMBEDDED_COMBO_PHY_CTRL	0x720
+>> +#define EXYNOS7_EMBEDDED_COMBO_PHY_CTRL_MASK	0x1
+>> +#define EXYNOS7_EMBEDDED_COMBO_PHY_CTRL_EN	BIT(0)
+>> +
+>> +/* Calibration for phy initialization */
+>> +static const struct exynos_ufs_phy_cfg exynos7_pre_init_cfg[] = {
+>> +	PHY_COMN_REG_CFG(0x00f, 0xfa, PWR_MODE_ANY),
+>> +	PHY_COMN_REG_CFG(0x010, 0x82, PWR_MODE_ANY),
+>> +	PHY_COMN_REG_CFG(0x011, 0x1e, PWR_MODE_ANY),
+>> +	PHY_COMN_REG_CFG(0x017, 0x84, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x035, 0x58, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x036, 0x32, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x037, 0x40, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x03b, 0x83, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x042, 0x88, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x043, 0xa6, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x048, 0x74, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x04c, 0x5b, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x04d, 0x83, PWR_MODE_ANY),
+>> +	PHY_TRSV_REG_CFG(0x05c, 0x14, PWR_MODE_ANY),
 >
->   	/* The PE number isn't pinned by M64 */
-> @@ -1036,46 +1062,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->   	return pe;
->   }
+> Are these the usual PHY calbiration settings swing, deemphasis, bias etc.. If
+> so, we should think about adding standard dt properties and adding the values
+> for these setting in dt.
 >
-> -static void pnv_ioda_setup_PEs(struct pci_bus *bus)
-> -{
-> -	struct pci_dev *dev;
-> -
-> -	pnv_ioda_setup_bus_PE(bus, false);
-> -
-> -	list_for_each_entry(dev, &bus->devices, bus_list) {
-> -		if (dev->subordinate) {
-> -			if (pci_pcie_type(dev) == PCI_EXP_TYPE_PCI_BRIDGE)
-> -				pnv_ioda_setup_bus_PE(dev->subordinate, true);
-> -			else
-> -				pnv_ioda_setup_PEs(dev->subordinate);
-> -		}
-> -	}
-> -}
-> -
-> -/*
-> - * Configure PEs so that the downstream PCI buses and devices
-> - * could have their associated PE#. Unfortunately, we didn't
-> - * figure out the way to identify the PLX bridge yet. So we
-> - * simply put the PCI bus and the subordinate behind the root
-> - * port to PE# here. The game rule here is expected to be changed
-> - * as soon as we can detected PLX bridge correctly.
-> - */
-> -static void pnv_pci_ioda_setup_PEs(void)
-> -{
-> -	struct pci_controller *hose, *tmp;
-> -	struct pnv_phb *phb;
-> -
-> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		phb = hose->private_data;
-> -
-> -		/* M64 layout might affect PE allocation */
-> -		if (phb->reserve_m64_pe)
-> -			phb->reserve_m64_pe(hose->bus, NULL, true);
-> -
-> -		pnv_ioda_setup_PEs(hose->bus);
-> -	}
-> -}
-> -
->   #ifdef CONFIG_PCI_IOV
->   static int pnv_pci_vf_release_m64(struct pci_dev *pdev, u16 num_vfs)
->   {
-> @@ -2391,8 +2377,13 @@ static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
->   static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->   				       struct pnv_ioda_pe *pe)
->   {
-> +	unsigned int weight;
->   	int64_t rc;
->
-> +	weight = pnv_pci_ioda_pe_dma_weight(pe);
-> +	if (!weight)
-> +		return;
-> +
->   	/* TVE #1 is selected by PCI address bit 59 */
->   	pe->tce_bypass_base = 1ull << 59;
->
-> @@ -2424,33 +2415,6 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->   		pnv_ioda_setup_bus_dma(pe, pe->pbus);
->   }
->
-> -static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
-> -{
-> -	struct pnv_ioda_pe *pe;
-> -
-> -	pnv_pci_ioda_setup_opal_tce_kill(phb);
-> -
-> -	list_for_each_entry(pe, &phb->ioda.pe_list, list)
-> -		pnv_pci_ioda1_setup_dma_pe(phb, pe);
-> -}
-> -
-> -static void pnv_pci_ioda2_setup_dma(struct pnv_phb *phb)
-> -{
-> -	struct pnv_ioda_pe *pe;
-> -	unsigned int weight;
-> -
-> -	pnv_pci_ioda_setup_opal_tce_kill(phb);
-> -
-> -	list_for_each_entry(pe, &phb->ioda.pe_list, list) {
-> -		weight = pnv_pci_ioda_pe_dma_weight(pe);
-> -		if (!weight)
-> -			continue;
-> -
-> -		pe_info(pe, "Assign DMA32 space\n");
-> -		pnv_pci_ioda2_setup_dma_pe(phb, pe);
-> -	}
-> -}
-> -
->   #ifdef CONFIG_PCI_MSI
->   static void pnv_ioda2_msi_eoi(struct irq_data *d)
->   {
-> @@ -2914,37 +2878,6 @@ static void pnv_ioda_setup_pe_seg(struct pnv_ioda_pe *pe)
->   	}
->   }
->
-> -static void pnv_pci_ioda_setup_seg(void)
-> -{
-> -	struct pci_controller *tmp, *hose;
-> -	struct pnv_phb *phb;
-> -	struct pnv_ioda_pe *pe;
-> -
-> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		phb = hose->private_data;
-> -		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
-> -			pnv_ioda_setup_pe_seg(pe);
-> -		}
-> -	}
-> -}
-> -
-> -static void pnv_pci_ioda_setup_DMA(void)
-> -{
-> -	struct pci_controller *hose, *tmp;
-> -	struct pnv_phb *phb;
-> -
-> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		phb = hose->private_data;
-> -		if (phb->type == PNV_PHB_IODA1)
-> -			pnv_pci_ioda1_setup_dma(phb);
-> -		else
-> -			pnv_pci_ioda2_setup_dma(phb);
-> -
-> -		/* Mark the PHB initialization done */
-> -		phb->initialized = 1;
-> -	}
-> -}
-> -
->   static void pnv_pci_ioda_create_dbgfs(void)
->   {
->   #ifdef CONFIG_DEBUG_FS
-> @@ -2955,6 +2888,9 @@ static void pnv_pci_ioda_create_dbgfs(void)
->   	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->   		phb = hose->private_data;
->
-> +		/* Notify initialization of PHB done */
-> +		phb->initialized = 1;
-> +
->   		sprintf(name, "PCI%04x", hose->global_number);
->   		phb->dbgfs = debugfs_create_dir(name, powerpc_debugfs_root);
->   		if (!phb->dbgfs)
-> @@ -2966,10 +2902,6 @@ static void pnv_pci_ioda_create_dbgfs(void)
->
->   static void pnv_pci_ioda_fixup(void)
->   {
-> -	pnv_pci_ioda_setup_PEs();
-> -	pnv_pci_ioda_setup_seg();
-> -	pnv_pci_ioda_setup_DMA();
-> -
->   	pnv_pci_ioda_create_dbgfs();
->
->   #ifdef CONFIG_EEH
-> @@ -3019,6 +2951,104 @@ static resource_size_t pnv_pci_window_alignment(struct pci_bus *bus,
->   	return phb->ioda.io_segsize;
->   }
->
-> +/*
-> + * We are updating root port or the upstream port of the
-> + * bridge behind the root port with PHB's windows in order
-> + * to accommodate the changes on required resources during
-> + * PCI (slot) hotplug, which is connected to either root
-> + * port or the downstream ports of PCIe switch behind the
-> + * root port.
-> + */
-> +static void pnv_pci_fixup_bridge_resources(struct pci_bus *bus,
-> +					   unsigned long type)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	struct pci_dev *bridge = bus->self;
-> +	struct resource *r, *w;
-> +	int i;
-> +
-> +	/* Check if we need apply fixup to the bridge's windows */
-> +	if (!pci_is_root_bus(bridge->bus) &&
-> +	    !pci_is_root_bus(bridge->bus->self->bus))
-> +		return;
-> +
-> +	/* Fixup the resoureces */
+Well these are the initial values need to programmed at a given 
+offset/sequence  before we do a ufs linkstart up.
+well we can explore dt option, but at this point of time this look 
+simple, I have access to just a single h/w which using this phy, will 
+try to get access/see how mush other exynos ufs-phy differs (if possible 
+for me), till then I prefere to have this way.
 
-
-s/resoureces/resources/
-
-
-> +	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
-> +		r = &bridge->resource[PCI_BRIDGE_RESOURCES + i];
-> +		if (!r->flags || !r->parent)
-> +			continue;
-> +
-> +		w = NULL;
-> +		if (r->flags & type & IORESOURCE_IO)
-> +			w = &hose->io_resource;
-> +		else if (pnv_pci_is_mem_pref_64(r->flags) &&
-> +			 (type & IORESOURCE_PREFETCH) &&
-> +			 phb->ioda.m64_segsize)
-> +			w = &hose->mem_resources[1];
-> +		else if (r->flags & type & IORESOURCE_MEM)
-> +			w = &hose->mem_resources[0];
-> +
-> +		r->start = w->start;
-> +		r->end = w->end;
-> +	}
-> +}
-> +
-> +static void pnv_pci_setup_bridge(struct pci_bus *bus,
-> +				 unsigned long type)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	struct pci_dev *bridge = bus->self;
-> +	struct pnv_ioda_pe *pe;
-> +	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
-> +
-> +	 /* The PE for root bus should be realized before any one else */
-> +	if (!phb->ioda.root_pe_populated) {
-> +		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
-> +		if (pe) {
-> +			phb->ioda.root_pe_idx = pe->pe_number;
-> +			phb->ioda.root_pe_populated = true;
-> +		}
-> +	}
-> +
-> +	/* Extend bridge's windows if necessary */
-> +	pnv_pci_fixup_bridge_resources(bus, type);
-> +
-> +	/* Don't assign PE to PCI bus, which doesn't have subordinate devices */
-> +	if (list_empty(&bus->devices))
-> +		return;
-> +
-> +	/* Reserve PEs according to used M64 resources */
-> +	if (phb->reserve_m64_pe)
-> +		phb->reserve_m64_pe(bus, NULL, all);
-> +
-> +	/*
-> +	 * Assign PE. We might run here because of partial hotplug.
-> +	 * For the case, we just pick up the existing PE and should
-> +	 * not allocate resources again.
-> +	 */
-> +	pe = pnv_ioda_setup_bus_PE(bus, all);
-> +	if (!pe)
-> +		return;
-> +
-> +	/* Setup MMIO mapping */
-> +	pnv_ioda_setup_pe_seg(pe);
-> +
-> +	/* Setup DMA */
-> +	switch (phb->type) {
-> +	case PNV_PHB_IODA1:
-> +		pnv_pci_ioda1_setup_dma_pe(phb, pe);
-> +		break;
-> +	case PNV_PHB_IODA2:
-> +		pnv_pci_ioda2_setup_dma_pe(phb, pe);
-> +		break;
-> +	default:
-> +		pr_warn("%s: No DMA for PHB#%d (type %d)\n",
-> +			__func__, phb->hose->global_number, phb->type);
-> +	}
-> +}
-> +
->   #ifdef CONFIG_PCI_IOV
->   static resource_size_t pnv_pci_iov_resource_alignment(struct pci_dev *pdev,
->   						      int resno)
-> @@ -3095,6 +3125,7 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
->   #endif
->   	.enable_device_hook	= pnv_pci_enable_device_hook,
->   	.window_alignment	= pnv_pci_window_alignment,
-> +	.setup_bridge		= pnv_pci_setup_bridge,
->   	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
->   	.dma_set_mask		= pnv_pci_ioda_dma_set_mask,
->   	.dma_get_required_mask	= pnv_pci_ioda_dma_get_required_mask,
-> @@ -3168,6 +3199,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->   	if (phb->regs == NULL)
->   		pr_err("  Failed to map registers !\n");
+> Thanks
+> Kishon
 >
-> +	/* Initialize TCE kill register */
-> +	pnv_pci_ioda_setup_opal_tce_kill(phb);
-> +
->   	/* Initialize more IODA stuff */
->   	phb->ioda.total_pe_num = 1;
->   	prop32 = of_get_property(np, "ibm,opal-num-pes", NULL);
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index a8ba97f..ef5271a 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -121,6 +121,7 @@ struct pnv_phb {
->   			unsigned int		total_pe_num;
->   			unsigned int		reserved_pe_idx;
->   			unsigned int		root_pe_idx;
-> +			bool			root_pe_populated;
->
->   			/* 32-bit MMIO window */
->   			unsigned int		m32_size;
->
-
-
--- 
-Alexey
