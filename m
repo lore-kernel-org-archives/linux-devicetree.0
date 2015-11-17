@@ -1,125 +1,137 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Tue, 17 Nov 2015 13:55:07 +0000
-Message-ID: <564B31BB.3010404@arm.com>
-References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>	<5649F2D9.7070902@arm.com>	<564A5255.3020603@broadcom.com>	<8520D5D51A55D047800579B0941471982585CBDA@XAP-PVEXMBX01.xlnx.xilinx.com> <20151117092100.76babf7f@arm.com> <8520D5D51A55D047800579B0941471982585CD78@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 3/3] doc: dt: mtd: stop referring to driver code for
+ spi-nor IDs
+Date: Tue, 17 Nov 2015 11:04:55 -0300
+Message-ID: <564B3407.2020403@osg.samsung.com>
+References: <1447713292-91525-1-git-send-email-computersforpeace@gmail.com>
+ <1447713292-91525-4-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B0941471982585CD78@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: Ray Jui <rjui@broadcom.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>l
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447713292-91525-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/11/15 13:27, Bharat Kumar Gogada wrote:
->>
->> On Tue, 17 Nov 2015 04:59:39 +0000
->> Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
->>
->>>> On 11/16/2015 7:14 AM, Marc Zyngier wrote:
->>>>> On 11/11/15 06:33, Bharat Kumar Gogada wrote:
->>>>>> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
->>>>>>
->>>>>> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
->>>>>> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
->>>>>> ---
->>>>>> Added logic to allocate contiguous hwirq in nwl_irq_domain_alloc
->>>> function.
->>>>>> Moved MSI functionality to separate functions.
->>>>>> Changed error return values.
->>>>>> ---
->>>>>>   .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
->>>>>>   drivers/pci/host/Kconfig                           |   16 +-
->>>>>>   drivers/pci/host/Makefile                          |    1 +
->>>>>>   drivers/pci/host/pcie-xilinx-nwl.c                 | 1062
->>>> ++++++++++++++++++++
->>>>>>   4 files changed, 1144 insertions(+), 3 deletions(-)
->>>>>>   create mode 100644
->>>>>> Documentation/devicetree/bindings/pci/xilinx-nwl-
->>>> pcie.txt
->>>>>>   create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
->>>>>>
->>>>>
->>>>> [...]
->>>>>
->>>>>> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct
->>>>>> +pci_bus
->>>>>> +*bus) {
->>>>>> +	struct platform_device *pdev = to_platform_device(pcie-
->>> dev);
->>>>>> +	struct nwl_msi *msi = &pcie->msi;
->>>>>> +	unsigned long base;
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	mutex_init(&msi->lock);
->>>>>> +
->>>>>> +	/* Check for msii_present bit */
->>>>>> +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) &
->> MSII_PRESENT;
->>>>>> +	if (!ret) {
->>>>>> +		dev_err(pcie->dev, "MSI not present\n");
->>>>>> +		ret = -EIO;
->>>>>> +		goto err;
->>>>>> +	}
->>>>>> +
->>>>>> +	/* Enable MSII */
->>>>>> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
->> I_MSII_CONTROL) |
->>>>>> +			  MSII_ENABLE, I_MSII_CONTROL);
->>>>>> +
->>>>>> +	/* Enable MSII status */
->>>>>> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
->> I_MSII_CONTROL) |
->>>>>> +			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
->>>>>> +
->>>>>> +	/* setup AFI/FPCI range */
->>>>>> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
->>>>>> +	base = virt_to_phys((void *)msi->pages);
->>>>>> +	nwl_bridge_writel(pcie, lower_32_bits(base),
->> I_MSII_BASE_LO);
->>>>>> +	nwl_bridge_writel(pcie, upper_32_bits(base),
->> I_MSII_BASE_HI);
->>>>>
->>>>> BTW, you still haven't answered my question as to why you need to
->>>>> waste a page of memory here, and why putting a device address
->>>>> doesn't
->>>> work.
->>>>>
->>>>> As this is (to the best of my knowledge) the only driver doing so,
->>>>> I'd really like you to explain the rational behind this.
->>>>
->>>> Might not be the only driver doing so after I start sending out
->>>> patches for the iProc MSI support (soon), :)
->>>>
->>>> I'm not sure how it works for the Xilinx NWL controller, which
->>>> Bharat should be able to help to explain. But for the iProc MSI
->>>> controller, there's no device I/O memory reserved for MSI posted writes
->> in the ASIC.
->>>> Therefore one needs to reserve host memory for these writes.
->>>>>
->>>
->>> Our SoC doesn't reserve any memory for MSI, hence we need to assign a
->>> memory space for it out of RAM.
->>
->> Question to both of you: Does the write make it to memory? Or is it sampled
->> by the bridge and dropped?
->>
-> No, write will not do any modification in memory, it is consumed by bridge.
+Hello Brian,
 
-Then you do not need to allocate memory at all. Use whatever memory you
-already have. CC-ing Robin, as this may have interaction with the SMMU.
-
+On 11/16/2015 07:34 PM, Brian Norris wrote:
+> Pull the supported chip names from drivers/mtd/devices/m25p80.c and stop
+> pointing readers to Linux code.
 > 
->> What happens if you replace the page in RAM with a dummy address?
-> What do you mean by dummy address ?
+> Also (although I see this habit repeated throughout the
+> Documentation/devicetree/bindings/ tree), stop using the title "driver"
 
-Any random (and suitably aligned) address. 0x00000deadbeef000 for example.
+Agreed.
 
-Thanks,
+> in this file, when we're trying explicitly to describe hardware, not
+> software.
+> 
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/jedec,spi-nor.txt      | 56 ++++++++++++++++++++--
+>  1 file changed, 51 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> index 2bee68103b01..2c91c03e7eb0 100644
+> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> @@ -1,15 +1,61 @@
+> -* MTD SPI driver for ST M25Pxx (and similar) serial flash chips
+> +* SPI NOR flash: ST M25Pxx (and similar) serial flash chips
+>  
+>  Required properties:
+>  - #address-cells, #size-cells : Must be present if the device has sub-nodes
+>    representing partitions.
+>  - compatible : May include a device-specific string consisting of the
+> -               manufacturer and name of the chip. Bear in mind the DT binding
+> -               is not Linux-only, but in case of Linux, see the "m25p_ids"
+> -               table in drivers/mtd/devices/m25p80.c for the list of supported
+> -               chips.
+> +               manufacturer and name of the chip. A list of supported chip
+> +               names follows.
 
-	M.
+Here says that the compatible string consists of manufacturer and name...
+
+>                 Must also include "jedec,spi-nor" for any SPI NOR flash that can
+>                 be identified by the JEDEC READ ID opcode (0x9F).
+> +
+> +               Supported chip names:
+> +                 at25df321a
+> +                 at25df641
+> +                 at26df081a
+> +                 mr25h256
+> +                 mx25l4005a
+> +                 mx25l1606e
+> +                 mx25l6405d
+> +                 mx25l12805d
+> +                 mx25l25635e
+> +                 n25q064
+> +                 n25q128a11
+> +                 n25q128a13
+> +                 n25q512a
+> +                 s25fl256s1
+> +                 s25fl512s
+> +                 s25sl12801
+> +                 s25fl008k
+> +                 s25fl064k
+> +                 sst25vf040b
+> +                 m25p40
+> +                 m25p80
+> +                 m25p16
+> +                 m25p32
+> +                 m25p64
+> +                 m25p128
+> +                 w25x80
+> +                 w25x32
+> +                 w25q32
+> +                 w25q32dw
+> +                 w25q80bl
+> +                 w25q128
+> +                 w25q256
+> +
+
+... but the entries in the list don't have a manufacturer. I know this is
+due backward compatibility because as we discussed in the thread mentioned
+in the cover letter, the SPI core didn't use the manufacturer and that
+implementation detail leaked into the DTBs.
+
+But I think that either only the correct list with vendor should be added
+to the DT binding docs (but make sure that backward compatibility in the
+driver and SPI core is maintained) or both the wrong and correct list should
+be documented and the former be marked as deprecated.
+
+> +               The following chip names have been used historically to
+> +               designate quirky versions of flash chips that do not support the
+> +               JEDEC READ ID opcode (0x9F):
+> +                 m25p05-nonjedec
+> +                 m25p10-nonjedec
+> +                 m25p20-nonjedec
+> +                 m25p40-nonjedec
+> +                 m25p80-nonjedec
+> +                 m25p16-nonjedec
+> +                 m25p32-nonjedec
+> +                 m25p64-nonjedec
+> +                 m25p128-nonjedec
+> +
+
+Same here, I would prefer if the DT binding make it clear that not having
+a vendor is wrong and is only documented to maintain backward compatibility.
+
+>  - reg : Chip-Select number
+>  - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
+>  
+> 
+
+Best regards,
 -- 
-Jazz is not dead. It just smells funny...
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
