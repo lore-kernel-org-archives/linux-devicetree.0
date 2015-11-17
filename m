@@ -1,59 +1,69 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/7] misc: eeprom: 93xx46: Add DT binding for a GPIO
- 'select' line.
-Date: Tue, 17 Nov 2015 14:59:01 -0600
-Message-ID: <20151117205901.GA10669@rob-hp-laptop>
-References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447733796-15546-7-git-send-email-cory.tusar@pid1solutions.com>
+Subject: Re: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT
+ binding docs
+Date: Tue, 17 Nov 2015 15:00:50 -0600
+Message-ID: <20151117210050.GA11889@rob-hp-laptop>
+References: <20151117035320.30676.88818.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447733796-15546-7-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20151117035320.30676.88818.sendpatchset@little-apple>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 11:16:35PM -0500, Cory Tusar wrote:
-> This commit documents an additional devicetree binding in the
-> eeprom_93x46 driver allowing a GPIO line to function as a 'select'
-> or 'enable' signal prior to accessing the EEPROM.
-
-You can just fold all the DT binding patches into 1. They don't have to 
-match up to driver changes.
-
+On Tue, Nov 17, 2015 at 12:53:20PM +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 > 
-> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
+> IPMMU DT binding documentation. The example is also updated to show
+> how the generic compatible string may be used as fallback.
+> 
+> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  Documentation/devicetree/bindings/misc/eeprom-93xx46.txt | 3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
-> index 34a0cc2..75b16f4 100644
-> --- a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
-> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
-> @@ -6,6 +6,8 @@ Required properties:
->  
->  Optional properties:
->  - read-only : parameter-less property which disables writes to the EEPROM
-> +- select-gpio : if present, specifies the GPIO that will be asserted prior to
-> +  each access to the EEPROM (e.g. for SPI bus multiplexing)
-
-This should be "select-gpios".
-
->  
->  Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
->  apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
-> @@ -17,4 +19,5 @@ Example:
->  		spi-max-frequency = <1000000>;
->  		spi-cs-high;
->  		data-size = <8>;
-> +		select-gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
->  	};
-> -- 
-> 2.4.10
+>  Changes since V1:
+>  - Updated compat string section to the following:
+>    "Must contain SoC-specific and generic entries from below."
 > 
+>  Thanks to Laurent for feedback!
+> 
+>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   12 ++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+> +++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2015-11-17 12:45:26.080513000 +0900
+> @@ -7,7 +7,15 @@ connected to the IPMMU through a port ca
+>  
+>  Required Properties:
+>  
+> -  - compatible: Must contain "renesas,ipmmu-vmsa".
+> +  - compatible: Must contain SoC-specific and generic entries from below.
+> +
+> +    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
+> +    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+> +    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+> +    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+> +    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+> +    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+> +
+>    - reg: Base address and size of the IPMMU registers.
+>    - interrupts: Specifiers for the MMU fault interrupts. For instances that
+>      support secure mode two interrupts must be specified, for non-secure and
+> @@ -27,7 +35,7 @@ node with the following property:
+>  Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+>  
+>  	ipmmu_mx: mmu@fe951000 {
+> -		compatible = "renasas,ipmmu-vmsa";
+> +		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+>  		reg = <0 0xfe951000 0 0x1000>;
+>  		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
