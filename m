@@ -1,95 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] pstore-ram: add Device Tree bindings
-Date: Tue, 17 Nov 2015 15:17:17 -0600
-Message-ID: <20151117211717.GA12750@rob-hp-laptop>
-References: <1447719205-8571-1-git-send-email-ghackmann@google.com>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: Re: [PATCH 6/7] misc: eeprom: 93xx46: Add DT binding for a GPIO
+ 'select' line.
+Date: Tue, 17 Nov 2015 16:19:13 -0500
+Message-ID: <564B99D1.5070308@pid1solutions.com>
+References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
+ <1447733796-15546-7-git-send-email-cory.tusar@pid1solutions.com>
+ <20151117205901.GA10669@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447719205-8571-1-git-send-email-ghackmann@google.com>
+In-Reply-To: <20151117205901.GA10669@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Hackmann <ghackmann@google.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org, jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 04:13:25PM -0800, Greg Hackmann wrote:
-> ramoops is one of the remaining places where ARM vendors still rely on
-> board-specific shims.  Device Tree lets us replace those shims with
-> generic code.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+On 11/17/2015 03:59 PM, Rob Herring wrote:
+> On Mon, Nov 16, 2015 at 11:16:35PM -0500, Cory Tusar wrote:
+>> This commit documents an additional devicetree binding in the
+>> eeprom_93x46 driver allowing a GPIO line to function as a 'select'
+>> or 'enable' signal prior to accessing the EEPROM.
 > 
-> These bindings mirror the ramoops module parameters, with two small
-> differences:
+> You can just fold all the DT binding patches into 1. They don't have to 
+> match up to driver changes.
+
+Will do.
+
+>>
+>> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+>> ---
+>>  Documentation/devicetree/bindings/misc/eeprom-93xx46.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+>> index 34a0cc2..75b16f4 100644
+>> --- a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+>> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+>> @@ -6,6 +6,8 @@ Required properties:
+>>  
+>>  Optional properties:
+>>  - read-only : parameter-less property which disables writes to the EEPROM
+>> +- select-gpio : if present, specifies the GPIO that will be asserted prior to
+>> +  each access to the EEPROM (e.g. for SPI bus multiplexing)
 > 
-> (1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
->     sets dump_oops=1 by default.
-> 
-> (2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
-> 
-> Signed-off-by: Greg Hackmann <ghackmann@google.com>
-> ---
-> Changes in V2:
-> - make DT binding documentation more generic
->  Documentation/devicetree/bindings/misc/ramoops.txt |  40 ++++++++
->  Documentation/ramoops.txt                          |   6 +-
->  fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
->  3 files changed, 152 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-> new file mode 100644
-> index 0000000..96c082b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/ramoops.txt
-> @@ -0,0 +1,40 @@
-> +Ramoops oops/panic logger
-> +=========================
-> +
-> +ramoops provides persistent RAM storage for oops and panics, so they can be
-> +recovered after a reboot.
-> +
-> +Parts of this storage may be set aside for other persistent log buffers, such
-> +as kernel log messages, or for optional ECC error-correction data.  The total
-> +size of these optional buffers must fit in the reserved region.  Any remaining
-> +space will be used for oops and panics.
+> This should be "select-gpios".
 
-If record-size is not set, I don't think this last statement is true.
+Will fix, thanks.
 
-> +
-> +
-> +Required properties:
-> +
-> +- compatible: must be "ramoops"
-> +
-> +- memory-region: phandle to a region of memory that is preserved between reboots
-> +
-> +
-> +Optional properties:
-> +
-> +- ecc-size: enables ECC support and specifies ECC buffer size in bytes
-> +  (defaults to no ECC)
-> +
-> +- record-size: maximum size in bytes of each dump done on oops/panic
-> +  (defaults to 0)
+>>  
+>>  Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+>>  apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
+>> @@ -17,4 +19,5 @@ Example:
+>>  		spi-max-frequency = <1000000>;
+>>  		spi-cs-high;
+>>  		data-size = <8>;
+>> +		select-gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
+>>  	};
+>> -- 
+>> 2.4.10
+>>
 
-Perhaps the default should be something useful. 
 
-> +
-> +- console-size: size in bytes of log buffer reserved for kernel messages
-> +  (defaults to 0)
-> +
-> +- ftrace-size: size in bytes of log buffer reserved for function tracing and
-> +  profiling (defaults to 0)
-> +
-> +- pmsg-size: size in bytes of log buffer reserved for userspace messages
-> +  (defaults to 0)
-> +
-> +- unbuffered: if present, use uncached mappings to map the reserved region
-> +  (defaults to cached mappings)
+- -- 
+Cory Tusar
+Principal
+PID 1 Solutions, Inc.
 
-It defaults to write-combined or buffered which is not really cached.
 
-> +
-> +- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+"There are two ways of constructing a software design.  One way is to
+ make it so simple that there are obviously no deficiencies, and the
+ other way is to make it so complicated that there are no obvious
+ deficiencies."  --Sir Charles Anthony Richard Hoare
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlZLmdEACgkQHT1tsfGwHJ+2xACdFuo21bKIe5y4tYHw63b5OA/s
+x20AnRKVla1svFEX15dNvrCwzgCBZ7cl
+=lXQy
+-----END PGP SIGNATURE-----
