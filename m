@@ -1,123 +1,121 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 00/11] exynos-ufs: add support for Exynos
-Date: Tue, 17 Nov 2015 11:00:12 +0530
-Message-ID: <564ABB64.3080001@ti.com>
-References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
- <CAGOxZ51jKb_UYG-UmsN17zpAwR92KXt0KjGq8gCotmsvCsfHkA@mail.gmail.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v7 25/50] powerpc/powernv: Reserve PE for root bus
+Date: Tue, 17 Nov 2015 17:04:42 +1100
+Message-ID: <564AC37A.2060701@ozlabs.ru>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-26-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGOxZ51jKb_UYG-UmsN17zpAwR92KXt0KjGq8gCotmsvCsfHkA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@gmail.com>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-26-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Alim,
+On 11/05/2015 12:12 AM, Gavin Shan wrote:
+> We're going to reserve/assign PEs when pcibios_setup_bridge() is
+> called. The function won't be called for root bus as it doesn't
+> have parent bridge. However, the root bus still needs a PE to be
+> covered.
+>
+> This reserves PE numbers that are adjacent to the reserved one
+> for root buses.
 
-On Monday 16 November 2015 06:31 AM, Alim Akhtar wrote:
-> Hi Kishon,
-> 
-> Any more concern on the PHY part of this series?
 
-Sorry for the late reply. Yes, I still have concerns. I'll comment on your patch.
+Somewhere in the patchset you need to describe why you need a separate PE 
+for a root bus and why reserved_pe_idx is not enough for this.
 
-Thanks
-Kishon
-> 
-> Thanks!
-> 
-> On Mon, Nov 9, 2015 at 10:56 AM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
->> This patch-set introduces UFS (Universal Flash Storage) host support
->> for Samsung Exynos SoC. Mostly, it consists of UFS PHY and host specific driver.
->> And it also contains some quirks handling for Exynos.
->>
->> NOTE: ** This series has a dependency on [4]. **
->>
->> -Changes since v4:
->> * Removed platform specific PHY ops as suggested by Kishon
->> * Rebased on the top of Yaniv Gardi's work [4]
->> * make use of newly introduce ufshcd_{get,set}_variant
->> * other small changes and improvements.
->> * rebased on the top of linux next-20151109
->>
->> -Changes since v3:
->> * Fixed compilation warrings as reported by "Kbuild Test Robot"[5].
->> * Restructure the driver to make it as a platform driver, rebased on top of [4].
->> * Addressed review comments from Arnd Bergmann[5].
->> * Other misc changes and improvements.
->>
->> -Changes since v2:
->> * Addressed review comments from Kishon[1] and Rob Herring [2]
->> * Splited ufs dt binding documetation from ufs driver patch
->>
->> -Changes since v1:
->> * Addressed review comments from Alexey[3] and various review comments from Amit.
->> * Updated email id of Seungwon as his samsung id is void now.
->> * Added ufs platform data
->>
->> [1]-> https://lkml.org/lkml/2015/9/18/29
->> [2]-> https://lkml.org/lkml/2015/9/21/668
->> [3]-> https://lkml.org/lkml/2015/8/23/124
->> [4]-> https://lkml.org/lkml/2015/10/28/271
->> [5]-> https://lkml.org/lkml/2015/10/1/402
->>
->> This patch set is tested on exynos7-espresso board.
->>
->>
->> Alim Akhtar (1):
->>   Documentation: samsung-phy: Add dt bindings for UFS
->>
->> Seungwon Jeon (10):
->>   phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
->>   scsi: ufs: add quirk to contain unconformable utrd field
->>   scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
->>   scsi: ufs: add quirk not to allow reset of interrupt aggregation
->>   scsi: ufs: add quirk to enable host controller without hce
->>   scsi: ufs: add specific callback for nexus type
->>   scsi: ufs: add add specific callback for hibern8
->>   scsi: ufs: make ufshcd_config_pwr_mode of non-static func
->>   Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
->>     controller
->>   scsi: ufs-exynos: add UFS host support for Exynos SoCs
->>
->>  .../devicetree/bindings/phy/samsung-phy.txt        |   22 +
->>  .../devicetree/bindings/ufs/ufs-exynos.txt         |  104 ++
->>  drivers/phy/Kconfig                                |    7 +
->>  drivers/phy/Makefile                               |    1 +
->>  drivers/phy/phy-exynos-ufs.c                       |  241 ++++
->>  drivers/phy/phy-exynos-ufs.h                       |   85 ++
->>  drivers/phy/phy-exynos7-ufs.h                      |   89 ++
->>  drivers/scsi/ufs/Kconfig                           |   12 +
->>  drivers/scsi/ufs/Makefile                          |    1 +
->>  drivers/scsi/ufs/ufs-exynos-hw.c                   |  131 ++
->>  drivers/scsi/ufs/ufs-exynos-hw.h                   |   43 +
->>  drivers/scsi/ufs/ufs-exynos.c                      | 1304 ++++++++++++++++++++
->>  drivers/scsi/ufs/ufs-exynos.h                      |  247 ++++
->>  drivers/scsi/ufs/ufshcd.c                          |  168 ++-
->>  drivers/scsi/ufs/ufshcd.h                          |   54 +
->>  drivers/scsi/ufs/ufshci.h                          |   26 +-
->>  drivers/scsi/ufs/unipro.h                          |   47 +
->>  include/linux/phy/phy-exynos-ufs.h                 |   85 ++
->>  18 files changed, 2647 insertions(+), 20 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->>  create mode 100644 drivers/phy/phy-exynos-ufs.c
->>  create mode 100644 drivers/phy/phy-exynos-ufs.h
->>  create mode 100644 drivers/phy/phy-exynos7-ufs.h
->>  create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
->>  create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
->>  create mode 100644 drivers/scsi/ufs/ufs-exynos.c
->>  create mode 100644 drivers/scsi/ufs/ufs-exynos.h
->>  create mode 100644 include/linux/phy/phy-exynos-ufs.h
->>
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+
+
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 33 ++++++++++++++++++++++---------
+>   arch/powerpc/platforms/powernv/pci.h      |  1 +
+>   2 files changed, 25 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index eea1c96..5e6745f 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -207,14 +207,14 @@ static int pnv_ioda2_init_m64(struct pnv_phb *phb)
+>   	set_bit(phb->ioda.m64_bar_idx, &phb->ioda.m64_bar_alloc);
+>
+>   	/*
+> -	 * Strip off the segment used by the reserved PE, which is
+> -	 * expected to be 0 or last one of PE capabicity.
+> +	 * Exclude the segments for reserved and root bus PE, which
+> +	 * are first or last two PEs.
+>   	 */
+>   	r = &phb->hose->mem_resources[1];
+>   	if (phb->ioda.reserved_pe_idx == 0)
+> -		r->start += phb->ioda.m64_segsize;
+> +		r->start += (2 * phb->ioda.m64_segsize);
+>   	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+> -		r->end -= phb->ioda.m64_segsize;
+> +		r->end -= (2 * phb->ioda.m64_segsize);
+>   	else
+>   		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
+>   			phb->ioda.reserved_pe_idx);
+> @@ -294,14 +294,14 @@ static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+>   	}
+>
+>   	/*
+> -	 * Exclude the segment used by the reserved PE, which
+> -	 * is expected to be 0 or last supported PE#.
+> +	 * Exclude the segments for reserved and root bus PE, which
+> +	 * are first or last two PEs.
+>   	 */
+>   	r = &phb->hose->mem_resources[1];
+>   	if (phb->ioda.reserved_pe_idx == 0)
+> -		r->start += phb->ioda.m64_segsize;
+> +		r->start += (2 * phb->ioda.m64_segsize);
+>   	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+> -		r->end -= phb->ioda.m64_segsize;
+> +		r->end -= (2 * phb->ioda.m64_segsize);
+>   	else
+>   		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
+>   			phb->ioda.reserved_pe_idx);
+> @@ -3231,7 +3231,22 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>   			phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
+>   	}
+>   	phb->ioda.pe_array = aux + pemap_off;
+> -	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
+> +
+> +	/*
+> +	 * Choose PE number for root bus, which shouldn't have
+> +	 * M64 resources consumed by its child devices. To pick
+> +	 * the PE number adjacent to the reserved one if possible.
+> +	 */
+> +	pnv_ioda_reserve_pe(phb, phb->ioda.reserved_pe_idx);
+> +	if (phb->ioda.reserved_pe_idx == 0) {
+> +		phb->ioda.root_pe_idx = 1;
+> +		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
+> +	} else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1)) {
+> +		phb->ioda.root_pe_idx = phb->ioda.reserved_pe_idx - 1;
+> +		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
+> +	} else {
+> +		phb->ioda.root_pe_idx = IODA_INVALID_PE;
+> +	}
+>
+>   	INIT_LIST_HEAD(&phb->ioda.pe_list);
+>   	mutex_init(&phb->ioda.pe_list_mutex);
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index e55ab0e..a8ba97f 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -120,6 +120,7 @@ struct pnv_phb {
+>   			/* Global bridge info */
+>   			unsigned int		total_pe_num;
+>   			unsigned int		reserved_pe_idx;
+> +			unsigned int		root_pe_idx;
+>
+>   			/* 32-bit MMIO window */
+>   			unsigned int		m32_size;
+>
+
+
+-- 
+Alexey
