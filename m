@@ -1,47 +1,47 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/2] Fixes for bbb-overlays
-Date: Tue, 17 Nov 2015 13:43:58 +0100
-Message-ID: <1447764240-10709-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 1/2] of/configfs: Use %zu to format size_t
+Date: Tue, 17 Nov 2015 13:43:59 +0100
+Message-ID: <1447764240-10709-2-git-send-email-geert+renesas@glider.be>
+References: <1447764240-10709-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447764240-10709-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Pantelis,
+On 64-bit:
 
-Now HCH's configfs cleanups have entered v4.4-rc1, I had to upgrade to a
-newer version of your overlay series.
+    drivers/of/configfs.c: In function 'cfs_overlay_item_dtbo_read':
+    drivers/of/configfs.c:153:2: warning: format '%u' expects argument of type 'unsigned int', but argument 4 has type 'size_t' [-Wformat=]
+      pr_debug("%s: buf=%p max_count=%u\n", __func__,
+      ^
 
-The following 2 patches:
-  - Kill a compiler warning on 64-bit (yes, using overlays on arm64 ;-),
-  - Fix an ugly "allocation failure" backtrace when reading empty binary
-    attributes.
-
-I sent earlier versions of these before, but they had to be rebased to
-adapt to changes in your bbb-overlays branch.
-
-Geert Uytterhoeven (2):
-  of/configfs: Use %zu to format size_t
-  configfs: Fix reading empty binary attributes
-
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Fixes: 353733fae1932992 ("OF: DT-Overlay configfs interface (v6)")
+---
+Against
+https://github.com/pantoniou/linux-beagle-track-mainline.git/bbb-overlays
+---
  drivers/of/configfs.c | 2 +-
- fs/configfs/file.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/of/configfs.c b/drivers/of/configfs.c
+index b68dea8f4ce1e508..563663eefe17c9f1 100644
+--- a/drivers/of/configfs.c
++++ b/drivers/of/configfs.c
+@@ -150,7 +150,7 @@ ssize_t cfs_overlay_item_dtbo_read(struct config_item *item, void *buf,
+ {
+ 	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
+ 
+-	pr_debug("%s: buf=%p max_count=%u\n", __func__,
++	pr_debug("%s: buf=%p max_count=%zu\n", __func__,
+ 			buf, max_count);
+ 
+ 	if (overlay->dtbo == NULL)
 -- 
 1.9.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
