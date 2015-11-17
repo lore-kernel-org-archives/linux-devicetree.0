@@ -1,81 +1,95 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 4/7] misc: eeprom: 93xx46: Add DT binding for Atmel
- AT93C46D devices.
-Date: Tue, 17 Nov 2015 16:15:30 -0500
-Message-ID: <564B98F2.6060705@pid1solutions.com>
-References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447733796-15546-5-git-send-email-cory.tusar@pid1solutions.com>
- <20151117205652.GA8990@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] pstore-ram: add Device Tree bindings
+Date: Tue, 17 Nov 2015 15:17:17 -0600
+Message-ID: <20151117211717.GA12750@rob-hp-laptop>
+References: <1447719205-8571-1-git-send-email-ghackmann@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151117205652.GA8990@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447719205-8571-1-git-send-email-ghackmann@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Hackmann <ghackmann@google.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-On 11/17/2015 03:56 PM, Rob Herring wrote:
-> On Mon, Nov 16, 2015 at 11:16:33PM -0500, Cory Tusar wrote:
->> This commit adds a compatible string to the eeprom_93xx46 devicetree
->> bindings in support of Atmel AT93C46D devices.
->>
->> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/misc/eeprom-93xx46.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> index ba493a8..34a0cc2 100644
->> --- a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> @@ -1,7 +1,7 @@
->>  EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
->>  
->>  Required properties:
->> -- compatible : "eeprom-93xx46"
->> +- compatible : "eeprom-93xx46", "atmel,at93c46d"
+On Mon, Nov 16, 2015 at 04:13:25PM -0800, Greg Hackmann wrote:
+> ramoops is one of the remaining places where ARM vendors still rely on
+> board-specific shims.  Device Tree lets us replace those shims with
+> generic code.
 > 
-> This needs to be clear that it should be the opposite order. Something 
-> like this:
+> These bindings mirror the ramoops module parameters, with two small
+> differences:
 > 
-> compatible: One of the following:
-> 	"atmel,at93c46d"
-> 	Followed by "eeprom-93xx46"
+> (1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
+>     sets dump_oops=1 by default.
+> 
+> (2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
+> 
+> Signed-off-by: Greg Hackmann <ghackmann@google.com>
+> ---
+> Changes in V2:
+> - make DT binding documentation more generic
+>  Documentation/devicetree/bindings/misc/ramoops.txt |  40 ++++++++
+>  Documentation/ramoops.txt                          |   6 +-
+>  fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
+>  3 files changed, 152 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+> new file mode 100644
+> index 0000000..96c082b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/ramoops.txt
+> @@ -0,0 +1,40 @@
+> +Ramoops oops/panic logger
+> +=========================
+> +
+> +ramoops provides persistent RAM storage for oops and panics, so they can be
+> +recovered after a reboot.
+> +
+> +Parts of this storage may be set aside for other persistent log buffers, such
+> +as kernel log messages, or for optional ECC error-correction data.  The total
+> +size of these optional buffers must fit in the reserved region.  Any remaining
+> +space will be used for oops and panics.
 
-Will fix, thanks.
+If record-size is not set, I don't think this last statement is true.
 
->>  - data-size : number of data bits per word (either 8 or 16)
->>  
->>  Optional properties:
->> -- 
->> 2.4.10
->>
+> +
+> +
+> +Required properties:
+> +
+> +- compatible: must be "ramoops"
+> +
+> +- memory-region: phandle to a region of memory that is preserved between reboots
+> +
+> +
+> +Optional properties:
+> +
+> +- ecc-size: enables ECC support and specifies ECC buffer size in bytes
+> +  (defaults to no ECC)
+> +
+> +- record-size: maximum size in bytes of each dump done on oops/panic
+> +  (defaults to 0)
 
+Perhaps the default should be something useful. 
 
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
+> +
+> +- console-size: size in bytes of log buffer reserved for kernel messages
+> +  (defaults to 0)
+> +
+> +- ftrace-size: size in bytes of log buffer reserved for function tracing and
+> +  profiling (defaults to 0)
+> +
+> +- pmsg-size: size in bytes of log buffer reserved for userspace messages
+> +  (defaults to 0)
+> +
+> +- unbuffered: if present, use uncached mappings to map the reserved region
+> +  (defaults to cached mappings)
 
+It defaults to write-combined or buffered which is not really cached.
 
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
+> +
+> +- no-dump-oops: if present, only dump panics (defaults to panics and oops)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlZLmPIACgkQHT1tsfGwHJ9FrACeKfmCgXePFz/N3v9QMV7c4ASj
-SxcAnREBHu6lR5iAeyAtLpz8UCOOtDbn
-=EfAl
------END PGP SIGNATURE-----
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
