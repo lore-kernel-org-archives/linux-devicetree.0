@@ -1,102 +1,108 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] cpufreq: arm_big_little: Add support to register a
- cpufreq cooling device
-Date: Tue, 17 Nov 2015 10:13:15 +0530
-Message-ID: <CAOh2x=mThxxv1-REBYTyLhtLBY2yKwLqSGjCVSkqP7hO0Fs4tw@mail.gmail.com>
-References: <1447702225-13323-1-git-send-email-punit.agrawal@arm.com>
-	<1447702225-13323-4-git-send-email-punit.agrawal@arm.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
+Date: Tue, 17 Nov 2015 15:43:28 +1100
+Message-ID: <564AB070.9040500@ozlabs.ru>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
+ <56498D8A.2050505@ozlabs.ru> <20151117014203.GC31584@gwshan>
+ <564A92E2.1040506@ozlabs.ru> <20151117030406.GB10142@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447702225-13323-4-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151117030406.GB10142@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 1:00 AM, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> wrote:
-> Register passive cooling devices when initialising cpufreq on
-> big.LITTLE systems. If the device tree provides a dynamic power
-> coefficient for the CPUs then the bound cooling device will support
-> the extensions that allow it to be used with all the existing thermal
-> governors including the power allocator governor.
+On 11/17/2015 02:04 PM, Gavin Shan wrote:
+> On Tue, Nov 17, 2015 at 01:37:22PM +1100, Alexey Kardashevskiy wrote:
+>> On 11/17/2015 12:42 PM, Gavin Shan wrote:
+>>> On Mon, Nov 16, 2015 at 07:02:18PM +1100, Alexey Kardashevskiy wrote:
+>>>> On 11/05/2015 12:12 AM, Gavin Shan wrote:
+>>>>> This enables M64 window on P7IOC, which has been enabled on PHB3.
+>>>>> Different from PHB3 where 16 M64 BARs are supported and each of
+>>>>> them can be owned by one particular PE# exclusively or divided
+>>>>> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
+>>>>> of them are divided to 8 segments. So every P7IOC PHB supports
+>>>>> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
+>>>>> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
+>>>>> M64DT, indicating that one M64 segment can only be pinned to the
+>>>>> fixed PE#. In order to have same code to support M64 on P7IOC and
+>>>>> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
+>>>>> of them is pinned to the fixed PE# by bypassing the function of
+>>>>> M64DT. In turn, we just need different phb->init_m64() for P7IOC
+>>>>> and PHB3 to support M64.
+>>>>
+>>>> I thought we decided (Ben suggested?) not to push P7IOC code now (or ever) as
+>>>> there is no user for it, has this changed?
+>>>>
+>>>
+>>> Remember that the code is mixed for P7IOC/PHB3. It's not harmful to support
+>>> M64 window on P7IOC, which is much larger than M32.
+>>
+>>
+>> The patchset starts with removing dead code and then adds more dead code.
+>> This is not right...
+>>
 >
-> A cooling device will be created per individual frequency domain and
-> can be bound to thermal zones via the thermal DT bindings.
+> Sorry, you mean it's fine to break the code on P7IOC as it's going to be dead.
+
+
+I am saying that the _new_ code which implements PCI hotplug on P7IOC is 
+dead, not the existing P7IOC support which needs to keep working. Reworks 
+you make should keep P7IOC alive but they do not have to add hotplug.
+
+imho it is more likely that we drop P7IOC support in the mainline kernel in 
+next 5 years than someone plugs a PCI device to a running P7IOC machine 
+anywhere.
+
+
+> But I'm curious when it's going happen, any idea about that?
 >
-> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Remind me when did I Ack this version of your patch ..
-
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/cpufreq/Kconfig.arm      |  2 ++
->  drivers/cpufreq/arm_big_little.c | 35 +++++++++++++++++++++++++++++++++++
->  2 files changed, 37 insertions(+)
+>>>> btw please put ioda1/ioda2/p7ioc/etc to the subject line to make it easier to
+>>>> see how much work is there about particular PHB type. You rename quite many
+>>>> functions and I generally want to ask you to group all renaming patches first
+>>>> but it would also make sense to keep them close to (for example)
+>>>> p7ioc-related patches so having more descriptive subject lines may help.
+>>>> Thanks.
+>>>>
+>>>
+>>> As the code is mixed for P7IOC/PHB3, I'm not following the line (IODA1/IODA2/p7ioc/phb3)
+>>> in this patchset.
+>>
+>> But you should draw the bold line between PHB types imho.
+>>
+>>> Instead, the sequence of patchset is order related to: cod refactoring,
+>>> IO/M32/M64, DMA, PE allocation/releaseing.
+>>
+>>
+>> Some patches from this patchset are about P7IOC only. All I am asking is to
+>> say specifically in the subject line what the patch touches -
+>> IODA1/IODA2/p7ioc/phb3/all_of_them. Or I can walk through all of them, pick
+>> P7IOC's ones, evaluate the amount of code and entropy they actually add and
+>> then ask Ben what we do about it, it will just take longer rather than if you
+>> did it.
+>>
 >
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 1582c1c..0e0052e 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -6,6 +6,8 @@
->  config ARM_BIG_LITTLE_CPUFREQ
->         tristate "Generic ARM big LITTLE CPUfreq driver"
->         depends on (ARM_CPU_TOPOLOGY || ARM64) && HAVE_CLK
-> +       # if CPU_THERMAL is on and THERMAL=m, ARM_BIT_LITTLE_CPUFREQ cannot be =y
-> +       depends on !CPU_THERMAL || THERMAL
->         select PM_OPP
->         help
->           This enables the Generic CPUfreq driver for ARM big.LITTLE platforms.
-> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
-> index c5d256c..60d09c0 100644
-> --- a/drivers/cpufreq/arm_big_little.c
-> +++ b/drivers/cpufreq/arm_big_little.c
-> @@ -23,6 +23,7 @@
->  #include <linux/cpu.h>
->  #include <linux/cpufreq.h>
->  #include <linux/cpumask.h>
-> +#include <linux/cpu_cooling.h>
->  #include <linux/export.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> @@ -55,6 +56,7 @@ static bool bL_switching_enabled;
->  #define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
->  #define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
+> Please give me a clear command what key words you need in the subject in next revision.
+> What I understood is you want to see one of them:
 >
-> +static struct thermal_cooling_device *cdev[MAX_CLUSTERS];
->  static struct cpufreq_arm_bL_ops *arm_bL_ops;
->  static struct clk *clk[MAX_CLUSTERS];
->  static struct cpufreq_frequency_table *freq_table[MAX_CLUSTERS + 1];
-> @@ -493,6 +495,7 @@ static int bL_cpufreq_init(struct cpufreq_policy *policy)
->  static int bL_cpufreq_exit(struct cpufreq_policy *policy)
->  {
->         struct device *cpu_dev;
-> +       int domain;
->
->         cpu_dev = get_cpu_device(policy->cpu);
->         if (!cpu_dev) {
-> @@ -501,12 +504,43 @@ static int bL_cpufreq_exit(struct cpufreq_policy *policy)
->                 return -ENODEV;
->         }
->
-> +       domain = topology_physical_package_id(cpu_dev->id);
+> powerpc/powernv/ioda1:
 
-And this is broken.
+Yes, looks good.
 
-Have you tested this for IKS ? That's what the primary use-case of
-this driver is.
-And yeah, I would like to migrate the bL usecase to cpufreq-dt, now that it can
-support multiple clusters.
+> powerpc/powernv/ioda2:
 
-This is broken, because exit() might get called for a CPU from big
-cluster, while
-read() was called for a CPU on little cluster.
 
---
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes.
+
+> powerpc/powernv/all:
+
+Just "powerpc/powernv".
+
+
+
+-- 
+Alexey
