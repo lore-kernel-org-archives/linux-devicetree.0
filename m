@@ -1,58 +1,100 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH v4 0/3] Dynamic power model from device tree
-Date: Tue, 17 Nov 2015 10:05:53 +0000
-Message-ID: <9hhwpthos8u.fsf@e105922-lin.cambridge.arm.com>
-References: <1447702225-13323-1-git-send-email-punit.agrawal@arm.com>
-	<CAOh2x=nRf-gf56ws_HFh-gvd9rLAYu+_f9oQ1CJ-A_-8-LZ=Wg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAOh2x=nRf-gf56ws_HFh-gvd9rLAYu+_f9oQ1CJ-A_-8-LZ=Wg@mail.gmail.com>
-	(Viresh Kumar's message of "Tue, 17 Nov 2015 10:05:53 +0530")
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, dawei.chien@mediatek.com, Javi Merino <javi.merino@arm.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v3 2/2] gpiolib: Add GPIO initialization
+Date: Tue, 17 Nov 2015 11:07:58 +0100
+Message-ID: <1447754878-21099-3-git-send-email-mpa@pengutronix.de>
+References: <1447754878-21099-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1447754878-21099-1-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar@linaro.org> writes:
+This functions adds a way to initialize a GPIO without hogging it.
 
-> On Tue, Nov 17, 2015 at 1:00 AM, Punit Agrawal <punit.agrawal@arm.com> wrote:
->> Hi,
->>
->> This patchset adds support to build a single-coefficient dynamic power
->> model for a CPU. The model is used by the CPU cooling device to
->> provide an estimate of power consumption and also translate allocated
->> power to performance cap.
->>
->> Changes from previous posting -
->>
->> v3 -> v4:
->> arm_big_little: Migrated to using static arrays
->> arm_big_little: Updated Kconfig to support building thermal as module
->>
->> Patch 1 extends the CPU nodes binding to provide an optional dynamic
->> power coefficient which can be used to create a dynamic power model
->> for the CPUs. This model is used to constrain device power consumption
->> (using power_allocator governor) when the system is thermally
->> constrained.
->>
->> Patches 2-3 extends the cpufreq-dt and arm_big_little driver to
->> register cpu cooling devices with the dynamic coefficient when
->> provided.
->>
->> The patches were previously posted at [0][1][2]. Mediatek platform
->> 8173 builds on these bindings to build the power model.
->>
->> If there are no objections, I'd appreciate Acks from device tree
->> bindings maintainers.
->
-> You forgot to cc cpufreq maintainers for this and there are good chances
-> that I may completely miss the series some times..
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ drivers/gpio/gpiolib-of.c | 13 ++++++++-----
+ drivers/gpio/gpiolib.c    | 24 ++++++++++++++++++++++++
+ drivers/gpio/gpiolib.h    |  2 ++
+ 3 files changed, 34 insertions(+), 5 deletions(-)
 
-Yikes! I'll make sure to include both Rafael and you for future
-postings.
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 5fe34a9df3e6..48cdc22eabf2 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -211,15 +211,18 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
+ 	enum gpiod_flags dflags;
+ 
+ 	for_each_child_of_node(chip->of_node, np) {
+-		if (!of_property_read_bool(np, "gpio-hog"))
+-			continue;
+ 
+ 		desc = of_parse_own_gpio(np, &name, &lflags, &dflags);
+-		if (IS_ERR(desc))
++		if (IS_ERR(desc) || !dflags)
+ 			continue;
+ 
+-		if (gpiod_hog(desc, name, lflags, dflags))
+-			continue;
++		if (of_property_read_bool(np, "gpio-hog"))
++			gpiod_hog(desc, name, lflags, dflags);
++		else if (of_property_read_bool(np, "gpio-initval"))
++			gpiod_initialize(desc, lflags, dflags);
++		else
++			dev_dbg(chip->dev, "GPIO line %d (%s): neither gpio-hog nor gpio-initval found.\n",
++				desc_to_gpio(desc), np->name);
+ 	}
+ }
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a18f00fc1bb8..3b35f2fafeb2 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2329,6 +2329,30 @@ static void gpiochip_free_hogs(struct gpio_chip *chip)
+ }
+ 
+ /**
++ * gpiod_initialize - Initialize a GPIO with a given value
++ * @desc:	gpio whose value will be assigned
++ * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
++ *		of_get_gpio_hog()
++ * @dflags:	gpiod_flags - optional GPIO initialization flags
++ *
++ * This is used to initialize GPIOs that were defined in DT
++ */
++int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
++		     enum gpiod_flags dflags)
++{
++	int status;
++
++	status = gpiod_configure_flags(desc, NULL, dflags);
++	if (status < 0) {
++		pr_err("initial setup of GPIO (chip %s, offset %d) failed\n",
++		       gpiod_to_chip(desc)->label, gpio_chip_hwgpio(desc));
++		return status;
++	}
++
++	return 0;
++}
++
++/**
+  * gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO function
+  * @dev:	GPIO consumer, can be NULL for system-global GPIOs
+  * @con_id:	function within the GPIO consumer
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 98ab08c0aa2d..4abf53a5e651 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -107,6 +107,8 @@ int gpiod_request(struct gpio_desc *desc, const char *label);
+ void gpiod_free(struct gpio_desc *desc);
+ int gpiod_hog(struct gpio_desc *desc, const char *name,
+ 		unsigned long lflags, enum gpiod_flags dflags);
++int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
++		     enum gpiod_flags dflags);
+ 
+ /*
+  * Return the GPIO number of the passed descriptor relative to its chip
+-- 
+2.6.2
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
