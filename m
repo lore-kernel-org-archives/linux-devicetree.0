@@ -1,130 +1,123 @@
-From: Jaedon Shin <jaedon.shin@gmail.com>
-Subject: Re: [v4 02/10] ata: ahci_brcmstb: add quirk for broken ncq
-Date: Tue, 17 Nov 2015 14:31:48 +0900
-Message-ID: <9F5DD1EA-4BBE-445A-AF44-9F110E0B664B@gmail.com>
-References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com> <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com> <20151117021603.GW8456@google.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3111\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20151117021603.GW8456@google.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 00/11] exynos-ufs: add support for Exynos
+Date: Tue, 17 Nov 2015 11:00:12 +0530
+Message-ID: <564ABB64.3080001@ti.com>
+References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ51jKb_UYG-UmsN17zpAwR92KXt0KjGq8gCotmsvCsfHkA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ51jKb_UYG-UmsN17zpAwR92KXt0KjGq8gCotmsvCsfHkA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Alim,
 
-> On Nov 17, 2015, at 11:16 AM, Brian Norris <computersforpeace@gmail.com> wrote:
+On Monday 16 November 2015 06:31 AM, Alim Akhtar wrote:
+> Hi Kishon,
 > 
-> Hi,
-> 
-> On Fri, Oct 30, 2015 at 11:01:16PM +0900, Jaedon Shin wrote:
->> Add quirk for broken ncq. Some chipsets (eg. BCM7349A0, BCM7445A0,
->> BCM7445B0, and all 40nm chipsets including BCM7425) need a workaround
->> disabling NCQ.
->> 
->> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
->> ---
->> drivers/ata/ahci_brcmstb.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->> 1 file changed, 46 insertions(+)
->> 
->> diff --git a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
->> index 73e3b0b2a3c2..194aeda8f14d 100644
->> --- a/drivers/ata/ahci_brcmstb.c
->> +++ b/drivers/ata/ahci_brcmstb.c
->> @@ -69,10 +69,15 @@
->> 	(DATA_ENDIAN << DMADESC_ENDIAN_SHIFT) |		\
->> 	(MMIO_ENDIAN << MMIO_ENDIAN_SHIFT))
->> 
->> +enum brcm_ahci_quirks {
->> +	BRCM_AHCI_QUIRK_NONCQ		= BIT(0),
->> +};
->> +
->> struct brcm_ahci_priv {
->> 	struct device *dev;
->> 	void __iomem *top_ctrl;
->> 	u32 port_mask;
->> +	u32 quirks;
->> };
->> 
->> static const struct ata_port_info ahci_brcm_port_info = {
->> @@ -202,6 +207,42 @@ static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
->> 	return impl;
->> }
->> 
->> +static void brcm_sata_quirks(struct platform_device *pdev,
->> +			     struct brcm_ahci_priv *priv)
->> +{
->> +	if (priv->quirks & BRCM_AHCI_QUIRK_NONCQ) {
->> +		void __iomem *ctrl = priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL;
->> +		void __iomem *ahci;
->> +		struct resource *res;
->> +		u32 reg;
->> +
->> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +						   "ahci");
->> +		ahci = devm_ioremap_resource(&pdev->dev, res);
->> +		if (IS_ERR(ahci))
->> +			return;
->> +
->> +		reg = brcm_sata_readreg(ctrl);
->> +		reg |= OVERRIDE_HWINIT;
->> +		brcm_sata_writereg(reg, ctrl);
->> +
->> +		/* Clear out the NCQ bit so the AHCI driver will not issue
->> +		 * FPDMA/NCQ commands.
->> +		 */
->> +		reg = readl(ahci + HOST_CAP);
->> +		reg &= ~HOST_CAP_NCQ;
->> +		writel(reg, ahci + HOST_CAP);
-> 
-> You're using readl()/writel() to access the AHCI block, but...
-> 
->> +
->> +		reg = brcm_sata_readreg(ctrl);
->> +		reg &= ~OVERRIDE_HWINIT;
->> +		brcm_sata_writereg(reg, ctrl);
->> +
->> +		devm_iounmap(&pdev->dev, ahci);
->> +		devm_release_mem_region(&pdev->dev, res->start,
->> +					resource_size(res));
->> +	}
->> +}
->> +
->> static void brcm_sata_init(struct brcm_ahci_priv *priv)
->> {
->> 	/* Configure endianness */
->> @@ -256,6 +297,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->> 	if (IS_ERR(priv->top_ctrl))
->> 		return PTR_ERR(priv->top_ctrl);
->> 
->> +	if (of_device_is_compatible(dev->of_node, "brcm,bcm7425-ahci"))
->> +		priv->quirks |= BRCM_AHCI_QUIRK_NONCQ;
->> +
->> +	brcm_sata_quirks(pdev, priv);
->> +
->> 	brcm_sata_init(priv);
-> 
-> ...the MMIO endianness is only configured in brcm_sata_init(). You won't
-> see this problem on ARM LE, but you should on MIPS BE. Maybe
-> brcm_sata_quirks() should be after brcm_sata_init()?
-> 
+> Any more concern on the PHY part of this series?
 
-Florian already pointed out, the NCQ disabling occurs prior to initializing 
-the SATA controller endianness in the original BSP. Therefore I think it's better
-to change to brcm_sata_{read,write}reg() instead of {read,write}l() for 
-HOST_CAP overwriting.
+Sorry for the late reply. Yes, I still have concerns. I'll comment on your patch.
 
->> 
->> 	priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
+Thanks
+Kishon
 > 
-> Brian
+> Thanks!
+> 
+> On Mon, Nov 9, 2015 at 10:56 AM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
+>> This patch-set introduces UFS (Universal Flash Storage) host support
+>> for Samsung Exynos SoC. Mostly, it consists of UFS PHY and host specific driver.
+>> And it also contains some quirks handling for Exynos.
+>>
+>> NOTE: ** This series has a dependency on [4]. **
+>>
+>> -Changes since v4:
+>> * Removed platform specific PHY ops as suggested by Kishon
+>> * Rebased on the top of Yaniv Gardi's work [4]
+>> * make use of newly introduce ufshcd_{get,set}_variant
+>> * other small changes and improvements.
+>> * rebased on the top of linux next-20151109
+>>
+>> -Changes since v3:
+>> * Fixed compilation warrings as reported by "Kbuild Test Robot"[5].
+>> * Restructure the driver to make it as a platform driver, rebased on top of [4].
+>> * Addressed review comments from Arnd Bergmann[5].
+>> * Other misc changes and improvements.
+>>
+>> -Changes since v2:
+>> * Addressed review comments from Kishon[1] and Rob Herring [2]
+>> * Splited ufs dt binding documetation from ufs driver patch
+>>
+>> -Changes since v1:
+>> * Addressed review comments from Alexey[3] and various review comments from Amit.
+>> * Updated email id of Seungwon as his samsung id is void now.
+>> * Added ufs platform data
+>>
+>> [1]-> https://lkml.org/lkml/2015/9/18/29
+>> [2]-> https://lkml.org/lkml/2015/9/21/668
+>> [3]-> https://lkml.org/lkml/2015/8/23/124
+>> [4]-> https://lkml.org/lkml/2015/10/28/271
+>> [5]-> https://lkml.org/lkml/2015/10/1/402
+>>
+>> This patch set is tested on exynos7-espresso board.
+>>
+>>
+>> Alim Akhtar (1):
+>>   Documentation: samsung-phy: Add dt bindings for UFS
+>>
+>> Seungwon Jeon (10):
+>>   phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
+>>   scsi: ufs: add quirk to contain unconformable utrd field
+>>   scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
+>>   scsi: ufs: add quirk not to allow reset of interrupt aggregation
+>>   scsi: ufs: add quirk to enable host controller without hce
+>>   scsi: ufs: add specific callback for nexus type
+>>   scsi: ufs: add add specific callback for hibern8
+>>   scsi: ufs: make ufshcd_config_pwr_mode of non-static func
+>>   Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
+>>     controller
+>>   scsi: ufs-exynos: add UFS host support for Exynos SoCs
+>>
+>>  .../devicetree/bindings/phy/samsung-phy.txt        |   22 +
+>>  .../devicetree/bindings/ufs/ufs-exynos.txt         |  104 ++
+>>  drivers/phy/Kconfig                                |    7 +
+>>  drivers/phy/Makefile                               |    1 +
+>>  drivers/phy/phy-exynos-ufs.c                       |  241 ++++
+>>  drivers/phy/phy-exynos-ufs.h                       |   85 ++
+>>  drivers/phy/phy-exynos7-ufs.h                      |   89 ++
+>>  drivers/scsi/ufs/Kconfig                           |   12 +
+>>  drivers/scsi/ufs/Makefile                          |    1 +
+>>  drivers/scsi/ufs/ufs-exynos-hw.c                   |  131 ++
+>>  drivers/scsi/ufs/ufs-exynos-hw.h                   |   43 +
+>>  drivers/scsi/ufs/ufs-exynos.c                      | 1304 ++++++++++++++++++++
+>>  drivers/scsi/ufs/ufs-exynos.h                      |  247 ++++
+>>  drivers/scsi/ufs/ufshcd.c                          |  168 ++-
+>>  drivers/scsi/ufs/ufshcd.h                          |   54 +
+>>  drivers/scsi/ufs/ufshci.h                          |   26 +-
+>>  drivers/scsi/ufs/unipro.h                          |   47 +
+>>  include/linux/phy/phy-exynos-ufs.h                 |   85 ++
+>>  18 files changed, 2647 insertions(+), 20 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+>>  create mode 100644 drivers/phy/phy-exynos-ufs.c
+>>  create mode 100644 drivers/phy/phy-exynos-ufs.h
+>>  create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>>  create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.c
+>>  create mode 100644 drivers/scsi/ufs/ufs-exynos-hw.h
+>>  create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+>>  create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+>>  create mode 100644 include/linux/phy/phy-exynos-ufs.h
+>>
+>> --
+>> 1.7.10.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
