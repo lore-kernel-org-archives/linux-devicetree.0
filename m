@@ -1,33 +1,56 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
-Date: Tue, 17 Nov 2015 14:40:40 +1100
-Message-ID: <1447731640.3729.23.camel@kernel.crashing.org>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
-	 <56498D8A.2050505@ozlabs.ru> <20151117014203.GC31584@gwshan>
-	 <564A92E2.1040506@ozlabs.ru> <20151117030406.GB10142@gwshan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151117030406.GB10142@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT binding docs
+Date: Tue, 17 Nov 2015 12:53:20 +0900
+Message-ID: <20151117035320.30676.88818.sendpatchset@little-apple>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-sh@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, galak@codeaurora.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-11-17 at 14:04 +1100, Gavin Shan wrote:
-> 
-> Sorry, you mean it's fine to break the code on P7IOC as it's going to be dead.
-> But I'm curious when it's going happen, any idea about that?
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Is it ? I think it's ok to not add support for M64, hotpug etc.... for
-IODA1, but we can do that without *breaking* basic function that we
-have today.
+Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
+IPMMU DT binding documentation. The example is also updated to show
+how the generic compatible string may be used as fallback.
 
-It's not completely dead, there are still a number of machines inside
-of IBM with P7 that we can support for a little while longer (including
-a few inside ozlabs).
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+---
 
-Cheers,
-Ben.
+ Changes since V1:
+ - Updated compat string section to the following:
+   "Must contain SoC-specific and generic entries from below."
+
+ Thanks to Laurent for feedback!
+
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   12 ++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2015-11-17 12:45:26.080513000 +0900
+@@ -7,7 +7,15 @@ connected to the IPMMU through a port ca
+ 
+ Required Properties:
+ 
+-  - compatible: Must contain "renesas,ipmmu-vmsa".
++  - compatible: Must contain SoC-specific and generic entries from below.
++
++    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
++    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
++    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
++    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
++    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
++    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
++
+   - reg: Base address and size of the IPMMU registers.
+   - interrupts: Specifiers for the MMU fault interrupts. For instances that
+     support secure mode two interrupts must be specified, for non-secure and
+@@ -27,7 +35,7 @@ node with the following property:
+ Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+ 
+ 	ipmmu_mx: mmu@fe951000 {
+-		compatible = "renasas,ipmmu-vmsa";
++		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+ 		reg = <0 0xfe951000 0 0x1000>;
+ 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
