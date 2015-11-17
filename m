@@ -1,97 +1,111 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [RFC] rpi: add support to enable usb power domain
-Date: Tue, 17 Nov 2015 13:46:32 -0800
-Message-ID: <8761105mfb.fsf@eliezer.anholt.net>
-References: <1446064810-5064-1-git-send-email-alex.aring@gmail.com> <87a8r1pkfz.fsf@eliezer.anholt.net> <20151102084557.GA1342@omega>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] Documentation: dt: binding: fsl: add devicetree
+ binding for describing RCPM
+Date: Tue, 17 Nov 2015 16:05:26 -0600
+Message-ID: <CAL_JsqLQPj43S=x4j2VenGC+-CSYxwPSMkQxB5HxGz+Uv_G3vA@mail.gmail.com>
+References: <1445841852-6830-1-git-send-email-dongsheng.wang@freescale.com>
+ <20151116172611.GA27814@rob-hp-laptop> <1447726048.2262.385.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151102084557.GA1342@omega>
+In-Reply-To: <1447726048.2262.385.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jason.jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-
-> Hi,
->
-> On Thu, Oct 29, 2015 at 12:02:24PM -0700, Eric Anholt wrote:
->> Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->>=20
->> > This patch adds support for RPi several Power Domains and enable suppo=
-rt
->> > to enable the USB Power Domain when it's not enabled before.
+On Mon, Nov 16, 2015 at 8:07 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Mon, 2015-11-16 at 11:26 -0600, Rob Herring wrote:
+>> +Sudeep
+>>
+>> On Mon, Oct 26, 2015 at 02:44:12PM +0800, Dongsheng Wang wrote:
+>> > From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 >> >
->> > This patch based on Eric Anholt's patch to support Power Domains. He h=
-ad
->> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
->> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DE=
-FER
->> > if we fail to init or turn-on domain").
+>> > RCPM is the Run Control and Power Management module performs all
+>> > device-level tasks associated with device run control and power
+>> > management.
 >> >
->> > It was tested with barebox and the following scripts before booting
-> ...
->> > Third:
->> > The barebox regulator doesn't support right now to enable/disable
->> > regulators at runtime but I want to bring this mainline in the next
->> > days. So you can't check yourself if the above scripts working right
->> > now. I describe it here to show you what exactly I tested.
->> >
->> > changes since Eric Anholts "power domain" patch:
->> >  - add for me all known power domains of the RPi, it contains the doma=
-ins
->> >    0 - 9.
->>=20
->> Note: None of the power domain enums other than the ones I'd had in my
->> patch are actually connected to anything in the firmware.  I don't think
->> we should be adding them, given that.
+>> > Add this for freescale powerpc platform and layerscape platform.
+>>
+>> [...]
+>>
+>> > @@ -0,0 +1,64 @@
+>> > +* Run Control and Power Management
+>> > +-------------------------------------------
+>> > +The RCPM performs all device-level tasks associated with device run
+>> > control
+>> > +and power management.
+>> > +
+>> > +Required properites:
+>> > +  - reg : Offset and length of the register set of the RCPM block.
+>> > +  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in
+>> > the
+>> > +   fsl,rcpm-wakeup property.
+>>
+>> [...]
+>>
+>> > +* Freescale RCPM Wakeup Source Device Tree Bindings
+>> > +-------------------------------------------
+>> > +Required fsl,rcpm-wakeup property should be added to a device node if the
+>> > device
+>> > +can be used as a wakeup source.
+>> > +
+>> > +  - fsl,rcpm-wakeup: Consists of a pointer to the rcpm node and the
+>> > IPPDEXPCR
+>> > +   register cells. The number of IPPDEXPCR register cells is defined
+>> > in
+>> > +   "fsl,#rcpm-wakeup-cells" in the rcpm node. The first register
+>> > cell is
+>> > +   the bit mask that should be set in IPPDEXPCR0, and the second
+>> > register
+>> > +   cell is for IPPDEXPCR1, and so on.
+>>
+>> We just merged a common wakeup source binding[1]. It doesn't really work
+>> in a similar way to what you have done, but I'd like to see something
+>> common here. How exactly wakeup is done tends to depend on whether
+>> interrupts are also wakeup signals or wake-up signally is completely
+>> separate from interrupts. Depending on that, I think there are 2 options
+>> here:
+>>
+>> - Use the common binding and implement a stacked irqdomain for the
+>> wakeup controller.
 >
-> Okay. Then it makes sense that I still accessing UART and SDHC when I
-> turn off the power.
+> I'm not sure what a stacked irqdomain is, but the mechanism described here
+> isn't about interrupts at all.  It's about controlling whether certain devices
+> are kept awake in order to have the possibility of generating a wakeup.  I
+> believe the actual wakeup comes via the ordinary device interrupt.
+
+Stacked irqdomains were recently added. They allow you to have
+multiple layers of control of interrupt lines. What you typically see
+is device interrupts will go to both the main interrupt controller and
+a special wake-up controller. So both devices need to be controlled.
+The main controller can be powered down in suspend, but the wake-up
+controller remains powered and can bring the cpu and interrupt
+controller back up.
+
+Keeping a device awake (clocks and power on) is somewhat different
+than wake-up mechanisms and we generally have the subsystems needed
+for that. Directly exposing another block's registers to a client
+driver is generally not the right way to do things. Although there is
+syscon for all the misc signals the h/w designers just clumped
+together.
+
+>> - Extend the common binding to allow a phandle+args value to point to
+>> the wakeup controller.
 >
-> In you patch you had SDHC, USB, DSI. Are you sure that SDHC power domain
-> has any effect, because I don't see any effect and can still access the
-> sd card.
+> Possibly, but the description in the common binding would have to be fairly
+> vague to make the semantics fit.
+>
+> The current common binding is also a bit confusing by saying that the presence
+> of the property means that all of the device's interrupts can be used as
+> wakeup events, but then saying that there can also be a dedicated wakeup but
+> not making it clear how to represent that...  Overloading it with device power
+> control might muddy things even further.
 
-It looks like the SDCARD domain is kept always on, even if we ask for it
-off.  We can clear the always-on flag by setting domain 29 in
-MBOX_CHAN_POWER.  It's not accessible from the property channel, unless
-I've misread the logic.
+I believe it just means any device interrupt can be used or only the
+irq named "wakeup" can be used.
 
-Yet another reason I'm hoping to write a native power domain driver.
-
-> I would add the power-domains where we have currently an use-case for it
-> and this USB at the moment. Is this okay for you?
-
-Sounds good to me.  I'll probably extend that for V3D.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWS6A4AAoJELXWKTbR/J7o8PQQAKbA2A95f5DG/bAOHdo9rys6
-iSaWJg5EHCkd0SHn3R5r4EKmQzecGjymSfTHDs/zANPKA8LLs4aLuszIcdn++OJe
-5LBIrFhQCauvAu/vC0ltW82EbFVNRv5A/qDP9eUqr96BR25Ij0a1zerGvZzEb1wH
-pfn40bKD2sdvitI7renZyXpfXeXjHV4LnCnIskhUd2O8g9xJDG54yhMdyRGGd9hD
-/8gMrYvTplJErySacvtxns21rEs4g8+bZ4bwI+3Izbk7YreRf7nBmFUNf1hK7HiS
-q81sc0GcNbkB76nuvGKhaWHhwCKNpNROOmlKgboK3X1CjjjtYQJ0cdK+MA88nmst
-Dyp59FL4M3pd11V4XNKVmQilfdoJZRynewQf2szoAya27OXhZMxemK3eKPIkpZrV
-5liLNigR5gbzOdCc21yurhRgc21UXRC4ND79yQoUR27V52aU3b/5eaB8D5rRli85
-DnfJgWTgsvD1GNSuuz8LanHO06lEAJNhbduacwtv9sE0YkuMN2ww/O8dP9lgHK2x
-k0Y63/S4z7uUQ9gyFbPMTPQWDBx6gOmmfZNCoCqDnLvQ2gL2/ZRV0D54hLewh7QV
-pyRNp0Vft5cRuqAJVb2N5j3DLqu6iKRQdnfDHTKaBxL/Z7bAOgilAEQQ+W3vLaLA
-soz5kEUPyYuxJ4UVChoa
-=miUp
------END PGP SIGNATURE-----
---=-=-=--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
