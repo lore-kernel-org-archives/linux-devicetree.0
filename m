@@ -1,164 +1,124 @@
-From: Laura Abbott <laura@labbott.name>
-Subject: [PATCHv2 3/3] NOMERGE: Sample driver
-Date: Mon, 16 Nov 2015 16:57:35 -0800
-Message-ID: <1447721855-7574-4-git-send-email-laura@labbott.name>
-References: <1447721855-7574-1-git-send-email-laura@labbott.name>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v7 17/50] powerpc/powernv: Avoid calculating DMA32
+ segments on PHB3
+Date: Tue, 17 Nov 2015 12:07:17 +1100
+Message-ID: <564A7DC5.5060702@ozlabs.ru>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-18-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1447721855-7574-1-git-send-email-laura@labbott.name>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Feng Tang <feng.tang@intel.com>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Laura Abbott <laura@labbott.name>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-18-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 11/05/2015 12:12 AM, Gavin Shan wrote:
+> In pnv_ioda_setup_dma(), it's unnecessary to calculate the DMA32
+> segments for PEs on PHB3 as the whole available DMA32 space can
+> be assigned to one specific PE on PHB3.
+>
+> This splits pnv_ioda_setup_dma() to pnv_pci_ioda1_setup_dma() and
+> pnv_pci_ioda2_setup_dma() in order to avoid calculating DMA32
+> segments for PEs on PHB3. No logical changes introduced.
 
 
-Small sample driver to show what setup would look like with the dt
-bindings
+This patch is not needed as
 
-Signed-off-by: Laura Abbott <laura@labbott.name>
----
- drivers/staging/android/ion/Kconfig         |  6 ++
- drivers/staging/android/ion/Makefile        |  1 +
- drivers/staging/android/ion/ion_of_sample.c | 96 +++++++++++++++++++++++++++++
- 3 files changed, 103 insertions(+)
- create mode 100644 drivers/staging/android/ion/ion_of_sample.c
+[PATCH v7 20/50] powerpc/powernv: Improve DMA32 segment calculation
 
-diff --git a/drivers/staging/android/ion/Kconfig b/drivers/staging/android/ion/Kconfig
-index 9b6d65d..c2afb35 100644
---- a/drivers/staging/android/ion/Kconfig
-+++ b/drivers/staging/android/ion/Kconfig
-@@ -43,3 +43,9 @@ config ION_OF
- 	  extensions
- 
- 	  If using Ion and devicetree, you should say Y here
-+
-+config ION_OF_SAMPLE
-+	bool "Sample driver"
-+	depends on ION_OF
-+	help
-+	  Small sample driver showing the Ion OF interface
-diff --git a/drivers/staging/android/ion/Makefile b/drivers/staging/android/ion/Makefile
-index a77417b..1309b91 100644
---- a/drivers/staging/android/ion/Makefile
-+++ b/drivers/staging/android/ion/Makefile
-@@ -8,4 +8,5 @@ endif
- obj-$(CONFIG_ION_DUMMY) += ion_dummy_driver.o
- obj-$(CONFIG_ION_TEGRA) += tegra/
- obj-$(CONFIG_ION_OF) += ion_of.o ion_physmem.o
-+obj-$(CONFIG_ION_OF_SAMPLE) += ion_of_sample.o
- 
-diff --git a/drivers/staging/android/ion/ion_of_sample.c b/drivers/staging/android/ion/ion_of_sample.c
-new file mode 100644
-index 0000000..bbcdf4d
---- /dev/null
-+++ b/drivers/staging/android/ion/ion_of_sample.c
-@@ -0,0 +1,96 @@
-+/*
-+ * Copyright (C) 2015 RC Module
-+ * Andrew Andrianov <andrew@ncrmnt.org>
-+ * Also based on work from Google, The Linux Foundation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include "ion.h"
-+#include "ion_priv.h"
-+#include "ion_of.h"
-+
-+struct sample_ion_dev {
-+        struct ion_heap         **heaps;
-+        struct ion_device       *idev;
-+};
-+
-+static struct ion_of_heap heaps[] = {
-+	PLATFORM_HEAP("sample-system", 0, ION_HEAP_TYPE_SYSTEM, "system"),
-+	PLATFORM_HEAP("sample-camera", 1, ION_HEAP_TYPE_DMA, "camera"),
-+	PLATFORM_HEAP("sample-fb", 2, ION_HEAP_TYPE_DMA, "fb"),
-+	{}
-+};
-+
-+static int ion_sample_probe(struct platform_device *pdev)
-+{
-+	struct ion_platform_data *data;
-+	struct sample_ion_dev *ipdev;
-+	int i;
-+
-+	ipdev = devm_kzalloc(&pdev->dev, sizeof(*ipdev), GFP_KERNEL);
-+	if (!ipdev)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ipdev);
-+
-+	ipdev->idev = ion_device_create(NULL);
-+	if (!ipdev->idev)
-+		return -ENOMEM;
-+
-+	data = ion_parse_dt(pdev, heaps);
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
-+
-+	ipdev->heaps = devm_kzalloc(&pdev->dev,
-+				sizeof(struct ion_heap)*data->nr, GFP_KERNEL);
-+
-+	if (!ipdev->heaps)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < data->nr; i++) {
-+		ipdev->heaps[i] = ion_heap_create(&data->heaps[i]);
-+		if (!ipdev->heaps[i])
-+			return -ENOMEM;
-+		ion_device_add_heap(ipdev->idev, ipdev->heaps[i]);
-+	}
-+	return 0;
-+}
-+
-+static int ion_sample_remove(struct platform_device *pdev)
-+{
-+	/* Everything should be devm */
-+	return 0;
-+}
-+
-+static const struct of_device_id of_match_table[] = {
-+	{ .compatible = "sample-ion", },
-+	{ /* end of list */ }
-+};
-+
-+static struct platform_driver ion_sample_driver = {
-+	.probe		= ion_sample_probe,
-+	.remove		= ion_sample_remove,
-+	.driver		= {
-+		.name	= "ion-of",
-+		.of_match_table = of_match_ptr(of_match_table),
-+	},
-+};
-+
-+static int __init ion_sample_init(void)
-+{
-+	return platform_driver_register(&ion_sample_driver);
-+}
-+device_initcall(ion_sample_init);
+moves this calculation to another place (which already makes this patch 
+unnecessary) and
+
+[PATCH v7 26/50] powerpc/powernv: Create PEs at PCI hot plugging time
+
+removes just introduced pnv_pci_ioda1_setup_dma() - if you remove it, then 
+there is no point in fixing it in the first place.
+
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 41 ++++++++++++++++++-------------
+>   1 file changed, 24 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 5a08e20..4c2e023 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -2383,7 +2383,7 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+>   		pnv_ioda_setup_bus_dma(pe, pe->pbus);
+>   }
+>
+> -static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+> +static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
+>   {
+>   	struct pci_controller *hose = phb->hose;
+>   	unsigned int residual, remaining, segs, tw, base;
+> @@ -2428,26 +2428,30 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>   				segs = remaining;
+>   		}
+>
+> -		/*
+> -		 * For IODA2 compliant PHB3, we needn't care about the weight.
+> -		 * The all available 32-bits DMA space will be assigned to
+> -		 * the specific PE.
+> -		 */
+> -		if (phb->type == PNV_PHB_IODA1) {
+> -			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
+> -				pe->dma_weight, segs);
+> -			pnv_pci_ioda1_setup_dma_pe(phb, pe, base, segs);
+> -		} else {
+> -			pe_info(pe, "Assign DMA32 space\n");
+> -			segs = 0;
+> -			pnv_pci_ioda2_setup_dma_pe(phb, pe);
+> -		}
+> +		pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
+> +			pe->dma_weight, segs);
+> +		pnv_pci_ioda1_setup_dma_pe(phb, pe, base, segs);
+>
+>   		remaining -= segs;
+>   		base += segs;
+>   	}
+>   }
+>
+> +static void pnv_pci_ioda2_setup_dma(struct pnv_phb *phb)
+> +{
+> +	struct pnv_ioda_pe *pe;
+> +
+> +	pnv_pci_ioda_setup_opal_tce_kill(phb);
+> +
+> +	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+> +		if (!pe->dma_weight)
+> +			continue;
+> +
+> +		pe_info(pe, "Assign DMA32 space\n");
+> +		pnv_pci_ioda2_setup_dma_pe(phb, pe);
+> +	}
+> +}
+> +
+>   #ifdef CONFIG_PCI_MSI
+>   static void pnv_ioda2_msi_eoi(struct irq_data *d)
+>   {
+> @@ -2931,10 +2935,13 @@ static void pnv_pci_ioda_setup_DMA(void)
+>   	struct pnv_phb *phb;
+>
+>   	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+> -		pnv_ioda_setup_dma(hose->private_data);
+> +		phb = hose->private_data;
+> +		if (phb->type == PNV_PHB_IODA1)
+> +			pnv_pci_ioda1_setup_dma(phb);
+> +		else
+> +			pnv_pci_ioda2_setup_dma(phb);
+>
+>   		/* Mark the PHB initialization done */
+> -		phb = hose->private_data;
+>   		phb->initialized = 1;
+>   	}
+>   }
+>
+
+
 -- 
-2.5.0
+Alexey
