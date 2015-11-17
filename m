@@ -1,41 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
-Date: Tue, 17 Nov 2015 12:06:03 +0100
-Message-ID: <CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
-References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
-	<1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
-	<CACRpkdapS-Vi_F-MqOFOPTHa2+zbrsPfPsbQA-Eks+tR3Wjg2A@mail.gmail.com>
-	<CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/13] xen: memory : Add new XENMAPSPACE type XENMAPSPACE_dev_mmio
+Date: Tue, 17 Nov 2015 12:16:49 +0100
+Message-ID: <CAKv+Gu_n9z7YS6HroH7WvBHJ8444o7NuNRsj74NGJMRxSFkX6Q@mail.gmail.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+	<1447754231-7772-5-git-send-email-shannon.zhao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447754231-7772-5-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Huangpeng (Peter)" <peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hangaohuai <hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 10, 2015 at 1:30 AM, Olof Johansson <olof@lixom.net> wrote:
-> On Mon, Sep 21, 2015 at 11:24 AM, Linus Walleij
-> <linus.walleij@linaro.org> wrote:
->> On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
->> <ludovic.desroches@atmel.com> wrote:
->>
->>> Add pio4 controller node to enable pinmux and gpio.
->>>
->>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
->>
->> Patch applied.
+On 17 November 2015 at 10:57,  <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >
-> Please don't merge DT changes through driver trees unless there's a
-> very specific reason to do so, since it introduces random conflicts.
 
-Sorry :(
+No empty commit logs please.
 
-Even noted this in the pull request to Torvalds, it was in the bottom
-of my patch stack so had been in -next for ages, I was afraid it
-would create more problem than it solves if I reverted the patch,
-but I guess I should have done so anyways.
-
-Yours,
-Linus Walleij
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  include/xen/interface/memory.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/xen/interface/memory.h b/include/xen/interface/memory.h
+> index 2ecfe4f..9aa8988 100644
+> --- a/include/xen/interface/memory.h
+> +++ b/include/xen/interface/memory.h
+> @@ -160,6 +160,7 @@ DEFINE_GUEST_HANDLE_STRUCT(xen_machphys_mapping_t);
+>  #define XENMAPSPACE_gmfn_foreign 4 /* GMFN from another dom,
+>                                     * XENMEM_add_to_physmap_range only.
+>                                     */
+> +#define XENMAPSPACE_dev_mmio     5 /* device mmio region */
+>
+>  /*
+>   * Sets the GPFN at which a particular page appears in the specified guest's
+> --
+> 2.1.0
+>
