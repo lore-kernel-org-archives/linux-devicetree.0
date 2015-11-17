@@ -1,8 +1,8 @@
 From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RESEND RFC/PATCH 4/8] dt-bindings: Add a binding for Mediatek Video
- Encoder
-Date: Tue, 17 Nov 2015 20:54:41 +0800
-Message-ID: <1447764885-23100-5-git-send-email-tiffany.lin@mediatek.com>
+Subject: [RESEND RFC/PATCH 5/8] arm64: dts: mediatek: Add Video Encoder for
+ MT8173
+Date: Tue, 17 Nov 2015 20:54:42 +0800
+Message-ID: <1447764885-23100-6-git-send-email-tiffany.lin@mediatek.com>
 References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,78 +22,70 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <p
 Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding documentation of Video Encoder for the
-MT8173 SoC from Mediatek.
+add video encoder driver for MT8173
 
 Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 ++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   47 ++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-new file mode 100644
-index 0000000..fea4d7c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-@@ -0,0 +1,58 @@
-+Mediatek Video Codec
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 098c15e..85ba167 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -545,6 +545,53 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		larb3: larb@18001000 {
++			compatible = "mediatek,mt8173-smi-larb";
++			reg = <0 0x18001000 0 0x1000>;
++			mediatek,smi = <&smi_common>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
++			clocks = <&vencsys CLK_VENC_CKE1>,
++				 <&vencsys CLK_VENC_CKE0>;
++			clock-names = "apb", "smi";
++		};
 +
-+Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
-+supports high resolution encoding functionalities.
++		vcodec_enc: vcodec@18002000 {
++			compatible = "mediatek,mt8173-vcodec-enc";
++			reg = <0 0x18002000 0 0x1000>,	/* VENC_SYS */
++			      <0 0x19002000 0 0x1000>;	/* VENC_LT_SYS */
++			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
++				     <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
++			larb = <&larb3>,
++			       <&larb5>;
++			iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
++				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
++				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
++			vpu = <&vpu>;
++			clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
++				 <&topckgen CLK_TOP_VENC_LT_SEL>,
++				 <&topckgen CLK_TOP_VCODECPLL_370P5>;
++			clock-names = "vencpll",
++				      "venc_lt_sel",
++				      "vcodecpll_370p5_ck";
++		};
 +
-+Required properties:
-+- compatible : "mediatek,mt8173-vcodec-enc" for encoder
-+- reg : Physical base address of the video codec registers and length of
-+  memory mapped region.
-+- interrupts : interrupt number to the cpu.
-+- larb : must contain the larbes of current platform
-+- clocks : list of clock specifiers, corresponding to entries in
-+  the clock-names property;
-+- clock-names: must contain "vencpll", "venc_lt_sel", "vcodecpll_370p5_ck"
-+- iommus : list of iommus specifiers should be enabled for hw encode.
-+  There are 2 cells needed to enable/disable iommu.
-+  The first one is local arbiter index(larbid), and the other is port
-+  index(portid) within local arbiter. Specifies the larbid and portid
-+  as defined in dt-binding/memory/mt8173-larb-port.h.
-+- vpu : the node of video processor unit
-+
-+Example:
-+vcodec_enc: vcodec@0x18002000 {
-+    compatible = "mediatek,mt8173-vcodec-enc";
-+    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
-+          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
-+    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
-+           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
-+    larb = <&larb3>,
-+           <&larb5>;
-+    iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
-+             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
-+             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
-+    vpu = <&vpu>;
-+    clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
-+             <&topckgen CLK_TOP_VENC_LT_SEL>,
-+             <&topckgen CLK_TOP_VCODECPLL_370P5>;
-+    clock-names = "vencpll",
-+                  "venc_lt_sel",
-+                  "vcodecpll_370p5_ck";
-+  };
+ 		vencltsys: clock-controller@19000000 {
+ 			compatible = "mediatek,mt8173-vencltsys", "syscon";
+ 			reg = <0 0x19000000 0 0x1000>;
 -- 
 1.7.9.5
