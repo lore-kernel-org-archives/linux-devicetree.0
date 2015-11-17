@@ -1,42 +1,98 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v4 03/10] ata: ahci_brcmstb: add quirk for different phy
-Date: Tue, 17 Nov 2015 15:06:58 -0500
-Message-ID: <20151117200658.GE22864@mtj.duckdns.org>
-References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
- <1446213684-2625-4-git-send-email-jaedon.shin@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: GPIO: Add gpio-initval
+Date: Tue, 17 Nov 2015 14:35:42 -0600
+Message-ID: <20151117203542.GA7091@rob-hp-laptop>
+References: <1447754878-21099-1-git-send-email-mpa@pengutronix.de>
+ <1447754878-21099-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1446213684-2625-4-git-send-email-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dragan Stancevic <dragan.stancevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1447754878-21099-2-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 30, 2015 at 11:01:17PM +0900, Jaedon Shin wrote:
-> Add quirk for phy interface of MIPS-based chipsets. The ARM-based
-> chipsets have four phy interface control registers and each port has two
-> registers but the MIPS-based chipsets have three. There are no
-> information and documentation.
+On Tue, Nov 17, 2015 at 11:07:57AM +0100, Markus Pargmann wrote:
+> Add a binding for GPIO initialization.
+
+Some comments, but they are really more on the gpio hog. I must have 
+missed them.
+ 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 34 ++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 12 deletions(-)
 > 
-> The Broadcom strict-ahci based BSP of legacy version did not control
-> these registers.
-...
->  enum brcm_ahci_quirks {
->  	BRCM_AHCI_QUIRK_NONCQ		= BIT(0),
-> +	BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE	= BIT(1),
->  };
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 069cdf6f9dac..d11abfa13add 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -155,29 +155,39 @@ gpio-controller@00000000 {
+>  	ngpios = <18>;
+>  }
+>  
+> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> -providing automatic GPIO request and configuration as part of the
+> -gpio-controller's driver probe function.
+> +The GPIO chip may contain GPIO definitions. These define properties for single
+> +GPIOs of this controller.
+>  
+> -Each GPIO hog definition is represented as a child node of the GPIO controller.
+> +There are two types of GPIO definitions:
+> +
+> +- GPIO hogging is a mechanism providing automatic GPIO request and
+> +  configuration as part of the gpio-controller driver's probe function. The
+> +  GPIO is held until the gpio-controller is removed.
 
-I see.  There's another quirk flag which actually needs to be
-persistent.  Hmm... I don't know.  Ah well, please disregard my
-previous comment.
+I can't say I like the term hogs, but that's just cosmetic.
 
-Thanks.
+> +- GPIO initialization provides an automatic initialization to known save
+> +  values. The GPIO can be used normally afterwards.
+> +
+> +Each GPIO definition is represented as a child node of the GPIO controller.
+>  Required properties:
+> -- gpio-hog:   A property specifying that this child node represent a GPIO hog.
+>  - gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+>  	      number of cells specified in its parent node (GPIO controller
+>  	      node).
+> -Only one of the following properties scanned in the order shown below.
+> -This means that when multiple properties are present they will be searched
+> -in the order presented below and the first match is taken as the intended
+> -configuration.
+> +
+> +Optional properties:
+> +- line-name:  The GPIO label name. If not present the node name is used.
 
--- 
-tejun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We already have "label" for this purpose.
+
+> +
+> + The following two options are mutually exclusive. One of them should be
+> + specified, but not both:
+> +- gpio-hog:   A property specifying that this child node represent a GPIO hog.
+> +- gpio-initval: This GPIO should be initialized to the specified configuration.
+> +
+> + The following three options are mutually exclusive. They change the setting of
+> + the GPIO pin. One of them should be specified:
+>  - input:      A property specifying to set the GPIO direction as input.
+>  - output-low  A property specifying to set the GPIO direction as output with
+>  	      the value low.
+>  - output-high A property specifying to set the GPIO direction as output with
+>  	      the value high.
+
+If they are mutually exclusive, then it should just be one property with 
+values. That is much more simple to validate.
+
+But none of this is really even needed. We can do all this with existing 
+bindings. Most gpio controllers use 2 cells and the 2nd cell was 
+reserved for something like this. Simply adding a -gpios property in the 
+gpio controller node would do the job:
+
+init-gpios = <&self n (GPIO_ACTIVE_HIGH | GPIO_OUTPUT)>;
+hog-gpios = <&self m GPIO_INPUT>;
+
+Perhaps we don't want to use GPIO_ACTIVE_x here, but we have 31 more 
+free bits to use.
+
+Rob
