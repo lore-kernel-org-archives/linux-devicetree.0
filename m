@@ -1,100 +1,82 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v3 2/2] gpiolib: Add GPIO initialization
-Date: Tue, 17 Nov 2015 11:07:58 +0100
-Message-ID: <1447754878-21099-3-git-send-email-mpa@pengutronix.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 1/2] dt-bindings: GPIO: Add gpio-initval
+Date: Tue, 17 Nov 2015 11:07:57 +0100
+Message-ID: <1447754878-21099-2-git-send-email-mpa@pengutronix.de>
 References: <1447754878-21099-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1447754878-21099-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447754878-21099-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This functions adds a way to initialize a GPIO without hogging it.
+Add a binding for GPIO initialization.
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/gpio/gpiolib-of.c | 13 ++++++++-----
- drivers/gpio/gpiolib.c    | 24 ++++++++++++++++++++++++
- drivers/gpio/gpiolib.h    |  2 ++
- 3 files changed, 34 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/gpio/gpio.txt | 34 ++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 5fe34a9df3e6..48cdc22eabf2 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -211,15 +211,18 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 	enum gpiod_flags dflags;
- 
- 	for_each_child_of_node(chip->of_node, np) {
--		if (!of_property_read_bool(np, "gpio-hog"))
--			continue;
- 
- 		desc = of_parse_own_gpio(np, &name, &lflags, &dflags);
--		if (IS_ERR(desc))
-+		if (IS_ERR(desc) || !dflags)
- 			continue;
- 
--		if (gpiod_hog(desc, name, lflags, dflags))
--			continue;
-+		if (of_property_read_bool(np, "gpio-hog"))
-+			gpiod_hog(desc, name, lflags, dflags);
-+		else if (of_property_read_bool(np, "gpio-initval"))
-+			gpiod_initialize(desc, lflags, dflags);
-+		else
-+			dev_dbg(chip->dev, "GPIO line %d (%s): neither gpio-hog nor gpio-initval found.\n",
-+				desc_to_gpio(desc), np->name);
- 	}
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 069cdf6f9dac..d11abfa13add 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -155,29 +155,39 @@ gpio-controller@00000000 {
+ 	ngpios = <18>;
  }
  
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index a18f00fc1bb8..3b35f2fafeb2 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2329,6 +2329,30 @@ static void gpiochip_free_hogs(struct gpio_chip *chip)
- }
+-The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+-providing automatic GPIO request and configuration as part of the
+-gpio-controller's driver probe function.
++The GPIO chip may contain GPIO definitions. These define properties for single
++GPIOs of this controller.
  
- /**
-+ * gpiod_initialize - Initialize a GPIO with a given value
-+ * @desc:	gpio whose value will be assigned
-+ * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
-+ *		of_get_gpio_hog()
-+ * @dflags:	gpiod_flags - optional GPIO initialization flags
-+ *
-+ * This is used to initialize GPIOs that were defined in DT
-+ */
-+int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
-+		     enum gpiod_flags dflags)
-+{
-+	int status;
+-Each GPIO hog definition is represented as a child node of the GPIO controller.
++There are two types of GPIO definitions:
 +
-+	status = gpiod_configure_flags(desc, NULL, dflags);
-+	if (status < 0) {
-+		pr_err("initial setup of GPIO (chip %s, offset %d) failed\n",
-+		       gpiod_to_chip(desc)->label, gpio_chip_hwgpio(desc));
-+		return status;
-+	}
++- GPIO hogging is a mechanism providing automatic GPIO request and
++  configuration as part of the gpio-controller driver's probe function. The
++  GPIO is held until the gpio-controller is removed.
++- GPIO initialization provides an automatic initialization to known save
++  values. The GPIO can be used normally afterwards.
 +
-+	return 0;
-+}
++Each GPIO definition is represented as a child node of the GPIO controller.
+ Required properties:
+-- gpio-hog:   A property specifying that this child node represent a GPIO hog.
+ - gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+ 	      number of cells specified in its parent node (GPIO controller
+ 	      node).
+-Only one of the following properties scanned in the order shown below.
+-This means that when multiple properties are present they will be searched
+-in the order presented below and the first match is taken as the intended
+-configuration.
 +
-+/**
-  * gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO function
-  * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-  * @con_id:	function within the GPIO consumer
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 98ab08c0aa2d..4abf53a5e651 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -107,6 +107,8 @@ int gpiod_request(struct gpio_desc *desc, const char *label);
- void gpiod_free(struct gpio_desc *desc);
- int gpiod_hog(struct gpio_desc *desc, const char *name,
- 		unsigned long lflags, enum gpiod_flags dflags);
-+int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
-+		     enum gpiod_flags dflags);
++Optional properties:
++- line-name:  The GPIO label name. If not present the node name is used.
++
++ The following two options are mutually exclusive. One of them should be
++ specified, but not both:
++- gpio-hog:   A property specifying that this child node represent a GPIO hog.
++- gpio-initval: This GPIO should be initialized to the specified configuration.
++
++ The following three options are mutually exclusive. They change the setting of
++ the GPIO pin. One of them should be specified:
+ - input:      A property specifying to set the GPIO direction as input.
+ - output-low  A property specifying to set the GPIO direction as output with
+ 	      the value low.
+ - output-high A property specifying to set the GPIO direction as output with
+ 	      the value high.
  
- /*
-  * Return the GPIO number of the passed descriptor relative to its chip
+-Optional properties:
+-- line-name:  The GPIO label name. If not present the node name is used.
+-
+ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 
+ 	qe_pio_a: gpio-controller@1400 {
 -- 
 2.6.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
