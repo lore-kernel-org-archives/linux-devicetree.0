@@ -1,69 +1,94 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT
- binding docs
-Date: Tue, 17 Nov 2015 15:00:50 -0600
-Message-ID: <20151117210050.GA11889@rob-hp-laptop>
-References: <20151117035320.30676.88818.sendpatchset@little-apple>
+From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Subject: Re: [PATCH 2/7] misc: eeprom: 93xx46: Add DT bindings to
+ eeprom_93xx46 driver.
+Date: Tue, 17 Nov 2015 16:14:32 -0500
+Message-ID: <564B98B8.20404@pid1solutions.com>
+References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
+ <1447733796-15546-3-git-send-email-cory.tusar@pid1solutions.com>
+ <20151117205321.GA7718@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151117035320.30676.88818.sendpatchset@little-apple>
+In-Reply-To: <20151117205321.GA7718@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 12:53:20PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-> 
-> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
-> IPMMU DT binding documentation. The example is also updated to show
-> how the generic compatible string may be used as fallback.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On 11/17/2015 03:53 PM, Rob Herring wrote:
+> On Mon, Nov 16, 2015 at 11:16:31PM -0500, Cory Tusar wrote:
+>> This commit documents bindings to be added to the eeprom_93xx46 driver
+>> which allow device word size and read-only attributes to be specified
+>> via devicetree.
+>>
+>> Currently the only supported device is a generic "eeprom-93xx46", which
+>> mirrors the configuration options previously available as a platform
+>> device.
+>>
+>> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/misc/eeprom-93xx46.txt       | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+>> new file mode 100644
+>> index 0000000..ba493a8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+>> @@ -0,0 +1,20 @@
+>> +EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
+>> +
+>> +Required properties:
+>> +- compatible : "eeprom-93xx46"
+> 
+> This should also have a compatible with the actual manufacturer.
 
-> ---
-> 
->  Changes since V1:
->  - Updated compat string section to the following:
->    "Must contain SoC-specific and generic entries from below."
-> 
->  Thanks to Laurent for feedback!
-> 
->  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   12 ++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-> +++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2015-11-17 12:45:26.080513000 +0900
-> @@ -7,7 +7,15 @@ connected to the IPMMU through a port ca
->  
->  Required Properties:
->  
-> -  - compatible: Must contain "renesas,ipmmu-vmsa".
-> +  - compatible: Must contain SoC-specific and generic entries from below.
-> +
-> +    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
-> +    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
-> +    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
-> +    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
-> +    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-> +    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
-> +
->    - reg: Base address and size of the IPMMU registers.
->    - interrupts: Specifiers for the MMU fault interrupts. For instances that
->      support secure mode two interrupts must be specified, for non-secure and
-> @@ -27,7 +35,7 @@ node with the following property:
->  Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
->  
->  	ipmmu_mx: mmu@fe951000 {
-> -		compatible = "renasas,ipmmu-vmsa";
-> +		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
->  		reg = <0 0xfe951000 0 0x1000>;
->  		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
+Above and beyond the one that's added later for the specific Atmel part
+I've tested with?
+
+>> +- data-size : number of data bits per word (either 8 or 16)
+>> +
+>> +Optional properties:
+>> +- read-only : parameter-less property which disables writes to the EEPROM
+>> +
+>> +Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
+>> +
+>> +Example:
+>> +	93c46c@0 {
+>> +		compatible = "eeprom-93xx46";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <1000000>;
+>> +		spi-cs-high;
+>> +		data-size = <8>;
+>> +	};
+>> -- 
+>> 2.4.10
+>>
+
+
+- -- 
+Cory Tusar
+Principal
+PID 1 Solutions, Inc.
+
+
+"There are two ways of constructing a software design.  One way is to
+ make it so simple that there are obviously no deficiencies, and the
+ other way is to make it so complicated that there are no obvious
+ deficiencies."  --Sir Charles Anthony Richard Hoare
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlZLmLgACgkQHT1tsfGwHJ/HTgCgjgtEntrpZNlGyHMjw3EPuOLT
+ZJ4AnRQPgOjG5IouJIXURjlkNGor9Npl
+=8pqx
+-----END PGP SIGNATURE-----
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
