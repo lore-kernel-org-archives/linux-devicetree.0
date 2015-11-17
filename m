@@ -1,91 +1,73 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 21/50] powerpc/powernv: Increase PE# capacity
-Date: Tue, 17 Nov 2015 12:56:34 +1100
-Message-ID: <20151117015634.GB1452@gwshan>
+Subject: Re: [PATCH v7 22/50] powerpc/powernv: Introduce pnv_ioda_init_pe()
+Date: Tue, 17 Nov 2015 12:58:17 +1100
+Message-ID: <20151117015817.GC1452@gwshan>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-22-git-send-email-gwshan@linux.vnet.ibm.com>
- <87y4dxbh95.fsf@gamma.ozlabs.ibm.com>
+ <1446642770-4681-23-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87wpthbh6u.fsf@gamma.ozlabs.ibm.com>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87y4dxbh95.fsf@gamma.ozlabs.ibm.com>
+In-Reply-To: <87wpthbh6u.fsf@gamma.ozlabs.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Daniel Axtens <dja@axtens.net>
 Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 11:29:26AM +1100, Daniel Axtens wrote:
+On Tue, Nov 17, 2015 at 11:30:49AM +1100, Daniel Axtens wrote:
 >Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
 >
->> Each PHB maintains an array helping to translate 2-bytes Request
->> ID (RID) to PE# with the assumption that PE# takes one byte, meaning
->> that we can't have more than 256 PEs. However, pci_dn->pe_number
->> already had 4-bytes for the PE#.
->>
->> This extends the PE# capacity so that each of them will be 4-bytes
->> long. Then we can reuse IODA_INVALID_PE to check the PE# stored in
->> phb->pe_rmap[] is valid or not.
->
->Just for clarity, could you make it clear in the commit message that
->you're increasing the PE# capacity _in the PHB_? I just found it a bit
->confusing the first time I read it.
->
->With that clarified I'll be happy to add my reviewed-by tag.
->
-
-Sure, will add it and thanks for your happiness :-)
-
+>> This introduces pnv_ioda_init_pe() to initialize the specified PE
+>> instance (phb->ioda.pe_array[x]). It's used by pnv_ioda_alloc_pe()
+>> and pnv_ioda_reserve_pe(). No logical changes introduced.
 >>
 >> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 >> ---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 6 +++++-
->>  arch/powerpc/platforms/powernv/pci.h      | 7 ++-----
->>  2 files changed, 7 insertions(+), 6 deletions(-)
+>>  arch/powerpc/platforms/powernv/pci-ioda.c | 14 ++++++++++----
+>>  1 file changed, 10 insertions(+), 4 deletions(-)
 >>
 >> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->> index 0e66c4d..ef93a01 100644
+>> index ef93a01..488e0f8 100644
 >> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 >> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->> @@ -766,7 +766,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>> @@ -129,6 +129,14 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned long flags)
+>>  		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
+>>  }
 >>  
->>  	/* Clear the reverse map */
->>  	for (rid = pe->rid; rid < rid_end; rid++)
->> -		phb->ioda.pe_rmap[rid] = 0;
->> +		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
->>  
->>  	/* Release from all parents PELT-V */
->>  	while (parent) {
->> @@ -3164,6 +3164,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>  	if (prop32)
->>  		phb->ioda.reserved_pe_idx = be32_to_cpup(prop32);
->>  
->> +	/* Invalidate RID to PE# mapping */
->> +	for (i = 0; i < ARRAY_SIZE(phb->ioda.pe_rmap); ++i)
->> +		phb->ioda.pe_rmap[i] = IODA_INVALID_PE;
+>> +static struct pnv_ioda_pe *pnv_ioda_init_pe(struct pnv_phb *phb, int pe_no)
+>> +{
+>> +	phb->ioda.pe_array[pe_no].phb = phb;
+>> +	phb->ioda.pe_array[pe_no].pe_number = pe_no;
 >> +
->>  	/* Parse 64-bit MMIO range */
->>  	pnv_ioda_parse_m64_window(phb);
+>> +	return &phb->ioda.pe_array[pe_no];
+>You have the function returning the newly initalized PE here...
+>
+>> +}
+>> +
+>>  static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+>>  {
+>>  	if (!(pe_no >= 0 && pe_no < phb->ioda.total_pe_num)) {
+>> @@ -141,8 +149,7 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+>>  		pr_debug("%s: PE %d was reserved on PHB#%x\n",
+>>  			 __func__, pe_no, phb->hose->global_number);
 >>  
->> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->> index 0802fcd..5df945f 100644
->> --- a/arch/powerpc/platforms/powernv/pci.h
->> +++ b/arch/powerpc/platforms/powernv/pci.h
->> @@ -162,11 +162,8 @@ struct pnv_phb {
->>  			struct list_head	pe_list;
->>  			struct mutex            pe_list_mutex;
->>  
->> -			/* Reverse map of PEs, will have to extend if
->> -			 * we are to support more than 256 PEs, indexed
->> -			 * bus { bus, devfn }
->> -			 */
->> -			unsigned char		pe_rmap[0x10000];
->> +			/* Reverse map of PEs, indexed by {bus, devfn} */
->> +			int			pe_rmap[0x10000];
->>  
->>  			/* TCE cache invalidate registers (physical and
->>  			 * remapped)
+>> -	phb->ioda.pe_array[pe_no].phb = phb;
+>> -	phb->ioda.pe_array[pe_no].pe_number = pe_no;
+>> +	pnv_ioda_init_pe(phb, pe_no);
+>... but then you ignore the result here and in the other function you've
+>modified.
+>
+>It looks like you're using the result in the next patch though, so I
+>wonder if you would be better to merge this patch with the next
+>one. However, as I said before I'll defer to Alexey on decisions about
+>how to split the patch series if he has a different opinion.
+>
+
+I'd like to keep this separate when thinking about the rule I was told before:
+one patch does one thing if it can. Also, merging it to next one will make
+next one harder to be reiview.
 
 Thanks,
 Gavin
