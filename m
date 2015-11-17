@@ -1,56 +1,74 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT binding docs
-Date: Tue, 17 Nov 2015 12:53:20 +0900
-Message-ID: <20151117035320.30676.88818.sendpatchset@little-apple>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-sh@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, galak@codeaurora.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
+From: Zain Wang <zain.wang@rock-chips.com>
+Subject: [PATCH v4 1/4] crypto: rockchip/crypto - add DT bindings documentation
+Date: Tue, 17 Nov 2015 12:00:44 +0800
+Message-ID: <1447732847-30514-2-git-send-email-zain.wang@rock-chips.com>
+References: <1447732847-30514-1-git-send-email-zain.wang@rock-chips.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1447732847-30514-1-git-send-email-zain.wang@rock-chips.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Zain Wang <zain.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+Add DT bindings documentation for the rk3288 crypto drivers.
 
-Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
-IPMMU DT binding documentation. The example is also updated to show
-how the generic compatible string may be used as fallback.
+Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
+Changed in v4:
+- None
 
- Changes since V1:
- - Updated compat string section to the following:
-   "Must contain SoC-specific and generic entries from below."
+Changed in v3:
+- add reset property
 
- Thanks to Laurent for feedback!
+Changed in v2:
+- None
 
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   12 ++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Changed in v1:
+- remove the _crypto suffix
+- use "rockchip,rk3288-crypto" instead of "rockchip,rk3288"
+- remove the description of status
 
---- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2015-11-17 12:45:26.080513000 +0900
-@@ -7,7 +7,15 @@ connected to the IPMMU through a port ca
- 
- Required Properties:
- 
--  - compatible: Must contain "renesas,ipmmu-vmsa".
-+  - compatible: Must contain SoC-specific and generic entries from below.
+ .../devicetree/bindings/crypto/rockchip-crypto.txt | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+
+diff --git a/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+new file mode 100644
+index 0000000..096df34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/rockchip-crypto.txt
+@@ -0,0 +1,29 @@
++Rockchip Electronics And Security Accelerator
 +
-+    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
-+    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
-+    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
-+    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
-+    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-+    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
++Required properties:
++- compatible: Should be "rockchip,rk3288-crypto"
++- reg: Base physical address of the engine and length of memory mapped
++       region
++- interrupts: Interrupt number
++- clocks: Reference to the clocks about crypto
++- clock-names: "aclk" used to clock data
++	       "hclk" used to clock data
++	       "sclk" used to clock crypto accelerator
++	       "apb_pclk" used to clock dma
++- resets: Must contain an entry for each entry in reset-names.
++	  See ../reset/reset.txt for details.
++- reset-names: Must include the name "crypto-rst".
 +
-   - reg: Base address and size of the IPMMU registers.
-   - interrupts: Specifiers for the MMU fault interrupts. For instances that
-     support secure mode two interrupts must be specified, for non-secure and
-@@ -27,7 +35,7 @@ node with the following property:
- Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
- 
- 	ipmmu_mx: mmu@fe951000 {
--		compatible = "renasas,ipmmu-vmsa";
-+		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
- 		reg = <0 0xfe951000 0 0x1000>;
- 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
++Examples:
++
++	crypto: cypto-controller@ff8a0000 {
++		compatible = "rockchip,rk3288-crypto";
++		reg = <0xff8a0000 0x4000>;
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_CRYPTO>, <&cru HCLK_CRYPTO>,
++			 <&cru SCLK_CRYPTO>, <&cru ACLK_DMAC1>;
++		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
++		resets = <&cru SRST_CRYPTO>;
++		reset-names = "crypto-rst";
++		status = "okay";
++	};
+-- 
+1.9.1
