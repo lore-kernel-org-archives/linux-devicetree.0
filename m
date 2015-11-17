@@ -1,124 +1,86 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v7 17/50] powerpc/powernv: Avoid calculating DMA32
- segments on PHB3
-Date: Tue, 17 Nov 2015 12:07:17 +1100
-Message-ID: <564A7DC5.5060702@ozlabs.ru>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 10/50] powerpc/powernv: Simplify
+ pnv_ioda_setup_pe_seg()
+Date: Tue, 17 Nov 2015 11:54:59 +1100
+Message-ID: <20151117005459.GA24472@gwshan>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-18-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-11-git-send-email-gwshan@linux.vnet.ibm.com>
+ <87r3k4hx89.fsf@gamma.ozlabs.ibm.com>
+ <20151105235218.GC30465@gwshan>
+ <56498D4E.7010009@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-18-git-send-email-gwshan@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <56498D4E.7010009@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, Daniel Axtens <dja@axtens.net>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 12:12 AM, Gavin Shan wrote:
-> In pnv_ioda_setup_dma(), it's unnecessary to calculate the DMA32
-> segments for PEs on PHB3 as the whole available DMA32 space can
-> be assigned to one specific PE on PHB3.
+On Mon, Nov 16, 2015 at 07:01:18PM +1100, Alexey Kardashevskiy wrote:
+>On 11/06/2015 10:52 AM, Gavin Shan wrote:
+>>On Fri, Nov 06, 2015 at 09:56:06AM +1100, Daniel Axtens wrote:
+>>>Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
+>>>
+>>>>The original implementation of pnv_ioda_setup_pe_seg() configures
+>>>>IO and M32 segments by separate logics, which can be merged by
+>>>>by caching @segmap, @seg_size, @win in advance. This shouldn't
+>>>>cause any behavioural changes.
+>>>>
+>>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>>---
+>>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 62 ++++++++++++++-----------------
+>>>>  1 file changed, 28 insertions(+), 34 deletions(-)
+>>>>
+>>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>index 7ee7cfe..553d3f3 100644
+>>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>@@ -2752,8 +2752,10 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>>>>  	struct pnv_phb *phb = hose->private_data;
+>>>>  	struct pci_bus_region region;
+>>>>  	struct resource *res;
+>>>>-	int i, index;
+>>>>-	int rc;
+>>>>+	unsigned int segsize;
+>>>>+	int *segmap, index, i;
+>>>>+	uint16_t win;
+>>>>+	int64_t rc;
+>>>
+>>>Good catch! Opal return codes are 64 bit and that should be explicit
+>>>in the type. However, I seem to remember that we preferred a different
+>>>type for 64 bit ints in the kernel. I think it's s64, and there are some
+>>>other uses of that in pci_ioda.c for return codes.
+>>>
+>>
+>>Both int64_t and s64 are fine. I used s64 for the OPAL return value, but
+>>Alexey likes "int64_t", which is ok to me as well. I won't change it back
+>>to s64 :-)
+>>
+>>>(I'm actually surprised that's not picked up as a compiler
+>>>warning. Maybe that's something to look at in future.)
+>>>
+>>
+>>Indeed, I didn't see a warning from gcc.
+>>
+>>>The rest of the patch looks good on casual inspection - to be sure I'll
+>>>test the entire series on a machine. (hopefully, time permitting!)
+>>>
+>>
+>>I run scripts/checkpatch.pl on the patchset. Only one warning came from
+>>[PATCH 44/50], but I won't bother to change that as the warning was
+>>brought by original code.
 >
-> This splits pnv_ioda_setup_dma() to pnv_pci_ioda1_setup_dma() and
-> pnv_pci_ioda2_setup_dma() in order to avoid calculating DMA32
-> segments for PEs on PHB3. No logical changes introduced.
-
-
-This patch is not needed as
-
-[PATCH v7 20/50] powerpc/powernv: Improve DMA32 segment calculation
-
-moves this calculation to another place (which already makes this patch 
-unnecessary) and
-
-[PATCH v7 26/50] powerpc/powernv: Create PEs at PCI hot plugging time
-
-removes just introduced pnv_pci_ioda1_setup_dma() - if you remove it, then 
-there is no point in fixing it in the first place.
-
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 41 ++++++++++++++++++-------------
->   1 file changed, 24 insertions(+), 17 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 5a08e20..4c2e023 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -2383,7 +2383,7 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->   		pnv_ioda_setup_bus_dma(pe, pe->pbus);
->   }
->
-> -static void pnv_ioda_setup_dma(struct pnv_phb *phb)
-> +static void pnv_pci_ioda1_setup_dma(struct pnv_phb *phb)
->   {
->   	struct pci_controller *hose = phb->hose;
->   	unsigned int residual, remaining, segs, tw, base;
-> @@ -2428,26 +2428,30 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->   				segs = remaining;
->   		}
->
-> -		/*
-> -		 * For IODA2 compliant PHB3, we needn't care about the weight.
-> -		 * The all available 32-bits DMA space will be assigned to
-> -		 * the specific PE.
-> -		 */
-> -		if (phb->type == PNV_PHB_IODA1) {
-> -			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
-> -				pe->dma_weight, segs);
-> -			pnv_pci_ioda1_setup_dma_pe(phb, pe, base, segs);
-> -		} else {
-> -			pe_info(pe, "Assign DMA32 space\n");
-> -			segs = 0;
-> -			pnv_pci_ioda2_setup_dma_pe(phb, pe);
-> -		}
-> +		pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
-> +			pe->dma_weight, segs);
-> +		pnv_pci_ioda1_setup_dma_pe(phb, pe, base, segs);
->
->   		remaining -= segs;
->   		base += segs;
->   	}
->   }
->
-> +static void pnv_pci_ioda2_setup_dma(struct pnv_phb *phb)
-> +{
-> +	struct pnv_ioda_pe *pe;
-> +
-> +	pnv_pci_ioda_setup_opal_tce_kill(phb);
-> +
-> +	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
-> +		if (!pe->dma_weight)
-> +			continue;
-> +
-> +		pe_info(pe, "Assign DMA32 space\n");
-> +		pnv_pci_ioda2_setup_dma_pe(phb, pe);
-> +	}
-> +}
-> +
->   #ifdef CONFIG_PCI_MSI
->   static void pnv_ioda2_msi_eoi(struct irq_data *d)
->   {
-> @@ -2931,10 +2935,13 @@ static void pnv_pci_ioda_setup_DMA(void)
->   	struct pnv_phb *phb;
->
->   	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		pnv_ioda_setup_dma(hose->private_data);
-> +		phb = hose->private_data;
-> +		if (phb->type == PNV_PHB_IODA1)
-> +			pnv_pci_ioda1_setup_dma(phb);
-> +		else
-> +			pnv_pci_ioda2_setup_dma(phb);
->
->   		/* Mark the PHB initialization done */
-> -		phb = hose->private_data;
->   		phb->initialized = 1;
->   	}
->   }
+>None of these patches failed checkpatch.pl check, what was the error in 44/50?
 >
 
+You're right that none of those patches failed with checkpatch.pl. I had revison
+6.1, 6.2, 6.3 before this revision (v7) was posted. There was a warning for 44/50
+in 6.3 (perhaps).
 
--- 
-Alexey
+I run checkpatch.pl on all (v7) patches, no warning reported.
+
+Thanks,
+Gavin
