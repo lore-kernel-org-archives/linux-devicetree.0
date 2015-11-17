@@ -1,26 +1,107 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT
- binding docs
-Date: Tue, 17 Nov 2015 11:20:19 -0800
-Message-ID: <20151117192018.GM23979@verge.net.au>
-References: <20151117035320.30676.88818.sendpatchset@little-apple>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 5/7] Documentation: bindings: Add SMP related
+ documentation
+Date: Tue, 17 Nov 2015 13:30:46 -0600
+Message-ID: <20151117193046.GA31149@rob-hp-laptop>
+References: <1447772202-12418-1-git-send-email-carlo@caione.org>
+ <1447772202-12418-6-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151117035320.30676.88818.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-sh@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, galak@codeaurora.org
+In-Reply-To: <1447772202-12418-6-git-send-email-carlo@caione.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, linux-meson@googlegroups.com, drake@endlessm.com, jerry.cao@amlogic.com, victor.wan@amlogic.com, pawel.moll@arm.com, arnd@arndb.de, Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 12:53:20PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
-> IPMMU DT binding documentation. The example is also updated to show
-> how the generic compatible string may be used as fallback.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+On Tue, Nov 17, 2015 at 03:56:40PM +0100, Carlo Caione wrote:
+> From: Carlo Caione <carlo@endlessm.com>
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Please give some indication in the subject what platform this change is 
+for:
+
+dt-bindings: amlogic: ...
+
+> 
+> With this patch we add documentation for:
+> 
+> * power-management-unit: the PMU is used to bring up the cores during
+>   SMP operations
+> * sram: among other things the sram is used to store the first code
+>   executed by the core when it is powered up
+> * cpu-enable-method: the CPU enable method used by Amlogic Meson8b SoCs
+> 
+> Signed-off-by: Carlo Caione <carlo@endlessm.com>
+> ---
+>  .../devicetree/bindings/arm/amlogic/pmu.txt        | 16 +++++++
+>  .../devicetree/bindings/arm/amlogic/smp-sram.txt   | 32 +++++++++++++
+>  .../arm/cpu-enable-method/amlogic,meson8b-smp      | 53 ++++++++++++++++++++++
+
+
+> diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/amlogic,meson8b-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/amlogic,meson8b-smp
+> new file mode 100644
+> index 0000000..95ee458b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/amlogic,meson8b-smp
+> @@ -0,0 +1,53 @@
+> +=========================================================
+> +Secondary CPU enable-method "amlogic,meson8b-smp" binding
+> +=========================================================
+> +
+> +This document describes the "amlogic,meson8b-smp" method for enabling secondary
+> +CPUs. To apply to all CPUs, a single "amlogic,meson8b-smp" enable method should
+> +be defined in the "cpus" node.
+> +
+> +Enable method name:	"amlogic,meson8b-smp"
+
+Just add this to Documentation/devicetree/bindings/arm/cpus.txt and 
+remove this file.
+
+> +Compatible machines:	"amlogic,meson8b"
+> +Compatible CPUs:	"arm,cortex-a5"
+> +Related properties:	(none)
+> +
+> +Example:
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		enable-method = "amlogic,meson8b-smp";
+> +
+> +		cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a5";
+> +			next-level-cache = <&L2>;
+> +			reg = <0x200>;
+> +			resets = <&clkc RST_CORE0>;
+> +		};
+> +
+> +		cpu@201 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a5";
+> +			next-level-cache = <&L2>;
+> +			reg = <0x201>;
+> +			resets = <&clkc RST_CORE1>;
+> +		};
+> +
+> +		cpu@202 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a5";
+> +			next-level-cache = <&L2>;
+> +			reg = <0x202>;
+> +			resets = <&clkc RST_CORE2>;
+> +		};
+> +
+> +		cpu@203 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a5";
+> +			next-level-cache = <&L2>;
+> +			reg = <0x203>;
+> +			resets = <&clkc RST_CORE3>;
+> +		};
+> +	};
+> +
+> -- 
+> 2.5.0
+> 
