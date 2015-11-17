@@ -1,121 +1,51 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v7 25/50] powerpc/powernv: Reserve PE for root bus
-Date: Tue, 17 Nov 2015 17:04:42 +1100
-Message-ID: <564AC37A.2060701@ozlabs.ru>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-26-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCHv2 2/3] staging: ion: Add files for parsing the devicetree
+Date: Tue, 17 Nov 2015 09:15:49 +0300
+Message-ID: <20151117061549.GM18797@mwanda>
+References: <1447721855-7574-1-git-send-email-laura@labbott.name>
+ <1447721855-7574-3-git-send-email-laura@labbott.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-26-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1447721855-7574-3-git-send-email-laura@labbott.name>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Laura Abbott <laura@labbott.name>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Feng Tang <feng.tang@intel.com>, Andrew Andrianov <andrew@ncrmnt.org>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, arve@android.com, Colin Cross <ccross@google.com>, linux-kernel@vger.kernel.org, Riley Andrews <riandrews@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 12:12 AM, Gavin Shan wrote:
-> We're going to reserve/assign PEs when pcibios_setup_bridge() is
-> called. The function won't be called for root bus as it doesn't
-> have parent bridge. However, the root bus still needs a PE to be
-> covered.
->
-> This reserves PE numbers that are adjacent to the reserved one
-> for root buses.
-
-
-Somewhere in the patchset you need to describe why you need a separate PE 
-for a root bus and why reserved_pe_idx is not enough for this.
-
-
-
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 33 ++++++++++++++++++++++---------
->   arch/powerpc/platforms/powernv/pci.h      |  1 +
->   2 files changed, 25 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index eea1c96..5e6745f 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -207,14 +207,14 @@ static int pnv_ioda2_init_m64(struct pnv_phb *phb)
->   	set_bit(phb->ioda.m64_bar_idx, &phb->ioda.m64_bar_alloc);
->
->   	/*
-> -	 * Strip off the segment used by the reserved PE, which is
-> -	 * expected to be 0 or last one of PE capabicity.
-> +	 * Exclude the segments for reserved and root bus PE, which
-> +	 * are first or last two PEs.
->   	 */
->   	r = &phb->hose->mem_resources[1];
->   	if (phb->ioda.reserved_pe_idx == 0)
-> -		r->start += phb->ioda.m64_segsize;
-> +		r->start += (2 * phb->ioda.m64_segsize);
->   	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
-> -		r->end -= phb->ioda.m64_segsize;
-> +		r->end -= (2 * phb->ioda.m64_segsize);
->   	else
->   		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
->   			phb->ioda.reserved_pe_idx);
-> @@ -294,14 +294,14 @@ static int pnv_ioda1_init_m64(struct pnv_phb *phb)
->   	}
->
->   	/*
-> -	 * Exclude the segment used by the reserved PE, which
-> -	 * is expected to be 0 or last supported PE#.
-> +	 * Exclude the segments for reserved and root bus PE, which
-> +	 * are first or last two PEs.
->   	 */
->   	r = &phb->hose->mem_resources[1];
->   	if (phb->ioda.reserved_pe_idx == 0)
-> -		r->start += phb->ioda.m64_segsize;
-> +		r->start += (2 * phb->ioda.m64_segsize);
->   	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
-> -		r->end -= phb->ioda.m64_segsize;
-> +		r->end -= (2 * phb->ioda.m64_segsize);
->   	else
->   		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
->   			phb->ioda.reserved_pe_idx);
-> @@ -3231,7 +3231,22 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->   			phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
->   	}
->   	phb->ioda.pe_array = aux + pemap_off;
-> -	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
+On Mon, Nov 16, 2015 at 04:57:34PM -0800, Laura Abbott wrote:
+> +	for_each_available_child_of_node(dt_node, node) {
+> +		struct platform_device *heap_pdev;
 > +
-> +	/*
-> +	 * Choose PE number for root bus, which shouldn't have
-> +	 * M64 resources consumed by its child devices. To pick
-> +	 * the PE number adjacent to the reserved one if possible.
-> +	 */
-> +	pnv_ioda_reserve_pe(phb, phb->ioda.reserved_pe_idx);
-> +	if (phb->ioda.reserved_pe_idx == 0) {
-> +		phb->ioda.root_pe_idx = 1;
-> +		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
-> +	} else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1)) {
-> +		phb->ioda.root_pe_idx = phb->ioda.reserved_pe_idx - 1;
-> +		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
-> +	} else {
-> +		phb->ioda.root_pe_idx = IODA_INVALID_PE;
-> +	}
->
->   	INIT_LIST_HEAD(&phb->ioda.pe_list);
->   	mutex_init(&phb->ioda.pe_list_mutex);
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index e55ab0e..a8ba97f 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -120,6 +120,7 @@ struct pnv_phb {
->   			/* Global bridge info */
->   			unsigned int		total_pe_num;
->   			unsigned int		reserved_pe_idx;
-> +			unsigned int		root_pe_idx;
->
->   			/* 32-bit MMIO window */
->   			unsigned int		m32_size;
->
+> +		ret = ion_parse_dt_heap_common(node, &heaps[i], compatible);
+> +		if (ret)
+> +			return ERR_PTR(ret);
+> +
+> +		heap_pdev = of_platform_device_create(node, heaps[i].name,
+> +							&pdev->dev);
+
+We should free these if something fails later in the function.
+
+> +		if (!pdev)
+> +			return ERR_PTR(-ENOMEM);
+> +		heap_pdev->dev.platform_data = &heaps[i];
+> +
+> +		heaps[i].priv = &heap_pdev->dev;
+> +
+> +		ret = ion_setup_heap_common(pdev, node, &heaps[i]);
+> +		if (ret)
+> +			return ERR_PTR(ret);
 
 
--- 
-Alexey
+regards,
+dan carpenter
