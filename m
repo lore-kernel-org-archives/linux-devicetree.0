@@ -1,82 +1,40 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v12 1/3] dt-bindings: Add a binding for Mediatek xHCI host
- controller
-Date: Tue, 17 Nov 2015 13:58:35 +0300
-Message-ID: <564B085B.7060706@cogentembedded.com>
-References: <1447751921-26746-1-git-send-email-chunfeng.yun@mediatek.com>
- <1447751921-26746-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+Date: Tue, 17 Nov 2015 12:00:06 +0100
+Message-ID: <CACRpkdZTHcROza2diFCOj783T1zfbkd=Dov3PUzDV2U35qEFXA@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
+	<56261239.5030007@linaro.org>
+	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
+	<CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
+	<CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447751921-26746-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, Nov 6, 2015 at 1:57 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
 
-On 11/17/2015 12:18 PM, Chunfeng Yun wrote:
+> Thinking again at it, I persist to believe have the defines makes it
+> easier to use.
+> With auto-completion, it makes it faster and less error prone to
+> select the right
+> alternate function without parsing the datasheet.
 
-> add a DT binding documentation of xHCI host controller for the
-> MT8173 SoC from Mediatek.
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
->   1 file changed, 51 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
->
-> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> new file mode 100644
-> index 0000000..a78f20b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> @@ -0,0 +1,51 @@
-> +MT8173 xHCI
-> +
-> +The device node for Mediatek SOC USB3.0 host controller
-> +
-> +Required properties:
-> + - compatible : should contain "mediatek,mt8173-xhci"
-> + - reg : specifies physical base address and size of the registers,
-> +	the first one for MAC, the second for IPPC
-> + - interrupts : interrupt used by the controller
-> + - power-domains : a phandle to USB power domain node to control USB's
-> +	mtcmos
+Auto-completion ... should we design our source code to
+fit certain editors?
 
-    What's that?
+> But as these defines are not actually used on driver side, maybe I
+> could just move
+> them to the dts directory?
 
-> + - vusb33-supply : regulator of USB avdd3.3v
-> +
-> + - clocks : a list of phandle + clock-specifier pairs, one for each
-> +	entry in clock-names
-> + - clock-names : must contain
-> +	"sys_ck": for clock of xHCI MAC
-> +	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-> +	"wakeup_deb_p0": for USB wakeup debounce clock of port1
+No strong opinion there. include/dt-bindings is part of the bindings
+documentation actually so I guess it goes there.
 
-    "wakeup_deb_p1"?
-
-> +
-> + - phys : a list of phandle + phy specifier pairs
-> +
-> +Optional properties:
-> + - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
-                                ^^ IP?
-
-> +	mode;
-> + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-> +	control register, it depends on "mediatek,wakeup-src".
-> + - vbus-supply : reference to the VBUS regulator;
-> + - usb3-lpm-capable : supports USB3.0 LPM
-
-[...]
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
