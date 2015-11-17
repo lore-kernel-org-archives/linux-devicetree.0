@@ -1,79 +1,117 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v4] Documentation: dt: binding: fsl: add devicetree
- binding for describing RCPM
-Date: Mon, 16 Nov 2015 20:07:28 -0600
-Message-ID: <1447726048.2262.385.camel@freescale.com>
-References: <1445841852-6830-1-git-send-email-dongsheng.wang@freescale.com>
- <20151116172611.GA27814@rob-hp-laptop>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
+Date: Tue, 17 Nov 2015 13:11:56 +1100
+Message-ID: <564A8CEC.4050906@ozlabs.ru>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
+ <56498D7B.7000307@ozlabs.ru> <20151117013813.GB31584@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20151116172611.GA27814@rob-hp-laptop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh@kernel.org>, Dongsheng Wang <dongsheng.wang@freescale.com>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, Chenhui Zhao <chenhui.zhao@freescale.com>, shawnguo@kernel.org, stuart.yoder@freescale.com, Tang Yuantian <Yuantian.Tang@freescale.com>, jason.jin@freescale.com, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151117013813.GB31584@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE1LTExLTE2IGF0IDExOjI2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiAr
-U3VkZWVwCj4gCj4gT24gTW9uLCBPY3QgMjYsIDIwMTUgYXQgMDI6NDQ6MTJQTSArMDgwMCwgRG9u
-Z3NoZW5nIFdhbmcgd3JvdGU6Cj4gPiBGcm9tOiBXYW5nIERvbmdzaGVuZyA8ZG9uZ3NoZW5nLndh
-bmdAZnJlZXNjYWxlLmNvbT4KPiA+IAo+ID4gUkNQTSBpcyB0aGUgUnVuIENvbnRyb2wgYW5kIFBv
-d2VyIE1hbmFnZW1lbnQgbW9kdWxlIHBlcmZvcm1zIGFsbAo+ID4gZGV2aWNlLWxldmVsIHRhc2tz
-IGFzc29jaWF0ZWQgd2l0aCBkZXZpY2UgcnVuIGNvbnRyb2wgYW5kIHBvd2VyCj4gPiBtYW5hZ2Vt
-ZW50Lgo+ID4gCj4gPiBBZGQgdGhpcyBmb3IgZnJlZXNjYWxlIHBvd2VycGMgcGxhdGZvcm0gYW5k
-IGxheWVyc2NhcGUgcGxhdGZvcm0uCj4gCj4gWy4uLl0KPiAKPiA+IEBAIC0wLDAgKzEsNjQgQEAK
-PiA+ICsqIFJ1biBDb250cm9sIGFuZCBQb3dlciBNYW5hZ2VtZW50Cj4gPiArLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gK1RoZSBSQ1BNIHBlcmZvcm1zIGFs
-bCBkZXZpY2UtbGV2ZWwgdGFza3MgYXNzb2NpYXRlZCB3aXRoIGRldmljZSBydW4KPiA+IGNvbnRy
-b2wKPiA+ICthbmQgcG93ZXIgbWFuYWdlbWVudC4KPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJp
-dGVzOgo+ID4gKyAgLSByZWcgOiBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0
-IG9mIHRoZSBSQ1BNIGJsb2NrLgo+ID4gKyAgLSBmc2wsI3JjcG0td2FrZXVwLWNlbGxzIDogVGhl
-IG51bWJlciBvZiBJUFBERVhQQ1IgcmVnaXN0ZXIgY2VsbHMgaW4KPiA+IHRoZQo+ID4gKwlmc2ws
-cmNwbS13YWtldXAgcHJvcGVydHkuCj4gCj4gWy4uLl0KPiAKPiA+ICsqIEZyZWVzY2FsZSBSQ1BN
-IFdha2V1cCBTb3VyY2UgRGV2aWNlIFRyZWUgQmluZGluZ3MKPiA+ICstLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPiArUmVxdWlyZWQgZnNsLHJjcG0td2FrZXVw
-IHByb3BlcnR5IHNob3VsZCBiZSBhZGRlZCB0byBhIGRldmljZSBub2RlIGlmIHRoZQo+ID4gZGV2
-aWNlCj4gPiArY2FuIGJlIHVzZWQgYXMgYSB3YWtldXAgc291cmNlLgo+ID4gKwo+ID4gKyAgLSBm
-c2wscmNwbS13YWtldXA6IENvbnNpc3RzIG9mIGEgcG9pbnRlciB0byB0aGUgcmNwbSBub2RlIGFu
-ZCB0aGUKPiA+IElQUERFWFBDUgo+ID4gKwlyZWdpc3RlciBjZWxscy4gVGhlIG51bWJlciBvZiBJ
-UFBERVhQQ1IgcmVnaXN0ZXIgY2VsbHMgaXMgZGVmaW5lZAo+ID4gaW4KPiA+ICsJImZzbCwjcmNw
-bS13YWtldXAtY2VsbHMiIGluIHRoZSByY3BtIG5vZGUuIFRoZSBmaXJzdCByZWdpc3Rlcgo+ID4g
-Y2VsbCBpcwo+ID4gKwl0aGUgYml0IG1hc2sgdGhhdCBzaG91bGQgYmUgc2V0IGluIElQUERFWFBD
-UjAsIGFuZCB0aGUgc2Vjb25kCj4gPiByZWdpc3Rlcgo+ID4gKwljZWxsIGlzIGZvciBJUFBERVhQ
-Q1IxLCBhbmQgc28gb24uCj4gCj4gV2UganVzdCBtZXJnZWQgYSBjb21tb24gd2FrZXVwIHNvdXJj
-ZSBiaW5kaW5nWzFdLiBJdCBkb2Vzbid0IHJlYWxseSB3b3JrIAo+IGluIGEgc2ltaWxhciB3YXkg
-dG8gd2hhdCB5b3UgaGF2ZSBkb25lLCBidXQgSSdkIGxpa2UgdG8gc2VlIHNvbWV0aGluZyAKPiBj
-b21tb24gaGVyZS4gSG93IGV4YWN0bHkgd2FrZXVwIGlzIGRvbmUgdGVuZHMgdG8gZGVwZW5kIG9u
-IHdoZXRoZXIgCj4gaW50ZXJydXB0cyBhcmUgYWxzbyB3YWtldXAgc2lnbmFscyBvciB3YWtlLXVw
-IHNpZ25hbGx5IGlzIGNvbXBsZXRlbHkgCj4gc2VwYXJhdGUgZnJvbSBpbnRlcnJ1cHRzLiBEZXBl
-bmRpbmcgb24gdGhhdCwgSSB0aGluayB0aGVyZSBhcmUgMiBvcHRpb25zIAo+IGhlcmU6Cj4gCj4g
-LSBVc2UgdGhlIGNvbW1vbiBiaW5kaW5nIGFuZCBpbXBsZW1lbnQgYSBzdGFja2VkIGlycWRvbWFp
-biBmb3IgdGhlIAo+IHdha2V1cCBjb250cm9sbGVyLgoKSSdtIG5vdCBzdXJlIHdoYXQgYSBzdGFj
-a2VkIGlycWRvbWFpbiBpcywgYnV0IHRoZSBtZWNoYW5pc20gZGVzY3JpYmVkIGhlcmUKaXNuJ3Qg
-YWJvdXQgaW50ZXJydXB0cyBhdCBhbGwuICBJdCdzIGFib3V0IGNvbnRyb2xsaW5nIHdoZXRoZXIg
-Y2VydGFpbiBkZXZpY2VzCmFyZSBrZXB0IGF3YWtlIGluIG9yZGVyIHRvIGhhdmUgdGhlIHBvc3Np
-YmlsaXR5IG9mIGdlbmVyYXRpbmcgYSB3YWtldXAuICBJCmJlbGlldmUgdGhlIGFjdHVhbCB3YWtl
-dXAgY29tZXMgdmlhIHRoZSBvcmRpbmFyeSBkZXZpY2UgaW50ZXJydXB0LgoKPiAtIEV4dGVuZCB0
-aGUgY29tbW9uIGJpbmRpbmcgdG8gYWxsb3cgYSBwaGFuZGxlK2FyZ3MgdmFsdWUgdG8gcG9pbnQg
-dG8gCj4gdGhlIHdha2V1cCBjb250cm9sbGVyLgoKUG9zc2libHksIGJ1dCB0aGUgZGVzY3JpcHRp
-b24gaW4gdGhlIGNvbW1vbiBiaW5kaW5nIHdvdWxkIGhhdmUgdG8gYmUgZmFpcmx5CnZhZ3VlIHRv
-IG1ha2UgdGhlIHNlbWFudGljcyBmaXQuCgpUaGUgY3VycmVudCBjb21tb24gYmluZGluZyBpcyBh
-bHNvIGEgYml0IGNvbmZ1c2luZyBieSBzYXlpbmcgdGhhdCB0aGUgcHJlc2VuY2UKb2YgdGhlIHBy
-b3BlcnR5IG1lYW5zIHRoYXQgYWxsIG9mIHRoZSBkZXZpY2UncyBpbnRlcnJ1cHRzIGNhbiBiZSB1
-c2VkIGFzCndha2V1cCBldmVudHMsIGJ1dCB0aGVuIHNheWluZyB0aGF0IHRoZXJlIGNhbiBhbHNv
-IGJlIGEgZGVkaWNhdGVkIHdha2V1cCBidXQKbm90IG1ha2luZyBpdCBjbGVhciBob3cgdG8gcmVw
-cmVzZW50IHRoYXQuLi4gIE92ZXJsb2FkaW5nIGl0IHdpdGggZGV2aWNlIHBvd2VyCmNvbnRyb2wg
-bWlnaHQgbXVkZHkgdGhpbmdzIGV2ZW4gZnVydGhlci4KCi1TY290dAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlz
-dApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcv
-bGlzdGluZm8vbGludXhwcGMtZGV2
+On 11/17/2015 12:38 PM, Gavin Shan wrote:
+> On Mon, Nov 16, 2015 at 07:02:03PM +1100, Alexey Kardashevskiy wrote:
+>> On 11/05/2015 12:12 AM, Gavin Shan wrote:
+>>> This enables M64 window on P7IOC, which has been enabled on PHB3.
+>>> Different from PHB3 where 16 M64 BARs are supported and each of
+>>> them can be owned by one particular PE# exclusively or divided
+>>> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
+>>> of them are divided to 8 segments. So every P7IOC PHB supports
+>>> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
+>>> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
+>>> M64DT, indicating that one M64 segment can only be pinned to the
+>>> fixed PE#. In order to have same code to support M64 on P7IOC and
+>>> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
+>>> of them is pinned to the fixed PE# by bypassing the function of
+>>> M64DT. In turn, we just need different phb->init_m64() for P7IOC
+>>> and PHB3 to support M64.
+>>>
+>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>> ---
+>>>   arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
+>>>   arch/powerpc/platforms/powernv/pci.h      |  3 ++
+>>>   2 files changed, 86 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> index 1f7d985..bfe69f1 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> @@ -256,6 +256,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
+>>>   	}
+>>>   }
+>>>
+>>> +static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+>>> +{
+>>> +	struct resource *r;
+>>> +	int index;
+>>> +
+>>> +	/*
+>>> +	 * There are 16 M64 BARs, each of which has 8 segments. So
+>>> +	 * there are as many M64 segments as the maximum number of
+>>> +	 * PEs, which is 128.
+>>> +	 */
+>>> +	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
+>>> +		unsigned long base, segsz = phb->ioda.m64_segsize;
+>>> +		int64_t rc;
+>>> +
+>>> +		base = phb->ioda.m64_base +
+>>> +		       index * PNV_IODA1_M64_SEGS * segsz;
+>>> +		rc = opal_pci_set_phb_mem_window(phb->opal_id,
+>>> +				OPAL_M64_WINDOW_TYPE, index, base, 0,
+>>> +				PNV_IODA1_M64_SEGS * segsz);
+>>> +		if (rc != OPAL_SUCCESS) {
+>>> +			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
+>>> +				rc, phb->hose->global_number, index);
+>>> +			goto fail;
+>>> +		}
+>>> +
+>>> +		rc = opal_pci_phb_mmio_enable(phb->opal_id,
+>>> +				OPAL_M64_WINDOW_TYPE, index,
+>>> +				OPAL_ENABLE_M64_SPLIT);
+>>> +		if (rc != OPAL_SUCCESS) {
+>>> +			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
+>>> +				rc, phb->hose->global_number, index);
+>>> +			goto fail;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	/*
+>>> +	 * Exclude the segment used by the reserved PE, which
+>>> +	 * is expected to be 0 or last supported PE#.
+>>> +	 */
+>>> +	r = &phb->hose->mem_resources[1];
+>>
+>>
+>> What does "1" mean here? A bridge's 64bit prefetchable window?
+>>
+>
+> It's PHB's M64 window.
+
+mem_resources[] of a hose are not windows of the root PCI bridge?
+
+
+
+>
+>>
+>>> +	if (phb->ioda.reserved_pe_idx == 0)
+>>> +		r->start += phb->ioda.m64_segsize;
+>>> +	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+>>> +		r->end -= phb->ioda.m64_segsize;
+>>> +	else
+>>> +		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
+>>> +			phb->ioda.reserved_pe_idx);
+>>> +
+>
+> Thanks,
+> Gavin
+>
+
+
+-- 
+Alexey
