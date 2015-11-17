@@ -1,57 +1,54 @@
-From: Laura Abbott <laura@labbott.name>
-Subject: Re: [PATCHv2 0/3] Devicetree bindings for Ion
-Date: Tue, 17 Nov 2015 11:02:35 -0800
-Message-ID: <564B79CB.3040004@labbott.name>
-References: <1447721855-7574-1-git-send-email-laura@labbott.name>
- <8990901.B0bMvlhTJH@wuerfel>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
+Date: Tue, 17 Nov 2015 11:15:11 -0800
+Message-ID: <CAOesGMhOmqr15Ou_QgJuiWdn6wWFYYLmy6eyf6zOopj8tKcadA@mail.gmail.com>
+References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
+	<1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
+	<CACRpkdapS-Vi_F-MqOFOPTHa2+zbrsPfPsbQA-Eks+tR3Wjg2A@mail.gmail.com>
+	<CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
+	<CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8990901.B0bMvlhTJH@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, arve@android.com
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Riley Andrews <riandrews@android.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tom Gall <tom.gall@linaro.org>, Colin Cross <ccross@google.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, romlem@google.com, mitchelh@codeaurora.org, linux-arm-kernel@lists.infradead.org, Feng Tang <feng.tang@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/15 7:15 AM, Arnd Bergmann wrote:
-> On Monday 16 November 2015 16:57:32 Laura Abbott wrote:
->> Hi,
+On Tue, Nov 17, 2015 at 3:06 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Nov 10, 2015 at 1:30 AM, Olof Johansson <olof@lixom.net> wrote:
+>> On Mon, Sep 21, 2015 at 11:24 AM, Linus Walleij
+>> <linus.walleij@linaro.org> wrote:
+>>> On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
+>>> <ludovic.desroches@atmel.com> wrote:
+>>>
+>>>> Add pio4 controller node to enable pinmux and gpio.
+>>>>
+>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>
+>>> Patch applied.
 >>
->> This is another attempt at devicetree bindings for Ion. The big complaint from
->> v1 was that too much unnecessary data was being pushed into devicetree.
->> v2 takes a different approach of using just compatbile strings for the heaps.
->> This gets closer to the devicetree philosophy of describing just the hardware.
->> Each heap ultimately represents some kind of memory that exists in the system.
->> The compatible string indicates the match for how to handle the type of memory
->> on this system. The details like heap-id, name etc. are now pushed out to C
->> files. This makes Ion heaps look closer to something like a quirks framework.
->> (I'd argue this isn't a complete mischaracterization given the type of setup
->> Ion gets used for...) The one downside here is that this leads to more new
->> bindings for each board that gets added.
->>
->> This version also includes a sample C file which shows what the structure
->> might look like. As always, your comments and reviews are appreciated.
+>> Please don't merge DT changes through driver trees unless there's a
+>> very specific reason to do so, since it introduces random conflicts.
 >
-> I'm still a bit unsure about the concept of hardwiring ion in the DT
-> bindings. It's not just Linux-specific, it's specific to the implementation
-> of one or two GPU drivers, and if we fix the bindings for Ion, we might
-> never be able to migrate them away from this framework.
+> Sorry :(
 >
+> Even noted this in the pull request to Torvalds, it was in the bottom
+> of my patch stack so had been in -next for ages, I was afraid it
+> would create more problem than it solves if I reverted the patch,
+> but I guess I should have done so anyways.
 
-Ion isn't just for GPU drivers. It certainly started out that way but
-it still fills some gaps in APIs (e.g. the use cases mentioned by
-Andrew Andrianov). The goal here was get those who are using Ion
-standardized on something and possibly treat those bindings as unstable.
-Devicetree bindings are probably going to be very low on the list of
-things that will keep drivers from migrating away from Ion. There's
-still an implicit assumption there that drivers will be migrating away
-from Ion though. I think part of the problem here may be the lack of
-direction right now for moving Ion forward. Progress has been slow.
-The thought was to at least enable those who are using Ion now and
-then revisit whatever we come up with later. If this isn't a good
-approach, I'd rather hear consensus now to know where to put effort
-and tell people to keep doing whatever outside the mainline kernel.
+Yeah, it's OK -- I spotted that pull request later as well.
 
-Thanks,
-Laura
+It's not a big deal in most specific instances, I'd say. It's just in
+aggregate it becomes a bother.
+
+So, just see this as a public reminder since we've seen it creep into
+other driver trees a bit more lately. Mistakes will still happen but
+try to keep it down. And for those who submit patches, feel free to
+point out in the patch that you don't expect the driver/subsystem
+maintainer to apply it to help them out.
+
+
+-Olof
