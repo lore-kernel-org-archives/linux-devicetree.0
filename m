@@ -1,7 +1,7 @@
 From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: [PATCH 5/7] misc: eeprom: 93xx46: Add quirks to support Atmel AT93C46D device.
-Date: Mon, 16 Nov 2015 23:16:34 -0500
-Message-ID: <1447733796-15546-6-git-send-email-cory.tusar@pid1solutions.com>
+Subject: [PATCH 1/7] misc: eeprom: 93xx46: Fix 16-bit read and write accesses.
+Date: Mon, 16 Nov 2015 23:16:30 -0500
+Message-ID: <1447733796-15546-2-git-send-email-cory.tusar@pid1solutions.com>
 References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
@@ -10,251 +10,42 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Atmel devices in this family have some quirks not found in other similar
-chips - they do not support a sequential read of the entire EEPROM
-contents, and the control word sent at the start of each operation
-varies in bit length.
+Compatible at93xx46 devices from both Microchip and Atmel expect a
+word-based address, regardless of whether the device is strapped for 8-
+or 16-bit operation.  However, the offset parameter passed in when
+reading or writing at a specific location is always specified in terms
+of bytes.
 
-This commit adds quirk support to the driver and modifies the read
-implementation to support non-sequential reads for consistency with
-other misc/eeprom drivers.
-
-Tested on a custom Freescale VF610-based platform, with an AT93C46D
-device attached via dspi2.  The spi-gpio driver was used to allow the
-necessary non-byte-sized transfers.
+This commit fixes 16-bit read and write accesses by shifting the offset
+parameter to account for this difference between a byte offset and a
+word-based address.
 
 Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 128 ++++++++++++++++++++++++++----------
- include/linux/eeprom_93xx46.h       |   6 ++
- 2 files changed, 98 insertions(+), 36 deletions(-)
+ drivers/misc/eeprom/eeprom_93xx46.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index 1f29d9a..0386b03 100644
+index ff63f05..e1bf0a5 100644
 --- a/drivers/misc/eeprom/eeprom_93xx46.c
 +++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -27,6 +27,15 @@
- #define ADDR_ERAL	0x20
- #define ADDR_EWEN	0x30
- 
-+struct eeprom_93xx46_devtype_data {
-+	unsigned int quirks;
-+};
-+
-+static const struct eeprom_93xx46_devtype_data atmel_at93c46d_data = {
-+	.quirks = EEPROM_93XX46_QUIRK_SINGLE_WORD_READ |
-+		  EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH,
-+};
-+
- struct eeprom_93xx46_dev {
- 	struct spi_device *spi;
- 	struct eeprom_93xx46_platform_data *pdata;
-@@ -35,6 +44,16 @@ struct eeprom_93xx46_dev {
- 	int addrlen;
- };
- 
-+static inline bool has_quirk_single_word_read(struct eeprom_93xx46_dev *edev)
-+{
-+	return !!(edev->pdata->quirks & EEPROM_93XX46_QUIRK_SINGLE_WORD_READ);
-+}
-+
-+static inline bool has_quirk_instruction_length(struct eeprom_93xx46_dev *edev)
-+{
-+	return !!(edev->pdata->quirks & EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH);
-+}
-+
- static ssize_t
- eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
- 		       struct bin_attribute *bin_attr,
-@@ -42,58 +61,73 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
- {
- 	struct eeprom_93xx46_dev *edev;
- 	struct device *dev;
--	struct spi_message m;
--	struct spi_transfer t[2];
--	int bits, ret;
--	u16 cmd_addr;
-+	ssize_t ret = 0;
- 
- 	dev = container_of(kobj, struct device, kobj);
- 	edev = dev_get_drvdata(dev);
- 
--	cmd_addr = OP_READ << edev->addrlen;
-+	mutex_lock(&edev->lock);
- 
--	if (edev->addrlen == 7) {
--		cmd_addr |= off & 0x7f;
--		bits = 10;
--	} else {
--		cmd_addr |= (off >> 1) & 0x3f;
--		bits = 9;
--	}
-+	if (edev->pdata->prepare)
-+		edev->pdata->prepare(edev);
- 
--	dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
--		cmd_addr, edev->spi->max_speed_hz);
-+	while (count) {
-+		struct spi_message m;
-+		struct spi_transfer t[2] = { { 0 } };
-+		u16 cmd_addr = OP_READ << edev->addrlen;
-+		size_t nbytes = count;
-+		int bits;
-+		int err;
-+
-+		if (edev->addrlen == 7) {
-+			cmd_addr |= off & 0x7f;
-+			bits = 10;
-+			if (has_quirk_single_word_read(edev))
-+				nbytes = 1;
-+		} else {
-+			cmd_addr |= (off >> 1) & 0x3f;
-+			bits = 9;
-+			if (has_quirk_single_word_read(edev))
-+				nbytes = 2;
-+		}
- 
--	spi_message_init(&m);
--	memset(t, 0, sizeof(t));
-+		dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
-+			cmd_addr, edev->spi->max_speed_hz);
- 
--	t[0].tx_buf = (char *)&cmd_addr;
--	t[0].len = 2;
--	t[0].bits_per_word = bits;
--	spi_message_add_tail(&t[0], &m);
-+		spi_message_init(&m);
- 
--	t[1].rx_buf = buf;
--	t[1].len = count;
--	t[1].bits_per_word = 8;
--	spi_message_add_tail(&t[1], &m);
-+		t[0].tx_buf = (char *)&cmd_addr;
-+		t[0].len = 2;
-+		t[0].bits_per_word = bits;
-+		spi_message_add_tail(&t[0], &m);
- 
--	mutex_lock(&edev->lock);
-+		t[1].rx_buf = buf;
-+		t[1].len = count;
-+		t[1].bits_per_word = 8;
-+		spi_message_add_tail(&t[1], &m);
- 
--	if (edev->pdata->prepare)
--		edev->pdata->prepare(edev);
-+		err = spi_sync(edev->spi, &m);
-+		/* have to wait at least Tcsl ns */
-+		ndelay(250);
- 
--	ret = spi_sync(edev->spi, &m);
--	/* have to wait at least Tcsl ns */
--	ndelay(250);
--	if (ret) {
--		dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
--			count, (int)off, ret);
-+		if (err) {
-+			dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
-+				nbytes, (int)off, err);
-+			ret = err;
-+			break;
-+		}
-+
-+		buf += nbytes;
-+		off += nbytes;
-+		count -= nbytes;
-+		ret += nbytes;
- 	}
- 
- 	if (edev->pdata->finish)
- 		edev->pdata->finish(edev);
- 
- 	mutex_unlock(&edev->lock);
--	return ret ? : count;
-+	return ret;
- }
- 
- static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
-@@ -112,7 +146,13 @@ static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
+@@ -54,7 +54,7 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
+ 		cmd_addr |= off & 0x7f;
+ 		bits = 10;
+ 	} else {
+-		cmd_addr |= off & 0x3f;
++		cmd_addr |= (off >> 1) & 0x3f;
  		bits = 9;
  	}
  
--	dev_dbg(&edev->spi->dev, "ew cmd 0x%04x\n", cmd_addr);
-+	if (has_quirk_instruction_length(edev)) {
-+		cmd_addr <<= 2;
-+		bits += 2;
-+	}
-+
-+	dev_dbg(&edev->spi->dev, "ew%s cmd 0x%04x, %d bits\n",
-+			is_on ? "en" : "ds", cmd_addr, bits);
- 
- 	spi_message_init(&m);
- 	memset(&t, 0, sizeof(t));
-@@ -247,6 +287,13 @@ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
+@@ -155,7 +155,7 @@ eeprom_93xx46_write_word(struct eeprom_93xx46_dev *edev,
+ 		bits = 10;
+ 		data_len = 1;
+ 	} else {
+-		cmd_addr |= off & 0x3f;
++		cmd_addr |= (off >> 1) & 0x3f;
  		bits = 9;
+ 		data_len = 2;
  	}
- 
-+	if (has_quirk_instruction_length(edev)) {
-+		cmd_addr <<= 2;
-+		bits += 2;
-+	}
-+
-+	dev_dbg(&edev->spi->dev, "eral cmd 0x%04x, %d bits\n", cmd_addr, bits);
-+
- 	spi_message_init(&m);
- 	memset(&t, 0, sizeof(t));
- 
-@@ -299,18 +346,21 @@ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
- #ifdef CONFIG_OF
- static const struct of_device_id eeprom_93xx46_of_table[] = {
- 	{ .compatible = "eeprom-93xx46", },
-+	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
- 
- static int eeprom_93xx46_probe_dt(struct spi_device *spi)
- {
-+	const struct of_device_id *of_id =
-+		of_match_device(eeprom_93xx46_of_table, &spi->dev);
- 	struct device_node *np = spi->dev.of_node;
- 	struct eeprom_93xx46_platform_data *pd;
- 	u32 tmp;
- 	int ret;
- 
--	if (!of_match_device(eeprom_93xx46_of_table, &spi->dev))
-+	if (!of_id)
- 		return 0;
- 
- 	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
-@@ -335,6 +385,12 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
- 	if (of_property_read_bool(np, "read-only"))
- 		pd->flags |= EE_READONLY;
- 
-+	if (of_id->data) {
-+		const struct eeprom_93xx46_devtype_data *data = of_id->data;
-+
-+		pd->quirks = data->quirks;
-+	}
-+
- 	spi->dev.platform_data = pd;
- 
- 	return 1;
-diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
-index 0679181..92fa4c3 100644
---- a/include/linux/eeprom_93xx46.h
-+++ b/include/linux/eeprom_93xx46.h
-@@ -9,6 +9,12 @@ struct eeprom_93xx46_platform_data {
- #define EE_ADDR16	0x02		/* 16 bit addr. cfg */
- #define EE_READONLY	0x08		/* forbid writing */
- 
-+	unsigned int	quirks;
-+/* Single word read transfers only; no sequential read. */
-+#define EEPROM_93XX46_QUIRK_SINGLE_WORD_READ		(1 << 0)
-+/* Instructions such as EWEN are (addrlen + 2) in length. */
-+#define EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH		(1 << 1)
-+
- 	/*
- 	 * optional hooks to control additional logic
- 	 * before and after spi transfer.
 -- 
 2.4.10
