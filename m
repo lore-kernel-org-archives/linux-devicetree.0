@@ -1,258 +1,71 @@
-From: Greg Hackmann <ghackmann@google.com>
-Subject: [PATCH v2] pstore-ram: add Device Tree bindings
-Date: Mon, 16 Nov 2015 16:13:25 -0800
-Message-ID: <1447719205-8571-1-git-send-email-ghackmann@google.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org, Greg Hackmann <ghackmann@google.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Mon, 16 Nov 2015 18:14:39 -0600
+Message-ID: <20151117001439.GA26823@rob-hp-laptop>
+References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
+ <20151116144525.GM20696@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151116144525.GM20696@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ramoops is one of the remaining places where ARM vendors still rely on
-board-specific shims.  Device Tree lets us replace those shims with
-generic code.
+On Mon, Nov 16, 2015 at 02:45:25PM +0000, Mark Rutland wrote:
+> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
+> > This patch adds a devicetree binding documentation for ARM's
+> > SP805 WatchDog Timer.
+> > 
+> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > new file mode 100644
+> > index 0000000..ec70fe9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > @@ -0,0 +1,33 @@
+> > +* ARM SP805 Watchdog Timer (WDT) Controller
+> > +
+> > +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+> > +can be used to identify the peripheral type, vendor, and revision.
+> > +This value can be used for driver matching.
+> > +
+> > +Note that the current sp805_wdt driver relies on the 'drivers/amba/bus.c'
+> > +framework to invoke the probe function of the sp805_wdt driver using the
+> > +unique PRIMECELL identifiers of the sp805 wdt IP.
+> 
+> This paragraph can go. We shouldn't describe kernel internals.
+> 
+> > +As SP805 WDT is a primecell IP, it follows the base bindings specified in
+> > +'arm/primecell.txt'
+> > +
+> > +Required properties:
+> > +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
+> > +- reg : Base address and size of the watchdog timer registers.
+> > +- interrupts : Should specify WDT interrupt number.
+> > +
+> > +Optional properties:
+> > +- clocks : From common clock binding. First clock is phandle to clock for apb
+> > +           pclk. Additional clocks are optional.
+> > +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
+> 
+> The hardware has "WDOGCLK", which is what the driver appears to expect
+> first implicitly.
 
-These bindings mirror the ramoops module parameters, with two small
-differences:
+The h/w has 2 clocks, PCLK and WDOGCLK, so both should be described and 
+neither should be optional.
 
-(1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
-    sets dump_oops=1 by default.
+Rob
 
-(2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
-
-Signed-off-by: Greg Hackmann <ghackmann@google.com>
----
-Changes in V2:
-- make DT binding documentation more generic
- Documentation/devicetree/bindings/misc/ramoops.txt |  40 ++++++++
- Documentation/ramoops.txt                          |   6 +-
- fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
- 3 files changed, 152 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-new file mode 100644
-index 0000000..96c082b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/ramoops.txt
-@@ -0,0 +1,40 @@
-+Ramoops oops/panic logger
-+=========================
-+
-+ramoops provides persistent RAM storage for oops and panics, so they can be
-+recovered after a reboot.
-+
-+Parts of this storage may be set aside for other persistent log buffers, such
-+as kernel log messages, or for optional ECC error-correction data.  The total
-+size of these optional buffers must fit in the reserved region.  Any remaining
-+space will be used for oops and panics.
-+
-+
-+Required properties:
-+
-+- compatible: must be "ramoops"
-+
-+- memory-region: phandle to a region of memory that is preserved between reboots
-+
-+
-+Optional properties:
-+
-+- ecc-size: enables ECC support and specifies ECC buffer size in bytes
-+  (defaults to no ECC)
-+
-+- record-size: maximum size in bytes of each dump done on oops/panic
-+  (defaults to 0)
-+
-+- console-size: size in bytes of log buffer reserved for kernel messages
-+  (defaults to 0)
-+
-+- ftrace-size: size in bytes of log buffer reserved for function tracing and
-+  profiling (defaults to 0)
-+
-+- pmsg-size: size in bytes of log buffer reserved for userspace messages
-+  (defaults to 0)
-+
-+- unbuffered: if present, use uncached mappings to map the reserved region
-+  (defaults to cached mappings)
-+
-+- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
-index 5d86756..9264bca 100644
---- a/Documentation/ramoops.txt
-+++ b/Documentation/ramoops.txt
-@@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
- 
- 2. Setting the parameters
- 
--Setting the ramoops parameters can be done in 2 different manners:
-+Setting the ramoops parameters can be done in 3 different manners:
-  1. Use the module parameters (which have the names of the variables described
-  as before).
-  For quick debugging, you can also reserve parts of memory during boot
-@@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
-  kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
-  region at 128 MB boundary:
-  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
-- 2. Use a platform device and set the platform data. The parameters can then
-+ 2. Use Device Tree bindings, as described in
-+ Documentation/device-tree/bindings/misc/ramoops.txt.
-+ 3. Use a platform device and set the platform data. The parameters can then
-  be set through that platform data. An example of doing that is:
- 
- #include <linux/pstore_ram.h>
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 319c3a6..ac29543 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -34,6 +34,8 @@
- #include <linux/slab.h>
- #include <linux/compiler.h>
- #include <linux/pstore_ram.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- 
- #define RAMOOPS_KERNMSG_HDR "===="
- #define MIN_MEM_SIZE 4096UL
-@@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
- 	return 0;
- }
- 
-+static int ramoops_parse_dt_size(struct platform_device *pdev,
-+		const char *propname, unsigned long *val)
-+{
-+	u64 val64;
-+	int ret;
-+
-+	ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
-+	if (ret == -EINVAL) {
-+		*val = 0;
-+		return 0;
-+	} else if (ret != 0) {
-+		dev_err(&pdev->dev, "failed to parse property %s: %d\n",
-+				propname, ret);
-+		return ret;
-+	}
-+
-+	if (val64 > ULONG_MAX) {
-+		dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
-+		return -EOVERFLOW;
-+	}
-+
-+	*val = val64;
-+	return 0;
-+}
-+
-+static int ramoops_parse_dt(struct platform_device *pdev,
-+		struct ramoops_platform_data *pdata)
-+{
-+	struct device_node *of_node = pdev->dev.of_node;
-+	struct device_node *mem_region;
-+	struct resource res;
-+	u32 ecc_size;
-+	int ret;
-+
-+	dev_dbg(&pdev->dev, "using Device Tree\n");
-+
-+	mem_region = of_parse_phandle(of_node, "memory-region", 0);
-+	if (!mem_region) {
-+		dev_err(&pdev->dev, "no memory-region phandle\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_address_to_resource(mem_region, 0, &res);
-+	of_node_put(mem_region);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	pdata->mem_size = resource_size(&res);
-+	pdata->mem_address = res.start;
-+	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-+	pdata->dump_oops = of_property_read_bool(of_node, "dump-oops");
-+
-+	ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
-+	if (ret == 0) {
-+		if (ecc_size > INT_MAX) {
-+			dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
-+			return -EOVERFLOW;
-+		}
-+		pdata->ecc_info.ecc_size = ecc_size;
-+	} else if (ret != -EINVAL) {
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ramoops_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct ramoops_platform_data *pdata = pdev->dev.platform_data;
-+	struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
- 	struct ramoops_context *cxt = &oops_cxt;
- 	size_t dump_mem_sz;
- 	phys_addr_t paddr;
- 	int err = -EINVAL;
- 
-+	if (dev->of_node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			err = -ENOMEM;
-+			goto fail_out;
-+		}
-+
-+		err = ramoops_parse_dt(pdev, pdata);
-+		if (err < 0)
-+			goto fail_out;
-+	}
-+
- 	/* Only a single ramoops area allowed at a time, so fail extra
- 	 * probes.
- 	 */
-@@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 		cxt->size, (unsigned long long)cxt->phys_addr,
- 		cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
- 
-+	platform_set_drvdata(pdev, pdata);
- 	return 0;
- 
- fail_buf:
-@@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dt_match[] = {
-+	{ .compatible = "ramoops" },
-+	{}
-+};
-+
- static struct platform_driver ramoops_driver = {
- 	.probe		= ramoops_probe,
- 	.remove		= ramoops_remove,
- 	.driver		= {
--		.name	= "ramoops",
-+		.name		= "ramoops",
-+		.of_match_table	= dt_match,
- 	},
- };
- 
--- 
-2.6.0.rc2.230.g3dd15c0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
