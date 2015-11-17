@@ -1,66 +1,57 @@
-From: Salil <salil.mehta@huawei.com>
-Subject: [PATCH V2 net-next 5/5] net:hns: Add the init code to disable Hip06 "Hardware VLAN assist"
-Date: Wed, 18 Nov 2015 02:52:27 +0800
-Message-ID: <1447786347-147518-6-git-send-email-salil.mehta@huawei.com>
-References: <1447786347-147518-1-git-send-email-salil.mehta@huawei.com>
+From: Laura Abbott <laura@labbott.name>
+Subject: Re: [PATCHv2 0/3] Devicetree bindings for Ion
+Date: Tue, 17 Nov 2015 11:02:35 -0800
+Message-ID: <564B79CB.3040004@labbott.name>
+References: <1447721855-7574-1-git-send-email-laura@labbott.name>
+ <8990901.B0bMvlhTJH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447786347-147518-1-git-send-email-salil.mehta@huawei.com>
+In-Reply-To: <8990901.B0bMvlhTJH@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, salil.mehta@huawei.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
+To: Arnd Bergmann <arnd@arndb.de>, arve@android.com
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Riley Andrews <riandrews@android.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tom Gall <tom.gall@linaro.org>, Colin Cross <ccross@google.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, romlem@google.com, mitchelh@codeaurora.org, linux-arm-kernel@lists.infradead.org, Feng Tang <feng.tang@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Salil Mehta <salil.mehta@huawei.com>
+On 11/17/15 7:15 AM, Arnd Bergmann wrote:
+> On Monday 16 November 2015 16:57:32 Laura Abbott wrote:
+>> Hi,
+>>
+>> This is another attempt at devicetree bindings for Ion. The big complaint from
+>> v1 was that too much unnecessary data was being pushed into devicetree.
+>> v2 takes a different approach of using just compatbile strings for the heaps.
+>> This gets closer to the devicetree philosophy of describing just the hardware.
+>> Each heap ultimately represents some kind of memory that exists in the system.
+>> The compatible string indicates the match for how to handle the type of memory
+>> on this system. The details like heap-id, name etc. are now pushed out to C
+>> files. This makes Ion heaps look closer to something like a quirks framework.
+>> (I'd argue this isn't a complete mischaracterization given the type of setup
+>> Ion gets used for...) The one downside here is that this leads to more new
+>> bindings for each board that gets added.
+>>
+>> This version also includes a sample C file which shows what the structure
+>> might look like. As always, your comments and reviews are appreciated.
+>
+> I'm still a bit unsure about the concept of hardwiring ion in the DT
+> bindings. It's not just Linux-specific, it's specific to the implementation
+> of one or two GPU drivers, and if we fix the bindings for Ion, we might
+> never be able to migrate them away from this framework.
+>
 
-This patch adds the initializzation code to disable the hardware
-vlan support for VLAN Tag stripping by default for now.
+Ion isn't just for GPU drivers. It certainly started out that way but
+it still fills some gaps in APIs (e.g. the use cases mentioned by
+Andrew Andrianov). The goal here was get those who are using Ion
+standardized on something and possibly treat those bindings as unstable.
+Devicetree bindings are probably going to be very low on the list of
+things that will keep drivers from migrating away from Ion. There's
+still an implicit assumption there that drivers will be migrating away
+from Ion though. I think part of the problem here may be the lack of
+direction right now for moving Ion forward. Progress has been slow.
+The thought was to at least enable those who are using Ion now and
+then revisit whatever we come up with later. If this isn't a good
+approach, I'd rather hear consensus now to know where to put effort
+and tell people to keep doing whatever outside the mainline kernel.
 
-Proper support of "hardware VLAN assitance" feature would
-soon come in the next coming patches.
-
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c |    7 +++++++
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h |    1 +
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-index b6bf292..544f323 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-@@ -176,6 +176,11 @@ static void hns_ppe_cnt_clr_ce(struct hns_ppe_cb *ppe_cb)
- 			 PPE_CNT_CLR_CE_B, 1);
- }
- 
-+static void hns_ppe_set_vlan_strip(struct hns_ppe_cb *ppe_cb, int en)
-+{
-+	dsaf_write_dev(ppe_cb, PPEV2_VLAN_STRIP_EN_REG, en);
-+}
-+
- /**
-  * hns_ppe_checksum_hw - set ppe checksum caculate
-  * @ppe_device: ppe device
-@@ -345,6 +350,8 @@ static void hns_ppe_init_hw(struct hns_ppe_cb *ppe_cb)
- 	hns_ppe_cnt_clr_ce(ppe_cb);
- 
- 	if (!AE_IS_VER1(dsaf_dev->dsaf_ver)) {
-+		hns_ppe_set_vlan_strip(ppe_cb, 0);
-+
- 		hns_ppe_set_rss_key(ppe_cb, rss_key);
- 
- 		for (i = 0; i < HNS_PPEV2_RSS_IND_TBL_SIZE; i++)
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-index 98c163e..6c18ca9 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-@@ -318,6 +318,7 @@
- #define PPE_CFG_PARSE_TAG_REG			0x94
- #define PPE_CFG_PRO_CHECK_EN_REG		0x98
- #define PPEV2_CFG_TSO_EN_REG                    0xA0
-+#define PPEV2_VLAN_STRIP_EN_REG                 0xAC
- #define PPE_INTEN_REG				0x100
- #define PPE_RINT_REG				0x104
- #define PPE_INTSTS_REG				0x108
--- 
-1.7.9.5
+Thanks,
+Laura
