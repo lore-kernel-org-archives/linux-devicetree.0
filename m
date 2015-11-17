@@ -1,121 +1,69 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] irqchip: Add brcm,bcm6345-l1-intc device tree binding
-Date: Mon, 16 Nov 2015 18:09:23 -0600
-Message-ID: <20151117000923.GA4698@rob-hp-laptop>
-References: <5648B804.40806@simon.arlott.org.uk>
- <20151116153443.GA13799@rob-hp-laptop>
- <564A2AA4.3060901@simon.arlott.org.uk>
+Subject: Re: [PATCH v3 1/4] DT: nvmem: Add NXP LPC18xx EEPROM memory binding
+ documentation
+Date: Mon, 16 Nov 2015 18:11:56 -0600
+Message-ID: <20151117001156.GA12542@rob-hp-laptop>
+References: <1447690798-14641-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <1447690798-14641-2-git-send-email-ariel@vanguardiasur.com.ar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <564A2AA4.3060901-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+In-Reply-To: <1447690798-14641-2-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 07:12:36PM +0000, Simon Arlott wrote:
-> Add device tree binding for the BCM6345 interrupt controller.
+On Mon, Nov 16, 2015 at 01:19:55PM -0300, Ariel D'Alessandro wrote:
+> Add the devicetree binding document for NXP LPC18xx EEPROM memory.
 > 
-> This controller is similar to the SMP-capable BCM7038 and
-> the BCM3380 but with packed interrupt registers.
-> 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-> ---
-> On 16/11/15 15:34, Rob Herring wrote:
-> > On Sun, Nov 15, 2015 at 04:51:16PM +0000, Simon Arlott wrote:
-> >> Add device tree binding for the BCM63168 interrupt controller.
-> >> 
-> >> This controller is similar to the SMP-capable BCM7038 and
-> >> the BCM3380 but with packed interrupt registers.
-> >> 
-> >> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-> > 
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> I'm going to rename this to bcm6345-l1 as suggested by Jonas Gorski, and
-> the binding now specifies a <soc> version of the compatible name to be
-> included.
+> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
- 
->  .../interrupt-controller/brcm,bcm6345-l1-intc.txt  | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
+
+> ---
+>  .../devicetree/bindings/nvmem/lpc1857-eeprom.txt   | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
+> diff --git a/Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt b/Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
 > new file mode 100644
-> index 0000000..c5bdcf1
+> index 0000000..809df68
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
-> @@ -0,0 +1,57 @@
-> +Broadcom BCM6345-style Level 1 interrupt controller
-> +
-> +This block is a first level interrupt controller that is typically connected
-> +directly to one of the HW INT lines on each CPU.
-> +
-> +Key elements of the hardware design include:
-> +
-> +- 32, 64 or 128 incoming level IRQ lines
-> +
-> +- Most onchip peripherals are wired directly to an L1 input
-> +
-> +- A separate instance of the register set for each CPU, allowing individual
-> +  peripheral IRQs to be routed to any CPU
-> +
-> +- Contains one or more enable/status word pairs per CPU
-> +
-> +- No atomic set/clear operations
-> +
-> +- No polarity/level/edge settings
-> +
-> +- No FIFO or priority encoder logic; software is expected to read all
-> +  2-4 status words to determine which IRQs are pending
+> +++ b/Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
+> @@ -0,0 +1,28 @@
+> +* NXP LPC18xx EEPROM memory NVMEM driver
 > +
 > +Required properties:
-> +
-> +- compatible: should be "brcm,bcm<soc>-l1-intc", "brcm,bcm6345-l1-intc"
-> +- reg: specifies the base physical address and size of the registers;
-> +  the number of supported IRQs is inferred from the size argument
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-> +  source, should be 1.
-> +- interrupt-parent: specifies the phandle to the parent interrupt controller(s)
-> +  this one is cascaded from
-> +- interrupts: specifies the interrupt line(s) in the interrupt-parent controller
-> +  node; valid values depend on the type of parent interrupt controller
-> +
-> +If multiple reg ranges and interrupt-parent entries are present on an SMP
-> +system, the driver will allow IRQ SMP affinity to be set up through the
-> +/proc/irq/ interface.  In the simplest possible configuration, only one
-> +reg range and one interrupt-parent is needed.
-> +
-> +The driver operates in native CPU endian by default, there is no support for
-> +specifying an alternative endianness.
+> +  - compatible: Should be "nxp,lpc1857-eeprom"
+> +  - reg: Must contain an entry with the physical base address and length
+> +    for each entry in reg-names.
+> +  - reg-names: Must include the following entries.
+> +    - reg: EEPROM registers.
+> +    - mem: EEPROM address space.
+> +  - clocks: Must contain an entry for each entry in clock-names.
+> +  - clock-names: Must include the following entries.
+> +    - eeprom: EEPROM operating clock.
+> +  - resets: Should contain a reference to the reset controller asserting
+> +    the EEPROM in reset.
+> +  - interrupts: Should contain EEPROM interrupt.
 > +
 > +Example:
 > +
-> +periph_intc: periph_intc@10000000 {
-> +        compatible = "brcm,bcm63168-l1-intc", "brcm,bcm6345-l1-intc";
-> +        reg = <0x10000020 0x20>,
-> +              <0x10000040 0x20>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +
-> +        interrupt-parent = <&cpu_intc>;
-> +        interrupts = <2>, <3>;
-> +};
+> +  eeprom: eeprom@4000e000 {
+> +    compatible = "nxp,lpc1857-eeprom";
+> +    reg = <0x4000e000 0x1000>,
+> +          <0x20040000 0x4000>;
+> +    reg-names = "reg", "mem";
+> +    clocks = <&ccu1 CLK_CPU_EEPROM>;
+> +    clock-names = "eeprom";
+> +    resets = <&rgu 27>;
+> +    interrupts = <4>;
+> +  };
 > -- 
-> 2.1.4
+> 2.6.2
 > 
-> -- 
-> Simon Arlott
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
