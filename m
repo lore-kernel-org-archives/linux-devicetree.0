@@ -1,108 +1,94 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
-Date: Tue, 17 Nov 2015 15:43:28 +1100
-Message-ID: <564AB070.9040500@ozlabs.ru>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
- <56498D8A.2050505@ozlabs.ru> <20151117014203.GC31584@gwshan>
- <564A92E2.1040506@ozlabs.ru> <20151117030406.GB10142@gwshan>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Tue, 17 Nov 2015 04:59:39 +0000
+Message-ID: <8520D5D51A55D047800579B0941471982585CBDA@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
+ <5649F2D9.7070902@arm.com> <564A5255.3020603@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151117030406.GB10142@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <564A5255.3020603@broadcom.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>, Marc Zyngier <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2015 02:04 PM, Gavin Shan wrote:
-> On Tue, Nov 17, 2015 at 01:37:22PM +1100, Alexey Kardashevskiy wrote:
->> On 11/17/2015 12:42 PM, Gavin Shan wrote:
->>> On Mon, Nov 16, 2015 at 07:02:18PM +1100, Alexey Kardashevskiy wrote:
->>>> On 11/05/2015 12:12 AM, Gavin Shan wrote:
->>>>> This enables M64 window on P7IOC, which has been enabled on PHB3.
->>>>> Different from PHB3 where 16 M64 BARs are supported and each of
->>>>> them can be owned by one particular PE# exclusively or divided
->>>>> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
->>>>> of them are divided to 8 segments. So every P7IOC PHB supports
->>>>> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
->>>>> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
->>>>> M64DT, indicating that one M64 segment can only be pinned to the
->>>>> fixed PE#. In order to have same code to support M64 on P7IOC and
->>>>> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
->>>>> of them is pinned to the fixed PE# by bypassing the function of
->>>>> M64DT. In turn, we just need different phb->init_m64() for P7IOC
->>>>> and PHB3 to support M64.
->>>>
->>>> I thought we decided (Ben suggested?) not to push P7IOC code now (or ever) as
->>>> there is no user for it, has this changed?
->>>>
->>>
->>> Remember that the code is mixed for P7IOC/PHB3. It's not harmful to support
->>> M64 window on P7IOC, which is much larger than M32.
->>
->>
->> The patchset starts with removing dead code and then adds more dead code.
->> This is not right...
->>
->
-> Sorry, you mean it's fine to break the code on P7IOC as it's going to be dead.
+> On 11/16/2015 7:14 AM, Marc Zyngier wrote:
+> > On 11/11/15 06:33, Bharat Kumar Gogada wrote:
+> >> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> >>
+> >> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> >> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> >> ---
+> >> Added logic to allocate contiguous hwirq in nwl_irq_domain_alloc
+> function.
+> >> Moved MSI functionality to separate functions.
+> >> Changed error return values.
+> >> ---
+> >>   .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
+> >>   drivers/pci/host/Kconfig                           |   16 +-
+> >>   drivers/pci/host/Makefile                          |    1 +
+> >>   drivers/pci/host/pcie-xilinx-nwl.c                 | 1062
+> ++++++++++++++++++++
+> >>   4 files changed, 1144 insertions(+), 3 deletions(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/pci/xilinx-nwl-
+> pcie.txt
+> >>   create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
+> >>
+> >
+> > [...]
+> >
+> >> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct pci_bus
+> >> +*bus) {
+> >> +	struct platform_device *pdev = to_platform_device(pcie->dev);
+> >> +	struct nwl_msi *msi = &pcie->msi;
+> >> +	unsigned long base;
+> >> +	int ret;
+> >> +
+> >> +	mutex_init(&msi->lock);
+> >> +
+> >> +	/* Check for msii_present bit */
+> >> +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
+> >> +	if (!ret) {
+> >> +		dev_err(pcie->dev, "MSI not present\n");
+> >> +		ret = -EIO;
+> >> +		goto err;
+> >> +	}
+> >> +
+> >> +	/* Enable MSII */
+> >> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
+> >> +			  MSII_ENABLE, I_MSII_CONTROL);
+> >> +
+> >> +	/* Enable MSII status */
+> >> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, I_MSII_CONTROL) |
+> >> +			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
+> >> +
+> >> +	/* setup AFI/FPCI range */
+> >> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
+> >> +	base = virt_to_phys((void *)msi->pages);
+> >> +	nwl_bridge_writel(pcie, lower_32_bits(base), I_MSII_BASE_LO);
+> >> +	nwl_bridge_writel(pcie, upper_32_bits(base), I_MSII_BASE_HI);
+> >
+> > BTW, you still haven't answered my question as to why you need to
+> > waste a page of memory here, and why putting a device address doesn't
+> work.
+> >
+> > As this is (to the best of my knowledge) the only driver doing so, I'd
+> > really like you to explain the rational behind this.
+> 
+> Might not be the only driver doing so after I start sending out patches for the
+> iProc MSI support (soon), :)
+> 
+> I'm not sure how it works for the Xilinx NWL controller, which Bharat should
+> be able to help to explain. But for the iProc MSI controller, there's no device
+> I/O memory reserved for MSI posted writes in the ASIC.
+> Therefore one needs to reserve host memory for these writes.
+> >
 
+Our SoC doesn't reserve any memory for MSI, hence we need to assign a memory space for it out of RAM.
 
-I am saying that the _new_ code which implements PCI hotplug on P7IOC is 
-dead, not the existing P7IOC support which needs to keep working. Reworks 
-you make should keep P7IOC alive but they do not have to add hotplug.
-
-imho it is more likely that we drop P7IOC support in the mainline kernel in 
-next 5 years than someone plugs a PCI device to a running P7IOC machine 
-anywhere.
-
-
-> But I'm curious when it's going happen, any idea about that?
->
->>>> btw please put ioda1/ioda2/p7ioc/etc to the subject line to make it easier to
->>>> see how much work is there about particular PHB type. You rename quite many
->>>> functions and I generally want to ask you to group all renaming patches first
->>>> but it would also make sense to keep them close to (for example)
->>>> p7ioc-related patches so having more descriptive subject lines may help.
->>>> Thanks.
->>>>
->>>
->>> As the code is mixed for P7IOC/PHB3, I'm not following the line (IODA1/IODA2/p7ioc/phb3)
->>> in this patchset.
->>
->> But you should draw the bold line between PHB types imho.
->>
->>> Instead, the sequence of patchset is order related to: cod refactoring,
->>> IO/M32/M64, DMA, PE allocation/releaseing.
->>
->>
->> Some patches from this patchset are about P7IOC only. All I am asking is to
->> say specifically in the subject line what the patch touches -
->> IODA1/IODA2/p7ioc/phb3/all_of_them. Or I can walk through all of them, pick
->> P7IOC's ones, evaluate the amount of code and entropy they actually add and
->> then ask Ben what we do about it, it will just take longer rather than if you
->> did it.
->>
->
-> Please give me a clear command what key words you need in the subject in next revision.
-> What I understood is you want to see one of them:
->
-> powerpc/powernv/ioda1:
-
-Yes, looks good.
-
-> powerpc/powernv/ioda2:
-
-
-Yes.
-
-> powerpc/powernv/all:
-
-Just "powerpc/powernv".
-
-
-
--- 
-Alexey
+Regards,
+Bharat
