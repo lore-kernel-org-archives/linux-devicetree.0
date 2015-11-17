@@ -1,149 +1,306 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8 3/8] ARM: dt: Binding documentation for imx25 touchscreen controller
-Date: Tue, 17 Nov 2015 09:54:03 +0100
-Message-ID: <2927401.FasWCEIy4W@adelgunde>
-References: <1447675269-8831-1-git-send-email-mpa@pengutronix.de> <1447675269-8831-4-git-send-email-mpa@pengutronix.de> <20151116141609.GA6167@rob-hp-laptop>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 23/50] powerpc/powernv: Use PE instead of number
+ during setup and release
+Date: Tue, 17 Nov 2015 20:03:02 +1100
+Message-ID: <20151117090302.GD16586@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-24-git-send-email-gwshan@linux.vnet.ibm.com>
+ <564AB64E.6060208@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart10441568.fBDciVvhji"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151116141609.GA6167@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Eric =?ISO-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <564AB64E.6060208@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 17, 2015 at 04:08:30PM +1100, Alexey Kardashevskiy wrote:
+>On 11/05/2015 12:12 AM, Gavin Shan wrote:
+>>In current implementation, the PEs that are allocated or picked
+>>from the reserved list are identified by PE number. The PE instance
+>>has to be picked according to the PE number eventually. We have
+>>same issue when PE is released.
+>>
+>>For pnv_ioda_pick_m64_pe() and pnv_ioda_alloc_pe(), this returns
+>>PE instance so that pnv_ioda_setup_bus_PE() can use the allocated
+>>or reserved PE instance directly. Also, pnv_ioda_setup_bus_PE()
+>>returns the reserved/allocated PE instance to be used in subsequent
+>>patches. On the other hand, pnv_ioda_free_pe() uses PE instance
+>>(not number) as its argument. No logical changes introduced.
+>>
+>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>---
+>>  arch/powerpc/platforms/powernv/pci-ioda.c | 81 +++++++++++++++++--------------
+>>  arch/powerpc/platforms/powernv/pci.h      |  2 +-
+>>  2 files changed, 46 insertions(+), 37 deletions(-)
+>>
+>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>index 488e0f8..ae82df1 100644
+>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>@@ -152,7 +152,7 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+>>  	pnv_ioda_init_pe(phb, pe_no);
+>>  }
+>>
+>>-static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
+>>+static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
+>>  {
+>>  	unsigned long pe;
+>>
+>>@@ -160,19 +160,20 @@ static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
+>>  		pe = find_next_zero_bit(phb->ioda.pe_alloc,
+>>  					phb->ioda.total_pe_num, 0);
+>>  		if (pe >= phb->ioda.total_pe_num)
+>>-			return IODA_INVALID_PE;
+>>+			return NULL;
+>>  	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
+>>
+>>-	pnv_ioda_init_pe(phb, pe);
+>>-	return pe;
+>>+	return pnv_ioda_init_pe(phb, pe);
+>>  }
+>>
+>>-static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
+>>+static void pnv_ioda_free_pe(struct pnv_ioda_pe *pe)
+>>  {
+>>-	WARN_ON(phb->ioda.pe_array[pe].pdev);
+>>+	struct pnv_phb *phb = pe->phb;
+>>+
+>>+	WARN_ON(pe->pdev);
+>>
+>>-	memset(&phb->ioda.pe_array[pe], 0, sizeof(struct pnv_ioda_pe));
+>>-	clear_bit(pe, phb->ioda.pe_alloc);
+>>+	memset(pe, 0, sizeof(struct pnv_ioda_pe));
+>>+	clear_bit(pe->pe_number, phb->ioda.pe_alloc);
+>>  }
+>>
+>>  /* The default M64 BAR is shared by all PEs */
+>>@@ -332,7 +333,7 @@ static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
+>>  	}
+>>  }
+>>
+>>-static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>+static struct pnv_ioda_pe *pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>  {
+>>  	struct pci_controller *hose = pci_bus_to_host(bus);
+>>  	struct pnv_phb *phb = hose->private_data;
+>>@@ -342,7 +343,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>
+>>  	/* Root bus shouldn't use M64 */
+>>  	if (pci_is_root_bus(bus))
+>>-		return IODA_INVALID_PE;
+>>+		return NULL;
+>>
+>>  	/* Allocate bitmap */
+>>  	size = _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
+>>@@ -350,7 +351,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>  	if (!pe_alloc) {
+>>  		pr_warn("%s: Out of memory !\n",
+>>  			__func__);
+>>-		return IODA_INVALID_PE;
+>>+		return NULL;
+>>  	}
+>>
+>>  	/* Figure out reserved PE numbers by the PE */
+>>@@ -363,7 +364,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>  	 */
+>>  	if (bitmap_empty(pe_alloc, phb->ioda.total_pe_num)) {
+>>  		kfree(pe_alloc);
+>>-		return IODA_INVALID_PE;
+>>+		return NULL;
+>>  	}
+>>
+>>  	/*
+>>@@ -409,7 +410,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>  	}
+>>
+>>  	kfree(pe_alloc);
+>>-	return master_pe->pe_number;
+>>+	return master_pe;
+>>  }
+>>
+>>  static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+>>@@ -988,28 +989,26 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
+>>   * subordinate PCI devices and buses. The second type of PE is normally
+>>   * orgiriated by PCIe-to-PCI bridge or PLX switch downstream ports.
+>>   */
+>>-static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>>+static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>>  {
+>>  	struct pci_controller *hose = pci_bus_to_host(bus);
+>>  	struct pnv_phb *phb = hose->private_data;
+>>-	struct pnv_ioda_pe *pe;
+>>-	int pe_num = IODA_INVALID_PE;
+>>+	struct pnv_ioda_pe *pe = NULL;
+>>
+>>  	/* Check if PE is determined by M64 */
+>>  	if (phb->pick_m64_pe)
+>>-		pe_num = phb->pick_m64_pe(bus, all);
+>>+		pe = phb->pick_m64_pe(bus, all);
+>>
+>>  	/* The PE number isn't pinned by M64 */
+>>-	if (pe_num == IODA_INVALID_PE)
+>>-		pe_num = pnv_ioda_alloc_pe(phb);
+>>+	if (!pe)
+>>+		pe = pnv_ioda_alloc_pe(phb);
+>>
+>>-	if (pe_num == IODA_INVALID_PE) {
+>>+	if (!pe) {
+>>  		pr_warning("%s: Not enough PE# available for PCI bus %04x:%02x\n",
+>>  			__func__, pci_domain_nr(bus), bus->number);
+>>-		return;
+>>+		return NULL;
+>>  	}
+>>
+>>-	pe = &phb->ioda.pe_array[pe_num];
+>>  	pe->flags |= (all ? PNV_IODA_PE_BUS_ALL : PNV_IODA_PE_BUS);
+>>  	pe->pbus = bus;
+>>  	pe->pdev = NULL;
+>>@@ -1018,17 +1017,16 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>>
+>>  	if (all)
+>>  		pe_info(pe, "Secondary bus %d..%d associated with PE#%d\n",
+>>-			bus->busn_res.start, bus->busn_res.end, pe_num);
+>>+			bus->busn_res.start, bus->busn_res.end, pe->pe_number);
+>>  	else
+>>  		pe_info(pe, "Secondary bus %d associated with PE#%d\n",
+>>-			bus->busn_res.start, pe_num);
+>>+			bus->busn_res.start, pe->pe_number);
+>>
+>>  	if (pnv_ioda_configure_pe(phb, pe)) {
+>>  		/* XXX What do we do here ? */
+>>-		if (pe_num)
+>>-			pnv_ioda_free_pe(phb, pe_num);
+>>+		pnv_ioda_free_pe(pe);
+>>  		pe->pbus = NULL;
+>>-		return;
+>>+		return NULL;
+>>  	}
+>>
+>>  	/* Associate it with all child devices */
+>>@@ -1036,6 +1034,8 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>>
+>>  	/* Put PE to the list */
+>>  	list_add_tail(&pe->list, &phb->ioda.pe_list);
+>>+
+>>+	return pe;
+>>  }
+>>
+>>  static void pnv_ioda_setup_PEs(struct pci_bus *bus)
+>>@@ -1267,7 +1267,7 @@ static void pnv_ioda_release_vf_PE(struct pci_dev *pdev)
+>>
+>>  		pnv_ioda_deconfigure_pe(phb, pe);
+>>
+>>-		pnv_ioda_free_pe(phb, pe->pe_number);
+>>+		pnv_ioda_free_pe(pe);
+>>  	}
+>>  }
+>>
+>>@@ -1276,6 +1276,7 @@ void pnv_pci_sriov_disable(struct pci_dev *pdev)
+>>  	struct pci_bus        *bus;
+>>  	struct pci_controller *hose;
+>>  	struct pnv_phb        *phb;
+>>+	struct pnv_ioda_pe    *pe;
+>>  	struct pci_dn         *pdn;
+>>  	struct pci_sriov      *iov;
+>>  	u16                    num_vfs, i;
+>>@@ -1300,8 +1301,11 @@ void pnv_pci_sriov_disable(struct pci_dev *pdev)
+>>  		/* Release PE numbers */
+>>  		if (pdn->m64_single_mode) {
+>>  			for (i = 0; i < num_vfs; i++) {
+>>-				if (pdn->pe_num_map[i] != IODA_INVALID_PE)
+>>-					pnv_ioda_free_pe(phb, pdn->pe_num_map[i]);
+>>+				if (pdn->pe_num_map[i] == IODA_INVALID_PE)
+>>+					continue;
+>>+
+>>+				pe = &phb->ioda.pe_array[pdn->pe_num_map[i]];
+>>+				pnv_ioda_free_pe(pe);
+>>  			}
+>>  		} else
+>>  			bitmap_clear(phb->ioda.pe_alloc, *pdn->pe_num_map, num_vfs);
+>>@@ -1354,9 +1358,8 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+>>
+>>  		if (pnv_ioda_configure_pe(phb, pe)) {
+>>  			/* XXX What do we do here ? */
+>>-			if (pe_num)
+>>-				pnv_ioda_free_pe(phb, pe_num);
+>>  			pe->pdev = NULL;
+>>+			pnv_ioda_free_pe(pe);
+>
+>
+>
+>pnv_ioda_free_pe() does WARN_ON(pdev). Before this patch you would free PE
+>first and then reset pe->pdev, now you reset it first, then call
+>pnv_ioda_free_pe(). This change is not just about "Use PE instead of number
+>during setup and release", is/was that a bug?
+>
+>And I fail to see when pe->pdev could get initialized in
+>pnv_ioda_configure_pe() as pnv_pci_dma_dev_setup() should not be called while
+>pnv_ioda_setup_vf_PE() is working.
+>
 
---nextPart10441568.fBDciVvhji
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+It wasn't or isn't a bug as pe->pdev is initialized in arch/powerpc/platform/powernv/pci.c::
+pnv_pci_dma_dev_setup()
 
-Hi,
+>
+>>  			continue;
+>>  		}
+>>
+>>@@ -1374,6 +1377,7 @@ int pnv_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
+>>  	struct pci_bus        *bus;
+>>  	struct pci_controller *hose;
+>>  	struct pnv_phb        *phb;
+>>+	struct pnv_ioda_pe    *pe;
+>>  	struct pci_dn         *pdn;
+>>  	int                    ret;
+>>  	u16                    i;
+>>@@ -1416,11 +1420,13 @@ int pnv_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
+>>  		/* Calculate available PE for required VFs */
+>>  		if (pdn->m64_single_mode) {
+>>  			for (i = 0; i < num_vfs; i++) {
+>>-				pdn->pe_num_map[i] = pnv_ioda_alloc_pe(phb);
+>>-				if (pdn->pe_num_map[i] == IODA_INVALID_PE) {
+>>+				pe = pnv_ioda_alloc_pe(phb);
+>>+				if (!pe) {
+>>  					ret = -EBUSY;
+>>  					goto m64_failed;
+>>  				}
+>>+
+>>+				pdn->pe_num_map[i] = pe->pe_number;
+>>  			}
+>>  		} else {
+>>  			mutex_lock(&phb->ioda.pe_alloc_mutex);
+>>@@ -1465,8 +1471,11 @@ int pnv_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
+>>  m64_failed:
+>>  	if (pdn->m64_single_mode) {
+>>  		for (i = 0; i < num_vfs; i++) {
+>>-			if (pdn->pe_num_map[i] != IODA_INVALID_PE)
+>>-				pnv_ioda_free_pe(phb, pdn->pe_num_map[i]);
+>>+			if (pdn->pe_num_map[i] == IODA_INVALID_PE)
+>>+				continue;
+>>+
+>>+			pe = &phb->ioda.pe_array[pdn->pe_num_map[i]];
+>>+			pnv_ioda_free_pe(pe);
+>>  		}
+>>  	} else
+>>  		bitmap_clear(phb->ioda.pe_alloc, *pdn->pe_num_map, num_vfs);
+>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>index 5df945f..e55ab0e 100644
+>>--- a/arch/powerpc/platforms/powernv/pci.h
+>>+++ b/arch/powerpc/platforms/powernv/pci.h
+>>@@ -105,7 +105,7 @@ struct pnv_phb {
+>>  	int (*init_m64)(struct pnv_phb *phb);
+>>  	void (*reserve_m64_pe)(struct pci_bus *bus,
+>>  			       unsigned long *pe_bitmap, bool all);
+>>-	int (*pick_m64_pe)(struct pci_bus *bus, bool all);
+>>+	struct pnv_ioda_pe *(*pick_m64_pe)(struct pci_bus *bus, bool all);
+>>  	int (*get_pe_state)(struct pnv_phb *phb, int pe_no);
+>>  	void (*freeze_pe)(struct pnv_phb *phb, int pe_no);
+>>  	int (*unfreeze_pe)(struct pnv_phb *phb, int pe_no, int opt);
+>>
 
-On Monday 16 November 2015 08:16:09 Rob Herring wrote:
-> On Mon, Nov 16, 2015 at 01:01:04PM +0100, Markus Pargmann wrote:
-> > This is the touchscreen conversion queue binding documentation. It =
-uses
-> > the shared imx25 ADC.
-> >=20
-> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >=20
-> > Notes:
-> >     Changes in v5:
-> >      - Fix signed/unsigned comparison
-> >      - Fix unused variable settling_time by putting it in the corre=
-ct argument list
-> >      - Use continous conversion queue with the repeat feature and a=
- proper
-> >        repeat-wait. Previously the touchscreen caused massive numbe=
-r of interrupts.
-> >=20
-> >  .../bindings/input/touchscreen/fsl-mx25-tcq.txt    | 29 ++++++++++=
-++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchsc=
-reen/fsl-mx25-tcq.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/fs=
-l-mx25-tcq.txt b/Documentation/devicetree/bindings/input/touchscreen/fs=
-l-mx25-tcq.txt
-> > new file mode 100644
-> > index 000000000000..89ab47a3acc1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-=
-tcq.txt
-> > @@ -0,0 +1,29 @@
-> > +Freescale mx25 TS conversion queue module
-> > +
-> > +mx25 touchscreen conversion queue module which controls the ADC un=
-it of the
-> > +mx25 for attached touchscreens.
-> > +
-> > +Required properties:
-> > + - compatible: Should be "fsl,imx25-tcq".
-> > + - reg: Memory range of the device.
-> > + - interrupts: Should be the interrupt number associated with this=
- module within
-> > +   the tscadc unit (<0>).
-> > + - interrupt-parent: Should be a phandle to the tscadc unit.
-> > + - fsl,wires: Should be '<4>' or '<5>'
-> > +
-> > +Optional properties:
-> > + - fsl,pen-debounce: Pen debounce time in nanoseconds.
-> > + - fsl,pen-threshold: Pen-down threshold for the touchscreen.
-> > + - fsl,settling-time: Settling time in nanoseconds.
->=20
-> Don't we have standard properties for these? If not, these should hav=
-e=20
-> units.
-
-I just found properties like 'debounce_timeout' without a vendor prefix=
- but
-they don't seem to be standard properties:
-=09Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touch=
-screen.txt
-
-For fsl,pen-threshold there is no real unit. It is the ratio between th=
-e
-internal voltage reference and the measured voltage after one of the
-touchscreen plates was precharged. However there are limits, I will add=
- a
-better description.
-
->=20
-> I don't understand the difference between debounce and settling times=
-.=20
-> Please make that clear in the doc.
-
-The settling time is the time waited after charging the touchscreen pla=
-tes. The
-pen-debounce time is a delay after a pen down has been detected.
-
-Best Regards,
-
-Markus
-
->=20
-> Rob
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
-
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---nextPart10441568.fBDciVvhji
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWSusrAAoJEEpcgKtcEGQQU2EP/1CGedi07KtAR2aaCUTKMmHC
-wuX8qHJpsh6sbcr9Y4azI7q6eiW4ONVxJEbt4cxON8rCHhqI1OmlYGucyDG9x0HR
-N3itvHvir8szFvs0Z7AbEepz03X6ahMWNX4Y9+OOrtJNuL+AjseXV3vRvhxSOSPV
-VcCEzzkvEcUB3vL4GGzJv8ijvzThwRgxnlsrSttGFWDrESihcvBHvQsTeq97Y5EB
-gvn6tuQSGH7+9z6eAwP6fKKg5cDs0nkib/spwhzBTsYUCBBDRzPWc4cEHR8QU287
-lFxwdA9mVBe/jBlqcfq6pV7qQhKpjkxAITIhbSFhh0JGGJyF25BWJamTb8XHrULO
-DO/Dksb01/i95of01fXEbMrMUsbi8F82PUpdV4xQsSEmxH1NYhtYd9dWPuTC+XSd
-W3UdnB+V0acbBF3S2p7cCt57i/SuIP3jDJOr67KQV9m7ENX5asTjwgbSQuYyoyGF
-WzVlcqq5H3hvuJvoEh/tp7GdSYD19a+wJCsbDnA6JKhhqnM4xjiaYyFzr2SbogB1
-AkR2DP9cwIwnnzcyDHq4tHjcL66F7AMjVjPdfdPYlya+ZK5mkmwTHtaMA9sU5CDJ
-bpRgNEBWVqrj57FTgT4+fvvAcFiLbbw3VIHFoPhjh125g2ZwpdkCnkZefDXg/pZz
-7vMzMpxLcno2B9vyl0zN
-=/Fbw
------END PGP SIGNATURE-----
-
---nextPart10441568.fBDciVvhji--
+Thanks,
+Gavin
