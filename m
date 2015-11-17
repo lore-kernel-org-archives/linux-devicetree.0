@@ -1,54 +1,26 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
-Date: Tue, 17 Nov 2015 11:15:11 -0800
-Message-ID: <CAOesGMhOmqr15Ou_QgJuiWdn6wWFYYLmy6eyf6zOopj8tKcadA@mail.gmail.com>
-References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
-	<1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
-	<CACRpkdapS-Vi_F-MqOFOPTHa2+zbrsPfPsbQA-Eks+tR3Wjg2A@mail.gmail.com>
-	<CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
-	<CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT
+ binding docs
+Date: Tue, 17 Nov 2015 11:20:19 -0800
+Message-ID: <20151117192018.GM23979@verge.net.au>
+References: <20151117035320.30676.88818.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151117035320.30676.88818.sendpatchset@little-apple>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-sh@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 3:06 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Nov 10, 2015 at 1:30 AM, Olof Johansson <olof@lixom.net> wrote:
->> On Mon, Sep 21, 2015 at 11:24 AM, Linus Walleij
->> <linus.walleij@linaro.org> wrote:
->>> On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
->>> <ludovic.desroches@atmel.com> wrote:
->>>
->>>> Add pio4 controller node to enable pinmux and gpio.
->>>>
->>>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
->>>
->>> Patch applied.
->>
->> Please don't merge DT changes through driver trees unless there's a
->> very specific reason to do so, since it introduces random conflicts.
->
-> Sorry :(
->
-> Even noted this in the pull request to Torvalds, it was in the bottom
-> of my patch stack so had been in -next for ages, I was afraid it
-> would create more problem than it solves if I reverted the patch,
-> but I guess I should have done so anyways.
+On Tue, Nov 17, 2015 at 12:53:20PM +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+> 
+> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
+> IPMMU DT binding documentation. The example is also updated to show
+> how the generic compatible string may be used as fallback.
+> 
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 
-Yeah, it's OK -- I spotted that pull request later as well.
-
-It's not a big deal in most specific instances, I'd say. It's just in
-aggregate it becomes a bother.
-
-So, just see this as a public reminder since we've seen it creep into
-other driver trees a bit more lately. Mistakes will still happen but
-try to keep it down. And for those who submit patches, feel free to
-point out in the patch that you don't expect the driver/subsystem
-maintainer to apply it to help them out.
-
-
--Olof
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
