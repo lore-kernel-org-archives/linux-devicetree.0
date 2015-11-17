@@ -1,81 +1,67 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: simplefb: Support
- regulator supply properties
-Date: Tue, 17 Nov 2015 14:50:51 -0600
-Message-ID: <20151117205051.GA6591@rob-hp-laptop>
-References: <1447734663-19189-1-git-send-email-wens@csie.org>
- <1447734663-19189-2-git-send-email-wens@csie.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH 2/7] misc: eeprom: 93xx46: Add DT bindings to
+ eeprom_93xx46 driver.
+Date: Tue, 17 Nov 2015 14:53:21 -0600
+Message-ID: <20151117205321.GA7718@rob-hp-laptop>
+References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
+ <1447733796-15546-3-git-send-email-cory.tusar@pid1solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBMFGV2ZAKGQE5ZQSX2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447734663-19189-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1447733796-15546-3-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 12:31:02PM +0800, Chen-Yu Tsai wrote:
-> The physical display tied to the framebuffer may have regulators
-> providing power to it, such as power for LCDs or interface conversion
-> chips.
+On Mon, Nov 16, 2015 at 11:16:31PM -0500, Cory Tusar wrote:
+> This commit documents bindings to be added to the eeprom_93xx46 driver
+> which allow device word size and read-only attributes to be specified
+> via devicetree.
 > 
-> The number of regulators in use may vary, but the regulator supply
-> binding can not be a list. Instead just support any named regulator
-> supply properties under the device node. These should be properly
-> named to match the device schematics / design. The driver should
-> take care to go through them all.
+> Currently the only supported device is a generic "eeprom-93xx46", which
+> mirrors the configuration options previously available as a platform
+> device.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Not really happy to see the continued expansion of simplefb binding, but
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
+> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
 > ---
->  .../devicetree/bindings/display/simple-framebuffer.txt      | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/misc/eeprom-93xx46.txt       | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-> index 4474ef6e0b95..8c9e9f515c87 100644
-> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-> @@ -47,10 +47,14 @@ Required properties:
->    - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
->  
->  Optional properties:
-> -- clocks : List of clocks used by the framebuffer. Clocks listed here
-> -           are expected to already be configured correctly. The OS must
-> -           ensure these clocks are not modified or disabled while the
-> -           simple framebuffer remains active.
-> +- clocks : List of clocks used by the framebuffer.
-> +- *-supply : Any number of regulators used by the framebuffer. These should
-> +	     be named according to the names in the device's design.
+> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+> new file mode 100644
+> index 0000000..ba493a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+> @@ -0,0 +1,20 @@
+> +EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
 > +
-> +  The above resources are expected to already be configured correctly.
-> +  The OS must ensure they are not modified or disabled while the simple
-> +  framebuffer remains active.
+> +Required properties:
+> +- compatible : "eeprom-93xx46"
+
+This should also have a compatible with the actual manufacturer.
+
+> +- data-size : number of data bits per word (either 8 or 16)
 > +
->  - display : phandle pointing to the primary display hardware node
->  
->  Example:
-> @@ -68,6 +72,7 @@ chosen {
->  		stride = <(1600 * 2)>;
->  		format = "r5g6b5";
->  		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
-> +		lcd-supply = <&reg_dc1sw>;
->  		display = <&lcdc0>;
->  	};
->  	stdout-path = "display0";
+> +Optional properties:
+> +- read-only : parameter-less property which disables writes to the EEPROM
+> +
+> +Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> +apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
+> +
+> +Example:
+> +	93c46c@0 {
+> +		compatible = "eeprom-93xx46";
+> +		reg = <0>;
+> +		spi-max-frequency = <1000000>;
+> +		spi-cs-high;
+> +		data-size = <8>;
+> +	};
 > -- 
-> 2.6.2
+> 2.4.10
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
