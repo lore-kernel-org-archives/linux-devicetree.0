@@ -1,85 +1,74 @@
-From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: Re: [PATCH 6/7] misc: eeprom: 93xx46: Add DT binding for a GPIO
- 'select' line.
-Date: Tue, 17 Nov 2015 16:19:13 -0500
-Message-ID: <564B99D1.5070308@pid1solutions.com>
-References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447733796-15546-7-git-send-email-cory.tusar@pid1solutions.com>
- <20151117205901.GA10669@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [Patch v4 2/2] media: v4l: ti-vpe: Document CAL driver
+Date: Tue, 17 Nov 2015 15:22:12 -0600
+Message-ID: <20151117212212.GA20622@rob-hp-laptop>
+References: <1447631628-9459-1-git-send-email-bparrot@ti.com>
+ <1447631628-9459-3-git-send-email-bparrot@ti.com>
+ <20151116152615.GA9256@rob-hp-laptop>
+ <20151116225249.GQ3999@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151117205901.GA10669@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20151116225249.GQ3999@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org, jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-On 11/17/2015 03:59 PM, Rob Herring wrote:
-> On Mon, Nov 16, 2015 at 11:16:35PM -0500, Cory Tusar wrote:
->> This commit documents an additional devicetree binding in the
->> eeprom_93x46 driver allowing a GPIO line to function as a 'select'
->> or 'enable' signal prior to accessing the EEPROM.
+On Mon, Nov 16, 2015 at 04:52:49PM -0600, Benoit Parrot wrote:
+> Rob Herring <robh@kernel.org> wrote on Mon [2015-Nov-16 09:26:16 -0600]:
+> > On Sun, Nov 15, 2015 at 05:53:48PM -0600, Benoit Parrot wrote:
+> > > Device Tree bindings for the Camera Adaptation Layer (CAL) driver
+> > 
+> > Bindings are for h/w blocks, not drivers...
 > 
-> You can just fold all the DT binding patches into 1. They don't have to 
-> match up to driver changes.
-
-Will do.
-
->>
->> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
->> ---
->>  Documentation/devicetree/bindings/misc/eeprom-93xx46.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> index 34a0cc2..75b16f4 100644
->> --- a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> @@ -6,6 +6,8 @@ Required properties:
->>  
->>  Optional properties:
->>  - read-only : parameter-less property which disables writes to the EEPROM
->> +- select-gpio : if present, specifies the GPIO that will be asserted prior to
->> +  each access to the EEPROM (e.g. for SPI bus multiplexing)
+> OK I'll fix that.
 > 
-> This should be "select-gpios".
+> > 
+> > > 
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/ti-cal.txt | 70 ++++++++++++++++++++++
+> > >  1 file changed, 70 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+> > > new file mode 100644
+> > > index 000000000000..680efadb6208
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+> > > @@ -0,0 +1,70 @@
+> > > +Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL)
+> > > +------------------------------------------------------
+> > > +
+> > > +The Camera Adaptation Layer (CAL) is a key component for image capture
+> > > +applications. The capture module provides the system interface and the
+> > > +processing capability to connect CSI2 image-sensor modules to the
+> > > +DRA72x device.
+> > > +
+> > > +Required properties:
+> > > +- compatible: must be "ti,cal"
+> > 
+> > Needs to be more specific.
+> 
+> See potential patch below.
 
-Will fix, thanks.
+Looks fine.
 
->>  
->>  Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
->>  apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
->> @@ -17,4 +19,5 @@ Example:
->>  		spi-max-frequency = <1000000>;
->>  		spi-cs-high;
->>  		data-size = <8>;
->> +		select-gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
->>  	};
->> -- 
->> 2.4.10
->>
+> > > +
+> > > +		csi2_0: port@0 {
+> > 
+> > Multiple ports should be under a ports node.
+> 
+> The video-interfaces.txt bindings doc state:
+> "All 'port' nodes can be grouped under optional 'ports' node"
+> Doesn't that mean that 'ports' is then optional has show in the csi2
+> example provide in the same documents?
 
+Yes, but we may want to change that or at least what is recommended. 
+Often when we don't group things, and we latter decide we want to. It 
+makes things easier if you have other child nodes that are not port 
+nodes.
 
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
-
-
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlZLmdEACgkQHT1tsfGwHJ+2xACdFuo21bKIe5y4tYHw63b5OA/s
-x20AnRKVla1svFEX15dNvrCwzgCBZ7cl
-=lXQy
------END PGP SIGNATURE-----
+Rob
