@@ -1,86 +1,62 @@
-From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
-Subject: [PATCHv2 1/3] ion: Devicetree bindings for Ion
-Date: Mon, 16 Nov 2015 16:57:33 -0800
-Message-ID: <1447721855-7574-2-git-send-email-laura@labbott.name>
-References: <1447721855-7574-1-git-send-email-laura@labbott.name>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447721855-7574-1-git-send-email-laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Cc: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tom Gall <tom.gall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Feng Tang <feng.tang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Laura Abbott <laura@labbott.name>
+Subject: [PATCHv2 0/3] Devicetree bindings for Ion
+Date: Mon, 16 Nov 2015 16:57:32 -0800
+Message-ID: <1447721855-7574-1-git-send-email-laura@labbott.name>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Feng Tang <feng.tang@intel.com>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Laura Abbott <laura@labbott.name>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
-This adds a base set of devicetree bindings for the Ion memory
-manager. This supports setting up the generic set of heaps and
-their properties.
 
-Signed-off-by: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
----
- drivers/staging/android/ion/devicetree.txt | 50 ++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Hi,
+
+This is another attempt at devicetree bindings for Ion. The big complaint from
+v1 was that too much unnecessary data was being pushed into devicetree.
+v2 takes a different approach of using just compatbile strings for the heaps.
+This gets closer to the devicetree philosophy of describing just the hardware.
+Each heap ultimately represents some kind of memory that exists in the system.
+The compatible string indicates the match for how to handle the type of memory
+on this system. The details like heap-id, name etc. are now pushed out to C
+files. This makes Ion heaps look closer to something like a quirks framework.
+(I'd argue this isn't a complete mischaracterization given the type of setup
+Ion gets used for...) The one downside here is that this leads to more new
+bindings for each board that gets added.
+
+This version also includes a sample C file which shows what the structure
+might look like. As always, your comments and reviews are appreciated.
+
+Thanks,
+Laura
+
+Laura Abbott (3):
+  ion: Devicetree bindings for Ion
+  staging: ion: Add files for parsing the devicetree (WIP)
+  NOMERGE: Sample driver
+
+ drivers/staging/android/ion/Kconfig         |  16 +++
+ drivers/staging/android/ion/Makefile        |   2 +
+ drivers/staging/android/ion/devicetree.txt  |  50 +++++++++
+ drivers/staging/android/ion/ion_of.c        | 168 ++++++++++++++++++++++++++++
+ drivers/staging/android/ion/ion_of.h        |  35 ++++++
+ drivers/staging/android/ion/ion_of_sample.c |  96 ++++++++++++++++
+ 6 files changed, 367 insertions(+)
  create mode 100644 drivers/staging/android/ion/devicetree.txt
+ create mode 100644 drivers/staging/android/ion/ion_of.c
+ create mode 100644 drivers/staging/android/ion/ion_of.h
+ create mode 100644 drivers/staging/android/ion/ion_of_sample.c
 
-diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
-new file mode 100644
-index 0000000..e1ea537
---- /dev/null
-+++ b/drivers/staging/android/ion/devicetree.txt
-@@ -0,0 +1,50 @@
-+Ion Memory Manager
-+
-+Ion is a memory manager that allows for sharing of buffers via dma-buf.
-+Ion allows for different types of allocation via an abstraction called
-+a 'heap'. A heap represents a specific type of memory. Each heap has
-+a different type. There can be multiple instances of the same heap
-+type.
-+
-+Required properties for Ion
-+
-+- compatible: "linux,ion" PLUS a compatible property for the device
-+
-+All child nodes of a linux,ion node are interpreted as heaps
-+
-+required properties for heaps
-+
-+- compatible: compatible string for a heap type PLUS a compatible property
-+for the specific instance of the heap. Current heap types
-+-- linux,ion-heap-system
-+-- linux,ion-heap-system-contig
-+-- linux,ion-heap-carveout
-+-- linux,ion-heap-chunk
-+-- linux,ion-heap-dma
-+-- linux,ion-heap-custom
-+
-+Optional properties
-+- memory-region: A phandle to a memory region. Required for DMA heap type
-+(see reserved-memory.txt for details on the reservation)
-+
-+Example:
-+
-+	ion {
-+		compatbile = "qcom,msm8916-ion", "linux,ion";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ion-system-heap {
-+			compatbile = "qcom,system-heap", "linux,ion-heap-system"
-+		};
-+
-+		ion-camera-region {
-+			compatible = "qcom,camera-heap", "linux,ion-heap-dma"
-+			memory-region = <&camera_region>;
-+		};
-+
-+		ion-fb-region {
-+			compatbile = "qcom,fb-heap", "linux,ion-heap-dma"
-+			memory-region = <&fb_region>;
-+		};
-+	}
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
