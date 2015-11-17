@@ -1,35 +1,57 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH v2 1/2] ASoC: da7218: Add bindings documentation for
- DA7218 audio codec
-Date: Tue, 17 Nov 2015 17:27:50 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D460E61B@SW-EX-MBX01.diasemi.com>
-References: <cover.1447254553.git.Adam.Thomson.Opensource@diasemi.com>
- <760d212f18efec816701f2b3e9fc549ca86d31ee.1447254553.git.Adam.Thomson.Opensource@diasemi.com>
- <20151111201946.GA24618@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: koelsch: Move SPI FLASH partitions to
+ subnode
+Date: Tue, 17 Nov 2015 09:46:14 -0800
+Message-ID: <20151117174613.GH23979@verge.net.au>
+References: <1447144506-20336-1-git-send-email-geert+renesas@glider.be>
+ <20151112011522.GB19649@verge.net.au>
+ <CAMuHMdVaBXSNnf5k3Sxx=bz8CscsE85PozgBH82yXa3HBXC1sg@mail.gmail.com>
+ <20151113002820.GE20462@verge.net.au>
+ <CAMuHMdW4jOYJJvk8RX+uZRhsa=eT3hg+by_3rbKP96M1mrLjPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151111201946.GA24618@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW4jOYJJvk8RX+uZRhsa=eT3hg+by_3rbKP96M1mrLjPQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mtd@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTm92ZW1iZXIgMTEsIDIwMTUgMjA6MjAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KDQo+ID4gKy0g
-ZGxnLG1pY2JpYXMxLWx2bCA6IFZvbHRhZ2UgKG1WKSBmb3IgTWljIEJpYXMgMQ0KPiA+ICsJWzwx
-MjAwPiwgPDE2MDA+LCA8MTgwMD4sIDwyMDAwPiwgPDIyMDA+LCA8MjQwMD4sIDwyNjAwPiwgPDI4
-MDA+LA0KPiA8MzAwMD5dDQo+ID4gKy0gZGxnLG1pY2JpYXMyLWx2bCA6IFZvbHRhZ2UgKG1WKSBm
-b3IgTWljIEJpYXMgMg0KPiA+ICsJWzwxMjAwPiwgPDE2MDA+LCA8MTgwMD4sIDwyMDAwPiwgPDIy
-MDA+LCA8MjQwMD4sIDwyNjAwPiwgPDI4MDA+LA0KPiA8MzAwMD5dDQo+IA0KPiBVbml0cyBwbGVh
-c2UgKC1taWNyb3ZvbHQpLg0KDQpJIHJlZmVyIGJhY2sgdG8gb3VyIHByZXZpb3VzIGRpc2N1c3Np
-b24gKGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzEwLzgvNjYxKS4NClRoaXMgZG9lc24ndCBh
-ZGQgYW55dGhpbmcgYW5kIG1ha2VzIHRoZSBiaW5kaW5nIG5hbWUgdW5uZWNlc3NhcmlseSBsb25n
-LiBXaHkgaXMNCnRoaXMgYmVpbmcgZW5mb3JjZWQ/IFdob2V2ZXIgdXNlcyB0aGUgYmluZGluZyB3
-aWxsIGhhdmUgdG8gbG9vayBhdCB0aGUNCmRvY3VtZW50YXRpb24gdG8gdW5kZXJzdGFuZCB3aGlj
-aCB2YWx1ZXMgYXJlIHZhbGlkIGFueXdheSwgc28gdGhpcyBzZWVtcyBsaWtlDQpjcnVmdC4NCg0K
-PiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIGRsZyxqYWNrLXJhdGUgOiBUaW1lIGJl
-dHdlZW4gamFjayBkZXRlY3QgbWVhc3VyZW1lbnRzICh1cykNCj4gPiArCVs8NT4sIDwxMD4sIDwy
-MD4sIDw0MD4sIDw4MD4sIDwxNjA+LCA8MzIwPiwgPDY0MD5dDQo+IA0KPiBVbml0cw0KDQpkaXR0
-by4NCg==
+On Fri, Nov 13, 2015 at 08:56:18AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Fri, Nov 13, 2015 at 1:28 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Thu, Nov 12, 2015 at 11:03:33AM +0100, Geert Uytterhoeven wrote:
+> >> On Thu, Nov 12, 2015 at 2:15 AM, Simon Horman <horms@verge.net.au> wrote:
+> >> > On Tue, Nov 10, 2015 at 09:35:06AM +0100, Geert Uytterhoeven wrote:
+> >> >> As of commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
+> >> >> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
+> >> >> partitions in a special 'partitions' subnode"), having partitions as
+> >> >> direct subnodes of an mtd device is discouraged:
+> >> >>
+> >> >>     spi0.0: 'partitions' subnode not found on /spi@e6b10000/flash@0. Trying to parse direct subnodes as partitions.
+> >> >
+> >> > I seem to see something else, perhaps I have a hardware problem?
+> >> >
+> >> >      m25p80 spi0.0: unrecognized JEDEC id bytes: 01,  2, 20
+> >>
+> >> That indeed means QSPI doesn't work. Is it reproducible?
+> >> Is this on Koelsch?
+> >
+> > Yes. It appears to happy reliably in my Koelsch.
+> 
+> Which tree / config?
+> 
+> I've just tried renesas-devel-20151113-v4.3 and topic/gen3-latest with
+> shmobile_defconfig, and the QSPI flash was detected correctly on both (the
+> former failed to parse partitions, as the code for the partitions subnode is
+> not yet in v4.3).
+
+* I am able to reproduce the "unrecognized JDEC id" problem on my Koelsch board
+  using renesas-devel-20151113-v4.3 with shmobile_defconfig.
+
+* I also noticed the partitions problem (on the gose board).
+  Perhaps I should have held off on applying the patches in question.
+  But the appears to be resolved now that the branch
+  with the patch in question has been rebased on top of v4.4-rc1.
