@@ -1,117 +1,113 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
-Date: Tue, 17 Nov 2015 13:11:56 +1100
-Message-ID: <564A8CEC.4050906@ozlabs.ru>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
- <56498D7B.7000307@ozlabs.ru> <20151117013813.GB31584@gwshan>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [v4 02/10] ata: ahci_brcmstb: add quirk for broken ncq
+Date: Mon, 16 Nov 2015 18:16:03 -0800
+Message-ID: <20151117021603.GW8456@google.com>
+References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
+ <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151117013813.GB31584@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2015 12:38 PM, Gavin Shan wrote:
-> On Mon, Nov 16, 2015 at 07:02:03PM +1100, Alexey Kardashevskiy wrote:
->> On 11/05/2015 12:12 AM, Gavin Shan wrote:
->>> This enables M64 window on P7IOC, which has been enabled on PHB3.
->>> Different from PHB3 where 16 M64 BARs are supported and each of
->>> them can be owned by one particular PE# exclusively or divided
->>> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
->>> of them are divided to 8 segments. So every P7IOC PHB supports
->>> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
->>> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
->>> M64DT, indicating that one M64 segment can only be pinned to the
->>> fixed PE#. In order to have same code to support M64 on P7IOC and
->>> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
->>> of them is pinned to the fixed PE# by bypassing the function of
->>> M64DT. In turn, we just need different phb->init_m64() for P7IOC
->>> and PHB3 to support M64.
->>>
->>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>> ---
->>>   arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
->>>   arch/powerpc/platforms/powernv/pci.h      |  3 ++
->>>   2 files changed, 86 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> index 1f7d985..bfe69f1 100644
->>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> @@ -256,6 +256,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
->>>   	}
->>>   }
->>>
->>> +static int pnv_ioda1_init_m64(struct pnv_phb *phb)
->>> +{
->>> +	struct resource *r;
->>> +	int index;
->>> +
->>> +	/*
->>> +	 * There are 16 M64 BARs, each of which has 8 segments. So
->>> +	 * there are as many M64 segments as the maximum number of
->>> +	 * PEs, which is 128.
->>> +	 */
->>> +	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
->>> +		unsigned long base, segsz = phb->ioda.m64_segsize;
->>> +		int64_t rc;
->>> +
->>> +		base = phb->ioda.m64_base +
->>> +		       index * PNV_IODA1_M64_SEGS * segsz;
->>> +		rc = opal_pci_set_phb_mem_window(phb->opal_id,
->>> +				OPAL_M64_WINDOW_TYPE, index, base, 0,
->>> +				PNV_IODA1_M64_SEGS * segsz);
->>> +		if (rc != OPAL_SUCCESS) {
->>> +			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
->>> +				rc, phb->hose->global_number, index);
->>> +			goto fail;
->>> +		}
->>> +
->>> +		rc = opal_pci_phb_mmio_enable(phb->opal_id,
->>> +				OPAL_M64_WINDOW_TYPE, index,
->>> +				OPAL_ENABLE_M64_SPLIT);
->>> +		if (rc != OPAL_SUCCESS) {
->>> +			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
->>> +				rc, phb->hose->global_number, index);
->>> +			goto fail;
->>> +		}
->>> +	}
->>> +
->>> +	/*
->>> +	 * Exclude the segment used by the reserved PE, which
->>> +	 * is expected to be 0 or last supported PE#.
->>> +	 */
->>> +	r = &phb->hose->mem_resources[1];
->>
->>
->> What does "1" mean here? A bridge's 64bit prefetchable window?
->>
->
-> It's PHB's M64 window.
+Hi,
 
-mem_resources[] of a hose are not windows of the root PCI bridge?
+On Fri, Oct 30, 2015 at 11:01:16PM +0900, Jaedon Shin wrote:
+> Add quirk for broken ncq. Some chipsets (eg. BCM7349A0, BCM7445A0,
+> BCM7445B0, and all 40nm chipsets including BCM7425) need a workaround
+> disabling NCQ.
+> 
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
+>  drivers/ata/ahci_brcmstb.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+> 
+> diff --git a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
+> index 73e3b0b2a3c2..194aeda8f14d 100644
+> --- a/drivers/ata/ahci_brcmstb.c
+> +++ b/drivers/ata/ahci_brcmstb.c
+> @@ -69,10 +69,15 @@
+>  	(DATA_ENDIAN << DMADESC_ENDIAN_SHIFT) |		\
+>  	(MMIO_ENDIAN << MMIO_ENDIAN_SHIFT))
+>  
+> +enum brcm_ahci_quirks {
+> +	BRCM_AHCI_QUIRK_NONCQ		= BIT(0),
+> +};
+> +
+>  struct brcm_ahci_priv {
+>  	struct device *dev;
+>  	void __iomem *top_ctrl;
+>  	u32 port_mask;
+> +	u32 quirks;
+>  };
+>  
+>  static const struct ata_port_info ahci_brcm_port_info = {
+> @@ -202,6 +207,42 @@ static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
+>  	return impl;
+>  }
+>  
+> +static void brcm_sata_quirks(struct platform_device *pdev,
+> +			     struct brcm_ahci_priv *priv)
+> +{
+> +	if (priv->quirks & BRCM_AHCI_QUIRK_NONCQ) {
+> +		void __iomem *ctrl = priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL;
+> +		void __iomem *ahci;
+> +		struct resource *res;
+> +		u32 reg;
+> +
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   "ahci");
+> +		ahci = devm_ioremap_resource(&pdev->dev, res);
+> +		if (IS_ERR(ahci))
+> +			return;
+> +
+> +		reg = brcm_sata_readreg(ctrl);
+> +		reg |= OVERRIDE_HWINIT;
+> +		brcm_sata_writereg(reg, ctrl);
+> +
+> +		/* Clear out the NCQ bit so the AHCI driver will not issue
+> +		 * FPDMA/NCQ commands.
+> +		 */
+> +		reg = readl(ahci + HOST_CAP);
+> +		reg &= ~HOST_CAP_NCQ;
+> +		writel(reg, ahci + HOST_CAP);
 
+You're using readl()/writel() to access the AHCI block, but...
 
+> +
+> +		reg = brcm_sata_readreg(ctrl);
+> +		reg &= ~OVERRIDE_HWINIT;
+> +		brcm_sata_writereg(reg, ctrl);
+> +
+> +		devm_iounmap(&pdev->dev, ahci);
+> +		devm_release_mem_region(&pdev->dev, res->start,
+> +					resource_size(res));
+> +	}
+> +}
+> +
+>  static void brcm_sata_init(struct brcm_ahci_priv *priv)
+>  {
+>  	/* Configure endianness */
+> @@ -256,6 +297,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->top_ctrl))
+>  		return PTR_ERR(priv->top_ctrl);
+>  
+> +	if (of_device_is_compatible(dev->of_node, "brcm,bcm7425-ahci"))
+> +		priv->quirks |= BRCM_AHCI_QUIRK_NONCQ;
+> +
+> +	brcm_sata_quirks(pdev, priv);
+> +
+>  	brcm_sata_init(priv);
 
->
->>
->>> +	if (phb->ioda.reserved_pe_idx == 0)
->>> +		r->start += phb->ioda.m64_segsize;
->>> +	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
->>> +		r->end -= phb->ioda.m64_segsize;
->>> +	else
->>> +		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
->>> +			phb->ioda.reserved_pe_idx);
->>> +
->
-> Thanks,
-> Gavin
->
+...the MMIO endianness is only configured in brcm_sata_init(). You won't
+see this problem on ARM LE, but you should on MIPS BE. Maybe
+brcm_sata_quirks() should be after brcm_sata_init()?
 
+>  
+>  	priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
 
--- 
-Alexey
+Brian
