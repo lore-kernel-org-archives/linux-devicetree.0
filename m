@@ -1,59 +1,83 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: [PATCH v5 1/3] devicetree: bindings: Add optional dynamic-power-coefficient property
-Date: Tue, 17 Nov 2015 12:06:21 +0000
-Message-ID: <1447761983-12415-2-git-send-email-punit.agrawal@arm.com>
-References: <1447761983-12415-1-git-send-email-punit.agrawal@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447761983-12415-1-git-send-email-punit.agrawal@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: Punit Agrawal <punit.agrawal@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com, viresh.kumar@linaro.org, rjw@rjwysocki.net, Mark Rutland <mark.rutland@arm.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/13] Xen: EFI: Parse DT parameters for Xen specific UEFI
+Date: Tue, 17 Nov 2015 13:17:22 +0100
+Message-ID: <CAKv+Gu-hjj0Mh3vUv86Y5Mk7STKP+ykBD_MXGcQWH1quWJ1jMA@mail.gmail.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+	<1447754231-7772-9-git-send-email-shannon.zhao@linaro.org>
+	<CAKv+Gu98L_dQYVhvGQG=d9Uga-x3mJ=4oxtQqvgU-D3DvcrwHg@mail.gmail.com>
+	<20151117113701.GE12586@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151117113701.GE12586@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Huangpeng (Peter)" <peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hangaohuai <hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The dynamic power consumption of a device is proportional to the
-square of voltage (V) and the clock frequency (f). It can be expressed as
+On 17 November 2015 at 12:37, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Nov 17, 2015 at 12:25:58PM +0100, Ard Biesheuvel wrote:
+>> On 17 November 2015 at 10:57,  <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >
+>> > Add a new function to parse DT parameters for Xen specific UEFI just
+>> > like the way for normal UEFI. Then it could reuse the existing codes.
+>> >
+>> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  drivers/firmware/efi/efi.c | 67 ++++++++++++++++++++++++++++++++++++++++++----
+>> >  1 file changed, 62 insertions(+), 5 deletions(-)
+>> >
+>> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+>> > index d6144e3..629bd06 100644
+>> > --- a/drivers/firmware/efi/efi.c
+>> > +++ b/drivers/firmware/efi/efi.c
+>> > @@ -24,6 +24,7 @@
+>> >  #include <linux/of_fdt.h>
+>> >  #include <linux/io.h>
+>> >  #include <linux/platform_device.h>
+>> > +#include <xen/xen.h>
+>> >
+>> >  struct efi __read_mostly efi = {
+>> >         .mps        = EFI_INVALID_TABLE_ADDR,
+>> > @@ -488,12 +489,60 @@ static __initdata struct {
+>> >         UEFI_PARAM("MemMap Desc. Version", "linux,uefi-mmap-desc-ver", desc_ver)
+>> >  };
+>> >
+>> > +static __initdata struct {
+>> > +       const char name[32];
+>> > +       const char propname[32];
+>> > +       int offset;
+>> > +       int size;
+>> > +} xen_dt_params[] = {
+>> > +       UEFI_PARAM("System Table", "xen,uefi-system-table", system_table),
+>> > +       UEFI_PARAM("MemMap Address", "xen,uefi-mmap-start", mmap),
+>> > +       UEFI_PARAM("MemMap Size", "xen,uefi-mmap-size", mmap_size),
+>> > +       UEFI_PARAM("MemMap Desc. Size", "xen,uefi-mmap-desc-size", desc_size),
+>> > +       UEFI_PARAM("MemMap Desc. Version", "xen,uefi-mmap-desc-ver", desc_ver)
+>> > +};
+>> > +
+>>
+>> We discussed (and agreed afair) that dropping the "linux," prefix from
+>> the DT properties was an acceptable change. If we do that, and reuse
+>> the same names in the xen version (i.e., drop the "xen," prefix), we
+>> could make this change a *lot* simpler.
+>
+> Regardless of if we drop the "linux," prefix from the existing strings,
+> I think we need the "xen," prefix here.
+>
+> The xen EFI interface comes with additional caveats, and we need to
+> treat it separately.
+>
+> Unless you're suggesting that /hypervisor/uefi-* is handled differently
+> to /chosen/uefi-*?
+>
+> I think I'd still prefer the "xen," prefix regardless.
+>
 
-Pdyn = dynamic-power-coefficient * V^2 * f.
-
-The coefficient represents the running time dynamic power consumption in
-units of mw/MHz/uVolt^2 and can be used in the above formula to
-calculate the dynamic power in mW.
-
-Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 3a07a87..6aca64f 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -242,6 +242,23 @@ nodes to be present and contain the properties described below.
- 		Definition: Specifies the syscon node controlling the cpu core
- 			    power domains.
- 
-+	- dynamic-power-coefficient
-+		Usage: optional
-+		Value type: <prop-encoded-array>
-+		Definition: A u32 value that represents the running time dynamic
-+			    power coefficient in units of mW/MHz/uVolt^2. The
-+			    coefficient can either be calculated from power
-+			    measurements or derived by analysis.
-+
-+			    The dynamic power consumption of the CPU  is
-+			    proportional to the square of the Voltage (V) and
-+			    the clock frequency (f). The coefficient is used to
-+			    calculate the dynamic power as below -
-+
-+			    Pdyn = dynamic-power-coefficient * V^2 * f
-+
-+			    where voltage is in uV, frequency is in MHz.
-+
- Example 1 (dual-cluster big.LITTLE system 32-bit):
- 
- 	cpus {
--- 
-2.6.2
+Well, we should still be able to reuse more of the existing code
+rather than duplicating a bunch of code in fdt_find_xen_uefi_params()
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
