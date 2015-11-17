@@ -1,95 +1,86 @@
-From: Daniel Axtens <dja@axtens.net>
-Subject: Re: [PATCH v7 22/50] powerpc/powernv: Introduce pnv_ioda_init_pe()
-Date: Tue, 17 Nov 2015 11:30:49 +1100
-Message-ID: <87wpthbh6u.fsf@gamma.ozlabs.ibm.com>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-23-git-send-email-gwshan@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-23-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+Subject: [PATCHv2 1/3] ion: Devicetree bindings for Ion
+Date: Mon, 16 Nov 2015 16:57:33 -0800
+Message-ID: <1447721855-7574-2-git-send-email-laura@labbott.name>
+References: <1447721855-7574-1-git-send-email-laura@labbott.name>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447721855-7574-1-git-send-email-laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tom Gall <tom.gall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Feng Tang <feng.tang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
+This adds a base set of devicetree bindings for the Ion memory
+manager. This supports setting up the generic set of heaps and
+their properties.
 
-> This introduces pnv_ioda_init_pe() to initialize the specified PE
-> instance (phb->ioda.pe_array[x]). It's used by pnv_ioda_alloc_pe()
-> and pnv_ioda_reserve_pe(). No logical changes introduced.
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/platforms/powernv/pci-ioda.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/pla=
-tforms/powernv/pci-ioda.c
-> index ef93a01..488e0f8 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -129,6 +129,14 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned l=
-ong flags)
->  		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
->  }
->=20=20
-> +static struct pnv_ioda_pe *pnv_ioda_init_pe(struct pnv_phb *phb, int pe_=
-no)
-> +{
-> +	phb->ioda.pe_array[pe_no].phb =3D phb;
-> +	phb->ioda.pe_array[pe_no].pe_number =3D pe_no;
-> +
-> +	return &phb->ioda.pe_array[pe_no];
-You have the function returning the newly initalized PE here...
+Signed-off-by: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+---
+ drivers/staging/android/ion/devicetree.txt | 50 ++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 drivers/staging/android/ion/devicetree.txt
 
-> +}
-> +
->  static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
->  {
->  	if (!(pe_no >=3D 0 && pe_no < phb->ioda.total_pe_num)) {
-> @@ -141,8 +149,7 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, =
-int pe_no)
->  		pr_debug("%s: PE %d was reserved on PHB#%x\n",
->  			 __func__, pe_no, phb->hose->global_number);
->=20=20
-> -	phb->ioda.pe_array[pe_no].phb =3D phb;
-> -	phb->ioda.pe_array[pe_no].pe_number =3D pe_no;
-> +	pnv_ioda_init_pe(phb, pe_no);
-... but then you ignore the result here and in the other function you've
-modified.
+diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
+new file mode 100644
+index 0000000..e1ea537
+--- /dev/null
++++ b/drivers/staging/android/ion/devicetree.txt
+@@ -0,0 +1,50 @@
++Ion Memory Manager
++
++Ion is a memory manager that allows for sharing of buffers via dma-buf.
++Ion allows for different types of allocation via an abstraction called
++a 'heap'. A heap represents a specific type of memory. Each heap has
++a different type. There can be multiple instances of the same heap
++type.
++
++Required properties for Ion
++
++- compatible: "linux,ion" PLUS a compatible property for the device
++
++All child nodes of a linux,ion node are interpreted as heaps
++
++required properties for heaps
++
++- compatible: compatible string for a heap type PLUS a compatible property
++for the specific instance of the heap. Current heap types
++-- linux,ion-heap-system
++-- linux,ion-heap-system-contig
++-- linux,ion-heap-carveout
++-- linux,ion-heap-chunk
++-- linux,ion-heap-dma
++-- linux,ion-heap-custom
++
++Optional properties
++- memory-region: A phandle to a memory region. Required for DMA heap type
++(see reserved-memory.txt for details on the reservation)
++
++Example:
++
++	ion {
++		compatbile = "qcom,msm8916-ion", "linux,ion";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ion-system-heap {
++			compatbile = "qcom,system-heap", "linux,ion-heap-system"
++		};
++
++		ion-camera-region {
++			compatible = "qcom,camera-heap", "linux,ion-heap-dma"
++			memory-region = <&camera_region>;
++		};
++
++		ion-fb-region {
++			compatbile = "qcom,fb-heap", "linux,ion-heap-dma"
++			memory-region = <&fb_region>;
++		};
++	}
+-- 
+2.5.0
 
-It looks like you're using the result in the next patch though, so I
-wonder if you would be better to merge this patch with the next
-one. However, as I said before I'll defer to Alexey on decisions about
-how to split the patch series if he has a different opinion.
-
-Regards,
-Daniel
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: GPGTools - https://gpgtools.org
-
-iQIcBAEBCgAGBQJWSnU5AAoJEPC3R3P2I92FoQYP/RyPK8sKCfwmjcdRe7vr+o+y
-aT6YLYeZ1HFfwO6tOLxwo0C8oBHbY0P5L1l5BuMB0fxW7J0n/nYhan1mEqNAlsrh
-k2YXRT6CT7UZPZ8gaHtefYA5Z78WnHYr02aFydqg7klJVj2seV3ZcBlsHj74XwJ2
-Aqdytc7aJ9YPZrZpAWz+GFol705t+f8P9TQwyurEyI6oDW8RWSEp1DBPdhQWdXnK
-ngJo3QMS1BwA3v7aeYqrykM7G2MIBsTVkWdYC8VRpZbz7v1s7fmpsl1Y8K54AsHP
-5zfJQzh7Je7EvmhbbO2uphXCWUNVVIoEtm+Wcs1nRSzJ+F9vnjte6PkQh+gIcK9y
-0tUpV4EWk8SMZngrW6dDrs38unS0sZqj+9ElqGSKdyqb65SpgAVyV5rZpMidlIJE
-FPylauU29ijvywDEYPjV3CZ/oZQ3psqKbpzPuv4xG/8McWfkPoVtldWp3N8rF+qs
-M2vQVxNVf9tXczpfhTYy53LFn4Xs/7bchlwwmGuXjgsB4n+oM2ZfSlOLbmd+RG4J
-87bRBV4xVJZL5HyZYqJwTqf5BRW1NYr44qlRv/OKjB7Y1r6mSc3G8bxySLAYhdxQ
-Zhn7qZXX7CsEKeRvUTjrdXcSdgpjz85Qb0VEvEG2LjdBHwxPQf/WovRUpLTz4Tx3
-XVFOTZ1dzEJLmU+eBp4v
-=nTkJ
------END PGP SIGNATURE-----
---=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
