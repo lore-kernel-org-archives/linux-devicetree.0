@@ -1,39 +1,41 @@
-From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: [PATCH v4 4/4] ARM: configs: lpc18xx: enable EEPROM NVMEM driver
-Date: Tue, 17 Nov 2015 17:02:56 -0300
-Message-ID: <1447790576-29410-5-git-send-email-ariel@vanguardiasur.com.ar>
-References: <1447790576-29410-1-git-send-email-ariel@vanguardiasur.com.ar>
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [v4 03/10] ata: ahci_brcmstb: add quirk for different phy
+Date: Tue, 17 Nov 2015 15:06:58 -0500
+Message-ID: <20151117200658.GE22864@mtj.duckdns.org>
+References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
+ <1446213684-2625-4-git-send-email-jaedon.shin@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447790576-29410-1-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1446213684-2625-4-git-send-email-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dragan Stancevic <dragan.stancevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable NVMEM driver for NXP LPC18xx EEPROM, which can be found in
-NXP LPC185x/3x and LPC435x/3x/2x/1x devices.
+On Fri, Oct 30, 2015 at 11:01:17PM +0900, Jaedon Shin wrote:
+> Add quirk for phy interface of MIPS-based chipsets. The ARM-based
+> chipsets have four phy interface control registers and each port has two
+> registers but the MIPS-based chipsets have three. There are no
+> information and documentation.
+> 
+> The Broadcom strict-ahci based BSP of legacy version did not control
+> these registers.
+...
+>  enum brcm_ahci_quirks {
+>  	BRCM_AHCI_QUIRK_NONCQ		= BIT(0),
+> +	BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE	= BIT(1),
+>  };
 
-Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
----
- arch/arm/configs/lpc18xx_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+I see.  There's another quirk flag which actually needs to be
+persistent.  Hmm... I don't know.  Ah well, please disregard my
+previous comment.
 
-diff --git a/arch/arm/configs/lpc18xx_defconfig b/arch/arm/configs/lpc18xx_defconfig
-index 03c155f..6d6d504 100644
---- a/arch/arm/configs/lpc18xx_defconfig
-+++ b/arch/arm/configs/lpc18xx_defconfig
-@@ -148,6 +148,8 @@ CONFIG_ARM_PL172_MPMC=y
- CONFIG_PWM=y
- CONFIG_PWM_LPC18XX_SCT=y
- CONFIG_PHY_LPC18XX_USB_OTG=y
-+CONFIG_NVMEM=y
-+CONFIG_NVMEM_LPC18XX_EEPROM=y
- CONFIG_EXT2_FS=y
- # CONFIG_FILE_LOCKING is not set
- # CONFIG_DNOTIFY is not set
+Thanks.
+
 -- 
-2.6.2
-
+tejun
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
