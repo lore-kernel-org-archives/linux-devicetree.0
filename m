@@ -1,8 +1,10 @@
 From: Carlo Caione <carlo@caione.org>
-Subject: [PATCH 0/7] Add basic SMP support for Amlogic Meson8b
-Date: Tue, 17 Nov 2015 15:56:35 +0100
-Message-ID: <1447772202-12418-1-git-send-email-carlo@caione.org>
+Subject: [PATCH 4/7] ARM: DTS: meson8b: Enable reset controller
+Date: Tue, 17 Nov 2015 15:56:39 +0100
+Message-ID: <1447772202-12418-5-git-send-email-carlo@caione.org>
+References: <1447772202-12418-1-git-send-email-carlo@caione.org>
 Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1447772202-12418-1-git-send-email-carlo@caione.org>
 Sender: linux-clk-owner@vger.kernel.org
 To: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, linux-meson@googlegroups.com, drake@endlessm.com, jerry.cao@amlogic.com, victor.wan@amlogic.com, pawel.moll@arm.com, arnd@arndb.de
 Cc: Carlo Caione <carlo@endlessm.com>
@@ -10,40 +12,57 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo@endlessm.com>
 
-This patchset adds SMP support for Amlogic Meson8b SoCs.
+Extend the CPU nodes to use the reset controller.
 
-Patch 1 fix some paramater for L2 cache needed for SMP.
-Patches 2-4 add a small reset controller used to reset the CPU cores at boot.
-Patches 5-7 deal with the SMP code itself.
+Signed-off-by: Carlo Caione <carlo@endlessm.com>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Carlo Caione (7):
-  ARM: DTS: meson8b: Extend L2 cache controller node
-  Documentation: bindings: Define CPU reset controller
-  clk: meson8b: Add reset controller for CPU cores
-  ARM: DTS: meson8b: Enable reset controller
-  Documentation: bindings: Add SMP related documentation
-  ARM: meson8b: Add SMP bringup code
-  ARM: DTS: meson8b: Add SMP related nodes
-
- .../devicetree/bindings/arm/amlogic/pmu.txt        |  16 ++
- .../devicetree/bindings/arm/amlogic/smp-sram.txt   |  32 +++
- .../arm/cpu-enable-method/amlogic,meson8b-smp      |  53 +++++
- .../bindings/clock/amlogic,meson8b-clkc.txt        |   6 +-
- arch/arm/boot/dts/meson8b.dtsi                     |  32 +++
- arch/arm/mach-meson/Kconfig                        |   1 +
- arch/arm/mach-meson/Makefile                       |   1 +
- arch/arm/mach-meson/platsmp.c                      | 228 +++++++++++++++++++++
- drivers/clk/meson/clk-cpu.c                        |  60 +++++-
- drivers/clk/meson/clkc.c                           |   5 +-
- drivers/clk/meson/clkc.h                           |   6 +-
- drivers/clk/meson/meson8b-clkc.c                   |   4 +-
- include/dt-bindings/clock/meson8b-clkc.h           |   5 +
- 13 files changed, 441 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
- create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/amlogic,meson8b-smp
- create mode 100644 arch/arm/mach-meson/platsmp.c
-
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 745f0f9..977d55f 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -60,6 +60,7 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x200>;
++			resets = <&clkc RST_CORE0>;
+ 		};
+ 
+ 		cpu@201 {
+@@ -67,6 +68,7 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x201>;
++			resets = <&clkc RST_CORE1>;
+ 		};
+ 
+ 		cpu@202 {
+@@ -74,6 +76,7 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x202>;
++			resets = <&clkc RST_CORE2>;
+ 		};
+ 
+ 		cpu@203 {
+@@ -81,6 +84,7 @@
+ 			compatible = "arm,cortex-a5";
+ 			next-level-cache = <&L2>;
+ 			reg = <0x203>;
++			resets = <&clkc RST_CORE3>;
+ 		};
+ 	};
+ 
+@@ -153,6 +157,7 @@
+ 		};
+ 
+ 		clkc: clock-controller@c1104000 {
++			#reset-cells = <1>;
+ 			#clock-cells = <1>;
+ 			compatible = "amlogic,meson8b-clkc";
+ 			reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
 -- 
 2.5.0
 
