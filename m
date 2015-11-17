@@ -1,29 +1,139 @@
-From: Mail System Administrator <redakcia-bSFjGd9kpVICAt+RKaP/nQ@public.gmane.org>
-Subject: Your Mailbox Has Exceeded..
-Date: Tue, 17 Nov 2015 23:17:20 +0100 (CET)
-Message-ID: <1464675584.29623485.1447798640401.JavaMail.zimbra@firma.azet.sk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH RFC 25/27] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Tue, 17 Nov 2015 15:37:49 -0700
+Message-ID: <1447799871-56374-26-git-send-email-lina.iyer@linaro.org>
+References: <1447799871-56374-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1447799871-56374-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: geert@linux-m68k.org, k.kozlowski@samsung.com, msivasub@codeaurora.org, agross@codeaurora.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, ahaslam@baylibre.com, mtitinger@baylibre.com, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear: Webmail Subscriber
+From: Kumar Gala <galak@codeaurora.org>
 
-Please note that your email account has exceeded
-storage capacity. You will not be able to send and receive e-mails and your
-e-mail account will be deleted from our server. To avoid this problem,
-click here: http://concordialaw.com.au/p/public_html/webmail/webmail/index.php
+The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
+on Qualcomm MSM platforms to determine which device tree should be
+utilized and passed to the kernel.
 
- to update your account.
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/msm/ids.txt | 65 +++++++++++++++++++++++
+ include/dt-bindings/arm/qcom-ids.h                | 33 ++++++++++++
+ 2 files changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/ids.txt
+ create mode 100644 include/dt-bindings/arm/qcom-ids.h
 
-Thank you.
-
-Management Team.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/msm/ids.txt b/Documentation/devicetree/bindings/arm/msm/ids.txt
+new file mode 100644
+index 0000000..9ee8428
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/msm/ids.txt
+@@ -0,0 +1,65 @@
++* MSM-ID
++
++The qcom,msm-id entry specifies the MSM chipset and hardware revision.  It can
++optionally be an array of these to indicate multiple hardware that use the same
++device tree.  It is expected that the bootloader will use this information at
++boot-up to decide which device tree to use when given multiple device trees,
++some of which may not be compatible with the actual hardware.  It is the
++bootloader's responsibility to pass the correct device tree to the kernel.
++
++PROPERTIES
++
++- qcom,msm-id:
++	Usage: required
++	Value type: <prop-encoded-array> (<chipset_id, rev_id> [, <c2, r2> ..])
++	Definition:
++		The "chipset_id" consists of three fields as below:
++
++		bits 0-15  = The unique MSM chipset id.
++		bits 16-31 = Reserved.  Should be 0
++
++		chipset_id is an exact match value
++
++		The "rev_id" is a chipset specific 32-bit id that represents
++		the version of the chipset.
++
++		The rev_id is a best match id.  The bootloader will look for
++		the closest possible patch.
++
++* BOARD-ID
++
++The qcom,board-id entry specifies the board type and revision information.  It
++can optionally be an array of these to indicate multiple boards that use the
++same device tree.  It is expected that the bootloader will use this information
++at boot-up to decide which device tree to use when given multiple device trees,
++some of which may not be compatible with the actual hardware.  It is the
++bootloader's responsibility to pass the correct device tree to the kernel.
++
++PROPERTIES
++
++- qcom,board-id:
++	Usage: required
++	Value type: <prop-encoded-array> (<board_id, subtype_id> [, <b2, s2> ..])
++	Definition:
++		The "board_id" consists of three fields as below:
++
++		bits 31-24 = Unusued.
++		bits 23-16 = Platform Version Major
++		bits 15-8  = Platfrom Version Minor
++		bits 7-0   = Platform Type
++
++		Platform Type field is an exact match value.  The Platform
++		Major/Minor field is a best match.  The bootloader will look
++		for the closest possible match.
++
++		The "subtype_id" is unique to a Platform Type/Chipset ID.  For
++		a given Platform Type, there will typically only be a single
++		board and the subtype_id will be 0.  However in some cases board
++		variants may need to be distinquished by different subtype_id
++		values.
++
++		subtype_id is an exact match value.
++
++EXAMPLE:
++	qcom,board-id = <15 2>;
++	qcom,msm-id = <0x1007e 0>;
+diff --git a/include/dt-bindings/arm/qcom-ids.h b/include/dt-bindings/arm/qcom-ids.h
+new file mode 100644
+index 0000000..a18f34e
+--- /dev/null
++++ b/include/dt-bindings/arm/qcom-ids.h
+@@ -0,0 +1,33 @@
++/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#ifndef __DT_BINDINGS_QCOM_IDS_H
++#define __DT_BINDINGS_QCOM_IDS_H
++
++/* qcom,msm-id */
++#define QCOM_ID_MSM8916		206
++#define QCOM_ID_APQ8016		247
++#define QCOM_ID_MSM8216		248
++#define QCOM_ID_MSM8116		249
++#define QCOM_ID_MSM8616		250
++
++/* qcom,board-id */
++#define QCOM_BRD_ID(a, major, minor) \
++	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | QCOM_BRD_ID_##a)
++
++#define QCOM_BRD_ID_MTP		8
++#define QCOM_BRD_ID_DRAGONBRD	10
++#define QCOM_BRD_ID_SBC		24
++
++#define QCOM_BRD_SUBTYPE_DEFAULT		0
++#define QCOM_BRD_SUBTYPE_MTP8916_SMB1360	1
++
++#endif
+-- 
+2.1.4
