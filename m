@@ -1,81 +1,76 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [v4 02/10] ata: ahci_brcmstb: add quirk for broken ncq
-Date: Tue, 17 Nov 2015 15:01:23 -0500
-Message-ID: <20151117200123.GD22864@mtj.duckdns.org>
-References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
- <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jaedon Shin <jaedon.shin@gmail.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: [PATCH v4 0/4] Add support for NXP LPC18xx EEPROM using nvmem
+Date: Tue, 17 Nov 2015 17:02:52 -0300
+Message-ID: <1447790576-29410-1-git-send-email-ariel@vanguardiasur.com.ar>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patch series adds support for NXP LPC18xx EEPROM memory found in
+NXP LPC185x/3x and LPC435x/3x/2x/1x devices.
 
-On Fri, Oct 30, 2015 at 11:01:16PM +0900, Jaedon Shin wrote:
-> +static void brcm_sata_quirks(struct platform_device *pdev,
-> +			     struct brcm_ahci_priv *priv)
-> +{
-> +	if (priv->quirks & BRCM_AHCI_QUIRK_NONCQ) {
-> +		void __iomem *ctrl = priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL;
-> +		void __iomem *ahci;
-> +		struct resource *res;
-> +		u32 reg;
-> +
-> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						   "ahci");
-> +		ahci = devm_ioremap_resource(&pdev->dev, res);
-> +		if (IS_ERR(ahci))
-> +			return;
-> +
-> +		reg = brcm_sata_readreg(ctrl);
-> +		reg |= OVERRIDE_HWINIT;
-> +		brcm_sata_writereg(reg, ctrl);
-> +
-> +		/* Clear out the NCQ bit so the AHCI driver will not issue
-> +		 * FPDMA/NCQ commands.
-> +		 */
-> +		reg = readl(ahci + HOST_CAP);
-> +		reg &= ~HOST_CAP_NCQ;
-> +		writel(reg, ahci + HOST_CAP);
-> +
-> +		reg = brcm_sata_readreg(ctrl);
-> +		reg &= ~OVERRIDE_HWINIT;
-> +		brcm_sata_writereg(reg, ctrl);
-> +
-> +		devm_iounmap(&pdev->dev, ahci);
-> +		devm_release_mem_region(&pdev->dev, res->start,
-> +					resource_size(res));
-> +	}
-> +}
+This patchset is based on tag next-20151116 of the linux-next
+repository. It has been successfully tested on a LPC4337 CIAA-NXP
+Board.
 
-Does the controller actually need HOST_CAP_NCQ bit turned off to work
-correctly?  If the only thing necessary is the host not issuing NCQ
-commands, setting AHCI_HFLAG_NO_NCQ should do.
+EEPROM notes:
+------------
 
->  static void brcm_sata_init(struct brcm_ahci_priv *priv)
->  {
->  	/* Configure endianness */
-> @@ -256,6 +297,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->top_ctrl))
->  		return PTR_ERR(priv->top_ctrl);
->  
-> +	if (of_device_is_compatible(dev->of_node, "brcm,bcm7425-ahci"))
-> +		priv->quirks |= BRCM_AHCI_QUIRK_NONCQ;
-> +
-> +	brcm_sata_quirks(pdev, priv);
+EEPROM size is 16384 bytes and it can be entirely read and 
+written/erased with 1 word (4 bytes) granularity. The last page
+(128 bytes) contains the EEPROM initialization data and is not writable.
 
-What's the point of "branch - set a bit - test the bit" sequence?
-Just do
+Erase/program time is less than 3ms. The EEPROM device requires a
+~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated dividing
+the system bus clock by the division factor, contained in the divider
+register (minus 1 encoded).
 
-	if (of_device_is_compatiable(...))
-		brcm_ahci_disable_ncq(...);
+EEPROM will be kept in Power Down mode except during read/write calls.
 
-Thanks.
+Changeset:
+---------
+v3 -> v4:
+* Added busywait polling for erase/program operation to finish.
+
+v2 -> v3:
+* Documented 'resets' property in devicetree bindings.
+* Added dynamic power on/off when writing/reading the EEPROM.
+* Added check for aligned offset in EEPROM writes.
+* Properly remove the driver in the reverse order of initialization.
+* Minor fixes.
+
+v1 -> v2:
+* Moved dt-bindings to be the first patch.
+* Changed compatible name from lpc1850 to lpc1857 as the former doesn't have EEPROM.
+* Fix hardware description which contained SoCs models without EEPROM.
+* Disabled fast_io and changed mdelay for msleep in regmap writes.
+* Replaced BUG_ON() in write function for an -EINVAL return.
+* Add patches for defconfig and devicetree files.
+
+Thanks,
+
+Ariel D'Alessandro (4):
+  DT: nvmem: Add NXP LPC18xx EEPROM memory binding documentation
+  nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+  ARM: dts: lpc18xx: add EEPROM memory node
+  ARM: configs: lpc18xx: enable EEPROM NVMEM driver
+
+ .../devicetree/bindings/nvmem/lpc1857-eeprom.txt   |  28 ++
+ arch/arm/boot/dts/lpc18xx.dtsi                     |  12 +
+ arch/arm/configs/lpc18xx_defconfig                 |   2 +
+ drivers/nvmem/Kconfig                              |   9 +
+ drivers/nvmem/Makefile                             |   2 +
+ drivers/nvmem/lpc18xx_eeprom.c                     | 330 +++++++++++++++++++++
+ 6 files changed, 383 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/lpc1857-eeprom.txt
+ create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
 
 -- 
-tejun
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
