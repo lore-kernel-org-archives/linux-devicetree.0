@@ -1,71 +1,188 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
-Date: Mon, 16 Nov 2015 18:14:39 -0600
-Message-ID: <20151117001439.GA26823@rob-hp-laptop>
-References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
- <1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
- <20151116144525.GM20696@leverpostej>
+From: Daniel Axtens <dja@axtens.net>
+Subject: Re: [PATCH v7 19/50] powerpc/powernv: Track DMA32 segment consumption
+Date: Tue, 17 Nov 2015 11:28:20 +1100
+Message-ID: <87ziydbhaz.fsf@gamma.ozlabs.ibm.com>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-20-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151116144525.GM20696@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1446642770-4681-20-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 16, 2015 at 02:45:25PM +0000, Mark Rutland wrote:
-> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
-> > This patch adds a devicetree binding documentation for ARM's
-> > SP805 WatchDog Timer.
-> > 
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > new file mode 100644
-> > index 0000000..ec70fe9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > @@ -0,0 +1,33 @@
-> > +* ARM SP805 Watchdog Timer (WDT) Controller
-> > +
-> > +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
-> > +can be used to identify the peripheral type, vendor, and revision.
-> > +This value can be used for driver matching.
-> > +
-> > +Note that the current sp805_wdt driver relies on the 'drivers/amba/bus.c'
-> > +framework to invoke the probe function of the sp805_wdt driver using the
-> > +unique PRIMECELL identifiers of the sp805 wdt IP.
-> 
-> This paragraph can go. We shouldn't describe kernel internals.
-> 
-> > +As SP805 WDT is a primecell IP, it follows the base bindings specified in
-> > +'arm/primecell.txt'
-> > +
-> > +Required properties:
-> > +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
-> > +- reg : Base address and size of the watchdog timer registers.
-> > +- interrupts : Should specify WDT interrupt number.
-> > +
-> > +Optional properties:
-> > +- clocks : From common clock binding. First clock is phandle to clock for apb
-> > +           pclk. Additional clocks are optional.
-> > +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
-> 
-> The hardware has "WDOGCLK", which is what the driver appears to expect
-> first implicitly.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The h/w has 2 clocks, PCLK and WDOGCLK, so both should be described and 
-neither should be optional.
+Gavin Shan <gwshan@linux.vnet.ibm.com> writes:
 
-Rob
+> Similar to the mechanism tracking consumed IO/M32/M64 segments,
+> this introduces an array for each PHB to track the consumed DMA32
+> segments, which are going to be released on PCI unplugging time.
+> The index of the array is the DMA32 segment number while the value
+> stored in the element is the assigned PE number.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +	/* Setup TCE32 segment mapping */
+Do you mean DMA32 rather than TCE32?
+> +	for (i =3D base; i < base + segs; i++)
+> +		phb->ioda.dma32_segmap[i] =3D pe->pe_number;
+> +
+I'm pretty sure this is right, but can you just confirm that you
+intended to index into the array starting at base and going to base + segs,
+and not going from 0 to segs? (i.e. not dma32_segmap[i - base]).
+
+Otherwise looks good.
+
+Regards,
+Daniel
+
+>  	/* Setup linux iommu table */
+>  	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
+>  				  base * PNV_IODA1_DMA32_SEGSIZE,
+> @@ -2378,13 +2382,13 @@ static void pnv_pci_ioda1_setup_dma(struct pnv_ph=
+b *phb)
+>  	 * then we assign at least one segment per PE, plus more based
+>  	 * on the amount of devices under that PE
+>  	 */
+> -	if (dma_pe_count > phb->ioda.tce32_count)
+> +	if (dma_pe_count > phb->ioda.dma32_count)
+>  		residual =3D 0;
+>  	else
+> -		residual =3D phb->ioda.tce32_count - dma_pe_count;
+> +		residual =3D phb->ioda.dma32_count - dma_pe_count;
+>=20=20
+>  	pr_info("PCI: Domain %04x has %ld available 32-bit DMA segments\n",
+> -		hose->global_number, phb->ioda.tce32_count);
+> +		hose->global_number, phb->ioda.dma32_count);
+>  	pr_info("PCI: %d PE# for a total weight of %d\n",
+>  		dma_pe_count, total_weight);
+>=20=20
+> @@ -2394,7 +2398,7 @@ static void pnv_pci_ioda1_setup_dma(struct pnv_phb =
+*phb)
+>  	 * out one base segment plus any residual segments based on
+>  	 * weight
+>  	 */
+> -	remaining =3D phb->ioda.tce32_count;
+> +	remaining =3D phb->ioda.dma32_count;
+>  	base =3D 0;
+>  	list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+>  		weight =3D pnv_pci_ioda_pe_dma_weight(pe);
+> @@ -3094,7 +3098,8 @@ static void __init pnv_pci_init_ioda_phb(struct dev=
+ice_node *np,
+>  {
+>  	struct pci_controller *hose;
+>  	struct pnv_phb *phb;
+> -	unsigned long size, m64map_off, m32map_off, pemap_off, iomap_off =3D 0;
+> +	unsigned long size, m64map_off, m32map_off, pemap_off;
+> +	unsigned long iomap_off =3D 0, dma32map_off =3D 0;
+>  	const __be64 *prop64;
+>  	const __be32 *prop32;
+>  	int i, len;
+> @@ -3177,6 +3182,10 @@ static void __init pnv_pci_init_ioda_phb(struct de=
+vice_node *np,
+>  	phb->ioda.io_segsize =3D phb->ioda.io_size / phb->ioda.total_pe_num;
+>  	phb->ioda.io_pci_base =3D 0; /* XXX calculate this ? */
+>=20=20
+> +	/* Calculate how many 32-bit TCE segments we have */
+> +	phb->ioda.dma32_count =3D phb->ioda.m32_pci_base /
+> +				PNV_IODA1_DMA32_SEGSIZE;
+> +
+>  	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
+>  	size =3D _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
+>  	m64map_off =3D size;
+> @@ -3186,6 +3195,9 @@ static void __init pnv_pci_init_ioda_phb(struct dev=
+ice_node *np,
+>  	if (phb->type =3D=3D PNV_PHB_IODA1) {
+>  		iomap_off =3D size;
+>  		size +=3D phb->ioda.total_pe_num * sizeof(phb->ioda.io_segmap[0]);
+> +		dma32map_off =3D size;
+> +		size +=3D phb->ioda.dma32_count *
+> +			sizeof(phb->ioda.dma32_segmap[0]);
+>  	}
+>  	pemap_off =3D size;
+>  	size +=3D phb->ioda.total_pe_num * sizeof(struct pnv_ioda_pe);
+> @@ -3201,6 +3213,10 @@ static void __init pnv_pci_init_ioda_phb(struct de=
+vice_node *np,
+>  		phb->ioda.io_segmap =3D aux + iomap_off;
+>  		for (i =3D 0; i < phb->ioda.total_pe_num; i++)
+>  			phb->ioda.io_segmap[i] =3D IODA_INVALID_PE;
+> +
+> +		phb->ioda.dma32_segmap =3D aux + dma32map_off;
+> +		for (i =3D 0; i < phb->ioda.dma32_count; i++)
+> +			phb->ioda.dma32_segmap[i] =3D IODA_INVALID_PE;
+>  	}
+>  	phb->ioda.pe_array =3D aux + pemap_off;
+>  	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
+> @@ -3208,10 +3224,6 @@ static void __init pnv_pci_init_ioda_phb(struct de=
+vice_node *np,
+>  	INIT_LIST_HEAD(&phb->ioda.pe_list);
+>  	mutex_init(&phb->ioda.pe_list_mutex);
+>=20=20
+> -	/* Calculate how many 32-bit TCE segments we have */
+> -	phb->ioda.tce32_count =3D phb->ioda.m32_pci_base /
+> -				PNV_IODA1_DMA32_SEGSIZE;
+> -
+>  #if 0 /* We should really do that ... */
+>  	rc =3D opal_pci_set_phb_mem_window(opal->phb_id,
+>  					 window_type,
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platform=
+s/powernv/pci.h
+> index 2038ef2..0802fcd 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -148,6 +148,10 @@ struct pnv_phb {
+>  			int			*m32_segmap;
+>  			int			*io_segmap;
+>=20=20
+> +			/* DMA32 segment maps - IODA1 only */
+> +			unsigned long		dma32_count;
+> +			int			*dma32_segmap;
+> +
+>  			/* IRQ chip */
+>  			int			irq_chip_init;
+>  			struct irq_chip		irq_chip;
+> @@ -164,9 +168,6 @@ struct pnv_phb {
+>  			 */
+>  			unsigned char		pe_rmap[0x10000];
+>=20=20
+> -			/* 32-bit TCE tables allocation */
+> -			unsigned long		tce32_count;
+> -
+>  			/* TCE cache invalidate registers (physical and
+>  			 * remapped)
+>  			 */
+> --=20
+> 2.1.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: GPGTools - https://gpgtools.org
+
+iQIcBAEBCgAGBQJWSnSkAAoJEPC3R3P2I92FQbAQAKyQDAQYAA88PgO5qHX+0nUH
+BQLJCH8uXSaLflsgCOpnWy9lv5jMzl5MpF1phbadTYTiVO6W/aZEUq+HhQ4ZBMgP
+fdhae3yUCQXAxsdeaSCvsFMDnVRacuh0Lqg4eznwrt0OEaCvtrROjpSl2A2kpgNv
+ZkMBblBcuQp3FXdqi6WPK2FS87jLgGPS1SxQQTnhNXrfxkGKXiQqhI1FRYRU18fz
+fP5tCik9BXdLU63qXTS8zbzvdE2jpqXoZjsDCrlfUp7NZ0Jy1pfD8KOXN5zBmHmu
+kYy03HAfvQO56foy5NEjTTgTFJwnmK9p9m+Rfc9nKmqm4QYN/0dAvKIcKRbfewVb
+Y/hd/DYpje/VwJ0dZk170f4uhuRcS8tqTsFqjYriNG/uyVisQQAs3a1S4/vaxc7L
+pOXH8iXPgD55zZWVyvqHQec1/Tu+FjVaEMiDBeqv37apbDViPonoy85BSTcUG9Bl
+AJ/Lkz/uFlDaEkFQBSFCuMHi5kSDpvm57T2lLbN83pGt35fW9OFq/o+yWYa/SRbO
+jL7Ppqko06sbr17h3/2oHTkpMINx124GKlBp1m+ih2hz0P3cKSoWk+kEzzClTLvY
+BQLN/RVQiGKye5aTcoiebAHuQrXlcwU18Y9fkcHmMg5PbNCHzFUASBnvmj8A5t5k
+RMQktBepybjKYACRwG69
+=RUYs
+-----END PGP SIGNATURE-----
+--=-=-=--
