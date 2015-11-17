@@ -1,125 +1,31 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 25/50] powerpc/powernv: Reserve PE for root bus
-Date: Tue, 17 Nov 2015 20:06:53 +1100
-Message-ID: <20151117090653.GA20134@gwshan>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-26-git-send-email-gwshan@linux.vnet.ibm.com>
- <564AC37A.2060701@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] Documentation: tps65086: Add DT bindings for the
+ TPS65086 GPO controller
+Date: Tue, 17 Nov 2015 10:12:26 +0100
+Message-ID: <CACRpkdaD+jjvJFYkEdDEwN_7ogyKVhYYrv8nYjacarnMA67=UQ@mail.gmail.com>
+References: <1446657135-7820-1-git-send-email-afd@ti.com>
+	<1446657135-7820-4-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <564AC37A.2060701@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446657135-7820-4-git-send-email-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 05:04:42PM +1100, Alexey Kardashevskiy wrote:
->On 11/05/2015 12:12 AM, Gavin Shan wrote:
->>We're going to reserve/assign PEs when pcibios_setup_bridge() is
->>called. The function won't be called for root bus as it doesn't
->>have parent bridge. However, the root bus still needs a PE to be
->>covered.
->>
->>This reserves PE numbers that are adjacent to the reserved one
->>for root buses.
->
->
->Somewhere in the patchset you need to describe why you need a separate PE for
->a root bus and why reserved_pe_idx is not enough for this.
->
+On Wed, Nov 4, 2015 at 6:12 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
 
-Please confirm if it's fine to add the descrption in this patch's chagelog.
-
+> The TPS65086 PMIC contains several regulators and a GPO controller.
+> Add bindings for the TPS65086 GPO controller.
 >
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 33 ++++++++++++++++++++++---------
->>  arch/powerpc/platforms/powernv/pci.h      |  1 +
->>  2 files changed, 25 insertions(+), 9 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index eea1c96..5e6745f 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -207,14 +207,14 @@ static int pnv_ioda2_init_m64(struct pnv_phb *phb)
->>  	set_bit(phb->ioda.m64_bar_idx, &phb->ioda.m64_bar_alloc);
->>
->>  	/*
->>-	 * Strip off the segment used by the reserved PE, which is
->>-	 * expected to be 0 or last one of PE capabicity.
->>+	 * Exclude the segments for reserved and root bus PE, which
->>+	 * are first or last two PEs.
->>  	 */
->>  	r = &phb->hose->mem_resources[1];
->>  	if (phb->ioda.reserved_pe_idx == 0)
->>-		r->start += phb->ioda.m64_segsize;
->>+		r->start += (2 * phb->ioda.m64_segsize);
->>  	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
->>-		r->end -= phb->ioda.m64_segsize;
->>+		r->end -= (2 * phb->ioda.m64_segsize);
->>  	else
->>  		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
->>  			phb->ioda.reserved_pe_idx);
->>@@ -294,14 +294,14 @@ static int pnv_ioda1_init_m64(struct pnv_phb *phb)
->>  	}
->>
->>  	/*
->>-	 * Exclude the segment used by the reserved PE, which
->>-	 * is expected to be 0 or last supported PE#.
->>+	 * Exclude the segments for reserved and root bus PE, which
->>+	 * are first or last two PEs.
->>  	 */
->>  	r = &phb->hose->mem_resources[1];
->>  	if (phb->ioda.reserved_pe_idx == 0)
->>-		r->start += phb->ioda.m64_segsize;
->>+		r->start += (2 * phb->ioda.m64_segsize);
->>  	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
->>-		r->end -= phb->ioda.m64_segsize;
->>+		r->end -= (2 * phb->ioda.m64_segsize);
->>  	else
->>  		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
->>  			phb->ioda.reserved_pe_idx);
->>@@ -3231,7 +3231,22 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>  			phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
->>  	}
->>  	phb->ioda.pe_array = aux + pemap_off;
->>-	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
->>+
->>+	/*
->>+	 * Choose PE number for root bus, which shouldn't have
->>+	 * M64 resources consumed by its child devices. To pick
->>+	 * the PE number adjacent to the reserved one if possible.
->>+	 */
->>+	pnv_ioda_reserve_pe(phb, phb->ioda.reserved_pe_idx);
->>+	if (phb->ioda.reserved_pe_idx == 0) {
->>+		phb->ioda.root_pe_idx = 1;
->>+		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
->>+	} else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1)) {
->>+		phb->ioda.root_pe_idx = phb->ioda.reserved_pe_idx - 1;
->>+		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
->>+	} else {
->>+		phb->ioda.root_pe_idx = IODA_INVALID_PE;
->>+	}
->>
->>  	INIT_LIST_HEAD(&phb->ioda.pe_list);
->>  	mutex_init(&phb->ioda.pe_list_mutex);
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index e55ab0e..a8ba97f 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -120,6 +120,7 @@ struct pnv_phb {
->>  			/* Global bridge info */
->>  			unsigned int		total_pe_num;
->>  			unsigned int		reserved_pe_idx;
->>+			unsigned int		root_pe_idx;
->>
->>  			/* 32-bit MMIO window */
->>  			unsigned int		m32_size;
->>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 
-Thanks,
-Gavin
+Patch applied to the GPIO tree with Rob's ACK.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
