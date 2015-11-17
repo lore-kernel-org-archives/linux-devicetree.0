@@ -1,59 +1,81 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/13] ARM: Xen: Document UEFI support on Xen ARM virtual
- platforms
-Date: Tue, 17 Nov 2015 14:44:57 -0600
-Message-ID: <20151117204457.GA31871@rob-hp-laptop>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
- <1447754231-7772-8-git-send-email-shannon.zhao@linaro.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: simplefb: Support
+ regulator supply properties
+Date: Tue, 17 Nov 2015 14:50:51 -0600
+Message-ID: <20151117205051.GA6591@rob-hp-laptop>
+References: <1447734663-19189-1-git-send-email-wens@csie.org>
+ <1447734663-19189-2-git-send-email-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBMFGV2ZAKGQE5ZQSX2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447754231-7772-8-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+In-Reply-To: <1447734663-19189-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 05:57:05PM +0800, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Tue, Nov 17, 2015 at 12:31:02PM +0800, Chen-Yu Tsai wrote:
+> The physical display tied to the framebuffer may have regulators
+> providing power to it, such as power for LCDs or interface conversion
+> chips.
 > 
-> Add a "uefi" node under /hypervisor node in FDT, then Linux kernel could
-> scan this to get the UEFI information.
+> The number of regulators in use may vary, but the regulator supply
+> binding can not be a list. Instead just support any named regulator
+> supply properties under the device node. These should be properly
+> named to match the device schematics / design. The driver should
+> take care to go through them all.
 > 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Not really happy to see the continued expansion of simplefb binding, but
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  Documentation/devicetree/bindings/arm/xen.txt | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+>  .../devicetree/bindings/display/simple-framebuffer.txt      | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-> index 0f7b9c2..c375d67 100644
-> --- a/Documentation/devicetree/bindings/arm/xen.txt
-> +++ b/Documentation/devicetree/bindings/arm/xen.txt
-> @@ -15,6 +15,24 @@ the following properties:
->  - interrupts: the interrupt used by Xen to inject event notifications.
->    A GIC node is also required.
+> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> index 4474ef6e0b95..8c9e9f515c87 100644
+> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> @@ -47,10 +47,14 @@ Required properties:
+>    - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
 >  
-> +To support UEFI on Xen ARM virtual platforms, Xen pupulates the FDT "uefi" node
-> +under /hypervisor with following parameters:
+>  Optional properties:
+> -- clocks : List of clocks used by the framebuffer. Clocks listed here
+> -           are expected to already be configured correctly. The OS must
+> -           ensure these clocks are not modified or disabled while the
+> -           simple framebuffer remains active.
+> +- clocks : List of clocks used by the framebuffer.
+> +- *-supply : Any number of regulators used by the framebuffer. These should
+> +	     be named according to the names in the device's design.
 > +
-> +________________________________________________________________________________
-> +Name                      | Size   | Description
-> +================================================================================
-> +xen,uefi-system-table     | 64-bit | Physical address of the UEFI System Table.
-> +--------------------------------------------------------------------------------
-> +xen,uefi-mmap-start       | 64-bit | Physical address of the UEFI memory map.
-> +--------------------------------------------------------------------------------
-> +xen,uefi-mmap-size        | 32-bit | Size in bytes of the UEFI memory map
-> +                          |        | pointed to in previous entry.
-> +--------------------------------------------------------------------------------
-> +xen,uefi-mmap-desc-size   | 32-bit | Size in bytes of each entry in the UEFI
-> +                          |        | memory map.
-> +--------------------------------------------------------------------------------
-> +xen,uefi-mmap-desc-ver    | 32-bit | Version of the mmap descriptor format.
-> +--------------------------------------------------------------------------------
-
-Why aren't you using what is already populated by UEFI as defined in 
-Documentation/arm/uefi.txt? Seems to be about the same thing.
-
-Rob
+> +  The above resources are expected to already be configured correctly.
+> +  The OS must ensure they are not modified or disabled while the simple
+> +  framebuffer remains active.
+> +
+>  - display : phandle pointing to the primary display hardware node
+>  
+>  Example:
+> @@ -68,6 +72,7 @@ chosen {
+>  		stride = <(1600 * 2)>;
+>  		format = "r5g6b5";
+>  		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
+> +		lcd-supply = <&reg_dc1sw>;
+>  		display = <&lcdc0>;
+>  	};
+>  	stdout-path = "display0";
+> -- 
+> 2.6.2
+> 
