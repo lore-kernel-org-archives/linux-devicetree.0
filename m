@@ -1,132 +1,82 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH v4 3/3] cpufreq: arm_big_little: Add support to register a cpufreq cooling device
-Date: Tue, 17 Nov 2015 10:58:16 +0000
-Message-ID: <9hhsi44q4dz.fsf@e105922-lin.cambridge.arm.com>
-References: <1447702225-13323-1-git-send-email-punit.agrawal@arm.com>
-	<1447702225-13323-4-git-send-email-punit.agrawal@arm.com>
-	<CAOh2x=mThxxv1-REBYTyLhtLBY2yKwLqSGjCVSkqP7hO0Fs4tw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v12 1/3] dt-bindings: Add a binding for Mediatek xHCI host
+ controller
+Date: Tue, 17 Nov 2015 13:58:35 +0300
+Message-ID: <564B085B.7060706@cogentembedded.com>
+References: <1447751921-26746-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1447751921-26746-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAOh2x=mThxxv1-REBYTyLhtLBY2yKwLqSGjCVSkqP7hO0Fs4tw@mail.gmail.com>
-	(Viresh Kumar's message of "Tue, 17 Nov 2015 10:13:15 +0530")
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, dawei.chien@mediatek.com, Javi Merino <javi.merino@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447751921-26746-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar@linaro.org> writes:
+Hello.
 
-> On Tue, Nov 17, 2015 at 1:00 AM, Punit Agrawal <punit.agrawal@arm.com> wrote:
->> Register passive cooling devices when initialising cpufreq on
->> big.LITTLE systems. If the device tree provides a dynamic power
->> coefficient for the CPUs then the bound cooling device will support
->> the extensions that allow it to be used with all the existing thermal
->> governors including the power allocator governor.
->>
->> A cooling device will be created per individual frequency domain and
->> can be bound to thermal zones via the thermal DT bindings.
->>
->> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 11/17/2015 12:18 PM, Chunfeng Yun wrote:
+
+> add a DT binding documentation of xHCI host controller for the
+> MT8173 SoC from Mediatek.
 >
-> Remind me when did I Ack this version of your patch ..
-
-You didn't - I missed removing the tag before sending the patch
-out. Dropped locally now.
-
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
+>   1 file changed, 51 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
 >
->> Cc: Sudeep Holla <sudeep.holla@arm.com>
->> Cc: Eduardo Valentin <edubezval@gmail.com>
->> ---
->>  drivers/cpufreq/Kconfig.arm      |  2 ++
->>  drivers/cpufreq/arm_big_little.c | 35 +++++++++++++++++++++++++++++++++++
->>  2 files changed, 37 insertions(+)
->>
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 1582c1c..0e0052e 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -6,6 +6,8 @@
->>  config ARM_BIG_LITTLE_CPUFREQ
->>         tristate "Generic ARM big LITTLE CPUfreq driver"
->>         depends on (ARM_CPU_TOPOLOGY || ARM64) && HAVE_CLK
->> +       # if CPU_THERMAL is on and THERMAL=m, ARM_BIT_LITTLE_CPUFREQ cannot be =y
->> +       depends on !CPU_THERMAL || THERMAL
->>         select PM_OPP
->>         help
->>           This enables the Generic CPUfreq driver for ARM big.LITTLE platforms.
->> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
->> index c5d256c..60d09c0 100644
->> --- a/drivers/cpufreq/arm_big_little.c
->> +++ b/drivers/cpufreq/arm_big_little.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/cpu.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/cpumask.h>
->> +#include <linux/cpu_cooling.h>
->>  #include <linux/export.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->> @@ -55,6 +56,7 @@ static bool bL_switching_enabled;
->>  #define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
->>  #define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
->>
->> +static struct thermal_cooling_device *cdev[MAX_CLUSTERS];
->>  static struct cpufreq_arm_bL_ops *arm_bL_ops;
->>  static struct clk *clk[MAX_CLUSTERS];
->>  static struct cpufreq_frequency_table *freq_table[MAX_CLUSTERS + 1];
->> @@ -493,6 +495,7 @@ static int bL_cpufreq_init(struct cpufreq_policy *policy)
->>  static int bL_cpufreq_exit(struct cpufreq_policy *policy)
->>  {
->>         struct device *cpu_dev;
->> +       int domain;
->>
->>         cpu_dev = get_cpu_device(policy->cpu);
->>         if (!cpu_dev) {
->> @@ -501,12 +504,43 @@ static int bL_cpufreq_exit(struct cpufreq_policy *policy)
->>                 return -ENODEV;
->>         }
->>
->> +       domain = topology_physical_package_id(cpu_dev->id);
->
-> And this is broken.
->
-> Have you tested this for IKS ? That's what the primary use-case of
-> this driver is.
+> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> new file mode 100644
+> index 0000000..a78f20b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> @@ -0,0 +1,51 @@
+> +MT8173 xHCI
+> +
+> +The device node for Mediatek SOC USB3.0 host controller
+> +
+> +Required properties:
+> + - compatible : should contain "mediatek,mt8173-xhci"
+> + - reg : specifies physical base address and size of the registers,
+> +	the first one for MAC, the second for IPPC
+> + - interrupts : interrupt used by the controller
+> + - power-domains : a phandle to USB power domain node to control USB's
+> +	mtcmos
 
-Juno dvfs uses this driver - which is where I've been testing the
-changes. Unfortunately, there is no IKS there.
+    What's that?
 
-> And yeah, I would like to migrate the bL usecase to cpufreq-dt, now that it can
-> support multiple clusters.
+> + - vusb33-supply : regulator of USB avdd3.3v
+> +
+> + - clocks : a list of phandle + clock-specifier pairs, one for each
+> +	entry in clock-names
+> + - clock-names : must contain
+> +	"sys_ck": for clock of xHCI MAC
+> +	"wakeup_deb_p0": for USB wakeup debounce clock of port0
+> +	"wakeup_deb_p0": for USB wakeup debounce clock of port1
 
-It would be great to have a unified cpufreq driver servicing multiple
-dvfs domains. If I understand correctly, we can drop $SUBJECT when that
-happens. In the meanwhile...
+    "wakeup_deb_p1"?
 
->
-> This is broken, because exit() might get called for a CPU from big
-> cluster, while
-> read() was called for a CPU on little cluster.
+> +
+> + - phys : a list of phandle + phy specifier pairs
+> +
+> +Optional properties:
+> + - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
+                                ^^ IP?
 
-Good catch. The patch will definitely not do the right thing when IKS is
-enabled. Looking at the code, it looks like you can switch in and out of
-IKS at run time.
+> +	mode;
+> + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
+> +	control register, it depends on "mediatek,wakeup-src".
+> + - vbus-supply : reference to the VBUS regulator;
+> + - usb3-lpm-capable : supports USB3.0 LPM
 
-The cpu_cooling device doesn't cope with different types of cores, so
-I'll just have to skip registering (and un-registering) the cooling
-device when IKS is enabled.
+[...]
 
-I'll send out a new version addressing the issues you've pointed out.
+MBR, Sergei
 
-Thanks for your comments.
-
-Punit
->
-> --
-> viresh
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
