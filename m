@@ -1,40 +1,41 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
-Date: Tue, 17 Nov 2015 12:00:06 +0100
-Message-ID: <CACRpkdZTHcROza2diFCOj783T1zfbkd=Dov3PUzDV2U35qEFXA@mail.gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
-	<56261239.5030007@linaro.org>
-	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
-	<CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
-	<CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
+Date: Tue, 17 Nov 2015 12:06:03 +0100
+Message-ID: <CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
+References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
+	<1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
+	<CACRpkdapS-Vi_F-MqOFOPTHa2+zbrsPfPsbQA-Eks+tR3Wjg2A@mail.gmail.com>
+	<CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 6, 2015 at 1:57 PM, Maxime Coquelin
-<mcoquelin.stm32@gmail.com> wrote:
+On Tue, Nov 10, 2015 at 1:30 AM, Olof Johansson <olof@lixom.net> wrote:
+> On Mon, Sep 21, 2015 at 11:24 AM, Linus Walleij
+> <linus.walleij@linaro.org> wrote:
+>> On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
+>> <ludovic.desroches@atmel.com> wrote:
+>>
+>>> Add pio4 controller node to enable pinmux and gpio.
+>>>
+>>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>
+>> Patch applied.
+>
+> Please don't merge DT changes through driver trees unless there's a
+> very specific reason to do so, since it introduces random conflicts.
 
-> Thinking again at it, I persist to believe have the defines makes it
-> easier to use.
-> With auto-completion, it makes it faster and less error prone to
-> select the right
-> alternate function without parsing the datasheet.
+Sorry :(
 
-Auto-completion ... should we design our source code to
-fit certain editors?
-
-> But as these defines are not actually used on driver side, maybe I
-> could just move
-> them to the dts directory?
-
-No strong opinion there. include/dt-bindings is part of the bindings
-documentation actually so I guess it goes there.
+Even noted this in the pull request to Torvalds, it was in the bottom
+of my patch stack so had been in -next for ages, I was afraid it
+would create more problem than it solves if I reverted the patch,
+but I guess I should have done so anyways.
 
 Yours,
 Linus Walleij
