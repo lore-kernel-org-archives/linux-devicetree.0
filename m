@@ -1,100 +1,123 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND RFC/PATCH 4/8] dt-bindings: Add a binding for Mediatek
- Video Encoder
-Date: Tue, 17 Nov 2015 13:41:00 -0600
-Message-ID: <20151117194100.GA3028@rob-hp-laptop>
-References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
- <1447764885-23100-5-git-send-email-tiffany.lin@mediatek.com>
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Tue, 17 Nov 2015 16:53:11 -0300
+Message-ID: <564B85A7.4080306@vanguardiasur.com.ar>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+ <56386E30.4060905@i2se.com> <5649F64B.5050407@vanguardiasur.com.ar>
+ <1526033037.5264.1447754499675.JavaMail.open-xchange@oxbaltgw01.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447764885-23100-5-git-send-email-tiffany.lin@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Geert Uytterhoeven <geert@linux-m68k.org>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew->
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1526033037.5264.1447754499675.JavaMail.open-xchange-h4m1HHXQYNFdfASV6gReHsgmgJlYmuWJ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 08:54:41PM +0800, Tiffany Lin wrote:
-> add a DT binding documentation of Video Encoder for the
-> MT8173 SoC from Mediatek.
-> 
-> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> ---
->  .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 ++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> new file mode 100644
-> index 0000000..fea4d7c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> @@ -0,0 +1,58 @@
-> +Mediatek Video Codec
-> +
-> +Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
-> +supports high resolution encoding functionalities.
-> +
-> +Required properties:
-> +- compatible : "mediatek,mt8173-vcodec-enc" for encoder
-> +- reg : Physical base address of the video codec registers and length of
-> +  memory mapped region.
-> +- interrupts : interrupt number to the cpu.
-> +- larb : must contain the larbes of current platform
+Stefan,
 
-What is this?
+El 17/11/15 a las 07:01, Stefan Wahren escribi=C3=B3:
+> Hi Ariel,
+>=20
+>> Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> hat am 16. November =
+2015 um
+>> 16:29 geschrieben:
+>>
+>>
+>> Hi Stefan,
+>>
+>> Sorry for the delay.
+>>
+>> El 03/11/15 a las 05:20, Stefan Wahren escribi=C3=B3:
+>>> Hi Ariel,
+>>>
+>>> Am 19.10.2015 um 19:32 schrieb Ariel D'Alessandro:
+>>>> This commit adds support for NXP LPC18xx EEPROM memory found in NX=
+P
+>>>> LPC185x/3x and LPC435x/3x/2x/1x devices.
+>>>>
+>>>> EEPROM size is 16384 bytes and it can be entirely read and
+>>>> written/erased with 1 word (4 bytes) granularity. The last page
+>>>> (128 bytes) contains the EEPROM initialization data and is not wri=
+table.
+>>>>
+>>>> Erase/program time is less than 3ms. The EEPROM device requires a
+>>>> ~1500 kHz clock (min 800 kHz, max 1600 kHz) that is generated divi=
+ding
+>>>> the system bus clock by the division factor, contained in the divi=
+der
+>>>> register (minus 1 encoded).
+>>>>
+>>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>>>> ---
+>>>> drivers/nvmem/Kconfig | 9 ++
+>>>> drivers/nvmem/Makefile | 2 +
+>>>> drivers/nvmem/lpc18xx_eeprom.c | 266
+>>>> +++++++++++++++++++++++++++++++++++++++++
+>>>> 3 files changed, 277 insertions(+)
+>>>> create mode 100644 drivers/nvmem/lpc18xx_eeprom.c
+>>>> [...]
+>>>> +
+>>>> +static int lpc18xx_eeprom_gather_write(void *context, const void =
+*reg,
+>>>> + size_t reg_size, const void *val,
+>>>> + size_t val_size)
+>>>> +{
+>>>> + struct lpc18xx_eeprom_dev *eeprom =3D context;
+>>>> + unsigned int offset =3D *(u32 *)reg;
+>>>> +
+>>>> + /* 3 ms of erase/program time between each writing */
+>>>> + while (val_size) {
+>>>> + writel(*(u32 *)val, eeprom->mem_base + offset);
+>>>> + usleep_range(3000, 4000);
+>>>
+>>> i think it would be good to verify that the EEPROM write operation =
+has
+>>> really finished.
+>>
+>> I'm not sure what are you proposing. Why could the write operation n=
+ot
+>> finish?
+>=20
+> it's always good to keep in sync with the hardware. Here is an extrac=
+t of
+> chapter=20
+> "46.6.2.1 Writing and erase/programming" from the datasheet [1]:
+>=20
+>   During programming, the EEPROM is not available for other operation=
+s. To
+> prevent
+>   undesired loss in performance which would be caused by stalling the=
+ bus, the
+> EEPROM
+>   instead generates an error for AHB read/writes and APB writes when =
+programming
+> is
+>   busy. In order to prevent the error response, the program operation=
+ finished
+> interrupt
+>   can be enabled or the interrupt status bit can be polled.
+>=20
+> Please blame me if it doesn't apply.
+>=20
+> It's only a suggestion: How about checking the interrupt status bit f=
+or
+> END_OF_PROG after the 3 ms sleep?
 
-> +- clocks : list of clock specifiers, corresponding to entries in
-> +  the clock-names property;
-> +- clock-names: must contain "vencpll", "venc_lt_sel", "vcodecpll_370p5_ck"
-> +- iommus : list of iommus specifiers should be enabled for hw encode.
-> +  There are 2 cells needed to enable/disable iommu.
-> +  The first one is local arbiter index(larbid), and the other is port
-> +  index(portid) within local arbiter. Specifies the larbid and portid
-> +  as defined in dt-binding/memory/mt8173-larb-port.h.
-> +- vpu : the node of video processor unit
+Yeah, I think that's a good idea, pretty simple and it will ensure
+(although 3ms should be enough) erase/program operation has effectively
+finished.
 
-This should be prefixed with mediatek.
+Thanks for the explanation and suggestion. I'm submitting patchset v4
+with this.
 
-> +
-> +Example:
-> +vcodec_enc: vcodec@0x18002000 {
-> +    compatible = "mediatek,mt8173-vcodec-enc";
-> +    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
-> +          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
-> +    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
-> +           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
-> +    larb = <&larb3>,
-> +           <&larb5>;
-> +    iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
-> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
-> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
-> +    vpu = <&vpu>;
-> +    clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
-> +             <&topckgen CLK_TOP_VENC_LT_SEL>,
-> +             <&topckgen CLK_TOP_VCODECPLL_370P5>;
-> +    clock-names = "vencpll",
-> +                  "venc_lt_sel",
-> +                  "vcodecpll_370p5_ck";
-> +  };
-> -- 
-> 1.7.9.5
-> 
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
