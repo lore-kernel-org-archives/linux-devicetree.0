@@ -1,139 +1,92 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH RFC 25/27] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Tue, 17 Nov 2015 15:37:49 -0700
-Message-ID: <1447799871-56374-26-git-send-email-lina.iyer@linaro.org>
-References: <1447799871-56374-1-git-send-email-lina.iyer@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1447799871-56374-1-git-send-email-lina.iyer@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: geert@linux-m68k.org, k.kozlowski@samsung.com, msivasub@codeaurora.org, agross@codeaurora.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, ahaslam@baylibre.com, mtitinger@baylibre.com, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4] Documentation: dt: binding: fsl: add devicetree
+ binding for describing RCPM
+Date: Tue, 17 Nov 2015 17:16:51 -0600
+Message-ID: <1447802211.27264.48.camel@freescale.com>
+References: <1445841852-6830-1-git-send-email-dongsheng.wang@freescale.com>
+	 <20151116172611.GA27814@rob-hp-laptop>
+	 <1447726048.2262.385.camel@freescale.com>
+	 <CAL_JsqLQPj43S=x4j2VenGC+-CSYxwPSMkQxB5HxGz+Uv_G3vA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLQPj43S=x4j2VenGC+-CSYxwPSMkQxB5HxGz+Uv_G3vA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jason.jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kumar Gala <galak@codeaurora.org>
+On Tue, 2015-11-17 at 16:05 -0600, Rob Herring wrote:
+> On Mon, Nov 16, 2015 at 8:07 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > On Mon, 2015-11-16 at 11:26 -0600, Rob Herring wrote:
+> > > We just merged a common wakeup source binding[1]. It doesn't really work
+> > > in a similar way to what you have done, but I'd like to see something
+> > > common here. How exactly wakeup is done tends to depend on whether
+> > > interrupts are also wakeup signals or wake-up signally is completely
+> > > separate from interrupts. Depending on that, I think there are 2 options
+> > > here:
+> > > 
+> > > - Use the common binding and implement a stacked irqdomain for the
+> > > wakeup controller.
+> > 
+> > I'm not sure what a stacked irqdomain is, but the mechanism described here
+> > isn't about interrupts at all.  It's about controlling whether certain
+> > devices
+> > are kept awake in order to have the possibility of generating a wakeup.  I
+> > believe the actual wakeup comes via the ordinary device interrupt.
+> 
+> Stacked irqdomains were recently added. They allow you to have
+> multiple layers of control of interrupt lines. What you typically see
+> is device interrupts will go to both the main interrupt controller and
+> a special wake-up controller. So both devices need to be controlled.
+> The main controller can be powered down in suspend, but the wake-up
+> controller remains powered and can bring the cpu and interrupt
+> controller back up.
+> 
+> Keeping a device awake (clocks and power on) is somewhat different
+> than wake-up mechanisms and we generally have the subsystems needed
+> for that.
 
-The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
-on Qualcomm MSM platforms to determine which device tree should be
-utilized and passed to the kernel.
+I'm not sure how we'd map this to the clock infrastructure either.  We don't
+have a control that turns the block on or off; instead, we have a bit that we
+can set to tell the chip to not automatically turn a certain block off when
+the chip goes to sleep.
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/msm/ids.txt | 65 +++++++++++++++++++++++
- include/dt-bindings/arm/qcom-ids.h                | 33 ++++++++++++
- 2 files changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/ids.txt
- create mode 100644 include/dt-bindings/arm/qcom-ids.h
+> Directly exposing another block's registers to a client
+> driver is generally not the right way to do things. Although there is
+> syscon for all the misc signals the h/w designers just clumped
+> together.
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/ids.txt b/Documentation/devicetree/bindings/arm/msm/ids.txt
-new file mode 100644
-index 0000000..9ee8428
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/ids.txt
-@@ -0,0 +1,65 @@
-+* MSM-ID
-+
-+The qcom,msm-id entry specifies the MSM chipset and hardware revision.  It can
-+optionally be an array of these to indicate multiple hardware that use the same
-+device tree.  It is expected that the bootloader will use this information at
-+boot-up to decide which device tree to use when given multiple device trees,
-+some of which may not be compatible with the actual hardware.  It is the
-+bootloader's responsibility to pass the correct device tree to the kernel.
-+
-+PROPERTIES
-+
-+- qcom,msm-id:
-+	Usage: required
-+	Value type: <prop-encoded-array> (<chipset_id, rev_id> [, <c2, r2> ..])
-+	Definition:
-+		The "chipset_id" consists of three fields as below:
-+
-+		bits 0-15  = The unique MSM chipset id.
-+		bits 16-31 = Reserved.  Should be 0
-+
-+		chipset_id is an exact match value
-+
-+		The "rev_id" is a chipset specific 32-bit id that represents
-+		the version of the chipset.
-+
-+		The rev_id is a best match id.  The bootloader will look for
-+		the closest possible patch.
-+
-+* BOARD-ID
-+
-+The qcom,board-id entry specifies the board type and revision information.  It
-+can optionally be an array of these to indicate multiple boards that use the
-+same device tree.  It is expected that the bootloader will use this information
-+at boot-up to decide which device tree to use when given multiple device trees,
-+some of which may not be compatible with the actual hardware.  It is the
-+bootloader's responsibility to pass the correct device tree to the kernel.
-+
-+PROPERTIES
-+
-+- qcom,board-id:
-+	Usage: required
-+	Value type: <prop-encoded-array> (<board_id, subtype_id> [, <b2, s2> ..])
-+	Definition:
-+		The "board_id" consists of three fields as below:
-+
-+		bits 31-24 = Unusued.
-+		bits 23-16 = Platform Version Major
-+		bits 15-8  = Platfrom Version Minor
-+		bits 7-0   = Platform Type
-+
-+		Platform Type field is an exact match value.  The Platform
-+		Major/Minor field is a best match.  The bootloader will look
-+		for the closest possible match.
-+
-+		The "subtype_id" is unique to a Platform Type/Chipset ID.  For
-+		a given Platform Type, there will typically only be a single
-+		board and the subtype_id will be 0.  However in some cases board
-+		variants may need to be distinquished by different subtype_id
-+		values.
-+
-+		subtype_id is an exact match value.
-+
-+EXAMPLE:
-+	qcom,board-id = <15 2>;
-+	qcom,msm-id = <0x1007e 0>;
-diff --git a/include/dt-bindings/arm/qcom-ids.h b/include/dt-bindings/arm/qcom-ids.h
-new file mode 100644
-index 0000000..a18f34e
---- /dev/null
-+++ b/include/dt-bindings/arm/qcom-ids.h
-@@ -0,0 +1,33 @@
-+/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __DT_BINDINGS_QCOM_IDS_H
-+#define __DT_BINDINGS_QCOM_IDS_H
-+
-+/* qcom,msm-id */
-+#define QCOM_ID_MSM8916		206
-+#define QCOM_ID_APQ8016		247
-+#define QCOM_ID_MSM8216		248
-+#define QCOM_ID_MSM8116		249
-+#define QCOM_ID_MSM8616		250
-+
-+/* qcom,board-id */
-+#define QCOM_BRD_ID(a, major, minor) \
-+	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | QCOM_BRD_ID_##a)
-+
-+#define QCOM_BRD_ID_MTP		8
-+#define QCOM_BRD_ID_DRAGONBRD	10
-+#define QCOM_BRD_ID_SBC		24
-+
-+#define QCOM_BRD_SUBTYPE_DEFAULT		0
-+#define QCOM_BRD_SUBTYPE_MTP8916_SMB1360	1
-+
-+#endif
--- 
-2.1.4
+It's not really exposing the registers; it's exposing a wakeup specifier that
+happens to match the content of a specific register.  The actual I/O is done
+in the RCPM driver, not the client.
+
+> > > - Extend the common binding to allow a phandle+args value to point to
+> > > the wakeup controller.
+> > 
+> > Possibly, but the description in the common binding would have to be
+> > fairly
+> > vague to make the semantics fit.
+> > 
+> > The current common binding is also a bit confusing by saying that the
+> > presence
+> > of the property means that all of the device's interrupts can be used as
+> > wakeup events, but then saying that there can also be a dedicated wakeup
+> > but
+> > not making it clear how to represent that...  Overloading it with device
+> > power
+> > control might muddy things even further.
+> 
+> I believe it just means any device interrupt can be used or only the
+> irq named "wakeup" can be used.
+
+That's what the examples show, but the binding itself says "device specific
+interrupt name", not "wakeup".
+
+-Scott
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
