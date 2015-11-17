@@ -1,121 +1,72 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH 3/7] misc: eeprom: 93xx46: Implement eeprom_93xx46 DT bindings.
-Date: Mon, 16 Nov 2015 23:16:32 -0500
-Message-ID: <1447733796-15546-4-git-send-email-cory.tusar@pid1solutions.com>
-References: <1447733796-15546-1-git-send-email-cory.tusar@pid1solutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447733796-15546-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v5 1/2] dt-bindings: simplefb: Support regulator
+ supply properties
+Date: Tue, 17 Nov 2015 12:31:02 +0800
+Message-ID: <1447734663-19189-2-git-send-email-wens@csie.org>
+References: <1447734663-19189-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHG3VKZAKGQE74D3BNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1447734663-19189-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit implements bindings in the eeprom_93xx46 driver allowing
-device word size and read-only attributes to be specified via
-devicetree.
+The physical display tied to the framebuffer may have regulators
+providing power to it, such as power for LCDs or interface conversion
+chips.
 
-Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+The number of regulators in use may vary, but the regulator supply
+binding can not be a list. Instead just support any named regulator
+supply properties under the device node. These should be properly
+named to match the device schematics / design. The driver should
+take care to go through them all.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 62 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ .../devicetree/bindings/display/simple-framebuffer.txt      | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index e1bf0a5..1f29d9a 100644
---- a/drivers/misc/eeprom/eeprom_93xx46.c
-+++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -13,6 +13,8 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- #include <linux/sysfs.h>
-@@ -294,12 +296,71 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
- }
- static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
+diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+index 4474ef6e0b95..8c9e9f515c87 100644
+--- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+@@ -47,10 +47,14 @@ Required properties:
+   - a8b8g8r8 (32-bit pixels, d[31:24]=a, d[23:16]=b, d[15:8]=g, d[7:0]=r).
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id eeprom_93xx46_of_table[] = {
-+	{ .compatible = "eeprom-93xx46", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
+ Optional properties:
+-- clocks : List of clocks used by the framebuffer. Clocks listed here
+-           are expected to already be configured correctly. The OS must
+-           ensure these clocks are not modified or disabled while the
+-           simple framebuffer remains active.
++- clocks : List of clocks used by the framebuffer.
++- *-supply : Any number of regulators used by the framebuffer. These should
++	     be named according to the names in the device's design.
 +
-+static int eeprom_93xx46_probe_dt(struct spi_device *spi)
-+{
-+	struct device_node *np = spi->dev.of_node;
-+	struct eeprom_93xx46_platform_data *pd;
-+	u32 tmp;
-+	int ret;
++  The above resources are expected to already be configured correctly.
++  The OS must ensure they are not modified or disabled while the simple
++  framebuffer remains active.
 +
-+	if (!of_match_device(eeprom_93xx46_of_table, &spi->dev))
-+		return 0;
-+
-+	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32(np, "data-size", &tmp);
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "data-size property not found\n");
-+		goto error_free;
-+	}
-+
-+	if (tmp == 8) {
-+		pd->flags |= EE_ADDR8;
-+	} else if (tmp == 16) {
-+		pd->flags |= EE_ADDR16;
-+	} else {
-+		dev_err(&spi->dev, "invalid data-size (%d)\n", tmp);
-+		goto error_free;
-+	}
-+
-+	if (of_property_read_bool(np, "read-only"))
-+		pd->flags |= EE_READONLY;
-+
-+	spi->dev.platform_data = pd;
-+
-+	return 1;
-+
-+error_free:
-+	devm_kfree(&spi->dev, pd);
-+	return ret;
-+}
-+
-+#else
-+static inline int eeprom_93xx46_probe_dt(struct spi_device *spi)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int eeprom_93xx46_probe(struct spi_device *spi)
- {
- 	struct eeprom_93xx46_platform_data *pd;
- 	struct eeprom_93xx46_dev *edev;
- 	int err;
+ - display : phandle pointing to the primary display hardware node
  
-+	err = eeprom_93xx46_probe_dt(spi);
-+	if (err < 0)
-+		return err;
-+
- 	pd = spi->dev.platform_data;
- 	if (!pd) {
- 		dev_err(&spi->dev, "missing platform data\n");
-@@ -370,6 +431,7 @@ static int eeprom_93xx46_remove(struct spi_device *spi)
- static struct spi_driver eeprom_93xx46_driver = {
- 	.driver = {
- 		.name	= "93xx46",
-+		.of_match_table = eeprom_93xx46_of_table,
- 	},
- 	.probe		= eeprom_93xx46_probe,
- 	.remove		= eeprom_93xx46_remove,
+ Example:
+@@ -68,6 +72,7 @@ chosen {
+ 		stride = <(1600 * 2)>;
+ 		format = "r5g6b5";
+ 		clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
++		lcd-supply = <&reg_dc1sw>;
+ 		display = <&lcdc0>;
+ 	};
+ 	stdout-path = "display0";
 -- 
-2.4.10
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.6.2
