@@ -1,44 +1,81 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH 2/2] ARM: dts: NSP: Add I2C support to the DT
-Date: Tue, 17 Nov 2015 14:55:27 -0500
-Message-ID: <1447790127-27237-3-git-send-email-jonmason@broadcom.com>
-References: <1447790127-27237-1-git-send-email-jonmason@broadcom.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [v4 02/10] ata: ahci_brcmstb: add quirk for broken ncq
+Date: Tue, 17 Nov 2015 15:01:23 -0500
+Message-ID: <20151117200123.GD22864@mtj.duckdns.org>
+References: <1446213684-2625-1-git-send-email-jaedon.shin@gmail.com>
+ <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447790127-27237-1-git-send-email-jonmason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446213684-2625-3-git-send-email-jaedon.shin@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Dragan Stancevic <dragan.stancevic@gmail.com>, linux-ide@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add I2C support to the Broadcom Northstar Plus Device Tree.  Since no
-driver changes are needed to enable this hardware, only the device tree
-changes are required to make this functional.
+Hello,
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Fri, Oct 30, 2015 at 11:01:16PM +0900, Jaedon Shin wrote:
+> +static void brcm_sata_quirks(struct platform_device *pdev,
+> +			     struct brcm_ahci_priv *priv)
+> +{
+> +	if (priv->quirks & BRCM_AHCI_QUIRK_NONCQ) {
+> +		void __iomem *ctrl = priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL;
+> +		void __iomem *ahci;
+> +		struct resource *res;
+> +		u32 reg;
+> +
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   "ahci");
+> +		ahci = devm_ioremap_resource(&pdev->dev, res);
+> +		if (IS_ERR(ahci))
+> +			return;
+> +
+> +		reg = brcm_sata_readreg(ctrl);
+> +		reg |= OVERRIDE_HWINIT;
+> +		brcm_sata_writereg(reg, ctrl);
+> +
+> +		/* Clear out the NCQ bit so the AHCI driver will not issue
+> +		 * FPDMA/NCQ commands.
+> +		 */
+> +		reg = readl(ahci + HOST_CAP);
+> +		reg &= ~HOST_CAP_NCQ;
+> +		writel(reg, ahci + HOST_CAP);
+> +
+> +		reg = brcm_sata_readreg(ctrl);
+> +		reg &= ~OVERRIDE_HWINIT;
+> +		brcm_sata_writereg(reg, ctrl);
+> +
+> +		devm_iounmap(&pdev->dev, ahci);
+> +		devm_release_mem_region(&pdev->dev, res->start,
+> +					resource_size(res));
+> +	}
+> +}
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 7335a74..b74438c 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -217,5 +217,14 @@
- 
- 			brcm,nand-has-wp;
- 		};
-+
-+		i2c0: i2c@38000 {
-+			compatible = "brcm,iproc-i2c";
-+			reg = <0x38000 0x50>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
-+			clock-frequency = <100000>;
-+		};
- 	};
- };
+Does the controller actually need HOST_CAP_NCQ bit turned off to work
+correctly?  If the only thing necessary is the host not issuing NCQ
+commands, setting AHCI_HFLAG_NO_NCQ should do.
+
+>  static void brcm_sata_init(struct brcm_ahci_priv *priv)
+>  {
+>  	/* Configure endianness */
+> @@ -256,6 +297,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->top_ctrl))
+>  		return PTR_ERR(priv->top_ctrl);
+>  
+> +	if (of_device_is_compatible(dev->of_node, "brcm,bcm7425-ahci"))
+> +		priv->quirks |= BRCM_AHCI_QUIRK_NONCQ;
+> +
+> +	brcm_sata_quirks(pdev, priv);
+
+What's the point of "branch - set a bit - test the bit" sequence?
+Just do
+
+	if (of_device_is_compatiable(...))
+		brcm_ahci_disable_ncq(...);
+
+Thanks.
+
 -- 
-1.9.1
+tejun
