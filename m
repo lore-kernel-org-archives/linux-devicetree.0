@@ -1,125 +1,61 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND RFC/PATCH 4/8] dt-bindings: Add a binding for Mediatek
- Video Encoder
-Date: Wed, 18 Nov 2015 15:09:48 +0800
-Message-ID: <1447830588.22499.25.camel@mtksdaap41>
-References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1447764885-23100-5-git-send-email-tiffany.lin@mediatek.com>
-	 <20151117194100.GA3028@rob-hp-laptop>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH v2 4/7] ARM: at91/dt: sama5d2: add pio controller node
+Date: Wed, 18 Nov 2015 08:25:08 +0100
+Message-ID: <20151118072508.GK16931@odux.rfo.atmel.com>
+References: <1442417823-15850-1-git-send-email-ludovic.desroches@atmel.com>
+ <1442417823-15850-5-git-send-email-ludovic.desroches@atmel.com>
+ <CACRpkdapS-Vi_F-MqOFOPTHa2+zbrsPfPsbQA-Eks+tR3Wjg2A@mail.gmail.com>
+ <CAOesGMhXtACRaTurWfQgHNr_mU+VF9TjQJz5wQ4RsSVS+WZ0cA@mail.gmail.com>
+ <CACRpkdbhFi531Dm9AgOGhc7XHnnyJ+L3t0FvHOPV-fC2f9X6QQ@mail.gmail.com>
+ <CAOesGMhOmqr15Ou_QgJuiWdn6wWFYYLmy6eyf6zOopj8tKcadA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151117194100.GA3028@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <edd>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMhOmqr15Ou_QgJuiWdn6wWFYYLmy6eyf6zOopj8tKcadA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, 2015-11-17 at 13:41 -0600, Rob Herring wrote:
-> On Tue, Nov 17, 2015 at 08:54:41PM +0800, Tiffany Lin wrote:
-> > add a DT binding documentation of Video Encoder for the
-> > MT8173 SoC from Mediatek.
-> > 
-> > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 ++++++++++++++++++++
-> >  1 file changed, 58 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> > new file mode 100644
-> > index 0000000..fea4d7c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> > @@ -0,0 +1,58 @@
-> > +Mediatek Video Codec
-> > +
-> > +Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
-> > +supports high resolution encoding functionalities.
-> > +
-> > +Required properties:
-> > +- compatible : "mediatek,mt8173-vcodec-enc" for encoder
-> > +- reg : Physical base address of the video codec registers and length of
-> > +  memory mapped region.
-> > +- interrupts : interrupt number to the cpu.
-> > +- larb : must contain the larbes of current platform
+On Tue, Nov 17, 2015 at 11:15:11AM -0800, Olof Johansson wrote:
+> On Tue, Nov 17, 2015 at 3:06 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Tue, Nov 10, 2015 at 1:30 AM, Olof Johansson <olof@lixom.net> wrote:
+> >> On Mon, Sep 21, 2015 at 11:24 AM, Linus Walleij
+> >> <linus.walleij@linaro.org> wrote:
+> >>> On Wed, Sep 16, 2015 at 8:37 AM, Ludovic Desroches
+> >>> <ludovic.desroches@atmel.com> wrote:
+> >>>
+> >>>> Add pio4 controller node to enable pinmux and gpio.
+> >>>>
+> >>>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> >>>
+> >>> Patch applied.
+> >>
+> >> Please don't merge DT changes through driver trees unless there's a
+> >> very specific reason to do so, since it introduces random conflicts.
+> >
+> > Sorry :(
+> >
+> > Even noted this in the pull request to Torvalds, it was in the bottom
+> > of my patch stack so had been in -next for ages, I was afraid it
+> > would create more problem than it solves if I reverted the patch,
+> > but I guess I should have done so anyways.
 > 
-> What is this?
-Resend due to previous mail has html format and reject by some mail
-servers.
-
-This is SMI (Smart Multimedia Interface) Local Arbiter.
-MT8173 has different local arbiters (larb).
-Please see
-http://lists.linuxfoundation.org/pipermail/iommu/2015-October/014587.html
-
-Video Encoder HW has it's local arbiter (larb), by configure ports in
-this larb, we can have encoder HW go through the m4u to talk with EMI.
-We will change it to mediatek,larb in next version.
-
+> Yeah, it's OK -- I spotted that pull request later as well.
 > 
-> > +- clocks : list of clock specifiers, corresponding to entries in
-> > +  the clock-names property;
-> > +- clock-names: must contain "vencpll", "venc_lt_sel", "vcodecpll_370p5_ck"
-> > +- iommus : list of iommus specifiers should be enabled for hw encode.
-> > +  There are 2 cells needed to enable/disable iommu.
-> > +  The first one is local arbiter index(larbid), and the other is port
-> > +  index(portid) within local arbiter. Specifies the larbid and portid
-> > +  as defined in dt-binding/memory/mt8173-larb-port.h.
-> > +- vpu : the node of video processor unit
+> It's not a big deal in most specific instances, I'd say. It's just in
+> aggregate it becomes a bother.
 > 
-> This should be prefixed with mediatek.
-We will prefix it with mediatek in next version.
-
+> So, just see this as a public reminder since we've seen it creep into
+> other driver trees a bit more lately. Mistakes will still happen but
+> try to keep it down. And for those who submit patches, feel free to
+> point out in the patch that you don't expect the driver/subsystem
+> maintainer to apply it to help them out.
 > 
-> > +
-> > +Example:
-> > +vcodec_enc: vcodec@0x18002000 {
-> > +    compatible = "mediatek,mt8173-vcodec-enc";
-> > +    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
-> > +          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
-> > +    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
-> > +           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
-> > +    larb = <&larb3>,
-> > +           <&larb5>;
-> > +    iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
-> > +    vpu = <&vpu>;
-> > +    clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
-> > +             <&topckgen CLK_TOP_VENC_LT_SEL>,
-> > +             <&topckgen CLK_TOP_VCODECPLL_370P5>;
-> > +    clock-names = "vencpll",
-> > +                  "venc_lt_sel",
-> > +                  "vcodecpll_370p5_ck";
-> > +  };
-> > -- 
-> > 1.7.9.5
-> > 
-best regards,
-Tiffany
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok. Sorry, I didn't think it could cause so many conflicts if not taken
+by Nicolas.
+
+
+Ludovic
