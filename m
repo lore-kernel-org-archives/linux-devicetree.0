@@ -1,29 +1,77 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 3/3] cpufreq: arm_big_little: Add support to register
- a cpufreq cooling device
-Date: Wed, 18 Nov 2015 19:34:39 +0530
-Message-ID: <20151118140439.GH7336@ubuntu>
-References: <1447761983-12415-1-git-send-email-punit.agrawal@arm.com>
- <1447761983-12415-4-git-send-email-punit.agrawal@arm.com>
- <20151118054216.GE7336@ubuntu>
- <9hh8u5vph46.fsf@e105922-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: disable arm twd and global
+ timer's nodes
+Date: Wed, 18 Nov 2015 14:15:38 +0000
+Message-ID: <20151118141537.GC10644@leverpostej>
+References: <1447855315-419-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9hh8u5vph46.fsf@e105922-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com, rjw@rjwysocki.net, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <1447855315-419-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, slash.tmp-GANU6spQydw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18-11-15, 13:33, Punit Agrawal wrote:
-> Thanks for the Ack.
+On Wed, Nov 18, 2015 at 04:01:55PM +0200, Grygorii Strashko wrote:
+> Keep ARM TWD and Global timer's nodes disabled by default - if someone
+> would like to use them then those nodes have to be enabled explicitly
+> in board file.
 > 
-> Will you or Rafael be picking up the series or do they need to go via
-> arm-soc?
+> The reason for this change is:
+> - ARM TWD is not always-on timer on am437x and it will stop in low
+>   CPUIdle states and, therefore, broadcast timer has to configured
+>   properly if CPU_IDLE=y.
+> - ARM Global timer is not always-on timer on am437x and it can't be
+>   used as clocksource device if CPU_IDLE=y.
 
-Rafael will pick this up, it should go via PM tree.
+I don't understand. What timer do you use in the absence of a TWD, and
+if it is better why is it not used even if TWD is present?
 
--- 
-viresh
+> - ARM Global timer driver doesn't support CPUfreq now.
+
+Surely that should be fixed in the driver (e.g. make it fail to probe if
+CPUfreq is present)? It's broken for any other users too...
+
+Mark.
+
+> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index d83ff9c..11376e3 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -75,6 +75,7 @@
+>  		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-parent = <&gic>;
+>  		clocks = <&dpll_mpu_m2_ck>;
+> +		status = "disabled";
+>  	};
+>  
+>  	local_timer: timer@48240600 {
+> @@ -83,6 +84,7 @@
+>  		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-parent = <&gic>;
+>  		clocks = <&dpll_mpu_m2_ck>;
+> +		status = "disabled";
+>  	};
+>  
+>  	l2-cache-controller@48242000 {
+> -- 
+> 2.6.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
