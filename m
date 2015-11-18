@@ -1,51 +1,95 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] clk: add generic driver for fixed rate clock
-Date: Wed, 18 Nov 2015 12:34:33 -0800
-Message-ID: <20151118203433.GE32672@codeaurora.org>
-References: <1378010420-20031-1-git-send-email-stefan.kristiansson@saunalahti.fi>
- <CAMuHMdXhxuawY-V+35YoeZWZ3jZ-Vj_MzuRDGBfDD9i9iy=oGA@mail.gmail.com>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: device_node lifetime (was: Re: [PATCH 1/7] phy: brcmstb-sata:
+ add missing of_node_put)
+Date: Wed, 18 Nov 2015 21:39:54 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1511182138090.2059@localhost6.localdomain6>
+References: <1447673600-8881-1-git-send-email-Julia.Lawall@lip6.fr> <1447673600-8881-2-git-send-email-Julia.Lawall@lip6.fr> <20151117013830.GV8456@google.com> <alpine.DEB.2.02.1511170711340.2045@localhost6.localdomain6> <20151117174430.GA8456@google.com>
+ <alpine.DEB.2.10.1511171846120.2455@hadrien> <20151117183036.GF8456@google.com> <alpine.DEB.2.02.1511172327030.2121@localhost6.localdomain6> <20151118190500.GE140057@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXhxuawY-V+35YoeZWZ3jZ-Vj_MzuRDGBfDD9i9iy=oGA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151118190500.GE140057-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17, Geert Uytterhoeven wrote:
-> Hi Stefan,
-> 
-> (quoting the full driver, as it predates linux-clk)
-> 
-> On Sun, Sep 1, 2013 at 6:40 AM, Stefan Kristiansson
-> <stefan.kristiansson@saunalahti.fi> wrote:
-> > This adds a simple driver with the only purpose to initialise
-> > the fixed rate clock.
-> > This is useful for systems that do not wish to use seperate init
-> > code for the fixed rate clock init, but rather only rely on a
-> > device tree description of it.
-> >
-> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> 
-> Thanks, this is still very useful!
-> 
-> I stumbled across this old patch while trying to instantiate a fixed rate
-> clock from a DT overlay.
-> Without this, the clock is never instantiated, as drivers/clk/clk-fixed-rate.c
-> uses CLK_OF_DECLARE() :-( With your driver, it works as expected
-> (after fixing the modpost complaint, cfr. below).
-> 
-> However, I think that instead of creating a new driver, you should just add
-> the meat of clk-generic-fixed.c to clk-fixed-rate.c.
 
-Hm... what happens when of_clk_init() runs and instantiates the
-clock, and then of_platform_populate() runs and creates the clock
-again? The platform device probe fails because the framework
-checks to make sure two clocks don't have the same name? I guess
-that's going to work, but it doesn't make me feel good.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Wed, 18 Nov 2015, Brian Norris wrote:
+
+> (changing subject, add devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org)
+> 
+> On Tue, Nov 17, 2015 at 11:33:25PM +0100, Julia Lawall wrote:
+> > On Tue, 17 Nov 2015, Brian Norris wrote:
+> > > On Tue, Nov 17, 2015 at 06:48:39PM +0100, Julia Lawall wrote:
+> > > > Is this something that should be checked for elsewhere?
+> > > 
+> > > I expect the same sort of problem shows up plenty of other places. I
+> > > don't think many people use CONFIG_OF_DYNAMIC, so the effects of these
+> > > failures probably aren't felt by many.
+> > 
+> > I tried the following semantic patch:
+> > 
+> > @@
+> > struct device_node *e;
+> > expression e1;
+> > identifier fld;
+> > @@
+> > 
+> >  ... when != of_node_get(...)
+> > *(<+...e1->fld...+>) = e
+> >  ... when != of_node_get(...)
+> >  return e1;
+> > 
+> > basically, this says that a structure field is initilized to a device node 
+> > value, the structure is returned by the containing function, and the 
+> > containing function contains no of_node_get at all.  Certainly this is 
+> > quite constrained, but it does produce a number of examples.
+> > 
+> > I looked at a few of them:
+> > 
+> > drivers/clk/ingenic/cgu.c, ingenic_cgu_new
+> > clk/pistachio/clk.c, pistachio_clk_alloc_provider
+> 
+> It looks like the clock core (drivers/clk/clk.c) initially grabs the clk
+> provider node in of_clk_init(), then drops it after it's initialized,
+> but most of these providers use of_clk_add_provider(), which seems to
+> manage the device_node lifetime for the user. So I think these are OK.
+> 
+> > drivers/mfd/syscon.c, of_syscon_register
+> 
+> This one looks potentially suspect. Syscon nodes aren't usually directly
+> managed by a single driver, and the device_node pointer is used for
+> lookups later...so I think it should keep a kref, and it doesn't.
+> 
+> > drivers/of/pdt.c, function of_pdt_create_node
+> 
+> Not real sure about this one.
+> 
+> > Any idea whether these need of_node_get?  In all cases the device node 
+> > value comes in as a parameter.
+> 
+> I'm really not an expert on this stuff. I just saw a potential problem
+> that I happen to be looking at in other subsystems, and I wanted to know
+> what others thought.
+
+Thanks for the analysis.  I will look into them a bit more.  Hopefully at 
+least the maintainer of each file will know what should be done.
+
+julia
+
+> I think this discussion should include the DT folks
+> and the subsystems in question. For one, I'm as interested as anyone in
+> getting this todo clarified:
+> 
+> Documentation/devicetree/todo.txt
+> - Document node lifecycle for CONFIG_OF_DYNAMIC
+> 
+> Regards,
+> Brian
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
