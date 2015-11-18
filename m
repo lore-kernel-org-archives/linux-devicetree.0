@@ -1,51 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] devicetree: bindings: Document Kryo cpu
-Date: Wed, 18 Nov 2015 17:07:47 -0600
-Message-ID: <20151118230747.GA12253@rob-hp-laptop>
-References: <1447809149-29724-1-git-send-email-sboyd@codeaurora.org>
- <1447809149-29724-2-git-send-email-sboyd@codeaurora.org>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: add support for NS, NSP, and NS2 clocks
+Date: Wed, 18 Nov 2015 18:13:47 -0500
+Message-ID: <1447888430-4451-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447809149-29724-2-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 05:12:26PM -0800, Stephen Boyd wrote:
-> Document the compatible string for the Kryo family of qcom cpus.
-> 
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This patch series adds device tree support for the Broadcom Northstar,
+Northstar Plus, and Northstar 2 clocks.
 
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 3a07a87fef20..6008b99ccb2b 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -177,6 +177,7 @@ nodes to be present and contain the properties described below.
->  			    "marvell,sheeva-v5"
->  			    "nvidia,tegra132-denver"
->  			    "qcom,krait"
-> +			    "qcom,kryo"
->  			    "qcom,scorpion"
->  	- enable-method
->  		Value type: <stringlist>
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Last sent as an RFC (see https://lkml.org/lkml/2015/10/13/882) due to
+the inability to merge because of the driver dependencies.  Those
+necessary driver changes were merged into 4.4.  All comments have been
+addressed and it is ready to be pulled in.
+
+
+Jon Mason (3):
+  ARM: dts: enable clock support for BCM5301X
+  ARM: dts: enable clock support for Broadcom NSP
+  ARM64: dts: enable clock support for Broadcom NS2
+
+ arch/arm/boot/dts/bcm-nsp.dtsi        | 99 ++++++++++++++++++++++++++---------
+ arch/arm/boot/dts/bcm5301x.dtsi       | 92 ++++++++++++++++++++++++--------
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 80 +++++++++++++++++++++++++++-
+ 3 files changed, 225 insertions(+), 46 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
