@@ -1,61 +1,48 @@
-From: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v3 net-next] net: hisilicon: fix binding document of mdio
-Date: Wed, 18 Nov 2015 10:08:00 +0800
-Message-ID: <1447812480-190001-1-git-send-email-huangdaode@hisilicon.com>
+From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Subject: Re: [Qemu-devel] [PATCH v4 4/4] devicetree: update documentation for
+ fw_cfg ARM bindings
+Date: Tue, 17 Nov 2015 21:17:27 -0500
+Message-ID: <20151118021727.GA14351@GLSMBP.INI.CMU.EDU>
+References: <1447470235-13643-1-git-send-email-somlo@cmu.edu>
+ <1447470235-13643-5-git-send-email-somlo@cmu.edu>
+ <20151115020754.GA21323@rob-hp-laptop>
+ <564995FA.40308@redhat.com>
+ <CAL_JsqKEi9BozyLQ9sKM3VL-hSSRntDyET859N1qTTMT4jkDOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKEi9BozyLQ9sKM3VL-hSSRntDyET859N1qTTMT4jkDOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jordan.l.just
 List-Id: devicetree@vger.kernel.org
 
-This patch explains the occasion of "hisilcon,mdio" and
-"hisilicon,hns-mdio" according to Arnd's comments.
-and reformat it according to comments from Rob<robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>.
+On Tue, Nov 17, 2015 at 04:14:42PM -0600, Rob Herring wrote:
+> On Mon, Nov 16, 2015 at 2:38 AM, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> >
+> > On 15/11/2015 03:07, Rob Herring wrote:
+> >> We generally don't want DT docs to depend on other kernel documentation.
+> >
+> > DT docs do not contain a copy of the data sheets, either.  There is no
+> > reason to say how to use the device (and even then, only doing so
+> > partially) in the DT docs.
+> 
+> The difference is datasheets apply to all OS's, kernel documentation
+> does not. In theory at least this could be used for other OS's, right?
+> 
+> Perhaps QEMU is the right place to thoroughly describe this and DT and
+> sysfs docs can refer to it.
 
-Signed-off-by: huangdaode <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
-change log:
-v3:
-  1)move change log under '---' line.
-  2)change minor syntax error on description.
+So, leave only ARM/DT specifc details in 
+Documentation/devicetree/bindings/arm/fw-cfg.txt,
+and rework the fw_cfg sysfs patch (1/4) to only document
+sysfs specific details in
+Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg ?
 
-v2:
-  1) reformat the style.
-  2) make it more clearity.
+The fw_cfg "datasheet" does exist in QEMU already, so there is
+something to point at from either/both of the above.
 
-v1:
-  initial version.
-
-v2 patch reference:https://lkml.org/lkml/2015/11/16/88
-v1 patch reference:https://lkml.org/lkml/2015/11/12/913
-
- Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-index 9c23fdf..4a7ede9 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hns-mdio.txt
-@@ -1,7 +1,12 @@
- Hisilicon MDIO bus controller
- 
- Properties:
--- compatible: "hisilicon,mdio","hisilicon,hns-mdio".
-+- compatible: can be one of:
-+	"hisilicon,hns-mdio"
-+	"hisilicon,mdio"
-+  "hisilicon,hns-mdio" is recommended to be used for hip05 and later SOCs,
-+  while "hisilicon,mdio" is optional for backwards compatibility only on
-+  hip04 Soc.
- - reg: The base address of the MDIO bus controller register bank.
- - #address-cells: Must be <1>.
- - #size-cells: Must be <0>.  MDIO addresses have no size component.
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+--Gabriel
