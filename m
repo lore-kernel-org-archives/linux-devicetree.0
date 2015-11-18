@@ -1,77 +1,81 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 20/32] scsi: hisi_sas: add v1 hw interrupt init
-Date: Wed, 18 Nov 2015 09:26:56 -0600
-Message-ID: <CAL_Jsq+NEm_+cGYC6XG6_fprg1Gd7VG0dj8MKPAPUPqpBzL0pg@mail.gmail.com>
-References: <1447779059-136143-1-git-send-email-john.garry@huawei.com> <1447779059-136143-21-git-send-email-john.garry@huawei.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: disable arm twd and global
+ timer's nodes
+Date: Wed, 18 Nov 2015 17:35:43 +0200
+Message-ID: <564C9ACF.6040107@ti.com>
+References: <1447855315-419-1-git-send-email-grygorii.strashko@ti.com>
+ <20151118141537.GC10644@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447779059-136143-21-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: "James E.J. Bottomley" <JBottomley-wo1vFcy6AUs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, John Garry <john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org>, hare-l3A5Bk7waGM@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151118141537.GC10644@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, slash.tmp@free.fr, tony@atomide.com, nsekhar@ti.com, Felipe Balbi <balbi@ti.com>, t-kristo@ti.com, Santosh Shilimkar <ssantosh@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 10:50 AM, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> Add code to interrupts, so now we can get a phy up
-> interrupt when a disk is connected.
+Hi Mark,
 
-So I started looking at why you are using of_irq_count which drivers
-shouldn't need to. In patch 5 you use it to allocate memory to store
-the irq names, then use them here...
+On 11/18/2015 04:15 PM, Mark Rutland wrote:
+> On Wed, Nov 18, 2015 at 04:01:55PM +0200, Grygorii Strashko wrote:
+>> Keep ARM TWD and Global timer's nodes disabled by default - if someone
+>> would like to use them then those nodes have to be enabled explicitly
+>> in board file.
+>>
+>> The reason for this change is:
+>> - ARM TWD is not always-on timer on am437x and it will stop in low
+>>    CPUIdle states and, therefore, broadcast timer has to configured
+>>    properly if CPU_IDLE=y.
+>> - ARM Global timer is not always-on timer on am437x and it can't be
+>>    used as clocksource device if CPU_IDLE=y.
+> 
+> I don't understand. What timer do you use in the absence of a TWD, and
+> if it is better why is it not used even if TWD is present?
 
+OMAP GP timer as clockevent device
+"ti,omap-counter32k" as clocksource
+both are in wakeup (always-on) PM domain.
 
-> +static const char phy_int_names[HISI_SAS_PHY_INT_NR][32] = {
-> +       {"Phy Up"},
-> +};
-> +static irq_handler_t phy_interrupts[HISI_SAS_PHY_INT_NR] = {
-> +       int_phyup_v1_hw,
-> +};
-> +
-> +static int interrupt_init_v1_hw(struct hisi_hba *hisi_hba)
-> +{
-> +       struct device *dev = &hisi_hba->pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       char *int_names = hisi_hba->int_names;
-> +       int i, j, irq, rc, idx;
-> +
-> +       if (!np)
-> +               return -ENOENT;
-> +
-> +       for (i = 0; i < hisi_hba->n_phy; i++) {
-> +               struct hisi_sas_phy *phy = &hisi_hba->phy[i];
-> +
-> +               idx = i * HISI_SAS_PHY_INT_NR;
-> +               for (j = 0; j < HISI_SAS_PHY_INT_NR; j++, idx++) {
-> +                       irq = irq_of_parse_and_map(np, idx);
+I see some problems with selecting clocksource/event device (but may be I'm mistaken):
+- Current clock event will be selected using "rating" field in clock_event_device
+  structure and now ARM TWD has higer value (350) vs OMAP GP timer (300),
+  so ARM TWD will be always selected if it's present. 
+- we have to force all am437x user to use kernel cmdline parameter "clocksource="
+  if ARM Global timer is present, but shouldn't be used. But even in this case,
+  it will be selected as sched_clock.
 
-It is also preferred that drivers don't use this either. You should
-use platform_get_irq() instead.
+We can see benefits from using these timers when Power mangement is not the case,
+for example on -RT kernel where CPUIdle is not the target.
 
-> +                       if (!irq) {
-> +                               dev_err(dev,
-> +                                       "irq init: fail map phy interrupt %d\n",
-> +                                       idx);
-> +                               return -ENOENT;
-> +                       }
-> +
-> +                       (void)snprintf(&int_names[idx * HISI_SAS_NAME_LEN],
-> +                                      HISI_SAS_NAME_LEN,
-> +                                      "%s %s:%d", dev_name(dev),
-> +                                      phy_int_names[j], i);
-> +                       rc = devm_request_irq(dev, irq, phy_interrupts[j], 0,
-> +                                       &int_names[idx * HISI_SAS_NAME_LEN],
-> +                                       phy);
+By this change, and taking into account discovered issues, I want to make people,
+who would like to use these timers on AM437x based boards, responsible for such
+decision with assumption that they know what they are doing.
+And this is simplest way I found to disable those timers without modifying kernel.
 
-There's no requirement for the name to match the name in the DT or
-even that the name needs to be unique.
+> 
+>> - ARM Global timer driver doesn't support CPUfreq now.
+> 
+> Surely that should be fixed in the driver (e.g. make it fail to probe if
+> CPUfreq is present)? It's broken for any other users too...
 
-If you really want the DT names used, then just call
-of_property_read_string_index() on interrupt-names here. There is no
-point to copy the string.
+May be.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, there is additional issue with ARM global timer which I've not
+mentioned here, because I sent the fix for it already (in progress):
+https://lkml.org/lkml/2015/11/13/456
+
+and there is ongoing discussion:
+http://www.spinics.net/lists/arm-kernel/msg459649.html
+
+-- 
+regards,
+-grygorii
