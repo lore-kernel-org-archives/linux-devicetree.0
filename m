@@ -1,137 +1,114 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH v5 3/3] cpufreq: arm_big_little: Add support to register a cpufreq cooling device
-Date: Wed, 18 Nov 2015 13:33:13 +0000
-Message-ID: <9hh8u5vph46.fsf@e105922-lin.cambridge.arm.com>
-References: <1447761983-12415-1-git-send-email-punit.agrawal@arm.com>
-	<1447761983-12415-4-git-send-email-punit.agrawal@arm.com>
-	<20151118054216.GE7336@ubuntu>
+From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH 02/13] xen/grant-table: Move xlated_setup_gnttab_pages
+ to common place
+Date: Wed, 18 Nov 2015 21:34:25 +0800
+Message-ID: <564C7E61.80700@linaro.org>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org> <1447754231-7772-3-git-send-email-shannon.zhao@linaro.org> <564C6E4C.9080003@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151118054216.GE7336@ubuntu> (Viresh Kumar's message of "Wed,
-	18 Nov 2015 11:12:40 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com, rjw@rjwysocki.net, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564C6E4C.9080003-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar@linaro.org> writes:
 
-> On 17-11-15, 12:06, Punit Agrawal wrote:
->> Register passive cooling devices when initialising cpufreq on
->> big.LITTLE systems. If the device tree provides a dynamic power
->> coefficient for the CPUs then the bound cooling device will support
->> the extensions that allow it to be used with all the existing thermal
->> governors including the power allocator governor.
->> 
->> A cooling device will be created per individual frequency domain and
->> can be bound to thermal zones via the thermal DT bindings.
->> 
->> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
->> Cc: Viresh Kumar <viresh.kumar@linaro.org>
->> Cc: Sudeep Holla <sudeep.holla@arm.com>
->> Cc: Eduardo Valentin <edubezval@gmail.com>
->> ---
->>  drivers/cpufreq/Kconfig.arm      |  2 ++
->>  drivers/cpufreq/arm_big_little.c | 41 ++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 43 insertions(+)
->> 
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 1582c1c..0e0052e 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -6,6 +6,8 @@
->>  config ARM_BIG_LITTLE_CPUFREQ
->>  	tristate "Generic ARM big LITTLE CPUfreq driver"
->>  	depends on (ARM_CPU_TOPOLOGY || ARM64) && HAVE_CLK
->> +	# if CPU_THERMAL is on and THERMAL=m, ARM_BIT_LITTLE_CPUFREQ cannot be =y
->> +	depends on !CPU_THERMAL || THERMAL
->>  	select PM_OPP
->>  	help
->>  	  This enables the Generic CPUfreq driver for ARM big.LITTLE platforms.
->> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
->> index c5d256c..c251247 100644
->> --- a/drivers/cpufreq/arm_big_little.c
->> +++ b/drivers/cpufreq/arm_big_little.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/cpu.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/cpumask.h>
->> +#include <linux/cpu_cooling.h>
->>  #include <linux/export.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->> @@ -55,6 +56,7 @@ static bool bL_switching_enabled;
->>  #define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
->>  #define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
->>  
->> +static struct thermal_cooling_device *cdev[MAX_CLUSTERS];
->>  static struct cpufreq_arm_bL_ops *arm_bL_ops;
->>  static struct clk *clk[MAX_CLUSTERS];
->>  static struct cpufreq_frequency_table *freq_table[MAX_CLUSTERS + 1];
->> @@ -493,6 +495,12 @@ static int bL_cpufreq_init(struct cpufreq_policy *policy)
->>  static int bL_cpufreq_exit(struct cpufreq_policy *policy)
->>  {
->>  	struct device *cpu_dev;
->> +	int cur_cluster = cpu_to_cluster(policy->cpu);
->> +
->> +	if (cur_cluster < MAX_CLUSTERS) {
->> +		cpufreq_cooling_unregister(cdev[cur_cluster]);
->> +		cdev[cur_cluster] = NULL;
->> +	}
->>  
->>  	cpu_dev = get_cpu_device(policy->cpu);
->>  	if (!cpu_dev) {
->> @@ -507,6 +515,38 @@ static int bL_cpufreq_exit(struct cpufreq_policy *policy)
->>  	return 0;
->>  }
->>  
->> +static void bL_cpufreq_ready(struct cpufreq_policy *policy)
->> +{
->> +	struct device *cpu_dev = get_cpu_device(policy->cpu);
->> +	int cur_cluster = cpu_to_cluster(policy->cpu);
->> +	struct device_node *np;
->> +
->> +	/* Do not register a cpu_cooling device if we are in IKS mode */
->> +	if (cur_cluster >= MAX_CLUSTERS)
->> +		return;
->> +
->> +	np = of_node_get(cpu_dev->of_node);
->> +	if (WARN_ON(!np))
->> +		return;
->> +
->> +	if (of_find_property(np, "#cooling-cells", NULL)) {
->> +		u32 power_coefficient = 0;
->> +
->> +		of_property_read_u32(np, "dynamic-power-coefficient",
->> +				     &power_coefficient);
->> +
->> +		cdev[cur_cluster] = of_cpufreq_power_cooling_register(np,
->> +				policy->related_cpus, power_coefficient, NULL);
->> +		if (IS_ERR(cdev[cur_cluster])) {
->> +			dev_err(cpu_dev,
->> +				"running cpufreq without cooling device: %ld\n",
->> +				PTR_ERR(cdev[cur_cluster]));
->> +			cdev[cur_cluster] = NULL;
->> +		}
->> +	}
->> +	of_node_put(np);
->> +}
->> +
->>  static struct cpufreq_driver bL_cpufreq_driver = {
->>  	.name			= "arm-big-little",
->>  	.flags			= CPUFREQ_STICKY |
->> @@ -517,6 +557,7 @@ static struct cpufreq_driver bL_cpufreq_driver = {
->>  	.get			= bL_cpufreq_get_rate,
->>  	.init			= bL_cpufreq_init,
->>  	.exit			= bL_cpufreq_exit,
->> +	.ready			= bL_cpufreq_ready,
->>  	.attr			= cpufreq_generic_attr,
->>  };
+
+On 2015/11/18 20:25, Julien Grall wrote:
+> Hi Shannon,
 >
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> On 17/11/15 09:57, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
+>> index 62f591f..c084ba6 100644
+>> --- a/drivers/xen/grant-table.c
+>> +++ b/drivers/xen/grant-table.c
+>> @@ -664,6 +664,55 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
+>>   }
+>>   EXPORT_SYMBOL_GPL(gnttab_setup_auto_xlat_frames);
+>>
+>> +int __init xlated_setup_gnttab_pages(void)
+>> +{
+>> +	struct page **pages;
+>> +	xen_pfn_t *pfns;
+>> +	void *vaddr;
+>> +	int rc;
+>> +	unsigned int i;
+>> +	unsigned long nr_grant_frames = gnttab_max_grant_frames();
+>> +
+>> +	BUG_ON(nr_grant_frames == 0);
+>> +	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
+>> +	if (!pages)
+>> +		return -ENOMEM;
+>> +
+>> +	pfns = kcalloc(nr_grant_frames, sizeof(pfns[0]), GFP_KERNEL);
+>> +	if (!pfns) {
+>> +		kfree(pages);
+>> +		return -ENOMEM;
+>> +	}
+>> +	rc = alloc_xenballooned_pages(nr_grant_frames, pages, 0 /* lowmem */);
+>
+> Can you rebase your patch on top of linux/master? The 3rd parameters has
+> been dropped for alloc_xenballooned_pages.
+>
+Sure, I rebase this patchset on Linux 4.3 and will rebase on master at 
+next version.
+>> +	if (rc) {
+>> +		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
+>> +			nr_grant_frames, rc);
+>> +		kfree(pages);
+>> +		kfree(pfns);
+>> +		return rc;
+>> +	}
+>> +	for (i = 0; i < nr_grant_frames; i++)
+>> +		pfns[i] = page_to_pfn(pages[i]);
+>
+> This code needs to be adapt for 64KB page granularity. Please use
+> page_to_xen_pfn here.
+>
+Ok.
 
-Thanks for the Ack.
+>> +
+>> +	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+>> +	if (!vaddr) {
+>> +		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
+>> +			nr_grant_frames, rc);
+>> +		free_xenballooned_pages(nr_grant_frames, pages);
+>> +		kfree(pages);
+>> +		kfree(pfns);
+>> +		return -ENOMEM;
+>> +	}
+>> +	kfree(pages);
+>> +
+>> +	xen_auto_xlat_grant_frames.pfn = pfns;
+>> +	xen_auto_xlat_grant_frames.count = nr_grant_frames;
+>> +	xen_auto_xlat_grant_frames.vaddr = vaddr;
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(xlated_setup_gnttab_pages);
+>> +
+>>   void gnttab_free_auto_xlat_frames(void)
+>>   {
+>>   	if (!xen_auto_xlat_grant_frames.count)
+>> diff --git a/include/xen/grant_table.h b/include/xen/grant_table.h
+>> index 4478f4b..fa31e66 100644
+>> --- a/include/xen/grant_table.h
+>> +++ b/include/xen/grant_table.h
+>> @@ -177,6 +177,7 @@ struct grant_frames {
+>>   extern struct grant_frames xen_auto_xlat_grant_frames;
+>>   unsigned int gnttab_max_grant_frames(void);
+>>   int gnttab_setup_auto_xlat_frames(phys_addr_t addr);
+>> +int xlated_setup_gnttab_pages(void);
+>>   void gnttab_free_auto_xlat_frames(void);
+>>
+>>   #define gnttab_map_vaddr(map) ((void *)(map.host_virt_addr))
+>>
+>
+> Regards,
+>
+>
 
-Will you or Rafael be picking up the series or do they need to go via
-arm-soc?
+-- 
+Shannon
