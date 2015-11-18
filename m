@@ -1,143 +1,125 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 18 Nov 2015 06:51:41 +0000
-Message-ID: <8520D5D51A55D047800579B0941471982585CEB1@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1447223619-30945-1-git-send-email-bharatku@xilinx.com>
- <5649F2D9.7070902@arm.com> <564A5255.3020603@broadcom.com>
- <8520D5D51A55D047800579B0941471982585CBDA@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20151117092100.76babf7f@arm.com>
- <8520D5D51A55D047800579B0941471982585CD78@XAP-PVEXMBX01.xlnx.xilinx.com>
- <564B31BB.3010404@arm.com> <564B54CF.5010307@broadcom.com>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND RFC/PATCH 4/8] dt-bindings: Add a binding for Mediatek
+ Video Encoder
+Date: Wed, 18 Nov 2015 15:09:48 +0800
+Message-ID: <1447830588.22499.25.camel@mtksdaap41>
+References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1447764885-23100-5-git-send-email-tiffany.lin@mediatek.com>
+	 <20151117194100.GA3028@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <564B54CF.5010307@broadcom.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151117194100.GA3028@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <edd>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v8] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
-> PCIe Host Controller
+Hi Rob,
+
+On Tue, 2015-11-17 at 13:41 -0600, Rob Herring wrote:
+> On Tue, Nov 17, 2015 at 08:54:41PM +0800, Tiffany Lin wrote:
+> > add a DT binding documentation of Video Encoder for the
+> > MT8173 SoC from Mediatek.
+> > 
+> > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 ++++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > new file mode 100644
+> > index 0000000..fea4d7c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > @@ -0,0 +1,58 @@
+> > +Mediatek Video Codec
+> > +
+> > +Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
+> > +supports high resolution encoding functionalities.
+> > +
+> > +Required properties:
+> > +- compatible : "mediatek,mt8173-vcodec-enc" for encoder
+> > +- reg : Physical base address of the video codec registers and length of
+> > +  memory mapped region.
+> > +- interrupts : interrupt number to the cpu.
+> > +- larb : must contain the larbes of current platform
 > 
+> What is this?
+Resend due to previous mail has html format and reject by some mail
+servers.
+
+This is SMI (Smart Multimedia Interface) Local Arbiter.
+MT8173 has different local arbiters (larb).
+Please see
+http://lists.linuxfoundation.org/pipermail/iommu/2015-October/014587.html
+
+Video Encoder HW has it's local arbiter (larb), by configure ports in
+this larb, we can have encoder HW go through the m4u to talk with EMI.
+We will change it to mediatek,larb in next version.
+
 > 
+> > +- clocks : list of clock specifiers, corresponding to entries in
+> > +  the clock-names property;
+> > +- clock-names: must contain "vencpll", "venc_lt_sel", "vcodecpll_370p5_ck"
+> > +- iommus : list of iommus specifiers should be enabled for hw encode.
+> > +  There are 2 cells needed to enable/disable iommu.
+> > +  The first one is local arbiter index(larbid), and the other is port
+> > +  index(portid) within local arbiter. Specifies the larbid and portid
+> > +  as defined in dt-binding/memory/mt8173-larb-port.h.
+> > +- vpu : the node of video processor unit
 > 
-> On 11/17/2015 5:55 AM, Marc Zyngier wrote:
-> > On 17/11/15 13:27, Bharat Kumar Gogada wrote:
-> >>>
-> >>> On Tue, 17 Nov 2015 04:59:39 +0000
-> >>> Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
-> >>>
-> >>>>> On 11/16/2015 7:14 AM, Marc Zyngier wrote:
-> >>>>>> On 11/11/15 06:33, Bharat Kumar Gogada wrote:
-> >>>>>>> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> >>>>>>> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> >>>>>>> ---
-> >>>>>>> Added logic to allocate contiguous hwirq in nwl_irq_domain_alloc
-> >>>>> function.
-> >>>>>>> Moved MSI functionality to separate functions.
-> >>>>>>> Changed error return values.
-> >>>>>>> ---
-> >>>>>>>    .../devicetree/bindings/pci/xilinx-nwl-pcie.txt    |   68 ++
-> >>>>>>>    drivers/pci/host/Kconfig                           |   16 +-
-> >>>>>>>    drivers/pci/host/Makefile                          |    1 +
-> >>>>>>>    drivers/pci/host/pcie-xilinx-nwl.c                 | 1062
-> >>>>> ++++++++++++++++++++
-> >>>>>>>    4 files changed, 1144 insertions(+), 3 deletions(-)
-> >>>>>>>    create mode 100644
-> >>>>>>> Documentation/devicetree/bindings/pci/xilinx-nwl-
-> >>>>> pcie.txt
-> >>>>>>>    create mode 100644 drivers/pci/host/pcie-xilinx-nwl.c
-> >>>>>>>
-> >>>>>>
-> >>>>>> [...]
-> >>>>>>
-> >>>>>>> +static int nwl_pcie_enable_msi(struct nwl_pcie *pcie, struct
-> >>>>>>> +pci_bus
-> >>>>>>> +*bus) {
-> >>>>>>> +	struct platform_device *pdev = to_platform_device(pcie-
-> >>>> dev);
-> >>>>>>> +	struct nwl_msi *msi = &pcie->msi;
-> >>>>>>> +	unsigned long base;
-> >>>>>>> +	int ret;
-> >>>>>>> +
-> >>>>>>> +	mutex_init(&msi->lock);
-> >>>>>>> +
-> >>>>>>> +	/* Check for msii_present bit */
-> >>>>>>> +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) &
-> >>> MSII_PRESENT;
-> >>>>>>> +	if (!ret) {
-> >>>>>>> +		dev_err(pcie->dev, "MSI not present\n");
-> >>>>>>> +		ret = -EIO;
-> >>>>>>> +		goto err;
-> >>>>>>> +	}
-> >>>>>>> +
-> >>>>>>> +	/* Enable MSII */
-> >>>>>>> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
-> >>> I_MSII_CONTROL) |
-> >>>>>>> +			  MSII_ENABLE, I_MSII_CONTROL);
-> >>>>>>> +
-> >>>>>>> +	/* Enable MSII status */
-> >>>>>>> +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
-> >>> I_MSII_CONTROL) |
-> >>>>>>> +			  MSII_STATUS_ENABLE, I_MSII_CONTROL);
-> >>>>>>> +
-> >>>>>>> +	/* setup AFI/FPCI range */
-> >>>>>>> +	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> >>>>>>> +	base = virt_to_phys((void *)msi->pages);
-> >>>>>>> +	nwl_bridge_writel(pcie, lower_32_bits(base),
-> >>> I_MSII_BASE_LO);
-> >>>>>>> +	nwl_bridge_writel(pcie, upper_32_bits(base),
-> >>> I_MSII_BASE_HI);
-> >>>>>>
-> >>>>>> BTW, you still haven't answered my question as to why you need to
-> >>>>>> waste a page of memory here, and why putting a device address
-> >>>>>> doesn't
-> >>>>> work.
-> >>>>>>
-> >>>>>> As this is (to the best of my knowledge) the only driver doing
-> >>>>>> so, I'd really like you to explain the rational behind this.
-> >>>>>
-> >>>>> Might not be the only driver doing so after I start sending out
-> >>>>> patches for the iProc MSI support (soon), :)
-> >>>>>
-> >>>>> I'm not sure how it works for the Xilinx NWL controller, which
-> >>>>> Bharat should be able to help to explain. But for the iProc MSI
-> >>>>> controller, there's no device I/O memory reserved for MSI posted
-> >>>>> writes
-> >>> in the ASIC.
-> >>>>> Therefore one needs to reserve host memory for these writes.
-> >>>>>>
-> >>>>
-> >>>> Our SoC doesn't reserve any memory for MSI, hence we need to assign
-> >>>> a memory space for it out of RAM.
-> >>>
-> >>> Question to both of you: Does the write make it to memory? Or is it
-> >>> sampled by the bridge and dropped?
-> >>>
-> >> No, write will not do any modification in memory, it is consumed by
-> bridge.
-> >
-> > Then you do not need to allocate memory at all. Use whatever memory
-> > you already have. CC-ing Robin, as this may have interaction with the
-> SMMU.
-> >
-> >>
-Ok, I will try with some random address, without allocating any memory and test it, and will
-update accordingly in next patch. 
-> >>> What happens if you replace the page in RAM with a dummy address?
-> >> What do you mean by dummy address ?
-> >
-> > Any random (and suitably aligned) address. 0x00000deadbeef000 for
-> example.
+> This should be prefixed with mediatek.
+We will prefix it with mediatek in next version.
+
 > 
-> In our case, I'm pretty sure the writes make it to memory (RAM). I can try
-> replacing it with a dummy address, but I'm pretty sure that will not work.
-> 
-Thanks,
-Bharat
+> > +
+> > +Example:
+> > +vcodec_enc: vcodec@0x18002000 {
+> > +    compatible = "mediatek,mt8173-vcodec-enc";
+> > +    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
+> > +          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
+> > +    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
+> > +           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
+> > +    larb = <&larb3>,
+> > +           <&larb5>;
+> > +    iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
+> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
+> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
+> > +    vpu = <&vpu>;
+> > +    clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
+> > +             <&topckgen CLK_TOP_VENC_LT_SEL>,
+> > +             <&topckgen CLK_TOP_VCODECPLL_370P5>;
+> > +    clock-names = "vencpll",
+> > +                  "venc_lt_sel",
+> > +                  "vcodecpll_370p5_ck";
+> > +  };
+> > -- 
+> > 1.7.9.5
+> > 
+best regards,
+Tiffany
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
