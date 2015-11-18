@@ -1,35 +1,89 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH V2 net-next 1/5] net:hns: Add support of Hip06 SoC to
- the Hislicon Network Subsystem
-Date: Wed, 18 Nov 2015 13:52:50 -0500 (EST)
-Message-ID: <20151118.135250.2066223916643044258.davem@davemloft.net>
-References: <1447786347-147518-1-git-send-email-salil.mehta@huawei.com>
-	<1447786347-147518-2-git-send-email-salil.mehta@huawei.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: device_node lifetime (was: Re: [PATCH 1/7] phy: brcmstb-sata: add
+ missing of_node_put)
+Date: Wed, 18 Nov 2015 11:05:00 -0800
+Message-ID: <20151118190500.GE140057@google.com>
+References: <1447673600-8881-1-git-send-email-Julia.Lawall@lip6.fr>
+ <1447673600-8881-2-git-send-email-Julia.Lawall@lip6.fr>
+ <20151117013830.GV8456@google.com>
+ <alpine.DEB.2.02.1511170711340.2045@localhost6.localdomain6>
+ <20151117174430.GA8456@google.com>
+ <alpine.DEB.2.10.1511171846120.2455@hadrien>
+ <20151117183036.GF8456@google.com>
+ <alpine.DEB.2.02.1511172327030.2121@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447786347-147518-2-git-send-email-salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1511172327030.2121-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Salil <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Date: Wed, 18 Nov 2015 02:52:23 +0800
+(changing subject, add devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org)
 
-> @@ -387,19 +409,23 @@ static void hns_rcb_ring_get_cfg(struct hnae_queue *q, int ring_type)
->  	struct rcb_common_cb *rcb_common;
->  	struct ring_pair_cb *ring_pair_cb;
->  	u32 buf_size;
-> -	u16 desc_num;
-> -	int irq_idx;
-> +	u16 desc_num, mdnum_ppkt;
-> +	int irq_idx, is_ver1;
+On Tue, Nov 17, 2015 at 11:33:25PM +0100, Julia Lawall wrote:
+> On Tue, 17 Nov 2015, Brian Norris wrote:
+> > On Tue, Nov 17, 2015 at 06:48:39PM +0100, Julia Lawall wrote:
+> > > Is this something that should be checked for elsewhere?
+> > 
+> > I expect the same sort of problem shows up plenty of other places. I
+> > don't think many people use CONFIG_OF_DYNAMIC, so the effects of these
+> > failures probably aren't felt by many.
+> 
+> I tried the following semantic patch:
+> 
+> @@
+> struct device_node *e;
+> expression e1;
+> identifier fld;
+> @@
+> 
+>  ... when != of_node_get(...)
+> *(<+...e1->fld...+>) = e
+>  ... when != of_node_get(...)
+>  return e1;
+> 
+> basically, this says that a structure field is initilized to a device node 
+> value, the structure is returned by the containing function, and the 
+> containing function contains no of_node_get at all.  Certainly this is 
+> quite constrained, but it does produce a number of examples.
+> 
+> I looked at a few of them:
+> 
+> drivers/clk/ingenic/cgu.c, ingenic_cgu_new
+> clk/pistachio/clk.c, pistachio_clk_alloc_provider
 
-Please use "bool" and true/false for boolean conditions like is_ver1.
+It looks like the clock core (drivers/clk/clk.c) initially grabs the clk
+provider node in of_clk_init(), then drops it after it's initialized,
+but most of these providers use of_clk_add_provider(), which seems to
+manage the device_node lifetime for the user. So I think these are OK.
 
-Please audit your entire submission for this problem.
+> drivers/mfd/syscon.c, of_syscon_register
+
+This one looks potentially suspect. Syscon nodes aren't usually directly
+managed by a single driver, and the device_node pointer is used for
+lookups later...so I think it should keep a kref, and it doesn't.
+
+> drivers/of/pdt.c, function of_pdt_create_node
+
+Not real sure about this one.
+
+> Any idea whether these need of_node_get?  In all cases the device node 
+> value comes in as a parameter.
+
+I'm really not an expert on this stuff. I just saw a potential problem
+that I happen to be looking at in other subsystems, and I wanted to know
+what others thought. I think this discussion should include the DT folks
+and the subsystems in question. For one, I'm as interested as anyone in
+getting this todo clarified:
+
+Documentation/devicetree/todo.txt
+- Document node lifecycle for CONFIG_OF_DYNAMIC
+
+Regards,
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
