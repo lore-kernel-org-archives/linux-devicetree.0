@@ -1,72 +1,72 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v7 5/5] gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
-Date: Wed, 18 Nov 2015 11:59:40 -0600
-Message-ID: <1447869580-10416-6-git-send-email-afd@ti.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v7 4/5] regulator: tps65912: Add regulator driver for the TPS65912 PMIC
+Date: Wed, 18 Nov 2015 11:59:39 -0600
+Message-ID: <1447869580-10416-5-git-send-email-afd@ti.com>
 References: <1447869580-10416-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447869580-10416-1-git-send-email-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447869580-10416-1-git-send-email-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the TPS65912 PMIC GPIOs.
+This patch adds support for TPS65912 PMIC regulators.
 
-TPS65912 has five configurable GPIOs that can be used for several
-purposes.
+The regulators set consists of 4 DCDCs and 10 LDOs. The output
+voltages are configurable and are meant to supply power to the
+main processor and other components.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 ---
- drivers/gpio/Kconfig         |   6 ++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-tps65912.c | 164 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 171 insertions(+)
- create mode 100644 drivers/gpio/gpio-tps65912.c
+ drivers/regulator/Kconfig              |   6 ++
+ drivers/regulator/Makefile             |   1 +
+ drivers/regulator/tps65912-regulator.c | 169 +++++++++++++++++++++++++++++++++
+ 3 files changed, 176 insertions(+)
+ create mode 100644 drivers/regulator/tps65912-regulator.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 131a89b..a5fab31 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -852,6 +852,12 @@ config GPIO_TPS65910
- 	  Select this option to enable GPIO driver for the TPS65910
- 	  chip family.
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 90c7612..3b08452 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -727,6 +727,12 @@ config REGULATOR_TPS65910
+ 	help
+ 	  This driver supports TPS65910/TPS65911 voltage regulator chips.
  
-+config GPIO_TPS65912
-+	tristate "TI TPS65912 GPIO"
++config REGULATOR_TPS65912
++	tristate "TI TPS65912 Power regulator"
 +	depends on MFD_TPS65912
 +	help
-+	  This driver supports TPS65912 gpio chip
++	    This driver supports TPS65912 voltage regulator chip.
 +
- config GPIO_TWL4030
- 	tristate "TWL4030, TWL5030, and TPS659x0 GPIOs"
- 	depends on TWL4030_CORE
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index f13b59f..986dbd8 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -97,6 +97,7 @@ obj-$(CONFIG_GPIO_TIMBERDALE)	+= gpio-timberdale.o
- obj-$(CONFIG_GPIO_PALMAS)	+= gpio-palmas.o
- obj-$(CONFIG_GPIO_TPS6586X)	+= gpio-tps6586x.o
- obj-$(CONFIG_GPIO_TPS65910)	+= gpio-tps65910.o
-+obj-$(CONFIG_GPIO_TPS65912)	+= gpio-tps65912.o
- obj-$(CONFIG_GPIO_TS5500)	+= gpio-ts5500.o
- obj-$(CONFIG_GPIO_TWL4030)	+= gpio-twl4030.o
- obj-$(CONFIG_GPIO_TWL6040)	+= gpio-twl6040.o
-diff --git a/drivers/gpio/gpio-tps65912.c b/drivers/gpio/gpio-tps65912.c
+ config REGULATOR_TPS80031
+ 	tristate "TI TPS80031/TPS80032 power regualtor driver"
+ 	depends on MFD_TPS80031
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 222ff5f..0f81749 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -91,6 +91,7 @@ obj-$(CONFIG_REGULATOR_TPS65218) += tps65218-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS6524X) += tps6524x-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS6586X) += tps6586x-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
++obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS80031) += tps80031-regulator.o
+ obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o
+ obj-$(CONFIG_REGULATOR_VEXPRESS) += vexpress.o
+diff --git a/drivers/regulator/tps65912-regulator.c b/drivers/regulator/tps65912-regulator.c
 new file mode 100644
-index 0000000..41e1a72
+index 0000000..a87f04e
 --- /dev/null
-+++ b/drivers/gpio/gpio-tps65912.c
-@@ -0,0 +1,164 @@
++++ b/drivers/regulator/tps65912-regulator.c
+@@ -0,0 +1,169 @@
 +/*
-+ * GPIO driver for TI TPS65912x PMICs
++ * Regulator driver for TI TPS65912x PMICs
 + *
 + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
 + *
-+ * Author: Andrew F. Davis <afd@ti.com>
++ * Author: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU General Public License version 2 as
@@ -77,153 +77,163 @@ index 0000000..41e1a72
 + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License version 2 for more details.
 + *
-+ * Based on the Arizona GPIO driver and the previous TPS65912 driver by
-+ * Margarita Olaya Cabrera <magi@slimlogic.co.uk>
++ * Based on the TPS65218 driver and the previous TPS65912 driver by
++ * Margarita Olaya Cabrera <magi-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
 + */
 +
-+#include <linux/gpio.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
 +
 +#include <linux/mfd/tps65912.h>
 +
-+struct tps65912_gpio {
-+	struct gpio_chip gpio_chip;
-+	struct tps65912 *tps;
-+};
++enum tps65912_regulators { DCDC1, DCDC2, DCDC3, DCDC4, LDO1, LDO2, LDO3,
++	LDO4, LDO5, LDO6, LDO7, LDO8, LDO9, LDO10 };
 +
-+static inline struct tps65912_gpio *to_tps65912_gpio(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct tps65912_gpio, gpio_chip);
-+}
-+
-+static int tps65912_gpio_get_direction(struct gpio_chip *gc,
-+				       unsigned offset)
-+{
-+	struct tps65912_gpio *gpio = to_tps65912_gpio(gc);
-+
-+	int ret, val;
-+
-+	ret = regmap_read(gpio->tps->regmap, TPS65912_GPIO1 + offset, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & GPIO_CFG_MASK)
-+		return GPIOF_DIR_OUT;
-+	else
-+		return GPIOF_DIR_IN;
-+}
-+
-+static int tps65912_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct tps65912_gpio *gpio = to_tps65912_gpio(gc);
-+
-+	return regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
-+				  GPIO_CFG_MASK, 0);
-+}
-+
-+static int tps65912_gpio_direction_output(struct gpio_chip *gc,
-+					  unsigned offset, int value)
-+{
-+	struct tps65912_gpio *gpio = to_tps65912_gpio(gc);
-+
-+	/* Set the initial value */
-+	regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
-+			   GPIO_SET_MASK, value ? GPIO_SET_MASK : 0);
-+
-+	return regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
-+				  GPIO_CFG_MASK, GPIO_CFG_MASK);
-+}
-+
-+static int tps65912_gpio_get(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct tps65912_gpio *gpio = to_tps65912_gpio(gc);
-+	int ret, val;
-+
-+	ret = regmap_read(gpio->tps->regmap, TPS65912_GPIO1 + offset, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & GPIO_STS_MASK)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static void tps65912_gpio_set(struct gpio_chip *gc, unsigned offset,
-+			      int value)
-+{
-+	struct tps65912_gpio *gpio = to_tps65912_gpio(gc);
-+
-+	regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
-+			   GPIO_SET_MASK, value ? GPIO_SET_MASK : 0);
-+}
-+
-+static struct gpio_chip template_chip = {
-+	.label			= "tps65912-gpio",
-+	.owner			= THIS_MODULE,
-+	.get_direction		= tps65912_gpio_get_direction,
-+	.direction_input	= tps65912_gpio_direction_input,
-+	.direction_output	= tps65912_gpio_direction_output,
-+	.get			= tps65912_gpio_get,
-+	.set			= tps65912_gpio_set,
-+	.base			= -1,
-+	.ngpio			= 5,
-+	.can_sleep		= true,
-+};
-+
-+static int tps65912_gpio_probe(struct platform_device *pdev)
-+{
-+	struct tps65912 *tps = dev_get_drvdata(pdev->dev.parent);
-+	struct tps65912_gpio *gpio;
-+	int ret;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	gpio->tps = dev_get_drvdata(pdev->dev.parent);
-+	gpio->gpio_chip = template_chip;
-+	gpio->gpio_chip.dev = tps->dev;
-+
-+	ret = gpiochip_add(&gpio->gpio_chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
-+		return ret;
++#define TPS65912_REGULATOR(_name, _id, _of_match, _ops, _vr, _er, _lr)	\
++	[_id] = {							\
++		.name			= _name,			\
++		.of_match		= _of_match,			\
++		.regulators_node	= "regulators",			\
++		.id			= _id,				\
++		.ops			= &_ops,			\
++		.n_voltages		= 64,				\
++		.type			= REGULATOR_VOLTAGE,		\
++		.owner			= THIS_MODULE,			\
++		.vsel_reg		= _vr,				\
++		.vsel_mask		= 0x3f,				\
++		.enable_reg		= _er,				\
++		.enable_mask		= BIT(7),			\
++		.volt_table		= NULL,				\
++		.linear_ranges		= _lr,				\
++		.n_linear_ranges	= ARRAY_SIZE(_lr),		\
 +	}
 +
-+	platform_set_drvdata(pdev, gpio);
++static const struct regulator_linear_range tps65912_dcdc_ranges[] = {
++	REGULATOR_LINEAR_RANGE(500000, 0x0, 0x3f, 50000),
++};
 +
-+	return 0;
-+}
++static const struct regulator_linear_range tps65912_ldo_ranges[] = {
++	REGULATOR_LINEAR_RANGE(800000, 0x0, 0x20, 25000),
++	REGULATOR_LINEAR_RANGE(1650000, 0x21, 0x3c, 50000),
++	REGULATOR_LINEAR_RANGE(3100000, 0x3d, 0x3f, 100000),
++};
 +
-+static int tps65912_gpio_remove(struct platform_device *pdev)
++/* Operations permitted on DCDCx */
++static struct regulator_ops tps65912_ops_dcdc = {
++	.is_enabled		= regulator_is_enabled_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.list_voltage		= regulator_list_voltage_linear_range,
++};
++
++/* Operations permitted on LDOx */
++static struct regulator_ops tps65912_ops_ldo = {
++	.is_enabled		= regulator_is_enabled_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.map_voltage		= regulator_map_voltage_linear_range,
++};
++
++static const struct regulator_desc regulators[] = {
++	TPS65912_REGULATOR("DCDC1", DCDC1, "dcdc1", tps65912_ops_dcdc,
++			   TPS65912_DCDC1_OP, TPS65912_DCDC1_CTRL,
++			   tps65912_dcdc_ranges),
++	TPS65912_REGULATOR("DCDC2", DCDC2, "dcdc2", tps65912_ops_dcdc,
++			   TPS65912_DCDC2_OP, TPS65912_DCDC2_CTRL,
++			   tps65912_dcdc_ranges),
++	TPS65912_REGULATOR("DCDC3", DCDC3, "dcdc3", tps65912_ops_dcdc,
++			   TPS65912_DCDC3_OP, TPS65912_DCDC3_CTRL,
++			   tps65912_dcdc_ranges),
++	TPS65912_REGULATOR("DCDC4", DCDC4, "dcdc4", tps65912_ops_dcdc,
++			   TPS65912_DCDC4_OP, TPS65912_DCDC4_CTRL,
++			   tps65912_dcdc_ranges),
++	TPS65912_REGULATOR("LDO1", LDO1, "ldo1", tps65912_ops_ldo,
++			   TPS65912_LDO1_OP, TPS65912_LDO1_AVS,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO2", LDO2, "ldo2", tps65912_ops_ldo,
++			   TPS65912_LDO2_OP, TPS65912_LDO2_AVS,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO3", LDO3, "ldo3", tps65912_ops_ldo,
++			   TPS65912_LDO3_OP, TPS65912_LDO3_AVS,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO4", LDO4, "ldo4", tps65912_ops_ldo,
++			   TPS65912_LDO4_OP, TPS65912_LDO4_AVS,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO5", LDO5, "ldo5", tps65912_ops_ldo,
++			   TPS65912_LDO5, TPS65912_LDO5,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO6", LDO6, "ldo6", tps65912_ops_ldo,
++			   TPS65912_LDO6, TPS65912_LDO6,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO7", LDO7, "ldo7", tps65912_ops_ldo,
++			   TPS65912_LDO7, TPS65912_LDO7,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO8", LDO8, "ldo8", tps65912_ops_ldo,
++			   TPS65912_LDO8, TPS65912_LDO8,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO9", LDO9, "ldo9", tps65912_ops_ldo,
++			   TPS65912_LDO9, TPS65912_LDO9,
++			   tps65912_ldo_ranges),
++	TPS65912_REGULATOR("LDO10", LDO10, "ldo10", tps65912_ops_ldo,
++			   TPS65912_LDO10, TPS65912_LDO10,
++			   tps65912_ldo_ranges),
++};
++
++static int tps65912_regulator_probe(struct platform_device *pdev)
 +{
-+	struct tps65912_gpio *gpio = platform_get_drvdata(pdev);
++	struct tps65912 *tps = dev_get_drvdata(pdev->dev.parent);
++	struct regulator_config config = { };
++	struct regulator_dev *rdev;
++	int i;
 +
-+	gpiochip_remove(&gpio->gpio_chip);
++	platform_set_drvdata(pdev, tps);
++
++	config.dev = &pdev->dev;
++	config.driver_data = tps;
++	config.dev->of_node = tps->dev->of_node;
++	config.regmap = tps->regmap;
++
++	for (i = 0; i < ARRAY_SIZE(regulators); i++) {
++		rdev = devm_regulator_register(&pdev->dev, &regulators[i],
++					       &config);
++		if (IS_ERR(rdev)) {
++			dev_err(tps->dev, "failed to register %s regulator\n",
++				pdev->name);
++			return PTR_ERR(rdev);
++		}
++	}
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id tps65912_gpio_id_table[] = {
-+	{ "tps65912-gpio", },
++static const struct platform_device_id tps65912_regulator_id_table[] = {
++	{ "tps65912-regulator", },
 +	{ /* sentinel */ }
 +};
-+MODULE_DEVICE_TABLE(platform, tps65912_gpio_id_table);
++MODULE_DEVICE_TABLE(platform, tps65912_regulator_id_table);
 +
-+static struct platform_driver tps65912_gpio_driver = {
++static struct platform_driver tps65912_regulator_driver = {
 +	.driver = {
-+		.name = "tps65912-gpio",
++		.name = "tps65912-regulator",
 +	},
-+	.probe = tps65912_gpio_probe,
-+	.remove = tps65912_gpio_remove,
-+	.id_table = tps65912_gpio_id_table,
++	.probe = tps65912_regulator_probe,
++	.id_table = tps65912_regulator_id_table,
 +};
-+module_platform_driver(tps65912_gpio_driver);
++module_platform_driver(tps65912_regulator_driver);
 +
-+MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_DESCRIPTION("TPS65912 GPIO driver");
++MODULE_AUTHOR("Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>");
++MODULE_DESCRIPTION("TPS65912 voltage regulator driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
