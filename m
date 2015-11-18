@@ -1,65 +1,89 @@
-From: Akshay Bhat <akshay.bhat@timesys.com>
-Subject: [PATCH] drm/panel: simple: Add support for G121X1-L03
-Date: Wed, 18 Nov 2015 15:57:47 -0500
-Message-ID: <1447880267-13422-1-git-send-email-akshay.bhat@timesys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/5] Documentation: tps65912: Add DT bindings for the
+ TPS65912 PMIC
+Date: Wed, 18 Nov 2015 15:14:50 -0600
+Message-ID: <20151118211450.GA11192@rob-hp-laptop>
+References: <1447869580-10416-1-git-send-email-afd@ti.com>
+ <1447869580-10416-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, justin.waters@timesys.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, Akshay Bhat <akshay.bhat@timesys.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447869580-10416-2-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIElubm9sdXggQ2hlTWVpIDEyIiBHMTIxWDEtTDAzIFhHQSBMVkRTIGRp
-c3BsYXkuCgpEYXRhc2hlZXQ6IGh0dHA6Ly93d3cuYXpkaXNwbGF5cy5jb20vUERGL0cxMjFYMS1M
-MDMucGRmClNpZ25lZC1vZmYtYnk6IEFrc2hheSBCaGF0IDxha3NoYXkuYmhhdEB0aW1lc3lzLmNv
-bT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGcxMjF4MS1sMDMudHh0
-ICB8ICA3ICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAg
-ICAgICAgICB8IDMxICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzgg
-aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZzEyMXgxLWwwMy50eHQKCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
-bHV4LGcxMjF4MS1sMDMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvaW5ub2x1eCxnMTIxeDEtbDAzLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NApp
-bmRleCAwMDAwMDAwLi42NDk3NDQ2Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxnMTIxeDEtbDAzLnR4dApA
-QCAtMCwwICsxLDcgQEAKK0lubm9sdXggQ29ycG9yYXRpb24gMTIuMSIgRzEyMVgxLUwwMyBYR0Eg
-KDEwMjR4NzY4KSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBh
-dGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCxnMTIxeDEtbDAzIgorCitUaGlzIGJpbmRpbmcgaXMg
-Y29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lm
-aWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IGY5N2I3M2UuLmQxODIxZjcgMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0v
-cGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTgzMiw2ICs4MzIsMzQgQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfZzEyMWkxX2wwMSA9IHsKIAl9LAogfTsKIAorc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGlubm9sdXhfZzEyMXgxX2wwM19tb2RlID0g
-eworCS5jbG9jayA9IDY1MDAwLAorCS5oZGlzcGxheSA9IDEwMjQsCisJLmhzeW5jX3N0YXJ0ID0g
-MTAyNCArIDAsCisJLmhzeW5jX2VuZCA9IDEwMjQgKyAxLAorCS5odG90YWwgPSAxMDI0ICsgMCAr
-IDEgKyAzMjAsCisJLnZkaXNwbGF5ID0gNzY4LAorCS52c3luY19zdGFydCA9IDc2OCArIDM4LAor
-CS52c3luY19lbmQgPSA3NjggKyAzOCArIDEsCisJLnZ0b3RhbCA9IDc2OCArIDM4ICsgMSArIDAs
-CisJLnZyZWZyZXNoID0gNjAsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
-aW5ub2x1eF9nMTIxeDFfbDAzID0geworCS5tb2RlcyA9ICZpbm5vbHV4X2cxMjF4MV9sMDNfbW9k
-ZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gNiwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0g
-MjQ2LAorCQkuaGVpZ2h0ID0gMTg1LAorCX0sCisJLmRlbGF5ID0geworCQkuZW5hYmxlID0gMjAw
-LAorCQkudW5wcmVwYXJlID0gMjAwLAorCQkuZGlzYWJsZSA9IDQwMCwKKwl9LAorfTsKKwogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGlubm9sdXhfbjExNmJnZV9tb2RlID0g
-ewogCS5jbG9jayA9IDc2NDIwLAogCS5oZGlzcGxheSA9IDEzNjYsCkBAIC0xMTU4LDYgKzExODYs
-OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtd
-ID0gewogCQkuY29tcGF0aWJsZSA9Imlubm9sdXgsZzEyMWkxLWwwMSIsCiAJCS5kYXRhID0gJmlu
-bm9sdXhfZzEyMWkxX2wwMQogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCxnMTIxeDEt
-bDAzIiwKKwkJLmRhdGEgPSAmaW5ub2x1eF9nMTIxeDFfbDAzLAorCX0sIHsKIAkJLmNvbXBhdGli
-bGUgPSAiaW5ub2x1eCxuMTE2YmdlIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9uMTE2YmdlLAogCX0s
-IHsKLS0gCjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On Wed, Nov 18, 2015 at 11:59:36AM -0600, Andrew F. Davis wrote:
+> The TPS65912 PMIC contains several regulators and a GPIO controller.
+> Add bindings for the TPS65912 PMIC.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  Documentation/devicetree/bindings/mfd/tps65912.txt | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
+> new file mode 100644
+> index 0000000..717e66d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+> @@ -0,0 +1,50 @@
+> +* TPS65912 Power Management Integrated Circuit bindings
+> +
+> +Required properties:
+> + - compatible		: Should be "ti,tps65912".
+> + - reg			: Slave address or chip select number (I2C / SPI).
+> + - interrupt-parent	: The parent interrupt controller.
+> + - interrupts		: The interrupt line the device is connected to.
+> + - interrupt-controller	: Marks the device node as an interrupt controller.
+> + - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+> +			    The first cell is the IRQ number.
+> +			    The second cell is the flags, encoded as trigger
+> +			    masks from ../interrupt-controller/interrupts.txt.
+> + - gpio-controller	: Marks the device node as a GPIO Controller.
+> + - #gpio-cells		: Should be two.  The first cell is the pin number and
+> +			    the second cell is used to specify flags.
+> +			    See ../gpio/gpio.txt for more information.
+> + - regulators:		: List of child nodes that specify the regulator
+> +			    initialization data. Child nodes must be named
+> +			    after their hardware counterparts: dcdc[1-4] and
+> +			    ldo[1-10]. Each child nodes is defined using the
+> +			    standard binding for regulators.
+> +
+> +Example:
+> +
+> +	pmic: tps65912@2d {
+> +		compatible = "ti,tps65912";
+> +		reg = <0x2d>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		regulators {
+> +			dcdc1 {
+> +				regulator-name = "vdd_core";
+> +				regulator-min-microvolt = <912000>;
+> +				regulator-max-microvolt = <1144000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo1 {
+> +				regulator-name = "ldo1";
+> +				regulator-min-microvolt = <1900000>;
+> +				regulator-max-microvolt = <1900000>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
