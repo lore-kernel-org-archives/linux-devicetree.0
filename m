@@ -1,86 +1,77 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
-Date: Wed, 18 Nov 2015 20:54:15 +0530
-Message-ID: <564C981F.3040907@codeaurora.org>
-References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-11-git-send-email-architt@codeaurora.org>
- <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 20/32] scsi: hisi_sas: add v1 hw interrupt init
+Date: Wed, 18 Nov 2015 09:26:56 -0600
+Message-ID: <CAL_Jsq+NEm_+cGYC6XG6_fprg1Gd7VG0dj8MKPAPUPqpBzL0pg@mail.gmail.com>
+References: <1447779059-136143-1-git-send-email-john.garry@huawei.com> <1447779059-136143-21-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447779059-136143-21-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: "James E.J. Bottomley" <JBottomley-wo1vFcy6AUs@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, John Garry <john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org>, hare-l3A5Bk7waGM@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMTEvMTgvMjAxNSA2OjQ4IFBNLCBSb2IgSGVycmluZyB3cm90ZToKPiArZHQg
-bGlzdAo+Cj4gT24gV2VkLCBOb3YgMTgsIDIwMTUgYXQgNDo1NSBBTSwgQXJjaGl0IFRhbmVqYSA8
-YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4+IEFkZCBhZGRpdGlvbmFsIHByb3BlcnR5
-IGluZm8gbmVlZGVkIGZvciBEU0l2MiBEVC4KPgo+IFBsZWFzZSB1c2UgZ2V0X21haW50YWluZXJz
-LnBsLgoKU29ycnkgYWJvdXQgdGhhdCwgbWlzc2VkIG91dCBkb2luZyB0aGF0IHBvc3RpbmcgdGhp
-cyB0aW1lLgoKPgo+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVh
-dXJvcmEub3JnPgo+PiAtLS0KPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9tc20vZHNpLnR4dCB8IDEwICsrKysrKysrKy0KPj4gICAxIGZpbGUgY2hhbmdlZCwg
-OSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4+IGluZGV4IGYz
-NDRiOWUuLmNhNjVhMzQgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4+IEBAIC0xMywxOCArMTMsMjUgQEAg
-UmVxdWlyZWQgcHJvcGVydGllczoKPj4gICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1t
-Y2MgTURTU19HRFNDPi4KPj4gICAtIGNsb2NrczogZGV2aWNlIGNsb2Nrcwo+PiAgICAgU2VlIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0
-IGZvciBkZXRhaWxzLgo+PiAtLSBjbG9jay1uYW1lczogdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJl
-IHJlcXVpcmVkOgo+PiArLSBjbG9jay1uYW1lczogdGhlc2UgdmFyeSBiYXNlZCBvbiB0aGUgRFNJ
-IHZlcnNpb24uIEZvciBEU0k2RzoKPj4gICAgICogImJ1c19jbGsiCj4+ICAgICAqICJieXRlX2Ns
-ayIKPj4gKyAgKiAiYnl0ZV9jbGtfc3JjCj4KPiBUaGlzIHNvdW5kcyBsaWtlIHRoZSBwYXJlbnQg
-b2YgYnl0ZV9jbGsuIElzIHRoYXQgcmVhbGx5IGEgY2xvY2sgd2l0aGluCj4gdGhlIGJsb2NrPwoK
-Ynl0ZV9jbGtfc3JjIGlzbid0IGluIHRoZSBibG9jaywgYnV0IGJ5dGVfY2xrX3NyYydzIHBhcmVu
-dCBpcyBvbmUgb2YKdGhlIFBMTHMgaW4gdGhpcyBibG9jay4gV2UgdGFrZSB0aGlzIGNsb2NrIHNv
-IHRoYXQgd2UgY2FuIHJlLXBhcmVudAppdCB0byBhbiBhcHByb3ByaWF0ZSBQTEwuIFRoZSBkZWNp
-c2lvbiBvZiB3aGF0IFBMTCB0byBjaG9vc2UgbmVlZHMgdG8KYmUgZG9uZSBieSB0aGUgRFNJIGJs
-b2NrJ3MgZHJpdmVyLgoKPgo+PiAgICAgKiAiY29yZV9jbGsiCj4+ICAgICAqICJjb3JlX21tc3Nf
-Y2xrIgo+PiAgICAgKiAiaWZhY2VfY2xrIgo+PiAgICAgKiAibWRwX2NvcmVfY2xrIgo+PiAgICAg
-KiAicGl4ZWxfY2xrIgo+PiArICAqICJwaXhlbF9jbGtfc3JjIgo+PiArICBGb3IgRFNJdjIsIHdl
-IG5lZWQgYSBmZXcgbW9yZToKPgo+IFdoYXQgaXMgdGhlIG92ZXJhbGwgb3JkZXIgb2YgY2xvY2tz
-PyBBcyBsaXN0ZWQ/CgpPcmRlciBpbiB3aGljaCB0aGUgZHJpdmVyIGRvZXMgY2xrX2dldD8gSXQg
-dXNlcyB0aGUgY2xvY2sKbmFtZSB0byBnZXQgZWFjaCBvbmUgaW5kaXZpZHVhbGx5LCBzbyB0aGUg
-b3JkZXIgZG9lc24ndCBtYXR0ZXIKYXMgc3VjaC4KCkkgZG9uJ3QgdGhpbmsgaXQgdGhlIG9yZGVy
-IG9mIGNsa19nZXQgaW4gdGhlIGRyaXZlciBpcyB0aGUgc2FtZQphcyB3aGF0J3MgYmVlbiBsaXN0
-ZWQgaGVyZS4gSSBjYW4gZml4IGl0IGlmIHRoYXQncyB0aGUgbm9ybS4KClRoYW5rcywKQXJjaGl0
-Cgo+Cj4+ICsgICAqICJkc2lfY2xrX3NyYyIKPj4gKyAgICogImVzY19jbGtfc3JjIgo+PiArICAg
-KiAic3JjX2NsayIKPj4gICAtIHZkZC1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkIHJlZ3VsYXRvciBk
-ZXZpY2Ugbm9kZQo+PiAgIC0gdmRkaW8tc3VwcGx5OiBwaGFuZGxlIHRvIHZkZC1pbyByZWd1bGF0
-b3IgZGV2aWNlIG5vZGUKPj4gICAtIHZkZGEtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxh
-dG9yIGRldmljZSBub2RlCj4+ICAgLSBxY29tLGRzaS1waHk6IHBoYW5kbGUgdG8gRFNJIFBIWSBk
-ZXZpY2Ugbm9kZQo+PiArLSBzeXNjb24tc2ZwYjogQSBwaGFuZGxlIHRvIG1tc3Nfc2ZwYiBzeXNj
-b24gbm9kZSAob25seSBmb3IgRFNJdjIpCj4+Cj4+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4g
-ICAtIHBhbmVsQDA6IE5vZGUgb2YgcGFuZWwgY29ubmVjdGVkIHRvIHRoaXMgRFNJIGNvbnRyb2xs
-ZXIuCj4+IEBAIC01MSw2ICs1OCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAgICAqICJx
-Y29tLGRzaS1waHktMjhubS1ocG0iCj4+ICAgICAqICJxY29tLGRzaS1waHktMjhubS1scCIKPj4g
-ICAgICogInFjb20sZHNpLXBoeS0yMG5tIgo+PiArICAqICJxY29tLGRzaS1waHktMjhubS04OTYw
-Igo+PiAgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgcmVn
-aXN0ZXJzIG9mIFBMTCwgUEhZIGFuZCBQSFkKPj4gICAgIHJlZ3VsYXRvcgo+PiAgIC0gcmVnLW5h
-bWVzOiBUaGUgbmFtZXMgb2YgcmVnaXN0ZXIgcmVnaW9ucy4gVGhlIGZvbGxvd2luZyByZWdpb25z
-IGFyZSByZXF1aXJlZDoKPj4gLS0KPj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJ
-bmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPj4gaG9zdGVkIGJ5IFRo
-ZSBMaW51eCBGb3VuZGF0aW9uCj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPj4gZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwo+PiBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIElu
-Yy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBD
-b2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Tue, Nov 17, 2015 at 10:50 AM, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> Add code to interrupts, so now we can get a phy up
+> interrupt when a disk is connected.
+
+So I started looking at why you are using of_irq_count which drivers
+shouldn't need to. In patch 5 you use it to allocate memory to store
+the irq names, then use them here...
+
+
+> +static const char phy_int_names[HISI_SAS_PHY_INT_NR][32] = {
+> +       {"Phy Up"},
+> +};
+> +static irq_handler_t phy_interrupts[HISI_SAS_PHY_INT_NR] = {
+> +       int_phyup_v1_hw,
+> +};
+> +
+> +static int interrupt_init_v1_hw(struct hisi_hba *hisi_hba)
+> +{
+> +       struct device *dev = &hisi_hba->pdev->dev;
+> +       struct device_node *np = dev->of_node;
+> +       char *int_names = hisi_hba->int_names;
+> +       int i, j, irq, rc, idx;
+> +
+> +       if (!np)
+> +               return -ENOENT;
+> +
+> +       for (i = 0; i < hisi_hba->n_phy; i++) {
+> +               struct hisi_sas_phy *phy = &hisi_hba->phy[i];
+> +
+> +               idx = i * HISI_SAS_PHY_INT_NR;
+> +               for (j = 0; j < HISI_SAS_PHY_INT_NR; j++, idx++) {
+> +                       irq = irq_of_parse_and_map(np, idx);
+
+It is also preferred that drivers don't use this either. You should
+use platform_get_irq() instead.
+
+> +                       if (!irq) {
+> +                               dev_err(dev,
+> +                                       "irq init: fail map phy interrupt %d\n",
+> +                                       idx);
+> +                               return -ENOENT;
+> +                       }
+> +
+> +                       (void)snprintf(&int_names[idx * HISI_SAS_NAME_LEN],
+> +                                      HISI_SAS_NAME_LEN,
+> +                                      "%s %s:%d", dev_name(dev),
+> +                                      phy_int_names[j], i);
+> +                       rc = devm_request_irq(dev, irq, phy_interrupts[j], 0,
+> +                                       &int_names[idx * HISI_SAS_NAME_LEN],
+> +                                       phy);
+
+There's no requirement for the name to match the name in the DT or
+even that the name needs to be unique.
+
+If you really want the DT names used, then just call
+of_property_read_string_index() on interrupt-names here. There is no
+point to copy the string.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
