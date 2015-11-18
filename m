@@ -1,82 +1,29 @@
-From: Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
-Date: Wed, 18 Nov 2015 19:33:15 +0530
-Message-ID: <CAFTCetSZbM8Y9j8YED6TVRih05R18vVuafCQKhX58A0fkzSocA@mail.gmail.com>
-References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
-	<1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
-	<20151116144525.GM20696@leverpostej>
-	<20151117001439.GA26823@rob-hp-laptop>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v5 3/3] cpufreq: arm_big_little: Add support to register
+ a cpufreq cooling device
+Date: Wed, 18 Nov 2015 19:34:39 +0530
+Message-ID: <20151118140439.GH7336@ubuntu>
+References: <1447761983-12415-1-git-send-email-punit.agrawal@arm.com>
+ <1447761983-12415-4-git-send-email-punit.agrawal@arm.com>
+ <20151118054216.GE7336@ubuntu>
+ <9hh8u5vph46.fsf@e105922-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151117001439.GA26823@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9hh8u5vph46.fsf@e105922-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Punit Agrawal <punit.agrawal@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com, rjw@rjwysocki.net, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 18-11-15, 13:33, Punit Agrawal wrote:
+> Thanks for the Ack.
+> 
+> Will you or Rafael be picking up the series or do they need to go via
+> arm-soc?
 
-Thanks for the review.
+Rafael will pick this up, it should go via PM tree.
 
-On Tue, Nov 17, 2015 at 5:44 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Nov 16, 2015 at 02:45:25PM +0000, Mark Rutland wrote:
->> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
->> > This patch adds a devicetree binding documentation for ARM's
->> > SP805 WatchDog Timer.
->> >
->> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
->> >  1 file changed, 33 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->> > new file mode 100644
->> > index 0000000..ec70fe9
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->> > @@ -0,0 +1,33 @@
->> > +* ARM SP805 Watchdog Timer (WDT) Controller
->> > +
->> > +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
->> > +can be used to identify the peripheral type, vendor, and revision.
->> > +This value can be used for driver matching.
->> > +
-
-[snip..]
-
->> > +As SP805 WDT is a primecell IP, it follows the base bindings specified in
->> > +'arm/primecell.txt'
->> > +
->> > +Required properties:
->> > +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
->> > +- reg : Base address and size of the watchdog timer registers.
->> > +- interrupts : Should specify WDT interrupt number.
->> > +
->> > +Optional properties:
->> > +- clocks : From common clock binding. First clock is phandle to clock for apb
->> > +           pclk. Additional clocks are optional.
->> > +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
->>
->> The hardware has "WDOGCLK", which is what the driver appears to expect
->> first implicitly.
->
-> The h/w has 2 clocks, PCLK and WDOGCLK, so both should be described and
-> neither should be optional.
-
-As per the SP805 WDT TRM I have with me (see [1], Figure 1-1), this
-h/w has only only input
-clock WDOGCLK.
-
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0270b/DDI0270.pdf
-
-Regards,
-Bhupesh
-
-> Rob
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
