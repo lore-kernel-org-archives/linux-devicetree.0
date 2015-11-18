@@ -1,52 +1,78 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 6/6] gpio: tps65086: Add GPIO driver for the TPS65086 PMIC
-Date: Wed, 18 Nov 2015 10:44:37 +0100
-Message-ID: <CACRpkdYfKXDto0TAyW8L+noomPmfTqV+SekdtFXuAsf_Xe3Bkw@mail.gmail.com>
-References: <1446657135-7820-1-git-send-email-afd@ti.com>
-	<1446657135-7820-7-git-send-email-afd@ti.com>
-	<CACRpkdb1V7JxLSbwqf4CX+nDLeQzP=bOA9YMXzE4CFTQfzRL9w@mail.gmail.com>
-	<564B51B3.2000102@ti.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/5] Add reboot notifier driver for rockchip platform
+Date: Wed, 18 Nov 2015 17:47:24 +0800
+Message-ID: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <564B51B3.2000102@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 5:11 PM, Andrew F. Davis <afd@ti.com> wrote:
-> On 11/17/2015 03:17 AM, Linus Walleij wrote:
->>
->> On Wed, Nov 4, 2015 at 6:12 PM, Andrew F. Davis <afd@ti.com> wrote:
->>
->>> Add support for the TPS65086 PMIC GPOs.
->>>
->>> TPS65086 has four configurable GPOs that can be used for several
->>> purposes.
->>>
->>> Signed-off-by: Andrew F. Davis <afd@ti.com>
->>
->>
->> OK...
->>
->>> +static int tps65086_gpio_get(struct gpio_chip *gc, unsigned offset)
->>> +static void tps65086_gpio_set(struct gpio_chip *gc, unsigned offset,
->>
->>
->> Just get/set and no get_direction/direction_input/direction_output?
->> Are you sure?
->>
->
-> Yeah, these are output only, I could probably add get_direction and just
-> always return output, but setters wouldn't make sense here.
 
-It's important that you note in the driver, commit blurb and maybe even
-Kconfig that these GPIOs are output-only. Someone could get confused.
+rockchip platform have a protocol to pass the kernel reboot
+mode to bootloader by some special registers when system reboot.
+By this way the bootloader can take different action according
+to the different kernel reboot mode, for example, command
+"reboot loader" will reboot the board to rockusb mode, this is
+a very convenient way to get the board enter download mode.
+And Android system also use this protocol to pass "recovery"=E3=80=81
+=E2=80=9Cfastboot=E2=80=9D reboot mode to bootloader. In upstream land,=
+ We found
+tegra platform also use this mechanism.
 
-You should implement .direction_output() and return 0, and implement
-.direction_input and return negative error code. As it is now, it will
-seem like input is working, while it's not, right?
+Before this version, I have sent two Series, which can be found
+at [0] [1]
+[0] https://patchwork.kernel.org/patch/7140751/
+[1] https://patchwork.kernel.org/patch/7153531/
 
-Yours,
-Linus Walleij
+Changes in v3:
+ - rename a pinctrl node in rk3288-veyron, the original name will be
+   used in the incoming reboot notifier driver
+ - add dt binding
+ - move from mach-rockchip to drivers/soc/rockchip, as the tegra does
+ - use dts pass the related register
+ - add DT node
+
+Changes in v2:
+  - check cpu dt node
+  - remove a unnecessary of_put_node in function rockchip_get_pmu_regma=
+p
+  - fix a align issue
+  - use reboot_notifier instead of restart_handler
+
+Andy Yan (5):
+  ARM: dts: rockchip: rk3288-veyron: rename pinctrl node reboot to rese=
+t
+  dt-bindings: soc: add document for rockchip reboot notifier driver
+  soc: rockchip: add reboot notifier driver
+  ARM: dts: rockchip: add reboot node
+  ARM64: dts: rockchip: add reboot node
+
+ .../bindings/soc/rockchip/rockchip-reboot.txt      | 18 ++++
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |  2 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |  6 ++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |  6 ++
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  6 ++
+ drivers/soc/rockchip/Kconfig                       |  7 ++
+ drivers/soc/rockchip/Makefile                      |  1 +
+ drivers/soc/rockchip/loader.h                      | 22 +++++
+ drivers/soc/rockchip/reboot.c                      | 98 ++++++++++++++=
+++++++++
+ 9 files changed, 165 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/rock=
+chip-reboot.txt
+ create mode 100644 drivers/soc/rockchip/loader.h
+ create mode 100644 drivers/soc/rockchip/reboot.c
+
+--=20
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
