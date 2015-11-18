@@ -1,98 +1,57 @@
-From: Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
-Date: Wed, 18 Nov 2015 19:21:24 +0530
-Message-ID: <CAFTCetQpb4M0dxCWYHXVZYgNKjZT7-J91hhx1=aa7FhPWgEf6A@mail.gmail.com>
-References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
-	<1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
-	<20151116144525.GM20696@leverpostej>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [4.4-rc][PATCH] ARM: dts: am4372: disable arm twd and global timer's nodes
+Date: Wed, 18 Nov 2015 16:01:55 +0200
+Message-ID: <1447855315-419-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151116144525.GM20696@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: slash.tmp-GANU6spQydw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Keep ARM TWD and Global timer's nodes disabled by default - if someone
+would like to use them then those nodes have to be enabled explicitly
+in board file.
 
-Thanks for the review.
+The reason for this change is:
+- ARM TWD is not always-on timer on am437x and it will stop in low
+  CPUIdle states and, therefore, broadcast timer has to configured
+  properly if CPU_IDLE=y.
+- ARM Global timer is not always-on timer on am437x and it can't be
+  used as clocksource device if CPU_IDLE=y.
+- ARM Global timer driver doesn't support CPUfreq now.
 
-On Mon, Nov 16, 2015 at 8:15 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
->> This patch adds a devicetree binding documentation for ARM's
->> SP805 WatchDog Timer.
->>
->> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->> new file mode 100644
->> index 0000000..ec70fe9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->> @@ -0,0 +1,33 @@
->> +* ARM SP805 Watchdog Timer (WDT) Controller
->> +
->> +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
->> +can be used to identify the peripheral type, vendor, and revision.
->> +This value can be used for driver matching.
->> +
->> +Note that the current sp805_wdt driver relies on the 'drivers/amba/bus.c'
->> +framework to invoke the probe function of the sp805_wdt driver using the
->> +unique PRIMECELL identifiers of the sp805 wdt IP.
->
-> This paragraph can go. We shouldn't describe kernel internals.
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am4372.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Ok.
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index d83ff9c..11376e3 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -75,6 +75,7 @@
+ 		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+ 		clocks = <&dpll_mpu_m2_ck>;
++		status = "disabled";
+ 	};
+ 
+ 	local_timer: timer@48240600 {
+@@ -83,6 +84,7 @@
+ 		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+ 		clocks = <&dpll_mpu_m2_ck>;
++		status = "disabled";
+ 	};
+ 
+ 	l2-cache-controller@48242000 {
+-- 
+2.6.3
 
->> +As SP805 WDT is a primecell IP, it follows the base bindings specified in
->> +'arm/primecell.txt'
->> +
->> +Required properties:
->> +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
->> +- reg : Base address and size of the watchdog timer registers.
->> +- interrupts : Should specify WDT interrupt number.
->> +
->> +Optional properties:
->> +- clocks : From common clock binding. First clock is phandle to clock for apb
->> +           pclk. Additional clocks are optional.
->> +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
->
-> The hardware has "WDOGCLK", which is what the driver appears to expect
-> first implicitly.
-
-Ok.
-
->> +Examples:
->> +
->> +             cluster1_core0_watchdog: wdt@c000000 {
->> +                     compatible = "arm,sp805-wdt", "arm,primecell";
->> +                     reg = <0x0 0xc000000 0x0 0x1000>;
->> +                     interrupts = <1 12 0x8>; /* PPI, Level low type */
->
-> I don't see how you can use PPIs here. This is not banked per CPU.
-
-I have raised this concern to my hardware team. This might be an issue
-with the documentation.
-I will change it in v2 as per their comments.
-
-Regards,
-Bhupesh
-
-> Mark.
->
->> +                     clocks = <&clockgen 4 3>;
->> +                     clock-names = "apb_pclk";
->> +             };
->> +
->> --
->> 1.7.9.5
->>
->>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
