@@ -1,129 +1,85 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v7 33/50] powerpc/pci: Export pci_traverse_device_nodes()
-Date: Wed, 18 Nov 2015 14:14:59 +1100
-Message-ID: <564BED33.6040903@ozlabs.ru>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-34-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v8 0/2] Mediatek SPI-NOR flash driver
+Date: Wed, 18 Nov 2015 11:30:01 +0800
+Message-ID: <1447817403-16631-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-34-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2015 12:12 AM, Gavin Shan wrote:
-> This renames traverse_pci_devices() to pci_traverse_device_nodes().
+This series is based on v4.4-rc1 and l2-mtd.git [0] and erase_sector
+implementation patch [1]
 
-Why? pci_traverse_device_nodes() is not moved to some more generic header 
-where is would be required to have a standard prefix. And the ppc-pci.h 
-header does not use any standard prefix so the point of renaming is unclear.
+[0]: git://git.infradead.org/l2-mtd.git
+[1]: http://lists.infradead.org/pipermail/linux-mtd/2015-October//062959.html
 
-traverse_pci_dn() is still there and it has "traverse", "pci" and "device 
-node" (abbreviated as "dn") in it so pci_traverse_device_nodes is more 
-confusing name than traverse_pci_devices. Cannot we just get rid of one of 
-them?
+Change in v8:
+1: rewrite the macro MTK_NOR_MAX_SHIFT from 6 to 7
+2: add a new macro MTK_NOR_MAX_RX_TX_SHIFT for max len of TX&RX
 
-Also the subject line says "Export" but nothing gets exported in this patch 
-- the visibility of pci_traverse_device_nodes() remains unchanged.
+Change in v7:
+1: change PRGDATA3 to PRGDATA4 for quad mode
+2: drop  PRGDATA3 for signal read mode
+3: drop unnecessary partition parser data
+4: convert mtd_device_parse_register to mtd_device_register
+5: disable clocks on failure
 
+Change in v6:
+1: delete mt8173_nor_do_rx
+2: delete mt8173_nor_do_rx
+3: add mt8173_nor_do_tx_rx for general usage
+4: support nor flash with 6 IDs
+5: delete mt8173_nor_erase_sector and use "nor->erase_opcode"
+6: add mt8173_nor_set_addr to programming the address register
+7: initialize the ppdata in mtk_nor_init
 
-> The function traverses all subordinate device nodes of the specified
-> one. Also, below cleanup applied to the function. No logical changes
-> introduced.
->
->     * Rename "pre" to "fn".
->     * Avoid assignment in if condition reported from checkpatch.pl.
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/include/asm/ppc-pci.h   |  6 +++---
->   arch/powerpc/kernel/pci_dn.c         | 14 +++++++++-----
->   arch/powerpc/platforms/pseries/msi.c |  4 ++--
->   3 files changed, 14 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-> index ca0c5bf..8753e4e 100644
-> --- a/arch/powerpc/include/asm/ppc-pci.h
-> +++ b/arch/powerpc/include/asm/ppc-pci.h
-> @@ -33,9 +33,9 @@ extern struct pci_dev *isa_bridge_pcidev;	/* may be NULL if no ISA bus */
->   struct device_node;
->   struct pci_dn;
->
-> -typedef void *(*traverse_func)(struct device_node *me, void *data);
-> -void *traverse_pci_devices(struct device_node *start, traverse_func pre,
-> -		void *data);
-> +void *pci_traverse_device_nodes(struct device_node *start,
-> +				void *(*fn)(struct device_node *, void *),
-> +				void *data);
->   void *traverse_pci_dn(struct pci_dn *root,
->   		      void *(*fn)(struct pci_dn *, void *),
->   		      void *data);
-> diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-> index 7f877a4..aa4110f 100644
-> --- a/arch/powerpc/kernel/pci_dn.c
-> +++ b/arch/powerpc/kernel/pci_dn.c
-> @@ -355,8 +355,9 @@ EXPORT_SYMBOL_GPL(pci_remove_device_node_info);
->    * one of these nodes we also assume its siblings are non-pci for
->    * performance.
->    */
-> -void *traverse_pci_devices(struct device_node *start, traverse_func pre,
-> -		void *data)
-> +void *pci_traverse_device_nodes(struct device_node *start,
-> +				void *(*fn)(struct device_node *, void *),
-> +				void *data)
->   {
->   	struct device_node *dn, *nextdn;
->   	void *ret;
-> @@ -371,8 +372,11 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
->   		if (classp)
->   			class = of_read_number(classp, 1);
->
-> -		if (pre && ((ret = pre(dn, data)) != NULL))
-> -			return ret;
-> +		if (fn) {
-> +			ret = fn(dn, data);
-> +			if (ret)
-> +				return ret;
-> +		}
->
->   		/* If we are a PCI bridge, go down */
->   		if (dn->child && ((class >> 8) == PCI_CLASS_BRIDGE_PCI ||
-> @@ -470,7 +474,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
->   	}
->
->   	/* Update dn->phb ptrs for new phb and children devices */
-> -	traverse_pci_devices(dn, add_pdn, phb);
-> +	pci_traverse_device_nodes(dn, add_pdn, phb);
->   }
->
->   /**
-> diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
-> index 272e9ec..543a638 100644
-> --- a/arch/powerpc/platforms/pseries/msi.c
-> +++ b/arch/powerpc/platforms/pseries/msi.c
-> @@ -305,7 +305,7 @@ static int msi_quota_for_device(struct pci_dev *dev, int request)
->   	memset(&counts, 0, sizeof(struct msi_counts));
->
->   	/* Work out how many devices we have below this PE */
-> -	traverse_pci_devices(pe_dn, count_non_bridge_devices, &counts);
-> +	pci_traverse_device_nodes(pe_dn, count_non_bridge_devices, &counts);
->
->   	if (counts.num_devices == 0) {
->   		pr_err("rtas_msi: found 0 devices under PE for %s\n",
-> @@ -320,7 +320,7 @@ static int msi_quota_for_device(struct pci_dev *dev, int request)
->   	/* else, we have some more calculating to do */
->   	counts.requestor = pci_device_to_OF_node(dev);
->   	counts.request = request;
-> -	traverse_pci_devices(pe_dn, count_spare_msis, &counts);
-> +	pci_traverse_device_nodes(pe_dn, count_spare_msis, &counts);
->
->   	/* If the quota isn't an integer multiple of the total, we can
->   	 * use the remainder as spare MSIs for anyone that wants them. */
->
+Change in v5:
+1: add "status = "disable"" to device tree
+2: add document "flash" node
+3: fix some statement error in Kconfig file
+4: fix alphabetical order error in makefile
+5: delete the parament "mtd_info *mtd" in mt8173_nor structure
+6: delete SPINOR_OP_WREN repeated calls
+7: add mt8173_nor_do_tx & mt8173_nor_do_rx for them full potential
+8: use a subnode to represent the flash
 
+Change in v4:
+1: delete the parament "write_enable" for mt8173_nor_write_reg
+2: fix the build warning for calling mt8173_nor_write_single_byte
 
--- 
-Alexey
+Change in v3:
+1: use switch() to replace some if-else statement
+2: use shifts to replace endianness statement
+3: delete some unused macros
+4: use auto-increment mechanism for single write
+5: write address added to 32bytes
+
+Change in v2:
+1. Rebase to 4.3-rc1
+2. propagate error code
+3. delete mux clock and axi clock in dts file
+4. descripts more exactly for binding file
+5. change file names from mtk-nor.c to mtk_quadspi.c
+6. delete some functions witch were used once time
+
+Bayi Cheng (2):
+  mtd: mtk-nor: mtk serial flash controller driver
+  arm64: dts: mt8173: Add nor flash node
+
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |  18 +-
+ drivers/mtd/spi-nor/Kconfig              |   7 +
+ drivers/mtd/spi-nor/Makefile             |   1 +
+ drivers/mtd/spi-nor/mtk-quadspi.c        | 483 +++++++++++++++++++++++++++++++
+ 4 files changed, 508 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+
+--
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
