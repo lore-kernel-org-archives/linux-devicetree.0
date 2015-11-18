@@ -1,31 +1,109 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 0/2] Add pm8994 gpio and mpp support
-Date: Tue, 17 Nov 2015 16:52:31 -0800
-Message-ID: <1447807953-11924-1-git-send-email-sboyd@codeaurora.org>
+Subject: [RFC/PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP bindings
+Date: Tue, 17 Nov 2015 17:00:26 -0800
+Message-ID: <1447808426-21834-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the support for pm8994 gpio and mpp modules. Given that there's
-nothing besides a compatible string update, I'm going to send a separate
-patch to add generic compatible strings for these sorts of things.
-
-Stephen Boyd (2):
-  pinctrl: qcom: spmi-gpio: Add pm8994 gpio support
-  pinctrl: qcom: spmi-mpp: Add pm8994 mpp support
+The drivers don't really need to know which PMIC they're for, so
+make a generic binding for them. This alleviates us from updating
+the drivers every time a new PMIC comes out. It's still
+recommended that we update the binding with new PMIC models and
+always specify the specific model for the MPPs and gpios before
+the generic compatible string in devicetree, but this at least
+cuts down on adding more and more compatible strings to the
+drivers until we actually need them.
 
 Cc: <devicetree@vger.kernel.org>
 Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
 
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 1 +
+We can also figure out the number of the pins from the number
+of interrupts, so we really don't need to even look at the size of the
+reg property or model number for the spmi and ssbi modules. I'll propose
+that change as well tomorrow.
+
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 5 ++++-
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 5 ++++-
  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
  drivers/pinctrl/qcom/pinctrl-spmi-mpp.c                      | 1 +
- 4 files changed, 5 insertions(+)
+ 4 files changed, 10 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+index a90c812ad642..f1e4643f4132 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+@@ -17,6 +17,9 @@ PMIC's from Qualcomm.
+ 		    "qcom,pm8994-gpio"
+ 		    "qcom,pma8084-gpio"
+ 
++		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
++		    if the device is on an spmi bus or an ssbi bus respectively
++
+ - reg:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -183,7 +186,7 @@ to specify in a pin configuration subnode:
+ Example:
+ 
+ 	pm8921_gpio: gpio@150 {
+-		compatible = "qcom,pm8921-gpio";
++		compatible = "qcom,pm8921-gpio", "qcom,ssbi-gpio";
+ 		reg = <0x150 0x160>;
+ 		interrupts = <192 1>, <193 1>, <194 1>,
+ 			     <195 1>, <196 1>, <197 1>,
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+index d74e631e10da..e28320b18ecb 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+@@ -18,6 +18,9 @@ of PMIC's from Qualcomm.
+ 		    "qcom,pm8994-mpp",
+ 		    "qcom,pma8084-mpp",
+ 
++		    And must contain either "qcom,spmi-mpp" or "qcom,ssbi-mpp"
++		    if the device is on an spmi bus or an ssbi bus respectively.
++
+ - reg:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -157,7 +160,7 @@ to specify in a pin configuration subnode:
+ Example:
+ 
+ 	mpps@a000 {
+-		compatible = "qcom,pm8841-mpp";
++		compatible = "qcom,pm8841-mpp", "qcom,spmi-mpp";
+ 		reg = <0xa000>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index df4413023e21..9f9979903fcb 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -806,6 +806,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
+ 	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
+ 	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
+ 	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
++	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
+ 	{ },
+ };
+ 
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+index 7b4136a22c5b..5a4373dd9c61 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+@@ -909,6 +909,7 @@ static const struct of_device_id pmic_mpp_of_match[] = {
+ 	{ .compatible = "qcom,pm8941-mpp" },	/* 8 MPP's */
+ 	{ .compatible = "qcom,pm8994-mpp" },	/* 8 MPP's */
+ 	{ .compatible = "qcom,pma8084-mpp" },	/* 8 MPP's */
++	{ .compatible = "qcom,spmi-mpp" },	/* Generic */
+ 	{ },
+ };
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
