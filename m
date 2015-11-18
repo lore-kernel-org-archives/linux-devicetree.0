@@ -1,42 +1,81 @@
-From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH 06/13] Xen: ARM: Add support for mapping amba
- device mmio
-Date: Wed, 18 Nov 2015 21:15:30 +0800
-Message-ID: <564C79F2.6050708@linaro.org>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org> <1447754231-7772-7-git-send-email-shannon.zhao@linaro.org> <20151117144040.GI3003@char.us.oracle.com> <564C14CA.9080601@huawei.com> <564C6EBF.7010105@citrix.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
+Date: Wed, 18 Nov 2015 07:18:51 -0600
+Message-ID: <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-1-git-send-email-architt@codeaurora.org> <1447844131-4182-11-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564C6EBF.7010105-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1447844131-4182-11-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
++dt list
 
+On Wed, Nov 18, 2015 at 4:55 AM, Archit Taneja <architt@codeaurora.org> wrote:
+> Add additional property info needed for DSIv2 DT.
 
-On 2015/11/18 20:27, Julien Grall wrote:
-> On 18/11/15 06:03, Shannon Zhao wrote:
->>>
->>> What about the removal of a bus device? No need to handle that?
->>>
->> I have thought about removal before. I think there is little(or no)
->> chance for AMBA and platform bus devices to be removed. It's not like
->> the PCI devices which will be hot-unplug.
->> Maybe I'm not right. If so, it's fine to add a case to handle the removal.
+Please use get_maintainers.pl.
+
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >
-> What about the platform device passthrough case?
->
-No, it will add the platform passthrough device at booting step while 
-it's only removed when Dom0 shutdowns unless it supports platform device 
-hot-unplug.
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index f344b9e..ca65a34 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -13,18 +13,25 @@ Required properties:
+>  - power-domains: Should be <&mmcc MDSS_GDSC>.
+>  - clocks: device clocks
+>    See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
+> -- clock-names: the following clocks are required:
+> +- clock-names: these vary based on the DSI version. For DSI6G:
+>    * "bus_clk"
+>    * "byte_clk"
+> +  * "byte_clk_src
 
-> In anycase, if the AMBA platform provides a removal method, there is
-> harmless to implement it.
->
-Sure, as you said, it's harmless to add.
+This sounds like the parent of byte_clk. Is that really a clock within
+the block?
 
-Thanks,
--- 
-Shannon
+>    * "core_clk"
+>    * "core_mmss_clk"
+>    * "iface_clk"
+>    * "mdp_core_clk"
+>    * "pixel_clk"
+> +  * "pixel_clk_src"
+> +  For DSIv2, we need a few more:
+
+What is the overall order of clocks? As listed?
+
+> +   * "dsi_clk_src"
+> +   * "esc_clk_src"
+> +   * "src_clk"
+>  - vdd-supply: phandle to vdd regulator device node
+>  - vddio-supply: phandle to vdd-io regulator device node
+>  - vdda-supply: phandle to vdda regulator device node
+>  - qcom,dsi-phy: phandle to DSI PHY device node
+> +- syscon-sfpb: A phandle to mmss_sfpb syscon node (only for DSIv2)
+>
+>  Optional properties:
+>  - panel@0: Node of panel connected to this DSI controller.
+> @@ -51,6 +58,7 @@ Required properties:
+>    * "qcom,dsi-phy-28nm-hpm"
+>    * "qcom,dsi-phy-28nm-lp"
+>    * "qcom,dsi-phy-20nm"
+> +  * "qcom,dsi-phy-28nm-8960"
+>  - reg: Physical base address and length of the registers of PLL, PHY and PHY
+>    regulator
+>  - reg-names: The names of register regions. The following regions are required:
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
