@@ -1,49 +1,44 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [RESEND PATCH v2 4/6] ARM: dts: Remove broken-cd from eMMC node in exynos5800-peach-pi
-Date: Wed, 18 Nov 2015 10:23:52 -0300
-Message-ID: <1447853034-22508-5-git-send-email-javier@osg.samsung.com>
+Subject: Re: [RESEND PATCH v2 6/6] ARM: dts: Mark eMMC as non-removable in
+ exynos5250-snow-common
+Date: Wed, 18 Nov 2015 10:32:48 -0300
+Message-ID: <564C7E00.9070704@osg.samsung.com>
 References: <1447853034-22508-1-git-send-email-javier@osg.samsung.com>
+ <1447853034-22508-7-git-send-email-javier@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447853034-22508-1-git-send-email-javier@osg.samsung.com>
+In-Reply-To: <1447853034-22508-7-git-send-email-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-The eMMC is non-removable so is marked with the non-removable DT
-property to avoid having to redetect it after a suspend/resume.
+Hello,
 
-But it also has the broken-cd property which is wrong since only
-one of the DT properties for card detection should be used.
+On 11/18/2015 10:23 AM, Javier Martinez Canillas wrote:
+> The eMMC is non-removable so mark it using the non-removable DT
+> property to avoid having to redetect it after a suspend/resume.
+> 
+> Also remove the card-detect-delay property that is not needed with
+> non-removable.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Reviewed-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Tested-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> 
+> Series-cc Alim Akhtar <alim.akhtar@samsung.com>
 
-Also remove the card-detect-delay property that is not needed with
-non-removable.
+Argh, sorry about this, it was a silly typo error where I forgot ':' so
+patman didn't process the tag...
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
----
+I guess it can be removed when applying to avoid resending the whole series.
 
- arch/arm/boot/dts/exynos5800-peach-pi.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index ca3a467a585d..7b018e451880 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -652,12 +652,10 @@
- &mmc_0 {
- 	status = "okay";
- 	num-slots = <1>;
--	broken-cd;
- 	mmc-hs200-1_8v;
- 	mmc-hs400-1_8v;
- 	cap-mmc-highspeed;
- 	non-removable;
--	card-detect-delay = <200>;
- 	clock-frequency = <800000000>;
- 	samsung,dw-mshc-ciu-div = <3>;
- 	samsung,dw-mshc-sdr-timing = <0 4>;
+Best regards,
 -- 
-2.4.3
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
