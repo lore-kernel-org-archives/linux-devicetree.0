@@ -1,81 +1,100 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v5 20/32] scsi: hisi_sas: add v1 hw interrupt init
-Date: Wed, 18 Nov 2015 16:13:10 +0000
-Message-ID: <564CA396.9010709@huawei.com>
-References: <1447779059-136143-1-git-send-email-john.garry@huawei.com>
- <1447779059-136143-21-git-send-email-john.garry@huawei.com>
- <CAL_Jsq+NEm_+cGYC6XG6_fprg1Gd7VG0dj8MKPAPUPqpBzL0pg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+NEm_+cGYC6XG6_fprg1Gd7VG0dj8MKPAPUPqpBzL0pg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "James E.J. Bottomley" <JBottomley@odin.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, John Garry <john.garry2@mail.dcu.ie>, hare@suse.de, Wei Xu <xuwei5@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v10 0/8] Goodix touchscreen enhancements
+Date: Wed, 18 Nov 2015 18:31:33 +0200
+Message-ID: <1447864301-1261-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, linux-input@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+This patchset depends on Dmitry's patch that fixes the
+GPIO ACPI API[1], so devm_gpiod_get_optional can be properly
+used in the code. Thanks for taking care of this, Dmitry!
 
+Bastien and Aleksei, I have removed your Acked-by and Tested-by
+tags from the patches I have changed.
 
-On 18/11/2015 15:26, Rob Herring wrote:
-> On Tue, Nov 17, 2015 at 10:50 AM, John Garry <john.garry@huawei.com> wrote:
->> Add code to interrupts, so now we can get a phy up
->> interrupt when a disk is connected.
-> So I started looking at why you are using of_irq_count which drivers
-> shouldn't need to. In patch 5 you use it to allocate memory to store
-> the irq names, then use them here...
-right
->
->> +static const char phy_int_names[HISI_SAS_PHY_INT_NR][32] = {
->> +       {"Phy Up"},
->> +};
->> +static irq_handler_t phy_interrupts[HISI_SAS_PHY_INT_NR] = {
->> +       int_phyup_v1_hw,
->> +};
->> +
->> +static int interrupt_init_v1_hw(struct hisi_hba *hisi_hba)
->> +{
->> +       struct device *dev = &hisi_hba->pdev->dev;
->> +       struct device_node *np = dev->of_node;
->> +       char *int_names = hisi_hba->int_names;
->> +       int i, j, irq, rc, idx;
->> +
->> +       if (!np)
->> +               return -ENOENT;
->> +
->> +       for (i = 0; i < hisi_hba->n_phy; i++) {
->> +               struct hisi_sas_phy *phy = &hisi_hba->phy[i];
->> +
->> +               idx = i * HISI_SAS_PHY_INT_NR;
->> +               for (j = 0; j < HISI_SAS_PHY_INT_NR; j++, idx++) {
->> +                       irq = irq_of_parse_and_map(np, idx);
-> It is also preferred that drivers don't use this either. You should
-> use platform_get_irq() instead.
->
->> +                       if (!irq) {
->> +                               dev_err(dev,
->> +                                       "irq init: fail map phy interrupt %d\n",
->> +                                       idx);
->> +                               return -ENOENT;
->> +                       }
->> +
->> +                       (void)snprintf(&int_names[idx * HISI_SAS_NAME_LEN],
->> +                                      HISI_SAS_NAME_LEN,
->> +                                      "%s %s:%d", dev_name(dev),
->> +                                      phy_int_names[j], i);
->> +                       rc = devm_request_irq(dev, irq, phy_interrupts[j], 0,
->> +                                       &int_names[idx * HISI_SAS_NAME_LEN],
->> +                                       phy);
-> There's no requirement for the name to match the name in the DT or
-> even that the name needs to be unique.
-It is desirable to be unique as we have so many instances of the same 
-types of interrupt sources:
-for hip05 chipset with v1 controller we have the following interrupts: 8 
-phyup, 8 abnormal, 8 broadcast, 32 completion, 2 fatal
-> If you really want the DT names used, then just call
-> of_property_read_string_index() on interrupt-names here. There is no
-> point to copy the string.
-We would not want to add so many strings, no?
-> Rob
-thanks,
-John
+Thanks,
+Irina
+
+[1] https://lkml.org/lkml/2015/11/11/465
+
+Changes in v10:
+ - use devm_gpiod_get_optional and no longer ignore errors returned
+by it
+ - use completion to signal other code paths in the driver that
+the config firmware is loaded on the device
+ - dropped the patch that ordered the includes
+
+Changes in v9:
+ - add GPIOLIB to driver dependencies
+ - add Tested-by tag from Bastien and Aleksei
+
+Changes in v8:
+ - only allow new functionality for devices that declare named
+gpios (using _DSD properties in ACPI or named DT properties)
+
+Changes in v7:
+ - add dmi quirk to skip gpio pins setup and functionality that
+depends on them for Onda v975w, WinBook TW100 and WinBook TW700.
+ - add support for named gpio pins
+ - rework the runtime pm patch to fix a couple of issues
+ - sort includes using inverse Xmas tree ordering
+
+Changes in v6:
+ - skip runtime power manangent calls in open/close if the device
+ACPI/DT configuration does not declare interrupt and reset gpio pins.
+ - reset the device before starting i2c communication
+ - add Bastien's ack to the first 2 patches
+
+Changes in v5:
+ - add some more style cleanup (reorder includes, use error instead
+of ret for return values)
+ - add runtime power management patch
+
+Changes in v4:
+ - use dmi quirk to determine the order of irq and reset pins
+ - use actual config length depending on device
+ - add sysfs interface to dump config
+ - initialize esd timeout from ACPI/DT properly
+
+Changes in v3:
+ - dropped the first 3 patches that got merged
+ - handle -EPROBE_DEFER and -ENOENT for gpio pins
+ - skip functionality depending on the gpio pins if the pins are not
+properly initialized from ACPI/DT (reset, write config, power management,
+ESD)
+ - dropped #ifdef CONFIG_PM_SLEEP and annotated with __maybe_unused instead
+ - use sysfs property to set ESD timeout instead of ACPI/DT property
+ - use request_firmware_nowait to read configuration firmware and use
+defaults if firmware is not found
+ - use ACPI IDs to determine the order of the GPIO pins in the ACPI tables
+(interrupt pin first or reset pin first)
+
+Changes in v2:
+ - use request_firmware instead of ACPI/DT property for config
+ - dropped "input: goodix: add ACPI IDs for GT911 and GT9271" patch
+ - add ACPI DSDT excerpt in commit message where necessary
+ - add comments for suspend/resume sleep values
+ - dropped the checkpatch fixes that did not make sense
+ - added Bastien's ack to the first patch
+
+Irina Tirdea (8):
+  Input: goodix - use actual config length for each device type
+  Input: goodix - reset device at init
+  Input: goodix - write configuration data to device
+  Input: goodix - add power management support
+  Input: goodix - use goodix_i2c_write_u8 instead of i2c_master_send
+  Input: goodix - add support for ESD
+  Input: goodix - add sysfs interface to dump config
+  Input: goodix - add runtime power management support
+
+ .../bindings/input/touchscreen/goodix.txt          |  11 +
+ drivers/input/touchscreen/Kconfig                  |   1 +
+ drivers/input/touchscreen/goodix.c                 | 766 ++++++++++++++++++++-
+ 3 files changed, 740 insertions(+), 38 deletions(-)
+
+-- 
+1.9.1
+
