@@ -1,58 +1,55 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 1/2] pinctrl: qcom: spmi-gpio: Add pm8994 gpio support
-Date: Tue, 17 Nov 2015 16:52:32 -0800
-Message-ID: <1447807953-11924-2-git-send-email-sboyd@codeaurora.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 2/2] pinctrl: qcom: spmi-mpp: Add pm8994 mpp support
+Date: Tue, 17 Nov 2015 16:52:33 -0800
+Message-ID: <1447807953-11924-3-git-send-email-sboyd@codeaurora.org>
 References: <1447807953-11924-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1447807953-11924-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447807953-11924-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the binding and driver for pm8994-gpio devices.
+Update the driver and binding for pm8994-mpp devices.
 
-Cc: <devicetree@vger.kernel.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
- 2 files changed, 3 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt | 1 +
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c                     | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index 1ae63c0acd40..a90c812ad642 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -14,6 +14,7 @@ PMIC's from Qualcomm.
- 		    "qcom,pm8917-gpio"
- 		    "qcom,pm8921-gpio"
- 		    "qcom,pm8941-gpio"
-+		    "qcom,pm8994-gpio"
- 		    "qcom,pma8084-gpio"
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+index d7803a2a94e9..d74e631e10da 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+@@ -15,6 +15,7 @@ of PMIC's from Qualcomm.
+ 		    "qcom,pm8917-mpp",
+ 		    "qcom,pm8921-mpp",
+ 		    "qcom,pm8941-mpp",
++		    "qcom,pm8994-mpp",
+ 		    "qcom,pma8084-mpp",
  
  - reg:
-@@ -79,6 +80,7 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio38 for pm8917
- 		    gpio1-gpio44 for pm8921
- 		    gpio1-gpio36 for pm8941
-+		    gpio1-gpio22 for pm8994
- 		    gpio1-gpio22 for pma8084
- 
- - function:
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index 6c42ca14d2fd..df4413023e21 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -804,6 +804,7 @@ static int pmic_gpio_remove(struct platform_device *pdev)
- static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm8916-gpio" },	/* 4 GPIO's */
- 	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
-+	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
- 	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+index 9ce0e30e33e8..7b4136a22c5b 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+@@ -907,6 +907,7 @@ static const struct of_device_id pmic_mpp_of_match[] = {
+ 	{ .compatible = "qcom,pm8841-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,pm8916-mpp" },	/* 4 MPP's */
+ 	{ .compatible = "qcom,pm8941-mpp" },	/* 8 MPP's */
++	{ .compatible = "qcom,pm8994-mpp" },	/* 8 MPP's */
+ 	{ .compatible = "qcom,pma8084-mpp" },	/* 8 MPP's */
  	{ },
  };
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
