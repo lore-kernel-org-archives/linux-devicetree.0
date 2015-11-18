@@ -1,200 +1,69 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v3 3/5] soc: rockchip: add reboot notifier driver
-Date: Wed, 18 Nov 2015 17:56:22 +0800
-Message-ID: <1447840582-19850-1-git-send-email-andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 4/5] ARM: dts: rockchip: add reboot node
+Date: Wed, 18 Nov 2015 18:00:35 +0800
+Message-ID: <1447840835-19903-1-git-send-email-andy.yan@rock-chips.com>
 References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, linux-rockchip@lists.infradead.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, khilman@linaro.org, treding@nvidia.com, wxt@rock-chips.com, sjg@chromium.org, benchan@google.com, Andy Yan <andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447840044-19689-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-rockchip platform have a protocol to pass the kernel reboot
-mode to bootloader by some special registers when system reboot.
-By this way the bootloader can take different action according
-to the different kernel reboot mode, for example, command
-"reboot loader" will reboot the board to rockusb mode, this is
-a very convenient way to get the board enter download mode.
+Add reboot notifier driver DT node for rk3xxx,rk3288 platform
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
 ---
 
 Changes in v3:
- - move from mach-rockchip to drivers/soc/rockchip, as the tegra does
- - use dts pass the related register
+ - add DT node
 
-Changes in v2:
-  - check cpu dt node
-  - remove a unnecessary of_put_node in function rockchip_get_pmu_regmap
-  - fix a align issue
-  - use reboot_notifier instead of restart_handler
+Changes in v2: None
 
- drivers/soc/rockchip/Kconfig  |  7 ++++
- drivers/soc/rockchip/Makefile |  1 +
- drivers/soc/rockchip/loader.h | 22 ++++++++++
- drivers/soc/rockchip/reboot.c | 98 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 128 insertions(+)
- create mode 100644 drivers/soc/rockchip/loader.h
- create mode 100644 drivers/soc/rockchip/reboot.c
+ arch/arm/boot/dts/rk3288.dtsi | 6 ++++++
+ arch/arm/boot/dts/rk3xxx.dtsi | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
-index 7140ff8..4edbc44 100644
---- a/drivers/soc/rockchip/Kconfig
-+++ b/drivers/soc/rockchip/Kconfig
-@@ -15,4 +15,11 @@ config ROCKCHIP_PM_DOMAINS
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 906e938..975b8c9 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -169,6 +169,12 @@
+ 		};
+ 	};
  
-           If unsure, say N.
++	reboot {
++		compatible = "rockchip,reboot";
++		rockchip,regmap = <&pmu>;
++		offset = <0x94>;
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 4497d28..7b14d7a 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -103,6 +103,12 @@
+ 		};
+ 	};
  
-+config ROCKCHIP_REBOOT
-+	bool "Rockchip reboot notifier driver"
-+	help
-+	  Say y here will enable reboot notifier support.
-+	  This will get reboot mode arguments from userspace and
-+	  store it in special register.
++	reboot {
++		compatible = "rockchip,reboot";
++		rockchip,regmap = <&pmu>;
++		offset = <0x40>;
++	};
 +
- endif
-diff --git a/drivers/soc/rockchip/Makefile b/drivers/soc/rockchip/Makefile
-index 3d73d06..9817496 100644
---- a/drivers/soc/rockchip/Makefile
-+++ b/drivers/soc/rockchip/Makefile
-@@ -2,3 +2,4 @@
- # Rockchip Soc drivers
- #
- obj-$(CONFIG_ROCKCHIP_PM_DOMAINS) += pm_domains.o
-+obj-$(CONFIG_ROCKCHIP_REBOOT) += reboot.o
-diff --git a/drivers/soc/rockchip/loader.h b/drivers/soc/rockchip/loader.h
-new file mode 100644
-index 0000000..bf51baa
---- /dev/null
-+++ b/drivers/soc/rockchip/loader.h
-@@ -0,0 +1,22 @@
-+#ifndef __MACH_ROCKCHIP_LOADER_H
-+#define __MACH_ROCKCHIP_LOADER_H
-+
-+/*high 24 bits is tag, low 8 bits is type*/
-+#define SYS_LOADER_REBOOT_FLAG   0x5242C300
-+
-+enum {
-+	BOOT_NORMAL = 0, /* normal boot */
-+	BOOT_LOADER,     /* enter loader rockusb mode */
-+	BOOT_MASKROM,    /* enter maskrom rockusb mode (not support now) */
-+	BOOT_RECOVER,    /* enter recover */
-+	BOOT_NORECOVER,  /* do not enter recover */
-+	BOOT_SECONDOS,   /* boot second OS (not support now)*/
-+	BOOT_WIPEDATA,   /* enter recover and wipe data. */
-+	BOOT_WIPEALL,    /* enter recover and wipe all data. */
-+	BOOT_CHECKIMG,   /* check firmware img with backup part*/
-+	BOOT_FASTBOOT,   /* enter fast boot mode */
-+	BOOT_SECUREBOOT_DISABLE,
-+	BOOT_CHARGING,   /* enter charge mode */
-+	BOOT_MAX         /* MAX VALID BOOT TYPE.*/
-+};
-+#endif
-diff --git a/drivers/soc/rockchip/reboot.c b/drivers/soc/rockchip/reboot.c
-new file mode 100644
-index 0000000..048aeb0b
---- /dev/null
-+++ b/drivers/soc/rockchip/reboot.c
-@@ -0,0 +1,98 @@
-+/*
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include "loader.h"
-+
-+struct rockchip_reboot {
-+	struct device *dev;
-+	struct regmap *map;
-+	u32 offset;
-+	struct notifier_block reboot_notifier;
-+};
-+
-+static void rockchip_get_reboot_flag(const char *cmd, u32 *flag)
-+{
-+	*flag = SYS_LOADER_REBOOT_FLAG + BOOT_NORMAL;
-+
-+	if (cmd) {
-+		if (!strcmp(cmd, "loader") || !strcmp(cmd, "bootloader"))
-+			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_LOADER;
-+		else if (!strcmp(cmd, "recovery"))
-+			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_RECOVER;
-+		else if (!strcmp(cmd, "charge"))
-+			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_CHARGING;
-+		else if (!strcmp(cmd, "fastboot"))
-+			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_FASTBOOT;
-+	}
-+}
-+
-+static int rockchip_reboot_notify(struct notifier_block *this,
-+				  unsigned long mode, void *cmd)
-+{
-+	struct rockchip_reboot *reboot;
-+	u32 flag;
-+
-+	reboot = container_of(this, struct rockchip_reboot, reboot_notifier);
-+	rockchip_get_reboot_flag(cmd, &flag);
-+	regmap_write(reboot->map, reboot->offset, flag);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int __init rockchip_reboot_probe(struct platform_device *pdev)
-+{
-+	struct rockchip_reboot *reboot;
-+	int ret;
-+
-+	reboot = devm_kzalloc(&pdev->dev, sizeof(*reboot), GFP_KERNEL);
-+	if (!reboot)
-+		return -ENOMEM;
-+
-+	reboot->dev = &pdev->dev;
-+	reboot->map = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+						      "rockchip,regmap");
-+	if (IS_ERR(reboot->map))
-+		return PTR_ERR(reboot->map);
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "offset", &reboot->offset))
-+		return -EINVAL;
-+
-+	reboot->reboot_notifier.notifier_call = rockchip_reboot_notify;
-+	ret = register_reboot_notifier(&reboot->reboot_notifier);
-+	if (ret)
-+		dev_err(reboot->dev, "can't register reboot notifier\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id rockchip_reboot_of_match[] = {
-+	{ .compatible = "rockchip,reboot" },
-+	{}
-+};
-+
-+static struct platform_driver rockchip_reboot_driver = {
-+	.probe = rockchip_reboot_probe,
-+	.driver = {
-+		.name = "rockchip-reboot",
-+		.of_match_table = rockchip_reboot_of_match,
-+	},
-+};
-+module_platform_driver(rockchip_reboot_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-+MODULE_DESCRIPTION("Rockchip platform reboot notifier driver");
-+MODULE_LICENSE("GPL");
+ 	xin24m: oscillator {
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <24000000>;
 -- 
 1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
