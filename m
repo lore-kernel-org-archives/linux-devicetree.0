@@ -1,114 +1,61 @@
-From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH 02/13] xen/grant-table: Move xlated_setup_gnttab_pages
- to common place
-Date: Wed, 18 Nov 2015 21:34:25 +0800
-Message-ID: <564C7E61.80700@linaro.org>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org> <1447754231-7772-3-git-send-email-shannon.zhao@linaro.org> <564C6E4C.9080003@citrix.com>
+From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
+Subject: [PATCH 1/2] usb: doc: dwc3-xilinx: Add devicetree bindings
+Date: Wed, 18 Nov 2015 18:20:31 +0530
+Message-ID: <1447851031-16241-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564C6E4C.9080003-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds binding doc for Xilinx DWC3 glue driver.
 
+Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+---
+ .../devicetree/bindings/usb/dwc3-xilinx.txt        | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
 
-On 2015/11/18 20:25, Julien Grall wrote:
-> Hi Shannon,
->
-> On 17/11/15 09:57, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
->> index 62f591f..c084ba6 100644
->> --- a/drivers/xen/grant-table.c
->> +++ b/drivers/xen/grant-table.c
->> @@ -664,6 +664,55 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
->>   }
->>   EXPORT_SYMBOL_GPL(gnttab_setup_auto_xlat_frames);
->>
->> +int __init xlated_setup_gnttab_pages(void)
->> +{
->> +	struct page **pages;
->> +	xen_pfn_t *pfns;
->> +	void *vaddr;
->> +	int rc;
->> +	unsigned int i;
->> +	unsigned long nr_grant_frames = gnttab_max_grant_frames();
->> +
->> +	BUG_ON(nr_grant_frames == 0);
->> +	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
->> +	if (!pages)
->> +		return -ENOMEM;
->> +
->> +	pfns = kcalloc(nr_grant_frames, sizeof(pfns[0]), GFP_KERNEL);
->> +	if (!pfns) {
->> +		kfree(pages);
->> +		return -ENOMEM;
->> +	}
->> +	rc = alloc_xenballooned_pages(nr_grant_frames, pages, 0 /* lowmem */);
->
-> Can you rebase your patch on top of linux/master? The 3rd parameters has
-> been dropped for alloc_xenballooned_pages.
->
-Sure, I rebase this patchset on Linux 4.3 and will rebase on master at 
-next version.
->> +	if (rc) {
->> +		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
->> +			nr_grant_frames, rc);
->> +		kfree(pages);
->> +		kfree(pfns);
->> +		return rc;
->> +	}
->> +	for (i = 0; i < nr_grant_frames; i++)
->> +		pfns[i] = page_to_pfn(pages[i]);
->
-> This code needs to be adapt for 64KB page granularity. Please use
-> page_to_xen_pfn here.
->
-Ok.
-
->> +
->> +	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
->> +	if (!vaddr) {
->> +		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
->> +			nr_grant_frames, rc);
->> +		free_xenballooned_pages(nr_grant_frames, pages);
->> +		kfree(pages);
->> +		kfree(pfns);
->> +		return -ENOMEM;
->> +	}
->> +	kfree(pages);
->> +
->> +	xen_auto_xlat_grant_frames.pfn = pfns;
->> +	xen_auto_xlat_grant_frames.count = nr_grant_frames;
->> +	xen_auto_xlat_grant_frames.vaddr = vaddr;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(xlated_setup_gnttab_pages);
->> +
->>   void gnttab_free_auto_xlat_frames(void)
->>   {
->>   	if (!xen_auto_xlat_grant_frames.count)
->> diff --git a/include/xen/grant_table.h b/include/xen/grant_table.h
->> index 4478f4b..fa31e66 100644
->> --- a/include/xen/grant_table.h
->> +++ b/include/xen/grant_table.h
->> @@ -177,6 +177,7 @@ struct grant_frames {
->>   extern struct grant_frames xen_auto_xlat_grant_frames;
->>   unsigned int gnttab_max_grant_frames(void);
->>   int gnttab_setup_auto_xlat_frames(phys_addr_t addr);
->> +int xlated_setup_gnttab_pages(void);
->>   void gnttab_free_auto_xlat_frames(void);
->>
->>   #define gnttab_map_vaddr(map) ((void *)(map.host_virt_addr))
->>
->
-> Regards,
->
->
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt b/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+new file mode 100644
+index 0000000..30361b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+@@ -0,0 +1,33 @@
++Xilinx SuperSpeed DWC3 USB SoC controller
++
++Required properties:
++- compatible:	Should contain "xlnx,zynqmp-dwc3"
++- clocks:	A list of phandles for the clocks listed in clock-names
++- clock-names:	Should contain the following:
++  "bus_clk"	 Master/Core clock, have to be >= 125 MHz for SS
++		 operation and >= 60MHz for HS operation
++
++  "ref_clk"	 Clock source to core during PHY power down
++
++Required child node:
++A child node must exist to represent the core DWC3 IP block. The name of
++the node is not important. The content of the node is defined in dwc3.txt.
++
++Example device node:
++
++		usb@0 {
++			#address-cells = <0x2>;
++			#size-cells = <0x1>;
++			status = "okay";
++			compatible = "xlnx,zynqmp-dwc3";
++			clock-names = "bus_clk" "ref_clk";
++			clocks = <&clk125>, <&clk125>;
++			ranges;
++
++			dwc3@fe200000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0xfe200000 0x40000>;
++				interrupts = <0x0 0x41 0x4>;
++				dr_mode = "host";
++			};
++		};
 -- 
-Shannon
+2.1.2
