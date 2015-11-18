@@ -1,85 +1,65 @@
-From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
-Subject: Re: Re: [Qemu-devel] [PATCH v4 4/4] devicetree: update documentation
- for fw_cfg ARM bindings
-Date: Wed, 18 Nov 2015 15:54:49 -0500
-Message-ID: <20151118205448.GD2109@HEDWIG.INI.CMU.EDU>
-References: <1447470235-13643-1-git-send-email-somlo@cmu.edu>
- <1447470235-13643-5-git-send-email-somlo@cmu.edu>
- <20151115020754.GA21323@rob-hp-laptop>
- <564995FA.40308@redhat.com>
- <CAL_JsqKEi9BozyLQ9sKM3VL-hSSRntDyET859N1qTTMT4jkDOw@mail.gmail.com>
- <564C7758.6010103@free.fr>
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: [PATCH] drm/panel: simple: Add support for G121X1-L03
+Date: Wed, 18 Nov 2015 15:57:47 -0500
+Message-ID: <1447880267-13422-1-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <564C7758.6010103-GANU6spQydw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Fran=E7ois?= Revol <revol-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, QEMU Developers <qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, jordan.l.justen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ard Biesheuvel <ard.bie>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, justin.waters@timesys.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, Akshay Bhat <akshay.bhat@timesys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 02:04:24PM +0100, Fran=E7ois Revol wrote:
-> On 17/11/2015 23:14, Rob Herring wrote:
-> > On Mon, Nov 16, 2015 at 2:38 AM, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org=
-> wrote:
-> >>
-> >>
-> >> On 15/11/2015 03:07, Rob Herring wrote:
-> >>> We generally don't want DT docs to depend on other kernel documen=
-tation.
-> >>
-> >> DT docs do not contain a copy of the data sheets, either.  There i=
-s no
-> >> reason to say how to use the device (and even then, only doing so
-> >> partially) in the DT docs.
-> >=20
-> > The difference is datasheets apply to all OS's, kernel documentatio=
-n
-> > does not. In theory at least this could be used for other OS's, rig=
-ht?
->=20
-> Would be nice indeed, as it's part of their intended purpose.
->=20
-> For now we have to shoehorn things into linux-only stuff (like initrd=
-)
-> because well, nobody cares enough about NetBSD to compile U-Boot with
-> its internal API, so let alone adding custom Haiku code.
->=20
-> And of course, for things linux doesn't care about (like framebuffer
-> description) then we're stuck trying to guess where it's at and writi=
-ng
-> drivers for our bootloader.
->=20
-> So if at least people were considering they aren't the only users of
-> this, that'd make life better for everyone.
->=20
-> > Perhaps QEMU is the right place to thoroughly describe this and DT =
-and
-> > sysfs docs can refer to it.
->=20
-> The brilliant idea of FDT was that we could have a canonical source a=
-nd
-> blob for it where people could send patches, but of course Linux and =
-BSD
-> freaks disagreed, so you now find Linux-flavoured DTs for rPi and oth=
-er
-> things, as well as BSD versions.
->=20
-> Please, at least get the binding documentation for this unique and
-> usable for everyone!
-
-That would be 'docs/specs/fw_cfg.txt' in the QEMU source tree. I will
-avoid cut'n'pasting anything from there into either the proposed
-Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg (leaving only the
-sysfs specific bits in there), and also remove any redundant bits from
-Documentation/devicetree/bindings/arm/fw-cfg.txt.
-
-I'm inclined to add (in v5) a mention of 'qemu:docs/specs/fw_cfg.txt'
-to both the proposed fw_cfg sysfs doc file, and to the existing fw_cfg
-arm/dt node doc file, unless I get strong objections against doing so..=
-=2E :)
-
-Thanks,
---Gabriel
+QWRkIHN1cHBvcnQgZm9yIElubm9sdXggQ2hlTWVpIDEyIiBHMTIxWDEtTDAzIFhHQSBMVkRTIGRp
+c3BsYXkuCgpEYXRhc2hlZXQ6IGh0dHA6Ly93d3cuYXpkaXNwbGF5cy5jb20vUERGL0cxMjFYMS1M
+MDMucGRmClNpZ25lZC1vZmYtYnk6IEFrc2hheSBCaGF0IDxha3NoYXkuYmhhdEB0aW1lc3lzLmNv
+bT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGcxMjF4MS1sMDMudHh0
+ICB8ICA3ICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAg
+ICAgICAgICB8IDMxICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzgg
+aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZzEyMXgxLWwwMy50eHQKCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
+bHV4LGcxMjF4MS1sMDMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvaW5ub2x1eCxnMTIxeDEtbDAzLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NApp
+bmRleCAwMDAwMDAwLi42NDk3NDQ2Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxnMTIxeDEtbDAzLnR4dApA
+QCAtMCwwICsxLDcgQEAKK0lubm9sdXggQ29ycG9yYXRpb24gMTIuMSIgRzEyMVgxLUwwMyBYR0Eg
+KDEwMjR4NzY4KSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBh
+dGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCxnMTIxeDEtbDAzIgorCitUaGlzIGJpbmRpbmcgaXMg
+Y29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lm
+aWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IGY5N2I3M2UuLmQxODIxZjcgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTgzMiw2ICs4MzIsMzQgQEAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfZzEyMWkxX2wwMSA9IHsKIAl9LAogfTsKIAorc3RhdGlj
+IGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGlubm9sdXhfZzEyMXgxX2wwM19tb2RlID0g
+eworCS5jbG9jayA9IDY1MDAwLAorCS5oZGlzcGxheSA9IDEwMjQsCisJLmhzeW5jX3N0YXJ0ID0g
+MTAyNCArIDAsCisJLmhzeW5jX2VuZCA9IDEwMjQgKyAxLAorCS5odG90YWwgPSAxMDI0ICsgMCAr
+IDEgKyAzMjAsCisJLnZkaXNwbGF5ID0gNzY4LAorCS52c3luY19zdGFydCA9IDc2OCArIDM4LAor
+CS52c3luY19lbmQgPSA3NjggKyAzOCArIDEsCisJLnZ0b3RhbCA9IDc2OCArIDM4ICsgMSArIDAs
+CisJLnZyZWZyZXNoID0gNjAsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
+aW5ub2x1eF9nMTIxeDFfbDAzID0geworCS5tb2RlcyA9ICZpbm5vbHV4X2cxMjF4MV9sMDNfbW9k
+ZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gNiwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0g
+MjQ2LAorCQkuaGVpZ2h0ID0gMTg1LAorCX0sCisJLmRlbGF5ID0geworCQkuZW5hYmxlID0gMjAw
+LAorCQkudW5wcmVwYXJlID0gMjAwLAorCQkuZGlzYWJsZSA9IDQwMCwKKwl9LAorfTsKKwogc3Rh
+dGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGlubm9sdXhfbjExNmJnZV9tb2RlID0g
+ewogCS5jbG9jayA9IDc2NDIwLAogCS5oZGlzcGxheSA9IDEzNjYsCkBAIC0xMTU4LDYgKzExODYs
+OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtd
+ID0gewogCQkuY29tcGF0aWJsZSA9Imlubm9sdXgsZzEyMWkxLWwwMSIsCiAJCS5kYXRhID0gJmlu
+bm9sdXhfZzEyMWkxX2wwMQogCX0sIHsKKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCxnMTIxeDEt
+bDAzIiwKKwkJLmRhdGEgPSAmaW5ub2x1eF9nMTIxeDFfbDAzLAorCX0sIHsKIAkJLmNvbXBhdGli
+bGUgPSAiaW5ub2x1eCxuMTE2YmdlIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9uMTE2YmdlLAogCX0s
+IHsKLS0gCjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
