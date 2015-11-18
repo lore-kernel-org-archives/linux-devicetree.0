@@ -1,78 +1,45 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 0/5] Add reboot notifier driver for rockchip platform
-Date: Wed, 18 Nov 2015 17:47:24 +0800
-Message-ID: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v3 1/5] ARM: dts: rockchip: rk3288-veyron: rename pinctrl node reboot to reset
+Date: Wed, 18 Nov 2015 17:50:46 +0800
+Message-ID: <1447840246-19744-1-git-send-email-andy.yan@rock-chips.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, linux-rockchip@lists.infradead.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, khilman@linaro.org, treding@nvidia.com, wxt@rock-chips.com, sjg@chromium.org, benchan@google.com, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+rename pinctrl node reboot to reset to match it's lable name
 
-rockchip platform have a protocol to pass the kernel reboot
-mode to bootloader by some special registers when system reboot.
-By this way the bootloader can take different action according
-to the different kernel reboot mode, for example, command
-"reboot loader" will reboot the board to rockusb mode, this is
-a very convenient way to get the board enter download mode.
-And Android system also use this protocol to pass "recovery"=E3=80=81
-=E2=80=9Cfastboot=E2=80=9D reboot mode to bootloader. In upstream land,=
- We found
-tegra platform also use this mechanism.
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-Before this version, I have sent two Series, which can be found
-at [0] [1]
-[0] https://patchwork.kernel.org/patch/7140751/
-[1] https://patchwork.kernel.org/patch/7153531/
+---
 
 Changes in v3:
  - rename a pinctrl node in rk3288-veyron, the original name will be
    used in the incoming reboot notifier driver
- - add dt binding
- - move from mach-rockchip to drivers/soc/rockchip, as the tegra does
- - use dts pass the related register
- - add DT node
 
-Changes in v2:
-  - check cpu dt node
-  - remove a unnecessary of_put_node in function rockchip_get_pmu_regma=
-p
-  - fix a align issue
-  - use reboot_notifier instead of restart_handler
+Changes in v2: None
 
-Andy Yan (5):
-  ARM: dts: rockchip: rk3288-veyron: rename pinctrl node reboot to rese=
-t
-  dt-bindings: soc: add document for rockchip reboot notifier driver
-  soc: rockchip: add reboot notifier driver
-  ARM: dts: rockchip: add reboot node
-  ARM64: dts: rockchip: add reboot node
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../bindings/soc/rockchip/rockchip-reboot.txt      | 18 ++++
- arch/arm/boot/dts/rk3288-veyron.dtsi               |  2 +-
- arch/arm/boot/dts/rk3288.dtsi                      |  6 ++
- arch/arm/boot/dts/rk3xxx.dtsi                      |  6 ++
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  6 ++
- drivers/soc/rockchip/Kconfig                       |  7 ++
- drivers/soc/rockchip/Makefile                      |  1 +
- drivers/soc/rockchip/loader.h                      | 22 +++++
- drivers/soc/rockchip/reboot.c                      | 98 ++++++++++++++=
-++++++++
- 9 files changed, 165 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/soc/rockchip/rock=
-chip-reboot.txt
- create mode 100644 drivers/soc/rockchip/loader.h
- create mode 100644 drivers/soc/rockchip/reboot.c
-
---=20
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 2fa7a0d..292aaaf 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -495,7 +495,7 @@
+ 		};
+ 	};
+ 
+-	reboot {
++	reset {
+ 		ap_warm_reset_h: ap-warm-reset-h {
+ 			rockchip,pins = <RK_GPIO0 13 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+-- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
