@@ -1,79 +1,98 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: GPIO: Add gpio-initval
-Date: Wed, 18 Nov 2015 11:20:15 +0100
-Message-ID: <CACRpkdZFwdG7vGVncF9Y=sbpP0vhnU_EfLanTNL=HfU71gRNKw@mail.gmail.com>
-References: <1447754878-21099-1-git-send-email-mpa@pengutronix.de>
-	<1447754878-21099-2-git-send-email-mpa@pengutronix.de>
-	<20151117203542.GA7091@rob-hp-laptop>
+From: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH 02/13] xen/grant-table: Move xlated_setup_gnttab_pages
+ to common place
+Date: Wed, 18 Nov 2015 10:38:24 +0000
+Message-ID: <564C5520.5030103@citrix.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+	<1447754231-7772-3-git-send-email-shannon.zhao@linaro.org>
+	<564B4F80.2020402@citrix.com> <564BFF6C.3070208@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151117203542.GA7091@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Markus Pargmann <mpa@pengutronix.de>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564BFF6C.3070208-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 9:35 PM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Nov 17, 2015 at 11:07:57AM +0100, Markus Pargmann wrote:
->> Add a binding for GPIO initialization.
->
-> Some comments, but they are really more on the gpio hog. I must have
-> missed them.
+On 18/11/15 04:32, Shannon Zhao wrote:
+> On 2015/11/18 0:02, David Vrabel wrote:
+>> On 17/11/15 09:57, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>>> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>
+>>> Move xlated_setup_gnttab_pages to common place, so it can be reused by
+>>> ARM to setup grant table when booting with ACPI.
+>> [...]
+>>> --- a/drivers/xen/grant-table.c
+>>> +++ b/drivers/xen/grant-table.c
+>>> @@ -664,6 +664,55 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(gnttab_setup_auto_xlat_frames);
+>>>  
+>>> +int __init xlated_setup_gnttab_pages(void)
+>>> +{
+>>> +	struct page **pages;
+>>> +	xen_pfn_t *pfns;
+>>> +	void *vaddr;
+>>> +	int rc;
+>>> +	unsigned int i;
+>>> +	unsigned long nr_grant_frames = gnttab_max_grant_frames();
+>>> +
+>>> +	BUG_ON(nr_grant_frames == 0);
+>>> +	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
+>>> +	if (!pages)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	pfns = kcalloc(nr_grant_frames, sizeof(pfns[0]), GFP_KERNEL);
+>>> +	if (!pfns) {
+>>> +		kfree(pages);
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +	rc = alloc_xenballooned_pages(nr_grant_frames, pages, 0 /* lowmem */);
+>>> +	if (rc) {
+>>> +		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
+>>> +			nr_grant_frames, rc);
+>>> +		kfree(pages);
+>>> +		kfree(pfns);
+>>> +		return rc;
+>>> +	}
+>>> +	for (i = 0; i < nr_grant_frames; i++)
+>>> +		pfns[i] = page_to_pfn(pages[i]);
+>>> +
+>>> +	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
+>>> +	if (!vaddr) {
+>>> +		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
+>>> +			nr_grant_frames, rc);
+>>> +		free_xenballooned_pages(nr_grant_frames, pages);
+>>> +		kfree(pages);
+>>> +		kfree(pfns);
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +	kfree(pages);
+>>
+>> Can you move most of this function into drivers/xen/xlate_mmu.c in a
+>> function like:
+>>
+>> /**
+>>  * xen_xlate_map_ballooned_pages - map a new set of ballooned pages
+>>  * count: number of GFNs.
+>>  * pages: returns the array of (now) ballooned pages.
+>>  * gfns: returns the array of corresponding GFNs.
+>>  * virt: returns the virtual address of the mapped region.
+>>  *
+>>  * This allocate a set of ballooned pages and maps them into the
+>>  * kernel's address space.
+>>  */
+>> void *xen_xlate_map_ballooned_pages(
+>>     unsigned int count,
+>>     struct page **pages,
+>>     xen_pfn_t **gfns);
+>>
+> Sure, but the parameter "pages" is not necessary I think, since the
+> pages has been freed in the function and it doesn't need in
+> xen_auto_xlat_grant_frames either. Right?
 
-They are already merged, and in use :(
+Yes.
 
->> +Optional properties:
->> +- line-name:  The GPIO label name. If not present the node name is used.
->
-> We already have "label" for this purpose.
-
-I would rather say we already have another instance of "line-name"
-for this purpose. See
-Documentation/devicetree/bindings/gpio/gpio.txt
-
-"label" was not chosen because it's a Linuxism (that is what the internal
-API is using) and not to the point.
-
-I like the clear "line" specifier over "pin" etc since GPIOs can be
-chip-internal and what not.
-
->> + The following two options are mutually exclusive. One of them should be
->> + specified, but not both:
->> +- gpio-hog:   A property specifying that this child node represent a GPIO hog.
->> +- gpio-initval: This GPIO should be initialized to the specified configuration.
->> +
->> + The following three options are mutually exclusive. They change the setting of
->> + the GPIO pin. One of them should be specified:
->>  - input:      A property specifying to set the GPIO direction as input.
->>  - output-low  A property specifying to set the GPIO direction as output with
->>             the value low.
->>  - output-high A property specifying to set the GPIO direction as output with
->>             the value high.
->
-> If they are mutually exclusive, then it should just be one property with
-> values. That is much more simple to validate.
->
-> But none of this is really even needed. We can do all this with existing
-> bindings. Most gpio controllers use 2 cells and the 2nd cell was
-> reserved for something like this. Simply adding a -gpios property in the
-> gpio controller node would do the job:
->
-> init-gpios = <&self n (GPIO_ACTIVE_HIGH | GPIO_OUTPUT)>;
-> hog-gpios = <&self m GPIO_INPUT>;
->
-> Perhaps we don't want to use GPIO_ACTIVE_x here, but we have 31 more
-> free bits to use.
-
-I prefer if the flags to be used for characteristics of the line rather
-than driving it in any way. Anyway the input/output-low/output-high is
-already merged, and in use for hogs.
-
-We looked at using -gpios in a self-referential manner, but that
-made it impossible to name the lines, and that is a desired
-property. Hogged lines need names so we can figure out who is
-using them during debug etc. It also makes the DT more
-human-readable.
-
-Yours,
-Linus Walleij
+David
