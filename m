@@ -1,66 +1,85 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] clk: add generic driver for fixed rate clock
-Date: Wed, 18 Nov 2015 22:43:31 +0100
-Message-ID: <CAMuHMdX3ZYx2UTspQxHdcmVPEvz-hPQm4NhnwLC-y6qA4ciFyw@mail.gmail.com>
-References: <1378010420-20031-1-git-send-email-stefan.kristiansson@saunalahti.fi>
-	<CAMuHMdXhxuawY-V+35YoeZWZ3jZ-Vj_MzuRDGBfDD9i9iy=oGA@mail.gmail.com>
-	<20151118203433.GE32672@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: doc: dwc3-xilinx: Add devicetree bindings
+Date: Wed, 18 Nov 2015 16:53:31 -0600
+Message-ID: <20151118225331.GA22325@rob-hp-laptop>
+References: <1447851031-16241-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151118203433.GE32672@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447851031-16241-1-git-send-email-sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Wed, Nov 18, 2015 at 06:20:31PM +0530, Subbaraya Sundeep Bhatta wrote:
+> This patch adds binding doc for Xilinx DWC3 glue driver.
+> 
+> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-On Wed, Nov 18, 2015 at 9:34 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 11/17, Geert Uytterhoeven wrote:
->> (quoting the full driver, as it predates linux-clk)
->>
->> On Sun, Sep 1, 2013 at 6:40 AM, Stefan Kristiansson
->> <stefan.kristiansson@saunalahti.fi> wrote:
->> > This adds a simple driver with the only purpose to initialise
->> > the fixed rate clock.
->> > This is useful for systems that do not wish to use seperate init
->> > code for the fixed rate clock init, but rather only rely on a
->> > device tree description of it.
->> >
->> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
->>
->> Thanks, this is still very useful!
->>
->> I stumbled across this old patch while trying to instantiate a fixed rate
->> clock from a DT overlay.
->> Without this, the clock is never instantiated, as drivers/clk/clk-fixed-rate.c
->> uses CLK_OF_DECLARE() :-( With your driver, it works as expected
->> (after fixing the modpost complaint, cfr. below).
->>
->> However, I think that instead of creating a new driver, you should just add
->> the meat of clk-generic-fixed.c to clk-fixed-rate.c.
->
-> Hm... what happens when of_clk_init() runs and instantiates the
-> clock, and then of_platform_populate() runs and creates the clock
-> again? The platform device probe fails because the framework
-> checks to make sure two clocks don't have the same name? I guess
-> that's going to work, but it doesn't make me feel good.
+I really dislike how the DWC3 binding has been done. The sub-node here 
+is pointless. The only thing the outer node does is add clocks which 
+should simply be part of the DWC3 node. Presumably the IP block needs 
+some clocks...
 
-My DTS does have other clocks that are compatible with "fixed-clock"
-and I didn't notice any ill behavior. Perhaps the driver core knows the
-node has already been bound to something, and thus no longer tries
-to bind it to a platform driver?
+Anyway, it's self-contained within the DWC3, so I won't make you clean 
+up the mess.
 
-I'll double-check that later...
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+> ---
+>  .../devicetree/bindings/usb/dwc3-xilinx.txt        | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt b/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+> new file mode 100644
+> index 0000000..30361b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+> @@ -0,0 +1,33 @@
+> +Xilinx SuperSpeed DWC3 USB SoC controller
+> +
+> +Required properties:
+> +- compatible:	Should contain "xlnx,zynqmp-dwc3"
+> +- clocks:	A list of phandles for the clocks listed in clock-names
+> +- clock-names:	Should contain the following:
+> +  "bus_clk"	 Master/Core clock, have to be >= 125 MHz for SS
+> +		 operation and >= 60MHz for HS operation
+> +
+> +  "ref_clk"	 Clock source to core during PHY power down
+> +
+> +Required child node:
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in dwc3.txt.
+> +
+> +Example device node:
+> +
+> +		usb@0 {
+> +			#address-cells = <0x2>;
+> +			#size-cells = <0x1>;
+> +			status = "okay";
+> +			compatible = "xlnx,zynqmp-dwc3";
+> +			clock-names = "bus_clk" "ref_clk";
+> +			clocks = <&clk125>, <&clk125>;
+> +			ranges;
+> +
+> +			dwc3@fe200000 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0x0 0xfe200000 0x40000>;
+> +				interrupts = <0x0 0x41 0x4>;
+> +				dr_mode = "host";
+> +			};
+> +		};
+> -- 
+> 2.1.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
