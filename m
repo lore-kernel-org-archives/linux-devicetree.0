@@ -1,69 +1,30 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH] ARM: dts: enable PCIe PHY support for Cygnus
-Date: Wed, 18 Nov 2015 10:16:59 -0800
-Message-ID: <1447870619-2828-2-git-send-email-rjui@broadcom.com>
-References: <1447870619-2828-1-git-send-email-rjui@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 03/11] dts: pinctrl: Add GPIO to Pinctrl pin mapping in
+ DT
+Date: Wed, 18 Nov 2015 10:39:30 -0800
+Message-ID: <564CC5E2.2070809@gmail.com>
+References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com> <1445233398-27129-4-git-send-email-pramodku@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447870619-2828-1-git-send-email-rjui@broadcom.com>
+In-Reply-To: <1445233398-27129-4-git-send-email-pramodku@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+To: Pramod Kumar <pramodku@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable PCIe PHY for both PCIe root complexes on Cygnus
+On 18/10/15 22:43, Pramod Kumar wrote:
+> ASIU gpio controller's pins are muxed with pin-cntroller.
+> Add this mapping through property "gpio-ranges".
+> 
+> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Applied to devicetree/next, since there was a bit of restructuring, I
+had to manually apply it, please verify the resolution looks correct to you.
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 2778533..5df5300 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -91,6 +91,21 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-+		pcie_phy: phy@0301d0a0 {
-+			compatible = "brcm,cygnus-pcie-phy";
-+			reg = <0x0301d0a0 0x14>;
-+
-+			pcie0_phy: phy@0 {
-+				reg = <0>;
-+				#phy-cells = <0>;
-+			};
-+
-+			pcie1_phy: phy@1 {
-+				reg = <1>;
-+				#phy-cells = <0>;
-+			};
-+		};
-+
- 		pinctrl: pinctrl@0x0301d0c8 {
- 			compatible = "brcm,cygnus-pinmux";
- 			reg = <0x0301d0c8 0x30>,
-@@ -161,6 +176,9 @@
- 			ranges = <0x81000000 0 0	  0x28000000 0 0x00010000
- 				  0x82000000 0 0x20000000 0x20000000 0 0x04000000>;
- 
-+			phys = <&pcie0_phy>;
-+			phy-names = "pcie-phy";
-+
- 			status = "disabled";
- 		};
- 
-@@ -182,6 +200,9 @@
- 			ranges = <0x81000000 0 0	  0x48000000 0 0x00010000
- 				  0x82000000 0 0x40000000 0x40000000 0 0x04000000>;
- 
-+			phys = <&pcie1_phy>;
-+			phy-names = "pcie-phy";
-+
- 			status = "disabled";
- 		};
- 
+Thanks!
 -- 
-1.9.1
+Florian
