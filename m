@@ -1,86 +1,118 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: device_node lifetime (was: Re: [PATCH 1/7] phy: brcmstb-sata: add
- missing of_node_put)
-Date: Wed, 18 Nov 2015 11:05:00 -0800
-Message-ID: <20151118190500.GE140057@google.com>
-References: <1447673600-8881-1-git-send-email-Julia.Lawall@lip6.fr>
- <1447673600-8881-2-git-send-email-Julia.Lawall@lip6.fr>
- <20151117013830.GV8456@google.com>
- <alpine.DEB.2.02.1511170711340.2045@localhost6.localdomain6>
- <20151117174430.GA8456@google.com>
- <alpine.DEB.2.10.1511171846120.2455@hadrien>
- <20151117183036.GF8456@google.com>
- <alpine.DEB.2.02.1511172327030.2121@localhost6.localdomain6>
+Subject: Re: [PATCH 3/3] doc: dt: mtd: stop referring to driver code for
+ spi-nor IDs
+Date: Wed, 18 Nov 2015 11:43:40 -0800
+Message-ID: <20151118194340.GF140057@google.com>
+References: <1447713292-91525-1-git-send-email-computersforpeace@gmail.com>
+ <1447713292-91525-4-git-send-email-computersforpeace@gmail.com>
+ <564B3407.2020403@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1511172327030.2121-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+In-Reply-To: <564B3407.2020403-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(changing subject, add devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org)
+Hi,
 
-On Tue, Nov 17, 2015 at 11:33:25PM +0100, Julia Lawall wrote:
-> On Tue, 17 Nov 2015, Brian Norris wrote:
-> > On Tue, Nov 17, 2015 at 06:48:39PM +0100, Julia Lawall wrote:
-> > > Is this something that should be checked for elsewhere?
+On Tue, Nov 17, 2015 at 11:04:55AM -0300, Javier Martinez Canillas wrote:
+> On 11/16/2015 07:34 PM, Brian Norris wrote:
+> > diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> > index 2bee68103b01..2c91c03e7eb0 100644
+> > --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> > @@ -1,15 +1,61 @@
+> > -* MTD SPI driver for ST M25Pxx (and similar) serial flash chips
+> > +* SPI NOR flash: ST M25Pxx (and similar) serial flash chips
+> >  
+> >  Required properties:
+> >  - #address-cells, #size-cells : Must be present if the device has sub-nodes
+> >    representing partitions.
+> >  - compatible : May include a device-specific string consisting of the
+> > -               manufacturer and name of the chip. Bear in mind the DT binding
+> > -               is not Linux-only, but in case of Linux, see the "m25p_ids"
+> > -               table in drivers/mtd/devices/m25p80.c for the list of supported
+> > -               chips.
+> > +               manufacturer and name of the chip. A list of supported chip
+> > +               names follows.
+> 
+> Here says that the compatible string consists of manufacturer and name...
+> 
+> >                 Must also include "jedec,spi-nor" for any SPI NOR flash that can
+> >                 be identified by the JEDEC READ ID opcode (0x9F).
+> > +
+> > +               Supported chip names:
+> > +                 at25df321a
+> > +                 at25df641
+[...]
+> +
+> 
+> ... but the entries in the list don't have a manufacturer. I know this is
+> due backward compatibility because as we discussed in the thread mentioned
+> in the cover letter, the SPI core didn't use the manufacturer and that
+> implementation detail leaked into the DTBs.
+> 
+> But I think that either only the correct list with vendor should be added
+> to the DT binding docs (but make sure that backward compatibility in the
+> driver and SPI core is maintained) or both the wrong and correct list should
+> be documented and the former be marked as deprecated.
+
+First, note that the list says "Supported chip *names*" (not "Supported
+compatible values"). It does not attempt to specify the full compatible
+value, and that's intentional.
+
+Second, I believe it is hard to determine after-the-fact what all the
+reasonable pairings of vendors might be. For some of these parts,
+various companies have produced parts under the same chip ID -- usually
+because one company bought another. For most chips though, this probably
+isn't a problem, so I could probably pick reasonable vendor pairings.
+
+IOW, there isn't just "a wrong" and "a correct" list; there's a
+(probably?) correct list and an enormous space of "I don't know what
+people might have put here" list. It's nearly unbounded, but even a
+reasonable list might get pretty large. So in practice, we'd essentially
+be sacrificing completeness for...what reason?
+
+> > +               The following chip names have been used historically to
+> > +               designate quirky versions of flash chips that do not support the
+> > +               JEDEC READ ID opcode (0x9F):
+> > +                 m25p05-nonjedec
+> > +                 m25p10-nonjedec
+> > +                 m25p20-nonjedec
+> > +                 m25p40-nonjedec
+> > +                 m25p80-nonjedec
+> > +                 m25p16-nonjedec
+> > +                 m25p32-nonjedec
+> > +                 m25p64-nonjedec
+> > +                 m25p128-nonjedec
+> > +
+> 
+> Same here, I would prefer if the DT binding make it clear that not having
+> a vendor is wrong and is only documented to maintain backward compatibility.
+
+The doc never says anything about not including the vendor. It says
+
+  "May include a device-specific string consisting of the manufacturer
+  and name of the chip"
+
+and it lists the chip names. So if someone is actually following the
+documentation, they will include a vendor. The vendor names are not
+listed because they're really not relevant to the implementation. But I
+could try to include them.
+
+> >  - reg : Chip-Select number
+> >  - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
+> >  
 > > 
-> > I expect the same sort of problem shows up plenty of other places. I
-> > don't think many people use CONFIG_OF_DYNAMIC, so the effects of these
-> > failures probably aren't felt by many.
-> 
-> I tried the following semantic patch:
-> 
-> @@
-> struct device_node *e;
-> expression e1;
-> identifier fld;
-> @@
-> 
->  ... when != of_node_get(...)
-> *(<+...e1->fld...+>) = e
->  ... when != of_node_get(...)
->  return e1;
-> 
-> basically, this says that a structure field is initilized to a device node 
-> value, the structure is returned by the containing function, and the 
-> containing function contains no of_node_get at all.  Certainly this is 
-> quite constrained, but it does produce a number of examples.
-> 
-> I looked at a few of them:
-> 
-> drivers/clk/ingenic/cgu.c, ingenic_cgu_new
-> clk/pistachio/clk.c, pistachio_clk_alloc_provider
 
-It looks like the clock core (drivers/clk/clk.c) initially grabs the clk
-provider node in of_clk_init(), then drops it after it's initialized,
-but most of these providers use of_clk_add_provider(), which seems to
-manage the device_node lifetime for the user. So I think these are OK.
-
-> drivers/mfd/syscon.c, of_syscon_register
-
-This one looks potentially suspect. Syscon nodes aren't usually directly
-managed by a single driver, and the device_node pointer is used for
-lookups later...so I think it should keep a kref, and it doesn't.
-
-> drivers/of/pdt.c, function of_pdt_create_node
-
-Not real sure about this one.
-
-> Any idea whether these need of_node_get?  In all cases the device node 
-> value comes in as a parameter.
-
-I'm really not an expert on this stuff. I just saw a potential problem
-that I happen to be looking at in other subsystems, and I wanted to know
-what others thought. I think this discussion should include the DT folks
-and the subsystems in question. For one, I'm as interested as anyone in
-getting this todo clarified:
-
-Documentation/devicetree/todo.txt
-- Document node lifecycle for CONFIG_OF_DYNAMIC
+So, what makes sense? I can make a separate list of vendors (my
+preference), or even try to pair up vendors with chip names (even if
+it's sometimes an N:1 relationship). But I don't see that really buying
+us much, since the implementation never has (and probably never will)
+enforce this. What do you think?
 
 Regards,
 Brian
