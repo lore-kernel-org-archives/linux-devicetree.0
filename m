@@ -1,92 +1,102 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/2] usb: doc: dwc3-xilinx: Add devicetree bindings
-Date: Wed, 18 Nov 2015 17:02:53 -0600
-Message-ID: <87ziyagbc2.fsf@saruman.tx.rr.com>
-References: <1447851031-16241-1-git-send-email-sbhatta@xilinx.com> <20151118225331.GA22325@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc2: add support of hi6220
+Date: Wed, 18 Nov 2015 17:03:24 -0600
+Message-ID: <20151118230324.GA9788@rob-hp-laptop>
+References: <1447832387-27549-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
-	protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151118225331.GA22325@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447832387-27549-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 18, 2015 at 03:39:47PM +0800, Zhangfei Gao wrote:
+> Support hisilicon,hi6220-usb for HiKey board
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
 
+For the binding:
 
-Hi,
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob Herring <robh@kernel.org> writes:
-> On Wed, Nov 18, 2015 at 06:20:31PM +0530, Subbaraya Sundeep Bhatta wrote:
->> This patch adds binding doc for Xilinx DWC3 glue driver.
->>=20
->> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
->
-> I really dislike how the DWC3 binding has been done. The sub-node here=20
-> is pointless. The only thing the outer node does is add clocks which=20
-> should simply be part of the DWC3 node. Presumably the IP block needs=20
-> some clocks...
->
-> Anyway, it's self-contained within the DWC3, so I won't make you clean=20
-> up the mess.
-
-heh, it's definitely not pointless. We get a lot of free goodies by
-doing it that way. I'm just not going to repeat it once again. But in
-summary:
-
-a) we force people to write glue layers for *only* their HW specific
-details
-
-b) there's really no way to abuse dwc3 core because there's no symbol
-exported from dwc3 core to glue
-
-c) PM (both system sleep and runtime) becomes a lot simpler with core
-only caring about what PM details delivered by SNPS (e.g. Hibernation
-mode from DWC3) and glue only has to consider the SoC integration parts
-of PM (for OMAP that would be PRCM details, hwmod, etc).
-
-I'm definitely not going to change dwc3 because it has made my life a
-lot saner. Definitely a lot saner than MUSB. Besides, DTS is supposed to
-describe the HW and that's, really, how the HW is.
-
-There's a piece of HW which is somewhat platform agnostic and delivered
-by SNPS as a black box (SNPS customers don't touch SNPS RTL) and there's
-another piece of HW which bridges this dwc3 to the platform specific
-details and integration context of the platform (for OMAP that would the
-SYSCONFIG/SYSSTATUS registers, Clock autogating, PRCM, etc, etc etc).
-
-So you _do_ in fact, have two separate pieces of HW which are SW visible
-and controllable independently. They each have their own IRQs (though in
-some SoCs they share the same line), they're own address space, yada
-yada yada.
-
-cheers
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWTQOeAAoJEIaOsuA1yqREDD8QALTt9u5rdbFM53ahZdG22gl5
-6kNl8oSay5LZfeGBVmbBkBUzcVFionZxusLYRasavz/MAhorMvXpQwDaJnS8lP8b
-Rpxv/21R9c0aDuAlGlDbDI8IlFyq1pN3wzQFqO2b2MIhZ1ZfrfOvliTIkvh1Efxn
-EUblv9YTjiQiDZmJhKnqRb+Rp7w0WY+Jm5DmkZY/WUz/TtxDNGRVsqmMsqjSizIC
-eKBDOd3Y5KpBb79i9JcuusoTYVJy3kctM8pA7HjeVWBac7oHft1OrnGudye7MLNJ
-nV4zACJwlbQFBT5iaERLc0SX2oun4CbuVhXoLq/fekumtOdObPHuwfmsuK+bk9pQ
-ypJ4YOY1QJPRekPHu3YkLWuWe1MUlO/1NApW8y/KbQgtxxx9aGst/gedpPWrFI3+
-7aATWSqIr9yDboLiotQ0oO6RfD3Rqj2hhfHSCNMKWaqEu75Ygj2nkJ40HitTfRJv
-DOqugXdLUvDyLE0zvyLmCyGUOlzioc2EJK5JoFRdJKIeDfWIw8pl37SgoIlbgcSZ
-ICZU/vDntq1OjVP5W+cAdOieJwSnA67pHSdDiLOG8deHfw/bj24wZIx6MxY5r+Jx
-JaDuOqvQ90kDkR/Pr3QhnQ+pgnTCv6KZxS6SiX0muMoqsQm01/RtCuLuWI+aV+1c
-VevxUBGUuEJX5cAJ6m1D
-=a2Jf
------END PGP SIGNATURE-----
---=-=-=--
+>  drivers/usb/dwc2/platform.c                    | 32 ++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index fd132cb..2213682 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -4,6 +4,7 @@ Platform DesignWare HS OTG USB 2.0 controller
+>  Required properties:
+>  - compatible : One of:
+>    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
+> +  - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
+>    - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+>    - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
+>    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+> index 5859b0f..a5cb1bf 100644
+> --- a/drivers/usb/dwc2/platform.c
+> +++ b/drivers/usb/dwc2/platform.c
+> @@ -54,6 +54,37 @@
+>  
+>  static const char dwc2_driver_name[] = "dwc2";
+>  
+> +static const struct dwc2_core_params params_hi6220 = {
+> +	.otg_cap			= 2,	/* No HNP/SRP capable */
+> +	.otg_ver			= 0,	/* 1.3 */
+> +	.dma_enable			= 1,
+> +	.dma_desc_enable		= 0,
+> +	.speed				= 0,	/* High Speed */
+> +	.enable_dynamic_fifo		= 1,
+> +	.en_multiple_tx_fifo		= 1,
+> +	.host_rx_fifo_size		= 512,
+> +	.host_nperio_tx_fifo_size	= 512,
+> +	.host_perio_tx_fifo_size	= 512,
+> +	.max_transfer_size		= 65535,
+> +	.max_packet_count		= 511,
+> +	.host_channels			= 16,
+> +	.phy_type			= 1,	/* UTMI */
+> +	.phy_utmi_width			= 8,
+> +	.phy_ulpi_ddr			= 0,	/* Single */
+> +	.phy_ulpi_ext_vbus		= 0,
+> +	.i2c_enable			= 0,
+> +	.ulpi_fs_ls			= 0,
+> +	.host_support_fs_ls_low_power	= 0,
+> +	.host_ls_low_power_phy_clk	= 0,	/* 48 MHz */
+> +	.ts_dline			= 0,
+> +	.reload_ctl			= 0,
+> +	.ahbcfg				= GAHBCFG_HBSTLEN_INCR16 <<
+> +					  GAHBCFG_HBSTLEN_SHIFT,
+> +	.uframe_sched			= 0,
+> +	.external_id_pin_ctl		= -1,
+> +	.hibernation			= -1,
+> +};
+> +
+>  static const struct dwc2_core_params params_bcm2835 = {
+>  	.otg_cap			= 0,	/* HNP/SRP capable */
+>  	.otg_ver			= 0,	/* 1.3 */
+> @@ -282,6 +313,7 @@ static int dwc2_driver_remove(struct platform_device *dev)
+>  
+>  static const struct of_device_id dwc2_of_match_table[] = {
+>  	{ .compatible = "brcm,bcm2835-usb", .data = &params_bcm2835 },
+> +	{ .compatible = "hisilicon,hi6220-usb", .data = &params_hi6220 },
+>  	{ .compatible = "rockchip,rk3066-usb", .data = &params_rk3066 },
+>  	{ .compatible = "snps,dwc2", .data = NULL },
+>  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
