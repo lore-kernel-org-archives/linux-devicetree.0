@@ -1,98 +1,58 @@
-From: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH 02/13] xen/grant-table: Move xlated_setup_gnttab_pages
- to common place
-Date: Wed, 18 Nov 2015 10:38:24 +0000
-Message-ID: <564C5520.5030103@citrix.com>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
-	<1447754231-7772-3-git-send-email-shannon.zhao@linaro.org>
-	<564B4F80.2020402@citrix.com> <564BFF6C.3070208@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564BFF6C.3070208-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: [PATCH] of: Fix comparison of reserved memory regions
+Date: Wed, 18 Nov 2015 21:46:38 +1100
+Message-ID: <1447843598-9355-1-git-send-email-mpe@ellerman.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/11/15 04:32, Shannon Zhao wrote:
-> On 2015/11/18 0:02, David Vrabel wrote:
->> On 17/11/15 09:57, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->>> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>> Move xlated_setup_gnttab_pages to common place, so it can be reused by
->>> ARM to setup grant table when booting with ACPI.
->> [...]
->>> --- a/drivers/xen/grant-table.c
->>> +++ b/drivers/xen/grant-table.c
->>> @@ -664,6 +664,55 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
->>>  }
->>>  EXPORT_SYMBOL_GPL(gnttab_setup_auto_xlat_frames);
->>>  
->>> +int __init xlated_setup_gnttab_pages(void)
->>> +{
->>> +	struct page **pages;
->>> +	xen_pfn_t *pfns;
->>> +	void *vaddr;
->>> +	int rc;
->>> +	unsigned int i;
->>> +	unsigned long nr_grant_frames = gnttab_max_grant_frames();
->>> +
->>> +	BUG_ON(nr_grant_frames == 0);
->>> +	pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
->>> +	if (!pages)
->>> +		return -ENOMEM;
->>> +
->>> +	pfns = kcalloc(nr_grant_frames, sizeof(pfns[0]), GFP_KERNEL);
->>> +	if (!pfns) {
->>> +		kfree(pages);
->>> +		return -ENOMEM;
->>> +	}
->>> +	rc = alloc_xenballooned_pages(nr_grant_frames, pages, 0 /* lowmem */);
->>> +	if (rc) {
->>> +		pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
->>> +			nr_grant_frames, rc);
->>> +		kfree(pages);
->>> +		kfree(pfns);
->>> +		return rc;
->>> +	}
->>> +	for (i = 0; i < nr_grant_frames; i++)
->>> +		pfns[i] = page_to_pfn(pages[i]);
->>> +
->>> +	vaddr = vmap(pages, nr_grant_frames, 0, PAGE_KERNEL);
->>> +	if (!vaddr) {
->>> +		pr_warn("%s Couldn't map %ld pfns rc:%d\n", __func__,
->>> +			nr_grant_frames, rc);
->>> +		free_xenballooned_pages(nr_grant_frames, pages);
->>> +		kfree(pages);
->>> +		kfree(pfns);
->>> +		return -ENOMEM;
->>> +	}
->>> +	kfree(pages);
->>
->> Can you move most of this function into drivers/xen/xlate_mmu.c in a
->> function like:
->>
->> /**
->>  * xen_xlate_map_ballooned_pages - map a new set of ballooned pages
->>  * count: number of GFNs.
->>  * pages: returns the array of (now) ballooned pages.
->>  * gfns: returns the array of corresponding GFNs.
->>  * virt: returns the virtual address of the mapped region.
->>  *
->>  * This allocate a set of ballooned pages and maps them into the
->>  * kernel's address space.
->>  */
->> void *xen_xlate_map_ballooned_pages(
->>     unsigned int count,
->>     struct page **pages,
->>     xen_pfn_t **gfns);
->>
-> Sure, but the parameter "pages" is not necessary I think, since the
-> pages has been freed in the function and it doesn't need in
-> xen_auto_xlat_grant_frames either. Right?
+In order to check for overlapping reserved memory regions, we first need
+to sort the array of memory regions. This is implemented using sort(),
+and a custom comparison function __rmem_cmp().
 
-Yes.
+Unfortunatley __rmem_cmp() doesn't work in all cases. Because the two
+base values are phys_addr_t, they may be u64 on some platforms, in which
+case subtracting one from the other and then (implicitly) casting to int
+does not give us the -ve/0/+ve value we need.
 
-David
+This leads to incorrect reports about overlaps, eg:
+
+  ibm,slw-image@1ffe600000 (0x0000001ffe600000--0x0000001ffe700000) overlaps with
+  ibm,firmware-allocs-memory@1000000000 (0x0000001000000000--0x0000001000dc0200)
+
+Fix it by just doing the standard double if and return 0 logic.
+
+Fixes: ae1add247bf8 ("of: Check for overlap in reserved memory regions")
+Signed-off-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+---
+ drivers/of/of_reserved_mem.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index be77e75c587d..1a3556a9e9ea 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -206,7 +206,13 @@ static int __init __rmem_cmp(const void *a, const void *b)
+ {
+ 	const struct reserved_mem *ra = a, *rb = b;
+ 
+-	return ra->base - rb->base;
++	if (ra->base < rb->base)
++		return -1;
++
++	if (ra->base > rb->base)
++		return 1;
++
++	return 0;
+ }
+ 
+ static void __init __rmem_check_for_overlap(void)
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
