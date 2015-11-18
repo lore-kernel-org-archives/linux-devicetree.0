@@ -1,36 +1,57 @@
-From: Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH 06/13] Xen: ARM: Add support for mapping amba
- device mmio
-Date: Wed, 18 Nov 2015 12:27:43 +0000
-Message-ID: <564C6EBF.7010105@citrix.com>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
- <1447754231-7772-7-git-send-email-shannon.zhao@linaro.org>
- <20151117144040.GI3003@char.us.oracle.com> <564C14CA.9080601@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564C14CA.9080601-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: shmobile: alt: add I2C1 DT support
+Date: Wed, 18 Nov 2015 13:51:06 +0100
+Message-ID: <1447851067-8214-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1447851067-8214-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447851067-8214-1-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/11/15 06:03, Shannon Zhao wrote:
->>
->> What about the removal of a bus device? No need to handle that?
->>
-> I have thought about removal before. I think there is little(or no)
-> chance for AMBA and platform bus devices to be removed. It's not like
-> the PCI devices which will be hot-unplug.
-> Maybe I'm not right. If so, it's fine to add a case to handle the removal.
+Defines the board-dependent part of the I2C1 device.
 
-What about the platform device passthrough case?
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7794-alt.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-In anycase, if the AMBA platform provides a removal method, there is
-harmless to implement it.
-
-Regards,
-
+diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+index e7c9455..88ed017 100644
+--- a/arch/arm/boot/dts/r8a7794-alt.dts
++++ b/arch/arm/boot/dts/r8a7794-alt.dts
+@@ -115,6 +115,11 @@
+ 		renesas,groups = "eth_link_b", "eth_mdio_b", "eth_rmii_b";
+ 		renesas,function = "eth";
+ 	};
++
++	i2c1_pins: i2c1 {
++		renesas,groups = "i2c1";
++		renesas,function = "i2c1";
++	};
+ };
+ 
+ &cmt0 {
+@@ -134,6 +139,14 @@
+ 	};
+ };
+ 
++&i2c1 {
++	pinctrl-0 = <&i2c1_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++};
++
+ &scif2 {
+ 	status = "okay";
+ };
 -- 
-Julien Grall
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
