@@ -1,77 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: disable arm twd and global
- timer's nodes
-Date: Wed, 18 Nov 2015 14:15:38 +0000
-Message-ID: <20151118141537.GC10644@leverpostej>
-References: <1447855315-419-1-git-send-email-grygorii.strashko@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 1/5] ARM: dts: rockchip: rk3288-veyron: rename pinctrl
+ node reboot to reset
+Date: Wed, 18 Nov 2015 17:18:33 +0300
+Message-ID: <564C88B9.3060109@cogentembedded.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <1447840246-19744-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447855315-419-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, slash.tmp-GANU6spQydw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447840246-19744-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>, heiko@sntech.de, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, benchan@google.com, sjg@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, treding@nvidia.com, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 04:01:55PM +0200, Grygorii Strashko wrote:
-> Keep ARM TWD and Global timer's nodes disabled by default - if someone
-> would like to use them then those nodes have to be enabled explicitly
-> in board file.
-> 
-> The reason for this change is:
-> - ARM TWD is not always-on timer on am437x and it will stop in low
->   CPUIdle states and, therefore, broadcast timer has to configured
->   properly if CPU_IDLE=y.
-> - ARM Global timer is not always-on timer on am437x and it can't be
->   used as clocksource device if CPU_IDLE=y.
+Hello.
 
-I don't understand. What timer do you use in the absence of a TWD, and
-if it is better why is it not used even if TWD is present?
+On 11/18/2015 12:50 PM, Andy Yan wrote:
 
-> - ARM Global timer driver doesn't support CPUfreq now.
+> rename pinctrl node reboot to reset to match it's lable name
 
-Surely that should be fixed in the driver (e.g. make it fail to probe if
-CPUfreq is present)? It's broken for any other users too...
+    Label? BTW, I'm not seeing it on this node...
 
-Mark.
-
-> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>
 > ---
->  arch/arm/boot/dts/am4372.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index d83ff9c..11376e3 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -75,6 +75,7 @@
->  		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
->  		interrupt-parent = <&gic>;
->  		clocks = <&dpll_mpu_m2_ck>;
-> +		status = "disabled";
->  	};
->  
->  	local_timer: timer@48240600 {
-> @@ -83,6 +84,7 @@
->  		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
->  		interrupt-parent = <&gic>;
->  		clocks = <&dpll_mpu_m2_ck>;
-> +		status = "disabled";
->  	};
->  
->  	l2-cache-controller@48242000 {
-> -- 
-> 2.6.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Changes in v3:
+>   - rename a pinctrl node in rk3288-veyron, the original name will be
+>     used in the incoming reboot notifier driver
+>
+> Changes in v2: None
+>
+>   arch/arm/boot/dts/rk3288-veyron.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> index 2fa7a0d..292aaaf 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> @@ -495,7 +495,7 @@
+>   		};
+>   	};
+>
+> -	reboot {
+> +	reset {
+>   		ap_warm_reset_h: ap-warm-reset-h {
+>   			rockchip,pins = <RK_GPIO0 13 RK_FUNC_GPIO &pcfg_pull_none>;
+>   		};
+
+MBR, Sergei
