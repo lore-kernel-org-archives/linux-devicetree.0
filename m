@@ -1,49 +1,38 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 02/13] dmaengine: Introduce
- dma_request_slave_channel_compat_reason()
-Date: Wed, 18 Nov 2015 21:36:18 +0530
-Message-ID: <20151118160618.GV25173@localhost>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
- <6358656.jIv3GGCCXu@wuerfel>
- <CAHp75VeZFXp9i_zz7CBkVQVPGQxuzYk9AbWbbbn33r8YX3LCdw@mail.gmail.com>
- <8215351.e99Q2vhQ5T@wuerfel>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: Implement CONFIG_CMDLINE_EXTEND
+Date: Wed, 18 Nov 2015 10:09:31 -0600
+Message-ID: <CAL_JsqLiXQsjf_Op_MtHDM_4t-Nz1fK8KRPoFi1e+ftdjLZJ2g@mail.gmail.com>
+References: <1447838885-9888-1-git-send-email-p.fedin@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <8215351.e99Q2vhQ5T@wuerfel>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-crypto <linux-crypto@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447838885-9888-1-git-send-email-p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Walker <danielwa-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 04:51:54PM +0100, Arnd Bergmann wrote:
-> On Wednesday 18 November 2015 17:43:04 Andy Shevchenko wrote:
-> > >
-> > > I assume that the sst-firmware.c case is a mistake, it should just use a
-> > > plain DMA_SLAVE and not DMA_MEMCPY.
-> > 
-> > Other way around.
-> > 
-> 
-> Ok, I see. In that case I guess it also shouldn't call
-> dmaengine_slave_config(), right? I don't think that's valid
-> on a MEMCPY channel.
+On Wed, Nov 18, 2015 at 3:28 AM, Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Add an option to extend built-in command line with one obtained from
+> the device tree.
+>
+> This option is very useful for, for example, switching between some
+> stable and development version, when one of them requires additional
+> arguments (e. g. to turn on some extra debug). It can be annoying to
+> reprogram command line in the bootloaded every time.
+>
+> Actually, this patch introduces the necessary support to all
+> architectures using the device tree, however only arm64 Kconfig is
+> modified, because this is the only platform i can test.
 
-Yes it is not valid. In this case the dma driver should invoke a generic memcpy
-and not need slave parameters, knowing the hw and reason for this (firmware
-download to DSP memory), this doesn't qualify for slave case.
-In fact filter function doesn't need a channel, any channel in this
-controller will be good
+There is work to make the cmdline options and handling generic[1].
+There are lots of sharp corners here and I'd like to sort out the
+generic support before adding more combinations.
 
--- 
-~Vinod
+Rob
+
+[1] http://www.spinics.net/lists/arm-kernel/msg449844.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
