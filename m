@@ -1,50 +1,64 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] misc: eeprom_93xx46: Add support for a GPIO
- 'select' line.
-Date: Thu, 19 Nov 2015 15:18:10 +0100
-Message-ID: <20151119141810.GA30828@lunn.ch>
-References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447903781-3910-6-git-send-email-cory.tusar@pid1solutions.com>
- <564D66BF.5010601@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <564D66BF.5010601-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] modpost: don't add a trailing wildcard for OF module aliases
+Date: Thu, 19 Nov 2015 11:28:28 -0300
+Message-ID: <1447943308-27689-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Jean Delvare <jdelvare@suse.de>, Mark Brown <broonie@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> >  #ifdef CONFIG_OF
-> > +static void select_assert(void *context)
-> > +{
-> > +	struct eeprom_93xx46_dev *edev = context;
-> > +
-> > +	gpiod_set_value_cansleep(gpio_to_desc(edev->pdata->select_gpio), 1);
-> 
-> I would suggest to use gpio_set_value()
+Commit ac551828993ee ("modpost: i2c aliases need no trailing wildcard")
+removed the wildcard at the end of the I2C module aliases because I2C
+devices have no IDs so the aliases are just arbitrary device names.
 
-Could you explain why?
+This is also true for OF modaliases since a compatible string is used
+to define a specific IP hardware block. So the modalias should match a
+specific compatible string and not attempt to match a compatible string
+whose name matches the beginning of another one.
 
-Maybe this gpio is on an SPI GPIO expander?
+For example, the following driver module:
 
+$ modinfo cros_ec_keyb | grep alias
+alias:          platform:cros-ec-keyb
+alias:          of:N*T*Cgoogle,cros-ec-keyb*
 
-> >  static const struct of_device_id eeprom_93xx46_of_table[] = {
-> >  	{ .compatible = "eeprom-93xx46", },
-> >  	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
-> > @@ -385,6 +402,15 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
-> >  	if (of_property_read_bool(np, "read-only"))
-> >  		pd->flags |= EE_READONLY;
-> >  
-> > +	ret = of_get_named_gpio(np, "select-gpios", 0);
-> 
-> gpios or gpio? I see only one requested gpio.
+will be tried to be loaded for an alias of:N*T*Cgoogle,cros-ec-keyb-v2
+but there could be a different driver that supports the device for that
+compatible string so it's better to remove the trailing wildcard for OF.
 
-DT always uses the plural. Go read some bindins in Documentation/devicetree/bindings/
+Also, remove the word "always" from the add_wildcard() function comment
+since that was carried from the time where a wildcard was always added
+at the end of the module alias for all the devices.
 
-   Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Suggested-by: Brian Norris <computersforpeace@gmail.com>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+---
+
+ scripts/mod/file2alias.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index 5b96206e9aab..65eaab8b7798 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -125,7 +125,7 @@ do {                                                            \
+                 sprintf(str + strlen(str), "*");                \
+ } while(0)
+ 
+-/* Always end in a wildcard, for future extension */
++/* End in a wildcard, for future extension */
+ static inline void add_wildcard(char *str)
+ {
+ 	int len = strlen(str);
+@@ -704,7 +704,6 @@ static int do_of_entry (const char *filename, void *symval, char *alias)
+ 		if (isspace (*tmp))
+ 			*tmp = '_';
+ 
+-	add_wildcard(alias);
+ 	return 1;
+ }
+ ADD_TO_DEVTABLE("of", of_device_id, do_of_entry);
+-- 
+2.4.3
