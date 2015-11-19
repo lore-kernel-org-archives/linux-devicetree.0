@@ -1,74 +1,103 @@
-From: "Interfax Service" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
-Subject: You have received a new fax, document 000513230
-Date: Tue, 17 Nov 2015 04:31:32 +0300
-Message-ID: <09a6d43e0f599e55337fe278ad969255@kulinarmag.ru>
-Reply-To: "Interfax Service" <incoming-wwpBGFb64evk1uMJSBkQmQ@public.gmane.org>
+From: Al Stone <al.stone@linaro.org>
+Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
+ watchdog driver
+Date: Thu, 19 Nov 2015 16:50:03 -0700
+Message-ID: <564E602B.6060606@linaro.org>
+References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
+ <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
+ <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
+ <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
+ <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
+ <563B62F7.3050307@codeaurora.org>
+ <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
+ <563B6A4B.7090400@codeaurora.org>
+ <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
+ <563B869F.2010004@roeck-us.net> <56452970.4070209@linaro.org>
+ <56452D98.80704@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="b1_a290a2e3910db61db0afff627a0f3f3a"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56452D98.80704@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, Fu Wei <fu.wei@linaro.org>
+Cc: Pratyush Anand <panand@redhat.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jon Masters <jcm@redhat.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robherring2@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Dave Young <dyoung@redhat.com>, Vipul Gandhi <vgandhi@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---b1_a290a2e3910db61db0afff627a0f3f3a
-Content-Type: text/plain; charset=us-ascii
+Sorry for the delayed response...I've got some difficult family things to work
+on IRL that are taking priority...
 
-You have received a new fax.
+On 11/12/2015 05:23 PM, Timur Tabi wrote:
+> On 11/12/2015 06:06 PM, Al Stone wrote:
+>> If it is a NAK, that's fine, but I also want to be sure I understand what the
+>> objections are.  Based on my understanding of the discussion so far over the
+>> multiple versions, I think the primary objection is that the use of pretimeout
+>> makes this driver too complex, and indeed complex enough that there is some
+>> concern that it could destabilize a running system.  Do I have that right?
+> 
+> I don't have a problem with the concept of pre-timeout per se.  My primary
+> objection is this code:
+> 
+>> +static irqreturn_t sbsa_gwdt_interrupt(int irq, void *dev_id)
+>> +{
+>> +       struct sbsa_gwdt *gwdt = (struct sbsa_gwdt *)dev_id;
+>> +       struct watchdog_device *wdd = &gwdt->wdd;
+>> +
+>> +       /* We don't use pretimeout, trigger WS1 now */
+>> +       if (!wdd->pretimeout)
+>> +               sbsa_gwdt_set_wcv(wdd, 0);
+> 
+> This driver depends on an interrupt handler in order to properly program the
+> hardware.  Unlike some other devices, the SBSA watchdog does not need assistance
+> to reset on a timeout -- it is a "fire and forget" device.  What happens if
+> there is a hard lockup, and interrupts no longer work?
 
-Please download attached fax document.
+Aha.  I see now.  That helps clarify a lot.  Thanks.
 
-Processed in:     46 seconds
-Scan quality:     400 DPI
-File size:        172 Kb
-Author:           Leon Byrne
-Filename:         task000513230.doc
-Pages:            4
-Date of scan:     Mon, 16 Nov 2015 06:58:18 +0300
+> The reason why Fu does this is because he wants to support a pre-timeout value
+> that's independent of the timeout value.  The SBSA watchdog is normally
+> programmed where real timeout equals twice the pre-timeout.  I would prefer that
+> the driver adhere to this limitation.  That would eliminate the need to
+> pre-program the hardware in the interrupt handler.
 
-Thank you for using Interfax!
+The "normally programmed" limitation described is interesting; forgive my
+ignorance, but where is that specified?  I couldn't find anything that specific
+in the SBSA, or the ARM ARM, but I could have missed it.  That being said,
+keeping them independent at least seems like a good idea; if I think about
+kdump/kexec or some other recovery mechanism wanting to perhaps copy part of
+RAM or flush a filesystem/database, or maybe do some other magic to recover
+enough to be able to reset the timer, that may be a really long interval on a
+large server.  I could easily see that being very different from a watchdog
+timer that's meant to just make sure the platform is still making progress.
+Conversely, I could see that recovery interval being very small or zero on
+a guest OS, for example, and the watchdog still different.
 
+>> And finally, a simpler, single stage timeout watchdog driver would be a
+>> reasonable thing to accept, yes?  I can see where that would make sense.
+> 
+> I would be okay with merging such a driver, and then enhancing it later to add
+> pre-timeout support.
+> 
+>> The issue for me in that case is that the SBSA requires a two stage timeout,
+>> so a single stage driver has no real value for me.
+> 
+> There are plenty of existing watchdog devices that have a two-stage timeout but
+> the driver treats it as a single stage.  The PowerPC watchdog driver is like
+> that.  The hardware is programmed for the second stage to cause a hardware
+> reset, and the interrupt handler is typically a no-op or just a printk().
+> 
 
---b1_a290a2e3910db61db0afff627a0f3f3a
-Content-Type: application/zip; name="task000513230.zip"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=task000513230.zip
+Hrm.  Thanks for the pointer.  I _think_ I see a way to do that with arm64, and
+perhaps combine this driver's functionality with what Timur did originally, but
+still have it reasonably straightforward.  I need to do the experiments, though,
+and see if it actually works first.
 
-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
-
-
---b1_a290a2e3910db61db0afff627a0f3f3a--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Linaro Enterprise Group
+al.stone@linaro.org
+-----------------------------------
