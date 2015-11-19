@@ -1,155 +1,64 @@
 From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: enable clock support for Broadcom NSP
-Date: Wed, 18 Nov 2015 15:57:36 -0800
-Message-ID: <564D1070.2040200@broadcom.com>
+Subject: Re: [PATCH 3/3] ARM64: dts: enable clock support for Broadcom NS2
+Date: Wed, 18 Nov 2015 16:03:12 -0800
+Message-ID: <564D11C0.409@broadcom.com>
 References: <1447888430-4451-1-git-send-email-jonmason@broadcom.com>
- <1447888430-4451-3-git-send-email-jonmason@broadcom.com>
+ <1447888430-4451-4-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447888430-4451-3-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1447888430-4451-4-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Would this patch merge properly with the other NSP DT clean up patch + 
-I2C DT patch that you worked out internally but have not sent out?
 
-I thought it's going to make the maintainers' life easier if you can 
-group DT changes per platform and send them out in the same series.
-
-I also have some inline comments below.
 
 On 11/18/2015 3:13 PM, Jon Mason wrote:
-> Replace current device tree dummy clocks with real clock support for
-> Broadcom Northstar Plus SoC
+> Add device tree entries for clock support for Broadcom Northstar 2 SoC
 >
 > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
->   arch/arm/boot/dts/bcm-nsp.dtsi | 99 ++++++++++++++++++++++++++++++++----------
->   1 file changed, 75 insertions(+), 24 deletions(-)
+>   arch/arm64/boot/dts/broadcom/ns2.dtsi | 80 ++++++++++++++++++++++++++++++++++-
+>   1 file changed, 79 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> index 4bcdd28..f85a4f1 100644
-> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -32,6 +32,7 @@
+> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> index 9610822..a510d3a 100644
+> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> @@ -31,6 +31,7 @@
+>    */
 >
 >   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/clock/bcm-nsp.h>
+> +#include <dt-bindings/clock/bcm-ns2.h>
 >
->   #include "skeleton.dtsi"
+>   /memreserve/ 0x84b00000 0x00000008;
 >
-> @@ -42,7 +43,7 @@
->
->   	mpcore {
->   		compatible = "simple-bus";
-> -		ranges = <0x00000000 0x19020000 0x00003000>;
-> +		ranges = <0x00000000 0x19000000 0x00023000>;
-
-Why does this have anything to do with clocks? Shouldn't it be a 
-separate patch?
-
->   		#address-cells = <1>;
->   		#size-cells = <1>;
->
-> @@ -58,32 +59,23 @@
->   			};
->   		};
->
-> -		L2: l2-cache {
-> -			compatible = "arm,pl310-cache";
-> -			reg = <0x2000 0x1000>;
-> -			cache-unified;
-> -			cache-level = <2>;
-> -		};
-> -
-> -		gic: interrupt-controller@19021000 {
-> -			compatible = "arm,cortex-a9-gic";
-> -			#interrupt-cells = <3>;
-> -			#address-cells = <0>;
-> -			interrupt-controller;
-> -			reg = <0x1000 0x1000>,
-> -			      <0x0100 0x100>;
-> +		a9pll: arm_clk@19000000 {
-> +			#clock-cells = <0>;
-> +			compatible = "brcm,nsp-armpll";
-> +			clocks = <&osc>;
-> +			reg = <0x00000 0x1000>;
->   		};
->
->   		timer@19020200 {
->   			compatible = "arm,cortex-a9-global-timer";
-> -			reg = <0x0200 0x100>;
-> +			reg = <0x20200 0x100>;
->   			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
->   			clocks = <&periph_clk>;
->   		};
->
->   		twd-timer@19020600 {
->   			compatible = "arm,cortex-a9-twd-timer";
-> -			reg = <0x0600 0x20>;
-> +			reg = <0x20600 0x20>;
->   			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
->   						  IRQ_TYPE_LEVEL_HIGH)>;
->   			clocks = <&periph_clk>;
-> @@ -91,11 +83,27 @@
->
->   		twd-watchdog@19020620 {
->   			compatible = "arm,cortex-a9-twd-wdt";
-> -			reg = <0x0620 0x20>;
-> +			reg = <0x20620 0x20>;
->   			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
->   						  IRQ_TYPE_LEVEL_HIGH)>;
->   			clocks = <&periph_clk>;
->   		};
-> +
-> +		gic: interrupt-controller@19021000 {
-> +			compatible = "arm,cortex-a9-gic";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +			interrupt-controller;
-> +			reg = <0x21000 0x1000>,
-> +			      <0x20100 0x100>;
-> +		};
-> +
-> +		L2: l2-cache {
-> +			compatible = "arm,pl310-cache";
-> +			reg = <0x22000 0x1000>;
-> +			cache-unified;
-> +			cache-level = <2>;
-> +		};
-
- From here and above, all labels are wrong. You are moving them into a 
-bus that has translated bus addresses, but you still use absolute 
-addresses for all labels.
-
-And again, 1) Why is this change imbedded in a patch meant for adding DT 
-clock support according to the commit message; 2) how does the 
-dependency work with the other patches that you are about to send out?
-
-
+> @@ -109,6 +110,33 @@
+>   				     <&A57_3>;
 >   	};
 >
->   	clocks {
-> @@ -103,10 +111,34 @@
->   		#size-cells = <1>;
->   		ranges;
->
-> -		periph_clk: periph_clk {
+> +	clocks {
+
+Is this a new convention? That is, group all clocks without a base 
+register address in a node named "clocks", but at the same time, put all 
+other clocks with base register address under a bus node.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
 > +		osc: oscillator {
 > +			#clock-cells = <0>;
->   			compatible = "fixed-clock";
+> +			compatible = "fixed-clock";
 > +			clock-frequency = <25000000>;
 > +		};
 > +
 > +		iprocmed: iprocmed {
 > +			#clock-cells = <0>;
 > +			compatible = "fixed-factor-clock";
-> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+> +			clocks = <&genpll_scr BCM_NS2_GENPLL_SCR_SCR_CLK>;
 > +			clock-div = <2>;
 > +			clock-mult = <1>;
 > +		};
@@ -157,74 +66,81 @@ dependency work with the other patches that you are about to send out?
 > +		iprocslow: iprocslow {
 > +			#clock-cells = <0>;
 > +			compatible = "fixed-factor-clock";
-> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+> +			clocks = <&genpll_scr BCM_NS2_GENPLL_SCR_SCR_CLK>;
 > +			clock-div = <4>;
 > +			clock-mult = <1>;
 > +		};
+> +	};
 > +
-> +		periph_clk: periph_clk {
->   			#clock-cells = <0>;
-> -			clock-frequency = <500000000>;
-> +			compatible = "fixed-factor-clock";
-> +			clocks = <&a9pll>;
-> +			clock-div = <2>;
-> +			clock-mult = <1>;
+>   	soc: soc {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+> @@ -156,6 +184,56 @@
+>   			mmu-masters;
 >   		};
->   	};
 >
-> @@ -118,17 +150,17 @@
->
->   		uart0: serial@18000300 {
->   			compatible = "ns16550a";
-> -			reg = <0x0300 0x100>;
-> +			reg = <0x000300 0x100>;
->   			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> -			clock-frequency = <62499840>;
+> +		lcpll_ddr: lcpll_ddr@6501d058 {
+> +			#clock-cells = <1>;
+> +			compatible = "brcm,ns2-lcpll-ddr";
+> +			reg = <0x6501d058 0x20>,
+> +			      <0x6501c020 0x4>,
+> +			      <0x6501d04c 0x4>;
+> +			clocks = <&osc>;
+> +			clock-output-names = "lcpll_ddr", "pcie_sata_usb",
+> +					     "ddr", "ddr_ch2_unused",
+> +					     "ddr_ch3_unused", "ddr_ch4_unused",
+> +					     "ddr_ch5_unused";
+> +		};
+> +
+> +		lcpll_ports: lcpll_ports@6501d078 {
+> +			#clock-cells = <1>;
+> +			compatible = "brcm,ns2-lcpll-ports";
+> +			reg = <0x6501d078 0x20>,
+> +			      <0x6501c020 0x4>,
+> +			      <0x6501d054 0x4>;
+> +			clocks = <&osc>;
+> +			clock-output-names = "lcpll_ports", "wan", "rgmii",
+> +					     "ports_ch2_unused",
+> +					     "ports_ch3_unused",
+> +					     "ports_ch4_unused",
+> +					     "ports_ch5_unused";
+> +		};
+> +
+> +		genpll_scr: genpll_scr@6501d098 {
+> +			#clock-cells = <1>;
+> +			compatible = "brcm,ns2-genpll-scr";
+> +			reg = <0x6501d098 0x32>,
+> +			      <0x6501c020 0x4>,
+> +			      <0x6501d044 0x4>;
+> +			clocks = <&osc>;
+> +			clock-output-names = "genpll_scr", "scr", "fs",
+> +					     "audio_ref", "scr_ch3_unused",
+> +					     "scr_ch4_unused", "scr_ch5_unused";
+> +		};
+> +
+> +		genpll_sw: genpll_sw@6501d0c4 {
+> +			#clock-cells = <1>;
+> +			compatible = "brcm,ns2-genpll-sw";
+> +			reg = <0x6501d0c4 0x32>,
+> +			      <0x6501c020 0x4>,
+> +			      <0x6501d044 0x4>;
+> +			clocks = <&osc>;
+> +			clock-output-names = "genpll_sw", "rpe", "250", "nic",
+> +					     "chimp", "port", "sdio";
+> +		};
+> +
+>   		crmu: crmu@65024000 {
+>   			compatible = "syscon";
+>   			reg = <0x65024000 0x100>;
+> @@ -204,7 +282,7 @@
+>   			interrupts = <GIC_SPI 393 IRQ_TYPE_LEVEL_HIGH>;
+>   			reg-shift = <2>;
+>   			reg-io-width = <4>;
+> -			clock-frequency = <23961600>;
 > +			clocks = <&osc>;
 >   			status = "disabled";
 >   		};
 >
->   		uart1: serial@18000400 {
->   			compatible = "ns16550a";
-> -			reg = <0x0400 0x100>;
-> +			reg = <0x000400 0x100>;
->   			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> -			clock-frequency = <62499840>;
-> +			clocks = <&osc>;
->   			status = "disabled";
->   		};
->
-> @@ -217,5 +249,24 @@
->
->   			brcm,nand-has-wp;
->   		};
-> +
-> +		lcpll0: lcpll0@1803f100 {
-
-wrong label
-
-> +			#clock-cells = <1>;
-> +			compatible = "brcm,nsp-lcpll0";
-> +			reg = <0x03f100 0x14>;
-> +			clocks = <&osc>;
-> +			clock-output-names = "lcpll0", "pcie_phy", "sdio",
-> +					     "ddr_phy";
-> +		};
-> +
-> +		genpll: genpll@1803f140 {
-
-wrong label
-
-> +			#clock-cells = <1>;
-> +			compatible = "brcm,nsp-genpll";
-> +			reg = <0x03f140 0x24>;
-> +			clocks = <&osc>;
-> +			clock-output-names = "genpll", "phy", "ethernetclk",
-> +					     "usbclk", "iprocfast", "sata1",
-> +					     "sata2";
-> +		};
->   	};
->   };
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
