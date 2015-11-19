@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v3 4/6] extcon: arizona: Add device binding for second jack detect pin on GPIO5
-Date: Thu, 19 Nov 2015 15:45:38 +0000
-Message-ID: <1447947940-3054-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v3 5/6] extcon: arizona: Update DT binding documentation for mic detection
+Date: Thu, 19 Nov 2015 15:45:39 +0000
+Message-ID: <1447947940-3054-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1447947940-3054-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,33 +12,41 @@ To: cw00.choi@samsung.com
 Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Some Arizona devices have the option to use the GPIO5 pin as a second
-jack detection pin. This patch adds device bindings to specify to the
-driver that it should use this pin. Note that the second jack detection
-pin is hard wired in the chip so can only be enabled through the
-binding, rather than a pin being specified.
+Add additional bindings to allow configuration of the system specific
+microphone detection settings.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- drivers/extcon/extcon-arizona.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+ .../devicetree/bindings/extcon/extcon-arizona.txt  |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 27ddf9c..7c9598d 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1244,6 +1244,11 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
- 
- 	device_property_read_u32(arizona->dev, "wlf,gpsw", &pdata->gpsw);
- 
-+	pdata->jd_gpio5 = device_property_read_bool(arizona->dev,
-+						    "wlf,use-jd-gpio");
-+	pdata->jd_gpio5_nopull = device_property_read_bool(arizona->dev,
-+						"wlf,use-jd-gpio-nopull");
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+index e1705fa..d661811 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+@@ -13,3 +13,23 @@ Optional properties:
+     ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to HPDETR
+     If this node is not mentioned or if the value is unknown, then
+     headphone detection mode is set to HPDETL.
 +
- 	return 0;
- }
- 
++  - wlf,micd-software-compare : Use a software comparison to determine mic
++    presence
++  - wlf,micd-detect-debounce : Additional software microphone detection
++    debounce specified in milliseconds.
++  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the headset
++    polarity if one exists.
++  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup prior to
++    performing microphone detection, specified as per the ARIZONA_MICD_TIME_XXX
++    defines.
++  - wlf,micd-rate : Delay between successive microphone detection measurements,
++    specified as per the ARIZONA_MICD_TIME_XXX defines.
++  - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
++    number of measurements to take, valid values being 2 and 4.
++  - wlf,micd-timeout : Timeout for microphone detection, specified in
++    milliseconds.
++  - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
++    detection.
++
++  - wlf,gpsw : Settings for the general purpose switch
 -- 
 1.7.2.5
