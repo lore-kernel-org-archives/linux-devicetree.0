@@ -1,67 +1,58 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: device_node lifetime (was: Re: [PATCH 1/7] phy: brcmstb-sata:
- add missing of_node_put)
-Date: Thu, 19 Nov 2015 19:14:28 +0000
-Message-ID: <20151119191428.GB8644@n2100.arm.linux.org.uk>
-References: <1447673600-8881-1-git-send-email-Julia.Lawall@lip6.fr>
- <1447673600-8881-2-git-send-email-Julia.Lawall@lip6.fr>
- <20151117013830.GV8456@google.com>
- <alpine.DEB.2.02.1511170711340.2045@localhost6.localdomain6>
- <20151117174430.GA8456@google.com>
- <alpine.DEB.2.10.1511171846120.2455@hadrien>
- <20151117183036.GF8456@google.com>
- <alpine.DEB.2.02.1511172327030.2121@localhost6.localdomain6>
- <20151118190500.GE140057@google.com>
- <CAL_JsqLQWh8-gshYLrYwrrRjBRXiOACh9LzVn2HUU38mfgYGoQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 01/25] serial: sh-sci: Update DT binding documentation for external clock input
+Date: Thu, 19 Nov 2015 22:19:14 +0200
+Message-ID: <1756365.Ijac5ApxcA@avalon>
+References: <1447958344-836-1-git-send-email-geert+renesas@glider.be> <1447958344-836-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLQWh8-gshYLrYwrrRjBRXiOACh9LzVn2HUU38mfgYGoQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Brian Norris <computersforpeace@gmail.com>, Julia Lawall <julia.lawall@lip6.fr>, Kishon Vijay Abraham I <kishon@ti.com>, kernel-janitors@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Bjorn Helgaas <bhelgaas@google.com>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447958344-836-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 12:44:11PM -0600, Rob Herring wrote:
-> On Wed, Nov 18, 2015 at 1:05 PM, Brian Norris
-> <computersforpeace@gmail.com> wrote:
-> > (changing subject, add devicetree@vger.kernel.org)
-> >
-> > On Tue, Nov 17, 2015 at 11:33:25PM +0100, Julia Lawall wrote:
-> >> On Tue, 17 Nov 2015, Brian Norris wrote:
-> >> > On Tue, Nov 17, 2015 at 06:48:39PM +0100, Julia Lawall wrote:
-> >> > > Is this something that should be checked for elsewhere?
-> >> >
-> >> > I expect the same sort of problem shows up plenty of other places. I
-> >> > don't think many people use CONFIG_OF_DYNAMIC, so the effects of these
-> >> > failures probably aren't felt by many.
+Hi Geert,
+
+Thank you for the patch.
+
+On Thursday 19 November 2015 19:38:40 Geert Uytterhoeven wrote:
+> Amend the DT bindings to include the optional external clock on
+> (H)SCI(F) and some SCIFA, where this pin can serve as a clock input,
+> depending on board wiring.
 > 
-> The "problem" is non-existent because either CONFIG_OF_DYNAMIC is off
-> or where it is used is limited (memory and cpus on PSeries) and now
-> overlays. Overlays have the potential to be problematic, but we should
-> manage ref counting for overlays in a completely different way. What
-> that looks like, I don't know. I'll leave that to the person that
-> cares about removing overlays.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt index
+> 2c9e6b8477e92792..8efc9b6f35637fbb 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -43,6 +43,9 @@ Required properties:
+>    - clocks: Must contain a phandle and clock-specifier pair for each entry
+>      in clock-names.
+>    - clock-names: Must contain "fck" for the SCIx UART functional clock.
+> +    On (H)SCI(F) and some SCIFA, an additional clock may be specified:
 
-So are you saying we should just forget about of_node_put and delete all
-of_node_put/of_node_get references in code outside drivers/of ?  That
-seems pretty obtuse given that we do have the overlay code merged, and
-sounds to me like a very bad idea.
+Could you list the SCIFA variants that support external clocks ?
 
-Expecting those who want to use overlays to run around checking that
-the refcounting is correct in drivers is a really silly idea IMHO -
-the existing API is refcounted, so either people really ought to be
-using it correctly as it's already been designed (in other words, with
-correct refcounting, and we shouldn't be shovelling this problem onto
-other people) or the refcounting should be completely killed.
-
-The existing half-way house of "we have refcounting, but we don't care
-about it" is really insane.
-
-Either we have refcounting, and it's used properly, or we don't have
-refcounting.  No middle ground IMHO.
+> +      - "hsck" for the optional external clock input (on HSCIF),
+> +      - "sck" for the optional external clock input (on other variants).
+> 
+>  Note: Each enabled SCIx UART should have an alias correctly numbered in the
+> "aliases" node.
 
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
