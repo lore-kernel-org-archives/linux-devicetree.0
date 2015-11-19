@@ -1,98 +1,80 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc2: add support of hi6220
-Date: Thu, 19 Nov 2015 02:36:31 +0000
-Message-ID: <2B3535C5ECE8B5419E3ECBE30077290901DC3D6B93@US01WEMBX2.internal.synopsys.com>
-References: <1447832387-27549-1-git-send-email-zhangfei.gao@linaro.org>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v4 3/3] ARM: dts: rockchip: Add the OTP gpio pinctrl
+Date: Thu, 19 Nov 2015 10:44:02 +0800
+Message-ID: <564D3772.9050402@gmail.com>
+References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com>
+ <1445599528-18825-4-git-send-email-wxt@rock-chips.com>
+ <CAD=FV=WBCD8WsXV2mAGUD6y=BFScbFc9U3XA7jAB-rqOLp4qGA@mail.gmail.com>
+ <2741625.HAsG2fX6yg@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2741625.HAsG2fX6yg@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2015 11:39 PM, Zhangfei Gao wrote:
-> Support hisilicon,hi6220-usb for HiKey board
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
->  drivers/usb/dwc2/platform.c                    | 32 ++++++++++++++++++++++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index fd132cb..2213682 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -4,6 +4,7 @@ Platform DesignWare HS OTG USB 2.0 controller
->  Required properties:
->  - compatible : One of:
->    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-> +  - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
->    - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
->    - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
->    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index 5859b0f..a5cb1bf 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -54,6 +54,37 @@
->  
->  static const char dwc2_driver_name[] = "dwc2";
->  
-> +static const struct dwc2_core_params params_hi6220 = {
-> +	.otg_cap			= 2,	/* No HNP/SRP capable */
-> +	.otg_ver			= 0,	/* 1.3 */
-> +	.dma_enable			= 1,
-> +	.dma_desc_enable		= 0,
-> +	.speed				= 0,	/* High Speed */
-> +	.enable_dynamic_fifo		= 1,
-> +	.en_multiple_tx_fifo		= 1,
-> +	.host_rx_fifo_size		= 512,
-> +	.host_nperio_tx_fifo_size	= 512,
-> +	.host_perio_tx_fifo_size	= 512,
-> +	.max_transfer_size		= 65535,
-> +	.max_packet_count		= 511,
-> +	.host_channels			= 16,
-> +	.phy_type			= 1,	/* UTMI */
-> +	.phy_utmi_width			= 8,
-> +	.phy_ulpi_ddr			= 0,	/* Single */
-> +	.phy_ulpi_ext_vbus		= 0,
-> +	.i2c_enable			= 0,
-> +	.ulpi_fs_ls			= 0,
-> +	.host_support_fs_ls_low_power	= 0,
-> +	.host_ls_low_power_phy_clk	= 0,	/* 48 MHz */
-> +	.ts_dline			= 0,
-> +	.reload_ctl			= 0,
-> +	.ahbcfg				= GAHBCFG_HBSTLEN_INCR16 <<
-> +					  GAHBCFG_HBSTLEN_SHIFT,
-> +	.uframe_sched			= 0,
-> +	.external_id_pin_ctl		= -1,
-> +	.hibernation			= -1,
-> +};
-> +
->  static const struct dwc2_core_params params_bcm2835 = {
->  	.otg_cap			= 0,	/* HNP/SRP capable */
->  	.otg_ver			= 0,	/* 1.3 */
-> @@ -282,6 +313,7 @@ static int dwc2_driver_remove(struct platform_device *dev)
->  
->  static const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "brcm,bcm2835-usb", .data = &params_bcm2835 },
-> +	{ .compatible = "hisilicon,hi6220-usb", .data = &params_hi6220 },
->  	{ .compatible = "rockchip,rk3066-usb", .data = &params_rk3066 },
->  	{ .compatible = "snps,dwc2", .data = NULL },
->  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
-> 
+Hi Heiko,
 
-Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+=E5=9C=A8 2015=E5=B9=B410=E6=9C=8825=E6=97=A5 15:55, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Am Freitag, 23. Oktober 2015, 08:25:08 schrieb Doug Anderson:
+>> On Fri, Oct 23, 2015 at 4:25 AM, Caesar Wang <wxt@rock-chips.com> wr=
+ote:
+>>> Add the "init" anf "sleep" pinctrl as the OTP gpio state.
+>>> We need the OTP pin is gpio state before resetting the TSADC contro=
+ller,
+>>> since the tshut polarity will generate a high signal.
+>>>
+>>> "init" pinctrl property is defined by Doug's Patch[0].
+>>>
+>>> Patch[0]:
+>>> https://patchwork.kernel.org/patch/7454311/
+>>>
+>>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>>> ---
+>>>
+>>> Changes in v4: None
+>>>
+>>> Changes in v3:
+>>>    - Add the "sleep" pinctrl as the gpio state in PATCH[3/3]
+>>>
+>>> Changes in v2:
+>>>    - Add some commits for more obvious in PATCH[2/2]
+>>>
+>>> Changes in v1:
+>>>    - As the Doug comments, drop the thermal driver patchs since
+>>>   =20
+>>>      we can with pinctrl changing to work.
+>>>   =20
+>>>    - As the Doug's patch to add the 'init' property.
+>>>  =20
+>>>   arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++--
+>>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>> I realized that the subject of this patch should probably contain th=
+e
+>> word rk3288, but I presume Heiko would rather add that himself than
+>> for you to spin this again.  ;)
+> yep :-) ... no need to respin for such an easy change
 
-Regards,
-John
+That's seem this patch didn't merge into your v4.5-armsoc/soc branch.:-=
+)
+
+I guess this patch should merge into  kernel-4.4 since the Patch[1/3] /=
+=20
+[2/3] have been merged into 4.4-rc1.:-P
+
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Thanks,
+Caesar
