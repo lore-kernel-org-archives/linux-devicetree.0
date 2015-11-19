@@ -1,49 +1,75 @@
-From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v11 2/8] Input: goodix - reset device at init
-Date: Thu, 19 Nov 2015 15:36:12 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F11F7FD@irsmsx105.ger.corp.intel.com>
-References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
-	 <1447936001-21420-3-git-send-email-irina.tirdea@intel.com>
- <1447946703.24088.73.camel@hadess.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/19] clk: sunxi: Add display clock
+Date: Thu, 19 Nov 2015 16:42:58 +0100
+Message-ID: <20151119154258.GQ32142@lukather>
+References: <1446214865-3972-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1446214865-3972-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20151030212902.GG19782@codeaurora.org>
+ <20151106233926.GN6114@lukather>
+ <20151112203154.GE15032@codeaurora.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447946703.24088.73.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="de1H0RjRxOSdb4we"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBA64W6ZAKGQETZIZAVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151112203154.GE15032-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Wynter Woods <wynter-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
-W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMTkgTm92ZW1iZXIsIDIwMTUgMTc6
-MjUNCj4gVG86IFRpcmRlYSwgSXJpbmE7IERtaXRyeSBUb3Jva2hvdjsgQWxla3NlaSBNYW1saW47
-IEthcnN0ZW4gTWVya2VyOyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1hcmsg
-UnV0bGFuZDsgUm9iIEhlcnJpbmc7IFB1cmRpbGEsIE9jdGF2aWFuOyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIIHYxMSAyLzhdIElucHV0OiBnb29kaXggLSByZXNldCBkZXZpY2UgYXQgaW5pdA0KPiAN
-Cj4gT24gVGh1LCAyMDE1LTExLTE5IGF0IDE0OjI2ICswMjAwLCBJcmluYSBUaXJkZWEgd3JvdGU6
-DQo+ID4gQWZ0ZXIgcG93ZXIgb24sIGl0IGlzIHJlY29tbWVuZGVkIHRoYXQgdGhlIGRyaXZlciBy
-ZXNldHMgdGhlIGRldmljZS4NCj4gPiBUaGUgcmVzZXQgcHJvY2VkdXJlIHRpbWluZyBpcyBkZXNj
-cmliZWQgaW4gdGhlIGRhdGFzaGVldCBhbmQgaXMgdXNlZA0KPiA+IGF0IGRldmljZSBpbml0IChi
-ZWZvcmUgd3JpdGluZyBkZXZpY2UgY29uZmlndXJhdGlvbikgYW5kDQo+ID4gZm9yIHBvd2VyIG1h
-bmFnZW1lbnQuIEl0IGlzIGEgc2VxdWVuY2Ugb2Ygc2V0dGluZyB0aGUgaW50ZXJydXB0DQo+ID4g
-YW5kIHJlc2V0IHBpbnMgaGlnaC9sb3cgYXQgc3BlY2lmaWMgdGltaW5nIGludGVydmFscy4gVGhp
-cyBwcm9jZWR1cmUNCj4gPiBhbHNvIGluY2x1ZGVzIHNldHRpbmcgdGhlIHNsYXZlIGFkZHJlc3Mg
-dG8gdGhlIG9uZSBzcGVjaWZpZWQgaW4gdGhlDQo+ID4gQUNQSS9kZXZpY2UgdHJlZS4NCj4gDQo+
-IFRoaXMgZmFpbHMgb24gYSA0LjMga2VybmVsIHdpdGggYW4gQUNQSSBkZXZpY2UgKFdpbkJvb2sg
-VFcxMDApOg0KPiBHb29kaXgtVFM6IHByb2JlIG9mIGkyYy1HRElYMTAwMTowMCBmYWlsZWQgd2l0
-aCBlcnJvciAtMTYNCj4gDQo+IENhbiB5b3UgcGxlYXNlIGRvY3VtZW50IHdoaWNoIHVwc3RyZWFt
-IGNvbW1pdCBpcyBuZWNlc3NhcnkgdG8gbWFrZSB0aGlzDQo+IGJlaGF2ZSBwcm9wZXJseT8NCj4g
-DQoNCllvdSBuZWVkIHRoZSBwYXRjaCB0aGF0IGZpeGVzIHRoZSBHUElPIEFQSSBbMV0gc28gdGhh
-dA0KZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwgd29ya3MgcHJvcGVybHkgKEkgbWVudGlvbmVkIHRo
-YXQgaW4gdGhlIGNvdmVyDQpsZXR0ZXIpLiBUaGlzIHBhdGNoIGp1c3QgZ290IG1lcmdlZCBpbiB0
-aGUgZ3BpbyB0cmVlLCBzbyBpdCB3aWxsIHRha2UgYQ0Kd2hpbGUgdW50aWwgaXQgd2lsbCBiZSBt
-ZXJnZWQgaW4gdGhlIG1haW4ga2VybmVsIHRyZWUgb3IgaW5wdXQgdHJlZS4gDQoNClRoYW5rcywN
-CklyaW5hDQoNCiBbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTUvMTEvMTEvNDY1DQoNCj4g
-SSdsbCB0ZXN0IGFnYWluIHdpdGggYSBuZXdlciBrZXJuZWwuDQo+IA0KPiBDaGVlcnMNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--de1H0RjRxOSdb4we
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Nov 12, 2015 at 12:31:54PM -0800, Stephen Boyd wrote:
+> On 11/06, Maxime Ripard wrote:
+> > Hi Stephen,
+> > 
+> > Thanks for your feedback!
+> > 
+> > On Fri, Oct 30, 2015 at 02:29:02PM -0700, Stephen Boyd wrote:
+> > > > +
+> > > > +	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+> > > > +	if (!mux)
+> > > [..]
+> > > > +		goto free_reset;
+> > > > +	}
+> > > > +
+> > > > +	return;
+> > > > +
+> > > > +free_reset:
+> > > > +	kfree(reset_data);
+> > > > +free_clk:
+> > > > +	clk_unregister(clk);
+> > > 
+> > > We really ought to have a clk_composite_unregister() API.
+> > 
+> > Can we?
+> > 
+> > We can always unregister the clock itself, but do we have a way to
+> > retrieve the structure that has been allocated in there?
+> > 
+> > (note that it also applies to the generic clocks registration: muxes,
+> > dividers, and so on).
+> 
+> Yes we have a way. We've done the same sort of design for other
+> generic clocks. Do the __clk_get_hw() thing like in clk-divider.c
+
+Ack. I'll cook up a patch for this then.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--de1H0RjRxOSdb4we--
