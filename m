@@ -1,41 +1,80 @@
-From: Pramod Kumar <pramodku@broadcom.com>
-Subject: RE: [PATCH 03/11] dts: pinctrl: Add GPIO to Pinctrl pin mapping in
- DT
-Date: Thu, 19 Nov 2015 03:34:58 +0000
-Message-ID: <0C803592FC378B4E83922050AB46442A2AD9ECBD@SJEXCHMB10.corp.ad.broadcom.com>
-References: <1445233398-27129-1-git-send-email-pramodku@broadcom.com>
- <1445233398-27129-4-git-send-email-pramodku@broadcom.com>
- <564CC5E2.2070809@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <564CC5E2.2070809@gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v3 00/12] Add mipi dsi support for rk3288
+Date: Thu, 19 Nov 2015 11:35:18 +0800
+Message-ID: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+Cc: Chris Zhong <zyw@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Jeff Chen <cym@rock-chips.com>, Thierry Reding <thierry.reding@gmail.com>, linux-clk@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, Huang Lin <hl@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vincent Palatin <vpalatin@chromium.org>, Russell King <linux@arm.linux.org.uk>, Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.orgRu
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmxvcmlhbiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGbG9y
-aWFuIEZhaW5lbGxpIFttYWlsdG86Zi5mYWluZWxsaUBnbWFpbC5jb21dDQo+IFNlbnQ6IDE5IE5v
-dmVtYmVyIDIwMTUgMDA6MTANCj4gVG86IFByYW1vZCBLdW1hcjsgUm9iIEhlcnJpbmc7IFBhd2Vs
-IE1vbGw7IE1hcmsgUnV0bGFuZDsgSWFuIENhbXBiZWxsOw0KPiBLdW1hciBHYWxhOyBSYXkgSnVp
-OyBTY290dCBCcmFuZGVuOyBSdXNzZWxsIEtpbmc7IExpbnVzIFdhbGxlaWo7IGxpbnV4LQ0KPiBn
-cGlvQHZnZXIua2VybmVsLm9yZw0KPiBDYzogYmNtLWtlcm5lbC1mZWVkYmFjay1saXN0OyBKYXNv
-biBVeTsgTWFzYWhpcm8gWWFtYWRhOyBUaG9tYXMgR2xlaXhuZXI7DQo+IExhdXJlbnQgUGluY2hh
-cnQ7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBKb25hcyBHb3Jz
-a2kNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwMy8xMV0gZHRzOiBwaW5jdHJsOiBBZGQgR1BJTyB0
-byBQaW5jdHJsIHBpbiBtYXBwaW5nIGluIERUDQo+IA0KPiBPbiAxOC8xMC8xNSAyMjo0MywgUHJh
-bW9kIEt1bWFyIHdyb3RlOg0KPiA+IEFTSVUgZ3BpbyBjb250cm9sbGVyJ3MgcGlucyBhcmUgbXV4
-ZWQgd2l0aCBwaW4tY250cm9sbGVyLg0KPiA+IEFkZCB0aGlzIG1hcHBpbmcgdGhyb3VnaCBwcm9w
-ZXJ0eSAiZ3Bpby1yYW5nZXMiLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUHJhbW9kIEt1bWFy
-IDxwcmFtb2RrdUBicm9hZGNvbS5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFJheSBKdWkgPHJqdWlA
-YnJvYWRjb20uY29tPg0KPiA+IFJldmlld2VkLWJ5OiBTY290dCBCcmFuZGVuIDxzYnJhbmRlbkBi
-cm9hZGNvbS5jb20+DQo+IA0KPiBBcHBsaWVkIHRvIGRldmljZXRyZWUvbmV4dCwgc2luY2UgdGhl
-cmUgd2FzIGEgYml0IG9mIHJlc3RydWN0dXJpbmcsIEkgaGFkIHRvDQo+IG1hbnVhbGx5IGFwcGx5
-IGl0LCBwbGVhc2UgdmVyaWZ5IHRoZSByZXNvbHV0aW9uIGxvb2tzIGNvcnJlY3QgdG8geW91Lg0K
-DQpBcHBsaWVkIHBhdGNoIGxvb2tzIGZpbmUuIFRoYW5rcyBmb3IgaGF2aW5nIHRpbWUgaW4gcmVz
-dHJ1Y3R1cmluZy4gDQoNClJlZ2FyZHMsDQpQcmFtb2QNCg0KPiANCj4gVGhhbmtzIQ0KPiAtLQ0K
-PiBGbG9yaWFuDQo=
+The rk3288 MIPI DSI is a Synopsys DesignWare MIPI DSI host controller
+IP. This series adds support for a Synopsys DesignWare MIPI DSI host
+controller DRM bridge driver and a rockchip MIPI DSI specific DRM
+driver.
+
+This series also includes a DRM panel driver for BOE TV080WUM-NL0 panel.
+This panel only use the MIPI DSI video mode.
+
+The MIPI DSI feature is tested on rk3288 evb board, backport them to
+chrome os kernel v3.14, and it can display normally.
+
+This patchset is base on the patchset from Ying.liu@freescale.com.
+<http://www.spinics.net/lists/dri-devel/msg77181.html>
+
+
+Changes in v3:
+move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
+move dw_mipi_dsi_rockchip.txt to bindings/display/rockchip/
+move boe,tv080wum-nl0.txt to bindings/display/panel/
+
+Changes in v2:
+add the mipi clk id in a single patch
+As Thierry.Reding comment, add a documentation for this panel.
+
+Chris Zhong (10):
+  clk: rockchip: add id for mipidsi sclk on rk3288
+  clk: rockchip: add mipidsi clocks on rk3288
+  drm/rockchip: return a true clock rate to adjusted_mode
+  drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
+  drm: rockchip: Support Synopsys DesignWare MIPI DSI host controller
+  Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
+  ARM: dts: rockchip: add rk3288 mipi_dsi nodes
+  drm/panel: simple: Add support for BOE TV080WUM-NL0
+  drm/panel: simple: Add boe,tv080wum-nl0 simple panel device tree
+    binding
+  ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
+
+Liu Ying (2):
+  drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
+  Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
+    bridge driver
+
+ .../bindings/display/bridge/dw_mipi_dsi.txt        |   76 ++
+ .../bindings/display/panel/boe,tv080wum-nl0.txt    |    7 +
+ .../display/rockchip/dw_mipi_dsi_rockchip.txt      |   56 ++
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   20 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |   39 +
+ drivers/clk/rockchip/clk-rk3288.c                  |    2 +-
+ drivers/gpu/drm/bridge/Kconfig                     |   11 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/dw_mipi_dsi.c               | 1055 ++++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               |   33 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   10 +
+ drivers/gpu/drm/rockchip/Makefile                  |    1 +
+ drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c    |  249 +++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |    9 +
+ include/drm/bridge/dw_mipi_dsi.h                   |   27 +
+ include/drm/drm_mipi_dsi.h                         |   14 +
+ include/dt-bindings/clock/rk3288-cru.h             |    1 +
+ 17 files changed, 1609 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+ create mode 100644 drivers/gpu/drm/bridge/dw_mipi_dsi.c
+ create mode 100644 drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c
+ create mode 100644 include/drm/bridge/dw_mipi_dsi.h
+
+-- 
+2.6.3
+
