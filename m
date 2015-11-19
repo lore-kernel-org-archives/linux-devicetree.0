@@ -1,62 +1,131 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: rockchip: Add the OTP gpio pinctrl
-Date: Thu, 19 Nov 2015 05:57:02 +0100
-Message-ID: <1668139.HQCaUDeMrM@phil>
-References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com>
- <2741625.HAsG2fX6yg@diego> <564D3772.9050402@gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: doc: dwc3-xilinx: Add devicetree bindings
+Date: Wed, 18 Nov 2015 22:59:48 -0600
+Message-ID: <87r3jmfut7.fsf@saruman.tx.rr.com>
+References: <1447851031-16241-1-git-send-email-sbhatta@xilinx.com> <20151118225331.GA22325@rob-hp-laptop> <87ziyagbc2.fsf@saruman.tx.rr.com> <CAL_JsqKE6f8DwvJQok=JGuzj5=9g8vrwY+wscLJkhFaG4229Mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <564D3772.9050402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
+	protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKE6f8DwvJQok=JGuzj5=9g8vrwY+wscLJkhFaG4229Mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2Flc2FyLAoKQW0gRG9ubmVyc3RhZywgMTkuIE5vdmVtYmVyIDIwMTUsIDEwOjQ0OjAyIHNj
-aHJpZWIgQ2Flc2FyIFdhbmc6Cj4g5ZyoIDIwMTXlubQxMOaciDI15pelIDE1OjU1LCBIZWlrbyBT
-dMO8Ym5lciDlhpnpgZM6Cj4gPiBBbSBGcmVpdGFnLCAyMy4gT2t0b2JlciAyMDE1LCAwODoyNTow
-OCBzY2hyaWViIERvdWcgQW5kZXJzb246Cj4gPj4gT24gRnJpLCBPY3QgMjMsIDIwMTUgYXQgNDoy
-NSBBTSwgQ2Flc2FyIFdhbmcgPHd4dEByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gPj4+IEFkZCB0
-aGUgImluaXQiIGFuZiAic2xlZXAiIHBpbmN0cmwgYXMgdGhlIE9UUCBncGlvIHN0YXRlLgo+ID4+
-PiBXZSBuZWVkIHRoZSBPVFAgcGluIGlzIGdwaW8gc3RhdGUgYmVmb3JlIHJlc2V0dGluZyB0aGUg
-VFNBREMgY29udHJvbGxlciwKPiA+Pj4gc2luY2UgdGhlIHRzaHV0IHBvbGFyaXR5IHdpbGwgZ2Vu
-ZXJhdGUgYSBoaWdoIHNpZ25hbC4KPiA+Pj4KPiA+Pj4gImluaXQiIHBpbmN0cmwgcHJvcGVydHkg
-aXMgZGVmaW5lZCBieSBEb3VnJ3MgUGF0Y2hbMF0uCj4gPj4+Cj4gPj4+IFBhdGNoWzBdOgo+ID4+
-PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzc0NTQzMTEvCj4gPj4+Cj4gPj4+
-IFNpZ25lZC1vZmYtYnk6IENhZXNhciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4gPj4+IFJl
-dmlld2VkLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gPj4+
-IC0tLQo+ID4+Pgo+ID4+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4gPj4+Cj4gPj4+IENoYW5nZXMg
-aW4gdjM6Cj4gPj4+ICAgIC0gQWRkIHRoZSAic2xlZXAiIHBpbmN0cmwgYXMgdGhlIGdwaW8gc3Rh
-dGUgaW4gUEFUQ0hbMy8zXQo+ID4+Pgo+ID4+PiBDaGFuZ2VzIGluIHYyOgo+ID4+PiAgICAtIEFk
-ZCBzb21lIGNvbW1pdHMgZm9yIG1vcmUgb2J2aW91cyBpbiBQQVRDSFsyLzJdCj4gPj4+Cj4gPj4+
-IENoYW5nZXMgaW4gdjE6Cj4gPj4+ICAgIC0gQXMgdGhlIERvdWcgY29tbWVudHMsIGRyb3AgdGhl
-IHRoZXJtYWwgZHJpdmVyIHBhdGNocyBzaW5jZQo+ID4+PiAgICAKPiA+Pj4gICAgICB3ZSBjYW4g
-d2l0aCBwaW5jdHJsIGNoYW5naW5nIHRvIHdvcmsuCj4gPj4+ICAgIAo+ID4+PiAgICAtIEFzIHRo
-ZSBEb3VnJ3MgcGF0Y2ggdG8gYWRkIHRoZSAnaW5pdCcgcHJvcGVydHkuCj4gPj4+ICAgCj4gPj4+
-ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgfCAxMCArKysrKysrKy0tCj4gPj4+ICAg
-MSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+PiBJIHJl
-YWxpemVkIHRoYXQgdGhlIHN1YmplY3Qgb2YgdGhpcyBwYXRjaCBzaG91bGQgcHJvYmFibHkgY29u
-dGFpbiB0aGUKPiA+PiB3b3JkIHJrMzI4OCwgYnV0IEkgcHJlc3VtZSBIZWlrbyB3b3VsZCByYXRo
-ZXIgYWRkIHRoYXQgaGltc2VsZiB0aGFuCj4gPj4gZm9yIHlvdSB0byBzcGluIHRoaXMgYWdhaW4u
-ICA7KQo+ID4geWVwIDotKSAuLi4gbm8gbmVlZCB0byByZXNwaW4gZm9yIHN1Y2ggYW4gZWFzeSBj
-aGFuZ2UKPiAKPiBUaGF0J3Mgc2VlbSB0aGlzIHBhdGNoIGRpZG4ndCBtZXJnZSBpbnRvIHlvdXIg
-djQuNS1hcm1zb2Mvc29jIGJyYW5jaC46LSkKPiAKPiBJIGd1ZXNzIHRoaXMgcGF0Y2ggc2hvdWxk
-IG1lcmdlIGludG8gIGtlcm5lbC00LjQgc2luY2UgdGhlIFBhdGNoWzEvM10gLyAKPiBbMi8zXSBo
-YXZlIGJlZW4gbWVyZ2VkIGludG8gNC40LXJjMS46LVAKCnRoYW5rcyBmb3IgdGhlIHJlbWluZGVy
-IDotKQoKSXQgc2VlbXMgSSBkaWRuJ3QgZ2V0IGEgbm90aWNlIHdoZW4gdGhlIGNvcmUgdGhlcm1h
-bCBjaGFuZ2VzIHdlcmUgbWVyZ2VkLCBzbyAKdGhpcyBwYXRjaCBzZWVtcyB0byBoYXZlIGRyb3Bw
-ZWQgb2YgbXkgcmFkYXIuIEl0IGlzIGNsZWFybHkgYSBmaXggZm9yIGEgcmVhbCAKaXNzdWUsIHNv
-IEkndmUgYWRkZWQgaXQgdG8gbXkgZml4ZXMgYnJhbmNoIGZvciA0LjQuCgoKSGVpa28KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlw
-IG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> On Wed, Nov 18, 2015 at 5:02 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+>>
+>> Hi,
+>>
+>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>>> On Wed, Nov 18, 2015 at 06:20:31PM +0530, Subbaraya Sundeep Bhatta wrot=
+e:
+>>>> This patch adds binding doc for Xilinx DWC3 glue driver.
+>>>>
+>>>> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> I really dislike how the DWC3 binding has been done. The sub-node here
+>>> is pointless. The only thing the outer node does is add clocks which
+>>> should simply be part of the DWC3 node. Presumably the IP block needs
+>>> some clocks...
+>>>
+>>> Anyway, it's self-contained within the DWC3, so I won't make you clean
+>>> up the mess.
+>>
+>> heh, it's definitely not pointless. We get a lot of free goodies by
+>> doing it that way. I'm just not going to repeat it once again. But in
+>> summary:
+>>
+>> a) we force people to write glue layers for *only* their HW specific
+>> details
+>>
+>> b) there's really no way to abuse dwc3 core because there's no symbol
+>> exported from dwc3 core to glue
+>
+> Both are doable independent of DT.
+>
+>> c) PM (both system sleep and runtime) becomes a lot simpler with core
+>> only caring about what PM details delivered by SNPS (e.g. Hibernation
+>> mode from DWC3) and glue only has to consider the SoC integration parts
+>> of PM (for OMAP that would be PRCM details, hwmod, etc).
+>
+> No doubt OMAP is special.
+
+not only OMAP. Every single SoC will integrate a particular IP in its
+own way.
+
+>> I'm definitely not going to change dwc3 because it has made my life a
+>> lot saner. Definitely a lot saner than MUSB. Besides, DTS is supposed to
+>> describe the HW and that's, really, how the HW is.
+>
+> So reading the description, the DWC3 has no clocks?
+
+of course it has, and you have registers in DWC3 to change some of the
+parents of the clocks it uses internally.
+
+>> There's a piece of HW which is somewhat platform agnostic and delivered
+>> by SNPS as a black box (SNPS customers don't touch SNPS RTL) and there's
+>> another piece of HW which bridges this dwc3 to the platform specific
+>> details and integration context of the platform (for OMAP that would the
+>> SYSCONFIG/SYSSTATUS registers, Clock autogating, PRCM, etc, etc etc).
+>
+> It is a black box, but with dozens of configuration options typically.
+
+all of which are detected within the driver. For those which can't be,
+we have bindings.
+
+>> So you _do_ in fact, have two separate pieces of HW which are SW visible
+>> and controllable independently. They each have their own IRQs (though in
+>> some SoCs they share the same line), they're own address space, yada
+>> yada yada.
+>
+> When that is the case, I have no problem with this split, but I don't
+> see any of these examples in this particular case. So how should the
+> binding look when there is no vendor specific glue? Are we supposed to
+> keep the binding structure to appease the needs of the driver?
+
+If there really is *no* vendor specific glue, nothing prevents them from
+patching dwc3 to understand *OPTIONAL* clocks and use dwc3 directly. As
+long as it doesn't break any of the platforms currently supported and
+doesn't look ugly, fine with me.
+
+In fact, there's one company which has been using dwc3 without a glue
+layer. I forgot who told me they didn't need a glue layer, but it's in
+the archives.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWTVdGAAoJEIaOsuA1yqREA1QP/AjfS4KcCMO8DUME0r7SQAcX
+t1qVTRYD7gbtoVu+BzTJaM7CCv8ERRbvyAD16DHjzSiveNuAJhPXeHX163fcXrZQ
+WGKqp2NmrA7JNNigu7vutAQd7wqC4Bn1mzm9P9090ZkfqIzV6kB45II4hmVJ6NHc
+g8Y+D2QoG3regZDeWbBVvVFxie5RtWWJTninW9Nk9vscQ0d2qoXQWsUBUjdLU9cq
+2890P2HjtfOnUa4o1hyuOl4Fo1c/p9QI0b2DFhVKKGgSc6sYCPfhKPDECOmGHJm8
+LgrZr4sJlXN9ZFUZIbG+vmGsWzLX40gfm3Pg/fAADOE2aptoyjC+X2dDMasPpzR1
+xPBj9eJWJEq09V1Qmx0Q1QaxJvevIesfDKTTf3NTrQqjzj7aPYY7mGje919jOYlm
+OXyU24LRw6NZ0rV1cp04UqMdm2jkmDiEB7Djmc/0fJo2mOFq0Jc5hqq0rIek4yk2
+4PrqbTESZ0kOqavoAv/arTYQM6x+RnU2TFQmnuUCkHiaHZj2d79pM6hQZcuJch16
+OAa4XOy6qUQYoP/Wi+Qu+RyMHHxKebgavHMd1bsl6hmlAVf3r5iMdZS+Pg4s220N
+6KwASmWq+AVwyTSHv2EctAqOJZ9StoDDC4pu9TwnYk+spjrRbRdAN/AxDzhipe93
+QMOMhvqQNuKJEOHCg8SH
+=Qnfs
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
