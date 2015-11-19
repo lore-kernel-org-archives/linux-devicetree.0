@@ -1,64 +1,54 @@
-From: Salil Mehta <salil.mehta@huawei.com>
-Subject: [PATCH V3 net-next 5/5] net:hns: Add the init code to disable Hip06 "Hardware VLAN assist"
-Date: Fri, 20 Nov 2015 04:58:26 +0800
-Message-ID: <1447966706-16219-6-git-send-email-salil.mehta@huawei.com>
-References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 02/25] serial: sh-sci: Update DT binding documentation for
+ BRG support
+Date: Thu, 19 Nov 2015 21:44:27 +0100
+Message-ID: <CAMuHMdWHbc1kK7MipyZ_M_C6gPyPqvC4H35eZLXQezjbQNK2Jw@mail.gmail.com>
+References: <1447958344-836-1-git-send-email-geert+renesas@glider.be>
+	<1447958344-836-3-git-send-email-geert+renesas@glider.be>
+	<1577961.dn1fd8r35p@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, salil.mehta@huawei.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1577961.dn1fd8r35p@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the initializzation code to disable the hardware
-vlan support for VLAN Tag stripping by default for now.
+Hi Laurent,
 
-Proper support of "hardware VLAN assitance" feature would
-soon come in the next coming patches.
+On Thu, Nov 19, 2015 at 9:26 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Thursday 19 November 2015 19:38:41 Geert Uytterhoeven wrote:
+>> Amend the DT bindings to include the optional clock sources for the Baud
+>> Rate Generator for External Clock (BRG), as found on some SCIF variants
+>> and on HSCIF.
 
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c |    7 +++++++
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h |    1 +
- 2 files changed, 8 insertions(+)
+>> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+>> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+>> @@ -46,6 +46,12 @@ Required properties:
+>>      On (H)SCI(F) and some SCIFA, an additional clock may be specified:
+>>        - "hsck" for the optional external clock input (on HSCIF),
+>>        - "sck" for the optional external clock input (on other variants).
+>> +    On UARTs equipped with a Baud Rate Generator for External Clock (BRG)
+>> +    (some SCIF and HSCIF), additional clocks may be specified:
+>> +      - "int_clk" for the optional internal clock source for the frequency
+>> +     divider (typically the (AXI or SHwy) bus clock),
+>
+> Isn't this always the same clock as the SCIF functional clock ?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-index b6bf292..544f323 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-@@ -176,6 +176,11 @@ static void hns_ppe_cnt_clr_ce(struct hns_ppe_cb *ppe_cb)
- 			 PPE_CNT_CLR_CE_B, 1);
- }
- 
-+static void hns_ppe_set_vlan_strip(struct hns_ppe_cb *ppe_cb, int en)
-+{
-+	dsaf_write_dev(ppe_cb, PPEV2_VLAN_STRIP_EN_REG, en);
-+}
-+
- /**
-  * hns_ppe_checksum_hw - set ppe checksum caculate
-  * @ppe_device: ppe device
-@@ -345,6 +350,8 @@ static void hns_ppe_init_hw(struct hns_ppe_cb *ppe_cb)
- 	hns_ppe_cnt_clr_ce(ppe_cb);
- 
- 	if (!AE_IS_VER1(dsaf_dev->dsaf_ver)) {
-+		hns_ppe_set_vlan_strip(ppe_cb, 0);
-+
- 		hns_ppe_set_rss_key(ppe_cb, rss_key);
- 
- 		for (i = 0; i < HNS_PPEV2_RSS_IND_TBL_SIZE; i++)
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-index 98c163e..6c18ca9 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-@@ -318,6 +318,7 @@
- #define PPE_CFG_PARSE_TAG_REG			0x94
- #define PPE_CFG_PRO_CHECK_EN_REG		0x98
- #define PPEV2_CFG_TSO_EN_REG                    0xA0
-+#define PPEV2_VLAN_STRIP_EN_REG                 0xAC
- #define PPE_INTEN_REG				0x100
- #define PPE_RINT_REG				0x104
- #define PPE_INTSTS_REG				0x108
--- 
-1.7.9.5
+(On R-Car Gen2/3)
+
+No, SCIF uses different parents for fck (p) and int_clk (zs).
+HSCIF uses the same parents though (zs).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
