@@ -1,90 +1,46 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v3 09/12] ARM: dts: rockchip: add rk3288 mipi_dsi nodes
-Date: Thu, 19 Nov 2015 11:35:27 +0800
-Message-ID: <1447904131-29328-10-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v3 11/12] drm/panel: simple: Add boe,tv080wum-nl0 simple panel device tree binding
+Date: Thu, 19 Nov 2015 11:35:29 +0800
+Message-ID: <1447904131-29328-12-git-send-email-zyw@rock-chips.com>
 References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, linux-rockchip@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
-Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a mipi_dsi node, and also add mipi_dsi endpoints to vopb and vopl
-output port nodes.
+This binding specifies a set of common properties for display panels. It
+can be used as a basis by bindings for specific panels.
+Bindings for three specific panels are provided to show how the
+simple panel binding can be used.
 
 Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+
 ---
 
-Changes in v3: None
-Changes in v2: None
+Changes in v3:
+move boe,tv080wum-nl0.txt to bindings/display/panel/
 
- arch/arm/boot/dts/rk3288.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Changes in v2:
+As Thierry.Reding comment, add a documentation for this panel.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6a79c9c..a5c5670 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -798,6 +798,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopb>;
- 			};
-+			vopb_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopb>;
-+			};
- 		};
- 	};
- 
-@@ -831,6 +835,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopl>;
- 			};
-+			vopl_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopl>;
-+			};
- 		};
- 	};
- 
-@@ -871,6 +879,37 @@
- 		};
- 	};
- 
-+	mipi_dsi: mipi@ff960000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0xff960000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
-+		clock-names = "ref", "pclk";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
+ .../devicetree/bindings/display/panel/boe,tv080wum-nl0.txt         | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt b/Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
+new file mode 100644
+index 0000000..50be5e2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
+@@ -0,0 +1,7 @@
++Boe Corporation 8.0" WUXGA TFT LCD panel
 +
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
++Required properties:
++- compatible: should be "boe,tv080wum-nl0"
 +
-+			mipi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mipi_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_mipi>;
-+				};
-+				mipi_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_mipi>;
-+				};
-+			};
-+		};
-+	};
-+
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 -- 
 2.6.3
