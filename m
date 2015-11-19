@@ -1,36 +1,49 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH RFC 25/27] devicetree: bindings: Document qcom,msm-id and
- qcom,board-id
-Date: Thu, 19 Nov 2015 08:36:40 -0700
-Message-ID: <20151119153640.GC893@linaro.org>
-References: <1447799871-56374-1-git-send-email-lina.iyer@linaro.org>
- <1447799871-56374-26-git-send-email-lina.iyer@linaro.org>
- <CAL_JsqJAOEvs08Jydn9wWtM7-Oxd=MmmDER48VRF7z3Gkzt0CQ@mail.gmail.com>
+From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v11 2/8] Input: goodix - reset device at init
+Date: Thu, 19 Nov 2015 15:36:12 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F11F7FD@irsmsx105.ger.corp.intel.com>
+References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
+	 <1447936001-21420-3-git-send-email-irina.tirdea@intel.com>
+ <1447946703.24088.73.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJAOEvs08Jydn9wWtM7-Oxd=MmmDER48VRF7z3Gkzt0CQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski@samsung.com>, msivasub@codeaurora.org, Andy Gross <agross@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, ahaslam@baylibre.com, mtitinger@baylibre.com, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447946703.24088.73.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19 2015 at 07:37 -0700, Rob Herring wrote:
->On Tue, Nov 17, 2015 at 4:37 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
->> From: Kumar Gala <galak@codeaurora.org>
->>
->> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
->> on Qualcomm MSM platforms to determine which device tree should be
->> utilized and passed to the kernel.
->
->See [1] and the link there to the prior version which is like this one.
->
-Thanks Rob. Andy Gross sent me that link and I am waiting on the changes
-along with the dtb tool to make it. These patches will go away after
-Stephen's changes. I just put it in here for completeness.
-
-Thanks,
-Lina
-
->[1] https://lkml.org/lkml/2015/10/26/651
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
+W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMTkgTm92ZW1iZXIsIDIwMTUgMTc6
+MjUNCj4gVG86IFRpcmRlYSwgSXJpbmE7IERtaXRyeSBUb3Jva2hvdjsgQWxla3NlaSBNYW1saW47
+IEthcnN0ZW4gTWVya2VyOyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1hcmsg
+UnV0bGFuZDsgUm9iIEhlcnJpbmc7IFB1cmRpbGEsIE9jdGF2aWFuOyBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIHYxMSAyLzhdIElucHV0OiBnb29kaXggLSByZXNldCBkZXZpY2UgYXQgaW5pdA0KPiAN
+Cj4gT24gVGh1LCAyMDE1LTExLTE5IGF0IDE0OjI2ICswMjAwLCBJcmluYSBUaXJkZWEgd3JvdGU6
+DQo+ID4gQWZ0ZXIgcG93ZXIgb24sIGl0IGlzIHJlY29tbWVuZGVkIHRoYXQgdGhlIGRyaXZlciBy
+ZXNldHMgdGhlIGRldmljZS4NCj4gPiBUaGUgcmVzZXQgcHJvY2VkdXJlIHRpbWluZyBpcyBkZXNj
+cmliZWQgaW4gdGhlIGRhdGFzaGVldCBhbmQgaXMgdXNlZA0KPiA+IGF0IGRldmljZSBpbml0IChi
+ZWZvcmUgd3JpdGluZyBkZXZpY2UgY29uZmlndXJhdGlvbikgYW5kDQo+ID4gZm9yIHBvd2VyIG1h
+bmFnZW1lbnQuIEl0IGlzIGEgc2VxdWVuY2Ugb2Ygc2V0dGluZyB0aGUgaW50ZXJydXB0DQo+ID4g
+YW5kIHJlc2V0IHBpbnMgaGlnaC9sb3cgYXQgc3BlY2lmaWMgdGltaW5nIGludGVydmFscy4gVGhp
+cyBwcm9jZWR1cmUNCj4gPiBhbHNvIGluY2x1ZGVzIHNldHRpbmcgdGhlIHNsYXZlIGFkZHJlc3Mg
+dG8gdGhlIG9uZSBzcGVjaWZpZWQgaW4gdGhlDQo+ID4gQUNQSS9kZXZpY2UgdHJlZS4NCj4gDQo+
+IFRoaXMgZmFpbHMgb24gYSA0LjMga2VybmVsIHdpdGggYW4gQUNQSSBkZXZpY2UgKFdpbkJvb2sg
+VFcxMDApOg0KPiBHb29kaXgtVFM6IHByb2JlIG9mIGkyYy1HRElYMTAwMTowMCBmYWlsZWQgd2l0
+aCBlcnJvciAtMTYNCj4gDQo+IENhbiB5b3UgcGxlYXNlIGRvY3VtZW50IHdoaWNoIHVwc3RyZWFt
+IGNvbW1pdCBpcyBuZWNlc3NhcnkgdG8gbWFrZSB0aGlzDQo+IGJlaGF2ZSBwcm9wZXJseT8NCj4g
+DQoNCllvdSBuZWVkIHRoZSBwYXRjaCB0aGF0IGZpeGVzIHRoZSBHUElPIEFQSSBbMV0gc28gdGhh
+dA0KZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwgd29ya3MgcHJvcGVybHkgKEkgbWVudGlvbmVkIHRo
+YXQgaW4gdGhlIGNvdmVyDQpsZXR0ZXIpLiBUaGlzIHBhdGNoIGp1c3QgZ290IG1lcmdlZCBpbiB0
+aGUgZ3BpbyB0cmVlLCBzbyBpdCB3aWxsIHRha2UgYQ0Kd2hpbGUgdW50aWwgaXQgd2lsbCBiZSBt
+ZXJnZWQgaW4gdGhlIG1haW4ga2VybmVsIHRyZWUgb3IgaW5wdXQgdHJlZS4gDQoNClRoYW5rcywN
+CklyaW5hDQoNCiBbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTUvMTEvMTEvNDY1DQoNCj4g
+SSdsbCB0ZXN0IGFnYWluIHdpdGggYSBuZXdlciBrZXJuZWwuDQo+IA0KPiBDaGVlcnMNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
