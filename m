@@ -1,72 +1,74 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/panel: simple: Add support for G121X1-L03
-Date: Thu, 19 Nov 2015 08:56:10 -0600
-Message-ID: <20151119145610.GA23749@rob-hp-laptop>
-References: <1447880267-13422-1-git-send-email-akshay.bhat@timesys.com>
+Subject: Re: [PATCH v2 2/5] Documentation: devicetree: Add DT bindings to
+ eeprom_93xx46 driver.
+Date: Thu, 19 Nov 2015 08:59:22 -0600
+Message-ID: <20151119145922.GA24560@rob-hp-laptop>
+References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com>
+ <1447903781-3910-3-git-send-email-cory.tusar@pid1solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447880267-13422-1-git-send-email-akshay.bhat@timesys.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Akshay Bhat <akshay.bhat@timesys.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, justin.waters@timesys.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, galak@codeaurora.org
+In-Reply-To: <1447903781-3910-3-git-send-email-cory.tusar@pid1solutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cory Tusar <cory.tusar@pid1solutions.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org, jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMTgsIDIwMTUgYXQgMDM6NTc6NDdQTSAtMDUwMCwgQWtzaGF5IEJoYXQgd3Jv
-dGU6Cj4gQWRkIHN1cHBvcnQgZm9yIElubm9sdXggQ2hlTWVpIDEyIiBHMTIxWDEtTDAzIFhHQSBM
-VkRTIGRpc3BsYXkuCj4gCj4gRGF0YXNoZWV0OiBodHRwOi8vd3d3LmF6ZGlzcGxheXMuY29tL1BE
-Ri9HMTIxWDEtTDAzLnBkZgo+IFNpZ25lZC1vZmYtYnk6IEFrc2hheSBCaGF0IDxha3NoYXkuYmhh
-dEB0aW1lc3lzLmNvbT4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoK
-PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxnMTIxeDEtbDAzLnR4
-dCAgfCAgNyArKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAg
-ICAgICAgICAgICB8IDMxICsrKysrKysrKysrKysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCAzOCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGcxMjF4MS1sMDMudHh0Cj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL2lubm9sdXgsZzEyMXgxLWwwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LGcxMjF4MS1sMDMudHh0Cj4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi42NDk3NDQ2Cj4gLS0tIC9kZXYvbnVsbAo+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9s
-dXgsZzEyMXgxLWwwMy50eHQKPiBAQCAtMCwwICsxLDcgQEAKPiArSW5ub2x1eCBDb3Jwb3JhdGlv
-biAxMi4xIiBHMTIxWDEtTDAzIFhHQSAoMTAyNHg3NjgpIFRGVCBMQ0QgcGFuZWwKPiArCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LGcx
-MjF4MS1sMDMiCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1w
-bGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1wYW5lbC50
-eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+
-IGluZGV4IGY5N2I3M2UuLmQxODIxZjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXNpbXBsZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNp
-bXBsZS5jCj4gQEAgLTgzMiw2ICs4MzIsMzQgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9k
-ZXNjIGlubm9sdXhfZzEyMWkxX2wwMSA9IHsKPiAgCX0sCj4gIH07Cj4gIAo+ICtzdGF0aWMgY29u
-c3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgaW5ub2x1eF9nMTIxeDFfbDAzX21vZGUgPSB7Cj4g
-KwkuY2xvY2sgPSA2NTAwMCwKPiArCS5oZGlzcGxheSA9IDEwMjQsCj4gKwkuaHN5bmNfc3RhcnQg
-PSAxMDI0ICsgMCwKPiArCS5oc3luY19lbmQgPSAxMDI0ICsgMSwKPiArCS5odG90YWwgPSAxMDI0
-ICsgMCArIDEgKyAzMjAsCj4gKwkudmRpc3BsYXkgPSA3NjgsCj4gKwkudnN5bmNfc3RhcnQgPSA3
-NjggKyAzOCwKPiArCS52c3luY19lbmQgPSA3NjggKyAzOCArIDEsCj4gKwkudnRvdGFsID0gNzY4
-ICsgMzggKyAxICsgMCwKPiArCS52cmVmcmVzaCA9IDYwLAo+ICt9Owo+ICsKPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBwYW5lbF9kZXNjIGlubm9sdXhfZzEyMXgxX2wwMyA9IHsKPiArCS5tb2RlcyA9
-ICZpbm5vbHV4X2cxMjF4MV9sMDNfbW9kZSwKPiArCS5udW1fbW9kZXMgPSAxLAo+ICsJLmJwYyA9
-IDYsCj4gKwkuc2l6ZSA9IHsKPiArCQkud2lkdGggPSAyNDYsCj4gKwkJLmhlaWdodCA9IDE4NSwK
-PiArCX0sCj4gKwkuZGVsYXkgPSB7Cj4gKwkJLmVuYWJsZSA9IDIwMCwKPiArCQkudW5wcmVwYXJl
-ID0gMjAwLAo+ICsJCS5kaXNhYmxlID0gNDAwLAo+ICsJfSwKPiArfTsKPiArCj4gIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBpbm5vbHV4X24xMTZiZ2VfbW9kZSA9IHsKPiAg
-CS5jbG9jayA9IDc2NDIwLAo+ICAJLmhkaXNwbGF5ID0gMTM2NiwKPiBAQCAtMTE1OCw2ICsxMTg2
-LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hb
-XSA9IHsKPiAgCQkuY29tcGF0aWJsZSA9Imlubm9sdXgsZzEyMWkxLWwwMSIsCj4gIAkJLmRhdGEg
-PSAmaW5ub2x1eF9nMTIxaTFfbDAxCj4gIAl9LCB7Cj4gKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1
-eCxnMTIxeDEtbDAzIiwKPiArCQkuZGF0YSA9ICZpbm5vbHV4X2cxMjF4MV9sMDMsCj4gKwl9LCB7
-Cj4gIAkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCxuMTE2YmdlIiwKPiAgCQkuZGF0YSA9ICZpbm5v
-bHV4X24xMTZiZ2UsCj4gIAl9LCB7Cj4gLS0gCj4gMi42LjMKPiAKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Nov 18, 2015 at 10:29:38PM -0500, Cory Tusar wrote:
+> This commit documents bindings to be added to the eeprom_93xx46 driver
+> which will allow:
+> 
+>   - Device word size and read-only attributes to be specified.
+>   - A device-specific compatible string for use with Atmel AT93C46D
+>     EEPROMs.
+>   - Specifying a GPIO line to function as a 'select' or 'enable' signal
+>     prior to accessing the EEPROM.
+> 
+> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+
+One nit, but:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  .../devicetree/bindings/misc/eeprom-93xx46.txt     | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+> new file mode 100644
+> index 0000000..8e116a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+> @@ -0,0 +1,25 @@
+> +EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
+> +
+> +Required properties:
+> +- compatible : shall be one of:
+> +    "atmel,at93c46d"
+> +    "eeprom-93xx46"
+> +- data-size : number of data bits per word (either 8 or 16)
+> +
+> +Optional properties:
+> +- read-only : parameter-less property which disables writes to the EEPROM
+> +- select-gpios : if present, specifies the GPIO that will be asserted prior to
+> +  each access to the EEPROM (e.g. for SPI bus multiplexing)
+> +
+> +Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> +apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
+> +
+> +Example:
+> +	93c46c@0 {
+
+This should be eeprom@0.
+
+> +		compatible = "eeprom-93xx46";
+> +		reg = <0>;
+> +		spi-max-frequency = <1000000>;
+> +		spi-cs-high;
+> +		data-size = <8>;
+> +		select-gpios = <&gpio4 4 GPIO_ACTIVE_HIGH>;
+> +	};
+> -- 
+> 2.4.10
+> 
