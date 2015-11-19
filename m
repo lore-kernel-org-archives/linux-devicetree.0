@@ -1,101 +1,105 @@
-From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: Re: [PATCH v2 2/5] Documentation: devicetree: Add DT bindings to
- eeprom_93xx46 driver.
-Date: Thu, 19 Nov 2015 12:30:50 -0500
-Message-ID: <564E074A.9020600@pid1solutions.com>
-References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447903781-3910-3-git-send-email-cory.tusar@pid1solutions.com>
- <20151119145922.GA24560@rob-hp-laptop>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Thu, 19 Nov 2015 23:36:08 +0530
+Message-ID: <CAGOxZ50b3cGXQSFL1uXt7O=CyBOaE=7WRQ-tSz8NUmWzBdhxoQ@mail.gmail.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+ <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+ <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
+ <562765F3.9010306@osg.samsung.com> <CAGOxZ52-ia8uhgGg5CiU9TSYkfAsRD52zvLqq++Y-mr4uaFOpg@mail.gmail.com>
+ <5627A75E.60509@osg.samsung.com> <CAGOxZ537QuzBP4tcG9qh-+iXK-Y=WwZGiJ1-cwtLqwRf0a+wVA@mail.gmail.com>
+ <56282B2D.6000708@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151119145922.GA24560@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org, jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <56282B2D.6000708@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hi Krzysztof/Ulf/Kukjin
 
-On 11/19/2015 09:59 AM, Rob Herring wrote:
-> On Wed, Nov 18, 2015 at 10:29:38PM -0500, Cory Tusar wrote:
->> This commit documents bindings to be added to the eeprom_93xx46 driver
->> which will allow:
+On Thu, Oct 22, 2015 at 5:47 AM, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On 22.10.2015 00:01, Alim Akhtar wrote:
+>> On Wed, Oct 21, 2015 at 8:25 PM, Javier Martinez Canillas
+>> <javier@osg.samsung.com> wrote:
+>>> Hello Alim,
+>>>
+>>> On 10/21/2015 04:50 PM, Alim Akhtar wrote:
+>>>
+>>> [snip]
+>>>
+>>>>>
+>>>>> [0]:
+>>>>> From c9b250ee03bae338339b70693e906145c719f783 Mon Sep 17 00:00:00 2001
+>>>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>> Date: Wed, 21 Oct 2015 11:59:44 +0200
+>>>>> Subject: [RFT PATCH] mmc: pwrseq: Use highest priority for eMMC restart
+>>>>>  handler
+>>>>>
+>>>>> The pwrseq_emmc driver does a eMMC card reset before a system reboot to
+>>>>> allow broken or limited ROM boot-loaders, that don't have an eMMC reset
+>>>>> logic, to be able to read the second stage from the eMMC.
+>>>>>
+>>>>> But this has to be called before a system reboot handler and while most
+>>>>> of them use the priority 128, there are other restart handlers (such as
+>>>>> the syscon-reboot one) that use a higher priority. So, use the highest
+>>>>> priority to make sure that the eMMC hw is reset before a system reboot.
+>>>>>
+>>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>> ---
+>>>> Looks good.
+>>>> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>>>
+>>>
+>
+> +Cc Ulf,
+>
+> Javier,
+>
+> First of all, thanks Javier for digging into the issue. Actually I have
+> Odroid U3 but because of user-space limitations (which I need for other
+> work) I cannot test all of mainline patches there.
+>
+>
+>>> Thanks, should I post it as a proper patch or are adding it to your
+>>> series?
+>> Suggest you to post as a patch collecting {Tested, Reviewed}-by (easy
+>> for maintainers to pickup ) and probably CCing Ulf for his feedback.
 >>
->>   - Device word size and read-only attributes to be specified.
->>   - A device-specific compatible string for use with Atmel AT93C46D
->>     EEPROMs.
->>   - Specifying a GPIO line to function as a 'select' or 'enable' signal
->>     prior to accessing the EEPROM.
->>
->> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-> 
-> One nit, but:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
->> ---
->>  .../devicetree/bindings/misc/eeprom-93xx46.txt     | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> new file mode 100644
->> index 0000000..8e116a1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
->> @@ -0,0 +1,25 @@
->> +EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
->> +
->> +Required properties:
->> +- compatible : shall be one of:
->> +    "atmel,at93c46d"
->> +    "eeprom-93xx46"
->> +- data-size : number of data bits per word (either 8 or 16)
->> +
->> +Optional properties:
->> +- read-only : parameter-less property which disables writes to the EEPROM
->> +- select-gpios : if present, specifies the GPIO that will be asserted prior to
->> +  each access to the EEPROM (e.g. for SPI bus multiplexing)
->> +
->> +Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
->> +apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
->> +
->> +Example:
->> +	93c46c@0 {
-> 
-> This should be eeprom@0.
+>>> I think the latter is more reasonable so with an ack from Ulf,
+>>> all patches can go through the linux-samsung tree.
+>>>
+>> yes, that is reasonable, as I said, let Krzysztof and Ulf take a call here.
+>
+> Javier, Alim, Ulf,
+>
+> I am not grabbing any more patches for v4.4 because I doubt that they
+> could be merged to arm-soc for this cycle. My last pull requests for
+> v4.4 is still pending...
+>
+> This means that I plan to pick up these series for v4.5, after closing
+> v4.4 merge window (unless Kukjin picks it also). Because of that, we
+> have plenty of time, so my idea is:
+> 1. Wait for some comments from Ulf on Javier's fix.
+> 2. If the fix goes into v4.4, then problem solved.
+> 3. If not and it get acked, then it can go with this set.
+> 4. If not and it get applied by Ulf for v4.5, then a tag from him would
+> be a nice way to solve dependency.
+>
+> Either way we don't have to hurry, I think.
+>
 
-Easy enough.  Will fix for v3.  Thanks.
+Is It the right time to get this series in?
+Thanks!!
 
->> +		compatible = "eeprom-93xx46";
->> +		reg = <0>;
->> +		spi-max-frequency = <1000000>;
->> +		spi-cs-high;
->> +		data-size = <8>;
->> +		select-gpios = <&gpio4 4 GPIO_ACTIVE_HIGH>;
->> +	};
->> -- 
->> 2.4.10
->>
+> Best regards,
+> Krzysztof
 
 
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
 
-
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlZOB0oACgkQHT1tsfGwHJ9EigCfUGD754C+nIpu5/bvnprFt1gF
-DDYAn1KkIYfk6Tp5X1eqfn2OirGHVLTe
-=PLGL
------END PGP SIGNATURE-----
+-- 
+Regards,
+Alim
