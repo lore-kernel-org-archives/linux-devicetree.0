@@ -1,68 +1,49 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM64: dts: enable clock support for Broadcom NS2
-Date: Wed, 18 Nov 2015 16:09:50 -0800
-Message-ID: <564D134E.8070205@broadcom.com>
-References: <1447888430-4451-1-git-send-email-jonmason@broadcom.com>
- <1447888430-4451-4-git-send-email-jonmason@broadcom.com>
- <564D11C0.409@broadcom.com> <564D12D7.7090407@gmail.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v7 12/50] powerpc/powernv: Track M64 segment consumption
+Date: Thu, 19 Nov 2015 11:10:42 +1100
+Message-ID: <564D1382.6030504@ozlabs.ru>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-13-git-send-email-gwshan@linux.vnet.ibm.com>
+ <56498D77.2060101@ozlabs.ru> <20151117010446.GA26294@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564D12D7.7090407-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151117010446.GA26294@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/18/2015 4:07 PM, Florian Fainelli wrote:
-> On 18/11/15 16:03, Ray Jui wrote:
+On 11/17/2015 12:04 PM, Gavin Shan wrote:
+> On Mon, Nov 16, 2015 at 07:01:59PM +1100, Alexey Kardashevskiy wrote:
+>> On 11/05/2015 12:12 AM, Gavin Shan wrote:
+>>> As we track M32 segment consumption, this introduces an array to
+>>> the PHB to track the mapping between M64 segment and PE number.
+>>> The information is going to be used to find M64 segment from the
+>>> PE number during PCI unplugging time in subsequent patches.
 >>
 >>
->> On 11/18/2015 3:13 PM, Jon Mason wrote:
->>> Add device tree entries for clock support for Broadcom Northstar 2 SoC
->>>
->>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>    arch/arm64/boot/dts/broadcom/ns2.dtsi | 80
->>> ++++++++++++++++++++++++++++++++++-
->>>    1 file changed, 79 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>> b/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>> index 9610822..a510d3a 100644
->>> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
->>> @@ -31,6 +31,7 @@
->>>     */
->>>
->>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +#include <dt-bindings/clock/bcm-ns2.h>
->>>
->>>    /memreserve/ 0x84b00000 0x00000008;
->>>
->>> @@ -109,6 +110,33 @@
->>>                         <&A57_3>;
->>>        };
->>>
->>> +    clocks {
+>> It would not hurt to put a few words about how we managed to live without
+>> such a mapping for M64 before but we needed mapping for M32.
 >>
->> Is this a new convention? That is, group all clocks without a base
->> register address in a node named "clocks", but at the same time, put all
->> other clocks with base register address under a bus node.
 >
-> I do not think that is new, lots of platforms do that. The clock
-> providers/controllers would typically be in the 'bus' nodes because it
-> has a register interface, while the synthetic clocks would be under
-> 'clocks'.
->
+> The M32 mapping (phb->ioda.m32_segmap[]) isn't used for anything before
+> this patcheset. There're no need for M64 mapping before this patchset
+> similarly, no need to add the words.
 
-Okay that's very good to know. Thanks!
+After years I learned that reviewers ask less questions about new but yet 
+unused code when I put few words in the commit log confirming that it is 
+not used now but it will be used for <here I put what it is for> later.
 
-Ray
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And it is not obvious that m32_segment is not used. And m64_segmap is 
+started being used only 13 patches later in:
+
+[PATCH v7 27/50] powerpc/powernv: Dynamically release PEs
+
+which is quite far, complicates reviewing. 12/50 is better be moved there 
+(to make it 26/50) or just merged into 27/50.
+
+
+-- 
+Alexey
