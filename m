@@ -1,121 +1,104 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RESEND PATCH v3] dt-bindings: Consolidate SRAM bindings from all
- vendors
-Date: Thu, 19 Nov 2015 09:42:49 +0900
-Message-ID: <1447893769-17088-1-git-send-email-k.kozlowski@samsung.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: soc: add document for rockchip reboot
+ notifier driver
+Date: Thu, 19 Nov 2015 09:17:37 +0800
+Message-ID: <564D2331.8070503@rock-chips.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <1447840410-19794-1-git-send-email-andy.yan@rock-chips.com>
+ <20151118225904.GA5429@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151118225904.GA5429@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SRAM bindings for various SoCs, using the mmio-sram genalloc
-API, are spread over different places - per SoC vendor. Since all of
-these are quite similar (they depend on mmio-sram) move them to a common
-place.
+Hi Rob:
 
-Suggested-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 06:59, Rob Herring wrote:
+> On Wed, Nov 18, 2015 at 05:53:30PM +0800, Andy Yan wrote:
+>> Add devicetree binding document for rockchip reboot nofifier driver
+> Just reading the subject this is way too specific to the Linux driver
+> needs rather than a h/w description. Please don't create fake DT node=
+s
+> just to bind to drivers. Whatever &pmu is is probably what should hav=
+e
+> the DT node. Let the driver for it create child devices if you need
+> that.
 
----
+     This is note a fake DT nodes, we really need it to tell the driver
+      which register to use to store the reboot mode. Because rockchip
+      use different register file to store the reboot mode on different
+      platform, on rk3066,rk3188, rk3288,it use  one of the PMU=20
+register, on
+      the incoming RK3036, it use one of the GRF register, and it use=20
+one  of
+      the PMUGRF register for arm64 platform rk3368. On the other hand,=
+ the
+      PMU/GRF/PMUGRF register file are mapped as "syscon", then referen=
+ced
+      by other DT nodes by phandle. So maybe let it as a separate DT=20
+node here
+      is better.
 
-Changes since v2:
-1. Update paths to sram.txt.
+> Rob
+>> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v3:
+>>   - add dt binding
+>>
+>> Changes in v2: None
+>>
+>>   .../bindings/soc/rockchip/rockchip-reboot.txt          | 18 ++++++=
+++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/rockchip/=
+rockchip-reboot.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/rockchip/rockchip=
+-reboot.txt b/Documentation/devicetree/bindings/soc/rockchip/rockchip-r=
+eboot.txt
+>> new file mode 100644
+>> index 0000000..6f69c8d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/rockchip/rockchip-reboot=
+=2Etxt
+>> @@ -0,0 +1,18 @@
+>> +Rockchip reboot notifier driver
+>> +
+>> +This driver get reboot mode arguments from userspace
+>> +and stores it in special register. Then the bootloader
+>> +will read it and take different action according the
+>> +argument stored.
+>> +
+>> +Required properties:
+>> +- compatible: should be "rockchip,reboot"
+>> +- regmap: this is phandle to the register map node
+>> +- offset: offset in the register map for the storage register (in b=
+ytes)
+>> +
+>> +Examples:
+>> +	reboot {
+>> +	   compatible =3D "rockchip,reboot";
+>> +	   regmap =3D <&pmu>;
+>> +	   offset =3D <0x94>;
+>> +	};
+>> --=20
+>> 1.9.1
+>>
+>>
+>
+>
 
-Changes since v1:
-1. New patch. Extended suggestion from Rob.
----
- Documentation/devicetree/bindings/arm/arm,scpi.txt                      | 2 +-
- .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt}  | 0
- .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt}  | 2 +-
- .../bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt}       | 2 +-
- Documentation/devicetree/bindings/{misc => sram}/sram.txt               | 0
- .../devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt}     | 2 +-
- 6 files changed, 4 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} (100%)
- rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} (92%)
- rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt} (95%)
- rename Documentation/devicetree/bindings/{misc => sram}/sram.txt (100%)
- rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt} (97%)
-
-diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-index 86302de67c2c..313dabdc14f9 100644
---- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-+++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-@@ -63,7 +63,7 @@ Required properties:
- - compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
- 
- The rest of the properties should follow the generic mmio-sram description
--found in ../../misc/sysram.txt
-+found in ../../sram/sram.txt
- 
- Each sub-node represents the reserved area for SCPI.
- 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-rename to Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-similarity index 92%
-rename from Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-rename to Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-index d9416fb8db6f..800701ecffca 100644
---- a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-+++ b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-@@ -12,7 +12,7 @@ Required sub-node properties:
- - compatible : should be "rockchip,rk3066-smp-sram"
- 
- The rest of the properties should follow the generic mmio-sram discription
--found in ../../misc/sram.txt
-+found in Documentation/devicetree/bindings/sram/sram.txt
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-similarity index 95%
-rename from Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-rename to Documentation/devicetree/bindings/sram/samsung-sram.txt
-index 4a0a4f70a0ce..6bc474b2b885 100644
---- a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-+++ b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-@@ -15,7 +15,7 @@ Required sub-node properties:
- 		"samsung,exynos4210-sysram-ns" : for Non-secure SYSRAM
- 
- The rest of the properties should follow the generic mmio-sram discription
--found in ../../misc/sysram.txt
-+found in Documentation/devicetree/bindings/sram/sram.txt
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/misc/sram.txt
-rename to Documentation/devicetree/bindings/sram/sram.txt
-diff --git a/Documentation/devicetree/bindings/soc/sunxi/sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-similarity index 97%
-rename from Documentation/devicetree/bindings/soc/sunxi/sram.txt
-rename to Documentation/devicetree/bindings/sram/sunxi-sram.txt
-index 067698112f5f..8d5665468fe7 100644
---- a/Documentation/devicetree/bindings/soc/sunxi/sram.txt
-+++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-@@ -16,7 +16,7 @@ SRAM nodes
- ----------
- 
- Each SRAM is described using the mmio-sram bindings documented in
--Documentation/devicetree/bindings/misc/sram.txt
-+Documentation/devicetree/bindings/sram/sram.txt
- 
- Each SRAM will have SRAM sections that are going to be handled by the
- SRAM controller as subnodes. These sections are represented following
--- 
-1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
