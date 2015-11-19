@@ -1,81 +1,113 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: doc: dwc3-xilinx: Add devicetree bindings
-Date: Wed, 18 Nov 2015 19:24:52 -0600
-Message-ID: <CAL_JsqKE6f8DwvJQok=JGuzj5=9g8vrwY+wscLJkhFaG4229Mw@mail.gmail.com>
-References: <1447851031-16241-1-git-send-email-sbhatta@xilinx.com>
- <20151118225331.GA22325@rob-hp-laptop> <87ziyagbc2.fsf@saruman.tx.rr.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/3] ARM: imx: clk-vf610: fix SAI clock tree
+Date: Wed, 18 Nov 2015 17:58:34 -0800
+Message-ID: <303ceb58a66266515be33d1943091908@agner.ch>
+References: <1445141122-14183-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87ziyagbc2.fsf-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1445141122-14183-1-git-send-email-stefan@agner.ch>
+Sender: linux-clk-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Li.Xiubo@freescale.com, zidan.wang@freescale.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 5:02 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
->
-> Hi,
->
-> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->> On Wed, Nov 18, 2015 at 06:20:31PM +0530, Subbaraya Sundeep Bhatta wrote:
->>> This patch adds binding doc for Xilinx DWC3 glue driver.
->>>
->>> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>
->> I really dislike how the DWC3 binding has been done. The sub-node here
->> is pointless. The only thing the outer node does is add clocks which
->> should simply be part of the DWC3 node. Presumably the IP block needs
->> some clocks...
->>
->> Anyway, it's self-contained within the DWC3, so I won't make you clean
->> up the mess.
->
-> heh, it's definitely not pointless. We get a lot of free goodies by
-> doing it that way. I'm just not going to repeat it once again. But in
-> summary:
->
-> a) we force people to write glue layers for *only* their HW specific
-> details
->
-> b) there's really no way to abuse dwc3 core because there's no symbol
-> exported from dwc3 core to glue
+Hi Shawn,
 
-Both are doable independent of DT.
+Any thoughts on that patchset? I kind of hoped that it would make it
+into 4.4 since it actually fixes issues (at least 1 and 2)... That said,
+I don't think it is stable material since it also breaks the device
+tree...
 
-> c) PM (both system sleep and runtime) becomes a lot simpler with core
-> only caring about what PM details delivered by SNPS (e.g. Hibernation
-> mode from DWC3) and glue only has to consider the SoC integration parts
-> of PM (for OMAP that would be PRCM details, hwmod, etc).
-
-No doubt OMAP is special.
-
-> I'm definitely not going to change dwc3 because it has made my life a
-> lot saner. Definitely a lot saner than MUSB. Besides, DTS is supposed to
-> describe the HW and that's, really, how the HW is.
-
-So reading the description, the DWC3 has no clocks?
-
-> There's a piece of HW which is somewhat platform agnostic and delivered
-> by SNPS as a black box (SNPS customers don't touch SNPS RTL) and there's
-> another piece of HW which bridges this dwc3 to the platform specific
-> details and integration context of the platform (for OMAP that would the
-> SYSCONFIG/SYSSTATUS registers, Clock autogating, PRCM, etc, etc etc).
-
-It is a black box, but with dozens of configuration options typically.
-
-> So you _do_ in fact, have two separate pieces of HW which are SW visible
-> and controllable independently. They each have their own IRQs (though in
-> some SoCs they share the same line), they're own address space, yada
-> yada yada.
-
-When that is the case, I have no problem with this split, but I don't
-see any of these examples in this particular case. So how should the
-binding look when there is no vendor specific glue? Are we supposed to
-keep the binding structure to appease the needs of the driver?
-
-Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+On 2015-10-17 21:05, Stefan Agner wrote:
+> The Synchronous Audio Interface (SAI) instances are clocked by
+> independent clocks: The bus clock and the audio clock (as shown in
+> Figure 51-1 in the Vybrid Reference Manual). The clock gates in
+> CCGR0/CCGR1 for SAI0 through SAI3 are bus clock gates, as access
+> tests to the registers with/without gating those clocks have shown.
+> The audio clock is gated by the SAIx_EN gates in CCM_CSCDR1,
+> followed by a clock divider (SAIx_DIV). Currently, the parent of
+> the bus clock gates has been assigned to SAIx_DIV, which is not
+> involved in the bus clock path for the SAI instances (see chapter
+> 9.10.12, SAI clocking in the Vybrid Reference Manual).
+> 
+> Fix this by define the parent clock of VF610_CLK_SAIx to be the bus
+> clock.
+> 
+> If the driver needs the audio clock (when used in master mode), a
+> fixed device tree is required which assign the audio clock properly
+> to VF610_CLK_SAIx_DIV.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+> Hi all,
+> 
+> Patch 1 and 2 are actual fixes and should be applied toghether. If
+> the clock tree changes are applied only, master mode won't work
+> anymore. With only the device tree changes applied, it probably
+> will still work but the VF610_CLK_SAIx_DIV will be enabled twice.
+> 
+> Since Patch 3 also uses the fixed clock layout, it should be
+> applied after the clock tree fix too...
+> 
+> Not sure through which tree these changes should go?
+> 
+> --
+> Stefan
+> 
+>  drivers/clk/imx/clk-vf610.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+> index bff45ea..42a7a23 100644
+> --- a/drivers/clk/imx/clk-vf610.c
+> +++ b/drivers/clk/imx/clk-vf610.c
+> @@ -335,22 +335,22 @@ static void __init vf610_clocks_init(struct
+> device_node *ccm_node)
+>  	clk[VF610_CLK_SAI0_SEL] = imx_clk_mux("sai0_sel", CCM_CSCMR1, 0, 2,
+> sai_sels, 4);
+>  	clk[VF610_CLK_SAI0_EN] = imx_clk_gate("sai0_en", "sai0_sel", CCM_CSCDR1, 16);
+>  	clk[VF610_CLK_SAI0_DIV] = imx_clk_divider("sai0_div", "sai0_en",
+> CCM_CSCDR1, 0, 4);
+> -	clk[VF610_CLK_SAI0] = imx_clk_gate2("sai0", "sai0_div", CCM_CCGR0,
+> CCM_CCGRx_CGn(15));
+> +	clk[VF610_CLK_SAI0] = imx_clk_gate2("sai0", "ipg_bus", CCM_CCGR0,
+> CCM_CCGRx_CGn(15));
+>  
+>  	clk[VF610_CLK_SAI1_SEL] = imx_clk_mux("sai1_sel", CCM_CSCMR1, 2, 2,
+> sai_sels, 4);
+>  	clk[VF610_CLK_SAI1_EN] = imx_clk_gate("sai1_en", "sai1_sel", CCM_CSCDR1, 17);
+>  	clk[VF610_CLK_SAI1_DIV] = imx_clk_divider("sai1_div", "sai1_en",
+> CCM_CSCDR1, 4, 4);
+> -	clk[VF610_CLK_SAI1] = imx_clk_gate2("sai1", "sai1_div", CCM_CCGR1,
+> CCM_CCGRx_CGn(0));
+> +	clk[VF610_CLK_SAI1] = imx_clk_gate2("sai1", "ipg_bus", CCM_CCGR1,
+> CCM_CCGRx_CGn(0));
+>  
+>  	clk[VF610_CLK_SAI2_SEL] = imx_clk_mux("sai2_sel", CCM_CSCMR1, 4, 2,
+> sai_sels, 4);
+>  	clk[VF610_CLK_SAI2_EN] = imx_clk_gate("sai2_en", "sai2_sel", CCM_CSCDR1, 18);
+>  	clk[VF610_CLK_SAI2_DIV] = imx_clk_divider("sai2_div", "sai2_en",
+> CCM_CSCDR1, 8, 4);
+> -	clk[VF610_CLK_SAI2] = imx_clk_gate2("sai2", "sai2_div", CCM_CCGR1,
+> CCM_CCGRx_CGn(1));
+> +	clk[VF610_CLK_SAI2] = imx_clk_gate2("sai2", "ipg_bus", CCM_CCGR1,
+> CCM_CCGRx_CGn(1));
+>  
+>  	clk[VF610_CLK_SAI3_SEL] = imx_clk_mux("sai3_sel", CCM_CSCMR1, 6, 2,
+> sai_sels, 4);
+>  	clk[VF610_CLK_SAI3_EN] = imx_clk_gate("sai3_en", "sai3_sel", CCM_CSCDR1, 19);
+>  	clk[VF610_CLK_SAI3_DIV] = imx_clk_divider("sai3_div", "sai3_en",
+> CCM_CSCDR1, 12, 4);
+> -	clk[VF610_CLK_SAI3] = imx_clk_gate2("sai3", "sai3_div", CCM_CCGR1,
+> CCM_CCGRx_CGn(2));
+> +	clk[VF610_CLK_SAI3] = imx_clk_gate2("sai3", "ipg_bus", CCM_CCGR1,
+> CCM_CCGRx_CGn(2));
+>  
+>  	clk[VF610_CLK_NFC_SEL] = imx_clk_mux("nfc_sel", CCM_CSCMR1, 12, 2,
+> nfc_sels, 4);
+>  	clk[VF610_CLK_NFC_EN] = imx_clk_gate("nfc_en", "nfc_sel", CCM_CSCDR2, 9);
