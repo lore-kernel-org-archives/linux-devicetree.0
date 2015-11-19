@@ -1,52 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 01/25] serial: sh-sci: Update DT binding documentation for
- external clock input
-Date: Thu, 19 Nov 2015 21:33:01 +0100
-Message-ID: <CAMuHMdX4ToefbBLR6o2AMuzCMoKcYo9XRZOzHJzgtQn552vmNg@mail.gmail.com>
-References: <1447958344-836-1-git-send-email-geert+renesas@glider.be>
-	<1447958344-836-2-git-send-email-geert+renesas@glider.be>
-	<1756365.Ijac5ApxcA@avalon>
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: Re: [PATCH] clk: add generic driver for fixed rate clock
+Date: Thu, 19 Nov 2015 22:25:37 +0200
+Message-ID: <20151119202536.GA9332@chokladfabriken.org>
+References: <1378010420-20031-1-git-send-email-stefan.kristiansson@saunalahti.fi>
+ <CAMuHMdXhxuawY-V+35YoeZWZ3jZ-Vj_MzuRDGBfDD9i9iy=oGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1756365.Ijac5ApxcA@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXhxuawY-V+35YoeZWZ3jZ-Vj_MzuRDGBfDD9i9iy=oGA@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Thu, Nov 19, 2015 at 9:19 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Thursday 19 November 2015 19:38:40 Geert Uytterhoeven wrote:
->> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt index
->> 2c9e6b8477e92792..8efc9b6f35637fbb 100644
->> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> @@ -43,6 +43,9 @@ Required properties:
->>    - clocks: Must contain a phandle and clock-specifier pair for each entry
->>      in clock-names.
->>    - clock-names: Must contain "fck" for the SCIx UART functional clock.
->> +    On (H)SCI(F) and some SCIFA, an additional clock may be specified:
+On Tue, Nov 17, 2015 at 04:46:29PM +0100, Geert Uytterhoeven wrote:
+> Thanks, this is still very useful!
+> 
+> I stumbled across this old patch while trying to instantiate a fixed rate
+> clock from a DT overlay.
+> Without this, the clock is never instantiated, as drivers/clk/clk-fixed-rate.c
+> uses CLK_OF_DECLARE() :-( With your driver, it works as expected
+> (after fixing the modpost complaint, cfr. below).
 >
-> Could you list the SCIFA variants that support external clocks ?
 
-The list is in the commit description of "[PATCH 19/25] serial: sh-sci: Add
-support for optional external (H)SCK input": sh7723, sh7724, and r8a7740.
+Ah, I'm glad that this old thing was of use to someone else than me ;)
 
-Note that the list is probably incomplete, so I don't know if it's that useful
-to have it in the binding docs. Especially as I haven't verified yet that it
-actually works ;-)
+> However, I think that instead of creating a new driver, you should just add
+> the meat of clk-generic-fixed.c to clk-fixed-rate.c.
 
-Gr{oetje,eeting}s,
+Sure, that sounds reasonable, I'll take a second bat at this patch and do that.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Stefan
