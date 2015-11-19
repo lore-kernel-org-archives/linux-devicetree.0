@@ -1,81 +1,193 @@
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: soc: add document for rockchip
- reboot notifier driver
-Date: Thu, 19 Nov 2015 13:56:45 +0100
-Message-ID: <20151119125643.GE21862@ulmo.nvidia.com>
-References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
- <1447840410-19794-1-git-send-email-andy.yan@rock-chips.com>
- <20151118225904.GA5429@rob-hp-laptop>
- <564D2331.8070503@rock-chips.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 02/11] phy: exynos-ufs: add UFS PHY driver for EXYNOS
+ SoC
+Date: Thu, 19 Nov 2015 19:09:41 +0530
+Message-ID: <564DD11D.2060101@ti.com>
+References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
+ <1447046787-480-3-git-send-email-alim.akhtar@samsung.com>
+ <564AC63F.1000508@ti.com> <564AE11F.50908@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IpbVkmxF4tDyP/Kb"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564D2331.8070503-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <564AE11F.50908-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---IpbVkmxF4tDyP/Kb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Thu, Nov 19, 2015 at 09:17:37AM +0800, Andy Yan wrote:
-> Hi Rob:
->=20
-> On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 06:59, Rob Herring wrote:
-> >On Wed, Nov 18, 2015 at 05:53:30PM +0800, Andy Yan wrote:
-> >>Add devicetree binding document for rockchip reboot nofifier driver
-> >Just reading the subject this is way too specific to the Linux driver
-> >needs rather than a h/w description. Please don't create fake DT nodes
-> >just to bind to drivers. Whatever &pmu is is probably what should have
-> >the DT node. Let the driver for it create child devices if you need
-> >that.
->=20
->     This is note a fake DT nodes, we really need it to tell the driver
->      which register to use to store the reboot mode. Because rockchip
->      use different register file to store the reboot mode on different
->      platform, on rk3066,rk3188, rk3288,it use  one of the PMU register, =
-on
->      the incoming RK3036, it use one of the GRF register, and it use one =
- of
->      the PMUGRF register for arm64 platform rk3368. On the other hand, the
->      PMU/GRF/PMUGRF register file are mapped as "syscon", then referenced
->      by other DT nodes by phandle. So maybe let it as a separate DT node
-> here
->      is better.
+On Tuesday 17 November 2015 01:41 PM, Alim Akhtar wrote:
+> Hi
+> Thanks again for looking into this.
+> 
+> On 11/17/2015 11:46 AM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Monday 09 November 2015 10:56 AM, Alim Akhtar wrote:
+>>> From: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> This patch introduces Exynos UFS PHY driver. This driver
+>>> supports to deal with phy calibration and power control
+>>> according to UFS host driver's behavior.
+>>>
+>>> Signed-off-by: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>   drivers/phy/Kconfig                |    7 ++
+>>>   drivers/phy/Makefile               |    1 +
+>>>   drivers/phy/phy-exynos-ufs.c       |  241
+>>> ++++++++++++++++++++++++++++++++++++
+>>>   drivers/phy/phy-exynos-ufs.h       |   85 +++++++++++++
+>>>   drivers/phy/phy-exynos7-ufs.h      |   89 +++++++++++++
+>>>   include/linux/phy/phy-exynos-ufs.h |   85 +++++++++++++
+>>>   6 files changed, 508 insertions(+)
+>>>   create mode 100644 drivers/phy/phy-exynos-ufs.c
+>>>   create mode 100644 drivers/phy/phy-exynos-ufs.h
+>>>   create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>>>   create mode 100644 include/linux/phy/phy-exynos-ufs.h
+>>>
+>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>> index 7eb5859dd035..7d38a92e0297 100644
+>>> --- a/drivers/phy/Kconfig
+>>> +++ b/drivers/phy/Kconfig
+>>> @@ -389,4 +389,11 @@ config PHY_CYGNUS_PCIE
+>>>         Enable this to support the Broadcom Cygnus PCIe PHY.
+>>>         If unsure, say N.
+>>>
+>>> +config PHY_EXYNOS_UFS
+>>> +    tristate "EXYNOS SoC series UFS PHY driver"
+>>> +    depends on OF && ARCH_EXYNOS || COMPILE_TEST
+>>> +    select GENERIC_PHY
+>>> +    help
+>>> +      Support for UFS PHY on Samsung EXYNOS chipsets.
+>>> +
+>>>   endmenu
+>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>> index 075db1a81aa5..9bec4d1a89e1 100644
+>>> --- a/drivers/phy/Makefile
+>>> +++ b/drivers/phy/Makefile
+>>> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)    +=
+>>> phy-armada375-usb2.o
+>>>   obj-$(CONFIG_BCM_KONA_USB2_PHY)        += phy-bcm-kona-usb2.o
+>>>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)    += phy-exynos-dp-video.o
+>>>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)    += phy-exynos-mipi-video.o
+>>> +obj-$(CONFIG_PHY_EXYNOS_UFS)    += phy-exynos-ufs.o
+>>>   obj-$(CONFIG_PHY_LPC18XX_USB_OTG)    += phy-lpc18xx-usb-otg.o
+>>>   obj-$(CONFIG_PHY_PXA_28NM_USB2)        += phy-pxa-28nm-usb2.o
+>>>   obj-$(CONFIG_PHY_PXA_28NM_HSIC)        += phy-pxa-28nm-hsic.o
+>>> diff --git a/drivers/phy/phy-exynos-ufs.c b/drivers/phy/phy-exynos-ufs.c
+>>> new file mode 100644
+>>> index 000000000000..cb1aeaa3d4eb
+>>> --- /dev/null
+>>> +++ b/drivers/phy/phy-exynos-ufs.c
+>>> @@ -0,0 +1,241 @@
+>>> +/*
+>>> + * UFS PHY driver for Samsung EXYNOS SoC
+>>> + *
+>>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
+>>> + * Author: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License as published by
+>>> + * the Free Software Foundation; either version 2 of the License, or
+>>> + * (at your option) any later version.
+>>> + */
+>>> +#include <linux/clk.h>
+>>> +#include <linux/delay.h>
+>>> +#include <linux/err.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/iopoll.h>
+>>> +#include <linux/mfd/syscon.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/phy/phy.h>
+>>> +#include <linux/phy/phy-exynos-ufs.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/regmap.h>
+>>> +
+>>> +#include "phy-exynos-ufs.h"
+>>> +
+>>> +#define for_each_phy_lane(phy, i) \
+>>> +    for (i = 0; i < (phy)->lane_cnt; i++)
+>>> +#define for_each_phy_cfg(cfg) \
+>>> +    for (; (cfg)->id; (cfg)++)
+>>> +
+>>> +#define PHY_DEF_LANE_CNT    1
+>>> +
+>>> +static void exynos_ufs_phy_config(struct exynos_ufs_phy *phy,
+>>> +            const struct exynos_ufs_phy_cfg *cfg, u8 lane)
+>>> +{
+>>> +    enum {LANE_0, LANE_1}; /* lane index */
+>>> +
+>>> +    switch (lane) {
+>>> +    case LANE_0:
+>>> +        writel(cfg->val, (phy)->reg_pma + cfg->off_0);
+>>> +        break;
+>>> +    case LANE_1:
+>>> +        if (cfg->id == PHY_TRSV_BLK)
+>>> +            writel(cfg->val, (phy)->reg_pma + cfg->off_1);
+>>> +        break;
+>>> +    }
+>>> +}
+>>> +
+>>> +static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
+>>> +{
+>>> +    if (IS_PWR_MODE_ANY(desc))
+>>> +        return true;
+>>> +
+>>> +    if (IS_PWR_MODE_HS(required_pwr) && IS_PWR_MODE_HS_ANY(desc))
+>>> +        return true;
+>>> +
+>>> +    if (COMP_PWR_MODE(required_pwr, desc))
+>>> +        return true;
+>>> +
+>>> +    if (COMP_PWR_MODE_MD(required_pwr, desc) &&
+>>> +        COMP_PWR_MODE_GEAR(required_pwr, desc) &&
+>>> +        COMP_PWR_MODE_SER(required_pwr, desc))
+>>> +        return true;
+>>> +
+>>> +    return false;
+>>> +}
+>>> +
+>>> +int exynos_ufs_phy_calibrate(struct phy *phy,
+>>> +                    enum phy_cfg_tag tag, u8 pwr)
+>>
+>> This is similar to the first version of your patch without EXPORT_SYMBOL.
+>>
+>> I think you have to create a new generic PHY_OPS for calibrate PHY while making
+>> sure that it is as generic as possible (which means calibrate_phy shouldn't
+>> have tag and pwr arguments or a strong justification as to why those arguments
+>> are required in a generic API).
+> I don't see the advantage to making this a generic phy_ops, this is exynos
+> specific ufs-phy, please have a look at other implementations
 
-In that case you should probably implement a reboot notifier in each of
-the drivers you list and depending on the generation of the SoC. You can
-easily parameterize this by matching on the compatible string.
+only the implementation is specific to exynos. I've seen lot of other vendors
+want to do something like calibrate phy.
 
-Thierry
+So if we add something like (*calibrate)(struct phy *phy), then it can be used
+by others as well. Russell King also want to minimize the code to program
+calibration settings. So it would be good to come up with a set of standard
+bindings like 'phy,tx-swing', 'phy,emphasis', 'phy,amplitude' etc.. to program
+these settings.
+> drivers/phy/phy-qcom-ufs.c (which I belive mereged recently)
 
---IpbVkmxF4tDyP/Kb
-Content-Type: application/pgp-signature; name="signature.asc"
+Thats why I hate when someone else merge PHY drivers :-( That driver can as
+well be in drivers/misc as it doesn't use PHY framework as it is supposed to be
+used. It just exports a dozen of API's to be used by controller drivers. ick..
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> may be other vendors might come with there own implementation of phy.
 
-iQIcBAABCAAGBQJWTccIAAoJEN0jrNd/PrOhv7sP/01q7ftp0EuePxtj+ZwZOJ1/
-JPBX7XkC6JYzMDsKxqnPD0CQCVf4o0nIR3aYDrQZKWo6pJH7szd9zb8O+2v5eXtT
-jRiCVVQ1DBnStvGYblRMTCN2AiXUD4x5+k0/ZeYtzOIm9SFaAqP42Rne865By9Gf
-+j/gvIa1czALngEMBJc6Oi46yByQuqjCgodnN2odS1hqWa74wvO1CI179OQbwQBR
-bbjv1zG6vFhKqH0gGcocGUhUz0GFJtkTivbggyXwX9am5I/BWfVLyWHEtncTb+Aa
-vo/lLOGv8LFHkTf+ASqYEqL9uboUSuhftVew7ZHIfsZuEK+lUBth+xpFvCY6jxtG
-6AN4GYP2fquxtrw8PTWIr5cFlWX91CJQqyXv+mr0yNg7BBqc0ytpuN6NAi5T0kkQ
-SGPxZUwHMR9f/JHq29oNSm5g5qHClWKs773JH+Q9bK+hOgqcZ4GKfII2iomOkv7R
-vau2lPuRrMb8jEQfKZZY3MWMx9qRqR8JOy95O7zyt+Bdldoe6T2yHmNvY/fkievs
-mJ/UManuWTCvzFwIzieJOMWgBl2aHYW5CKSHKmeGp+tmrMRXVNgzX6ZrcHpY2oxP
-BAHMBs3D81JCXR8mnNMtGWUohFFE6Q8wfruwPkX/H6YSEA1xP4i9kHEPYTG3lhnp
-Q6oX9Vt82X+AzkekhqFY
-=p7Wa
------END PGP SIGNATURE-----
+right, it's all about providing the correct callback functions.
+> I am using what is currently provided by the generic phy framework.
 
---IpbVkmxF4tDyP/Kb--
+I think for your use case, what is currently provided in the PHY framework is
+not sufficient.
+
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
