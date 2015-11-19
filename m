@@ -1,74 +1,135 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 05/19] mmc: core/host: enable support for the standard
- "wakeup-source" property
-Date: Thu, 19 Nov 2015 12:32:45 +0100
-Message-ID: <CAPDyKFrB7-SsBt_C9hvgwY-NHL-S8pvXmKc70f2Z_G2RoEpk9Q@mail.gmail.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
-	<1445422216-29375-6-git-send-email-sudeep.holla@arm.com>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v10 2/8] Input: goodix - reset device at init
+Date: Thu, 19 Nov 2015 11:55:27 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F11F439@irsmsx105.ger.corp.intel.com>
+References: <1447864301-1261-1-git-send-email-irina.tirdea@intel.com>
+ <1447864301-1261-3-git-send-email-irina.tirdea@intel.com>
+ <20151118212422.GA31164@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445422216-29375-6-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151118212422.GA31164@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 October 2015 at 12:10, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> Though the mmc core driver should/will continue to support the legacy
-> "enable-sdio-wakeup" property to enable SDIO as the wakeup source, we
-> need to add support for the new standard property "wakeup-source".
->
-> This patch adds support for "wakeup-source" property in addition to the
-> existing "enable-sdio-wakeup" property.
->
-> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 
-Thanks, applied for next!
 
-Kind regards
-Uffe
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: 18 November, 2015 23:24
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; Karsten Merker; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v10 2/8] Input: goodix - reset device at init
+> 
+> On Wed, Nov 18, 2015 at 06:31:35PM +0200, Irina Tirdea wrote:
+> > After power on, it is recommended that the driver resets the device.
+> > The reset procedure timing is described in the datasheet and is used
+> > at device init (before writing device configuration) and
+> > for power management. It is a sequence of setting the interrupt
+> > and reset pins high/low at specific timing intervals. This procedure
+> > also includes setting the slave address to the one specified in the
+> > ACPI/device tree.
+> >
+> > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > driver gt9xx.c for Android (publicly available in Android kernel
+> > trees for various devices).
+> >
+> > For reset the driver needs to control the interrupt and
+> > reset gpio pins (configured through ACPI/device tree). For devices
+> > that do not have the gpio pins properly declared, the functionality
+> > depending on these pins will not be available, but the device can still
+> > be used with basic functionality.
+> >
+> > For both device tree and ACPI, the interrupt gpio pin configuration is
+> > read from the "irq-gpio" property and the reset pin configuration is
+> > read from the "reset-gpio" property. For ACPI 5.1, named properties
+> > can be specified using the _DSD section. This functionality will not be
+> > available for devices that use indexed gpio pins declared in the _CRS
+> > section (we need to provide backward compatibility with devices
+> > that do not support using the interrupt gpio pin as output).
+> >
+> > For ACPI, the pins can be specified using ACPI 5.1:
+> > Device (STAC)
+> > {
+> >     Name (_HID, "GDIX1001")
+> >     ...
+> >
+> >     Method (_CRS, 0, Serialized)
+> >     {
+> >         Name (RBUF, ResourceTemplate ()
+> >         {
+> >             I2cSerialBus (0x0014, ControllerInitiated, 0x00061A80,
+> >                 AddressingMode7Bit, "\\I2C0",
+> >                 0x00, ResourceConsumer, ,
+> >                 )
+> >
+> >             GpioInt (Edge, ActiveHigh, Exclusive, PullNone, 0x0000,
+> >                 "\\I2C0", 0x00, ResourceConsumer, ,
+> >                  )
+> >                  {   // Pin list
+> >                      0
+> >                  }
+> >
+> >             GpioIo (Exclusive, PullDown, 0x0000, 0x0000,
+> >                 IoRestrictionOutputOnly, "\\I2C0", 0x00,
+> >                 ResourceConsumer, ,
+> >                 )
+> >                 {
+> >                      1
+> >                 }
+> >         })
+> >         Return (RBUF)
+> >     }
+> >
+> >     Name (_DSD,  Package ()
+> >     {
+> >         ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> >         Package ()
+> >         {
+> >             Package (2) {"irq-gpio", Package() {^STAC, 0, 0, 0 }},
+> >             Package (2) {"reset-gpio", Package() {^STAC, 1, 0, 0 }},
+> >             ...
+> >         }
+> >     }
+> >
+> > Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > ---
+> >  .../bindings/input/touchscreen/goodix.txt          |   5 +
+> >  drivers/input/touchscreen/Kconfig                  |   1 +
+> >  drivers/input/touchscreen/goodix.c                 | 101 +++++++++++++++++++++
+> >  3 files changed, 107 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > index 8ba98ee..7137881 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > @@ -12,6 +12,8 @@ Required properties:
+> >   - reg			: I2C address of the chip. Should be 0x5d or 0x14
+> >   - interrupt-parent	: Interrupt controller to which the chip is connected
+> >   - interrupts		: Interrupt to which the chip is connected
+> > + - irq-gpio		: GPIO pin used for IRQ
+> 
+> Please note here why you need this in addition to just "interrupts".
 
-> ---
->  drivers/mmc/core/host.c        | 3 ++-
->  drivers/mmc/host/sdhci-pltfm.c | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 5466f25f0281..85222bb56c73 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -513,7 +513,8 @@ int mmc_of_parse(struct mmc_host *host)
->                 host->caps2 |= MMC_CAP2_FULL_PWR_CYCLE;
->         if (of_property_read_bool(np, "keep-power-in-suspend"))
->                 host->pm_caps |= MMC_PM_KEEP_POWER;
-> -       if (of_property_read_bool(np, "enable-sdio-wakeup"))
-> +       if (of_property_read_bool(np, "wakeup-source") ||
-> +           of_property_read_bool(np, "enable-sdio-wakeup")) /* legacy */
->                 host->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
->         if (of_property_read_bool(np, "mmc-ddr-1_8v"))
->                 host->caps |= MMC_CAP_1_8V_DDR;
-> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> index a207f5aaf62f..f00374bdafc9 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.c
-> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> @@ -108,7 +108,8 @@ void sdhci_get_of_property(struct platform_device *pdev)
->         if (of_find_property(np, "keep-power-in-suspend", NULL))
->                 host->mmc->pm_caps |= MMC_PM_KEEP_POWER;
->
-> -       if (of_find_property(np, "enable-sdio-wakeup", NULL))
-> +       if (of_property_read_bool(np, "wakeup-source") ||
-> +           of_property_read_bool(np, "enable-sdio-wakeup")) /* legacy */
->                 host->mmc->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
->  }
->  #else
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+> Also, it should be irq-gpios instead.
+> 
+> > + - reset-gpio		: GPIO pin used for reset
+> 
+> Should be reset-gpios instead.
+> 
+
+I'll fix this, I wasn't aware that irq/reset-gpio is deprecated.
+
+Thanks,
+Irina
+
+> Rob
