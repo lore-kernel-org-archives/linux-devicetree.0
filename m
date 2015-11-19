@@ -1,185 +1,43 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH v2 1/3] ARM: dts: enable clock support for BCM5301X
-Date: Thu, 19 Nov 2015 18:05:07 -0500
-Message-ID: <1447974309-29566-2-git-send-email-jonmason@broadcom.com>
-References: <1447974309-29566-1-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/3] ARM: dts: add support for NS, NSP, and NS2 clocks
+Date: Thu, 19 Nov 2015 18:05:06 -0500
+Message-ID: <1447974309-29566-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447974309-29566-1-git-send-email-jonmason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Replace current device tree dummy clocks with real clock support for
-Broadcom Northstar SoCs.
+Changes in v2:
+Rebased off of outstanding NSP DT patches and tweaked the entry names
+per Ray Jui
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- arch/arm/boot/dts/bcm5301x.dtsi | 92 +++++++++++++++++++++++++++++++----------
- 1 file changed, 71 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 6f50f67..65a1309 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -8,6 +8,7 @@
-  * Licensed under the GNU/GPL. See COPYING for details.
-  */
- 
-+#include <dt-bindings/clock/bcm-nsp.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-@@ -27,7 +28,7 @@
- 			compatible = "ns16550";
- 			reg = <0x0300 0x100>;
- 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--			clock-frequency = <100000000>;
-+			clocks = <&iprocslow>;
- 			status = "disabled";
- 		};
- 
-@@ -35,48 +36,55 @@
- 			compatible = "ns16550";
- 			reg = <0x0400 0x100>;
- 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--			clock-frequency = <100000000>;
-+			clocks = <&iprocslow>;
- 			status = "disabled";
- 		};
- 	};
- 
- 	mpcore {
- 		compatible = "simple-bus";
--		ranges = <0x00000000 0x19020000 0x00003000>;
-+		ranges = <0x00000000 0x19000000 0x00023000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
--		scu@0000 {
-+		a9pll: arm_clk@00000 {
-+			#clock-cells = <0>;
-+			compatible = "brcm,nsp-armpll";
-+			clocks = <&osc>;
-+			reg = <0x00000 0x1000>;
-+		};
-+
-+		scu@20000 {
- 			compatible = "arm,cortex-a9-scu";
--			reg = <0x0000 0x100>;
-+			reg = <0x20000 0x100>;
- 		};
- 
--		timer@0200 {
-+		timer@20200 {
- 			compatible = "arm,cortex-a9-global-timer";
--			reg = <0x0200 0x100>;
-+			reg = <0x20200 0x100>;
- 			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clk_periph>;
-+			clocks = <&periph_clk>;
- 		};
- 
--		local-timer@0600 {
-+		local-timer@20600 {
- 			compatible = "arm,cortex-a9-twd-timer";
--			reg = <0x0600 0x100>;
-+			reg = <0x20600 0x100>;
- 			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clk_periph>;
-+			clocks = <&periph_clk>;
- 		};
- 
--		gic: interrupt-controller@1000 {
-+		gic: interrupt-controller@21000 {
- 			compatible = "arm,cortex-a9-gic";
- 			#interrupt-cells = <3>;
- 			#address-cells = <0>;
- 			interrupt-controller;
--			reg = <0x1000 0x1000>,
--			      <0x0100 0x100>;
-+			reg = <0x21000 0x1000>,
-+			      <0x20100 0x100>;
- 		};
- 
--		L2: cache-controller@2000 {
-+		L2: cache-controller@22000 {
- 			compatible = "arm,pl310-cache";
--			reg = <0x2000 0x1000>;
-+			reg = <0x22000 0x1000>;
- 			cache-unified;
- 			arm,shared-override;
- 			prefetch-data = <1>;
-@@ -94,14 +102,37 @@
- 
- 	clocks {
- 		#address-cells = <1>;
--		#size-cells = <0>;
-+		#size-cells = <1>;
-+		ranges;
- 
--		/* As long as we do not have a real clock driver us this
--		 * fixed clock */
--		clk_periph: periph {
-+		osc: oscillator {
-+			#clock-cells = <0>;
- 			compatible = "fixed-clock";
-+			clock-frequency = <25000000>;
-+		};
-+
-+		iprocmed: iprocmed {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
-+
-+		iprocslow: iprocslow {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+		};
-+
-+		periph_clk: periph_clk {
- 			#clock-cells = <0>;
--			clock-frequency = <400000000>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&a9pll>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
- 		};
- 	};
- 
-@@ -178,6 +209,25 @@
- 		};
- 	};
- 
-+	lcpll0: lcpll0@1800c100 {
-+		#clock-cells = <1>;
-+		compatible = "brcm,nsp-lcpll0";
-+		reg = <0x1800c100 0x14>;
-+		clocks = <&osc>;
-+		clock-output-names = "lcpll0", "pcie_phy", "sdio",
-+				     "ddr_phy";
-+	};
-+
-+	genpll: genpll@1800c140 {
-+		#clock-cells = <1>;
-+		compatible = "brcm,nsp-genpll";
-+		reg = <0x1800c140 0x24>;
-+		clocks = <&osc>;
-+		clock-output-names = "genpll", "phy", "ethernetclk",
-+				     "usbclk", "iprocfast", "sata1",
-+				     "sata2";
-+	};
-+
- 	nand: nand@18028000 {
- 		compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
- 		reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
+This patch series adds device tree support for the Broadcom Northstar,
+Northstar Plus, and Northstar 2 clocks.
+
+Last sent as an RFC (see https://lkml.org/lkml/2015/10/13/882) due to
+the inability to merge because of the driver dependencies.  Those
+necessary driver changes were merged into 4.4.  All comments have been
+addressed and it is ready to be pulled in.
+
+
+Jon Mason (3):
+  ARM: dts: enable clock support for BCM5301X
+  ARM: dts: enable clock support for Broadcom NSP
+  ARM64: dts: enable clock support for Broadcom NS2
+
+ arch/arm/boot/dts/bcm-nsp.dtsi        | 77 ++++++++++++++++++++++++-----
+ arch/arm/boot/dts/bcm5301x.dtsi       | 92 +++++++++++++++++++++++++++--------
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 80 +++++++++++++++++++++++++++++-
+ 3 files changed, 214 insertions(+), 35 deletions(-)
+
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
