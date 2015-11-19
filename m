@@ -1,46 +1,72 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v3 11/12] drm/panel: simple: Add boe,tv080wum-nl0 simple panel device tree binding
-Date: Thu, 19 Nov 2015 11:35:29 +0800
-Message-ID: <1447904131-29328-12-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v3 12/12] ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
+Date: Thu, 19 Nov 2015 11:35:30 +0800
+Message-ID: <1447904131-29328-13-git-send-email-zyw@rock-chips.com>
 References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, linux-rockchip@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
-Cc: Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This binding specifies a set of common properties for display panels. It
-can be used as a basis by bindings for specific panels.
-Bindings for three specific panels are provided to show how the
-simple panel binding can be used.
+This tv080wum-nl0 panel is a mipi panel, it can use in MIPI_TX socket
+of rk3288 evb board.
 
 Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
 ---
 
-Changes in v3:
-move boe,tv080wum-nl0.txt to bindings/display/panel/
+Changes in v3: None
+Changes in v2: None
 
-Changes in v2:
-As Thierry.Reding comment, add a documentation for this panel.
+ arch/arm/boot/dts/rk3288-evb.dtsi | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/display/panel/boe,tv080wum-nl0.txt         | 7 +++++++
- 1 file changed, 7 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt b/Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
-new file mode 100644
-index 0000000..50be5e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/boe,tv080wum-nl0.txt
-@@ -0,0 +1,7 @@
-+Boe Corporation 8.0" WUXGA TFT LCD panel
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index f6d2e78..d04878f 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -47,7 +47,7 @@
+ 		reg = <0x0 0x80000000>;
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		brightness-levels = <
+ 			  0   1   2   3   4   5   6   7
+@@ -177,6 +177,21 @@
+ 	status = "okay";
+ };
+ 
++&mipi_dsi {
++	status = "okay";
 +
-+Required properties:
-+- compatible: should be "boe,tv080wum-nl0"
++	panel {
++		compatible ="boe,tv080wum-nl0";
++		reg = <0>;
 +
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
++		enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_en>;
++		backlight = <&backlight>;
++		status = "okay";
++	};
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+@@ -247,6 +262,9 @@
+ 		bl_en: bl-en {
+ 			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
++		lcd_en: lcd-en {
++			rockchip,pins = <7 3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ 
+ 	buttons {
 -- 
 2.6.3
