@@ -1,74 +1,132 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] Documentation: devicetree: Add DT bindings to
- eeprom_93xx46 driver.
-Date: Thu, 19 Nov 2015 08:59:22 -0600
-Message-ID: <20151119145922.GA24560@rob-hp-laptop>
-References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447903781-3910-3-git-send-email-cory.tusar@pid1solutions.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] Documentation: dt-bindings: Add bindings for
+ Synopsys DW MIPI DSI DRM bridge driver
+Date: Thu, 19 Nov 2015 09:12:28 -0600
+Message-ID: <20151119151228.GA26097@rob-hp-laptop>
+References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
+ <1447904131-29328-6-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447903781-3910-3-git-send-email-cory.tusar@pid1solutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cory Tusar <cory.tusar@pid1solutions.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org, jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1447904131-29328-6-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liu Ying <Ying.liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 10:29:38PM -0500, Cory Tusar wrote:
-> This commit documents bindings to be added to the eeprom_93xx46 driver
-> which will allow:
+On Thu, Nov 19, 2015 at 11:35:23AM +0800, Chris Zhong wrote:
+> From: Liu Ying <Ying.liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
->   - Device word size and read-only attributes to be specified.
->   - A device-specific compatible string for use with Atmel AT93C46D
->     EEPROMs.
->   - Specifying a GPIO line to function as a 'select' or 'enable' signal
->     prior to accessing the EEPROM.
+> This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
+> host controller DRM bridge driver.
 > 
-> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-
-One nit, but:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+> Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
 > ---
->  .../devicetree/bindings/misc/eeprom-93xx46.txt     | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
+> Changes in v3:
+> move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
+> 
+> Changes in v2: None
+> 
+>  .../bindings/display/bridge/dw_mipi_dsi.txt        | 76 ++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
 > new file mode 100644
-> index 0000000..8e116a1
+> index 0000000..0e5c140
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
-> @@ -0,0 +1,25 @@
-> +EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
+> +++ b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> @@ -0,0 +1,76 @@
+> +Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
+> +
+> +The controller is a digital core that implements all protocol functions
+> +defined in the MIPI DSI specification, providing an interface between
+> +the system and the MIPI DPHY, and allowing communication with a MIPI DSI
+> +compliant display.
 > +
 > +Required properties:
-> +- compatible : shall be one of:
-> +    "atmel,at93c46d"
-> +    "eeprom-93xx46"
-> +- data-size : number of data bits per word (either 8 or 16)
-> +
-> +Optional properties:
-> +- read-only : parameter-less property which disables writes to the EEPROM
-> +- select-gpios : if present, specifies the GPIO that will be asserted prior to
-> +  each access to the EEPROM (e.g. for SPI bus multiplexing)
-> +
-> +Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
-> +apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
-> +
-> +Example:
-> +	93c46c@0 {
+> + - #address-cells: Should be <1>.
+> + - #size-cells: Should be <0>.
+> + - compatible: The first compatible string should be "fsl,imx6q-mipi-dsi"
+> +   for i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
+> +   device tree binding documentations.  A common compatible string
+> +   "snps,dw-mipi-dsi" should be appended for all SoCs.
+> + - reg: Represent the physical address range of the controller.
+> + - interrupts: Represent the controller's interrupt to the CPU(s).
+> + - clocks, clock-names: Phandles to the controller's pll reference
+> +   clock(ref), configuration clock(cfg) and APB clock(pclk), as
+> +   described in [1].
 
-This should be eeprom@0.
+You are missing the gpr property.
 
-> +		compatible = "eeprom-93xx46";
-> +		reg = <0>;
-> +		spi-max-frequency = <1000000>;
-> +		spi-cs-high;
-> +		data-size = <8>;
-> +		select-gpios = <&gpio4 4 GPIO_ACTIVE_HIGH>;
+> +
+> +For more required properties, please refer to relevant device tree binding
+> +documentations which describe the controller embedded in specific SoCs.
+> +
+> +Required sub-nodes:
+> + - A node to represent a DSI peripheral as described in [2].
+
+Please describe the ports.
+
+> +
+> +For more required sub-nodes, please refer to relevant device tree binding
+> +documentations which describe the controller embedded in specific SoCs.
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> +
+> +example:
+> +	gpr: iomuxc-gpr@020e0000 {
+> +		/* ... */
+> +	};
+> +
+> +	mipi_dsi: mipi@021e0000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+> +		reg = <0x021e0000 0x4000>;
+> +		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpr = <&gpr>;
+> +		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+> +			 <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+> +			 <&clks IMX6QDL_CLK_MIPI_IPG>;
+> +		clock-names = "ref", "cfg", "pclk";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +
+> +				mipi_mux_0: endpoint {
+> +					remote-endpoint = <&ipu1_di0_mipi>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +
+> +				mipi_mux_1: endpoint {
+> +					remote-endpoint = <&ipu1_di1_mipi>;
+> +				};
+> +			};
+> +		};
+> +
+> +		panel {
+> +			compatible = "truly,tft480800-16-e-dsi";
+> +			reg = <0>;
+> +			/* ... */
+> +		};
 > +	};
 > -- 
-> 2.4.10
+> 2.6.3
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
