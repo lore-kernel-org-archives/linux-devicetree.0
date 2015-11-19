@@ -1,39 +1,53 @@
 From: Pramod Kumar <pramodku@broadcom.com>
-Subject: [PATCH v2 4/7] pinctrl: Add new compatible string to GPIO controller driver
-Date: Thu, 19 Nov 2015 09:22:16 +0530
-Message-ID: <1447905139-16002-5-git-send-email-pramodku@broadcom.com>
+Subject: [PATCH v2 2/7] dts: define ngpios property in gpio controller's node
+Date: Thu, 19 Nov 2015 09:22:14 +0530
+Message-ID: <1447905139-16002-3-git-send-email-pramodku@broadcom.com>
 References: <1447905139-16002-1-git-send-email-pramodku@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1447905139-16002-1-git-send-email-pramodku@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
 Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas Gorski <jogo@openwrt.org>, Pramod Kumar <pramodku@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This compatible string should be used for all new iproc based future
-SoCs having the same GPIO controller hardware.
+Add ngpios property in cygnus ASIU, CCM and CRMU gpio controller's node
 
 Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
 Reviewed-by: Ray Jui <rjui@broadcom.com>
 Reviewed-by: Scott Branden <sbranden@broadcom.com>
 ---
- drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c b/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-index 498a58a..d0d788f 100644
---- a/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-cygnus-gpio.c
-@@ -646,6 +646,7 @@ static const struct of_device_id cygnus_gpio_of_match[] = {
- 	{ .compatible = "brcm,cygnus-ccm-gpio" },
- 	{ .compatible = "brcm,cygnus-asiu-gpio" },
- 	{ .compatible = "brcm,cygnus-crmu-gpio" },
-+	{ .compatible = "brcm,iproc-gpio" },
- 	{ }
- };
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 2778533..59c4330 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -101,6 +101,7 @@
+ 			compatible = "brcm,cygnus-crmu-gpio";
+ 			reg = <0x03024800 0x50>,
+ 			      <0x03024008 0x18>;
++			ngpios = <6>;
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 		};
+@@ -127,6 +128,7 @@
+ 			compatible = "brcm,cygnus-ccm-gpio";
+ 			reg = <0x1800a000 0x50>,
+ 			      <0x0301d164 0x20>;
++			ngpios = <24>;
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+@@ -245,6 +247,7 @@
+ 		gpio_asiu: gpio@180a5000 {
+ 			compatible = "brcm,cygnus-asiu-gpio";
+ 			reg = <0x180a5000 0x668>;
++			ngpios = <146>;
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
  
 -- 
 1.9.1
-
