@@ -1,86 +1,185 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v4 1/4] Documentation: tps65086: Add DT bindings for the TPS65086 PMIC
-Date: Thu, 19 Nov 2015 17:01:39 -0600
-Message-ID: <1447974102-24938-2-git-send-email-afd@ti.com>
-References: <1447974102-24938-1-git-send-email-afd@ti.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH v2 1/3] ARM: dts: enable clock support for BCM5301X
+Date: Thu, 19 Nov 2015 18:05:07 -0500
+Message-ID: <1447974309-29566-2-git-send-email-jonmason@broadcom.com>
+References: <1447974309-29566-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447974102-24938-1-git-send-email-afd@ti.com>
+In-Reply-To: <1447974309-29566-1-git-send-email-jonmason@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-The TPS65086 PMIC contains several regulators and a GPO controller.
-Add bindings for the TPS65086 PMIC.
+Replace current device tree dummy clocks with real clock support for
+Broadcom Northstar SoCs.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- Documentation/devicetree/bindings/mfd/tps65086.txt | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
+ arch/arm/boot/dts/bcm5301x.dtsi | 92 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 71 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
-new file mode 100644
-index 0000000..6b50613
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
-@@ -0,0 +1,55 @@
-+* TPS65086 Power Management Integrated Circuit bindings
-+
-+Required properties:
-+ - compatible		: Should be "ti,tps65086".
-+ - reg			: I2C slave address.
-+ - interrupt-parent	: Phandle to he parent interrupt controller.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: Marks the device node as an interrupt controller.
-+ - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
-+			    The first cell is the IRQ number.
-+			    The second cell is the flags, encoded as trigger
-+			    masks from ../interrupt-controller/interrupts.txt.
-+ - gpio-controller      : Marks the device node as a GPIO Controller.
-+ - #gpio-cells          : Should be two.  The first cell is the pin number and
-+                            the second cell is used to specify flags.
-+                            See ../gpio/gpio.txt for more information.
-+ - regulators:          : List of child nodes that specify the regulator
-+                            initialization data. Child nodes must be named
-+                            after their hardware counterparts: buck[1-6],
-+                            ldoa[1-3], swa1, swb[1-2], and vtt. Each child
-+                            nodes is defined using the standard binding for
-+                            regulators and the optional regulator properties
-+                            defined below.
-+
-+Optional regulator properties:
-+ - ti,regulator-step-size-25mv	: This is applicable for buck[1,2,6], set this
-+				    if the regulator is factory set with a 25mv
-+				    step voltage mapping.
-+ - ti,regulator-decay		: This is applicable for buck[1-6], set this if
-+				    the output needs to decay, default is for
-+				    the output to slew down.
-+
-+Example:
-+
-+	pmic: tps65086@5e {
-+		compatible = "ti,tps65086";
-+		reg = <0x5e>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		regulators {
-+			buck1 {
-+				regulator-name = "vcc1";
-+				regulator-min-microvolt = <1600000>;
-+				regulator-max-microvolt = <1600000>;
-+				regulator-boot-on;
-+				ti,regulator-decay;
-+				ti,regulator-step-size-25mv;
-+			};
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 6f50f67..65a1309 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -8,6 +8,7 @@
+  * Licensed under the GNU/GPL. See COPYING for details.
+  */
+ 
++#include <dt-bindings/clock/bcm-nsp.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+@@ -27,7 +28,7 @@
+ 			compatible = "ns16550";
+ 			reg = <0x0300 0x100>;
+ 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+-			clock-frequency = <100000000>;
++			clocks = <&iprocslow>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -35,48 +36,55 @@
+ 			compatible = "ns16550";
+ 			reg = <0x0400 0x100>;
+ 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+-			clock-frequency = <100000000>;
++			clocks = <&iprocslow>;
+ 			status = "disabled";
+ 		};
+ 	};
+ 
+ 	mpcore {
+ 		compatible = "simple-bus";
+-		ranges = <0x00000000 0x19020000 0x00003000>;
++		ranges = <0x00000000 0x19000000 0x00023000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		scu@0000 {
++		a9pll: arm_clk@00000 {
++			#clock-cells = <0>;
++			compatible = "brcm,nsp-armpll";
++			clocks = <&osc>;
++			reg = <0x00000 0x1000>;
 +		};
++
++		scu@20000 {
+ 			compatible = "arm,cortex-a9-scu";
+-			reg = <0x0000 0x100>;
++			reg = <0x20000 0x100>;
+ 		};
+ 
+-		timer@0200 {
++		timer@20200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+-			reg = <0x0200 0x100>;
++			reg = <0x20200 0x100>;
+ 			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_periph>;
++			clocks = <&periph_clk>;
+ 		};
+ 
+-		local-timer@0600 {
++		local-timer@20600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+-			reg = <0x0600 0x100>;
++			reg = <0x20600 0x100>;
+ 			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk_periph>;
++			clocks = <&periph_clk>;
+ 		};
+ 
+-		gic: interrupt-controller@1000 {
++		gic: interrupt-controller@21000 {
+ 			compatible = "arm,cortex-a9-gic";
+ 			#interrupt-cells = <3>;
+ 			#address-cells = <0>;
+ 			interrupt-controller;
+-			reg = <0x1000 0x1000>,
+-			      <0x0100 0x100>;
++			reg = <0x21000 0x1000>,
++			      <0x20100 0x100>;
+ 		};
+ 
+-		L2: cache-controller@2000 {
++		L2: cache-controller@22000 {
+ 			compatible = "arm,pl310-cache";
+-			reg = <0x2000 0x1000>;
++			reg = <0x22000 0x1000>;
+ 			cache-unified;
+ 			arm,shared-override;
+ 			prefetch-data = <1>;
+@@ -94,14 +102,37 @@
+ 
+ 	clocks {
+ 		#address-cells = <1>;
+-		#size-cells = <0>;
++		#size-cells = <1>;
++		ranges;
+ 
+-		/* As long as we do not have a real clock driver us this
+-		 * fixed clock */
+-		clk_periph: periph {
++		osc: oscillator {
++			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
++			clock-frequency = <25000000>;
++		};
++
++		iprocmed: iprocmed {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		iprocslow: iprocslow {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
++			clock-div = <4>;
++			clock-mult = <1>;
++		};
++
++		periph_clk: periph_clk {
+ 			#clock-cells = <0>;
+-			clock-frequency = <400000000>;
++			compatible = "fixed-factor-clock";
++			clocks = <&a9pll>;
++			clock-div = <2>;
++			clock-mult = <1>;
+ 		};
+ 	};
+ 
+@@ -178,6 +209,25 @@
+ 		};
+ 	};
+ 
++	lcpll0: lcpll0@1800c100 {
++		#clock-cells = <1>;
++		compatible = "brcm,nsp-lcpll0";
++		reg = <0x1800c100 0x14>;
++		clocks = <&osc>;
++		clock-output-names = "lcpll0", "pcie_phy", "sdio",
++				     "ddr_phy";
 +	};
++
++	genpll: genpll@1800c140 {
++		#clock-cells = <1>;
++		compatible = "brcm,nsp-genpll";
++		reg = <0x1800c140 0x24>;
++		clocks = <&osc>;
++		clock-output-names = "genpll", "phy", "ethernetclk",
++				     "usbclk", "iprocfast", "sata1",
++				     "sata2";
++	};
++
+ 	nand: nand@18028000 {
+ 		compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+ 		reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
 -- 
 1.9.1
