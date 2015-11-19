@@ -1,157 +1,119 @@
-From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Subject: [PATCH v2 2/3] nvmem: mediatek: Add Mediatek EFUSE driver
-Date: Thu, 19 Nov 2015 18:46:53 +0800
-Message-ID: <1447930014-19579-3-git-send-email-andrew-ct.chen@mediatek.com>
-References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 02/13] dmaengine: Introduce dma_request_slave_channel_compat_reason()
+Date: Thu, 19 Nov 2015 12:25:13 +0100
+Message-ID: <4533695.7ZVFN1S94o@wuerfel>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com> <6358656.jIv3GGCCXu@wuerfel> <564DA5AE.3060608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <564DA5AE.3060608@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Mediatek EFUSE driver to access hardware data like
-thermal sensor calibration or HDMI impedance.
+On Thursday 19 November 2015 12:34:22 Peter Ujfalusi wrote:
+> 
+> I think we can go with a single API, but I don't really like that:
+> dma_request_channel(dev, name, *mask, fn, fn_param);
+> 
+> This would cover all current uses being legacy, DT/ACPI, compat, etc:
+> dma_request_channel(NULL, NULL, &mask, fn, fn_param); /* Legacy slave */
+> dma_request_channel(NULL, NULL, &mask, NULL, NULL); /* memcpy. etc */
+> dma_request_channel(dev, name, NULL, NULL, NULL); /* DT/ACPI, current slave */
+> dma_request_channel(dev, name, &mask, fn, fn_param); /* current compat */
+> 
+> Note, that we need "const dma_cap_mask_t *mask" to be able to make the mask
+> optional.
 
-Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
----
- drivers/nvmem/Kconfig     | 11 ++++++
- drivers/nvmem/Makefile    |  2 ++
- drivers/nvmem/mtk-efuse.c | 89 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 102 insertions(+)
- create mode 100644 drivers/nvmem/mtk-efuse.c
+Right, that would work, but I also don't really like it.
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index bc4ea58..ea7ec17 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -36,6 +36,17 @@ config NVMEM_MXS_OCOTP
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem-mxs-ocotp.
- 
-+config MTK_EFUSE
-+	tristate "Mediatek SoCs EFUSE support"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  This is a driver to access hardware related data like sensor
-+	  calibration, HDMI impedance etc.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called efuse-mtk.
-+
- config QCOM_QFPROM
- 	tristate "QCOM QFPROM Support"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 95dde3f..a59b069 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -10,6 +10,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP)	+= nvmem-imx-ocotp.o
- nvmem-imx-ocotp-y		:= imx-ocotp.o
- obj-$(CONFIG_NVMEM_MXS_OCOTP)	+= nvmem-mxs-ocotp.o
- nvmem-mxs-ocotp-y		:= mxs-ocotp.o
-+obj-$(CONFIG_MTK_EFUSE)		+= nvmem_mtk-efuse.o
-+nvmem_mtk-efuse-y		:= mtk-efuse.o
- obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
- nvmem_qfprom-y			:= qfprom.o
- obj-$(CONFIG_ROCKCHIP_EFUSE)	+= nvmem_rockchip_efuse.o
-diff --git a/drivers/nvmem/mtk-efuse.c b/drivers/nvmem/mtk-efuse.c
-new file mode 100644
-index 0000000..7b35f5b
---- /dev/null
-+++ b/drivers/nvmem/mtk-efuse.c
-@@ -0,0 +1,89 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+static struct regmap_config mtk_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int mtk_efuse_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct nvmem_device *nvmem;
-+	struct nvmem_config *econfig;
-+	struct regmap *regmap;
-+	void __iomem *base;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
-+	if (!econfig)
-+		return -ENOMEM;
-+
-+	mtk_regmap_config.max_register = resource_size(res) - 1;
-+
-+	regmap = devm_regmap_init_mmio(dev, base, &mtk_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "regmap init failed\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	econfig->dev = dev;
-+	econfig->owner = THIS_MODULE;
-+	nvmem = nvmem_register(econfig);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
-+
-+	platform_set_drvdata(pdev, nvmem);
-+
-+	return 0;
-+}
-+
-+static int mtk_efuse_remove(struct platform_device *pdev)
-+{
-+	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-+
-+	return nvmem_unregister(nvmem);
-+}
-+
-+static const struct of_device_id mtk_efuse_of_match[] = {
-+	{ .compatible = "mediatek,mt8173-efuse",},
-+	{ .compatible = "mediatek,efuse",},
-+	{/* sentinel */},
-+};
-+MODULE_DEVICE_TABLE(of, mtk_efuse_of_match);
-+
-+static struct platform_driver mtk_efuse_driver = {
-+	.probe = mtk_efuse_probe,
-+	.remove = mtk_efuse_remove,
-+	.driver = {
-+		.name = "mediatek,efuse",
-+		.of_match_table = mtk_efuse_of_match,
-+	},
-+};
-+module_platform_driver(mtk_efuse_driver);
-+MODULE_AUTHOR("Andrew-CT Chen <andrew-ct.chen@mediatek.com>");
-+MODULE_DESCRIPTION("Mediatek EFUSE driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+> If we have two main APIs, one to request slave channels and one to get any
+> channel with given capability
+> dma_request_slave_channel(NULL, NULL, &mask, fn, fn_param); /* Legacy slave */
+> dma_request_slave_channel(dev, name, NULL, NULL, NULL); /* DT/ACPI, current
+>                                                            slave */
+> dma_request_slave_channel(dev, name, &mask, fn, fn_param); /* current compat*/
+> 
+> This way we can omit the mask also in cases when the client only want to get
+> DMA_SLAVE, we can just build up the mask within the function. If the mask is
+> provided we would copy the bits from the provided mask, so for example if you
+> want to have DMA_SLAVE+DMA_CYCLIC, the driver only needs to pass DMA_CYCLIC,
+> the DMA_SLAVE is going to be set anyways.
+
+I think it's more logical here to have mask=NULL mean that we want DMA_SLAVE,
+but otherwise pass the full mask as DMA_SLAVE|DMA_CYCLIC etc.
+
+> dma_request_channel(mask); /* memcpy. etc, non slave mostly */
+> 
+> Not sure how to name this as reusing existing (good, descriptive) function
+> names would mean changes all over the kernel to start off this.
+> 
+> Not used and
+> request_dma_channel(); /* as _irq/_mem_region/_resource, etc */
+> request_dma();
+> dma_channel_request();
+
+dma_request_slavechan();
+dma_request_slave();
+dma_request_mask();
+
+> All in all, not sure which way would be better...
+
+I think I would prefer the simplest API to have only the dev+name
+arguments, as we tend to move that way for all platforms anyway, and it
+seems silly to have all drivers pass three NULL arguments all the time.
+At the moment, there are 139 references to dma_request_slave_channel_*
+in the kernel, and only 46 of them are dma_request_slave_channel_compat.
+Out of those 46, a couple can already be converted back to use
+dma_request_slave_channel() because the platform now only supports
+devicetree based boots and will not go back to platform data.
+
+How about something like
+
+extern struct dma_chan *
+__dma_request_chan(struct device *dev, const char *name,
+		    const dma_cap_mask_t *mask, dma_filter_fn fn, void *fn_param);
+
+static inline struct dma_chan *
+dma_request_slavechan(struct device *dev, const char *name)
+{
+	return __dma_request_chan(dev, name, NULL, NULL, NULL);
+}
+
+static inline struct dma_chan *
+dma_request_chan(const dma_cap_mask_t *mask)
+{
+	return __dma_request_chan(NULL, NULL, mask, NULL, NULL);
+}
+
+That way the vast majority of drivers can use one of the two nice interfaces
+and the rest can be converted to use __dma_request_chan().
+
+On a related topic, we had in the past considered providing a way for
+platform code to register a lookup table of some sort, to associate
+a device/name pair with a configuration. That would let us use the
+simplified dma_request_slavechan(dev, name) pair everywhere. We could
+use the same method that we have for clk_register_clkdevs() or
+pinctrl_register_map().
+
+Something like either
+
+static struct dma_chan_map myplatform_dma_map[] = {
+	{ .devname = "omap-aes0", .slave = "tx", .filter = omap_dma_filter_fn, .arg = (void *)65, },
+	{ .devname = "omap-aes0", .slave = "rx", .filter = omap_dma_filter_fn, .arg = (void *)66, },
+};
+
+or
+
+static struct dma_chan_map myplatform_dma_map[] = {
+	{ .devname = "omap-aes0", .slave = "tx", .master = "omap-dma-engine0", .req = 65, },
+	{ .devname = "omap-aes0", .slave = "rx", .master = "omap-dma-engine0", .req = 66, },
+};
+
+we could even allow a combination of the two, so the simple case just specifies
+master and req number, which requires changes to the dmaengine driver, but we could
+also do a mass-conversion to the .filter/.arg variant.
+
+	Arnd
