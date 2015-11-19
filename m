@@ -1,170 +1,74 @@
-Return-Path: <zain.wang@rock-chips.com>
-From: Zain <zain.wang@rock-chips.com>
-Subject: Re: [RESEND PATCH 4/4] crypto: rk_crypto - add DT bindings
- documentation
-References: <1446193369-4453-1-git-send-email-zain.wang@rock-chips.com>
- <1446193369-4453-5-git-send-email-zain.wang@rock-chips.com>
- <1830252.moyLTPMs2Y@phil>
-Message-ID: <56381BD7.9070209@rock-chips.com>
-Date: Tue, 3 Nov 2015 10:28:39 +0800
 MIME-Version: 1.0
-In-Reply-To: <1830252.moyLTPMs2Y@phil>
-Content-Type: multipart/alternative;
- boundary="------------030809040902070301020803"
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
+In-Reply-To: <20151119191428.GB8644@n2100.arm.linux.org.uk>
+References: <1447673600-8881-1-git-send-email-Julia.Lawall@lip6.fr>
+	<1447673600-8881-2-git-send-email-Julia.Lawall@lip6.fr>
+	<20151117013830.GV8456@google.com>
+	<alpine.DEB.2.02.1511170711340.2045@localhost6.localdomain6>
+	<20151117174430.GA8456@google.com>
+	<alpine.DEB.2.10.1511171846120.2455@hadrien>
+	<20151117183036.GF8456@google.com>
+	<alpine.DEB.2.02.1511172327030.2121@localhost6.localdomain6>
+	<20151118190500.GE140057@google.com>
+	<CAL_JsqLQWh8-gshYLrYwrrRjBRXiOACh9LzVn2HUU38mfgYGoQ@mail.gmail.com>
+	<20151119191428.GB8644@n2100.arm.linux.org.uk>
+Date: Thu, 19 Nov 2015 16:58:08 -0600
+Message-ID: <CAL_JsqK2TspMj-CxCia073mmHs_QYtyxJ6uNkKto1+Sc3ra5cA@mail.gmail.com>
+Subject: Re: device_node lifetime (was: Re: [PATCH 1/7] phy: brcmstb-sata: add
+ missing of_node_put)
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Brian Norris <computersforpeace@gmail.com>, Julia Lawall <julia.lawall@lip6.fr>, Kishon Vijay Abraham I <kishon@ti.com>, kernel-janitors@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Bjorn Helgaas <bhelgaas@google.com>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------030809040902070301020803
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-
-Hi Heiko,
-
-On 2015年10月30日 22:08, Heiko Stuebner wrote:
-> Hi,
->
-> Am Freitag, 30. Oktober 2015, 16:22:49 schrieb Zain Wang:
->> Add DT bindings documentation for the rk3288 crypto drivers.
+On Thu, Nov 19, 2015 at 1:14 PM, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
+> On Thu, Nov 19, 2015 at 12:44:11PM -0600, Rob Herring wrote:
+>> On Wed, Nov 18, 2015 at 1:05 PM, Brian Norris
+>> <computersforpeace@gmail.com> wrote:
+>> > (changing subject, add devicetree@vger.kernel.org)
+>> >
+>> > On Tue, Nov 17, 2015 at 11:33:25PM +0100, Julia Lawall wrote:
+>> >> On Tue, 17 Nov 2015, Brian Norris wrote:
+>> >> > On Tue, Nov 17, 2015 at 06:48:39PM +0100, Julia Lawall wrote:
+>> >> > > Is this something that should be checked for elsewhere?
+>> >> >
+>> >> > I expect the same sort of problem shows up plenty of other places. I
+>> >> > don't think many people use CONFIG_OF_DYNAMIC, so the effects of these
+>> >> > failures probably aren't felt by many.
 >>
->> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
->> ---
->>  .../devicetree/bindings/crypto/rk-crypto.txt       | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
->>
->> diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
->> new file mode 100644
->> index 0000000..1e50768
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
->> @@ -0,0 +1,31 @@
->> +Rockchip Electronics And Security Accelerator
->> +
->> +Required properties:
->> +- compatible: should be "rockchip,crypto"
->> +- reg: base physical address of the engine and length of memory mapped
->> +       region.
->> +- interrupts: interrupt number
->> +- clocks: clock specifiers
->> +- clock-names: "aclk_crypto" used to clock data
->> +			   "hclk_crypto" used to clock data
->> +			   "srst_crypto" used to clock crypto accelerator
->> +			   "apb_pclk"    used to clock dma
-> The TRM area of the crypto IP block does not specifiy any special naming for
-> its clocks, but as a general rule clock names are in the scope of the ip block
-> so there is no need to add _crypto to every one of them :-) .
+>> The "problem" is non-existent because either CONFIG_OF_DYNAMIC is off
+>> or where it is used is limited (memory and cpus on PSeries) and now
+>> overlays. Overlays have the potential to be problematic, but we should
+>> manage ref counting for overlays in a completely different way. What
+>> that looks like, I don't know. I'll leave that to the person that
+>> cares about removing overlays.
 >
-> I'd suggest clock-names as "aclk", "hclk", "crypto" for the devicetree, with
-> crypto being the clock that actually drives the operation.
-ok! done!
-> Secondly, why do you need to drive the clock of the peripheral dma-
-> controller itself (your apb_pclk)? The documentation in the TRM is
-> quite sparse, so this might very well be justified, but it looks odd that
-> you need to control the dmac1-clock when it looks like the crypto block
-> is doing its own dma and neither system-dma has any crypto-related
-> channel.
+> So are you saying we should just forget about of_node_put and delete all
+> of_node_put/of_node_get references in code outside drivers/of ?  That
+> seems pretty obtuse given that we do have the overlay code merged, and
+> sounds to me like a very bad idea.
+
+I wasn't suggesting going as far as that, but I do think we can't rely on drivers to get ref counting right.
+
+> Expecting those who want to use overlays to run around checking that
+> the refcounting is correct in drivers is a really silly idea IMHO -
+> the existing API is refcounted, so either people really ought to be
+> using it correctly as it's already been designed (in other words, with
+> correct refcounting, and we shouldn't be shovelling this problem onto
+> other people) or the refcounting should be completely killed.
+
+I'm only saying stop shoveling until ref
+
+This is only the tip of the iceberg. What happens when you start hot plugging GPIO controllers for example.
+
+> The existing half-way house of "we have refcounting, but we don't care
+> about it" is really insane.
 >
-> So I'd really like some explanation for this :-)
-Because dmac1_clk(apb_pclk) is connected to NOC. NOC is the bus
-inter-connect. Gating dmac1_clock will block this part of NOC transfer.
-And crypto master is using this part of NOC transfer to access DDR/SRAM,
-it would be wrong result without dmac1_clk. That's why dmac1_clk should
-be refered here.
-> Thanks
-> Heiko
+> Either we have refcounting, and it's used properly, or we don't have
+> refcounting.  No middle ground IMHO.
+
+
 >
->
->
-Thanks
-Zain
-
---------------030809040902070301020803
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Hi Heiko,<br>
-    <br>
-    <div class="moz-cite-prefix">On 2015年10月30日 22:08, Heiko Stuebner
-      wrote:<br>
-    </div>
-    <blockquote cite="mid:1830252.moyLTPMs2Y@phil" type="cite">
-      <pre wrap="">Hi,
-
-Am Freitag, 30. Oktober 2015, 16:22:49 schrieb Zain Wang:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">Add DT bindings documentation for the rk3288 crypto drivers.
-
-Signed-off-by: Zain Wang <a class="moz-txt-link-rfc2396E" href="mailto:zain.wang@rock-chips.com">&lt;zain.wang@rock-chips.com&gt;</a>
----
- .../devicetree/bindings/crypto/rk-crypto.txt       | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/rk-crypto.txt
-
-diff --git a/Documentation/devicetree/bindings/crypto/rk-crypto.txt b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
-new file mode 100644
-index 0000000..1e50768
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/rk-crypto.txt
-@@ -0,0 +1,31 @@
-+Rockchip Electronics And Security Accelerator
-+
-+Required properties:
-+- compatible: should be "rockchip,crypto"
-+- reg: base physical address of the engine and length of memory mapped
-+       region.
-+- interrupts: interrupt number
-+- clocks: clock specifiers
-+- clock-names: "aclk_crypto" used to clock data
-+			   "hclk_crypto" used to clock data
-+			   "srst_crypto" used to clock crypto accelerator
-+			   "apb_pclk"    used to clock dma
-</pre>
-      </blockquote>
-      <pre wrap="">The TRM area of the crypto IP block does not specifiy any special naming for
-its clocks, but as a general rule clock names are in the scope of the ip block
-so there is no need to add _crypto to every one of them :-) .
-
-I'd suggest clock-names as "aclk", "hclk", "crypto" for the devicetree, with
-crypto being the clock that actually drives the operation.</pre>
-    </blockquote>
-    ok! done!<br>
-    <blockquote cite="mid:1830252.moyLTPMs2Y@phil" type="cite">
-      <pre wrap="">Secondly, why do you need to drive the clock of the peripheral dma-
-controller itself (your apb_pclk)? The documentation in the TRM is
-quite sparse, so this might very well be justified, but it looks odd that
-you need to control the dmac1-clock when it looks like the crypto block
-is doing its own dma and neither system-dma has any crypto-related
-channel.
-
-So I'd really like some explanation for this :-)
-</pre>
-    </blockquote>
-    Because dmac1_clk(apb_pclk) is connected to NOC. NOC is the bus
-    inter-connect. Gating dmac1_clock will block this part of NOC
-    transfer. And crypto master is using this part of NOC transfer to
-    access DDR/SRAM, it would be wrong result without dmac1_clk. That's
-    why dmac1_clk should be refered here.<span style="font-size: 10.5pt;
-      line-height: 1.5; background-color: window;"><br>
-    </span>
-    <blockquote cite="mid:1830252.moyLTPMs2Y@phil" type="cite">
-      <pre wrap="">Thanks
-Heiko
-
-
-
-</pre>
-    </blockquote>
-    Thanks<br>
-    Zain<br>
-  </body>
-</html>
-
---------------030809040902070301020803--
+> --
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
