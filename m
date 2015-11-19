@@ -1,46 +1,71 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 02/25] serial: sh-sci: Update DT binding documentation for BRG support
-Date: Thu, 19 Nov 2015 19:38:41 +0100
-Message-ID: <1447958344-836-3-git-send-email-geert+renesas@glider.be>
-References: <1447958344-836-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447958344-836-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: device_node lifetime (was: Re: [PATCH 1/7] phy: brcmstb-sata: add
+ missing of_node_put)
+Date: Thu, 19 Nov 2015 12:44:11 -0600
+Message-ID: <CAL_JsqLQWh8-gshYLrYwrrRjBRXiOACh9LzVn2HUU38mfgYGoQ@mail.gmail.com>
+References: <1447673600-8881-1-git-send-email-Julia.Lawall@lip6.fr>
+ <1447673600-8881-2-git-send-email-Julia.Lawall@lip6.fr> <20151117013830.GV8456@google.com>
+ <alpine.DEB.2.02.1511170711340.2045@localhost6.localdomain6>
+ <20151117174430.GA8456@google.com> <alpine.DEB.2.10.1511171846120.2455@hadrien>
+ <20151117183036.GF8456@google.com> <alpine.DEB.2.02.1511172327030.2121@localhost6.localdomain6>
+ <20151118190500.GE140057@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151118190500.GE140057@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Julia Lawall <julia.lawall@lip6.fr>, Kishon Vijay Abraham I <kishon@ti.com>, kernel-janitors@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Bjorn Helgaas <bhelgaas@google.com>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Amend the DT bindings to include the optional clock sources for the Baud
-Rate Generator for External Clock (BRG), as found on some SCIF variants
-and on HSCIF.
+On Wed, Nov 18, 2015 at 1:05 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> (changing subject, add devicetree@vger.kernel.org)
+>
+> On Tue, Nov 17, 2015 at 11:33:25PM +0100, Julia Lawall wrote:
+>> On Tue, 17 Nov 2015, Brian Norris wrote:
+>> > On Tue, Nov 17, 2015 at 06:48:39PM +0100, Julia Lawall wrote:
+>> > > Is this something that should be checked for elsewhere?
+>> >
+>> > I expect the same sort of problem shows up plenty of other places. I
+>> > don't think many people use CONFIG_OF_DYNAMIC, so the effects of these
+>> > failures probably aren't felt by many.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+The "problem" is non-existent because either CONFIG_OF_DYNAMIC is off
+or where it is used is limited (memory and cpus on PSeries) and now
+overlays. Overlays have the potential to be problematic, but we should
+manage ref counting for overlays in a completely different way. What
+that looks like, I don't know. I'll leave that to the person that
+cares about removing overlays.
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index 8efc9b6f35637fbb..ae907e39b11c2a5a 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -46,6 +46,12 @@ Required properties:
-     On (H)SCI(F) and some SCIFA, an additional clock may be specified:
-       - "hsck" for the optional external clock input (on HSCIF),
-       - "sck" for the optional external clock input (on other variants).
-+    On UARTs equipped with a Baud Rate Generator for External Clock (BRG)
-+    (some SCIF and HSCIF), additional clocks may be specified:
-+      - "int_clk" for the optional internal clock source for the frequency
-+	divider (typically the (AXI or SHwy) bus clock),
-+      - "scif_clk" for the optional external clock source for the frequency
-+	divider (SCIF_CLK).
- 
- Note: Each enabled SCIx UART should have an alias correctly numbered in the
- "aliases" node.
--- 
-1.9.1
+>> basically, this says that a structure field is initilized to a device node
+>> value, the structure is returned by the containing function, and the
+>> containing function contains no of_node_get at all.  Certainly this is
+>> quite constrained, but it does produce a number of examples.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've got no idea if this is right or not.
+
+>> drivers/of/pdt.c, function of_pdt_create_node
+>
+> Not real sure about this one.
+
+SPARC. Stay away.
+
+>
+>> Any idea whether these need of_node_get?  In all cases the device node
+>> value comes in as a parameter.
+>
+> I'm really not an expert on this stuff. I just saw a potential problem
+> that I happen to be looking at in other subsystems, and I wanted to know
+> what others thought. I think this discussion should include the DT folks
+> and the subsystems in question. For one, I'm as interested as anyone in
+> getting this todo clarified:
+>
+> Documentation/devicetree/todo.txt
+> - Document node lifecycle for CONFIG_OF_DYNAMIC
+
+Step 2 after figuring out it can't be documented is "define a new way
+to handle dynamic DT refcounting aka how to get rid of
+of_node_get/put."
+
+Rob
