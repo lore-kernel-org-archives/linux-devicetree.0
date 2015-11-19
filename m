@@ -1,63 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 01/25] serial: sh-sci: Update DT binding documentation for external clock input
-Date: Thu, 19 Nov 2015 22:27:55 +0200
-Message-ID: <2241755.f72hngpPkv@avalon>
-References: <1447958344-836-1-git-send-email-geert+renesas@glider.be> <1447958344-836-2-git-send-email-geert+renesas@glider.be> <1756365.Ijac5ApxcA@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1756365.Ijac5ApxcA@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 PART-RESEND 0/2] berlin sdhci clock clean up
+Date: Thu, 19 Nov 2015 21:31:13 +0100
+Message-ID: <564E3191.8060109@gmail.com>
+References: <1447671395-8023-1-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447671395-8023-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Thursday 19 November 2015 22:19:14 Laurent Pinchart wrote:
-> On Thursday 19 November 2015 19:38:40 Geert Uytterhoeven wrote:
-> > Amend the DT bindings to include the optional external clock on
-> > (H)SCI(F) and some SCIFA, where this pin can serve as a clock input,
-> > depending on board wiring.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt index
-> > 2c9e6b8477e92792..8efc9b6f35637fbb 100644
-> > --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> > 
-> > @@ -43,6 +43,9 @@ Required properties:
-> >    - clocks: Must contain a phandle and clock-specifier pair for each
-> >    entry
-> >    
-> >      in clock-names.
-> >    
-> >    - clock-names: Must contain "fck" for the SCIx UART functional clock.
-> > 
-> > +    On (H)SCI(F) and some SCIFA, an additional clock may be specified:
-> Could you list the SCIFA variants that support external clocks ?
+On 16.11.2015 11:56, Jisheng Zhang wrote:
+> Add or fix the optional clock property, then remove the CLK_IGNORE_UNUSED
+> flag for sdio clk(s).
 > 
-> > +      - "hsck" for the optional external clock input (on HSCIF),
-> > +      - "sck" for the optional external clock input (on other variants).
+> This is a partialy resend of 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/379457.html
+> 
+> patch3, patch4 has been merged.
 
-Additionally, those clocks are used as inputs to the baud rate generator for 
-external clocks, as the ones listed in patch 02/25 in this series. I'd merge 
-the two patches and clarify the wording.
+Great! Really!
 
-> >  Note: Each enabled SCIx UART should have an alias correctly numbered in
-> >  the "aliases" node.
+As they have been taken without my Acked-by, ignoring my request to
+_not_ remove the CLK_IGNORE_UNUSED flags _before_ these two, the
+remaining patches now become fixes.
 
--- 
-Regards,
+Please resend the patches with a proper description what and why they
+are fixes now.
 
-Laurent Pinchart
+Sebastian
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
