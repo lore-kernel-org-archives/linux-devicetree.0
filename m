@@ -1,113 +1,98 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/3] ARM: imx: clk-vf610: fix SAI clock tree
-Date: Wed, 18 Nov 2015 17:58:34 -0800
-Message-ID: <303ceb58a66266515be33d1943091908@agner.ch>
-References: <1445141122-14183-1-git-send-email-stefan@agner.ch>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc2: add support of hi6220
+Date: Thu, 19 Nov 2015 02:36:31 +0000
+Message-ID: <2B3535C5ECE8B5419E3ECBE30077290901DC3D6B93@US01WEMBX2.internal.synopsys.com>
+References: <1447832387-27549-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1445141122-14183-1-git-send-email-stefan@agner.ch>
-Sender: linux-clk-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Li.Xiubo@freescale.com, zidan.wang@freescale.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <john.youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On 11/17/2015 11:39 PM, Zhangfei Gao wrote:
+> Support hisilicon,hi6220-usb for HiKey board
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
+>  drivers/usb/dwc2/platform.c                    | 32 ++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index fd132cb..2213682 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -4,6 +4,7 @@ Platform DesignWare HS OTG USB 2.0 controller
+>  Required properties:
+>  - compatible : One of:
+>    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
+> +  - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
+>    - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+>    - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
+>    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+> index 5859b0f..a5cb1bf 100644
+> --- a/drivers/usb/dwc2/platform.c
+> +++ b/drivers/usb/dwc2/platform.c
+> @@ -54,6 +54,37 @@
+>  
+>  static const char dwc2_driver_name[] = "dwc2";
+>  
+> +static const struct dwc2_core_params params_hi6220 = {
+> +	.otg_cap			= 2,	/* No HNP/SRP capable */
+> +	.otg_ver			= 0,	/* 1.3 */
+> +	.dma_enable			= 1,
+> +	.dma_desc_enable		= 0,
+> +	.speed				= 0,	/* High Speed */
+> +	.enable_dynamic_fifo		= 1,
+> +	.en_multiple_tx_fifo		= 1,
+> +	.host_rx_fifo_size		= 512,
+> +	.host_nperio_tx_fifo_size	= 512,
+> +	.host_perio_tx_fifo_size	= 512,
+> +	.max_transfer_size		= 65535,
+> +	.max_packet_count		= 511,
+> +	.host_channels			= 16,
+> +	.phy_type			= 1,	/* UTMI */
+> +	.phy_utmi_width			= 8,
+> +	.phy_ulpi_ddr			= 0,	/* Single */
+> +	.phy_ulpi_ext_vbus		= 0,
+> +	.i2c_enable			= 0,
+> +	.ulpi_fs_ls			= 0,
+> +	.host_support_fs_ls_low_power	= 0,
+> +	.host_ls_low_power_phy_clk	= 0,	/* 48 MHz */
+> +	.ts_dline			= 0,
+> +	.reload_ctl			= 0,
+> +	.ahbcfg				= GAHBCFG_HBSTLEN_INCR16 <<
+> +					  GAHBCFG_HBSTLEN_SHIFT,
+> +	.uframe_sched			= 0,
+> +	.external_id_pin_ctl		= -1,
+> +	.hibernation			= -1,
+> +};
+> +
+>  static const struct dwc2_core_params params_bcm2835 = {
+>  	.otg_cap			= 0,	/* HNP/SRP capable */
+>  	.otg_ver			= 0,	/* 1.3 */
+> @@ -282,6 +313,7 @@ static int dwc2_driver_remove(struct platform_device *dev)
+>  
+>  static const struct of_device_id dwc2_of_match_table[] = {
+>  	{ .compatible = "brcm,bcm2835-usb", .data = &params_bcm2835 },
+> +	{ .compatible = "hisilicon,hi6220-usb", .data = &params_hi6220 },
+>  	{ .compatible = "rockchip,rk3066-usb", .data = &params_rk3066 },
+>  	{ .compatible = "snps,dwc2", .data = NULL },
+>  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
+> 
 
-Any thoughts on that patchset? I kind of hoped that it would make it
-into 4.4 since it actually fixes issues (at least 1 and 2)... That said,
-I don't think it is stable material since it also breaks the device
-tree...
+Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Regards,
+John
+
 
 --
-Stefan
-
-On 2015-10-17 21:05, Stefan Agner wrote:
-> The Synchronous Audio Interface (SAI) instances are clocked by
-> independent clocks: The bus clock and the audio clock (as shown in
-> Figure 51-1 in the Vybrid Reference Manual). The clock gates in
-> CCGR0/CCGR1 for SAI0 through SAI3 are bus clock gates, as access
-> tests to the registers with/without gating those clocks have shown.
-> The audio clock is gated by the SAIx_EN gates in CCM_CSCDR1,
-> followed by a clock divider (SAIx_DIV). Currently, the parent of
-> the bus clock gates has been assigned to SAIx_DIV, which is not
-> involved in the bus clock path for the SAI instances (see chapter
-> 9.10.12, SAI clocking in the Vybrid Reference Manual).
-> 
-> Fix this by define the parent clock of VF610_CLK_SAIx to be the bus
-> clock.
-> 
-> If the driver needs the audio clock (when used in master mode), a
-> fixed device tree is required which assign the audio clock properly
-> to VF610_CLK_SAIx_DIV.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
-> Hi all,
-> 
-> Patch 1 and 2 are actual fixes and should be applied toghether. If
-> the clock tree changes are applied only, master mode won't work
-> anymore. With only the device tree changes applied, it probably
-> will still work but the VF610_CLK_SAIx_DIV will be enabled twice.
-> 
-> Since Patch 3 also uses the fixed clock layout, it should be
-> applied after the clock tree fix too...
-> 
-> Not sure through which tree these changes should go?
-> 
-> --
-> Stefan
-> 
->  drivers/clk/imx/clk-vf610.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-> index bff45ea..42a7a23 100644
-> --- a/drivers/clk/imx/clk-vf610.c
-> +++ b/drivers/clk/imx/clk-vf610.c
-> @@ -335,22 +335,22 @@ static void __init vf610_clocks_init(struct
-> device_node *ccm_node)
->  	clk[VF610_CLK_SAI0_SEL] = imx_clk_mux("sai0_sel", CCM_CSCMR1, 0, 2,
-> sai_sels, 4);
->  	clk[VF610_CLK_SAI0_EN] = imx_clk_gate("sai0_en", "sai0_sel", CCM_CSCDR1, 16);
->  	clk[VF610_CLK_SAI0_DIV] = imx_clk_divider("sai0_div", "sai0_en",
-> CCM_CSCDR1, 0, 4);
-> -	clk[VF610_CLK_SAI0] = imx_clk_gate2("sai0", "sai0_div", CCM_CCGR0,
-> CCM_CCGRx_CGn(15));
-> +	clk[VF610_CLK_SAI0] = imx_clk_gate2("sai0", "ipg_bus", CCM_CCGR0,
-> CCM_CCGRx_CGn(15));
->  
->  	clk[VF610_CLK_SAI1_SEL] = imx_clk_mux("sai1_sel", CCM_CSCMR1, 2, 2,
-> sai_sels, 4);
->  	clk[VF610_CLK_SAI1_EN] = imx_clk_gate("sai1_en", "sai1_sel", CCM_CSCDR1, 17);
->  	clk[VF610_CLK_SAI1_DIV] = imx_clk_divider("sai1_div", "sai1_en",
-> CCM_CSCDR1, 4, 4);
-> -	clk[VF610_CLK_SAI1] = imx_clk_gate2("sai1", "sai1_div", CCM_CCGR1,
-> CCM_CCGRx_CGn(0));
-> +	clk[VF610_CLK_SAI1] = imx_clk_gate2("sai1", "ipg_bus", CCM_CCGR1,
-> CCM_CCGRx_CGn(0));
->  
->  	clk[VF610_CLK_SAI2_SEL] = imx_clk_mux("sai2_sel", CCM_CSCMR1, 4, 2,
-> sai_sels, 4);
->  	clk[VF610_CLK_SAI2_EN] = imx_clk_gate("sai2_en", "sai2_sel", CCM_CSCDR1, 18);
->  	clk[VF610_CLK_SAI2_DIV] = imx_clk_divider("sai2_div", "sai2_en",
-> CCM_CSCDR1, 8, 4);
-> -	clk[VF610_CLK_SAI2] = imx_clk_gate2("sai2", "sai2_div", CCM_CCGR1,
-> CCM_CCGRx_CGn(1));
-> +	clk[VF610_CLK_SAI2] = imx_clk_gate2("sai2", "ipg_bus", CCM_CCGR1,
-> CCM_CCGRx_CGn(1));
->  
->  	clk[VF610_CLK_SAI3_SEL] = imx_clk_mux("sai3_sel", CCM_CSCMR1, 6, 2,
-> sai_sels, 4);
->  	clk[VF610_CLK_SAI3_EN] = imx_clk_gate("sai3_en", "sai3_sel", CCM_CSCDR1, 19);
->  	clk[VF610_CLK_SAI3_DIV] = imx_clk_divider("sai3_div", "sai3_en",
-> CCM_CSCDR1, 12, 4);
-> -	clk[VF610_CLK_SAI3] = imx_clk_gate2("sai3", "sai3_div", CCM_CCGR1,
-> CCM_CCGRx_CGn(2));
-> +	clk[VF610_CLK_SAI3] = imx_clk_gate2("sai3", "ipg_bus", CCM_CCGR1,
-> CCM_CCGRx_CGn(2));
->  
->  	clk[VF610_CLK_NFC_SEL] = imx_clk_mux("nfc_sel", CCM_CSCMR1, 12, 2,
-> nfc_sels, 4);
->  	clk[VF610_CLK_NFC_EN] = imx_clk_gate("nfc_en", "nfc_sel", CCM_CSCDR2, 9);
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
