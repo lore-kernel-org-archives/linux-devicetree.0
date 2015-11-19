@@ -1,92 +1,61 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: [PATCH 1/3] power: domain: add pm_genpd_uninit
-Date: Thu, 19 Nov 2015 19:08:08 +0100
-Message-ID: <1447956490-22930-2-git-send-email-alex.aring@gmail.com>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de, Alexander Aring <alex.aring@gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Thu, 19 Nov 2015 15:18:47 -0300
+Message-ID: <CABxcv=nr3ueCouu5R-z7uVbYx4nkOgqbY0s8Vh8hPBKpLj1FTQ@mail.gmail.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+	<CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+	<CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+	<1606098.olLAyTIhB3@dell2.five-lan.de>
+	<56272C1C.8040007@samsung.com>
+	<562765F3.9010306@osg.samsung.com>
+	<CAGOxZ52-ia8uhgGg5CiU9TSYkfAsRD52zvLqq++Y-mr4uaFOpg@mail.gmail.com>
+	<5627A75E.60509@osg.samsung.com>
+	<CAGOxZ537QuzBP4tcG9qh-+iXK-Y=WwZGiJ1-cwtLqwRf0a+wVA@mail.gmail.com>
+	<56282B2D.6000708@samsung.com>
+	<CAGOxZ50b3cGXQSFL1uXt7O=CyBOaE=7WRQ-tSz8NUmWzBdhxoQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ50b3cGXQSFL1uXt7O=CyBOaE=7WRQ-tSz8NUmWzBdhxoQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds function pm_genpd_uninit for undo a pm_genpd_init. This
-is useful for multiple power domains while probing. If the probing fails
-after one pm_genpd_init was called we need to undo all previous
-registrations of generic pm domains inside the gpd_list list.
+Hello Alim,
 
-There is a check on IS_ERR_OR_NULL(genpd) which is useful to check again
-registered power domains and not registered domains, the driver can use
-this mechanism to have an array with registered and non-registered power
-domains, where non-registered power domains are NULL.
+On Thu, Nov 19, 2015 at 3:06 PM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
 
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Kevin Hilman <khilman@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Alexander Aring <alex.aring@gmail.com>
----
- drivers/base/power/domain.c | 22 ++++++++++++++++++++++
- include/linux/pm_domain.h   |  4 ++++
- 2 files changed, 26 insertions(+)
+[snip]
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index e03b1ad..24f54b8 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1509,6 +1509,28 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
- }
- EXPORT_SYMBOL_GPL(pm_genpd_init);
- 
-+/**
-+ * pm_genpd_uninit - Uninitialize a generic I/O PM domain object.
-+ * @genpd: PM domain object to initialize.
-+ */
-+void pm_genpd_uninit(struct generic_pm_domain *genpd)
-+{
-+	if (IS_ERR_OR_NULL(genpd))
-+		return;
-+
-+	/* check if domain is still in registered inside the pm subsystem */
-+	WARN_ON_ONCE(!list_empty(&genpd->master_links) ||
-+		     !list_empty(&genpd->slave_links) ||
-+		     !list_empty(&genpd->dev_list));
-+
-+	mutex_lock(&gpd_list_lock);
-+	list_del(&genpd->gpd_list_node);
-+	mutex_unlock(&gpd_list_lock);
-+
-+	mutex_destroy(&genpd->lock);
-+}
-+EXPORT_SYMBOL_GPL(pm_genpd_uninit);
-+
- #ifdef CONFIG_PM_GENERIC_DOMAINS_OF
- /*
-  * Device Tree based PM domain providers.
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index ba4ced3..df84a45 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -123,6 +123,7 @@ extern int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
- 				     struct generic_pm_domain *target);
- extern void pm_genpd_init(struct generic_pm_domain *genpd,
- 			  struct dev_power_governor *gov, bool is_off);
-+extern void pm_genpd_uninit(struct generic_pm_domain *genpd);
- 
- extern struct dev_power_governor simple_qos_governor;
- extern struct dev_power_governor pm_domain_always_on_gov;
-@@ -161,6 +162,9 @@ static inline void pm_genpd_init(struct generic_pm_domain *genpd,
- 				 struct dev_power_governor *gov, bool is_off)
- {
- }
-+static inline void pm_genpd_uninit(struct generic_pm_domain *genpd)
-+{
-+}
- #endif
- 
- static inline int pm_genpd_add_device(struct generic_pm_domain *genpd,
--- 
-2.6.1
+>>
+>> Javier, Alim, Ulf,
+>>
+>> I am not grabbing any more patches for v4.4 because I doubt that they
+>> could be merged to arm-soc for this cycle. My last pull requests for
+>> v4.4 is still pending...
+>>
+>> This means that I plan to pick up these series for v4.5, after closing
+>> v4.4 merge window (unless Kukjin picks it also). Because of that, we
+>> have plenty of time, so my idea is:
+>> 1. Wait for some comments from Ulf on Javier's fix.
+>> 2. If the fix goes into v4.4, then problem solved.
+>> 3. If not and it get acked, then it can go with this set.
+>> 4. If not and it get applied by Ulf for v4.5, then a tag from him would
+>> be a nice way to solve dependency.
+>>
+>> Either way we don't have to hurry, I think.
+>>
+>
+> Is It the right time to get this series in?
 
+The patch that the series had as a dependency made it to v4.4-rc1 as
+commit 1c6e58d83615 ("mmc: pwrseq: Use highest priority for eMMC
+restart handler") so it should be safe now to pick this series for
+v4.5.
+
+> Thanks!!
+>
+
+Best regards,
+Javier
