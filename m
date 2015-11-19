@@ -1,132 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] Documentation: dt-bindings: Add bindings for
- Synopsys DW MIPI DSI DRM bridge driver
-Date: Thu, 19 Nov 2015 09:12:28 -0600
-Message-ID: <20151119151228.GA26097@rob-hp-laptop>
-References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
- <1447904131-29328-6-git-send-email-zyw@rock-chips.com>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH v11 2/8] Input: goodix - reset device at init
+Date: Thu, 19 Nov 2015 16:25:03 +0100
+Message-ID: <1447946703.24088.73.camel@hadess.net>
+References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
+	 <1447936001-21420-3-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447904131-29328-6-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liu Ying <Ying.liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1447936001-21420-3-git-send-email-irina.tirdea@intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, linux-input@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 11:35:23AM +0800, Chris Zhong wrote:
-> From: Liu Ying <Ying.liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
-> host controller DRM bridge driver.
-> 
-> Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> ---
-> 
-> Changes in v3:
-> move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
-> 
-> Changes in v2: None
-> 
->  .../bindings/display/bridge/dw_mipi_dsi.txt        | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-> new file mode 100644
-> index 0000000..0e5c140
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-> @@ -0,0 +1,76 @@
-> +Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
-> +
-> +The controller is a digital core that implements all protocol functions
-> +defined in the MIPI DSI specification, providing an interface between
-> +the system and the MIPI DPHY, and allowing communication with a MIPI DSI
-> +compliant display.
-> +
-> +Required properties:
-> + - #address-cells: Should be <1>.
-> + - #size-cells: Should be <0>.
-> + - compatible: The first compatible string should be "fsl,imx6q-mipi-dsi"
-> +   for i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
-> +   device tree binding documentations.  A common compatible string
-> +   "snps,dw-mipi-dsi" should be appended for all SoCs.
-> + - reg: Represent the physical address range of the controller.
-> + - interrupts: Represent the controller's interrupt to the CPU(s).
-> + - clocks, clock-names: Phandles to the controller's pll reference
-> +   clock(ref), configuration clock(cfg) and APB clock(pclk), as
-> +   described in [1].
+On Thu, 2015-11-19 at 14:26 +0200, Irina Tirdea wrote:
+> After power on, it is recommended that the driver resets the device.
+> The reset procedure timing is described in the datasheet and is used
+> at device init (before writing device configuration) and
+> for power management. It is a sequence of setting the interrupt
+> and reset pins high/low at specific timing intervals. This procedure
+> also includes setting the slave address to the one specified in the
+> ACPI/device tree.
 
-You are missing the gpr property.
+This fails on a 4.3 kernel with an ACPI device (WinBook TW100):
+Goodix-TS: probe of i2c-GDIX1001:00 failed with error -16
 
-> +
-> +For more required properties, please refer to relevant device tree binding
-> +documentations which describe the controller embedded in specific SoCs.
-> +
-> +Required sub-nodes:
-> + - A node to represent a DSI peripheral as described in [2].
+Can you please document which upstream commit is necessary to make this
+behave properly?
 
-Please describe the ports.
+I'll test again with a newer kernel.
 
-> +
-> +For more required sub-nodes, please refer to relevant device tree binding
-> +documentations which describe the controller embedded in specific SoCs.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> +
-> +example:
-> +	gpr: iomuxc-gpr@020e0000 {
-> +		/* ... */
-> +	};
-> +
-> +	mipi_dsi: mipi@021e0000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
-> +		reg = <0x021e0000 0x4000>;
-> +		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-> +		gpr = <&gpr>;
-> +		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-> +			 <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-> +			 <&clks IMX6QDL_CLK_MIPI_IPG>;
-> +		clock-names = "ref", "cfg", "pclk";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +
-> +				mipi_mux_0: endpoint {
-> +					remote-endpoint = <&ipu1_di0_mipi>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +
-> +				mipi_mux_1: endpoint {
-> +					remote-endpoint = <&ipu1_di1_mipi>;
-> +				};
-> +			};
-> +		};
-> +
-> +		panel {
-> +			compatible = "truly,tft480800-16-e-dsi";
-> +			reg = <0>;
-> +			/* ... */
-> +		};
-> +	};
-> -- 
-> 2.6.3
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
