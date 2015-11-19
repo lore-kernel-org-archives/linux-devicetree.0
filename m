@@ -1,42 +1,88 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 01/12] clk: rockchip: add id for mipidsi sclk on rk3288
-Date: Thu, 19 Nov 2015 11:35:19 +0800
-Message-ID: <1447904131-29328-2-git-send-email-zyw@rock-chips.com>
-References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v12 1/3] dt-bindings: Add a binding for Mediatek xHCI
+ host controller
+Date: Thu, 19 Nov 2015 11:36:51 +0800
+Message-ID: <1447904211.18917.12.camel@mhfsdcap03>
+References: <1447751921-26746-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1447751921-26746-2-git-send-email-chunfeng.yun@mediatek.com>
+	 <564B085B.7060706@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447904131-29328-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <564B085B.7060706-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jeff Chen <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Huang Lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a new id for the sclk supplying the mipidsi on rk3288 socs.
+Hi,
+On Tue, 2015-11-17 at 13:58 +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 11/17/2015 12:18 PM, Chunfeng Yun wrote:
+> 
+> > add a DT binding documentation of xHCI host controller for the
+> > MT8173 SoC from Mediatek.
+> >
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
+> >   1 file changed, 51 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> > new file mode 100644
+> > index 0000000..a78f20b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> > @@ -0,0 +1,51 @@
+> > +MT8173 xHCI
+> > +
+> > +The device node for Mediatek SOC USB3.0 host controller
+> > +
+> > +Required properties:
+> > + - compatible : should contain "mediatek,mt8173-xhci"
+> > + - reg : specifies physical base address and size of the registers,
+> > +	the first one for MAC, the second for IPPC
+> > + - interrupts : interrupt used by the controller
+> > + - power-domains : a phandle to USB power domain node to control USB's
+> > +	mtcmos
+> 
+>     What's that?
+It works as a gateway in fact which can turn on/off usb power
+> 
+> > + - vusb33-supply : regulator of USB avdd3.3v
+> > +
+> > + - clocks : a list of phandle + clock-specifier pairs, one for each
+> > +	entry in clock-names
+> > + - clock-names : must contain
+> > +	"sys_ck": for clock of xHCI MAC
+> > +	"wakeup_deb_p0": for USB wakeup debounce clock of port0
+> > +	"wakeup_deb_p0": for USB wakeup debounce clock of port1
+> 
+>     "wakeup_deb_p1"?
+Yes, it's a typo
+> 
+> > +
+> > + - phys : a list of phandle + phy specifier pairs
+> > +
+> > +Optional properties:
+> > + - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
+>                                 ^^ IP?
+Ok
+> 
+> > +	mode;
+> > + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
+> > +	control register, it depends on "mediatek,wakeup-src".
+> > + - vbus-supply : reference to the VBUS regulator;
+> > + - usb3-lpm-capable : supports USB3.0 LPM
+> 
+> [...]
+> 
+> MBR, Sergei
+> 
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
----
-
-Changes in v3: None
-Changes in v2:
-add the mipi clk id in a single patch
-
- include/dt-bindings/clock/rk3288-cru.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index c719aac..b07cdd3 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -86,6 +86,7 @@
- #define SCLK_USBPHY480M_SRC	122
- #define SCLK_PVTM_CORE		123
- #define SCLK_PVTM_GPU		124
-+#define SCLK_MIPI_24M		125
- 
- #define SCLK_MAC		151
- #define SCLK_MACREF_OUT		152
--- 
-2.6.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
