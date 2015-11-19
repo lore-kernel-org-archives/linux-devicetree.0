@@ -1,124 +1,112 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC/PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP
- bindings
-Date: Thu, 19 Nov 2015 08:50:17 -0600
-Message-ID: <20151119145017.GA19795@rob-hp-laptop>
-References: <1447808426-21834-1-git-send-email-sboyd@codeaurora.org>
+Subject: Re: [Patch v5 2/2] media: v4l: ti-vpe: Document DRA72 CAL h/w module
+Date: Thu, 19 Nov 2015 08:51:43 -0600
+Message-ID: <20151119145143.GA21319@rob-hp-laptop>
+References: <1447879632-22635-1-git-send-email-bparrot@ti.com>
+ <1447879632-22635-3-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447808426-21834-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+In-Reply-To: <1447879632-22635-3-git-send-email-bparrot@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 05:00:26PM -0800, Stephen Boyd wrote:
-> The drivers don't really need to know which PMIC they're for, so
-> make a generic binding for them. This alleviates us from updating
-> the drivers every time a new PMIC comes out. It's still
-> recommended that we update the binding with new PMIC models and
-> always specify the specific model for the MPPs and gpios before
-> the generic compatible string in devicetree, but this at least
-> cuts down on adding more and more compatible strings to the
-> drivers until we actually need them.
+On Wed, Nov 18, 2015 at 02:47:12PM -0600, Benoit Parrot wrote:
+> Device Tree bindings for the DRA72 Camera Adaptation Layer (CAL)
+> H/W module.
 > 
-> Cc: <devicetree@vger.kernel.org>
-> Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
-
-Seems okay to me. I assume you are going to update all the dts files?
-
-Rob
-
+>  Documentation/devicetree/bindings/media/ti-cal.txt | 72 ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
 > 
-> We can also figure out the number of the pins from the number
-> of interrupts, so we really don't need to even look at the size of the
-> reg property or model number for the spmi and ssbi modules. I'll propose
-> that change as well tomorrow.
-> 
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 5 ++++-
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 5 ++++-
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
->  drivers/pinctrl/qcom/pinctrl-spmi-mpp.c                      | 1 +
->  4 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> index a90c812ad642..f1e4643f4132 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> @@ -17,6 +17,9 @@ PMIC's from Qualcomm.
->  		    "qcom,pm8994-gpio"
->  		    "qcom,pma8084-gpio"
->  
-> +		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
-> +		    if the device is on an spmi bus or an ssbi bus respectively
+> diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
+> new file mode 100644
+> index 000000000000..ae9b52f37576
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/ti-cal.txt
+> @@ -0,0 +1,72 @@
+> +Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL)
+> +------------------------------------------------------
 > +
->  - reg:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -183,7 +186,7 @@ to specify in a pin configuration subnode:
->  Example:
->  
->  	pm8921_gpio: gpio@150 {
-> -		compatible = "qcom,pm8921-gpio";
-> +		compatible = "qcom,pm8921-gpio", "qcom,ssbi-gpio";
->  		reg = <0x150 0x160>;
->  		interrupts = <192 1>, <193 1>, <194 1>,
->  			     <195 1>, <196 1>, <197 1>,
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-> index d74e631e10da..e28320b18ecb 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
-> @@ -18,6 +18,9 @@ of PMIC's from Qualcomm.
->  		    "qcom,pm8994-mpp",
->  		    "qcom,pma8084-mpp",
->  
-> +		    And must contain either "qcom,spmi-mpp" or "qcom,ssbi-mpp"
-> +		    if the device is on an spmi bus or an ssbi bus respectively.
+> +The Camera Adaptation Layer (CAL) is a key component for image capture
+> +applications. The capture module provides the system interface and the
+> +processing capability to connect CSI2 image-sensor modules to the
+> +DRA72x device.
 > +
->  - reg:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -157,7 +160,7 @@ to specify in a pin configuration subnode:
->  Example:
->  
->  	mpps@a000 {
-> -		compatible = "qcom,pm8841-mpp";
-> +		compatible = "qcom,pm8841-mpp", "qcom,spmi-mpp";
->  		reg = <0xa000>;
->  		gpio-controller;
->  		#gpio-cells = <2>;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index df4413023e21..9f9979903fcb 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -806,6 +806,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
->  	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
->  	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
->  	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
-> +	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
->  	{ },
->  };
->  
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
-> index 7b4136a22c5b..5a4373dd9c61 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
-> @@ -909,6 +909,7 @@ static const struct of_device_id pmic_mpp_of_match[] = {
->  	{ .compatible = "qcom,pm8941-mpp" },	/* 8 MPP's */
->  	{ .compatible = "qcom,pm8994-mpp" },	/* 8 MPP's */
->  	{ .compatible = "qcom,pma8084-mpp" },	/* 8 MPP's */
-> +	{ .compatible = "qcom,spmi-mpp" },	/* Generic */
->  	{ },
->  };
->  
+> +Required properties:
+> +- compatible: must be "ti,dra72-cal"
+> +- reg:	CAL Top level, Receiver Core #0, Receiver Core #1 and Camera RX
+> +	control address space
+> +- reg-names: cal_top, cal_rx_core0, cal_rx_core1, and camerrx_control
+> +	     registers
+> +- interrupts: should contain IRQ line for the CAL;
+> +
+> +CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+> +should contain a 'port' child node with child 'endpoint' node. Please
+> +refer to the bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +	cal: cal@4845b000 {
+> +		compatible = "ti,dra72-cal";
+> +		ti,hwmods = "cal";
+> +		reg = <0x4845B000 0x400>,
+> +		      <0x4845B800 0x40>,
+> +		      <0x4845B900 0x40>,
+> +		      <0x4A002e94 0x4>;
+> +		reg-names = "cal_top",
+> +			    "cal_rx_core0",
+> +			    "cal_rx_core1",
+> +			    "camerrx_control";
+> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			csi2_0: port@0 {
+> +				reg = <0>;
+> +				endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&ar0330_1>;
+> +				};
+> +			};
+> +			csi2_1: port@1 {
+> +				reg = <1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	i2c5: i2c@4807c000 {
+> +		ar0330@10 {
+> +			compatible = "ti,ar0330";
+> +			reg = <0x10>;
+> +
+> +			port {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				ar0330_1: endpoint {
+> +					reg = <0>;
+> +					clock-lanes = <1>;
+> +					data-lanes = <0 2 3 4>;
+> +					remote-endpoint = <&csi2_0>;
+> +				};
+> +			};
+> +		};
+> +	};
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 1.8.5.1
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
