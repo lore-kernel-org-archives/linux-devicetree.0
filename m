@@ -1,70 +1,91 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 01/25] serial: sh-sci: Update DT binding documentation for
- external clock input
-Date: Thu, 19 Nov 2015 21:39:50 +0100
-Message-ID: <CAMuHMdUnT2zCnj9QBVgxJaHV2fk5iuc7cxq=fh+fVTv3toOVaQ@mail.gmail.com>
-References: <1447958344-836-1-git-send-email-geert+renesas@glider.be>
-	<1447958344-836-2-git-send-email-geert+renesas@glider.be>
-	<1756365.Ijac5ApxcA@avalon>
-	<2241755.f72hngpPkv@avalon>
+From: Salil Mehta <salil.mehta@huawei.com>
+Subject: [PATCH V3 net-next 4/5] net:hns: Add support of ethtool TSO set option for Hip06 in HNS
+Date: Fri, 20 Nov 2015 04:58:25 +0800
+Message-ID: <1447966706-16219-5-git-send-email-salil.mehta@huawei.com>
+References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2241755.f72hngpPkv@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, salil.mehta@huawei.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 9:27 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> On Thursday 19 November 2015 22:19:14 Laurent Pinchart wrote:
->> On Thursday 19 November 2015 19:38:40 Geert Uytterhoeven wrote:
->> > Amend the DT bindings to include the optional external clock on
->> > (H)SCI(F) and some SCIFA, where this pin can serve as a clock input,
->> > depending on board wiring.
+From: Salil <salil.mehta@huawei.com>
 
->> > --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> >
->> > @@ -43,6 +43,9 @@ Required properties:
->> >    - clocks: Must contain a phandle and clock-specifier pair for each
->> >    entry
->> >
->> >      in clock-names.
->> >
->> >    - clock-names: Must contain "fck" for the SCIx UART functional clock.
->> >
->> > +    On (H)SCI(F) and some SCIFA, an additional clock may be specified:
->> Could you list the SCIFA variants that support external clocks ?
->>
->> > +      - "hsck" for the optional external clock input (on HSCIF),
->> > +      - "sck" for the optional external clock input (on other variants).
->
-> Additionally, those clocks are used as inputs to the baud rate generator for
-> external clocks, as the ones listed in patch 02/25 in this series. I'd merge
-> the two patches and clarify the wording.
+This patch adds the support of ethtool TSO option to V1 patch,
+meant to add support of Hip06 SoC to HNS
 
-"SCK" predates the BRG, it even exists on SCI in H8/300.
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: lisheng <lisheng011@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c |   47 +++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-That SCK is used as input to the BRG is just an artefact of how the BRG was
-added to the SCIF. The BRG is just muxed with the existing SCK to form a clock
-input, which is muxed with the BRR clock through the SCSCR.CKEx bits.
-And the BRG itself can choose between SCIF_CLK and INT_CLK.
-
-Hence that's why I split it in two parts.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 055e14c..a0763ab 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -1386,6 +1386,51 @@ static int hns_nic_change_mtu(struct net_device *ndev, int new_mtu)
+ 	return ret;
+ }
+ 
++static int hns_nic_set_features(struct net_device *netdev,
++				netdev_features_t features)
++{
++	struct hns_nic_priv *priv = netdev_priv(netdev);
++	struct hnae_handle *h = priv->ae_handle;
++
++	switch (priv->enet_ver) {
++	case AE_VERSION_1:
++		if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6))
++			netdev_info(netdev, "enet v1 do not support tso!\n");
++	break;
++	default:
++		if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6)) {
++			priv->ops.fill_desc = fill_tso_desc;
++			priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tso;
++			/* The chip only support 7*4096 */
++			netif_set_gso_max_size(netdev, 7 * 4096);
++			h->dev->ops->set_tso_stats(h, 1);
++		} else {
++			priv->ops.fill_desc = fill_v2_desc;
++			priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tx;
++			h->dev->ops->set_tso_stats(h, 0);
++		}
++	break;
++	}
++	netdev->features = features;
++	return 0;
++}
++
++static netdev_features_t hns_nic_fix_features(
++		struct net_device *netdev, netdev_features_t features)
++{
++	struct hns_nic_priv *priv = netdev_priv(netdev);
++
++	switch (priv->enet_ver) {
++	case AE_VERSION_1:
++		features &= ~(NETIF_F_TSO | NETIF_F_TSO6 |
++				NETIF_F_HW_VLAN_CTAG_FILTER);
++		break;
++	default:
++		break;
++	}
++	return features;
++}
++
+ /**
+  * nic_set_multicast_list - set mutl mac address
+  * @netdev: net device
+@@ -1481,6 +1526,8 @@ static const struct net_device_ops hns_nic_netdev_ops = {
+ 	.ndo_set_mac_address = hns_nic_net_set_mac_address,
+ 	.ndo_change_mtu = hns_nic_change_mtu,
+ 	.ndo_do_ioctl = hns_nic_do_ioctl,
++	.ndo_set_features = hns_nic_set_features,
++	.ndo_fix_features = hns_nic_fix_features,
+ 	.ndo_get_stats64 = hns_nic_get_stats64,
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	.ndo_poll_controller = hns_nic_poll_controller,
+-- 
+1.7.9.5
