@@ -1,166 +1,344 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [RESEND RFC/PATCH 0/8] Add MT8173 Video Encoder Driver and VPU
- Driver
-Date: Thu, 19 Nov 2015 08:40:37 +0100
-Message-ID: <564D7CF5.6040504@xs4all.nl>
-References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
+From: LABBE Corentin <clabbe.montjoie@gmail.com>
+Subject: Re: [linux-sunxi] [PATCH] thermal: Add support for Sunxi THS on the
+ Allwinner H3
+Date: Thu, 19 Nov 2015 09:09:32 +0100
+Message-ID: <20151119080932.GA32146@Red>
+References: <20151118205147.GA19779@maud.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447764885-23100-1-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Peter Griffin <peter.gr>
-Cc: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151118205147.GA19779@maud.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: Josef Gajdusek <atx@atx.name>
+Cc: linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, gpatchesrdh@mveas.com, mturquette@linaro.org, hdegoede@redhat.com, sboyd@codeaurora.org, mturquette@baylibre.com, emilio@elopez.com.ar, linux@arm.linux.org.uk, edubezval@gmail.com, rui.zhang@intel.com, wens@csie.org, maxime.ripard@free-electrons.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2015 01:54 PM, Tiffany Lin wrote:
-> ==============
->  Introduction
-> ==============
+On Wed, Nov 18, 2015 at 09:51:48PM +0100, Josef Gajdusek wrote:
+> This patch adds support for the Sunxi thermal sensor on the Allwinner H3.
+> Also adds declaration of the H3 THS clock to clk-sunxi.c ignoring the
+> dividers as they are not continuous (clk-divider.c cannot be used as it
+> does not support setting an enable bit).
+> Should be easily extendable for the A33/A83T/... as they have similar but
+> not completely identical sensors.
 > 
-> The purpose of this RFC is to discuss the driver for a hw video codec
-> embedded in the Mediatek's MT8173 SoCs. Mediatek Video Codec is able to
-> handle video encoding of in a range of formats.
+> Signed-off-by: Josef Gajdusek <atx@atx.name>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt  |   1 +
+>  .../devicetree/bindings/thermal/sunxi-ths.txt      |  24 ++
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  27 +++
+>  drivers/clk/sunxi/clk-sunxi.c                      |  16 ++
+>  drivers/thermal/Kconfig                            |   7 +
+>  drivers/thermal/Makefile                           |   1 +
+>  drivers/thermal/sunxi_ths.c                        | 263 +++++++++++++++++++++
+>  7 files changed, 339 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sunxi-ths.txt
+>  create mode 100644 drivers/thermal/sunxi_ths.c
 > 
-> This RFC also include VPU driver. Mediatek Video Codec driver rely on
-> VPU driver to load, communicate with VPU.
-> 
-> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI.
-> MTK IOMMU and MTK SMI have not yet been merged, but we wanted to start
-> discussion about the driver earlier so it could be merged sooner. The
-> driver posted here is the initial version, so I suppose it will require
-> more work.
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index 23e7bce..6d63b35 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -73,6 +73,7 @@ Required properties:
+>  	"allwinner,sun8i-h3-usb-clk" - for usb gates + resets on H3
+>  	"allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
+>  	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
+> +	"allwinner,sun8i-h3-ths-clk" - for THS on H3
+>  
+>  Required properties for all clocks:
+>  - reg : shall be the control register address for the clock.
+> diff --git a/Documentation/devicetree/bindings/thermal/sunxi-ths.txt b/Documentation/devicetree/bindings/thermal/sunxi-ths.txt
+> new file mode 100644
+> index 0000000..75c9211
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sunxi-ths.txt
+> @@ -0,0 +1,24 @@
+> +* sunxi THS
+> +
+> +Required properties:
+> +- compatible : "allwinner,sun8i-h3-ths"
+> +- reg : Address range of the thermal registers and location of the calibration
+> +        value
+> +- resets : Must contain an entry for each entry in reset-names.
+> +           see ../reset/reset.txt for details
+> +- reset-names : Must include the name "ahb"
+> +- clocks : Must contain an entry for each entry in clock-names.
+> +- clock-names : Must contain "ahb" for the bus gate and "ths" for the THS
+> +  clock
+> +
+> +Example:
+> +ths: ths@01c25000 {
+> +	#thermal-sensor-cells = <0>;
+> +	compatible = "allwinner,sun8i-h3-ths";
+> +	reg = <0x01c25000 0x88>, <0x01c14234 0x4>;
+> +	interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+> +	resets = <&bus_rst 136>;
+> +	reset-names = "ahb";
+> +	clocks = <&bus_gates 72>, <&ths_clk>;
+> +	clock-names = "ahb", "ths";
+> +};
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> index 0faa38a..b82881d 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -77,6 +77,14 @@
+>  		};
+>  	};
+>  
+> +	thermal-zones {
+> +		cpu_thermal: cpu_thermal {
+> +			polling-delay-passive = <1000>;
+> +			polling-delay = <5000>;
+> +			thermal-sensors = <&ths 0>;
+> +		};
+> +	};
+> +
+>  	timer {
+>  		compatible = "arm,armv7-timer";
+>  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> @@ -236,6 +244,14 @@
+>  					"ahb1_ephy", "ahb1_dbg";
+>  		};
+>  
+> +		ths_clk: clk@01c20074 {
+> +			#clock-cells = <0>;
+> +			compatible = "allwinner,sun8i-h3-ths-clk";
+> +			reg = <0x01c20074 0x4>;
+> +			clocks = <&osc24M>;
+> +			clock-output-names = "ths";
+> +		};
+> +
+>  		mmc0_clk: clk@01c20088 {
+>  			#clock-cells = <1>;
+>  			compatible = "allwinner,sun4i-a10-mmc-clk";
+> @@ -522,6 +538,17 @@
+>  			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  
+> +		ths: ths@01c25000 {
+> +			#thermal-sensor-cells = <0>;
+> +			compatible = "allwinner,sun8i-h3-ths";
+> +			reg = <0x01c25000 0x88>, <0x01c14234 0x4>;
+> +			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+> +			resets = <&bus_rst 104>;
+> +			reset-names = "ahb";
+> +			clocks = <&bus_gates 72>, <&ths_clk>;
+> +			clock-names = "ahb", "ths";
+> +		};
+> +
+>  		uart0: serial@01c28000 {
+>  			compatible = "snps,dw-apb-uart";
+>  			reg = <0x01c28000 0x400>;
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 6293c65..637401a 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -604,6 +604,13 @@ static void sun7i_a20_get_out_factors(u32 *freq, u32 parent_rate,
+>  	*p = calcp;
+>  }
+>  
+> +static void sun8i_h3_get_ths_factors(u32 *freq, u32 parent_rate,
+> +				      u8 *n, u8 *k, u8 *m, u8 *p)
+> +{
+> +	/* Ignore the dividers as they are not continuous */
+> +	*freq = parent_rate;
+> +}
+> +
+>  /**
+>   * sunxi_factors_clk_setup() - Setup function for factor clocks
+>   */
+> @@ -668,6 +675,8 @@ static struct clk_factors_config sun4i_apb1_config = {
+>  	.pwidth = 2,
+>  };
+>  
+> +static struct clk_factors_config sun8i_h3_ths_config = {};
+> +
+>  /* user manual says "n" but it's really "p" */
+>  static struct clk_factors_config sun7i_a20_out_config = {
+>  	.mshift = 8,
+> @@ -734,6 +743,12 @@ static const struct factors_data sun7i_a20_out_data __initconst = {
+>  	.getter = sun7i_a20_get_out_factors,
+>  };
+>  
+> +static const struct factors_data sun8i_h3_ths_data __initconst = {
+> +	.enable = 31,
+> +	.table = &sun8i_h3_ths_config,
+> +	.getter = sun8i_h3_get_ths_factors,
+> +};
+> +
+>  static struct clk * __init sunxi_factors_clk_setup(struct device_node *node,
+>  						   const struct factors_data *data)
+>  {
+> @@ -1127,6 +1142,7 @@ static const struct of_device_id clk_factors_match[] __initconst = {
+>  	{.compatible = "allwinner,sun5i-a13-ahb-clk", .data = &sun5i_a13_ahb_data,},
+>  	{.compatible = "allwinner,sun4i-a10-apb1-clk", .data = &sun4i_apb1_data,},
+>  	{.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
+> +	{.compatible = "allwinner,sun8i-h3-ths-clk", .data = &sun8i_h3_ths_data,},
+>  	{}
+>  };
+>  
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index c463c89..0111d4d 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -365,6 +365,13 @@ config INTEL_PCH_THERMAL
+>  	  Thermal reporting device will provide temperature reading,
+>  	  programmable trip points and other information.
+>  
+> +config SUNXI_THS
+> +	tristate "Sunxi THS driver"
+> +	depends on ARCH_SUNXI
+> +	depends on OF
+> +	help
+> +	  Enable this to support thermal reporting on some newer Allwinner SoC.
+> +
+>  menu "Texas Instruments thermal drivers"
+>  depends on ARCH_HAS_BANDGAP || COMPILE_TEST
+>  source "drivers/thermal/ti-soc-thermal/Kconfig"
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index cfae6a6..3a25e3c 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -48,3 +48,4 @@ obj-$(CONFIG_INTEL_PCH_THERMAL)	+= intel_pch_thermal.o
+>  obj-$(CONFIG_ST_THERMAL)	+= st/
+>  obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra_soctherm.o
+>  obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+> +obj-$(CONFIG_SUNXI_THS)		+= sunxi_ths.o
+> diff --git a/drivers/thermal/sunxi_ths.c b/drivers/thermal/sunxi_ths.c
+> new file mode 100644
+> index 0000000..650cd39
+> --- /dev/null
+> +++ b/drivers/thermal/sunxi_ths.c
+> @@ -0,0 +1,263 @@
+> +/*
+> + * Sunxi THS driver
+> + *
+> + * Copyright (C) 2015 Josef Gajdusek
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+I do not see any sign of irq in this code, so perhaps linux/irq.h and linux/interrupt.h are useless.
 
-I plan on reviewing this patch series (at least the non-dt parts). It's busy,
-though, and I don't know exactly when I get the chance. But just so you know
-that someone will be reviewing it.
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
 
-Regards,
+...
 
-	Hans
+> +struct sunxi_ths_data {
+> +	struct sunxi_ths_type *type;
+> +	struct reset_control *reset;
+> +	struct clk *clk;
+> +	struct clk *busclk;
+> +	void __iomem *regs;
+> +	void __iomem *calreg;
+> +	struct platform_device *pdev;
+> +	struct thermal_zone_device *tzd;
+> +	int irq;
+/* This variable is never used */
+> +};
+> +
+> +struct sunxi_ths_type {
+> +	int (*init)(struct sunxi_ths_data *);
+> +	int (*get_temp)(struct sunxi_ths_data *, int *out);
+> +};
+> +
+> +static int sunxi_ths_reg_to_temperature(int32_t reg, int divisor, int minus)
+> +{
+> +	return minus - (reg * 1000000) / divisor;
+> +}
+Use s32 instead of int32_t
+Perhaps this is a sign that you do not have used checkpatch --strict
 
-> 
-> [1]http://lists.infradead.org/pipermail/linux-mediatek/2015-October/002525.html
-> 
-> ==================
->  Device interface
-> ==================
-> 
-> In principle the driver bases on memory-to-memory framework:
-> it provides a single video node and each opened file handle gets its own
-> private context with separate buffer queues. Each context consist of 2
-> buffer queues: OUTPUT (for source buffers, i.e. raw video frames)
-> and CAPTURE (for destination buffers, i.e. encoded video frames).
-> 
-> The process of encoding video data from stream is a bit more complicated
-> than typical memory-to-memory processing. We base on memory-to-memory
-> framework and add the complicated part in our vb2 and v4l2 callback 
-> functionss. So we can base on well done m2m memory-to-memory framework, 
-> reduce duplicate code and make our driver code simple.
-> 
-> ==============================
->  VPU (Video Processor Unit)
-> ==============================
-> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> It is able to handle video decoding/encoding of in a range of formats.
-> The driver provides with VPU firmware download, memory management and
-> the communication interface between CPU and VPU.
-> For VPU initialization, it will create virtual memory for CPU access and
-> IOMMU address for vcodec hw device access. When a decode/encode instance
-> opens a device node, vpu driver will download vpu firmware to the device.
-> A decode/encode instant will decode/encode a frame using VPU 
-> interface to interrupt vpu to handle decoding/encoding jobs.
-> 
-> Please have a look at the code and comments will be very much appreciated.
-> 
-> Andrew-CT Chen (3):
->   dt-bindings: Add a binding for Mediatek Video Processor Unit
->   arm64: dts: mediatek: Add node for Mediatek Video Processor Unit
->   media: platform: mtk-vpu: Support Mediatek VPU
-> 
-> Daniel Hsiao (1):
->   media: platform: mtk-vcodec: Add Mediatek VP8 Video Encoder Driver
-> 
-> Tiffany Lin (4):
->   dt-bindings: Add a binding for Mediatek Video Encoder
->   arm64: dts: mediatek: Add Video Encoder for MT8173
->   media: platform: mtk-vcodec: Add Mediatek V4L2 Video Encoder Driver
->   media: platform: mtk-vcodec: Add Mediatek H264 Video Encoder Driver
-> 
->  .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 +
->  .../devicetree/bindings/media/mediatek-vpu.txt     |   27 +
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   58 +
->  drivers/media/platform/Kconfig                     |   19 +
->  drivers/media/platform/Makefile                    |    5 +
->  drivers/media/platform/mtk-vcodec/Kconfig          |    5 +
->  drivers/media/platform/mtk-vcodec/Makefile         |   12 +
->  drivers/media/platform/mtk-vcodec/common/Makefile  |   12 +
->  .../media/platform/mtk-vcodec/common/venc_drv_if.c |  159 ++
->  .../media/platform/mtk-vcodec/h264_enc/Makefile    |    9 +
->  .../platform/mtk-vcodec/h264_enc/venc_h264_if.c    |  529 ++++++
->  .../platform/mtk-vcodec/h264_enc/venc_h264_if.h    |   53 +
->  .../platform/mtk-vcodec/h264_enc/venc_h264_vpu.c   |  341 ++++
->  .../platform/mtk-vcodec/include/venc_drv_base.h    |   68 +
->  .../platform/mtk-vcodec/include/venc_drv_if.h      |  187 +++
->  .../platform/mtk-vcodec/include/venc_ipi_msg.h     |  212 +++
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  441 +++++
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 1773 ++++++++++++++++++++
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h |   28 +
->  .../media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c |  535 ++++++
->  .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  |  122 ++
->  .../media/platform/mtk-vcodec/mtk_vcodec_intr.c    |  110 ++
->  .../media/platform/mtk-vcodec/mtk_vcodec_intr.h    |   30 +
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_pm.h  |   26 +
->  .../media/platform/mtk-vcodec/mtk_vcodec_util.c    |  106 ++
->  .../media/platform/mtk-vcodec/mtk_vcodec_util.h    |   66 +
->  drivers/media/platform/mtk-vcodec/vp8_enc/Makefile |    9 +
->  .../platform/mtk-vcodec/vp8_enc/venc_vp8_if.c      |  371 ++++
->  .../platform/mtk-vcodec/vp8_enc/venc_vp8_if.h      |   48 +
->  .../platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c     |  245 +++
->  drivers/media/platform/mtk-vpu/Makefile            |    1 +
->  .../platform/mtk-vpu/h264_enc/venc_h264_vpu.h      |  127 ++
->  .../media/platform/mtk-vpu/include/venc_ipi_msg.h  |  212 +++
->  drivers/media/platform/mtk-vpu/mtk_vpu_core.c      |  823 +++++++++
->  drivers/media/platform/mtk-vpu/mtk_vpu_core.h      |  161 ++
->  .../media/platform/mtk-vpu/vp8_enc/venc_vp8_vpu.h  |  119 ++
->  36 files changed, 7107 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
->  create mode 100644 drivers/media/platform/mtk-vcodec/Kconfig
->  create mode 100644 drivers/media/platform/mtk-vcodec/Makefile
->  create mode 100644 drivers/media/platform/mtk-vcodec/common/Makefile
->  create mode 100644 drivers/media/platform/mtk-vcodec/common/venc_drv_if.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/Makefile
->  create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_if.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_if.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_vpu.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/include/venc_drv_base.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/include/venc_drv_if.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/include/venc_ipi_msg.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_pm.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_util.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/Makefile
->  create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.h
->  create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c
->  create mode 100644 drivers/media/platform/mtk-vpu/Makefile
->  create mode 100644 drivers/media/platform/mtk-vpu/h264_enc/venc_h264_vpu.h
->  create mode 100644 drivers/media/platform/mtk-vpu/include/venc_ipi_msg.h
->  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu_core.c
->  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu_core.h
->  create mode 100644 drivers/media/platform/mtk-vpu/vp8_enc/venc_vp8_vpu.h
-> 
+> +
+> +static int sunxi_ths_get_temp(void *_data, int *out)
+> +{
+> +	struct sunxi_ths_data *data = _data;
+> +
+> +	return data->type->get_temp(data, out);
+> +}
+> +
+> +static int sunxi_ths_h3_init(struct sunxi_ths_data *data)
+> +{
+> +	if (data->calreg)
+> +		writel(readl(data->calreg) & 0xfff, data->regs + THS_H3_CDATA);
+> +	/* Magical constants mostly taken from Allwinner 3.4 kernel.
+> +	 * Seem to work fine, though this could be configurable in DT/sysft
+> +	 */
+> +	writel(0xff << THS_H3_CTRL0_SENSOR_ACQ0,
+> +			data->regs + THS_H3_CTRL0);
+> +	writel((0x3f << THS_H3_CTRL2_SENSOR_ACQ1) | BIT(THS_H3_CTRL2_SENSE_EN),
+> +			data->regs + THS_H3_CTRL2);
+> +	writel((0x390 << THS_H3_INT_CTRL_THERMAL_PER) | BIT(THS_H3_INT_CTRL_DATA_IRQ_EN),
+> +			data->regs + THS_H3_INT_CTRL);
+> +	writel(BIT(THS_H3_FILTER_EN) | (0x2 << THS_H3_FILTER_TYPE),
+> +			data->regs + THS_H3_FILTER);
+> +	return 0;
+> +}
+> +
+> +static int sunxi_ths_h3_get_temp(struct sunxi_ths_data *data, int *out)
+> +{
+> +	*out = sunxi_ths_reg_to_temperature(readl(data->regs + THS_H3_DATA),
+> +			8253, 217000);
+You could use a temp variable for avoiding this 80column wrap.
+You could explain also from where 8253 and 217000 come from.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	return 0;
+> +}
+> +
+> +static const struct thermal_zone_of_device_ops sunxi_ths_thermal_ops = {
+> +	.get_temp = sunxi_ths_get_temp,
+> +};
+> +
+> +static const struct sunxi_ths_type sunxi_ths_device_h3 = {
+> +	.init = sunxi_ths_h3_init,
+> +	.get_temp = sunxi_ths_h3_get_temp,
+> +};
+> +
+> +static const struct of_device_id sunxi_ths_id_table[] = {
+> +	{
+> +		.compatible = "allwinner,sun8i-h3-ths",
+> +		.data = &sunxi_ths_device_h3,
+> +	},
+> +	{
+> +		/* sentinel */
+> +	},
+> +};
+> +MODULE_DEVICE_TABLE(of, sunxi_ths_id_table);
+> +
+> +static int sunxi_ths_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const struct of_device_id *match;
+> +	struct sunxi_ths_data *data;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	match = of_match_node(sunxi_ths_id_table, np);
+> +	if (!match)
+> +		return -ENXIO;
+I think -ENXIO is not the correct return code.
+
+> +
+> +	data =
+> +		devm_kzalloc(&pdev->dev, sizeof(struct sunxi_ths_data), GFP_KERNEL);
+Prefer sizeof(*data)
+Again use checkpatch --strict
+
+Regards
+
