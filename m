@@ -1,192 +1,99 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v6 00/12] MT8173 DRM support
-Date: Thu, 19 Nov 2015 09:40:40 +0100
-Message-ID: <20151119084040.GL20799@phenom.ffwll.local>
-References: <1447868060-11620-1-git-send-email-p.zabel@pengutronix.de>
+From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] dt/bindings: add bindings for optee
+Date: Thu, 19 Nov 2015 10:18:11 +0100
+Message-ID: <20151119091810.GA15974@ermac>
+References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
+ <1446106888-8983-4-git-send-email-jens.wiklander@linaro.org>
+ <20151116170109.GA20076@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447868060-11620-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, kernel@pengutronix.de
+In-Reply-To: <20151116170109.GA20076@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMTgsIDIwMTUgYXQgMDY6MzQ6MDhQTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
-cm90ZToKPiBIaSwKPiAKPiBhbm90aGVyIHVwZGF0ZSB0byB0aGUgTVQ4MTczIERSTSBzdXBwb3J0
-IHBhdGNoc2V0LiBTaW5jZSB0aGUgZGV2aWNlIHRyZWUKPiBiaW5kaW5ncyBhcmUgbm93IGluIG9y
-ZGVyLCBJIGhhdmUgZHJvcHBlZCB0aGUgUkZDLgo+IFRoZSBpcnEgaGFuZGxlciBpcyBzdGlsbCB3
-cml0aW5nIHRvIGhhcmR3YXJlIHJlZ2lzdGVycywgYXMgb24gTVQ4MTczIHZibGFuawo+IHN5bmNo
-cm9uaXNlZCByZWdpc3RlciB1cGRhdGVzIG5lZWQgaGVscCBmcm9tIGEgc2VwYXJhdGUgaGFyZHdh
-cmUgY29tbWFuZAo+IHF1ZXVlIHVuaXQuIEEgZHJpdmVyIGZvciB0aGF0IGlzIGN1cnJlbnRseSBi
-ZWluZyB3cml0dGVuLCBzbyB0aGlzIHdpbGwgYmUKPiBmaXhlZCBsYXRlci4KCkltbyB0aGlzIGlz
-IG1pbm9yIGVub3VnaCB0aGF0IGl0IHNob3VsZG4ndCBibG9jayBtZXJnaW5nLCBhbmQgb3RoZXJ3
-aXNlCnRoZSBkcml2ZXIgbG9va3MgcmF0aGVyIG5lYXQuIE9uY2UgeW91IGhhdmUgYWNrcyBmb3Ig
-dGhlIGFybS9jbGsgcGFydHMgSQp0aGluayB5b3Ugc2hvdWxkIGp1c3Qgc2VuZCBhIHB1bGwgcmVx
-dWVzdHMgZm9yIHRoaXMgdG8gRGF2ZSBmb3IgNC41LiBBbmQKeWVzLCB0aGF0IG1lYW5zIEFja2Vk
-LWJ5OiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPiAodG9vIGxhenkKdG8g
-ZG8gYSBmdWxsIHJldmlldyBhZ2FpbikgZm9yIHRoZSBkcm0gc2lkZS4KCkNoZWVycywgRGFuaWVs
-Cgo+IAo+IENoYW5nZXMgc2luY2UgdjU6Cj4gLSBVcGRhdGVkIERJU1BfTVVURVggZGVzY3JpcHRp
-b24gaW4gYmluZGluZyBkb2N1bWVudGF0aW9uCj4gLSBSZWdpc3RlciBhbmQgdW5yZWdpc3RlciBk
-cml2ZXJzIGluIGEgbG9vcAo+IC0gQ29tYmluZWQgbXRrX2RybV9jcnRjIGFuZCBtdGtfY3J0Y19k
-ZHBfY29udGV4dCwgYWRkZWQgbXRrX2Rpc3Bfb3ZsCj4gICBzdHJ1Y3R1cmUgdG8gY29udGFpbiBv
-dmwgZGRwIGNvbXBvbmVudAo+IC0gUmV3b3JrZWQgY29tcG9uZW50IGNhbGxiYWNrcyAocmVtb3Zl
-ZCBjb21wXyBwcmVmaXggZnJvbQo+ICAgbXRrX2RkcF9jb21wX2Z1bmNzLCBtb3ZlIGlkIGludG8g
-bXRrX2RkcF9jb21wIGFkZGVkIGlubGluZQo+ICAgZnVuY3Rpb25zIHRvIHdyYXAgY2FsbGJhY2tz
-KQo+IC0gVXNlIG5vbi1zeW5jIHBtX3J1bnRpbWVfcHV0IHZhcmlhbnQKPiAtIFVzZSBSR0I4ODgg
-YXMgZmFsbGJhY2sgZm9ybWF0Cj4gLSBSZW1vdmVkIHVudXNlZCBwaXBlIHBhcmFtZXRlciBmcm9t
-IG10a19kZHBfYWRkX2NvbXBfdG9fcGF0aAo+IC0gUmVuYW1lZCBtdGtfZHJtX3ByaXZhdGUtPnBp
-cGUgdG8gLT5udW1fcGlwZXMKPiAtIFVwZGF0ZWQgbXRrIHNwZWNpZmljIGNydGMgYW5kIHBsYW5l
-IGF0b21pYyBzdGF0ZSBoYW5kbGluZwo+IC0gTW92ZWQgbXRrX2RybV9jcnRjX3BsYW5lX2NvbmZp
-ZyB0byBwbGFuZSBsb2NhbCBtdGtfcGxhbmVfY29uZmlnCj4gLSBMZXQgbGF5ZXJfY29uZmlnIHRh
-a2UgYSBzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlCj4gLSBVc2Ugd3JpdGVsX3JlbGF4ZWQgaW4gbXRr
-X2RkcF9hZGRfY29tcF90b19wYXRoCj4gLSBSZW1vdmVkIHNvbWUgdW51c2VkIHBhcmFtZXRlcnMs
-IGZ1bmN0aW9ucywgYW5kIGxvY2FsIHZhcmlhYmxlcwo+IC0gUmVtb3ZlZCBjdXN0b20gY3J0YyBl
-bmFibGUgZmxhZwo+IC0gUmVtb3ZlZCB1bm5lY2Vzc2FyeSBjb21wLT5mdW5jcyBOVUxMIGNoZWNr
-cwo+IC0gTW92ZWQgTEFSQiBoYW5kbGluZyBvdXQgb2YgZHJtIGRyaXZlciBjb2RlIGludG8gY3J0
-YyBjb2RlLAo+ICAgcmVxdWVzdCBMQVJCIGR1cmluZyBjb21wb25lbnQgaW5pdGlhbGl6YXRpb24K
-PiAtIFVwZGF0ZWQgZGlzcGxheSBkYXRhIHBhdGggLyBtdXRleCBjb2RlCj4gLSBNb3ZlZCBpbml0
-aWFsaXphdGlvbiBvZiBkcml2ZXJsZXNzIGRkcCBjb21wb25lbnRzIGludG8gdGhlIGRybSBkcml2
-ZXIKPiAtIENvbW1lbnRlZCBjcnRjX2Rpc2FibGUKPiAtIFJlbW92ZWQgc3VwcG9ydCBmb3IgbXVs
-dGlwbGFuYXIgZnJhbWVidWZmZXJzCj4gLSBDb25maWd1cmUgd2lkdGgvaGVpZ2h0IG9mIHRoZSBj
-b2xvciBlbmdpbmUgZXZlbiBpZiBpdCBpcyBieXBhc3NlZAo+IC0gQWRkZWQgc3RhdGljIGtleXdv
-cmQgdG8gdW5leHBvcnRlZCBzdHJ1Y3R1cmVzIGFuZCBmdW5jdGlvbnMKPiAtIFVubGluayBkaXNw
-bGF5IGRhdGEgcGF0aCBpbiBod19maW5pCj4gLSBBZGRlZCBzdGF0aWMga2V5d29yZCB0byB1bmV4
-cG9ydGVkIHN0cnVjdHVyZXMgYW5kIGZ1bmN0aW9ucwo+IAo+IFRoZSBmb2xsb3dpbmcgcGF0Y2hl
-cyBhcmUgc3RpbGwgbmVlZGVkIHRvIGFwcGx5IHRoaXMgb24gdG9wIG9mIHY0LjQtcmMxOgo+IAo+
-IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNjgyNTYwMS8gKCJhcm02NDogZHRz
-OiBtdDgxNzM6IGFkZCBNVDgxNzMgZGlzcGxheSBQV00gZHJpdmVyIHN1cHBvcnQgbm9kZSIpLAo+
-IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvNzEzODUzMS8gKCJhcm02NDogZHRz
-OiBtZWRpYXRlazogYWRkIHhIQ0kgJiB1c2IgcGh5IGZvciBtdDgxNzMiKSwKPiBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzY5Mjg2NTEvICgiZHRzOiBtdDgxNzM6IEFkZCBpb21t
-dS9zbWkgbm9kZXMgZm9yIG10ODE3MyIpLCBhbmQKPiAKPiBBbmQgdG8gYnVpbGQ6Cj4gCj4gaHR0
-cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC82OTI4NjIxLyAoIm1lbW9yeTogbWVkaWF0
-ZWs6IEFkZCBTTUkgZHJpdmVyIiksCj4gCj4gcmVnYXJkcwo+IFBoaWxpcHAKPiAKPiBDSyBIdSAo
-NSk6Cj4gICBkdC1iaW5kaW5nczogZHJtL21lZGlhdGVrOiBBZGQgTWVkaWF0ZWsgZGlzcGxheSBz
-dWJzeXN0ZW0gZHRzIGJpbmRpbmcKPiAgIGRybS9tZWRpYXRlazogQWRkIERSTSBEcml2ZXIgZm9y
-IE1lZGlhdGVrIFNvQyBNVDgxNzMuCj4gICBkcm0vbWVkaWF0ZWs6IEFkZCBEU0kgc3ViIGRyaXZl
-cgo+ICAgYXJtNjQ6IGR0czogbXQ4MTczOiBBZGQgZGlzcGxheSBzdWJzeXN0ZW0gcmVsYXRlZCBu
-b2Rlcwo+ICAgYXJtNjQ6IGR0czogbXQ4MTczOiBBZGQgSERNSSByZWxhdGVkIG5vZGVzCj4gCj4g
-SmllIFFpdSAoMyk6Cj4gICBkcm0vbWVkaWF0ZWs6IEFkZCBEUEkgc3ViIGRyaXZlcgo+ICAgZHJt
-L21lZGlhdGVrOiBBZGQgSERNSSBzdXBwb3J0Cj4gICBkcm0vbWVkaWF0ZWs6IGVuYWJsZSBoZG1p
-IG91dHB1dCBjb250cm9sIGJpdAo+IAo+IFBoaWxpcHAgWmFiZWwgKDQpOgo+ICAgZHQtYmluZGlu
-Z3M6IGRybS9tZWRpYXRlazogQWRkIE1lZGlhdGVrIEhETUkgZHRzIGJpbmRpbmcKPiAgIGNsazog
-bWVkaWF0ZWs6IG1ha2UgZHBpMF9zZWwgYW5kIGhkbWlfc2VsIG5vdCBwcm9wYWdhdGUgcmF0ZSBj
-aGFuZ2VzCj4gICBjbGs6IG1lZGlhdGVrOiBBZGQgaGRtaV9yZWYgSERNSSBQSFkgUExMIHJlZmVy
-ZW5jZSBjbG9jayBvdXRwdXQKPiAgIGR0LWJpbmRpbmdzOiBoZG1pLWNvbm5lY3RvcjogYWRkIERE
-QyBJMkMgYnVzIHBoYW5kbGUgZG9jdW1lbnRhdGlvbgo+IAo+ICAuLi4vYmluZGluZ3MvZGlzcGxh
-eS9jb25uZWN0b3IvaGRtaS1jb25uZWN0b3IudHh0ICB8ICAgMSArCj4gIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0ICAgIHwgMTgzICsrKysrCj4gIC4uLi9i
-aW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgICAgIHwgIDM1ICsKPiAg
-Li4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICAgfCAgNTMg
-KysKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssaGRtaS50eHQgICAg
-fCAxNDIgKysrKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpICAg
-ICAgICAgICB8IDI4MiArKysrKysrKwo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTcz
-LmMgICAgICAgICAgICAgICAgICB8ICAgOSArLQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGst
-bXRrLmggICAgICAgICAgICAgICAgICAgICB8ICAgNyArLQo+ICBkcml2ZXJzL2dwdS9kcm0vS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAgMjIgKwo+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAyMSArCj4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY2VjLmMgICAgICAgICAgICAgICAgIHwgMjQ1
-ICsrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jZWMuaCAgICAgICAgICAg
-ICAgICAgfCAgMjUgKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jICAgICAg
-ICAgICAgICAgICB8IDY4MyArKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcGkuaCAgICAgICAgICAgICAgICAgfCAgODAgKysrCj4gIGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHBpX3JlZ3MuaCAgICAgICAgICAgIHwgMjI4ICsrKysrKwo+ICBk
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAgICAgICAgICB8IDU5NiAr
-KysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
-aCAgICAgICAgICAgIHwgIDQxICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcC5jICAgICAgICAgICAgIHwgMzYyICsrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZGRwLmggICAgICAgICAgICAgfCAgNDEgKysKPiAgZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyAgICAgICAgfCA0MzEgKysrKysrKysrKysK
-PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCAgICAgICAgfCAx
-NTIgKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAg
-ICAgICB8IDU2MSArKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZHJ2LmggICAgICAgICAgICAgfCAgNTggKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZmIuYyAgICAgICAgICAgICAgfCAxMzkgKysrKwo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5oICAgICAgICAgICAgICB8ICAyOSArCj4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5jICAgICAgICAgICAgIHwgMTg3ICsrKysrCj4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oICAgICAgICAgICAgIHwgIDU0
-ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2hkbWlfZHJ2LmMgICAgICAg
-IHwgNjMzICsrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX3BsYW5lLmMgICAgICAgICAgIHwgMjM1ICsrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9wbGFuZS5oICAgICAgICAgICB8ICA2MSArKwo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RzaS5jICAgICAgICAgICAgICAgICB8IDc4NyArKysrKysrKysrKysr
-KysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuaCAgICAgICAgICAg
-ICAgICAgfCAgNTQgKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pLmMgICAg
-ICAgICAgICAgICAgfCA1MTUgKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19oZG1pLmggICAgICAgICAgICAgICAgfCAxMTggKysrCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfaGRtaV9kZGNfZHJ2LmMgICAgICAgIHwgMzYyICsrKysrKysrKysKPiAg
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX2h3LmMgICAgICAgICAgICAgfCA3Njgg
-KysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1p
-X2h3LmggICAgICAgICAgICAgfCAgNzYgKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19oZG1pX3BoeS5jICAgICAgICAgICAgfCAzNDAgKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfaGRtaV9waHkuaCAgICAgICAgICAgIHwgIDIwICsKPiAgZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19oZG1pX3BoeV9yZWdzLmggICAgICAgfCAxMTggKysrCj4gIGRy
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9yZWdzLmggICAgICAgICAgIHwgMjIyICsr
-KysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlfdHguYyAgICAgICAgICAg
-ICB8IDM3NyArKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90
-eC5oICAgICAgICAgICAgIHwgIDIxICsKPiAgaW5jbHVkZS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlf
-YXVkaW8uaCAgICAgICAgICAgICAgfCAxNTAgKysrKwo+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Ns
-b2NrL210ODE3My1jbGsuaCAgICAgICAgICAgICB8ICAgMyArLQo+ICA0NyBmaWxlcyBjaGFuZ2Vk
-LCA5NTI1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRp
-YXRlayxkaXNwLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dAo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
-aWF0ZWsvbWVkaWF0ZWssZHNpLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssaGRtaS50eHQK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmlnCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUKPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY2VjLmMKPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY2VjLmgKPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMKPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmgKPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpX3JlZ3Mu
-aAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-Y3J0Yy5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9jcnRjLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2RkcC5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAo+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMKPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oCj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5jCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5oCj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYwo+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2Vt
-LmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2hkbWlfZHJ2LmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX3BsYW5lLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX3BsYW5lLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHNpLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19oZG1pX2RkY19kcnYuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX2h3LmMKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9ody5oCj4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmMKPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9waHkuaAo+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX3BoeV9y
-ZWdzLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-aGRtaV9yZWdzLmgKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfbWlwaV90eC5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX21pcGlfdHguaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kcm0vbWVk
-aWF0ZWsvbXRrX2hkbWlfYXVkaW8uaAo+IAo+IC0tIAo+IDIuNi4yCj4gCgotLSAKRGFuaWVsIFZl
-dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
-bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Nov 16, 2015 at 11:01:10AM -0600, Rob Herring wrote:
+> On Thu, Oct 29, 2015 at 09:21:25AM +0100, Jens Wiklander wrote:
+> > Introduces optee prefix and adds bindings for ARM TrustZone based OP-TEE
+> > implementation.
+> > 
+> > Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  .../bindings/arm/firmware/optee,optee-tz.txt       | 29 ++++++++++++++++++++++
+> >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+> >  2 files changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt
+> > new file mode 100644
+> > index 0000000..0a8ed0d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt
+> > @@ -0,0 +1,29 @@
+> > +OP-TEE Device Tree Bindings
+> > +
+> > +OP-TEE is a piece of software using hardware features to provide a Trusted
+> > +Execution Environment. The security can be provided with ARM TrustZone, but
+> > +also by virtualization or a separate chip. As there's no single OP-TEE
+> > +vendor we're using "optee" as the first part of compatible property,
+> > +indicating the OP-TEE protocol is used when communicating with the secure
+> > +world.
+> > +
+> > +* OP-TEE based on ARM TrustZone required properties:
+> > +
+> > +- compatible     : should contain "optee,optee-tz"
+> 
+> I would leave off optee as a vendor. Different implementations by 
+> vendors should then add their vendor prefix as they all have the chance 
+> to screw-up something. I suppose we could do "linaro" as the reference 
+> implementation.
+
+OK, I'll use "linaro" then.
+
+> 
+> > +
+> > +- method         : The method of calling the OP-TEE Trusted OS. Permitted
+> > +                   values are:
+> > +
+> > +                   "smc" : SMC #0, with the register assignments specified
+> > +		           in drivers/tee/optee/optee_smc.h
+> > +
+> > +                   "hvc" : HVC #0, with the register assignments specified
+> > +		           in drivers/tee/optee/optee_smc.h
+> 
+> The use here would be a guest VM calling thru to hypervisor and then 
+> hypervisor calling optee?
+
+Yes, the hypervisor needs to be involved (translating IPA to PA etc)
+when invoking secure world.
+
+> 
+> > +
+> > +
+> > +
+> > +Example:
+> > +	optee {
+> 
+> This should go under a /firmware node similar to 
+> Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt.
+
+I tried that and discovered that a
+compatible = "simple-bus";
+is needed for the firmware node for optee to get probed. Is it OK to write
+the example as:
+
+firmware {
+        compatible = "simple-bus";
+
+        optee {
+...
+
+Thanks,
+Jens
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
