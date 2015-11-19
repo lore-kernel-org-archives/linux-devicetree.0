@@ -1,36 +1,62 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v13 4/6] fpga: add fpga bridge framework
-Date: Wed, 18 Nov 2015 20:50:35 -0800
-Message-ID: <CAAtXAHekFyL=N96vZYp9rUJMUcBW31Jj=+7J1=aiGpH4Gg1OxQ@mail.gmail.com>
-References: <1446570664-10293-1-git-send-email-atull@opensource.altera.com>
-	<1446570664-10293-5-git-send-email-atull@opensource.altera.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ARM: dts: rockchip: Add the OTP gpio pinctrl
+Date: Thu, 19 Nov 2015 05:57:02 +0100
+Message-ID: <1668139.HQCaUDeMrM@phil>
+References: <1445599528-18825-1-git-send-email-wxt@rock-chips.com>
+ <2741625.HAsG2fX6yg@diego> <564D3772.9050402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1446570664-10293-5-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <564D3772.9050402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
-
-while trying to implement something that works for Zynq along these lines
-I stumbled upon some minor stuff.
-
-On Tue, Nov 3, 2015 at 9:11 AM,  <atull@opensource.altera.com> wrote:
-
-> + * Return: 0 on success, negative error code otherwise.
-> + */
-> +int fpga_bridge_register(struct device *dev, const char *name,
-> +                        struct fpga_bridge_ops *br_ops, void *priv)
-
-const struct fpga_bridge_ops
-
-> +int fpga_bridge_register(struct device *dev, const char *name,
-> +                        struct fpga_bridge_ops *br_ops, void *priv);
-const struct fpga_bridge_ops
-
-Cheers,
-
-Moritz
+SGkgQ2Flc2FyLAoKQW0gRG9ubmVyc3RhZywgMTkuIE5vdmVtYmVyIDIwMTUsIDEwOjQ0OjAyIHNj
+aHJpZWIgQ2Flc2FyIFdhbmc6Cj4g5ZyoIDIwMTXlubQxMOaciDI15pelIDE1OjU1LCBIZWlrbyBT
+dMO8Ym5lciDlhpnpgZM6Cj4gPiBBbSBGcmVpdGFnLCAyMy4gT2t0b2JlciAyMDE1LCAwODoyNTow
+OCBzY2hyaWViIERvdWcgQW5kZXJzb246Cj4gPj4gT24gRnJpLCBPY3QgMjMsIDIwMTUgYXQgNDoy
+NSBBTSwgQ2Flc2FyIFdhbmcgPHd4dEByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4gPj4+IEFkZCB0
+aGUgImluaXQiIGFuZiAic2xlZXAiIHBpbmN0cmwgYXMgdGhlIE9UUCBncGlvIHN0YXRlLgo+ID4+
+PiBXZSBuZWVkIHRoZSBPVFAgcGluIGlzIGdwaW8gc3RhdGUgYmVmb3JlIHJlc2V0dGluZyB0aGUg
+VFNBREMgY29udHJvbGxlciwKPiA+Pj4gc2luY2UgdGhlIHRzaHV0IHBvbGFyaXR5IHdpbGwgZ2Vu
+ZXJhdGUgYSBoaWdoIHNpZ25hbC4KPiA+Pj4KPiA+Pj4gImluaXQiIHBpbmN0cmwgcHJvcGVydHkg
+aXMgZGVmaW5lZCBieSBEb3VnJ3MgUGF0Y2hbMF0uCj4gPj4+Cj4gPj4+IFBhdGNoWzBdOgo+ID4+
+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzc0NTQzMTEvCj4gPj4+Cj4gPj4+
+IFNpZ25lZC1vZmYtYnk6IENhZXNhciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4gPj4+IFJl
+dmlld2VkLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gPj4+
+IC0tLQo+ID4+Pgo+ID4+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4gPj4+Cj4gPj4+IENoYW5nZXMg
+aW4gdjM6Cj4gPj4+ICAgIC0gQWRkIHRoZSAic2xlZXAiIHBpbmN0cmwgYXMgdGhlIGdwaW8gc3Rh
+dGUgaW4gUEFUQ0hbMy8zXQo+ID4+Pgo+ID4+PiBDaGFuZ2VzIGluIHYyOgo+ID4+PiAgICAtIEFk
+ZCBzb21lIGNvbW1pdHMgZm9yIG1vcmUgb2J2aW91cyBpbiBQQVRDSFsyLzJdCj4gPj4+Cj4gPj4+
+IENoYW5nZXMgaW4gdjE6Cj4gPj4+ICAgIC0gQXMgdGhlIERvdWcgY29tbWVudHMsIGRyb3AgdGhl
+IHRoZXJtYWwgZHJpdmVyIHBhdGNocyBzaW5jZQo+ID4+PiAgICAKPiA+Pj4gICAgICB3ZSBjYW4g
+d2l0aCBwaW5jdHJsIGNoYW5naW5nIHRvIHdvcmsuCj4gPj4+ICAgIAo+ID4+PiAgICAtIEFzIHRo
+ZSBEb3VnJ3MgcGF0Y2ggdG8gYWRkIHRoZSAnaW5pdCcgcHJvcGVydHkuCj4gPj4+ICAgCj4gPj4+
+ICAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgfCAxMCArKysrKysrKy0tCj4gPj4+ICAg
+MSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+PiBJIHJl
+YWxpemVkIHRoYXQgdGhlIHN1YmplY3Qgb2YgdGhpcyBwYXRjaCBzaG91bGQgcHJvYmFibHkgY29u
+dGFpbiB0aGUKPiA+PiB3b3JkIHJrMzI4OCwgYnV0IEkgcHJlc3VtZSBIZWlrbyB3b3VsZCByYXRo
+ZXIgYWRkIHRoYXQgaGltc2VsZiB0aGFuCj4gPj4gZm9yIHlvdSB0byBzcGluIHRoaXMgYWdhaW4u
+ICA7KQo+ID4geWVwIDotKSAuLi4gbm8gbmVlZCB0byByZXNwaW4gZm9yIHN1Y2ggYW4gZWFzeSBj
+aGFuZ2UKPiAKPiBUaGF0J3Mgc2VlbSB0aGlzIHBhdGNoIGRpZG4ndCBtZXJnZSBpbnRvIHlvdXIg
+djQuNS1hcm1zb2Mvc29jIGJyYW5jaC46LSkKPiAKPiBJIGd1ZXNzIHRoaXMgcGF0Y2ggc2hvdWxk
+IG1lcmdlIGludG8gIGtlcm5lbC00LjQgc2luY2UgdGhlIFBhdGNoWzEvM10gLyAKPiBbMi8zXSBo
+YXZlIGJlZW4gbWVyZ2VkIGludG8gNC40LXJjMS46LVAKCnRoYW5rcyBmb3IgdGhlIHJlbWluZGVy
+IDotKQoKSXQgc2VlbXMgSSBkaWRuJ3QgZ2V0IGEgbm90aWNlIHdoZW4gdGhlIGNvcmUgdGhlcm1h
+bCBjaGFuZ2VzIHdlcmUgbWVyZ2VkLCBzbyAKdGhpcyBwYXRjaCBzZWVtcyB0byBoYXZlIGRyb3Bw
+ZWQgb2YgbXkgcmFkYXIuIEl0IGlzIGNsZWFybHkgYSBmaXggZm9yIGEgcmVhbCAKaXNzdWUsIHNv
+IEkndmUgYWRkZWQgaXQgdG8gbXkgZml4ZXMgYnJhbmNoIGZvciA0LjQuCgoKSGVpa28KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlw
+IG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
