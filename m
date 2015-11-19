@@ -1,65 +1,40 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v11 4/8] Input: goodix - add power management support
-Date: Thu, 19 Nov 2015 14:31:07 -0800
-Message-ID: <CAKdAkRSdWQwkpKBNohQT2QhgBM0gxqVxLniViM5TrBNUoqZ1sw@mail.gmail.com>
-References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
-	<1447936001-21420-5-git-send-email-irina.tirdea@intel.com>
-	<20151119182433.GB24773@dtor-ws>
-	<CAJZ5v0iPwohZt+N1quhnCq0zj+HSROaA_8nOTFV_zisYCa2bRw@mail.gmail.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH] spi: dts: sun4i: Add support for inter-word
+ wait cycles using the SPI Wait Clock Register
+Date: Fri, 20 Nov 2015 09:59:11 +1100
+Message-ID: <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
+References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com> <1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0iPwohZt+N1quhnCq0zj+HSROaA_8nOTFV_zisYCa2bRw@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Irina Tirdea <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447948422-4915-2-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 2:18 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> Hi,
->
-> On Thu, Nov 19, 2015 at 7:24 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->> On Thu, Nov 19, 2015 at 02:26:37PM +0200, Irina Tirdea wrote:
->>> Implement suspend/resume for goodix driver.
->>>
->
-> [cut]
->
->>>
->>> +static int __maybe_unused goodix_suspend(struct device *dev)
->>> +{
->>> +     struct i2c_client *client = to_i2c_client(dev);
->>> +     struct goodix_ts_data *ts = i2c_get_clientdata(client);
->>> +     int error;
->>> +
->>> +     /* We need gpio pins to suspend/resume */
->>> +     if (!ts->gpiod_int || !ts->gpiod_rst)
->>> +             return 0;
->>> +
->>> +     wait_for_completion(&ts->firmware_loading_complete);
->>
->> This is not that nice as it may lead to angry splats from the PM core if
->> firmware loading takes too long and we start suspending before it
->> completes.
->
-> What exactly do you mean?  The suspend watchdog or something else?
+Hi Marcus,
 
-I was thinking about dpm watchdog that will panic the system if
-suspend takes too long. Hmm, this is debug facility and the default
-timeout is 60 seconds, so I guess we can ignore my concern.
+On Fri, Nov 20, 2015 at 2:53 AM, Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Adds support and documentation for a new slave device property
+> "sun4i,spi-wdelay" that allows to set the SPI Wait Clock Register per
+> device / transfer. The SPI hardware will wait the specified amount of
+> SPI clock periods (plus a constant 3 clock periods) before transmitting
+> the next word.
 
->
->> Rafael, if we issue pm_stay_awake() before requesting firmware and
->> pm_relax() once it is done, will this prevent the current suspend
->> timeouts?
->
-> pm_stay_awake() only works if the checking of wakeup sources is
-> enabled which generally depends on what user space does.
+Should you possibly hide the 3 clock periods from the user?
 
-I see.
+I.e. they set whatever they want for the wdelay, we set it to the
+closest number we can that's greater or equal to what they ask for.
 
-Thanks.
+Thanks,
 
 -- 
-Dmitry
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
