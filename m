@@ -1,61 +1,42 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/8] arm: dts: berlin2q: add watchdog nodes
-Date: Thu, 19 Nov 2015 21:47:05 +0100
-Message-ID: <564E3549.2050700@gmail.com>
-References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
- <1447672194-483-2-git-send-email-jszhang@marvell.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] arm64: dts: berlin: PSCI-1.0 support
+Date: Thu, 19 Nov 2015 21:49:31 +0100
+Message-ID: <564E35DB.9080902@gmail.com>
+References: <1447673869-842-1-git-send-email-jszhang@marvell.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447672194-483-2-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447673869-842-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16.11.2015 12:09, Jisheng Zhang wrote:
-> The Marvell Berlin BG2Q has 3 watchdogs which are compatible with the
-> snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
-> corresponding device tree nodes.
+On 16.11.2015 12:37, Jisheng Zhang wrote:
+> The firmware can support PSCI-1.0 in fact. This change also enables
+> suspend to ram on Marvell berlin arm64 SoC.
 > 
-> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+
+Appled to berlin64/dt.
+
+Thanks!
+
 > ---
->  arch/arm/boot/dts/berlin2q.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-> index a3ecde5..fac4315 100644
-> --- a/arch/arm/boot/dts/berlin2q.dtsi
-> +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> @@ -483,6 +483,30 @@
->  			ranges = <0 0xfc0000 0x10000>;
->  			interrupt-parent = <&sic>;
+> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> index 8eddf10..a87f1a2 100644
+> --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> @@ -55,7 +55,7 @@
+>  	};
 >  
-> +			wdt0: watchdog@1000 {
-> +				compatible = "snps,dw-wdt";
-> +				reg = <0x1000 0x100>;
-> +				clocks = <&refclk>;
-> +				interrupts = <0>;
-> +				status = "disabled";
-
-Jisheng,
-
-as the watchdogs are internal and cannot be clock gated
-at all, how about we remove the status = "disabled" and
-make them always available?
-
-I have applied patches 1-4 with the status property removed.
-This also renders patches 5-8 useless.
-
-So, for now tentatively
-
-Appled to berlin/dt and berlin64/dt respectivly
-
-with status property removed.
-
-Sebastian
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	psci {
+> -		compatible = "arm,psci-0.2";
+> +		compatible = "arm,psci-1.0", "arm,psci-0.2";
+>  		method = "smc";
+>  	};
+>  
+> 
