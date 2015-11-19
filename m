@@ -1,90 +1,115 @@
-From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v12 1/3] dt-bindings: Add a binding for Mediatek xHCI
- host controller
-Date: Thu, 19 Nov 2015 11:36:51 +0800
-Message-ID: <1447904211.18917.12.camel@mhfsdcap03>
-References: <1447751921-26746-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1447751921-26746-2-git-send-email-chunfeng.yun@mediatek.com>
-	 <564B085B.7060706@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564B085B.7060706-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v3 05/12] Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM bridge driver
+Date: Thu, 19 Nov 2015 11:35:23 +0800
+Message-ID: <1447904131-29328-6-git-send-email-zyw@rock-chips.com>
+References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+Cc: Liu Ying <Ying.liu@freescale.com>, Liu Ying <Ying.Liu@freescale.com>, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Tue, 2015-11-17 at 13:58 +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 11/17/2015 12:18 PM, Chunfeng Yun wrote:
-> 
-> > add a DT binding documentation of xHCI host controller for the
-> > MT8173 SoC from Mediatek.
-> >
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
-> >   1 file changed, 51 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> > new file mode 100644
-> > index 0000000..a78f20b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> > @@ -0,0 +1,51 @@
-> > +MT8173 xHCI
-> > +
-> > +The device node for Mediatek SOC USB3.0 host controller
-> > +
-> > +Required properties:
-> > + - compatible : should contain "mediatek,mt8173-xhci"
-> > + - reg : specifies physical base address and size of the registers,
-> > +	the first one for MAC, the second for IPPC
-> > + - interrupts : interrupt used by the controller
-> > + - power-domains : a phandle to USB power domain node to control USB's
-> > +	mtcmos
-> 
->     What's that?
-It works as a gateway in fact which can turn on/off usb power
-> 
-> > + - vusb33-supply : regulator of USB avdd3.3v
-> > +
-> > + - clocks : a list of phandle + clock-specifier pairs, one for each
-> > +	entry in clock-names
-> > + - clock-names : must contain
-> > +	"sys_ck": for clock of xHCI MAC
-> > +	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-> > +	"wakeup_deb_p0": for USB wakeup debounce clock of port1
-> 
->     "wakeup_deb_p1"?
-Yes, it's a typo
-> 
-> > +
-> > + - phys : a list of phandle + phy specifier pairs
-> > +
-> > +Optional properties:
-> > + - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
->                                 ^^ IP?
-Ok
-> 
-> > +	mode;
-> > + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-> > +	control register, it depends on "mediatek,wakeup-src".
-> > + - vbus-supply : reference to the VBUS regulator;
-> > + - usb3-lpm-capable : supports USB3.0 LPM
-> 
-> [...]
-> 
-> MBR, Sergei
-> 
+From: Liu Ying <Ying.liu@freescale.com>
 
+This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
+host controller DRM bridge driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+
+---
+
+Changes in v3:
+move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
+
+Changes in v2: None
+
+ .../bindings/display/bridge/dw_mipi_dsi.txt        | 76 ++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+new file mode 100644
+index 0000000..0e5c140
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+@@ -0,0 +1,76 @@
++Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
++
++The controller is a digital core that implements all protocol functions
++defined in the MIPI DSI specification, providing an interface between
++the system and the MIPI DPHY, and allowing communication with a MIPI DSI
++compliant display.
++
++Required properties:
++ - #address-cells: Should be <1>.
++ - #size-cells: Should be <0>.
++ - compatible: The first compatible string should be "fsl,imx6q-mipi-dsi"
++   for i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
++   device tree binding documentations.  A common compatible string
++   "snps,dw-mipi-dsi" should be appended for all SoCs.
++ - reg: Represent the physical address range of the controller.
++ - interrupts: Represent the controller's interrupt to the CPU(s).
++ - clocks, clock-names: Phandles to the controller's pll reference
++   clock(ref), configuration clock(cfg) and APB clock(pclk), as
++   described in [1].
++
++For more required properties, please refer to relevant device tree binding
++documentations which describe the controller embedded in specific SoCs.
++
++Required sub-nodes:
++ - A node to represent a DSI peripheral as described in [2].
++
++For more required sub-nodes, please refer to relevant device tree binding
++documentations which describe the controller embedded in specific SoCs.
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
++
++example:
++	gpr: iomuxc-gpr@020e0000 {
++		/* ... */
++	};
++
++	mipi_dsi: mipi@021e0000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
++		reg = <0x021e0000 0x4000>;
++		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
++		gpr = <&gpr>;
++		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
++			 <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
++			 <&clks IMX6QDL_CLK_MIPI_IPG>;
++		clock-names = "ref", "cfg", "pclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				mipi_mux_0: endpoint {
++					remote-endpoint = <&ipu1_di0_mipi>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				mipi_mux_1: endpoint {
++					remote-endpoint = <&ipu1_di1_mipi>;
++				};
++			};
++		};
++
++		panel {
++			compatible = "truly,tft480800-16-e-dsi";
++			reg = <0>;
++			/* ... */
++		};
++	};
+-- 
+2.6.3
