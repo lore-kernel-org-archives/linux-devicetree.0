@@ -1,70 +1,263 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] misc: eeprom_93xx46: Implement eeprom_93xx46 DT
- bindings.
-Date: Thu, 19 Nov 2015 18:14:46 +0200
-Message-ID: <564DF576.9010807@mleia.com>
-References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com> <1447903781-3910-4-git-send-email-cory.tusar@pid1solutions.com> <564D632D.8020107@mleia.com> <564DD5E7.6080700@ti.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: enable clock support for Broadcom NSP
+Date: Thu, 19 Nov 2015 08:25:12 -0800
+Message-ID: <564DF7E8.7020404@broadcom.com>
+References: <1447888430-4451-1-git-send-email-jonmason@broadcom.com>
+ <1447888430-4451-3-git-send-email-jonmason@broadcom.com>
+ <564D1070.2040200@broadcom.com> <20151119154810.GC23560@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564DD5E7.6080700-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20151119154810.GC23560-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
 
-On 19.11.2015 16:00, Andrew F. Davis wrote:
-> On 11/18/2015 11:50 PM, Vladimir Zapolskiy wrote:
->> Hi Cory,
+
+On 11/19/2015 7:48 AM, Jon Mason wrote:
+> On Wed, Nov 18, 2015 at 03:57:36PM -0800, Ray Jui wrote:
+>> Would this patch merge properly with the other NSP DT clean up patch
+>> + I2C DT patch that you worked out internally but have not sent out?
 >>
->> On 19.11.2015 05:29, Cory Tusar wrote:
->>> This commit implements bindings in the eeprom_93xx46 driver allowing
->>> device word size and read-only attributes to be specified via
->>> devicetree.
+>> I thought it's going to make the maintainers' life easier if you can
+>> group DT changes per platform and send them out in the same series.
+>>
+>> I also have some inline comments below.
+>>
+>> On 11/18/2015 3:13 PM, Jon Mason wrote:
+>>> Replace current device tree dummy clocks with real clock support for
+>>> Broadcom Northstar Plus SoC
 >>>
->>> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+>>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >>> ---
-
-[snip]
-
->>> +
->>> +#else
->>> +static inline int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>> +{
->>> +	return 0;
->>> +}
->>> +#endif
->>> +
+>>>   arch/arm/boot/dts/bcm-nsp.dtsi | 99 ++++++++++++++++++++++++++++++++----------
+>>>   1 file changed, 75 insertions(+), 24 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+>>> index 4bcdd28..f85a4f1 100644
+>>> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+>>> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+>>> @@ -32,6 +32,7 @@
+>>>
+>>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>   #include <dt-bindings/interrupt-controller/irq.h>
+>>> +#include <dt-bindings/clock/bcm-nsp.h>
+>>>
+>>>   #include "skeleton.dtsi"
+>>>
+>>> @@ -42,7 +43,7 @@
+>>>
+>>>   	mpcore {
+>>>   		compatible = "simple-bus";
+>>> -		ranges = <0x00000000 0x19020000 0x00003000>;
+>>> +		ranges = <0x00000000 0x19000000 0x00023000>;
 >>
->> I actually don't see a point to have #ifdef CONFIG_OF here.
+>> Why does this have anything to do with clocks? Shouldn't it be a
+>> separate patch?
+>
+> No, this is correct (though the patch is a little odd to look at).
+> The a9pll starts at 0x19000000 instead of 0x19020000.  So, everything
+> needs to be adjusted.
+>
+
+Okay.
+
 >>
-> 
-> Usually to avoid a lot of dead code and data when OF is not enabled.
-> 
+>>>   		#address-cells = <1>;
+>>>   		#size-cells = <1>;
+>>>
+>>> @@ -58,32 +59,23 @@
+>>>   			};
+>>>   		};
+>>>
+>>> -		L2: l2-cache {
+>>> -			compatible = "arm,pl310-cache";
+>>> -			reg = <0x2000 0x1000>;
+>>> -			cache-unified;
+>>> -			cache-level = <2>;
+>>> -		};
+>>> -
+>>> -		gic: interrupt-controller@19021000 {
+>>> -			compatible = "arm,cortex-a9-gic";
+>>> -			#interrupt-cells = <3>;
+>>> -			#address-cells = <0>;
+>>> -			interrupt-controller;
+>>> -			reg = <0x1000 0x1000>,
+>>> -			      <0x0100 0x100>;
+>>> +		a9pll: arm_clk@19000000 {
+>>> +			#clock-cells = <0>;
+>>> +			compatible = "brcm,nsp-armpll";
+>>> +			clocks = <&osc>;
+>>> +			reg = <0x00000 0x1000>;
+>>>   		};
+>>>
+>>>   		timer@19020200 {
+>>>   			compatible = "arm,cortex-a9-global-timer";
+>>> -			reg = <0x0200 0x100>;
+>>> +			reg = <0x20200 0x100>;
+>>>   			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>>>   			clocks = <&periph_clk>;
+>>>   		};
+>>>
+>>>   		twd-timer@19020600 {
+>>>   			compatible = "arm,cortex-a9-twd-timer";
+>>> -			reg = <0x0600 0x20>;
+>>> +			reg = <0x20600 0x20>;
+>>>   			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+>>>   						  IRQ_TYPE_LEVEL_HIGH)>;
+>>>   			clocks = <&periph_clk>;
+>>> @@ -91,11 +83,27 @@
+>>>
+>>>   		twd-watchdog@19020620 {
+>>>   			compatible = "arm,cortex-a9-twd-wdt";
+>>> -			reg = <0x0620 0x20>;
+>>> +			reg = <0x20620 0x20>;
+>>>   			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
+>>>   						  IRQ_TYPE_LEVEL_HIGH)>;
+>>>   			clocks = <&periph_clk>;
+>>>   		};
+>>> +
+>>> +		gic: interrupt-controller@19021000 {
+>>> +			compatible = "arm,cortex-a9-gic";
+>>> +			#interrupt-cells = <3>;
+>>> +			#address-cells = <0>;
+>>> +			interrupt-controller;
+>>> +			reg = <0x21000 0x1000>,
+>>> +			      <0x20100 0x100>;
+>>> +		};
+>>> +
+>>> +		L2: l2-cache {
+>>> +			compatible = "arm,pl310-cache";
+>>> +			reg = <0x22000 0x1000>;
+>>> +			cache-unified;
+>>> +			cache-level = <2>;
+>>> +		};
+>>
+>>  From here and above, all labels are wrong. You are moving them into
+>> a bus that has translated bus addresses, but you still use absolute
+>> addresses for all labels.
+>>
 
-This is a premature optimization.
+Please fix all the labels.
 
+>> And again, 1) Why is this change imbedded in a patch meant for
+>> adding DT clock support according to the commit message; 2) how does
+>> the dependency work with the other patches that you are about to
+>> send out?
+>
+> This was already discussed in the original series.  See
+> http://www.spinics.net/lists/arm-kernel/msg451580.html
 
-Also please see Documentation/CodingStyle, Chapter 20: Conditional
-Compilation:
+The discussion explains my first question. But what about my second 
+question? How does the dependency work with other NSP DT patches that 
+you have on hand? Will there be conflicts? If so, do you expect the 
+maintainers need to manually fix all the conflicts?
 
-	Wherever possible, don't use preprocessor conditionals
-	(#if, #ifdef) in .c files; doing so makes code harder to read
-	and logic harder to follow.  Instead, use such conditionals in
-	a header file defining functions for use in those .c files,
-	providing no-op stub versions in the #else case, and then call
-	those functions unconditionally from .c files.  The compiler
-	will avoid generating any code for the stub calls, producing
-	identical results, but the logic will remain easy to follow.
+>>
+>>
+>>>   	};
+>>>
+>>>   	clocks {
+>>> @@ -103,10 +111,34 @@
+>>>   		#size-cells = <1>;
+>>>   		ranges;
+>>>
+>>> -		periph_clk: periph_clk {
+>>> +		osc: oscillator {
+>>> +			#clock-cells = <0>;
+>>>   			compatible = "fixed-clock";
+>>> +			clock-frequency = <25000000>;
+>>> +		};
+>>> +
+>>> +		iprocmed: iprocmed {
+>>> +			#clock-cells = <0>;
+>>> +			compatible = "fixed-factor-clock";
+>>> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+>>> +			clock-div = <2>;
+>>> +			clock-mult = <1>;
+>>> +		};
+>>> +
+>>> +		iprocslow: iprocslow {
+>>> +			#clock-cells = <0>;
+>>> +			compatible = "fixed-factor-clock";
+>>> +			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
+>>> +			clock-div = <4>;
+>>> +			clock-mult = <1>;
+>>> +		};
+>>> +
+>>> +		periph_clk: periph_clk {
+>>>   			#clock-cells = <0>;
+>>> -			clock-frequency = <500000000>;
+>>> +			compatible = "fixed-factor-clock";
+>>> +			clocks = <&a9pll>;
+>>> +			clock-div = <2>;
+>>> +			clock-mult = <1>;
+>>>   		};
+>>>   	};
+>>>
+>>> @@ -118,17 +150,17 @@
+>>>
+>>>   		uart0: serial@18000300 {
+>>>   			compatible = "ns16550a";
+>>> -			reg = <0x0300 0x100>;
+>>> +			reg = <0x000300 0x100>;
+>>>   			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+>>> -			clock-frequency = <62499840>;
+>>> +			clocks = <&osc>;
+>>>   			status = "disabled";
+>>>   		};
+>>>
+>>>   		uart1: serial@18000400 {
+>>>   			compatible = "ns16550a";
+>>> -			reg = <0x0400 0x100>;
+>>> +			reg = <0x000400 0x100>;
+>>>   			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+>>> -			clock-frequency = <62499840>;
+>>> +			clocks = <&osc>;
+>>>   			status = "disabled";
+>>>   		};
+>>>
+>>> @@ -217,5 +249,24 @@
+>>>
+>>>   			brcm,nand-has-wp;
+>>>   		};
+>>> +
+>>> +		lcpll0: lcpll0@1803f100 {
+>>
+>> wrong label
+>>
 
-etc.
+Please fix
 
---
-With best wishes,
-Vladimir
+>>> +			#clock-cells = <1>;
+>>> +			compatible = "brcm,nsp-lcpll0";
+>>> +			reg = <0x03f100 0x14>;
+>>> +			clocks = <&osc>;
+>>> +			clock-output-names = "lcpll0", "pcie_phy", "sdio",
+>>> +					     "ddr_phy";
+>>> +		};
+>>> +
+>>> +		genpll: genpll@1803f140 {
+>>
+>> wrong label
+>>
+
+Please fix
+
+>>> +			#clock-cells = <1>;
+>>> +			compatible = "brcm,nsp-genpll";
+>>> +			reg = <0x03f140 0x24>;
+>>> +			clocks = <&osc>;
+>>> +			clock-output-names = "genpll", "phy", "ethernetclk",
+>>> +					     "usbclk", "iprocfast", "sata1",
+>>> +					     "sata2";
+>>> +		};
+>>>   	};
+>>>   };
+>>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
