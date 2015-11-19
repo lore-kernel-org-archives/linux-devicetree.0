@@ -1,68 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/6] dt/bindings: add bindings for optee
-Date: Thu, 19 Nov 2015 08:30:34 -0600
-Message-ID: <CAL_JsqLCW6Wekccwqc4U8qFO9thuNQ4+EO6-AoasQtH+Z6CdrQ@mail.gmail.com>
-References: <1446106888-8983-1-git-send-email-jens.wiklander@linaro.org>
- <1446106888-8983-4-git-send-email-jens.wiklander@linaro.org>
- <20151116170109.GA20076@rob-hp-laptop> <20151119091810.GA15974@ermac>
+Subject: Re: [PATCH RFC 25/27] devicetree: bindings: Document qcom,msm-id and qcom,board-id
+Date: Thu, 19 Nov 2015 08:36:52 -0600
+Message-ID: <CAL_JsqJAOEvs08Jydn9wWtM7-Oxd=MmmDER48VRF7z3Gkzt0CQ@mail.gmail.com>
+References: <1447799871-56374-1-git-send-email-lina.iyer@linaro.org> <1447799871-56374-26-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151119091810.GA15974@ermac>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Will Deacon <will.deacon@arm.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1447799871-56374-26-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, msivasub@codeaurora.org, Andy Gross <agross@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, ahaslam@baylibre.com, mtitinger@baylibre.com, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 3:18 AM, Jens Wiklander
-<jens.wiklander@linaro.org> wrote:
-> On Mon, Nov 16, 2015 at 11:01:10AM -0600, Rob Herring wrote:
->> On Thu, Oct 29, 2015 at 09:21:25AM +0100, Jens Wiklander wrote:
->> > Introduces optee prefix and adds bindings for ARM TrustZone based OP-TEE
->> > implementation.
->> >
->> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
->> > ---
->> >  .../bindings/arm/firmware/optee,optee-tz.txt       | 29 ++++++++++++++++++++++
->> >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->> >  2 files changed, 30 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt
->> > new file mode 100644
->> > index 0000000..0a8ed0d
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/arm/firmware/optee,optee-tz.txt
->> > @@ -0,0 +1,29 @@
->> > +OP-TEE Device Tree Bindings
->> > +
->> > +OP-TEE is a piece of software using hardware features to provide a Trusted
->> > +Execution Environment. The security can be provided with ARM TrustZone, but
->> > +also by virtualization or a separate chip. As there's no single OP-TEE
->> > +vendor we're using "optee" as the first part of compatible property,
->> > +indicating the OP-TEE protocol is used when communicating with the secure
->> > +world.
-
-[...]
-
->> > +Example:
->> > +   optee {
->>
->> This should go under a /firmware node similar to
->> Documentation/devicetree/bindings/arm/firmware/tlm,trusted-foundations.txt.
+On Tue, Nov 17, 2015 at 4:37 PM, Lina Iyer <lina.iyer@linaro.org> wrote:
+> From: Kumar Gala <galak@codeaurora.org>
 >
-> I tried that and discovered that a
-> compatible = "simple-bus";
-> is needed for the firmware node for optee to get probed. Is it OK to write
-> the example as:
->
-> firmware {
->         compatible = "simple-bus";
->
->         optee {
+> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
+> on Qualcomm MSM platforms to determine which device tree should be
+> utilized and passed to the kernel.
 
-That would needlessly create devices for any other child nodes and it
-is not a bus. Just find the node and call of_platform_device_create
-for that node in an initcall.
+See [1] and the link there to the prior version which is like this one.
 
 Rob
+
+[1] https://lkml.org/lkml/2015/10/26/651
