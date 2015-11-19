@@ -1,40 +1,62 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH] spi: dts: sun4i: Add support for inter-word
- wait cycles using the SPI Wait Clock Register
-Date: Fri, 20 Nov 2015 09:59:11 +1100
-Message-ID: <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
-References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com> <1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v4 0/4] Add support for the TI TPS65086 PMIC
+Date: Thu, 19 Nov 2015 17:01:38 -0600
+Message-ID: <1447974102-24938-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447948422-4915-2-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcus,
+This series adds support for the TPS65086 PMIC. It is a MFD with an I2C
+interface, several regulators and load switches, and a GPO controller.
 
-On Fri, Nov 20, 2015 at 2:53 AM, Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Adds support and documentation for a new slave device property
-> "sun4i,spi-wdelay" that allows to set the SPI Wait Clock Register per
-> device / transfer. The SPI hardware will wait the specified amount of
-> SPI clock periods (plus a constant 3 clock periods) before transmitting
-> the next word.
+v1 can be found here: [1] v2: [2] v3: [3]
 
-Should you possibly hide the 3 clock periods from the user?
+Changes from v3:
+ - Removed compatible strings from DT sub-nodes
+ - Rearranged DT bindings
+ - Small fixes
 
-I.e. they set whatever they want for the wdelay, we set it to the
-closest number we can that's greater or equal to what they ask for.
+Changes from v2:
+ - Use DT match callback in regulator
+ - Typo fixes
 
-Thanks,
+Changes from v1:
+ - Split up DT Docs into separate patches
+ - Use mfd core to instantiate sub-devices
+ - Several small fixes as discussed in v1 thread
+
+[1] http://www.spinics.net/lists/devicetree/msg98403.html
+[2] http://www.spinics.net/lists/kernel/msg2111345.html
+[3] https://lkml.org/lkml/2015/11/4/393
+
+Andrew F. Davis (4):
+  Documentation: tps65086: Add DT bindings for the TPS65086 PMIC
+  mfd: tps65086: Add driver for the TPS65086 PMIC
+  regulator: tps65086: Add regulator driver for the TPS65086 PMIC
+  gpio: tps65086: Add GPO driver for the TPS65086 PMIC
+
+ Documentation/devicetree/bindings/mfd/tps65086.txt |  55 +++++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-tps65086.c                       | 144 ++++++++++++
+ drivers/mfd/Kconfig                                |  13 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/tps65086.c                             | 150 ++++++++++++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/tps65086-regulator.c             | 251 +++++++++++++++++++++
+ include/linux/mfd/tps65086.h                       | 118 ++++++++++
+ 11 files changed, 747 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
+ create mode 100644 drivers/gpio/gpio-tps65086.c
+ create mode 100644 drivers/mfd/tps65086.c
+ create mode 100644 drivers/regulator/tps65086-regulator.c
+ create mode 100644 include/linux/mfd/tps65086.h
 
 -- 
-Julian Calaby
+1.9.1
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
