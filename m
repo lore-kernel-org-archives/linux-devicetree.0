@@ -1,64 +1,53 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 11/11] arm: dts: lpc32xx: remove clock frequency property from UART device nodes
-Date: Fri, 20 Nov 2015 03:05:11 +0200
-Message-ID: <1447981511-29653-12-git-send-email-vz@mleia.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 05/11] arm: dts: lpc32xx: add clock controller device node
+Date: Fri, 20 Nov 2015 03:05:05 +0200
+Message-ID: <1447981511-29653-6-git-send-email-vz@mleia.com>
 References: <1447981511-29653-1-git-send-email-vz@mleia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447981511-29653-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1447981511-29653-1-git-send-email-vz@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-If clock-frequency property is given, then it substitutes calculation
-of supplying clock frequency from parent clock, this may break UART,
-if parent clock is given and managed by common clock framework.
+NXP LPC32xx SoC has a clocking and power control unit (CPC) as a part
+of system control block (SCB). CPC is supplied by two external
+oscillators and it manages core and most of peripheral clocks, the
+change adds SCB and CPC descriptions to shared LPC32xx dtsi file.
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 68bf011..f396343 100644
+index a9f2d9a..65023c1 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -209,7 +209,6 @@
- 				compatible = "nxp,lpc3220-uart";
- 				reg = <0x40090000 0x1000>;
- 				interrupts = <9 0>;
--				clock-frequency = <13000000>;
- 				reg-shift = <2>;
- 				clocks = <&clk LPC32XX_CLK_UART5>;
- 				status = "disabled";
-@@ -219,7 +218,6 @@
- 				compatible = "nxp,lpc3220-uart";
- 				reg = <0x40080000 0x1000>;
- 				interrupts = <7 0>;
--				clock-frequency = <13000000>;
- 				reg-shift = <2>;
- 				clocks = <&clk LPC32XX_CLK_UART3>;
- 				status = "disabled";
-@@ -229,7 +227,6 @@
- 				compatible = "nxp,lpc3220-uart";
- 				reg = <0x40088000 0x1000>;
- 				interrupts = <8 0>;
--				clock-frequency = <13000000>;
- 				reg-shift = <2>;
- 				clocks = <&clk LPC32XX_CLK_UART4>;
- 				status = "disabled";
-@@ -239,7 +236,6 @@
- 				compatible = "nxp,lpc3220-uart";
- 				reg = <0x40098000 0x1000>;
- 				interrupts = <10 0>;
--				clock-frequency = <13000000>;
- 				reg-shift = <2>;
- 				clocks = <&clk LPC32XX_CLK_UART6>;
- 				status = "disabled";
+@@ -247,6 +247,23 @@
+ 			compatible = "simple-bus";
+ 			ranges = <0x20000000 0x20000000 0x30000000>;
+ 
++			/* System Control Block */
++			scb {
++				compatible = "simple-bus";
++				ranges = <0x0 0x040004000 0x00001000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				clk: clock-controller@0 {
++					compatible = "nxp,lpc3220-clk";
++					reg = <0x00 0x114>;
++					#clock-cells = <1>;
++
++					clocks = <&xtal_32k>, <&xtal>;
++					clock-names = "xtal_32k", "xtal";
++				};
++			};
++
+ 			/*
+ 			 * MIC Interrupt controller includes:
+ 			 *   MIC @40008000
 -- 
 2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
