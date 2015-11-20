@@ -1,162 +1,94 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH 05/13] Xen: ARM: Add support for mapping platform device
- mmio
-Date: Fri, 20 Nov 2015 16:30:57 +0000
-Message-ID: <alpine.DEB.2.02.1511201628410.1107@kaball.uk.xensource.com>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
- <1447754231-7772-6-git-send-email-shannon.zhao@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/4] Documentation: tps65086: Add DT bindings for the
+ TPS65086 PMIC
+Date: Fri, 20 Nov 2015 10:33:21 -0600
+Message-ID: <20151120163321.GA4952@rob-hp-laptop>
+References: <1447974102-24938-1-git-send-email-afd@ti.com>
+ <1447974102-24938-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447754231-7772-6-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447974102-24938-2-git-send-email-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, Nov 19, 2015 at 05:01:39PM -0600, Andrew F. Davis wrote:
+> The TPS65086 PMIC contains several regulators and a GPO controller.
+> Add bindings for the TPS65086 PMIC.
 > 
-> Add a bus_notifier for platform bus device in order to map the device
-> mmio regions when DOM0 booting with ACPI.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
->  drivers/xen/Makefile   |   1 +
->  drivers/xen/platform.c | 104 +++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 105 insertions(+)
->  create mode 100644 drivers/xen/platform.c
+>  Documentation/devicetree/bindings/mfd/tps65086.txt | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65086.txt
 > 
-> diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
-> index e293bc5..2f867e7 100644
-> --- a/drivers/xen/Makefile
-> +++ b/drivers/xen/Makefile
-> @@ -11,6 +11,7 @@ CFLAGS_features.o			:= $(nostackp)
->  
->  CFLAGS_efi.o				+= -fshort-wchar
->  
-> +dom0-$(CONFIG_ARM64) += platform.o
->  dom0-$(CONFIG_PCI) += pci.o
->  dom0-$(CONFIG_USB_SUPPORT) += dbgp.o
->  dom0-$(CONFIG_XEN_ACPI) += acpi.o $(xen-pad-y)
-> diff --git a/drivers/xen/platform.c b/drivers/xen/platform.c
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
 > new file mode 100644
-> index 0000000..0f95e7f
+> index 0000000..6b50613
 > --- /dev/null
-> +++ b/drivers/xen/platform.c
-> @@ -0,0 +1,104 @@
-> +/*
-> + * Copyright (c) 2015, Linaro Limited.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-> + * Place - Suite 330, Boston, MA 02111-1307 USA.
-> + *
-> + * Author: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + */
+> +++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
+> @@ -0,0 +1,55 @@
+> +* TPS65086 Power Management Integrated Circuit bindings
 > +
-> +#include <linux/platform_device.h>
-> +#include <linux/acpi.h>
-> +#include <xen/xen.h>
-> +#include <xen/interface/memory.h>
-> +#include <asm/xen/hypervisor.h>
-> +#include <asm/xen/hypercall.h>
+> +Required properties:
+> + - compatible		: Should be "ti,tps65086".
+> + - reg			: I2C slave address.
+> + - interrupt-parent	: Phandle to he parent interrupt controller.
+> + - interrupts		: The interrupt line the device is connected to.
+> + - interrupt-controller	: Marks the device node as an interrupt controller.
+> + - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+> +			    The first cell is the IRQ number.
+> +			    The second cell is the flags, encoded as trigger
+> +			    masks from ../interrupt-controller/interrupts.txt.
+> + - gpio-controller      : Marks the device node as a GPIO Controller.
+> + - #gpio-cells          : Should be two.  The first cell is the pin number and
+> +                            the second cell is used to specify flags.
+> +                            See ../gpio/gpio.txt for more information.
+> + - regulators:          : List of child nodes that specify the regulator
+> +                            initialization data. Child nodes must be named
+> +                            after their hardware counterparts: buck[1-6],
+> +                            ldoa[1-3], swa1, swb[1-2], and vtt. Each child
+> +                            nodes is defined using the standard binding for
+> +                            regulators and the optional regulator properties
+> +                            defined below.
 > +
-> +static int xen_map_platform_device_mmio(struct platform_device *pdev)
-> +{
-> +	int i, rc = 0;
+> +Optional regulator properties:
+> + - ti,regulator-step-size-25mv	: This is applicable for buck[1,2,6], set this
+> +				    if the regulator is factory set with a 25mv
+> +				    step voltage mapping.
+> + - ti,regulator-decay		: This is applicable for buck[1-6], set this if
+> +				    the output needs to decay, default is for
+> +				    the output to slew down.
 > +
-> +	for (i = 0; i < pdev->num_resources; i++)
-> +	{
-> +		struct resource *r = &pdev->resource[i];
+> +Example:
 > +
-> +		if (resource_type(r) == IORESOURCE_MEM)
-> +		{
-> +			int j;
-> +			int nr = DIV_ROUND_UP(resource_size(r), PAGE_SIZE);
-> +			xen_pfn_t *gpfns = kmalloc(sizeof(xen_pfn_t) * nr,
-> +						   GFP_KERNEL);
-> +			xen_ulong_t *idxs = kmalloc(sizeof(xen_ulong_t) * nr,
-> +						    GFP_KERNEL);
-> +			int *errs = kmalloc(sizeof(int) * nr, GFP_KERNEL);
-
-please check for kmalloc returning NULL and return -ENOMEM
-
-
-> +			struct xen_add_to_physmap_range xatp;
+> +	pmic: tps65086@5e {
+> +		compatible = "ti,tps65086";
+> +		reg = <0x5e>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
 > +
-> +			for (j = 0; j < nr; j++) {
-> +				gpfns[j] = (r->start >> PAGE_SHIFT) + j;
-> +				idxs[j] = (r->start >> PAGE_SHIFT) + j;
-
-XEN_PFN_DOWN
-
-
-> +				errs[j] = 0;
-> +			}
-> +
-> +			xatp.domid = DOMID_SELF;
-> +			xatp.size = nr;
-> +			xatp.space = XENMAPSPACE_dev_mmio;
-> +
-> +			set_xen_guest_handle(xatp.gpfns, gpfns);
-> +			set_xen_guest_handle(xatp.idxs, idxs);
-> +			set_xen_guest_handle(xatp.errs, errs);
-> +
-> +			rc = HYPERVISOR_memory_op(XENMEM_add_to_physmap_range,
-> +						  &xatp);
-> +			kfree(gpfns);
-> +			kfree(idxs);
-> +			kfree(errs);
-> +			if (rc != 0)
-> +				return rc;
-> +		}
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static int xen_platform_notifier(struct notifier_block *nb,
-> +				 unsigned long action, void *data)
-> +{
-> +	struct platform_device *pdev = to_platform_device(data);
-> +	int r = 0;
-> +
-> +	if (!acpi_disabled && (action == BUS_NOTIFY_ADD_DEVICE))
-> +		r = xen_map_platform_device_mmio(pdev);
-> +
-> +	if (r)
-> +	{
-> +		dev_err(&pdev->dev, "Failed to add_to_physmap device (%s) mmio!\n",
-> +			pdev->name);
-> +		return NOTIFY_OK;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block platform_device_nb = {
-> +	.notifier_call = xen_platform_notifier,
-> +};
-> +
-> +static int __init register_xen_platform_notifier(void)
-> +{
-> +	if (!xen_initial_domain())
-> +		return 0;
-> +
-> +	return bus_register_notifier(&platform_bus_type, &platform_device_nb);
-> +}
-> +
-> +arch_initcall(register_xen_platform_notifier);
+> +		regulators {
+> +			buck1 {
+> +				regulator-name = "vcc1";
+> +				regulator-min-microvolt = <1600000>;
+> +				regulator-max-microvolt = <1600000>;
+> +				regulator-boot-on;
+> +				ti,regulator-decay;
+> +				ti,regulator-step-size-25mv;
+> +			};
+> +		};
+> +	};
 > -- 
-> 2.1.0
+> 1.9.1
 > 
