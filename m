@@ -1,48 +1,54 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 3/5] arm: dts: qcom: Update ifc6540 compat for qcom boot
- format
-Date: Fri, 20 Nov 2015 15:31:18 -0800
-Message-ID: <1448062280-15406-4-git-send-email-sboyd@codeaurora.org>
-References: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
+From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH v4 1/3] Documentation: dt-bindings: add async_irq to msm_hsusb
+Date: Fri, 20 Nov 2015 15:47:18 -0800
+Message-ID: <1448063240-2739-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ifc6540 is an sbc (single board computer) board, so update
-the compatible field accordingly.
+Add optional async_irq to msm_hsusb binding doc.
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 ---
- arch/arm/boot/dts/qcom-apq8084-ifc6540.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-index c9c2b769554f..32aaa9d45228 100644
---- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-+++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-@@ -3,7 +3,7 @@
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index 8654a3e..2d13c1c 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -23,7 +23,12 @@ Required properties:
+   "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
  
- / {
- 	model = "Qualcomm APQ8084/IFC6540";
--	compatible = "qcom,apq8084-ifc6540", "qcom,apq8084";
-+	compatible = "qcom,apq8084-sbc", "qcom,apq8084";
+ - regs:         Offset and length of the register set in the memory map
+-- interrupts:   interrupt-specifier for the OTG interrupt.
++- interrupts:   interrupt-specifier for the OTG interrupts
++
++- interrupt-names: Should contain the following:
++  "core"        USB core interrupt
++  "async"       Asynchronous interrupt to wake up from low power mode
++                (optional)
  
- 	aliases {
- 		serial0 = &blsp2_uart2;
+ - clocks:       A list of phandle + clock-specifier pairs for the
+                 clocks listed in clock-names
+@@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
+     usb@f9a55000 {
+         compatible = "qcom,usb-otg-snps";
+         reg = <0xf9a55000 0x400>;
+-        interrupts = <0 134 0>;
++        interrupts = <0 134 0>, <0 140 0>;
++        interrupt-names = "core", "async";
+         dr_mode = "peripheral";
+ 
+         clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
