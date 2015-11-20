@@ -1,183 +1,40 @@
-From: Chen Feng <puck.chen@hisilicon.com>
-Subject: [PATCH V7 2/3] reset: hi6220: Reset driver for hisilicon hi6220 SoC
-Date: Fri, 20 Nov 2015 10:10:05 +0800
-Message-ID: <1447985406-44776-2-git-send-email-puck.chen@hisilicon.com>
-References: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
+From: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/4] spi: mediatek: update document devicetree bindings to fix syntax error
+Date: Fri, 20 Nov 2015 10:21:16 +0800
+Message-ID: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: puck.chen@hisilicon.com, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com
-Cc: puck.chen@aliyun.com, w.f@huawei.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add reset driver for hi6220-hikey board,this driver supply deassert
-of IP on hi6220 SoC.
+This patch updates document devicetree bindings
+to fix syntax error.
 
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/reset/Kconfig                  |   1 +
- drivers/reset/Makefile                 |   1 +
- drivers/reset/hisilicon/Kconfig        |   5 ++
- drivers/reset/hisilicon/Makefile       |   1 +
- drivers/reset/hisilicon/hi6220_reset.c | 108 +++++++++++++++++++++++++++++++++
- 5 files changed, 116 insertions(+)
- create mode 100644 drivers/reset/hisilicon/Kconfig
- create mode 100644 drivers/reset/hisilicon/Makefile
- create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
+ .../devicetree/bindings/spi/spi-mt65xx.txt         |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 0615f50..df37212 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
- 	  If unsure, say no.
+diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+index ce363c923f..fba8334 100644
+--- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
++++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+@@ -32,7 +32,7 @@ Optional properties:
+ -cs-gpios: see spi-bus.txt, only required for MT8173.
  
- source "drivers/reset/sti/Kconfig"
-+source "drivers/reset/hisilicon/Kconfig"
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 85d5904..99e18c8 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -4,5 +4,6 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
- obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
- obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_ARCH_STI) += sti/
-+obj-$(CONFIG_ARCH_HISI) += hisilicon/
- obj-$(CONFIG_ARCH_ZYNQ) += reset-zynq.o
- obj-$(CONFIG_ATH79) += reset-ath79.o
-diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
-new file mode 100644
-index 0000000..26bf95a
---- /dev/null
-+++ b/drivers/reset/hisilicon/Kconfig
-@@ -0,0 +1,5 @@
-+config COMMON_RESET_HI6220
-+	tristate "Hi6220 Reset Driver"
-+	depends on (ARCH_HISI && RESET_CONTROLLER)
-+	help
-+	  Build the Hisilicon Hi6220 reset driver.
-diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
-new file mode 100644
-index 0000000..c932f86
---- /dev/null
-+++ b/drivers/reset/hisilicon/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
-diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-new file mode 100644
-index 0000000..d17c910
---- /dev/null
-+++ b/drivers/reset/hisilicon/hi6220_reset.c
-@@ -0,0 +1,108 @@
-+/*
-+ * Hisilicon Hi6220 reset controller driver
-+ *
-+ * Copyright (c) 2015 Hisilicon Limited.
-+ *
-+ * Author: Feng Chen <puck.chen@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/bitops.h>
-+#include <linux/of.h>
-+#include <linux/reset-controller.h>
-+#include <linux/reset.h>
-+#include <linux/platform_device.h>
-+
-+#define ASSERT_OFFSET            0x300
-+#define DEASSERT_OFFSET          0x304
-+#define MAX_INDEX                0x509
-+
-+#define to_reset_data(x) container_of(x, struct hi6220_reset_data, rc_dev)
-+
-+struct hi6220_reset_data {
-+	void __iomem			*assert_base;
-+	void __iomem			*deassert_base;
-+	struct reset_controller_dev	rc_dev;
-+};
-+
-+static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
-+			       unsigned long idx)
-+{
-+	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-+
-+	int bank = idx >> 8;
-+	int offset = idx & 0xff;
-+
-+	writel(BIT(offset), data->assert_base + (bank * 0x10));
-+
-+	return 0;
-+}
-+
-+static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
-+				 unsigned long idx)
-+{
-+	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-+
-+	int bank = idx >> 8;
-+	int offset = idx & 0xff;
-+
-+	writel(BIT(offset), data->deassert_base + (bank * 0x10));
-+
-+	return 0;
-+}
-+
-+static struct reset_control_ops hi6220_reset_ops = {
-+	.assert = hi6220_reset_assert,
-+	.deassert = hi6220_reset_deassert,
-+};
-+
-+static int hi6220_reset_probe(struct platform_device *pdev)
-+{
-+	struct hi6220_reset_data *data;
-+	struct resource *res;
-+	void __iomem *src_base;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	src_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(src_base))
-+		return PTR_ERR(src_base);
-+
-+	data->assert_base = src_base + ASSERT_OFFSET;
-+	data->deassert_base = src_base + DEASSERT_OFFSET;
-+	data->rc_dev.nr_resets = MAX_INDEX;
-+	data->rc_dev.ops = &hi6220_reset_ops;
-+	data->rc_dev.of_node = pdev->dev.of_node;
-+
-+	reset_controller_register(&data->rc_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id hi6220_reset_match[] = {
-+	{ .compatible = "hisilicon,hi6220-sysctrl" },
-+	{ },
-+};
-+
-+static struct platform_driver hi6220_reset_driver = {
-+	.probe = hi6220_reset_probe,
-+	.driver = {
-+		.name = "reset-hi6220",
-+		.of_match_table = hi6220_reset_match,
-+	},
-+};
-+
-+static int __init hi6220_reset_init(void)
-+{
-+	return platform_driver_register(&hi6220_reset_driver);
-+}
-+
-+postcore_initcall(hi6220_reset_init);
+ - mediatek,pad-select: specify which pins group(ck/mi/mo/cs) spi
+-  controller used. This is a array, the element value should be 0~3,
++  controller used. This is an array, the element value should be 0~3,
+   only required for MT8173.
+     0: specify GPIO69,70,71,72 for spi pins.
+     1: specify GPIO102,103,104,105 for spi pins.
 -- 
-1.9.1
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
