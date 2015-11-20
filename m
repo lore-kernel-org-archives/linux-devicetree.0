@@ -1,91 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/10] dt-bindings: nxp: add description of wakeup
- controller on LPC32xx
-Date: Fri, 20 Nov 2015 10:55:07 -0600
-Message-ID: <20151120165507.GA12088@rob-hp-laptop>
-References: <1447982925-30138-1-git-send-email-vz@mleia.com>
- <1447982925-30138-3-git-send-email-vz@mleia.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/4] spi: mediatek: remove needless pair of
+ writel()/readl()
+Date: Fri, 20 Nov 2015 17:56:10 +0100
+Message-ID: <564F50AA.50000@gmail.com>
+References: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
+ <1447986080-31410-3-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447982925-30138-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447986080-31410-3-git-send-email-leilk.liu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leilk Liu <leilk.liu@mediatek.com>, Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:28:37AM +0200, Vladimir Zapolskiy wrote:
-> NXP LPC32xx has three wakeup controllers of two types, this
-> descriptions defines DT bindings of wakeup controllers connected to
-> MIC, SIC1 and SIC2 interrupt controllers.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+
+
+On 20/11/15 03:21, Leilk Liu wrote:
+> It's not need to re-read and re-write SPI_CMD_REG, so remove it.
+>
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 > ---
->  .../bindings/arm/nxp/nxp,lpc3220-wakeup.txt        | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/nxp/nxp,lpc3220-wakeup.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/nxp/nxp,lpc3220-wakeup.txt b/Documentation/devicetree/bindings/arm/nxp/nxp,lpc3220-wakeup.txt
-> new file mode 100644
-> index 0000000..803728f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/nxp/nxp,lpc3220-wakeup.txt
-> @@ -0,0 +1,41 @@
-> +NXP LPC32xx Wakeup Controller
-> +
-> +Required properties:
-> +- compatible: should be "nxp,lpc3220-wakeup"
-> +- reg:  should contain wakeup controller registers location and length
-> +- #wakeup-cells: must be 2, the first cell describes wakeup source on
-> +  the controller, the second cell is a hardware interrupt number on IC.
+>   drivers/spi/spi-mt65xx.c |    3 ---
+>   1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+> index 7840067..6c1a96e 100644
+> --- a/drivers/spi/spi-mt65xx.c
+> +++ b/drivers/spi/spi-mt65xx.c
+> @@ -154,9 +154,6 @@ static int mtk_spi_prepare_message(struct spi_master *master,
+>   		reg_val |= SPI_CMD_CPOL;
+>   	else
+>   		reg_val &= ~SPI_CMD_CPOL;
+> -	writel(reg_val, mdata->base + SPI_CMD_REG);
+> -
+> -	reg_val = readl(mdata->base + SPI_CMD_REG);
+>
+>   	/* set the mlsbx and mlsbtx */
+>   	if (chip_config->tx_mlsb)
+>
 
-This probably needs to be done differently. For one, we already have a 
-common property "wakeup-source" with different meaning.
-
-Marc, Is there an example of using stacked irqdomain and mapping of irq 
-numbers to wakeup numbers?
-
-Rob
-
-> +
-> +Examples:
-> +
-> +	/* System Control Block */
-> +	scb {
-> +		compatible = "simple-bus";
-> +		ranges = <0x0 0x040004000 0x00001000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		wakeup_int: wakeup-controller@20 {
-> +			compatible = "nxp,lpc3220-wakeup";
-> +			reg = <0x20 0x10>;
-> +			#wakeup-cells = <2>;
-> +		};
-> +
-> +		wakeup_pin: wakeup-controller@30 {
-> +			compatible = "nxp,lpc3220-wakeup";
-> +			reg = <0x30 0x10>;
-> +			#wakeup-cells = <2>;
-> +		};
-> +	};
-> +
-> +	/* Main Interrupt Controller */
-> +	mic: interrupt-controller@40008000 {
-> +		compatible = "nxp,lpc3220-mic";
-> +		reg = <0x40008000 0x4000>;
-> +		interrupt-controller;
-> +		interrupt-controller-name = "mic";
-> +		#interrupt-cells = <2>;
-> +
-> +		wakeup-sources = <&wakeup_int 7 29>,
-> +				 <&wakeup_int 25 27>;
-> +	};
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
