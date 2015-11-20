@@ -1,52 +1,76 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] ARM: dts: add support for NS, NSP, and NS2 clocks
-Date: Fri, 20 Nov 2015 09:12:19 -0800
-Message-ID: <564F5473.9020608@broadcom.com>
-References: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH 10/13] ARM64: ACPI: Check if it runs on Xen to enable or
+ disable ACPI
+Date: Fri, 20 Nov 2015 17:20:25 +0000
+Message-ID: <alpine.DEB.2.02.1511201717170.1107@kaball.uk.xensource.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+ <1447754231-7772-11-git-send-email-shannon.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448032640-27713-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1447754231-7772-11-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
+> a /hypervisor node in DT. So check if it needs to enable ACPI.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/kernel/acpi.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> index 19de753..7b67426 100644
+> --- a/arch/arm64/kernel/acpi.c
+> +++ b/arch/arm64/kernel/acpi.c
+> @@ -62,10 +62,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
+>  {
+>  	/*
+>  	 * Return 1 as soon as we encounter a node at depth 1 that is
+> -	 * not the /chosen node.
+> +	 * not the /chosen node or to Xen initial domain that is not
+> +	 * either /chosen or /hypervisor node.
 
-On 11/20/2015 7:17 AM, Jon Mason wrote:
-> Changes in v3:
-> Tweaked the NSP entry names, per Ray Jui
->
-> Changes in v2:
-> Rebased off of outstanding NSP DT patches and tweaked the entry names
-> per Ray Jui
->
->
-> This patch series adds device tree support for the Broadcom Northstar,
-> Northstar Plus, and Northstar 2 clocks.
->
-> Last sent as an RFC (see https://lkml.org/lkml/2015/10/13/882) due to
-> the inability to merge because of the driver dependencies.  Those
-> necessary driver changes were merged into 4.4.  All comments have been
-> addressed and it is ready to be pulled in.
->
->
-> Jon Mason (3):
->    ARM: dts: enable clock support for BCM5301X
->    ARM: dts: enable clock support for Broadcom NSP
->    ARM64: dts: enable clock support for Broadcom NS2
->
->   arch/arm/boot/dts/bcm-nsp.dtsi        | 81 ++++++++++++++++++++++++------
->   arch/arm/boot/dts/bcm5301x.dtsi       | 92 +++++++++++++++++++++++++++--------
->   arch/arm64/boot/dts/broadcom/ns2.dtsi | 80 +++++++++++++++++++++++++++++-
->   3 files changed, 216 insertions(+), 37 deletions(-)
->
+* not the /chosen node, or /hypervisor node when running on Xen.
 
-This entire patch series looks good to me! Thanks!
+>  	 */
+>  	if (depth == 1 && (strcmp(uname, "chosen") != 0))
+> -		return 1;
+> +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
+> +			return 1;
 
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Please add { } around the inner if statement.
+
+
+>  	return 0;
+>  }
+>  
+> @@ -179,8 +182,9 @@ void __init acpi_boot_table_init(void)
+>  	/*
+>  	 * Enable ACPI instead of device tree unless
+>  	 * - ACPI has been disabled explicitly (acpi=off), or
+> -	 * - the device tree is not empty (it has more than just a /chosen node)
+> -	 *   and ACPI has not been force enabled (acpi=force)
+> +	 * - the device tree is not empty (it has more than just a /chosen node
+> +	 *   or to Xen initial domain it has more than a /chosen node and
+> +	 *   /hypervisor node) and ACPI has not been force enabled (acpi=force)
+
+the device tree is not empty (it has more than just a /chosen node, and
+an /hypervisor node when running on Xen
+
+
+>  	 */
+>  	if (param_acpi_off ||
+>  	    (!param_acpi_force && of_scan_flat_dt(dt_scan_depth1_nodes, NULL)))
+> -- 
+> 2.1.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
