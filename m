@@ -1,144 +1,85 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 5/5] arm: dts: qcom: Add aliases for PMICs
-Date: Fri, 20 Nov 2015 15:31:20 -0800
-Message-ID: <1448062280-15406-6-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v2 4/5] arm64: dts: qcom: Alias pm8916 on msm8916 devices
+Date: Fri, 20 Nov 2015 15:31:19 -0800
+Message-ID: <1448062280-15406-5-git-send-email-sboyd@codeaurora.org>
 References: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andy Gross <agross@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add an alias for the PMICs found on qcom based SoCs so that the
-newly updated dtbTool can find the PMIC compatible string and add
-the pmic-id element to the QCDT header.
+Add an alias for pm8916 on msm8916 based SoCs so that the newly
+updated dtbTool can find the pmic compatible string and add the
+pmic-id element to the QCDT header.
 
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts | 2 ++
- arch/arm/boot/dts/qcom-apq8084-ifc6540.dts     | 1 +
- arch/arm/boot/dts/qcom-apq8084-mtp.dts         | 1 +
- arch/arm/boot/dts/qcom-pm8841.dtsi             | 8 ++++----
- arch/arm/boot/dts/qcom-pm8941.dtsi             | 8 ++++----
- arch/arm/boot/dts/qcom-pma8084.dtsi            | 8 ++++----
- 6 files changed, 16 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/pm8916.dtsi      | 6 +++---
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-index 835bdc71c5ba..c0e205315042 100644
---- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -8,6 +8,8 @@
- 
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 6b8abbe68746..46bfcb9b2e84 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -20,6 +20,7 @@
  	aliases {
  		serial0 = &blsp1_uart2;
-+		usid0 = &pm8941_0;
-+		usid4 = &pm8841_0;
+ 		serial1 = &blsp1_uart1;
++		usid0 = &pm8916_0;
  	};
  
  	chosen {
-diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-index 32aaa9d45228..2052b84a77c6 100644
---- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-+++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-@@ -7,6 +7,7 @@
- 
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi
+index a1aa0b201e92..ceeb8a6feed6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi
+@@ -17,6 +17,7 @@
+ / {
  	aliases {
- 		serial0 = &blsp2_uart2;
-+		usid0 = &pma8084_0;
+ 		serial0 = &blsp1_uart2;
++		usid0 = &pm8916_0;
  	};
  
  	chosen {
-diff --git a/arch/arm/boot/dts/qcom-apq8084-mtp.dts b/arch/arm/boot/dts/qcom-apq8084-mtp.dts
-index 3016c7048d44..d174d15bcf70 100644
---- a/arch/arm/boot/dts/qcom-apq8084-mtp.dts
-+++ b/arch/arm/boot/dts/qcom-apq8084-mtp.dts
-@@ -7,6 +7,7 @@
- 
- 	aliases {
- 		serial0 = &blsp2_uart2;
-+		usid0 = &pma8084_0;
- 	};
- 
- 	chosen {
-diff --git a/arch/arm/boot/dts/qcom-pm8841.dtsi b/arch/arm/boot/dts/qcom-pm8841.dtsi
-index 8f1a0b162017..523bee959f98 100644
---- a/arch/arm/boot/dts/qcom-pm8841.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8841.dtsi
-@@ -3,8 +3,8 @@
- 
- &spmi_bus {
- 
--	usid4: pm8841@4 {
--		compatible = "qcom,spmi-pmic";
-+	pm8841_0: pm8841@4 {
-+		compatible = "qcom,pm8841", "qcom,spmi-pmic";
- 		reg = <0x4 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -27,8 +27,8 @@
- 		};
- 	};
- 
--	usid5: pm8841@5 {
--		compatible = "qcom,spmi-pmic";
-+	pm8841_1: pm8841@5 {
-+		compatible = "qcom,pm8841", "qcom,spmi-pmic";
- 		reg = <0x5 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index c19a48732b2d..12c1202ba2ca 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+index b222ece7e3d2..37432451ee4c 100644
+--- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
 @@ -4,8 +4,8 @@
  
  &spmi_bus {
  
--	usid0: pm8941@0 {
--		compatible ="qcom,spmi-pmic";
-+	pm8941_0: pm8941@0 {
-+		compatible = "qcom,pm8941", "qcom,spmi-pmic";
+-	usid0: pm8916@0 {
+-		compatible = "qcom,spmi-pmic";
++	pm8916_0: pm8916@0 {
++		compatible = "qcom,pm8916", "qcom,spmi-pmic";
  		reg = <0x0 SPMI_USID>;
  		#address-cells = <1>;
  		#size-cells = <0>;
-@@ -153,8 +153,8 @@
+@@ -90,7 +90,7 @@
  		};
  	};
  
--	usid1: pm8941@1 {
--		compatible = "qcom,spmi-pmic";
-+	pm8941_1: pm8941@1 {
-+		compatible = "qcom,pm8941", "qcom,spmi-pmic";
+-	usid1: pm8916@1 {
++	pm8916_1: pm8916@1 {
+ 		compatible = "qcom,spmi-pmic";
  		reg = <0x1 SPMI_USID>;
  		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
-index 5e240ccc08b7..10b8f9e6d60b 100644
---- a/arch/arm/boot/dts/qcom-pma8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
-@@ -4,8 +4,8 @@
- 
- &spmi_bus {
- 
--	usid0: pma8084@0 {
--		compatible = "qcom,spmi-pmic";
-+	pma8084_0: pma8084@0 {
-+		compatible = "qcom,pma8084", "qcom,spmi-pmic";
- 		reg = <0x0 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -101,8 +101,8 @@
- 		};
- 	};
- 
--	usid1: pma8084@1 {
--		compatible = "qcom,spmi-pmic";
-+	pma8084_1: pma8084@1 {
-+		compatible = "qcom,pma8084", "qcom,spmi-pmic";
- 		reg = <0x1 SPMI_USID>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
