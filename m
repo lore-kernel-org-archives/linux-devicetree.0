@@ -1,75 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: spi: Documentation for Hi6220 spi
- driver
-Date: Fri, 20 Nov 2015 09:39:05 -0600
-Message-ID: <20151120153905.GA8476@rob-hp-laptop>
-References: <1447922229-60552-1-git-send-email-zhongkaihua@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add document of mediatek efuse driver
+Date: Fri, 20 Nov 2015 09:40:29 -0600
+Message-ID: <20151120154029.GA10692@rob-hp-laptop>
+References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com>
+ <1447930014-19579-2-git-send-email-andrew-ct.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447922229-60552-1-git-send-email-zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kkojima-ugdvmXx6nUh3+QwDJ9on6Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+In-Reply-To: <1447930014-19579-2-git-send-email-andrew-ct.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 04:37:08PM +0800, Zhong Kaihua wrote:
-> dt-bindings: spi: Documentation for Hi6220 spi driver
+On Thu, Nov 19, 2015 at 06:46:52PM +0800, Andrew-CT Chen wrote:
+> Add Mediatek MT8173 EFUSE Devicetree binding file
 > 
-> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
->  .../devicetree/bindings/spi/spi-hi6220.txt         | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-hi6220.txt
+>  .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-hi6220.txt b/Documentation/devicetree/bindings/spi/spi-hi6220.txt
+> diff --git a/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
 > new file mode 100644
-> index 0000000..91aa169
+> index 0000000..74cf529
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-hi6220.txt
-> @@ -0,0 +1,45 @@
-> +Hi6220 SPI controller
+> +++ b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+> @@ -0,0 +1,36 @@
+> += Mediatek MTK-EFUSE device tree bindings =
+> +
+> +This binding is intended to represent MTK-EFUSE which is found in most Mediatek SOCs.
 > +
 > +Required properties:
-> +- compatible : "arm,pl022", "arm,primecell"
-
-If this is just a pl022, then you don't need this document as 
-spi_pl022.txt already exists. If HiSilicon has modified this block, then 
-you need an additional HiSi specific compatible string and add it to 
-spi_pl022.txt.
-
-> +- reg : Offset and length of the register set for the device
-> +- interrupts : Should contain SPI controller interrupt
-> +- num-cs : total number of chipselects
+> +- compatible: should be "mediatek,mt8173-efuse" or "mediatek,efuse"
+> +- reg: Should contain registers location and length
 > +
-> +Required Board Specific Properties:
-> +
-> +- #address-cells: should be 1.
-> +- #size-cells: should be 0.
-> +
-> +Optional properties:
-> +- cs-gpios : should specify GPIOs used for chipselects.
-> +  The gpios will be referred to as reg = <index> in the SPI child nodes.
-> +  If unspecified, a single SPI device without a chip select can be used.
-> +- dmas : Two or more DMA channel specifiers following the convention outlined
-> +         in bindings/dma/dma.txt
-> +- dma-names: Names for the dma channels, if present. There must be at
-> +	     least one channel named "tx" for transmit and named "rx" for
-> +             receive.
+> += Data cells =
+> +Are child nodes of MTK-EFUSE, bindings of which as described in
+> +bindings/nvmem/nvmem.txt
 > +
 > +Example:
-> +             spi_0: spi@f7106000 {
-> +			compatible = "arm,pl022", "arm,primecell";
-> +			reg = <0x0 0xf7106000 0x0 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			interrupts = <0 50 4>;
-> +			bus-id = <0>;
-
-This should be removed.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +	efuse: efuse@10206000 {
+> +		compatible = "mediatek,mt8173-efuse";
+> +		reg	   = <0 0x10206000 0 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		/* Data cells */
+> +		thermal_calibration: calib@528 {
+> +			reg = <0x528 0xc>;
+> +		};
+> +	};
+> +
+> += Data consumers =
+> +Are device nodes which consume nvmem data cells.
+> +
+> +For example:
+> +
+> +	thermal {
+> +		...
+> +		nvmem-cells = <&thermal_calibration>;
+> +		nvmem-cell-names = "calibration";
+> +	};
+> -- 
+> 1.9.1
+> 
