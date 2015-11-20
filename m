@@ -1,59 +1,131 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] irqchip: add support for Sigma Designs SMP86xx interrupt controller
-Date: Fri, 20 Nov 2015 12:15:06 +0000
-Message-ID: <yw1x7flceuk5.fsf@unicorn.mansr.com>
-References: <1447958026-3015-1-git-send-email-mans@mansr.com>
-	<1447958026-3015-3-git-send-email-mans@mansr.com>
-	<564F0BFD.3090703@free.fr>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v3 00/12] Add mipi dsi support for rk3288
+Date: Fri, 20 Nov 2015 12:19:54 +0000
+Message-ID: <CACvgo52SDcRtkNuNSF6dsw_TXV5wrMmW4_ci_4uX63CJrcBg+w@mail.gmail.com>
+References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
+	<CACvgo53YOMpbz1TdVmRBPPz4dv=X+8FoEo0ZcfN5DwbDYi2ZzQ@mail.gmail.com>
+	<564EC575.90109@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564F0BFD.3090703-GANU6spQydw@public.gmane.org> (Mason's message of "Fri, 20 Nov 2015
-	13:03:09 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <564EC575.90109@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-rockchip <linux-rockchip@lists.infradead.org>, Mark Yao <mark.yao@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Kever Yang <kever.yang@rock-chips.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Jeff Chen <cym@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>Russell King <linux>
 List-Id: devicetree@vger.kernel.org
 
-Mason <slash.tmp-GANU6spQydw@public.gmane.org> writes:
-
-> On 19/11/2015 19:33, Mans Rullgard wrote:
+On 20 November 2015 at 07:02, Chris Zhong <zyw@rock-chips.com> wrote:
+> Hi Emil
 >
->> This adds support for the secondary interrupt controller used in Sig=
-ma
->> Designs SMP86xx and SMP87xx chips.
->>=20
->> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/irqchip/Kconfig      |   5 +
->>  drivers/irqchip/Makefile     |   1 +
->>  drivers/irqchip/irq-tangox.c | 232 ++++++++++++++++++++++++++++++++=
-+++++++++++
->>  3 files changed, 238 insertions(+)
->>  create mode 100644 drivers/irqchip/irq-tangox.c
->>=20
->> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->> index 4d7294e..baf3345 100644
->> --- a/drivers/irqchip/Kconfig
->> +++ b/drivers/irqchip/Kconfig
->> @@ -193,3 +193,8 @@ config IRQ_MXS
->>  	def_bool y if MACH_ASM9260 || ARCH_MXS
->>  	select IRQ_DOMAIN
->>  	select STMP_DEVICE
->> +
->> +config TANGOX_IRQ
+> On 11/19/2015 10:41 PM, Emil Velikov wrote:
+>>
+>> On 19 November 2015 at 03:35, Chris Zhong <zyw@rock-chips.com> wrote:
+>>>
+>>> The rk3288 MIPI DSI is a Synopsys DesignWare MIPI DSI host controller
+>>> IP. This series adds support for a Synopsys DesignWare MIPI DSI host
+>>> controller DRM bridge driver and a rockchip MIPI DSI specific DRM
+>>> driver.
+>>>
+>>> This series also includes a DRM panel driver for BOE TV080WUM-NL0 panel.
+>>> This panel only use the MIPI DSI video mode.
+>>>
+>>> The MIPI DSI feature is tested on rk3288 evb board, backport them to
+>>> chrome os kernel v3.14, and it can display normally.
+>>>
+>>> This patchset is base on the patchset from Ying.liu@freescale.com.
+>>> <http://www.spinics.net/lists/dri-devel/msg77181.html>
+>>>
+>>>
+>>> Changes in v3:
+>>> move the dw_mipi_dsi.txt to
+>>> Documentation/devicetree/bindings/display/bridge
+>>> move dw_mipi_dsi_rockchip.txt to bindings/display/rockchip/
+>>> move boe,tv080wum-nl0.txt to bindings/display/panel/
+>>>
+>>> Changes in v2:
+>>> add the mipi clk id in a single patch
+>>> As Thierry.Reding comment, add a documentation for this panel.
+>>>
+>>> Chris Zhong (10):
+>>>    clk: rockchip: add id for mipidsi sclk on rk3288
+>>>    clk: rockchip: add mipidsi clocks on rk3288
+>>>    drm/rockchip: return a true clock rate to adjusted_mode
+>>>    drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
+>>
+>> Did you actually rewrite the patch from Liu Ying ?
 >
-> Question: Kevin Hilman said I should use tango instead of tangox
-> for the arch directory. Does that advice extend to Kconfig names?
+> I modify the dw_mipi_dsi.c based on the patch from Liu Ying.
+If you base your work on top of (i.e. you rework) someone else's patch
+you should retain this authorship and signed-off-by line. This of
+course is not limited to the above patch but a general rule, afaik.
 
-I suppose the same logic applies to all names.
+>>
+>> Out of curiosity what was the obstacle of this work getting merged ?
+>
+> There are different version dw controller, and it is too hard to merge them,
+> since most registers are different.
+Have you discussed this limitation with Liu ? Does your work handle
+both versions of the controller ? If so your commit message should say
+something about that. Here are some good sources on the whats and whys
+wrt writing good commit messages [1] [2]
 
---=20
-M=E5ns Rullg=E5rd
-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] http://who-t.blogspot.co.uk/2009/12/on-commit-messages.html
+[2] http://chris.beams.io/posts/git-commit/
+
+>>
+>>
+>>>    drm: rockchip: Support Synopsys DesignWare MIPI DSI host controller
+>>>    Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
+>>>    ARM: dts: rockchip: add rk3288 mipi_dsi nodes
+>>>    drm/panel: simple: Add support for BOE TV080WUM-NL0
+>>>    drm/panel: simple: Add boe,tv080wum-nl0 simple panel device tree
+>>>      binding
+>>
+>> As the DT people will tell you - there is no BOE vendor in
+>> bindings/vendor-prefixes.txt.
+>
+> Yes, I have post a verdor patch in v2 series,
+> <https://patchwork.kernel.org/patch/7530791/>
+> Maybe I should add it back to series with
+>
+> Acked-by: Rob Herring<robh@kernel.org>
+>
+If a patch has been reviewed/acked that's great. Add the tag, but
+please do not drop patches until they are merged. In the latter case
+you can mention that your series depends on branch X from repo Y.
+
+>>
+>>>    ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
+>>>
+>>> Liu Ying (2):
+>>>    drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
+>>>    Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
+>>>      bridge driver
+>>>
+>> >From the above 12 patches only ~6 reached this mailing list is that
+>> intentional ? Previously I've seen people CC dri-devel for their
+>> panel/bridge DT patches.
+>
+> I use the patman to post the series, forgot to add you and Thierry to the
+> to-list.
+> I will fix in next version series. Thanks for your reply.
+>
+No need to add me bth. Thierry on the other hand should be Cc'd on the
+patches where he's the maintainer.
+
+As the To/Cc list is already quite excessive - I'd suggest following
+the approach used by veterans in kernel development.
+
+I'm not a veteran kernel dev, but this is what I've noticed over the years:
+ - Subsystem foo - mailing-list, maintainer(s), and optionally the top
+1-2 developers
+ - Other subsystems - mailing-list and optionally the maintainer(s).
+
+Thus in the case of the panel driver you'll get - dri-devel, Thierry
+and optionally(?) devicetree
+For the DT binding for the panel driver - devicetree, Rob, dri-devel, Thierry.
+
+...I think you get the idea :-)
+
+Regards,
+Emil
