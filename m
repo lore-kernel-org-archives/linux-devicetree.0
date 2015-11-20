@@ -1,54 +1,47 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] pinctrl/lantiq: update devicetree bindings
- Documentation
-Date: Fri, 20 Nov 2015 08:26:40 -0600
-Message-ID: <20151120142640.GA3348@rob-hp-laptop>
-References: <1447995151-3857-1-git-send-email-mschiller@tdt.de>
+Subject: Re: [PATCH V2 3/3] ASoC: fsl_asrc: spba clock is needed by asrc
+ device
+Date: Fri, 20 Nov 2015 08:29:46 -0600
+Message-ID: <20151120142946.GA6949@rob-hp-laptop>
+References: <cover.1447997800.git.shengjiu.wang@freescale.com>
+ <7b40da78c965d4152c15794ec527c75198c9e2f9.1447997800.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447995151-3857-1-git-send-email-mschiller-h82pf8jx2gI@public.gmane.org>
+In-Reply-To: <7b40da78c965d4152c15794ec527c75198c9e2f9.1447997800.git.shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Schiller <mschiller-h82pf8jx2gI@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
+To: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 05:52:28AM +0100, Martin Schiller wrote:
-> This patch adds the new dedicated "lantiq,pinctrl-<chip>" compatible strings
-> to the devicetree bindings Documentation, where <chip> is one of "ase",
-> "danube", "xrx100", "xrx200" or "xrx300" and marks the "lantiq,pinctrl-xway"
-> and "lantiq,pinctrl-xr9" compatible strings as DEPRECATED.
-
-This could use a better subject. Every change to bindings are "updating 
-binding description."
-
+On Fri, Nov 20, 2015 at 02:17:53PM +0800, Shengjiu Wang wrote:
+> ASRC need to enable the spba clock, when sdma is using share peripheral
+> script. In this case, there is two spba master port is used, if don't
+> enable the clock, the spba bus will have arbitration issue, which may
+> cause read/write wrong data from/to ASRC registers
 > 
-> Signed-off-by: Martin Schiller <mschiller-h82pf8jx2gI@public.gmane.org>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
->  .../bindings/pinctrl/lantiq,pinctrl-xway.txt       | 108 +++++++++++++++++++--
->  1 file changed, 100 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/sound/fsl,asrc.txt |  2 ++
+>  sound/soc/fsl/fsl_asrc.c                             | 10 ++++++++++
+>  sound/soc/fsl/fsl_asrc.h                             |  1 +
+>  3 files changed, 13 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-> index e89b467..16daa12 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-> @@ -1,7 +1,14 @@
->  Lantiq XWAY pinmux controller
->  
->  Required properties:
-> -- compatible: "lantiq,pinctrl-xway" or "lantiq,pinctrl-xr9"
-> +- compatible: "lantiq,pinctrl-xway", (DEPRECATED: Use XWAY DANUBE Family)
-> +	      "lantiq,pinctrl-xr9", (DEPRECATED: Use XWAY xRX100/xRX200 Family)
-> +	      "lantiq,pinctrl-<chip>", where <chip> is:
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> index b93362a..d8eeee3 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> @@ -25,6 +25,8 @@ Required properties:
+>  	"mem"		  Peripheral access clock to access registers.
+>  	"ipg"		  Peripheral clock to driver module.
+>  	"asrck_<0-f>"	  Clock sources for input and output clock.
+> +	"spba"		  The spba clock is needed when two spba master port
+> +			  is used.
 
-<chip> first is preferred: lantiq,<chip>-pinctrl
+I'm assuming the same comments on patch 1 apply to all 3.
 
-> +		"ase" (XWAY AMAZON Family)
-> +		"danube" (XWAY DANUBE Family)
-> +		"xrx100" (XWAY xRX100 Family)
-> +		"xrx200" (XWAY xRX200 Family)
-> +		"xrx300" (XWAY xRX300 Family)
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
