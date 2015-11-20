@@ -1,66 +1,101 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH 03/13] arm/xen: Use xlated_setup_gnttab_pages to setup
- grant table
-Date: Fri, 20 Nov 2015 16:19:42 +0000
-Message-ID: <alpine.DEB.2.02.1511201618530.1107@kaball.uk.xensource.com>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
- <1447754231-7772-4-git-send-email-shannon.zhao@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: add binding for Sigma Designs SMP86xx
+ interrupt controller
+Date: Fri, 20 Nov 2015 10:23:04 -0600
+Message-ID: <20151120162304.GA28663@rob-hp-laptop>
+References: <1447958026-3015-1-git-send-email-mans@mansr.com>
+ <1447958026-3015-2-git-send-email-mans@mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447754231-7772-4-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447958026-3015-2-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, Nov 19, 2015 at 06:33:45PM +0000, Mans Rullgard wrote:
+> This adds a binding for the secondary interrupt controller in
+> Sigma Designs SMP86xx and SMP87xx chips.
 > 
-> Use xlated_setup_gnttab_pages to setup grant table. Then it doesn't rely
-> on DT or ACPI to pass the start address and size of grant table.
+> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../interrupt-controller/sigma,smp8642-intc.txt    | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
 > 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
+> new file mode 100644
+> index 0000000..f82cddf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
+> @@ -0,0 +1,47 @@
+> +Sigma Designs SMP86xx/SMP87xx secondary interrupt controller
+> +
+> +Required properties:
+> +- compatible: should be "sigma,smp8642-intc"
+> +- reg: physical address of MMIO region
+> +- interrupt-parent: phandle of parent interrupt controller
+> +- interrupt-controller: boolean
+> +
+> +One child node per control block with properties:
+> +- sigma,reg-offset: offset of registers from main base address
 
-It looks good. I'll wait for the final version of
-xlated_setup_gnttab_pages before acking it, but it is fine in principle.
+Your driver defines these offsets too.
 
+Do you expect to have many different variations here? If not, I would 
+get rid of all the child nodes and just hard code it in the driver.
 
->  arch/arm/xen/enlighten.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-> index eeeab07..7cb82f7 100644
-> --- a/arch/arm/xen/enlighten.c
-> +++ b/arch/arm/xen/enlighten.c
-> @@ -186,18 +186,10 @@ static int __init xen_guest_init(void)
->  {
->  	struct xen_add_to_physmap xatp;
->  	struct shared_info *shared_info_page = NULL;
-> -	struct resource res;
-> -	phys_addr_t grant_frames;
->  
->  	if (!xen_domain())
->  		return 0;
->  
-> -	if (of_address_to_resource(xen_node, GRANT_TABLE_PHYSADDR, &res)) {
-> -		pr_err("Xen grant table base address not found\n");
-> -		return -ENODEV;
-> -	}
-> -	grant_frames = res.start;
-> -
->  	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
->  	if (!xen_events_irq) {
->  		pr_err("Xen event channel interrupt not found\n");
-> @@ -232,7 +224,7 @@ static int __init xen_guest_init(void)
->  	if (xen_vcpu_info == NULL)
->  		return -ENOMEM;
->  
-> -	if (gnttab_setup_auto_xlat_frames(grant_frames)) {
-> +	if (xlated_setup_gnttab_pages()) {
->  		free_percpu(xen_vcpu_info);
->  		return -ENOMEM;
->  	}
+You could also simply do:
+
+sigma,reg-offset = <0x0 0x100 0x300>;
+
+> +- interrupt-controller: boolean
+> +- #interrupt-cells: should be <2>, interrupt index and flags per interrupts.txt
+> +- interrupts: interrupt spec of primary interrupt controller
+> +- label: (optional) name for display purposes
+
+NAK. Interrupt controllers are not really visible to users. Think of 
+physical labels on things like connectors or LEDs.
+
+> +
+> +Example:
+> +
+> +intc: interrupt-controller@6e000 {
+> +	compatible = "sigma,smp8642-intc";
+> +	reg = <0x6e000 0x400>;
+> +	interrupt-parent = <&gic>;
+> +	interrupt-controller;
+> +
+> +	irq0: irq0 {
+> +		sigma,reg-offset = <0x000>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +		label = "IRQ0";
+> +	};
+> +
+> +	irq1: irq1 {
+> +		sigma,reg-offset = <0x100>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +		label = "IRQ1";
+> +	};
+> +
+> +	irq2: irq2 {
+> +		sigma,reg-offset = <0x300>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +		label = "IRQ2";
+> +	};
+> +};
 > -- 
-> 2.1.0
+> 2.6.3
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
