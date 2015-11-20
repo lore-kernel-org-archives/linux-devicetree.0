@@ -1,62 +1,86 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] ASoC: sun4i-codec: Add support for PA
- gpio pin
-Date: Fri, 20 Nov 2015 18:02:06 +0100
-Message-ID: <20151120170206.GL32142@lukather>
-References: <1448027233-750-1-git-send-email-hdegoede@redhat.com>
- <20151120163047.GF32142@lukather>
- <CAGb2v66PPm+G=RfrLgNHNeVDed8BSuGaERKLgfsnzPpAzKcmsA@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Pramod Kumar <pramodku@broadcom.com>
+Subject: RE: [PATCH v2 6/7] Documentation: Rename gpio controller name from
+ cygnus to iproc
+Date: Fri, 20 Nov 2015 17:03:56 +0000
+Message-ID: <0C803592FC378B4E83922050AB46442A2ADA021F@SJEXCHMB10.corp.ad.broadcom.com>
+References: <1447905139-16002-1-git-send-email-pramodku@broadcom.com>
+ <1447905139-16002-7-git-send-email-pramodku@broadcom.com>
+ <20151120153437.GA7645@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="opU1cLy5W6t5oyvs"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFFEXWZAKGQEEMYOKWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66PPm+G=RfrLgNHNeVDed8BSuGaERKLgfsnzPpAzKcmsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151120153437.GA7645@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
---opU1cLy5W6t5oyvs
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Rob,
 
-On Sat, Nov 21, 2015 at 12:42:41AM +0800, Chen-Yu Tsai wrote:
-> >>  static void sun4i_codec_stop_playback(struct sun4i_codec *scodec)
-> >>  {
-> >> -     /*
-> >> -      * FIXME: according to the BSP, we might need to drive a PA
-> >> -      *        GPIO low here on some boards
-> >> -      */
-> >> -
-> >>       /* Disable DAC DRQ */
-> >>       regmap_update_bits(scodec->regmap, SUN4I_CODEC_DAC_FIFOC,
-> >>                          BIT(SUN4I_CODEC_DAC_FIFOC_DAC_DRQ_EN),
-> >>                          0);
-> >> +
-> >> +     if (scodec->gpio_pa)
-> >> +             gpiod_set_value_cansleep(scodec->gpio_pa, 0);
-> >
-> > You should rather plug that into DAPM, using a speaker widget, and a
-> > custom event function that will enable or disable the amplifier only
-> > when this audio path is going to be used.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: 20 November 2015 21:05
+> To: Pramod Kumar
+> Cc: Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; Ray Jui; Scott Branden;
+> Russell King; Linus Walleij; linux-gpio@vger.kernel.org; bcm-kernel-feedback-
+> list; Jason Uy; Masahiro Yamada; Thomas Gleixner; Laurent Pinchart;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; Jonas Gorski
+> Subject: Re: [PATCH v2 6/7] Documentation: Rename gpio controller name from
+> cygnus to iproc
 > 
-> Isn't an "amplifier" widget better suited?
+> On Thu, Nov 19, 2015 at 09:22:18AM +0530, Pramod Kumar wrote:
+> > Renamed gpio controller's driver name from cygnus to iproc to make it
+> > more generic so that all iProc based SoCs having the same gpio
+> > controller could use this.
+> >
+> > Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+> > Reviewed-by: Ray Jui <rjui@broadcom.com>
+> > Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> 
+> Where's my ack?
 
-This is exactly what SND_SOC_DAPM_SPK is used for:
-http://lxr.free-electrons.com/source/Documentation/sound/alsa/soc/dapm.txt#L273 ;)
+Somehow it got missed. I'm sincerely apologetic for it. Will add it.  
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---opU1cLy5W6t5oyvs--
+Regards,
+Pramod
+> 
+> > ---
+> >  .../bindings/pinctrl/{brcm,cygnus-gpio.txt => brcm,iproc-gpio.txt}    | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)  rename
+> > Documentation/devicetree/bindings/pinctrl/{brcm,cygnus-gpio.txt =>
+> > brcm,iproc-gpio.txt} (97%)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+> > b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> > similarity index 97%
+> > rename from
+> > Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+> > rename to
+> > Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> > index 8b1e5d1..e427792 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-gpio.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> > @@ -1,4 +1,4 @@
+> > -Broadcom Cygnus GPIO/PINCONF Controller
+> > +Broadcom iProc GPIO/PINCONF Controller
+> >
+> >  Required properties:
+> >
+> > @@ -7,7 +7,7 @@ Required properties:
+> >      "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
+> >
+> >  - reg:
+> > -    Define the base and range of the I/O address space that contains the
+> Cygnus
+> > +    Define the base and range of the I/O address space that contains
+> > + SoC
+> >  GPIO/PINCONF controller registers
+> >
+> >  - ngpios:
+> > --
+> > 1.9.1
+> >
