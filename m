@@ -1,45 +1,57 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/6] ARM: shmobile: r8a7778 dtsi: Use "arm,pl390" for GIC
-Date: Fri, 20 Nov 2015 13:36:55 +0100
-Message-ID: <1448023017-21816-5-git-send-email-geert+renesas@glider.be>
-References: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/6] ARM: shmobile: Use "arm,pl390" for GIC where appropriate
+Date: Fri, 20 Nov 2015 13:36:51 +0100
+Message-ID: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Replace the "arm,cortex-a9-gic" compatible value for the GIC by
-"arm,pl390", as the documentation states it is a PL390.
-This has been confirmed by reading the GICD_IIDR register, which reports
-0x0000043b (PL390 = 0x00, ARM = 0x43b).
+	Hi Simon, Magnus, Greg,
 
-This has no effect on runtime behavior, as currently the GIC driver
-treats both compatible values the same.
+On several Renesas ARM SoCs, the GIC is described in DT as being a
+Cortex A9 GIC, while it's actually a PL390. This is not only stated in
+the documentation, but has been verified by reading the GICD_IIDR
+register.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-You can read the GICD_IIDR register from U-Boot using
+This series
+  1. Corrects the DT compatible value to match reality,
+  2. Updates the board staging drivers to match the above.
 
-    md 0xfe438008 1
----
- arch/arm/boot/dts/r8a7778.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As both parts impact each other, I think it's best that all patches go
+in through Simon's ARM/SHMOBILE tree.
 
-diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
-index da76f5d95875ce11..fd10197c7dba6d7d 100644
---- a/arch/arm/boot/dts/r8a7778.dtsi
-+++ b/arch/arm/boot/dts/r8a7778.dtsi
-@@ -61,7 +61,7 @@
- 	};
- 
- 	gic: interrupt-controller@fe438000 {
--		compatible = "arm,cortex-a9-gic";
-+		compatible = "arm,pl390";
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg = <0xfe438000 0x1000>,
+Greg: can you please provide your ack for the last two patches?
+
+Thanks!
+
+Geert Uytterhoeven (6):
+  ARM: shmobile: r7s72100 dtsi: Use "arm,pl390" for GIC
+  ARM: shmobile: r8a7740 dtsi: Use "arm,pl390" for GIC
+  ARM: shmobile: emev2 dtsi: Use "arm,pl390" for GIC
+  ARM: shmobile: r8a7778 dtsi: Use "arm,pl390" for GIC
+  staging: board: kzm9d: Use "arm,pl390"
+  staging: board: armadillo800eva: Use "arm,pl390"
+
+ arch/arm/boot/dts/emev2.dtsi            | 2 +-
+ arch/arm/boot/dts/r7s72100.dtsi         | 2 +-
+ arch/arm/boot/dts/r8a7740.dtsi          | 2 +-
+ arch/arm/boot/dts/r8a7778.dtsi          | 2 +-
+ drivers/staging/board/armadillo800eva.c | 2 +-
+ drivers/staging/board/kzm9d.c           | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
