@@ -1,16 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sun4i: Add backlight node to
- iNet1 tablet
-Date: Fri, 20 Nov 2015 17:38:18 +0100
-Message-ID: <20151120163818.GG32142@lukather>
+Subject: Re: [PATCH 2/4] ARM: dts: sun5i: Add backlight node to
+ UTOO P66 tablet
+Date: Fri, 20 Nov 2015 17:39:16 +0100
+Message-ID: <20151120163916.GH32142@lukather>
 References: <1448027950-14629-1-git-send-email-hdegoede@redhat.com>
+ <1448027950-14629-2-git-send-email-hdegoede@redhat.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SKW69dzTt3T8RCN0"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB64YXWZAKGQE74FOVSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="5joxkA65nhhP20dL"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNUZXWZAKGQERFTBELY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448027950-14629-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1448027950-14629-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -22,23 +23,20 @@ To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---SKW69dzTt3T8RCN0
+--5joxkA65nhhP20dL
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Fri, Nov 20, 2015 at 02:59:07PM +0100, Hans de Goede wrote:
-> Add a node describing the lcd panel backlight on the iNet1 tablet.
+On Fri, Nov 20, 2015 at 02:59:08PM +0100, Hans de Goede wrote:
+> Add a node describing the lcd panel backlight on the UTOO P66 tablet.
 > 
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Applied. This patch was not applying. Please either mention the
-dependency between your patch sets or base them on top of linus' rc's
-or my branches.
-
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---SKW69dzTt3T8RCN0--
+--5joxkA65nhhP20dL--
