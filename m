@@ -1,184 +1,31 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH v3 2/3] ARM: dts: enable clock support for Broadcom NSP
-Date: Fri, 20 Nov 2015 10:17:19 -0500
-Message-ID: <1448032640-27713-3-git-send-email-jonmason@broadcom.com>
-References: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: sun5i: Add i2c axp152 pmic
+ support for Auxtek T004 boards
+Date: Fri, 20 Nov 2015 23:18:05 +0800
+Message-ID: <CAGb2v64sJCib3ahhinUSUnmu5E1MXp3T+pgO1p8QQNhjdFZFnQ@mail.gmail.com>
+References: <1448027950-14629-1-git-send-email-hdegoede@redhat.com> <1448027950-14629-4-git-send-email-hdegoede@redhat.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRHTXSZAKGQE2U5MUWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1448027950-14629-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace current device tree dummy clocks with real clock support for
-Broadcom Northstar Plus SoC
+On Fri, Nov 20, 2015 at 9:59 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
+>
+> Add a node describing the AXP152 pmic used on Auxtek T004 boards.
+>
+> Signed-off-by: Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 81 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 66 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index b74438c..d9bfc56 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -32,6 +32,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/clock/bcm-nsp.h>
- 
- #include "skeleton.dtsi"
- 
-@@ -42,7 +43,7 @@
- 
- 	mpcore {
- 		compatible = "simple-bus";
--		ranges = <0x00000000 0x19020000 0x00003000>;
-+		ranges = <0x00000000 0x19000000 0x00023000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -58,41 +59,48 @@
- 			};
- 		};
- 
--		timer@0200 {
-+		a9pll: arm_clk@00000 {
-+			#clock-cells = <0>;
-+			compatible = "brcm,nsp-armpll";
-+			clocks = <&osc>;
-+			reg = <0x00000 0x1000>;
-+		};
-+
-+		timer@20200 {
- 			compatible = "arm,cortex-a9-global-timer";
--			reg = <0x0200 0x100>;
-+			reg = <0x20200 0x100>;
- 			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&periph_clk>;
- 		};
- 
--		twd-timer@0600 {
-+		twd-timer@20600 {
- 			compatible = "arm,cortex-a9-twd-timer";
--			reg = <0x0600 0x20>;
-+			reg = <0x20600 0x20>;
- 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
- 						  IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&periph_clk>;
- 		};
- 
--		twd-watchdog@0620 {
-+		twd-watchdog@20620 {
- 			compatible = "arm,cortex-a9-twd-wdt";
--			reg = <0x0620 0x20>;
-+			reg = <0x20620 0x20>;
- 			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
- 						  IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&periph_clk>;
- 		};
- 
--		gic: interrupt-controller@1000 {
-+		gic: interrupt-controller@21000 {
- 			compatible = "arm,cortex-a9-gic";
- 			#interrupt-cells = <3>;
- 			#address-cells = <0>;
- 			interrupt-controller;
--			reg = <0x1000 0x1000>,
--			      <0x0100 0x100>;
-+			reg = <0x21000 0x1000>,
-+			      <0x20100 0x100>;
- 		};
- 
- 		L2: l2-cache {
- 			compatible = "arm,pl310-cache";
--			reg = <0x2000 0x1000>;
-+			reg = <0x22000 0x1000>;
- 			cache-unified;
- 			cache-level = <2>;
- 		};
-@@ -103,10 +111,34 @@
- 		#size-cells = <1>;
- 		ranges;
- 
--		periph_clk: periph_clk {
-+		osc: oscillator {
-+			#clock-cells = <0>;
- 			compatible = "fixed-clock";
-+			clock-frequency = <25000000>;
-+		};
-+
-+		iprocmed: iprocmed {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
-+
-+		iprocslow: iprocslow {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&genpll BCM_NSP_GENPLL_IPROCFAST_CLK>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+		};
-+
-+		periph_clk: periph_clk {
- 			#clock-cells = <0>;
--			clock-frequency = <500000000>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&a9pll>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
- 		};
- 	};
- 
-@@ -120,7 +152,7 @@
- 			compatible = "ns16550a";
- 			reg = <0x0300 0x100>;
- 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--			clock-frequency = <62499840>;
-+			clocks = <&osc>;
- 			status = "disabled";
- 		};
- 
-@@ -128,7 +160,7 @@
- 			compatible = "ns16550a";
- 			reg = <0x0400 0x100>;
- 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--			clock-frequency = <62499840>;
-+			clocks = <&osc>;
- 			status = "disabled";
- 		};
- 
-@@ -226,5 +258,24 @@
- 			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
- 			clock-frequency = <100000>;
- 		};
-+
-+		lcpll0: lcpll0@3f100 {
-+			#clock-cells = <1>;
-+			compatible = "brcm,nsp-lcpll0";
-+			reg = <0x3f100 0x14>;
-+			clocks = <&osc>;
-+			clock-output-names = "lcpll0", "pcie_phy", "sdio",
-+					     "ddr_phy";
-+		};
-+
-+		genpll: genpll@3f140 {
-+			#clock-cells = <1>;
-+			compatible = "brcm,nsp-genpll";
-+			reg = <0x3f140 0x24>;
-+			clocks = <&osc>;
-+			clock-output-names = "genpll", "phy", "ethernetclk",
-+					     "usbclk", "iprocfast", "sata1",
-+					     "sata2";
-+		};
- 	};
- };
--- 
-1.9.1
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
