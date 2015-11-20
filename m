@@ -1,83 +1,214 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 09/11] clk: lpc32xx: add common clock framework driver
-Date: Fri, 20 Nov 2015 21:20:26 +0100
-Message-ID: <4933690.HhBPeGYMb3@wuerfel>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com> <3762298.NKYXldtldq@wuerfel> <564F6172.3090509@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <564F6172.3090509@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-clk@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 1/6] clk: berlin: add common pll driver
+Date: Fri, 20 Nov 2015 21:46:18 +0100
+Message-ID: <564F869A.3090904@gmail.com>
+References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
+ <1448008952-1787-2-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448008952-1787-2-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, antoine.tenart@free-electrons.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 November 2015 20:07:46 Vladimir Zapolskiy wrote:
-> On 20.11.2015 16:04, Arnd Bergmann wrote:
-> > On Friday 20 November 2015 03:05:09 Vladimir Zapolskiy wrote:
-> >> +
-> >> +struct clk_proto_t {
-> >> +       const char *name;
-> >> +       const u8 parents[LPC32XX_CLK_PARENTS_MAX];
-> >> +       u8 num_parents;
-> >> +       unsigned long flags;
-> >> +};
-> >> +
-> >> +#define CLK_PREFIX(LITERAL)            LPC32XX_CLK_ ## LITERAL
-> >> +#define NUMARGS(...)   (sizeof((int[]){__VA_ARGS__})/sizeof(int))
-> >> +
-> >> +#define LPC32XX_CLK_DEFINE(_idx, _name, _flags, ...)           \
-> >> +       [CLK_PREFIX(_idx)] = {                                  \
-> >> +               .name = #_name,                                 \
-> >> +               .flags = _flags,                                \
-> >> +               .parents = { __VA_ARGS__ },                     \
-> >> +               .num_parents = NUMARGS(__VA_ARGS__),            \
-> >> +        }
-> >> +
-> > 
-> > Try to not outsmart yourself with the macros. It's better to avoid
-> > string concatenation so it's possible to grep for uses of some
-> > constant.
-> > 
-> > I would probably not use a macro at all here and just open-code the
-> > entire table. If you ensure that '0' is not a valid parent, then
-> > you can leave out the .num_parents field and just look for the
-> > zero-termination.
+On 20.11.2015 09:42, Jisheng Zhang wrote:
+> Add pll driver for Marvell SoCs newer than BG2, BG2CD, BG2Q.
 > 
-> Macros are here for simplicity, code size reduction and to avoid some
-> stupid mistakes like different number of .parents and .num_parents.
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> ---
+>  drivers/clk/berlin/Makefile |   1 +
+>  drivers/clk/berlin/pll.c    | 133 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 drivers/clk/berlin/pll.c
 > 
-> I believe macro unwrapping in this code will add another 1000 LoC and
-> will result in quite unreadable and less maintainable code.
+> diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
+> index 2a36ab7..eee42b0 100644
+> --- a/drivers/clk/berlin/Makefile
+> +++ b/drivers/clk/berlin/Makefile
+> @@ -1,4 +1,5 @@
+>  obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
+> +obj-y += pll.o
 
-I mean specifically the macro above:
+Jisheng,
 
-static const struct clk_proto_t clk_proto[LPC32XX_CLK_CCF_MAX] __initconst = {
-+       LPC32XX_CLK_DEFINE(XTAL, xtal, 0x0),
-+       LPC32XX_CLK_DEFINE(XTAL_32K, xtal_32k, 0x0),
-+
-+       LPC32XX_CLK_DEFINE(RTC, rtc, 0x0, LPC32XX_CLK_XTAL_32K),
-+       LPC32XX_CLK_DEFINE(OSC, osc, CLK_IGNORE_UNUSED, LPC32XX_CLK_XTAL),
-+       LPC32XX_CLK_DEFINE(SYS, sys, CLK_IGNORE_UNUSED,
-+               LPC32XX_CLK_OSC, LPC32XX_CLK_PLL397X),
-+       LPC32XX_CLK_DEFINE(PLL397X, pll_397x, CLK_IGNORE_UNUSED,
-+               LPC32XX_CLK_RTC),
+please keep the naming style of files as we already have,
+e.g. at least name the files for this driver berlin4-pll.
 
-can become
+Even better you find the differences and merge it with
+the berlin2-pll driver.
 
-static const struct clk_proto_t clk_proto[] __initconst = {
-	[LPC32XX_CLK_XTAL]	= { "xtal" },
-	[LPC32XX_CLK_XTAL_32K]	= { "xtal_32k" },
-	[LPC32XX_CLK_RTC]	= { "rtc",
-			.parents = { LPC32XX_CLK_XTAL_32K, 0 } },
-	[LPC32XX_CLK_OSC]	= { "osc", CLK_IGNORE_UNUSED,
-			.parents = { LPC32XX_CLK_XTAL, 0 } },
-	[LPC32XX_CLK_SYS]	= { "sys", CLK_IGNORE_UNUSED,
-			.parents = { LPC32XX_CLK_OSC, LPC32XX_CLK_PLL397X, 0) },
-	[LPC32XX_CLK_PLL397X]	= { "pll_397x", CLK_IGNORE_UNUSED,
-			.parents = { LPC32XX_CLK_RTC, 0 },
+In general, I am not going to Ack any Berlin clock drivers
+that expose the clock tree in any way. We recently merged
+the Berlin2 clock stuff to a common OF node, I am not going
+through the same mess for BG4 again.
 
-Not harder to read at all, not really longer, but easier to grep for.
+>  obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
+>  obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
+>  obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
+> diff --git a/drivers/clk/berlin/pll.c b/drivers/clk/berlin/pll.c
+> new file mode 100644
+> index 0000000..435445e
+> --- /dev/null
+> +++ b/drivers/clk/berlin/pll.c
+> @@ -0,0 +1,133 @@
+> +/*
+> + * Copyright (c) 2015 Marvell Technology Group Ltd.
+> + *
+> + * Author: Jisheng Zhang <jszhang@marvell.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#define PLL_CTRL0	0x0
+> +#define PLL_CTRL1	0x4
+> +#define PLL_CTRL2	0x8
+> +#define PLL_CTRL3	0xC
+> +#define PLL_CTRL4	0x10
+> +#define PLL_STATUS	0x14
+> +
+> +#define PLL_SOURCE_MAX	2
+> +
+> +struct berlin_pll {
+> +	struct clk_hw	hw;
+> +	void __iomem	*ctrl;
+> +	void __iomem	*bypass;
+> +	u8		bypass_shift;
+> +};
+> +
+> +#define to_berlin_pll(hw)       container_of(hw, struct berlin_pll, hw)
+> +
+> +static unsigned long berlin_pll_recalc_rate(struct clk_hw *hw,
+> +					    unsigned long parent_rate)
+> +{
+> +	u32 val, fbdiv, rfdiv, vcodivsel, bypass;
+> +	struct berlin_pll *pll = to_berlin_pll(hw);
+> +
+> +	bypass = readl_relaxed(pll->bypass);
+> +	if (bypass & (1 << pll->bypass_shift))
+> +		return parent_rate;
 
-	Arnd
+Bypass could be modelled as a ccf clock-mux:
+
+REF ---+------------|\
+       |    _____   | |-- OUT
+       +---| PLL |--|/
+
+Please reuse what is already available.
+
+> +	val = readl_relaxed(pll->ctrl + PLL_CTRL0);
+> +	fbdiv = (val >> 12) & 0x1FF;
+> +	rfdiv = (val >> 3) & 0x1FF;
+
+Please get rid of any magic numbers.
+
+> +	val = readl_relaxed(pll->ctrl + PLL_CTRL1);
+> +	vcodivsel = (val >> 9) & 0x7;
+> +	return parent_rate * fbdiv * 4 / rfdiv /
+> +		(1 << vcodivsel);
+
+A comment at the top of recalc_rate how output frequency is
+calculated would be great.
+
+> +}
+> +
+> +static u8 berlin_pll_get_parent(struct clk_hw *hw)
+> +{
+> +	struct berlin_pll *pll = to_berlin_pll(hw);
+> +	u32 bypass = readl_relaxed(pll->bypass);
+> +
+> +	return !!(bypass & (1 << pll->bypass_shift));
+> +}
+> +
+> +static const struct clk_ops berlin_pll_ops = {
+> +	.recalc_rate	= berlin_pll_recalc_rate,
+> +	.get_parent	= berlin_pll_get_parent,
+> +};
+> +
+> +static void __init berlin_pll_setup(struct device_node *np)
+> +{
+> +	struct clk_init_data init;
+> +	struct berlin_pll *pll;
+> +	const char *parent_names[PLL_SOURCE_MAX];
+> +	struct clk *clk;
+> +	int ret, num_parents;
+> +	u8 bypass_shift;
+> +
+> +	num_parents = of_clk_get_parent_count(np);
+> +	if (num_parents <= 0 || num_parents > PLL_SOURCE_MAX)
+> +		return;
+> +
+> +	ret = of_property_read_u8(np, "bypass-shift", &bypass_shift);
+> +	if (ret)
+> +		return;
+
+The name "bypass" implies you can either choose to output the PLL
+generated clock or pass the parent clock, i.e. bypass the PLL.
+
+How can you choose from two parents then?
+
+> +	of_clk_parent_fill(np, parent_names, num_parents);
+> +
+> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> +	if (!pll)
+> +		return;
+> +
+> +	pll->ctrl = of_iomap(np, 0);
+> +	if (WARN_ON(!pll->ctrl))
+> +		goto err_iomap_ctrl;
+> +
+> +	pll->bypass = of_iomap(np, 1);
+> +	if (WARN_ON(!pll->bypass))
+> +		goto err_iomap_bypass;
+> +
+> +	init.name = np->name;
+> +	init.flags = 0;
+> +	init.ops = &berlin_pll_ops;
+> +	init.parent_names = parent_names;
+> +	init.num_parents = num_parents;
+> +
+> +	pll->hw.init = &init;
+> +	pll->bypass_shift = bypass_shift;
+> +
+> +	clk = clk_register(NULL, &pll->hw);
+> +	if (WARN_ON(IS_ERR(clk)))
+> +		goto err_clk_register;
+> +
+> +	ret = of_clk_add_provider(np, of_clk_src_simple_get, clk);
+> +	if (WARN_ON(ret))
+> +		goto err_clk_add;
+> +	return;
+> +
+> +err_clk_add:
+> +	clk_unregister(clk);
+> +err_clk_register:
+> +	iounmap(pll->bypass);
+> +err_iomap_bypass:
+> +	iounmap(pll->ctrl);
+> +err_iomap_ctrl:
+> +	kfree(pll);
+> +}
+> +CLK_OF_DECLARE(berlin_pll, "marvell,berlin-pll", berlin_pll_setup);
+
+Just to repeat: I will not Ack any clk driver that is exposed to DT
+except a single bg4 clock complex node. Have a look at BG2x clock
+drivers and rework bg4 to have the same structure.
+
+Sebastian
