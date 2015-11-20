@@ -1,264 +1,114 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 06/11] arm: dts: lpc32xx: add clock properties to device nodes
-Date: Fri, 20 Nov 2015 03:05:06 +0200
-Message-ID: <1447981511-29653-7-git-send-email-vz@mleia.com>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: soc: add document for rockchip reboot
+ notifier driver
+Date: Fri, 20 Nov 2015 09:16:35 +0800
+Message-ID: <564E7473.9080509@rock-chips.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <20151118225904.GA5429@rob-hp-laptop> <564D2331.8070503@rock-chips.com>
+ <2082288.pD4oKxtaXL@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447981511-29653-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <2082288.pD4oKxtaXL@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The change adds clock properties to all described peripheral devices,
-clock ids are taken from dt-bindings/clock/lpc32xx-clock.h
+Hi Heiko:
 
-Some existing drivers expect to get clock names, in those cases
-clock-names are added as well.
+On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 12:35, Heiko Stuebner wrote:
+> Hi Andy,
+>
+> Am Donnerstag, 19. November 2015, 09:17:37 schrieb Andy Yan:
+>> Hi Rob:
+>>
+>> On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 06:59, Rob Herring wrote:
+>>> On Wed, Nov 18, 2015 at 05:53:30PM +0800, Andy Yan wrote:
+>>>> Add devicetree binding document for rockchip reboot nofifier drive=
+r
+>>> Just reading the subject this is way too specific to the Linux driv=
+er
+>>> needs rather than a h/w description. Please don't create fake DT no=
+des
+>>> just to bind to drivers. Whatever &pmu is is probably what should h=
+ave
+>>> the DT node. Let the driver for it create child devices if you need
+>>> that.
+>>       This is note a fake DT nodes, we really need it to tell the dr=
+iver
+>>        which register to use to store the reboot mode. Because rockc=
+hip
+>>        use different register file to store the reboot mode on diffe=
+rent
+>>        platform, on rk3066,rk3188, rk3288,it use  one of the PMU
+>> register, on
+>>        the incoming RK3036, it use one of the GRF register, and it u=
+se
+>> one  of
+>>        the PMUGRF register for arm64 platform rk3368. On the other h=
+and, the
+>>        PMU/GRF/PMUGRF register file are mapped as "syscon", then ref=
+erenced
+>>        by other DT nodes by phandle. So maybe let it as a separate D=
+T
+>> node here
+>>        is better.
+> or alternatively we could do something similar to what the bl-switche=
+r
+> cupfreq-driver does. Take a look at
+>
+> drivers/cpufreq/arm_big_little.c
+> drivers/clk/clk-mb86s7x.c
+>
+> We already have the core restart-handler code in the clock-tree, so c=
+ould
+> maybe simply do the
+> 	platform_device_register_simple("rockchip-reboot", -1, NULL, 0);
+> in that common code?
+>
+> Though I'm not yet sure how to get the platform-data. I guess one opt=
+ion would
+> be to do things like the 3288 suspend code does (arch/arm/mach-rockch=
+ip/pm.c
+> at the bottom), by having the per-soc-data in the driver and then mat=
+ching
+> against the pmu. Because the pmu is not part of the clock controller =
+binding
+> (and probably also shouldn't be).
+>
+>
+> Heiko
+>
+>
+>
+>
+>
+    Thanks for your suggestion.
+     I have read the code you list above, if we implement the reboot=20
+notifier
+     driver like this, the driver need to add much more code to find th=
+e=20
+platform
+     data(like arch/arm/mach-rockhcip/pm.c), what's more, if we have a=20
+new soc
+     in the future and the soc use a different register here, we need=20
+modify the
+     driver to add a new platform data again, this will bring additiona=
+l=20
+work.
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/lpc32xx.dtsi | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+     Use the DT node pass the register will make the driver code simple=
+=20
+and clear.
+     Is there any hurt to put this information in the DT?
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 65023c1..792468e 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -13,6 +13,8 @@
- 
- #include "skeleton.dtsi"
- 
-+#include <dt-bindings/clock/lpc32xx-clock.h>
-+
- / {
- 	compatible = "nxp,lpc3220";
- 	interrupt-parent = <&mic>;
-@@ -57,6 +59,7 @@
- 		slc: flash@20020000 {
- 			compatible = "nxp,lpc3220-slc";
- 			reg = <0x20020000 0x1000>;
-+			clocks = <&clk LPC32XX_CLK_SLC>;
- 			status = "disabled";
- 		};
- 
-@@ -64,6 +67,7 @@
- 			compatible = "nxp,lpc3220-mlc";
- 			reg = <0x200a8000 0x11000>;
- 			interrupts = <11 0>;
-+			clocks = <&clk LPC32XX_CLK_MLC>;
- 			status = "disabled";
- 		};
- 
-@@ -71,6 +75,8 @@
- 			compatible = "arm,pl080", "arm,primecell";
- 			reg = <0x31000000 0x1000>;
- 			interrupts = <0x1c 0>;
-+			clocks = <&clk LPC32XX_CLK_DMA>;
-+			clock-names = "apb_pclk";
- 		};
- 
- 		usb {
-@@ -110,6 +116,8 @@
- 			compatible = "arm,pl110", "arm,primecell";
- 			reg = <0x31040000 0x1000>;
- 			interrupts = <0x0e 0>;
-+			clocks = <&clk LPC32XX_CLK_LCD>;
-+			clock-names = "apb_pclk";
- 			status = "disabled";
- 		};
- 
-@@ -117,11 +125,14 @@
- 			compatible = "nxp,lpc-eth";
- 			reg = <0x31060000 0x1000>;
- 			interrupts = <0x1d 0>;
-+			clocks = <&clk LPC32XX_CLK_MAC>;
- 		};
- 
- 		emc: memory-controller@31080000 {
- 			compatible = "arm,pl175", "arm,primecell";
- 			reg = <0x31080000 0x1000>;
-+			clocks = <&clk LPC32XX_CLK_DDRAM>, <&clk LPC32XX_CLK_DDRAM>;
-+			clock-names = "mpmcclk", "apb_pclk";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
-@@ -142,6 +153,8 @@
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x20084000 0x1000>;
- 				interrupts = <0x14 0>;
-+				clocks = <&clk LPC32XX_CLK_SSP0>;
-+				clock-names = "apb_pclk";
- 			};
- 
- 			spi1: spi@20088000 {
-@@ -153,6 +166,8 @@
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x2008c000 0x1000>;
- 				interrupts = <0x15 0>;
-+				clocks = <&clk LPC32XX_CLK_SSP1>;
-+				clock-names = "apb_pclk";
- 			};
- 
- 			spi2: spi@20090000 {
-@@ -169,6 +184,8 @@
- 				compatible = "arm,pl18x", "arm,primecell";
- 				reg = <0x20098000 0x1000>;
- 				interrupts = <0x0f 0>, <0x0d 0>;
-+				clocks = <&clk LPC32XX_CLK_SD>;
-+				clock-names = "apb_pclk";
- 				status = "disabled";
- 			};
- 
-@@ -185,6 +202,7 @@
- 				interrupts = <9 0>;
- 				clock-frequency = <13000000>;
- 				reg-shift = <2>;
-+				clocks = <&clk LPC32XX_CLK_UART5>;
- 				status = "disabled";
- 			};
- 
-@@ -194,6 +212,7 @@
- 				interrupts = <7 0>;
- 				clock-frequency = <13000000>;
- 				reg-shift = <2>;
-+				clocks = <&clk LPC32XX_CLK_UART3>;
- 				status = "disabled";
- 			};
- 
-@@ -203,6 +222,7 @@
- 				interrupts = <8 0>;
- 				clock-frequency = <13000000>;
- 				reg-shift = <2>;
-+				clocks = <&clk LPC32XX_CLK_UART4>;
- 				status = "disabled";
- 			};
- 
-@@ -212,6 +232,7 @@
- 				interrupts = <10 0>;
- 				clock-frequency = <13000000>;
- 				reg-shift = <2>;
-+				clocks = <&clk LPC32XX_CLK_UART6>;
- 				status = "disabled";
- 			};
- 
-@@ -222,6 +243,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				pnx,timeout = <0x64>;
-+				clocks = <&clk LPC32XX_CLK_I2C1>;
- 			};
- 
- 			i2c2: i2c@400A8000 {
-@@ -231,6 +253,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				pnx,timeout = <0x64>;
-+				clocks = <&clk LPC32XX_CLK_I2C2>;
- 			};
- 
- 			mpwm: mpwm@400E8000 {
-@@ -302,6 +325,7 @@
- 				compatible = "nxp,lpc3220-rtc";
- 				reg = <0x40024000 0x1000>;
- 				interrupts = <0x34 0>;
-+				clocks = <&clk LPC32XX_CLK_RTC>;
- 			};
- 
- 			gpio: gpio@40028000 {
-@@ -315,6 +339,8 @@
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4002C000 0x1000>;
- 				interrupts = <0x3 0>;
-+				clocks = <&clk LPC32XX_CLK_TIMER4>;
-+				clock-names = "timerclk";
- 				status = "disabled";
- 			};
- 
-@@ -322,17 +348,22 @@
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x40030000 0x1000>;
- 				interrupts = <0x4 0>;
-+				clocks = <&clk LPC32XX_CLK_TIMER5>;
-+				clock-names = "timerclk";
- 				status = "disabled";
- 			};
- 
- 			watchdog: watchdog@4003C000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
-+				clocks = <&clk LPC32XX_CLK_WDOG>;
- 			};
- 
- 			timer0: timer@40044000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x40044000 0x1000>;
-+				clocks = <&clk LPC32XX_CLK_TIMER0>;
-+				clock-names = "timerclk";
- 				interrupts = <0x10 0>;
- 			};
- 
-@@ -347,6 +378,7 @@
- 				compatible = "nxp,lpc3220-adc";
- 				reg = <0x40048000 0x1000>;
- 				interrupts = <0x27 0>;
-+				clocks = <&clk LPC32XX_CLK_ADC>;
- 				status = "disabled";
- 			};
- 
-@@ -354,6 +386,7 @@
- 				compatible = "nxp,lpc3220-tsc";
- 				reg = <0x40048000 0x1000>;
- 				interrupts = <0x27 0>;
-+				clocks = <&clk LPC32XX_CLK_ADC>;
- 				status = "disabled";
- 			};
- 
-@@ -361,6 +394,8 @@
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4004C000 0x1000>;
- 				interrupts = <0x11 0>;
-+				clocks = <&clk LPC32XX_CLK_TIMER1>;
-+				clock-names = "timerclk";
- 			};
- 
- 			key: key@40050000 {
-@@ -374,18 +409,22 @@
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x40058000 0x1000>;
- 				interrupts = <0x12 0>;
-+				clocks = <&clk LPC32XX_CLK_TIMER2>;
-+				clock-names = "timerclk";
- 				status = "disabled";
- 			};
- 
- 			pwm1: pwm@4005C000 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
-+				clocks = <&clk LPC32XX_CLK_PWM1>;
- 				status = "disabled";
- 			};
- 
- 			pwm2: pwm@4005C004 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
-+				clocks = <&clk LPC32XX_CLK_PWM2>;
- 				status = "disabled";
- 			};
- 
-@@ -393,6 +432,8 @@
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x40060000 0x1000>;
- 				interrupts = <0x13 0>;
-+				clocks = <&clk LPC32XX_CLK_TIMER3>;
-+				clock-names = "timerclk";
- 				status = "disabled";
- 			};
- 		};
--- 
-2.1.4
+     Andy
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
