@@ -1,92 +1,60 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v3 00/12] Add mipi dsi support for rk3288
-Date: Fri, 20 Nov 2015 15:02:13 +0800
-Message-ID: <564EC575.90109@rock-chips.com>
-References: <1447904131-29328-1-git-send-email-zyw@rock-chips.com>
- <CACvgo53YOMpbz1TdVmRBPPz4dv=X+8FoEo0ZcfN5DwbDYi2ZzQ@mail.gmail.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH V2 1/3] ASoC: fsl_esai: spba clock is needed by esai
+ device
+Date: Thu, 19 Nov 2015 23:39:06 -0800
+Message-ID: <20151120073905.GA3740@Asurada-CZ80>
+References: <cover.1447997800.git.shengjiu.wang@freescale.com>
+ <d5cb15bbd3563ed34c58c15b224495b854bca616.1447997800.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CACvgo53YOMpbz1TdVmRBPPz4dv=X+8FoEo0ZcfN5DwbDYi2ZzQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip <linux-rockchip@lists.infradead.org>, Mark Yao <mark.yao@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Kever Yang <kever.yang@rock-chips.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Jeff Chen <cym@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>Russell King <linux>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d5cb15bbd3563ed34c58c15b224495b854bca616.1447997800.git.shengjiu.wang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shengjiu Wang <shengjiu.wang@freescale.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, timur@tabi.org, Xiubo.Lee@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Emil
+On Fri, Nov 20, 2015 at 02:17:51PM +0800, Shengjiu Wang wrote:
 
-On 11/19/2015 10:41 PM, Emil Velikov wrote:
-> On 19 November 2015 at 03:35, Chris Zhong <zyw@rock-chips.com> wrote:
->> The rk3288 MIPI DSI is a Synopsys DesignWare MIPI DSI host controller
->> IP. This series adds support for a Synopsys DesignWare MIPI DSI host
->> controller DRM bridge driver and a rockchip MIPI DSI specific DRM
->> driver.
->>
->> This series also includes a DRM panel driver for BOE TV080WUM-NL0 panel.
->> This panel only use the MIPI DSI video mode.
->>
->> The MIPI DSI feature is tested on rk3288 evb board, backport them to
->> chrome os kernel v3.14, and it can display normally.
->>
->> This patchset is base on the patchset from Ying.liu@freescale.com.
->> <http://www.spinics.net/lists/dri-devel/msg77181.html>
->>
->>
->> Changes in v3:
->> move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
->> move dw_mipi_dsi_rockchip.txt to bindings/display/rockchip/
->> move boe,tv080wum-nl0.txt to bindings/display/panel/
->>
->> Changes in v2:
->> add the mipi clk id in a single patch
->> As Thierry.Reding comment, add a documentation for this panel.
->>
->> Chris Zhong (10):
->>    clk: rockchip: add id for mipidsi sclk on rk3288
->>    clk: rockchip: add mipidsi clocks on rk3288
->>    drm/rockchip: return a true clock rate to adjusted_mode
->>    drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
-> Did you actually rewrite the patch from Liu Ying ?
-I modify the dw_mipi_dsi.c based on the patch from Liu Ying.
-> Out of curiosity what was the obstacle of this work getting merged ?
-There are different version dw controller, and it is too hard to merge them,
-since most registers are different.
->
->>    drm: rockchip: Support Synopsys DesignWare MIPI DSI host controller
->>    Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
->>    ARM: dts: rockchip: add rk3288 mipi_dsi nodes
->>    drm/panel: simple: Add support for BOE TV080WUM-NL0
->>    drm/panel: simple: Add boe,tv080wum-nl0 simple panel device tree
->>      binding
-> As the DT people will tell you - there is no BOE vendor in
-> bindings/vendor-prefixes.txt.
-Yes, I have post a verdor patch in v2 series,
-<https://patchwork.kernel.org/patch/7530791/>
-Maybe I should add it back to series with
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> index d3b6b5f..f1d5351 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> @@ -27,6 +27,8 @@ Required properties:
+>  			  derive HCK, SCK and FS.
+>  	"fsys"		  The system clock derived from ahb clock used to
+>  			  derive HCK, SCK and FS.
+> +	"spba"		  The spba clock is needed when two spba master port
+> +			  is used.
 
-Acked-by: Rob Herring<robh@kernel.org>
+I was expecting a little bit more detail like:
 
->
->>    ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
->>
->> Liu Ying (2):
->>    drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
->>    Documentation: dt-bindings: Add bindings for Synopsys DW MIPI DSI DRM
->>      bridge driver
->>
-> >From the above 12 patches only ~6 reached this mailing list is that
-> intentional ? Previously I've seen people CC dri-devel for their
-> panel/bridge DT patches.
-I use the patman to post the series, forgot to add you and Thierry to 
-the to-list.
-I will fix in next version series. Thanks for your reply.
++	"spba"		The spba clock is required when ESAI is placed as
+			a bus slave of the Shared Peripheral Bus and when
+			two or more bus masters (CPU, DMA or DSP) try to
+			access it. This property is optional depending on
+			the SoC design.
 
->
-> Regards,
-> Emil
->
->
->
+> diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+> index 504e731..8749f53 100644
+> --- a/sound/soc/fsl/fsl_esai.c
+> +++ b/sound/soc/fsl/fsl_esai.c
+> @@ -54,6 +54,7 @@ struct fsl_esai {
+>  	struct clk *coreclk;
+>  	struct clk *extalclk;
+>  	struct clk *fsysclk;
+> +	struct clk *spbaclk;
 
+Please add one entry in the comment above for the new clock.
 
+> @@ -819,6 +826,11 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  		dev_warn(&pdev->dev, "failed to get fsys clock: %ld\n",
+>  				PTR_ERR(esai_priv->fsysclk));
+>  
+> +	esai_priv->spbaclk = devm_clk_get(&pdev->dev, "spba");
+> +	if (IS_ERR(esai_priv->spbaclk))
+> +		dev_warn(&pdev->dev, "Cannot get spba clock: %ld\n",
+
+It'd be better to write the warning following the previous one:
++  		dev_warn(&pdev->dev, "failed to get spba clock: %ld\n",
