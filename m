@@ -1,560 +1,154 @@
-From: Chen Feng <puck.chen@hisilicon.com>
-Subject: [PATCH V5 RESEND 2/3] iommu/hisilicon: Add hi6220-SoC smmu driver
-Date: Fri, 20 Nov 2015 10:25:08 +0800
-Message-ID: <1447986309-47548-3-git-send-email-puck.chen@hisilicon.com>
-References: <1447986309-47548-1-git-send-email-puck.chen@hisilicon.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V4 2/2] powerpc/85xx: Add PCIe controller support for
+ bsc9132qds
+Date: Thu, 19 Nov 2015 21:02:23 -0600
+Message-ID: <1447988543.27264.176.camel@freescale.com>
+References: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
+	 <1446693360-1578-2-git-send-email-Zhiqiang.Hou@freescale.com>
+	 <CY1PR0301MB07806A3A31D76967125054C28B1D0@CY1PR0301MB0780.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447986309-47548-1-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, puck.chen@hisilicon.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org
-Cc: puck.chen@aliyun.com, w.f@huawei.com, xuwei5@hisilicon.com, guodong.xu@linaro.org, arnd@linaro.org, haojian.zhuang@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CY1PR0301MB07806A3A31D76967125054C28B1D0-YrwGdl+PljnwWZenWrSUgZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hou Zhiqiang-B48286 <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org" <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org" <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rai Harninder-B01044 <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Lian Minghuan-B31939 <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Hu Mingkai-B21284 <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add iommu driver for hi6220 SoC platform.The smmu on hi6220
-SoC is for media system.And the media IP use the same page-table.
-It supports only one-to-one mapping from iova to phys address.
+On Mon, 2015-11-16 at 20:31 -0600, Hou Zhiqiang-B48286 wrote:
+> Hi,
+>=20
+> Any response, please comment.
 
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
----
- drivers/iommu/Kconfig        |  11 +
- drivers/iommu/Makefile       |   1 +
- drivers/iommu/hi6220_iommu.c | 492 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 504 insertions(+)
- create mode 100644 drivers/iommu/hi6220_iommu.c
+They look OK.
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index b9094e9..7c13521 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -84,6 +84,17 @@ config IOMMU_PGTABLES_L2
- 	def_bool y
- 	depends on MSM_IOMMU && MMU && SMP && CPU_DCACHE_DISABLE=n
- 
-+config HI6220_IOMMU
-+	bool "Hi6220 IOMMU Support"
-+	depends on ARM64
-+	select IOMMU_API
-+	select IOMMU_IOVA
-+	help
-+	  Enable IOMMU Driver for hi6220 SoC. The IOMMU API and IOMMU IOVA
-+	  is also selected.
-+
-+	  If unsure, say N.
-+
- # AMD IOMMU support
- config AMD_IOMMU
- 	bool "AMD IOMMU support"
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 68faca02..cdb2b83 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
- obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
- obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
- obj-$(CONFIG_DMAR_TABLE) += dmar.o
-+obj-$(CONFIG_HI6220_IOMMU) += hi6220_iommu.o
- obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o
- obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
- obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
-diff --git a/drivers/iommu/hi6220_iommu.c b/drivers/iommu/hi6220_iommu.c
-new file mode 100644
-index 0000000..fd74f29
---- /dev/null
-+++ b/drivers/iommu/hi6220_iommu.c
-@@ -0,0 +1,492 @@
-+/*
-+ * Hisilicon Hi6220 IOMMU driver
-+ *
-+ * Copyright (c) 2015 Hisilicon Limited.
-+ *
-+ * Author: Chen Feng <puck.chen@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#define pr_fmt(fmt) "IOMMU: " fmt
-+
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iommu.h>
-+#include <linux/irq.h>
-+#include <linux/iova.h>
-+#include <linux/iopoll.h>
-+#include <linux/interrupt.h>
-+#include <linux/list.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/sizes.h>
-+
-+#define SMMU_CTRL_OFFSET             (0x0000)
-+#define SMMU_ENABLE_OFFSET           (0x0004)
-+#define SMMU_PTBR_OFFSET             (0x0008)
-+#define SMMU_START_OFFSET            (0x000C)
-+#define SMMU_END_OFFSET              (0x0010)
-+#define SMMU_INTMASK_OFFSET          (0x0014)
-+#define SMMU_RINTSTS_OFFSET          (0x0018)
-+#define SMMU_MINTSTS_OFFSET          (0x001C)
-+#define SMMU_INTCLR_OFFSET           (0x0020)
-+#define SMMU_STATUS_OFFSET           (0x0024)
-+#define SMMU_AXIID_OFFSET            (0x0028)
-+#define SMMU_CNTCTRL_OFFSET          (0x002C)
-+#define SMMU_TRANSCNT_OFFSET         (0x0030)
-+#define SMMU_L0TLBHITCNT_OFFSET      (0x0034)
-+#define SMMU_L1TLBHITCNT_OFFSET      (0x0038)
-+#define SMMU_WRAPCNT_OFFSET          (0x003C)
-+#define SMMU_SEC_START_OFFSET        (0x0040)
-+#define SMMU_SEC_END_OFFSET          (0x0044)
-+#define SMMU_VERSION_OFFSET          (0x0048)
-+#define SMMU_IPTSRC_OFFSET           (0x004C)
-+#define SMMU_IPTPA_OFFSET            (0x0050)
-+#define SMMU_TRBA_OFFSET             (0x0054)
-+#define SMMU_BYS_START_OFFSET        (0x0058)
-+#define SMMU_BYS_END_OFFSET          (0x005C)
-+#define SMMU_RAM_OFFSET              (0x1000)
-+
-+#define SMMU_CTRL_INVALID            (BIT(10))
-+#define SMMU_SR_REGS_NUM             (15)
-+#define SMMU_REGS_SGMT_END           (0x60)
-+#define PAGE_ENTRY_VALID             (0x1)
-+#define IOPAGE_SHIFT                 (12)
-+#define IOVA_PFN(addr)               ((addr) >> IOPAGE_SHIFT)
-+#define IOVA_PAGE_SZ                 (SZ_4K)
-+
-+/**
-+ * The iova address from 0 ~ 2G
-+ */
-+#define IOVA_START                   (0x0)
-+#define IOVA_END                     (0x80000000)
-+
-+struct hi6220_smmu {
-+	unsigned int irq;
-+	void __iomem *reg_base;
-+	struct clk *smmu_peri_clk;
-+	struct clk *smmu_clk;
-+	struct clk *media_sc_clk;
-+	spinlock_t spinlock; /*spinlock for tlb invalid*/
-+	dma_addr_t pgtable_phy;
-+	void *pgtable_virt;
-+	u32  pgtable_size;
-+	u32  *sr_data;
-+};
-+
-+struct hi6220_domain {
-+	struct hi6220_smmu *smmu_dev;
-+	struct iommu_domain io_domain;
-+};
-+
-+static struct hi6220_smmu *smmu_dev_handle;
-+static struct iova_domain iova_allocator;
-+
-+static struct hi6220_domain *to_hi6220_domain(struct iommu_domain *dom)
-+{
-+	return container_of(dom, struct hi6220_domain, io_domain);
-+}
-+
-+static inline void __smmu_writel(struct hi6220_smmu *smmu_dev, u32 value,
-+				 unsigned long offset)
-+{
-+	writel(value, smmu_dev->reg_base + offset);
-+}
-+
-+static inline u32 __smmu_readl(struct hi6220_smmu *smmu_dev,
-+			       unsigned long offset)
-+{
-+	return readl(smmu_dev->reg_base + offset);
-+}
-+
-+/**
-+ * store and load the regs
-+ */
-+static void __store_regs(struct hi6220_smmu *smmu_dev)
-+{
-+	int i;
-+	u32 *data = smmu_dev->sr_data;
-+
-+	for (i = 0; i < SMMU_SR_REGS_NUM; i++)
-+		data[i] = __smmu_readl(smmu_dev, i * 4);
-+}
-+
-+static void __load_regs(struct hi6220_smmu *smmu_dev)
-+{
-+	int i;
-+	u32 *data = smmu_dev->sr_data;
-+
-+	for (i = 0; i < SMMU_SR_REGS_NUM; i++)
-+		__smmu_writel(smmu_dev, data[i], i * 4);
-+}
-+
-+static inline void __set_smmu_pte(unsigned int *pte,
-+				  dma_addr_t phys_addr)
-+{
-+	if ((*pte & PAGE_ENTRY_VALID))
-+		pr_err("set pte[%p]->%x already set!\n", pte, *pte);
-+
-+	*pte = (unsigned int)(phys_addr | PAGE_ENTRY_VALID);
-+}
-+
-+static inline void __clear_smmu_pte(unsigned int *pte)
-+{
-+	if (!(*pte & PAGE_ENTRY_VALID))
-+		pr_err("clear pte[%p] %x err!\n", pte, *pte);
-+
-+	*pte = 0;
-+}
-+
-+static int __invalid_smmu_tlb(struct hi6220_domain *m_domain,
-+				     unsigned long iova, size_t size)
-+{
-+	unsigned long flags;
-+	unsigned int smmu_ctrl = 0;
-+	unsigned int start_pfn = 0;
-+	unsigned int end_pfn   = 0;
-+	unsigned int tmp;
-+	int ret;
-+	void __iomem *reg_base;
-+	struct hi6220_smmu *smmu_dev = m_domain->smmu_dev;
-+	dma_addr_t smmu_pgtbl_phy = m_domain->smmu_dev->pgtable_phy;
-+
-+	reg_base = smmu_dev->reg_base;
-+	start_pfn = IOVA_PFN(iova);
-+	end_pfn   = IOVA_PFN(iova + size);
-+
-+	spin_lock_irqsave(&smmu_dev->spinlock, flags);
-+	__smmu_writel(smmu_dev, smmu_pgtbl_phy + start_pfn * sizeof(int),
-+		      SMMU_START_OFFSET);
-+	__smmu_writel(smmu_dev, smmu_pgtbl_phy + end_pfn * sizeof(int),
-+		      SMMU_END_OFFSET);
-+
-+	smmu_ctrl = __smmu_readl(smmu_dev, SMMU_CTRL_OFFSET);
-+	smmu_ctrl = smmu_ctrl | SMMU_CTRL_INVALID;
-+	__smmu_writel(smmu_dev, smmu_ctrl, SMMU_CTRL_OFFSET);
-+	spin_unlock_irqrestore(&smmu_dev->spinlock, flags);
-+
-+	ret = readl_poll_timeout_atomic(reg_base + SMMU_CNTCTRL_OFFSET, tmp,
-+					!(tmp & SMMU_CTRL_INVALID), 5, 50);
-+	if (ret) {
-+		pr_err("invalid smmu tlb error!");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int __smmu_enable(struct hi6220_smmu *smmu_dev)
-+{
-+	/**
-+	 * enable clock first
-+	 */
-+	if (clk_prepare_enable(smmu_dev->media_sc_clk)) {
-+		pr_err("clk_prepare_enable media_sc_clk is falied\n");
-+		return -ENODEV;
-+	}
-+	if (clk_prepare_enable(smmu_dev->smmu_peri_clk)) {
-+		pr_err("clk_prepare_enable smmu_peri_clk is falied\n");
-+		return -ENODEV;
-+	}
-+	if (clk_prepare_enable(smmu_dev->smmu_clk)) {
-+		pr_err("clk_prepare_enable smmu_clk is falied\n");
-+		return -ENODEV;
-+	}
-+
-+	/**
-+	 * load the store register when resume
-+	 */
-+	if (smmu_dev->sr_data)
-+		__load_regs(smmu_dev);
-+
-+	/*set axi id*/
-+	__smmu_writel(smmu_dev, 0xC70000FF, SMMU_AXIID_OFFSET);
-+	/*iommu page size 4K */
-+	__smmu_writel(smmu_dev, 0x000001A6, SMMU_CTRL_OFFSET);
-+	/*clear interrupt pa address*/
-+	__smmu_writel(smmu_dev, 0x00000000, SMMU_IPTPA_OFFSET);
-+	/*clear interrupt*/
-+	__smmu_writel(smmu_dev, 0xFF, SMMU_INTCLR_OFFSET);
-+
-+	/*set page table phy_addr for ptable and preload*/
-+	__smmu_writel(smmu_dev, smmu_dev->pgtable_phy, SMMU_PTBR_OFFSET);
-+	__smmu_writel(smmu_dev, smmu_dev->pgtable_phy, SMMU_START_OFFSET);
-+	/*set the page table memory size*/
-+	__smmu_writel(smmu_dev, smmu_dev->pgtable_size, SMMU_END_OFFSET);
-+	__smmu_writel(smmu_dev, 0x3, SMMU_ENABLE_OFFSET);
-+
-+	return 0;
-+}
-+
-+/**
-+ * interrupt happen when operator error
-+ */
-+static irqreturn_t hi6220_smmu_isr(int irq, void *data)
-+{
-+	int          i;
-+	int          index;
-+	unsigned int irq_stat;
-+	struct hi6220_smmu *smmu_dev = (struct hi6220_smmu *)data;
-+	unsigned int pgt = 0;
-+	unsigned int pc_pgt = 0;
-+
-+	irq_stat = __smmu_readl(smmu_dev, SMMU_MINTSTS_OFFSET);
-+
-+	/**
-+	 * clear smmu interrupt
-+	 */
-+	__smmu_writel(smmu_dev, 0xff, SMMU_INTCLR_OFFSET);
-+	pgt = __smmu_readl(smmu_dev, SMMU_PTBR_OFFSET);
-+	pc_pgt = __smmu_readl(smmu_dev, SMMU_IPTSRC_OFFSET);
-+
-+	/**
-+	 * dump key register of smmu
-+	 */
-+	pr_err("\n irq status= %08x\n"
-+			" SMMU_CTRL_OFFSET = %08x\n"
-+			" SMMU_ENABLE_OFFSET = %08x\n"
-+			" SMMU_PTBR_OFFSET = %08x\n"
-+			" SMMU_START_OFFSET = %08x\n"
-+			" SMMU_END_OFFSET = %08x\n"
-+			" SMMU_IPTSRC_OFFSET = %08x\n",
-+			irq_stat,
-+			__smmu_readl(smmu_dev, SMMU_CTRL_OFFSET),
-+			__smmu_readl(smmu_dev, SMMU_ENABLE_OFFSET),
-+			__smmu_readl(smmu_dev, SMMU_PTBR_OFFSET),
-+			__smmu_readl(smmu_dev, SMMU_START_OFFSET),
-+			__smmu_readl(smmu_dev, SMMU_END_OFFSET),
-+			__smmu_readl(smmu_dev, SMMU_IPTSRC_OFFSET));
-+	/**
-+	 * test bit0 to bit5
-+	 */
-+	if (irq_stat & 0x1)
-+		pr_err("page_size L1 TLB_size ddr_size configure error\n");
-+	if (irq_stat & BIT(1)) {
-+		index = (pc_pgt - pgt) / 4;
-+		pr_err("ptable entry error:IOMMU_VA=0x%x\n", index * SZ_4K);
-+	}
-+	if (irq_stat & BIT(2))
-+		pr_err("AXI master0 receive error response\n");
-+	if (irq_stat & BIT(3))
-+		pr_err("AXI master1 receive error response\n");
-+	if (irq_stat & BIT(4))
-+		pr_err("AXI master0 access timeout\n");
-+	if (irq_stat & BIT(5))
-+		pr_err("AXI master1 access timeout\n");
-+
-+	/**
-+	 * dump all smmu register for error check
-+	 */
-+	for (i = 0; i < SMMU_REGS_SGMT_END; i += 4)
-+		pr_err("[%08x] ", __smmu_readl(smmu_dev, i));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct iommu_domain *hi6220_domain_alloc(unsigned type)
-+{
-+	struct hi6220_domain *m_domain;
-+	struct hi6220_smmu *smmu_dev;
-+
-+	if (type != IOMMU_DOMAIN_UNMANAGED)
-+		return NULL;
-+
-+	smmu_dev = smmu_dev_handle;
-+	if (!smmu_dev)
-+		return NULL;
-+
-+	m_domain = kzalloc(sizeof(*m_domain), GFP_KERNEL);
-+	if (!m_domain)
-+		return NULL;
-+
-+	m_domain->smmu_dev = smmu_dev_handle;
-+	m_domain->io_domain.geometry.aperture_start = IOVA_START;
-+	m_domain->io_domain.geometry.aperture_end = IOVA_END;
-+	m_domain->io_domain.geometry.force_aperture = true;
-+
-+	return &m_domain->io_domain;
-+}
-+
-+static void hi6220_domain_free(struct iommu_domain *domain)
-+{
-+	struct hi6220_domain *hi6220_domain = to_hi6220_domain(domain);
-+
-+	kfree(hi6220_domain);
-+}
-+
-+static int hi6220_smmu_attach_dev(struct iommu_domain *domain,
-+				  struct device *dev)
-+{
-+	dev->archdata.iommu = &iova_allocator;
-+
-+	return 0;
-+}
-+
-+static void hi6220_smmu_detach_dev(struct iommu_domain *domain,
-+				   struct device *dev)
-+{
-+	dev->archdata.iommu = NULL;
-+}
-+
-+static int hi6220_smmu_map(struct iommu_domain *domain,
-+			   unsigned long iova, phys_addr_t pa,
-+			   size_t size, int smmu_prot)
-+{
-+	struct hi6220_domain *m_domain = to_hi6220_domain(domain);
-+	struct hi6220_smmu *smmu_dev = m_domain->smmu_dev;
-+	unsigned int *page_table = (unsigned int *)smmu_dev->pgtable_virt;
-+
-+	__set_smmu_pte(page_table + IOVA_PFN(iova), pa);
-+
-+	__invalid_smmu_tlb(m_domain, iova, size);
-+
-+	return 0;
-+}
-+
-+static size_t hi6220_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+				size_t size)
-+{
-+	struct hi6220_domain *m_domain = to_hi6220_domain(domain);
-+	struct hi6220_smmu *smmu_dev = m_domain->smmu_dev;
-+	int *page_table = (unsigned int *)smmu_dev->pgtable_virt;
-+
-+	__clear_smmu_pte(page_table + IOVA_PFN(iova));
-+
-+	__invalid_smmu_tlb(m_domain, iova, size);
-+
-+	return IOVA_PAGE_SZ;
-+}
-+
-+static const struct iommu_ops hi6220_smmu_ops = {
-+	.domain_alloc = hi6220_domain_alloc,
-+	.domain_free = hi6220_domain_free,
-+	.attach_dev = hi6220_smmu_attach_dev,
-+	.detach_dev = hi6220_smmu_detach_dev,
-+	.map = hi6220_smmu_map,
-+	.unmap = hi6220_smmu_unmap,
-+	.map_sg = default_iommu_map_sg,
-+	.pgsize_bitmap = IOVA_PAGE_SZ,
-+};
-+
-+static int hi6220_smmu_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	int irq;
-+	struct hi6220_smmu *smmu_dev  = NULL;
-+	struct resource *res = NULL;
-+
-+	smmu_dev = devm_kzalloc(&pdev->dev, sizeof(*smmu_dev), GFP_KERNEL);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	smmu_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(smmu_dev->reg_base))
-+		return PTR_ERR(smmu_dev->reg_base);
-+
-+	smmu_dev->pgtable_size = (IOVA_END - IOVA_START) / SZ_4K * sizeof(int);
-+	smmu_dev->media_sc_clk = devm_clk_get(&pdev->dev, "media-sc");
-+	smmu_dev->smmu_peri_clk = devm_clk_get(&pdev->dev, "smmu-peri");
-+	smmu_dev->smmu_clk  = devm_clk_get(&pdev->dev, "smmu");
-+	if (IS_ERR(smmu_dev->media_sc_clk) || IS_ERR(smmu_dev->smmu_peri_clk) ||
-+	    IS_ERR(smmu_dev->media_sc_clk)) {
-+		pr_err("clk is not ready!\n");
-+		return -EINVAL;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(&pdev->dev, irq, hi6220_smmu_isr, 0,
-+			       dev_name(&pdev->dev), smmu_dev);
-+	if (ret) {
-+		pr_err("Unabled to register handler of irq %d\n", irq);
-+		return ret;
-+	}
-+
-+	spin_lock_init(&smmu_dev->spinlock);
-+
-+	__smmu_enable(smmu_dev);
-+
-+	iova_cache_get();
-+	init_iova_domain(&iova_allocator, IOVA_PAGE_SZ,
-+			 IOVA_PFN(IOVA_START), IOVA_PFN(IOVA_END));
-+
-+	smmu_dev->sr_data = vmalloc(sizeof(u32) * SMMU_SR_REGS_NUM);
-+	if (!smmu_dev->sr_data) {
-+		iova_cache_put();
-+		return -ENOMEM;
-+	}
-+
-+	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	smmu_dev->pgtable_virt = dma_zalloc_coherent(&pdev->dev,
-+						     smmu_dev->pgtable_size,
-+						     &smmu_dev->pgtable_phy,
-+						     GFP_KERNEL);
-+
-+	if (!smmu_dev->pgtable_virt) {
-+		pr_err("alloc pagetable mem failed\n");
-+		vfree(smmu_dev->sr_data);
-+		iova_cache_put();
-+		return -ENOMEM;
-+	}
-+
-+	platform_set_drvdata(pdev, smmu_dev);
-+	bus_set_iommu(&platform_bus_type, &hi6220_smmu_ops);
-+	smmu_dev_handle = smmu_dev;
-+
-+	return 0;
-+}
-+
-+static int hi6220_smmu_suspend(struct platform_device *pdev,
-+			       pm_message_t state)
-+{
-+	struct hi6220_smmu *smmu_dev = dev_get_drvdata(&pdev->dev);
-+
-+	__store_regs(smmu_dev);
-+
-+	if (smmu_dev->smmu_clk)
-+		clk_disable_unprepare(smmu_dev->smmu_clk);
-+	if (smmu_dev->media_sc_clk)
-+		clk_disable_unprepare(smmu_dev->media_sc_clk);
-+	if (smmu_dev->smmu_peri_clk)
-+		clk_disable_unprepare(smmu_dev->smmu_peri_clk);
-+
-+	return 0;
-+}
-+
-+static int hi6220_smmu_resume(struct platform_device *pdev)
-+{
-+	struct hi6220_smmu *smmu_dev = dev_get_drvdata(&pdev->dev);
-+
-+	__smmu_enable(smmu_dev);
-+	return 0;
-+}
-+
-+static const struct of_device_id of_smmu_match_tbl[] = {
-+	{
-+		.compatible = "hisilicon,hi6220-smmu",
-+	},
-+	{ }
-+};
-+
-+static struct platform_driver hi6220_smmu_driver = {
-+	.driver  = {
-+		.name = "smmu-hi6220",
-+		.of_match_table = of_smmu_match_tbl,
-+	},
-+	.probe  =  hi6220_smmu_probe,
-+	.suspend = hi6220_smmu_suspend,
-+	.resume  = hi6220_smmu_resume,
-+};
-+
-+static int __init hi6220_smmu_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&hi6220_smmu_driver);
-+	return ret;
-+}
-+
-+subsys_initcall(hi6220_smmu_init);
--- 
-1.9.1
+-Scott
+
+>=20
+> > -----Original Message-----
+> > From: Zhiqiang Hou [mailto:Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
+> > Sent: 2015=E5=B9=B411=E6=9C=885=E6=97=A5 11:16
+> > To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Wood Scott-B07421;
+> > galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; paulus@samba.o=
+rg;
+> > mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> > pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; ijc+devicetree-KcIKpvwj1kXF2uMehF1BdA@public.gmane.org=
+g.uk;
+> > Rai Harninder-B01044
+> > Cc: Lian Minghuan-B31939; Hu Mingkai-B21284; Hou Zhiqiang-B48286
+> > Subject: [PATCH V4 2/2] powerpc/85xx: Add PCIe controller support f=
+or
+> > bsc9132qds
+> >=20
+> > From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >=20
+> > 1. Use machine_arch_initcall to hook mpc85xx_common_publish_devices=
+ This
+> > can ensure before pcibios_init() is called, pci controllers have be=
+en
+> > probed and added to the hose_list.
+> > 2. Add a workaround for errata A-005434
+> > For the BSC9132, PEX_PEXIWARn[TRGT] for all windows defaults to 0xF=
+,
+> > which is mapped to CCSRBAR. However, for other products, 0xF is map=
+ped to
+> > the local memory. Therefore, for the BSC9132, any default PCI Expre=
+ss
+> > access to the local memory (DDR) will now access the CCSRBAR. This =
+patch
+> > changes the mapping of targets of inbound windows PEX_PEXIWARn[TRGT=
+] to
+> > the Local address space =E2=80=93 0x0 (from 0xF).
+> >=20
+> > Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Signed-off-by: Hou Zhiqiang <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > V4: V3:
+> >  - Remove gerrit stuff.
+> >=20
+> >  arch/powerpc/platforms/85xx/bsc913x_qds.c |  8 +++++++-
+> >  arch/powerpc/sysdev/fsl_pci.c             | 13 +++++++++++++
+> >  2 files changed, 20 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/powerpc/platforms/85xx/bsc913x_qds.c
+> > b/arch/powerpc/platforms/85xx/bsc913x_qds.c
+> > index f0927e5..dcfafd6 100644
+> > --- a/arch/powerpc/platforms/85xx/bsc913x_qds.c
+> > +++ b/arch/powerpc/platforms/85xx/bsc913x_qds.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/pci.h>
+> >  #include <asm/mpic.h>
+> >  #include <sysdev/fsl_soc.h>
+> > +#include <sysdev/fsl_pci.h>
+> >  #include <asm/udbg.h>
+> >=20
+> >  #include "mpc85xx.h"
+> > @@ -46,10 +47,12 @@ static void __init bsc913x_qds_setup_arch(void)
+> >  	mpc85xx_smp_init();
+> >  #endif
+> >=20
+> > +	fsl_pci_assign_primary();
+> > +
+> >  	pr_info("bsc913x board from Freescale Semiconductor\n");  }
+> >=20
+> > -machine_device_initcall(bsc9132_qds, mpc85xx_common_publish_device=
+s);
+> > +machine_arch_initcall(bsc9132_qds, mpc85xx_common_publish_devices)=
+;
+> >=20
+> >  /*
+> >   * Called very early, device-tree isn't unflattened @@ -67,6 +70,9=
+ @@
+> > define_machine(bsc9132_qds) {
+> >  	.probe			=3D bsc9132_qds_probe,
+> >  	.setup_arch		=3D bsc913x_qds_setup_arch,
+> >  	.init_IRQ		=3D bsc913x_qds_pic_init,
+> > +#ifdef CONFIG_PCI
+> > +	.pcibios_fixup_bus	=3D fsl_pcibios_fixup_bus,
+> > +#endif
+> >  	.get_irq		=3D mpic_get_irq,
+> >  	.restart		=3D fsl_rstcr_restart,
+> >  	.calibrate_decr		=3D generic_calibrate_decr,
+> > diff --git a/arch/powerpc/sysdev/fsl_pci.c
+> > b/arch/powerpc/sysdev/fsl_pci.c index ebc1f412..b8607f6 100644
+> > --- a/arch/powerpc/sysdev/fsl_pci.c
+> > +++ b/arch/powerpc/sysdev/fsl_pci.c
+> > @@ -193,6 +193,19 @@ static void setup_pci_atmu(struct pci_controll=
+er
+> > *hose)
+> >  	const u64 *reg;
+> >  	int len;
+> >=20
+> > +	if (of_device_is_compatible(hose->dn, "fsl,bsc9132-pcie")) {
+> > +		/*
+> > +		 * BSC9132 Rev1.0 has an issue where all the PEX inbound
+> > +		 * windows have implemented the default target value as
+> > 0xf
+> > +		 * for CCSR space.In all Freescale legacy devices the
+> > target
+> > +		 * of 0xf is reserved for local memory space. 9132 Rev1.0
+> > +		 * now has local mempry space mapped to target 0x0
+> > instead of
+> > +		 * 0xf. Hence adding a workaround to remove the target
+> > 0xf
+> > +		 * defined for memory space from Inbound window
+> > attributes.
+> > +		 */
+> > +		piwar &=3D ~PIWAR_TGI_LOCAL;
+> > +	}
+> > +
+> >  	if (early_find_capability(hose, 0, 0, PCI_CAP_ID_EXP)) {
+> >  		if (in_be32(&pci->block_rev1) >=3D PCIE_IP_REV_2_2) {
+> >  			win_idx =3D 2;
+> > --
+> > 2.1.0.27.g96db324
+>=20
+> Thanks,
+> Zhiqiang
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
