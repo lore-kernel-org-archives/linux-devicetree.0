@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 5/6] staging: board: kzm9d: Use "arm,pl390"
-Date: Fri, 20 Nov 2015 13:36:56 +0100
-Message-ID: <1448023017-21816-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/6] ARM: shmobile: r8a7740 dtsi: Use "arm,pl390" for GIC
+Date: Fri, 20 Nov 2015 13:36:53 +0100
+Message-ID: <1448023017-21816-3-git-send-email-geert+renesas@glider.be>
 References: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1448023017-21816-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -10,29 +10,37 @@ To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <m
 Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Replace the "arm,cortex-a9-gic" compatible value for the GIC by
+"arm,pl390", as the documentation states it is a PL390.
+This has been confirmed by reading the GICD_IIDR register, which reports
+0x0000043b (PL390 = 0x00, ARM = 0x43b).
+
+This has no effect on runtime behavior, as currently the GIC driver
+treats both compatible values the same.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-Must be applied together with "ARM: shmobile: emev2 dtsi: Use
-"arm,pl390" for GIC"!
+You can read the GICD_IIDR register from Hermit using
 
-Greg: Can you please provide your ack? Thanks!
+    frob
+    peek 0xc2800008
 ---
- drivers/staging/board/kzm9d.c | 2 +-
+ arch/arm/boot/dts/r8a7740.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/board/kzm9d.c b/drivers/staging/board/kzm9d.c
-index 8d1eb09bc66ef413..05a6d434d307fe0f 100644
---- a/drivers/staging/board/kzm9d.c
-+++ b/drivers/staging/board/kzm9d.c
-@@ -11,7 +11,7 @@ static struct resource usbs1_res[] __initdata = {
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 4d58cdc3a026b2a4..08846c72cf1a64a3 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -39,7 +39,7 @@
+ 	};
  
- static void __init kzm9d_init(void)
- {
--	board_staging_gic_setup_xlate("arm,cortex-a9-gic", 32);
-+	board_staging_gic_setup_xlate("arm,pl390", 32);
- 
- 	if (!board_staging_dt_node_available(usbs1_res,
- 					     ARRAY_SIZE(usbs1_res))) {
+ 	gic: interrupt-controller@c2800000 {
+-		compatible = "arm,cortex-a9-gic";
++		compatible = "arm,pl390";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+ 		reg = <0xc2800000 0x1000>,
 -- 
 1.9.1
 
