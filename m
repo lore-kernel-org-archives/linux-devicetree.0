@@ -1,16 +1,16 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/4] usb: dwc3: qcom: Configure TCSR phy mux register
-Date: Fri, 20 Nov 2015 09:06:33 -0600
-Message-ID: <87a8q8emme.fsf@saruman.tx.rr.com>
-References: <1448008509-8913-1-git-send-email-agross@codeaurora.org> <1448008509-8913-3-git-send-email-agross@codeaurora.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 4/4] Documentation: usb: dwc3: qcom: Add TCSR mux usage
+Date: Fri, 20 Nov 2015 09:08:46 -0600
+Message-ID: <877flcemip.fsf@saruman.tx.rr.com>
+References: <1448008509-8913-1-git-send-email-agross@codeaurora.org> <1448008509-8913-5-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
 	protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448008509-8913-3-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448008509-8913-5-git-send-email-agross@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
@@ -20,69 +20,36 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
-> This patch adds automatic configuration of the TCSR phy mux register base=
-d on
-> the syscon-tcsr devicetree entry.  This configuration is optional, as some
-> platforms may not require the mux selection.
+Andy Gross <agross@codeaurora.org> writes:
+> This patch adds documentation for the optional syscon-tcsr property in the
+> Qualcomm DWC3 node.  The syscon-tcsr specifies the register and bit used =
+to
+> configure the TCSR USB phy mux register.
 >
-> Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-just when I find a way to make a generic dwc3-of-simple.c glue layer :-p
-
-I can, certainly drop my patches but I need more details on the syscon
-usage below.
-
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
 > ---
->  drivers/usb/dwc3/dwc3-qcom.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 0880260..fcf264c 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -17,6 +17,8 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Docume=
+ntation/devicetree/bindings/usb/qcom,dwc3.txt
+> index ca164e7..dfa222d 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> @@ -8,6 +8,10 @@ Required properties:
+>    "core"		Master/Core clock, have to be >=3D 125 MHz for SS
+>  				operation and >=3D 60MHz for HS operation
 >=20=20
->  struct dwc3_qcom {
->  	struct device		*dev;
-> @@ -30,6 +32,9 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  {
->  	struct device_node *node =3D pdev->dev.of_node;
->  	struct dwc3_qcom *qdwc;
-> +	struct regmap *regmap;
-> +	u32 mux_offset;
-> +	u32 mux_bit;
->  	int ret;
->=20=20
->  	qdwc =3D devm_kzalloc(&pdev->dev, sizeof(*qdwc), GFP_KERNEL);
-> @@ -58,6 +63,26 @@ static int dwc3_qcom_probe(struct platform_device *pde=
-v)
->  		qdwc->sleep_clk =3D NULL;
->  	}
->=20=20
-> +	/* look for tcsr and if present, provision it */
-> +	regmap =3D syscon_regmap_lookup_by_phandle(node, "syscon-tcsr");
-> +	if (!IS_ERR(regmap)) {
-> +		if (of_property_read_u32_index(node, "syscon-tcsr", 1,
-> +					       &mux_offset)) {
-> +			dev_err(qdwc->dev, "missing USB TCSR mux offset\n");
-> +			return -EINVAL;
-> +		}
-> +		if (of_property_read_u32_index(node, "syscon-tcsr", 2,
-> +					       &mux_bit)) {
-> +			dev_err(qdwc->dev, "missing USB TCSR mux bit\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		regmap_update_bits(regmap, mux_offset, BIT(mux_bit),
-> +				   BIT(mux_bit));
+> +Optional properties:
+> +- syscon-tcsr	Specifies TCSR handle, register offset, and bit position f=
+or
+> +			configuring the phy mux setting.
 
-what is tcsr and what does it ? It also seems to be optional, why's that ?
+oh, it's a PHY mux ? I don't think it should be part of any dwc3-* glue
+layer then. By the time we reach dwc3, the mux should be properly
+configured.
+
+Kishon, any ideas ?
 
 =2D-=20
 balbi
@@ -93,22 +60,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJWTzb6AAoJEIaOsuA1yqREPLgQAJ9JHHRhe163MPksLPCA6oxk
-jbIG3Cpf08bTkpODDPO0yKNOdXa8QQp8Rca9EZS4iR3g2whsHweBgbE1uSqnSKqo
-szeZ6fDvUAv6UDKYxX80AdtOS1OwqkqCTTkheJHp3uu8z9wFqrv0tmpfyEYFtN35
-APDXkC31BPLpqTZSVDgszujwtJxOYreRQYsE4pec2wzVQDvU01J7z0oNbm9w9rGl
-KibJBC4MUl73DO1H5No1jFm8n25/ZPbWzz4jULhjSk11NnLGaLeI1TufSeo/bieC
-SjOXIwDFMwwpUgIO6rAsJ54crhUdyOinaMnBwbuezO8MAmfLgX3uEO/Nvvbz4E6H
-l6B941HEAgOni8v0YmcW8e5PD+sdWvhwXbz+Bx9O38XsFkq7C+al2SkydbLBB0OP
-ulC/juJHFE0plgVmrWGfSD5Ayw/Drv0MPNFUCOxtG4KJ9DiVTE6GJzHZU18fZGi0
-Pa+LJiWdqDUOsy7N5MluckiU4voxX3gDGIz4HhkncKOTHOJF+qaPRWLC/wXlfXRf
-2JrTVFPRt+BJS/EuYqF+CHyXwEkdiWUHmkItYqedmRyNOBWyGiSL4w5LR6hOZquq
-EsLYyvHTLZgpMcZIv31nrlXiQLc+6dQKl5nL2p81pWuXtNIyQfAXvs0cPUBYlHn1
-h4ky/rRZA0c8UV1Ys6AR
-=fwlA
+iQIcBAEBAgAGBQJWTzd/AAoJEIaOsuA1yqREaYIP/3idfLH+qlOuKDt4kMr3sZiW
+BqubE9+7oLPRXBSKnl46MAVVeQ/EPe+BE5abaS9q7KK8KKn2Wg0ITnzUGGg7XZPM
+cGvmj9GeZIRdSuclpb2h0lyEUPrTq9cdAYTvbcot8CxoJVQ02gBIhYxhwx4N2NI/
+QbyTMm01HFyPTbw+sLMUDXrepm66FCRhLkeZ8ZKZyyJlV20jd0FvanM8NjRm/Byc
+p5M/DrJxTWcZnwbtyXdkeZ/kFdhelrno42WGnSYHnkTIIghgFX+lORxPVliMYM34
+rYc27zesIytaH+WbltHX+n33qkAA5f5rFslSi43r9dcPcXhor4WOabDJ9hxrA2MO
+f4SIqZSaP1Id4kytn608dM6OTTWTDp90vlGZqMQWW6wZXWvb2ilLSx7EmMR7CYgk
+ODEzuxenTsTKThER2xil58LUJAmlKCr6FLeLUUZlVsQjvtNwkPRGAKJRST6Pi4sv
+56y+Le1epDeROFKg0Nc9M5FBsl9GGg/86JZBm5Dq+9v10NWl9vv7ZQGgDs0l6Utz
+636Tck8dNNL3d+cgeZyxYEaetU+6F56II9BWBtT4F7I+Unu90/KXpUzfRksMVOOz
+RaY2Aqg6zADde0TqsZzUHKsQXHAQjeV40qeNVeJKs5lrqLl7YBQY9CKCyUCkvda0
+X6jA5DAtSiL30RME9mpV
+=nQFT
 -----END PGP SIGNATURE-----
 --=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
