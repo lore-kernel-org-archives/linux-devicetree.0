@@ -1,42 +1,66 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: sun4i: Enable onboard codec
- used on the iNet1 tablet
-Date: Fri, 20 Nov 2015 17:18:46 +0100
-Message-ID: <20151120161846.GE32142@lukather>
-References: <1448027233-750-1-git-send-email-hdegoede@redhat.com>
- <1448027233-750-2-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH 03/13] arm/xen: Use xlated_setup_gnttab_pages to setup
+ grant table
+Date: Fri, 20 Nov 2015 16:19:42 +0000
+Message-ID: <alpine.DEB.2.02.1511201618530.1107@kaball.uk.xensource.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+ <1447754231-7772-4-git-send-email-shannon.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fzZfjcV6kaBgkq89"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2EPXWZAKGQEHSMFFMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448027233-750-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447754231-7772-4-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---fzZfjcV6kaBgkq89
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Fri, Nov 20, 2015 at 02:47:11PM +0100, Hans de Goede wrote:
-> The iNet1 tablet uses the A10's integrated audio codec, enable it.
+On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Use xlated_setup_gnttab_pages to setup grant table. Then it doesn't rely
+> on DT or ACPI to pass the start address and size of grant table.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Applied, thanks!
-Maxime
+It looks good. I'll wait for the final version of
+xlated_setup_gnttab_pages before acking it, but it is fine in principle.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---fzZfjcV6kaBgkq89--
+
+>  arch/arm/xen/enlighten.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index eeeab07..7cb82f7 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -186,18 +186,10 @@ static int __init xen_guest_init(void)
+>  {
+>  	struct xen_add_to_physmap xatp;
+>  	struct shared_info *shared_info_page = NULL;
+> -	struct resource res;
+> -	phys_addr_t grant_frames;
+>  
+>  	if (!xen_domain())
+>  		return 0;
+>  
+> -	if (of_address_to_resource(xen_node, GRANT_TABLE_PHYSADDR, &res)) {
+> -		pr_err("Xen grant table base address not found\n");
+> -		return -ENODEV;
+> -	}
+> -	grant_frames = res.start;
+> -
+>  	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+>  	if (!xen_events_irq) {
+>  		pr_err("Xen event channel interrupt not found\n");
+> @@ -232,7 +224,7 @@ static int __init xen_guest_init(void)
+>  	if (xen_vcpu_info == NULL)
+>  		return -ENOMEM;
+>  
+> -	if (gnttab_setup_auto_xlat_frames(grant_frames)) {
+> +	if (xlated_setup_gnttab_pages()) {
+>  		free_percpu(xen_vcpu_info);
+>  		return -ENOMEM;
+>  	}
+> -- 
+> 2.1.0
+> 
