@@ -1,79 +1,92 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] arm: dts: lpc32xx: move USB controller subdevices
- into own device node
-Date: Fri, 20 Nov 2015 22:05:56 +0200
-Message-ID: <564F7D24.8040009@mleia.com>
-References: <1445117757-8073-1-git-send-email-vz@mleia.com> <1445117757-8073-9-git-send-email-vz@mleia.com> <CAL_JsqJZ+fKe32gaKAJa+8KvaDkNJS0rWD+NQH7hkWxaahC4ag@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/8] arm: dts: berlin2q: add watchdog nodes
+Date: Fri, 20 Nov 2015 21:19:46 +0100
+Message-ID: <564F8062.8070609@gmail.com>
+References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
+ <1447672194-483-2-git-send-email-jszhang@marvell.com>
+ <564E3549.2050700@gmail.com> <20151120113414.1aa1e48e@xhacker>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJZ+fKe32gaKAJa+8KvaDkNJS0rWD+NQH7hkWxaahC4ag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20151120113414.1aa1e48e@xhacker>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20.11.2015 21:47, Rob Herring wrote:
-> On Sat, Oct 17, 2015 at 4:35 PM, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org> wrote:
->> NXP LPC32xx SoC has one USB OTG controller, which is supposed to work
->> with an external phy (default is NXP ISP1301).
+On 20.11.2015 04:34, Jisheng Zhang wrote:
+> On Thu, 19 Nov 2015 21:47:05 +0100
+> Sebastian Hesselbarth wrote:
+>> On 16.11.2015 12:09, Jisheng Zhang wrote:
+>>> The Marvell Berlin BG2Q has 3 watchdogs which are compatible with the
+>>> snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
+>>> corresponding device tree nodes.
+>>>
+>>> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/berlin2q.dtsi | 24 ++++++++++++++++++++++++
+>>>  1 file changed, 24 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+>>> index a3ecde5..fac4315 100644
+>>> --- a/arch/arm/boot/dts/berlin2q.dtsi
+>>> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+>>> @@ -483,6 +483,30 @@
+>>>  			ranges = <0 0xfc0000 0x10000>;
+>>>  			interrupt-parent = <&sic>;
+>>>  
+>>> +			wdt0: watchdog@1000 {
+>>> +				compatible = "snps,dw-wdt";
+>>> +				reg = <0x1000 0x100>;
+>>> +				clocks = <&refclk>;
+>>> +				interrupts = <0>;
+>>> +				status = "disabled";  
 >>
->> Practically the USB controller contains 5 subdevices:
->> - host controller   0x3102 0000 -- 0x3102 00FF
->> - OTG controller    0x3102 0100 -- 0x3102 01FF
->> - device controller 0x3102 0200 -- 0x3102 02FF
->> - I2C controller    0x3102 0300 -- 0x3102 03FF
->> - clock controller  0x3102 0F00 -- 0x3102 0FFF
+>> as the watchdogs are internal and cannot be clock gated
+>> at all, how about we remove the status = "disabled" and
+>> make them always available?
 > 
-> [...]
+> there are two issues here:
 > 
->> -               /*
->> -                * Enable either ohci or usbd (gadget)!
->> -                */
->> -               ohci: ohci@31020000 {
->> -                       compatible = "nxp,ohci-nxp", "usb-ohci";
->> -                       reg = <0x31020000 0x300>;
->> -                       interrupts = <0x3b 0>;
->> -                       status = "disabled";
->> -               };
->> +               usb {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <1>;
->> +                       compatible = "simple-bus";
->> +                       ranges = <0x0 0x31020000 0x00001000>;
+> 1. the dw-wdt can't support multiple variants now. I have rewrite the driver
+> with watchdog core supplied framework, but the patch isn't sent out and
+> may be need time to clean up and review.
+
+Ok.
+
+> 2. not all dw-wdt devices are available and functional. This depends on
+> board design and configuration.
+
+I understand that "board design and configuration" may hinder the wdt
+to issue a hard reset. But all others are able to issue a soft reset
+or just an interrupt, right?
+
+So, I still don't see why we should disable wdt nodes by default
+except for the driver issue above.
+
+> So IMHO status=disabled and patch5-8 is necessary, what do you think?
+
+No. I'd agree to enable wdt0 by default and leave wdt[1,2] disabled
+because of the driver issue. Patches 5-8 only enable wdt0 anyway.
+
+As soon as the driver issue is resolved, we enable all wdt nodes
+unconditionally.
+
+Sebastian
+
+>> I have applied patches 1-4 with the status property removed.
+>> This also renders patches 5-8 useless.
 >>
->> -               usbd: usbd@31020000 {
->> -                       compatible = "nxp,lpc3220-udc";
->> -                       reg = <0x31020000 0x300>;
->> -                       interrupts = <0x3d 0>, <0x3e 0>, <0x3c 0>, <0x3a 0>;
->> -                       status = "disabled";
->> +                       /*
->> +                        * Enable either ohci or usbd (gadget)!
->> +                        */
->> +                       ohci: ohci@0 {
->> +                               compatible = "nxp,ohci-nxp", "usb-ohci";
->> +                               reg = <0x0 0x300>;
->> +                               interrupts = <0x3b 0>;
->> +                               status = "disabled";
->> +                       };
->> +
->> +                       usbd: usbd@0 {
->> +                               compatible = "nxp,lpc3220-udc";
->> +                               reg = <0x0 0x300>;
-> 
-> Not a result of this change, but you are overlapping addresses. Please
-> don't do that. It causes problems adding device resources into the
-> resource tree (i.e. request_resource).
+>> So, for now tentatively
+>>
+>> Appled to berlin/dt and berlin64/dt respectivly
+>>
+>> with status property removed.
+>>
+>> Sebastian
+>>
 > 
 
-As you noticed this is legacy code, it will be corrected after fixing
-USB host and device drivers, and this is in long term plans. USB changes
-require at least CCF and IRQ chip changes applied.
-
---
-With best wishes,
-Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
