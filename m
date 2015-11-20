@@ -1,84 +1,63 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 02/11] dt-bindings: clock: add description of LPC32xx
- USB clock controller
-Date: Fri, 20 Nov 2015 20:14:37 +0200
-Message-ID: <564F630D.5090201@mleia.com>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com> <1447981511-29653-3-git-send-email-vz@mleia.com> <20151120164133.GA9011@rob-hp-laptop>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 03/10] dt-bindings: interrupt-controllers: add description
+ of SIC1 and SIC2
+Date: Fri, 20 Nov 2015 20:16:56 +0200
+Message-ID: <564F6398.5070206@mleia.com>
+References: <1447982925-30138-1-git-send-email-vz@mleia.com> <1447982925-30138-4-git-send-email-vz@mleia.com> <20151120165835.GA17916@rob-hp-laptop> <564F5DF8.7040908@mleia.com> <564F6021.7090000@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151120164133.GA9011@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564F6021.7090000-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20.11.2015 18:41, Rob Herring wrote:
-> On Fri, Nov 20, 2015 at 03:05:02AM +0200, Vladimir Zapolskiy wrote:
->> NXP LPC32xx USB controller has a subdevice, which controls USB AHB
->> slave, USB OTG, USB OHCI, USB device and I2C controller to USB phy
->> clocks, this change adds description of the clock controller, for more
->> details reference LPC32xx User's Manual, namely USB control, OTG clock
->> control and OTG clock status registers.
+Hi Marc,
+
+On 20.11.2015 20:02, Marc Zyngier wrote:
+> On 20/11/15 17:52, Vladimir Zapolskiy wrote:
+>> Hi Rob,
 >>
->> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
->> ---
->>  .../bindings/clock/nxp,lpc3220-usb-clk.txt         | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+>> On 20.11.2015 18:58, Rob Herring wrote:
+>>> On Fri, Nov 20, 2015 at 03:28:38AM +0200, Vladimir Zapolskiy wrote:
+>>>> NXP LPC32xx has three interrupt controllers, namely root Main
+>>>> Interrupt Controller (MIC) and two supplementary Sub Interrupt
+>>>> Controllers (SIC1 and SIC2), four interrupt outputs from SIC1 and SIC2
+>>>> are connected to MIC.
+>>>>
+>>>> Also the change describes two additional optional properties:
+>>>> * interrupt-controller-name - human readable name of an interrupt
+>>>>   controller,
+>>>
+>>> Why? compatible is human readable. If you don't like that, then put the 
+>>> string in the driver.
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
->> new file mode 100644
->> index 0000000..67fba7f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
->> @@ -0,0 +1,22 @@
->> +NXP LPC32xx USB Clock Controller
->> +
->> +Required properties:
->> +- compatible: should be "nxp,lpc3220-usb-clk"
->> +- reg:  should contain clock controller registers location and length
->> +- #clock-cells: must be 1, the cell holds id of a clock provided by the
->> +  USB clock controller
->> +
->> +Examples:
->> +
->> +	usb {
-> 
-> I don't understand the full structure of USB blocks. Can you make the 
-> example complete. All the blocks are a child of this node?
-
-Yes, all the blocks are children of this node.
-
-USB controller contains 5 subdevices, interestingly one of these
-subdevices, I2C controller, is the same as a general purpose I2C
-controller device.
-
-Please find some description here:
-http://www.spinics.net/lists/devicetree/msg98538.html
-
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		compatible = "simple-bus";
->> +		ranges = <0x0 0x31020000 0x00001000>;
->> +
->> +		usbclk: clock-controller@F00 {
-> lower case                               ^
-> 
->> +			compatible = "nxp,lpc3220-usb-clk";
->> +			reg = <0xF00 0x100>;
-> 
-> lower case
-
-Ok, thanks for pointing it out.
-
->> +			#clock-cells = <1>;
->> +		};
->> +	};
->> -- 
->> 2.1.4
+>> in runtime I'd like to differentiate various IRQ chips by name. Here for
+>> example I have one compatible "*-sic" and two actual IRQ chips SIC1 and
+>> SIC2. If I read /proc/interrupts or /sys/kernel/debug/irq_domain_mapping
+>> I would prefer to visualize interrupts from SIC1 and SIC2.
 >>
+>> I understand that this property is not hardware specific, but there are
+>> plenty of similar properties like "label" etc. Probably renaming of the
+>> property may help?
+> 
+> You can always generate the name based on the probing order or the address.
+
+But the probing order is not guaranteed in general.
+
+It might be confusing, if the spec operates with strictly defined SIC1
+and SIC2 names, and in runtime the names of interrupt controllers are
+swapped.
+
+Another option might be to introduce different compatibles, but I think
+optional label/name property is better.
 
 --
+With best wishes,
 Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
