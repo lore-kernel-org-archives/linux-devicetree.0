@@ -1,46 +1,45 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 02/13] dmaengine: Introduce
- dma_request_slave_channel_compat_reason()
-Date: Fri, 20 Nov 2015 14:30:11 +0200
-Message-ID: <564F1253.4000800@ti.com>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
- <4533695.7ZVFN1S94o@wuerfel> <564EF502.6040708@ti.com>
- <6118451.vaLZWOZEF5@wuerfel>
- <CAHp75VdoHqPMNGFfz4mPhX+Lw+vxgiyqFS8j5+kQ9Z9CHt=OTA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VdoHqPMNGFfz4mPhX+Lw+vxgiyqFS8j5+kQ9Z9CHt=OTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/6] ARM: shmobile: r8a7778 dtsi: Use "arm,pl390" for GIC
+Date: Fri, 20 Nov 2015 13:36:55 +0100
+Message-ID: <1448023017-21816-5-git-send-email-geert+renesas@glider.be>
+References: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2015 02:24 PM, Andy Shevchenko wrote:
-> On Fri, Nov 20, 2015 at 12:58 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote=
-:
->> On Friday 20 November 2015 12:25:06 Peter Ujfalusi wrote:
->>> On 11/19/2015 01:25 PM, Arnd Bergmann wrote:
->=20
->> Another idea would be to remove the filter function from struct dma_=
-chan_map
->> and pass the map through platform data
->=20
-> Why not unified device properties?
+Replace the "arm,cortex-a9-gic" compatible value for the GIC by
+"arm,pl390", as the documentation states it is a PL390.
+This has been confirmed by reading the GICD_IIDR register, which reports
+0x0000043b (PL390 = 0x00, ARM = 0x43b).
 
-Is this some Windows/ACPI feature? Quick search gives mostly MSDN and
-Windows10 related links.
+This has no effect on runtime behavior, as currently the GIC driver
+treats both compatible values the same.
 
-We only need dma_chan_map for platforms which has not been converted to=
- DT and
-still using legacy boot. Or platforms which can still boot in legacy mo=
-de. In
-DT/ACPI mode we do not need this map at all.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+You can read the GICD_IIDR register from U-Boot using
 
---=20
-P=C3=A9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    md 0xfe438008 1
+---
+ arch/arm/boot/dts/r8a7778.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+index da76f5d95875ce11..fd10197c7dba6d7d 100644
+--- a/arch/arm/boot/dts/r8a7778.dtsi
++++ b/arch/arm/boot/dts/r8a7778.dtsi
+@@ -61,7 +61,7 @@
+ 	};
+ 
+ 	gic: interrupt-controller@fe438000 {
+-		compatible = "arm,cortex-a9-gic";
++		compatible = "arm,pl390";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+ 		reg = <0xfe438000 0x1000>,
+-- 
+1.9.1
+
