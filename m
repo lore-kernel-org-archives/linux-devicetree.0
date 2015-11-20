@@ -1,48 +1,53 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH V2 3/3] ASoC: fsl_asrc: spba clock is needed by asrc
- device
-Date: Fri, 20 Nov 2015 14:00:16 -0800
-Message-ID: <20151120220015.GA10156@Asurada>
-References: <cover.1447997800.git.shengjiu.wang@freescale.com>
- <7b40da78c965d4152c15794ec527c75198c9e2f9.1447997800.git.shengjiu.wang@freescale.com>
- <20151120142946.GA6949@rob-hp-laptop>
+From: Tim Bird <tim.bird@sonymobile.com>
+Subject: Re: [PATCH 2/2] usb: phy: msm: fix connect/disconnect bug for
+ dragonboard OTG port
+Date: Fri, 20 Nov 2015 14:36:55 -0800
+Message-ID: <564FA087.5050807@sonymobile.com>
+References: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
+ <1447202811-3429-2-git-send-email-tim.bird@sonymobile.com>
+ <20151111031445.GA8826@shlinux2> <56437F50.6050006@sonymobile.com>
+ <20151112091349.GA3402@shlinux2> <877flhn9mh.fsf@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151120142946.GA6949@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shengjiu Wang <shengjiu.wang@freescale.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, timur@tabi.org, Xiubo.Lee@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <877flhn9mh.fsf@saruman.tx.rr.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Peter Chen <peter.chen@freescale.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, =?UTF-8?Q?Andersson=2c_Bj=c3=b6rn?= <Bjorn.Andersson@sonymobile.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 08:29:46AM -0600, Rob Herring wrote:
-> On Fri, Nov 20, 2015 at 02:17:53PM +0800, Shengjiu Wang wrote:
-> > ASRC need to enable the spba clock, when sdma is using share peripheral
-> > script. In this case, there is two spba master port is used, if don't
-> > enable the clock, the spba bus will have arbitration issue, which may
-> > cause read/write wrong data from/to ASRC registers
-> > 
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
-> > ---
-> >  Documentation/devicetree/bindings/sound/fsl,asrc.txt |  2 ++
-> >  sound/soc/fsl/fsl_asrc.c                             | 10 ++++++++++
-> >  sound/soc/fsl/fsl_asrc.h                             |  1 +
-> >  3 files changed, 13 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > index b93362a..d8eeee3 100644
-> > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > @@ -25,6 +25,8 @@ Required properties:
-> >  	"mem"		  Peripheral access clock to access registers.
-> >  	"ipg"		  Peripheral clock to driver module.
-> >  	"asrck_<0-f>"	  Clock sources for input and output clock.
-> > +	"spba"		  The spba clock is needed when two spba master port
-> > +			  is used.
+
+
+On 11/16/2015 09:21 AM, Felipe Balbi wrote:
 > 
-> I'm assuming the same comments on patch 1 apply to all 3.
+> Hi,
+> 
+> Peter Chen <peter.chen@freescale.com> writes:
+>> On Wed, Nov 11, 2015 at 09:48:00AM -0800, Tim Bird wrote:
+>>>
+>>>
+>>> On 11/10/2015 07:14 PM, Peter Chen wrote:
+>>>> On Tue, Nov 10, 2015 at 04:46:51PM -0800, Tim Bird wrote:
+>>>>> This fixes a bug where if you disconnect and re-connect the USB cable,
+>>>>> the gadget driver stops working.
+>>>>>
+>>>>> Add support for async_irq to wake up driver from low power mode.
+>>>>> Without this, the power management code never calls resume.
+>>>>> Also, have the phy driver kick the gadget driver (chipidea otg)
+>>>>> by having the chipidea driver register with it, for vbus connect
+>>>>> notifications.
+>>>>>
+>>>>> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+>>>>> ---
+>>>>>  drivers/usb/chipidea/udc.c    |  6 ++++++
+>>>>>  drivers/usb/phy/phy-msm-usb.c | 16 ++++++++++++++++
+>>>>>  include/linux/usb/msm_hsusb.h |  1 +
+>>>>>  3 files changed, 23 insertions(+)
+> 
+> I just wanna know how you guys want this to be handled ? Through my tree
+> or chipidea's ? Or do we break the dependencies between the changes ?
 
-Yes. I should have mentioned that.
-
-Nicolin
+I'm fine with splitting it up.  I'm sending a new series with 3 patches
+right after this message.  Do both trees go to linux-next?
+ -- Tim
