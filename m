@@ -1,46 +1,54 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 6/9] ARM: dts: sun8i: Add simplefb node
- labels to reference at board level
-Date: Fri, 20 Nov 2015 12:13:42 +0100
-Message-ID: <20151120111342.GW32142@lukather>
-References: <1447691908-25456-1-git-send-email-wens@csie.org>
- <1447691908-25456-7-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12 0/3] Mediatek xHCI support
+Date: Fri, 20 Nov 2015 13:20:49 +0200
+Message-ID: <564F0211.3090605@intel.com>
+References: <1447751921-26746-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ItroYk2LVxvwOvi/"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4UAXSZAKGQEN2WCYXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447691908-25456-7-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447751921-26746-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---ItroYk2LVxvwOvi/
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 17.11.2015 11:18, Chunfeng Yun wrote:
+>  From 577f68d9c0ca1531d5f9cae0dcbea2ba116c8551 Mon Sep 17 00:00:00 2001
+> From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Date: Tue, 17 Nov 2015 17:09:05 +0800
+> Subject: [PATCH v12 0/3] Mediatek xHCI support
+>
+> The patch supports MediaTek's xHCI controller.
+>
+> There are some differences from xHCI spec:
+> 1. The interval is specified in 250 * 8ns increments for Interrupt Moderation
+> Interval(IMODI) of the Interrupter Moderation(IMOD) register, it is 8 times as
+> much as that defined in xHCI spec.
+>
+> 2. For the value of TD Size in Normal TRB, MTK's xHCI controller defines a
+> number of packets that remain to be transferred for a TD after processing all
+> Max packets in all previous TRBs,that means don't include the current TRB's,
+> but in xHCI spec it includes the current ones.
+>
+> 3. To minimize the scheduling effort for synchronous endpoints in xHC, the MTK
+> architecture defines some extra SW scheduling parameters for HW. According to
+> these parameters provided by SW, the xHC can easily decide whether a
+> synchronous endpoint should be scheduled in a specific uFrame. The extra SW
+> scheduling parameters are put into reserved DWs in Slot and Endpoint Context.
+> And a bandwidth scheduler algorithm is added to support such feature.
+>
+> A usb3.0 phy driver is also added which used by mt65xx SoCs platform, it
+> supports two usb2.0 ports and one usb3.0 port.
+>
 
-On Tue, Nov 17, 2015 at 12:38:25AM +0800, Chen-Yu Tsai wrote:
-> Some boards, such as tablets, have regulators providing power to parts
-> of the display pipeline, like signal converters and LCD panels.
-> 
-> Add labels to the simplefb device nodes so that we can reference them
-> in the board dts files to add regulator supply properties.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Added to my tree, I'll send it forward to Greg shortly
 
-Applied, thanks!
-Maxime
+Fixed the documentation "wakeup_deb_p0" -> "wakeup_deb_p1" typo as well
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---ItroYk2LVxvwOvi/--
+-Mathias  
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
