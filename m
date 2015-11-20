@@ -1,86 +1,73 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 03/11] dt-bindings: clock: add NXP LPC32xx clock list for consumers
-Date: Fri, 20 Nov 2015 03:05:03 +0200
-Message-ID: <1447981511-29653-4-git-send-email-vz@mleia.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 08/11] clk: lpc18xx: add NXP specific common clock framework selection
+Date: Fri, 20 Nov 2015 03:05:08 +0200
+Message-ID: <1447981511-29653-9-git-send-email-vz@mleia.com>
 References: <1447981511-29653-1-git-send-email-vz@mleia.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1447981511-29653-1-git-send-email-vz@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447981511-29653-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The change adds a list of NXP LPC32xx clocks, which can be requested
-by clock consumers.
+The change adds COMMON_CLK_NXP configuration symbol and enables it for
+NXP LPC18XX architecture, this is needed to reuse drivers/clk/nxp
+folder for NXP common clock framework drivers other than LPC18XX one.
 
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- include/dt-bindings/clock/lpc32xx-clock.h | 56 +++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 include/dt-bindings/clock/lpc32xx-clock.h
+ arch/arm/Kconfig     | 1 +
+ drivers/clk/Kconfig  | 5 +++++
+ drivers/clk/Makefile | 2 +-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/clock/lpc32xx-clock.h b/include/dt-bindings/clock/lpc32xx-clock.h
-new file mode 100644
-index 0000000..6f4036a
---- /dev/null
-+++ b/include/dt-bindings/clock/lpc32xx-clock.h
-@@ -0,0 +1,56 @@
-+/*
-+ * Copyright (c) 2015 Vladimir Zapolskiy <vz@mleia.com>
-+ *
-+ * This code is released using a dual license strategy: BSD/GPL
-+ * You can choose the licence that better fits your requirements.
-+ *
-+ * Released under the terms of 3-clause BSD License
-+ * Released under the terms of GNU General Public License Version 2.0
-+ *
-+ */
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 0365cbb..c318277 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -952,6 +952,7 @@ config ARCH_LPC18XX
+ 	select ARCH_HAS_RESET_CONTROLLER
+ 	select ARM_AMBA
+ 	select CLKSRC_LPC32XX
++	select COMMON_CLK
+ 	select PINCTRL
+ 	help
+ 	  Support for NXP's LPC18xx Cortex-M3 and LPC43xx Cortex-M4
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index c3e3a02..7fc1eb9 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -175,6 +175,11 @@ config COMMON_CLK_PWM
+ 	  Adapter driver so that any PWM output can be (mis)used as clock signal
+ 	  at 50% duty cycle.
+ 
++config COMMON_CLK_NXP
++	def_bool COMMON_CLK && ARCH_LPC18XX
++	---help---
++	  Support for clock providers on NXP platforms.
 +
-+#ifndef __DT_BINDINGS_LPC32XX_CLOCK_H
-+#define __DT_BINDINGS_LPC32XX_CLOCK_H
-+
-+/* LPC32XX System Control Block clocks */
-+#define LPC32XX_CLK_RTC		0
-+#define LPC32XX_CLK_DMA		1
-+#define LPC32XX_CLK_MLC		2
-+#define LPC32XX_CLK_SLC		3
-+#define LPC32XX_CLK_LCD		4
-+#define LPC32XX_CLK_MAC		5
-+#define LPC32XX_CLK_SD		6
-+#define LPC32XX_CLK_DDRAM	7
-+#define LPC32XX_CLK_SSP0	8
-+#define LPC32XX_CLK_SSP1	9
-+#define LPC32XX_CLK_UART3	10
-+#define LPC32XX_CLK_UART4	11
-+#define LPC32XX_CLK_UART5	12
-+#define LPC32XX_CLK_UART6	13
-+#define LPC32XX_CLK_IRDA	14
-+#define LPC32XX_CLK_I2C1	15
-+#define LPC32XX_CLK_I2C2	16
-+#define LPC32XX_CLK_TIMER0	17
-+#define LPC32XX_CLK_TIMER1	18
-+#define LPC32XX_CLK_TIMER2	19
-+#define LPC32XX_CLK_TIMER3	20
-+#define LPC32XX_CLK_TIMER4	21
-+#define LPC32XX_CLK_TIMER5	22
-+#define LPC32XX_CLK_WDOG	23
-+#define LPC32XX_CLK_I2S0	24
-+#define LPC32XX_CLK_I2S1	25
-+#define LPC32XX_CLK_SPI1	26
-+#define LPC32XX_CLK_SPI2	27
-+#define LPC32XX_CLK_MCPWM	28
-+#define LPC32XX_CLK_HSTIMER	29
-+#define LPC32XX_CLK_KEY		30
-+#define LPC32XX_CLK_PWM1	31
-+#define LPC32XX_CLK_PWM2	32
-+#define LPC32XX_CLK_ADC		33
-+
-+/* LPC32XX USB clocks */
-+#define LPC32XX_USB_CLK_I2C	0
-+#define LPC32XX_USB_CLK_DEVICE	1
-+#define LPC32XX_USB_CLK_HOST	2
-+
-+#endif /* __DT_BINDINGS_LPC32XX_CLOCK_H */
+ config COMMON_CLK_PXA
+ 	def_bool COMMON_CLK && ARCH_PXA
+ 	---help---
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 820714c..15603c1 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -62,8 +62,8 @@ endif
+ obj-$(CONFIG_PLAT_ORION)		+= mvebu/
+ obj-$(CONFIG_ARCH_MESON)		+= meson/
+ obj-$(CONFIG_ARCH_MXS)			+= mxs/
+-obj-$(CONFIG_ARCH_LPC18XX)		+= nxp/
+ obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
++obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
+ obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
+ obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
+ obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
 -- 
 2.1.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
