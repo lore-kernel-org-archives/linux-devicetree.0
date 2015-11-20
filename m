@@ -1,37 +1,67 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH 3/4] spi: mediatek: remove needless pair of writel()/readl()
-Date: Fri, 20 Nov 2015 10:21:18 +0800
-Message-ID: <1447986080-31410-3-git-send-email-leilk.liu@mediatek.com>
-References: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH V5 RESEND 1/3] docs: iommu: Documentation for iommu in hi6220 SoC
+Date: Fri, 20 Nov 2015 10:25:07 +0800
+Message-ID: <1447986309-47548-2-git-send-email-puck.chen@hisilicon.com>
+References: <1447986309-47548-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, Leilk Liu <leilk.liu@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447986309-47548-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: puck.chen-Dw/NWeUnuQfQT0dZR+AlfA@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It's not need to re-read and re-write SPI_CMD_REG, so remove it.
+Documentation for hi6220 iommu driver.
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- drivers/spi/spi-mt65xx.c |    3 ---
- 1 file changed, 3 deletions(-)
+ .../bindings/iommu/hisi,hi6220-iommu.txt           | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 7840067..6c1a96e 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -154,9 +154,6 @@ static int mtk_spi_prepare_message(struct spi_master *master,
- 		reg_val |= SPI_CMD_CPOL;
- 	else
- 		reg_val &= ~SPI_CMD_CPOL;
--	writel(reg_val, mdata->base + SPI_CMD_REG);
--
--	reg_val = readl(mdata->base + SPI_CMD_REG);
- 
- 	/* set the mlsbx and mlsbtx */
- 	if (chip_config->tx_mlsb)
+diff --git a/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
+new file mode 100644
+index 0000000..44f9101
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/hisi,hi6220-iommu.txt
+@@ -0,0 +1,32 @@
++Hi6220 SoC SMMU Device Driver devicetree document
++The media system shared the same smmu IP to access DDR memory. And all
++media IP used the same page table.
++
++Below binding describes the system mmu for media system in hi6220 platform
++
++Required properties:
++- compatible: should contain "hisilicon,hi6220-smmu".
++- reg: A tuple of base address and size of System MMU registers.
++- clocks: a list of phandle + clock-specifier pairs, one for each entry
++  in clock-names.
++- clock-names: should contain:
++  * "smmu"
++  * "media-sc"
++  * "smmu-peri"
++- interrupts: An interrupt specifier for interrupt signal of System MMU.
++- #iommu-cells: The iommu-cells should be 0. Because no additional information
++  needs to be encoded in the specifier.
++
++Examples:
++	iommu@f4210000 {
++		compatible = "hisilicon,hi6220-smmu";
++		reg = <0x0 0xf4210000 0x0 0x1000>;
++		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&sys_ctrl HI6220_MMU_CLK>,
++		         <&media_ctrl HI6220_MED_MMU>,
++		         <&sys_ctrl HI6220_MEDIA_PLL_SRC>;
++		clock-names = "smmu",
++			      "media-sc",
++			      "smmu-peri";
++		#iommu-cells = <0>;
++	};
 -- 
-1.7.9.5
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
