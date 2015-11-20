@@ -1,85 +1,157 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: [PATCH 2/4] usb: dwc3: qcom: Configure TCSR phy mux register
-Date: Fri, 20 Nov 2015 02:35:07 -0600
-Message-ID: <1448008509-8913-3-git-send-email-agross@codeaurora.org>
+Subject: [PATCH 3/4] ARM: dts: qcom: Add DWC3 USB support on IPQ8064
+Date: Fri, 20 Nov 2015 02:35:08 -0600
+Message-ID: <1448008509-8913-4-git-send-email-agross@codeaurora.org>
 References: <1448008509-8913-1-git-send-email-agross@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1448008509-8913-1-git-send-email-agross@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <agross@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: Felipe Balbi <balbi@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds automatic configuration of the TCSR phy mux register based on
-the syscon-tcsr devicetree entry.  This configuration is optional, as some
-platforms may not require the mux selection.
+This patch adds Qualcomm DWC3 USB nodes to device tree to enable support for the
+DWC3 controller found on IPQ8064/AP148 platforms.
 
 Signed-off-by: Andy Gross <agross@codeaurora.org>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 24 +++++++++
+ arch/arm/boot/dts/qcom-ipq8064.dtsi      | 89 ++++++++++++++++++++++++++++++++
+ 2 files changed, 113 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 0880260..fcf264c 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -17,6 +17,8 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- 
- struct dwc3_qcom {
- 	struct device		*dev;
-@@ -30,6 +32,9 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
- 	struct dwc3_qcom *qdwc;
-+	struct regmap *regmap;
-+	u32 mux_offset;
-+	u32 mux_bit;
- 	int ret;
- 
- 	qdwc = devm_kzalloc(&pdev->dev, sizeof(*qdwc), GFP_KERNEL);
-@@ -58,6 +63,26 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 		qdwc->sleep_clk = NULL;
- 	}
- 
-+	/* look for tcsr and if present, provision it */
-+	regmap = syscon_regmap_lookup_by_phandle(node, "syscon-tcsr");
-+	if (!IS_ERR(regmap)) {
-+		if (of_property_read_u32_index(node, "syscon-tcsr", 1,
-+					       &mux_offset)) {
-+			dev_err(qdwc->dev, "missing USB TCSR mux offset\n");
-+			return -EINVAL;
-+		}
-+		if (of_property_read_u32_index(node, "syscon-tcsr", 2,
-+					       &mux_bit)) {
-+			dev_err(qdwc->dev, "missing USB TCSR mux bit\n");
-+			return -EINVAL;
-+		}
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+index d501382..bf1638c 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
++++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+@@ -97,5 +97,29 @@
+ 		sata@29000000 {
+ 			status = "ok";
+ 		};
 +
-+		regmap_update_bits(regmap, mux_offset, BIT(mux_bit),
-+				   BIT(mux_bit));
-+	} else {
-+		dev_info(qdwc->dev, "missing syscon tcsr entry\n");
-+	}
++		phy@100f8800 {
++			status = "ok";
++		};
 +
- 	ret = clk_prepare_enable(qdwc->core_clk);
- 	if (ret) {
- 		dev_err(qdwc->dev, "failed to enable core clock\n");
++		phy@100f8830 {
++			status = "ok";
++		};
++
++		usb30@0 {
++			status = "ok";
++		};
++
++		phy@110f8800 {
++			status = "ok";
++		};
++
++		phy@110f8830 {
++			status = "ok";
++		};
++
++		usb30@1 {
++			status = "ok";
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index fa69863..b2dcd9d 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -329,5 +329,94 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		hs_phy_0: phy@100f8800 {
++			compatible = "qcom,dwc3-hs-usb-phy";
++			reg = <0x100f8800 0x30>;
++			clocks = <&gcc USB30_0_UTMI_CLK>;
++			clock-names = "ref";
++
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		ss_phy_0: phy@100f8830 {
++			compatible = "qcom,dwc3-ss-usb-phy";
++			reg = <0x100f8830 0x30>;
++
++			clocks = <&gcc USB30_0_MASTER_CLK>;
++			clock-names = "ref";
++
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb30@0 {
++			compatible = "qcom,dwc3";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&gcc USB30_0_MASTER_CLK>;
++			clock-names = "core";
++
++			syscon-tcsr = <&tcsr 0xb0 1>;
++
++			ranges;
++
++			status = "disabled";
++
++			dwc3@10000000 {
++				compatible = "snps,dwc3";
++				reg = <0x10000000 0xcd00>;
++				interrupts = <0 205 0x4>;
++				phys = <&hs_phy_0>, <&ss_phy_0>;
++				phy-names = "usb2-phy", "usb3-phy";
++				tx-fifo-resize;
++				dr_mode = "host";
++			};
++		};
++
++		hs_phy_1: phy@110f8800 {
++			compatible = "qcom,dwc3-hs-usb-phy";
++			reg = <0x110f8800 0x30>;
++			clocks = <&gcc USB30_1_UTMI_CLK>;
++			clock-names = "ref";
++
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		ss_phy_1: phy@110f8830 {
++			compatible = "qcom,dwc3-ss-usb-phy";
++			reg = <0x110f8830 0x30>;
++
++			clocks = <&gcc USB30_1_MASTER_CLK>;
++			clock-names = "ref";
++
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb30@1 {
++			compatible = "qcom,dwc3";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&gcc USB30_1_MASTER_CLK>;
++			clock-names = "core";
++
++			syscon-tcsr = <&tcsr 0xb0 0>;
++
++			ranges;
++
++			status = "disabled";
++
++			dwc3@11000000 {
++				compatible = "snps,dwc3";
++				reg = <0x11000000 0xcd00>;
++				interrupts = <0 110 0x4>;
++				phys = <&hs_phy_1>, <&ss_phy_1>;
++				phy-names = "usb2-phy", "usb3-phy";
++				tx-fifo-resize;
++				dr_mode = "host";
++			};
++		};
+ 	};
+ };
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
