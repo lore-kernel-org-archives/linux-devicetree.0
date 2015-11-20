@@ -1,173 +1,79 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] touchscreen: pixcir_i2c: Add support
- for wake and enable gpios
-Date: Fri, 20 Nov 2015 11:32:14 -0800
-Message-ID: <20151120193214.GE26895@dtor-ws>
-References: <1448025892-20899-1-git-send-email-hdegoede@redhat.com>
- <1448025892-20899-5-git-send-email-hdegoede@redhat.com>
- <20151120185451.GC26895@dtor-ws>
- <564F7258.3060601@redhat.com>
-Reply-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 net-next 5/5] net:hns: Add the init code to disable Hip06 "Hardware VLAN assist"
+Date: Sat, 21 Nov 2015 03:49:12 +0800
+Message-ID: <1448048952-146714-6-git-send-email-salil.mehta@huawei.com>
+References: <1448048952-146714-1-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRBQXKXWZAKGQEX6NDWSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <564F7258.3060601-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448048952-146714-1-git-send-email-salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 08:19:52PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 20-11-15 19:54, Dmitry Torokhov wrote:
-> >On Fri, Nov 20, 2015 at 02:24:49PM +0100, Hans de Goede wrote:
-> >>From: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
-> >>
-> >>On some devices the wake and enable pins of the pixcir touchscreen
-> >>controller are connected to gpios and these must be controlled by the
-> >>driver for the device to operate properly.
-> >>
-> >>Signed-off-by: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>Changes in v2 (Hans de Goede):
-> >>-Split the changes for dealing with inverted / swapped axis out into a
-> >>  separate patch
-> >>-Remove a bunch of dev_info calls to make the driver less chatty
-> >>-Use devm_gpiod_get_optional as these new gpios are optional
-> >>-Only msleep after setting enable high if we have an enable pin
-> >>---
-> >>  .../bindings/input/touchscreen/pixcir_i2c_ts.txt   |  2 +
-> >>  drivers/input/touchscreen/pixcir_i2c_ts.c          | 46 ++++++++++++++++++++++
-> >>  2 files changed, 48 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
-> >>index 8eb240a..72ca5ec 100644
-> >>--- a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
-> >>+++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
-> >>@@ -10,6 +10,8 @@ Required properties:
-> >>
-> >>  Optional properties:
-> >>  - reset-gpio: GPIO connected to the RESET line of the chip
-> >>+- enable-gpios: GPIO connected to the ENABLE line of the chip
-> >>+- wake-gpios: GPIO connected to the WAKE line of the chip
-> >>
-> >>  Example:
-> >>
-> >>diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> >>index 211408c..b75ef65 100644
-> >>--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-> >>+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> >>@@ -38,6 +38,8 @@ struct pixcir_i2c_ts_data {
-> >>  	struct input_dev *input;
-> >>  	struct gpio_desc *gpio_attb;
-> >>  	struct gpio_desc *gpio_reset;
-> >>+	struct gpio_desc *gpio_enable;
-> >>+	struct gpio_desc *gpio_wake;
-> >>  	const struct pixcir_i2c_chip_data *chip;
-> >>  	int max_fingers;	/* Max fingers supported in this instance */
-> >>  	bool running;
-> >>@@ -208,6 +210,11 @@ static int pixcir_set_power_mode(struct pixcir_i2c_ts_data *ts,
-> >>  	struct device *dev = &ts->client->dev;
-> >>  	int ret;
-> >>
-> >>+	if (mode == PIXCIR_POWER_ACTIVE || mode == PIXCIR_POWER_IDLE) {
-> >>+		if (!IS_ERR_OR_NULL(ts->gpio_wake))
-> >>+			gpiod_set_value_cansleep(ts->gpio_wake, 1);
-> >>+	}
-> >>+
-> >>  	ret = i2c_smbus_read_byte_data(ts->client, PIXCIR_REG_POWER_MODE);
-> >>  	if (ret < 0) {
-> >>  		dev_err(dev, "%s: can't read reg 0x%x : %d\n",
-> >>@@ -228,6 +235,11 @@ static int pixcir_set_power_mode(struct pixcir_i2c_ts_data *ts,
-> >>  		return ret;
-> >>  	}
-> >>
-> >>+	if (mode == PIXCIR_POWER_HALT) {
-> >>+		if (!IS_ERR_OR_NULL(ts->gpio_wake))
-> >>+			gpiod_set_value_cansleep(ts->gpio_wake, 0);
-> >>+	}
-> >>+
-> >>  	return 0;
-> >>  }
-> >>
-> >>@@ -302,6 +314,11 @@ static int pixcir_start(struct pixcir_i2c_ts_data *ts)
-> >>  	struct device *dev = &ts->client->dev;
-> >>  	int error;
-> >>
-> >>+	if (!IS_ERR_OR_NULL(ts->gpio_enable)) {
-> >>+		gpiod_set_value_cansleep(ts->gpio_enable, 1);
-> >>+		msleep(100);
-> >>+	}
-> >>+
-> >>  	/* LEVEL_TOUCH interrupt with active low polarity */
-> >>  	error = pixcir_set_int_mode(ts, PIXCIR_INT_LEVEL_TOUCH, 0);
-> >>  	if (error) {
-> >>@@ -343,6 +360,9 @@ static int pixcir_stop(struct pixcir_i2c_ts_data *ts)
-> >>  	/* Wait till running ISR is complete */
-> >>  	synchronize_irq(ts->client->irq);
-> >>
-> >>+	if (!IS_ERR_OR_NULL(ts->gpio_enable))
-> >>+		gpiod_set_value_cansleep(ts->gpio_enable, 0);
-> >>+
-> >>  	return 0;
-> >>  }
-> >>
-> >>@@ -534,6 +554,24 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
-> >>  		return error;
-> >>  	}
-> >>
-> >>+	tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
-> >>+						    GPIOD_OUT_HIGH);
-> >>+	if (IS_ERR(tsdata->gpio_wake)) {
-> >>+		error = PTR_ERR(tsdata->gpio_wake);
-> >>+		if (error != -EPROBE_DEFER)
-> >>+			dev_err(dev, "Failed to get wake gpio: %d\n", error);
-> >>+		return error;
-> >>+	}
-> >>+
-> >>+	tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
-> >>+						      GPIOD_OUT_HIGH);
-> >>+	if (IS_ERR(tsdata->gpio_enable)) {
-> >>+		error = PTR_ERR(tsdata->gpio_enable);
-> >>+		if (error != -EPROBE_DEFER)
-> >>+			dev_err(dev, "Failed to get enable gpio: %d\n", error);
-> >>+		return error;
-> >>+	}
-> >>+
-> >>  	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
-> >>  					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> >>  					  client->name, tsdata);
-> >>@@ -542,6 +580,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
-> >>  		return error;
-> >>  	}
-> >>
-> >>+	if (!IS_ERR_OR_NULL(tsdata->gpio_wake))
-> >>+		gpiod_set_value_cansleep(tsdata->gpio_wake, 1);
-> >>+
-> >>+	if (!IS_ERR_OR_NULL(tsdata->gpio_enable)) {
-> >>+		gpiod_set_value_cansleep(tsdata->gpio_enable, 1);
-> >>+		msleep(100);
-> >>+	}
-> >
-> >Actually, another question: why do we need this calls to activate wake
-> >and enable gpios here if we request them as active?
-> 
-> Hmm, interesting point. I will re-test with just the msleep there. For v2
-> what do you want to do with the if tests, keep as "if (!IS_ERR_OR_NULL(...))"
-> or change them to just "if (...)" ?
+This patch adds the initializzation code to disable the hardware
+vlan support for VLAN Tag stripping by default for now.
 
-Would prefer plain "if (gpio)" where makes sense.
+Proper support of "hardware VLAN assitance" feature would
+soon come in the next coming patches.
 
-Thanks!
+Signed-off-by: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
 
+PATCH V4:
+- No change over the earlier patches
+
+PATCH V2/V3:
+- No change over the initial floated patch
+
+PATCH V1:
+- Initial code to disable the hardware VLAN assist for now
+---
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c |    7 +++++++
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h |    1 +
+ 2 files changed, 8 insertions(+)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
+index b6bf292..544f323 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
+@@ -176,6 +176,11 @@ static void hns_ppe_cnt_clr_ce(struct hns_ppe_cb *ppe_cb)
+ 			 PPE_CNT_CLR_CE_B, 1);
+ }
+ 
++static void hns_ppe_set_vlan_strip(struct hns_ppe_cb *ppe_cb, int en)
++{
++	dsaf_write_dev(ppe_cb, PPEV2_VLAN_STRIP_EN_REG, en);
++}
++
+ /**
+  * hns_ppe_checksum_hw - set ppe checksum caculate
+  * @ppe_device: ppe device
+@@ -345,6 +350,8 @@ static void hns_ppe_init_hw(struct hns_ppe_cb *ppe_cb)
+ 	hns_ppe_cnt_clr_ce(ppe_cb);
+ 
+ 	if (!AE_IS_VER1(dsaf_dev->dsaf_ver)) {
++		hns_ppe_set_vlan_strip(ppe_cb, 0);
++
+ 		hns_ppe_set_rss_key(ppe_cb, rss_key);
+ 
+ 		for (i = 0; i < HNS_PPEV2_RSS_IND_TBL_SIZE; i++)
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+index 98c163e..6c18ca9 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+@@ -318,6 +318,7 @@
+ #define PPE_CFG_PARSE_TAG_REG			0x94
+ #define PPE_CFG_PRO_CHECK_EN_REG		0x98
+ #define PPEV2_CFG_TSO_EN_REG                    0xA0
++#define PPEV2_VLAN_STRIP_EN_REG                 0xAC
+ #define PPE_INTEN_REG				0x100
+ #define PPE_RINT_REG				0x104
+ #define PPE_INTSTS_REG				0x108
 -- 
-Dmitry
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
