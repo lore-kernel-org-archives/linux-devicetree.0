@@ -1,47 +1,61 @@
-From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
- wait cycles using the SPI Wait Clock Register
-Date: Fri, 20 Nov 2015 09:45:48 +0100
-Message-ID: <CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
-References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
-	<1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
-	<CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
-Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v2 0/6] Add Marvell berlin4ct clk support
+Date: Fri, 20 Nov 2015 16:42:26 +0800
+Message-ID: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDFO74UEV4IRBPF3XOZAKGQE35XEEUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, sebastian.hesselbarth@gmail.com, antoine.tenart@free-electrons.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Julian,
+Add berlin4ct clk driver. The berlin4ct SoC contains:
 
-2015-11-19 23:59 GMT+01:00 Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Should you possibly hide the 3 clock periods from the user?
->
-> I.e. they set whatever they want for the wdelay, we set it to the
-> closest number we can that's greater or equal to what they ask for.
+two kinds of PLL: normal PLL and AVPLL. The normal PLL support is done.
+The AVPLL support is in TODO list.
 
-That's a good idea and much better than having to remember to subtract
-3 cycles from the desired wait time!
+two kinds of clk: normal clk and gate clk. The normal clk supports changing
+divider, selecting clock source, disabling/enabling etc. The gate clk only
+supports disabling/enabling. Both are supported in this series.
 
-But it would mean that this magic number becomes part of the driver
-code. I have found no official documentation that mentions those
-additional cycles. While I have checked many different transmission
-speeds using both CDR1 and CDR2 divider configurations, there is still
-the possibility that the behaviour changes with weird SPI module
-configurations... And I've only tested it on A20 hardware. So it would
-be great if somebody else with access to A10 hardware and an
-oscilloscope could check if we have a consistent 3 cycle overhead.
+Since v1:
+ - rebased on v4.4-rc1
+ - refactor out common code from clk-berlin4ct.c
+ - s/lock/berlin4ct_gateclk_lock
+ - drop WARN_ON for an allocation failure
+ - s/kzalloc/kcalloc
+ - add necessary handling in error code path, such as free memory, iounmap etc.
+ - initialize init.flags
+ - drop vcodiv_berlin[] array
 
-Cheers,
 
-   Marcus
+Jisheng Zhang (6):
+  clk: berlin: add common pll driver
+  clk: berlin: add common clk driver for newer SoCs
+  clk: berlin: add common gateclk driver for newer SoCs
+  clk: berlin: add clk support for berlin4ct
+  dt-bindings: add binding for marvell berlin4ct SoC
+  arm64: dts: berlin4ct: add pll and clock nodes
+
+ .../bindings/clock/marvell,berlin4ct.txt           |  38 ++++
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi         |  38 ++++
+ drivers/clk/berlin/Makefile                        |   1 +
+ drivers/clk/berlin/clk-berlin4ct.c                 |  97 ++++++++++
+ drivers/clk/berlin/clk.c                           | 203 +++++++++++++++++++++
+ drivers/clk/berlin/clk.h                           |  45 +++++
+ drivers/clk/berlin/gate.c                          |  73 ++++++++
+ drivers/clk/berlin/pll.c                           | 133 ++++++++++++++
+ include/dt-bindings/clock/berlin4ct.h              |  56 ++++++
+ 9 files changed, 684 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
+ create mode 100644 drivers/clk/berlin/clk-berlin4ct.c
+ create mode 100644 drivers/clk/berlin/clk.c
+ create mode 100644 drivers/clk/berlin/clk.h
+ create mode 100644 drivers/clk/berlin/gate.c
+ create mode 100644 drivers/clk/berlin/pll.c
+ create mode 100644 include/dt-bindings/clock/berlin4ct.h
+
+-- 
+2.6.2
+
