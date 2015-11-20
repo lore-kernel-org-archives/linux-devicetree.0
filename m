@@ -1,53 +1,43 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH v3 2/4] Documentation: add the binding file for Freescale imx7d ADC driver
-Date: Fri, 20 Nov 2015 23:48:13 +0800
-Message-ID: <1448034495-1759-3-git-send-email-haibo.chen@freescale.com>
-References: <1448034495-1759-1-git-send-email-haibo.chen@freescale.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 6/8] Input: goodix - add support for ESD
+Date: Fri, 20 Nov 2015 09:44:58 -0600
+Message-ID: <20151120154458.GA12090@rob-hp-laptop>
+References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
+ <1447936001-21420-7-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448034495-1759-1-git-send-email-haibo.chen@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447936001-21420-7-git-send-email-irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Octavian Purdila <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch adds the binding file for Freescale imx7d ADC driver.
+On Thu, Nov 19, 2015 at 02:26:39PM +0200, Irina Tirdea wrote:
+> Add ESD (Electrostatic Discharge) protection mechanism.
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/iio/adc/imx7d-adc.txt      | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+[...]
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
-new file mode 100644
-index 0000000..5c184b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
-@@ -0,0 +1,22 @@
-+Freescale imx7d ADC bindings
-+
-+The devicetree bindings are for the ADC driver written for
-+imx7d SoC.
-+
-+Required properties:
-+- compatible: Should be "fsl,imx7d-adc"
-+- reg: Offset and length of the register set for the ADC device
-+- interrupts: The interrupt number for the ADC device
-+- clocks: The root clock of the ADC controller
-+- clock-names: Must contain "adc", matching entry in the clocks property
-+- vref-supply: The regulator supply ADC reference voltage
-+
-+Example:
-+adc1: adc@30610000 {
-+	compatible = "fsl,imx7d-adc";
-+	reg = <0x30610000 0x10000>;
-+	interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clks IMX7D_ADC_ROOT_CLK>;
-+	clock-names = "adc";
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+};
--- 
-1.9.1
+> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> driver gt9xx.c for Android (publicly available in Android kernel
+> trees for various devices).
+> 
+> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> For the binding: Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+You should not have the "For the binding:" part here. It was just a note 
+so it was clear what part I looked at.
+
+It is preferred to split DT bindings to separate patches for this 
+reason.
+ 
+> Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/goodix.txt          |   4 +
+>  drivers/input/touchscreen/goodix.c                 | 160 ++++++++++++++++++++-
+>  2 files changed, 159 insertions(+), 5 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
