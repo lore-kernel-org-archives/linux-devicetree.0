@@ -1,57 +1,96 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] ARM: dts: add support for NS, NSP, and NS2 clocks
-Date: Fri, 20 Nov 2015 10:16:15 -0800
-Message-ID: <564F636F.1040803@gmail.com>
-References: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/7] touchscreen: pixcir_i2c: Add
+ support for wake and enable gpios
+Date: Fri, 20 Nov 2015 19:22:43 +0100
+Message-ID: <564F64F3.6070405@redhat.com>
+References: <1448018233-27824-1-git-send-email-hdegoede@redhat.com>
+ <1448018233-27824-5-git-send-email-hdegoede@redhat.com>
+ <20151120172725.GA26895@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448032640-27713-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151120172725.GA26895@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Sander Vermin <sander@vermin.nl>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/15 07:17, Jon Mason wrote:
-> Changes in v3:
-> Tweaked the NSP entry names, per Ray Jui
-> 
-> Changes in v2:
-> Rebased off of outstanding NSP DT patches and tweaked the entry names
-> per Ray Jui
-> 
-> 
-> This patch series adds device tree support for the Broadcom Northstar,
-> Northstar Plus, and Northstar 2 clocks.
-> 
-> Last sent as an RFC (see https://lkml.org/lkml/2015/10/13/882) due to
-> the inability to merge because of the driver dependencies.  Those
-> necessary driver changes were merged into 4.4.  All comments have been
-> addressed and it is ready to be pulled in.
+Hi,
 
-Patches 1-2 applied to devicetree/next
-Patch 3 applied to devicetree-arm64/next
+On 20-11-15 18:27, Dmitry Torokhov wrote:
+> On Fri, Nov 20, 2015 at 12:17:10PM +0100, Hans de Goede wrote:
+>> From: Sander Vermin <sander@vermin.nl>
+>>
+>> On some devices the wake and enable pins of the pixcir touchscreen
+>> controller are connected to gpios and these must be controlled by the
+>> driver for the device to operate properly.
+>>
+>> Signed-off-by: Sander Vermin <sander@vermin.nl>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2 (Hans de Goede):
+>> -Split the changes for dealing with inverted / swapped axis out into a
+>>   separate patch
+>> -Remove a bunch of dev_info calls to make the driver less chatty
+>> -Use devm_gpiod_get_optional as these new gpios are optional
+>> -Only msleep after setting enable high if we have an enable pin
+>> ---
+>>   .../bindings/input/touchscreen/pixcir_i2c_ts.txt   |  2 +
+>>   drivers/input/touchscreen/pixcir_i2c_ts.c          | 46 ++++++++++++++++++++++
+>>   2 files changed, 48 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+>> index 8eb240a..72ca5ec 100644
+>> --- a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+>> +++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+>> @@ -10,6 +10,8 @@ Required properties:
+>>
+>>   Optional properties:
+>>   - reset-gpio: GPIO connected to the RESET line of the chip
+>> +- enable-gpios: GPIO connected to the ENABLE line of the chip
+>> +- wake-gpios: GPIO connected to the WAKE line of the chip
+>>
+>>   Example:
+>>
+>> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> index 211408c..b75ef65 100644
+>> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> @@ -38,6 +38,8 @@ struct pixcir_i2c_ts_data {
+>>   	struct input_dev *input;
+>>   	struct gpio_desc *gpio_attb;
+>>   	struct gpio_desc *gpio_reset;
+>> +	struct gpio_desc *gpio_enable;
+>> +	struct gpio_desc *gpio_wake;
+>>   	const struct pixcir_i2c_chip_data *chip;
+>>   	int max_fingers;	/* Max fingers supported in this instance */
+>>   	bool running;
+>> @@ -208,6 +210,11 @@ static int pixcir_set_power_mode(struct pixcir_i2c_ts_data *ts,
+>>   	struct device *dev = &ts->client->dev;
+>>   	int ret;
+>>
+>> +	if (mode == PIXCIR_POWER_ACTIVE || mode == PIXCIR_POWER_IDLE) {
+>> +		if (!IS_ERR_OR_NULL(ts->gpio_wake))
+>> +			gpiod_set_value_cansleep(ts->gpio_wake, 1);
+>
+> I believe you error out in case when IS_ERR(ts->gpio_wake) is true, so I
+> wonder if we should simply use
+>
+> 		if (ts->gpio_wake)
+> 			gpiod_set_value_cansleep(ts->gpio_wake, 1);
+>
+> here and elsewhere.
 
-Thanks Jon!
+Yes that will work fine, I believe Sander went with his version because that
+is what the existing gpio code (for the also optional reset pin) already does.
 
-> 
-> 
-> Jon Mason (3):
->   ARM: dts: enable clock support for BCM5301X
->   ARM: dts: enable clock support for Broadcom NSP
->   ARM64: dts: enable clock support for Broadcom NS2
-> 
->  arch/arm/boot/dts/bcm-nsp.dtsi        | 81 ++++++++++++++++++++++++------
->  arch/arm/boot/dts/bcm5301x.dtsi       | 92 +++++++++++++++++++++++++++--------
->  arch/arm64/boot/dts/broadcom/ns2.dtsi | 80 +++++++++++++++++++++++++++++-
->  3 files changed, 216 insertions(+), 37 deletions(-)
-> 
+So from a consistency pov it is better to keep this patch as is.
 
+> No need to resubmit, just let me know.
 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, either way is fine with me.
+
+Regards,
+
+Hans
