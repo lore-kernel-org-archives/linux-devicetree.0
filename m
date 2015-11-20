@@ -1,63 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] devicetree: add rpi power domain driver bindings
-Date: Fri, 20 Nov 2015 10:14:15 -0600
-Message-ID: <20151120161415.GA27944@rob-hp-laptop>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
- <1447956490-22930-4-git-send-email-alex.aring@gmail.com>
+From: "Herrero, Gregory" <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc2: add support of hi6220
+Date: Fri, 20 Nov 2015 17:15:33 +0100
+Message-ID: <20151120161533.GA2987@herrerog>
+References: <1447832387-27549-1-git-send-email-zhangfei.gao@linaro.org>
+ <87ziy9erpi.fsf@saruman.tx.rr.com>
+ <2B3535C5ECE8B5419E3ECBE30077290901DC3D9462@US01WEMBX2.internal.synopsys.com>
+ <871tbkelca.fsf@saruman.tx.rr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447956490-22930-4-git-send-email-alex.aring@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexander Aring <alex.aring@gmail.com>
-Cc: linux-rpi-kernel@lists.infradead.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <871tbkelca.fsf-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 07:08:10PM +0100, Alexander Aring wrote:
-> This patch adds devicetree tree bindings for the Raspberry Pi power
-> domain driver.
-> 
-> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+Hi Felipe,
 
-Acked-by: Rob Herring <robh@kernel.org>
+I just realized this patch miss "dma_desc_fs_enable" property in
+params_hi6220. (drivers/usb/dwc2/platform.c:57)
 
-> ---
->  .../bindings/arm/bcm/raspberrypi,bcm2835-power.txt | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
+You need to apply this patch:
+
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index d5102c4..2dfdae3 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -59,6 +59,7 @@ static const struct dwc2_core_params params_hi6220 = {
+        .otg_ver                        = 0,    /* 1.3 */
+        .dma_enable                     = 1,
+        .dma_desc_enable                = 0,
++       .dma_desc_fs_enable             = 0,
+        .speed                          = 0,    /* High Speed */
+        .enable_dynamic_fifo            = 1,
+        .en_multiple_tx_fifo            = 1,
+
+
+Note that it is needed due to below patch.
+"usb: dwc2: host: enable descriptor dma for fs devices"
+
+Regards,
+Gregory
+
+On Fri, Nov 20, 2015 at 04:34:13PM +0100, Felipe Balbi wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
-> new file mode 100644
-> index 0000000..c3abc24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
-> @@ -0,0 +1,25 @@
-> +Raspberry Pi power domain driver
-> +
-> +Required properties:
-> +
-> +- compatible:		Should be "raspberrypi,bcm2835-power".
-> +- firmware:		Reference to the RPi firmware device node.
-> +- #power-domain-cells:	Should be <1>, we providing multiple power domains.
-> +
-> +The valid defines for power domain are:
-> +
-> + RPI_POWER_DOMAIN_USB
-> +
-> +Example:
-> +
-> +power: power {
-> +	compatible = "raspberrypi,bcm2835-power";
-> +	firmware = <&firmware>;
-> +	#power-domain-cells = <1>;
-> +};
-> +
-> +Example for using power domain:
-> +
-> +&usb {
-> +       power-domains = <&power RPI_POWER_DOMAIN_USB>;
-> +};
+> Hi,
+> 
+> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+> > On 11/19/2015 11:04 AM, Felipe Balbi wrote:
+> >> 
+> >> Hi,
+> >> 
+> >> Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+> >>> Support hisilicon,hi6220-usb for HiKey board
+> >>>
+> >>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> 
+> >> doesn't apply:
+> >> 
+> >> Applying: usb: dwc2: add support of hi6220
+> >> error: drivers/usb/dwc2/platform.c: does not match index
+> >> Patch failed at 0001 usb: dwc2: add support of hi6220
+> >> The copy of the patch that failed is found in: workspace/linux/.git/rebase-apply/patch
+> >> When you have resolved this problem, run "git am --continue".
+> >> If you prefer to skip this patch, run "git am --skip" instead.
+> >> To restore the original branch and stop patching, run "git am --abort".
+> >> 
+> >> Care to rebase on my testing/next and also collect John's and Rob's ack ?
+> >> 
+> >
+> >
+> > That's weird. I just sync'd to your testing/next and it seems to
+> > apply fine.
+> >
+> > Same with the series from Gregory Herrero.
+> >
+> > Any chance it's something to do with your local repo?
+> 
+> odd. Seems like it works if I apply manually with git am, but fails if I
+> pipe message from emacs to git am. Oh well, let me try again.
+> 
 > -- 
-> 2.6.1
-> 
+> balbi
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
