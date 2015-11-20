@@ -1,40 +1,99 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 2/5] arm64: dts: qcom: Make msm8916-mtp compatible string compliant
-Date: Fri, 20 Nov 2015 15:31:17 -0800
-Message-ID: <1448062280-15406-3-git-send-email-sboyd@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v2 1/5] devicetree: bindings: Document qcom board compatible format
+Date: Fri, 20 Nov 2015 15:31:16 -0800
+Message-ID: <1448062280-15406-2-git-send-email-sboyd@codeaurora.org>
 References: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448062280-15406-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This compatible string isn't compliant with the format for
-subtypes. Replace it with a compliant compatible type.
+Some qcom based bootloaders identify the dtb blob based on a set
+of device properties like SoC, platform, PMIC, and revisions of
+those components. In downstream kernels, these values are added
+to the different component dtsi files (i.e. pmic dtsi file, SoC
+dtsi file, board dtsi file, etc.) via qcom specific DT
+properties. The dtb files are parsed by a program called dtbTool
+that picks out these properties and creates a table of contents
+binary blob with the property information and some offsets into
+the concatenation of all the dtbs (termed a QCDT image).
 
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+The suggestion is to do this via the board compatible string
+instead, because these qcom specific properties are never used by
+the kernel. Add a document describing the format of the
+compatible string that encodes all this information that's
+currently encoded in the qcom,{msm-id,board-id,pmic-id}
+properties in downstream devicetrees. Future bootloaders may be
+updated to look at the compatible field instead of looking for
+the table of contents image. For non-updateable bootloaders, a
+new dtbTool program will parse the compatible string and generate
+a QCDT image from it.
+
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916-mtp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/qcom.txt | 51 ++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-index fced77f0fd3a..b0a064d3806b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-@@ -17,6 +17,6 @@
- 
- / {
- 	model = "Qualcomm Technologies, Inc. MSM 8916 MTP";
--	compatible = "qcom,msm8916-mtp", "qcom,msm8916-mtp-smb1360",
-+	compatible = "qcom,msm8916-mtp", "qcom,msm8916-mtp/1",
- 			"qcom,msm8916", "qcom,mtp";
- };
+diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+new file mode 100644
+index 000000000000..3e24518c6678
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/qcom.txt
+@@ -0,0 +1,51 @@
++QCOM device tree bindings
++-------------------------
++
++Some qcom based bootloaders identify the dtb blob based on a set of
++device properties like SoC and platform and revisions of those components.
++To support this scheme, we encode this information into the board compatible
++string.
++
++Each board must specify a top-level board compatible string with the following
++format:
++
++	compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
++
++The 'SoC' and 'board' elements are required. All other elements are optional.
++
++The 'SoC' element must be one of the following strings:
++
++	apq8016
++	apq8074
++	apq8084
++	apq8096
++	msm8916
++	msm8974
++	msm8996
++
++The 'board' element must be one of the following strings:
++
++	cdp
++	liquid
++	dragonboard
++	mtp
++	sbc
++
++The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
++where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
++as v1. If all versions of the 'board_version' elements match, then a
++wildcard '*' should be used, e.g. 'v*'.
++
++The 'foundry_id' and 'subtype' elements are one or more digits from 0 to 9.
++
++Examples:
++
++	"qcom,msm8916-v1-cdp-pm8916-v2.1"
++
++A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
++2.1.
++
++	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1"
++
++A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
++foundry 2.
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
