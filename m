@@ -1,94 +1,61 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH 2/4] usb: dwc3: qcom: Configure TCSR phy mux register
-Date: Fri, 20 Nov 2015 09:54:12 -0600
-Message-ID: <20151120155411.GB8722@qualcomm.com>
+Subject: Re: [PATCH 4/4] Documentation: usb: dwc3: qcom: Add TCSR mux usage
+Date: Fri, 20 Nov 2015 09:56:16 -0600
+Message-ID: <20151120155616.GC8722@qualcomm.com>
 References: <1448008509-8913-1-git-send-email-agross@codeaurora.org>
- <1448008509-8913-3-git-send-email-agross@codeaurora.org>
- <87a8q8emme.fsf@saruman.tx.rr.com>
+ <1448008509-8913-5-git-send-email-agross@codeaurora.org>
+ <877flcemip.fsf@saruman.tx.rr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87a8q8emme.fsf@saruman.tx.rr.com>
+In-Reply-To: <877flcemip.fsf@saruman.tx.rr.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Felipe Balbi <balbi@ti.com>
 Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 09:06:33AM -0600, Felipe Balbi wrote:
+On Fri, Nov 20, 2015 at 09:08:46AM -0600, Felipe Balbi wrote:
 > 
 > Hi,
 > 
 > Andy Gross <agross@codeaurora.org> writes:
-> > This patch adds automatic configuration of the TCSR phy mux register based on
-> > the syscon-tcsr devicetree entry.  This configuration is optional, as some
-> > platforms may not require the mux selection.
+> > This patch adds documentation for the optional syscon-tcsr property in the
+> > Qualcomm DWC3 node.  The syscon-tcsr specifies the register and bit used to
+> > configure the TCSR USB phy mux register.
 > >
 > > Signed-off-by: Andy Gross <agross@codeaurora.org>
-> 
-> just when I find a way to make a generic dwc3-of-simple.c glue layer :-p
-> 
-> I can, certainly drop my patches but I need more details on the syscon
-> usage below.
-> 
 > > ---
-> >  drivers/usb/dwc3/dwc3-qcom.c | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
+> >  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
 > >
-> > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > index 0880260..fcf264c 100644
-> > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > @@ -17,6 +17,8 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_platform.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/regmap.h>
+> > diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> > index ca164e7..dfa222d 100644
+> > --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> > @@ -8,6 +8,10 @@ Required properties:
+> >    "core"		Master/Core clock, have to be >= 125 MHz for SS
+> >  				operation and >= 60MHz for HS operation
 > >  
-> >  struct dwc3_qcom {
-> >  	struct device		*dev;
-> > @@ -30,6 +32,9 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device_node *node = pdev->dev.of_node;
-> >  	struct dwc3_qcom *qdwc;
-> > +	struct regmap *regmap;
-> > +	u32 mux_offset;
-> > +	u32 mux_bit;
-> >  	int ret;
-> >  
-> >  	qdwc = devm_kzalloc(&pdev->dev, sizeof(*qdwc), GFP_KERNEL);
-> > @@ -58,6 +63,26 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
-> >  		qdwc->sleep_clk = NULL;
-> >  	}
-> >  
-> > +	/* look for tcsr and if present, provision it */
-> > +	regmap = syscon_regmap_lookup_by_phandle(node, "syscon-tcsr");
-> > +	if (!IS_ERR(regmap)) {
-> > +		if (of_property_read_u32_index(node, "syscon-tcsr", 1,
-> > +					       &mux_offset)) {
-> > +			dev_err(qdwc->dev, "missing USB TCSR mux offset\n");
-> > +			return -EINVAL;
-> > +		}
-> > +		if (of_property_read_u32_index(node, "syscon-tcsr", 2,
-> > +					       &mux_bit)) {
-> > +			dev_err(qdwc->dev, "missing USB TCSR mux bit\n");
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		regmap_update_bits(regmap, mux_offset, BIT(mux_bit),
-> > +				   BIT(mux_bit));
+> > +Optional properties:
+> > +- syscon-tcsr	Specifies TCSR handle, register offset, and bit position for
+> > +			configuring the phy mux setting.
 > 
-> what is tcsr and what does it ? It also seems to be optional, why's that ?
+> oh, it's a PHY mux ? I don't think it should be part of any dwc3-* glue
+> layer then. By the time we reach dwc3, the mux should be properly
+> configured.
+> 
+> Kishon, any ideas ?
 > 
 > -- 
 > balbi
 
-The syscon is to set the mux selection for the phys.  Our hardware has a
-steering mux between hsic and dwc3 and setting this to 1 steers the phys to the
-right controller.
+The only issue with putting it at the phy layer is that i'd have redundant
+syscon entries for each pair of phys, unless i group them somehow in dt.  The
+only other issue I can think of is that in the downstream kernels, they do this
+before messing with the configuration of the dwc3.  So long as the phys do their
+thing before the dwc3 (phys latched before config), we're ok.
 
-It is optional because not all platforms appear to have this stupidity.
 
 
 -- 
