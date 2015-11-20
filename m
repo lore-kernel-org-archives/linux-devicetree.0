@@ -1,191 +1,162 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 02/13] dmaengine: Introduce
-	dma_request_slave_channel_compat_reason()
-Date: Fri, 20 Nov 2015 11:58:57 +0100
-Message-ID: <6118451.vaLZWOZEF5@wuerfel>
-References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
- <4533695.7ZVFN1S94o@wuerfel> <564EF502.6040708@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 5/9] ARM: dts: sun8i: sinlinx-sina33: Add
+ AXP223 PMIC device and regulator nodes
+Date: Fri, 20 Nov 2015 12:12:38 +0100
+Message-ID: <20151120111238.GV32142@lukather>
+References: <1447691908-25456-1-git-send-email-wens@csie.org>
+ <1447691908-25456-6-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <564EF502.6040708@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-crypto@vger.kernel.org, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YwTTlJgQ7QoYB9ta"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMUAXSZAKGQEG5QMIJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1447691908-25456-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 November 2015 12:25:06 Peter Ujfalusi wrote:
-> On 11/19/2015 01:25 PM, Arnd Bergmann wrote:
-> >> dma_request_channel(mask); /* memcpy. etc, non slave mostly */
-> >>
-> >> Not sure how to name this as reusing existing (good, descriptive) function
-> >> names would mean changes all over the kernel to start off this.
-> >>
-> >> Not used and
-> >> request_dma_channel(); /* as _irq/_mem_region/_resource, etc */
-> >> request_dma();
-> >> dma_channel_request();
-> > 
-> > dma_request_slavechan();
-> > dma_request_slave();
-> > dma_request_mask();
+--YwTTlJgQ7QoYB9ta
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Nov 17, 2015 at 12:38:24AM +0800, Chen-Yu Tsai wrote:
+> This board has a X-Powers AXP223 PMIC connected via RSB. Its regulators
+> provide power to various parts of the SoC and the board.
 > 
-> Let me think aloud here a bit...
-> 1. To request slave channel which will return you the channel your device is
-> bind via DT/ACPI or the platform map table you propose later:
+> Also update the regulator supply phandles.
 > 
-> dma_request_chan(struct device *dev, const char *name);
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 79 +++++++++++++++++++++++++-
+>  1 file changed, 76 insertions(+), 3 deletions(-)
 > 
-> 2. To request a channel (any channel) matching with the capabilities the
-> driver needs, like memcpy, memset, etc:
-> 
-> #define dma_request_chan_by_mask(mask) __dma_request_chan_by_mask(&(mask))
-> __dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-> 
-> I think the dma_request_chan() does not need mask to be passed, since via this
-> we request a specific channel which has been defined/set by DT/ACPI or the
-> lookup map. We could add a mask parameter which could be used to sanity check
-> the channel we got against the capabilities the driver needs from the channel.
-> We currently do this in the drivers where the author wanted to make sure that
-> the channel is capable of what it should be capable.
-> 
-> So two API to request channel:
-> struct dma_chan *dma_request_chan(struct device *dev, const char *name);
-> struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-> 
-> Both will return with the valid channel pointer or in case of failure with
-> ERR_PTR().
-> 
-> We need to go through the code in regards to return codes also to have sane
-> mapping.
+> diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+> index 13ce68f06dd6..91a0fde47fdd 100644
+> --- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+> +++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+> @@ -68,7 +68,7 @@
+>  };
+>  
+>  &lradc {
+> -	vref-supply = <&reg_vcc3v0>;
+> +	vref-supply = <&reg_dcdc1>;
+>  	status = "okay";
+>  
+>  	button@200 {
+> @@ -96,7 +96,7 @@
+>  &mmc0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_sina33>;
+> -	vmmc-supply = <&reg_vcc3v0>;
+> +	vmmc-supply = <&reg_dcdc1>;
+>  	bus-width = <4>;
+>  	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+>  	cd-inverted;
+> @@ -106,7 +106,7 @@
+>  &mmc2 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc2_8bit_pins>;
+> -	vmmc-supply = <&reg_vcc3v0>;
+> +	vmmc-supply = <&reg_dcdc1>;
+>  	bus-width = <8>;
+>  	non-removable;
+>  	status = "okay";
+> @@ -132,6 +132,79 @@
+>  
+>  &r_rsb {
+>  	status = "okay";
+> +
+> +	axp22x: pmic@3e3 {
+> +		compatible = "x-powers,axp223";
+> +		reg = <0x3e3>;
+> +		interrupt-parent = <&nmi_intc>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +		eldoin-supply = <&reg_dcdc1>;
+> +	};
+> +};
+> +
+> +#include "axp22x.dtsi"
+> +
+> +&reg_aldo1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "vcc-io";
+> +};
+> +
+> +&reg_aldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <2350000>;
+> +	regulator-max-microvolt = <2650000>;
+> +	regulator-name = "vdd-dll";
+> +};
+> +
+> +&reg_aldo3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <2700000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-pll-avcc";
+> +};
+> +
+> +&reg_dc5ldo {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <900000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpus";
+> +};
+> +
+> +&reg_dcdc1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "vcc-3v0";
+> +};
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <900000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-sys";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <900000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc5 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1500000>;
+> +	regulator-max-microvolt = <1500000>;
+> +	regulator-name = "vcc-dram";
+> +};
+> +
+> +&reg_rtc_ldo {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "vcc-rtc";
+>  };
 
-Right.
-> > That way the vast majority of drivers can use one of the two nice interfaces
-> > and the rest can be converted to use __dma_request_chan().
-> > 
-> > On a related topic, we had in the past considered providing a way for
-> > platform code to register a lookup table of some sort, to associate
-> > a device/name pair with a configuration. That would let us use the
-> > simplified dma_request_slavechan(dev, name) pair everywhere. We could
-> > use the same method that we have for clk_register_clkdevs() or
-> > pinctrl_register_map().
-> > 
-> > Something like either
-> > 
-> > static struct dma_chan_map myplatform_dma_map[] = {
-> > 	{ .devname = "omap-aes0", .slave = "tx", .filter = omap_dma_filter_fn, .arg = (void *)65, },
-> > 	{ .devname = "omap-aes0", .slave = "rx", .filter = omap_dma_filter_fn, .arg = (void *)66, },
-> > };
-> > 
-> > or
-> > 
-> > static struct dma_chan_map myplatform_dma_map[] = {
-> > 	{ .devname = "omap-aes0", .slave = "tx", .master = "omap-dma-engine0", .req = 65, },
-> > 	{ .devname = "omap-aes0", .slave = "rx", .master = "omap-dma-engine0", .req = 66, },
-> 
-> sa11x0-dma expects the fn_param as string :o
+Isn't this supposed to be in the AXP DTSI?
 
-Some of them do, but the new API requires changes in both the DMA master and
-slave drivers, so that could be changed if we wanted to, or we just allow 
-both methods indefinitely and let sa11x0-dma pass the filterfn+data rather than
-a number.
+Thanks!
+Maxime
 
-> > };
-> 
-> Basically we are deprecating the use of IORESOURCE_DMA?
-
-I thought we already had ;-)
-
-> For legacy the filter function is pretty much needed to handle the differences
-> between the platforms as not all of them does the filtering in a same way. So
-> the first type of map would be feasible IMHO.
-
-It certainly makes the transition to a map table much easier.
-
-> > we could even allow a combination of the two, so the simple case just specifies
-> > master and req number, which requires changes to the dmaengine driver, but we could
-> > also do a mass-conversion to the .filter/.arg variant.
-> 
-> This will get rid of the need for the fn and fn_param parameters when
-> requesting dma channel, but it will not get rid of the exported function from
-> the dma engine drivers since in arch code we need to have visibility to the
-> filter_fn.
-
-Correct. A lot of dmaengine drivers already need to be built-in so the platform
-code can put a pointer to the filter function, so it would not be worse for them.
-
-Another idea would be to remove the filter function from struct dma_chan_map
-and pass the map through platform data to the dmaengine driver, which then
-registers it to the core along with the mask. Something like:
-
-/* platform code */
-static struct dma_chan_map oma_dma_map[] = {
- 	{ .devname = "omap-aes0", .slave = "tx", .arg = (void *)65, },
- 	{ .devname = "omap-aes0", .slave = "rx", .arg = (void *)66, },
-	...
-	{},
-};
-
-static struct omap_system_dma_plat_info dma_plat_info __initdata = {
-	.dma_map = &oma_dma_map,
-	...
-};      
-
-machine_init(void)
-{
-	...
-	platform_device_register_data(NULL, "omap-dma-engine", 0, &dma_plat_info, sizeof(dma_plat_info);
-	...
-}
-
-/* dmaengine driver */
-
-static int omap_dma_probe(struct platform_device *pdev)
-{
-	struct omap_system_dma_plat_info *pdata = dev_get_platdata(&pdev->dev);
-	...
-
-	dmam_register_platform_map(&pdev->dev, omap_dma_filter_fn, pdata->dma_map);
-}
-
-/* dmaengine core */
-
-struct dma_map_list {
-	struct list_head node;
-	struct device *master;
-	dma_filter_fn filter;
-	struct dma_chan_map *map;
-};
-
-static LIST_HEAD(dma_map_list);
-static DEFINE_MUTEX(dma_map_mutex);
-
-int dmam_register_platform_map(struct device *dev, dma_filter_fn filter, struct dma_chan_map *map)
-{
-	struct dma_map_list *list = kmalloc(sizeof(*list), GFP_KERNEL);
-
-	if (!list)
-		return -ENOMEM;
-
-	list->dev = dev;
-	list->filter = filter;
-	list->map = map;
-
-	mutex_lock(&dma_map_mutex);
-	list_add(&dma_map_list, &list->node);
-	mutex_unlock(&dma_map_mutex);
-}
-
-Now we can completely remove the dependency on the filter function definition
-from platform code and slave drivers.
-
-	Arnd
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--YwTTlJgQ7QoYB9ta--
