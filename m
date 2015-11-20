@@ -1,70 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/11] dt-bindings: clock: add description of LPC32xx USB
- clock controller
-Date: Fri, 20 Nov 2015 10:41:33 -0600
-Message-ID: <20151120164133.GA9011@rob-hp-laptop>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com>
- <1447981511-29653-3-git-send-email-vz@mleia.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: sun5i: Add i2c axp152 pmic
+ support for Auxtek T004 boards
+Date: Fri, 20 Nov 2015 17:42:35 +0100
+Message-ID: <20151120164235.GJ32142@lukather>
+References: <1448027950-14629-1-git-send-email-hdegoede@redhat.com>
+ <1448027950-14629-4-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jmkJtp15SxLq1SbD"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7M2XWZAKGQEUXPDHBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447981511-29653-3-git-send-email-vz@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1448027950-14629-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:05:02AM +0200, Vladimir Zapolskiy wrote:
-> NXP LPC32xx USB controller has a subdevice, which controls USB AHB
-> slave, USB OTG, USB OHCI, USB device and I2C controller to USB phy
-> clocks, this change adds description of the clock controller, for more
-> details reference LPC32xx User's Manual, namely USB control, OTG clock
-> control and OTG clock status registers.
+--jmkJtp15SxLq1SbD
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Fri, Nov 20, 2015 at 02:59:10PM +0100, Hans de Goede wrote:
+> From: Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
 > 
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> ---
->  .../bindings/clock/nxp,lpc3220-usb-clk.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+> Add a node describing the AXP152 pmic used on Auxtek T004 boards.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
-> new file mode 100644
-> index 0000000..67fba7f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
-> @@ -0,0 +1,22 @@
-> +NXP LPC32xx USB Clock Controller
-> +
-> +Required properties:
-> +- compatible: should be "nxp,lpc3220-usb-clk"
-> +- reg:  should contain clock controller registers location and length
-> +- #clock-cells: must be 1, the cell holds id of a clock provided by the
-> +  USB clock controller
-> +
-> +Examples:
-> +
-> +	usb {
+> Signed-off-by: Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-I don't understand the full structure of USB blocks. Can you make the 
-example complete. All the blocks are a child of this node?
+I don't really get why this patch is in the same set as the other
+patches, but I just applied it. Thanks!
 
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
-> +		ranges = <0x0 0x31020000 0x00001000>;
-> +
-> +		usbclk: clock-controller@F00 {
-lower case                               ^
+Maxime
 
-> +			compatible = "nxp,lpc3220-usb-clk";
-> +			reg = <0xF00 0x100>;
-
-lower case
-
-> +			#clock-cells = <1>;
-> +		};
-> +	};
-> -- 
-> 2.1.4
-> 
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--jmkJtp15SxLq1SbD--
