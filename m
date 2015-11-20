@@ -1,136 +1,91 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v3 5/5] ARM: exynos: select POWER_RESET_SYSCON and
- POWER_RESET_SYSCON_POWEROFF
-Date: Fri, 20 Nov 2015 10:47:09 +0530
-Message-ID: <1447996629-18232-6-git-send-email-alim.akhtar@samsung.com>
-References: <1447996629-18232-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1447996629-18232-1-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: k.kozlowski@samsung.com, kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, ulf.hansson@linaro.org
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: [PATCH V2 1/3] ASoC: fsl_esai: spba clock is needed by esai device
+Date: Fri, 20 Nov 2015 14:17:51 +0800
+Message-ID: <d5cb15bbd3563ed34c58c15b224495b854bca616.1447997800.git.shengjiu.wang@freescale.com>
+References: <cover.1447997800.git.shengjiu.wang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1447997800.git.shengjiu.wang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, timur@tabi.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org
+Cc: alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since we switch to use generic syscon regmap based reset/poweroff
-driver for exynos SoC, lets select it from ARCH_EXYNOS instead of
-enabling it from various defconfigs. This also select POWER_RESET
-as SYSCON-{reset, poweroff} drivers depends on it.
+ESAI need to enable the spba clock, when sdma is using share peripheral
+script. In this case, there is two spba master port is used, if don't
+enable the clock, the spba bus will have arbitration issue, which may
+cause read/write wrong data from/to ESAI registers.
 
-Also because of the above changes we don't need special handling
-for reboot/poweroff in exynos pmu driver. This patch also removes
-the same from exynos pmu driver to keep git bisect working.
-
-Note: This will break reboot/poweroff on boards with older dtbs
-with a newer kernel.
-
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Acked-by: Moritz Fischer <moritz.fischer@ettus.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
 ---
- arch/arm/mach-exynos/Kconfig |    3 +++
- arch/arm/mach-exynos/pmu.c   |   43 ------------------------------------------
- 2 files changed, 3 insertions(+), 43 deletions(-)
+ Documentation/devicetree/bindings/sound/fsl,esai.txt |  2 ++
+ sound/soc/fsl/fsl_esai.c                             | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 3a10f1a8317a..d279edf9b10d 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -27,6 +27,9 @@ menuconfig ARCH_EXYNOS
- 	select SRAM
- 	select THERMAL
- 	select MFD_SYSCON
-+	select POWER_RESET
-+	select POWER_RESET_SYSCON
-+	select POWER_RESET_SYSCON_POWEROFF
- 	help
- 	  Support for SAMSUNG EXYNOS SoCs (EXYNOS4/5)
+diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+index d3b6b5f..f1d5351 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+@@ -27,6 +27,8 @@ Required properties:
+ 			  derive HCK, SCK and FS.
+ 	"fsys"		  The system clock derived from ahb clock used to
+ 			  derive HCK, SCK and FS.
++	"spba"		  The spba clock is needed when two spba master port
++			  is used.
  
-diff --git a/arch/arm/mach-exynos/pmu.c b/arch/arm/mach-exynos/pmu.c
-index de68938ee6aa..393c04aa727e 100644
---- a/arch/arm/mach-exynos/pmu.c
-+++ b/arch/arm/mach-exynos/pmu.c
-@@ -14,9 +14,6 @@
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/delay.h>
--#include <linux/notifier.h>
--#include <linux/reboot.h>
--
+   - fsl,fifo-depth	: The number of elements in the transmit and receive
+ 			  FIFOs. This number is the maximum allowed value for
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index 504e731..8749f53 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -54,6 +54,7 @@ struct fsl_esai {
+ 	struct clk *coreclk;
+ 	struct clk *extalclk;
+ 	struct clk *fsysclk;
++	struct clk *spbaclk;
+ 	u32 fifo_depth;
+ 	u32 slot_width;
+ 	u32 slots;
+@@ -469,6 +470,9 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
+ 	ret = clk_prepare_enable(esai_priv->coreclk);
+ 	if (ret)
+ 		return ret;
++	ret = clk_prepare_enable(esai_priv->spbaclk);
++	if (ret)
++		goto err_spbaclk;
+ 	if (!IS_ERR(esai_priv->extalclk)) {
+ 		ret = clk_prepare_enable(esai_priv->extalclk);
+ 		if (ret)
+@@ -499,6 +503,8 @@ err_fsysclk:
+ 	if (!IS_ERR(esai_priv->extalclk))
+ 		clk_disable_unprepare(esai_priv->extalclk);
+ err_extalck:
++	clk_disable_unprepare(esai_priv->spbaclk);
++err_spbaclk:
+ 	clk_disable_unprepare(esai_priv->coreclk);
  
- #include "exynos-pmu.h"
- #include "regs-pmu.h"
-@@ -681,23 +678,6 @@ static unsigned int const exynos5420_list_disable_pmu_reg[] = {
- 	EXYNOS5420_CMU_RESET_FSYS_SYS_PWR_REG,
- };
- 
--static void exynos_power_off(void)
--{
--	unsigned int tmp;
--
--	pr_info("Power down.\n");
--	tmp = pmu_raw_readl(EXYNOS_PS_HOLD_CONTROL);
--	tmp ^= (1 << 8);
--	pmu_raw_writel(tmp, EXYNOS_PS_HOLD_CONTROL);
--
--	/* Wait a little so we don't give a false warning below */
--	mdelay(100);
--
--	pr_err("Power down failed, please power off system manually.\n");
--	while (1)
--		;
--}
--
- static void exynos5420_powerdown_conf(enum sys_powerdown mode)
- {
- 	u32 this_cluster;
-@@ -875,14 +855,6 @@ static void exynos5420_pmu_init(void)
- 	pr_info("EXYNOS5420 PMU initialized\n");
+ 	return ret;
+@@ -564,6 +570,7 @@ static void fsl_esai_shutdown(struct snd_pcm_substream *substream,
+ 		clk_disable_unprepare(esai_priv->fsysclk);
+ 	if (!IS_ERR(esai_priv->extalclk))
+ 		clk_disable_unprepare(esai_priv->extalclk);
++	clk_disable_unprepare(esai_priv->spbaclk);
+ 	clk_disable_unprepare(esai_priv->coreclk);
  }
  
--static int pmu_restart_notify(struct notifier_block *this,
--		unsigned long code, void *unused)
--{
--	pmu_raw_writel(0x1, EXYNOS_SWRESET);
--
--	return NOTIFY_DONE;
--}
--
- static const struct exynos_pmu_data exynos3250_pmu_data = {
- 	.pmu_config	= exynos3250_pmu_config,
- 	.pmu_init	= exynos3250_pmu_init,
-@@ -940,20 +912,11 @@ static const struct of_device_id exynos_pmu_of_device_ids[] = {
- 	{ /*sentinel*/ },
- };
+@@ -819,6 +826,11 @@ static int fsl_esai_probe(struct platform_device *pdev)
+ 		dev_warn(&pdev->dev, "failed to get fsys clock: %ld\n",
+ 				PTR_ERR(esai_priv->fsysclk));
  
--/*
-- * Exynos PMU restart notifier, handles restart functionality
-- */
--static struct notifier_block pmu_restart_handler = {
--	.notifier_call = pmu_restart_notify,
--	.priority = 128,
--};
--
- static int exynos_pmu_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *match;
- 	struct device *dev = &pdev->dev;
- 	struct resource *res;
--	int ret;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pmu_base_addr = devm_ioremap_resource(dev, res);
-@@ -978,12 +941,6 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pmu_context);
- 
--	ret = register_restart_handler(&pmu_restart_handler);
--	if (ret)
--		dev_warn(dev, "can't register restart handler err=%d\n", ret);
--
--	pm_power_off = exynos_power_off;
--
- 	dev_dbg(dev, "Exynos PMU Driver probe done\n");
- 	return 0;
- }
++	esai_priv->spbaclk = devm_clk_get(&pdev->dev, "spba");
++	if (IS_ERR(esai_priv->spbaclk))
++		dev_warn(&pdev->dev, "Cannot get spba clock: %ld\n",
++				PTR_ERR(esai_priv->spbaclk));
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
 -- 
-1.7.10.4
+1.9.1
