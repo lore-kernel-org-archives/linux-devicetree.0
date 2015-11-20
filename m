@@ -1,80 +1,116 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [Linaro-acpi] [PATCH v8 5/5] Watchdog: introduce ARM SBSA
- watchdog driver
-Date: Thu, 19 Nov 2015 18:26:44 -0600
-Message-ID: <564E68C4.3070709@codeaurora.org>
-References: <1445961999-9506-1-git-send-email-fu.wei@linaro.org>
- <1445961999-9506-6-git-send-email-fu.wei@linaro.org>
- <CAOZdJXV8x8EMQEZhdFS+34iO+6P9S==k9bQjt=67iXt6K2oSCw@mail.gmail.com>
- <563AE588.1080009@roeck-us.net> <563B5DF9.6080102@codeaurora.org>
- <CADyBb7sD2Y2kGj-suOs1UeUwXPjH39mvX_Sobn0Y7WfsJ9hF=Q@mail.gmail.com>
- <563B62F7.3050307@codeaurora.org>
- <CADyBb7vDf+KRi8gUGEt+iu-GpqVQgVq7nKTVt7O=3x78KCi+RQ@mail.gmail.com>
- <563B6A4B.7090400@codeaurora.org>
- <CADyBb7t6ovfrz1b3ZZykKq22HkZi1W0PWg7-wXihEjM9ciTgGg@mail.gmail.com>
- <563B869F.2010004@roeck-us.net> <56452970.4070209@linaro.org>
- <56452E10.5060705@roeck-us.net> <564E654B.2060000@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
+Date: Fri, 20 Nov 2015 09:46:21 +0900
+Message-ID: <564E6D5D.60607@samsung.com>
+References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
+ <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
+ <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
+ <562765F3.9010306@osg.samsung.com>
+ <CAGOxZ52-ia8uhgGg5CiU9TSYkfAsRD52zvLqq++Y-mr4uaFOpg@mail.gmail.com>
+ <5627A75E.60509@osg.samsung.com>
+ <CAGOxZ537QuzBP4tcG9qh-+iXK-Y=WwZGiJ1-cwtLqwRf0a+wVA@mail.gmail.com>
+ <56282B2D.6000708@samsung.com>
+ <CAGOxZ50b3cGXQSFL1uXt7O=CyBOaE=7WRQ-tSz8NUmWzBdhxoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <564E654B.2060000@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Al Stone <al.stone@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Fu Wei <fu.wei@linaro.org>
-Cc: Pratyush Anand <panand@redhat.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jon Masters <jcm@redhat.com>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lkml <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robherring2@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Wei Fu <tekkamanninja@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Dave Young <dyoung@redhat.com>, Vipul Gandhi <vgandhi@codeaurora.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAGOxZ50b3cGXQSFL1uXt7O=CyBOaE=7WRQ-tSz8NUmWzBdhxoQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Al Stone wrote:
->>> The issue for me in that case is that the SBSA requires a two stage timeout,
->> >
->> >Hmm - really ? This makes me want to step back a bit and re-read the specification
->> >to understand where it says that, and what the reasoning might be for such a
->> >requirement.
-> As far as I can tell, that's what the SBSA is requiring.  My understanding is
-> that the hardware is to first assert a WS0 signal when the timer expires.  If
-> the timer expires and WS0 has already been asserted, the WS1 signal is to be
-> asserted.  When WS1 is asserted, the system is to do a hard reset (Section 5.2,
-> "Server Base System Architecture", ARM-DEN-0029 Version 2.3).  I'm interpreting
-> the occurrence of WS0 as the first stage and WS1 as the second.
->
-> To me, at least, this makes sense in a server environment.  The WS0 occurs,
-> which gives me some time to save key info or try to recover before WS1 occurs
-> (or kexec, or any other cleverness).
+On 20.11.2015 03:06, Alim Akhtar wrote:
+> Hi Krzysztof/Ulf/Kukjin
+> 
+> On Thu, Oct 22, 2015 at 5:47 AM, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+>> On 22.10.2015 00:01, Alim Akhtar wrote:
+>>> On Wed, Oct 21, 2015 at 8:25 PM, Javier Martinez Canillas
+>>> <javier@osg.samsung.com> wrote:
+>>>> Hello Alim,
+>>>>
+>>>> On 10/21/2015 04:50 PM, Alim Akhtar wrote:
+>>>>
+>>>> [snip]
+>>>>
+>>>>>>
+>>>>>> [0]:
+>>>>>> From c9b250ee03bae338339b70693e906145c719f783 Mon Sep 17 00:00:00 2001
+>>>>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>>> Date: Wed, 21 Oct 2015 11:59:44 +0200
+>>>>>> Subject: [RFT PATCH] mmc: pwrseq: Use highest priority for eMMC restart
+>>>>>>  handler
+>>>>>>
+>>>>>> The pwrseq_emmc driver does a eMMC card reset before a system reboot to
+>>>>>> allow broken or limited ROM boot-loaders, that don't have an eMMC reset
+>>>>>> logic, to be able to read the second stage from the eMMC.
+>>>>>>
+>>>>>> But this has to be called before a system reboot handler and while most
+>>>>>> of them use the priority 128, there are other restart handlers (such as
+>>>>>> the syscon-reboot one) that use a higher priority. So, use the highest
+>>>>>> priority to make sure that the eMMC hw is reset before a system reboot.
+>>>>>>
+>>>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>>> ---
+>>>>> Looks good.
+>>>>> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>>>>
+>>>>
+>>
+>> +Cc Ulf,
+>>
+>> Javier,
+>>
+>> First of all, thanks Javier for digging into the issue. Actually I have
+>> Odroid U3 but because of user-space limitations (which I need for other
+>> work) I cannot test all of mainline patches there.
+>>
+>>
+>>>> Thanks, should I post it as a proper patch or are adding it to your
+>>>> series?
+>>> Suggest you to post as a patch collecting {Tested, Reviewed}-by (easy
+>>> for maintainers to pickup ) and probably CCing Ulf for his feedback.
+>>>
+>>>> I think the latter is more reasonable so with an ack from Ulf,
+>>>> all patches can go through the linux-samsung tree.
+>>>>
+>>> yes, that is reasonable, as I said, let Krzysztof and Ulf take a call here.
+>>
+>> Javier, Alim, Ulf,
+>>
+>> I am not grabbing any more patches for v4.4 because I doubt that they
+>> could be merged to arm-soc for this cycle. My last pull requests for
+>> v4.4 is still pending...
+>>
+>> This means that I plan to pick up these series for v4.5, after closing
+>> v4.4 merge window (unless Kukjin picks it also). Because of that, we
+>> have plenty of time, so my idea is:
+>> 1. Wait for some comments from Ulf on Javier's fix.
+>> 2. If the fix goes into v4.4, then problem solved.
+>> 3. If not and it get acked, then it can go with this set.
+>> 4. If not and it get applied by Ulf for v4.5, then a tag from him would
+>> be a nice way to solve dependency.
+>>
+>> Either way we don't have to hurry, I think.
+>>
+> 
+> Is It the right time to get this series in?
+> Thanks!!
 
-I'm having some problem with the word "requires".
+I started applying it but stopped at #5. It should be squashed with #6
+to get rid of (not important) conflict between syscon reboot and
+existing Exynos restart handler:
 
-I think it applies only to the hardware.  That is, there must be a WS0 
-timeout/event, and then after that there must be a WS1 timeout/event.
+syscon-poweroff syscon-poweroff: pm_power_off already claimed c001e52c
+exynos_power_off
+syscon-poweroff: probe of syscon-poweroff failed with error -16
 
-I don't think there is any "requirement" for software to do anything 
-with WS0.  That's why I don't think pre-timeout is necessary for the 
-driver to be SBSA-compliant.  All of the drivers for existing two-stage 
-watchdog devices treat the device as a one-stage device, because the 
-watchdog API does not support pre-timeout.  Are all of them also 
-"broken"?  No.  So it would not be broken for an SBSA watchdog driver to 
-ignore WS0.
+The conflict is not really an issue because of ordering of init calls
+the Exynos will register itself before syscon. Nevertheless splitting
+the patches does not really make sense... so please merge #5 with #6.
 
-I would have no problem with the following sequence of events:
-
-1) We merge in a driver that treats the SBSA watchdog as a single-stage 
-watchdog that does a hard reset at WS1 and ignores WS0.  My driver, with 
-a few changes, would qualify.
-
-2) We add support for pre-timeout to the Watchdog interface.  Fu can 
-take all the time in the world (as far as I'm concerned) getting this 
-perfected.  My only request is that the new pre-timeout API supports 
-hardware where the timeout between stages must be equal.  That is, if 
-timeout to stage 1 (call it T1) is X seconds, then the timeout to stage 
-2 (call it T2) is another X seconds.  T2 = T1.  Of course, the API 
-should also support hardware where T2 != T1.
-
-3) The existing SBSA watchdog driver is updated to support the new 
-pre-timeout API.  It would enforce the requirement that T2 = T1.
-
-This approach will allow us to get a working SBSA watchdog driver into 
-4.5 without much fuss.
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Best regards,
+Krzysztof
