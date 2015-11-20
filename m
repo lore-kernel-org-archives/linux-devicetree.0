@@ -1,31 +1,41 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 2/5] PM / OPP: Add {opp-microvolt|opp-microamp}-<name>
- binding
-Date: Fri, 20 Nov 2015 10:41:36 +0530
-Message-ID: <20151120051136.GA3957@ubuntu>
-References: <cover.1447209519.git.viresh.kumar@linaro.org>
- <1f1d9dd73ff629504f3c730e4100dba800c6132a.1447209519.git.viresh.kumar@linaro.org>
- <20151111203100.GA10702@rob-hp-laptop>
- <20151112050814.GC5408@ubuntu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151112050814.GC5408@ubuntu>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v3 0/5] Switch to generic syscon regmap based drivers
+Date: Fri, 20 Nov 2015 10:47:04 +0530
+Message-ID: <1447996629-18232-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: k.kozlowski@samsung.com, kgene@kernel.org, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-11-15, 10:38, Viresh Kumar wrote:
-> On 11-11-15, 14:31, Rob Herring wrote:
-> > > +		opp00 {
-> > 
-> > Thought we are doing frequency for unit address here.
-> 
-> That's done by the (Already reviewed) 4th patch..
+Now we have a nice way to reboot/poweroff system using a generic
+syscon regmap based drivers, this series moves exynos SoCs to
+make use of the same.
 
-Ping for the pending Ack :)
+Changes since v2:
+* Merged patch 5 and 6 to keep git bisect happy
+
+Changes since v1:
+* Added a comment about the register information
+* Droped defconfig changes as disscussed
+* Collected various Reviewed-by, Tested-by and Acked-by tags
+* Added SYSCON-{RESET, POWEROFF} to select from Kconfig
+
+Alim Akhtar (5):
+  arm: dts: Add syscon-{reboot, poweroff} nodes for exynos3250 SoCs
+  arm: dts: Add syscon-{reboot, poweroff} nodes for exynos4
+  arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5
+  arm: dts: Add syscon-{reboot, poweroff} nodes for exynos5410 SoC
+  ARM: exynos: select POWER_RESET_SYSCON and
+    POWER_RESET_SYSCON_POWEROFF
+
+ arch/arm/boot/dts/exynos3250.dtsi |   14 ++++++++++++
+ arch/arm/boot/dts/exynos4.dtsi    |   14 ++++++++++++
+ arch/arm/boot/dts/exynos5.dtsi    |   14 ++++++++++++
+ arch/arm/boot/dts/exynos5410.dtsi |   14 ++++++++++++
+ arch/arm/mach-exynos/Kconfig      |    3 +++
+ arch/arm/mach-exynos/pmu.c        |   43 -------------------------------------
+ 6 files changed, 59 insertions(+), 43 deletions(-)
 
 -- 
-viresh
+1.7.10.4
