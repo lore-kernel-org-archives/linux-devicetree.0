@@ -1,40 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 05/13] Documentation: dt-bindings: Add bindings for
- Synopsys DW MIPI DSI DRM bridge driver
-Date: Fri, 20 Nov 2015 08:32:07 -0600
-Message-ID: <20151120143207.GA7574@rob-hp-laptop>
-References: <1448007339-10966-1-git-send-email-zyw@rock-chips.com>
- <1448007339-10966-6-git-send-email-zyw@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] Documentation: usb: dwc3: qcom: Add TCSR mux usage
+Date: Fri, 20 Nov 2015 08:33:51 -0600
+Message-ID: <20151120143351.GA9240@rob-hp-laptop>
+References: <1448008509-8913-1-git-send-email-agross@codeaurora.org>
+ <1448008509-8913-5-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448007339-10966-6-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, rmk+kernel@arm.linux.org.uk, treding@nvidia.com, ajaykumar.rs@samsung.com
+In-Reply-To: <1448008509-8913-5-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMjAsIDIwMTUgYXQgMDQ6MTU6MzFQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gRnJvbTogTGl1IFlpbmcgPFlpbmcubGl1QGZyZWVzY2FsZS5jb20+Cj4gCj4gVGhpcyBw
-YXRjaCBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciBTeW5vcHN5cyBEZXNpZ25XYXJlIE1J
-UEkgRFNJCj4gaG9zdCBjb250cm9sbGVyIERSTSBicmlkZ2UgZHJpdmVyLgo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IExpdSBZaW5nIDxZaW5nLkxpdUBmcmVlc2NhbGUuY29tPgo+IFNpZ25lZC1vZmYtYnk6
-IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+CgpPbmUgbml0LCBidXQ6CgpBY2tlZC1i
-eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCj4gQ2hhbmdlcyBpbiB2NDoKPiByZW1v
-dmUgZ3ByIHByb3BlcnR5IGZyb20gZXhhbXBsZSwgc2luY2UgaXQgaXMgbm91c2VkIG5vdy4KPiBh
-ZGQgdGhlIGRlc2NyaXB0aW9uIGFib3V0IHBvcnRzCgpbLi4uXQoKPiArZXhhbXBsZToKPiArCWdw
-cjogaW9tdXhjLWdwckAwMjBlMDAwMCB7Cj4gKwkJLyogLi4uICovCj4gKwl9OwoKVGhpcyBpcyBz
-dGlsbCBsaW5nZXJpbmcuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Fri, Nov 20, 2015 at 02:35:09AM -0600, Andy Gross wrote:
+> This patch adds documentation for the optional syscon-tcsr property in the
+> Qualcomm DWC3 node.  The syscon-tcsr specifies the register and bit used to
+> configure the TCSR USB phy mux register.
+> 
+> Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> index ca164e7..dfa222d 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> @@ -8,6 +8,10 @@ Required properties:
+>    "core"		Master/Core clock, have to be >= 125 MHz for SS
+>  				operation and >= 60MHz for HS operation
+>  
+> +Optional properties:
+> +- syscon-tcsr	Specifies TCSR handle, register offset, and bit position for
+> +			configuring the phy mux setting.
+> +
+>  Optional clocks:
+>    "iface"		System bus AXI clock.  Not present on all platforms
+>    "sleep"		Sleep clock, used when USB3 core goes into low
+> @@ -22,6 +26,11 @@ Documentation/devicetree/bindings/phy/qcom,dwc3-usb-phy.txt
+>  
+>  Example device nodes:
+>  
+> +		tcsr: syscon@1a400000 {
+> +			compatible = "qcom,tcsr-ipq8064", "syscon";
+> +			reg = <0x1a400000 0x100>;
+> +		};
+> +
+>  		hs_phy: phy@100f8800 {
+>  			compatible = "qcom,dwc3-hs-usb-phy";
+>  			reg = <0x100f8800 0x30>;
+> @@ -51,6 +60,8 @@ Example device nodes:
+>  
+>  			ranges;
+>  
+> +			syscon-tcsr = <&tcsr 0xb0 0x1>;
+> +
+>  			status = "ok";
+>  
+>  			dwc3@10000000 {
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
