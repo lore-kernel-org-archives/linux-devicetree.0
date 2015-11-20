@@ -1,55 +1,46 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 03/11] dt-bindings: clock: add NXP LPC32xx clock list for
- consumers
-Date: Fri, 20 Nov 2015 14:56:26 +0100
-Message-ID: <4268221.QhjAE5RLYk@wuerfel>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com>
- <1447981511-29653-4-git-send-email-vz@mleia.com>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: add description of LPC32xx clock controller
+Date: Fri, 20 Nov 2015 14:58:09 +0100
+Message-ID: <3740707.LksPCoyRXC@wuerfel>
+References: <1447981511-29653-1-git-send-email-vz@mleia.com> <1447981511-29653-2-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1447981511-29653-4-git-send-email-vz@mleia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1447981511-29653-2-git-send-email-vz@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 November 2015 03:05:03 Vladimir Zapolskiy wrote:
-> +
-> +/* LPC32XX System Control Block clocks */
-> +#define LPC32XX_CLK_RTC                0
-> +#define LPC32XX_CLK_DMA                1
-> +#define LPC32XX_CLK_MLC                2
-> +#define LPC32XX_CLK_SLC                3
-> +#define LPC32XX_CLK_LCD                4
-> +#define LPC32XX_CLK_MAC                5
-> +#define LPC32XX_CLK_SD         6
-> +#define LPC32XX_CLK_DDRAM      7
-> +#define LPC32XX_CLK_SSP0       8
-> +#define LPC32XX_CLK_SSP1       9
-> +#define LPC32XX_CLK_UART3      10
-> +#define LPC32XX_CLK_UART4      11
-> +#define LPC32XX_CLK_UART5      12
-> +#define LPC32XX_CLK_UART6      13
-> +#define LPC32XX_CLK_IRDA       14
-> +#define LPC32XX_CLK_I2C1       15
+On Friday 20 November 2015 03:05:01 Vladimir Zapolskiy wrote:
+> NXP LPC32xx SoC has a clocking and power control unit (CPC) as a part
+> of system control block (SCB). CPC is supplied by two external
+> oscillators and it manages core and most of peripheral
+> clocks, the change adds description of DT bindings for clock
+> controller found on LPC32xx SoC series.
 > 
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> ---
+>  .../devicetree/bindings/clock/nxp,lpc3220-clk.txt  | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> new file mode 100644
+> index 0000000..20cbca3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> @@ -0,0 +1,30 @@
+> +NXP LPC32xx Clock Controller
+> +
+> +Required properties:
+> +- compatible: should be "nxp,lpc3220-clk"
 
-Any chance we can avoid the include file? This is going to make it really
-hard to merge everything in one merge window with the dependencies between
-the driver, the bindings and the platform code.
+Please use a specific model number without 'xx' wildcards. If you have
+multiple chips that are mutually compatible, pick one as the base number
+and then list the others as more specific instances, like
 
-If there is a way to describe the clocks based on numbers from the
-data sheet instead of making up your own, that makes life much
-easier for us.
+	compatible = "nxp,lpc3250-clk", "nxp,lpc3220-clk";
 
 	Arnd
