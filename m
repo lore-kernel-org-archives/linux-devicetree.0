@@ -1,80 +1,60 @@
 From: Tim Bird <tim.bird@sonymobile.com>
-Subject: [PATCH v3 2/3] usb: phy: msm: fix connect/disconnect bug for dragonboard OTG port
-Date: Fri, 20 Nov 2015 15:20:40 -0800
-Message-ID: <1448061641-31672-2-git-send-email-tim.bird@sonymobile.com>
+Subject: Re: [PATCH v3 1/3] Documentation: dt-bindings: add async_irq to
+ msm_hsusb
+Date: Fri, 20 Nov 2015 15:22:01 -0800
+Message-ID: <564FAB19.7090603@sonymobile.com>
 References: <1448061641-31672-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1448061641-31672-1-git-send-email-tim.bird@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter.Chen@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, Bjorn.Andersson@sonymobile.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, tbird20d@gmail.com, tim.bird@sonymobile.com
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Peter.Chen@freescale.com" <Peter.Chen@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "balbi@ti.com" <balbi@ti.com>, =?UTF-8?Q?Andersson=2c_Bj=c3=b6rn?= <Bjorn.Andersson@sonymobile.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for async_irq to wake up driver from low power mode.
-Without this, the power management code never calls resume.
-Remove a spurious interrupt enable in the driver resume function.
 
-Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
----
- drivers/usb/phy/phy-msm-usb.c | 17 ++++++++++++++++-
- include/linux/usb/msm_hsusb.h |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index e40a071..04fb056 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -648,7 +648,6 @@ skip_phy_resume:
- 	if (motg->async_int) {
- 		motg->async_int = 0;
- 		pm_runtime_put(phy->dev);
--		enable_irq(motg->irq);
- 	}
- 
- 	dev_info(phy->dev, "USB exited from low power mode\n");
-@@ -1732,6 +1731,12 @@ static int msm_otg_probe(struct platform_device *pdev)
- 		return motg->irq;
- 	}
- 
-+	motg->async_irq = platform_get_irq_byname(pdev, "async");
-+	if (motg->async_irq < 0) {
-+		dev_err(&pdev->dev, "platform_get_irq for async irq failed\n");
-+		motg->async_irq = 0;
-+	}
-+
- 	regs[0].supply = "vddcx";
- 	regs[1].supply = "v3p3";
- 	regs[2].supply = "v1p8";
-@@ -1781,6 +1786,16 @@ static int msm_otg_probe(struct platform_device *pdev)
- 		goto disable_ldo;
- 	}
- 
-+	if (motg->async_irq) {
-+		ret = devm_request_irq(&pdev->dev, motg->async_irq,
-+				      msm_otg_irq, IRQF_TRIGGER_RISING,
-+				      "msm_otg", motg);
-+		if (ret) {
-+			dev_err(&pdev->dev, "request irq failed (ASYNC INT)\n");
-+			goto disable_ldo;
-+		}
-+	}
-+
- 	phy->init = msm_phy_init;
- 	phy->set_power = msm_otg_set_power;
- 	phy->notify_disconnect = msm_phy_notify_disconnect;
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 8c8f685..08c67a3 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -164,6 +164,7 @@ struct msm_otg {
- 	struct usb_phy phy;
- 	struct msm_otg_platform_data *pdata;
- 	int irq;
-+	int async_irq;
- 	struct clk *clk;
- 	struct clk *pclk;
- 	struct clk *core_clk;
--- 
-1.8.2.2
+On 11/20/2015 03:20 PM, Tim Bird wrote:
+> Add optional async_irq to msm_hsusb binding doc.
+> 
+> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+I probably should have taken this Acked-by by Rob off.  Sorry about that.
+  -- Tim
+
+> ---
+>  Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> index 8654a3e..bb2b304 100644
+> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> @@ -23,7 +23,12 @@ Required properties:
+>    "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
+>  
+>  - regs:         Offset and length of the register set in the memory map
+> -- interrupts:   interrupt-specifier for the OTG interrupt.
+> +- interrupts:   interrupt-specifier for the OTG interrupts
+> +
+> +- interrupt-names: Should contain the following:
+> +  "core"        USB core interrupt
+> +  "async"       Asynchronous interrupt to wake up from low power mode
+> +                (optional)
+>  
+>  - clocks:       A list of phandle + clock-specifier pairs for the
+>                  clocks listed in clock-names
+> @@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
+>      usb@f9a55000 {
+>          compatible = "qcom,usb-otg-snps";
+>          reg = <0xf9a55000 0x400>;
+> -        interrupts = <0 134 0>;
+> +        interrupts = <0 134 0>, <0 140 0>;
+> +        interrupt-names = "core_irq", "async_irq";
+>          dr_mode = "peripheral";
+>  
+>          clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
+> 
