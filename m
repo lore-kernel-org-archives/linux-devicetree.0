@@ -1,75 +1,73 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc2: add support of hi6220
-Date: Fri, 20 Nov 2015 11:20:52 -0600
-Message-ID: <87mvu8d1u3.fsf@saruman.tx.rr.com>
-References: <1447832387-27549-1-git-send-email-zhangfei.gao@linaro.org> <87ziy9erpi.fsf@saruman.tx.rr.com> <2B3535C5ECE8B5419E3ECBE30077290901DC3D9462@US01WEMBX2.internal.synopsys.com> <871tbkelca.fsf@saruman.tx.rr.com> <20151120161533.GA2987@herrerog>
+From: Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [Xen-devel] [PATCH 11/13] xen/hvm/params: Add a new dilivery
+ type for event-channel in HVM_PARAM_CALLBACK_IRQ
+Date: Fri, 20 Nov 2015 17:22:17 +0000
+Message-ID: <564F56C9.8060007@citrix.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+	<1447754231-7772-12-git-send-email-shannon.zhao@linaro.org>
+ <alpine.DEB.2.02.1511201706070.1107@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
-	protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151120161533.GA2987@herrerog>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Herrero, Gregory" <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1511201706070.1107-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-"Herrero, Gregory" <gregory.herrero-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> writes:
-
-> Hi Felipe,
+On 20/11/15 17:07, Stefano Stabellini wrote:
+> On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Add a new dilivery type:
+> delivery
 >
-> I just realized this patch miss "dma_desc_fs_enable" property in
-> params_hi6220. (drivers/usb/dwc2/platform.c:57)
->
-> You need to apply this patch:
->
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index d5102c4..2dfdae3 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -59,6 +59,7 @@ static const struct dwc2_core_params params_hi6220 =3D {
->         .otg_ver                        =3D 0,    /* 1.3 */
->         .dma_enable                     =3D 1,
->         .dma_desc_enable                =3D 0,
-> +       .dma_desc_fs_enable             =3D 0,
->         .speed                          =3D 0,    /* High Speed */
->         .enable_dynamic_fifo            =3D 1,
->         .en_multiple_tx_fifo            =3D 1,
->
->
-> Note that it is needed due to below patch.
-> "usb: dwc2: host: enable descriptor dma for fs devices"
+>> val[63:56] == 3: val[15:8] is flag: val[7:0] is a PPI.
+>> To the flag, bit 0 stands the interrupt mode is edge(1) or level(0) and
+>> bit 1 stands the interrupt polarity is active low(1) or high(0).
+>>
+>> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  include/xen/interface/hvm/params.h | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/include/xen/interface/hvm/params.h b/include/xen/interface/hvm/params.h
+>> index a6c7991..550688a 100644
+>> --- a/include/xen/interface/hvm/params.h
+>> +++ b/include/xen/interface/hvm/params.h
+>> @@ -34,6 +34,11 @@
+>>   *                  Domain = val[47:32], Bus  = val[31:16],
+>>   *                  DevFn  = val[15: 8], IntX = val[ 1: 0]
+>>   * val[63:56] == 2: val[7:0] is a vector number.
+>> + * val[63:56] == 3: val[15:8] is flag of event-channel interrupt:
+>> + *                      bit 0: interrupt is edge(1) or level(0) triggered
+>> + *                      bit 1: interrupt is active low(1) or high(0)
+>> + *                  val[7:0] is PPI number used by event-channel.
+>> + *                  This is only used by ARM/ARM64.
+>>   * If val == 0 then CPU0 event-channel notifications are not delivered.
+>>   */
+>>  #define HVM_PARAM_CALLBACK_IRQ 0
 
-done, thanks.
+Sadly NACK in this form.
 
-=2D-=20
-balbi
+This is not your fault, but this particular field has hidden ABI which
+the original submitter neglected to put into public API.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Bits 63:56 of this field currently have a hidden ABI with:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+xen/include/asm-x86/hvm/irq.h
+enum {
+    HVMIRQ_callback_none,
+    HVMIRQ_callback_gsi,
+    HVMIRQ_callback_pci_intx,
+    HVMIRQ_callback_vector
+} callback_via_type;
 
-iQIcBAEBAgAGBQJWT1Z1AAoJEIaOsuA1yqREvuEP/08LiVrPUhRZAgVctSuE1aRj
-ITvckFZ5wafm9kiIy27WuQ+RCgXGAcwT+SZ3LYOcUAOqFiJV8fua2RPylY5s7U6M
-47RZVZGF7Ffv/nV5R78gxdfgsh1rrsj7ZfIJZUeYHeWk64IHwL7qwQy70NcBjf+u
-5f0Noivr19f4ewOVbcadel8ulQHg8v8YCAm42vdC9WCaP8uVsJMnV3jM72rTue2A
-/ykVi2zqXwTVenWdCV2+sdH1vb+Mym6aDz5qDloSiacWnbEFcrXSdiLWJEbN70EY
-sxT4WDhvboKBiLXr6oB9IegBbJimDKl90+OX4lv5ioa6M/bFiK/NKlwMjUCJvZNp
-P51VxV9eYjRftCTODLwdBDWYOOR5lfywwIA+uZHvBttS+iTesrOHH9D3N4dHD2ZF
-v9nxhappoWR6A8klSUa//FmH0WmqVPDH0dh5w339uxwEt4+uguz4SlYVGa1VLbTc
-GkuMKpTIbUh/aB0htGPKECaV7R5dgGKYdWQg/Ovs+UCnDfryyWLo/Q18uC7OpMhY
-rBQMjnEYvwzOAMk/LcEazFeDPBbwuibVZ2gAIN0WcY3AoVkyo+qbBaDHS1RY97zy
-BR+s86g1Gj4jBS8YlJVK+nylCjkWtJstntzS4KPx3PzBNIeV7lYampVMwS1CayBn
-pVI5GeaAbhjsz676Sb+H
-=DtPP
------END PGP SIGNATURE-----
---=-=-=--
+I will submit a patch to fix this this properly.
+
+~Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
