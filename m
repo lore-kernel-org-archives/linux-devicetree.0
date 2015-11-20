@@ -1,69 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt-bindings: create arm/nxp folder and move
- LPC32xx SoC description to it
-Date: Fri, 20 Nov 2015 10:43:20 -0600
-Message-ID: <20151120164320.GA10936@rob-hp-laptop>
-References: <1447982925-30138-1-git-send-email-vz@mleia.com>
- <1447982925-30138-2-git-send-email-vz@mleia.com>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
+ wait cycles using the SPI Wait Clock Register
+Date: Fri, 20 Nov 2015 17:45:48 +0100
+Message-ID: <CAGNoLaPLXOmObXgW0YsN8giM1WCRDn7MieTBcKOE5sjXbjg0GA@mail.gmail.com>
+References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
+	<1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
+	<CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
+	<CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
+	<CAGRGNgV0kOkye-Zu4WGQKgGim7N2HB9rAFJ3HNQS89Rr6_WexQ@mail.gmail.com>
+	<CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A@mail.gmail.com>
+	<20151120161246.GB21921@rob-hp-laptop>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447982925-30138-2-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDFO74UEV4IRBPM4XWZAKGQEZ2FTVCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151120161246.GB21921@rob-hp-laptop>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:28:36AM +0200, Vladimir Zapolskiy wrote:
-> Create a separate folder for device tree bindings of NXP SoCs devices,
-> and move lpc32xx.txt to it.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/lpc32xx.txt     | 8 --------
->  Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt | 8 ++++++++
+2015-11-20 17:12 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Fri, Nov 20, 2015 at 02:56:34PM +0100, Marcus Weseloh wrote:
+>> > (and the wdelay should
+>> > arguably be a core-spi thing, not a sunxi thing, but that's a separate
+>> > discussion)
+>>
+>> I've been thinking about that, but it seemed to big a change to
+>> attempt with my limited kernel hacking experience.
+>
+> It is not any bigger. You just need to document it in the core binding.
+> It would still be read by the drivers using it.
 
-This one is short, but use git-format-patch -M option in the future.
+Julien, Rob: thanks for your comments! Ok, I will make the following changes:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+- remove "sun4i,spi-wdelay" from the sun4i binding and add the
+property to the spi-bus.txt binding instead
+- remove the comment about the additional 3 cycles from the documentation
+- modfy the spi-sun4i driver to take care of the minimum 3 cycle period
 
->  2 files changed, 8 insertions(+), 8 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/lpc32xx.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/lpc32xx.txt b/Documentation/devicetree/bindings/arm/lpc32xx.txt
-> deleted file mode 100644
-> index 56ec8dd..0000000
-> --- a/Documentation/devicetree/bindings/arm/lpc32xx.txt
-> +++ /dev/null
-> @@ -1,8 +0,0 @@
-> -NXP LPC32xx Platforms Device Tree Bindings
-> -------------------------------------------
-> -
-> -Boards with the NXP LPC32xx SoC shall have the following properties:
-> -
-> -Required root node property:
-> -
-> -compatible: must be "nxp,lpc3220", "nxp,lpc3230", "nxp,lpc3240" or "nxp,lpc3250"
-> diff --git a/Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
-> new file mode 100644
-> index 0000000..56ec8dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
-> @@ -0,0 +1,8 @@
-> +NXP LPC32xx Platforms Device Tree Bindings
-> +------------------------------------------
-> +
-> +Boards with the NXP LPC32xx SoC shall have the following properties:
-> +
-> +Required root node property:
-> +
-> +compatible: must be "nxp,lpc3220", "nxp,lpc3230", "nxp,lpc3240" or "nxp,lpc3250"
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Does that sound right?
+
+And maybe I could also use a more descriptive name for the property,
+maybe "spi-word-wait-cycles"?
+
+Cheers,
+
+   Marcus
