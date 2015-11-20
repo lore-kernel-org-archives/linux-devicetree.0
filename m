@@ -1,191 +1,150 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: update desription of LPC32xx GPIO
- controller
-Date: Fri, 20 Nov 2015 08:13:54 -0600
-Message-ID: <20151120141354.GA25446@rob-hp-laptop>
-References: <1447982995-30231-1-git-send-email-vz@mleia.com>
- <1447982995-30231-2-git-send-email-vz@mleia.com>
+Subject: Re: [PATCH V7 1/3] reset: hisilicon: document hisi-hi6220 reset
+ controllers bindings
+Date: Fri, 20 Nov 2015 08:15:29 -0600
+Message-ID: <20151120141529.GA31078@rob-hp-laptop>
+References: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447982995-30231-2-git-send-email-vz@mleia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+In-Reply-To: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Feng <puck.chen@hisilicon.com>
+Cc: p.zabel@pengutronix.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, puck.chen@aliyun.com, w.f@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:29:52AM +0200, Vladimir Zapolskiy wrote:
-> For the purpose of better description of NXP LPC32xx GPIO controller
-> hardware in device tree format, extend the existing description with
-> device tree subnodes, which represent 6 GPIO banks within the
-> controller.
+On Fri, Nov 20, 2015 at 10:10:04AM +0800, Chen Feng wrote:
+> Add DT bindings documentation for hi6220 SoC reset controller.
 > 
-> Note, client interface to the GPIO controller is untouched.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
->  .../devicetree/bindings/gpio/gpio_lpc32xx.txt      | 121 ++++++++++++++++++++-
->  1 file changed, 120 insertions(+), 1 deletion(-)
+>  .../bindings/reset/hisilicon,hi6220-reset.txt      | 34 +++++++++++
+>  include/dt-bindings/reset/hisi,hi6220-resets.h     | 67 ++++++++++++++++++++++
+>  2 files changed, 101 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+>  create mode 100644 include/dt-bindings/reset/hisi,hi6220-resets.h
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> index 4981936..d2da63c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> @@ -15,7 +15,43 @@ Required properties:
->     2) pin number
->     3) optional parameters:
->        - bit 0 specifies polarity (0 for normal, 1 for inverted)
-> -- reg: Index of the GPIO group
-> +- #address-cells: should be 2, which stands for GPIO bank id and
-> +  physical base address of this GPIO bank.
-
-Now you need special code to do address translation. I'd really think 
-twice about doing this.
-
-Why do you need the bank number?
-
-> +- #size-cells: should be 1, total size of GPIO bank registers.
+> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+> new file mode 100644
+> index 0000000..e0b185a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+> @@ -0,0 +1,34 @@
+> +Hisilicon System Reset Controller
+> +======================================
 > +
-> +The NXP LPC32xx SoC GPIO controller device node must contain a list
-> +of device nodes representing GPIO banks and their descriptions.
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
 > +
-> +The format of subnodes should follow the description below.
+> +The reset controller registers are part of the system-ctl block on
+> +hi6220 SoC.
 > +
 > +Required properties:
-> +- reg: should contain 3 integer values:
-> +   1) GPIO bank id from 0 to 5,
-> +   2) physical base address of this GPIO bank,
-> +   3) total size of the GPIO bank registers.
+> +- compatible: may be "hisilicon,hi6220-sysctrl"
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +- #reset-cells: 1, see below
 > +
-> +Optional properties:
-> +- gpio-bank-name: human readable name of a GPIO bank,
-> +- gpio-no-output-state: property of P2 bank, which has special,
-> +  mapping of its control registers,
-> +- gpio-offset: property of P3/GPIO bank, offset of bits representing
-> +  GPIO lines in output and direction registers,
-
-Seems like nr-gpios should have been a mask instead...
-
-> +- gpios: number of GPIO lines per GPIO bank, if this property is
-> +  omitted, then gpio-input-mask must be present,
-
-"gpios" is already the property name for the client interface.
-
-> +- gpio-input-mask: should contain two bitmasks, the first bitmask is
-> +  the mapping of GPIO lines to input status register, the second
-> +  bitmask should be a subset of the first bitmask and it represents
-> +  input GPIO lines, which may serve as an interrupt source,
-> +  if gpio-input-mask roperty is omitted, gpios property should be
-> +  present,
-> +- interrupts: list of parent interrupts mapped to input GPIO lines,
-> +- interrupts-extended: list of parent interrupts mapped to input GPIO
-> +  lines, used if parent interrupts are provided by more than one
-> +  interrupt controller, this option is used by GPI bank,
-> +- interrupt-controller: indicates that GPIO bank may serve as an
-> +  interrupt controller,
-> +- #interrupt-cells: if interrupt-controller property is present,
-> +  it should be 2, interrupt id and its flags.
->  
->  Example:
->  
-> @@ -24,6 +60,89 @@ Example:
->  		reg = <0x40028000 0x1000>;
->  		gpio-controller;
->  		#gpio-cells = <3>; /* bank, pin, flags */
-
-Can't bank and pin be encoded into one cell as the gpio core binding 
-suggests.
-
+> +Example:
+> +sys_ctrl: sys_ctrl@f7030000 {
+> +	compatible = "hisilicon,hi6220-sysctrl", "syscon";
+> +	reg = <0x0 0xf7030000 0x0 0x2000>;
+> +	#clock-cells = <1>;
+> +	#reset-cells = <1>;
+> +};
 > +
-> +		ranges = <0 0x0 0x40028000 0x00001000>,
-> +			 <1 0x0 0x40028000 0x00001000>,
-> +			 <2 0x0 0x40028000 0x00001000>,
-> +			 <3 0x0 0x40028000 0x00001000>,
-> +			 <4 0x0 0x40028000 0x00001000>,
-> +			 <5 0x0 0x40028000 0x00001000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
+> +Specifying reset lines connected to IP modules
+> +==============================================
+> +example:
 > +
-> +		gpio_p0: gpio-controller@0 {
-> +			reg = <0 0x40 0x1C>;
-> +			gpio-bank-name = "p0";
-> +			gpios = <8>;
+> +        uart1: serial@..... {
+> +                ...
+> +                resets = <&sys_ctrl PERIPH_RSTEN3_UART1>;
+> +                ...
+> +        };
 > +
-> +			interrupt-parent = <&sic2>;
-> +			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
+> +The index could be found in <dt-bindings/reset/hisi,hi6220-resets.h>.
+> diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
+> new file mode 100644
+> index 0000000..ca08a7e
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
+> @@ -0,0 +1,67 @@
+> +/**
+> + * This header provides index for the reset controller
+> + * based on hi6220 SoC.
+> + */
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_HI6220
+> +#define _DT_BINDINGS_RESET_CONTROLLER_HI6220
 > +
-> +		gpio_p1: gpio-controller@1 {
-> +			reg = <1 0x60 0x1C>;
-> +			gpio-bank-name = "p1";
-> +			gpios = <24>;
+> +#define PERIPH_RSTDIS0_MMC0             0x000
+> +#define PERIPH_RSTDIS0_MMC1             0x001
+> +#define PERIPH_RSTDIS0_MMC2             0x002
+> +#define PERIPH_RSTDIS0_NANDC            0x003
+> +#define PERIPH_RSTDIS0_USBOTG_BUS       0x004
+> +#define PERIPH_RSTDIS0_POR_PICOPHY      0x005
+> +#define PERIPH_RSTDIS0_USBOTG           0x006
+> +#define PERIPH_RSTDIS0_USBOTG_32K       0x007
+> +#define PERIPH_RSTDIS1_HIFI             0x100
+> +#define PERIPH_RSTDIS1_DIGACODEC        0x105
+> +#define PERIPH_RSTEN2_IPF               0x200
+> +#define PERIPH_RSTEN2_SOCP              0x201
+> +#define PERIPH_RSTEN2_DMAC              0x202
+> +#define PERIPH_RSTEN2_SECENG            0x203
+> +#define PERIPH_RSTEN2_ABB               0x204
+> +#define PERIPH_RSTEN2_HPM0              0x205
+> +#define PERIPH_RSTEN2_HPM1              0x206
+> +#define PERIPH_RSTEN2_HPM2              0x207
+> +#define PERIPH_RSTEN2_HPM3              0x208
+> +#define PERIPH_RSTEN3_CSSYS             0x300
+> +#define PERIPH_RSTEN3_I2C0              0x301
+> +#define PERIPH_RSTEN3_I2C1              0x302
+> +#define PERIPH_RSTEN3_I2C2              0x303
+> +#define PERIPH_RSTEN3_I2C3              0x304
+> +#define PERIPH_RSTEN3_UART1             0x305
+> +#define PERIPH_RSTEN3_UART2             0x306
+> +#define PERIPH_RSTEN3_UART3             0x307
+> +#define PERIPH_RSTEN3_UART4             0x308
+> +#define PERIPH_RSTEN3_SSP               0x309
+> +#define PERIPH_RSTEN3_PWM               0x30a
+> +#define PERIPH_RSTEN3_BLPWM             0x30b
+> +#define PERIPH_RSTEN3_TSENSOR           0x30c
+> +#define PERIPH_RSTEN3_DAPB              0x312
+> +#define PERIPH_RSTEN3_HKADC             0x313
+> +#define PERIPH_RSTEN3_CODEC_SSI         0x314
+> +#define PERIPH_RSTEN3_PMUSSI1           0x316
+> +#define PERIPH_RSTEN8_RS0               0x400
+> +#define PERIPH_RSTEN8_RS2               0x401
+> +#define PERIPH_RSTEN8_RS3               0x402
+> +#define PERIPH_RSTEN8_MS0               0x403
+> +#define PERIPH_RSTEN8_MS2               0x405
+> +#define PERIPH_RSTEN8_XG2RAM0           0x406
+> +#define PERIPH_RSTEN8_X2SRAM_TZMA       0x407
+> +#define PERIPH_RSTEN8_SRAM              0x408
+> +#define PERIPH_RSTEN8_HARQ              0x40a
+> +#define PERIPH_RSTEN8_DDRC              0x40c
+> +#define PERIPH_RSTEN8_DDRC_APB          0x40d
+> +#define PERIPH_RSTEN8_DDRPACK_APB       0x40e
+> +#define PERIPH_RSTEN8_DDRT              0x411
+> +#define PERIPH_RSDIST9_CARM_DAP         0x500
+> +#define PERIPH_RSDIST9_CARM_ATB         0x501
+> +#define PERIPH_RSDIST9_CARM_LBUS        0x502
+> +#define PERIPH_RSDIST9_CARM_POR         0x503
+> +#define PERIPH_RSDIST9_CARM_CORE        0x504
+> +#define PERIPH_RSDIST9_CARM_DBG         0x505
+> +#define PERIPH_RSDIST9_CARM_L2          0x506
+> +#define PERIPH_RSDIST9_CARM_SOCDBG      0x507
+> +#define PERIPH_RSDIST9_CARM_ETM         0x508
 > +
-> +			interrupt-parent = <&sic2>;
-> +			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		gpio_p2: gpio-controller@2 {
-> +			reg = <2 0x10 0x18>;
-> +			gpio-bank-name = "p2";
-> +			gpios = <13>;
-> +			gpio-no-output-state;
-> +		};
-> +
-> +		gpio_gpio: gpio-controller@3 {
-> +			reg = <3 0x00 0x1C>;
-
-This overlaps with bank 2.
-
-> +			gpio-bank-name = "gpio";
-> +			gpio-offset = <25>;
-> +			gpio-input-mask = <0x01007c00>, <0x01007c00>;
-> +
-> +			interrupt-parent = <&sic2>;
-> +			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <1 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <2 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <3 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <4 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <5 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +
-> +		gpio_gpi: gpio-controller@4 {
-> +			reg = <4 0x00 0x04>;
-> +			gpio-bank-name = "gpi";
-> +			gpio-input-only;
-> +			gpio-input-mask = <0x1aff83ff>, <0x100803ff>;
-> +
-> +			interrupts-extended =
-> +				<&sic2 22 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 23 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 24 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 25 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 26 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 27 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 28 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 15 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2  9 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 10 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic2 11 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&sic1  4 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +
-> +		gpio_gpo: gpio-controller@5 {
-> +			reg = <5 0x00 0x10>;
-> +			gpio-bank-name = "gpo";
-> +			gpios = <24>;
-> +			gpio-output-only;
-> +		};
->  	};
->  
->  	leds {
+> +#endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
 > -- 
-> 2.1.4
+> 1.9.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
