@@ -1,63 +1,44 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] extcon: arizona: Update DT binding
- documentation for mic detection
-Date: Fri, 20 Nov 2015 16:20:00 +0000
-Message-ID: <20151120162000.GH18889@ck-lbox>
-References: <1447947940-3054-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1447947940-3054-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151120155833.GA18510@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: sun4i: Add backlight node to
+ iNet1 tablet
+Date: Fri, 20 Nov 2015 17:38:18 +0100
+Message-ID: <20151120163818.GG32142@lukather>
+References: <1448027950-14629-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SKW69dzTt3T8RCN0"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB64YXWZAKGQE74FOVSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151120155833.GA18510@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+In-Reply-To: <1448027950-14629-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 09:58:33AM -0600, Rob Herring wrote:
-> On Thu, Nov 19, 2015 at 03:45:39PM +0000, Charles Keepax wrote:
-> > Add additional bindings to allow configuration of the system specific
-> > microphone detection settings.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/extcon/extcon-arizona.txt  |   20 ++++++++++++++++++++
-> >  1 files changed, 20 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> > index e1705fa..d661811 100644
-> > --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> > +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> > @@ -13,3 +13,23 @@ Optional properties:
-> >      ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to HPDETR
-> >      If this node is not mentioned or if the value is unknown, then
-> >      headphone detection mode is set to HPDETL.
-> > +
-> > +  - wlf,micd-software-compare : Use a software comparison to determine mic
-> > +    presence
-> > +  - wlf,micd-detect-debounce : Additional software microphone detection
-> > +    debounce specified in milliseconds.
-> > +  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the headset
-> > +    polarity if one exists.
-> > +  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup prior to
-> > +    performing microphone detection, specified as per the ARIZONA_MICD_TIME_XXX
-> > +    defines.
-> > +  - wlf,micd-rate : Delay between successive microphone detection measurements,
-> > +    specified as per the ARIZONA_MICD_TIME_XXX defines.
-> > +  - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
-> > +    number of measurements to take, valid values being 2 and 4.
-> > +  - wlf,micd-timeout : Timeout for microphone detection, specified in
-> > +    milliseconds.
+--SKW69dzTt3T8RCN0
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Fri, Nov 20, 2015 at 02:59:07PM +0100, Hans de Goede wrote:
+> Add a node describing the lcd panel backlight on the iNet1 tablet.
 > 
-> Please add unit suffix (-ms).
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Yeah can do will ping out a small patch to update this as well.
+Applied. This patch was not applying. Please either mention the
+dependency between your patch sets or base them on top of linus' rc's
+or my branches.
 
-Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--SKW69dzTt3T8RCN0--
