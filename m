@@ -1,145 +1,86 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2 3/6] clk: berlin: add common gateclk driver for newer SoCs
-Date: Fri, 20 Nov 2015 16:42:29 +0800
-Message-ID: <1448008952-1787-4-git-send-email-jszhang@marvell.com>
+Subject: [PATCH v2 6/6] arm64: dts: berlin4ct: add pll and clock nodes
+Date: Fri, 20 Nov 2015 16:42:32 +0800
+Message-ID: <1448008952-1787-7-git-send-email-jszhang@marvell.com>
 References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, sebastian.hesselbarth@gmail.com, antoine.tenart@free-electrons.com
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Add common gateclk driver for Marvell SoCs newer than BG2, BG2CD,
-BG2Q. berlin_gateclk_setup() is provided to setup and register such
-kind of clks.
+Add syspll, mempll, cpupll, gateclk and berlin-clk nodes.
 
 Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- drivers/clk/berlin/Makefile |  2 +-
- drivers/clk/berlin/clk.h    | 12 ++++++++
- drivers/clk/berlin/gate.c   | 73 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 86 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/berlin/gate.c
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 38 ++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
-index ee2e09d..fc92151 100644
---- a/drivers/clk/berlin/Makefile
-+++ b/drivers/clk/berlin/Makefile
-@@ -1,5 +1,5 @@
- obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
--obj-y += pll.o clk.o
-+obj-y += pll.o clk.o gate.o
- obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
- obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
- obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
-diff --git a/drivers/clk/berlin/clk.h b/drivers/clk/berlin/clk.h
-index 5e5680e..4d8af6c 100644
---- a/drivers/clk/berlin/clk.h
-+++ b/drivers/clk/berlin/clk.h
-@@ -25,9 +25,21 @@ struct clk_desc {
- 	unsigned long	flags;
- };
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index a4a1876..808a997 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -42,6 +42,7 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
  
-+struct gateclk_desc {
-+	const char	*name;
-+	const char	*parent_name;
-+	u8		bit_idx;
-+	unsigned long	flags;
-+};
-+
- void __init berlin_clk_setup(struct device_node *np,
- 			     const struct clk_desc *desc,
- 			     struct clk_onecell_data *clk_data,
- 			     int n);
++#include <dt-bindings/clock/berlin4ct.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
  
-+void __init berlin_gateclk_setup(struct device_node *np,
-+				 const struct gateclk_desc *descs,
-+				 struct clk_onecell_data *clk_data,
-+				 int n);
+ / {
+@@ -135,6 +136,22 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		cpupll: cpupll {
++			compatible = "marvell,berlin-pll";
++			reg = <0x922000 0x14>, <0xea0710 4>;
++			#clock-cells = <0>;
++			clocks = <&osc>, <&clk CLK_CPUFASTREF>;
++			bypass-shift = /bits/ 8 <2>;
++		};
 +
- #endif
-diff --git a/drivers/clk/berlin/gate.c b/drivers/clk/berlin/gate.c
-new file mode 100644
-index 0000000..35200d2
---- /dev/null
-+++ b/drivers/clk/berlin/gate.c
-@@ -0,0 +1,73 @@
-+/*
-+ * Copyright (c) 2015 Marvell Technology Group Ltd.
-+ *
-+ * Author: Jisheng Zhang <jszhang@marvell.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
++		mempll: mempll {
++			compatible = "marvell,berlin-pll";
++			reg = <0x940034 0x14>, <0xea0710 4>;
++			#clock-cells = <0>;
++			clocks = <&osc>, <&clk CLK_MEMFASTREF>;
++			bypass-shift = /bits/ 8 <1>;
++		};
 +
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock_types.h>
+ 		apb@e80000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+@@ -225,6 +242,27 @@
+ 			};
+ 		};
+ 
++		syspll: syspll {
++			compatible = "marvell,berlin-pll";
++			reg = <0xea0200 0x14>, <0xea0710 4>;
++			#clock-cells = <0>;
++			clocks = <&osc>;
++			bypass-shift = /bits/ 8 <0>;
++		};
 +
-+#include "clk.h"
++		gateclk: gateclk {
++			compatible = "marvell,berlin4ct-gateclk";
++			reg = <0xea0700 4>;
++			#clock-cells = <1>;
++		};
 +
-+static DEFINE_SPINLOCK(berlin_gateclk_lock);
++		clk: clk {
++			compatible = "marvell,berlin4ct-clk";
++			reg = <0xea0720 0x144>;
++			#clock-cells = <1>;
++			clocks = <&syspll>;
++		};
 +
-+void __init berlin_gateclk_setup(struct device_node *np,
-+				 const struct gateclk_desc *descs,
-+				 struct clk_onecell_data *clk_data,
-+				 int n)
-+{
-+	int i, ret;
-+	void __iomem *base;
-+	struct clk **clks;
-+
-+	clks = kcalloc(n, sizeof(struct clk *), GFP_KERNEL);
-+	if (!clks)
-+		return;
-+
-+	base = of_iomap(np, 0);
-+	if (WARN_ON(!base))
-+		goto err_iomap;
-+
-+	for (i = 0; i < n; i++) {
-+		struct clk *clk;
-+
-+		clk = clk_register_gate(NULL, descs[i].name,
-+				descs[i].parent_name,
-+				descs[i].flags, base,
-+				descs[i].bit_idx, 0,
-+				&berlin_gateclk_lock);
-+		if (WARN_ON(IS_ERR(clk)))
-+			goto err_clk_register;
-+		clks[i] = clk;
-+	}
-+
-+	clk_data->clks = clks;
-+	clk_data->clk_num = i;
-+
-+	ret = of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
-+	if (WARN_ON(ret))
-+		goto err_clk_register;
-+	return;
-+
-+err_clk_register:
-+	for (i = 0; i < n; i++)
-+		clk_unregister(clks[i]);
-+	iounmap(base);
-+err_iomap:
-+	kfree(clks);
-+}
+ 		soc_pinctrl: pin-controller@ea8000 {
+ 			compatible = "marvell,berlin4ct-soc-pinctrl";
+ 			reg = <0xea8000 0x14>;
 -- 
 2.6.2
-
