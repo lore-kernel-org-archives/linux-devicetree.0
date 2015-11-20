@@ -1,65 +1,119 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
- wait cycles using the SPI Wait Clock Register
-Date: Fri, 20 Nov 2015 10:12:46 -0600
-Message-ID: <20151120161246.GB21921@rob-hp-laptop>
-References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
- <1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
- <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
- <CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
- <CAGRGNgV0kOkye-Zu4WGQKgGim7N2HB9rAFJ3HNQS89Rr6_WexQ@mail.gmail.com>
- <CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A@mail.gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 1/6] ARM: shmobile: r8a7740 dtsi: Add L2
+ cache-controller node
+Date: Fri, 20 Nov 2015 17:14:27 +0100
+Message-ID: <CAMuHMdWv4iDxmyPCG26sTMZAnHd3AO7h8nTcxbPryW-d3zzjFw@mail.gmail.com>
+References: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
+	<1438765090-823-2-git-send-email-geert+renesas@glider.be>
+	<55C1D894.8070302@arm.com>
+	<CAMuHMdXdEV+41mH338bDbazzqOErDLQkBUAj2+uVX4Wupn1ABQ@mail.gmail.com>
+	<55C1EC3C.9000407@arm.com>
+	<CAMuHMdVAOba0ofmoy8OH2DdY1m3XaD8iOXvXBE035=C4yK58VQ@mail.gmail.com>
+	<55C47E32.6070400@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBA4NXWZAKGQEFV5QPPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <55C47E32.6070400@arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 02:56:34PM +0100, Marcus Weseloh wrote:
-> Hi Julien,
-> 
-> 2015-11-20 11:12 GMT+01:00 Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> > Having magic numbers is kind-of a drivers' job.
+Hi Sudeep,
 
-I guess all my comments were already raised...
+[reviving this old thread, now we're two merge windows further]
 
-> 
-> Yes, of course. What I meant was that I didn't feel comfortable to
-> include this magic number in driver code because I'm not 100% sure if
-> it is correct across all SPI configurations and SoCs that this driver
-> supports (A10 / A20).
+On Fri, Aug 7, 2015 at 11:45 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On 06/08/15 17:21, Geert Uytterhoeven wrote:
+>> On Wed, Aug 5, 2015 at 12:58 PM, Sudeep Holla <sudeep.holla@arm.com>
+>> wrote:
+>>> On 05/08/15 11:44, Geert Uytterhoeven wrote:
+>>>> On Wed, Aug 5, 2015 at 11:34 AM, Sudeep Holla <sudeep.holla@arm.com>
+>>>> wrote:
+>
+>
+> [..]
+>
+>>>>> Any particular reason whey you need all this cache-* properties ? Is
+>>>>
+>>>> To describe the cache as good as possible.
+>>>
+>>> Why if you can probe it ? IMO DT is mostly useful to describe things
+>>> that can't be probed/discovered using hardware.
+>>>
+>>>>> something broken on these SoCs ? We should be able to get most of these
+>>>>> information from the SoC(reading some registers). It's good to avoid
+>>>>> passing them via DT if they can be discovered from hardware.
+>>>>
+>>>> So we have all these documented properties in
+>>>> Documentation/devicetree/bindings/arm/l2cc.txt, but they're not meant to
+>>>> be used?
+>>>
+>>> No I didn't mean that, I just wanted to know if they can't be probed due
+>>> to some hardware issue. It would avoid issues with wrong DTs especially
+>>> if they are not so easy to upgrade.
+>>
+>> I think it works just fine without them.
+>
+> Yes, in general if you specify a value in DT that can be probed, its
+> usually to override the probed value(useful if there is some h/w errata)...
+>
+>> Should I drop all cache-* properties marked optional in
+>> Documentation/devicetree/bindings/arm/l2cc.txt?
+>> That would be cache-size, cache-sets, cache-block-size, and
+>> cache-line-size.
+>
+> ... however if you incorrect values by mistake, then it's problematic
+> even if h/w provides correct value.
+>
+>> What about the L1 cache? I know Linux uses none of the d-cache-*
+>> and i-cache-* properties.
+>
+> Same there, IIRC PPC use them, but on ARM I think so far the need has
+> not arise.
+>
+> Just to re-iterate myself, I am not against adding them, but it's not
+> really needed. I just wanted to know if there was any h/w issue.
 
-You could not subtract off 3 that way you meet the minimum time no 
-matter what. If other platforms are not setting this property, then I 
-would expect the behavior is unchanged. If they do want to set it, it is 
-their job to validate that it is correct. If it differs, the compatible 
-string can help with that.
+AFAIK, there's nothing to be overridden. The cache seems to be configured in
+the exact same way with and without cache-size, cache-sets, cache-block-size,
+and cache-line-size.
 
-> > (and the wdelay should
-> > arguably be a core-spi thing, not a sunxi thing, but that's a separate
-> > discussion)
-> 
-> I've been thinking about that, but it seemed to big a change to
-> attempt with my limited kernel hacking experience.
+With:
 
-It is not any bigger. You just need to document it in the core binding. 
-It would still be read by the drivers using it.
+    L2C OF: override cache size: 262144 bytes (256KB)
+    L2C OF: override line size: 32 bytes
+    L2C OF: override way size: 32768 bytes (32KB)
+    L2C OF: override associativity: 8
+    L2C: DT/platform modifies aux control register: 0x02040000 -> 0x02440000
+    L2C: DT/platform tries to modify or specify cache size
+    L2C-310 erratum 769419 enabled
+    L2C-310 enabling early BRESP for Cortex-A9
+    L2C-310 full line of zeros enabled for Cortex-A9
+    L2C-310 dynamic clock gating enabled, standby mode enabled
+    L2C-310 cache controller enabled, 8 ways, 256 kB
+    L2C-310: CACHE_ID 0x410000c7, AUX_CTRL 0x46440001
 
-> Mark, do you think we should rather talk about adding support for
-> options like this delay to spi-core? Or would it be OK to add it to
-> the sun4i driver and possibly refactor later?
-> 
-> Cheers,
-> 
->   Marcus
+Without:
+
+    L2C: DT/platform modifies aux control register: 0x02040000 -> 0x02440000
+    L2C-310 erratum 769419 enabled
+    L2C-310 enabling early BRESP for Cortex-A9
+    L2C-310 full line of zeros enabled for Cortex-A9
+    L2C-310 dynamic clock gating enabled, standby mode enabled
+    L2C-310 cache controller enabled, 8 ways, 256 kB
+    L2C-310: CACHE_ID 0x410000c7, AUX_CTRL 0x46440001
+
+Hence I'll drop cache-size, cache-sets, cache-block-size, and cache-line-size,
+for both unified L2 and L1 I/D caches.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
