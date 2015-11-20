@@ -1,52 +1,58 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 03/10] dt-bindings: interrupt-controllers: add description
- of SIC1 and SIC2
-Date: Fri, 20 Nov 2015 18:02:09 +0000
-Message-ID: <564F6021.7090000@arm.com>
-References: <1447982925-30138-1-git-send-email-vz@mleia.com> <1447982925-30138-4-git-send-email-vz@mleia.com> <20151120165835.GA17916@rob-hp-laptop> <564F5DF8.7040908@mleia.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 09/11] clk: lpc32xx: add common clock framework driver
+Date: Fri, 20 Nov 2015 20:07:46 +0200
+Message-ID: <564F6172.3090509@mleia.com>
+References: <1447981511-29653-1-git-send-email-vz@mleia.com> <1447981511-29653-10-git-send-email-vz@mleia.com> <3762298.NKYXldtldq@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564F5DF8.7040908-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <3762298.NKYXldtldq@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/15 17:52, Vladimir Zapolskiy wrote:
-> Hi Rob,
+On 20.11.2015 16:04, Arnd Bergmann wrote:
+> On Friday 20 November 2015 03:05:09 Vladimir Zapolskiy wrote:
+>> +
+>> +struct clk_proto_t {
+>> +       const char *name;
+>> +       const u8 parents[LPC32XX_CLK_PARENTS_MAX];
+>> +       u8 num_parents;
+>> +       unsigned long flags;
+>> +};
+>> +
+>> +#define CLK_PREFIX(LITERAL)            LPC32XX_CLK_ ## LITERAL
+>> +#define NUMARGS(...)   (sizeof((int[]){__VA_ARGS__})/sizeof(int))
+>> +
+>> +#define LPC32XX_CLK_DEFINE(_idx, _name, _flags, ...)           \
+>> +       [CLK_PREFIX(_idx)] = {                                  \
+>> +               .name = #_name,                                 \
+>> +               .flags = _flags,                                \
+>> +               .parents = { __VA_ARGS__ },                     \
+>> +               .num_parents = NUMARGS(__VA_ARGS__),            \
+>> +        }
+>> +
 > 
-> On 20.11.2015 18:58, Rob Herring wrote:
->> On Fri, Nov 20, 2015 at 03:28:38AM +0200, Vladimir Zapolskiy wrote:
->>> NXP LPC32xx has three interrupt controllers, namely root Main
->>> Interrupt Controller (MIC) and two supplementary Sub Interrupt
->>> Controllers (SIC1 and SIC2), four interrupt outputs from SIC1 and SIC2
->>> are connected to MIC.
->>>
->>> Also the change describes two additional optional properties:
->>> * interrupt-controller-name - human readable name of an interrupt
->>>   controller,
->>
->> Why? compatible is human readable. If you don't like that, then put the 
->> string in the driver.
+> Try to not outsmart yourself with the macros. It's better to avoid
+> string concatenation so it's possible to grep for uses of some
+> constant.
 > 
-> in runtime I'd like to differentiate various IRQ chips by name. Here for
-> example I have one compatible "*-sic" and two actual IRQ chips SIC1 and
-> SIC2. If I read /proc/interrupts or /sys/kernel/debug/irq_domain_mapping
-> I would prefer to visualize interrupts from SIC1 and SIC2.
-> 
-> I understand that this property is not hardware specific, but there are
-> plenty of similar properties like "label" etc. Probably renaming of the
-> property may help?
+> I would probably not use a macro at all here and just open-code the
+> entire table. If you ensure that '0' is not a valid parent, then
+> you can leave out the .num_parents field and just look for the
+> zero-termination.
 
-You can always generate the name based on the probing order or the address.
+Macros are here for simplicity, code size reduction and to avoid some
+stupid mistakes like different number of .parents and .num_parents.
 
-Thanks,
+I believe macro unwrapping in this code will add another 1000 LoC and
+will result in quite unreadable and less maintainable code.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--
+Best wishes,
+Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
