@@ -1,44 +1,135 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v13 4/6] fpga: add fpga bridge framework
-Date: Fri, 20 Nov 2015 09:08:16 -0600
-Message-ID: <alpine.DEB.2.02.1511200908010.7014@linuxheads99>
-References: <1446570664-10293-1-git-send-email-atull@opensource.altera.com> <1446570664-10293-5-git-send-email-atull@opensource.altera.com> <CAAtXAHekFyL=N96vZYp9rUJMUcBW31Jj=+7J1=aiGpH4Gg1OxQ@mail.gmail.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH v3 3/3] ARM64: dts: enable clock support for Broadcom NS2
+Date: Fri, 20 Nov 2015 10:17:20 -0500
+Message-ID: <1448032640-27713-4-git-send-email-jonmason@broadcom.com>
+References: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHekFyL=N96vZYp9rUJMUcBW31Jj=+7J1=aiGpH4Gg1OxQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Nov 2015, Moritz Fischer wrote:
+Add device tree entries for clock support for Broadcom Northstar 2 SoC
 
-> Hi Alan,
-> 
-> while trying to implement something that works for Zynq along these lines
-> I stumbled upon some minor stuff.
-> 
-> On Tue, Nov 3, 2015 at 9:11 AM,  <atull@opensource.altera.com> wrote:
-> 
-> > + * Return: 0 on success, negative error code otherwise.
-> > + */
-> > +int fpga_bridge_register(struct device *dev, const char *name,
-> > +                        struct fpga_bridge_ops *br_ops, void *priv)
-> 
-> const struct fpga_bridge_ops
-> 
-> > +int fpga_bridge_register(struct device *dev, const char *name,
-> > +                        struct fpga_bridge_ops *br_ops, void *priv);
-> const struct fpga_bridge_ops
-> 
-> Cheers,
-> 
-> Moritz
-> 
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 80 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 1 deletion(-)
 
-Hi Moritz,
-
-Thanks!
-
-Alan
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index 9610822..a510d3a 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -31,6 +31,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/bcm-ns2.h>
+ 
+ /memreserve/ 0x84b00000 0x00000008;
+ 
+@@ -109,6 +110,33 @@
+ 				     <&A57_3>;
+ 	};
+ 
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		osc: oscillator {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <25000000>;
++		};
++
++		iprocmed: iprocmed {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll_scr BCM_NS2_GENPLL_SCR_SCR_CLK>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		iprocslow: iprocslow {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll_scr BCM_NS2_GENPLL_SCR_SCR_CLK>;
++			clock-div = <4>;
++			clock-mult = <1>;
++		};
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -156,6 +184,56 @@
+ 			mmu-masters;
+ 		};
+ 
++		lcpll_ddr: lcpll_ddr@6501d058 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-lcpll-ddr";
++			reg = <0x6501d058 0x20>,
++			      <0x6501c020 0x4>,
++			      <0x6501d04c 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll_ddr", "pcie_sata_usb",
++					     "ddr", "ddr_ch2_unused",
++					     "ddr_ch3_unused", "ddr_ch4_unused",
++					     "ddr_ch5_unused";
++		};
++
++		lcpll_ports: lcpll_ports@6501d078 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-lcpll-ports";
++			reg = <0x6501d078 0x20>,
++			      <0x6501c020 0x4>,
++			      <0x6501d054 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll_ports", "wan", "rgmii",
++					     "ports_ch2_unused",
++					     "ports_ch3_unused",
++					     "ports_ch4_unused",
++					     "ports_ch5_unused";
++		};
++
++		genpll_scr: genpll_scr@6501d098 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-genpll-scr";
++			reg = <0x6501d098 0x32>,
++			      <0x6501c020 0x4>,
++			      <0x6501d044 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll_scr", "scr", "fs",
++					     "audio_ref", "scr_ch3_unused",
++					     "scr_ch4_unused", "scr_ch5_unused";
++		};
++
++		genpll_sw: genpll_sw@6501d0c4 {
++			#clock-cells = <1>;
++			compatible = "brcm,ns2-genpll-sw";
++			reg = <0x6501d0c4 0x32>,
++			      <0x6501c020 0x4>,
++			      <0x6501d044 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll_sw", "rpe", "250", "nic",
++					     "chimp", "port", "sdio";
++		};
++
+ 		crmu: crmu@65024000 {
+ 			compatible = "syscon";
+ 			reg = <0x65024000 0x100>;
+@@ -204,7 +282,7 @@
+ 			interrupts = <GIC_SPI 393 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clock-frequency = <23961600>;
++			clocks = <&osc>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+1.9.1
