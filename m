@@ -1,47 +1,137 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 0/6] Arizona Extcon Update Device Bindings
-Date: Fri, 20 Nov 2015 11:07:34 +0900
-Message-ID: <564E8066.8080006@samsung.com>
-References: <1447947940-3054-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Chen Feng <puck.chen@hisilicon.com>
+Subject: [PATCH V7 1/3] reset: hisilicon: document hisi-hi6220 reset controllers bindings
+Date: Fri, 20 Nov 2015 10:10:04 +0800
+Message-ID: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1447947940-3054-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: puck.chen@hisilicon.com, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com
+Cc: puck.chen@aliyun.com, w.f@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add DT bindings documentation for hi6220 SoC reset controller.
 
-On 2015=EB=85=84 11=EC=9B=94 20=EC=9D=BC 00:45, Charles Keepax wrote:
-> This patch chain adds device bindings for the jack and
-> microphone detection system specific settings.
->=20
-> Changes since v2:
->  - Now moved things over to the new extcon binding document
->=20
-> Thanks,
-> Charles
->=20
-> Charles Keepax (6):
->   extcon: arizona: Add device binding to enable ADC mode micdet
->   extcon: arizona: Add device binding for the general purpose switch
->   extcon: arizona: Add device binding for jack detect polarity
->     inversion
->   extcon: arizona: Add device binding for second jack detect pin on
->     GPIO5
->   extcon: arizona: Update DT binding documentation for mic detection
->   extcon: arizona: Update DT binding documentation for jack detection
->=20
->  .../devicetree/bindings/extcon/extcon-arizona.txt  |   26 ++++++++++=
-++++++++++
->  drivers/extcon/extcon-arizona.c                    |   13 ++++++++++
->  2 files changed, 39 insertions(+), 0 deletions(-)
->=20
+Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+---
+ .../bindings/reset/hisilicon,hi6220-reset.txt      | 34 +++++++++++
+ include/dt-bindings/reset/hisi,hi6220-resets.h     | 67 ++++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+ create mode 100644 include/dt-bindings/reset/hisi,hi6220-resets.h
 
-Applied them.
-
-Thanks,
-Chanwoo Choi
+diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+new file mode 100644
+index 0000000..e0b185a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+@@ -0,0 +1,34 @@
++Hisilicon System Reset Controller
++======================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++The reset controller registers are part of the system-ctl block on
++hi6220 SoC.
++
++Required properties:
++- compatible: may be "hisilicon,hi6220-sysctrl"
++- reg: should be register base and length as documented in the
++  datasheet
++- #reset-cells: 1, see below
++
++Example:
++sys_ctrl: sys_ctrl@f7030000 {
++	compatible = "hisilicon,hi6220-sysctrl", "syscon";
++	reg = <0x0 0xf7030000 0x0 0x2000>;
++	#clock-cells = <1>;
++	#reset-cells = <1>;
++};
++
++Specifying reset lines connected to IP modules
++==============================================
++example:
++
++        uart1: serial@..... {
++                ...
++                resets = <&sys_ctrl PERIPH_RSTEN3_UART1>;
++                ...
++        };
++
++The index could be found in <dt-bindings/reset/hisi,hi6220-resets.h>.
+diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
+new file mode 100644
+index 0000000..ca08a7e
+--- /dev/null
++++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
+@@ -0,0 +1,67 @@
++/**
++ * This header provides index for the reset controller
++ * based on hi6220 SoC.
++ */
++#ifndef _DT_BINDINGS_RESET_CONTROLLER_HI6220
++#define _DT_BINDINGS_RESET_CONTROLLER_HI6220
++
++#define PERIPH_RSTDIS0_MMC0             0x000
++#define PERIPH_RSTDIS0_MMC1             0x001
++#define PERIPH_RSTDIS0_MMC2             0x002
++#define PERIPH_RSTDIS0_NANDC            0x003
++#define PERIPH_RSTDIS0_USBOTG_BUS       0x004
++#define PERIPH_RSTDIS0_POR_PICOPHY      0x005
++#define PERIPH_RSTDIS0_USBOTG           0x006
++#define PERIPH_RSTDIS0_USBOTG_32K       0x007
++#define PERIPH_RSTDIS1_HIFI             0x100
++#define PERIPH_RSTDIS1_DIGACODEC        0x105
++#define PERIPH_RSTEN2_IPF               0x200
++#define PERIPH_RSTEN2_SOCP              0x201
++#define PERIPH_RSTEN2_DMAC              0x202
++#define PERIPH_RSTEN2_SECENG            0x203
++#define PERIPH_RSTEN2_ABB               0x204
++#define PERIPH_RSTEN2_HPM0              0x205
++#define PERIPH_RSTEN2_HPM1              0x206
++#define PERIPH_RSTEN2_HPM2              0x207
++#define PERIPH_RSTEN2_HPM3              0x208
++#define PERIPH_RSTEN3_CSSYS             0x300
++#define PERIPH_RSTEN3_I2C0              0x301
++#define PERIPH_RSTEN3_I2C1              0x302
++#define PERIPH_RSTEN3_I2C2              0x303
++#define PERIPH_RSTEN3_I2C3              0x304
++#define PERIPH_RSTEN3_UART1             0x305
++#define PERIPH_RSTEN3_UART2             0x306
++#define PERIPH_RSTEN3_UART3             0x307
++#define PERIPH_RSTEN3_UART4             0x308
++#define PERIPH_RSTEN3_SSP               0x309
++#define PERIPH_RSTEN3_PWM               0x30a
++#define PERIPH_RSTEN3_BLPWM             0x30b
++#define PERIPH_RSTEN3_TSENSOR           0x30c
++#define PERIPH_RSTEN3_DAPB              0x312
++#define PERIPH_RSTEN3_HKADC             0x313
++#define PERIPH_RSTEN3_CODEC_SSI         0x314
++#define PERIPH_RSTEN3_PMUSSI1           0x316
++#define PERIPH_RSTEN8_RS0               0x400
++#define PERIPH_RSTEN8_RS2               0x401
++#define PERIPH_RSTEN8_RS3               0x402
++#define PERIPH_RSTEN8_MS0               0x403
++#define PERIPH_RSTEN8_MS2               0x405
++#define PERIPH_RSTEN8_XG2RAM0           0x406
++#define PERIPH_RSTEN8_X2SRAM_TZMA       0x407
++#define PERIPH_RSTEN8_SRAM              0x408
++#define PERIPH_RSTEN8_HARQ              0x40a
++#define PERIPH_RSTEN8_DDRC              0x40c
++#define PERIPH_RSTEN8_DDRC_APB          0x40d
++#define PERIPH_RSTEN8_DDRPACK_APB       0x40e
++#define PERIPH_RSTEN8_DDRT              0x411
++#define PERIPH_RSDIST9_CARM_DAP         0x500
++#define PERIPH_RSDIST9_CARM_ATB         0x501
++#define PERIPH_RSDIST9_CARM_LBUS        0x502
++#define PERIPH_RSDIST9_CARM_POR         0x503
++#define PERIPH_RSDIST9_CARM_CORE        0x504
++#define PERIPH_RSDIST9_CARM_DBG         0x505
++#define PERIPH_RSDIST9_CARM_L2          0x506
++#define PERIPH_RSDIST9_CARM_SOCDBG      0x507
++#define PERIPH_RSDIST9_CARM_ETM         0x508
++
++#endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
+-- 
+1.9.1
