@@ -1,84 +1,82 @@
-From: Daniel Axtens <dja@axtens.net>
-Subject: Re: [PATCH v7 20/50] powerpc/powernv: Improve DMA32 segment calculation
-Date: Fri, 20 Nov 2015 14:14:48 +1100
-Message-ID: <877fldwedz.fsf@gamma.ozlabs.ibm.com>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com> <1446642770-4681-21-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/8] arm: dts: berlin2q: add watchdog nodes
+Date: Fri, 20 Nov 2015 11:34:14 +0800
+Message-ID: <20151120113414.1aa1e48e@xhacker>
+References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
+	<1447672194-483-2-git-send-email-jszhang@marvell.com>
+	<564E3549.2050700@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1446642770-4681-21-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564E3549.2050700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, 19 Nov 2015 21:47:05 +0100
+Sebastian Hesselbarth wrote:
 
+> On 16.11.2015 12:09, Jisheng Zhang wrote:
+> > The Marvell Berlin BG2Q has 3 watchdogs which are compatible with the
+> > snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
+> > corresponding device tree nodes.
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/berlin2q.dtsi | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+> > index a3ecde5..fac4315 100644
+> > --- a/arch/arm/boot/dts/berlin2q.dtsi
+> > +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> > @@ -483,6 +483,30 @@
+> >  			ranges = <0 0xfc0000 0x10000>;
+> >  			interrupt-parent = <&sic>;
+> >  
+> > +			wdt0: watchdog@1000 {
+> > +				compatible = "snps,dw-wdt";
+> > +				reg = <0x1000 0x100>;
+> > +				clocks = <&refclk>;
+> > +				interrupts = <0>;
+> > +				status = "disabled";  
+> 
+> Jisheng,
+> 
+> as the watchdogs are internal and cannot be clock gated
+> at all, how about we remove the status = "disabled" and
+> make them always available?
 
-> +	total_weight =3D pnv_pci_ioda_total_dma_weight(phb);
-> +	weight =3D pnv_pci_ioda_pe_dma_weight(pe);
-> +	if (!total_weight || !weight)
-> +		return;
-> +
-> +	segs =3D (weight * phb->ioda.dma32_count) / total_weight;
-> +	if (!segs)
-> +		segs =3D 1;
+there are two issues here:
 
-I'm a little bit concerned about rounding here. Having said that I've
-also lost track of dma32_count: if it's big then rounding won't
-matter. What's a typical dma32_count?
+1. the dw-wdt can't support multiple variants now. I have rewrite the driver
+with watchdog core supplied framework, but the patch isn't sent out and
+may be need time to clean up and review.
 
-> +
-> +	/*
-> +	 * Allocate continuous DMA32 segments. We begin with the expected
-Very much a nit pick, but I think you mean s/continuous/contiguous/.
+2. not all dw-wdt devices are available and functional. This depends on
+board design and configuration.
 
-> +	 * number of segments. With one more attempt, the number of DMA32
-> +	 * segments to be allocated is decreased by one until one segment
-> +	 * is allocated successfully.
-> +	 */
-> +	while (segs) {
-> +		found =3D false;
-> +		for (base =3D 0; base <=3D phb->ioda.dma32_count - segs; base++) {
-> +			for (i =3D base; i < base + segs; i++) {
-> +				if (phb->ioda.dma32_segmap[i] !=3D
-> +				    IODA_INVALID_PE)
-> +					break;
-> +			}
-> +
-> +			if (i >=3D base + segs) {
-How would `i' ever be greater than base + segs? Should the test just
-be 'if (i =3D=3D base + segs) {'=20
-> +				found =3D true;
-> +				break;
-> +			}
-> +		}
+So IMHO status=disabled and patch5-8 is necessary, what do you think?
 
-Regards,
-Daniel
+Thanks a lot for review,
+Jisheng
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> I have applied patches 1-4 with the status property removed.
+> This also renders patches 5-8 useless.
+> 
+> So, for now tentatively
+> 
+> Appled to berlin/dt and berlin64/dt respectivly
+> 
+> with status property removed.
+> 
+> Sebastian
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: GPGTools - https://gpgtools.org
-
-iQIcBAEBCgAGBQJWTpAoAAoJEPC3R3P2I92FZSAP+QHwd81bGja1fkxHlgO/EZNc
-7iO8Zhi53J6iWCHZ3Kbu5D1k379l1+ouWiOBzIsxa1MbmVsWHn0xIrieGgyuS++6
-jI6V2s1kOTaAImRBFYS8Zk80K2AGbm9//FXNwI/8crX44F+O/KgfDw9XRyV/YvFp
-BRmn+M1LjDkJqne9n4+2/NweevwKk8UtlqReoZbY+WLxtHhEGTs7WusT+Ii0lkQ5
-EjFCdOysnWr7oybiaJGkMf7k1oU/H3+yrgTYKjQedEi5nqpa7y8NNBlvVUIKDPzm
-gx7tT/SPlB57rETODf62+dLIsHjNAhzGkiUb4w/3bHutXsaRTckwdPyOZs8vz6RD
-5VAsVU9McxYWLf0k+lFbwO65xQoiBJeblUjjr0c1228959oensKMQ3CL4ezWLA1r
-AY0CrKkCq+1bvFsJDWbVarnKuVenVdnekR5U2mCyV4Ns7Z53WWDmWSik1rFyF/bp
-OM4gGi8Uue9w4gXwmQJ3veBxZQ+ruFPozY6S4IM1m9nwnBUiLc5w7U/Ui5g71Vj2
-9PGGWWbDABGQzUIkQSNxZ4DUoGRnhlfFSIXHLAfKsQ160zQ72bOtPHKlQmHLvVJ9
-AkANhLLtbs6pAEr/McWIMvl/yM+4hc+bdg2gxCcoOOp/xnnWNw/40OOr5byVhWg0
-eS8k32r6Mmwch17rvnKb
-=OjyT
------END PGP SIGNATURE-----
---=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
