@@ -1,150 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V7 1/3] reset: hisilicon: document hisi-hi6220 reset
- controllers bindings
-Date: Fri, 20 Nov 2015 08:15:29 -0600
-Message-ID: <20151120141529.GA31078@rob-hp-laptop>
-References: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] spi: mediatek: update document devicetree bindings
+ to fix syntax error
+Date: Fri, 20 Nov 2015 08:17:25 -0600
+Message-ID: <20151120141725.GA31912@rob-hp-laptop>
+References: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447985406-44776-1-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>
-Cc: p.zabel@pengutronix.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, puck.chen@aliyun.com, w.f@huawei.com
+In-Reply-To: <1447986080-31410-1-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 10:10:04AM +0800, Chen Feng wrote:
-> Add DT bindings documentation for hi6220 SoC reset controller.
+On Fri, Nov 20, 2015 at 10:21:16AM +0800, Leilk Liu wrote:
+> This patch updates document devicetree bindings
+> to fix syntax error.
 > 
-> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  .../bindings/reset/hisilicon,hi6220-reset.txt      | 34 +++++++++++
->  include/dt-bindings/reset/hisi,hi6220-resets.h     | 67 ++++++++++++++++++++++
->  2 files changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
->  create mode 100644 include/dt-bindings/reset/hisi,hi6220-resets.h
+>  .../devicetree/bindings/spi/spi-mt65xx.txt         |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-> new file mode 100644
-> index 0000000..e0b185a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-> @@ -0,0 +1,34 @@
-> +Hisilicon System Reset Controller
-> +======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +The reset controller registers are part of the system-ctl block on
-> +hi6220 SoC.
-> +
-> +Required properties:
-> +- compatible: may be "hisilicon,hi6220-sysctrl"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- #reset-cells: 1, see below
-> +
-> +Example:
-> +sys_ctrl: sys_ctrl@f7030000 {
-> +	compatible = "hisilicon,hi6220-sysctrl", "syscon";
-> +	reg = <0x0 0xf7030000 0x0 0x2000>;
-> +	#clock-cells = <1>;
-> +	#reset-cells = <1>;
-> +};
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +example:
-> +
-> +        uart1: serial@..... {
-> +                ...
-> +                resets = <&sys_ctrl PERIPH_RSTEN3_UART1>;
-> +                ...
-> +        };
-> +
-> +The index could be found in <dt-bindings/reset/hisi,hi6220-resets.h>.
-> diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
-> new file mode 100644
-> index 0000000..ca08a7e
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
-> @@ -0,0 +1,67 @@
-> +/**
-> + * This header provides index for the reset controller
-> + * based on hi6220 SoC.
-> + */
-> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_HI6220
-> +#define _DT_BINDINGS_RESET_CONTROLLER_HI6220
-> +
-> +#define PERIPH_RSTDIS0_MMC0             0x000
-> +#define PERIPH_RSTDIS0_MMC1             0x001
-> +#define PERIPH_RSTDIS0_MMC2             0x002
-> +#define PERIPH_RSTDIS0_NANDC            0x003
-> +#define PERIPH_RSTDIS0_USBOTG_BUS       0x004
-> +#define PERIPH_RSTDIS0_POR_PICOPHY      0x005
-> +#define PERIPH_RSTDIS0_USBOTG           0x006
-> +#define PERIPH_RSTDIS0_USBOTG_32K       0x007
-> +#define PERIPH_RSTDIS1_HIFI             0x100
-> +#define PERIPH_RSTDIS1_DIGACODEC        0x105
-> +#define PERIPH_RSTEN2_IPF               0x200
-> +#define PERIPH_RSTEN2_SOCP              0x201
-> +#define PERIPH_RSTEN2_DMAC              0x202
-> +#define PERIPH_RSTEN2_SECENG            0x203
-> +#define PERIPH_RSTEN2_ABB               0x204
-> +#define PERIPH_RSTEN2_HPM0              0x205
-> +#define PERIPH_RSTEN2_HPM1              0x206
-> +#define PERIPH_RSTEN2_HPM2              0x207
-> +#define PERIPH_RSTEN2_HPM3              0x208
-> +#define PERIPH_RSTEN3_CSSYS             0x300
-> +#define PERIPH_RSTEN3_I2C0              0x301
-> +#define PERIPH_RSTEN3_I2C1              0x302
-> +#define PERIPH_RSTEN3_I2C2              0x303
-> +#define PERIPH_RSTEN3_I2C3              0x304
-> +#define PERIPH_RSTEN3_UART1             0x305
-> +#define PERIPH_RSTEN3_UART2             0x306
-> +#define PERIPH_RSTEN3_UART3             0x307
-> +#define PERIPH_RSTEN3_UART4             0x308
-> +#define PERIPH_RSTEN3_SSP               0x309
-> +#define PERIPH_RSTEN3_PWM               0x30a
-> +#define PERIPH_RSTEN3_BLPWM             0x30b
-> +#define PERIPH_RSTEN3_TSENSOR           0x30c
-> +#define PERIPH_RSTEN3_DAPB              0x312
-> +#define PERIPH_RSTEN3_HKADC             0x313
-> +#define PERIPH_RSTEN3_CODEC_SSI         0x314
-> +#define PERIPH_RSTEN3_PMUSSI1           0x316
-> +#define PERIPH_RSTEN8_RS0               0x400
-> +#define PERIPH_RSTEN8_RS2               0x401
-> +#define PERIPH_RSTEN8_RS3               0x402
-> +#define PERIPH_RSTEN8_MS0               0x403
-> +#define PERIPH_RSTEN8_MS2               0x405
-> +#define PERIPH_RSTEN8_XG2RAM0           0x406
-> +#define PERIPH_RSTEN8_X2SRAM_TZMA       0x407
-> +#define PERIPH_RSTEN8_SRAM              0x408
-> +#define PERIPH_RSTEN8_HARQ              0x40a
-> +#define PERIPH_RSTEN8_DDRC              0x40c
-> +#define PERIPH_RSTEN8_DDRC_APB          0x40d
-> +#define PERIPH_RSTEN8_DDRPACK_APB       0x40e
-> +#define PERIPH_RSTEN8_DDRT              0x411
-> +#define PERIPH_RSDIST9_CARM_DAP         0x500
-> +#define PERIPH_RSDIST9_CARM_ATB         0x501
-> +#define PERIPH_RSDIST9_CARM_LBUS        0x502
-> +#define PERIPH_RSDIST9_CARM_POR         0x503
-> +#define PERIPH_RSDIST9_CARM_CORE        0x504
-> +#define PERIPH_RSDIST9_CARM_DBG         0x505
-> +#define PERIPH_RSDIST9_CARM_L2          0x506
-> +#define PERIPH_RSDIST9_CARM_SOCDBG      0x507
-> +#define PERIPH_RSDIST9_CARM_ETM         0x508
-> +
-> +#endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> index ce363c923f..fba8334 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> @@ -32,7 +32,7 @@ Optional properties:
+>  -cs-gpios: see spi-bus.txt, only required for MT8173.
+>  
+>  - mediatek,pad-select: specify which pins group(ck/mi/mo/cs) spi
+> -  controller used. This is a array, the element value should be 0~3,
+> +  controller used. This is an array, the element value should be 0~3,
+>    only required for MT8173.
+>      0: specify GPIO69,70,71,72 for spi pins.
+>      1: specify GPIO102,103,104,105 for spi pins.
 > -- 
-> 1.9.1
+> 1.7.9.5
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
