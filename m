@@ -1,42 +1,54 @@
-From: Tim Bird <tim.bird@sonymobile.com>
-Subject: Re: [PATCH v3 1/3] Documentation: dt-bindings: add async_irq to
- msm_hsusb
-Date: Fri, 20 Nov 2015 15:24:47 -0800
-Message-ID: <564FABBF.8090308@sonymobile.com>
-References: <1448061641-31672-1-git-send-email-tim.bird@sonymobile.com>
- <5200286.dcPK8pnl2Z@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v2 0/5] Remove the need for qcom,{msm-id,board-id,pmic-id}
+Date: Fri, 20 Nov 2015 15:31:15 -0800
+Message-ID: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5200286.dcPK8pnl2Z@wuerfel>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Peter.Chen@freescale.com" <Peter.Chen@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "balbi@ti.com" <balbi@ti.com>, =?UTF-8?Q?Andersson=2c_Bj=c3=b6rn?= <Bjorn.Andersson@sonymobile.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>
+To: Andy Gross <agross@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset documents a compatible string format that encodes
+all the information that was being encoded in qcom specific DT
+properties in downstream msm kernels. The goal being to come
+up with a format that will allow us to express the information
+we want to express without requiring the use of vendor specific
+properties. An updated dtbTool will be released after these new
+bindings are accepted so that users can work with non-updateable
+bootloaders.
 
+This is an attempt to resolve a discussion around March of this year[1]
+where the arm-soc maintainers suggested we express this information
+through the board's compatible string.
 
-On 11/20/2015 03:22 PM, Arnd Bergmann wrote:
-> On Friday 20 November 2015 15:20:39 Tim Bird wrote:
->> +- interrupt-names: Should contain the following:
->> +  "core"        USB core interrupt
->> +  "async"       Asynchronous interrupt to wake up from low power mode
->> +                (optional)
->>  
->>  - clocks:       A list of phandle + clock-specifier pairs for the
->>                  clocks listed in clock-names
->> @@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
->>      usb@f9a55000 {
->>          compatible = "qcom,usb-otg-snps";
->>          reg = <0xf9a55000 0x400>;
->> -        interrupts = <0 134 0>;
->> +        interrupts = <0 134 0>, <0 140 0>;
->> +        interrupt-names = "core_irq", "async_irq";
->>          dr_mode = "peripheral";
->>  
->>
-> 
-> Now the example doesn't match the documentation any more.
-Arrgh.  I'm an idiot.  V4 coming RSN.
- -- Tim
+Changes from v1:
+ * Remove unused elements (mb, panel, boot device)
+ * Remove PMICs from board compatible
+ * Add patches to allow us to parse PMIC compatibles with aliases
+
+[1] http://lkml.kernel.org/g/1425503602-24916-1-git-send-email-galak@codeaurora.org
+
+Stephen Boyd (5):
+  devicetree: bindings: Document qcom board compatible format
+  arm64: dts: qcom: Make msm8916-mtp compatible string compliant
+  arm: dts: qcom: Update ifc6540 compat for qcom boot format
+  arm64: dts: qcom: Alias pm8916 on msm8916 devices
+  arm: dts: qcom: Add aliases for PMICs
+
+ Documentation/devicetree/bindings/arm/qcom.txt | 51 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  2 +
+ arch/arm/boot/dts/qcom-apq8084-ifc6540.dts     |  3 +-
+ arch/arm/boot/dts/qcom-apq8084-mtp.dts         |  1 +
+ arch/arm/boot/dts/qcom-pm8841.dtsi             |  8 ++--
+ arch/arm/boot/dts/qcom-pm8941.dtsi             |  8 ++--
+ arch/arm/boot/dts/qcom-pma8084.dtsi            |  8 ++--
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi      |  1 +
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dts       |  2 +-
+ arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi      |  1 +
+ arch/arm64/boot/dts/qcom/pm8916.dtsi           |  6 +--
+ 11 files changed, 74 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
