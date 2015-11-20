@@ -1,66 +1,111 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 03/11] dt-bindings: clock: add NXP LPC32xx clock list for consumers
-Date: Fri, 20 Nov 2015 22:07:16 +0100
-Message-ID: <5570695.dzvsXZ7sfz@wuerfel>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com> <4268221.QhjAE5RLYk@wuerfel> <564F5F2E.70607@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <564F5F2E.70607@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Vladimir Zapolskiy <vz@mleia.com>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: berlin4ct: enable all i2c nodes for the
+ STB board
+Date: Fri, 20 Nov 2015 22:19:32 +0100
+Message-ID: <564F8E64.7020606@gmail.com>
+References: <1448012821-7413-1-git-send-email-jszhang@marvell.com>
+ <1448012821-7413-3-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448012821-7413-3-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 November 2015 19:58:06 Vladimir Zapolskiy wrote:
-> On 20.11.2015 15:56, Arnd Bergmann wrote:
-> > On Friday 20 November 2015 03:05:03 Vladimir Zapolskiy wrote:
-> >> +
-> >> +/* LPC32XX System Control Block clocks */
-> >> +#define LPC32XX_CLK_RTC                0
-> >> +#define LPC32XX_CLK_DMA                1
-> >> +#define LPC32XX_CLK_MLC                2
-> >> +#define LPC32XX_CLK_SLC                3
-> >> +#define LPC32XX_CLK_LCD                4
-> >> +#define LPC32XX_CLK_MAC                5
-> >> +#define LPC32XX_CLK_SD         6
-> >> +#define LPC32XX_CLK_DDRAM      7
-> >> +#define LPC32XX_CLK_SSP0       8
-> >> +#define LPC32XX_CLK_SSP1       9
-> >> +#define LPC32XX_CLK_UART3      10
-> >> +#define LPC32XX_CLK_UART4      11
-> >> +#define LPC32XX_CLK_UART5      12
-> >> +#define LPC32XX_CLK_UART6      13
-> >> +#define LPC32XX_CLK_IRDA       14
-> >> +#define LPC32XX_CLK_I2C1       15
-> >>
-> > 
-> > Any chance we can avoid the include file? This is going to make it really
-> > hard to merge everything in one merge window with the dependencies between
-> > the driver, the bindings and the platform code.
+On 20.11.2015 10:47, Jisheng Zhang wrote:
+> Enable all i2c nodes for the Marvell berlin BG4CT STB board.
 > 
-> I see only one option to avoid this commit, namely squash it with the
-> CCF driver and merge it before making changes in DTS.
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> ---
+>  arch/arm64/boot/dts/marvell/berlin4ct-stb.dts | 50 +++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
 > 
-> However I suppose ARM trees won't be synced on clk tree, so probably it
-> won't simplify maintainer's work.
+> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+> index 348c37e..9e8e2e0 100644
+> --- a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+> +++ b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+> @@ -61,6 +61,56 @@
+>  	};
+>  };
+>  
+> +&avio_pinctrl {
+> +	twsi1_pmux: twsi1-pmux {
+> +		groups = "TX_EDDC_SCL", "TX_EDDC_SDA";
+> +		function = "tx_eddc";
+> +	};
 
-I think the best way for this would then be to have one git branch that
-contains the binding header, and base the other patches on top of that
-branch, for both the changes going into the clk git and arm-soc.
+Please keep the pinmux sub-nodes in the SoC dtsi as long
+as they are not strictly board specific, i.e. gpios.
 
-That way, both have the commit we need, but we don't get duplicate
-commits when they are both merged into mainline.
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	pinctrl-0 = <&twsi0_pmux>;
+> +	pinctrl-names = "default";
 
-> > If there is a way to describe the clocks based on numbers from the
-> > data sheet instead of making up your own, that makes life much
-> > easier for us.
+If there is only one (or a default) pinctrl-0 option for i2c0,
+you can also move it to the SoC dtsi.
+
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	pinctrl-0 = <&twsi1_pmux>;
+> +	pinctrl-names = "default";
+
+ditto.
+
+> +};
+> +
+> +&i2c2 {
+> +	status = "okay";
+> +	pinctrl-0 = <&twsi2_pmux>;
+> +	pinctrl-names = "default";
+
+ditto.
+
+> +};
+> +
+> +&i2c3 {
+> +	status = "okay";
+> +	pinctrl-0 = <&twsi3_pmux>;
+> +	pinctrl-names = "default";
+
+ditto.
+
+> +};
+> +
+> +&soc_pinctrl {
+> +	twsi0_pmux: twsi0-pmux {
+> +		groups = "TW0_SCL", "TW0_SDA";
+> +		function = "tw0";
+> +	};
+
+Same comment about moving pinmux nodes to SoC dtsi.
+
+> +};
+> +
+> +&system_pinctrl {
+> +	twsi2_pmux: twsi2-pmux {
+> +		groups = "SM_TW2_SCL", "SM_TW2_SDA";
+> +		function = "tw2";
+> +	};
+> +
+> +	twsi3_pmux: twsi3-pmux {
+> +		groups = "SM_TW3_SCL", "SM_TW3_SDA";
+> +		function = "tw3";
+> +	};
+
+ditto.
+
+Sebastian
+
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
 > 
-> There are no any clock numbers in the datasheet, unfortunately.
-
-I was thinking that maybe there would be a logical numbering based
-on the register layout, e.g. a tuple of register index and bit position,
-but it seems that the mmio area is too irregular to make that easy.
-
-	Arnd
