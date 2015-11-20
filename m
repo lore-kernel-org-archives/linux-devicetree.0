@@ -1,37 +1,191 @@
-From: Chanwoo Choi <cwchoi00-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] extcon: arizona: Update naming for second jack detection
- DT binding
-Date: Fri, 20 Nov 2015 23:13:18 +0900
-Message-ID: <CAGTfZH350BUED_TbwHHbKEwV2pM57_CEXBo-9GfKuZvy4EZ1fw@mail.gmail.com>
-References: <1448009639-5331-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Reply-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: gpio: update desription of LPC32xx GPIO
+ controller
+Date: Fri, 20 Nov 2015 08:13:54 -0600
+Message-ID: <20151120141354.GA25446@rob-hp-laptop>
+References: <1447982995-30231-1-git-send-email-vz@mleia.com>
+ <1447982995-30231-2-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448009639-5331-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447982995-30231-2-git-send-email-vz@mleia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Nov 20, 2015 at 5:53 PM, Charles Keepax
-<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> Update the name for the second jack detection pin binding to be a little
-> less confusing.
->
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+On Fri, Nov 20, 2015 at 03:29:52AM +0200, Vladimir Zapolskiy wrote:
+> For the purpose of better description of NXP LPC32xx GPIO controller
+> hardware in device tree format, extend the existing description with
+> device tree subnodes, which represent 6 GPIO banks within the
+> controller.
+> 
+> Note, client interface to the GPIO controller is untouched.
+> 
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 > ---
->  .../devicetree/bindings/extcon/extcon-arizona.txt  |    4 ++--
->  drivers/extcon/extcon-arizona.c                    |    4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/gpio/gpio_lpc32xx.txt      | 121 ++++++++++++++++++++-
+>  1 file changed, 120 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> index 4981936..d2da63c 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> @@ -15,7 +15,43 @@ Required properties:
+>     2) pin number
+>     3) optional parameters:
+>        - bit 0 specifies polarity (0 for normal, 1 for inverted)
+> -- reg: Index of the GPIO group
+> +- #address-cells: should be 2, which stands for GPIO bank id and
+> +  physical base address of this GPIO bank.
 
-Applied it.
+Now you need special code to do address translation. I'd really think 
+twice about doing this.
 
-Thanks,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why do you need the bank number?
+
+> +- #size-cells: should be 1, total size of GPIO bank registers.
+> +
+> +The NXP LPC32xx SoC GPIO controller device node must contain a list
+> +of device nodes representing GPIO banks and their descriptions.
+> +
+> +The format of subnodes should follow the description below.
+> +
+> +Required properties:
+> +- reg: should contain 3 integer values:
+> +   1) GPIO bank id from 0 to 5,
+> +   2) physical base address of this GPIO bank,
+> +   3) total size of the GPIO bank registers.
+> +
+> +Optional properties:
+> +- gpio-bank-name: human readable name of a GPIO bank,
+> +- gpio-no-output-state: property of P2 bank, which has special,
+> +  mapping of its control registers,
+> +- gpio-offset: property of P3/GPIO bank, offset of bits representing
+> +  GPIO lines in output and direction registers,
+
+Seems like nr-gpios should have been a mask instead...
+
+> +- gpios: number of GPIO lines per GPIO bank, if this property is
+> +  omitted, then gpio-input-mask must be present,
+
+"gpios" is already the property name for the client interface.
+
+> +- gpio-input-mask: should contain two bitmasks, the first bitmask is
+> +  the mapping of GPIO lines to input status register, the second
+> +  bitmask should be a subset of the first bitmask and it represents
+> +  input GPIO lines, which may serve as an interrupt source,
+> +  if gpio-input-mask roperty is omitted, gpios property should be
+> +  present,
+> +- interrupts: list of parent interrupts mapped to input GPIO lines,
+> +- interrupts-extended: list of parent interrupts mapped to input GPIO
+> +  lines, used if parent interrupts are provided by more than one
+> +  interrupt controller, this option is used by GPI bank,
+> +- interrupt-controller: indicates that GPIO bank may serve as an
+> +  interrupt controller,
+> +- #interrupt-cells: if interrupt-controller property is present,
+> +  it should be 2, interrupt id and its flags.
+>  
+>  Example:
+>  
+> @@ -24,6 +60,89 @@ Example:
+>  		reg = <0x40028000 0x1000>;
+>  		gpio-controller;
+>  		#gpio-cells = <3>; /* bank, pin, flags */
+
+Can't bank and pin be encoded into one cell as the gpio core binding 
+suggests.
+
+> +
+> +		ranges = <0 0x0 0x40028000 0x00001000>,
+> +			 <1 0x0 0x40028000 0x00001000>,
+> +			 <2 0x0 0x40028000 0x00001000>,
+> +			 <3 0x0 0x40028000 0x00001000>,
+> +			 <4 0x0 0x40028000 0x00001000>,
+> +			 <5 0x0 0x40028000 0x00001000>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +
+> +		gpio_p0: gpio-controller@0 {
+> +			reg = <0 0x40 0x1C>;
+> +			gpio-bank-name = "p0";
+> +			gpios = <8>;
+> +
+> +			interrupt-parent = <&sic2>;
+> +			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		gpio_p1: gpio-controller@1 {
+> +			reg = <1 0x60 0x1C>;
+> +			gpio-bank-name = "p1";
+> +			gpios = <24>;
+> +
+> +			interrupt-parent = <&sic2>;
+> +			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		gpio_p2: gpio-controller@2 {
+> +			reg = <2 0x10 0x18>;
+> +			gpio-bank-name = "p2";
+> +			gpios = <13>;
+> +			gpio-no-output-state;
+> +		};
+> +
+> +		gpio_gpio: gpio-controller@3 {
+> +			reg = <3 0x00 0x1C>;
+
+This overlaps with bank 2.
+
+> +			gpio-bank-name = "gpio";
+> +			gpio-offset = <25>;
+> +			gpio-input-mask = <0x01007c00>, <0x01007c00>;
+> +
+> +			interrupt-parent = <&sic2>;
+> +			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <1 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <2 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <3 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <4 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <5 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		gpio_gpi: gpio-controller@4 {
+> +			reg = <4 0x00 0x04>;
+> +			gpio-bank-name = "gpi";
+> +			gpio-input-only;
+> +			gpio-input-mask = <0x1aff83ff>, <0x100803ff>;
+> +
+> +			interrupts-extended =
+> +				<&sic2 22 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 23 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 24 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 25 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 26 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 27 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 28 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 15 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2  9 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 10 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic2 11 IRQ_TYPE_LEVEL_HIGH>,
+> +				<&sic1  4 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		gpio_gpo: gpio-controller@5 {
+> +			reg = <5 0x00 0x10>;
+> +			gpio-bank-name = "gpo";
+> +			gpios = <24>;
+> +			gpio-output-only;
+> +		};
+>  	};
+>  
+>  	leds {
+> -- 
+> 2.1.4
+> 
