@@ -1,59 +1,94 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
-Date: Fri, 20 Nov 2015 10:22:52 +0100
-Message-ID: <564EE66C.5010709@samsung.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-16-git-send-email-milo.kim@ti.com>
- <5638DD99.9070502@samsung.com> <56419F0C.90009@ti.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH 1/2] arm64: dts: berlin4ct: add I2C nodes for BG4CT
+Date: Fri, 20 Nov 2015 17:47:00 +0800
+Message-ID: <1448012821-7413-2-git-send-email-jszhang@marvell.com>
+References: <1448012821-7413-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <56419F0C.90009@ti.com>
+In-Reply-To: <1448012821-7413-1-git-send-email-jszhang@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Kim, Milo" <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2015 08:38 AM, Kim, Milo wrote:
-[...]
->>> +                cat /sys/class/leds/<led>/pattern_levels
->>> +                low brightness: 0, high brightness: 255
->>> +
->>> +What:        /sys/class/leds/<led>/run_pattern
->>> +Date:        Oct 2015
->>> +KernelVersion:    4.3
->>> +Contact:    Milo Kim <milo.kim@ti.com>
->>> +Description:    write only
->>> +                After 'pattern_times' and 'pattern_levels' are updated,
->>> +                run the pattern by writing 1 to 'run_pattern'.
->>> +                To stop running pattern, writes 0 to 'run_pattern'.
->>
->> I wonder how registering an in-driver trigger would work. It would
->> allow for hiding above pattern attributes when the trigger is inactive,
->> and thus making the sysfs interface more transparent. You could avoid
->> the need for run_pattern attribute, as setting the trigger would itself
->> activate the pattern, and setting brightness to 0 would turn it off.
->
-> I like this idea, let me try to fix it.
+The Marvell Berlin BG4CT SoC has 4 TWSI which are compatible with the
+Synopsys DesignWare I2C driver. Add the corresponding nodes.
 
-After thinking it over, I came to conclusion that implementing it as
-an in-driver trigger is not a proper way to go, since triggers are
-defined as kernel based source of LED events.
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 52 ++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-This is somehow abused in case of timer trigger which takes hardware 
-blinking feature as a first choice and applies software blinking as
-a fallback only. To be consistent with that, we could go for adding
-generic pattern trigger and add a led_pattern_set() API, similarly
-to existing led_blink_set().
-
-The problem is that different LED controllers may implement blinking
-patterns that are configured with different set of parameters. This
-subject would definitely require thorough analysis.
-
-For now, please just expose pattern settings as separate sysfs
-attributes of a LED class device.
-
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index cca4c41..39d0676 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -232,6 +232,32 @@
+ 				};
+ 			};
+ 
++			i2c0: i2c@1400 {
++				compatible = "snps,designware-i2c";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x1400 0x100>;
++				clocks = <&clk CLK_APBCORE>;
++				i2c-sda-hold-time-ns = <35>;
++				i2c-sda-falling-time-ns = <425>;
++				i2c-scl-falling-time-ns = <205>;
++				interrupts = <4>;
++				status = "disabled";
++			};
++
++			i2c1: i2c@1800 {
++				compatible = "snps,designware-i2c";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x1800 0x100>;
++				clocks = <&clk CLK_APBCORE>;
++				i2c-sda-hold-time-ns = <35>;
++				i2c-sda-falling-time-ns = <425>;
++				i2c-scl-falling-time-ns = <205>;
++				interrupts = <5>;
++				status = "disabled";
++			};
++
+ 			aic: interrupt-controller@3800 {
+ 				compatible = "snps,dw-apb-ictl";
+ 				reg = <0x3800 0x30>;
+@@ -319,6 +345,32 @@
+ 				};
+ 			};
+ 
++			i2c2: i2c@b000 {
++				compatible = "snps,designware-i2c";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0xb000 0x100>;
++				clocks = <&osc>;
++				i2c-sda-hold-time-ns = <140>;
++				i2c-sda-falling-time-ns = <500>;
++				i2c-scl-falling-time-ns = <220>;
++				interrupts = <6>;
++				status = "disabled";
++			};
++
++			i2c3: i2c@c000 {
++				compatible = "snps,designware-i2c";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0xc000 0x100>;
++				clocks = <&osc>;
++				i2c-sda-hold-time-ns = <140>;
++				i2c-sda-falling-time-ns = <500>;
++				i2c-scl-falling-time-ns = <220>;
++				interrupts = <7>;
++				status = "disabled";
++			};
++
+ 			uart0: uart@d000 {
+ 				compatible = "snps,dw-apb-uart";
+ 				reg = <0xd000 0x100>;
 -- 
-Best Regards,
-Jacek Anaszewski
+2.6.2
