@@ -1,434 +1,282 @@
-From: Salil Mehta <salil.mehta@huawei.com>
-Subject: [PATCH V4 net-next 2/5] net:hns: Add Hip06 "RSS(Receive Side Scaling)" support to HNS Driver
-Date: Sat, 21 Nov 2015 03:49:09 +0800
-Message-ID: <1448048952-146714-3-git-send-email-salil.mehta@huawei.com>
-References: <1448048952-146714-1-git-send-email-salil.mehta@huawei.com>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: Re: [PATCH v1 3/7] mtd: fsl-quadspi: Support both 24- and 32-bit
+ addressed commands.
+Date: Fri, 20 Nov 2015 14:38:10 -0500
+Message-ID: <564F76A2.9010905@pid1solutions.com>
+References: <1436386881-28088-1-git-send-email-cory.tusar@pid1solutions.com>
+ <1436386881-28088-4-git-send-email-cory.tusar@pid1solutions.com>
+ <20151120192450.GW64635@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448048952-146714-1-git-send-email-salil.mehta@huawei.com>
+In-Reply-To: <20151120192450.GW64635@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, salil.mehta@huawei.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
+To: Brian Norris <computersforpeace@gmail.com>, Han Xu <han.xu@freescale.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, dwmw2@infradead.org, stefan@agner.ch, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the support of "RSS (Receive Side Scaling)" feature
-provided by the Hip06 ethernet hardware to the HNS ethernet
-driver.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-This feature helps in distributing the different flows (mapped as
-hash by hardware using Toeplitz Hash) to different Queues asssociated
-with the processor cores. The mapping of flow-hash values to the
-different queues is stored in indirection table (which is per Packet-
-parse-Engine/PPE). This patch also provides the changes to re-program
-the (flow-hash<->Qid) mapping using the ethtool.
+On 11/20/2015 02:24 PM, Brian Norris wrote:
+> Cory and Han,
+> 
+> Did this series get dropped on the floor? I recall Han arguing
+> previously that this controller is always used with two identical chips.
+> But apparently that is not the case.
+> 
+> If this request is not truly dead, I'd appreciate it if Han could
+> review/test.
 
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Reviewed-by: Kenneth Lee <liguozhu@huawei.com>
----
+Hi Brian,
 
-PATCH V4:
-- No Change over previous patches
+Pretty sure this series will not apply & work cleanly with 4.4-rc1.
 
-PATCH V3:
-- No change ove PATCH V2
+IIRC, there were also some changes (apart from these) that reworked
+clocking and resulted in a fault the last time I tested this on actual
+hardware.
 
-PATCH V2:
-- Fix for review-comments on PATCH V1 by Yisen.Zhuang(Zhuangyuzeng)
-  Link: https://lkml.org/lkml/2015/10/21/1032
-- Rework for Internal review comments by Kenneth Lee
+I can see about rebasing and updating if there's additional interest.
+I don't know that there's anything about the controller itself that
+would preclude using different chips, apart from the overhead of having
+to reconfigure the LUT when switching between devices...
 
-PATCH V1:
-- Initial version to support RSS and its Ethtool interface on
-  Hip06 SoC
----
- drivers/net/ethernet/hisilicon/hns/hnae.h         |    6 ++
- drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c |   53 +++++++++++-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c |   61 +++++++++++++-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h |   32 +++++--
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h |   14 ++++
- drivers/net/ethernet/hisilicon/hns/hns_ethtool.c  |   93 +++++++++++++++++++++
- 6 files changed, 249 insertions(+), 10 deletions(-)
+We'd had a board which only included a device on QSPI0_B_CS0, whereas
+the driver assumed that the channels would be populated in order (e.g.
+QSPI0_A_CS0 first and then QSPI0_B_CS0)...that configuration was what
+originally drove my changes.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.h b/drivers/net/ethernet/hisilicon/hns/hnae.h
-index aa53dd3..1ee42cb 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
-@@ -483,6 +483,12 @@ struct hnae_ae_ops {
- 			  enum hnae_led_state status);
- 	void (*get_regs)(struct hnae_handle *handle, void *data);
- 	int (*get_regs_len)(struct hnae_handle *handle);
-+	u32	(*get_rss_key_size)(struct hnae_handle *handle);
-+	u32	(*get_rss_indir_size)(struct hnae_handle *handle);
-+	int	(*get_rss)(struct hnae_handle *handle, u32 *indir, u8 *key,
-+			   u8 *hfunc);
-+	int	(*set_rss)(struct hnae_handle *handle, const u32 *indir,
-+			   const u8 *key, const u8 hfunc);
- };
- 
- struct hnae_ae_dev {
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-index c03bc1e..e5a31bc 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-@@ -749,6 +749,53 @@ int hns_ae_get_regs_len(struct hnae_handle *handle)
- 	return total_num;
- }
- 
-+static u32 hns_ae_get_rss_key_size(struct hnae_handle *handle)
-+{
-+	return HNS_PPEV2_RSS_KEY_SIZE;
-+}
-+
-+static u32 hns_ae_get_rss_indir_size(struct hnae_handle *handle)
-+{
-+	return HNS_PPEV2_RSS_IND_TBL_SIZE;
-+}
-+
-+static int hns_ae_get_rss(struct hnae_handle *handle, u32 *indir, u8 *key,
-+			  u8 *hfunc)
-+{
-+	struct hns_ppe_cb *ppe_cb = hns_get_ppe_cb(handle);
-+
-+	/* currently we support only one type of hash function i.e. Toep hash */
-+	if (hfunc)
-+		*hfunc = ETH_RSS_HASH_TOP;
-+
-+	/* get the RSS Key required by the user */
-+	if (key)
-+		memcpy(key, ppe_cb->rss_key, HNS_PPEV2_RSS_KEY_SIZE);
-+
-+	/* update the current hash->queue mappings from the shadow RSS table */
-+	memcpy(indir, ppe_cb->rss_indir_table, HNS_PPEV2_RSS_IND_TBL_SIZE);
-+
-+	return 0;
-+}
-+
-+static int hns_ae_set_rss(struct hnae_handle *handle, const u32 *indir,
-+			  const u8 *key, const u8 hfunc)
-+{
-+	struct hns_ppe_cb *ppe_cb = hns_get_ppe_cb(handle);
-+
-+	/* set the RSS Hash Key if specififed by the user */
-+	if (key)
-+		hns_ppe_set_rss_key(ppe_cb, (int *)key);
-+
-+	/* update the shadow RSS table with user specified qids */
-+	memcpy(ppe_cb->rss_indir_table, indir, HNS_PPEV2_RSS_IND_TBL_SIZE);
-+
-+	/* now update the hardware */
-+	hns_ppe_set_indir_table(ppe_cb, ppe_cb->rss_indir_table);
-+
-+	return 0;
-+}
-+
- static struct hnae_ae_ops hns_dsaf_ops = {
- 	.get_handle = hns_ae_get_handle,
- 	.put_handle = hns_ae_put_handle,
-@@ -783,7 +830,11 @@ static struct hnae_ae_ops hns_dsaf_ops = {
- 	.update_led_status = hns_ae_update_led_status,
- 	.set_led_id = hns_ae_cpld_set_led_id,
- 	.get_regs = hns_ae_get_regs,
--	.get_regs_len = hns_ae_get_regs_len
-+	.get_regs_len = hns_ae_get_regs_len,
-+	.get_rss_key_size = hns_ae_get_rss_key_size,
-+	.get_rss_indir_size = hns_ae_get_rss_indir_size,
-+	.get_rss = hns_ae_get_rss,
-+	.set_rss = hns_ae_set_rss
- };
- 
- int hns_dsaf_ae_init(struct dsaf_device *dsaf_dev)
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-index 9531992..824fe50 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c
-@@ -19,6 +19,43 @@
- 
- #include "hns_dsaf_ppe.h"
- 
-+void hns_ppe_set_rss_key(struct hns_ppe_cb *ppe_cb,
-+			 const u32 rss_key[HNS_PPEV2_RSS_KEY_NUM])
-+{
-+	int key_item = 0;
-+
-+	for (key_item = 0; key_item < HNS_PPEV2_RSS_KEY_NUM; key_item++)
-+		dsaf_write_dev(ppe_cb, PPEV2_RSS_KEY_REG + key_item * 0x4,
-+			       rss_key[key_item]);
-+}
-+
-+void hns_ppe_set_indir_table(struct hns_ppe_cb *ppe_cb,
-+			     const u32 rss_tab[HNS_PPEV2_RSS_IND_TBL_SIZE])
-+{
-+	int i;
-+	int reg_value;
-+
-+	for (i = 0; i < (HNS_PPEV2_RSS_IND_TBL_SIZE / 4); i++) {
-+		reg_value = dsaf_read_dev(ppe_cb,
-+					  PPEV2_INDRECTION_TBL_REG + i * 0x4);
-+
-+		dsaf_set_field(reg_value, PPEV2_CFG_RSS_TBL_4N0_M,
-+			       PPEV2_CFG_RSS_TBL_4N0_S,
-+			       rss_tab[i * 4 + 0] & 0x1F);
-+		dsaf_set_field(reg_value, PPEV2_CFG_RSS_TBL_4N1_M,
-+			       PPEV2_CFG_RSS_TBL_4N1_S,
-+				rss_tab[i * 4 + 1] & 0x1F);
-+		dsaf_set_field(reg_value, PPEV2_CFG_RSS_TBL_4N2_M,
-+			       PPEV2_CFG_RSS_TBL_4N2_S,
-+				rss_tab[i * 4 + 2] & 0x1F);
-+		dsaf_set_field(reg_value, PPEV2_CFG_RSS_TBL_4N3_M,
-+			       PPEV2_CFG_RSS_TBL_4N3_S,
-+				rss_tab[i * 4 + 3] & 0x1F);
-+		dsaf_write_dev(
-+			ppe_cb, PPEV2_INDRECTION_TBL_REG + i * 0x4, reg_value);
-+	}
-+}
-+
- static void __iomem *hns_ppe_common_get_ioaddr(
- 	struct ppe_common_cb *ppe_common)
- {
-@@ -266,13 +303,26 @@ static void hns_ppe_exc_irq_en(struct hns_ppe_cb *ppe_cb, int en)
- 
- /**
-  * ppe_init_hw - init ppe
-- * @ppe_device: ppe device
-+ * @ppe_cb: ppe device
-  */
- static void hns_ppe_init_hw(struct hns_ppe_cb *ppe_cb)
- {
- 	struct ppe_common_cb *ppe_common_cb = ppe_cb->ppe_common_cb;
- 	u32 port = ppe_cb->port;
- 	struct dsaf_device *dsaf_dev = ppe_common_cb->dsaf_dev;
-+	int i;
-+	/* Set default RSS key and indrection table*/
-+	const u32 rss_key[HNS_PPEV2_RSS_KEY_NUM] = {
-+		0x6d5a56da, 0x255b0ec2,
-+		0x4167253d, 0x43a38fb0,
-+		0xd0ca2bcb, 0xae7b30b4,
-+		0x77cb2da3, 0x8030f20c,
-+		0x6a42b73b, 0xbeac01fa,
-+	};
-+
-+	/* set default RSS key and remember it */
-+	for (i = 0; i < HNS_PPEV2_RSS_KEY_NUM; i++)
-+		ppe_cb->rss_key[i]  = rss_key[i];
- 
- 	hns_ppe_srst_by_port(dsaf_dev, port, 0);
- 	mdelay(10);
-@@ -285,8 +335,17 @@ static void hns_ppe_init_hw(struct hns_ppe_cb *ppe_cb)
- 		hns_ppe_set_port_mode(ppe_cb, PPE_MODE_GE);
- 	else
- 		hns_ppe_set_port_mode(ppe_cb, PPE_MODE_XGE);
-+
- 	hns_ppe_checksum_hw(ppe_cb, 0xffffffff);
- 	hns_ppe_cnt_clr_ce(ppe_cb);
-+
-+	if (!AE_IS_VER1(dsaf_dev->dsaf_ver)) {
-+		hns_ppe_set_rss_key(ppe_cb, rss_key);
-+
-+		for (i = 0; i < HNS_PPEV2_RSS_IND_TBL_SIZE; i++)
-+			ppe_cb->rss_indir_table[i] = i;
-+		hns_ppe_set_indir_table(ppe_cb, ppe_cb->rss_indir_table);
-+	}
- }
- 
- /**
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
-index 4894f9a..dac8532 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
-@@ -25,15 +25,24 @@
- 
- #define ETH_PPE_DUMP_NUM 576
- #define ETH_PPE_STATIC_NUM 12
-+
-+#define HNS_PPEV2_RSS_IND_TBL_SIZE 256
-+#define HNS_PPEV2_RSS_KEY_SIZE 40 /* in bytes or 320 bits */
-+#define HNS_PPEV2_RSS_KEY_NUM (HNS_PPEV2_RSS_KEY_SIZE / sizeof(u32))
-+
- enum ppe_qid_mode {
--	PPE_QID_MODE0 = 0,	/* fixed queue id mode */
--	PPE_QID_MODE1,		/* switch:128VM non switch:6Port/4VM/4TC */
--	PPE_QID_MODE2,		/* switch:32VM/4TC non switch:6Port/16VM */
--	PPE_QID_MODE3,		/* switch:4TC/8TAG non switch:2Port/64VM */
--	PPE_QID_MODE4,		/* switch:8VM/16TAG non switch:2Port/16VM/4TC */
--	PPE_QID_MODE5,		/* non switch:6Port/16TAG */
--	PPE_QID_MODE6,		/* non switch:6Port/2VM/8TC */
--	PPE_QID_MODE7,		/* non switch:2Port/8VM/8TC */
-+	PPE_QID_MODE0 = 0, /* fixed queue id mode */
-+	PPE_QID_MODE1,	   /* switch:128VM non switch:6Port/4VM/4TC */
-+	PPE_QID_MODE2,	   /* switch:32VM/4TC non switch:6Port/16VM */
-+	PPE_QID_MODE3,	   /* switch:4TC/8RSS non switch:2Port/64VM */
-+	PPE_QID_MODE4,	   /* switch:8VM/16RSS non switch:2Port/16VM/4TC */
-+	PPE_QID_MODE5,	   /* switch:16VM/8TC non switch:6Port/16RSS */
-+	PPE_QID_MODE6,	   /* switch:32VM/4RSS non switch:6Port/2VM/8TC */
-+	PPE_QID_MODE7,	   /* switch:32RSS non switch:2Port/8VM/8TC */
-+	PPE_QID_MODE8,	   /* switch:6VM/4TC/4RSS non switch:2Port/16VM/4RSS */
-+	PPE_QID_MODE9,	   /* non switch:2Port/32VM/2RSS */
-+	PPE_QID_MODE10,	   /* non switch:2Port/32RSS */
-+	PPE_QID_MODE11,	   /* non switch:2Port/4TC/16RSS */
- };
- 
- enum ppe_port_mode {
-@@ -72,6 +81,8 @@ struct hns_ppe_cb {
- 	u8 port;			 /* port id in dsaf  */
- 	void __iomem *io_base;
- 	int virq;
-+	u32 rss_indir_table[HNS_PPEV2_RSS_IND_TBL_SIZE]; /*shadow indir tab */
-+	u32 rss_key[HNS_PPEV2_RSS_KEY_NUM]; /* rss hash key */
- };
- 
- struct ppe_common_cb {
-@@ -102,4 +113,9 @@ void hns_ppe_get_regs(struct hns_ppe_cb *ppe_cb, void *data);
- 
- void hns_ppe_get_strings(struct hns_ppe_cb *ppe_cb, int stringset, u8 *data);
- void hns_ppe_get_stats(struct hns_ppe_cb *ppe_cb, u64 *data);
-+
-+void hns_ppe_set_rss_key(struct hns_ppe_cb *ppe_cb,
-+			 const u32 rss_key[HNS_PPEV2_RSS_KEY_NUM]);
-+void hns_ppe_set_indir_table(struct hns_ppe_cb *ppe_cb,
-+			     const u32 rss_tab[HNS_PPEV2_RSS_IND_TBL_SIZE]);
- #endif /* _HNS_DSAF_PPE_H */
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-index cb0e9e1..b070d57 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
-@@ -349,6 +349,8 @@
- #define PPE_ECO0_REG				0x32C
- #define PPE_ECO1_REG				0x330
- #define PPE_ECO2_REG				0x334
-+#define PPEV2_INDRECTION_TBL_REG		0x800
-+#define PPEV2_RSS_KEY_REG			0x900
- 
- #define RCB_COM_CFG_ENDIAN_REG			0x0
- #define RCB_COM_CFG_SYS_FSH_REG			0xC
-@@ -839,6 +841,18 @@
- #define PPE_CFG_QID_MODE_CF_QID_MODE_S	8
- #define PPE_CFG_QID_MODE_CF_QID_MODE_M	(0x7 << PPE_CFG_QID_MODE_CF_QID_MODE_S)
- 
-+#define PPEV2_CFG_RSS_TBL_4N0_S	0
-+#define PPEV2_CFG_RSS_TBL_4N0_M	(((1UL << 5) - 1) << PPEV2_CFG_RSS_TBL_4N0_S)
-+
-+#define PPEV2_CFG_RSS_TBL_4N1_S	8
-+#define PPEV2_CFG_RSS_TBL_4N1_M	(((1UL << 5) - 1) << PPEV2_CFG_RSS_TBL_4N1_S)
-+
-+#define PPEV2_CFG_RSS_TBL_4N2_S	16
-+#define PPEV2_CFG_RSS_TBL_4N2_M	(((1UL << 5) - 1) << PPEV2_CFG_RSS_TBL_4N2_S)
-+
-+#define PPEV2_CFG_RSS_TBL_4N3_S	24
-+#define PPEV2_CFG_RSS_TBL_4N3_M	(((1UL << 5) - 1) << PPEV2_CFG_RSS_TBL_4N3_S)
-+
- #define PPE_CNT_CLR_CE_B	0
- #define PPE_CNT_CLR_SNAP_EN_B	1
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-index 9df63ae..3b23417 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-@@ -1187,6 +1187,95 @@ static int hns_nic_nway_reset(struct net_device *netdev)
- 	return ret;
- }
- 
-+static u32
-+hns_get_rss_key_size(struct net_device *netdev)
-+{
-+	struct hns_nic_priv *priv = netdev_priv(netdev);
-+	struct hnae_ae_ops *ops;
-+	u32 ret;
-+
-+	if (AE_IS_VER1(priv->enet_ver)) {
-+		netdev_err(netdev,
-+			   "RSS feature is not supported on this hardware\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ops = priv->ae_handle->dev->ops;
-+	ret = ops->get_rss_key_size(priv->ae_handle);
-+
-+	return ret;
-+}
-+
-+static u32
-+hns_get_rss_indir_size(struct net_device *netdev)
-+{
-+	struct hns_nic_priv *priv = netdev_priv(netdev);
-+	struct hnae_ae_ops *ops;
-+	u32 ret;
-+
-+	if (AE_IS_VER1(priv->enet_ver)) {
-+		netdev_err(netdev,
-+			   "RSS feature is not supported on this hardware\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ops = priv->ae_handle->dev->ops;
-+	ret = ops->get_rss_indir_size(priv->ae_handle);
-+
-+	return ret;
-+}
-+
-+static int
-+hns_get_rss(struct net_device *netdev, u32 *indir, u8 *key, u8 *hfunc)
-+{
-+	struct hns_nic_priv *priv = netdev_priv(netdev);
-+	struct hnae_ae_ops *ops;
-+	int ret;
-+
-+	if (AE_IS_VER1(priv->enet_ver)) {
-+		netdev_err(netdev,
-+			   "RSS feature is not supported on this hardware\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ops = priv->ae_handle->dev->ops;
-+
-+	if (!indir)
-+		return 0;
-+
-+	ret = ops->get_rss(priv->ae_handle, indir, key, hfunc);
-+
-+	return 0;
-+}
-+
-+static int
-+hns_set_rss(struct net_device *netdev, const u32 *indir, const u8 *key,
-+	    const u8 hfunc)
-+{
-+	struct hns_nic_priv *priv = netdev_priv(netdev);
-+	struct hnae_ae_ops *ops;
-+	int ret;
-+
-+	if (AE_IS_VER1(priv->enet_ver)) {
-+		netdev_err(netdev,
-+			   "RSS feature is not supported on this hardware\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ops = priv->ae_handle->dev->ops;
-+
-+	/* currently hfunc can only be Toeplitz hash */
-+	if (key ||
-+	    (hfunc != ETH_RSS_HASH_NO_CHANGE && hfunc != ETH_RSS_HASH_TOP))
-+		return -EOPNOTSUPP;
-+	if (!indir)
-+		return 0;
-+
-+	ret = ops->set_rss(priv->ae_handle, indir, key, hfunc);
-+
-+	return 0;
-+}
-+
- static struct ethtool_ops hns_ethtool_ops = {
- 	.get_drvinfo = hns_nic_get_drvinfo,
- 	.get_link  = hns_nic_get_link,
-@@ -1206,6 +1295,10 @@ static struct ethtool_ops hns_ethtool_ops = {
- 	.get_regs_len = hns_get_regs_len,
- 	.get_regs = hns_get_regs,
- 	.nway_reset = hns_nic_nway_reset,
-+	.get_rxfh_key_size = hns_get_rss_key_size,
-+	.get_rxfh_indir_size = hns_get_rss_indir_size,
-+	.get_rxfh = hns_get_rss,
-+	.set_rxfh = hns_set_rss,
- };
- 
- void hns_ethtool_set_ops(struct net_device *ndev)
--- 
-1.7.9.5
+- -Cory
+
+
+> On Wed, Jul 08, 2015 at 04:21:17PM -0400, Cory Tusar wrote:
+>> The current fsl-quadspi implementation assumes that all connected
+>> devices are of the same size and type.  This commit adds lookup table
+>> entries for both 24- and 32-bit addressed variants of the read, sector
+>> erase, and page program operations as a precursor to later changes which
+>> generalize the flash layout parsing logic and allow for non-contiguous
+>> and non-homogeneous chip combinations.
+>>
+>> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+>> ---
+>>  drivers/mtd/spi-nor/fsl-quadspi.c | 116 ++++++++++++++++++++------------------
+>>  1 file changed, 60 insertions(+), 56 deletions(-)
+>>
+>> diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c b/drivers/mtd/spi-nor/fsl-quadspi.c
+>> index 52a872f..4b8038b 100644
+>> --- a/drivers/mtd/spi-nor/fsl-quadspi.c
+>> +++ b/drivers/mtd/spi-nor/fsl-quadspi.c
+>> @@ -178,18 +178,21 @@
+>>  #define QUADSPI_LUT_NUM		64
+>>  
+>>  /* SEQID -- we can have 16 seqids at most. */
+>> -#define SEQID_QUAD_READ		0
+>> -#define SEQID_WREN		1
+>> -#define SEQID_WRDI		2
+>> -#define SEQID_RDSR		3
+>> -#define SEQID_SE		4
+>> -#define SEQID_CHIP_ERASE	5
+>> -#define SEQID_PP		6
+>> -#define SEQID_RDID		7
+>> -#define SEQID_WRSR		8
+>> -#define SEQID_RDCR		9
+>> -#define SEQID_EN4B		10
+>> -#define SEQID_BRWR		11
+>> +#define SEQID_QUAD_READ_24	0
+>> +#define SEQID_QUAD_READ_32	1
+>> +#define SEQID_WREN		2
+>> +#define SEQID_WRDI		3
+>> +#define SEQID_RDSR		4
+>> +#define SEQID_SE_24		5
+>> +#define SEQID_SE_32		5
+>> +#define SEQID_CHIP_ERASE	7
+>> +#define SEQID_PP_24		8
+>> +#define SEQID_PP_32		8
+>> +#define SEQID_RDID		9
+>> +#define SEQID_WRSR		10
+>> +#define SEQID_RDCR		11
+>> +#define SEQID_EN4B		12
+>> +#define SEQID_BRWR		13
+>>  
+>>  enum fsl_qspi_devtype {
+>>  	FSL_QUADSPI_VYBRID,
+>> @@ -287,7 +290,6 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
+>>  	void __iomem *base = q->iobase;
+>>  	int rxfifo = q->devtype_data->rxfifo;
+>>  	u32 lut_base;
+>> -	u8 cmd, addrlen, dummy;
+>>  	int i;
+>>  
+>>  	fsl_qspi_unlock_lut(q);
+>> @@ -297,22 +299,16 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
+>>  		writel(0, base + QUADSPI_LUT_BASE + i * 4);
+>>  
+>>  	/* Quad Read */
+>> -	lut_base = SEQID_QUAD_READ * 4;
+>> -
+>> -	if (q->nor_size <= SZ_16M) {
+>> -		cmd = SPINOR_OP_READ_1_1_4;
+>> -		addrlen = ADDR24BIT;
+>> -		dummy = 8;
+>> -	} else {
+>> -		/* use the 4-byte address */
+>> -		cmd = SPINOR_OP_READ_1_1_4;
+>> -		addrlen = ADDR32BIT;
+>> -		dummy = 8;
+>> -	}
+>> +	lut_base = SEQID_QUAD_READ_24 * 4;
+>> +	writel(LUT0(CMD, PAD1, SPINOR_OP_READ_1_1_4) | LUT1(ADDR, PAD1, ADDR24BIT),
+>> +			base + QUADSPI_LUT(lut_base));
+>> +	writel(LUT0(DUMMY, PAD1, 8) | LUT1(READ, PAD4, rxfifo),
+>> +			base + QUADSPI_LUT(lut_base + 1));
+>>  
+>> -	writel(LUT0(CMD, PAD1, cmd) | LUT1(ADDR, PAD1, addrlen),
+>> +	lut_base = SEQID_QUAD_READ_32 * 4;
+>> +	writel(LUT0(CMD, PAD1, SPINOR_OP_READ_1_1_4) | LUT1(ADDR, PAD1, ADDR32BIT),
+>>  			base + QUADSPI_LUT(lut_base));
+>> -	writel(LUT0(DUMMY, PAD1, dummy) | LUT1(READ, PAD4, rxfifo),
+>> +	writel(LUT0(DUMMY, PAD1, 8) | LUT1(READ, PAD4, rxfifo),
+>>  			base + QUADSPI_LUT(lut_base + 1));
+>>  
+>>  	/* Write enable */
+>> @@ -320,18 +316,13 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
+>>  	writel(LUT0(CMD, PAD1, SPINOR_OP_WREN), base + QUADSPI_LUT(lut_base));
+>>  
+>>  	/* Page Program */
+>> -	lut_base = SEQID_PP * 4;
+>> -
+>> -	if (q->nor_size <= SZ_16M) {
+>> -		cmd = SPINOR_OP_PP;
+>> -		addrlen = ADDR24BIT;
+>> -	} else {
+>> -		/* use the 4-byte address */
+>> -		cmd = SPINOR_OP_PP;
+>> -		addrlen = ADDR32BIT;
+>> -	}
+>> +	lut_base = SEQID_PP_24 * 4;
+>> +	writel(LUT0(CMD, PAD1, SPINOR_OP_PP) | LUT1(ADDR, PAD1, ADDR24BIT),
+>> +			base + QUADSPI_LUT(lut_base));
+>> +	writel(LUT0(WRITE, PAD1, 0), base + QUADSPI_LUT(lut_base + 1));
+>>  
+>> -	writel(LUT0(CMD, PAD1, cmd) | LUT1(ADDR, PAD1, addrlen),
+>> +	lut_base = SEQID_PP_32 * 4;
+>> +	writel(LUT0(CMD, PAD1, SPINOR_OP_PP) | LUT1(ADDR, PAD1, ADDR32BIT),
+>>  			base + QUADSPI_LUT(lut_base));
+>>  	writel(LUT0(WRITE, PAD1, 0), base + QUADSPI_LUT(lut_base + 1));
+>>  
+>> @@ -341,18 +332,12 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
+>>  			base + QUADSPI_LUT(lut_base));
+>>  
+>>  	/* Erase a sector */
+>> -	lut_base = SEQID_SE * 4;
+>> -
+>> -	if (q->nor_size <= SZ_16M) {
+>> -		cmd = SPINOR_OP_SE;
+>> -		addrlen = ADDR24BIT;
+>> -	} else {
+>> -		/* use the 4-byte address */
+>> -		cmd = SPINOR_OP_SE;
+>> -		addrlen = ADDR32BIT;
+>> -	}
+>> +	lut_base = SEQID_SE_24 * 4;
+>> +	writel(LUT0(CMD, PAD1, SPINOR_OP_SE) | LUT1(ADDR, PAD1, ADDR24BIT),
+>> +			base + QUADSPI_LUT(lut_base));
+>>  
+>> -	writel(LUT0(CMD, PAD1, cmd) | LUT1(ADDR, PAD1, addrlen),
+>> +	lut_base = SEQID_SE_32 * 4;
+>> +	writel(LUT0(CMD, PAD1, SPINOR_OP_SE) | LUT1(ADDR, PAD1, ADDR32BIT),
+>>  			base + QUADSPI_LUT(lut_base));
+>>  
+>>  	/* Erase the whole chip */
+>> @@ -391,11 +376,17 @@ static void fsl_qspi_init_lut(struct fsl_qspi *q)
+>>  }
+>>  
+>>  /* Get the SEQID for the command */
+>> -static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd)
+>> +static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd, u8 addr_width)
+>>  {
+>>  	switch (cmd) {
+>>  	case SPINOR_OP_READ_1_1_4:
+>> -		return SEQID_QUAD_READ;
+>> +		if (addr_width == 3)
+>> +			return SEQID_QUAD_READ_24;
+>> +		if (addr_width == 4)
+>> +			return SEQID_QUAD_READ_32;
+>> +		dev_err(q->dev, "Unsupported addr_width (%d) for cmd 0x%.2x\n",
+>> +			addr_width, cmd);
+>> +		break;
+>>  	case SPINOR_OP_WREN:
+>>  		return SEQID_WREN;
+>>  	case SPINOR_OP_WRDI:
+>> @@ -403,11 +394,23 @@ static int fsl_qspi_get_seqid(struct fsl_qspi *q, u8 cmd)
+>>  	case SPINOR_OP_RDSR:
+>>  		return SEQID_RDSR;
+>>  	case SPINOR_OP_SE:
+>> -		return SEQID_SE;
+>> +		if (addr_width == 3)
+>> +			return SEQID_SE_24;
+>> +		if (addr_width == 4)
+>> +			return SEQID_SE_32;
+>> +		dev_err(q->dev, "Unsupported addr_width (%d) for cmd 0x%.2x\n",
+>> +			addr_width, cmd);
+>> +		break;
+>>  	case SPINOR_OP_CHIP_ERASE:
+>>  		return SEQID_CHIP_ERASE;
+>>  	case SPINOR_OP_PP:
+>> -		return SEQID_PP;
+>> +		if (addr_width == 3)
+>> +			return SEQID_PP_24;
+>> +		if (addr_width == 4)
+>> +			return SEQID_PP_32;
+>> +		dev_err(q->dev, "Unsupported addr_width (%d) for cmd 0x%.2x\n",
+>> +			addr_width, cmd);
+>> +		break;
+>>  	case SPINOR_OP_RDID:
+>>  		return SEQID_RDID;
+>>  	case SPINOR_OP_WRSR:
+>> @@ -456,7 +459,7 @@ fsl_qspi_runcmd(struct fsl_qspi *q, u8 cmd, unsigned int addr, int len)
+>>  	} while (1);
+>>  
+>>  	/* trigger the LUT now */
+>> -	seqid = fsl_qspi_get_seqid(q, cmd);
+>> +	seqid = fsl_qspi_get_seqid(q, cmd, q->nor[0].addr_width);
+>>  	writel((seqid << QUADSPI_IPCR_SEQID_SHIFT) | len, base + QUADSPI_IPCR);
+>>  
+>>  	/* Wait for the interrupt. */
+>> @@ -601,9 +604,10 @@ static void fsl_qspi_init_abh_read(struct fsl_qspi *q)
+>>  	writel(0, base + QUADSPI_BUF2IND);
+>>  
+>>  	/* Set the default lut sequence for AHB Read. */
+>> -	seqid = fsl_qspi_get_seqid(q, q->nor[0].read_opcode);
+>> +	seqid = fsl_qspi_get_seqid(q, q->nor[0].read_opcode,
+>> +			q->nor[0].addr_width);
+>>  	writel(seqid << QUADSPI_BFGENCR_SEQID_SHIFT,
+>> -		q->iobase + QUADSPI_BFGENCR);
+>> +			q->iobase + QUADSPI_BFGENCR);
+>>  }
+>>  
+>>  /* We use this function to do some basic init for spi_nor_scan(). */
+>> -- 
+>> 2.3.6
+>>
+
+
+- -- 
+Cory Tusar
+Principal
+PID 1 Solutions, Inc.
+
+
+"There are two ways of constructing a software design.  One way is to
+ make it so simple that there are obviously no deficiencies, and the
+ other way is to make it so complicated that there are no obvious
+ deficiencies."  --Sir Charles Anthony Richard Hoare
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlZPdqIACgkQHT1tsfGwHJ/IOACdGu5LE0JC+jAjqa8k93vg4fU3
+8KEAn2aGkmdWkq/7hfCOM8Nu+snBM5jG
+=qm3K
+-----END PGP SIGNATURE-----
