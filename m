@@ -1,58 +1,51 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/6] clk: berlin: add common pll driver
-Date: Fri, 20 Nov 2015 21:46:18 +0100
-Message-ID: <564F869A.3090904@gmail.com>
+Subject: Re: [PATCH v2 2/6] clk: berlin: add common clk driver for newer SoCs
+Date: Fri, 20 Nov 2015 21:54:01 +0100
+Message-ID: <564F8869.6040307@gmail.com>
 References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
- <1448008952-1787-2-git-send-email-jszhang@marvell.com>
+ <1448008952-1787-3-git-send-email-jszhang@marvell.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448008952-1787-2-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1448008952-1787-3-git-send-email-jszhang@marvell.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, antoine.tenart@free-electrons.com
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 20.11.2015 09:42, Jisheng Zhang wrote:
-> Add pll driver for Marvell SoCs newer than BG2, BG2CD, BG2Q.
+> Add common clk driver for Marvell SoCs newer than BG2, BG2CD, BG2Q.
+> berlin_clk_setup() is provided to setup and register such kind of clks.
 > 
 > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 > ---
->  drivers/clk/berlin/Makefile |   1 +
->  drivers/clk/berlin/pll.c    | 133 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 134 insertions(+)
->  create mode 100644 drivers/clk/berlin/pll.c
+>  drivers/clk/berlin/Makefile |   2 +-
+>  drivers/clk/berlin/clk.c    | 203 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/berlin/clk.h    |  33 +++++++
+>  3 files changed, 237 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/clk/berlin/clk.c
+>  create mode 100644 drivers/clk/berlin/clk.h
 > 
 > diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
-> index 2a36ab7..eee42b0 100644
+> index eee42b0..ee2e09d 100644
 > --- a/drivers/clk/berlin/Makefile
 > +++ b/drivers/clk/berlin/Makefile
-> @@ -1,4 +1,5 @@
+> @@ -1,5 +1,5 @@
 >  obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
-> +obj-y += pll.o
+> -obj-y += pll.o
+> +obj-y += pll.o clk.o
 
-Jisheng,
-
-please keep the naming style of files as we already have,
-e.g. at least name the files for this driver berlin4-pll.
-
-Even better you find the differences and merge it with
-the berlin2-pll driver.
-
-In general, I am not going to Ack any Berlin clock drivers
-that expose the clock tree in any way. We recently merged
-the Berlin2 clock stuff to a common OF node, I am not going
-through the same mess for BG4 again.
+Same comment about the naming convention.
 
 >  obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
 >  obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
 >  obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
-> diff --git a/drivers/clk/berlin/pll.c b/drivers/clk/berlin/pll.c
+> diff --git a/drivers/clk/berlin/clk.c b/drivers/clk/berlin/clk.c
 > new file mode 100644
-> index 0000000..435445e
+> index 0000000..70f2b9d
 > --- /dev/null
-> +++ b/drivers/clk/berlin/pll.c
-> @@ -0,0 +1,133 @@
+> +++ b/drivers/clk/berlin/clk.c
+> @@ -0,0 +1,203 @@
 > +/*
 > + * Copyright (c) 2015 Marvell Technology Group Ltd.
 > + *
@@ -77,138 +70,244 @@ through the same mess for BG4 again.
 > +#include <linux/of_address.h>
 > +#include <linux/slab.h>
 > +
-> +#define PLL_CTRL0	0x0
-> +#define PLL_CTRL1	0x4
-> +#define PLL_CTRL2	0x8
-> +#define PLL_CTRL3	0xC
-> +#define PLL_CTRL4	0x10
-> +#define PLL_STATUS	0x14
+> +#include "clk.h"
 > +
-> +#define PLL_SOURCE_MAX	2
+> +#define CLKEN		(1 << 0)
+
+#define CLKEN	BIT(0)
+
+> +#define CLKPLLSEL_MASK	7
+
+Please use hex numbers for the mask.
+
+> +#define CLKPLLSEL_SHIFT	1
+> +#define CLKPLLSWITCH	(1 << 4)
+> +#define CLKSWITCH	(1 << 5)
+> +#define CLKD3SWITCH	(1 << 6)
+
+BIT() again.
+
+> +#define CLKSEL_MASK	7
+
+Hex again.
+
+> +#define CLKSEL_SHIFT	7
 > +
-> +struct berlin_pll {
-> +	struct clk_hw	hw;
-> +	void __iomem	*ctrl;
-> +	void __iomem	*bypass;
-> +	u8		bypass_shift;
+> +#define CLK_SOURCE_MAX	5
+> +
+> +struct berlin_clk {
+> +	struct clk_hw hw;
+> +	void __iomem *base;
 > +};
 > +
-> +#define to_berlin_pll(hw)       container_of(hw, struct berlin_pll, hw)
+> +#define to_berlin_clk(hw)	container_of(hw, struct berlin_clk, hw)
 > +
-> +static unsigned long berlin_pll_recalc_rate(struct clk_hw *hw,
-> +					    unsigned long parent_rate)
+> +static u8 clk_div[] = {1, 2, 4, 6, 8, 12, 1, 1};
+
+Hmm, this pretty much looks like berlin2-div dividers...
+
+> +static unsigned long berlin_clk_recalc_rate(struct clk_hw *hw,
+> +					unsigned long parent_rate)
 > +{
-> +	u32 val, fbdiv, rfdiv, vcodivsel, bypass;
-> +	struct berlin_pll *pll = to_berlin_pll(hw);
+> +	u32 val, divider;
+> +	struct berlin_clk *clk = to_berlin_clk(hw);
 > +
-> +	bypass = readl_relaxed(pll->bypass);
-> +	if (bypass & (1 << pll->bypass_shift))
-> +		return parent_rate;
+> +	val = readl_relaxed(clk->base);
+> +	if (val & CLKD3SWITCH)
+> +		divider = 3;
 
-Bypass could be modelled as a ccf clock-mux:
+and this looks like berlin2-div structure, doesn't it?
 
-REF ---+------------|\
-       |    _____   | |-- OUT
-       +---| PLL |--|/
-
-Please reuse what is already available.
-
-> +	val = readl_relaxed(pll->ctrl + PLL_CTRL0);
-> +	fbdiv = (val >> 12) & 0x1FF;
-> +	rfdiv = (val >> 3) & 0x1FF;
-
-Please get rid of any magic numbers.
-
-> +	val = readl_relaxed(pll->ctrl + PLL_CTRL1);
-> +	vcodivsel = (val >> 9) & 0x7;
-> +	return parent_rate * fbdiv * 4 / rfdiv /
-> +		(1 << vcodivsel);
-
-A comment at the top of recalc_rate how output frequency is
-calculated would be great.
-
-> +}
-> +
-> +static u8 berlin_pll_get_parent(struct clk_hw *hw)
-> +{
-> +	struct berlin_pll *pll = to_berlin_pll(hw);
-> +	u32 bypass = readl_relaxed(pll->bypass);
-> +
-> +	return !!(bypass & (1 << pll->bypass_shift));
-> +}
-> +
-> +static const struct clk_ops berlin_pll_ops = {
-> +	.recalc_rate	= berlin_pll_recalc_rate,
-> +	.get_parent	= berlin_pll_get_parent,
-> +};
-> +
-> +static void __init berlin_pll_setup(struct device_node *np)
-> +{
-> +	struct clk_init_data init;
-> +	struct berlin_pll *pll;
-> +	const char *parent_names[PLL_SOURCE_MAX];
-> +	struct clk *clk;
-> +	int ret, num_parents;
-> +	u8 bypass_shift;
-> +
-> +	num_parents = of_clk_get_parent_count(np);
-> +	if (num_parents <= 0 || num_parents > PLL_SOURCE_MAX)
-> +		return;
-> +
-> +	ret = of_property_read_u8(np, "bypass-shift", &bypass_shift);
-> +	if (ret)
-> +		return;
-
-The name "bypass" implies you can either choose to output the PLL
-generated clock or pass the parent clock, i.e. bypass the PLL.
-
-How can you choose from two parents then?
-
-> +	of_clk_parent_fill(np, parent_names, num_parents);
-> +
-> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-> +	if (!pll)
-> +		return;
-> +
-> +	pll->ctrl = of_iomap(np, 0);
-> +	if (WARN_ON(!pll->ctrl))
-> +		goto err_iomap_ctrl;
-> +
-> +	pll->bypass = of_iomap(np, 1);
-> +	if (WARN_ON(!pll->bypass))
-> +		goto err_iomap_bypass;
-> +
-> +	init.name = np->name;
-> +	init.flags = 0;
-> +	init.ops = &berlin_pll_ops;
-> +	init.parent_names = parent_names;
-> +	init.num_parents = num_parents;
-> +
-> +	pll->hw.init = &init;
-> +	pll->bypass_shift = bypass_shift;
-> +
-> +	clk = clk_register(NULL, &pll->hw);
-> +	if (WARN_ON(IS_ERR(clk)))
-> +		goto err_clk_register;
-> +
-> +	ret = of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +	if (WARN_ON(ret))
-> +		goto err_clk_add;
-> +	return;
-> +
-> +err_clk_add:
-> +	clk_unregister(clk);
-> +err_clk_register:
-> +	iounmap(pll->bypass);
-> +err_iomap_bypass:
-> +	iounmap(pll->ctrl);
-> +err_iomap_ctrl:
-> +	kfree(pll);
-> +}
-> +CLK_OF_DECLARE(berlin_pll, "marvell,berlin-pll", berlin_pll_setup);
-
-Just to repeat: I will not Ack any clk driver that is exposed to DT
-except a single bg4 clock complex node. Have a look at BG2x clock
-drivers and rework bg4 to have the same structure.
+Again, please reuse what is already available.
 
 Sebastian
+
+> +	else {
+> +		if (val & CLKSWITCH) {
+> +			val >>= CLKSEL_SHIFT;
+> +			val &= CLKSEL_MASK;
+> +			divider = clk_div[val];
+> +		} else
+> +			divider = 1;
+> +	}
+> +
+> +	return parent_rate / divider;
+> +}
+> +
+> +static u8 berlin_clk_get_parent(struct clk_hw *hw)
+> +{
+> +	u32 val;
+> +	struct berlin_clk *clk = to_berlin_clk(hw);
+> +
+> +	val = readl_relaxed(clk->base);
+> +	if (val & CLKPLLSWITCH) {
+> +		val >>= CLKPLLSEL_SHIFT;
+> +		val &= CLKPLLSEL_MASK;
+> +		return val;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int berlin_clk_enable(struct clk_hw *hw)
+> +{
+> +	u32 val;
+> +	struct berlin_clk *clk = to_berlin_clk(hw);
+> +
+> +	val = readl_relaxed(clk->base);
+> +	val |= CLKEN;
+> +	writel_relaxed(val, clk->base);
+> +
+> +	return 0;
+> +}
+> +
+> +static void berlin_clk_disable(struct clk_hw *hw)
+> +{
+> +	u32 val;
+> +	struct berlin_clk *clk = to_berlin_clk(hw);
+> +
+> +	val = readl_relaxed(clk->base);
+> +	val &= ~CLKEN;
+> +	writel_relaxed(val, clk->base);
+> +}
+> +
+> +static int berlin_clk_is_enabled(struct clk_hw *hw)
+> +{
+> +	u32 val;
+> +	struct berlin_clk *clk = to_berlin_clk(hw);
+> +
+> +	val = readl_relaxed(clk->base);
+> +	val &= CLKEN;
+> +
+> +	return val ? 1 : 0;
+> +}
+> +
+> +static const struct clk_ops berlin_clk_ops = {
+> +	.recalc_rate	= berlin_clk_recalc_rate,
+> +	.get_parent	= berlin_clk_get_parent,
+> +	.enable		= berlin_clk_enable,
+> +	.disable	= berlin_clk_disable,
+> +	.is_enabled	= berlin_clk_is_enabled,
+> +};
+> +
+> +static struct clk * __init
+> +berlin_clk_register(const char *name, int num_parents,
+> +		    const char **parent_names, unsigned long flags,
+> +		    void __iomem *base)
+> +{
+> +	struct clk *clk;
+> +	struct berlin_clk *bclk;
+> +	struct clk_init_data init;
+> +
+> +	bclk = kzalloc(sizeof(*bclk), GFP_KERNEL);
+> +	if (!bclk)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = name;
+> +	init.ops = &berlin_clk_ops;
+> +	init.parent_names = parent_names;
+> +	init.num_parents = num_parents;
+> +	init.flags = flags;
+> +
+> +	bclk->base = base;
+> +	bclk->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &bclk->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(bclk);
+> +
+> +	return clk;
+> +}
+> +
+> +void __init berlin_clk_setup(struct device_node *np,
+> +			     const struct clk_desc *descs,
+> +			     struct clk_onecell_data *clk_data,
+> +			     int n)
+> +{
+> +	int i, ret, num_parents;
+> +	void __iomem *base;
+> +	struct clk **clks;
+> +	const char *parent_names[CLK_SOURCE_MAX];
+> +
+> +	num_parents = of_clk_get_parent_count(np);
+> +	if (num_parents <= 0 || num_parents > CLK_SOURCE_MAX)
+> +		return;
+> +
+> +	of_clk_parent_fill(np, parent_names, num_parents);
+> +
+> +	clks = kcalloc(n, sizeof(struct clk *), GFP_KERNEL);
+> +	if (!clks)
+> +		return;
+> +
+> +	base = of_iomap(np, 0);
+> +	if (WARN_ON(!base))
+> +		goto err_iomap;
+> +
+> +	for (i = 0; i < n; i++) {
+> +		struct clk *clk;
+> +
+> +		clk = berlin_clk_register(descs[i].name,
+> +				num_parents, parent_names,
+> +				descs[i].flags,
+> +				base + descs[i].offset);
+> +		if (WARN_ON(IS_ERR(clks[i])))
+> +			goto err_clk_register;
+> +		clks[i] = clk;
+> +	}
+> +
+> +	clk_data->clks = clks;
+> +	clk_data->clk_num = i;
+> +
+> +	ret = of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
+> +	if (WARN_ON(ret))
+> +		goto err_clk_register;
+> +	return;
+> +
+> +err_clk_register:
+> +	for (i = 0; i < n; i++)
+> +		clk_unregister(clks[i]);
+> +	iounmap(base);
+> +err_iomap:
+> +	kfree(clks);
+> +}
+> diff --git a/drivers/clk/berlin/clk.h b/drivers/clk/berlin/clk.h
+> new file mode 100644
+> index 0000000..5e5680e
+> --- /dev/null
+> +++ b/drivers/clk/berlin/clk.h
+> @@ -0,0 +1,33 @@
+> +/*
+> + * Copyright (c) 2015 Marvell Technology Group Ltd.
+> + *
+> + * Author: Jisheng Zhang <jszhang@marvell.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef __BERLIN_CLK_H
+> +#define __BERLIN_CLK_H
+> +
+> +struct clk_desc {
+> +	const char	*name;
+> +	u32		offset;
+> +	unsigned long	flags;
+> +};
+> +
+> +void __init berlin_clk_setup(struct device_node *np,
+> +			     const struct clk_desc *desc,
+> +			     struct clk_onecell_data *clk_data,
+> +			     int n);
+> +
+> +#endif
+> 
+
