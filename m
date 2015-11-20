@@ -1,46 +1,103 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 09/11] clk: lpc32xx: add common clock framework driver
-Date: Fri, 20 Nov 2015 15:04:11 +0100
-Message-ID: <3762298.NKYXldtldq@wuerfel>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com> <1447981511-29653-10-git-send-email-vz@mleia.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH V3 net-next 4/5] net:hns: Add support of ethtool TSO set
+ option for Hip06 in HNS
+Date: Fri, 20 Nov 2015 17:07:17 +0300
+Message-ID: <564F2915.1090507@cogentembedded.com>
+References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
+ <1447966706-16219-5-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1447981511-29653-10-git-send-email-vz@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1447966706-16219-5-git-send-email-salil.mehta@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Salil Mehta <salil.mehta@huawei.com>, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 November 2015 03:05:09 Vladimir Zapolskiy wrote:
-> +
-> +struct clk_proto_t {
-> +       const char *name;
-> +       const u8 parents[LPC32XX_CLK_PARENTS_MAX];
-> +       u8 num_parents;
-> +       unsigned long flags;
-> +};
-> +
-> +#define CLK_PREFIX(LITERAL)            LPC32XX_CLK_ ## LITERAL
-> +#define NUMARGS(...)   (sizeof((int[]){__VA_ARGS__})/sizeof(int))
-> +
-> +#define LPC32XX_CLK_DEFINE(_idx, _name, _flags, ...)           \
-> +       [CLK_PREFIX(_idx)] = {                                  \
-> +               .name = #_name,                                 \
-> +               .flags = _flags,                                \
-> +               .parents = { __VA_ARGS__ },                     \
-> +               .num_parents = NUMARGS(__VA_ARGS__),            \
-> +        }
-> +
+On 11/19/2015 11:58 PM, Salil Mehta wrote:
 
-Try to not outsmart yourself with the macros. It's better to avoid
-string concatenation so it's possible to grep for uses of some
-constant.
+> From: Salil <salil.mehta@huawei.com>
+>
+> This patch adds the support of ethtool TSO option to V1 patch,
+> meant to add support of Hip06 SoC to HNS
+>
+> Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+> Signed-off-by: lisheng <lisheng011@huawei.com>
+> ---
+>   drivers/net/ethernet/hisilicon/hns/hns_enet.c |   47 +++++++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+> index 055e14c..a0763ab 100644
+> --- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+> +++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+> @@ -1386,6 +1386,51 @@ static int hns_nic_change_mtu(struct net_device *ndev, int new_mtu)
+>   	return ret;
+>   }
+>
+> +static int hns_nic_set_features(struct net_device *netdev,
+> +				netdev_features_t features)
+> +{
+> +	struct hns_nic_priv *priv = netdev_priv(netdev);
+> +	struct hnae_handle *h = priv->ae_handle;
+> +
+> +	switch (priv->enet_ver) {
+> +	case AE_VERSION_1:
+> +		if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6))
 
-I would probably not use a macro at all here and just open-code the
-entire table. If you ensure that '0' is not a valid parent, then
-you can leave out the .num_parents field and just look for the
-zero-termination.
+		if ((features & (NETIF_F_TSO| NETIF_F_TSO6))
 
-	Arnd
+> +			netdev_info(netdev, "enet v1 do not support tso!\n");
+> +	break;
+
+    The *break* should have the same indentation level as *if*.
+
+> +	default:
+> +		if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6)) {
+
+	if ((features & (NETIF_F_TSO| NETIF_F_TSO6))
+
+> +			priv->ops.fill_desc = fill_tso_desc;
+> +			priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tso;
+> +			/* The chip only support 7*4096 */
+> +			netif_set_gso_max_size(netdev, 7 * 4096);
+> +			h->dev->ops->set_tso_stats(h, 1);
+> +		} else {
+> +			priv->ops.fill_desc = fill_v2_desc;
+> +			priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tx;
+> +			h->dev->ops->set_tso_stats(h, 0);
+> +		}
+> +	break;
+
+    Same here.
+
+> +	}
+> +	netdev->features = features;
+> +	return 0;
+> +}
+> +
+> +static netdev_features_t hns_nic_fix_features(
+> +		struct net_device *netdev, netdev_features_t features)
+> +{
+> +	struct hns_nic_priv *priv = netdev_priv(netdev);
+> +
+> +	switch (priv->enet_ver) {
+> +	case AE_VERSION_1:
+> +		features &= ~(NETIF_F_TSO | NETIF_F_TSO6 |
+> +				NETIF_F_HW_VLAN_CTAG_FILTER);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+
+    Here it's indented correctly.
+
+> +	return features;
+> +}
+> +
+>   /**
+>    * nic_set_multicast_list - set mutl mac address
+>    * @netdev: net device
+[...]
+
+MBR, Sergei
