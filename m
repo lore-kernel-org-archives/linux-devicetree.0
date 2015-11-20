@@ -1,44 +1,234 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/4] spi: mediatek: remove needless pair of
- writel()/readl()
-Date: Fri, 20 Nov 2015 17:56:10 +0100
-Message-ID: <564F50AA.50000@gmail.com>
-References: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
- <1447986080-31410-3-git-send-email-leilk.liu@mediatek.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH 09/13] ARM: Xen: Initialize Xen specific UEFI runtime
+ services
+Date: Fri, 20 Nov 2015 16:57:08 +0000
+Message-ID: <alpine.DEB.2.02.1511201645030.1107@kaball.uk.xensource.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+ <1447754231-7772-10-git-send-email-shannon.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447986080-31410-3-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>, Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447754231-7772-10-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> When running on Xen hypervisor, runtime services are supported through
+> hypercall. So call Xen specific function to initialize runtime services.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+You can drop the dom0_op part of the patch and based on top of
+
+http://marc.info/?l=xen-devel&m=144802905409775&w=2
 
 
-On 20/11/15 03:21, Leilk Liu wrote:
-> It's not need to re-read and re-write SPI_CMD_REG, so remove it.
->
-> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-> ---
->   drivers/spi/spi-mt65xx.c |    3 ---
->   1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-> index 7840067..6c1a96e 100644
-> --- a/drivers/spi/spi-mt65xx.c
-> +++ b/drivers/spi/spi-mt65xx.c
-> @@ -154,9 +154,6 @@ static int mtk_spi_prepare_message(struct spi_master *master,
->   		reg_val |= SPI_CMD_CPOL;
->   	else
->   		reg_val &= ~SPI_CMD_CPOL;
-> -	writel(reg_val, mdata->base + SPI_CMD_REG);
-> -
-> -	reg_val = readl(mdata->base + SPI_CMD_REG);
->
->   	/* set the mlsbx and mlsbtx */
->   	if (chip_config->tx_mlsb)
->
+>  arch/arm/include/asm/xen/hypercall.h |  1 +
+>  arch/arm/xen/enlighten.c             |  1 +
+>  arch/arm/xen/hypercall.S             |  1 +
+>  arch/arm64/kernel/efi.c              | 20 ++++++++++++++------
+>  arch/arm64/xen/hypercall.S           |  1 +
+>  drivers/xen/Kconfig                  |  2 +-
+>  drivers/xen/efi.c                    | 22 ++++++++++++++++++++++
+>  include/xen/xen-ops.h                | 10 ++++++++++
+>  8 files changed, 51 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/xen/hypercall.h b/arch/arm/include/asm/xen/hypercall.h
+> index 712b50e..0de6074 100644
+> --- a/arch/arm/include/asm/xen/hypercall.h
+> +++ b/arch/arm/include/asm/xen/hypercall.h
+> @@ -50,6 +50,7 @@ int HYPERVISOR_physdev_op(int cmd, void *arg);
+>  int HYPERVISOR_vcpu_op(int cmd, int vcpuid, void *extra_args);
+>  int HYPERVISOR_tmem_op(void *arg);
+>  int HYPERVISOR_multicall(struct multicall_entry *calls, uint32_t nr);
+> +int HYPERVISOR_dom0_op(void *arg);
+>  
+>  static inline int
+>  HYPERVISOR_suspend(unsigned long start_info_mfn)
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 7cb82f7..1373d6d 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -289,3 +289,4 @@ EXPORT_SYMBOL_GPL(HYPERVISOR_vcpu_op);
+>  EXPORT_SYMBOL_GPL(HYPERVISOR_tmem_op);
+>  EXPORT_SYMBOL_GPL(HYPERVISOR_multicall);
+>  EXPORT_SYMBOL_GPL(privcmd_call);
+> +EXPORT_SYMBOL_GPL(HYPERVISOR_dom0_op);
+> diff --git a/arch/arm/xen/hypercall.S b/arch/arm/xen/hypercall.S
+> index 10fd99c..16fc153 100644
+> --- a/arch/arm/xen/hypercall.S
+> +++ b/arch/arm/xen/hypercall.S
+> @@ -90,6 +90,7 @@ HYPERCALL2(physdev_op);
+>  HYPERCALL3(vcpu_op);
+>  HYPERCALL1(tmem_op);
+>  HYPERCALL2(multicall);
+> +HYPERCALL1(dom0_op);
+>  
+>  ENTRY(privcmd_call)
+>  	stmdb sp!, {r4}
+> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+> index 13671a9..ab1c9e9 100644
+> --- a/arch/arm64/kernel/efi.c
+> +++ b/arch/arm64/kernel/efi.c
+> @@ -34,6 +34,9 @@
+>  #include <asm/mmu.h>
+>  #include <asm/pgtable.h>
+>  
+> +#include <xen/xen.h>
+> +#include <xen/xen-ops.h>
+> +
+>  struct efi_memory_map memmap;
+>  
+>  static u64 efi_system_table;
+> @@ -308,13 +311,18 @@ static int __init arm64_enable_runtime_services(void)
+>  	}
+>  	set_bit(EFI_SYSTEM_TABLES, &efi.flags);
+>  
+> -	if (!efi_virtmap_init()) {
+> -		pr_err("No UEFI virtual mapping was installed -- runtime services will not be available\n");
+> -		return -1;
+> -	}
+> +	if (!xen_initial_domain()) {
+> +		if (!efi_virtmap_init()) {
+> +			pr_err("No UEFI virtual mapping was installed -- runtime services will not be available\n");
+> +			return -1;
+> +		}
+>  
+> -	/* Set up runtime services function pointers */
+> -	efi_native_runtime_setup();
+> +		/* Set up runtime services function pointers */
+> +		efi_native_runtime_setup();
+> +	} else {
+> +		/* Set up runtime services function pointers for Xen UEFI */
+> +		xen_efi_runtime_setup();
+> +	}
+>  	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+>  
+>  	efi.runtime_version = efi.systab->hdr.revision;
+> diff --git a/arch/arm64/xen/hypercall.S b/arch/arm64/xen/hypercall.S
+> index 8bbe940..f6e15aa 100644
+> --- a/arch/arm64/xen/hypercall.S
+> +++ b/arch/arm64/xen/hypercall.S
+> @@ -81,6 +81,7 @@ HYPERCALL2(physdev_op);
+>  HYPERCALL3(vcpu_op);
+>  HYPERCALL1(tmem_op);
+>  HYPERCALL2(multicall);
+> +HYPERCALL1(dom0_op);
+>  
+>  ENTRY(privcmd_call)
+>  	mov x16, x0
+> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+> index 73708ac..59aec8b 100644
+> --- a/drivers/xen/Kconfig
+> +++ b/drivers/xen/Kconfig
+> @@ -268,7 +268,7 @@ config XEN_HAVE_PVMMU
+>  
+>  config XEN_EFI
+>  	def_bool y
+> -	depends on X86_64 && EFI
+> +	depends on ARM64 || X86_64 && EFI
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Please use brackets
+
+
+>  config XEN_AUTO_XLATE
+>  	def_bool y
+> diff --git a/drivers/xen/efi.c b/drivers/xen/efi.c
+> index f745db2..5246d89 100644
+> --- a/drivers/xen/efi.c
+> +++ b/drivers/xen/efi.c
+> @@ -33,6 +33,7 @@
+>  
+>  #define INIT_EFI_OP(name) \
+>  	{.cmd = XENPF_efi_runtime_call, \
+> +	 .interface_version = XENPF_INTERFACE_VERSION, \
+>  	 .u.efi_runtime_call.function = XEN_EFI_##name, \
+>  	 .u.efi_runtime_call.misc = 0}
+
+This change won't be needed anymore if you rebase on 
+
+http://marc.info/?l=xen-devel&m=144802905409775&w=2
+
+
+> @@ -261,6 +262,7 @@ static efi_status_t xen_efi_query_capsule_caps(efi_capsule_header_t **capsules,
+>  	return efi_data(op).status;
+>  }
+>  
+> +#ifdef CONFIG_x86
+>  static efi_char16_t vendor[100] __initdata;
+>  
+>  static efi_system_table_t efi_systab_xen __initdata = {
+> @@ -319,7 +321,26 @@ static const struct efi efi_xen __initconst = {
+>  	.memmap                   = NULL, /* Not used under Xen. */
+>  	.flags			  = 0     /* Initialized later. */
+>  };
+> +#endif
+>  
+> +#ifdef CONFIG_ARM64
+> +void xen_efi_runtime_setup(void)
+> +{
+> +	efi.get_time = xen_efi_get_time;
+> +	efi.set_time = xen_efi_set_time;
+> +	efi.get_wakeup_time = xen_efi_get_wakeup_time;
+> +	efi.set_wakeup_time = xen_efi_set_wakeup_time;
+> +	efi.get_variable = xen_efi_get_variable;
+> +	efi.get_next_variable = xen_efi_get_next_variable;
+> +	efi.set_variable = xen_efi_set_variable;
+> +	efi.query_variable_info = xen_efi_query_variable_info;
+> +	efi.update_capsule = xen_efi_update_capsule;
+> +	efi.query_capsule_caps = xen_efi_query_capsule_caps;
+> +	efi.get_next_high_mono_count = xen_efi_get_next_high_mono_count;
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_X86
+>  efi_system_table_t __init *xen_efi_probe(void)
+>  {
+>  	struct xen_platform_op op = {
+> @@ -369,3 +390,4 @@ efi_system_table_t __init *xen_efi_probe(void)
+>  
+>  	return &efi_systab_xen;
+>  }
+> +#endif
+
+Instead of using #ifdef's I would move the x86 specific code into
+arch/x86/xen/efi.c. In particular xen_efi_probe, efi_xen, and
+efi_systab_xen. I think it is OK for the initialization to be arch
+specific.
+
+
+> diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
+> index e4e214a..a6c26ad 100644
+> --- a/include/xen/xen-ops.h
+> +++ b/include/xen/xen-ops.h
+> @@ -84,13 +84,23 @@ int xen_xlate_unmap_gfn_range(struct vm_area_struct *vma,
+>  bool xen_running_on_version_or_later(unsigned int major, unsigned int minor);
+>  
+>  #ifdef CONFIG_XEN_EFI
+> +#ifdef CONFIG_X86
+>  extern efi_system_table_t *xen_efi_probe(void);
+> +#endif
+> +#ifdef CONFIG_ARM64
+> +extern void xen_efi_runtime_setup(void);
+> +#endif
+>  #else
+> +#ifdef CONFIG_X86
+>  static inline efi_system_table_t __init *xen_efi_probe(void)
+>  {
+>  	return NULL;
+>  }
+>  #endif
+> +#ifdef CONFIG_ARM64
+> +static inline void xen_efi_runtime_setup(void) { }
+> +#endif
+> +#endif
+>  
+>  #ifdef CONFIG_PREEMPT
+
+I would get rid of this mess and instead I would export the functions
+defined in drivers/xen/efi.c. Then I would use them in
+arch/{arm,x86}/xen/efi.c.
