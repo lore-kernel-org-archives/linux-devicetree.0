@@ -1,53 +1,80 @@
 From: Tim Bird <tim.bird@sonymobile.com>
-Subject: Re: [PATCH 2/2] usb: phy: msm: fix connect/disconnect bug for
- dragonboard OTG port
-Date: Fri, 20 Nov 2015 14:36:55 -0800
-Message-ID: <564FA087.5050807@sonymobile.com>
-References: <1447202811-3429-1-git-send-email-tim.bird@sonymobile.com>
- <1447202811-3429-2-git-send-email-tim.bird@sonymobile.com>
- <20151111031445.GA8826@shlinux2> <56437F50.6050006@sonymobile.com>
- <20151112091349.GA3402@shlinux2> <877flhn9mh.fsf@saruman.tx.rr.com>
+Subject: [PATCH v2 2/3] usb: phy: msm: fix connect/disconnect bug for dragonboard OTG port
+Date: Fri, 20 Nov 2015 14:37:17 -0800
+Message-ID: <1448059038-6179-2-git-send-email-tim.bird@sonymobile.com>
+References: <1448059038-6179-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <877flhn9mh.fsf@saruman.tx.rr.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Peter Chen <peter.chen@freescale.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, =?UTF-8?Q?Andersson=2c_Bj=c3=b6rn?= <Bjorn.Andersson@sonymobile.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448059038-6179-1-git-send-email-tim.bird@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter.Chen@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, balbi@ti.com, Bjorn.Andersson@sonymobile.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, tbird20d@gmail.com, tim.bird@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
+Add support for async_irq to wake up driver from low power mode.
+Without this, the power management code never calls resume.
+Remove a spurious interrupt enable in the driver resume function.
 
+Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+---
+ drivers/usb/phy/phy-msm-usb.c | 17 ++++++++++++++++-
+ include/linux/usb/msm_hsusb.h |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-On 11/16/2015 09:21 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Peter Chen <peter.chen@freescale.com> writes:
->> On Wed, Nov 11, 2015 at 09:48:00AM -0800, Tim Bird wrote:
->>>
->>>
->>> On 11/10/2015 07:14 PM, Peter Chen wrote:
->>>> On Tue, Nov 10, 2015 at 04:46:51PM -0800, Tim Bird wrote:
->>>>> This fixes a bug where if you disconnect and re-connect the USB cable,
->>>>> the gadget driver stops working.
->>>>>
->>>>> Add support for async_irq to wake up driver from low power mode.
->>>>> Without this, the power management code never calls resume.
->>>>> Also, have the phy driver kick the gadget driver (chipidea otg)
->>>>> by having the chipidea driver register with it, for vbus connect
->>>>> notifications.
->>>>>
->>>>> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
->>>>> ---
->>>>>  drivers/usb/chipidea/udc.c    |  6 ++++++
->>>>>  drivers/usb/phy/phy-msm-usb.c | 16 ++++++++++++++++
->>>>>  include/linux/usb/msm_hsusb.h |  1 +
->>>>>  3 files changed, 23 insertions(+)
-> 
-> I just wanna know how you guys want this to be handled ? Through my tree
-> or chipidea's ? Or do we break the dependencies between the changes ?
-
-I'm fine with splitting it up.  I'm sending a new series with 3 patches
-right after this message.  Do both trees go to linux-next?
- -- Tim
+diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+index e40a071..db6297c 100644
+--- a/drivers/usb/phy/phy-msm-usb.c
++++ b/drivers/usb/phy/phy-msm-usb.c
+@@ -648,7 +648,6 @@ skip_phy_resume:
+ 	if (motg->async_int) {
+ 		motg->async_int = 0;
+ 		pm_runtime_put(phy->dev);
+-		enable_irq(motg->irq);
+ 	}
+ 
+ 	dev_info(phy->dev, "USB exited from low power mode\n");
+@@ -1732,6 +1731,12 @@ static int msm_otg_probe(struct platform_device *pdev)
+ 		return motg->irq;
+ 	}
+ 
++	motg->async_irq = platform_get_irq_byname(pdev, "async_irq");
++	if (motg->async_irq < 0) {
++		dev_err(&pdev->dev, "platform_get_irq for async_irq failed\n");
++		motg->async_irq = 0;
++	}
++
+ 	regs[0].supply = "vddcx";
+ 	regs[1].supply = "v3p3";
+ 	regs[2].supply = "v1p8";
+@@ -1781,6 +1786,16 @@ static int msm_otg_probe(struct platform_device *pdev)
+ 		goto disable_ldo;
+ 	}
+ 
++	if (motg->async_irq) {
++		ret = devm_request_irq(&pdev->dev, motg->async_irq,
++				      msm_otg_irq, IRQF_TRIGGER_RISING,
++				      "msm_otg", motg);
++		if (ret) {
++			dev_err(&pdev->dev, "request irq failed (ASYNC INT)\n");
++			goto disable_ldo;
++		}
++	}
++
+ 	phy->init = msm_phy_init;
+ 	phy->set_power = msm_otg_set_power;
+ 	phy->notify_disconnect = msm_phy_notify_disconnect;
+diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
+index 8c8f685..08c67a3 100644
+--- a/include/linux/usb/msm_hsusb.h
++++ b/include/linux/usb/msm_hsusb.h
+@@ -164,6 +164,7 @@ struct msm_otg {
+ 	struct usb_phy phy;
+ 	struct msm_otg_platform_data *pdata;
+ 	int irq;
++	int async_irq;
+ 	struct clk *clk;
+ 	struct clk *pclk;
+ 	struct clk *core_clk;
+-- 
+1.8.2.2
