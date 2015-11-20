@@ -1,59 +1,84 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 09/11] clk: lpc32xx: add common clock framework driver
-Date: Fri, 20 Nov 2015 20:07:46 +0200
-Message-ID: <564F6172.3090509@mleia.com>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com> <1447981511-29653-10-git-send-email-vz@mleia.com> <3762298.NKYXldtldq@wuerfel>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 02/11] dt-bindings: clock: add description of LPC32xx
+ USB clock controller
+Date: Fri, 20 Nov 2015 20:14:37 +0200
+Message-ID: <564F630D.5090201@mleia.com>
+References: <1447981511-29653-1-git-send-email-vz@mleia.com> <1447981511-29653-3-git-send-email-vz@mleia.com> <20151120164133.GA9011@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3762298.NKYXldtldq@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151120164133.GA9011@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20.11.2015 16:04, Arnd Bergmann wrote:
-> On Friday 20 November 2015 03:05:09 Vladimir Zapolskiy wrote:
+On 20.11.2015 18:41, Rob Herring wrote:
+> On Fri, Nov 20, 2015 at 03:05:02AM +0200, Vladimir Zapolskiy wrote:
+>> NXP LPC32xx USB controller has a subdevice, which controls USB AHB
+>> slave, USB OTG, USB OHCI, USB device and I2C controller to USB phy
+>> clocks, this change adds description of the clock controller, for more
+>> details reference LPC32xx User's Manual, namely USB control, OTG clock
+>> control and OTG clock status registers.
+>>
+>> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+>> ---
+>>  .../bindings/clock/nxp,lpc3220-usb-clk.txt         | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+>> new file mode 100644
+>> index 0000000..67fba7f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+>> @@ -0,0 +1,22 @@
+>> +NXP LPC32xx USB Clock Controller
 >> +
->> +struct clk_proto_t {
->> +       const char *name;
->> +       const u8 parents[LPC32XX_CLK_PARENTS_MAX];
->> +       u8 num_parents;
->> +       unsigned long flags;
->> +};
+>> +Required properties:
+>> +- compatible: should be "nxp,lpc3220-usb-clk"
+>> +- reg:  should contain clock controller registers location and length
+>> +- #clock-cells: must be 1, the cell holds id of a clock provided by the
+>> +  USB clock controller
 >> +
->> +#define CLK_PREFIX(LITERAL)            LPC32XX_CLK_ ## LITERAL
->> +#define NUMARGS(...)   (sizeof((int[]){__VA_ARGS__})/sizeof(int))
+>> +Examples:
 >> +
->> +#define LPC32XX_CLK_DEFINE(_idx, _name, _flags, ...)           \
->> +       [CLK_PREFIX(_idx)] = {                                  \
->> +               .name = #_name,                                 \
->> +               .flags = _flags,                                \
->> +               .parents = { __VA_ARGS__ },                     \
->> +               .num_parents = NUMARGS(__VA_ARGS__),            \
->> +        }
->> +
+>> +	usb {
 > 
-> Try to not outsmart yourself with the macros. It's better to avoid
-> string concatenation so it's possible to grep for uses of some
-> constant.
+> I don't understand the full structure of USB blocks. Can you make the 
+> example complete. All the blocks are a child of this node?
+
+Yes, all the blocks are children of this node.
+
+USB controller contains 5 subdevices, interestingly one of these
+subdevices, I2C controller, is the same as a general purpose I2C
+controller device.
+
+Please find some description here:
+http://www.spinics.net/lists/devicetree/msg98538.html
+
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		compatible = "simple-bus";
+>> +		ranges = <0x0 0x31020000 0x00001000>;
+>> +
+>> +		usbclk: clock-controller@F00 {
+> lower case                               ^
 > 
-> I would probably not use a macro at all here and just open-code the
-> entire table. If you ensure that '0' is not a valid parent, then
-> you can leave out the .num_parents field and just look for the
-> zero-termination.
+>> +			compatible = "nxp,lpc3220-usb-clk";
+>> +			reg = <0xF00 0x100>;
+> 
+> lower case
 
-Macros are here for simplicity, code size reduction and to avoid some
-stupid mistakes like different number of .parents and .num_parents.
+Ok, thanks for pointing it out.
 
-I believe macro unwrapping in this code will add another 1000 LoC and
-will result in quite unreadable and less maintainable code.
+>> +			#clock-cells = <1>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.1.4
+>>
 
 --
-Best wishes,
 Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
