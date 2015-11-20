@@ -1,99 +1,65 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH 01/13] Xen : Hide UART used by Xen
-Date: Fri, 20 Nov 2015 16:07:26 +0000
-Message-ID: <alpine.DEB.2.02.1511201541040.1107@kaball.uk.xensource.com>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
- <1447754231-7772-2-git-send-email-shannon.zhao@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
+ wait cycles using the SPI Wait Clock Register
+Date: Fri, 20 Nov 2015 10:12:46 -0600
+Message-ID: <20151120161246.GB21921@rob-hp-laptop>
+References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
+ <1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
+ <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
+ <CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
+ <CAGRGNgV0kOkye-Zu4WGQKgGim7N2HB9rAFJ3HNQS89Rr6_WexQ@mail.gmail.com>
+ <CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A@mail.gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447754231-7772-2-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBA4NXWZAKGQEFV5QPPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CC'ing ACPI maintainers.
-
-Please use ./scripts/get_maintainer.pl to retrieve a list of maintainers
-to CC for each patch.
-
-
-On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Fri, Nov 20, 2015 at 02:56:34PM +0100, Marcus Weseloh wrote:
+> Hi Julien,
 > 
-> According to the STAO table, hide UART used by Xen from Dom0.
+> 2015-11-20 11:12 GMT+01:00 Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > Having magic numbers is kind-of a drivers' job.
+
+I guess all my comments were already raised...
+
 > 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/acpi/bus.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+> Yes, of course. What I meant was that I didn't feel comfortable to
+> include this magic number in driver code because I'm not 100% sure if
+> it is correct across all SPI configurations and SoCs that this driver
+> supports (A10 / A20).
+
+You could not subtract off 3 that way you meet the minimum time no 
+matter what. If other platforms are not setting this property, then I 
+would expect the behavior is unchanged. If they do want to set it, it is 
+their job to validate that it is correct. If it differs, the compatible 
+string can help with that.
+
+> > (and the wdelay should
+> > arguably be a core-spi thing, not a sunxi thing, but that's a separate
+> > discussion)
 > 
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index a212cef..e93806b 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -46,6 +46,7 @@ ACPI_MODULE_NAME("bus");
->  struct acpi_device *acpi_root;
->  struct proc_dir_entry *acpi_root_dir;
->  EXPORT_SYMBOL(acpi_root_dir);
-> +static u64 uart_addr;
+> I've been thinking about that, but it seemed to big a change to
+> attempt with my limited kernel hacking experience.
 
-I would call this spcr_addr or spcr_uart_addr because there are many
-uarts on the system but only one spcr. It might make sense to initialize
-this to 0xffffffffffffffff rather than 0, which could actually be a
-correct uart address.
+It is not any bigger. You just need to document it in the core binding. 
+It would still be read by the drivers using it.
 
-
->  #ifdef CONFIG_X86
->  #ifdef CONFIG_ACPI_CUSTOM_DSDT
-> @@ -93,6 +94,16 @@ acpi_status acpi_bus_get_status_handle(acpi_handle handle,
->  {
->  	acpi_status status;
->
-> +	if (uart_addr) {
-> +		u64 addr;
-> +		status = acpi_evaluate_integer(handle, METHOD_NAME__ADR, NULL,
-> +					       &addr);
-> +		if (ACPI_SUCCESS(status) && (addr == uart_addr)) {
-> +			*sta = 0;
-> +			return AE_OK;
-> +		}
-> +	}
-> +
->  	status = acpi_evaluate_integer(handle, "_STA", NULL, sta);
->  	if (ACPI_SUCCESS(status))
->  		return AE_OK;
-> @@ -1069,6 +1080,7 @@ EXPORT_SYMBOL_GPL(acpi_kobj);
->  static int __init acpi_init(void)
->  {
->  	int result;
-> +	struct acpi_table_stao *stao_ptr;
->  
->  	if (acpi_disabled) {
->  		printk(KERN_INFO PREFIX "Interpreter disabled.\n");
-> @@ -1081,6 +1093,16 @@ static int __init acpi_init(void)
->  		acpi_kobj = NULL;
->  	}
->  
-> +	acpi_get_table(ACPI_SIG_STAO, 1,
-> +		       (struct acpi_table_header **)&stao_ptr);
-> +	if(stao_ptr->ignore_uart)
-> +	{
-
-Please follow the linux coding style. You can use
-./scripts/checkpatch.pl to check for coding style errors.
-
-
-> +		struct acpi_table_spcr *spcr_ptr;
-> +		acpi_get_table(ACPI_SIG_SPCR, 1,
-> +			       (struct acpi_table_header **)&spcr_ptr);
-> +		uart_addr = spcr_ptr->serial_port.address;
-> +	}
-> +
->  	init_acpi_device_notify();
->  	result = acpi_bus_init();
->  	if (result) {
-> -- 
-> 2.1.0
+> Mark, do you think we should rather talk about adding support for
+> options like this delay to spi-core? Or would it be OK to add it to
+> the sun4i driver and possibly refactor later?
 > 
+> Cheers,
+> 
+>   Marcus
