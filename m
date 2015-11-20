@@ -1,84 +1,60 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 00/11] clk: lpc32xx: add clock support for NXP LPC32xx
-Date: Fri, 20 Nov 2015 03:05:00 +0200
-Message-ID: <1447981511-29653-1-git-send-email-vz@mleia.com>
+Subject: [PATCH 11/11] arm: dts: lpc32xx: remove clock frequency property from UART device nodes
+Date: Fri, 20 Nov 2015 03:05:11 +0200
+Message-ID: <1447981511-29653-12-git-send-email-vz@mleia.com>
+References: <1447981511-29653-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447981511-29653-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This changeset adds common clock framework driver for NXP LPC32xx
-boards.
+If clock-frequency property is given, then it substitutes calculation
+of supplying clock frequency from parent clock, this may break UART,
+if parent clock is given and managed by common clock framework.
 
-The changeset has dependencies on the recent updates to LPC32xx DTS:
-  http://permalink.gmane.org/gmane.linux.ports.arm.kernel/456304
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-The RFC version of CCF driver 9/11 can be found here:
-  http://www.spinics.net/lists/devicetree/msg100583.html
-
-Changes from RFC to v1:
-* added definitions of a missed IRDA clock,
-* renamed compatible property from lpc32xx-scb to lpc32xx-clk
-* switched to regmap interface instead of mmio, this is required to
-  secure access to registers shared between pinmux, dma and clock
-  driver, unfortunately this change has to pull some code snippets
-  from common gate, divider and mux helpers rebased on regmap API,
-* split clock definitions from the driver to be able to update
-  dts files separately from CCF driver.
-
-The driver is written from scratch, here are main functional
-differences with the legacy driver arch/arm/mach-lpc32xx/clock.c:
-* serialized access to SCB registers,
-* reworked routines to select PLL parameters,
-* now the clock driver has detailed description of all clocks,
-  the original driver misses several clock entries and most of fine
-  grained clock controls, here every mux and divider are accounted,
-* now clocks and clock hierarchies can be described in board DT file,
-* sophisticated management of USB clocks, for example now USB device
-  controller needs only one clock instead of USB PLL, USB OTG and USB
-  device clocks,
-* other benefits from a driver powered by CCF.
-
-Patch 9/11 may produce false positives from checkpatch, the fix
-to checkpatch can be found in Andrew's tree.
-
-Vladimir Zapolskiy (11):
-  dt-bindings: clock: add description of LPC32xx clock controller
-  dt-bindings: clock: add description of LPC32xx USB clock controller
-  dt-bindings: clock: add NXP LPC32xx clock list for consumers
-  arm: dts: lpc32xx: add device nodes for external oscillators
-  arm: dts: lpc32xx: add clock controller device node
-  arm: dts: lpc32xx: add clock properties to device nodes
-  arm: dts: lpc32xx: add USB clock controller
-  clk: lpc18xx: add NXP specific common clock framework selection
-  clk: lpc32xx: add common clock framework driver
-  arm: lpc32xx: switch to common clock framework
-  arm: dts: lpc32xx: remove clock frequency property from UART device
-    nodes
-
- .../devicetree/bindings/clock/nxp,lpc3220-clk.txt  |   30 +
- .../bindings/clock/nxp,lpc3220-usb-clk.txt         |   22 +
- arch/arm/Kconfig                                   |    4 +-
- arch/arm/boot/dts/lpc32xx.dtsi                     |   87 +-
- arch/arm/mach-lpc32xx/Makefile                     |    3 +-
- arch/arm/mach-lpc32xx/clock.c                      | 1284 ----------------
- arch/arm/mach-lpc32xx/phy3250.c                    |    1 -
- arch/arm/mach-lpc32xx/serial.c                     |    3 -
- arch/arm/mach-lpc32xx/timer.c                      |  144 --
- drivers/clk/Kconfig                                |    6 +
- drivers/clk/Makefile                               |    2 +-
- drivers/clk/nxp/Makefile                           |    1 +
- drivers/clk/nxp/clk-lpc32xx.c                      | 1562 ++++++++++++++++++++
- include/dt-bindings/clock/lpc32xx-clock.h          |   56 +
- 14 files changed, 1765 insertions(+), 1440 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
- create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
- delete mode 100644 arch/arm/mach-lpc32xx/clock.c
- delete mode 100644 arch/arm/mach-lpc32xx/timer.c
- create mode 100644 drivers/clk/nxp/clk-lpc32xx.c
- create mode 100644 include/dt-bindings/clock/lpc32xx-clock.h
-
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 68bf011..f396343 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -209,7 +209,6 @@
+ 				compatible = "nxp,lpc3220-uart";
+ 				reg = <0x40090000 0x1000>;
+ 				interrupts = <9 0>;
+-				clock-frequency = <13000000>;
+ 				reg-shift = <2>;
+ 				clocks = <&clk LPC32XX_CLK_UART5>;
+ 				status = "disabled";
+@@ -219,7 +218,6 @@
+ 				compatible = "nxp,lpc3220-uart";
+ 				reg = <0x40080000 0x1000>;
+ 				interrupts = <7 0>;
+-				clock-frequency = <13000000>;
+ 				reg-shift = <2>;
+ 				clocks = <&clk LPC32XX_CLK_UART3>;
+ 				status = "disabled";
+@@ -229,7 +227,6 @@
+ 				compatible = "nxp,lpc3220-uart";
+ 				reg = <0x40088000 0x1000>;
+ 				interrupts = <8 0>;
+-				clock-frequency = <13000000>;
+ 				reg-shift = <2>;
+ 				clocks = <&clk LPC32XX_CLK_UART4>;
+ 				status = "disabled";
+@@ -239,7 +236,6 @@
+ 				compatible = "nxp,lpc3220-uart";
+ 				reg = <0x40098000 0x1000>;
+ 				interrupts = <10 0>;
+-				clock-frequency = <13000000>;
+ 				reg-shift = <2>;
+ 				clocks = <&clk LPC32XX_CLK_UART6>;
+ 				status = "disabled";
 -- 
 2.1.4
 
