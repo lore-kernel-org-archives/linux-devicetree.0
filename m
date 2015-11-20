@@ -1,103 +1,51 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH V3 net-next 4/5] net:hns: Add support of ethtool TSO set
- option for Hip06 in HNS
-Date: Fri, 20 Nov 2015 17:07:17 +0300
-Message-ID: <564F2915.1090507@cogentembedded.com>
-References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
- <1447966706-16219-5-git-send-email-salil.mehta@huawei.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 02/13] dmaengine: Introduce dma_request_slave_channel_compat_reason()
+Date: Fri, 20 Nov 2015 16:08:47 +0200
+Message-ID: <CAHp75VcEb1OP=mTQEAuQ6G_RswPCfvG4UzcFG+NBfJxABZVBcA@mail.gmail.com>
+References: <1432646768-12532-1-git-send-email-peter.ujfalusi@ti.com>
+	<4533695.7ZVFN1S94o@wuerfel>
+	<564EF502.6040708@ti.com>
+	<6118451.vaLZWOZEF5@wuerfel>
+	<CAHp75VdoHqPMNGFfz4mPhX+Lw+vxgiyqFS8j5+kQ9Z9CHt=OTA@mail.gmail.com>
+	<564F1253.4000800@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1447966706-16219-5-git-send-email-salil.mehta@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Salil Mehta <salil.mehta@huawei.com>, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564F1253.4000800-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2015 11:58 PM, Salil Mehta wrote:
-
-> From: Salil <salil.mehta@huawei.com>
+On Fri, Nov 20, 2015 at 2:30 PM, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> wrote:
+> On 11/20/2015 02:24 PM, Andy Shevchenko wrote:
+>> On Fri, Nov 20, 2015 at 12:58 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> On Friday 20 November 2015 12:25:06 Peter Ujfalusi wrote:
+>>>> On 11/19/2015 01:25 PM, Arnd Bergmann wrote:
+>>
+>>> Another idea would be to remove the filter function from struct dma_chan_map
+>>> and pass the map through platform data
+>>
+>> Why not unified device properties?
 >
-> This patch adds the support of ethtool TSO option to V1 patch,
-> meant to add support of Hip06 SoC to HNS
+> Is this some Windows/ACPI feature?
+
+Nope.
+
+Check drivers/base/property.c
+
+> Quick search gives mostly MSDN and
+> Windows10 related links.
 >
-> Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-> Signed-off-by: lisheng <lisheng011@huawei.com>
-> ---
->   drivers/net/ethernet/hisilicon/hns/hns_enet.c |   47 +++++++++++++++++++++++++
->   1 file changed, 47 insertions(+)
->
-> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-> index 055e14c..a0763ab 100644
-> --- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-> +++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-> @@ -1386,6 +1386,51 @@ static int hns_nic_change_mtu(struct net_device *ndev, int new_mtu)
->   	return ret;
->   }
->
-> +static int hns_nic_set_features(struct net_device *netdev,
-> +				netdev_features_t features)
-> +{
-> +	struct hns_nic_priv *priv = netdev_priv(netdev);
-> +	struct hnae_handle *h = priv->ae_handle;
-> +
-> +	switch (priv->enet_ver) {
-> +	case AE_VERSION_1:
-> +		if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6))
+> We only need dma_chan_map for platforms which has not been converted to DT and
+> still using legacy boot. Or platforms which can still boot in legacy mode. In
+> DT/ACPI mode we do not need this map at all.
 
-		if ((features & (NETIF_F_TSO| NETIF_F_TSO6))
 
-> +			netdev_info(netdev, "enet v1 do not support tso!\n");
-> +	break;
-
-    The *break* should have the same indentation level as *if*.
-
-> +	default:
-> +		if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6)) {
-
-	if ((features & (NETIF_F_TSO| NETIF_F_TSO6))
-
-> +			priv->ops.fill_desc = fill_tso_desc;
-> +			priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tso;
-> +			/* The chip only support 7*4096 */
-> +			netif_set_gso_max_size(netdev, 7 * 4096);
-> +			h->dev->ops->set_tso_stats(h, 1);
-> +		} else {
-> +			priv->ops.fill_desc = fill_v2_desc;
-> +			priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tx;
-> +			h->dev->ops->set_tso_stats(h, 0);
-> +		}
-> +	break;
-
-    Same here.
-
-> +	}
-> +	netdev->features = features;
-> +	return 0;
-> +}
-> +
-> +static netdev_features_t hns_nic_fix_features(
-> +		struct net_device *netdev, netdev_features_t features)
-> +{
-> +	struct hns_nic_priv *priv = netdev_priv(netdev);
-> +
-> +	switch (priv->enet_ver) {
-> +	case AE_VERSION_1:
-> +		features &= ~(NETIF_F_TSO | NETIF_F_TSO6 |
-> +				NETIF_F_HW_VLAN_CTAG_FILTER);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-
-    Here it's indented correctly.
-
-> +	return features;
-> +}
-> +
->   /**
->    * nic_set_multicast_list - set mutl mac address
->    * @netdev: net device
-[...]
-
-MBR, Sergei
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
