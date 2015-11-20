@@ -1,53 +1,92 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/7] Various touchscreens: Support axis
- inversion / swapping / extra gpios
-Date: Fri, 20 Nov 2015 12:33:20 +0100
-Message-ID: <564F0500.6020606@redhat.com>
-References: <1448018233-27824-1-git-send-email-hdegoede@redhat.com>
- <20151120112245.GC8644@n2100.arm.linux.org.uk>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v3 1/3] mailbox: Add support for APM X-Gene platform
+ mailbox driver
+Date: Fri, 20 Nov 2015 17:17:16 +0530
+Message-ID: <CABb+yY2zHycEmsVvp8OFwpJ1PZgrEPpV-oOe56wgFJ=EE0nTcg@mail.gmail.com>
+References: <1429863912.2927.43.camel@x220>
+	<cover.1447091625.git.dhdang@apm.com>
+	<b6f12c4d5f45205c356a61acd26aecff70b54e68.1447091626.git.dhdang@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCEKXSZAKGQEHID5OGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151120112245.GC8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b6f12c4d5f45205c356a61acd26aecff70b54e68.1447091626.git.dhdang@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Duc Dang <dhdang@apm.com>
+Cc: Paul Bolle <pebolle@tiscali.nl>, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 20-11-15 12:22, Russell King - ARM Linux wrote:
-> On Fri, Nov 20, 2015 at 12:17:06PM +0100, Hans de Goede wrote:
->> This patch-set extends the of_touchscreen.c helpers to (optionally) also
->> deal with axis inversion / swapping, and patches a bunch of drivers to use
->> this new functionality.
+On Mon, Nov 9, 2015 at 11:35 PM, Duc Dang <dhdang@apm.com> wrote:
+> X-Gene mailbox controller provides 8 mailbox channels, with
+> each channel has a dedicated interrupt line.
 >
-> What's wrong with using tslib?  tslib supports axis transformations in
-> userspace via a set of filters.
+> [dhdang: rebase over 4.3-rc5, some minor changes to
+> address comment in v2 patch set]
+>
+Do you want this to go into git logs?
 
-Doing this in the kernel when we know that the touchscreen is always
-mounted upside down (or rotated 90 degress) on a certain tablet makes things
-just work, where as tslib requires manual configuration by the user.
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> Signed-off-by: Duc Dang <dhdang@apm.com>
+> ---
+here is the right place for any history. And it is good practice to
+specify whatever changes were made from last revision.
 
-Also most distributions are not even shipping tslib, some of this can be
-done with the xf86-input-evdev driver (which is the upstream xorg default
-driver for touchscreens) too, but again requires manual configuration and
-the same goes for the new libinput stack to which xorg is moving and which
-is the default for wayland.
 
-Also note that this patch-set is not adding new functionality. We already
-have devicetree-bindings to indicate to the driver that axis inversion /
-swapping should be done in the driver, and these are already used in
-various drivers. This patch-set just makes it easier to add support for
-these already existing (and documented) devicetree properties.
+> +
+> +struct slimpro_mbox_chan {
+> +       struct device *dev;
+> +       struct mbox_chan *chan;
+> +       void __iomem *reg;
+> +       int id;
+>
+You don't seem to really need 'id'.
 
-Regards,
 
-Hans
+> +
+> +static void mb_chan_enable_int(struct slimpro_mbox_chan *mb_chan, u32 mask)
+> +{
+> +       u32 val = readl(mb_chan->reg + REG_DB_STATMASK);
+> +
+> +       val &= ~mask;
+> +       writel(val, mb_chan->reg + REG_DB_STATMASK);
+> +}
+> +
+> +static void mb_chan_disable_int(struct slimpro_mbox_chan *mb_chan, u32 mask)
+> +{
+> +       u32 val = readl(mb_chan->reg + REG_DB_STATMASK);
+> +
+> +       val |= mask;
+> +       writel(val, mb_chan->reg + REG_DB_STATMASK);
+> +}
+> +
+These 2 functions are called just once. And do what other drivers
+usually inline. Wouldn't it be better to directly set & clear the bit
+when needed?
+
+> +static int slimpro_mbox_send_data(struct mbox_chan *chan, void *msg)
+> +{
+> +       struct slimpro_mbox_chan *mb_chan =
+> +                               (struct slimpro_mbox_chan *)chan->con_priv;
+> +
+You don't need to typecast a void pointer. Here and elsewhere.
+
+
+> +
+> +       /* Setup mailbox links */
+> +       for (i = 0; i < MBOX_CNT; i++) {
+> +               ctx->mc[i].irq = platform_get_irq(pdev, i);
+>
+You expect every platform to provide exactly 'MBOX_CNT' irqs and they
+must be different (because you don't 'SHARE' when you request).
+Usually developers relax either of the conditions.
+
+
+> +static struct platform_driver slimpro_mbox_driver = {
+> +       .probe  = slimpro_mbox_probe,
+> +       .remove = slimpro_mbox_remove,
+> +       .driver = {
+> +               .name = "xgene-slimpro-mbox",
+> +               .owner = THIS_MODULE,
+>
+No need to set .owner.
+
+Cheers.
