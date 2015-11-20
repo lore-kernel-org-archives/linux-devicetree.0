@@ -1,161 +1,108 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH 06/13] Xen: ARM: Add support for mapping amba device
- mmio
-Date: Fri, 20 Nov 2015 16:39:17 +0000
-Message-ID: <alpine.DEB.2.02.1511201638330.1107@kaball.uk.xensource.com>
-References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
- <1447754231-7772-7-git-send-email-shannon.zhao@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: sun4i: Add backlight node to
+ pov protab2 ips9 tablet
+Date: Fri, 20 Nov 2015 17:41:09 +0100
+Message-ID: <20151120164109.GI32142@lukather>
+References: <1448027950-14629-1-git-send-email-hdegoede@redhat.com>
+ <1448027950-14629-3-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447754231-7772-7-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hangaohuai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SqJDPA0lBYgnDFWV"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJU2XWZAKGQERIAPJGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448027950-14629-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Nov 2015, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Add a bus_notifier for AMBA bus device in order to map the device
-> mmio regions when DOM0 booting with ACPI.
-> 
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--SqJDPA0lBYgnDFWV
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Please use scripts/checkpatch.pl to check the coding style
-
-
->  drivers/xen/Makefile |  1 +
->  drivers/xen/amba.c   | 99 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 100 insertions(+)
->  create mode 100644 drivers/xen/amba.c
+On Fri, Nov 20, 2015 at 02:59:09PM +0100, Hans de Goede wrote:
+> Add a node describing the lcd panel backlight on the pov protab2 ips9
+> tablet.
 > 
-> diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
-> index 2f867e7..139bd0b 100644
-> --- a/drivers/xen/Makefile
-> +++ b/drivers/xen/Makefile
-> @@ -12,6 +12,7 @@ CFLAGS_features.o			:= $(nostackp)
->  CFLAGS_efi.o				+= -fshort-wchar
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Fixed the conflict and applied. Thanks,
+
+Maxime
+
+> ---
+>  arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+> index 0e5124f..1f92ec7 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+> @@ -47,6 +47,7 @@
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/pinctrl/sun4i-a10.h>
+> +#include <dt-bindings/pwm/pwm.h>
 >  
->  dom0-$(CONFIG_ARM64) += platform.o
-> +dom0-$(CONFIG_ARM_AMBA) += amba.o
->  dom0-$(CONFIG_PCI) += pci.o
->  dom0-$(CONFIG_USB_SUPPORT) += dbgp.o
->  dom0-$(CONFIG_XEN_ACPI) += acpi.o $(xen-pad-y)
-> diff --git a/drivers/xen/amba.c b/drivers/xen/amba.c
-> new file mode 100644
-> index 0000000..e491c8e
-> --- /dev/null
-> +++ b/drivers/xen/amba.c
-> @@ -0,0 +1,99 @@
-> +/*
-> + * Copyright (c) 2015, Linaro Limited.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-> + * Place - Suite 330, Boston, MA 02111-1307 USA.
-> + *
-> + * Author: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + */
+>  / {
+>  	model = "Point of View Protab2-IPS9";
+> @@ -56,6 +57,16 @@
+>  		serial0 = &uart0;
+>  	};
+>  
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&bl_en_pin_protab>;
+> +		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> +		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+> +		default-brightness-level = <8>;
+> +		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+> +	};
 > +
-> +#include <linux/amba/bus.h>
-> +#include <linux/acpi.h>
-> +#include <xen/xen.h>
-> +#include <xen/interface/memory.h>
-> +#include <asm/xen/hypervisor.h>
-> +#include <asm/xen/hypercall.h>
+>  	chosen {
+>  		stdout-path = "serial0:115200n8";
+>  	};
+> @@ -145,6 +156,13 @@
+>  };
+>  
+>  &pio {
+> +	bl_en_pin_protab: bl_en_pin@0 {
+> +		allwinner,pins = "PH7";
+> +		allwinner,function = "gpio_out";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +	};
 > +
-> +static int xen_map_amba_device_mmio(struct amba_device *adev)
-> +{
-> +	int rc = 0;
-> +	struct resource *r = &adev->res;
-> +
-> +	if (resource_type(r) == IORESOURCE_MEM)
-> +	{
-> +		int j;
-> +		int nr = DIV_ROUND_UP(resource_size(r), PAGE_SIZE);
-> +		xen_pfn_t *gpfns = kmalloc(sizeof(xen_pfn_t) * nr, GFP_KERNEL);
-> +		xen_ulong_t *idxs = kmalloc(sizeof(xen_ulong_t) * nr,
-> +					    GFP_KERNEL);
-> +		int *errs = kmalloc(sizeof(int) * nr, GFP_KERNEL);
-> +		struct xen_add_to_physmap_range xatp;
-> +
-> +		for (j = 0; j < nr; j++) {
-> +			gpfns[j] = (r->start >> PAGE_SHIFT) + j;
-> +			idxs[j] = (r->start >> PAGE_SHIFT) + j;
-> +			errs[j] = 0;
-
-same comments as before: use XEN_PFN_DOWN and check for return errors
-from kmalloc
-
-
-> +		}
-> +
-> +		xatp.domid = DOMID_SELF;
-> +		xatp.size = nr;
-> +		xatp.space = XENMAPSPACE_dev_mmio;
-> +
-> +		set_xen_guest_handle(xatp.gpfns, gpfns);
-> +		set_xen_guest_handle(xatp.idxs, idxs);
-> +		set_xen_guest_handle(xatp.errs, errs);
-> +
-> +		rc = HYPERVISOR_memory_op(XENMEM_add_to_physmap_range, &xatp);
-> +
-> +		kfree(gpfns);
-> +		kfree(idxs);
-> +		kfree(errs);
-> +		if (rc != 0)
-> +			return rc;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static int xen_amba_notifier(struct notifier_block *nb,
-> +			     unsigned long action, void *data)
-> +{
-> +	struct amba_device *adev = to_amba_device(data);
-> +	int r = 0;
-> +
-> +	if (!acpi_disabled && (action == BUS_NOTIFY_ADD_DEVICE))
-> +		r = xen_map_amba_device_mmio(adev);
-> +
-> +	if (r)
-> +	{
-> +		dev_err(&adev->dev, "Failed to add_to_physmap device (%s) mmio!\n",
-> +			adev->dev.init_name);
-> +		return NOTIFY_OK;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block amba_device_nb = {
-> +	.notifier_call = xen_amba_notifier,
+>  	touchscreen_pins: touchscreen_pins@0 {
+>  		allwinner,pins = "PA5", "PB13";
+>  		allwinner,function = "gpio_out";
+> @@ -167,6 +185,12 @@
+>  	};
+>  };
+>  
+> +&pwm {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm0_pins_a>;
+> +	status = "okay";
 > +};
 > +
-> +static int __init register_xen_amba_notifier(void)
-> +{
-> +	if (!xen_initial_domain())
-> +		return 0;
-> +
-> +	return bus_register_notifier(&amba_bustype, &amba_device_nb);
-> +}
-> +
-> +arch_initcall(register_xen_amba_notifier);
+>  &reg_dcdc2 {
+>  	regulator-always-on;
+>  	regulator-min-microvolt = <1000000>;
 > -- 
-> 2.1.0
+> 2.5.0
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--SqJDPA0lBYgnDFWV--
