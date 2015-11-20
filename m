@@ -1,148 +1,113 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 4/6] clk: berlin: add clk support for berlin4ct
-Date: Fri, 20 Nov 2015 21:56:34 +0100
-Message-ID: <564F8902.4000405@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] arm64: dts: berlin4ct: add pll and clock nodes
+Date: Fri, 20 Nov 2015 22:06:59 +0100
+Message-ID: <564F8B73.7070403@gmail.com>
 References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
- <1448008952-1787-5-git-send-email-jszhang@marvell.com>
+ <1448008952-1787-7-git-send-email-jszhang@marvell.com>
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1448008952-1787-5-git-send-email-jszhang@marvell.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, antoine.tenart@free-electrons.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448008952-1787-7-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 20.11.2015 09:42, Jisheng Zhang wrote:
-> This patch supports the gateclk and berlin-clk in berlin4ct SoC.
+> Add syspll, mempll, cpupll, gateclk and berlin-clk nodes.
 > 
-> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/clk/berlin/Makefile        |  2 +-
->  drivers/clk/berlin/clk-berlin4ct.c | 97 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 98 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/berlin/clk-berlin4ct.c
+>  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 38 ++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 > 
-> diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
-> index fc92151..accfc3a 100644
-> --- a/drivers/clk/berlin/Makefile
-> +++ b/drivers/clk/berlin/Makefile
-> @@ -1,5 +1,5 @@
->  obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
-> -obj-y += pll.o clk.o gate.o
-> +obj-y += pll.o clk.o gate.o clk-berlin4ct.o
+> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> index a4a1876..808a997 100644
+> --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> @@ -42,6 +42,7 @@
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> +#include <dt-bindings/clock/berlin4ct.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+>  / {
+> @@ -135,6 +136,22 @@
+>  			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>  		};
+>  
+> +		cpupll: cpupll {
+> +			compatible = "marvell,berlin-pll";
+> +			reg = <0x922000 0x14>, <0xea0710 4>;
+> +			#clock-cells = <0>;
+> +			clocks = <&osc>, <&clk CLK_CPUFASTREF>;
+> +			bypass-shift = /bits/ 8 <2>;
+> +		};
+> +
+> +		mempll: mempll {
+> +			compatible = "marvell,berlin-pll";
+> +			reg = <0x940034 0x14>, <0xea0710 4>;
 
-This will always compile clk-berlin4ct unconditionally on bg2x too.
+Whenever you see overlapping/repeating reg ranges, e.g. <0xea0710 4>
+you can be sure you are not representing HW structure but driver
+structure here.
 
-Also, keep the naming style.
+Please merge clocks/gates/plls to a single clock complex node
+and deal with the internals by using "simple-mfd" and "syscon" regmaps.
+
+> +			#clock-cells = <0>;
+> +			clocks = <&osc>, <&clk CLK_MEMFASTREF>;
+> +			bypass-shift = /bits/ 8 <1>;
+> +		};
+> +
+>  		apb@e80000 {
+>  			compatible = "simple-bus";
+>  			#address-cells = <1>;
+> @@ -225,6 +242,27 @@
+>  			};
+>  		};
+>  
+> +		syspll: syspll {
+> +			compatible = "marvell,berlin-pll";
+> +			reg = <0xea0200 0x14>, <0xea0710 4>;
+> +			#clock-cells = <0>;
+> +			clocks = <&osc>;
+> +			bypass-shift = /bits/ 8 <0>;
+> +		};
+> +
+> +		gateclk: gateclk {
+> +			compatible = "marvell,berlin4ct-gateclk";
+> +			reg = <0xea0700 4>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		clk: clk {
+> +			compatible = "marvell,berlin4ct-clk";
+> +			reg = <0xea0720 0x144>;
+
+Looking at the reg ranges, I'd say that they are all clock related
+and pretty close to each other:
+
+gateclk: reg = <0xea0700 4>;
+bypass:  reg = <0xea0710 4>;
+clk:     reg = <0xea0720 0x144>;
+
+So, please just follow the OF/driver structure we already
+have for Berlin2.
 
 Sebastian
 
->  obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
->  obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
->  obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
-> diff --git a/drivers/clk/berlin/clk-berlin4ct.c b/drivers/clk/berlin/clk-berlin4ct.c
-> new file mode 100644
-> index 0000000..0d994a4
-> --- /dev/null
-> +++ b/drivers/clk/berlin/clk-berlin4ct.c
-> @@ -0,0 +1,97 @@
-> +/*
-> + * Copyright (c) 2015 Marvell Technology Group Ltd.
-> + *
-> + * Author: Jisheng Zhang <jszhang@marvell.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
+> +			#clock-cells = <1>;
+> +			clocks = <&syspll>;
+> +		};
 > +
-> +#include <linux/clk-provider.h>
-> +
-> +#include "clk.h"
-> +
-> +static struct clk_onecell_data gateclk_data;
-> +static struct clk_onecell_data clk_data;
-> +
-> +static const struct gateclk_desc berlin4ct_gates[] __initconst = {
-> +	{ "tspsysclk",		"perifsysclk",	0 },
-> +	{ "usb0coreclk",	"perifsysclk",	1 },
-> +	{ "zspsysclk",		"perifsysclk",	2 },
-> +	{ "sdiosysclk",		"perifsysclk",	3 },
-> +	{ "ethcoreclk",		"perifsysclk",	4 },
-> +	{ "pcie0sys",		"perifsysclk",	6 },
-> +	{ "sata0core",		"perifsysclk",	7 },
-> +	{ "nfcsysclk",		"perifsysclk",	8 },
-> +	{ "emmcsysclk",		"perifsysclk",	9 },
-> +	{ "ihb0sysclk",		"perifsysclk",	10 },
-> +};
-> +
-> +static void __init berlin4ct_gateclk_setup(struct device_node *np)
-> +{
-> +	int n = ARRAY_SIZE(berlin4ct_gates);
-> +
-> +	berlin_gateclk_setup(np, berlin4ct_gates, &gateclk_data, n);
-> +}
-> +CLK_OF_DECLARE(berlin4ct_gateclk, "marvell,berlin4ct-gateclk",
-> +	       berlin4ct_gateclk_setup);
-> +
-> +static const struct clk_desc berlin4ct_descs[] __initconst = {
-> +	{ "cpufastrefclk",	0x0 },
-> +	{ "memfastrefclk",	0x4 },
-> +	{ "cfgclk",		0x20,	CLK_IGNORE_UNUSED },
-> +	{ "perifsysclk",	0x24,	CLK_IGNORE_UNUSED },
-> +	{ "hbclk",		0x28 },
-> +	{ "atbclk",		0x2c },
-> +	{ "decoderclk",		0x40 },
-> +	{ "decoderm3clk",	0x44 },
-> +	{ "decoderpcubeclk",	0x48 },
-> +	{ "encoderclk",		0x4c },
-> +	{ "ovpcoreclk",		0x50 },
-> +	{ "gfx2dcoreclk",	0x60 },
-> +	{ "gfx3dcoreclk",	0x64 },
-> +	{ "gfx3dshclk",		0x68 },
-> +	{ "gfx3dsysclk",	0x6c },
-> +	{ "gfx2dsysclk",	0x70 },
-> +	{ "aviosysclk",		0x80 },
-> +	{ "vppsysclk",		0x84 },
-> +	{ "eddcclk",		0x88 },
-> +	{ "aviobiuclk",		0x8c },
-> +	{ "zspclk",		0xa0 },
-> +	{ "tspclk",		0xc0 },
-> +	{ "tsprefclk",		0xc4 },
-> +	{ "ndsclk",		0xc8 },
-> +	{ "nocsclk",		0xcc },
-> +	{ "apbcoreclk",		0xd0,	CLK_IGNORE_UNUSED },
-> +	{ "emmcclk",		0xe0 },
-> +	{ "sd0clk",		0xe4 },
-> +	{ "sd1clk",		0xe8 },
-> +	{ "dllmstrefclk",	0xec },
-> +	{ "gethrgmiiclk",	0xf0 },
-> +	{ "gethrgmiisysclk",	0xf4 },
-> +	{ "usim0clk",		0x100 },
-> +	{ "pcietestclk",	0x110 },
-> +	{ "usb2testclk",	0x120 },
-> +	{ "usb3testclk",	0x124 },
-> +	{ "usb3coreclk",	0x128 },
-> +	{ "nfceccclk",		0x130 },
-> +	{ "bcmclk",		0x140 },
-> +};
-> +
-> +static void __init berlin4ct_clk_setup(struct device_node *np)
-> +{
-> +	int n = ARRAY_SIZE(berlin4ct_descs);
-> +
-> +	berlin_clk_setup(np, berlin4ct_descs, &clk_data, n);
-> +}
-> +CLK_OF_DECLARE(berlin4ct_clk, "marvell,berlin4ct-clk",
-> +	       berlin4ct_clk_setup);
+>  		soc_pinctrl: pin-controller@ea8000 {
+>  			compatible = "marvell,berlin4ct-soc-pinctrl";
+>  			reg = <0xea8000 0x14>;
 > 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
