@@ -1,326 +1,628 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 08/10] irqchip: add LPC32xx interrupt controller driver
-Date: Fri, 20 Nov 2015 03:28:43 +0200
-Message-ID: <1447982925-30138-9-git-send-email-vz@mleia.com>
-References: <1447982925-30138-1-git-send-email-vz@mleia.com>
+Subject: [PATCH 3/4] gpio: lpc32xx: remove legacy LPC32xx GPIO driver
+Date: Fri, 20 Nov 2015 03:29:54 +0200
+Message-ID: <1447982995-30231-4-git-send-email-vz@mleia.com>
+References: <1447982995-30231-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447982925-30138-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1447982995-30231-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The change adds improved support of NXP LPC32xx MIC, SIC1 and SIC2
-interrupt controllers.
+Legacy GPIO controller driver for NXP LPC32xx platforms depends on
+hardcoded hardware interrupt values, which makes it unmaintainable
+with newer interrupt controller features like custom platform irq
+handler, dynamic allocation of virtual irqs and sparse irqs.
 
-This is a list of new features in comparison to the legacy driver:
-* irq types are taken from device tree settings, no more need to
-  hardcode them,
-* old driver is based on irq_domain_add_legacy, which causes problems
-  with handling MIC hardware interrupt 0 produced by SIC1,
-* there is one driver for MIC, SIC1 and SIC2, no more need to handle
-  them separately, e.g. have two separate handlers for SIC1 and SIC2,
-* the driver does not have any dependencies on hardcoded register
-  offsets,
-* the driver is much simpler for comprehension and more maintainable,
-* SPARSE_IRQS option is supported.
-
-The change disables compilation of a legacy driver found at
-arch/arm/mach-lpc32xx/irq.c, the file will be removed in a separate
-commit.
+The legacy LPX32xx interrupt controller and as a result this legacy
+GPIO controller driver are broken since commit 76ba59f8366f2 ("genirq:
+Add irq_domain-aware core IRQ handler"), the driver will be replaced
+by a new version compatible with current GPIO client device tree
+interface.
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/Kconfig                |   2 +
- arch/arm/mach-lpc32xx/Makefile  |   2 +-
- arch/arm/mach-lpc32xx/phy3250.c |   1 -
- drivers/irqchip/Makefile        |   1 +
- drivers/irqchip/irq-lpc32xx.c   | 227 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 231 insertions(+), 2 deletions(-)
- create mode 100644 drivers/irqchip/irq-lpc32xx.c
+ drivers/gpio/Makefile       |   1 -
+ drivers/gpio/gpio-lpc32xx.c | 577 --------------------------------------------
+ 2 files changed, 578 deletions(-)
+ delete mode 100644 drivers/gpio/gpio-lpc32xx.c
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 5cc11f1..1f2c03f 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -597,6 +597,8 @@ config ARCH_LPC32XX
- 	select CPU_ARM926T
- 	select GENERIC_CLOCKEVENTS
- 	select HAVE_IDE
-+	select MULTI_IRQ_HANDLER
-+	select SPARSE_IRQ
- 	select USE_OF
- 	help
- 	  Support for the NXP LPC32XX family of processors
-diff --git a/arch/arm/mach-lpc32xx/Makefile b/arch/arm/mach-lpc32xx/Makefile
-index b1023c0..2a28f645 100644
---- a/arch/arm/mach-lpc32xx/Makefile
-+++ b/arch/arm/mach-lpc32xx/Makefile
-@@ -2,6 +2,6 @@
- # Makefile for the linux kernel.
- #
- 
--obj-y	:= irq.o common.o serial.o
-+obj-y	:= common.o serial.o
- obj-y	+= pm.o suspend.o wakeup.o
- obj-y	+= phy3250.o
-diff --git a/arch/arm/mach-lpc32xx/phy3250.c b/arch/arm/mach-lpc32xx/phy3250.c
-index 60f3392..92e8574 100644
---- a/arch/arm/mach-lpc32xx/phy3250.c
-+++ b/arch/arm/mach-lpc32xx/phy3250.c
-@@ -259,7 +259,6 @@ static const char *const lpc32xx_dt_compat[] __initconst = {
- DT_MACHINE_START(LPC32XX_DT, "LPC32XX SoC (Flattened Device Tree)")
- 	.atag_offset	= 0x100,
- 	.map_io		= lpc32xx_map_io,
--	.init_irq	= lpc32xx_init_irq,
- 	.init_machine	= lpc3250_machine_init,
- 	.dt_compat	= lpc32xx_dt_compat,
- 	.restart	= lpc23xx_restart,
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 177f78f..21008a6 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
-+obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
- obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
- obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
- obj-$(CONFIG_IRQ_MXS)			+= irq-mxs.o
-diff --git a/drivers/irqchip/irq-lpc32xx.c b/drivers/irqchip/irq-lpc32xx.c
-new file mode 100644
-index 0000000..fcf281b
---- /dev/null
-+++ b/drivers/irqchip/irq-lpc32xx.c
-@@ -0,0 +1,227 @@
-+/*
-+ * Copyright 2015 Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#define pr_fmt(fmt) "%s: " fmt, __func__
-+
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/slab.h>
-+#include <asm/exception.h>
-+
-+#define LPC32XX_INTC_MASK		0x00
-+#define LPC32XX_INTC_RAW		0x04
-+#define LPC32XX_INTC_STAT		0x08
-+#define LPC32XX_INTC_POL		0x0C
-+#define LPC32XX_INTC_TYPE		0x10
-+#define LPC32XX_INTC_FIQ		0x14
-+
-+#define IRQS_PER_CONTROLLER		32
-+
-+struct lpc32xx_irq_chip {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	struct irq_chip chip;
-+};
-+
-+static struct lpc32xx_irq_chip *lpc32xx_mic_data;
-+
-+static inline u32 lpc32xx_ic_read(struct irq_domain *id, u32 reg)
-+{
-+	struct lpc32xx_irq_chip *ic = (struct lpc32xx_irq_chip *)id->host_data;
-+
-+	return readl(ic->base + reg);
-+}
-+
-+static inline void lpc32xx_ic_write(struct irq_domain *id, u32 reg, u32 val)
-+{
-+	struct lpc32xx_irq_chip *ic = (struct lpc32xx_irq_chip *)id->host_data;
-+
-+	writel(val, ic->base + reg);
-+}
-+
-+static void lpc32xx_irq_mask(struct irq_data *d)
-+{
-+	u32 val, mask = BIT(d->hwirq);
-+
-+	val = lpc32xx_ic_read(d->domain, LPC32XX_INTC_MASK) & ~mask;
-+	lpc32xx_ic_write(d->domain, LPC32XX_INTC_MASK, val);
-+}
-+
-+static void lpc32xx_irq_unmask(struct irq_data *d)
-+{
-+	u32 val, mask = BIT(d->hwirq);
-+
-+	val = lpc32xx_ic_read(d->domain, LPC32XX_INTC_MASK) | mask;
-+	lpc32xx_ic_write(d->domain, LPC32XX_INTC_MASK, val);
-+}
-+
-+static void lpc32xx_irq_ack(struct irq_data *d)
-+{
-+	u32 mask = BIT(d->hwirq);
-+
-+	lpc32xx_ic_write(d->domain, LPC32XX_INTC_RAW, mask);
-+}
-+
-+static int lpc32xx_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct irq_domain *domain = d->domain;
-+	u32 val, mask = BIT(d->hwirq);
-+	bool high, edge;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		edge = true;
-+		high = true;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		edge = true;
-+		high = false;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		edge = false;
-+		high = true;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		edge = false;
-+		high = false;
-+		break;
-+	default:
-+		pr_info("unsupported irq type %d\n", type);
-+		return -EINVAL;
-+	}
-+
-+	irqd_set_trigger_type(d, type);
-+
-+	val = lpc32xx_ic_read(domain, LPC32XX_INTC_POL);
-+	if (high)
-+		val |= mask;
-+	else
-+		val &= ~mask;
-+	lpc32xx_ic_write(domain, LPC32XX_INTC_POL, val);
-+
-+	val = lpc32xx_ic_read(domain, LPC32XX_INTC_TYPE);
-+	if (edge) {
-+		val |= mask;
-+		irq_set_handler_locked(d, handle_edge_irq);
-+	} else {
-+		val &= ~mask;
-+		irq_set_handler_locked(d, handle_level_irq);
-+	}
-+	lpc32xx_ic_write(domain, LPC32XX_INTC_TYPE, val);
-+
-+	return 0;
-+}
-+
-+static void __exception_irq_entry lpc32xx_handle_irq(struct pt_regs *regs)
-+{
-+	u32 hwirq;
-+
-+	do {
-+		hwirq = lpc32xx_ic_read(lpc32xx_mic_data->domain,
-+					LPC32XX_INTC_STAT);
-+		if (hwirq)
-+			handle_domain_irq(lpc32xx_mic_data->domain,
-+					  ffs(hwirq) - 1, regs);
-+	} while (hwirq);
-+}
-+
-+static void lpc32xx_sic_handler(struct irq_desc *desc)
-+{
-+	struct lpc32xx_irq_chip *ic = irq_desc_get_handler_data(desc);
-+	struct irq_domain *domain = ic->domain;
-+	u32 hwirq;
-+
-+	do {
-+		hwirq = lpc32xx_ic_read(domain, LPC32XX_INTC_STAT);
-+		if (hwirq)
-+			generic_handle_irq(irq_find_mapping(domain,
-+							    ffs(hwirq) - 1));
-+	} while (hwirq);
-+}
-+
-+static int lpc32xx_irq_domain_map(struct irq_domain *id, unsigned int virq,
-+				  irq_hw_number_t hw)
-+{
-+	struct lpc32xx_irq_chip *ic = (struct lpc32xx_irq_chip *)id->host_data;
-+
-+	irq_set_chip_and_handler(virq, &ic->chip, handle_level_irq);
-+	irq_set_status_flags(virq, IRQ_LEVEL);
-+	irq_set_noprobe(virq);
-+
-+	return 0;
-+}
-+
-+static void lpc32xx_irq_domain_unmap(struct irq_domain *id, unsigned int virq)
-+{
-+	irq_set_chip_and_handler(virq, NULL, NULL);
-+}
-+
-+static const struct irq_domain_ops lpc32xx_irq_domain_ops = {
-+	.map    = lpc32xx_irq_domain_map,
-+	.unmap	= lpc32xx_irq_domain_unmap,
-+	.xlate  = irq_domain_xlate_twocell,
-+};
-+
-+static int __init lpc32xx_of_ic_init(struct device_node *node,
-+				     struct device_node *parent)
-+{
-+	int parent_irq, i;
-+	struct lpc32xx_irq_chip *irqc;
-+
-+	irqc = kzalloc(sizeof(*irqc), GFP_KERNEL);
-+	if (!irqc)
-+		return -ENOMEM;
-+
-+	irqc->chip.irq_ack = lpc32xx_irq_ack;
-+	irqc->chip.irq_mask = lpc32xx_irq_mask;
-+	irqc->chip.irq_unmask = lpc32xx_irq_unmask;
-+	irqc->chip.irq_set_type = lpc32xx_irq_set_type;
-+	irqc->chip.name = of_get_property(node, "interrupt-controller-name",
-+					  NULL);
-+
-+	irqc->base = of_iomap(node, 0);
-+	if (!irqc->base) {
-+		pr_err("%s: unable to map registers\n", node->full_name);
-+		return -EINVAL;
-+	}
-+
-+	irqc->domain = irq_domain_add_linear(node, IRQS_PER_CONTROLLER,
-+					     &lpc32xx_irq_domain_ops, irqc);
-+	if (!irqc->domain) {
-+		pr_err("unable to add irq domain\n");
-+		iounmap(irqc->base);
-+		return -ENODEV;
-+	}
-+
-+	for (i = 0; i < of_irq_count(node); i++) {
-+		parent_irq = irq_of_parse_and_map(node, i);
-+		if (parent_irq)
-+			irq_set_chained_handler_and_data(parent_irq,
-+						 lpc32xx_sic_handler, irqc);
-+	}
-+
-+	if (of_device_is_compatible(node, "nxp,lpc3220-mic")) {
-+		lpc32xx_mic_data = irqc;
-+		set_handle_irq(lpc32xx_handle_irq);
-+	}
-+
-+	lpc32xx_ic_write(irqc->domain, LPC32XX_INTC_MASK, 0x00);
-+	lpc32xx_ic_write(irqc->domain, LPC32XX_INTC_POL, 0x00);
-+	lpc32xx_ic_write(irqc->domain, LPC32XX_INTC_TYPE, 0x00);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(nxp_lpc32xx_mic, "nxp,lpc3220-mic", lpc32xx_of_ic_init);
-+IRQCHIP_DECLARE(nxp_lpc32xx_sic, "nxp,lpc3220-sic", lpc32xx_of_ic_init);
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 986dbd8..e3ccd99 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -50,7 +50,6 @@ obj-$(CONFIG_GPIO_INTEL_MID)	+= gpio-intel-mid.o
+ obj-$(CONFIG_GPIO_LOONGSON)	+= gpio-loongson.o
+ obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
+ obj-$(CONFIG_GPIO_LPC18XX)	+= gpio-lpc18xx.o
+-obj-$(CONFIG_ARCH_LPC32XX)	+= gpio-lpc32xx.o
+ obj-$(CONFIG_GPIO_LYNXPOINT)	+= gpio-lynxpoint.o
+ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
+ obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
+diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
+deleted file mode 100644
+index 47e2dde..0000000
+--- a/drivers/gpio/gpio-lpc32xx.c
++++ /dev/null
+@@ -1,577 +0,0 @@
+-/*
+- * GPIO driver for LPC32xx SoC
+- *
+- * Author: Kevin Wells <kevin.wells-3arQi8VN3Tc@public.gmane.org>
+- *
+- * Copyright (C) 2010 NXP Semiconductors
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-
+-#include <linux/kernel.h>
+-#include <linux/init.h>
+-#include <linux/io.h>
+-#include <linux/errno.h>
+-#include <linux/gpio.h>
+-#include <linux/of.h>
+-#include <linux/of_gpio.h>
+-#include <linux/platform_device.h>
+-#include <linux/module.h>
+-#include <linux/platform_data/gpio-lpc32xx.h>
+-
+-#include <mach/hardware.h>
+-#include <mach/platform.h>
+-#include <mach/irqs.h>
+-
+-#define LPC32XX_GPIO_P3_INP_STATE		_GPREG(0x000)
+-#define LPC32XX_GPIO_P3_OUTP_SET		_GPREG(0x004)
+-#define LPC32XX_GPIO_P3_OUTP_CLR		_GPREG(0x008)
+-#define LPC32XX_GPIO_P3_OUTP_STATE		_GPREG(0x00C)
+-#define LPC32XX_GPIO_P2_DIR_SET			_GPREG(0x010)
+-#define LPC32XX_GPIO_P2_DIR_CLR			_GPREG(0x014)
+-#define LPC32XX_GPIO_P2_DIR_STATE		_GPREG(0x018)
+-#define LPC32XX_GPIO_P2_INP_STATE		_GPREG(0x01C)
+-#define LPC32XX_GPIO_P2_OUTP_SET		_GPREG(0x020)
+-#define LPC32XX_GPIO_P2_OUTP_CLR		_GPREG(0x024)
+-#define LPC32XX_GPIO_P2_MUX_SET			_GPREG(0x028)
+-#define LPC32XX_GPIO_P2_MUX_CLR			_GPREG(0x02C)
+-#define LPC32XX_GPIO_P2_MUX_STATE		_GPREG(0x030)
+-#define LPC32XX_GPIO_P0_INP_STATE		_GPREG(0x040)
+-#define LPC32XX_GPIO_P0_OUTP_SET		_GPREG(0x044)
+-#define LPC32XX_GPIO_P0_OUTP_CLR		_GPREG(0x048)
+-#define LPC32XX_GPIO_P0_OUTP_STATE		_GPREG(0x04C)
+-#define LPC32XX_GPIO_P0_DIR_SET			_GPREG(0x050)
+-#define LPC32XX_GPIO_P0_DIR_CLR			_GPREG(0x054)
+-#define LPC32XX_GPIO_P0_DIR_STATE		_GPREG(0x058)
+-#define LPC32XX_GPIO_P1_INP_STATE		_GPREG(0x060)
+-#define LPC32XX_GPIO_P1_OUTP_SET		_GPREG(0x064)
+-#define LPC32XX_GPIO_P1_OUTP_CLR		_GPREG(0x068)
+-#define LPC32XX_GPIO_P1_OUTP_STATE		_GPREG(0x06C)
+-#define LPC32XX_GPIO_P1_DIR_SET			_GPREG(0x070)
+-#define LPC32XX_GPIO_P1_DIR_CLR			_GPREG(0x074)
+-#define LPC32XX_GPIO_P1_DIR_STATE		_GPREG(0x078)
+-
+-#define GPIO012_PIN_TO_BIT(x)			(1 << (x))
+-#define GPIO3_PIN_TO_BIT(x)			(1 << ((x) + 25))
+-#define GPO3_PIN_TO_BIT(x)			(1 << (x))
+-#define GPIO012_PIN_IN_SEL(x, y)		(((x) >> (y)) & 1)
+-#define GPIO3_PIN_IN_SHIFT(x)			((x) == 5 ? 24 : 10 + (x))
+-#define GPIO3_PIN_IN_SEL(x, y)			(((x) >> GPIO3_PIN_IN_SHIFT(y)) & 1)
+-#define GPIO3_PIN5_IN_SEL(x)			(((x) >> 24) & 1)
+-#define GPI3_PIN_IN_SEL(x, y)			(((x) >> (y)) & 1)
+-#define GPO3_PIN_IN_SEL(x, y)			(((x) >> (y)) & 1)
+-
+-struct gpio_regs {
+-	void __iomem *inp_state;
+-	void __iomem *outp_state;
+-	void __iomem *outp_set;
+-	void __iomem *outp_clr;
+-	void __iomem *dir_set;
+-	void __iomem *dir_clr;
+-};
+-
+-/*
+- * GPIO names
+- */
+-static const char *gpio_p0_names[LPC32XX_GPIO_P0_MAX] = {
+-	"p0.0", "p0.1", "p0.2", "p0.3",
+-	"p0.4", "p0.5", "p0.6", "p0.7"
+-};
+-
+-static const char *gpio_p1_names[LPC32XX_GPIO_P1_MAX] = {
+-	"p1.0", "p1.1", "p1.2", "p1.3",
+-	"p1.4", "p1.5", "p1.6", "p1.7",
+-	"p1.8", "p1.9", "p1.10", "p1.11",
+-	"p1.12", "p1.13", "p1.14", "p1.15",
+-	"p1.16", "p1.17", "p1.18", "p1.19",
+-	"p1.20", "p1.21", "p1.22", "p1.23",
+-};
+-
+-static const char *gpio_p2_names[LPC32XX_GPIO_P2_MAX] = {
+-	"p2.0", "p2.1", "p2.2", "p2.3",
+-	"p2.4", "p2.5", "p2.6", "p2.7",
+-	"p2.8", "p2.9", "p2.10", "p2.11",
+-	"p2.12"
+-};
+-
+-static const char *gpio_p3_names[LPC32XX_GPIO_P3_MAX] = {
+-	"gpio00", "gpio01", "gpio02", "gpio03",
+-	"gpio04", "gpio05"
+-};
+-
+-static const char *gpi_p3_names[LPC32XX_GPI_P3_MAX] = {
+-	"gpi00", "gpi01", "gpi02", "gpi03",
+-	"gpi04", "gpi05", "gpi06", "gpi07",
+-	"gpi08", "gpi09",  NULL,    NULL,
+-	 NULL,    NULL,    NULL,   "gpi15",
+-	"gpi16", "gpi17", "gpi18", "gpi19",
+-	"gpi20", "gpi21", "gpi22", "gpi23",
+-	"gpi24", "gpi25", "gpi26", "gpi27",
+-	"gpi28"
+-};
+-
+-static const char *gpo_p3_names[LPC32XX_GPO_P3_MAX] = {
+-	"gpo00", "gpo01", "gpo02", "gpo03",
+-	"gpo04", "gpo05", "gpo06", "gpo07",
+-	"gpo08", "gpo09", "gpo10", "gpo11",
+-	"gpo12", "gpo13", "gpo14", "gpo15",
+-	"gpo16", "gpo17", "gpo18", "gpo19",
+-	"gpo20", "gpo21", "gpo22", "gpo23"
+-};
+-
+-static struct gpio_regs gpio_grp_regs_p0 = {
+-	.inp_state	= LPC32XX_GPIO_P0_INP_STATE,
+-	.outp_set	= LPC32XX_GPIO_P0_OUTP_SET,
+-	.outp_clr	= LPC32XX_GPIO_P0_OUTP_CLR,
+-	.dir_set	= LPC32XX_GPIO_P0_DIR_SET,
+-	.dir_clr	= LPC32XX_GPIO_P0_DIR_CLR,
+-};
+-
+-static struct gpio_regs gpio_grp_regs_p1 = {
+-	.inp_state	= LPC32XX_GPIO_P1_INP_STATE,
+-	.outp_set	= LPC32XX_GPIO_P1_OUTP_SET,
+-	.outp_clr	= LPC32XX_GPIO_P1_OUTP_CLR,
+-	.dir_set	= LPC32XX_GPIO_P1_DIR_SET,
+-	.dir_clr	= LPC32XX_GPIO_P1_DIR_CLR,
+-};
+-
+-static struct gpio_regs gpio_grp_regs_p2 = {
+-	.inp_state	= LPC32XX_GPIO_P2_INP_STATE,
+-	.outp_set	= LPC32XX_GPIO_P2_OUTP_SET,
+-	.outp_clr	= LPC32XX_GPIO_P2_OUTP_CLR,
+-	.dir_set	= LPC32XX_GPIO_P2_DIR_SET,
+-	.dir_clr	= LPC32XX_GPIO_P2_DIR_CLR,
+-};
+-
+-static struct gpio_regs gpio_grp_regs_p3 = {
+-	.inp_state	= LPC32XX_GPIO_P3_INP_STATE,
+-	.outp_state	= LPC32XX_GPIO_P3_OUTP_STATE,
+-	.outp_set	= LPC32XX_GPIO_P3_OUTP_SET,
+-	.outp_clr	= LPC32XX_GPIO_P3_OUTP_CLR,
+-	.dir_set	= LPC32XX_GPIO_P2_DIR_SET,
+-	.dir_clr	= LPC32XX_GPIO_P2_DIR_CLR,
+-};
+-
+-struct lpc32xx_gpio_chip {
+-	struct gpio_chip	chip;
+-	struct gpio_regs	*gpio_grp;
+-};
+-
+-static inline struct lpc32xx_gpio_chip *to_lpc32xx_gpio(
+-	struct gpio_chip *gpc)
+-{
+-	return container_of(gpc, struct lpc32xx_gpio_chip, chip);
+-}
+-
+-static void __set_gpio_dir_p012(struct lpc32xx_gpio_chip *group,
+-	unsigned pin, int input)
+-{
+-	if (input)
+-		__raw_writel(GPIO012_PIN_TO_BIT(pin),
+-			group->gpio_grp->dir_clr);
+-	else
+-		__raw_writel(GPIO012_PIN_TO_BIT(pin),
+-			group->gpio_grp->dir_set);
+-}
+-
+-static void __set_gpio_dir_p3(struct lpc32xx_gpio_chip *group,
+-	unsigned pin, int input)
+-{
+-	u32 u = GPIO3_PIN_TO_BIT(pin);
+-
+-	if (input)
+-		__raw_writel(u, group->gpio_grp->dir_clr);
+-	else
+-		__raw_writel(u, group->gpio_grp->dir_set);
+-}
+-
+-static void __set_gpio_level_p012(struct lpc32xx_gpio_chip *group,
+-	unsigned pin, int high)
+-{
+-	if (high)
+-		__raw_writel(GPIO012_PIN_TO_BIT(pin),
+-			group->gpio_grp->outp_set);
+-	else
+-		__raw_writel(GPIO012_PIN_TO_BIT(pin),
+-			group->gpio_grp->outp_clr);
+-}
+-
+-static void __set_gpio_level_p3(struct lpc32xx_gpio_chip *group,
+-	unsigned pin, int high)
+-{
+-	u32 u = GPIO3_PIN_TO_BIT(pin);
+-
+-	if (high)
+-		__raw_writel(u, group->gpio_grp->outp_set);
+-	else
+-		__raw_writel(u, group->gpio_grp->outp_clr);
+-}
+-
+-static void __set_gpo_level_p3(struct lpc32xx_gpio_chip *group,
+-	unsigned pin, int high)
+-{
+-	if (high)
+-		__raw_writel(GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_set);
+-	else
+-		__raw_writel(GPO3_PIN_TO_BIT(pin), group->gpio_grp->outp_clr);
+-}
+-
+-static int __get_gpio_state_p012(struct lpc32xx_gpio_chip *group,
+-	unsigned pin)
+-{
+-	return GPIO012_PIN_IN_SEL(__raw_readl(group->gpio_grp->inp_state),
+-		pin);
+-}
+-
+-static int __get_gpio_state_p3(struct lpc32xx_gpio_chip *group,
+-	unsigned pin)
+-{
+-	int state = __raw_readl(group->gpio_grp->inp_state);
+-
+-	/*
+-	 * P3 GPIO pin input mapping is not contiguous, GPIOP3-0..4 is mapped
+-	 * to bits 10..14, while GPIOP3-5 is mapped to bit 24.
+-	 */
+-	return GPIO3_PIN_IN_SEL(state, pin);
+-}
+-
+-static int __get_gpi_state_p3(struct lpc32xx_gpio_chip *group,
+-	unsigned pin)
+-{
+-	return GPI3_PIN_IN_SEL(__raw_readl(group->gpio_grp->inp_state), pin);
+-}
+-
+-static int __get_gpo_state_p3(struct lpc32xx_gpio_chip *group,
+-	unsigned pin)
+-{
+-	return GPO3_PIN_IN_SEL(__raw_readl(group->gpio_grp->outp_state), pin);
+-}
+-
+-/*
+- * GPIO primitives.
+- */
+-static int lpc32xx_gpio_dir_input_p012(struct gpio_chip *chip,
+-	unsigned pin)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpio_dir_p012(group, pin, 1);
+-
+-	return 0;
+-}
+-
+-static int lpc32xx_gpio_dir_input_p3(struct gpio_chip *chip,
+-	unsigned pin)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpio_dir_p3(group, pin, 1);
+-
+-	return 0;
+-}
+-
+-static int lpc32xx_gpio_dir_in_always(struct gpio_chip *chip,
+-	unsigned pin)
+-{
+-	return 0;
+-}
+-
+-static int lpc32xx_gpio_get_value_p012(struct gpio_chip *chip, unsigned pin)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	return __get_gpio_state_p012(group, pin);
+-}
+-
+-static int lpc32xx_gpio_get_value_p3(struct gpio_chip *chip, unsigned pin)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	return __get_gpio_state_p3(group, pin);
+-}
+-
+-static int lpc32xx_gpi_get_value(struct gpio_chip *chip, unsigned pin)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	return __get_gpi_state_p3(group, pin);
+-}
+-
+-static int lpc32xx_gpio_dir_output_p012(struct gpio_chip *chip, unsigned pin,
+-	int value)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpio_level_p012(group, pin, value);
+-	__set_gpio_dir_p012(group, pin, 0);
+-
+-	return 0;
+-}
+-
+-static int lpc32xx_gpio_dir_output_p3(struct gpio_chip *chip, unsigned pin,
+-	int value)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpio_level_p3(group, pin, value);
+-	__set_gpio_dir_p3(group, pin, 0);
+-
+-	return 0;
+-}
+-
+-static int lpc32xx_gpio_dir_out_always(struct gpio_chip *chip, unsigned pin,
+-	int value)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpo_level_p3(group, pin, value);
+-	return 0;
+-}
+-
+-static void lpc32xx_gpio_set_value_p012(struct gpio_chip *chip, unsigned pin,
+-	int value)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpio_level_p012(group, pin, value);
+-}
+-
+-static void lpc32xx_gpio_set_value_p3(struct gpio_chip *chip, unsigned pin,
+-	int value)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpio_level_p3(group, pin, value);
+-}
+-
+-static void lpc32xx_gpo_set_value(struct gpio_chip *chip, unsigned pin,
+-	int value)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	__set_gpo_level_p3(group, pin, value);
+-}
+-
+-static int lpc32xx_gpo_get_value(struct gpio_chip *chip, unsigned pin)
+-{
+-	struct lpc32xx_gpio_chip *group = to_lpc32xx_gpio(chip);
+-
+-	return __get_gpo_state_p3(group, pin);
+-}
+-
+-static int lpc32xx_gpio_request(struct gpio_chip *chip, unsigned pin)
+-{
+-	if (pin < chip->ngpio)
+-		return 0;
+-
+-	return -EINVAL;
+-}
+-
+-static int lpc32xx_gpio_to_irq_p01(struct gpio_chip *chip, unsigned offset)
+-{
+-	return IRQ_LPC32XX_P0_P1_IRQ;
+-}
+-
+-static const char lpc32xx_gpio_to_irq_gpio_p3_table[] = {
+-	IRQ_LPC32XX_GPIO_00,
+-	IRQ_LPC32XX_GPIO_01,
+-	IRQ_LPC32XX_GPIO_02,
+-	IRQ_LPC32XX_GPIO_03,
+-	IRQ_LPC32XX_GPIO_04,
+-	IRQ_LPC32XX_GPIO_05,
+-};
+-
+-static int lpc32xx_gpio_to_irq_gpio_p3(struct gpio_chip *chip, unsigned offset)
+-{
+-	if (offset < ARRAY_SIZE(lpc32xx_gpio_to_irq_gpio_p3_table))
+-		return lpc32xx_gpio_to_irq_gpio_p3_table[offset];
+-	return -ENXIO;
+-}
+-
+-static const char lpc32xx_gpio_to_irq_gpi_p3_table[] = {
+-	IRQ_LPC32XX_GPI_00,
+-	IRQ_LPC32XX_GPI_01,
+-	IRQ_LPC32XX_GPI_02,
+-	IRQ_LPC32XX_GPI_03,
+-	IRQ_LPC32XX_GPI_04,
+-	IRQ_LPC32XX_GPI_05,
+-	IRQ_LPC32XX_GPI_06,
+-	IRQ_LPC32XX_GPI_07,
+-	IRQ_LPC32XX_GPI_08,
+-	IRQ_LPC32XX_GPI_09,
+-	-ENXIO, /* 10 */
+-	-ENXIO, /* 11 */
+-	-ENXIO, /* 12 */
+-	-ENXIO, /* 13 */
+-	-ENXIO, /* 14 */
+-	-ENXIO, /* 15 */
+-	-ENXIO, /* 16 */
+-	-ENXIO, /* 17 */
+-	-ENXIO, /* 18 */
+-	IRQ_LPC32XX_GPI_19,
+-	-ENXIO, /* 20 */
+-	-ENXIO, /* 21 */
+-	-ENXIO, /* 22 */
+-	-ENXIO, /* 23 */
+-	-ENXIO, /* 24 */
+-	-ENXIO, /* 25 */
+-	-ENXIO, /* 26 */
+-	-ENXIO, /* 27 */
+-	IRQ_LPC32XX_GPI_28,
+-};
+-
+-static int lpc32xx_gpio_to_irq_gpi_p3(struct gpio_chip *chip, unsigned offset)
+-{
+-	if (offset < ARRAY_SIZE(lpc32xx_gpio_to_irq_gpi_p3_table))
+-		return lpc32xx_gpio_to_irq_gpi_p3_table[offset];
+-	return -ENXIO;
+-}
+-
+-static struct lpc32xx_gpio_chip lpc32xx_gpiochip[] = {
+-	{
+-		.chip = {
+-			.label			= "gpio_p0",
+-			.direction_input	= lpc32xx_gpio_dir_input_p012,
+-			.get			= lpc32xx_gpio_get_value_p012,
+-			.direction_output	= lpc32xx_gpio_dir_output_p012,
+-			.set			= lpc32xx_gpio_set_value_p012,
+-			.request		= lpc32xx_gpio_request,
+-			.to_irq			= lpc32xx_gpio_to_irq_p01,
+-			.base			= LPC32XX_GPIO_P0_GRP,
+-			.ngpio			= LPC32XX_GPIO_P0_MAX,
+-			.names			= gpio_p0_names,
+-			.can_sleep		= false,
+-		},
+-		.gpio_grp = &gpio_grp_regs_p0,
+-	},
+-	{
+-		.chip = {
+-			.label			= "gpio_p1",
+-			.direction_input	= lpc32xx_gpio_dir_input_p012,
+-			.get			= lpc32xx_gpio_get_value_p012,
+-			.direction_output	= lpc32xx_gpio_dir_output_p012,
+-			.set			= lpc32xx_gpio_set_value_p012,
+-			.request		= lpc32xx_gpio_request,
+-			.to_irq			= lpc32xx_gpio_to_irq_p01,
+-			.base			= LPC32XX_GPIO_P1_GRP,
+-			.ngpio			= LPC32XX_GPIO_P1_MAX,
+-			.names			= gpio_p1_names,
+-			.can_sleep		= false,
+-		},
+-		.gpio_grp = &gpio_grp_regs_p1,
+-	},
+-	{
+-		.chip = {
+-			.label			= "gpio_p2",
+-			.direction_input	= lpc32xx_gpio_dir_input_p012,
+-			.get			= lpc32xx_gpio_get_value_p012,
+-			.direction_output	= lpc32xx_gpio_dir_output_p012,
+-			.set			= lpc32xx_gpio_set_value_p012,
+-			.request		= lpc32xx_gpio_request,
+-			.base			= LPC32XX_GPIO_P2_GRP,
+-			.ngpio			= LPC32XX_GPIO_P2_MAX,
+-			.names			= gpio_p2_names,
+-			.can_sleep		= false,
+-		},
+-		.gpio_grp = &gpio_grp_regs_p2,
+-	},
+-	{
+-		.chip = {
+-			.label			= "gpio_p3",
+-			.direction_input	= lpc32xx_gpio_dir_input_p3,
+-			.get			= lpc32xx_gpio_get_value_p3,
+-			.direction_output	= lpc32xx_gpio_dir_output_p3,
+-			.set			= lpc32xx_gpio_set_value_p3,
+-			.request		= lpc32xx_gpio_request,
+-			.to_irq			= lpc32xx_gpio_to_irq_gpio_p3,
+-			.base			= LPC32XX_GPIO_P3_GRP,
+-			.ngpio			= LPC32XX_GPIO_P3_MAX,
+-			.names			= gpio_p3_names,
+-			.can_sleep		= false,
+-		},
+-		.gpio_grp = &gpio_grp_regs_p3,
+-	},
+-	{
+-		.chip = {
+-			.label			= "gpi_p3",
+-			.direction_input	= lpc32xx_gpio_dir_in_always,
+-			.get			= lpc32xx_gpi_get_value,
+-			.request		= lpc32xx_gpio_request,
+-			.to_irq			= lpc32xx_gpio_to_irq_gpi_p3,
+-			.base			= LPC32XX_GPI_P3_GRP,
+-			.ngpio			= LPC32XX_GPI_P3_MAX,
+-			.names			= gpi_p3_names,
+-			.can_sleep		= false,
+-		},
+-		.gpio_grp = &gpio_grp_regs_p3,
+-	},
+-	{
+-		.chip = {
+-			.label			= "gpo_p3",
+-			.direction_output	= lpc32xx_gpio_dir_out_always,
+-			.set			= lpc32xx_gpo_set_value,
+-			.get			= lpc32xx_gpo_get_value,
+-			.request		= lpc32xx_gpio_request,
+-			.base			= LPC32XX_GPO_P3_GRP,
+-			.ngpio			= LPC32XX_GPO_P3_MAX,
+-			.names			= gpo_p3_names,
+-			.can_sleep		= false,
+-		},
+-		.gpio_grp = &gpio_grp_regs_p3,
+-	},
+-};
+-
+-static int lpc32xx_of_xlate(struct gpio_chip *gc,
+-			    const struct of_phandle_args *gpiospec, u32 *flags)
+-{
+-	/* Is this the correct bank? */
+-	u32 bank = gpiospec->args[0];
+-	if ((bank >= ARRAY_SIZE(lpc32xx_gpiochip) ||
+-	    (gc != &lpc32xx_gpiochip[bank].chip)))
+-		return -EINVAL;
+-
+-	if (flags)
+-		*flags = gpiospec->args[2];
+-	return gpiospec->args[1];
+-}
+-
+-static int lpc32xx_gpio_probe(struct platform_device *pdev)
+-{
+-	int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++) {
+-		if (pdev->dev.of_node) {
+-			lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
+-			lpc32xx_gpiochip[i].chip.of_gpio_n_cells = 3;
+-			lpc32xx_gpiochip[i].chip.of_node = pdev->dev.of_node;
+-		}
+-		gpiochip_add(&lpc32xx_gpiochip[i].chip);
+-	}
+-
+-	return 0;
+-}
+-
+-#ifdef CONFIG_OF
+-static const struct of_device_id lpc32xx_gpio_of_match[] = {
+-	{ .compatible = "nxp,lpc3220-gpio", },
+-	{ },
+-};
+-#endif
+-
+-static struct platform_driver lpc32xx_gpio_driver = {
+-	.driver		= {
+-		.name	= "lpc32xx-gpio",
+-		.of_match_table = of_match_ptr(lpc32xx_gpio_of_match),
+-	},
+-	.probe		= lpc32xx_gpio_probe,
+-};
+-
+-module_platform_driver(lpc32xx_gpio_driver);
 -- 
 2.1.4
 
