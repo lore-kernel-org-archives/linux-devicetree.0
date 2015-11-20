@@ -1,132 +1,183 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2 5/6] dt-bindings: add binding for marvell berlin4ct SoC
-Date: Fri, 20 Nov 2015 16:42:31 +0800
-Message-ID: <1448008952-1787-6-git-send-email-jszhang@marvell.com>
+Subject: [PATCH v2 1/6] clk: berlin: add common pll driver
+Date: Fri, 20 Nov 2015 16:42:27 +0800
+Message-ID: <1448008952-1787-2-git-send-email-jszhang@marvell.com>
 References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, sebastian.hesselbarth@gmail.com, antoine.tenart@free-electrons.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a dt-binding include for Marvell berlin4ct clock IDs.
+Add pll driver for Marvell SoCs newer than BG2, BG2CD, BG2Q.
 
 Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 ---
- .../bindings/clock/marvell,berlin4ct.txt           | 38 +++++++++++++++
- include/dt-bindings/clock/berlin4ct.h              | 56 ++++++++++++++++++++++
- 2 files changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
- create mode 100644 include/dt-bindings/clock/berlin4ct.h
+ drivers/clk/berlin/Makefile |   1 +
+ drivers/clk/berlin/pll.c    | 133 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 134 insertions(+)
+ create mode 100644 drivers/clk/berlin/pll.c
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt b/Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
+diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
+index 2a36ab7..eee42b0 100644
+--- a/drivers/clk/berlin/Makefile
++++ b/drivers/clk/berlin/Makefile
+@@ -1,4 +1,5 @@
+ obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
++obj-y += pll.o
+ obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
+ obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
+ obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
+diff --git a/drivers/clk/berlin/pll.c b/drivers/clk/berlin/pll.c
 new file mode 100644
-index 0000000..a489473
+index 0000000..435445e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/marvell,berlin4ct.txt
-@@ -0,0 +1,38 @@
-+* Marvell berlin4ct Clock Controllers
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+The berlin4ct clock subsystem generates and supplies clock to various
-+controllers within the berlin4ct SoC. The berlin4ct contains 3 clock controller
-+blocks: pll, gateclk, berlin-clk.
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "marvell,berlin-pll" - pll compatible
-+  - "marvell,berlin4ct-clk" - berlin clk compatible
-+  - "marvell,berlin4ct-gateclk" - gateclk compatible
-+- reg: physical base address of the clock controller and length of memory mapped
-+  region. For pll, the second reg defines the bypass register base address and
-+  length of memory mapped region.
-+- #clock-cells: for pll should 0, for gateclk and berlin clk should be 1.
-+- #bypass-shift: the bypass bit in bypass register.
-+
-+Example:
-+
-+syspll: syspll {
-+	compatible = "marvell,berlin-pll";
-+	reg = <0xea0200 0x14>, <0xea0710 4>;
-+	#clock-cells = <0>;
-+	clocks = <&osc>;
-+	bypass-shift = /bits/ 8 <0>;
-+};
-+
-+clk: clk {
-+	compatible = "marvell,berlin4ct-clk";
-+	reg = <0xea0720 0x144>;
-+	#clock-cells = <1>;
-+	clocks = <&syspll>;
-+};
-diff --git a/include/dt-bindings/clock/berlin4ct.h b/include/dt-bindings/clock/berlin4ct.h
-new file mode 100644
-index 0000000..abd5873
---- /dev/null
-+++ b/include/dt-bindings/clock/berlin4ct.h
-@@ -0,0 +1,56 @@
++++ b/drivers/clk/berlin/pll.c
+@@ -0,0 +1,133 @@
 +/*
-+ * Berlin BG4CT clock tree IDs
++ * Copyright (c) 2015 Marvell Technology Group Ltd.
++ *
++ * Author: Jisheng Zhang <jszhang@marvell.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
 +
-+/* GATE CLK */
-+#define GATECLK_TSPSYS		0
-+#define GATECLK_USB0CORE	1
-+#define GATECLK_ZSPSYS		2
-+#define GATECLK_SDIOSYS		3
-+#define GATECLK_ETHCORE		4
-+#define GATECLK_PCIE0SYS	5
-+#define GATECLK_SATA0CORE	6
-+#define GATECLK_NFCSYS		7
-+#define GATECLK_EMMCSYS		8
-+#define GATECLK_IHB0SYS		9
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/slab.h>
 +
-+/* BERLIN CLK */
-+#define CLK_CPUFASTREF		0
-+#define CLK_MEMFASTREF		1
-+#define CLK_CFG			2
-+#define CLK_PERIFSYS		3
-+#define CLK_HB			4
-+#define CLK_ATB			5
-+#define CLK_DECODER		6
-+#define CLK_DECODERM3		7
-+#define CLK_DECODERPCUBE	8
-+#define CLK_ENCODER		9
-+#define CLK_OVPCORE		10
-+#define CLK_GFX2DCORE		11
-+#define CLK_GFX3DCORE		12
-+#define CLK_GFX3DSH		13
-+#define CLK_GFX3DSYS		14
-+#define CLK_GFX2DSYS		15
-+#define CLK_AVIOSYS		16
-+#define CLK_VPPSYS		17
-+#define CLK_EDDC		18
-+#define CLK_AVIOBIU		19
-+#define CLK_ZSP			20
-+#define CLK_TSP			21
-+#define CLK_TSPREF		22
-+#define CLK_NDS			23
-+#define CLK_NOCS		24
-+#define CLK_APBCORE		25
-+#define CLK_EMMC		26
-+#define CLK_SD0			27
-+#define CLK_SD1			28
-+#define CLK_DLLMSTREF		29
-+#define CLK_GETHRGMII		30
-+#define CLK_GETHRGMIISYS	31
-+#define CLK_USIM0		32
-+#define CLK_PCIETEST		33
-+#define CLK_USB2TEST		34
-+#define CLK_USB3TEST		35
-+#define CLK_USB3CORE		36
-+#define CLK_NFCECC		37
-+#define CLK_BCM			38
++#define PLL_CTRL0	0x0
++#define PLL_CTRL1	0x4
++#define PLL_CTRL2	0x8
++#define PLL_CTRL3	0xC
++#define PLL_CTRL4	0x10
++#define PLL_STATUS	0x14
++
++#define PLL_SOURCE_MAX	2
++
++struct berlin_pll {
++	struct clk_hw	hw;
++	void __iomem	*ctrl;
++	void __iomem	*bypass;
++	u8		bypass_shift;
++};
++
++#define to_berlin_pll(hw)       container_of(hw, struct berlin_pll, hw)
++
++static unsigned long berlin_pll_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	u32 val, fbdiv, rfdiv, vcodivsel, bypass;
++	struct berlin_pll *pll = to_berlin_pll(hw);
++
++	bypass = readl_relaxed(pll->bypass);
++	if (bypass & (1 << pll->bypass_shift))
++		return parent_rate;
++
++	val = readl_relaxed(pll->ctrl + PLL_CTRL0);
++	fbdiv = (val >> 12) & 0x1FF;
++	rfdiv = (val >> 3) & 0x1FF;
++	val = readl_relaxed(pll->ctrl + PLL_CTRL1);
++	vcodivsel = (val >> 9) & 0x7;
++	return parent_rate * fbdiv * 4 / rfdiv /
++		(1 << vcodivsel);
++}
++
++static u8 berlin_pll_get_parent(struct clk_hw *hw)
++{
++	struct berlin_pll *pll = to_berlin_pll(hw);
++	u32 bypass = readl_relaxed(pll->bypass);
++
++	return !!(bypass & (1 << pll->bypass_shift));
++}
++
++static const struct clk_ops berlin_pll_ops = {
++	.recalc_rate	= berlin_pll_recalc_rate,
++	.get_parent	= berlin_pll_get_parent,
++};
++
++static void __init berlin_pll_setup(struct device_node *np)
++{
++	struct clk_init_data init;
++	struct berlin_pll *pll;
++	const char *parent_names[PLL_SOURCE_MAX];
++	struct clk *clk;
++	int ret, num_parents;
++	u8 bypass_shift;
++
++	num_parents = of_clk_get_parent_count(np);
++	if (num_parents <= 0 || num_parents > PLL_SOURCE_MAX)
++		return;
++
++	ret = of_property_read_u8(np, "bypass-shift", &bypass_shift);
++	if (ret)
++		return;
++
++	of_clk_parent_fill(np, parent_names, num_parents);
++
++	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
++	if (!pll)
++		return;
++
++	pll->ctrl = of_iomap(np, 0);
++	if (WARN_ON(!pll->ctrl))
++		goto err_iomap_ctrl;
++
++	pll->bypass = of_iomap(np, 1);
++	if (WARN_ON(!pll->bypass))
++		goto err_iomap_bypass;
++
++	init.name = np->name;
++	init.flags = 0;
++	init.ops = &berlin_pll_ops;
++	init.parent_names = parent_names;
++	init.num_parents = num_parents;
++
++	pll->hw.init = &init;
++	pll->bypass_shift = bypass_shift;
++
++	clk = clk_register(NULL, &pll->hw);
++	if (WARN_ON(IS_ERR(clk)))
++		goto err_clk_register;
++
++	ret = of_clk_add_provider(np, of_clk_src_simple_get, clk);
++	if (WARN_ON(ret))
++		goto err_clk_add;
++	return;
++
++err_clk_add:
++	clk_unregister(clk);
++err_clk_register:
++	iounmap(pll->bypass);
++err_iomap_bypass:
++	iounmap(pll->ctrl);
++err_iomap_ctrl:
++	kfree(pll);
++}
++CLK_OF_DECLARE(berlin_pll, "marvell,berlin-pll", berlin_pll_setup);
 -- 
 2.6.2
