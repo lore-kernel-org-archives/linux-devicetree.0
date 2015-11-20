@@ -1,44 +1,50 @@
 From: Tim Bird <tim.bird@sonymobile.com>
-Subject: [PATCH v2 3/3] usb: chipidea: register driver as a peripheral with the phy
-Date: Fri, 20 Nov 2015 14:37:18 -0800
-Message-ID: <1448059038-6179-3-git-send-email-tim.bird@sonymobile.com>
-References: <1448059038-6179-1-git-send-email-tim.bird@sonymobile.com>
+Subject: [PATCH v2 1/3] Documentation: dt-bindings: add async_irq to msm_hsusb
+Date: Fri, 20 Nov 2015 14:37:16 -0800
+Message-ID: <1448059038-6179-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448059038-6179-1-git-send-email-tim.bird@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter.Chen@freescale.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
 Cc: gregkh@linuxfoundation.org, balbi@ti.com, Bjorn.Andersson@sonymobile.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, tbird20d@gmail.com, tim.bird@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-Register the chipidea driver with the phy, so that the phy
-driver can kick the gadget driver when it resumes from low power.
-The phy-msm-usb (Qualcomm) driver requires this in order to
-recover gadget operation after you disconnect the USB cable
-and reconnect it.
+Add optional async_irq to msm_hsusb binding doc.
 
 Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/usb/chipidea/udc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index 8223fe7..06234cd 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -1890,6 +1890,12 @@ static int udc_start(struct ci_hdrc *ci)
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index 8654a3e..7ba1dff 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -23,7 +23,12 @@ Required properties:
+   "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
  
- 	ci->gadget.ep0 = &ci->ep0in->ep;
- 
-+	if (ci->usb_phy) {
-+		retval = otg_set_peripheral(ci->usb_phy->otg, &ci->gadget);
-+		if (retval)
-+			goto destroy_eps;
-+	}
+ - regs:         Offset and length of the register set in the memory map
+-- interrupts:   interrupt-specifier for the OTG interrupt.
++- interrupts:   interrupt-specifier for the OTG interrupts
 +
- 	retval = usb_add_gadget_udc(dev, &ci->gadget);
- 	if (retval)
- 		goto destroy_eps;
++- interrupt-names: Should contain the following:
++  "core_irq"    USB core interrupt
++  "async_irq"   Asynchronous interrupt to wake up from low power mode
++                (optional)
+ 
+ - clocks:       A list of phandle + clock-specifier pairs for the
+                 clocks listed in clock-names
+@@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
+     usb@f9a55000 {
+         compatible = "qcom,usb-otg-snps";
+         reg = <0xf9a55000 0x400>;
+-        interrupts = <0 134 0>;
++        interrupts = <0 134 0>, <0 140 0>;
++        interrupt-names = "core_irq", "async_irq";
+         dr_mode = "peripheral";
+ 
+         clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
 -- 
 1.8.2.2
