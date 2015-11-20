@@ -1,64 +1,68 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH 4/4] Documentation: usb: dwc3: qcom: Add TCSR mux usage
-Date: Fri, 20 Nov 2015 09:56:16 -0600
-Message-ID: <20151120155616.GC8722@qualcomm.com>
-References: <1448008509-8913-1-git-send-email-agross@codeaurora.org>
- <1448008509-8913-5-git-send-email-agross@codeaurora.org>
- <877flcemip.fsf@saruman.tx.rr.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] extcon: arizona: Update DT binding documentation
+ for mic detection
+Date: Fri, 20 Nov 2015 09:58:33 -0600
+Message-ID: <20151120155833.GA18510@rob-hp-laptop>
+References: <1447947940-3054-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1447947940-3054-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <877flcemip.fsf@saruman.tx.rr.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
+In-Reply-To: <1447947940-3054-6-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 09:08:46AM -0600, Felipe Balbi wrote:
+On Thu, Nov 19, 2015 at 03:45:39PM +0000, Charles Keepax wrote:
+> Add additional bindings to allow configuration of the system specific
+> microphone detection settings.
 > 
-> Hi,
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+>  .../devicetree/bindings/extcon/extcon-arizona.txt  |   20 ++++++++++++++++++++
+>  1 files changed, 20 insertions(+), 0 deletions(-)
 > 
-> Andy Gross <agross@codeaurora.org> writes:
-> > This patch adds documentation for the optional syscon-tcsr property in the
-> > Qualcomm DWC3 node.  The syscon-tcsr specifies the register and bit used to
-> > configure the TCSR USB phy mux register.
-> >
-> > Signed-off-by: Andy Gross <agross@codeaurora.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > index ca164e7..dfa222d 100644
-> > --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > @@ -8,6 +8,10 @@ Required properties:
-> >    "core"		Master/Core clock, have to be >= 125 MHz for SS
-> >  				operation and >= 60MHz for HS operation
-> >  
-> > +Optional properties:
-> > +- syscon-tcsr	Specifies TCSR handle, register offset, and bit position for
-> > +			configuring the phy mux setting.
-> 
-> oh, it's a PHY mux ? I don't think it should be part of any dwc3-* glue
-> layer then. By the time we reach dwc3, the mux should be properly
-> configured.
-> 
-> Kishon, any ideas ?
-> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> index e1705fa..d661811 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> @@ -13,3 +13,23 @@ Optional properties:
+>      ARIZONA_ACCDET_MODE_HPR or 2 - Headphone detect mode is set to HPDETR
+>      If this node is not mentioned or if the value is unknown, then
+>      headphone detection mode is set to HPDETL.
+> +
+> +  - wlf,micd-software-compare : Use a software comparison to determine mic
+> +    presence
+> +  - wlf,micd-detect-debounce : Additional software microphone detection
+> +    debounce specified in milliseconds.
+> +  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the headset
+> +    polarity if one exists.
+> +  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup prior to
+> +    performing microphone detection, specified as per the ARIZONA_MICD_TIME_XXX
+> +    defines.
+> +  - wlf,micd-rate : Delay between successive microphone detection measurements,
+> +    specified as per the ARIZONA_MICD_TIME_XXX defines.
+> +  - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
+> +    number of measurements to take, valid values being 2 and 4.
+> +  - wlf,micd-timeout : Timeout for microphone detection, specified in
+> +    milliseconds.
+
+Please add unit suffix (-ms).
+
+> +  - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
+> +    detection.
+> +
+> +  - wlf,gpsw : Settings for the general purpose switch
 > -- 
-> balbi
-
-The only issue with putting it at the phy layer is that i'd have redundant
-syscon entries for each pair of phys, unless i group them somehow in dt.  The
-only other issue I can think of is that in the downstream kernels, they do this
-before messing with the configuration of the dwc3.  So long as the phys do their
-thing before the dwc3 (phys latched before config), we're ok.
-
-
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> 1.7.2.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
