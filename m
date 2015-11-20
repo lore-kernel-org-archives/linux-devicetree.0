@@ -1,124 +1,31 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v2 0/6] Switch to generic syscon regmap based drivers
-Date: Fri, 20 Nov 2015 10:38:04 +0530
-Message-ID: <564EAAB4.1050009@samsung.com>
-References: <1445333085-22837-1-git-send-email-alim.akhtar@samsung.com>
- <CAGOxZ50G-ttivhVjbozUisA0HXcFz7bvRUuPR67xR88TTCa_wQ@mail.gmail.com>
- <CAGOxZ51_JPy51htzD_M_=qaPVUexkVhoA2ANLS2-rpK3QDT=8A@mail.gmail.com>
- <1606098.olLAyTIhB3@dell2.five-lan.de> <56272C1C.8040007@samsung.com>
- <562765F3.9010306@osg.samsung.com>
- <CAGOxZ52-ia8uhgGg5CiU9TSYkfAsRD52zvLqq++Y-mr4uaFOpg@mail.gmail.com>
- <5627A75E.60509@osg.samsung.com>
- <CAGOxZ537QuzBP4tcG9qh-+iXK-Y=WwZGiJ1-cwtLqwRf0a+wVA@mail.gmail.com>
- <56282B2D.6000708@samsung.com>
- <CAGOxZ50b3cGXQSFL1uXt7O=CyBOaE=7WRQ-tSz8NUmWzBdhxoQ@mail.gmail.com>
- <564E6D5D.60607@samsung.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 2/5] PM / OPP: Add {opp-microvolt|opp-microamp}-<name>
+ binding
+Date: Fri, 20 Nov 2015 10:41:36 +0530
+Message-ID: <20151120051136.GA3957@ubuntu>
+References: <cover.1447209519.git.viresh.kumar@linaro.org>
+ <1f1d9dd73ff629504f3c730e4100dba800c6132a.1447209519.git.viresh.kumar@linaro.org>
+ <20151111203100.GA10702@rob-hp-laptop>
+ <20151112050814.GC5408@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <564E6D5D.60607@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Alim Akhtar <alim.akhtar@gmail.com>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151112050814.GC5408@ubuntu>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, open list <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On 12-11-15, 10:38, Viresh Kumar wrote:
+> On 11-11-15, 14:31, Rob Herring wrote:
+> > > +		opp00 {
+> > 
+> > Thought we are doing frequency for unit address here.
+> 
+> That's done by the (Already reviewed) 4th patch..
 
-On 11/20/2015 06:16 AM, Krzysztof Kozlowski wrote:
-> On 20.11.2015 03:06, Alim Akhtar wrote:
->> Hi Krzysztof/Ulf/Kukjin
->>
->> On Thu, Oct 22, 2015 at 5:47 AM, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->>> On 22.10.2015 00:01, Alim Akhtar wrote:
->>>> On Wed, Oct 21, 2015 at 8:25 PM, Javier Martinez Canillas
->>>> <javier@osg.samsung.com> wrote:
->>>>> Hello Alim,
->>>>>
->>>>> On 10/21/2015 04:50 PM, Alim Akhtar wrote:
->>>>>
->>>>> [snip]
->>>>>
->>>>>>>
->>>>>>> [0]:
->>>>>>>  From c9b250ee03bae338339b70693e906145c719f783 Mon Sep 17 00:00:00 2001
->>>>>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
->>>>>>> Date: Wed, 21 Oct 2015 11:59:44 +0200
->>>>>>> Subject: [RFT PATCH] mmc: pwrseq: Use highest priority for eMMC restart
->>>>>>>   handler
->>>>>>>
->>>>>>> The pwrseq_emmc driver does a eMMC card reset before a system reboot to
->>>>>>> allow broken or limited ROM boot-loaders, that don't have an eMMC reset
->>>>>>> logic, to be able to read the second stage from the eMMC.
->>>>>>>
->>>>>>> But this has to be called before a system reboot handler and while most
->>>>>>> of them use the priority 128, there are other restart handlers (such as
->>>>>>> the syscon-reboot one) that use a higher priority. So, use the highest
->>>>>>> priority to make sure that the eMMC hw is reset before a system reboot.
->>>>>>>
->>>>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>>>>>> ---
->>>>>> Looks good.
->>>>>> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
->>>>>>
->>>>>
->>>
->>> +Cc Ulf,
->>>
->>> Javier,
->>>
->>> First of all, thanks Javier for digging into the issue. Actually I have
->>> Odroid U3 but because of user-space limitations (which I need for other
->>> work) I cannot test all of mainline patches there.
->>>
->>>
->>>>> Thanks, should I post it as a proper patch or are adding it to your
->>>>> series?
->>>> Suggest you to post as a patch collecting {Tested, Reviewed}-by (easy
->>>> for maintainers to pickup ) and probably CCing Ulf for his feedback.
->>>>
->>>>> I think the latter is more reasonable so with an ack from Ulf,
->>>>> all patches can go through the linux-samsung tree.
->>>>>
->>>> yes, that is reasonable, as I said, let Krzysztof and Ulf take a call here.
->>>
->>> Javier, Alim, Ulf,
->>>
->>> I am not grabbing any more patches for v4.4 because I doubt that they
->>> could be merged to arm-soc for this cycle. My last pull requests for
->>> v4.4 is still pending...
->>>
->>> This means that I plan to pick up these series for v4.5, after closing
->>> v4.4 merge window (unless Kukjin picks it also). Because of that, we
->>> have plenty of time, so my idea is:
->>> 1. Wait for some comments from Ulf on Javier's fix.
->>> 2. If the fix goes into v4.4, then problem solved.
->>> 3. If not and it get acked, then it can go with this set.
->>> 4. If not and it get applied by Ulf for v4.5, then a tag from him would
->>> be a nice way to solve dependency.
->>>
->>> Either way we don't have to hurry, I think.
->>>
->>
->> Is It the right time to get this series in?
->> Thanks!!
->
-> I started applying it but stopped at #5. It should be squashed with #6
-> to get rid of (not important) conflict between syscon reboot and
-> existing Exynos restart handler:
->
-> syscon-poweroff syscon-poweroff: pm_power_off already claimed c001e52c
-> exynos_power_off
-> syscon-poweroff: probe of syscon-poweroff failed with error -16
->
-> The conflict is not really an issue because of ordering of init calls
-> the Exynos will register itself before syscon. Nevertheless splitting
-> the patches does not really make sense... so please merge #5 with #6.
->
-Hmm...nice catch..will send v3 shortly after merging patch #5 and #6.
+Ping for the pending Ack :)
 
-> Best regards,
-> Krzysztof
->
->
+-- 
+viresh
