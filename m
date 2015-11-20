@@ -1,54 +1,88 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: sun5i: Add i2c axp152 pmic support for Auxtek T004 boards
-Date: Fri, 20 Nov 2015 14:59:10 +0100
-Message-ID: <1448027950-14629-4-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 3/4] ARM: dts: sun4i: Add backlight node to pov
+ protab2 ips9 tablet
+Date: Fri, 20 Nov 2015 14:59:09 +0100
+Message-ID: <1448027950-14629-3-git-send-email-hdegoede@redhat.com>
 References: <1448027950-14629-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBQGOXSZAKGQEQFROMLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1448027950-14629-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
+Add a node describing the lcd panel backlight on the pov protab2 ips9
+tablet.
 
-Add a node describing the AXP152 pmic used on Auxtek T004 boards.
-
-Signed-off-by: Michael van Slingerland <michael-D+wD5cluMvBGkk3ZsQTy/Q@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts b/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts
-index 2b3511e..a790ec8 100644
---- a/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts
-+++ b/arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts
-@@ -86,6 +86,20 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+index 0e5124f..1f92ec7 100644
+--- a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
++++ b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+@@ -47,6 +47,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "Point of View Protab2-IPS9";
+@@ -56,6 +57,16 @@
+ 		serial0 = &uart0;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&bl_en_pin_protab>;
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
++		default-brightness-level = <8>;
++		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -145,6 +156,13 @@
  };
  
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp152: pmic@30 {
-+		compatible = "x-powers,axp152";
-+		reg = <0x30>;
-+		interrupts = <0>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
+ &pio {
++	bl_en_pin_protab: bl_en_pin@0 {
++		allwinner,pins = "PH7";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 +	};
++
+ 	touchscreen_pins: touchscreen_pins@0 {
+ 		allwinner,pins = "PA5", "PB13";
+ 		allwinner,function = "gpio_out";
+@@ -167,6 +185,12 @@
+ 	};
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pins_a>;
++	status = "okay";
 +};
 +
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_t004>;
+ &reg_dcdc2 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <1000000>;
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
