@@ -1,7 +1,8 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v4 10/13] of: add vendor prefix for boe
-Date: Fri, 20 Nov 2015 16:15:36 +0800
-Message-ID: <1448007339-10966-11-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v4 12/13] drm/panel: simple: Add boe,
+ tv080wum-nl0 simple panel device tree binding
+Date: Fri, 20 Nov 2015 16:15:38 +0800
+Message-ID: <1448007339-10966-13-git-send-email-zyw@rock-chips.com>
 References: <1448007339-10966-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -18,23 +19,31 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com, emil.l.velikov@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Arnaud Ebalard <arno@natisbad.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, rmk+kernel@arm.linux.org.uk, ajaykumar.rs@samsung.com, Jonathan Cameron <jic23@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, rmk+kernel@arm.linux.org.uk, ajaykumar.rs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+VGhpcyBiaW5kaW5nIHNwZWNpZmllcyBhIHNldCBvZiBjb21tb24gcHJvcGVydGllcyBmb3IgZGlz
+cGxheSBwYW5lbHMuIEl0CmNhbiBiZSB1c2VkIGFzIGEgYmFzaXMgYnkgYmluZGluZ3MgZm9yIHNw
+ZWNpZmljIHBhbmVscy4KQmluZGluZ3MgZm9yIHRocmVlIHNwZWNpZmljIHBhbmVscyBhcmUgcHJv
+dmlkZWQgdG8gc2hvdyBob3cgdGhlCnNpbXBsZSBwYW5lbCBiaW5kaW5nIGNhbiBiZSB1c2VkLgoK
 U2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KQWNrZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQoKQ2hhbmdlcyBpbiB2NDogTm9uZQpD
-aGFuZ2VzIGluIHYzOiBOb25lCkNoYW5nZXMgaW4gdjI6IE5vbmUKCiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKwogMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAppbmRleCA1NWRmMWQ0Li4wZjg4ZDZmIDEwMDY0
-NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVz
-LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZp
-eGVzLnR4dApAQCAtMzMsNiArMzMsNyBAQCBhdW8JQVUgT3B0cm9uaWNzIENvcnBvcmF0aW9uCiBh
-dmFnbwlBdmFnbyBUZWNobm9sb2dpZXMKIGF2aWMJU2hhbmdoYWkgQVZJQyBPcHRvZWxlY3Ryb25p
-Y3MgQ28uLCBMdGQuCiBheGlzCUF4aXMgQ29tbXVuaWNhdGlvbnMgQUIKK2JvZQlCT0UgVGVjaG5v
-bG9neSBHcm91cCBDby4sIEx0ZC4KIGJvc2NoCUJvc2NoIFNlbnNvcnRlYyBHbWJICiBib3VuZGFy
-eQlCb3VuZGFyeSBEZXZpY2VzIEluYy4KIGJyY20JQnJvYWRjb20gQ29ycG9yYXRpb24KLS0gCjIu
-Ni4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgotLS0KCkNoYW5nZXMgaW4gdjQ6IE5vbmUK
+Q2hhbmdlcyBpbiB2MzoKbW92ZSBib2UsdHYwODB3dW0tbmwwLnR4dCB0byBiaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsLwoKQ2hhbmdlcyBpbiB2MjoKQXMgVGhpZXJyeS5SZWRpbmcgY29tbWVudCwgYWRk
+IGEgZG9jdW1lbnRhdGlvbiBmb3IgdGhpcyBwYW5lbC4KCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2JvZSx0djA4MHd1bS1ubDAudHh0ICAgICAgICAgfCA3ICsrKysrKysK
+IDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ib2UsdHYwODB3dW0t
+bmwwLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL2JvZSx0djA4MHd1bS1ubDAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLHR2MDgwd3VtLW5sMC50eHQKbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNTBiZTVlMgotLS0gL2Rldi9udWxsCisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JvZSx0djA4MHd1
+bS1ubDAudHh0CkBAIC0wLDAgKzEsNyBAQAorQm9lIENvcnBvcmF0aW9uIDguMCIgV1VYR0EgVEZU
+IExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQg
+YmUgImJvZSx0djA4MHd1bS1ubDAiCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGgg
+dGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1w
+YW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCi0tIAoyLjYuMwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
