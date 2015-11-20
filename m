@@ -1,113 +1,61 @@
-From: Raphael Poggi <poggi.raph@gmail.com>
-Subject: [PATCH 4/4] sound: codecs: pcm1792a: introduce channel side
-Date: Fri, 20 Nov 2015 11:09:17 +0100
-Message-ID: <1448014157-36526-5-git-send-email-raphael.poggi@avalun.com>
-References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: perex@perex.cz, tiwai@suse.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Raphael Poggi <poggi.raph@gmail.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
+ wait cycles using the SPI Wait Clock Register
+Date: Fri, 20 Nov 2015 21:12:04 +1100
+Message-ID: <CAGRGNgV0kOkye-Zu4WGQKgGim7N2HB9rAFJ3HNQS89Rr6_WexQ@mail.gmail.com>
+References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
+ <1447948422-4915-2-git-send-email-mweseloh42@gmail.com> <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
+ <CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBCHEXOZAKGQEQV7PCKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Raphael Poggi <poggi.raph@gmail.com>
+Hi Marcus,
 
-Add possibility to choose the channel side using the device tree,
-and also modify it using alsa ctrl.
+On Fri, Nov 20, 2015 at 7:45 PM, Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Julian,
+>
+> 2015-11-19 23:59 GMT+01:00 Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> Should you possibly hide the 3 clock periods from the user?
+>>
+>> I.e. they set whatever they want for the wdelay, we set it to the
+>> closest number we can that's greater or equal to what they ask for.
+>
+> That's a good idea and much better than having to remember to subtract
+> 3 cycles from the desired wait time!
+>
+> But it would mean that this magic number becomes part of the driver
+> code. I have found no official documentation that mentions those
+> additional cycles. While I have checked many different transmission
+> speeds using both CDR1 and CDR2 divider configurations, there is still
+> the possibility that the behaviour changes with weird SPI module
+> configurations... And I've only tested it on A20 hardware. So it would
+> be great if somebody else with access to A10 hardware and an
+> oscilloscope could check if we have a consistent 3 cycle overhead.
 
-Signed-off-by: Raphael Poggi <poggi.raph@gmail.com>
----
- sound/soc/codecs/pcm1792a.c | 46 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Having magic numbers is kind-of a drivers' job. (and the wdelay should
+arguably be a core-spi thing, not a sunxi thing, but that's a separate
+discussion)
 
-diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm1792a.c
-index febaa48..005b679 100644
---- a/sound/soc/codecs/pcm1792a.c
-+++ b/sound/soc/codecs/pcm1792a.c
-@@ -65,6 +65,12 @@ static const struct reg_default pcm1792a_reg_defaults[] = {
- 	{ PCM1792A_DEVICE_ID, 0x00 },
- };
- 
-+enum __pcm1792_side {
-+	STEREO,
-+	MONORAL_LEFT,
-+	MONORAL_RIGHT
-+};
-+
- static bool pcm1792a_accessible_reg(struct device *dev, unsigned int reg)
- {
- 	return reg >= 0x10 && reg <= 0x17;
-@@ -83,6 +89,7 @@ struct pcm1792a_private {
- 	struct regmap *regmap;
- 	unsigned int format;
- 	unsigned int rate;
-+	unsigned int side;
- };
- 
- static int pcm1792a_set_dai_fmt(struct snd_soc_dai *codec_dai,
-@@ -153,6 +160,13 @@ static int pcm1792a_hw_params(struct snd_pcm_substream *substream,
- 	ret = regmap_update_bits(priv->regmap, PCM1792A_FMT_CONTROL,
- 				 PCM1792A_FMT_MASK | PCM1792A_ATLD_ENABLE, val);
- 
-+	if (priv->side == MONORAL_LEFT)
-+		val = PCM1792A_CHANNEL_MONO_LEFT;
-+	else if (priv->side == MONORAL_RIGHT)
-+		val = PCM1792A_CHANNEL_MONO_RIGHT;
-+
-+	regmap_update_bits(priv->regmap, PCM1792A_CHANNEL, PCM1792A_CHANNEL_MONO_MASK, val);
-+
- 	return ret;
- }
- 
-@@ -222,10 +236,31 @@ static struct snd_soc_codec_driver soc_codec_dev_pcm1792a = {
- 	.num_dapm_routes	= ARRAY_SIZE(pcm1792a_dapm_routes),
- };
- 
-+static int pcm1792a_of_init(struct spi_device *spi)
-+{
-+	int ret = 0;
-+	struct pcm1792a_private *pcm1792a = dev_get_drvdata(&spi->dev);
-+	const char *name;
-+	struct device_node *np = spi->dev.of_node;
-+
-+	name = of_get_property(np, "ti,side", NULL);
-+	if (name) {
-+		if (!strcmp(name, "left"))
-+			pcm1792a->side = MONORAL_LEFT;
-+		else
-+			pcm1792a->side = MONORAL_RIGHT;
-+	}
-+	else
-+		pcm1792a->side = STEREO;
-+
-+	return ret;
-+}
-+
- static int pcm1792a_spi_probe(struct spi_device *spi)
- {
- 	struct pcm1792a_private *pcm1792a;
- 	int ret;
-+	struct device_node *np = spi->dev.of_node;
- 
- 	pcm1792a = devm_kzalloc(&spi->dev, sizeof(struct pcm1792a_private),
- 				GFP_KERNEL);
-@@ -241,6 +276,17 @@ static int pcm1792a_spi_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
-+	if (np) {
-+		ret = pcm1792a_of_init(spi);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (pcm1792a->side == MONORAL_LEFT)
-+		regmap_update_bits(pcm1792a->regmap, PCM1792A_CHANNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_LEFT);
-+	else if (pcm1792a->side == MONORAL_RIGHT)
-+		regmap_update_bits(pcm1792a->regmap, PCM1792A_CHANNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_RIGHT);
-+
- 	return snd_soc_register_codec(&spi->dev,
- 			&soc_codec_dev_pcm1792a, &pcm1792a_dai, 1);
- }
+If it is different for other SoCs, then you might have to move that
+constant somewhere else and introduce new compatible strings for them.
+
+Thanks,
+
 -- 
-2.1.0
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
