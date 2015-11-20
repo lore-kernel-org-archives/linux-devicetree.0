@@ -1,41 +1,107 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC/PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP
- bindings
-Date: Fri, 20 Nov 2015 09:53:34 -0800
-Message-ID: <20151120175334.GR32672@codeaurora.org>
-References: <1447808426-21834-1-git-send-email-sboyd@codeaurora.org>
- <20151119145017.GA19795@rob-hp-laptop>
+From: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+Subject: [PATCH 1/3] pinctrl: Broadcom NSP pinctrl device tree bindings
+Date: Fri, 20 Nov 2015 12:56:31 -0500
+Message-ID: <1448042191-1982-1-git-send-email-yrdreddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151119145017.GA19795@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19, Rob Herring wrote:
-> On Tue, Nov 17, 2015 at 05:00:26PM -0800, Stephen Boyd wrote:
-> > The drivers don't really need to know which PMIC they're for, so
-> > make a generic binding for them. This alleviates us from updating
-> > the drivers every time a new PMIC comes out. It's still
-> > recommended that we update the binding with new PMIC models and
-> > always specify the specific model for the MPPs and gpios before
-> > the generic compatible string in devicetree, but this at least
-> > cuts down on adding more and more compatible strings to the
-> > drivers until we actually need them.
-> > 
-> > Cc: <devicetree@vger.kernel.org>
-> > Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > ---
-> 
-> Seems okay to me. I assume you are going to update all the dts files?
+Device tree binding documentation for Broadcom NSP IOMUX driver
 
-Yep, I'll send out patches to do that.
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+---
+ .../bindings/pinctrl/brcm,nsp-pinmux.txt           | 79 ++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+new file mode 100644
+index 0000000..603564e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+@@ -0,0 +1,79 @@
++Broadcom NSP (Northstar plus) IOMUX Controller
++
++The NSP IOMUX controller supports group based mux configuration. In
++addition, certain pins can be muxed to GPIO function individually.
++
++Required properties:
++- compatible:
++    Must be "brcm,nsp-pinmux"
++
++- reg:
++    Should contain the register physical address and length for each of
++    GPIO_CONTROL0, GP_AUX_SEL and IPROC_CONFIG IOMUX registers
++
++Properties in subnodes:
++- function:
++    The mux function to select
++
++- groups:
++    The list of groups to select with a given function
++
++For more details, refer to
++Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++
++For example:
++
++	pinmux: pinmux@1803f1c0 {
++		compatible = "brcm,nsp-pinmux";
++		reg = <0x1803f1c0 0x04>,
++		      <0x18030028 0x04>,
++		      <0x1803f408 0x04>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm &gpio_b &nand_sel>;
++
++		pwm: pwm {
++			function = "pwm";
++			groups = "pwm0_grp", "pwm1_grp";
++		};
++
++		gpio_b: gpio_b {
++			function = "gpio_b";
++			groups = "gpio_b_0_grp", "gpio_b_1_grp";
++		};
++
++		nand_sel: nand_sel {
++			function = "nand";
++			groups = "nand_grp";
++		};
++	};
++
++List of supported functions and groups in Northstar Plus:
++
++"spi": "spi_grp"
++
++"i2c": "i2c_grp"
++
++"mdio": "mdio_grp"
++
++"pwm": "pwm0_grp", "pwm1_grp", "pwm2_grp", "pwm3_grp"
++
++"gpio_b": "gpio_b_0_grp", "gpio_b_1_grp", "gpio_b_2_grp", "gpio_b_3_grp"
++
++"uart1": "uart1_grp"
++
++"uart2": "uart2_grp"
++
++"synce": "synce_grp"
++
++"sata_led_grps": "sata0_led_grp", "sata1_led_grp"
++
++"xtal_out": "xtal_out_grp"
++
++"sdio": "sdio_pwr_grp", "sdio_1p8v_grp"
++
++"switch_led": "switch_p05_led0_grp", "switch_p05_led1_grp"
++
++"nand": "nand_grp"
++
++"emmc": "emmc_grp"
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.1.0
