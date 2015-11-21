@@ -1,69 +1,52 @@
-From: Karsten Merker <merker@debian.org>
-Subject: [PATCH V4 2/3] Input: goodix - use "inverted_[xy]" flags instead of "rotated_screen"
-Date: Sat, 21 Nov 2015 14:30:21 +0100
-Message-ID: <1448112622-2062-3-git-send-email-merker@debian.org>
-References: <1448112622-2062-1-git-send-email-merker@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448112622-2062-1-git-send-email-merker@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Irina Tirdea <irina.tirdea@intel.com>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Karsten Merker <merker@debian.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
+ TPS65086 PMIC
+Date: Sat, 21 Nov 2015 13:37:39 +0000
+Message-ID: <20151121133739.GG26072@sirena.org.uk>
+References: <1447974102-24938-1-git-send-email-afd@ti.com>
+ <1447974102-24938-4-git-send-email-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OFj+1YLvsEfSXdCH"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1447974102-24938-4-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The goodix touchscreen driver uses a "rotated_screen" flag for
-systems on which the touchscreen is mounted rotated by 180
-degrees with respect to the display.  With the addition of
-support for the dt properties "touchscreen-inverted-x" and
-"touchscreen-inverted-y", a separate "rotated_screen" flag
-is not necessary anymore. This patch replaces it by setting
-the inverted_x and inverted_y flags instead.
 
-Signed-off-by: Karsten Merker <merker@debian.org>
-Reviewed-by: Irina Tirdea <irina.tirdea@intel.com>
-Tested-by: Bastien Nocera <hadess@hadess.net>
-Acked-by: Bastien Nocera <hadess@hadess.net>
----
- drivers/input/touchscreen/goodix.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+--OFj+1YLvsEfSXdCH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index 6985d72..2d888ea 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -39,7 +39,6 @@ struct goodix_ts_data {
- 	int abs_y_max;
- 	unsigned int max_touch_num;
- 	unsigned int int_trigger_type;
--	bool rotated_screen;
- 	int cfg_len;
- 	struct gpio_desc *gpiod_int;
- 	struct gpio_desc *gpiod_rst;
-@@ -267,11 +266,6 @@ static void goodix_ts_report_touch(struct goodix_ts_data *ts, u8 *coor_data)
- 	int input_y = get_unaligned_le16(&coor_data[3]);
- 	int input_w = get_unaligned_le16(&coor_data[5]);
- 
--	if (ts->rotated_screen) {
--		input_x = ts->abs_x_max - input_x;
--		input_y = ts->abs_y_max - input_y;
--	}
--
- 	/* Inversions have to happen before axis swapping */
- 	if (ts->inverted_x)
- 		input_x = ts->abs_x_max - input_x;
-@@ -708,10 +702,12 @@ static void goodix_read_config(struct goodix_ts_data *ts)
- 		ts->max_touch_num = GOODIX_MAX_CONTACTS;
- 	}
- 
--	ts->rotated_screen = dmi_check_system(rotated_screen);
--	if (ts->rotated_screen)
-+	if (dmi_check_system(rotated_screen)) {
-+		ts->inverted_x = true;
-+		ts->inverted_y = true;
- 		dev_dbg(&ts->client->dev,
- 			 "Applying '180 degrees rotated screen' quirk\n");
-+	}
- }
- 
- /**
--- 
-2.1.4
+On Thu, Nov 19, 2015 at 05:01:41PM -0600, Andrew F. Davis wrote:
+> Add support for TPS65086 PMIC regulators.
+>=20
+> The regulators set consists of 3 Step-down Controllers, 3 Step-down
+> Converters, 3 LDOs, 3 Load Switches, and a Sink and Source LDO. The
+> output voltages are configurable and are meant to supply power to a
+> SoC and/or other components.
+
+An earlier version of this patch has already been applied, please don't
+resend already applied patches but send incremental patches with any
+changes.
+
+--OFj+1YLvsEfSXdCH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWUHOiAAoJECTWi3JdVIfQ2zkH/1om6MWN2crlK7vScrcQ5D2Y
+V7YjnuFgqP+fl5Jll5QvcKWf7IIayPR9YxApgW/AyraNT8HGp6ILq5O/4foy2RhE
+zQkhsZLoKtd58xsF1h1SFVRyDAdPru/Ql1tabplJHjhiDiqbUAieA80UaGvPj8Vs
+/RLVk+URAp79bBEcyyNZCq1xxIsESbTLXvsO5rhTFz12yIqwi5RtT/AkMDJU5JoE
+mGBr26m/5dMsjr2utsgbbXUkozVWhZ2k+10TeIfCbTYl2Q5QUdLCnRCqrAizJxZb
+McV/1eNGpFoOLxTObSY8A0VdPbtUlopvbz0h9vszYagbGxQLhTwTlZ9SL6IcCdE=
+=wycQ
+-----END PGP SIGNATURE-----
+
+--OFj+1YLvsEfSXdCH--
