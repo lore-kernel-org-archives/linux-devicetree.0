@@ -1,81 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] ASoC: da7218: Add bindings
- documentation for DA7218 audio codec
-Date: Sat, 21 Nov 2015 12:52:52 +0000
-Message-ID: <20151121125252.GD26072@sirena.org.uk>
-References: <cover.1447941395.git.Adam.Thomson.Opensource@diasemi.com>
- <add67c0ebac7a516d3cf515fea10a08b7cabadbc.1447941395.git.Adam.Thomson.Opensource@diasemi.com>
- <20151120155351.GA13917@rob-hp-laptop>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH 1/2] mtd: brcmnand: Add brcm,nand-bcm63268 device tree binding
+Date: Sat, 21 Nov 2015 13:10:45 +0000
+Message-ID: <56506D55.3000907@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6360125759100229767=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20151120155351.GA13917@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Support Opensource <support.opensource@diasemi.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add device tree binding for NAND on the BCM63268.
 
---===============6360125759100229767==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
-Content-Disposition: inline
+The BCM63268 has a NAND interrupt register with combined status and enable
+registers.
 
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
---76DTJ5CE0DCVQemd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 4ff7128..45c6e0c 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -72,6 +72,13 @@ we define additional 'compatible' properties and associated register resources w
+        and enable registers
+      - reg-names: (required) "nand-int-base"
+ 
++   * "brcm,nand-bcm63268"
++     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
++     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
++       and enable registers, and boot address registers
++     - reg-names: (required) "nand-intr-base"
++     - clock: (required) reference to the clock for NAND controller
++
+    * "brcm,nand-iproc"
+      - reg: (required) the "IDM" register range, for interrupt enable and APB
+        bus access endianness configuration, and the "EXT" register range,
+@@ -148,3 +155,29 @@ nand@f0442800 {
+ 		};
+ 	};
+ };
++
++nand@0x10000200 {
++	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm63268",
++		"brcm,brcmnand-v4.0", "brcm,brcmnand";
++	reg = <0x10000200 0x180>,
++	      <0x10000600 0x200>,
++	      <0x100000b0 0x10>;
++	reg-names = "nand", "nand-cache", "nand-intr-base";
++	interrupt-parent = <&periph_intc>;
++	interrupts = <50>;
++	clocks = <&periph_clk 20>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand0: nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <1>;
++		nand-ecc-step-size = <512>;
++
++		#address-cells = <0>;
++		#size-cells = <0>;
++	};
++};
+-- 
+2.1.4
 
-On Fri, Nov 20, 2015 at 09:53:51AM -0600, Rob Herring wrote:
-> On Thu, Nov 19, 2015 at 01:59:34PM +0000, Adam Thomson wrote:
-
-> > +- VDD-supply: VDD power supply for the device
-> > +- VDDMIC-supply: VDDMIC power supply for the device
-> > +- VDDIO-supply: VDDIO power supply for the device
-
-> These should be lower case (that is documented in ePAPR BTW :)).
-
-Does that actually make a meaningful difference to anything?  Things end
-up this way because the strings we use to request the supplies end up in
-the property names, we've also got a few other things like representing
-microvolts as uV which just look very wrong when written all lowercase.
-We could work around it for the supply names by force lowercasing the
-name if we don't find the property with the passed name (to avoid
-breaking existing users) though.
-
-There's a bunch of stuff in ePAPR that we're ignoring, and a bunch of
-other stuff that has no real value like the class naming stuff.
-
---76DTJ5CE0DCVQemd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWUGkkAAoJECTWi3JdVIfQWl4H/RDSgXh229dQZWfcM1mECnYd
-mNcVzURkDN0x8WUFoX6jfF/C2bufqzz7TimMAsH8zF7C1gHLALx/gtvieGPPYmN/
-wTjt4qtcipvNB5+rKjiNvEzukSvXvl1Gx31zqTbGnAoDK/v481OvzRGjhQiuU6/T
-njfmYFm/aNYV65/xPnXoiTm/zB9Q9szRPIPV70kvq7Mpsp/z30j/VOyMxxES3jxa
-+bATZq0qZq4i/GS7a57o7GJ3Si0DLS89MWy+fdVH+8AhUpiq7tgatCG0cNRr64Wu
-ErdEFS4XPDs9BJWEe9ua+i81yfor2NB1MBfIrmzn85XoOs/yyYdwsXzW81xhFr4=
-=MShk
------END PGP SIGNATURE-----
-
---76DTJ5CE0DCVQemd--
-
---===============6360125759100229767==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6360125759100229767==--
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
