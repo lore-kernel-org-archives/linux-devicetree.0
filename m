@@ -1,7 +1,7 @@
 From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH 09/14] DEVICETREE: Add bindings for PIC32 usart driver
-Date: Fri, 20 Nov 2015 17:17:21 -0700
-Message-ID: <1448065205-15762-10-git-send-email-joshua.henderson@microchip.com>
+Subject: [PATCH 12/14] DEVICETREE: Add bindings for PIC32 SDHC host controller
+Date: Fri, 20 Nov 2015 17:17:24 -0700
+Message-ID: <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
 References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -22,50 +22,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Andrei Pistirica <andrei.pistirica@microchip.com>
 
-Document the devicetree bindings for the USART peripheral found on
+Document the devicetree bindings for the SDHC peripheral found on
 Microchip PIC32 class devices.
 
 Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
 Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
 ---
- .../bindings/serial/microchip,pic32-usart.txt      |   29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
+ .../devicetree/bindings/mmc/sdhci-pic32.txt        |   24 ++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt b/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
 new file mode 100644
-index 0000000..c87321c
+index 0000000..f16388c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
-@@ -0,0 +1,29 @@
-+* Microchip Universal Synchronous Asynchronous Receiver/Transmitter (USART)
++++ b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+@@ -0,0 +1,24 @@
++* Microchip PIC32 SDHCI Controller
++
++This file documents differences between the core properties in mmc.txt
++and the properties used by the sdhci-pic32 driver.
 +
 +Required properties:
-+- compatible: Should be "microchip,pic32-usart"
++- compatible: Should be "microchip,pic32-sdhci"
 +- reg: Should contain registers location and length
 +- interrupts: Should contain interrupt
-+- pinctrl: Should contain pinctrl for TX/RX/RTS/CTS
++- pinctrl: Should contain pinctrl for data and command lines
 +
 +Optional properties:
-+- microchip,uart-has-rtscts : Indicate the uart has hardware flow control
-+- rts-gpios: RTS pin for USP-based UART if microchip,uart-has-rtscts
-+- cts-gpios: CTS pin for USP-based UART if microchip,uart-has-rtscts
++- no-1-8-v: 1.8V voltage selection not supported
++- piomode: disable DMA support
 +
 +Example:
-+	usart0: serial@1f822000 {
-+		compatible = "microchip,pic32-usart";
-+		reg = <0x1f822000 0x50>;
-+		interrupts = <UART1_FAULT DEFAULT_INT_PRI IRQ_TYPE_NONE>,
-+			     <UART1_RECEIVE_DONE DEFAULT_INT_PRI IRQ_TYPE_NONE>,
-+			     <UART1_TRANSFER_DONE DEFAULT_INT_PRI IRQ_TYPE_NONE>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <
-+			&pinctrl_uart1
-+			&pinctrl_uart1_cts
-+			&pinctrl_uart1_rts>;
-+		microchip,uart-has-rtscts;
-+		cts-gpios = <&pioB 15 0>;
-+		rts-gpios = <&pioD 1 0>;
++
++	sdhci@1f8ec000 {
++		compatible = "microchip,pic32-sdhci";
++		reg = <0x1f8ec000 0x100>;
++		interrupts = <SDHC_EVENT DEFAULT_INT_PRI IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&REFCLKO4>, <&PBCLK5>;
++		clock-names = "base_clk", "sys_clk";
 +	};
 -- 
 1.7.9.5
