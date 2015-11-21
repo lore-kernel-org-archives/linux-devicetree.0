@@ -1,49 +1,98 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
- TPS65086 PMIC
-Date: Sat, 21 Nov 2015 14:40:50 -0600
-Message-ID: <5650D6D2.5060108@ti.com>
-References: <1447974102-24938-1-git-send-email-afd@ti.com>
- <1447974102-24938-4-git-send-email-afd@ti.com>
- <20151121133739.GG26072@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 01/14] DEVICETREE: Add bindings for PIC32 interrupt controller
+Date: Sat, 21 Nov 2015 21:47:14 +0100
+Message-ID: <7036408.cJ9oZKCcQe@wuerfel>
+References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com> <1448065205-15762-2-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151121133739.GG26072@sirena.org.uk>
+In-Reply-To: <1448065205-15762-2-git-send-email-joshua.henderson@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joshua Henderson <joshua.henderson@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Cristian Birsan <cristian.birsan@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2015 07:37 AM, Mark Brown wrote:
-> On Thu, Nov 19, 2015 at 05:01:41PM -0600, Andrew F. Davis wrote:
->> Add support for TPS65086 PMIC regulators.
->>
->> The regulators set consists of 3 Step-down Controllers, 3 Step-down
->> Converters, 3 LDOs, 3 Load Switches, and a Sink and Source LDO. The
->> output voltages are configurable and are meant to supply power to a
->> SoC and/or other components.
->
-> An earlier version of this patch has already been applied, please don't
-> resend already applied patches but send incremental patches with any
-> changes.
->
+On Friday 20 November 2015 17:17:13 Joshua Henderson wrote:
 
-Odd, I didn't seem to get any message for this getting applied. Looks
-like only a couple lines difference from the version in the regulators
-branch, I don't imagine you are able to rebase that with these changes?
+> +Example
+> +-------
+> +
+> +evic: interrupt-controller@1f810000 {
+> +        compatible = "microchip,evic-v2";
+> +        interrupt-controller;
+> +        #interrupt-cells = <3>;
+> +        reg = <0x1f810000 0x1000>;
+> +        device_type="evic-v2";
+> +};
 
-Anyway the reason that line needed changed is over a confusion in
-what the 'of_node' does in 'struct regulator_config'. The description
-seems to make it seem like it is the node that gets checked for
-init data.
+This is not a correct use of device_type. Just drop that property.
 
-> * @of_node: OpenFirmware node to parse for device tree bindings (may be
-> *           NULL).
+> diff --git a/include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h b/include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h
+> new file mode 100644
+> index 0000000..2c466b8
+> --- /dev/null
+> +++ b/include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h
+> @@ -0,0 +1,238 @@
+> +/*
+> + * This header provides constants for the MICROCHIP PIC32 EVIC.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_MICROCHIP_EVIC_H
+> +#define _DT_BINDINGS_INTERRUPT_CONTROLLER_MICROCHIP_EVIC_H
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/* Hardware interrupt number */
+> +#define CORE_TIMER_INTERRUPT 0
+> +#define CORE_SOFTWARE_INTERRUPT_0 1
+> +#define CORE_SOFTWARE_INTERRUPT_1 2
+> +#define EXTERNAL_INTERRUPT_0 3
+> +#define TIMER1 4
 
-But the 'of_node' that is actually searched is the one given in
-regulator_config->dev->of_node. Is this intended behavior (drivers
-assume it is so it probably has to be now) and if so, the above
-description might need to be clarified as too what that 'of_node'
-pointer really does?
+A header file like this is just going to make everyone's life
+miserable. Try to remove as much as possible here: normally
+you can just use the numbers from the data sheet that match
+the actual hardware registers, and put them into the dts file.
+
+> +/* Interrupt priority bits */
+> +#define PRI_0	0	/* Note:This priority disables the interrupt! */
+> +#define PRI_1	1
+> +#define PRI_2	2
+> +#define PRI_3	3
+> +#define PRI_4	4
+> +#define PRI_5	5
+> +#define PRI_6	6
+> +#define PRI_7	7
+
+> +/* Interrupt subpriority bits */
+> +#define SUB_PRI_0	0
+> +#define SUB_PRI_1	1
+> +#define SUB_PRI_2	2
+> +#define SUB_PRI_3	3
+
+These are obviously silly and should be removed/
+
+> +#define PRI_MASK	0x7	/* 3 bit priority mask */
+> +#define SUBPRI_MASK	0x3	/* 2 bit subpriority mask */
+> +#define INT_MASK	0x1F	/* 5 bit pri and subpri mask */
+> +#define NR_EXT_IRQS	5	/* 5 external interrupts sources */
+> +
+> +#define MICROCHIP_EVIC_MIN_PRIORITY 0
+> +#define MICROCHIP_EVIC_MAX_PRIORITY INT_MASK
+> +
+> +#define INT_PRI(pri, subpri)	\
+> +	(((pri & PRI_MASK) << 2) | (subpri & SUBPRI_MASK))
+> +
+> +#define DEFINE_INT(irq, pri) { irq, pri }
+> +
+> +#define DEFAULT_INT_PRI INT_PRI(2, 0)
+
+Is it required to have a specific priority configured for each line?
+If these are software selectable, it's probably better to not put
+them into DT in the first place.
+
+If you absolutely need them, I would suggest using two separate cells
+for pri and subpri so you can avoid the macro.
+
+	Arnd
