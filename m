@@ -1,109 +1,54 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH] arm: dts: qcom: Add generic PMIC gpio/MPP compat strings
-Date: Fri, 20 Nov 2015 17:49:46 -0800
-Message-ID: <1448070586-2653-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh@kernel.org>
+From: chunfeng yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v12 0/3] Mediatek xHCI support
+Date: Sat, 21 Nov 2015 10:42:37 +0800
+Message-ID: <1448073757.18917.14.camel@mhfsdcap03>
+References: <1447751921-26746-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <564F0211.3090605@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <564F0211.3090605@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the generic compatible strings for the PMIC gpio and MPP
-modules found on qcom based PMICs.
-
-Cc: <devicetree@vger.kernel.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 6 ++++--
- arch/arm/boot/dts/qcom-pm8841.dtsi  | 2 +-
- arch/arm/boot/dts/qcom-pm8941.dtsi  | 4 ++--
- arch/arm/boot/dts/qcom-pma8084.dtsi | 4 ++--
- 4 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 11aca7fb1793..d0670d0ee08c 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -430,7 +430,8 @@
- 
- 				pm8921_gpio: gpio@150 {
- 
--					compatible = "qcom,pm8921-gpio";
-+					compatible = "qcom,pm8921-gpio",
-+						     "qcom,ssbi-gpio";
- 					reg = <0x150>;
- 					interrupts = <192 1>, <193 1>, <194 1>,
- 						     <195 1>, <196 1>, <197 1>,
-@@ -454,7 +455,8 @@
- 				};
- 
- 				pm8921_mpps: mpps@50 {
--					compatible = "qcom,pm8921-mpp";
-+					compatible = "qcom,pm8921-mpp",
-+						     "qcom,ssbi-mpp";
- 					reg = <0x50>;
- 					gpio-controller;
- 					#gpio-cells = <2>;
-diff --git a/arch/arm/boot/dts/qcom-pm8841.dtsi b/arch/arm/boot/dts/qcom-pm8841.dtsi
-index 523bee959f98..9f357f68713c 100644
---- a/arch/arm/boot/dts/qcom-pm8841.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8841.dtsi
-@@ -10,7 +10,7 @@
- 		#size-cells = <0>;
- 
- 		pm8841_mpps: mpps@a000 {
--			compatible = "qcom,pm8841-mpp";
-+			compatible = "qcom,pm8841-mpp", "qcom,spmi-mpp";
- 			reg = <0xa000 0x400>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index 12c1202ba2ca..64622bd251d1 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -48,7 +48,7 @@
- 		};
- 
- 		pm8941_gpios: gpios@c000 {
--			compatible = "qcom,pm8941-gpio";
-+			compatible = "qcom,pm8941-gpio", "qcom,spmi-gpio";
- 			reg = <0xc000 0x2400>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -91,7 +91,7 @@
- 		};
- 
- 		pm8941_mpps: mpps@a000 {
--			compatible = "qcom,pm8941-mpp";
-+			compatible = "qcom,pm8941-mpp", "qcom,spmi-mpp";
- 			reg = <0xa000 0x800>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
-index 10b8f9e6d60b..4e9bd3f88473 100644
---- a/arch/arm/boot/dts/qcom-pma8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
-@@ -19,7 +19,7 @@
- 		};
- 
- 		pma8084_gpios: gpios@c000 {
--			compatible = "qcom,pma8084-gpio";
-+			compatible = "qcom,pma8084-gpio", "qcom,spmi-gpio";
- 			reg = <0xc000 0x1600>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -48,7 +48,7 @@
- 		};
- 
- 		pma8084_mpps: mpps@a000 {
--			compatible = "qcom,pma8084-mpp";
-+			compatible = "qcom,pma8084-mpp", "qcom,spmi-mpp";
- 			reg = <0xa000 0x800>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hi,
+On Fri, 2015-11-20 at 13:20 +0200, Mathias Nyman wrote:
+> On 17.11.2015 11:18, Chunfeng Yun wrote:
+> >  From 577f68d9c0ca1531d5f9cae0dcbea2ba116c8551 Mon Sep 17 00:00:00 2001
+> > From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Date: Tue, 17 Nov 2015 17:09:05 +0800
+> > Subject: [PATCH v12 0/3] Mediatek xHCI support
+> >
+> > The patch supports MediaTek's xHCI controller.
+> >
+> > There are some differences from xHCI spec:
+> > 1. The interval is specified in 250 * 8ns increments for Interrupt Moderation
+> > Interval(IMODI) of the Interrupter Moderation(IMOD) register, it is 8 times as
+> > much as that defined in xHCI spec.
+> >
+> > 2. For the value of TD Size in Normal TRB, MTK's xHCI controller defines a
+> > number of packets that remain to be transferred for a TD after processing all
+> > Max packets in all previous TRBs,that means don't include the current TRB's,
+> > but in xHCI spec it includes the current ones.
+> >
+> > 3. To minimize the scheduling effort for synchronous endpoints in xHC, the MTK
+> > architecture defines some extra SW scheduling parameters for HW. According to
+> > these parameters provided by SW, the xHC can easily decide whether a
+> > synchronous endpoint should be scheduled in a specific uFrame. The extra SW
+> > scheduling parameters are put into reserved DWs in Slot and Endpoint Context.
+> > And a bandwidth scheduler algorithm is added to support such feature.
+> >
+> > A usb3.0 phy driver is also added which used by mt65xx SoCs platform, it
+> > supports two usb2.0 ports and one usb3.0 port.
+> >
+> 
+> Added to my tree, I'll send it forward to Greg shortly
+> 
+> Fixed the documentation "wakeup_deb_p0" -> "wakeup_deb_p1" typo as well
+Thank you very much.
+> 
+> -Mathias  
+> 
