@@ -1,44 +1,49 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for Innosilicon HDMI
- on Rockchip platform
-Date: Sat, 21 Nov 2015 21:14:11 +0100
-Message-ID: <1776316.RzHCH7Zejb@phil>
-References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
- <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
+ TPS65086 PMIC
+Date: Sat, 21 Nov 2015 14:40:50 -0600
+Message-ID: <5650D6D2.5060108@ti.com>
+References: <1447974102-24938-1-git-send-email-afd@ti.com>
+ <1447974102-24938-4-git-send-email-afd@ti.com>
+ <20151121133739.GG26072@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zheng Yang <zhengyang@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Ben Chan <benchan@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151121133739.GG26072@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFraXIsCgpBbSBNaXR0d29jaCwgMTEuIE5vdmVtYmVyIDIwMTUsIDE1OjQ3OjMyIHNjaHJp
-ZWIgWWFraXIgWWFuZzoKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlw
-cy5jb20+Cj4gLS0tCj4gIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50
-eHQgICAgICAgIHwgNTAgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-NTAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+
-IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMTg5ODQwOAo+IC0tLSAvZGV2L251
-bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
-Y2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0Cj4gQEAgLTAsMCArMSw1MCBAQAo+ICtSb2NrY2hp
-cCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRoZSBJbm5vc2lsaWNvbiBIRE1JCj4gKz09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICst
-IGNvbXBhdGlibGU6Cj4gKwkicm9ja2NoaXAscmszMDM2LWR3LWhkbWkiOwoKc2hvdWxkIGJlICJy
-b2NrY2hpcCxyazMwMzYtaW5uby1oZG1pIjsgaW5zdGVhZCBJIGd1ZXNzCgoKSGVpa28KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 11/21/2015 07:37 AM, Mark Brown wrote:
+> On Thu, Nov 19, 2015 at 05:01:41PM -0600, Andrew F. Davis wrote:
+>> Add support for TPS65086 PMIC regulators.
+>>
+>> The regulators set consists of 3 Step-down Controllers, 3 Step-down
+>> Converters, 3 LDOs, 3 Load Switches, and a Sink and Source LDO. The
+>> output voltages are configurable and are meant to supply power to a
+>> SoC and/or other components.
+>
+> An earlier version of this patch has already been applied, please don't
+> resend already applied patches but send incremental patches with any
+> changes.
+>
+
+Odd, I didn't seem to get any message for this getting applied. Looks
+like only a couple lines difference from the version in the regulators
+branch, I don't imagine you are able to rebase that with these changes?
+
+Anyway the reason that line needed changed is over a confusion in
+what the 'of_node' does in 'struct regulator_config'. The description
+seems to make it seem like it is the node that gets checked for
+init data.
+
+> * @of_node: OpenFirmware node to parse for device tree bindings (may be
+> *           NULL).
+
+But the 'of_node' that is actually searched is the one given in
+regulator_config->dev->of_node. Is this intended behavior (drivers
+assume it is so it probably has to be now) and if so, the above
+description might need to be clarified as too what that 'of_node'
+pointer really does?
