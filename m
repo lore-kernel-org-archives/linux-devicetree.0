@@ -1,103 +1,95 @@
-From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: Re: [PATCH v2 3/5] misc: eeprom_93xx46: Implement eeprom_93xx46 DT
- bindings.
-Date: Fri, 20 Nov 2015 23:53:10 -0500
-Message-ID: <564FF8B6.5050104@pid1solutions.com>
-References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447903781-3910-4-git-send-email-cory.tusar@pid1solutions.com>
- <564D632D.8020107@mleia.com> <564DD5E7.6080700@ti.com>
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 1/4] sound: codecs: pcm1792a: clean function exit
+Date: Sat, 21 Nov 2015 10:31:07 +0100
+Message-ID: <CAOf5uwmx95te=gHg5FnmNx+xOcpmGfnfzdgbnF8m8sms028PKQ@mail.gmail.com>
+References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
+	<1448014157-36526-2-git-send-email-raphael.poggi@avalun.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <564DD5E7.6080700@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, Vladimir Zapolskiy <vz@mleia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org
-Cc: jic23@kernel.org, broonie@kernel.org, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448014157-36526-2-git-send-email-raphael.poggi-jXdF5569nj7QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raphael Poggi <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hi
 
-On 11/19/2015 09:00 AM, Andrew F. Davis wrote:
-> On 11/18/2015 11:50 PM, Vladimir Zapolskiy wrote:
->> Hi Cory,
->>
->> On 19.11.2015 05:29, Cory Tusar wrote:
->>> This commit implements bindings in the eeprom_93xx46 driver allowing
->>> device word size and read-only attributes to be specified via
->>> devicetree.
->>>
->>> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Raphael Poggi <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Signed-off-by: Raphael Poggi <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  sound/soc/codecs/pcm1792a.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+>
+> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm1792a.c
+> index 08bb486..cf42b24 100644
+> --- a/sound/soc/codecs/pcm1792a.c
+> +++ b/sound/soc/codecs/pcm1792a.c
+> @@ -91,14 +91,9 @@ static int pcm1792a_digital_mute(struct snd_soc_dai *dai, int mute)
+>  {
+>         struct snd_soc_codec *codec = dai->codec;
+>         struct pcm1792a_private *priv = snd_soc_codec_get_drvdata(codec);
+> -       int ret;
+>
+> -       ret = regmap_update_bits(priv->regmap, PCM1792A_SOFT_MUTE,
+> +       return regmap_update_bits(priv->regmap, PCM1792A_SOFT_MUTE,
+>                                  PCM1792A_MUTE_MASK, !!mute);
+> -       if (ret < 0)
+> -               return ret;
+> -
 
-[snip]
+Ok, I have seen that almost all the codecs use return regmap_upda...
 
->>> +error_free:
->>> +    devm_kfree(&spi->dev, pd);
->>> +    return ret;
->>> +}
->>> +
->>> +#else
->>> +static inline int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>> +{
->>> +    return 0;
->>> +}
->>> +#endif
->>> +
->>
->> I actually don't see a point to have #ifdef CONFIG_OF here.
->>
-> 
-> Usually to avoid a lot of dead code and data when OF is not enabled.
+> -       return 0;
+>  }
+>
+>  static int pcm1792a_hw_params(struct snd_pcm_substream *substream,
+> @@ -107,7 +102,8 @@ static int pcm1792a_hw_params(struct snd_pcm_substream *substream,
+>  {
+>         struct snd_soc_codec *codec = dai->codec;
+>         struct pcm1792a_private *priv = snd_soc_codec_get_drvdata(codec);
+> -       int val = 0, ret;
+> +       int val = 0;
+> +       int ret = 0;
+>
+>         priv->rate = params_rate(params);
+>
+> @@ -147,10 +143,8 @@ static int pcm1792a_hw_params(struct snd_pcm_substream *substream,
+>
+>         ret = regmap_update_bits(priv->regmap, PCM1792A_FMT_CONTROL,
+>                                  PCM1792A_FMT_MASK | PCM1792A_ATLD_ENABLE, val);
+> -       if (ret < 0)
+> -               return ret;
+>
 
-Hi Andrew,
+Please do the same as before
 
-I tend to agree, but I'm going to cross-check by building a couple
-variants of this to see just how much gets optimized out automagically
-when using Vladimir's suggestions.
-
->> Instead please add a check for !spi->dev.of_node at the beginning of
->> eeprom_93xx46_probe_dt() or in .probe()
->>
->>>   static int eeprom_93xx46_probe(struct spi_device *spi)
->>>   {
->>>       struct eeprom_93xx46_platform_data *pd;
->>>       struct eeprom_93xx46_dev *edev;
->>>       int err;
->>>
->>> +    err = eeprom_93xx46_probe_dt(spi);
->>> +    if (err < 0)
->>> +        return err;
->>> +
->>>       pd = spi->dev.platform_data;
->>>       if (!pd) {
->>>           dev_err(&spi->dev, "missing platform data\n");
->>> @@ -370,6 +431,7 @@ static int eeprom_93xx46_remove(struct spi_device *spi)
->>>   static struct spi_driver eeprom_93xx46_driver = {
->>>       .driver = {
->>>           .name    = "93xx46",
->>> +        .of_match_table = eeprom_93xx46_of_table,
->>>       },
->>>       .probe        = eeprom_93xx46_probe,
->>>       .remove        = eeprom_93xx46_remove,
->>>
+Michael
 
 
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
+> -       return 0;
+> +       return ret;
+>  }
+>
+>  static const struct snd_soc_dai_ops pcm1792a_dai_ops = {
+> --
+> 2.1.0
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
 
 
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlZP+LYACgkQHT1tsfGwHJ8GjwCffZac5kr/MHgiLrBh0IxyT6UJ
-3rMAn2a/bD5OdWXdxg+DscoHUQbtyHr9
-=W3Rd
------END PGP SIGNATURE-----
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
