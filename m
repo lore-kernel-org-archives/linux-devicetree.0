@@ -1,32 +1,73 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: dts: enable clock support for BCM5301X
-Date: Sat, 21 Nov 2015 15:26:09 +0100
-Message-ID: <56507F01.8080807@hauke-m.de>
-References: <1448032640-27713-1-git-send-email-jonmason@broadcom.com>
- <1448032640-27713-2-git-send-email-jonmason@broadcom.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH v5 1/3] mtd: arasan: Add device tree binding documentation
+Date: Sat, 21 Nov 2015 20:09:37 +0530
+Message-ID: <1448116777-9748-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448032640-27713-2-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dwmw2@infradead.org, computersforpeace@gmail.com, michals@xilinx.com, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2015 04:17 PM, Jon Mason wrote:
-> Replace current device tree dummy clocks with real clock support for
-> Broadcom Northstar SoCs.
-> 
-> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm5301x.dtsi | 92 +++++++++++++++++++++++++++++++----------
->  1 file changed, 71 insertions(+), 21 deletions(-)
-> 
+This patch adds the dts binding document for arasan nand flash
+controller.
 
-Acked-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+Changes in v5:
+- None
+Changes in v4:
+- Added num-cs property
+- Added clock support
+Changes in v3:
+- None
+Changes in v2:
+- None
+---
+ .../devicetree/bindings/mtd/arasan_nfc.txt         | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/arasan_nfc.txt
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+new file mode 100644
+index 0000000..02e1ce3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+@@ -0,0 +1,34 @@
++Arasan Nand Flash Controller with ONFI 3.1 support
++
++Required properties:
++- compatible: Should be "arasan,nfc-v3p10"
++- reg: Memory map for module access
++- interrupt-parent: Interrupt controller the interrupt is routed through
++- interrupts: Should contain the interrupt for the device
++- clock-name: List of input clocks - "clk_sys", "clk_flash"
++	      (See clock bindings for details)
++- clocks: Clock phandles (see clock bindings for details)
++
++Optional properties:
++- arasan,has-mdma: Enables Dma support
++- num-cs: Number of chip selects used
++
++for nand partition information please refer the below file
++Documentation/devicetree/bindings/mtd/partition.txt
++
++Example:
++	nand0: nand@ff100000 {
++		compatible = "arasan,nfc-v3p10"
++		reg = <0x0 0xff100000 0x1000>;
++		clock-name = "clk_sys", "clk_flash"
++		clocks = <&misc_clk &misc_clk>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 14 4>;
++		arasan,has-mdma;
++		num-cs = <1>;
++		partition@0 {
++			label = "filesystem";
++			reg = <0x0 0x0 0x1000000>;
++		};
++		(...)
++	};
+-- 
+2.1.2
