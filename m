@@ -1,87 +1,94 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 03/11] dt-bindings: clock: add NXP LPC32xx clock list
- for consumers
-Date: Sat, 21 Nov 2015 20:53:38 +0200
-Message-ID: <5650BDB2.9070403@mleia.com>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com> <4268221.QhjAE5RLYk@wuerfel> <564F5F2E.70607@mleia.com> <5570695.dzvsXZ7sfz@wuerfel>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH 1/4] clocksource: Add brcm,bcm6345-timer device tree binding
+Date: Sat, 21 Nov 2015 19:02:46 +0000
+Message-ID: <5650BFD6.5030700@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5570695.dzvsXZ7sfz@wuerfel>
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Miguel Gaio <miguel.gaio-HH44TBFINEIAvxtiuMwx3w@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Add device tree binding for the BCM6345 timer. This is required for the
+BCM6345 watchdog which needs to respond to one of the timer interrupts.
 
-On 20.11.2015 23:07, Arnd Bergmann wrote:
-> On Friday 20 November 2015 19:58:06 Vladimir Zapolskiy wrote:
->> On 20.11.2015 15:56, Arnd Bergmann wrote:
->>> On Friday 20 November 2015 03:05:03 Vladimir Zapolskiy wrote:
->>>> +
->>>> +/* LPC32XX System Control Block clocks */
->>>> +#define LPC32XX_CLK_RTC                0
->>>> +#define LPC32XX_CLK_DMA                1
->>>> +#define LPC32XX_CLK_MLC                2
->>>> +#define LPC32XX_CLK_SLC                3
->>>> +#define LPC32XX_CLK_LCD                4
->>>> +#define LPC32XX_CLK_MAC                5
->>>> +#define LPC32XX_CLK_SD         6
->>>> +#define LPC32XX_CLK_DDRAM      7
->>>> +#define LPC32XX_CLK_SSP0       8
->>>> +#define LPC32XX_CLK_SSP1       9
->>>> +#define LPC32XX_CLK_UART3      10
->>>> +#define LPC32XX_CLK_UART4      11
->>>> +#define LPC32XX_CLK_UART5      12
->>>> +#define LPC32XX_CLK_UART6      13
->>>> +#define LPC32XX_CLK_IRDA       14
->>>> +#define LPC32XX_CLK_I2C1       15
->>>>
->>>
->>> Any chance we can avoid the include file? This is going to make it really
->>> hard to merge everything in one merge window with the dependencies between
->>> the driver, the bindings and the platform code.
->>
->> I see only one option to avoid this commit, namely squash it with the
->> CCF driver and merge it before making changes in DTS.
->>
->> However I suppose ARM trees won't be synced on clk tree, so probably it
->> won't simplify maintainer's work.
-> 
-> I think the best way for this would then be to have one git branch that
-> contains the binding header, and base the other patches on top of that
-> branch, for both the changes going into the clk git and arm-soc.
-> 
-> That way, both have the commit we need, but we don't get duplicate
-> commits when they are both merged into mainline.
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+---
+ .../bindings/timer/brcm,bcm6345-timer.txt          | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
 
-I isolated the binding header, because in my opinion it may be reviewed
-(and hopefully accepted unchanged) separately from the CCF driver. If I
-am not mistaken, merging of two branches with an identical commit is
-seamless.
+diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+new file mode 100644
+index 0000000..2593907
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+@@ -0,0 +1,57 @@
++Broadcom BCM6345 Timer
++
++This block is a timer that is connected to one interrupt on the main interrupt
++controller and functions as a programmable interrupt controller for timer events.
++
++- 3 to 4 independent timers with their own maskable level interrupt bit (but not
++  per CPU because there is only one parent interrupt and the timers share it)
++
++- 1 watchdog timer with an unmaskable level interrupt
++
++- Contains one enable/status word pair
++
++- No atomic set/clear operations
++
++The lack of per CPU ability of timers makes them unusable as a set of
++clockevent devices, otherwise they could be attached to the remaining
++interrupts.
++
++The BCM6318 also has a separate interrupt for every timer except the watchdog.
++
++Required properties:
++
++- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-timer"
++- reg: specifies the base physical address and size of the registers, excluding
++  the watchdog registers
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an interrupt
++  source, should be 1.
++- interrupt-parent: specifies the phandle to the parent interrupt controller(s)
++  this one is cascaded from
++- interrupts: specifies the interrupt line(s) in the interrupt-parent controller
++  node for the main timer interrupt, followed by the individual timer interrupts
++  if present; valid values depend on the type of parent interrupt controller
++
++Example:
++
++timer: timer@0x10000080 {
++        compatible = "brcm,bcm63168-timer", "brcm,bcm6345-timer";
++        reg = <0x10000080 0x1c>;
++
++        interrupt-controller;
++        #interrupt-cells = <1>;
++
++        interrupt-parent = <&periph_intc>;
++        interrupts = <0>;
++};
++
++timer: timer@0x10000040 {
++        compatible = "brcm,bcm6318-timer", "brcm,bcm6345-timer";
++        reg = <0x10000040 0x28>;
++
++        interrupt-controller;
++        #interrupt-cells = <1>;
++
++        interrupt-parent = <&periph_intc>;
++        interrupts = <31>, <0>, <1>, <2>, <3>;
++};
+-- 
+2.1.4
 
-It is hard to predict, when the CCF driver gets into mainline, but the
-presence of the binding header in arm-soc tree will allow to avoid lots
-of conflicts and/or code rebases concerning lpc32xx.dtsi file.
-
->>> If there is a way to describe the clocks based on numbers from the
->>> data sheet instead of making up your own, that makes life much
->>> easier for us.
->>
->> There are no any clock numbers in the datasheet, unfortunately.
-> 
-> I was thinking that maybe there would be a logical numbering based
-> on the register layout, e.g. a tuple of register index and bit position,
-> but it seems that the mmio area is too irregular to make that easy.
-
-Absolutely correct. Only if we consider registers, the clock controller
-registers are scattered in System Control Block, which also contains 3
-wakeup controllers, partially pinmux and DMA settings, "software
-interrupt" controller, fine tuned configurations of ARM core debugging
-mechanisms and so on.
-
+-- 
+Simon Arlott
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
