@@ -1,145 +1,43 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH 1/4] sound: codecs: pcm1792a: clean
- function exit
-Date: Sat, 21 Nov 2015 17:33:46 +0100
-Message-ID: <20151121163336.GA27666@panicking>
-References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
- <1448014157-36526-2-git-send-email-raphael.poggi@avalun.com>
- <CAOf5uwmx95te=gHg5FnmNx+xOcpmGfnfzdgbnF8m8sms028PKQ@mail.gmail.com>
- <CACqcpZACQiBkyj=a765rKjGi7Ft_MS4+t_0F90dQXGxecRm92Q@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 00/10] Better compatible for the rockchip thermal and support RK3368 SoCs
+Date: Sat, 21 Nov 2015 17:41:47 +0100
+Message-ID: <1718129.opDY4sItVM@phil>
+References: <1447044542-30859-1-git-send-email-wxt@rock-chips.com> <20151112182950.GB4361@localhost.localdomain> <20151112183119.GA5289@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <CACqcpZACQiBkyj=a765rKjGi7Ft_MS4+t_0F90dQXGxecRm92Q@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?iso-8859-1?Q?Rapha=EBl?= Poggi <poggi.raph@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, tiwai@suse.com, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151112183119.GA5289-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Am Donnerstag, 12. November 2015, 10:31:20 schrieb Eduardo Valentin:
+> On Thu, Nov 12, 2015 at 10:29:52AM -0800, Eduardo Valentin wrote:
+> > On Mon, Nov 09, 2015 at 12:48:52PM +0800, Caesar Wang wrote:
+> > > Thank you all for providing inputs and comments on previous versions of
+> > > this patchset.
+> > > Especially thanks to the (Eduardo, Dmitry, Heiko,....).
+> > > 
+> > > This series patchs are working for RK3368 on Rockchip platform.
+> > 
+> > Do you have any results on existing support? Is the driver still in one
+> > piece for rk3288?
+> > 
+> > I am planing to send your series in next rc cycles. It won't appear in
+> > linux-next until merge window finishes.
+> 
+> To be more specific, only patches 1-7. DT bindings go via the right
+> machine tree.
 
-On Sat, Nov 21, 2015 at 05:16:53PM +0100, Rapha=EBl Poggi wrote:
-> Hi,
-> =
-
-> I know that almost all the codec do as before, but what is the goal of
-> using an extra condition when we can avoid it ?
-> =
+after seeing these 7 patches in your next-branch, I've now applied the 3
+dts patches to my dts64 branch for 4.5 as well.
 
 
-If you use top posting I can not follow. I said that I'm agree on the
-first one chage and I suggest to do the same for the next one.
-
-Michael
-
-> Raphael
-> =
-
-> 2015-11-21 10:31 GMT+01:00 Michael Trimarchi <michael@amarulasolutions.co=
-m>:
-> > Hi
-> >
-> > On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph@gmail.com> =
-wrote:
-> >> From: Raphael Poggi <poggi.raph@gmail.com>
-> >>
-> >> Signed-off-by: Raphael Poggi <poggi.raph@gmail.com>
-> >> ---
-> >>  sound/soc/codecs/pcm1792a.c | 14 ++++----------
-> >>  1 file changed, 4 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm1792a.c
-> >> index 08bb486..cf42b24 100644
-> >> --- a/sound/soc/codecs/pcm1792a.c
-> >> +++ b/sound/soc/codecs/pcm1792a.c
-> >> @@ -91,14 +91,9 @@ static int pcm1792a_digital_mute(struct snd_soc_dai=
- *dai, int mute)
-> >>  {
-> >>         struct snd_soc_codec *codec =3D dai->codec;
-> >>         struct pcm1792a_private *priv =3D snd_soc_codec_get_drvdata(co=
-dec);
-> >> -       int ret;
-> >>
-> >> -       ret =3D regmap_update_bits(priv->regmap, PCM1792A_SOFT_MUTE,
-> >> +       return regmap_update_bits(priv->regmap, PCM1792A_SOFT_MUTE,
-> >>                                  PCM1792A_MUTE_MASK, !!mute);
-> >> -       if (ret < 0)
-> >> -               return ret;
-> >> -
-> >
-> > Ok, I have seen that almost all the codecs use return regmap_upda...
-> >
-> >> -       return 0;
-> >>  }
-> >>
-> >>  static int pcm1792a_hw_params(struct snd_pcm_substream *substream,
-> >> @@ -107,7 +102,8 @@ static int pcm1792a_hw_params(struct snd_pcm_subst=
-ream *substream,
-> >>  {
-> >>         struct snd_soc_codec *codec =3D dai->codec;
-> >>         struct pcm1792a_private *priv =3D snd_soc_codec_get_drvdata(co=
-dec);
-> >> -       int val =3D 0, ret;
-> >> +       int val =3D 0;
-> >> +       int ret =3D 0;
-> >>
-> >>         priv->rate =3D params_rate(params);
-> >>
-> >> @@ -147,10 +143,8 @@ static int pcm1792a_hw_params(struct snd_pcm_subs=
-tream *substream,
-> >>
-> >>         ret =3D regmap_update_bits(priv->regmap, PCM1792A_FMT_CONTROL,
-> >>                                  PCM1792A_FMT_MASK | PCM1792A_ATLD_ENA=
-BLE, val);
-> >> -       if (ret < 0)
-> >> -               return ret;
-> >>
-> >
-> > Please do the same as before
-> >
-> > Michael
-> >
-> >
-> >> -       return 0;
-> >> +       return ret;
-> >>  }
-> >>
-> >>  static const struct snd_soc_dai_ops pcm1792a_dai_ops =3D {
-> >> --
-> >> 2.1.0
-> >>
-> >> _______________________________________________
-> >> Alsa-devel mailing list
-> >> Alsa-devel@alsa-project.org
-> >> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
-> >
-> >
-> >
-> > --
-> > | Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-> > | COO  -  Founder                                      Cruquiuskade 47 |
-> > | +31(0)851119172                                 Amsterdam 1018 AM NL |
-> > |                  [`as] http://www.amarulasolutions.com               |
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-kernel"=
- in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > Please read the FAQ at  http://www.tux.org/lkml/
-
--- =
-
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
