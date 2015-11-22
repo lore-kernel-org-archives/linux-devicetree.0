@@ -1,115 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] devicetree: bindings: Document qcom board
- compatible format
-Date: Sun, 22 Nov 2015 14:49:35 -0600
-Message-ID: <20151122204935.GA465@rob-hp-laptop>
-References: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
- <1448062280-15406-2-git-send-email-sboyd@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] Documentation: dt-bindings: add async_irq to
+ msm_hsusb
+Date: Sun, 22 Nov 2015 14:50:23 -0600
+Message-ID: <20151122205023.GA2953@rob-hp-laptop>
+References: <1448063240-2739-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448062280-15406-2-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
+In-Reply-To: <1448063240-2739-1-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:31:16PM -0800, Stephen Boyd wrote:
-> Some qcom based bootloaders identify the dtb blob based on a set
-> of device properties like SoC, platform, PMIC, and revisions of
-> those components. In downstream kernels, these values are added
-> to the different component dtsi files (i.e. pmic dtsi file, SoC
-> dtsi file, board dtsi file, etc.) via qcom specific DT
-> properties. The dtb files are parsed by a program called dtbTool
-> that picks out these properties and creates a table of contents
-> binary blob with the property information and some offsets into
-> the concatenation of all the dtbs (termed a QCDT image).
+On Fri, Nov 20, 2015 at 03:47:18PM -0800, Tim Bird wrote:
+> Add optional async_irq to msm_hsusb binding doc.
 > 
-> The suggestion is to do this via the board compatible string
-> instead, because these qcom specific properties are never used by
-> the kernel. Add a document describing the format of the
-> compatible string that encodes all this information that's
-> currently encoded in the qcom,{msm-id,board-id,pmic-id}
-> properties in downstream devicetrees. Future bootloaders may be
-> updated to look at the compatible field instead of looking for
-> the table of contents image. For non-updateable bootloaders, a
-> new dtbTool program will parse the compatible string and generate
-> a QCDT image from it.
-> 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-Much more reasonable now. I do find the '/' in it a bit strange though.
-
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  Documentation/devicetree/bindings/arm/qcom.txt | 51 ++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
+>  Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
-> new file mode 100644
-> index 000000000000..3e24518c6678
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
-> @@ -0,0 +1,51 @@
-> +QCOM device tree bindings
-> +-------------------------
+> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> index 8654a3e..2d13c1c 100644
+> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> @@ -23,7 +23,12 @@ Required properties:
+>    "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
+>  
+>  - regs:         Offset and length of the register set in the memory map
+> -- interrupts:   interrupt-specifier for the OTG interrupt.
+> +- interrupts:   interrupt-specifier for the OTG interrupts
 > +
-> +Some qcom based bootloaders identify the dtb blob based on a set of
-> +device properties like SoC and platform and revisions of those components.
-> +To support this scheme, we encode this information into the board compatible
-> +string.
-> +
-> +Each board must specify a top-level board compatible string with the following
-> +format:
-> +
-> +	compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
-> +
-> +The 'SoC' and 'board' elements are required. All other elements are optional.
-> +
-> +The 'SoC' element must be one of the following strings:
-> +
-> +	apq8016
-> +	apq8074
-> +	apq8084
-> +	apq8096
-> +	msm8916
-> +	msm8974
-> +	msm8996
-> +
-> +The 'board' element must be one of the following strings:
-> +
-> +	cdp
-> +	liquid
-> +	dragonboard
-> +	mtp
-> +	sbc
-> +
-> +The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
-> +where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
-> +as v1. If all versions of the 'board_version' elements match, then a
-> +wildcard '*' should be used, e.g. 'v*'.
-> +
-> +The 'foundry_id' and 'subtype' elements are one or more digits from 0 to 9.
-> +
-> +Examples:
-> +
-> +	"qcom,msm8916-v1-cdp-pm8916-v2.1"
-> +
-> +A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
-> +2.1.
-> +
-> +	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1"
-> +
-> +A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
-> +foundry 2.
+> +- interrupt-names: Should contain the following:
+> +  "core"        USB core interrupt
+> +  "async"       Asynchronous interrupt to wake up from low power mode
+> +                (optional)
+>  
+>  - clocks:       A list of phandle + clock-specifier pairs for the
+>                  clocks listed in clock-names
+> @@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
+>      usb@f9a55000 {
+>          compatible = "qcom,usb-otg-snps";
+>          reg = <0xf9a55000 0x400>;
+> -        interrupts = <0 134 0>;
+> +        interrupts = <0 134 0>, <0 140 0>;
+> +        interrupt-names = "core", "async";
+>          dr_mode = "peripheral";
+>  
+>          clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 1.8.2.2
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
