@@ -1,85 +1,58 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 4/4] MIPS: bmips: Convert bcm63xx_wdt to use WATCHDOG_CORE
-Date: Sat, 21 Nov 2015 18:32:23 -0800
-Message-ID: <56512937.6030903@roeck-us.net>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Sun, 22 Nov 2015 07:51:46 +0100
+Message-ID: <20151122065146.GD26074@amd>
+References: <1436214373-12969-1-git-send-email-pali.rohar@gmail.com>
+ <20150713131902.GH26485@atomide.com>
+ <20151012201640.GQ23801@atomide.com>
+ <201510122225.12786@pali>
+ <20151012204509.GT23801@atomide.com>
+ <20151013143746.GJ23104@pali>
+ <20151105114041.GC27908@pali>
+ <20151105161756.GG3078@atomide.com>
+ <5643E716.9080204@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <5650E5BB.6020404@simon.arlott.org.uk>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Simon Arlott <simon@fire.lp0.eu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Miguel Gaio <miguel.gaio@efixo.com>, Maxime Bizon <mbizon@freebox.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, linux-watchdog@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5643E716.9080204@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2015 01:44 PM, Simon Arlott wrote:
-> On 21/11/15 21:32, Guenter Roeck wrote:
->> On 11/21/2015 11:05 AM, Simon Arlott wrote:
->>> Convert bcm63xx_wdt to use WATCHDOG_CORE and add a device tree binding.
->>>
->>> Adds support for the time left value and provides a more effective
->>> interrupt handler based on the watchdog warning interrupt behaviour.
->>>
->>> This removes the unnecessary software countdown timer and replaces the
->>> use of bcm63xx_timer with a normal interrupt when not using mach-bcm63xx.
->>>
->>
->> Hi Simon,
->>
->> this is really doing a bit too much in a single patch.
->> Conversion to the watchdog infrastructure should probably be
->> the first step, followed by further optimizations and improvements.
->
-> I'll split it into two patches, but that won't remove the need for #ifdefs.
->
->> In general, it would be great if we can avoid #ifdef in the code.
->> Maybe there is some other means to determine if one code path
->> needs to be taken or another. The driver may be part of a
->> multi-platform image, and #ifdefs in the code make that all
->> but impossible. Besides, it makes the code really hard to read
->> and understand.
->
-> It's impossible to avoid the #ifdefs because the driver needs to support
-> mach-bmips while still supporting mach-bcm63xx. I don't think they make
-> it too difficult to understand. Until there are device tree supporting
-> drivers for everything mach-bcm63xx needs, it can't be removed.
->
+On Wed 2015-11-11 17:10:46, Frank Rowand wrote:
+> Adding devicetree list.
+>=20
+> Thread starts at
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/35445=
+9.html
+>=20
+> On 11/5/2015 8:17 AM, Tony Lindgren wrote:
+> > * Pali Roh=E1r <pali.rohar@gmail.com> [151105 03:41]:
+> >> On Tuesday 13 October 2015 16:37:46 Pali Roh=E1r wrote:
+> >>> On Monday 12 October 2015 13:45:09 Tony Lindgren wrote:
+> >>>> * Pali Roh=E1r <pali.rohar@gmail.com> [151012 13:29]:
+> >>>>> On Monday 12 October 2015 22:16:40 Tony Lindgren wrote:
+> >>>>>>
+> >>>>>> Pali, any news on posting an updated series with the comments
+> >>>>>> addressed in this thread? It seems that we all pretty much agr=
+ee
+> >>>>>> what needs to be done.
+>=20
+> I'm not real happy with the concept of patches 4 and 5 in this series=
+=2E
+> My concern is that those two patches are using the FDT as a transport
+> mechanism for a binary blob (the atags object).
 
-Even if ifdefs are needed, they don't need to be as extensive as they are.
-#ifdef around function names can be handled with shim functions, different
-clock names can be handled by defining the clock name per platform.
-The interrupt handler registration may not require an #ifdef if it is
-just made optional. Conditional include files are typically not needed
-at all.
+Umm. Ok. Do you have alternative proposal that works for everyone?
 
->> We have some infrastructure changes in the works which will move
->> the need for soft-timers from individual drivers into the watchdog core.
->> Would this possibly be helpful here ? The timer-driven watchdog ping
->> seems to accomplish pretty much the same.
->
-> There is no need for a software timer. This is not a timer-driven
-> watchdog ping, there is an unmaskable timer interrupt when the watchdog
-> timer has less than 50% remaining.
->
-Ok. Maybe I got confused by the interrupt-triggered watchdog ping.
-I'll have to look into that much more closely; it is quite unusual
-and complex. The explanation is also not easy to understand.
-What does "The only way to stop this interrupt" mean ? Repeatedly
-triggering the interrupt in 1/2, 1/4, 1/8 of the remaining time is
-really odd.
-
-On side note, the subject tag should be "watchdog:", not "MIPS:".
-
-Thanks,
-Guenter
+I mean. This discussion was going for quite a long time, and it would
+be nice to have some solution... patch proposal... something.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
