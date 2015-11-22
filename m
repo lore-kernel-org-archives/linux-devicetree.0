@@ -1,75 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
- TPS65086 PMIC
-Date: Sun, 22 Nov 2015 13:13:21 +0000
-Message-ID: <20151122131321.GM26072@sirena.org.uk>
-References: <1447974102-24938-1-git-send-email-afd@ti.com>
- <1447974102-24938-4-git-send-email-afd@ti.com>
- <20151121133739.GG26072@sirena.org.uk>
- <5650D6D2.5060108@ti.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [RFC PATCH v1 0/2] Add basic HDCP function support for dw_hdmi driver
+Date: Sun, 22 Nov 2015 21:31:17 +0800
+Message-ID: <1448199077-10221-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="g6DVDhPhk1bqxDrC"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5650D6D2.5060108@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King <rmk+kernel@arm.linux.org.uk>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---g6DVDhPhk1bqxDrC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, Nov 21, 2015 at 02:40:50PM -0600, Andrew F. Davis wrote:
-> On 11/21/2015 07:37 AM, Mark Brown wrote:
-
-> >An earlier version of this patch has already been applied, please don't
-> >resend already applied patches but send incremental patches with any
-> >changes.
-
-> Odd, I didn't seem to get any message for this getting applied. Looks
-> like only a couple lines difference from the version in the regulators
-> branch, I don't imagine you are able to rebase that with these changes?
-
-As a matter of policy I try to avoid rewriting history unless it is
-really required.
-
-> Anyway the reason that line needed changed is over a confusion in
-> what the 'of_node' does in 'struct regulator_config'. The description
-> seems to make it seem like it is the node that gets checked for
-> init data.
-
-The current behaviour is the intended behaviour.
-
-> >* @of_node: OpenFirmware node to parse for device tree bindings (may be
-> >*           NULL).
-
-> But the 'of_node' that is actually searched is the one given in
-> regulator_config->dev->of_node. Is this intended behavior (drivers
-> assume it is so it probably has to be now) and if so, the above
-> description might need to be clarified as too what that 'of_node'
-> pointer really does?
-
-Please submit a patch with any clarification you think is needed.
-of_node is the name of the container subnode of the main node for the
-device where we look for init data - both are used.
-
---g6DVDhPhk1bqxDrC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWUb9wAAoJECTWi3JdVIfQf0EH/iDVkhnWLMgG7vkZAvTlX9CI
-jxuuwUV4ZlkFO9lEbGpkaasgUyCUZghthsh/G6jBTYGH97FYP/a/jxt0WPInR+3s
-Lz7MfnJo410TZcCwnDty5LNaPdYU4jaAQddwfxN7Uw2alY7+A3/m6TBnAob/bSLg
-coLDvrBwR1OBAKsMxOcgHSW/R2NcnhC2MJp+yI/AQN+iKq/MRxe0aqFqojoihf6g
-YqftSImrciux1+Eb+8zuk9Yi+1LxmM9BG4ElhRzSmZcesPOBLM0FBOAT7gy1Ru1f
-kxNqBgyVRSKnwpPNCnFn8f5z8SLSuI2AVrw5XygTP8y/Vh3F6y3S4gPcKCZVRrY=
-=O5l9
------END PGP SIGNATURE-----
-
---g6DVDhPhk1bqxDrC--
+SGksCgpUaGlzIHNlcmllcyB0cnkgdG8gYWRkIHRoZSBiYXNpYyBIRENQIGZ1bmN0aW9uIHN1cHBv
+cnQgZm9yIGJyaWRnZQpkd19oZG1pIGRyaXZlci4gQmVzaWRlIHRoaXMgc2VyaWVzIGFsc28gcmVz
+ZW5kIHRoZSBwYXRjaCBmcm9tIFNlYW4KUGF1bCB0aGF0IHRyeSB0byBpbnRyb2R1Y2UgYSBjb21t
+b24gd2F5IGZvciB1c2Vyc3BhY2UgdG8gb3BlcmF0ZQp0aGUgSERDUCBmdW5jdGlvbi4KClVzZXJz
+cGFjZSBjb3VsZCBjaG9zZSB0byBlbmFibGUvZGlzYWJsZSB0aGUgSERDUCBmdW5jdGlvbiB0aHJv
+dWdodAp0aGUgbmV3IHN0YW5kYXJkIHByb3BlcnRpZXMgIkNvbnRlbnQgUHJvdGVjdGlvbiIsIGFu
+ZCBkcml2ZXIgd291bGQKcmVmbGVjdCB0aGUgSERDUCBhdXRoIHN0YXR1cyB0byAiQ29udGVudCBQ
+cm90ZWN0aW9uIEtTViIgcHJvcGVydHkuCgpCZXNpZGUgdGhpcyBzZXJpZXMgYWxzbyBiYXNlIG9u
+IFZsYWRpbWlyIFphcG9sc2tpeSdzIHBhdGNoIHRoYXQgaGVscAp0byBpbnRyb2R1Y2UgRERDIHN1
+cHBvcnQgZm9yIGR3X2hkbWkgZHJpdmVyLgoKW1Jlc2VuZF0gU2VhbiBQdWFsOiBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzcyNzk4MDEKW1JlYmFzZWQgb25dIFZsYWRpbWlyIFph
+cG9sc2tpeTogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC83Mjc5ODAxCgpUaGFu
+a3MKLSBZYWtpcgoKCgpTZWFuIFBhdWwgKDEpOgogIGRybTogQWRkIENvbnRlbnQgUHJvdGVjdGlv
+biBwcm9wZXJ0aWVzIHRvIGRybQoKWWFraXIgWWFuZyAoMSk6CiAgZHJtOiBicmlkZ3cvZHdfaGRt
+aTogYWRkIGJhc2ljIGhkbWkgaGRjcCBkcml2ZXIKCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R3
+X2hkbWkuYyB8IDM1NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0KIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfaGRtaS5oIHwgIDIwICsrKwogZHJpdmVycy9ncHUvZHJt
+L2RybV9jcnRjLmMgICAgICAgfCAgMjEgKysrCiBkcml2ZXJzL2dwdS9kcm0vZHJtX3N5c2ZzLmMg
+ICAgICB8ICA0NiArKysrKwogaW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaCAgICAgfCAgMTcg
+KysKIGluY2x1ZGUvZHJtL2RybV9jcnRjLmggICAgICAgICAgIHwgICAzICsKIGluY2x1ZGUvdWFw
+aS9kcm0vZHJtX21vZGUuaCAgICAgIHwgICA0ICsKIDcgZmlsZXMgY2hhbmdlZCwgNDQ3IGluc2Vy
+dGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQoKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
