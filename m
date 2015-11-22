@@ -1,23 +1,19 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
- wait cycles using the SPI Wait Clock Register
-Date: Sun, 22 Nov 2015 20:45:56 +0100
-Message-ID: <20151122194556.GO32142@lukather>
-References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
- <1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
- <CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
- <CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
- <CAGRGNgV0kOkye-Zu4WGQKgGim7N2HB9rAFJ3HNQS89Rr6_WexQ@mail.gmail.com>
- <CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A@mail.gmail.com>
- <20151120161246.GB21921@rob-hp-laptop>
- <CAGNoLaPLXOmObXgW0YsN8giM1WCRDn7MieTBcKOE5sjXbjg0GA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/9] ARM: dts: sun8i: sinlinx-sina33: Add
+ AXP223 PMIC device and regulator nodes
+Date: Sun, 22 Nov 2015 20:46:43 +0100
+Message-ID: <20151122194643.GP32142@lukather>
+References: <1447691908-25456-1-git-send-email-wens@csie.org>
+ <1447691908-25456-6-git-send-email-wens@csie.org>
+ <20151120111238.GV32142@lukather>
+ <CAGb2v67RxuQT4AffPbdW29yLMn7jjHgiqwXTGmgf8VgqT-fN9g@mail.gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8QM4kKE+nfbBA4vJ"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5VWZCZAKGQECS5BZUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="owpTafYe/1tj88Rh"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJNXZCZAKGQE7CERAFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGNoLaPLXOmObXgW0YsN8giM1WCRDn7MieTBcKOE5sjXbjg0GA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAGb2v67RxuQT4AffPbdW29yLMn7jjHgiqwXTGmgf8VgqT-fN9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -25,48 +21,35 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---8QM4kKE+nfbBA4vJ
+--owpTafYe/1tj88Rh
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi,
-
-On Fri, Nov 20, 2015 at 05:45:48PM +0100, Marcus Weseloh wrote:
-> 2015-11-20 17:12 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> > On Fri, Nov 20, 2015 at 02:56:34PM +0100, Marcus Weseloh wrote:
-> >> > (and the wdelay should
-> >> > arguably be a core-spi thing, not a sunxi thing, but that's a separate
-> >> > discussion)
-> >>
-> >> I've been thinking about that, but it seemed to big a change to
-> >> attempt with my limited kernel hacking experience.
+On Sat, Nov 21, 2015 at 01:24:24AM +0800, Chen-Yu Tsai wrote:
+> >> +&reg_rtc_ldo {
+> >> +     regulator-always-on;
+> >> +     regulator-min-microvolt = <3000000>;
+> >> +     regulator-max-microvolt = <3000000>;
+> >> +     regulator-name = "vcc-rtc";
+> >>  };
 > >
-> > It is not any bigger. You just need to document it in the core binding.
-> > It would still be read by the drivers using it.
+> > Isn't this supposed to be in the AXP DTSI?
 > 
-> Julien, Rob: thanks for your comments! Ok, I will make the following changes:
-> 
-> - remove "sun4i,spi-wdelay" from the sun4i binding and add the
-> property to the spi-bus.txt binding instead
-> - remove the comment about the additional 3 cycles from the documentation
-> - modfy the spi-sun4i driver to take care of the minimum 3 cycle period
-> 
-> Does that sound right?
-> 
-> And maybe I could also use a more descriptive name for the property,
-> maybe "spi-word-wait-cycles"?
+> Are you referring to &reg_rtc_ldo?
 
-I don't think it should be in a clock-rate dependant unit. Using micro
-or nano-seconds would be more appropriate I guess.
+Yep :)
 
+> Yes, it should. I'll do a new version.
+
+Great, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---8QM4kKE+nfbBA4vJ--
+--owpTafYe/1tj88Rh--
