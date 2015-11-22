@@ -1,30 +1,89 @@
-From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: dts: am4372: add spi alias for qspi
-Date: Sun, 22 Nov 2015 15:35:22 -0500
-Message-ID: <20151122203522.GK9551@bill-the-cat>
-References: <1447916462-1007-1-git-send-email-mugunthanvnm@ti.com>
- <1447916462-1007-3-git-send-email-mugunthanvnm@ti.com>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH 08/11] clk: lpc18xx: add NXP specific common clock
+ framework selection
+Date: Sun, 22 Nov 2015 21:38:08 +0100
+Message-ID: <CAGhQ9VzrGA3jZBKiZzDr=6pGUnbs0aHdKxsxwmkyMWMT+xYghg@mail.gmail.com>
+References: <1447981511-29653-1-git-send-email-vz@mleia.com>
+	<1447981511-29653-9-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447916462-1007-3-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1447981511-29653-9-git-send-email-vz@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 12:31:02PM +0530, Mugunthan V N wrote:
+Hi Vladimir,
 
-> Set the alias for qspi to spi0
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+On 20 November 2015 at 02:05, Vladimir Zapolskiy <vz@mleia.com> wrote:
+> The change adds COMMON_CLK_NXP configuration symbol and enables it for
+> NXP LPC18XX architecture, this is needed to reuse drivers/clk/nxp
+> folder for NXP common clock framework drivers other than LPC18XX one.
+>
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> Cc: Joachim Eastwood <manabian@gmail.com>
+> ---
+>  arch/arm/Kconfig     | 1 +
+>  drivers/clk/Kconfig  | 5 +++++
+>  drivers/clk/Makefile | 2 +-
+>  3 files changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 0365cbb..c318277 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -952,6 +952,7 @@ config ARCH_LPC18XX
+>         select ARCH_HAS_RESET_CONTROLLER
+>         select ARM_AMBA
+>         select CLKSRC_LPC32XX
+> +       select COMMON_CLK
 
-Reviewed-by: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+COMMON_CLK is already selected by ARM_SINGLE_ARMV7M which ARCH_LPC18XX
+depends on so this hunk should not be necessary.
 
--- 
-Tom
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         select PINCTRL
+>         help
+>           Support for NXP's LPC18xx Cortex-M3 and LPC43xx Cortex-M4
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index c3e3a02..7fc1eb9 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -175,6 +175,11 @@ config COMMON_CLK_PWM
+>           Adapter driver so that any PWM output can be (mis)used as clock signal
+>           at 50% duty cycle.
+>
+> +config COMMON_CLK_NXP
+> +       def_bool COMMON_CLK && ARCH_LPC18XX
+> +       ---help---
+> +         Support for clock providers on NXP platforms.
+> +
+>  config COMMON_CLK_PXA
+>         def_bool COMMON_CLK && ARCH_PXA
+>         ---help---
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 820714c..15603c1 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -62,8 +62,8 @@ endif
+>  obj-$(CONFIG_PLAT_ORION)               += mvebu/
+>  obj-$(CONFIG_ARCH_MESON)               += meson/
+>  obj-$(CONFIG_ARCH_MXS)                 += mxs/
+> -obj-$(CONFIG_ARCH_LPC18XX)             += nxp/
+>  obj-$(CONFIG_MACH_PISTACHIO)           += pistachio/
+> +obj-$(CONFIG_COMMON_CLK_NXP)           += nxp/
+>  obj-$(CONFIG_COMMON_CLK_PXA)           += pxa/
+>  obj-$(CONFIG_COMMON_CLK_QCOM)          += qcom/
+>  obj-$(CONFIG_ARCH_ROCKCHIP)            += rockchip/
+> --
+
+Other than the one comment above it looks good to me:
+Acked-by: Joachim Eastwood <manabian@gmail.com>
+
+I'll try to find the time look through the other patches you have for
+lpc32xx. I also have a EA LPC3250 dev kit v2
+(http://embeddedartists.com/products/kits/lpc3250_kit_v2.php) in my
+collection.
+
+regards,
+Joachim Eastwood
