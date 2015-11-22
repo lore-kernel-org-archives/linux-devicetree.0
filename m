@@ -1,89 +1,119 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH 08/11] clk: lpc18xx: add NXP specific common clock
- framework selection
-Date: Sun, 22 Nov 2015 21:38:08 +0100
-Message-ID: <CAGhQ9VzrGA3jZBKiZzDr=6pGUnbs0aHdKxsxwmkyMWMT+xYghg@mail.gmail.com>
-References: <1447981511-29653-1-git-send-email-vz@mleia.com>
-	<1447981511-29653-9-git-send-email-vz@mleia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: Broadcom NSP pinctrl device tree bindings
+Date: Sun, 22 Nov 2015 14:45:53 -0600
+Message-ID: <20151122204553.GA31160@rob-hp-laptop>
+References: <1448042191-1982-1-git-send-email-yrdreddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1447981511-29653-9-git-send-email-vz@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448042191-1982-1-git-send-email-yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+On Fri, Nov 20, 2015 at 12:56:31PM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
+> Device tree binding documentation for Broadcom NSP IOMUX driver
+> 
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-On 20 November 2015 at 02:05, Vladimir Zapolskiy <vz@mleia.com> wrote:
-> The change adds COMMON_CLK_NXP configuration symbol and enables it for
-> NXP LPC18XX architecture, this is needed to reuse drivers/clk/nxp
-> folder for NXP common clock framework drivers other than LPC18XX one.
->
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> Cc: Joachim Eastwood <manabian@gmail.com>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  arch/arm/Kconfig     | 1 +
->  drivers/clk/Kconfig  | 5 +++++
->  drivers/clk/Makefile | 2 +-
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 0365cbb..c318277 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -952,6 +952,7 @@ config ARCH_LPC18XX
->         select ARCH_HAS_RESET_CONTROLLER
->         select ARM_AMBA
->         select CLKSRC_LPC32XX
-> +       select COMMON_CLK
-
-COMMON_CLK is already selected by ARM_SINGLE_ARMV7M which ARCH_LPC18XX
-depends on so this hunk should not be necessary.
-
->         select PINCTRL
->         help
->           Support for NXP's LPC18xx Cortex-M3 and LPC43xx Cortex-M4
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index c3e3a02..7fc1eb9 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -175,6 +175,11 @@ config COMMON_CLK_PWM
->           Adapter driver so that any PWM output can be (mis)used as clock signal
->           at 50% duty cycle.
->
-> +config COMMON_CLK_NXP
-> +       def_bool COMMON_CLK && ARCH_LPC18XX
-> +       ---help---
-> +         Support for clock providers on NXP platforms.
+>  .../bindings/pinctrl/brcm,nsp-pinmux.txt           | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+> new file mode 100644
+> index 0000000..603564e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-pinmux.txt
+> @@ -0,0 +1,79 @@
+> +Broadcom NSP (Northstar plus) IOMUX Controller
 > +
->  config COMMON_CLK_PXA
->         def_bool COMMON_CLK && ARCH_PXA
->         ---help---
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 820714c..15603c1 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -62,8 +62,8 @@ endif
->  obj-$(CONFIG_PLAT_ORION)               += mvebu/
->  obj-$(CONFIG_ARCH_MESON)               += meson/
->  obj-$(CONFIG_ARCH_MXS)                 += mxs/
-> -obj-$(CONFIG_ARCH_LPC18XX)             += nxp/
->  obj-$(CONFIG_MACH_PISTACHIO)           += pistachio/
-> +obj-$(CONFIG_COMMON_CLK_NXP)           += nxp/
->  obj-$(CONFIG_COMMON_CLK_PXA)           += pxa/
->  obj-$(CONFIG_COMMON_CLK_QCOM)          += qcom/
->  obj-$(CONFIG_ARCH_ROCKCHIP)            += rockchip/
-> --
-
-Other than the one comment above it looks good to me:
-Acked-by: Joachim Eastwood <manabian@gmail.com>
-
-I'll try to find the time look through the other patches you have for
-lpc32xx. I also have a EA LPC3250 dev kit v2
-(http://embeddedartists.com/products/kits/lpc3250_kit_v2.php) in my
-collection.
-
-regards,
-Joachim Eastwood
+> +The NSP IOMUX controller supports group based mux configuration. In
+> +addition, certain pins can be muxed to GPIO function individually.
+> +
+> +Required properties:
+> +- compatible:
+> +    Must be "brcm,nsp-pinmux"
+> +
+> +- reg:
+> +    Should contain the register physical address and length for each of
+> +    GPIO_CONTROL0, GP_AUX_SEL and IPROC_CONFIG IOMUX registers
+> +
+> +Properties in subnodes:
+> +- function:
+> +    The mux function to select
+> +
+> +- groups:
+> +    The list of groups to select with a given function
+> +
+> +For more details, refer to
+> +Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +
+> +For example:
+> +
+> +	pinmux: pinmux@1803f1c0 {
+> +		compatible = "brcm,nsp-pinmux";
+> +		reg = <0x1803f1c0 0x04>,
+> +		      <0x18030028 0x04>,
+> +		      <0x1803f408 0x04>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pwm &gpio_b &nand_sel>;
+> +
+> +		pwm: pwm {
+> +			function = "pwm";
+> +			groups = "pwm0_grp", "pwm1_grp";
+> +		};
+> +
+> +		gpio_b: gpio_b {
+> +			function = "gpio_b";
+> +			groups = "gpio_b_0_grp", "gpio_b_1_grp";
+> +		};
+> +
+> +		nand_sel: nand_sel {
+> +			function = "nand";
+> +			groups = "nand_grp";
+> +		};
+> +	};
+> +
+> +List of supported functions and groups in Northstar Plus:
+> +
+> +"spi": "spi_grp"
+> +
+> +"i2c": "i2c_grp"
+> +
+> +"mdio": "mdio_grp"
+> +
+> +"pwm": "pwm0_grp", "pwm1_grp", "pwm2_grp", "pwm3_grp"
+> +
+> +"gpio_b": "gpio_b_0_grp", "gpio_b_1_grp", "gpio_b_2_grp", "gpio_b_3_grp"
+> +
+> +"uart1": "uart1_grp"
+> +
+> +"uart2": "uart2_grp"
+> +
+> +"synce": "synce_grp"
+> +
+> +"sata_led_grps": "sata0_led_grp", "sata1_led_grp"
+> +
+> +"xtal_out": "xtal_out_grp"
+> +
+> +"sdio": "sdio_pwr_grp", "sdio_1p8v_grp"
+> +
+> +"switch_led": "switch_p05_led0_grp", "switch_p05_led1_grp"
+> +
+> +"nand": "nand_grp"
+> +
+> +"emmc": "emmc_grp"
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
