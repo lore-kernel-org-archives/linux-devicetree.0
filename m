@@ -1,62 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] Documentation: dt-bindings: add async_irq to
- msm_hsusb
-Date: Sun, 22 Nov 2015 14:50:23 -0600
-Message-ID: <20151122205023.GA2953@rob-hp-laptop>
-References: <1448063240-2739-1-git-send-email-tim.bird@sonymobile.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: gpio: update desription of LPC32xx GPIO
+ controller
+Date: Sun, 22 Nov 2015 15:09:22 -0600
+Message-ID: <20151122210922.GA6853@rob-hp-laptop>
+References: <1447982995-30231-1-git-send-email-vz@mleia.com>
+ <1447982995-30231-2-git-send-email-vz@mleia.com>
+ <20151120141354.GA25446@rob-hp-laptop>
+ <564F6617.6090104@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448063240-2739-1-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <564F6617.6090104@mleia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:47:18PM -0800, Tim Bird wrote:
-> Add optional async_irq to msm_hsusb binding doc.
+On Fri, Nov 20, 2015 at 08:27:35PM +0200, Vladimir Zapolskiy wrote:
+> On 20.11.2015 16:13, Rob Herring wrote:
+> > On Fri, Nov 20, 2015 at 03:29:52AM +0200, Vladimir Zapolskiy wrote:
+> >> For the purpose of better description of NXP LPC32xx GPIO controller
+> >> hardware in device tree format, extend the existing description with
+> >> device tree subnodes, which represent 6 GPIO banks within the
+> >> controller.
+> >>
+> >> Note, client interface to the GPIO controller is untouched.
+> >>
+> >> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> >> ---
+> >>  .../devicetree/bindings/gpio/gpio_lpc32xx.txt      | 121 ++++++++++++++++++++-
+> >>  1 file changed, 120 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> >> index 4981936..d2da63c 100644
+> >> --- a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> >> +++ b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+> >> @@ -15,7 +15,43 @@ Required properties:
+> >>     2) pin number
+> >>     3) optional parameters:
+> >>        - bit 0 specifies polarity (0 for normal, 1 for inverted)
+> >> -- reg: Index of the GPIO group
+> >> +- #address-cells: should be 2, which stands for GPIO bank id and
+> >> +  physical base address of this GPIO bank.
+> > 
+> > Now you need special code to do address translation. I'd really think 
+> > twice about doing this.
 > 
-> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> Correct, address translation code is needed here...
+> 
+> > Why do you need the bank number?
+> 
+> Only one reason -- backward compatibility in sense of referencing a GPIO
+> line on client's side. This API design is broken, I agree.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+What client exactly? Between the dtb and kernel or kernel and userspace 
+or ...?
 
-> ---
->  Documentation/devicetree/bindings/usb/msm-hsusb.txt | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> Honestly I would prefer to get rid of this "feature", new code allows to
+> reference on client's side either a parent GPIO controller device node,
+> or bank nodes, probably the improvement can be done in a few steps?
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> index 8654a3e..2d13c1c 100644
-> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> @@ -23,7 +23,12 @@ Required properties:
->    "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
->  
->  - regs:         Offset and length of the register set in the memory map
-> -- interrupts:   interrupt-specifier for the OTG interrupt.
-> +- interrupts:   interrupt-specifier for the OTG interrupts
-> +
-> +- interrupt-names: Should contain the following:
-> +  "core"        USB core interrupt
-> +  "async"       Asynchronous interrupt to wake up from low power mode
-> +                (optional)
->  
->  - clocks:       A list of phandle + clock-specifier pairs for the
->                  clocks listed in clock-names
-> @@ -89,7 +94,8 @@ Example HSUSB OTG controller device node:
->      usb@f9a55000 {
->          compatible = "qcom,usb-otg-snps";
->          reg = <0xf9a55000 0x400>;
-> -        interrupts = <0 134 0>;
-> +        interrupts = <0 134 0>, <0 140 0>;
-> +        interrupt-names = "core", "async";
->          dr_mode = "peripheral";
->  
->          clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
-> -- 
-> 1.8.2.2
+>   - this change,
+>   - convert clients to reference a GPIO bank directly,
+>   - remove root GPIO controller (e.g. make it "simple-bus") and convert
+> GPIO banks to "gpio-controller"s.
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Can an evolution like this happen?
+
+You generally don't want bindings to evolve.
+
+
+> >> +		gpio_p2: gpio-controller@2 {
+> >> +			reg = <2 0x10 0x18>;
+> >> +			gpio-bank-name = "p2";
+> >> +			gpios = <13>;
+> >> +			gpio-no-output-state;
+> >> +		};
+> >> +
+> >> +		gpio_gpio: gpio-controller@3 {
+> >> +			reg = <3 0x00 0x1C>;
+> > 
+> > This overlaps with bank 2.
+> 
+> Yes, it is. Thousand thanks to hardware designers.
+
+Then you might want to split these into 2 regions. The problem is 
+request_resource does not work with overlapping resources. Or just don't 
+do subnodes. If there is not a lot of variations in the subnode data, 
+then just leave that information in the kernel.
+
+Rob
