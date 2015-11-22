@@ -1,336 +1,209 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 23/50] powerpc/powernv: Use PE instead of number
- during setup and release
-Date: Mon, 23 Nov 2015 09:52:41 +1100
-Message-ID: <20151122225240.GC16159@gwshan>
+Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
+Date: Mon, 23 Nov 2015 09:46:36 +1100
+Message-ID: <20151122224636.GB16159@gwshan>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-24-git-send-email-gwshan@linux.vnet.ibm.com>
- <564AB64E.6060208@ozlabs.ru>
- <20151117090302.GD16586@gwshan>
- <564BC2C3.4060908@ozlabs.ru>
+ <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
+ <56498D6A.7010905@ozlabs.ru>
+ <20151117013713.GA31584@gwshan>
+ <564D1566.5020708@ozlabs.ru>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <564BC2C3.4060908@ozlabs.ru>
+In-Reply-To: <564D1566.5020708@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
 To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 11:13:55AM +1100, Alexey Kardashevskiy wrote:
->On 11/17/2015 08:03 PM, Gavin Shan wrote:
->>On Tue, Nov 17, 2015 at 04:08:30PM +1100, Alexey Kardashevskiy wrote:
+On Thu, Nov 19, 2015 at 11:18:46AM +1100, Alexey Kardashevskiy wrote:
+>On 11/17/2015 12:37 PM, Gavin Shan wrote:
+>>On Mon, Nov 16, 2015 at 07:01:46PM +1100, Alexey Kardashevskiy wrote:
 >>>On 11/05/2015 12:12 AM, Gavin Shan wrote:
->>>>In current implementation, the PEs that are allocated or picked
->>>>from the reserved list are identified by PE number. The PE instance
->>>>has to be picked according to the PE number eventually. We have
->>>>same issue when PE is released.
->>>>
->>>>For pnv_ioda_pick_m64_pe() and pnv_ioda_alloc_pe(), this returns
->>>>PE instance so that pnv_ioda_setup_bus_PE() can use the allocated
->>>>or reserved PE instance directly. Also, pnv_ioda_setup_bus_PE()
->>>>returns the reserved/allocated PE instance to be used in subsequent
->>>>patches. On the other hand, pnv_ioda_free_pe() uses PE instance
->>>>(not number) as its argument. No logical changes introduced.
+>>>>This enables M64 window on P7IOC, which has been enabled on PHB3.
+>>>>Different from PHB3 where 16 M64 BARs are supported and each of
+>>>>them can be owned by one particular PE# exclusively or divided
+>>>>evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
+>>>>of them are divided to 8 segments. So every P7IOC PHB supports
+>>>>128 M64 segments in total. P7IOC has M64DT, which helps mapping
+>>>>one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
+>>>>M64DT, indicating that one M64 segment can only be pinned to the
+>>>>fixed PE#. In order to have same code to support M64 on P7IOC and
+>>>>PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
+>>>>of them is pinned to the fixed PE# by bypassing the function of
+>>>>M64DT. In turn, we just need different phb->init_m64() for P7IOC
+>>>>and PHB3 to support M64.
 >>>>
 >>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 >>>>---
->>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 81 +++++++++++++++++--------------
->>>>  arch/powerpc/platforms/powernv/pci.h      |  2 +-
->>>>  2 files changed, 46 insertions(+), 37 deletions(-)
+>>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
+>>>>  arch/powerpc/platforms/powernv/pci.h      |  3 ++
+>>>>  2 files changed, 86 insertions(+), 3 deletions(-)
 >>>>
 >>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>index 488e0f8..ae82df1 100644
+>>>>index 1f7d985..bfe69f1 100644
 >>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
 >>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>@@ -152,7 +152,7 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
->>>>  	pnv_ioda_init_pe(phb, pe_no);
+>>>>@@ -256,6 +256,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
+>>>>  	}
 >>>>  }
 >>>>
->>>>-static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
->>>>+static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
->>>>  {
->>>>  	unsigned long pe;
->>>>
->>>>@@ -160,19 +160,20 @@ static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
->>>>  		pe = find_next_zero_bit(phb->ioda.pe_alloc,
->>>>  					phb->ioda.total_pe_num, 0);
->>>>  		if (pe >= phb->ioda.total_pe_num)
->>>>-			return IODA_INVALID_PE;
->>>>+			return NULL;
->>>>  	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
->>>>
->>>>-	pnv_ioda_init_pe(phb, pe);
->>>>-	return pe;
->>>>+	return pnv_ioda_init_pe(phb, pe);
->>>>  }
->>>>
->>>>-static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
->>>>+static void pnv_ioda_free_pe(struct pnv_ioda_pe *pe)
->>>>  {
->>>>-	WARN_ON(phb->ioda.pe_array[pe].pdev);
->>>>+	struct pnv_phb *phb = pe->phb;
+>>>>+static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+>>>>+{
+>>>>+	struct resource *r;
+>>>>+	int index;
 >>>>+
->>>>+	WARN_ON(pe->pdev);
->>>>
->>>>-	memset(&phb->ioda.pe_array[pe], 0, sizeof(struct pnv_ioda_pe));
->>>>-	clear_bit(pe, phb->ioda.pe_alloc);
->>>>+	memset(pe, 0, sizeof(struct pnv_ioda_pe));
->>>>+	clear_bit(pe->pe_number, phb->ioda.pe_alloc);
->>>>  }
->>>>
->>>>  /* The default M64 BAR is shared by all PEs */
->>>>@@ -332,7 +333,7 @@ static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
->>>>  	}
->>>>  }
->>>>
->>>>-static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>>>+static struct pnv_ioda_pe *pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>>>  {
->>>>  	struct pci_controller *hose = pci_bus_to_host(bus);
->>>>  	struct pnv_phb *phb = hose->private_data;
->>>>@@ -342,7 +343,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>>>
->>>>  	/* Root bus shouldn't use M64 */
->>>>  	if (pci_is_root_bus(bus))
->>>>-		return IODA_INVALID_PE;
->>>>+		return NULL;
->>>>
->>>>  	/* Allocate bitmap */
->>>>  	size = _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
->>>>@@ -350,7 +351,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>>>  	if (!pe_alloc) {
->>>>  		pr_warn("%s: Out of memory !\n",
->>>>  			__func__);
->>>>-		return IODA_INVALID_PE;
->>>>+		return NULL;
->>>>  	}
->>>>
->>>>  	/* Figure out reserved PE numbers by the PE */
->>>>@@ -363,7 +364,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>>>  	 */
->>>>  	if (bitmap_empty(pe_alloc, phb->ioda.total_pe_num)) {
->>>>  		kfree(pe_alloc);
->>>>-		return IODA_INVALID_PE;
->>>>+		return NULL;
->>>>  	}
->>>>
->>>>  	/*
->>>>@@ -409,7 +410,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>>>+	/*
+>>>>+	 * There are 16 M64 BARs, each of which has 8 segments. So
+>>>>+	 * there are as many M64 segments as the maximum number of
+>>>>+	 * PEs, which is 128.
+>>>>+	 */
+>>>>+	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
+>>>>+		unsigned long base, segsz = phb->ioda.m64_segsize;
+>>>>+		int64_t rc;
+>>>>+
+>>>>+		base = phb->ioda.m64_base +
+>>>>+		       index * PNV_IODA1_M64_SEGS * segsz;
+>>>>+		rc = opal_pci_set_phb_mem_window(phb->opal_id,
+>>>>+				OPAL_M64_WINDOW_TYPE, index, base, 0,
+>>>>+				PNV_IODA1_M64_SEGS * segsz);
+>>>>+		if (rc != OPAL_SUCCESS) {
+>>>>+			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
+>>>>+				rc, phb->hose->global_number, index);
+>>>>+			goto fail;
+>>>>+		}
+>>>>+
+>>>>+		rc = opal_pci_phb_mmio_enable(phb->opal_id,
+>>>>+				OPAL_M64_WINDOW_TYPE, index,
+>>>>+				OPAL_ENABLE_M64_SPLIT);
+>>>>+		if (rc != OPAL_SUCCESS) {
+>>>>+			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
+>>>>+				rc, phb->hose->global_number, index);
+>>>>+			goto fail;
+>>>>+		}
+>>>>+	}
+>>>>+
+>>>>+	/*
+>>>>+	 * Exclude the segment used by the reserved PE, which
+>>>>+	 * is expected to be 0 or last supported PE#.
+>>>>+	 */
+>>>>+	r = &phb->hose->mem_resources[1];
+>>>>+	if (phb->ioda.reserved_pe_idx == 0)
+>>>>+		r->start += phb->ioda.m64_segsize;
+>>>>+	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+>>>>+		r->end -= phb->ioda.m64_segsize;
+>>>>+	else
+>>>>+		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
+>>>>+			phb->ioda.reserved_pe_idx);
+>>>>+
+>>>>+	return 0;
+>>>>+
+>>>>+fail:
+>>>>+	for ( ; index >= 0; index--)
+>>>>+		opal_pci_phb_mmio_enable(phb->opal_id,
+>>>>+			OPAL_M64_WINDOW_TYPE, index, OPAL_DISABLE_M64);
+>>>>+
+>>>>+	return -EIO;
+>>>>+}
+>>>>+
+>>>>  static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
+>>>>  				    unsigned long *pe_bitmap,
+>>>>  				    bool all)
+>>>>@@ -325,6 +383,26 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>>>  			pe->master = master_pe;
+>>>>  			list_add_tail(&pe->list, &master_pe->slaves);
+>>>>  		}
+>>>>+
+>>>>+		/*
+>>>>+		 * P7IOC supports M64DT, which helps mapping M64 segment
+>>>>+		 * to one particular PE#. However, PHB3 has fixed mapping
+>>>>+		 * between M64 segment and PE#. In order to have same logic
+>>>>+		 * for P7IOC and PHB3, we enforce fixed mapping between M64
+>>>>+		 * segment and PE# on P7IOC.
+>>>>+		 */
+>>>>+		if (phb->type == PNV_PHB_IODA1) {
+>>>>+			int64_t rc;
+>>>>+
+>>>>+			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>>>+					pe->pe_number, OPAL_M64_WINDOW_TYPE,
+>>>>+					pe->pe_number / PNV_IODA1_M64_SEGS,
+>>>>+					pe->pe_number % PNV_IODA1_M64_SEGS);
+>>>>+			if (rc != OPAL_SUCCESS)
+>>>>+				pr_warn("%s: Error %lld mapping M64 for PHB#%d-PE#%d\n",
+>>>>+					__func__, rc, phb->hose->global_number,
+>>>>+					pe->pe_number);
+>>>>+		}
 >>>>  	}
 >>>>
 >>>>  	kfree(pe_alloc);
->>>>-	return master_pe->pe_number;
->>>>+	return master_pe;
->>>>  }
+>>>>@@ -339,8 +417,7 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+>>>>  	const u32 *r;
+>>>>  	u64 pci_addr;
 >>>>
->>>>  static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->>>>@@ -988,28 +989,26 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
->>>>   * subordinate PCI devices and buses. The second type of PE is normally
->>>>   * orgiriated by PCIe-to-PCI bridge or PLX switch downstream ports.
->>>>   */
->>>>-static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>>>+static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>>>  {
->>>>  	struct pci_controller *hose = pci_bus_to_host(bus);
->>>>  	struct pnv_phb *phb = hose->private_data;
->>>>-	struct pnv_ioda_pe *pe;
->>>>-	int pe_num = IODA_INVALID_PE;
->>>>+	struct pnv_ioda_pe *pe = NULL;
->>>>
->>>>  	/* Check if PE is determined by M64 */
->>>>  	if (phb->pick_m64_pe)
->>>>-		pe_num = phb->pick_m64_pe(bus, all);
->>>>+		pe = phb->pick_m64_pe(bus, all);
->>>>
->>>>  	/* The PE number isn't pinned by M64 */
->>>>-	if (pe_num == IODA_INVALID_PE)
->>>>-		pe_num = pnv_ioda_alloc_pe(phb);
->>>>+	if (!pe)
->>>>+		pe = pnv_ioda_alloc_pe(phb);
->>>>
->>>>-	if (pe_num == IODA_INVALID_PE) {
->>>>+	if (!pe) {
->>>>  		pr_warning("%s: Not enough PE# available for PCI bus %04x:%02x\n",
->>>>  			__func__, pci_domain_nr(bus), bus->number);
->>>>-		return;
->>>>+		return NULL;
+>>>>-	/* FIXME: Support M64 for P7IOC */
+>>>>-	if (phb->type != PNV_PHB_IODA2) {
+>>>>+	if (phb->type != PNV_PHB_IODA1 && phb->type != PNV_PHB_IODA2) {
+>>>>  		pr_info("  Not support M64 window\n");
+>>>>  		return;
 >>>>  	}
+>>>>@@ -373,7 +450,10 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
 >>>>
->>>>-	pe = &phb->ioda.pe_array[pe_num];
->>>>  	pe->flags |= (all ? PNV_IODA_PE_BUS_ALL : PNV_IODA_PE_BUS);
->>>>  	pe->pbus = bus;
->>>>  	pe->pdev = NULL;
->>>>@@ -1018,17 +1017,16 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>>>
->>>>  	if (all)
->>>>  		pe_info(pe, "Secondary bus %d..%d associated with PE#%d\n",
->>>>-			bus->busn_res.start, bus->busn_res.end, pe_num);
->>>>+			bus->busn_res.start, bus->busn_res.end, pe->pe_number);
->>>>  	else
->>>>  		pe_info(pe, "Secondary bus %d associated with PE#%d\n",
->>>>-			bus->busn_res.start, pe_num);
->>>>+			bus->busn_res.start, pe->pe_number);
->>>>
->>>>  	if (pnv_ioda_configure_pe(phb, pe)) {
->>>>  		/* XXX What do we do here ? */
->>>>-		if (pe_num)
->>>>-			pnv_ioda_free_pe(phb, pe_num);
->>>>+		pnv_ioda_free_pe(pe);
->>>>  		pe->pbus = NULL;
->>>>-		return;
->>>>+		return NULL;
->>>>  	}
->>>>
->>>>  	/* Associate it with all child devices */
->>>>@@ -1036,6 +1034,8 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>>>
->>>>  	/* Put PE to the list */
->>>>  	list_add_tail(&pe->list, &phb->ioda.pe_list);
->>>>+
->>>>+	return pe;
->>>>  }
->>>>
->>>>  static void pnv_ioda_setup_PEs(struct pci_bus *bus)
->>>>@@ -1267,7 +1267,7 @@ static void pnv_ioda_release_vf_PE(struct pci_dev *pdev)
->>>>
->>>>  		pnv_ioda_deconfigure_pe(phb, pe);
->>>>
->>>>-		pnv_ioda_free_pe(phb, pe->pe_number);
->>>>+		pnv_ioda_free_pe(pe);
->>>>  	}
->>>>  }
->>>>
->>>>@@ -1276,6 +1276,7 @@ void pnv_pci_sriov_disable(struct pci_dev *pdev)
->>>>  	struct pci_bus        *bus;
->>>>  	struct pci_controller *hose;
->>>>  	struct pnv_phb        *phb;
->>>>+	struct pnv_ioda_pe    *pe;
->>>>  	struct pci_dn         *pdn;
->>>>  	struct pci_sriov      *iov;
->>>>  	u16                    num_vfs, i;
->>>>@@ -1300,8 +1301,11 @@ void pnv_pci_sriov_disable(struct pci_dev *pdev)
->>>>  		/* Release PE numbers */
->>>>  		if (pdn->m64_single_mode) {
->>>>  			for (i = 0; i < num_vfs; i++) {
->>>>-				if (pdn->pe_num_map[i] != IODA_INVALID_PE)
->>>>-					pnv_ioda_free_pe(phb, pdn->pe_num_map[i]);
->>>>+				if (pdn->pe_num_map[i] == IODA_INVALID_PE)
->>>>+					continue;
->>>>+
->>>>+				pe = &phb->ioda.pe_array[pdn->pe_num_map[i]];
->>>>+				pnv_ioda_free_pe(pe);
->>>>  			}
->>>>  		} else
->>>>  			bitmap_clear(phb->ioda.pe_alloc, *pdn->pe_num_map, num_vfs);
->>>>@@ -1354,9 +1358,8 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
->>>>
->>>>  		if (pnv_ioda_configure_pe(phb, pe)) {
->>>>  			/* XXX What do we do here ? */
->>>>-			if (pe_num)
->>>>-				pnv_ioda_free_pe(phb, pe_num);
->>>>  			pe->pdev = NULL;
->>>>+			pnv_ioda_free_pe(pe);
+>>>>  	/* Use last M64 BAR to cover M64 window */
+>>>>  	phb->ioda.m64_bar_idx = 15;
+>>>>-	phb->init_m64 = pnv_ioda2_init_m64;
+>>>>+	if (phb->type == PNV_PHB_IODA1)
+>>>>+		phb->init_m64 = pnv_ioda1_init_m64;
+>>>>+	else
+>>>>+		phb->init_m64 = pnv_ioda2_init_m64;
+>>>>  	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
+>>>>  	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
 >>>
 >>>
->>>
->>>pnv_ioda_free_pe() does WARN_ON(pdev). Before this patch you would free PE
->>>first and then reset pe->pdev, now you reset it first, then call
->>>pnv_ioda_free_pe(). This change is not just about "Use PE instead of number
->>>during setup and release", is/was that a bug?
->>>
->>>And I fail to see when pe->pdev could get initialized in
->>>pnv_ioda_configure_pe() as pnv_pci_dma_dev_setup() should not be called while
->>>pnv_ioda_setup_vf_PE() is working.
+>>>Nit: the callbacks initialization does not seem to relate to parsing any
+>>>window :) They could all go to where pnv_ioda_parse_m64_window() is called,
+>>>no separate patch is needed.
 >>>
 >>
->>It wasn't or isn't a bug as
+>>Well, what's the benifit for that? I personally prefer the way I had: initialize
+>>all callbacks in one place, not in separate places.
 >
->
->There is an unexplained change in behavior - after the patch pe->pdev gets
->cleaned before pnv_ioda_free_pe(), before the patch it was opposite. Your
->options are:
->- remove "No logical changes introduced" from the commit log and explain the
->change or
->- move "pe->pdev = NULL;" after pnv_ioda_free_pe().
+>One place is good, agree. Which should have been a single phv_phb_ops
+>instance as it is done everywhere else in the kernel. And the existing
+>pnv_phb's callbacks are already initialized in various places, not a single
+>one.
 >
 
-I'll take option#1: to drop this specific change in next revision.
+Ok, but that's separate issue not related to this patchset. I guess the issue
+you're taling about can be fixed in future, not in this patchset.
 
+>>However, if you have good
+>>reason to support your suggestion, I'll change accordingly for sure.
 >
->
->>pe->pdev is initialized in arch/powerpc/platform/powernv/pci.c::
->>pnv_pci_dma_dev_setup()
->
->So when pnv_ioda_setup_vf_PE() starts working, it is valid for pe->pdev to
->have not-NULL pointer? Because nothing in pnv_ioda_setup_vf_PE() calls
->pnv_pci_dma_dev_setup(), explicitly or implicitly.
+>Nah, leave it as is for now, we will probably change this later.
 >
 
+Thanks.
 
-Correct.
-
->
->
+>>
 >>>
->>>>  			continue;
->>>>  		}
->>>>
->>>>@@ -1374,6 +1377,7 @@ int pnv_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->>>>  	struct pci_bus        *bus;
->>>>  	struct pci_controller *hose;
->>>>  	struct pnv_phb        *phb;
->>>>+	struct pnv_ioda_pe    *pe;
->>>>  	struct pci_dn         *pdn;
->>>>  	int                    ret;
->>>>  	u16                    i;
->>>>@@ -1416,11 +1420,13 @@ int pnv_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->>>>  		/* Calculate available PE for required VFs */
->>>>  		if (pdn->m64_single_mode) {
->>>>  			for (i = 0; i < num_vfs; i++) {
->>>>-				pdn->pe_num_map[i] = pnv_ioda_alloc_pe(phb);
->>>>-				if (pdn->pe_num_map[i] == IODA_INVALID_PE) {
->>>>+				pe = pnv_ioda_alloc_pe(phb);
->>>>+				if (!pe) {
->>>>  					ret = -EBUSY;
->>>>  					goto m64_failed;
->>>>  				}
->>>>+
->>>>+				pdn->pe_num_map[i] = pe->pe_number;
->>>>  			}
->>>>  		} else {
->>>>  			mutex_lock(&phb->ioda.pe_alloc_mutex);
->>>>@@ -1465,8 +1471,11 @@ int pnv_pci_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->>>>  m64_failed:
->>>>  	if (pdn->m64_single_mode) {
->>>>  		for (i = 0; i < num_vfs; i++) {
->>>>-			if (pdn->pe_num_map[i] != IODA_INVALID_PE)
->>>>-				pnv_ioda_free_pe(phb, pdn->pe_num_map[i]);
->>>>+			if (pdn->pe_num_map[i] == IODA_INVALID_PE)
->>>>+				continue;
->>>>+
->>>>+			pe = &phb->ioda.pe_array[pdn->pe_num_map[i]];
->>>>+			pnv_ioda_free_pe(pe);
->>>>  		}
->>>>  	} else
->>>>  		bitmap_clear(phb->ioda.pe_alloc, *pdn->pe_num_map, num_vfs);
+>>>>  }
 >>>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>>>index 5df945f..e55ab0e 100644
+>>>>index 671fd13..c4019ac 100644
 >>>>--- a/arch/powerpc/platforms/powernv/pci.h
 >>>>+++ b/arch/powerpc/platforms/powernv/pci.h
->>>>@@ -105,7 +105,7 @@ struct pnv_phb {
->>>>  	int (*init_m64)(struct pnv_phb *phb);
->>>>  	void (*reserve_m64_pe)(struct pci_bus *bus,
->>>>  			       unsigned long *pe_bitmap, bool all);
->>>>-	int (*pick_m64_pe)(struct pci_bus *bus, bool all);
->>>>+	struct pnv_ioda_pe *(*pick_m64_pe)(struct pci_bus *bus, bool all);
->>>>  	int (*get_pe_state)(struct pnv_phb *phb, int pe_no);
->>>>  	void (*freeze_pe)(struct pnv_phb *phb, int pe_no);
->>>>  	int (*unfreeze_pe)(struct pnv_phb *phb, int pe_no, int opt);
+>>>>@@ -78,6 +78,9 @@ struct pnv_ioda_pe {
+>>>>  	struct list_head	list;
+>>>>  };
 >>>>
->>
+>>>>+#define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
+>>>>+#define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
+>>>>+
+>>>>  #define PNV_PHB_FLAG_EEH	(1 << 0)
+>>>>
+>>>>  struct pnv_phb {
+>>>>
 
 Thanks,
 Gavin
