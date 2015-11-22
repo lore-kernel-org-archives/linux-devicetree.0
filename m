@@ -1,58 +1,34 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Sun, 22 Nov 2015 07:51:46 +0100
-Message-ID: <20151122065146.GD26074@amd>
-References: <1436214373-12969-1-git-send-email-pali.rohar@gmail.com>
- <20150713131902.GH26485@atomide.com>
- <20151012201640.GQ23801@atomide.com>
- <201510122225.12786@pali>
- <20151012204509.GT23801@atomide.com>
- <20151013143746.GJ23104@pali>
- <20151105114041.GC27908@pali>
- <20151105161756.GG3078@atomide.com>
- <5643E716.9080204@gmail.com>
+From: Yuval Mintz <Yuval.Mintz-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V3 net-next 3/5] net:hns: Add Hip06 "TSO(TCP Segment
+ Offload)" support HNS Driver
+Date: Sun, 22 Nov 2015 08:49:49 +0000
+Message-ID: <CO2PR11MB00885067453FB6462178765497180__13255.3157549866$1448182227$gmane$org@CO2PR11MB0088.namprd11.prod.outlook.com>
+References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
+ <1447966706-16219-4-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5643E716.9080204@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447966706-16219-4-git-send-email-salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org" <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org" <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>, "mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mehta.sal>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2015-11-11 17:10:46, Frank Rowand wrote:
-> Adding devicetree list.
->=20
-> Thread starts at
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/35445=
-9.html
->=20
-> On 11/5/2015 8:17 AM, Tony Lindgren wrote:
-> > * Pali Roh=E1r <pali.rohar@gmail.com> [151105 03:41]:
-> >> On Tuesday 13 October 2015 16:37:46 Pali Roh=E1r wrote:
-> >>> On Monday 12 October 2015 13:45:09 Tony Lindgren wrote:
-> >>>> * Pali Roh=E1r <pali.rohar@gmail.com> [151012 13:29]:
-> >>>>> On Monday 12 October 2015 22:16:40 Tony Lindgren wrote:
-> >>>>>>
-> >>>>>> Pali, any news on posting an updated series with the comments
-> >>>>>> addressed in this thread? It seems that we all pretty much agr=
-ee
-> >>>>>> what needs to be done.
->=20
-> I'm not real happy with the concept of patches 4 and 5 in this series=
-=2E
-> My concern is that those two patches are using the FDT as a transport
-> mechanism for a binary blob (the atags object).
+> +static void hns_ae_set_tso_stats(struct hnae_handle *handle, int
+> +enable) {
+> +	struct hns_ppe_cb *ppe_cb = hns_get_ppe_cb(handle);
+> +
+> +	hns_ppe_set_tso_enable(ppe_cb, enable); }
 
-Umm. Ok. Do you have alternative proposal that works for everyone?
+Style issues?
 
-I mean. This discussion was going for quite a long time, and it would
-be nice to have some solution... patch proposal... something.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+> +void hns_ppe_set_tso_enable(struct hns_ppe_cb *ppe_cb, u32 value) {
+> +	dsaf_set_dev_bit(ppe_cb, PPEV2_CFG_TSO_EN_REG, 0, !!value); }
+> +
+
+Likewise
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
