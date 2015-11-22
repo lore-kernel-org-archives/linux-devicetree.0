@@ -1,209 +1,77 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 14/50] powerpc/powernv: M64 support on P7IOC
-Date: Mon, 23 Nov 2015 09:46:36 +1100
-Message-ID: <20151122224636.GB16159@gwshan>
-References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1446642770-4681-15-git-send-email-gwshan@linux.vnet.ibm.com>
- <56498D6A.7010905@ozlabs.ru>
- <20151117013713.GA31584@gwshan>
- <564D1566.5020708@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: "Kim, Milo" <milo.kim@ti.com>
+Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
+Date: Mon, 23 Nov 2015 08:40:18 +0900
+Message-ID: <56525262.60308@ti.com>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <1446441875-1256-16-git-send-email-milo.kim@ti.com>
+ <5638DD99.9070502@samsung.com> <56419F0C.90009@ti.com>
+ <564EE66C.5010709@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <564D1566.5020708@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <564EE66C.5010709@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 11:18:46AM +1100, Alexey Kardashevskiy wrote:
->On 11/17/2015 12:37 PM, Gavin Shan wrote:
->>On Mon, Nov 16, 2015 at 07:01:46PM +1100, Alexey Kardashevskiy wrote:
->>>On 11/05/2015 12:12 AM, Gavin Shan wrote:
->>>>This enables M64 window on P7IOC, which has been enabled on PHB3.
->>>>Different from PHB3 where 16 M64 BARs are supported and each of
->>>>them can be owned by one particular PE# exclusively or divided
->>>>evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
->>>>of them are divided to 8 segments. So every P7IOC PHB supports
->>>>128 M64 segments in total. P7IOC has M64DT, which helps mapping
->>>>one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
->>>>M64DT, indicating that one M64 segment can only be pinned to the
->>>>fixed PE#. In order to have same code to support M64 on P7IOC and
->>>>PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
->>>>of them is pinned to the fixed PE# by bypassing the function of
->>>>M64DT. In turn, we just need different phb->init_m64() for P7IOC
->>>>and PHB3 to support M64.
->>>>
->>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>>>---
->>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
->>>>  arch/powerpc/platforms/powernv/pci.h      |  3 ++
->>>>  2 files changed, 86 insertions(+), 3 deletions(-)
->>>>
->>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>index 1f7d985..bfe69f1 100644
->>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>@@ -256,6 +256,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
->>>>  	}
->>>>  }
->>>>
->>>>+static int pnv_ioda1_init_m64(struct pnv_phb *phb)
->>>>+{
->>>>+	struct resource *r;
->>>>+	int index;
->>>>+
->>>>+	/*
->>>>+	 * There are 16 M64 BARs, each of which has 8 segments. So
->>>>+	 * there are as many M64 segments as the maximum number of
->>>>+	 * PEs, which is 128.
->>>>+	 */
->>>>+	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
->>>>+		unsigned long base, segsz = phb->ioda.m64_segsize;
->>>>+		int64_t rc;
->>>>+
->>>>+		base = phb->ioda.m64_base +
->>>>+		       index * PNV_IODA1_M64_SEGS * segsz;
->>>>+		rc = opal_pci_set_phb_mem_window(phb->opal_id,
->>>>+				OPAL_M64_WINDOW_TYPE, index, base, 0,
->>>>+				PNV_IODA1_M64_SEGS * segsz);
->>>>+		if (rc != OPAL_SUCCESS) {
->>>>+			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
->>>>+				rc, phb->hose->global_number, index);
->>>>+			goto fail;
->>>>+		}
->>>>+
->>>>+		rc = opal_pci_phb_mmio_enable(phb->opal_id,
->>>>+				OPAL_M64_WINDOW_TYPE, index,
->>>>+				OPAL_ENABLE_M64_SPLIT);
->>>>+		if (rc != OPAL_SUCCESS) {
->>>>+			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
->>>>+				rc, phb->hose->global_number, index);
->>>>+			goto fail;
->>>>+		}
->>>>+	}
->>>>+
->>>>+	/*
->>>>+	 * Exclude the segment used by the reserved PE, which
->>>>+	 * is expected to be 0 or last supported PE#.
->>>>+	 */
->>>>+	r = &phb->hose->mem_resources[1];
->>>>+	if (phb->ioda.reserved_pe_idx == 0)
->>>>+		r->start += phb->ioda.m64_segsize;
->>>>+	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
->>>>+		r->end -= phb->ioda.m64_segsize;
->>>>+	else
->>>>+		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
->>>>+			phb->ioda.reserved_pe_idx);
->>>>+
->>>>+	return 0;
->>>>+
->>>>+fail:
->>>>+	for ( ; index >= 0; index--)
->>>>+		opal_pci_phb_mmio_enable(phb->opal_id,
->>>>+			OPAL_M64_WINDOW_TYPE, index, OPAL_DISABLE_M64);
->>>>+
->>>>+	return -EIO;
->>>>+}
->>>>+
->>>>  static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
->>>>  				    unsigned long *pe_bitmap,
->>>>  				    bool all)
->>>>@@ -325,6 +383,26 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>>>  			pe->master = master_pe;
->>>>  			list_add_tail(&pe->list, &master_pe->slaves);
->>>>  		}
->>>>+
->>>>+		/*
->>>>+		 * P7IOC supports M64DT, which helps mapping M64 segment
->>>>+		 * to one particular PE#. However, PHB3 has fixed mapping
->>>>+		 * between M64 segment and PE#. In order to have same logic
->>>>+		 * for P7IOC and PHB3, we enforce fixed mapping between M64
->>>>+		 * segment and PE# on P7IOC.
->>>>+		 */
->>>>+		if (phb->type == PNV_PHB_IODA1) {
->>>>+			int64_t rc;
->>>>+
->>>>+			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
->>>>+					pe->pe_number, OPAL_M64_WINDOW_TYPE,
->>>>+					pe->pe_number / PNV_IODA1_M64_SEGS,
->>>>+					pe->pe_number % PNV_IODA1_M64_SEGS);
->>>>+			if (rc != OPAL_SUCCESS)
->>>>+				pr_warn("%s: Error %lld mapping M64 for PHB#%d-PE#%d\n",
->>>>+					__func__, rc, phb->hose->global_number,
->>>>+					pe->pe_number);
->>>>+		}
->>>>  	}
->>>>
->>>>  	kfree(pe_alloc);
->>>>@@ -339,8 +417,7 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->>>>  	const u32 *r;
->>>>  	u64 pci_addr;
->>>>
->>>>-	/* FIXME: Support M64 for P7IOC */
->>>>-	if (phb->type != PNV_PHB_IODA2) {
->>>>+	if (phb->type != PNV_PHB_IODA1 && phb->type != PNV_PHB_IODA2) {
->>>>  		pr_info("  Not support M64 window\n");
->>>>  		return;
->>>>  	}
->>>>@@ -373,7 +450,10 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->>>>
->>>>  	/* Use last M64 BAR to cover M64 window */
->>>>  	phb->ioda.m64_bar_idx = 15;
->>>>-	phb->init_m64 = pnv_ioda2_init_m64;
->>>>+	if (phb->type == PNV_PHB_IODA1)
->>>>+		phb->init_m64 = pnv_ioda1_init_m64;
->>>>+	else
->>>>+		phb->init_m64 = pnv_ioda2_init_m64;
->>>>  	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
->>>>  	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
+Hi Jacek,
+
+On 11/20/2015 6:22 PM, Jacek Anaszewski wrote:
+> On 11/10/2015 08:38 AM, Kim, Milo wrote:
+> [...]
+>>>> +                cat /sys/class/leds/<led>/pattern_levels
+>>>> +                low brightness: 0, high brightness: 255
+>>>> +
+>>>> +What:        /sys/class/leds/<led>/run_pattern
+>>>> +Date:        Oct 2015
+>>>> +KernelVersion:    4.3
+>>>> +Contact:    Milo Kim <milo.kim@ti.com>
+>>>> +Description:    write only
+>>>> +                After 'pattern_times' and 'pattern_levels' are updated,
+>>>> +                run the pattern by writing 1 to 'run_pattern'.
+>>>> +                To stop running pattern, writes 0 to 'run_pattern'.
 >>>
->>>
->>>Nit: the callbacks initialization does not seem to relate to parsing any
->>>window :) They could all go to where pnv_ioda_parse_m64_window() is called,
->>>no separate patch is needed.
->>>
+>>> I wonder how registering an in-driver trigger would work. It would
+>>> allow for hiding above pattern attributes when the trigger is inactive,
+>>> and thus making the sysfs interface more transparent. You could avoid
+>>> the need for run_pattern attribute, as setting the trigger would itself
+>>> activate the pattern, and setting brightness to 0 would turn it off.
 >>
->>Well, what's the benifit for that? I personally prefer the way I had: initialize
->>all callbacks in one place, not in separate places.
+>> I like this idea, let me try to fix it.
 >
->One place is good, agree. Which should have been a single phv_phb_ops
->instance as it is done everywhere else in the kernel. And the existing
->pnv_phb's callbacks are already initialized in various places, not a single
->one.
+> After thinking it over, I came to conclusion that implementing it as
+> an in-driver trigger is not a proper way to go, since triggers are
+> defined as kernel based source of LED events.
+>
+> This is somehow abused in case of timer trigger which takes hardware
+> blinking feature as a first choice and applies software blinking as
+> a fallback only. To be consistent with that, we could go for adding
+> generic pattern trigger and add a led_pattern_set() API, similarly
+> to existing led_blink_set().
+>
+> The problem is that different LED controllers may implement blinking
+> patterns that are configured with different set of parameters. This
+> subject would definitely require thorough analysis.
+>
+> For now, please just expose pattern settings as separate sysfs
+> attributes of a LED class device.
 >
 
-Ok, but that's separate issue not related to this patchset. I guess the issue
-you're taling about can be fixed in future, not in this patchset.
+Thanks for your suggestion.
+Then, LM3633 LED driver will support 8 device attributes.
 
->>However, if you have good
->>reason to support your suggestion, I'll change accordingly for sure.
->
->Nah, leave it as is for now, we will probably change this later.
->
+	pattern_time_delay
+	pattern_time_rise
+	pattern_time_high
+	pattern_time_fall
+	pattern_time_low
+	pattern_brightness_low
+	pattern_brightness_high
+	pattern_run_pattern
 
-Thanks.
+Details will be updated in Documentation/ABI/testing/sysfs-class-led-lm3633.
 
->>
->>>
->>>>  }
->>>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>>>index 671fd13..c4019ac 100644
->>>>--- a/arch/powerpc/platforms/powernv/pci.h
->>>>+++ b/arch/powerpc/platforms/powernv/pci.h
->>>>@@ -78,6 +78,9 @@ struct pnv_ioda_pe {
->>>>  	struct list_head	list;
->>>>  };
->>>>
->>>>+#define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
->>>>+#define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
->>>>+
->>>>  #define PNV_PHB_FLAG_EEH	(1 << 0)
->>>>
->>>>  struct pnv_phb {
->>>>
-
-Thanks,
-Gavin
+Best regards,
+Milo
