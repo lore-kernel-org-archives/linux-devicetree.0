@@ -1,61 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 3/3] Input: goodix - update dt bindings documentation
- (axis swapping/inversion)
-Date: Sun, 22 Nov 2015 16:00:32 -0600
-Message-ID: <20151122220032.GA7033@rob-hp-laptop>
-References: <1448112622-2062-1-git-send-email-merker@debian.org>
- <1448112622-2062-4-git-send-email-merker@debian.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/3] mtd: arasan: Add device tree binding documentation
+Date: Sun, 22 Nov 2015 16:09:02 -0600
+Message-ID: <20151122220902.GA7523@rob-hp-laptop>
+References: <1448116777-9748-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448112622-2062-4-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1448116777-9748-1-git-send-email-punnaia@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dwmw2@infradead.org, computersforpeace@gmail.com, michals@xilinx.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 21, 2015 at 02:30:22PM +0100, Karsten Merker wrote:
-> The goodix touchscreen driver has gained support for the
-> optional touchscreen-inverted-x, touchscreen-inverted-y
-> and touchscreen-swapped-x-y properties as described in
-> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt.
+On Sat, Nov 21, 2015 at 08:09:37PM +0530, Punnaiah Choudary Kalluri wrote:
+> This patch adds the dts binding document for arasan nand flash
+> controller.
 > 
-> Document these properties in the goodix bindings description.
-> 
-> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> Changes in v5:
+> - None
+> Changes in v4:
+> - Added num-cs property
+> - Added clock support
+> Changes in v3:
+> - None
+> Changes in v2:
+> - None
+> ---
+>  .../devicetree/bindings/mtd/arasan_nfc.txt         | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/arasan_nfc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index a8492e3..ef5f42d 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -23,6 +23,11 @@ Optional properties:
->                              device. ESD is disabled if this property is not set
->                              or is set to 0.
->  
-> + - touchscreen-inverted-x  : X axis is inverted (boolean)
-> + - touchscreen-inverted-y  : Y axis is inverted (boolean)
-> + - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
-> +                             (swapping is done after inverting the axis)
+> diff --git a/Documentation/devicetree/bindings/mtd/arasan_nfc.txt b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+> new file mode 100644
+> index 0000000..02e1ce3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/arasan_nfc.txt
+> @@ -0,0 +1,34 @@
+> +Arasan Nand Flash Controller with ONFI 3.1 support
 > +
->  Example:
->  
->  	i2c@00000000 {
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Required properties:
+> +- compatible: Should be "arasan,nfc-v3p10"
+
+This should have a chip specific compatible in addition. Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
