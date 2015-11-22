@@ -1,93 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: update desription of LPC32xx GPIO
- controller
-Date: Sun, 22 Nov 2015 15:09:22 -0600
-Message-ID: <20151122210922.GA6853@rob-hp-laptop>
-References: <1447982995-30231-1-git-send-email-vz@mleia.com>
- <1447982995-30231-2-git-send-email-vz@mleia.com>
- <20151120141354.GA25446@rob-hp-laptop>
- <564F6617.6090104@mleia.com>
+From: Thomas Kaiser <thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
+ lamobo-r1 board
+Date: Sun, 22 Nov 2015 13:12:41 -0800 (PST)
+Message-ID: <6cdff23b-6ebf-41f4-b1f7-0b94abbdb003@googlegroups.com>
+References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
+ <jwvy4drz1qz.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+Reply-To: thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <564F6617.6090104@mleia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: multipart/mixed;
+	boundary="----=_Part_443_1752676550.1448226761367"
+Return-path: <linux-sunxi+bncBDQ6N3ODDQIMVX6IWICRUBGOIPAHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <jwvy4drz1qz.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi-mXXj517/zsQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 08:27:35PM +0200, Vladimir Zapolskiy wrote:
-> On 20.11.2015 16:13, Rob Herring wrote:
-> > On Fri, Nov 20, 2015 at 03:29:52AM +0200, Vladimir Zapolskiy wrote:
-> >> For the purpose of better description of NXP LPC32xx GPIO controller
-> >> hardware in device tree format, extend the existing description with
-> >> device tree subnodes, which represent 6 GPIO banks within the
-> >> controller.
-> >>
-> >> Note, client interface to the GPIO controller is untouched.
-> >>
-> >> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> >> ---
-> >>  .../devicetree/bindings/gpio/gpio_lpc32xx.txt      | 121 ++++++++++++++++++++-
-> >>  1 file changed, 120 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> >> index 4981936..d2da63c 100644
-> >> --- a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> >> +++ b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
-> >> @@ -15,7 +15,43 @@ Required properties:
-> >>     2) pin number
-> >>     3) optional parameters:
-> >>        - bit 0 specifies polarity (0 for normal, 1 for inverted)
-> >> -- reg: Index of the GPIO group
-> >> +- #address-cells: should be 2, which stands for GPIO bank id and
-> >> +  physical base address of this GPIO bank.
-> > 
-> > Now you need special code to do address translation. I'd really think 
-> > twice about doing this.
-> 
-> Correct, address translation code is needed here...
-> 
-> > Why do you need the bank number?
-> 
-> Only one reason -- backward compatibility in sense of referencing a GPIO
-> line on client's side. This API design is broken, I agree.
+------=_Part_443_1752676550.1448226761367
+Content-Type: multipart/alternative;
+	boundary="----=_Part_444_925818351.1448226761368"
 
-What client exactly? Between the dtb and kernel or kernel and userspace 
-or ...?
+------=_Part_444_925818351.1448226761368
+Content-Type: text/plain; charset=UTF-8
 
-> Honestly I would prefer to get rid of this "feature", new code allows to
-> reference on client's side either a parent GPIO controller device node,
-> or bank nodes, probably the improvement can be done in a few steps?
-> 
->   - this change,
->   - convert clients to reference a GPIO bank directly,
->   - remove root GPIO controller (e.g. make it "simple-bus") and convert
-> GPIO banks to "gpio-controller"s.
-> 
-> Can an evolution like this happen?
-
-You generally don't want bindings to evolve.
+Stefan Monnier wrote:
+>
+> When I looked for a DTS file for this board, I was told that the 
+> bananapi DTS works just fine
 
 
-> >> +		gpio_p2: gpio-controller@2 {
-> >> +			reg = <2 0x10 0x18>;
-> >> +			gpio-bank-name = "p2";
-> >> +			gpios = <13>;
-> >> +			gpio-no-output-state;
-> >> +		};
-> >> +
-> >> +		gpio_gpio: gpio-controller@3 {
-> >> +			reg = <3 0x00 0x1C>;
-> > 
-> > This overlaps with bank 2.
-> 
-> Yes, it is. Thousand thanks to hardware designers.
+Nope, there are some differences already outlined in the wiki (eg. powering 
+of a connected SATA disk is AXP209's job -- unless you pull pin PB3 the PMU 
+won't supply the disk with power).
 
-Then you might want to split these into 2 regions. The problem is 
-request_resource does not work with overlapping resources. Or just don't 
-do subnodes. If there is not a lot of variations in the subnode data, 
-then just leave that information in the kernel.
+The device tree people use in the wild for over half a year with working 
+SATA disk and switch can also be found in the 
+wiki: http://linux-sunxi.org/Lamobo_R1#Mainline_kernel
 
-Rob
+Unless the patches there for the switch won't also be applied networking is 
+pretty useless. And the R1 still suffers from lousy GMAC throughput 
+compared to other A20 devices (maybe a driver issue).
+
+Regards,
+
+Thomas
+
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+------=_Part_444_925818351.1448226761368
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Stefan Monnier wrote:<blockquote class=3D"gmail_quote" sty=
+le=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left=
+: 1ex;">When I looked for a DTS file for this board, I was told that the
+<br>bananapi DTS works just fine</blockquote><div><br></div><div>Nope, ther=
+e are some differences already outlined in the wiki (eg. powering of a conn=
+ected SATA disk is AXP209&#39;s job -- unless you pull pin PB3 the PMU won&=
+#39;t supply the disk with power).</div><div><br></div><div>The device tree=
+ people use in the wild for over half a year with working SATA disk and swi=
+tch can also be found in the wiki:=C2=A0http://linux-sunxi.org/Lamobo_R1#Ma=
+inline_kernel</div><div><br></div><div>Unless the patches there for the swi=
+tch won&#39;t also be applied networking is pretty useless. And the R1 stil=
+l suffers from lousy GMAC throughput compared to other A20 devices (maybe a=
+ driver issue).</div><div><br></div><div>Regards,</div><div><br></div><div>=
+Thomas</div></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+------=_Part_444_925818351.1448226761368--
+
+------=_Part_443_1752676550.1448226761367--
