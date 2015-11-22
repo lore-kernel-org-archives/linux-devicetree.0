@@ -1,127 +1,248 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [RFC PATCH v1 1/2] drm: Add Content Protection properties to drm
-Date: Sun, 22 Nov 2015 21:42:48 +0800
-Message-ID: <1448199768-5066-1-git-send-email-ykk@rock-chips.com>
-References: <1448199077-10221-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1448199077-10221-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King <rmk+kernel@arm.linux.org.uk>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Sylvain Chouleur <sylvain.chouleur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Documentation: device-tree Fix typos and formatting
+Date: Sun, 22 Nov 2015 14:44:34 +0100
+Message-ID: <1448199874-27204-1-git-send-email-sylvain.chouleur@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylvain Chouleur <sylvain.chouleur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+CgpBZGQgbmV3IHN0YW5kYXJk
-IGNvbm5lY3RvciBwcm9wZXJ0aWVzIHRvIHRyYWNrIHdoZXRoZXIgY29udGVudCBwcm90ZWN0aW9u
-CihleDogaGRjcCkgaXMgZGVzaXJlZCBieSB1c2Vyc3BhY2UuIFRoZXJlIGFyZSB0d28gcHJvcGVy
-dGllcyBpbnZvbHZlZCwKIkNvbnRlbnQgUHJvdGVjdGlvbiIgYW5kICJDb250ZW50IFByb3RlY3Rp
-b24gS1NWIi4KClRoZSAiQ29udGVudCBQcm90ZWN0aW9uIiBwcm9wZXJ0eSBhbGxvd3MgdXNlcnNw
-YWNlIHRvIHJlcXVlc3QgcHJvdGVjdGlvbgpvbiBhIGNvbm5lY3Rvci4gU2V0ICJEZXNpcmVkIiB0
-byBlbmFibGUsICJVbmRlc2lyZWQiIHRvIGRpc2FibGUuCgpUaGUgIkNvbnRlbnQgUHJvdGVjdGlv
-biBLU1YiIHByb3BlcnR5IHJlZmxlY3RzIHRoZSBjdXJyZW50IHN0YXRlIG9mCnByb3RlY3Rpb24u
-IElmIHRoZSBLU1YgaXMgMCwgdGhlIGNvbm5lY3Rpb24gaXMgbm90IHByb3RlY3RlZC4gT25jZSB0
-aGUKZHJpdmVyIGhhcyBlbmFibGVkIHByb3RlY3Rpb24sIGl0IHdpbGwgdXBkYXRlIHRoZSB0aGUg
-dmFsdWUgd2l0aCB0aGUgS1NWCihvciBzaW1pbGFybHkgdW5pcXVlIGlkZW50aWZpZXIsIGlmIG5v
-dCB1c2luZyBIRENQKSBvZiB0aGUgZmlyc3QtaG9wCmRldmljZSAoc2luayBvciByZXBlYXRlciku
-CgpTaWduZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KU2lnbmVk
-LW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgotLS0KIGRyaXZlcnMvZ3B1
-L2RybS9kcm1fY3J0Yy5jICB8IDIxICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUv
-ZHJtL2RybV9zeXNmcy5jIHwgNDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCiBpbmNsdWRlL2RybS9kcm1fY3J0Yy5oICAgICAgfCAgMyArKysKIGluY2x1ZGUv
-dWFwaS9kcm0vZHJtX21vZGUuaCB8ICA0ICsrKysKIDQgZmlsZXMgY2hhbmdlZCwgNzQgaW5zZXJ0
-aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fY3J0Yy5jIGIvZHJpdmVy
-cy9ncHUvZHJtL2RybV9jcnRjLmMKaW5kZXggMzJkZDEzNC4uZGU3YWU2YSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL2RybV9jcnRjLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9jcnRj
-LmMKQEAgLTc4LDYgKzc4LDEzIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3Byb3BfZW51bV9s
-aXN0IGRybV9wbGFuZV90eXBlX2VudW1fbGlzdFtdID0gewogCXsgRFJNX1BMQU5FX1RZUEVfQ1VS
-U09SLCAiQ3Vyc29yIiB9LAogfTsKIAorc3RhdGljIHN0cnVjdCBkcm1fcHJvcF9lbnVtX2xpc3Qg
-ZHJtX2NwX2VudW1fbGlzdFtdID0geworCXsgRFJNX01PREVfQ09OVEVOVF9QUk9URUNUSU9OX1VO
-REVTSVJFRCwgIlVuZGVzaXJlZCIgfSwKKwl7IERSTV9NT0RFX0NPTlRFTlRfUFJPVEVDVElPTl9E
-RVNJUkVELCAiRGVzaXJlZCIgfSwKK307CisKK0RSTV9FTlVNX05BTUVfRk4oZHJtX2dldF9jb250
-ZW50X3Byb3RlY3Rpb25fbmFtZSwgZHJtX2NwX2VudW1fbGlzdCkKKwogLyoKICAqIE9wdGlvbmFs
-IHByb3BlcnRpZXMKICAqLwpAQCAtMTQ3MCw2ICsxNDc3LDIwIEBAIHN0YXRpYyBpbnQgZHJtX21v
-ZGVfY3JlYXRlX3N0YW5kYXJkX3Byb3BlcnRpZXMoc3RydWN0IGRybV9kZXZpY2UgKmRldikKIAkJ
-cmV0dXJuIC1FTk9NRU07CiAJZGV2LT5tb2RlX2NvbmZpZy5wcm9wX21vZGVfaWQgPSBwcm9wOwog
-CisJcHJvcCA9IGRybV9wcm9wZXJ0eV9jcmVhdGVfZW51bShkZXYsIDAsCisJCQkJCSJDb250ZW50
-IFByb3RlY3Rpb24iLCBkcm1fY3BfZW51bV9saXN0LAorCQkJCQlBUlJBWV9TSVpFKGRybV9jcF9l
-bnVtX2xpc3QpKTsKKwlpZiAoIXByb3ApCisJCXJldHVybiAtRU5PTUVNOworCWRldi0+bW9kZV9j
-b25maWcuY29udGVudF9wcm90ZWN0aW9uX3Byb3BlcnR5ID0gcHJvcDsKKworCXByb3AgPSBkcm1f
-cHJvcGVydHlfY3JlYXRlX3JhbmdlKGRldiwgRFJNX01PREVfUFJPUF9JTU1VVEFCTEUsCisJCQkJ
-CSAiQ29udGVudCBQcm90ZWN0aW9uIEtTViIsIDAsCisJCQkJCSAweEZGRkZGRkZGRkYpOworCWlm
-ICghcHJvcCkKKwkJcmV0dXJuIC1FTk9NRU07CisJZGV2LT5tb2RlX2NvbmZpZy5jb250ZW50X3By
-b3RlY3Rpb25fa3N2X3Byb3BlcnR5ID0gcHJvcDsKKwogCXJldHVybiAwOwogfQogCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX3N5c2ZzLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX3N5
-c2ZzLmMKaW5kZXggYzc1ZjAyMi4uZGMxMjJiOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2RybV9zeXNmcy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fc3lzZnMuYwpAQCAtMjQ4LDYg
-KzI0OCw0OCBAQCBzdGF0aWMgc3NpemVfdCBlbmFibGVkX3Nob3coc3RydWN0IGRldmljZSAqZGV2
-aWNlLAogCQkJImRpc2FibGVkIik7CiB9CiAKK3N0YXRpYyBzc2l6ZV90IGNvbnRlbnRfcHJvdGVj
-dGlvbl9zaG93KHN0cnVjdCBkZXZpY2UgKmRldmljZSwKKwkJCQkgICAgICAgc3RydWN0IGRldmlj
-ZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZikKK3sKKwlzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAq
-Y29ubmVjdG9yID0gdG9fZHJtX2Nvbm5lY3RvcihkZXZpY2UpOworCXN0cnVjdCBkcm1fZGV2aWNl
-ICpkZXYgPSBjb25uZWN0b3ItPmRldjsKKwlzdHJ1Y3QgZHJtX3Byb3BlcnR5ICpwcm9wOworCXVp
-bnQ2NF90IGNwOworCWludCByZXQ7CisKKwlwcm9wID0gZGV2LT5tb2RlX2NvbmZpZy5jb250ZW50
-X3Byb3RlY3Rpb25fcHJvcGVydHk7CisJaWYgKCFwcm9wKQorCQlyZXR1cm4gMDsKKworCXJldCA9
-IGRybV9vYmplY3RfcHJvcGVydHlfZ2V0X3ZhbHVlKCZjb25uZWN0b3ItPmJhc2UsIHByb3AsICZj
-cCk7CisJaWYgKHJldCkKKwkJcmV0dXJuIDA7CisKKwlyZXR1cm4gc25wcmludGYoYnVmLCBQQUdF
-X1NJWkUsICIlc1xuIiwKKwkJCWRybV9nZXRfY29udGVudF9wcm90ZWN0aW9uX25hbWUoKGludClj
-cCkpOworfQorCitzdGF0aWMgc3NpemVfdCBjb250ZW50X3Byb3RlY3Rpb25fa3N2X3Nob3coc3Ry
-dWN0IGRldmljZSAqZGV2aWNlLAorCQkJCQkgICBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0
-ciwKKwkJCQkJICAgY2hhciAqYnVmKQoreworCXN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0
-b3IgPSB0b19kcm1fY29ubmVjdG9yKGRldmljZSk7CisJc3RydWN0IGRybV9kZXZpY2UgKmRldiA9
-IGNvbm5lY3Rvci0+ZGV2OworCXN0cnVjdCBkcm1fcHJvcGVydHkgKnByb3A7CisJdWludDY0X3Qg
-a3N2OworCWludCByZXQ7CisKKwlwcm9wID0gZGV2LT5tb2RlX2NvbmZpZy5jb250ZW50X3Byb3Rl
-Y3Rpb25fa3N2X3Byb3BlcnR5OworCWlmICghcHJvcCkKKwkJcmV0dXJuIDA7CisKKwlyZXQgPSBk
-cm1fb2JqZWN0X3Byb3BlcnR5X2dldF92YWx1ZSgmY29ubmVjdG9yLT5iYXNlLCBwcm9wLCAma3N2
-KTsKKwlpZiAocmV0KQorCQlyZXR1cm4gMDsKKworCXJldHVybiBzbnByaW50ZihidWYsIFBBR0Vf
-U0laRSwgIiVsbHhcbiIsIGtzdik7Cit9CisKIHN0YXRpYyBzc2l6ZV90IGVkaWRfc2hvdyhzdHJ1
-Y3QgZmlsZSAqZmlscCwgc3RydWN0IGtvYmplY3QgKmtvYmosCiAJCQkgc3RydWN0IGJpbl9hdHRy
-aWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZiwgbG9mZl90IG9mZiwKIAkJCSBzaXplX3QgY291bnQpCkBA
-IC0zOTksMTIgKzQ0MSwxNiBAQCBzdGF0aWMgREVWSUNFX0FUVFJfUlcoc3RhdHVzKTsKIHN0YXRp
-YyBERVZJQ0VfQVRUUl9STyhlbmFibGVkKTsKIHN0YXRpYyBERVZJQ0VfQVRUUl9STyhkcG1zKTsK
-IHN0YXRpYyBERVZJQ0VfQVRUUl9STyhtb2Rlcyk7CitzdGF0aWMgREVWSUNFX0FUVFJfUk8oY29u
-dGVudF9wcm90ZWN0aW9uKTsKK3N0YXRpYyBERVZJQ0VfQVRUUl9STyhjb250ZW50X3Byb3RlY3Rp
-b25fa3N2KTsKIAogc3RhdGljIHN0cnVjdCBhdHRyaWJ1dGUgKmNvbm5lY3Rvcl9kZXZfYXR0cnNb
-XSA9IHsKIAkmZGV2X2F0dHJfc3RhdHVzLmF0dHIsCiAJJmRldl9hdHRyX2VuYWJsZWQuYXR0ciwK
-IAkmZGV2X2F0dHJfZHBtcy5hdHRyLAogCSZkZXZfYXR0cl9tb2Rlcy5hdHRyLAorCSZkZXZfYXR0
-cl9jb250ZW50X3Byb3RlY3Rpb24uYXR0ciwKKwkmZGV2X2F0dHJfY29udGVudF9wcm90ZWN0aW9u
-X2tzdi5hdHRyLAogCU5VTEwKIH07CiAKZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9jcnRj
-LmggYi9pbmNsdWRlL2RybS9kcm1fY3J0Yy5oCmluZGV4IDE3MzUzNWEuLmJhMmJjMzcgMTAwNjQ0
-Ci0tLSBhL2luY2x1ZGUvZHJtL2RybV9jcnRjLmgKKysrIGIvaW5jbHVkZS9kcm0vZHJtX2NydGMu
-aApAQCAtMTExOCw2ICsxMTE4LDggQEAgc3RydWN0IGRybV9tb2RlX2NvbmZpZyB7CiAJc3RydWN0
-IGRybV9wcm9wZXJ0eSAqcHJvcF9jcnRjX2lkOwogCXN0cnVjdCBkcm1fcHJvcGVydHkgKnByb3Bf
-YWN0aXZlOwogCXN0cnVjdCBkcm1fcHJvcGVydHkgKnByb3BfbW9kZV9pZDsKKwlzdHJ1Y3QgZHJt
-X3Byb3BlcnR5ICpjb250ZW50X3Byb3RlY3Rpb25fcHJvcGVydHk7CisJc3RydWN0IGRybV9wcm9w
-ZXJ0eSAqY29udGVudF9wcm90ZWN0aW9uX2tzdl9wcm9wZXJ0eTsKIAogCS8qIERWSS1JIHByb3Bl
-cnRpZXMgKi8KIAlzdHJ1Y3QgZHJtX3Byb3BlcnR5ICpkdmlfaV9zdWJjb25uZWN0b3JfcHJvcGVy
-dHk7CkBAIC0xMjg2LDYgKzEyODgsNyBAQCBleHRlcm4gdm9pZCBkcm1fZW5jb2Rlcl9jbGVhbnVw
-KHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rlcik7CiBleHRlcm4gY29uc3QgY2hhciAqZHJtX2dl
-dF9jb25uZWN0b3Jfc3RhdHVzX25hbWUoZW51bSBkcm1fY29ubmVjdG9yX3N0YXR1cyBzdGF0dXMp
-OwogZXh0ZXJuIGNvbnN0IGNoYXIgKmRybV9nZXRfc3VicGl4ZWxfb3JkZXJfbmFtZShlbnVtIHN1
-YnBpeGVsX29yZGVyIG9yZGVyKTsKIGV4dGVybiBjb25zdCBjaGFyICpkcm1fZ2V0X2RwbXNfbmFt
-ZShpbnQgdmFsKTsKK2V4dGVybiBjb25zdCBjaGFyICpkcm1fZ2V0X2NvbnRlbnRfcHJvdGVjdGlv
-bl9uYW1lKGludCB2YWwpOwogZXh0ZXJuIGNvbnN0IGNoYXIgKmRybV9nZXRfZHZpX2lfc3ViY29u
-bmVjdG9yX25hbWUoaW50IHZhbCk7CiBleHRlcm4gY29uc3QgY2hhciAqZHJtX2dldF9kdmlfaV9z
-ZWxlY3RfbmFtZShpbnQgdmFsKTsKIGV4dGVybiBjb25zdCBjaGFyICpkcm1fZ2V0X3R2X3N1YmNv
-bm5lY3Rvcl9uYW1lKGludCB2YWwpOwpkaWZmIC0tZ2l0IGEvaW5jbHVkZS91YXBpL2RybS9kcm1f
-bW9kZS5oIGIvaW5jbHVkZS91YXBpL2RybS9kcm1fbW9kZS5oCmluZGV4IDZjMTFjYTQuLjdiMDgz
-NDIgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvdWFwaS9kcm0vZHJtX21vZGUuaAorKysgYi9pbmNsdWRl
-L3VhcGkvZHJtL2RybV9tb2RlLmgKQEAgLTgxLDYgKzgxLDEwIEBACiAjZGVmaW5lIERSTV9NT0RF
-X0RQTVNfU1VTUEVORAkyCiAjZGVmaW5lIERSTV9NT0RFX0RQTVNfT0ZGCTMKIAorLyogQ29udGVu
-dCBQcm90ZWN0aW9uIEZsYWdzICovCisjZGVmaW5lIERSTV9NT0RFX0NPTlRFTlRfUFJPVEVDVElP
-Tl9VTkRFU0lSRUQgICAwCisjZGVmaW5lIERSTV9NT0RFX0NPTlRFTlRfUFJPVEVDVElPTl9ERVNJ
-UkVEICAgICAxCisKIC8qIFNjYWxpbmcgbW9kZSBvcHRpb25zICovCiAjZGVmaW5lIERSTV9NT0RF
-X1NDQUxFX05PTkUJCTAgLyogVW5tb2RpZmllZCB0aW1pbmcgKGRpc3BsYXkgb3IKIAkJCQkJICAg
-ICBzb2Z0d2FyZSBjYW4gc3RpbGwgc2NhbGUpICovCi0tIAoxLjkuMQoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Also remove reference to a mandatory platform type field in /chosen
+which is wrong per ePAPR v1.1 spec.
+
+Signed-off-by: Sylvain Chouleur <sylvain.chouleur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/booting-without-of.txt | 40 ++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 04d34f6a58f3..3a3707c7eb65 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -191,6 +191,7 @@ it with special cases.
+    device tree block magic value (0xd00dfeed) or the ATAG_CORE value at
+    offset 0x4 from r2 (0x54410001).
+ 
++
+ 2) Entry point for arch/powerpc
+ -------------------------------
+ 
+@@ -269,6 +270,7 @@ it with special cases.
+   cannot support both configurations with Book E and configurations
+   with classic Powerpc architectures.
+ 
++
+ 3) Entry point for arch/x86
+ -------------------------------
+ 
+@@ -289,6 +291,7 @@ it with special cases.
+   or initrd address. It simply holds information which can not be retrieved
+   otherwise like interrupt routing or a list of devices behind an I2C bus.
+ 
++
+ 4) Entry point for arch/mips/bmips
+ ----------------------------------
+ 
+@@ -316,10 +319,10 @@ it with special cases.
+   This convention is defined for 32-bit systems only, as there are not
+   currently any 64-bit BMIPS implementations.
+ 
++
+ II - The DT block format
+ ========================
+ 
+-
+ This chapter defines the actual format of the flattened device-tree
+ passed to the kernel. The actual content of it and kernel requirements
+ are described later. You can find example of code manipulating that
+@@ -626,8 +629,8 @@ This tree is almost a minimal tree. It pretty much contains the
+ minimal set of required nodes and properties to boot a linux kernel;
+ that is, some basic model information at the root, the CPUs, and the
+ physical memory layout.  It also includes misc information passed
+-through /chosen, like in this example, the platform type (mandatory)
+-and the kernel command line arguments (optional).
++through /chosen, like in this example, the kernel command line
++arguments (optional).
+ 
+ The /cpus/PowerPC,970@0/64-bit property is an example of a
+ property without a value. All other properties have a value. The
+@@ -637,6 +640,7 @@ properties and their content.
+ 
+ 
+ 3) Device tree "structure" block
++--------------------------------
+ 
+ The structure of the device tree is a linearized tree structure. The
+ "OF_DT_BEGIN_NODE" token starts a new node, and the "OF_DT_END_NODE"
+@@ -674,7 +678,9 @@ properties come first (up until at least 2.6.22).  Any tools
+ manipulating a flattened tree must take care to preserve this
+ constraint.
+ 
++
+ 4) Device tree "strings" block
++------------------------------
+ 
+ In order to save space, property names, which are generally redundant,
+ are stored separately in the "strings" block. This block is simply the
+@@ -779,6 +785,7 @@ registers are visible on the parent bus using an identity mapping
+ translation.  In other words, the parent bus address space is the same
+ as the child bus address space.
+ 
++
+ 2) Note about "compatible" properties
+ -------------------------------------
+ 
+@@ -789,6 +796,7 @@ compatibility with a family of similar devices, in some cases,
+ allowing a single driver to match against several devices regardless
+ of their actual names.
+ 
++
+ 3) Note about "name" properties
+ -------------------------------
+ 
+@@ -810,6 +818,7 @@ used to reconstruct the name. That is, the part of the unit name
+ before the "@" sign is used (or the entire unit name if no "@" sign
+ is present).
+ 
++
+ 4) Note about node and property names and character set
+ -------------------------------------------------------
+ 
+@@ -831,6 +840,7 @@ address which can extend beyond that limit.
+ 
+ 5) Required nodes and properties
+ --------------------------------
++
+   These are all that are currently required. However, it is strongly
+   recommended that you expose PCI host bridges as documented in the
+   PCI binding to Open Firmware, and your interrupt tree as documented
+@@ -930,7 +940,6 @@ compatibility.
+   lines in there as a "soft-reset" property since they start secondary
+   CPUs by soft-resetting them.
+ 
+-
+   d) the /memory node(s)
+ 
+   To define the physical memory layout of your board, you should
+@@ -1051,11 +1060,9 @@ compatibility.
+ 	}
+ 
+ 
+-
+ IV - "dtc", the device tree compiler
+ ====================================
+ 
+-
+ dtc source code can be found at
+ <http://git.jdl.com/gitweb/?p=dtc.git>
+ 
+@@ -1171,7 +1178,6 @@ definitions to the compiler...
+ V - Recommendations for a bootloader
+ ====================================
+ 
+-
+ Here are some various ideas/recommendations that have been proposed
+ while all this has been defined and implemented.
+ 
+@@ -1200,7 +1206,6 @@ while all this has been defined and implemented.
+     (reference needed; who is 'I' here? ---gcl Jan 31, 2011)
+ 
+ 
+-
+ VI - System-on-a-chip devices and nodes
+ =======================================
+ 
+@@ -1250,7 +1255,7 @@ more SoCs.
+ 
+ 
+ VII - Specifying interrupt information for devices
+-===================================================
++==================================================
+ 
+ The device tree represents the buses and devices of a hardware
+ system in a form similar to the physical bus topology of the
+@@ -1264,6 +1269,7 @@ document "Open Firmware Recommended Practice: Interrupt
+ Mapping Version 0.9".  The document is available at:
+ <http://www.openfirmware.org/ofwg/practice/>
+ 
++
+ 1) interrupts property
+ ----------------------
+ 
+@@ -1271,8 +1277,8 @@ Devices that generate interrupts to a single interrupt controller
+ should use the conventional OF representation described in the
+ OF interrupt mapping documentation.
+ 
+-Each device which generates interrupts must have an 'interrupt'
+-property.  The interrupt property value is an arbitrary number of
++Each device which generates interrupts must have an 'interrupts'
++property.  The interrupts property value is an arbitrary number of
+ of 'interrupt specifier' values which describe the interrupt or
+ interrupts for the device.
+ 
+@@ -1289,7 +1295,7 @@ number and level/sense information. All interrupt children in an
+ OpenPIC interrupt domain use 2 cells per interrupt in their interrupts
+ property.
+ 
+-The PCI bus binding specifies a #interrupt-cell value of 1 to encode
++The PCI bus binding specifies a #interrupt-cells value of 1 to encode
+ which interrupt pin (INTA,INTB,INTC,INTD) is used.
+ 
+ 2) interrupt-parent property
+@@ -1304,6 +1310,7 @@ If the interrupt-parent property is not defined for a node, its
+ interrupt parent is assumed to be an ancestor in the node's
+ _device tree_ hierarchy.
+ 
++
+ 3) OpenPIC Interrupt Controllers
+ --------------------------------
+ 
+@@ -1319,6 +1326,7 @@ Sense and level information should be encoded as follows:
+ 	2 = active high level sensitive type enabled
+ 	3 = high to low edge sensitive type enabled
+ 
++
+ 4) ISA Interrupt Controllers
+ ----------------------------
+ 
+@@ -1335,11 +1343,12 @@ encodings listed below:
+ 	2 =  high to low edge sensitive type enabled
+ 	3 =  low to high edge sensitive type enabled
+ 
++
+ VIII - Specifying Device Power Management Information (sleep property)
+-===================================================================
++======================================================================
+ 
+ Devices on SOCs often have mechanisms for placing devices into low-power
+-states that are decoupled from the devices' own register blocks.  Sometimes,
++states that are decoupled from the devices's own register blocks.  Sometimes,
+ this information is more complicated than a cell-index property can
+ reasonably describe.  Thus, each device controlled in such a manner
+ may contain a "sleep" property which describes these connections.
+@@ -1366,7 +1375,9 @@ reasonably grouped in this manner, then create a virtual sleep controller
+ (similar to an interrupt nexus, except that defining a standardized
+ sleep-map should wait until its necessity is demonstrated).
+ 
++
+ IX - Specifying dma bus information
++===================================
+ 
+ Some devices may have DMA memory range shifted relatively to the beginning of
+ RAM, or even placed outside of kernel RAM. For example, the Keystone 2 SoC
+@@ -1417,6 +1428,7 @@ soc {
+ 		};
+ };
+ 
++
+ Appendix A - Sample SOC node for MPC8540
+ ========================================
+ 
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
