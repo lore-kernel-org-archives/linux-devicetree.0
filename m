@@ -1,77 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 09/14] DEVICETREE: Add bindings for PIC32 usart driver
-Date: Sun, 22 Nov 2015 15:56:22 -0600
-Message-ID: <20151122215622.GA32221@rob-hp-laptop>
+Subject: Re: [PATCH 12/14] DEVICETREE: Add bindings for PIC32 SDHC host
+ controller
+Date: Sun, 22 Nov 2015 15:57:37 -0600
+Message-ID: <20151122215737.GA5285@rob-hp-laptop>
 References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-10-git-send-email-joshua.henderson@microchip.com>
+ <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 Content-Disposition: inline
-In-Reply-To: <1448065205-15762-10-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Joshua Henderson <joshua.henderson@microchip.com>
 Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Andrei Pistirica <andrei.pistirica@microchip.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 05:17:21PM -0700, Joshua Henderson wrote:
+On Fri, Nov 20, 2015 at 05:17:24PM -0700, Joshua Henderson wrote:
 > From: Andrei Pistirica <andrei.pistirica@microchip.com>
 > 
-> Document the devicetree bindings for the USART peripheral found on
+> Document the devicetree bindings for the SDHC peripheral found on
 > Microchip PIC32 class devices.
 > 
 > Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
 > Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
 > ---
->  .../bindings/serial/microchip,pic32-usart.txt      |   29 ++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
+>  .../devicetree/bindings/mmc/sdhci-pic32.txt        |   24 ++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt b/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
 > new file mode 100644
-> index 0000000..c87321c
+> index 0000000..f16388c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
-> @@ -0,0 +1,29 @@
-> +* Microchip Universal Synchronous Asynchronous Receiver/Transmitter (USART)
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+> @@ -0,0 +1,24 @@
+> +* Microchip PIC32 SDHCI Controller
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the sdhci-pic32 driver.
 > +
 > +Required properties:
-> +- compatible: Should be "microchip,pic32-usart"
-
-Again, should be more specific.
-
+> +- compatible: Should be "microchip,pic32-sdhci"
 > +- reg: Should contain registers location and length
 > +- interrupts: Should contain interrupt
-> +- pinctrl: Should contain pinctrl for TX/RX/RTS/CTS
+> +- pinctrl: Should contain pinctrl for data and command lines
 > +
 > +Optional properties:
-> +- microchip,uart-has-rtscts : Indicate the uart has hardware flow control
-> +- rts-gpios: RTS pin for USP-based UART if microchip,uart-has-rtscts
-> +- cts-gpios: CTS pin for USP-based UART if microchip,uart-has-rtscts
+> +- no-1-8-v: 1.8V voltage selection not supported
 
-This appears to just be copied for Sirf UART.
+There's a standard property for this one.
 
-Doesn't *-gpios being present imply having h/w 
-flow-control (i.e. microchip,uart-has-rtscts)?
+> +- piomode: disable DMA support
 
-Rob
+Proably this one too IIRC.
 
 > +
 > +Example:
-> +	usart0: serial@1f822000 {
-> +		compatible = "microchip,pic32-usart";
-> +		reg = <0x1f822000 0x50>;
-> +		interrupts = <UART1_FAULT DEFAULT_INT_PRI IRQ_TYPE_NONE>,
-> +			     <UART1_RECEIVE_DONE DEFAULT_INT_PRI IRQ_TYPE_NONE>,
-> +			     <UART1_TRANSFER_DONE DEFAULT_INT_PRI IRQ_TYPE_NONE>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <
-> +			&pinctrl_uart1
-> +			&pinctrl_uart1_cts
-> +			&pinctrl_uart1_rts>;
-> +		microchip,uart-has-rtscts;
-> +		cts-gpios = <&pioB 15 0>;
-> +		rts-gpios = <&pioD 1 0>;
+> +
+> +	sdhci@1f8ec000 {
+> +		compatible = "microchip,pic32-sdhci";
+> +		reg = <0x1f8ec000 0x100>;
+> +		interrupts = <SDHC_EVENT DEFAULT_INT_PRI IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&REFCLKO4>, <&PBCLK5>;
+> +		clock-names = "base_clk", "sys_clk";
 > +	};
 > -- 
 > 1.7.9.5
