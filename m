@@ -1,52 +1,75 @@
-From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: Misc fix for the ATH79 DDR controllers
-Date: Sun, 22 Nov 2015 12:52:17 +0100
-Message-ID: <1448193137-30456-2-git-send-email-albeu@free.fr>
-References: <1448193137-30456-1-git-send-email-albeu@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448193137-30456-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
+ TPS65086 PMIC
+Date: Sun, 22 Nov 2015 13:13:21 +0000
+Message-ID: <20151122131321.GM26072@sirena.org.uk>
+References: <1447974102-24938-1-git-send-email-afd@ti.com>
+ <1447974102-24938-4-git-send-email-afd@ti.com>
+ <20151121133739.GG26072@sirena.org.uk>
+ <5650D6D2.5060108@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="g6DVDhPhk1bqxDrC"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5650D6D2.5060108@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix a few typos and reword the description of the
 
-Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-CC: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
----
- .../bindings/memory-controllers/ath79-ddr-controller.txt          | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+--g6DVDhPhk1bqxDrC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-index efe35a06..c81af75 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-@@ -1,6 +1,6 @@
- Binding for Qualcomm  Atheros AR7xxx/AR9xxx DDR controller
- 
--The DDR controller of the ARxxx and AR9xxx families provides an interface
-+The DDR controller of the AR7xxx and AR9xxx families provides an interface
- to flush the FIFO between various devices and the DDR. This is mainly used
- by the IRQ controller to flush the FIFO before running the interrupt handler
- of such devices.
-@@ -11,9 +11,9 @@ Required properties:
-   "qca,[ar7100|ar7240]-ddr-controller" as fallback.
-   On SoC with PCI support "qca,ar7100-ddr-controller" should be used as
-   fallback, otherwise "qca,ar7240-ddr-controller" should be used.
--- reg: Base address and size of the controllers memory area
--- #qca,ddr-wb-channel-cells: has to be 1, the index of the write buffer
--  channel
-+- reg: Base address and size of the controller's memory area
-+- #qca,ddr-wb-channel-cells: Specifies the number of cells needed to encode
-+			     the write buffer channel index, should be 1.
- 
- Example:
- 
--- 
-2.0.0
+On Sat, Nov 21, 2015 at 02:40:50PM -0600, Andrew F. Davis wrote:
+> On 11/21/2015 07:37 AM, Mark Brown wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >An earlier version of this patch has already been applied, please don't
+> >resend already applied patches but send incremental patches with any
+> >changes.
+
+> Odd, I didn't seem to get any message for this getting applied. Looks
+> like only a couple lines difference from the version in the regulators
+> branch, I don't imagine you are able to rebase that with these changes?
+
+As a matter of policy I try to avoid rewriting history unless it is
+really required.
+
+> Anyway the reason that line needed changed is over a confusion in
+> what the 'of_node' does in 'struct regulator_config'. The description
+> seems to make it seem like it is the node that gets checked for
+> init data.
+
+The current behaviour is the intended behaviour.
+
+> >* @of_node: OpenFirmware node to parse for device tree bindings (may be
+> >*           NULL).
+
+> But the 'of_node' that is actually searched is the one given in
+> regulator_config->dev->of_node. Is this intended behavior (drivers
+> assume it is so it probably has to be now) and if so, the above
+> description might need to be clarified as too what that 'of_node'
+> pointer really does?
+
+Please submit a patch with any clarification you think is needed.
+of_node is the name of the container subnode of the main node for the
+device where we look for init data - both are used.
+
+--g6DVDhPhk1bqxDrC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWUb9wAAoJECTWi3JdVIfQf0EH/iDVkhnWLMgG7vkZAvTlX9CI
+jxuuwUV4ZlkFO9lEbGpkaasgUyCUZghthsh/G6jBTYGH97FYP/a/jxt0WPInR+3s
+Lz7MfnJo410TZcCwnDty5LNaPdYU4jaAQddwfxN7Uw2alY7+A3/m6TBnAob/bSLg
+coLDvrBwR1OBAKsMxOcgHSW/R2NcnhC2MJp+yI/AQN+iKq/MRxe0aqFqojoihf6g
+YqftSImrciux1+Eb+8zuk9Yi+1LxmM9BG4ElhRzSmZcesPOBLM0FBOAT7gy1Ru1f
+kxNqBgyVRSKnwpPNCnFn8f5z8SLSuI2AVrw5XygTP8y/Vh3F6y3S4gPcKCZVRrY=
+=O5l9
+-----END PGP SIGNATURE-----
+
+--g6DVDhPhk1bqxDrC--
