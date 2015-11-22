@@ -1,80 +1,222 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] watchdog: Add brcm,bcm6345-wdt device tree binding
-Date: Sun, 22 Nov 2015 16:13:52 -0600
-Message-ID: <20151122221352.GA13686@rob-hp-laptop>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C047.6040303@simon.arlott.org.uk>
+Subject: Re: [PATCH v2] phy-sun4i-usb: Add support for the host usb-phys
+ found on the H3 SoC
+Date: Sun, 22 Nov 2015 16:15:08 -0600
+Message-ID: <20151122221508.GA14518@rob-hp-laptop>
+References: <1448191764-11454-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5650C047.6040303-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Miguel Gaio <miguel.gaio-HH44TBFINEIAvxtiuMwx3w@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1448191764-11454-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 21, 2015 at 07:04:39PM +0000, Simon Arlott wrote:
-> Add device tree binding for the BCM6345 watchdog.
+On Sun, Nov 22, 2015 at 12:29:24PM +0100, Hans de Goede wrote:
+> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 > 
-> This uses the BCM6345 timer for its warning interrupt.
+> Note this commit only adds support for phys 1-3, phy 0, the otg phy, is
+> not yet (fully) supported after this commit.
 > 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Change break; after dev_err() to return, as intended, fixing a compiler
+>  warning (the dev_err case should never be reached).
+> ---
+>  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
+
+For the binding:
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> ---
->  .../bindings/watchdog/brcm,bcm6345-wdt.txt         | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm6345-wdt.txt
+>  drivers/phy/phy-sun4i-usb.c                        | 67 +++++++++++++++++-----
+>  2 files changed, 53 insertions(+), 15 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/brcm,bcm6345-wdt.txt b/Documentation/devicetree/bindings/watchdog/brcm,bcm6345-wdt.txt
-> new file mode 100644
-> index 0000000..9d852d4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm6345-wdt.txt
-> @@ -0,0 +1,35 @@
-> +BCM6345 Watchdog timer
+> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> index 0cebf74..95736d7 100644
+> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>    * allwinner,sun7i-a20-usb-phy
+>    * allwinner,sun8i-a23-usb-phy
+>    * allwinner,sun8i-a33-usb-phy
+> +  * allwinner,sun8i-h3-usb-phy
+>  - reg : a list of offset + length pairs
+>  - reg-names :
+>    * "phy_ctrl"
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index b12964b..11bc9cd 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -46,6 +46,9 @@
+>  #define REG_PHYBIST			0x08
+>  #define REG_PHYTUNE			0x0c
+>  #define REG_PHYCTL_A33			0x10
+> +#define REG_PHY_UNK_H3			0x20
 > +
-> +Required properties:
-> +
-> +- compatible: should be "brcm,bcm63<soc>-wdt", "brcm,bcm6345-wdt"
-> +- reg: Specifies base physical address and size of the registers.
-> +- clocks: Specify the clock used for timing
-> +
-> +Optional properties:
-> +
-> +- interrupt-parent: phandle to the interrupt controller
-> +- interrupts: Specify the interrupt used for the watchdog timout warning
-> +- timeout-sec: Contains the default watchdog timeout in seconds
-> +
-> +Example:
-> +
-> +watchdog {
-> +	compatible = "brcm,bcm63168-wdt", "brcm,bcm6345-wdt";
-> +	reg = <0x1000009c 0x0c>;
-> +	clocks = <&periph_clk>;
-> +
-> +	interrupt-parent = <&timer>;
-> +	interrupts = <3>;
-> +	timeout-sec = <30>;
+> +#define REG_PMU_UNK_H3			0x10
+>  
+>  #define PHYCTL_DATA			BIT(7)
+>  
+> @@ -79,7 +82,7 @@
+>  #define PHY_DISCON_TH_SEL		0x2a
+>  #define PHY_SQUELCH_DETECT		0x3c
+>  
+> -#define MAX_PHYS			3
+> +#define MAX_PHYS			4
+>  
+>  /*
+>   * Note do not raise the debounce time, we must report Vusb high within 100ms
+> @@ -88,12 +91,19 @@
+>  #define DEBOUNCE_TIME			msecs_to_jiffies(50)
+>  #define POLL_TIME			msecs_to_jiffies(250)
+>  
+> +enum sun4i_usb_phy_type {
+> +	sun4i_a10_phy,
+> +	sun8i_a33_phy,
+> +	sun8i_h3_phy
 > +};
 > +
-> +watchdog {
-> +	compatible = "brcm,bcm6318-wdt", "brcm,bcm6345-wdt";
-> +	reg = <0x10000068 0x0c>;
-> +	clocks = <&periph_clk>;
+>  struct sun4i_usb_phy_data {
+> +	struct device *dev;
+>  	void __iomem *base;
+>  	struct mutex mutex;
+>  	int num_phys;
+>  	u32 disc_thresh;
+> -	bool has_a33_phyctl;
+> +	enum sun4i_usb_phy_type type;
+>  	struct sun4i_usb_phy {
+>  		struct phy *phy;
+>  		void __iomem *pmu;
+> @@ -164,12 +174,18 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+>  
+>  	mutex_lock(&phy_data->mutex);
+>  
+> -	if (phy_data->has_a33_phyctl) {
+> +	switch (phy_data->type) {
+> +	case sun4i_a10_phy:
+> +		phyctl = phy_data->base + REG_PHYCTL_A10;
+> +		break;
+> +	case sun8i_a33_phy:
+>  		phyctl = phy_data->base + REG_PHYCTL_A33;
+>  		/* A33 needs us to set phyctl to 0 explicitly */
+>  		writel(0, phyctl);
+> -	} else {
+> -		phyctl = phy_data->base + REG_PHYCTL_A10;
+> +		break;
+> +	case sun8i_h3_phy:
+> +		dev_err(phy_data->dev, "H3 usb_phy_write is not supported\n");
+> +		return;
+>  	}
+>  
+>  	for (i = 0; i < len; i++) {
+> @@ -230,6 +246,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>  	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>  	int ret;
+> +	u32 val;
+>  
+>  	ret = clk_prepare_enable(phy->clk);
+>  	if (ret)
+> @@ -241,15 +258,26 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  		return ret;
+>  	}
+>  
+> -	/* Enable USB 45 Ohm resistor calibration */
+> -	if (phy->index == 0)
+> -		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+> +	if (data->type == sun8i_h3_phy) {
+> +		if (phy->index == 0) {
+> +			val = readl(data->base + REG_PHY_UNK_H3);
+> +			writel(val & ~1, data->base + REG_PHY_UNK_H3);
+> +		}
 > +
-> +	interrupt-parent = <&timer>;
-> +	interrupts = <3>;
-> +	timeout-sec = <30>;
-> +};
+> +		val = readl(phy->pmu + REG_PMU_UNK_H3);
+> +		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
+> +	} else {
+> +		/* Enable USB 45 Ohm resistor calibration */
+> +		if (phy->index == 0)
+> +			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+>  
+> -	/* Adjust PHY's magnitude and rate */
+> -	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+> +		/* Adjust PHY's magnitude and rate */
+> +		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+>  
+> -	/* Disconnect threshold adjustment */
+> -	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
+> +		/* Disconnect threshold adjustment */
+> +		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
+> +				    data->disc_thresh, 2);
+> +	}
+>  
+>  	sun4i_usb_phy_passby(phy, 1);
+>  
+> @@ -522,11 +550,14 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  	mutex_init(&data->mutex);
+>  	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+>  	dev_set_drvdata(dev, data);
+> +	data->dev = dev;
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+>  		data->num_phys = 2;
+> +	else if (of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+> +		data->num_phys = 4;
+>  	else
+>  		data->num_phys = 3;
+>  
+> @@ -538,13 +569,18 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+> -	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+> +	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy") ||
+> +	    of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+>  		dedicated_clocks = true;
+>  	else
+>  		dedicated_clocks = false;
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+> -		data->has_a33_phyctl = true;
+> +		data->type = sun8i_a33_phy;
+> +	else if (of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+> +		data->type = sun8i_h3_phy;
+> +	else
+> +		data->type = sun4i_a10_phy;
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
+>  	data->base = devm_ioremap_resource(dev, res);
+> @@ -620,7 +656,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  			return PTR_ERR(phy->reset);
+>  		}
+>  
+> -		if (i) { /* No pmu for usbc0 */
+> +		if (data->type == sun8i_h3_phy || i != 0) {
+>  			snprintf(name, sizeof(name), "pmu%d", i);
+>  			res = platform_get_resource_byname(pdev,
+>  							IORESOURCE_MEM, name);
+> @@ -696,6 +732,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
+>  	{ .compatible = "allwinner,sun7i-a20-usb-phy" },
+>  	{ .compatible = "allwinner,sun8i-a23-usb-phy" },
+>  	{ .compatible = "allwinner,sun8i-a33-usb-phy" },
+> +	{ .compatible = "allwinner,sun8i-h3-usb-phy" },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
 > -- 
-> 2.1.4
+> 2.5.0
 > 
-> -- 
-> Simon Arlott
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
