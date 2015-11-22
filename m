@@ -1,77 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 12/14] DEVICETREE: Add bindings for PIC32 SDHC host
- controller
-Date: Sun, 22 Nov 2015 15:57:37 -0600
-Message-ID: <20151122215737.GA5285@rob-hp-laptop>
-References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
+Subject: Re: [PATCH 1/2] mtd: brcmnand: Add brcm,nand-bcm63268 device tree
+ binding
+Date: Sun, 22 Nov 2015 15:59:45 -0600
+Message-ID: <20151122215945.GA5930@rob-hp-laptop>
+References: <56506D55.3000907@simon.arlott.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Joshua Henderson <joshua.henderson@microchip.com>
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Andrei Pistirica <andrei.pistirica@microchip.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <56506D55.3000907@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 05:17:24PM -0700, Joshua Henderson wrote:
-> From: Andrei Pistirica <andrei.pistirica@microchip.com>
+On Sat, Nov 21, 2015 at 01:10:45PM +0000, Simon Arlott wrote:
+> Add device tree binding for NAND on the BCM63268.
 > 
-> Document the devicetree bindings for the SDHC peripheral found on
-> Microchip PIC32 class devices.
+> The BCM63268 has a NAND interrupt register with combined status and enable
+> registers.
 > 
-> Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
-> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
 > ---
->  .../devicetree/bindings/mmc/sdhci-pic32.txt        |   24 ++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
-> new file mode 100644
-> index 0000000..f16388c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
-> @@ -0,0 +1,24 @@
-> +* Microchip PIC32 SDHCI Controller
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci-pic32 driver.
-> +
-> +Required properties:
-> +- compatible: Should be "microchip,pic32-sdhci"
-> +- reg: Should contain registers location and length
-> +- interrupts: Should contain interrupt
-> +- pinctrl: Should contain pinctrl for data and command lines
-> +
-> +Optional properties:
-> +- no-1-8-v: 1.8V voltage selection not supported
+> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> index 4ff7128..45c6e0c 100644
+> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> @@ -72,6 +72,13 @@ we define additional 'compatible' properties and associated register resources w
+>         and enable registers
+>       - reg-names: (required) "nand-int-base"
+>  
+> +   * "brcm,nand-bcm63268"
+> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
 
-There's a standard property for this one.
-
-> +- piomode: disable DMA support
-
-Proably this one too IIRC.
-
-> +
-> +Example:
-> +
-> +	sdhci@1f8ec000 {
-> +		compatible = "microchip,pic32-sdhci";
-> +		reg = <0x1f8ec000 0x100>;
-> +		interrupts = <SDHC_EVENT DEFAULT_INT_PRI IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&REFCLKO4>, <&PBCLK5>;
-> +		clock-names = "base_clk", "sys_clk";
-> +	};
-> -- 
-> 1.7.9.5
-> 
+vendor,<soc>-device is preferred.
