@@ -1,505 +1,288 @@
-From: Simon Arlott <simon@fire.lp0.eu>
-Subject: Re: [PATCH (v2) 2/2] MIPS: bmips: Add bcm6345-l1 interrupt controller
-Date: Sun, 22 Nov 2015 14:30:14 +0000
-Message-ID: <5651D176.6030908@simon.arlott.org.uk>
-References: <5648B804.40806@simon.arlott.org.uk>
- <20151116153443.GA13799@rob-hp-laptop> <564A2AA4.3060901@simon.arlott.org.uk>
- <565065E2.2050609@simon.arlott.org.uk>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH (v3) 2/2] mtd: brcmnand: Add support for the BCM63268
+Date: Sun, 22 Nov 2015 14:34:55 +0000
+Message-ID: <5651D28F.5040906@simon.arlott.org.uk>
+References: <56506D55.3000907@simon.arlott.org.uk>
+ <56506DD0.3030806@simon.arlott.org.uk> <5650A402.7030404@simon.arlott.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <565065E2.2050609@simon.arlott.org.uk>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, linux-mips@linux-mips.org, Jonas Gorski <jogo@openwrt.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5650A402.7030404-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the BCM6345 interrupt controller based on the SMP-capable BCM7038
-and the BCM3380 but with packed interrupt registers.
+The BCM63268 has a NAND interrupt register with combined status and ena=
+ble
+registers. It also has a clock for the NAND controller that needs to be
+enabled.
 
-Add the BCM6345 interrupt controller to a list with the existing BCM7038
-so that interrupts on CPU1 are not ignored.
+Set up the device by enabling the clock, disabling and acking all
+interrupts, then handle the CTRL_READY interrupt.
 
-Update the maintainers file list for BMIPS to include this driver.
+Add a "device_remove" function to struct brcmnand_soc so that the clock
+can be disabled when the device is removed.
 
-Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 ---
-On 21/11/15 12:38, Simon Arlott wrote:
-> Add the BCM6345 interrupt controller based on the SMP-capable BCM7038
->  drivers/irqchip/irq-bcm6345-l1.c | 366 +++++++++++++++++++++++++++++++++++++++
+On 21/11/15 17:04, Simon Arlott wrote:
+> The BCM63268 has a NAND interrupt register with combined status and e=
+nable
+> registers. It also has a clock for the NAND controller that needs to =
+be
+> enabled.
+>  drivers/mtd/nand/brcmnand/bcm63268_nand.c | 171 ++++++++++++++++++++=
+++++++++++
 
-Removed unused variable "word" from bcm6345_l1_unmask/bcm6345_l1_mask.
+Changed argument of bcm63268_nand_remove() from struct bcm63268_nand_so=
+c
+to struct brcmnand_soc.
 
- MAINTAINERS                      |   1 +
- arch/mips/Kconfig                |   1 +
- arch/mips/bmips/irq.c            |  10 +-
- drivers/irqchip/Kconfig          |   5 +
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-bcm6345-l1.c | 364 +++++++++++++++++++++++++++++++++++++++
- 6 files changed, 380 insertions(+), 2 deletions(-)
- create mode 100644 drivers/irqchip/irq-bcm6345-l1.c
+ drivers/mtd/nand/brcmnand/Makefile        |   1 +
+ drivers/mtd/nand/brcmnand/bcm63268_nand.c | 174 ++++++++++++++++++++++=
+++++++++
+ drivers/mtd/nand/brcmnand/brcmnand.c      |   3 +
+ drivers/mtd/nand/brcmnand/brcmnand.h      |   1 +
+ 4 files changed, 179 insertions(+)
+ create mode 100644 drivers/mtd/nand/brcmnand/bcm63268_nand.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e9caa4b..63bf54a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2373,6 +2373,7 @@ F:	arch/mips/bmips/*
- F:	arch/mips/include/asm/mach-bmips/*
- F:	arch/mips/kernel/*bmips*
- F:	arch/mips/boot/dts/brcm/bcm*.dts*
-+F:	drivers/irqchip/irq-bcm63*
- F:	drivers/irqchip/irq-bcm7*
- F:	drivers/irqchip/irq-brcmstb*
- 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index e3aa5b0..e536f3f 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -149,6 +149,7 @@ config BMIPS_GENERIC
- 	select CSRC_R4K
- 	select SYNC_R4K
- 	select COMMON_CLK
-+	select BCM6345_L1_IRQ
- 	select BCM7038_L1_IRQ
- 	select BCM7120_L2_IRQ
- 	select BRCMSTB_L2_IRQ
-diff --git a/arch/mips/bmips/irq.c b/arch/mips/bmips/irq.c
-index e7fc6f934..7efefcf 100644
---- a/arch/mips/bmips/irq.c
-+++ b/arch/mips/bmips/irq.c
-@@ -15,6 +15,12 @@
- #include <asm/irq_cpu.h>
- #include <asm/time.h>
- 
-+static const struct of_device_id smp_intc_dt_match[] = {
-+	{ .compatible = "brcm,bcm7038-l1-intc" },
-+	{ .compatible = "brcm,bcm6345-l1-intc" },
-+	{}
-+};
-+
- unsigned int get_c0_compare_int(void)
- {
- 	return CP0_LEGACY_COMPARE_IRQ;
-@@ -24,8 +30,8 @@ void __init arch_init_irq(void)
- {
- 	struct device_node *dn;
- 
--	/* Only the STB (bcm7038) controller supports SMP IRQ affinity */
--	dn = of_find_compatible_node(NULL, NULL, "brcm,bcm7038-l1-intc");
-+	/* Only these controllers support SMP IRQ affinity */
-+	dn = of_find_matching_node(NULL, smp_intc_dt_match);
- 	if (dn)
- 		of_node_put(dn);
- 	else
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 4d7294e..d307bb3 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -65,6 +65,11 @@ config I8259
- 	bool
- 	select IRQ_DOMAIN
- 
-+config BCM6345_L1_IRQ
-+	bool
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+
- config BCM7038_L1_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 177f78f..ded59cf 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
- obj-$(CONFIG_SOC_VF610)			+= irq-vf610-mscm-ir.o
-+obj-$(CONFIG_BCM6345_L1_IRQ)		+= irq-bcm6345-l1.o
- obj-$(CONFIG_BCM7038_L1_IRQ)		+= irq-bcm7038-l1.o
- obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
- obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-diff --git a/drivers/irqchip/irq-bcm6345-l1.c b/drivers/irqchip/irq-bcm6345-l1.c
+diff --git a/drivers/mtd/nand/brcmnand/Makefile b/drivers/mtd/nand/brcm=
+nand/Makefile
+index 3b1fbfd..b83a9ae 100644
+--- a/drivers/mtd/nand/brcmnand/Makefile
++++ b/drivers/mtd/nand/brcmnand/Makefile
+@@ -2,5 +2,6 @@
+ # more specific iproc_nand.o, for instance
+ obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D iproc_nand.o
+ obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm63138_nand.o
++obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm63268_nand.o
+ obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmstb_nand.o
+ obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmnand.o
+diff --git a/drivers/mtd/nand/brcmnand/bcm63268_nand.c b/drivers/mtd/na=
+nd/brcmnand/bcm63268_nand.c
 new file mode 100644
-index 0000000..b844c89
+index 0000000..70b142e
 --- /dev/null
-+++ b/drivers/irqchip/irq-bcm6345-l1.c
-@@ -0,0 +1,364 @@
++++ b/drivers/mtd/nand/brcmnand/bcm63268_nand.c
+@@ -0,0 +1,174 @@
 +/*
-+ * Broadcom BCM6345 style Level 1 interrupt controller driver
-+ *
-+ * Copyright (C) 2014 Broadcom Corporation
 + * Copyright 2015 Simon Arlott
 + *
-+ * This program is free software; you can redistribute it and/or modify
++ * This program is free software; you can redistribute it and/or modif=
+y
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + *
-+ * This is based on the BCM7038 (which supports SMP) but with a single
-+ * enable register instead of separate mask/set/clear registers.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
 + *
-+ * The BCM3380 has a similar mask/status register layout, but each pair
-+ * of words is at separate locations (and SMP is not supported).
++ * Derived from bcm63138_nand.c:
++ * Copyright =C2=A9 2015 Broadcom Corporation
 + *
-+ * ENABLE/STATUS words are packed next to each other for each CPU:
++ * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/include/=
+bcm963xx/63268_map_part.h:
++ * Copyright 2000-2010 Broadcom Corporation
 + *
-+ * BCM6368:
-+ *   0x1000_0020: CPU0_W0_ENABLE
-+ *   0x1000_0024: CPU0_W1_ENABLE
-+ *   0x1000_0028: CPU0_W0_STATUS		IRQs 31-63
-+ *   0x1000_002c: CPU0_W1_STATUS		IRQs 0-31
-+ *   0x1000_0030: CPU1_W0_ENABLE
-+ *   0x1000_0034: CPU1_W1_ENABLE
-+ *   0x1000_0038: CPU1_W0_STATUS		IRQs 31-63
-+ *   0x1000_003c: CPU1_W1_STATUS		IRQs 0-31
-+ *
-+ * BCM63168:
-+ *   0x1000_0020: CPU0_W0_ENABLE
-+ *   0x1000_0024: CPU0_W1_ENABLE
-+ *   0x1000_0028: CPU0_W2_ENABLE
-+ *   0x1000_002c: CPU0_W3_ENABLE
-+ *   0x1000_0030: CPU0_W0_STATUS	IRQs 96-127
-+ *   0x1000_0034: CPU0_W1_STATUS	IRQs 64-95
-+ *   0x1000_0038: CPU0_W2_STATUS	IRQs 32-63
-+ *   0x1000_003c: CPU0_W3_STATUS	IRQs 0-31
-+ *   0x1000_0040: CPU1_W0_ENABLE
-+ *   0x1000_0044: CPU1_W1_ENABLE
-+ *   0x1000_0048: CPU1_W2_ENABLE
-+ *   0x1000_004c: CPU1_W3_ENABLE
-+ *   0x1000_0050: CPU1_W0_STATUS	IRQs 96-127
-+ *   0x1000_0054: CPU1_W1_STATUS	IRQs 64-95
-+ *   0x1000_0058: CPU1_W2_STATUS	IRQs 32-63
-+ *   0x1000_005c: CPU1_W3_STATUS	IRQs 0-31
-+ *
-+ * IRQs are numbered in CPU native endian order
-+ * (which is big-endian in these examples)
++ * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/flash/na=
+ndflash.c:
++ * Copyright 2000-2010 Broadcom Corporation
 + */
 +
-+#define pr_fmt(fmt)	KBUILD_MODNAME	": " fmt
-+
-+#include <linux/bitops.h>
-+#include <linux/cpumask.h>
-+#include <linux/kconfig.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
++#include <linux/device.h>
++#include <linux/clk.h>
 +#include <linux/io.h>
 +#include <linux/ioport.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_irq.h>
 +#include <linux/of_address.h>
-+#include <linux/of_platform.h>
 +#include <linux/platform_device.h>
 +#include <linux/slab.h>
-+#include <linux/smp.h>
-+#include <linux/types.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
 +
-+#define IRQS_PER_WORD		32
-+#define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 2)
++#include "brcmnand.h"
 +
-+struct bcm6345_l1_cpu;
-+
-+struct bcm6345_l1_chip {
-+	raw_spinlock_t		lock;
-+	unsigned int		n_words;
-+	struct irq_domain	*domain;
-+	struct cpumask		cpumask;
-+	struct bcm6345_l1_cpu	*cpus[NR_CPUS];
++struct bcm63268_nand_soc {
++	struct brcmnand_soc soc;
++	void __iomem *base;
++	struct clk *clk;
 +};
 +
-+struct bcm6345_l1_cpu {
-+	void __iomem		*map_base;
-+	unsigned int		parent_irq;
-+	u32			enable_cache[];
++#define BCM63268_NAND_INT		0x00
++#define  BCM63268_NAND_STATUS_SHIFT	0
++#define  BCM63268_NAND_STATUS_MASK	(0xfff << BCM63268_NAND_STATUS_SHIF=
+T)
++#define  BCM63268_NAND_ENABLE_SHIFT	16
++#define  BCM63268_NAND_ENABLE_MASK	(0xffff << BCM63268_NAND_ENABLE_SHI=
+=46T)
++#define BCM63268_NAND_BASE_ADDR0	0x04
++#define BCM63268_NAND_BASE_ADDR1	0x0c
++
++enum {
++	BCM63268_NP_READ	=3D BIT(0),
++	BCM63268_BLOCK_ERASE	=3D BIT(1),
++	BCM63268_COPY_BACK	=3D BIT(2),
++	BCM63268_PAGE_PGM	=3D BIT(3),
++	BCM63268_CTRL_READY	=3D BIT(4),
++	BCM63268_DEV_RBPIN	=3D BIT(5),
++	BCM63268_ECC_ERR_UNC	=3D BIT(6),
++	BCM63268_ECC_ERR_CORR	=3D BIT(7),
 +};
 +
-+static inline unsigned int reg_enable(struct bcm6345_l1_chip *intc,
-+					   unsigned int word)
++static bool bcm63268_nand_intc_ack(struct brcmnand_soc *soc)
 +{
-+#ifdef __BIG_ENDIAN
-+	return (1 * intc->n_words - word - 1) * sizeof(u32);
-+#else
-+	return (0 * intc->n_words + word) * sizeof(u32);
-+#endif
-+}
++	struct bcm63268_nand_soc *priv =3D
++			container_of(soc, struct bcm63268_nand_soc, soc);
++	void __iomem *mmio =3D priv->base + BCM63268_NAND_INT;
++	u32 val =3D brcmnand_readl(mmio);
 +
-+static inline unsigned int reg_status(struct bcm6345_l1_chip *intc,
-+				      unsigned int word)
-+{
-+#ifdef __BIG_ENDIAN
-+	return (2 * intc->n_words - word - 1) * sizeof(u32);
-+#else
-+	return (1 * intc->n_words + word) * sizeof(u32);
-+#endif
-+}
-+
-+static inline unsigned int cpu_for_irq(struct bcm6345_l1_chip *intc,
-+					struct irq_data *d)
-+{
-+	return cpumask_first_and(&intc->cpumask, irq_data_get_affinity_mask(d));
-+}
-+
-+static void bcm6345_l1_irq_handle(struct irq_desc *desc)
-+{
-+	struct bcm6345_l1_chip *intc = irq_desc_get_handler_data(desc);
-+	struct bcm6345_l1_cpu *cpu;
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned int idx;
-+
-+#ifdef CONFIG_SMP
-+	cpu = intc->cpus[cpu_logical_map(smp_processor_id())];
-+#else
-+	cpu = intc->cpus[0];
-+#endif
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (idx = 0; idx < intc->n_words; idx++) {
-+		int base = idx * IRQS_PER_WORD;
-+		unsigned long pending;
-+		irq_hw_number_t hwirq;
-+		unsigned int irq;
-+
-+		pending = __raw_readl(cpu->map_base + reg_status(intc, idx));
-+		pending &= __raw_readl(cpu->map_base + reg_enable(intc, idx));
-+
-+		for_each_set_bit(hwirq, &pending, IRQS_PER_WORD) {
-+			irq = irq_linear_revmap(intc->domain, base + hwirq);
-+			if (irq)
-+				do_IRQ(irq);
-+			else
-+				spurious_interrupt();
-+		}
++	if (val & (BCM63268_CTRL_READY << BCM63268_NAND_STATUS_SHIFT)) {
++		/* Ack interrupt */
++		val &=3D ~BCM63268_NAND_STATUS_MASK;
++		val |=3D BCM63268_CTRL_READY << BCM63268_NAND_STATUS_SHIFT;
++		brcmnand_writel(val, mmio);
++		return true;
 +	}
 +
-+	chained_irq_exit(chip, desc);
++	return false;
 +}
 +
-+static inline void __bcm6345_l1_unmask(struct irq_data *d)
++static void bcm63268_nand_intc_set(struct brcmnand_soc *soc, bool en)
 +{
-+	struct bcm6345_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	u32 word = d->hwirq / IRQS_PER_WORD;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-+	unsigned int cpu_idx = cpu_for_irq(intc, d);
++	struct bcm63268_nand_soc *priv =3D
++			container_of(soc, struct bcm63268_nand_soc, soc);
++	void __iomem *mmio =3D priv->base + BCM63268_NAND_INT;
++	u32 val =3D brcmnand_readl(mmio);
 +
-+	intc->cpus[cpu_idx]->enable_cache[word] |= mask;
-+	__raw_writel(intc->cpus[cpu_idx]->enable_cache[word],
-+		intc->cpus[cpu_idx]->map_base + reg_enable(intc, word));
++	/* Don't ack any interrupts */
++	val &=3D ~BCM63268_NAND_STATUS_MASK;
++
++	if (en)
++		val |=3D BCM63268_CTRL_READY << BCM63268_NAND_ENABLE_SHIFT;
++	else
++		val &=3D ~(BCM63268_CTRL_READY << BCM63268_NAND_ENABLE_SHIFT);
++
++	brcmnand_writel(val, mmio);
 +}
 +
-+static inline void __bcm6345_l1_mask(struct irq_data *d)
++static void bcm63268_nand_remove(struct brcmnand_soc *soc)
 +{
-+	struct bcm6345_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	u32 word = d->hwirq / IRQS_PER_WORD;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-+	unsigned int cpu_idx = cpu_for_irq(intc, d);
++	struct bcm63268_nand_soc *priv =3D
++			container_of(soc, struct bcm63268_nand_soc, soc);
 +
-+	intc->cpus[cpu_idx]->enable_cache[word] &= ~mask;
-+	__raw_writel(intc->cpus[cpu_idx]->enable_cache[word],
-+		intc->cpus[cpu_idx]->map_base + reg_enable(intc, word));
++	clk_disable_unprepare(priv->clk);
++	clk_put(priv->clk);
 +}
 +
-+static void bcm6345_l1_unmask(struct irq_data *d)
++static int bcm63268_nand_probe(struct platform_device *pdev)
 +{
-+	struct bcm6345_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&intc->lock, flags);
-+	__bcm6345_l1_unmask(d);
-+	raw_spin_unlock_irqrestore(&intc->lock, flags);
-+}
-+
-+static void bcm6345_l1_mask(struct irq_data *d)
-+{
-+	struct bcm6345_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&intc->lock, flags);
-+	__bcm6345_l1_mask(d);
-+	raw_spin_unlock_irqrestore(&intc->lock, flags);
-+}
-+
-+static int bcm6345_l1_set_affinity(struct irq_data *d,
-+				   const struct cpumask *dest,
-+				   bool force)
-+{
-+	struct bcm6345_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	u32 word = d->hwirq / IRQS_PER_WORD;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-+	unsigned int old_cpu = cpu_for_irq(intc, d);
-+	unsigned int new_cpu;
-+	struct cpumask valid;
-+	unsigned long flags;
-+	bool enabled;
-+
-+	if (!cpumask_and(&valid, &intc->cpumask, dest))
-+		return -EINVAL;
-+
-+	new_cpu = cpumask_any_and(&valid, cpu_online_mask);
-+	if (new_cpu >= nr_cpu_ids)
-+		return -EINVAL;
-+
-+	dest = cpumask_of(new_cpu);
-+
-+	raw_spin_lock_irqsave(&intc->lock, flags);
-+	if (old_cpu != new_cpu) {
-+		enabled = intc->cpus[old_cpu]->enable_cache[word] & mask;
-+		if (enabled)
-+			__bcm6345_l1_mask(d);
-+		cpumask_copy(irq_data_get_affinity_mask(d), dest);
-+		if (enabled)
-+			__bcm6345_l1_unmask(d);
-+	} else {
-+		cpumask_copy(irq_data_get_affinity_mask(d), dest);
-+	}
-+	raw_spin_unlock_irqrestore(&intc->lock, flags);
-+
-+	return IRQ_SET_MASK_OK_NOCOPY;
-+}
-+
-+static int __init bcm6345_l1_init_one(struct device_node *dn,
-+				      unsigned int idx,
-+				      struct bcm6345_l1_chip *intc)
-+{
-+	struct resource res;
-+	resource_size_t sz;
-+	struct bcm6345_l1_cpu *cpu;
-+	unsigned int i, n_words;
-+
-+	if (of_address_to_resource(dn, idx, &res))
-+		return -EINVAL;
-+	sz = resource_size(&res);
-+	n_words = sz / REG_BYTES_PER_IRQ_WORD;
-+
-+	if (!intc->n_words)
-+		intc->n_words = n_words;
-+	else if (intc->n_words != n_words)
-+		return -EINVAL;
-+
-+	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
-+					GFP_KERNEL);
-+	if (!cpu)
-+		return -ENOMEM;
-+
-+	cpu->map_base = ioremap(res.start, sz);
-+	if (!cpu->map_base)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < n_words; i++) {
-+		cpu->enable_cache[i] = 0;
-+		__raw_writel(0, cpu->map_base + reg_enable(intc, i));
-+	}
-+
-+	cpu->parent_irq = irq_of_parse_and_map(dn, idx);
-+	if (!cpu->parent_irq) {
-+		pr_err("failed to map parent interrupt %d\n", cpu->parent_irq);
-+		return -EINVAL;
-+	}
-+	irq_set_chained_handler_and_data(cpu->parent_irq,
-+						bcm6345_l1_irq_handle, intc);
-+
-+	return 0;
-+}
-+
-+static struct irq_chip bcm6345_l1_irq_chip = {
-+	.name			= "bcm6345-l1",
-+	.irq_mask		= bcm6345_l1_mask,
-+	.irq_unmask		= bcm6345_l1_unmask,
-+	.irq_set_affinity	= bcm6345_l1_set_affinity,
-+};
-+
-+static int bcm6345_l1_map(struct irq_domain *d, unsigned int virq,
-+			  irq_hw_number_t hw_irq)
-+{
-+	irq_set_chip_and_handler(virq,
-+		&bcm6345_l1_irq_chip, handle_percpu_irq);
-+	irq_set_chip_data(virq, d->host_data);
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops bcm6345_l1_domain_ops = {
-+	.xlate			= irq_domain_xlate_onecell,
-+	.map			= bcm6345_l1_map,
-+};
-+
-+static int __init bcm6345_l1_of_init(struct device_node *dn,
-+			      struct device_node *parent)
-+{
-+	struct bcm6345_l1_chip *intc;
-+	unsigned int idx;
++	struct device *dev =3D &pdev->dev;
++	struct bcm63268_nand_soc *priv;
++	struct brcmnand_soc *soc;
++	struct resource *res;
 +	int ret;
 +
-+	intc = kzalloc(sizeof(*intc), GFP_KERNEL);
-+	if (!intc)
++	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
 +		return -ENOMEM;
++	soc =3D &priv->soc;
 +
-+	for_each_possible_cpu(idx) {
-+		ret = bcm6345_l1_init_one(dn, idx, intc);
-+		if (ret)
-+			pr_err("failed to init intc L1 for cpu %d: %d\n",
-+				idx, ret);
-+		else
-+			cpumask_set_cpu(idx, &intc->cpumask);
++	res =3D platform_get_resource_byname(pdev,
++		IORESOURCE_MEM, "nand-intr-base");
++	if (!res)
++		return -EINVAL;
++
++	priv->base =3D devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	priv->clk =3D of_clk_get(dev->of_node, 0);
++	if (IS_ERR(priv->clk))
++		return PTR_ERR(priv->clk);
++
++	ret =3D clk_prepare_enable(priv->clk);
++	if (ret) {
++		clk_put(priv->clk);
++		return ret;
 +	}
 +
-+	if (!cpumask_weight(&intc->cpumask)) {
-+		ret = -ENODEV;
-+		goto out_free;
++	soc->ctlrdy_ack =3D bcm63268_nand_intc_ack;
++	soc->ctlrdy_set_enabled =3D bcm63268_nand_intc_set;
++	soc->remove_device =3D bcm63268_nand_remove;
++
++	/* Disable and ack all interrupts  */
++	brcmnand_writel(0, priv->base + BCM63268_NAND_INT);
++	brcmnand_writel(BCM63268_NAND_STATUS_MASK,
++			priv->base + BCM63268_NAND_INT);
++
++	ret =3D brcmnand_probe(pdev, soc);
++	if (ret) {
++		clk_disable_unprepare(priv->clk);
++		clk_put(priv->clk);
 +	}
 +
-+	raw_spin_lock_init(&intc->lock);
-+
-+	intc->domain = irq_domain_add_linear(dn, IRQS_PER_WORD * intc->n_words,
-+					     &bcm6345_l1_domain_ops,
-+					     intc);
-+	if (!intc->domain) {
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	pr_info("registered BCM6345 L1 intc (IRQs: %d)\n",
-+			IRQS_PER_WORD * intc->n_words);
-+	for_each_cpu(idx, &intc->cpumask) {
-+		struct bcm6345_l1_cpu *cpu = intc->cpus[idx];
-+
-+		pr_info("  CPU%u at MMIO 0x%p (irq = %d)\n", idx,
-+				cpu->map_base, cpu->parent_irq);
-+	}
-+
-+	return 0;
-+
-+out_unmap:
-+	for_each_possible_cpu(idx) {
-+		struct bcm6345_l1_cpu *cpu = intc->cpus[idx];
-+
-+		if (cpu) {
-+			if (cpu->map_base)
-+				iounmap(cpu->map_base);
-+			kfree(cpu);
-+		}
-+	}
-+out_free:
-+	kfree(intc);
 +	return ret;
 +}
 +
-+IRQCHIP_DECLARE(bcm6345_l1, "brcm,bcm6345-l1-intc", bcm6345_l1_of_init);
--- 
++static const struct of_device_id bcm63268_nand_of_match[] =3D {
++	{ .compatible =3D "brcm,nand-bcm63268" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, bcm63268_nand_of_match);
++
++static struct platform_driver bcm63268_nand_driver =3D {
++	.probe			=3D bcm63268_nand_probe,
++	.remove			=3D brcmnand_remove,
++	.driver =3D {
++		.name		=3D "bcm63268_nand",
++		.pm		=3D &brcmnand_pm_ops,
++		.of_match_table	=3D bcm63268_nand_of_match,
++	}
++};
++module_platform_driver(bcm63268_nand_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Simon Arlott");
++MODULE_DESCRIPTION("NAND driver for BCM63268");
+diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/br=
+cmnand/brcmnand.c
+index 2c8f67f..7b4988f 100644
+--- a/drivers/mtd/nand/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+@@ -2270,6 +2270,9 @@ int brcmnand_remove(struct platform_device *pdev)
+ 	list_for_each_entry(host, &ctrl->host_list, node)
+ 		nand_release(&host->mtd);
+=20
++	if (ctrl->soc && ctrl->soc->remove_device)
++		ctrl->soc->remove_device(ctrl->soc);
++
+ 	dev_set_drvdata(&pdev->dev, NULL);
+=20
+ 	return 0;
+diff --git a/drivers/mtd/nand/brcmnand/brcmnand.h b/drivers/mtd/nand/br=
+cmnand/brcmnand.h
+index ef5eabb..5c5dc2d 100644
+--- a/drivers/mtd/nand/brcmnand/brcmnand.h
++++ b/drivers/mtd/nand/brcmnand/brcmnand.h
+@@ -24,6 +24,7 @@ struct brcmnand_soc {
+ 	bool (*ctlrdy_ack)(struct brcmnand_soc *soc);
+ 	void (*ctlrdy_set_enabled)(struct brcmnand_soc *soc, bool en);
+ 	void (*prepare_data_bus)(struct brcmnand_soc *soc, bool prepare);
++	void (*remove_device)(struct brcmnand_soc *soc);
+ };
+=20
+ static inline void brcmnand_soc_data_bus_prepare(struct brcmnand_soc *=
+soc)
+--=20
 2.1.4
 
--- 
+--=20
 Simon Arlott
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
