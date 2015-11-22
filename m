@@ -1,91 +1,59 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: [PATCH (v4) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device tree
- binding
-Date: Sun, 22 Nov 2015 22:15:33 +0000
-Message-ID: <56523E85.905@simon.arlott.org.uk>
-References: <56506D55.3000907@simon.arlott.org.uk>
- <20151122215945.GA5930@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Misc fix for the ATH79 DDR controllers
+Date: Sun, 22 Nov 2015 16:17:12 -0600
+Message-ID: <20151122221712.GA15619@rob-hp-laptop>
+References: <1448193137-30456-1-git-send-email-albeu@free.fr>
+ <1448193137-30456-2-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151122215945.GA5930@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1448193137-30456-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding for NAND on the BCM63268.
+On Sun, Nov 22, 2015 at 12:52:17PM +0100, Alban Bedel wrote:
+> Fix a few typos and reword the description of the
 
-The BCM63268 has a NAND interrupt register with combined status and enable
-registers.
+of the...?
 
-Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
----
-On 22/11/15 21:59, Rob Herring wrote:
->> + * "brcm,nand-bcm63268"
->> + - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
->
-> vendor,<soc>-device is preferred.
-
-The existing two bindings use brcm,nand-<soc>, but I've changed this one.
-
- .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index 4ff7128..2644d6c 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -72,6 +72,13 @@ we define additional 'compatible' properties and associated register resources w
-        and enable registers
-      - reg-names: (required) "nand-int-base"
- 
-+   * "brcm,bcm63268-nand"
-+     - compatible: should contain "brcm,bcm<soc>-nand", "brcm,bcm63268-nand"
-+     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
-+       and enable registers, and boot address registers
-+     - reg-names: (required) "nand-intr-base"
-+     - clock: (required) reference to the clock for NAND controller
-+
-    * "brcm,nand-iproc"
-      - reg: (required) the "IDM" register range, for interrupt enable and APB
-        bus access endianness configuration, and the "EXT" register range,
-@@ -148,3 +155,29 @@ nand@f0442800 {
- 		};
- 	};
- };
-+
-+nand@0x10000200 {
-+	compatible = "brcm,bcm63168-nand", "brcm,bcm63268-nand",
-+		"brcm,brcmnand-v4.0", "brcm,brcmnand";
-+	reg = <0x10000200 0x180>,
-+	      <0x10000600 0x200>,
-+	      <0x100000b0 0x10>;
-+	reg-names = "nand", "nand-cache", "nand-intr-base";
-+	interrupt-parent = <&periph_intc>;
-+	interrupts = <50>;
-+	clocks = <&periph_clk 20>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	nand0: nandcs@0 {
-+		compatible = "brcm,nandcs";
-+		reg = <0>;
-+		nand-on-flash-bbt;
-+		nand-ecc-strength = <1>;
-+		nand-ecc-step-size = <512>;
-+
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+	};
-+};
--- 
-2.1.4
-
--- 
-Simon Arlott
+> 
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> CC: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> ---
+>  .../bindings/memory-controllers/ath79-ddr-controller.txt          | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+> index efe35a06..c81af75 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
+> @@ -1,6 +1,6 @@
+>  Binding for Qualcomm  Atheros AR7xxx/AR9xxx DDR controller
+>  
+> -The DDR controller of the ARxxx and AR9xxx families provides an interface
+> +The DDR controller of the AR7xxx and AR9xxx families provides an interface
+>  to flush the FIFO between various devices and the DDR. This is mainly used
+>  by the IRQ controller to flush the FIFO before running the interrupt handler
+>  of such devices.
+> @@ -11,9 +11,9 @@ Required properties:
+>    "qca,[ar7100|ar7240]-ddr-controller" as fallback.
+>    On SoC with PCI support "qca,ar7100-ddr-controller" should be used as
+>    fallback, otherwise "qca,ar7240-ddr-controller" should be used.
+> -- reg: Base address and size of the controllers memory area
+> -- #qca,ddr-wb-channel-cells: has to be 1, the index of the write buffer
+> -  channel
+> +- reg: Base address and size of the controller's memory area
+> +- #qca,ddr-wb-channel-cells: Specifies the number of cells needed to encode
+> +			     the write buffer channel index, should be 1.
+>  
+>  Example:
+>  
+> -- 
+> 2.0.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
