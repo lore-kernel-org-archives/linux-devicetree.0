@@ -1,324 +1,68 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] misc: eeprom_93xx46: Add quirks to support Atmel
- AT93C46D device.
-Date: Mon, 23 Nov 2015 12:44:44 -0500
-Message-ID: <5653508C.3020800@pid1solutions.com>
-References: <1447903781-3910-1-git-send-email-cory.tusar@pid1solutions.com>
- <1447903781-3910-5-git-send-email-cory.tusar@pid1solutions.com>
- <564D654C.1080803@mleia.com>
+From: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] usb: chipidea: register driver as a peripheral
+ with the phy
+Date: Mon, 23 Nov 2015 10:05:23 -0800
+Message-ID: <56535563.6010902@sonymobile.com>
+References: <1448063240-2739-1-git-send-email-tim.bird@sonymobile.com>
+ <1448063240-2739-3-git-send-email-tim.bird@sonymobile.com>
+ <20151123082929.GA8193@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564D654C.1080803-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20151123082929.GA8193@shlinux2>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Andersson=2c_Bj=c3=b6rn?= <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
 
-On 11/19/2015 12:59 AM, Vladimir Zapolskiy wrote:
-> On 19.11.2015 05:29, Cory Tusar wrote:
->> Atmel devices in this family have some quirks not found in other similar
->> chips - they do not support a sequential read of the entire EEPROM
->> contents, and the control word sent at the start of each operation
->> varies in bit length.
+
+On 11/23/2015 12:29 AM, Peter Chen wrote:
+> On Fri, Nov 20, 2015 at 03:47:20PM -0800, Tim Bird wrote:
+>> Register the chipidea driver with the phy, so that the phy
+>> driver can kick the gadget driver when it resumes from low power.
+>> The phy-msm-usb (Qualcomm) driver requires this in order to
+>> recover gadget operation after you disconnect the USB cable
+>> and reconnect it.
 >>
->> This commit adds quirk support to the driver and modifies the read
->> implementation to support non-sequential reads for consistency with
->> other misc/eeprom drivers.
->>
->> Tested on a custom Freescale VF610-based platform, with an AT93C46D
->> device attached via dspi2.  The spi-gpio driver was used to allow the
->> necessary non-byte-sized transfers.
->>
->> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+>> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 >> ---
->>  drivers/misc/eeprom/eeprom_93xx46.c | 128 ++++++++++++++++++++++++++----------
->>  include/linux/eeprom_93xx46.h       |   6 ++
->>  2 files changed, 98 insertions(+), 36 deletions(-)
+>>  drivers/usb/chipidea/udc.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
 >>
->> diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
->> index 1f29d9a..0386b03 100644
->> --- a/drivers/misc/eeprom/eeprom_93xx46.c
->> +++ b/drivers/misc/eeprom/eeprom_93xx46.c
->> @@ -27,6 +27,15 @@
->>  #define ADDR_ERAL	0x20
->>  #define ADDR_EWEN	0x30
+>> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+>> index 8223fe7..06234cd 100644
+>> --- a/drivers/usb/chipidea/udc.c
+>> +++ b/drivers/usb/chipidea/udc.c
+>> @@ -1890,6 +1890,12 @@ static int udc_start(struct ci_hdrc *ci)
 >>  
->> +struct eeprom_93xx46_devtype_data {
->> +	unsigned int quirks;
->> +};
->> +
->> +static const struct eeprom_93xx46_devtype_data atmel_at93c46d_data = {
->> +	.quirks = EEPROM_93XX46_QUIRK_SINGLE_WORD_READ |
->> +		  EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH,
->> +};
->> +
->>  struct eeprom_93xx46_dev {
->>  	struct spi_device *spi;
->>  	struct eeprom_93xx46_platform_data *pdata;
->> @@ -35,6 +44,16 @@ struct eeprom_93xx46_dev {
->>  	int addrlen;
->>  };
+>>  	ci->gadget.ep0 = &ci->ep0in->ep;
 >>  
->> +static inline bool has_quirk_single_word_read(struct eeprom_93xx46_dev *edev)
->> +{
->> +	return !!(edev->pdata->quirks & EEPROM_93XX46_QUIRK_SINGLE_WORD_READ);
-> 
-> bool return type will do the work, please remove !!.
-
-Will fix.
-
->> +}
->> +
->> +static inline bool has_quirk_instruction_length(struct eeprom_93xx46_dev *edev)
->> +{
->> +	return !!(edev->pdata->quirks & EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH);
-> 
-> Same here.
-
-Will fix.
-
->> +}
->> +
->>  static ssize_t
->>  eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
->>  		       struct bin_attribute *bin_attr,
->> @@ -42,58 +61,73 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
->>  {
->>  	struct eeprom_93xx46_dev *edev;
->>  	struct device *dev;
->> -	struct spi_message m;
->> -	struct spi_transfer t[2];
->> -	int bits, ret;
->> -	u16 cmd_addr;
->> +	ssize_t ret = 0;
->>  
->>  	dev = container_of(kobj, struct device, kobj);
->>  	edev = dev_get_drvdata(dev);
->>  
->> -	cmd_addr = OP_READ << edev->addrlen;
->> +	mutex_lock(&edev->lock);
->>  
->> -	if (edev->addrlen == 7) {
->> -		cmd_addr |= off & 0x7f;
->> -		bits = 10;
->> -	} else {
->> -		cmd_addr |= (off >> 1) & 0x3f;
->> -		bits = 9;
->> -	}
->> +	if (edev->pdata->prepare)
->> +		edev->pdata->prepare(edev);
->>  
->> -	dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
->> -		cmd_addr, edev->spi->max_speed_hz);
->> +	while (count) {
->> +		struct spi_message m;
->> +		struct spi_transfer t[2] = { { 0 } };
-> 
-> Just { 0 };
-
-No...just '{ 0 }' may be functional, but results in a compiler
-warning.
-
->> +		u16 cmd_addr = OP_READ << edev->addrlen;
->> +		size_t nbytes = count;
->> +		int bits;
->> +		int err;
->> +
->> +		if (edev->addrlen == 7) {
->> +			cmd_addr |= off & 0x7f;
->> +			bits = 10;
->> +			if (has_quirk_single_word_read(edev))
->> +				nbytes = 1;
->> +		} else {
->> +			cmd_addr |= (off >> 1) & 0x3f;
->> +			bits = 9;
->> +			if (has_quirk_single_word_read(edev))
->> +				nbytes = 2;
->> +		}
->>  
->> -	spi_message_init(&m);
->> -	memset(t, 0, sizeof(t));
->> +		dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
->> +			cmd_addr, edev->spi->max_speed_hz);
->>  
->> -	t[0].tx_buf = (char *)&cmd_addr;
->> -	t[0].len = 2;
->> -	t[0].bits_per_word = bits;
->> -	spi_message_add_tail(&t[0], &m);
->> +		spi_message_init(&m);
->>  
->> -	t[1].rx_buf = buf;
->> -	t[1].len = count;
->> -	t[1].bits_per_word = 8;
->> -	spi_message_add_tail(&t[1], &m);
->> +		t[0].tx_buf = (char *)&cmd_addr;
->> +		t[0].len = 2;
->> +		t[0].bits_per_word = bits;
->> +		spi_message_add_tail(&t[0], &m);
->>  
->> -	mutex_lock(&edev->lock);
->> +		t[1].rx_buf = buf;
->> +		t[1].len = count;
->> +		t[1].bits_per_word = 8;
->> +		spi_message_add_tail(&t[1], &m);
->>  
->> -	if (edev->pdata->prepare)
->> -		edev->pdata->prepare(edev);
->> +		err = spi_sync(edev->spi, &m);
->> +		/* have to wait at least Tcsl ns */
->> +		ndelay(250);
->>  
->> -	ret = spi_sync(edev->spi, &m);
->> -	/* have to wait at least Tcsl ns */
->> -	ndelay(250);
->> -	if (ret) {
->> -		dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
->> -			count, (int)off, ret);
->> +		if (err) {
->> +			dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
->> +				nbytes, (int)off, err);
->> +			ret = err;
->> +			break;
->> +		}
->> +
->> +		buf += nbytes;
->> +		off += nbytes;
->> +		count -= nbytes;
->> +		ret += nbytes;
->>  	}
->>  
->>  	if (edev->pdata->finish)
->>  		edev->pdata->finish(edev);
->>  
->>  	mutex_unlock(&edev->lock);
->> -	return ret ? : count;
->> +	return ret;
->>  }
->>  
->>  static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
->> @@ -112,7 +146,13 @@ static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
->>  		bits = 9;
->>  	}
->>  
->> -	dev_dbg(&edev->spi->dev, "ew cmd 0x%04x\n", cmd_addr);
->> +	if (has_quirk_instruction_length(edev)) {
->> +		cmd_addr <<= 2;
->> +		bits += 2;
+>> +	if (ci->usb_phy) {
+>> +		retval = otg_set_peripheral(ci->usb_phy->otg, &ci->gadget);
+>> +		if (retval)
+>> +			goto destroy_eps;
 >> +	}
 >> +
->> +	dev_dbg(&edev->spi->dev, "ew%s cmd 0x%04x, %d bits\n",
->> +			is_on ? "en" : "ds", cmd_addr, bits);
->>  
->>  	spi_message_init(&m);
->>  	memset(&t, 0, sizeof(t));
->> @@ -247,6 +287,13 @@ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
->>  		bits = 9;
->>  	}
->>  
->> +	if (has_quirk_instruction_length(edev)) {
->> +		cmd_addr <<= 2;
->> +		bits += 2;
->> +	}
->> +
->> +	dev_dbg(&edev->spi->dev, "eral cmd 0x%04x, %d bits\n", cmd_addr, bits);
->> +
->>  	spi_message_init(&m);
->>  	memset(&t, 0, sizeof(t));
->>  
->> @@ -299,18 +346,21 @@ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
->>  #ifdef CONFIG_OF
->>  static const struct of_device_id eeprom_93xx46_of_table[] = {
->>  	{ .compatible = "eeprom-93xx46", },
->> +	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
->>  	{}
->>  };
->>  MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
->>  
->>  static int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>  {
->> +	const struct of_device_id *of_id =
->> +		of_match_device(eeprom_93xx46_of_table, &spi->dev);
->>  	struct device_node *np = spi->dev.of_node;
->>  	struct eeprom_93xx46_platform_data *pd;
->>  	u32 tmp;
->>  	int ret;
->>  
->> -	if (!of_match_device(eeprom_93xx46_of_table, &spi->dev))
->> +	if (!of_id)
->>  		return 0;
->>  
->>  	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
->> @@ -335,6 +385,12 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>  	if (of_property_read_bool(np, "read-only"))
->>  		pd->flags |= EE_READONLY;
->>  
->> +	if (of_id->data) {
->> +		const struct eeprom_93xx46_devtype_data *data = of_id->data;
->> +
->> +		pd->quirks = data->quirks;
->> +	}
->> +
->>  	spi->dev.platform_data = pd;
->>  
->>  	return 1;
->> diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
->> index 0679181..92fa4c3 100644
->> --- a/include/linux/eeprom_93xx46.h
->> +++ b/include/linux/eeprom_93xx46.h
->> @@ -9,6 +9,12 @@ struct eeprom_93xx46_platform_data {
->>  #define EE_ADDR16	0x02		/* 16 bit addr. cfg */
->>  #define EE_READONLY	0x08		/* forbid writing */
->>  
->> +	unsigned int	quirks;
->> +/* Single word read transfers only; no sequential read. */
->> +#define EEPROM_93XX46_QUIRK_SINGLE_WORD_READ		(1 << 0)
->> +/* Instructions such as EWEN are (addrlen + 2) in length. */
->> +#define EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH		(1 << 1)
->> +
+>>  	retval = usb_add_gadget_udc(dev, &ci->gadget);
+>>  	if (retval)
+>>  		goto destroy_eps;
 > 
-> I wonder do you really need this in platfrom data? Would it work for
-> you, if quirks are OF specific only? If yes, then please move macros to
-> .c file.
-
-The driver currently supports instantiation as a platform_device only.
-Why not continue to support this, while also adding the capability to
-instantiate via DT?
-
+> Hi Tim,
 > 
->>  	/*
->>  	 * optional hooks to control additional logic
->>  	 * before and after spi transfer.
->>
-> 
-> --
-> With best wishes,
-> Vladimir
-> 
+> I am afraid it can't work for current chipidea framework (find this
+> problem after testing), the chipidea core manages its host and device
+> function using its own API start/stop, it does not define struct usb_otg
+> APIs. In fact, it is not reasonable control host and device function
+> at PHY driver.
 
+OK.  I'm going to re-evaluate the phy-msm-usb.c code, and try to figure out
+what it should look like under the current framework.
 
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
+Thanks for looking at it and testing it.  I may have questions as I go.
+ -- Tim
 
-
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlZTUIwACgkQHT1tsfGwHJ+eaQCfUPrpmynJlsJArLgpooe5JVfO
-AF4AoIG09XYhMuQ+YFjckwE3LNxVPHNf
-=p86d
------END PGP SIGNATURE-----
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
