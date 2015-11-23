@@ -1,147 +1,60 @@
-From: Thomas Kaiser <thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
- lamobo-r1 board
-Date: Mon, 23 Nov 2015 02:35:48 -0800 (PST)
-Message-ID: <ec251773-e70f-45e3-bb2b-86d2e27c90b3@googlegroups.com>
-References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
- <20151122195925.GR32142@lukather>
- <5652CE10.1020808@redhat.com>
-Reply-To: thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org
+From: Martin Schiller <mschiller@tdt.de>
+Subject: RE: [PATCH 1/4] pinctrl/lantiq: update devicetree bindings
+ Documentation
+Date: Mon, 23 Nov 2015 10:46:37 +0000
+Message-ID: <6a6af36764c34428851b0cc8f513e89d@TDT-MS.TDTNET.local>
+References: <1447995151-3857-1-git-send-email-mschiller@tdt.de>
+ <20151120142640.GA3348@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_10_1900352844.1448274948155"
-Return-path: <linux-sunxi+bncBDQ6N3ODDQIIJWGLWICRUBA4Y5TZG-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5652CE10.1020808-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20151120142640.GA3348@rob-hp-laptop>
+Content-Language: de-DE
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "jogo@openwrt.org" <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_10_1900352844.1448274948155
-Content-Type: multipart/alternative;
-	boundary="----=_Part_11_69937953.1448274948155"
-
-------=_Part_11_69937953.1448274948155
-Content-Type: text/plain; charset=UTF-8
-
-Hi,
-
-Hans de Goede wrote:
-
-> On 22-11-15 20:59, Maxime Ripard wrote: 
-> >> +&cpu0 { 
-> >> +        cpu-supply = <&reg_dcdc2>; 
-> >> +        operating-points = < 
-> >> +                /* kHz          uV */ 
-> >> +                960000        1400000 
-> >> +                912000        1400000 
-> >> +                864000        1350000 
-> >> +                720000        1250000 
-> >> +                528000        1150000 
-> >> +                312000        1100000 
-> >> +                144000        1050000 
-> >> +                >; 
-> > 
-> > Why are you using a custom set of OPPs here, the default ones were 
-> > unstable? 
->
-> The fex file uses non standard OPPs
->
-
-Which fex file? In case you're referring to an 'official' one please  
-keep in mind how SinoVoip 'develops' stuff. By doing copy&paste 
-(remember the .dts for the Banana Pi M2?). Anyway, the fex files used 
-by R1 users since a year contain comparable OPPs:
-
-https://github.com/igorpecovnik/lib/blob/next/config/lamobo-r1.fex
-https://github.com/Bananian/fex/blob/master/BPI-R1/script.fex
-
-Stuff contained in official SinoVoip OS images can not be regarded 
-safe or even tested since noone uses these OS images due to being 
-broken more or less. And Lamobo R1 users that were relying on mainline 
-kernel the last months already used a .dts sharing the default OPPs: 
-
-https://github.com/igorpecovnik/lib/blob/next/patch/sun7i-a20-lamobo-r1.dts
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
-------=_Part_11_69937953.1448274948155
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi,<div><br></div><div>Hans de Goede wrote:<br><blockquote class=3D"gmail_q=
-uote" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;pad=
-ding-left: 1ex;">On 22-11-15 20:59, Maxime Ripard wrote:
-<br>&gt;&gt; +&amp;cpu0 {
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cpu-supply =
-=3D &lt;&amp;reg_dcdc2&gt;;
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0operating-poi=
-nts =3D &lt;
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* kHz=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 =C2=A0uV */
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0960000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01400000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0912000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01400000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0864000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01350000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0720000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01250000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0528000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01150000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0312000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01100000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0144000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0<wbr>=C2=A01050000
-<br>&gt;&gt; +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&gt;;
-<br>&gt;
-<br>&gt; Why are you using a custom set of OPPs here, the default ones were
-<br>&gt; unstable?
-<br>
-<br>The fex file uses non standard OPPs<br></blockquote><div><br></div><div=
-><div>Which fex file? In case you&#39;re referring to an &#39;official&#39;=
- one please =C2=A0</div><div>keep in mind how SinoVoip &#39;develops&#39; s=
-tuff. By doing copy&amp;paste=C2=A0</div><div>(remember the .dts for the Ba=
-nana Pi M2?). Anyway, the fex files used=C2=A0</div><div>by R1 users since =
-a year contain comparable OPPs:</div><div><br></div><div>https://github.com=
-/igorpecovnik/lib/blob/next/config/lamobo-r1.fex</div><div>https://github.c=
-om/Bananian/fex/blob/master/BPI-R1/script.fex</div><div><br></div><div>Stuf=
-f contained in official SinoVoip OS images can not be regarded=C2=A0</div><=
-div>safe or even tested since noone uses these OS images due to being=C2=A0=
-</div><div>broken more or less. And Lamobo R1 users that were relying on ma=
-inline=C2=A0</div><div>kernel the last months already used a .dts sharing t=
-he default OPPs:=C2=A0</div><div><br></div><div>https://github.com/igorpeco=
-vnik/lib/blob/next/patch/sun7i-a20-lamobo-r1.dts</div></div></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
-------=_Part_11_69937953.1448274948155--
-
-------=_Part_10_1900352844.1448274948155--
+T24gMTEvMjAvMjAxNSBhdCAzOjI2IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gRnJpLCBO
+b3YgMjAsIDIwMTUgYXQgMDU6NTI6MjhBTSArMDEwMCwgTWFydGluIFNjaGlsbGVyIHdyb3RlOg0K
+PiA+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgbmV3IGRlZGljYXRlZCAibGFudGlxLHBpbmN0cmwtPGNo
+aXA+IiBjb21wYXRpYmxlDQo+IHN0cmluZ3MNCj4gPiB0byB0aGUgZGV2aWNldHJlZSBiaW5kaW5n
+cyBEb2N1bWVudGF0aW9uLCB3aGVyZSA8Y2hpcD4gaXMgb25lIG9mDQo+ICJhc2UiLA0KPiA+ICJk
+YW51YmUiLCAieHJ4MTAwIiwgInhyeDIwMCIgb3IgInhyeDMwMCIgYW5kIG1hcmtzIHRoZQ0KPiAi
+bGFudGlxLHBpbmN0cmwteHdheSINCj4gPiBhbmQgImxhbnRpcSxwaW5jdHJsLXhyOSIgY29tcGF0
+aWJsZSBzdHJpbmdzIGFzIERFUFJFQ0FURUQuDQo+DQo+IFRoaXMgY291bGQgdXNlIGEgYmV0dGVy
+IHN1YmplY3QuIEV2ZXJ5IGNoYW5nZSB0byBiaW5kaW5ncyBhcmUgInVwZGF0aW5nDQo+IGJpbmRp
+bmcgZGVzY3JpcHRpb24uIg0KDQpPSywgc28gd291bGQgInBpbmN0cmwvbGFudGlxOiB1cGRhdGlu
+ZyBkdCBiaW5kaW5nIGRlc2NyaXB0aW9uIiBiZSBiZXR0ZXI/DQoNCj4NCj4gPg0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IE1hcnRpbiBTY2hpbGxlciA8bXNjaGlsbGVyQHRkdC5kZT4NCj4gPiAtLS0NCj4g
+PiAgLi4uL2JpbmRpbmdzL3BpbmN0cmwvbGFudGlxLHBpbmN0cmwteHdheS50eHQgICAgICAgfCAx
+MDgNCj4gKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDAgaW5z
+ZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9sYW50aXEscGluY3RybC14d2F5
+LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2xhbnRp
+cSxwaW5jdHJsLXh3YXkudHh0DQo+ID4gaW5kZXggZTg5YjQ2Ny4uMTZkYWExMiAxMDA2NDQNCj4g
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9sYW50aXEs
+cGluY3RybC0NCj4geHdheS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcGluY3RybC9sYW50aXEscGluY3RybC0NCj4geHdheS50eHQNCj4gPiBAQCAtMSw3
+ICsxLDE0IEBADQo+ID4gIExhbnRpcSBYV0FZIHBpbm11eCBjb250cm9sbGVyDQo+ID4NCj4gPiAg
+UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRpYmxlOiAibGFudGlxLHBpbmN0cmwt
+eHdheSIgb3IgImxhbnRpcSxwaW5jdHJsLXhyOSINCj4gPiArLSBjb21wYXRpYmxlOiAibGFudGlx
+LHBpbmN0cmwteHdheSIsIChERVBSRUNBVEVEOiBVc2UgWFdBWSBEQU5VQkUNCj4gRmFtaWx5KQ0K
+PiA+ICsgICAgICAibGFudGlxLHBpbmN0cmwteHI5IiwgKERFUFJFQ0FURUQ6IFVzZSBYV0FZIHhS
+WDEwMC94UlgyMDANCj4gRmFtaWx5KQ0KPiA+ICsgICAgICAibGFudGlxLHBpbmN0cmwtPGNoaXA+
+Iiwgd2hlcmUgPGNoaXA+IGlzOg0KPg0KPiA8Y2hpcD4gZmlyc3QgaXMgcHJlZmVycmVkOiBsYW50
+aXEsPGNoaXA+LXBpbmN0cmwNCj4NCj4gPiArImFzZSIgKFhXQVkgQU1BWk9OIEZhbWlseSkNCj4g
+PiArImRhbnViZSIgKFhXQVkgREFOVUJFIEZhbWlseSkNCj4gPiArInhyeDEwMCIgKFhXQVkgeFJY
+MTAwIEZhbWlseSkNCj4gPiArInhyeDIwMCIgKFhXQVkgeFJYMjAwIEZhbWlseSkNCj4gPiArInhy
+eDMwMCIgKFhXQVkgeFJYMzAwIEZhbWlseSkNCg0KTm8gcHJvYmxlbSwgSSB3aWxsIGNoYW5nZSB0
+aGlzIHRvICJsYW50aXEsPGNoaXA+LXBpbmN0cmwiIGZvciB0aGUgbmV3IGJpbmRpbmdzLg0KDQpN
+YXJ0aW4NCg0K
