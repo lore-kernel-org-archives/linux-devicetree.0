@@ -1,73 +1,102 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 1/4] ARM: shmobile: r8a7740 dtsi: Add L2 cache-controller node
-Date: Mon, 23 Nov 2015 14:55:59 +0100
-Message-ID: <1448286962-16897-2-git-send-email-geert+renesas@glider.be>
-References: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v5 0/4] ARM: shmobile: r8a7740/sh73a0 DT Cache Handling
+Date: Mon, 23 Nov 2015 14:55:58 +0100
+Message-ID: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing L2 cache-controller node, and link the CPU node to it.
-This will allow migration to the generic l2c OF initialization.
+	Hi Simon, Magnus,
 
-The L2 cache is an ARM L2C-310 (r3p1-150rel0), of size 256 KiB (32 KiB x
-8 ways).
+This patch series add minimal L1 and L2 cache descriptions to DT for
+r8a7740 and sh73a0, and migrates the shmobile DT-based generic r8a7740
+platform from calling l2x0_of_init() to the generic l2c OF
+initialization.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v5:
+Note that the conversion to the generic l2c OF initialization is not
+done yet for sh73a0, as this initializes the L2 cache earlier, breaking
+the (fragile) sh73a0 secondary CPU bringup code.
+
+Also note that this conversion should be done on r8a7778, and r8a7779,
+too.
+
+Changes compared to v4 ("[PATCH v4 0/6] ARM: shmobile: r8a7740/sh73a0 DT
+Cache Handling",
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
   - Drop optional cache-{size,sets,{block,line}-size} properties, as
-    this information is auto-detected,
-  - Integrate adding the link from CPU to L2 cache into this patch,
+    this information is auto-detected (I verified this for both L1 and
+    L2 cache properties),
+  - Merge the L1 patches into the L2 patches, as the only part left from
+    the L1 patches was adding the links from CPU to L2 cache nodes.
 
-v4:
-  - Commit eeedcea69e927857 ("ARM: 8395/1: l2c: Add support for the
-    "arm,shared-override" property") is queued for 4.3 in arm/for-next,
+Changes compared to v3 ("[PATCH v3 0/6] ARM: l2c / shmobile: r8a7740 :
+Shared Override",
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
+  - "l2c: Add support for the "arm,shared-override" property" was split
+    off into an independent patch, and is now queued for v4.3 in
+    arm/for-next,
+  - Dropped armadillo legacy migration, as it no longer exists,
+  - Added sh73a0 L1 and L2 DT cache description.
 
-v3:
-  - Add "arm,shared-override",
+Changes compared to v2 ("[PATCH v2 0/5] ARM: shmobile: r8a7740/armadillo:
+Migrate to generic l2c OF",
+http://www.spinics.net/lists/devicetree/msg68176.html):
+  - Add DT support for Shared Override,
+  - Setting Shared Override is done only if CMA is not available (as
+    Russell claims it's not needed if CMA is available),
+  - Use 0/~0 in machine_desc.l2c_aux_{val,mask}, as DT now supports
+    "arm,shared-override".
 
-v2:
-  - Fix interrupt (should be 3 cells, not 1),
-  - Describe cache better.
----
- arch/arm/boot/dts/r8a7740.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes compared to v1:
+  - Fix interrupt reference in DT,
+  - Describe L2 better in DT,
+  - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE in
+    machine_desc.l2c_aux_{val,mask}, as there's no DT property for
+    this.
+  - Add L1 cache to DT.
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 387aef60c825bc24..ff3dedb63ef48ea7 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -26,6 +26,7 @@
- 			reg = <0x0>;
- 			clock-frequency = <800000000>;
- 			power-domains = <&pd_a3sm>;
-+			next-level-cache = <&L2>;
- 		};
- 	};
- 
-@@ -37,6 +38,18 @@
- 		      <0xc2000000 0x1000>;
- 	};
- 
-+	L2: cache-controller {
-+		compatible = "arm,pl310-cache";
-+		reg = <0xf0100000 0x1000>;
-+		interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&pd_a3sm>;
-+		arm,data-latency = <3 3 3>;
-+		arm,tag-latency = <2 2 2>;
-+		arm,shared-override;
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
- 	dbsc3: memory-controller@fe400000 {
- 		compatible = "renesas,dbsc3-r8a7740";
- 		reg = <0xfe400000 0x400>;
+Dependencies:
+  - This series applies to renesas-devel-20151123-v4.4-rc2,
+  - Patch 3 depends on patch 1,
+  - Patch 4 depends on patch 3.
+
+Given C code changesets depending on DT changesets in the same branch
+are frowned upon, you may want to postpone patches 3 and 4 to v4.6.
+Of course I'll sleep better if you just apply all 4 of them now ;-)
+
+I've been running this on r8a7740/armadillo and sh73a0/kzm9g for more
+than a year.
+
+Thanks for applying!
+
+Geert Uytterhoeven (4):
+  ARM: shmobile: r8a7740 dtsi: Add L2 cache-controller node
+  ARM: shmobile: sh73a0 dtsi: Add L2 cache-controller node
+  ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
+  ARM: shmobile: r8a7740: Remove mapping of L2 cache controller
+    registers
+
+ arch/arm/boot/dts/r8a7740.dtsi         | 13 +++++++++++++
+ arch/arm/boot/dts/sh73a0.dtsi          | 14 ++++++++++++++
+ arch/arm/mach-shmobile/setup-r8a7740.c | 18 ++----------------
+ 3 files changed, 29 insertions(+), 16 deletions(-)
+
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
