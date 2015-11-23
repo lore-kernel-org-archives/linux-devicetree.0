@@ -1,82 +1,39 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH] ARM: dts: keystone: k2l: fix kernel crash when clk_ignore_unused is not in bootargs
-Date: Mon, 23 Nov 2015 11:54:09 -0500
-Message-ID: <1448297649-22122-1-git-send-email-m-karicheri2@ti.com>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [PATCH 0/2] Add support for Pistachio internal DAC
+Date: Mon, 23 Nov 2015 17:24:57 +0000
+Message-ID: <1448299499-18435-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: ssantosh@kernel.org, corbet@lwn.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently kernel crash randomly when K2L EVM is booted without
-clk_ignore_unused in the bootargs. This workaround is not needed
-on other K2 devices such as K2HK and K2E and with this fix, we can
-remove the workaround altogether. netcp driver on K2L uses linked
-ram on OSR (On chip Static RAM) and requires the clock to this peripheral
-enabled for proper functioning. This is the reason for the kernel crash.
-So add the clock node to fix this issue.
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
-While at it, remove the workaround documentation as well.
+Add binding document and driver for Pistachio internal DAC
 
-With the fix applied, clk_summary dump shows the clock to OSR enabled.
+Damien.Horsley (2):
+  ASoC: img: Add binding document for Pistachio internal DAC
+  ASoC: img: Add driver for Pistachio internal DAC
 
-cat /sys/kernel/debug/clk/clk_summary
- ------cut--------------
-   tcp3d-1                   0            0   399360000          0 0
-   tcp3d-0                   0            0   399360000          0 0
-   osr                       1            1   399360000          0 0
-   fftc-0                    0            0   399360000          0 0
- -----cut----------------
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- Applies to Linux 4.4-rc2
- Documentation/arm/keystone/Overview.txt | 18 ------------------
- arch/arm/boot/dts/k2l-netcp.dtsi        |  2 +-
- 2 files changed, 1 insertion(+), 19 deletions(-)
+ .../bindings/sound/img,pistachio-internal-dac.txt  |  18 ++
+ sound/soc/img/Kconfig                              |   8 +
+ sound/soc/img/Makefile                             |   2 +
+ sound/soc/img/pistachio-internal-dac.c             | 350 +++++++++++++++++++++
+ 4 files changed, 378 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,pistachio-internal-dac.txt
+ create mode 100644 sound/soc/img/pistachio-internal-dac.c
 
-diff --git a/Documentation/arm/keystone/Overview.txt b/Documentation/arm/keystone/Overview.txt
-index f17bc4c..400c0c2 100644
---- a/Documentation/arm/keystone/Overview.txt
-+++ b/Documentation/arm/keystone/Overview.txt
-@@ -49,24 +49,6 @@ specified through DTS. Following are the DTS used:-
- The device tree documentation for the keystone machines are located at
-         Documentation/devicetree/bindings/arm/keystone/keystone.txt
- 
--Known issues & workaround
---------------------------
--
--Some of the device drivers used on keystone are re-used from that from
--DaVinci and other TI SoCs. These device drivers may use clock APIs directly.
--Some of the keystone specific drivers such as netcp uses run time power
--management API instead to enable clock. As this API has limitations on
--keystone, following workaround is needed to boot Linux.
--
--   Add 'clk_ignore_unused' to the bootargs env variable in u-boot. Otherwise
--   clock frameworks will try to disable clocks that are unused and disable
--   the hardware. This is because netcp related power domain and clock
--   domains are enabled in u-boot as run time power management API currently
--   doesn't enable clocks for netcp due to a limitation. This workaround is
--   expected to be removed in the future when proper API support becomes
--   available. Until then, this work around is needed.
--
--
- Document Author
- ---------------
- Murali Karicheri <m-karicheri2@ti.com>
-diff --git a/arch/arm/boot/dts/k2l-netcp.dtsi b/arch/arm/boot/dts/k2l-netcp.dtsi
-index 01aef23..5acbd0d 100644
---- a/arch/arm/boot/dts/k2l-netcp.dtsi
-+++ b/arch/arm/boot/dts/k2l-netcp.dtsi
-@@ -137,7 +137,7 @@ netcp: netcp@26000000 {
- 	/* NetCP address range */
- 	ranges = <0 0x26000000 0x1000000>;
- 
--	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
-+	clocks = <&clkosr>, <&papllclk>, <&clkcpgmac>, <&chipclk12>;
- 	dma-coherent;
- 
- 	ti,navigator-dmas = <&dma_gbe 0>,
 -- 
-1.9.1
-
+2.1.4
