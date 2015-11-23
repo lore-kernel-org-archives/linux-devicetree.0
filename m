@@ -1,53 +1,77 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2] watchdog: add Alphascale asm9260-wdt driver
-Date: Mon, 23 Nov 2015 07:47:01 -0800
-Message-ID: <565334F5.7020803@roeck-us.net>
-References: <20151027023132.GA1270@roeck-us.net>
- <1446714416-22587-1-git-send-email-linux@rempel-privat.de>
- <1446714416-22587-2-git-send-email-linux@rempel-privat.de>
- <20151105204301.GA15806@rob-hp-laptop> <5652BC30.7060803@rempel-privat.de>
- <5652BFA5.9010101@roeck-us.net> <5652E1A7.2090108@rempel-privat.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5652E1A7.2090108-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Gabriel L. Somlo" <somlo@cmu.edu>
+Subject: [PATCH v5 4/4] devicetree: update documentation for fw_cfg ARM bindings
+Date: Mon, 23 Nov 2015 10:57:44 -0500
+Message-ID: <1448294264-17388-5-git-send-email-somlo@cmu.edu>
+References: <1448294264-17388-1-git-send-email-somlo@cmu.edu>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448294264-17388-1-git-send-email-somlo@cmu.edu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, lersek@redhat.com, ralf@linux-mips.org, rmk+kernel@arm.linux.org.uk, eric@anholt.net, hanjun.guo@linaro.org, zajec5@gmail.com, sudeep.holla@arm.com, agross@codeaurora.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: qemu-devel@nongnu.org, jordan.l.justen@intel.com, mst@redhat.com, peter.maydell@linaro.org, leif.lindholm@linaro.org, ard.biesheuvel@linaro.org, pbonzini@redhat.com, kraxel@redhat.com, luto@amacapital.net, stefanha@gmail.com, revol@free.fr
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2015 01:51 AM, Oleksij Rempel wrote:
+From: Gabriel Somlo <somlo@cmu.edu>
 
->>>>
->>>> Seems like this should be a generic wdog property.
->>>>
->>>
->>> what do you mean?
->>> Using "mode" instead of "alphascale,mode" and implement it in WD
->>> framework?
->>>
->>
->> You should still read the property in the driver, even it if is made
->> generic.
->> The watchdog framework can't really use the information, most drivers don't
->> support selecting the mode. We can consider moving it into the framework
->> if/when it benefits other drivers.
->>
->> On a side note, I would suggest "software" and "hardware" instead of sw
->> / hw,
->> but that is just a personal preference.
->
-> Ok, then i will leave it for now as is. If "mode" will be introduced, it
-> can brake compatibility. Using "alphascale,mode" feels save :)
->
-Not sure I understand. Using a generic property name doesn't mean anything
-about its implementation. Devicetree properties are supposed to be OS and
-implementation independent, no ?
+Remove fw_cfg hardware interface details from
+Documentation/devicetree/bindings/arm/fw-cfg.txt,
+and replace them with a pointer to the authoritative
+documentation in the QEMU source tree.
 
-Guenter
+Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
+Cc: Laszlo Ersek <lersek@redhat.com>
+---
+ Documentation/devicetree/bindings/arm/fw-cfg.txt | 38 ++----------------------
+ 1 file changed, 2 insertions(+), 36 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+index 953fb64..ce27386 100644
+--- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
++++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+@@ -11,43 +11,9 @@ QEMU exposes the control and data register to ARM guests as memory mapped
+ registers; their location is communicated to the guest's UEFI firmware in the
+ DTB that QEMU places at the bottom of the guest's DRAM.
+ 
+-The guest writes a selector value (a key) to the selector register, and then
+-can read the corresponding data (produced by QEMU) via the data register. If
+-the selected entry is writable, the guest can rewrite it through the data
+-register.
++The authoritative guest-side hardware interface documentation to the fw_cfg
++device ca be found in "docs/specs/fw_cfg.txt" in the QEMU source tree.
+ 
+-The selector register takes keys in big endian byte order.
+-
+-The data register allows accesses with 8, 16, 32 and 64-bit width (only at
+-offset 0 of the register). Accesses larger than a byte are interpreted as
+-arrays, bundled together only for better performance. The bytes constituting
+-such a word, in increasing address order, correspond to the bytes that would
+-have been transferred by byte-wide accesses in chronological order.
+-
+-The interface allows guest firmware to download various parameters and blobs
+-that affect how the firmware works and what tables it installs for the guest
+-OS. For example, boot order of devices, ACPI tables, SMBIOS tables, kernel and
+-initrd images for direct kernel booting, virtual machine UUID, SMP information,
+-virtual NUMA topology, and so on.
+-
+-The authoritative registry of the valid selector values and their meanings is
+-the QEMU source code; the structure of the data blobs corresponding to the
+-individual key values is also defined in the QEMU source code.
+-
+-The presence of the registers can be verified by selecting the "signature" blob
+-with key 0x0000, and reading four bytes from the data register. The returned
+-signature is "QEMU".
+-
+-The outermost protocol (involving the write / read sequences of the control and
+-data registers) is expected to be versioned, and/or described by feature bits.
+-The interface revision / feature bitmap can be retrieved with key 0x0001. The
+-blob to be read from the data register has size 4, and it is to be interpreted
+-as a uint32_t value in little endian byte order. The current value
+-(corresponding to the above outer protocol) is zero.
+-
+-The guest kernel is not expected to use these registers (although it is
+-certainly allowed to); the device tree bindings are documented here because
+-this is where device tree bindings reside in general.
+ 
+ Required properties:
+ 
+-- 
+2.4.3
