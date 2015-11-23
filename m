@@ -1,42 +1,69 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH] ARM: dts: keystone: k2l: fix kernel crash when
- clk_ignore_unused is not in bootargs
-Date: Mon, 23 Nov 2015 10:17:03 -0800
-Message-ID: <5653581F.4060902@oracle.com>
-References: <1448297649-22122-1-git-send-email-m-karicheri2@ti.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/10] watchdog: bcm63xx_wdt: Obtain watchdog clock HZ
+ from "periph" clk
+Date: Mon, 23 Nov 2015 10:19:27 -0800
+Message-ID: <565358AF.2090609@gmail.com>
+References: <5650BFD6.5030700@simon.arlott.org.uk> <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net> <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net> <5651CB13.4090704@simon.arlott.org.uk> <5651CC3C.5090200@simon.arlott.org.uk> <CAOiHx==Z=4H=-L2CY-FE5m6WMV0XzgsCmy1b9tUbsmOHydzkEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1448297649-22122-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, ssantosh@kernel.org, corbet@lwn.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx==Z=4H=-L2CY-FE5m6WMV0XzgsCmy1b9tUbsmOHydzkEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2015 8:54 AM, Murali Karicheri wrote:
-> Currently kernel crash randomly when K2L EVM is booted without
-> clk_ignore_unused in the bootargs. This workaround is not needed
-> on other K2 devices such as K2HK and K2E and with this fix, we can
-> remove the workaround altogether. netcp driver on K2L uses linked
-> ram on OSR (On chip Static RAM) and requires the clock to this peripheral
-> enabled for proper functioning. This is the reason for the kernel crash.
-> So add the clock node to fix this issue.
->
-> While at it, remove the workaround documentation as well.
->
-> With the fix applied, clk_summary dump shows the clock to OSR enabled.
->
-> cat /sys/kernel/debug/clk/clk_summary
->   ------cut--------------
->     tcp3d-1                   0            0   399360000          0 0
->     tcp3d-0                   0            0   399360000          0 0
->     osr                       1            1   399360000          0 0
->     fftc-0                    0            0   399360000          0 0
->   -----cut----------------
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
-Nice !!
-I will queue this up for fixes. Thanks.
+On 23/11/15 07:02, Jonas Gorski wrote:
+> Hi,
+> 
+> On Sun, Nov 22, 2015 at 3:07 PM, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org> wrote:
+>> Instead of using a fixed clock HZ in the driver, obtain it from the
+>> "periph" clk that the watchdog timer uses.
+>>
+>> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+>> ---
+>>  drivers/watchdog/bcm63xx_wdt.c | 36 +++++++++++++++++++++++++++++++-----
+>>  1 file changed, 31 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
+>> index 1d2a501..eb5e551 100644
+>> --- a/drivers/watchdog/bcm63xx_wdt.c
+>> +++ b/drivers/watchdog/bcm63xx_wdt.c
+>> @@ -13,6 +13,7 @@
+>>
+>>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>
+>> +#include <linux/clk.h>
+>>  #include <linux/errno.h>
+>>  #include <linux/io.h>
+>>  #include <linux/kernel.h>
+>> @@ -32,11 +33,13 @@
+>>
+>>  #define PFX KBUILD_MODNAME
+>>
+>> -#define WDT_HZ                 50000000                /* Fclk */
+>> +#define WDT_CLK_NAME           "periph"
+> 
+> @Florian:
+> Is this correct? The comment for the watchdog in 6358_map_part.h and
+> earlier claims that the clock is 40 MHz there, but the code uses 50MHz
+> - is this a bug in the comments or is it a bug taken over from the
+> original broadcom code? I'm sure that the periph clock being 50 MHz
+> even on the older chips is correct, else we'd have noticed that in
+> serial output (where it's also used).
 
-Regards,
-Santosh
+There are references to a Fbus2 clock in documentation, but I could not
+find any actual documentation for its actual clock frequency, I would be
+surprised if this chip would have diverged from the previous and future
+ones and used a 40Mhz clock. 6345 started with a peripheral clock
+running at 50Mhz, and that is true for all chips since then AFAICT.
+
+I agree we would have noticed this with the UART or SPI controllers if
+that was not true, so probably a code glitch here...
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
