@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 1/5] of/irq: export of_irq_find_parent again
-Date: Mon, 23 Nov 2015 11:16:52 +0100
-Message-ID: <1448273816-11290-2-git-send-email-carlo@caione.org>
+Subject: [PATCH v2 4/5] pinctrl: dt-binding: Extend meson documentation with GPIO IRQs support
+Date: Mon, 23 Nov 2015 11:16:55 +0100
+Message-ID: <1448273816-11290-5-git-send-email-carlo@caione.org>
 References: <1448273816-11290-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1448273816-11290-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
@@ -12,52 +12,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-of_irq_find_parent was made static since it had no users outside of
-of_irq.c. Export it again since we are going to use it again.
+Extend the pinctrl binding documentation with the support for external
+GPIO interrupts.
 
 Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/of/irq.c       | 2 +-
- include/linux/of_irq.h | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 902b89b..45735d5 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -53,7 +53,7 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
-  * Returns a pointer to the interrupt parent node, or NULL if the interrupt
-  * parent could not be determined.
-  */
--static struct device_node *of_irq_find_parent(struct device_node *child)
-+struct device_node *of_irq_find_parent(struct device_node *child)
- {
- 	struct device_node *p;
- 	const __be32 *parp;
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 039f2ee..6f879c6 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -94,6 +94,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
-  */
- extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
- u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
-+extern struct device_node *of_irq_find_parent(struct device_node *child);
+diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+index 3f6a524..56743eb 100644
+--- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+@@ -3,6 +3,12 @@
+ Required properties for the root node:
+  - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
+  - reg: address and size of registers controlling irq functionality
++ - reg-names: should be "irq"
++ - interrupt-controller: marks the device node as an interrupt controller
++ - #interrupt-cells: should be 2. The first cell is the GPIO number. The
++		     second cell is used to specify trigger type.
++ - interrupts: specifies the GPIO IRQ numbers on the GIC (GPIO_IRQ#)
++ - interrupt-parent: specifies the parent interrupt controller.
  
- #else /* !CONFIG_OF && !CONFIG_SPARC */
- static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-@@ -107,6 +108,11 @@ static inline u32 of_msi_map_rid(struct device *dev,
- {
- 	return rid_in;
- }
-+
-+static inline void *of_irq_find_parent(struct device_node *child)
-+{
-+	return NULL;
-+}
- #endif /* !CONFIG_OF */
+ === GPIO sub-nodes ===
  
- #endif /* __OF_IRQ_H */
+@@ -46,7 +52,13 @@ pinctrl-bindings.txt
+ 
+ 	pinctrl: pinctrl@c1109880 {
+ 		compatible = "amlogic,meson8-pinctrl";
++		reg-names = "irq";
+ 		reg = <0xc1109880 0x10>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 64 1>, <0 65 1>, <0 66 1>, <0 67 1>,
++			     <0 68 1>, <0 69 1>, <0 70 1>, <0 71 1>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
 -- 
 2.5.0
 
