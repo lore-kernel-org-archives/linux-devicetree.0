@@ -1,161 +1,54 @@
-From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: Re: [PATCH v2] watchdog: add Alphascale asm9260-wdt driver
-Date: Mon, 23 Nov 2015 10:51:35 +0100
-Message-ID: <5652E1A7.2090108@rempel-privat.de>
-References: <20151027023132.GA1270@roeck-us.net>
- <1446714416-22587-1-git-send-email-linux@rempel-privat.de>
- <1446714416-22587-2-git-send-email-linux@rempel-privat.de>
- <20151105204301.GA15806@rob-hp-laptop> <5652BC30.7060803@rempel-privat.de>
- <5652BFA5.9010101@roeck-us.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] PCI: designware: remove wrong io_base assignment
+Date: Mon, 23 Nov 2015 10:59:36 +0100
+Message-ID: <6048361.Am0T3g77Bd@wuerfel>
+References: <cover.1448270813.git.stanimir.varbanov@linaro.org> <44d133d5ebd4f7b9e8b817aa8bae12f690e70000.1448270813.git.stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="lIevVQAstKCfBFoRqS98vk9CgJIvPke71"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5652BFA5.9010101-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <44d133d5ebd4f7b9e8b817aa8bae12f690e70000.1448270813.git.stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---lIevVQAstKCfBFoRqS98vk9CgJIvPke71
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Monday 23 November 2015 11:28:58 Stanimir Varbanov wrote:
+> The io_base is used to keep the cpu physical address parsed
+> from ranges dt property. After issue pci_remap_iospace the
+> io_base has been assigned with io->start, which is not correct
+> cause io->start is a PCI bus address.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/pci/host/pcie-designware.c |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 540f077c37ea..02a7452bdf23 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -440,7 +440,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  					 ret, pp->io);
+>  				continue;
+>  			}
+> -			pp->io_base = pp->io->start;
+>  			break;
+>  		case IORESOURCE_MEM:
+>  			pp->mem = win->res;
 
-Am 23.11.2015 um 08:26 schrieb Guenter Roeck:
-> On 11/22/2015 11:11 PM, Oleksij Rempel wrote:
->> Hi,
->>
->> thank you for review!
->>
->> Am 05.11.2015 um 21:43 schrieb Rob Herring:
->>> On Thu, Nov 05, 2015 at 10:06:56AM +0100, Oleksij Rempel wrote:
->>>> Add WD support for Alphascale asm9260 SoC. This driver
->>>> provide support for different function modes:
->>>> - HW mode to trigger SoC reset on timeout
->>>> - SW mode do soft reset if needed
->>>> - DEBUG mode
->>>>
->>>> Optional support for stopping watchdog. If reset binding are not
->>>> provided
->>>> this driver will work in nowayout mode.
->>>>
->>>> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
->>>> ---
->>>>   .../bindings/watchdog/alphascale-asm9260.txt       |  39 ++
->>>
->>> It is preferred that bindings are a separate patch.
->>>
->>>>   drivers/watchdog/Kconfig                           |   9 +
->>>>   drivers/watchdog/Makefile                          |   1 +
->>>>   drivers/watchdog/asm9260_wdt.c                     | 415
->>>> +++++++++++++++++++++
->>>>   4 files changed, 464 insertions(+)
->>>>   create mode 100644
->>>> Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->>>>   create mode 100644 drivers/watchdog/asm9260_wdt.c
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->>>> b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->>>> new file mode 100644
->>>> index 0000000..6e54d1f
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.=
-txt
->>>> @@ -0,0 +1,39 @@
->>>> +Alphascale asm9260 Watchdog timer
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible : should be "alphascale,asm9260-wdt".
->>>> +- reg : Specifies base physical address and size of the registers.
->>>> +- clocks : the clocks feeding the watchdog timer. See
->>>> clock-bindings.txt
->>>> +- clock-names : should be set to
->>>> +    "mod" - source for tick counter.
->>>> +    "ahb" - ahb gate.
->>>> +
->>>> +Optional properties:
->>>> +- resets : phandle pointing to the system reset controller with
->>>> correct
->>>> +    reset line index for watchdog controller reset. This propertie =
-is
->>>
->>> s/propertie/property/
->>>
->>>> +    required if you need to disable "nowayout" and it neened only w=
-ith
->>>> +    CONFIG_WATCHDOG_NOWAYOUT=3Dn.
->>>
->>> The DT cannot depend on certain kernel configs.
->>>
->>>> +    Without reseting this WD controller, it is not possible to stop=
+I was surprised to see such an obvious bug here, as we had spent a lot of
+time trying to get it right. However, it broke only recently and it's
+worth mentioning what commit did it, so
 
->>>
->>> s/reseting/resetting/
->>>
->>>> +    counter.
->>>> +- reset-names : should be set to "wdt_rst" if "resets" is used.
->>>> +- timeout-sec : shall contain the default watchdog timeout in secon=
-ds,
->>>> +    if unset, the default timeout is 30 seconds.
->>>> +- alphascale,mode : tree modes are supported
->>>
->>> s/tree/three/
->>>
->>>> +    "hw" - hw reset (defaul).
->>>
->>> s/defaul/default/
->>>
->>>> +    "sw" - sw reset.
->>>> +    "debug" - no action is taken.
->>>
->>> Seems like this should be a generic wdog property.
->>>
->>
->> what do you mean?
->> Using "mode" instead of "alphascale,mode" and implement it in WD
->> framework?
->>
->=20
-> You should still read the property in the driver, even it if is made
-> generic.
-> The watchdog framework can't really use the information, most drivers d=
-on't
-> support selecting the mode. We can consider moving it into the framewor=
-k
-> if/when it benefits other drivers.
->=20
-> On a side note, I would suggest "software" and "hardware" instead of sw=
+Fixes: 0021d22b73d6 ("PCI: designware: Use of_pci_get_host_bridge_resources() to parse DT")
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-> / hw,
-> but that is just a personal preference.
+The bug is present in 4.4-rc1 and we should get your fix merged into 4.4
+as well, while all the other patches in your series are presumably for 4.5.
 
-Ok, then i will leave it for now as is. If "mode" will be introduced, it
-can brake compatibility. Using "alphascale,mode" feels save :)
-
---=20
-Regards,
-Oleksij
-
-
---lIevVQAstKCfBFoRqS98vk9CgJIvPke71
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iF4EAREIAAYFAlZS4awACgkQHwImuRkmbWmPBQD/baZpTmdlQWmYU+x8Glno/mEU
-+LsLacUCQdz7CZz1DkcA/iAGeDpWdHBBpM5uxUGBLfxfuFYXtn9e04mhEUYrQ8cn
-=tm5L
------END PGP SIGNATURE-----
-
---lIevVQAstKCfBFoRqS98vk9CgJIvPke71--
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
