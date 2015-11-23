@@ -1,44 +1,72 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 01/13] clk: rockchip: add id for mipidsi sclk on rk3288
-Date: Mon, 23 Nov 2015 18:29:40 +0100
-Message-ID: <2553166.BXJRVnMEyt@diego>
-References: <1448007339-10966-1-git-send-email-zyw@rock-chips.com>
- <1448007339-10966-2-git-send-email-zyw@rock-chips.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
+ TPS65086 PMIC
+Date: Mon, 23 Nov 2015 11:40:55 -0600
+Message-ID: <56534FA7.2040200@ti.com>
+References: <1447974102-24938-1-git-send-email-afd@ti.com>
+ <1447974102-24938-4-git-send-email-afd@ti.com>
+ <20151121133739.GG26072@sirena.org.uk> <5650D6D2.5060108@ti.com>
+ <20151122131321.GM26072@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1448007339-10966-2-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, ajaykumar.rs@samsung.com, Jeff Chen <cym@rock-chips.com>, linux-rockchip@lists.infradead.org, rmk+kernel@arm.linux.org.uk, treding@nvidia.com, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Huang Lin <hl@rock-chips.com>, emil.l.velikov@gmail.com, Doug Anderson <dianders@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151122131321.GM26072@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hyaXMsCgpBbSBGcmVpdGFnLCAyMC4gTm92ZW1iZXIgMjAxNSwgMTY6MTU6Mjcgc2Nocmll
-YiBDaHJpcyBaaG9uZzoKPiBBZGRzIGEgbmV3IGlkIGZvciB0aGUgc2NsayBzdXBwbHlpbmcgdGhl
-IG1pcGlkc2kgb24gcmszMjg4IHNvY3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcg
-PHp5d0Byb2NrLWNoaXBzLmNvbT4KPiAKPiAtLS0KPiAKPiBDaGFuZ2VzIGluIHY0OiBOb25lCj4g
-Q2hhbmdlcyBpbiB2MzogTm9uZQo+IENoYW5nZXMgaW4gdjI6Cj4gYWRkIHRoZSBtaXBpIGNsayBp
-ZCBpbiBhIHNpbmdsZSBwYXRjaAo+IAo+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3JrMzI4
-OC1jcnUuaCB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiAKPiBkaWZm
-IC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9yazMyODgtY3J1LmgKPiBiL2luY2x1
-ZGUvZHQtYmluZGluZ3MvY2xvY2svcmszMjg4LWNydS5oIGluZGV4IGM3MTlhYWMuLmIwN2NkZDMg
-MTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9yazMyODgtY3J1LmgKPiAr
-KysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3JrMzI4OC1jcnUuaAo+IEBAIC04Niw2ICs4
-Niw3IEBACj4gICNkZWZpbmUgU0NMS19VU0JQSFk0ODBNX1NSQwkxMjIKPiAgI2RlZmluZSBTQ0xL
-X1BWVE1fQ09SRQkJMTIzCj4gICNkZWZpbmUgU0NMS19QVlRNX0dQVQkJMTI0Cj4gKyNkZWZpbmUg
-U0NMS19NSVBJXzI0TQkJMTI1CgppbiB0aGUgVFJNIChhbmQgdGhlcmVmb3JlIGluIHRoZSBjbG9j
-ay1jb250cm9sbGVyKSB0aGlzIGlzIGxhYmVsZWQgYXMKc2Nsa19taXBpZHNpXzI0bSwgc28gSSdk
-IHRoaW5rIHRoZSBjbG9jay1pZCBzaG91bHMgYWxzbyBjb250YWluIHRoZQpEU0kgcGFydCBhcyB3
-ZWxsLCBtYWtpbmcgaXQgU0NMS19NSVBJRFNJXzI0TQoKCkhlaWtvCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 11/22/2015 07:13 AM, Mark Brown wrote:
+> On Sat, Nov 21, 2015 at 02:40:50PM -0600, Andrew F. Davis wrote:
+>> On 11/21/2015 07:37 AM, Mark Brown wrote:
+>
+>>> An earlier version of this patch has already been applied, please don't
+>>> resend already applied patches but send incremental patches with any
+>>> changes.
+>
+>> Odd, I didn't seem to get any message for this getting applied. Looks
+>> like only a couple lines difference from the version in the regulators
+>> branch, I don't imagine you are able to rebase that with these changes?
+>
+> As a matter of policy I try to avoid rewriting history unless it is
+> really required.
+>
+
+Makes sense, I'll push the patch once the rest of this driver gets
+pulled in-case more changes are needed.
+
+>> Anyway the reason that line needed changed is over a confusion in
+>> what the 'of_node' does in 'struct regulator_config'. The description
+>> seems to make it seem like it is the node that gets checked for
+>> init data.
+>
+> The current behaviour is the intended behaviour.
+>
+>>> * @of_node: OpenFirmware node to parse for device tree bindings (may be
+>>> *           NULL).
+>
+>> But the 'of_node' that is actually searched is the one given in
+>> regulator_config->dev->of_node. Is this intended behavior (drivers
+>> assume it is so it probably has to be now) and if so, the above
+>> description might need to be clarified as too what that 'of_node'
+>> pointer really does?
+>
+> Please submit a patch with any clarification you think is needed.
+> of_node is the name of the container subnode of the main node for the
+> device where we look for init data - both are used.
+>
+
+But which of_node?
+
+regulator_config->of_node
+regulator_config->dev->of_node
+
+The second is the only one I see getting used, the first is only
+used when drivers provide their own init_data and automatic init
+data getting fails.
+
+The same issue is present in GPIO (gpiolib.c:612), where the of_node
+in the config takes precedence over the one in config->dev, the
+opposite is true for regulators, this is very confusing and should be
+standardized.
