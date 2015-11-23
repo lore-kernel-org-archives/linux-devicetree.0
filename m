@@ -1,89 +1,85 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
-Date: Mon, 23 Nov 2015 12:17:15 +0100
-Message-ID: <5652F5BB.8090205@samsung.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-16-git-send-email-milo.kim@ti.com>
- <5638DD99.9070502@samsung.com> <56419F0C.90009@ti.com>
- <564EE66C.5010709@samsung.com> <56525262.60308@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] drm/panel: simple: Add support for G121X1-L03
+Date: Mon, 23 Nov 2015 12:20:39 +0100
+Message-ID: <20151123112039.GG31868@ulmo.nvidia.com>
+References: <1447880267-13422-1-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <56525262.60308-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1049884751=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1447880267-13422-1-git-send-email-akshay.bhat@timesys.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Akshay Bhat <akshay.bhat@timesys.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, justin.waters@timesys.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Milo,
 
-On 11/23/2015 12:40 AM, Kim, Milo wrote:
-> Hi Jacek,
->
-> On 11/20/2015 6:22 PM, Jacek Anaszewski wrote:
->> On 11/10/2015 08:38 AM, Kim, Milo wrote:
->> [...]
->>>>> +                cat /sys/class/leds/<led>/pattern_levels
->>>>> +                low brightness: 0, high brightness: 255
->>>>> +
->>>>> +What:        /sys/class/leds/<led>/run_pattern
->>>>> +Date:        Oct 2015
->>>>> +KernelVersion:    4.3
->>>>> +Contact:    Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
->>>>> +Description:    write only
->>>>> +                After 'pattern_times' and 'pattern_levels' are
->>>>> updated,
->>>>> +                run the pattern by writing 1 to 'run_pattern'.
->>>>> +                To stop running pattern, writes 0 to 'run_pattern'.
->>>>
->>>> I wonder how registering an in-driver trigger would work. It would
->>>> allow for hiding above pattern attributes when the trigger is inactive,
->>>> and thus making the sysfs interface more transparent. You could avoid
->>>> the need for run_pattern attribute, as setting the trigger would itself
->>>> activate the pattern, and setting brightness to 0 would turn it off.
->>>
->>> I like this idea, let me try to fix it.
->>
->> After thinking it over, I came to conclusion that implementing it as
->> an in-driver trigger is not a proper way to go, since triggers are
->> defined as kernel based source of LED events.
->>
->> This is somehow abused in case of timer trigger which takes hardware
->> blinking feature as a first choice and applies software blinking as
->> a fallback only. To be consistent with that, we could go for adding
->> generic pattern trigger and add a led_pattern_set() API, similarly
->> to existing led_blink_set().
->>
->> The problem is that different LED controllers may implement blinking
->> patterns that are configured with different set of parameters. This
->> subject would definitely require thorough analysis.
->>
->> For now, please just expose pattern settings as separate sysfs
->> attributes of a LED class device.
->>
->
-> Thanks for your suggestion.
-> Then, LM3633 LED driver will support 8 device attributes.
->
->      pattern_time_delay
->      pattern_time_rise
->      pattern_time_high
->      pattern_time_fall
->      pattern_time_low
->      pattern_brightness_low
->      pattern_brightness_high
->      pattern_run_pattern
->
-> Details will be updated in
-> Documentation/ABI/testing/sysfs-class-led-lm3633.
+--===============1049884751==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="t4apE7yKrX2dGgJC"
+Content-Disposition: inline
 
-OK, it looks reasonable.
 
--- 
-Best Regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--t4apE7yKrX2dGgJC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 18, 2015 at 03:57:47PM -0500, Akshay Bhat wrote:
+> Add support for Innolux CheMei 12" G121X1-L03 XGA LVDS display.
+>=20
+> Datasheet: http://www.azdisplays.com/PDF/G121X1-L03.pdf
+> Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
+> ---
+>  .../bindings/display/panel/innolux,g121x1-l03.txt  |  7 +++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++=
+++++++
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/innol=
+ux,g121x1-l03.txt
+
+Applied, thanks.
+
+Thierry
+
+--t4apE7yKrX2dGgJC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWUvaHAAoJEN0jrNd/PrOhv98P/2uOe86CTbV3O83oEBfYh49z
+Rq0ceStnaUqwOiR4ruGSIJonbKQsJQDll6TwfJDDD5b/0YlufhwFmjojulHWsRcQ
+vYdMMDp7sEXUDZ4Xv/7WotQBqEOTVTXB86YrjbzavV+IAzI9JXQXPlyCD9VTrpz7
+kF2LQWq6pmSE4HDe/TGCoa1xzvo2guSOzw+Hgnk45io0l+cN9EBz7Ii5EhTAerBL
+ElefuwT7Xm2+M6qvKgLkQO5HwWnpqvKM59zEh0u4LL7wiXLcUryrre26SlLupLep
+ErEXXSocYV9eGQQ5eGlA/cr6KYSJPKxG0wHO2ydPHJDjhsq4Xs8JW5HjWQAaO8Rj
+q/FbMFt5ravoTDUwKdb2t8Twh5+clp7NNJcpCSsmqXvoR/nDZh4aeF+u3gKe0cea
+Rlzi05JT6BmNicWZiqNNWry8e9JYepIpRnTBSqHa5Thi4Z0YLSnQllHQdNWSpw4U
+rsDyobqNTPxtn/reyosd66viScalLp/Y29MnUR2X0slptkm21JNWSakA2eKYmZ4+
+R6cVQcyBy1ZXF5b4M0qskOBv6ZvteUlmp7Rj5XOXhcN5qoMo9aP3pYSpOuQfBRNB
+CCmt0iuIrubp4/ZVRcMK3U4gL303K+SO8zzM0Bm5JCFM23JnJ/wHDK1KSa1MRs2D
+KsU7LsZJCFOL8OTtShL9
+=QcsL
+-----END PGP SIGNATURE-----
+
+--t4apE7yKrX2dGgJC--
+
+--===============1049884751==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1049884751==--
