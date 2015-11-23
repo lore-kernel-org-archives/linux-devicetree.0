@@ -1,89 +1,62 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 1/2] drm/panel: Add Sharp LS043T1LE01 panel binding
- documentation
-Date: Mon, 23 Nov 2015 12:42:09 +0100
-Message-ID: <20151123114209.GD8911@ulmo.nvidia.com>
-References: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3 1/2] ASoC: da7218: Add bindings documentation for
+ DA7218 audio codec
+Date: Mon, 23 Nov 2015 11:51:39 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D460ED28@SW-EX-MBX01.diasemi.com>
+References: <cover.1447941395.git.Adam.Thomson.Opensource@diasemi.com>
+ <add67c0ebac7a516d3cf515fea10a08b7cabadbc.1447941395.git.Adam.Thomson.Opensource@diasemi.com>
+ <20151120155351.GA13917@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0638812599=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1446244470-8517-1-git-send-email-bjorn.andersson@sonymobile.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151120155351.GA13917@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0638812599==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
-Content-Disposition: inline
-
-
---UfEAyuTBtIjiZzX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Oct 30, 2015 at 03:34:29PM -0700, Bjorn Andersson wrote:
-> From: Werner Johansson <werner.johansson@sonymobile.com>
->=20
-> Signed-off-by: Werner Johansson <werner.johansson@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->=20
-> Change since v1:
-> - Dropped -vid suffix from compatible
->=20
->  .../bindings/display/panel/sharp,ls043t1le01.txt   | 22 ++++++++++++++++=
-++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp=
-,ls043t1le01.txt
-
-Applied, thanks.
-
-Thierry
-
---UfEAyuTBtIjiZzX6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWUvuRAAoJEN0jrNd/PrOhBO4P/jNgZ2a1Bitojk1fujt4XQRt
-Ruc512p4fSN3C4VoRsshMY0JHNeD+eB3lKPyA/VCQLuUUwHZGVP+/me1SzMbFf5u
-+KmnZS6UJmgdo8a35o1w3Fcz3+JRC0qRQBgUEBBqTMOJMD6v+iSAdvjDkfbRiAiP
-XfIM4rkc38eZ9VCAvQbleB06Px1MZs6yrbrFUTiNkuU8ZW0kBFYGLi9/HahqBTsa
-Y9YS048Q2dRJUFLdYNvUlTujKhe+SQSVXhIp9biH2liCVHVV8fLq4PVhcuqBvAZN
-LV9Dhd0997GLbAQRq6RkL6Rl9F/+vgJwn8/XYm18PP68a/cNqdet+dhjx2Kzt+49
-o6XH9rmBgeup5DpUyrPMBXhbo/RIyyKXdueZdLBtRHNx/qJUxYqsSiTRacW0mabq
-g74FCtjPxGAZLWwljoE5OsW668ZWTph7coTgfC8UACb8gc/GgenfWq/afH5HB/Y3
-rvrZBoiTVEm1OfkmhbDxzUElqu0tgh65MlxByTfHAsBl1/RFDRowLXgbHGqQZJbS
-vTfKsvZwLm3Er/ZmtXO0yoCnnB1+NqVSmsY38YutylzsnatMbEVGUUPiWpafm9AR
-246Q/U8RxwOv2XNYlmjm6hM4QOR2MJTQcJEJN9ZKGEqdvHr3g0bv63xKOw+J4Xo8
-BHfpwTy//nbrGqzCn/Uu
-=kT2c
------END PGP SIGNATURE-----
-
---UfEAyuTBtIjiZzX6--
-
---===============0638812599==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============0638812599==--
+T24gTm92ZW1iZXIgMjAsIDIwMTUgMTU6NTQsIFJvYiBIZXJyaW5nIHdyb3RlOg0KDQo+ID4gKy0g
+ZGxnLG1pY2JpYXMxLWx2bC1taWxsaXZvbHQgOiBWb2x0YWdlIChtVikgZm9yIE1pYyBCaWFzIDEN
+Cj4gPiArCVs8MTIwMD4sIDwxNjAwPiwgPDE4MDA+LCA8MjAwMD4sIDwyMjAwPiwgPDI0MDA+LCA8
+MjYwMD4sIDwyODAwPiwNCj4gPDMwMDA+XQ0KPiA+ICstIGRsZyxtaWNiaWFzMi1sdmwtbWlsbGl2
+b2x0IDogVm9sdGFnZSAobVYpIGZvciBNaWMgQmlhcyAyDQo+ID4gKwlbPDEyMDA+LCA8MTYwMD4s
+IDwxODAwPiwgPDIwMDA+LCA8MjIwMD4sIDwyNDAwPiwgPDI2MDA+LCA8MjgwMD4sDQo+IDwzMDAw
+Pl0NCj4gPiArLSBkbGcsbWljMS1hbXAtaW4tc2VsIDogTWljMSBpbnB1dCBzb3VyY2UgdHlwZQ0K
+PiA+ICsJWyJkaWZmIiwgInNlX3AiLCAic2VfbiJdDQo+ID4gKy0gZGxnLG1pYzItYW1wLWluLXNl
+bCA6IE1pYzIgaW5wdXQgc291cmNlIHR5cGUNCj4gPiArCVsiZGlmZiIsICJzZV9wIiwgInNlX24i
+XQ0KPiA+ICstIGRsZyxkbWljMS1kYXRhLXNlbCA6IERNSUMxIGNoYW5uZWwgc2VsZWN0IGJhc2Vk
+IG9uIGNsb2NrIGVkZ2UuDQo+ID4gKwlbImxyaXNlX3JmYWxsIiwgImxmYWxsX3JyaXNlIl0NCj4g
+PiArLSBkbGcsZG1pYzEtc2FtcGxlcGhhc2UgOiBXaGVuIHRvIHNhbXBsZSBhdWRpbyBmcm9tIERN
+SUMxLg0KPiA+ICsJWyJvbl9jbGtlZGdlIiwgImJldHdlZW5fY2xrZWRnZSJdDQo+ID4gKy0gZGxn
+LGRtaWMxLWNsa3JhdGUtaGVydHogOiBETWljMSBjbG9jayBmcmVxdWVuY3kgKEh6KS4NCj4gDQo+
+IC1oeg0KPiANCj4gRG9jdW1lbnRpbmcgdGhlIHVuaXQgc3VmZml4ZXMgaXMgb24gbXkgdG9kbyBs
+aXN0Li4uDQoNClNvIGlzIHRoZSBnZW5lcmFsIHJ1bGUgdG8gdXNlIGFiYnJldmlhdGVkIHN1ZmZp
+eGVzLCBhcGFydCBmcm9tIG1pbGxpdm9sdHMsDQptaWNyb3ZvbHRzLCBldGMsIG9yIGFyZSB0aGVy
+ZSBzb21lIG90aGVyIHJ1bGVzIHRoYXQgSSBzaG91bGQgYmUgYXdhcmUgb2Y/IEkNCmRvbid0IHdh
+bnQgdG8gaGF2ZSB0byBrZWVwIHJlLXN1Ym1pdHRpbmcgcGF0Y2hlcyBpbiB0aGUgZnV0dXJlIGJl
+Y2F1c2UgSSdtIG5vdA0KZm9sbG93aW5nIGEgcnVsZSBJIGhhdmUgbm8gd2F5IG9mIGtub3dpbmcg
+YWJvdXQ/DQoNCj4gPiArCVs8MTUwMDAwMD4sIDwzMDAwMDAwPl0NCj4gPiArLSBkbGcsZG1pYzIt
+ZGF0YS1zZWwgOiBETWljMiBjaGFubmVsIHNlbGVjdCBiYXNlZCBvbiBjbG9jayBlZGdlLg0KPiA+
+ICsJWyJscmlzZV9yZmFsbCIsICJsZmFsbF9ycmlzZSJdDQo+ID4gKy0gZGxnLGRtaWMyLXNhbXBs
+ZXBoYXNlIDogV2hlbiB0byBzYW1wbGUgYXVkaW8gZnJvbSBETWljMi4NCj4gPiArCVsib25fY2xr
+ZWRnZSIsICJiZXR3ZWVuX2Nsa2VkZ2UiXQ0KPiA+ICstIGRsZyxkbWljMi1jbGtyYXRlLWhlcnR6
+IDogRE1pYzIgY2xvY2sgZnJlcXVlbmN5IChIeikuDQo+IA0KPiAtaHoNCj4gDQo+ID4gKwlbPDE1
+MDAwMDA+LCA8MzAwMDAwMD5dDQo+ID4gKy0gZGxnLGhwLWRpZmYtc2luZ2xlLXN1cHBseSA6IEJv
+b2xlYW4gZmxhZywgdXNlIHNpbmdsZSBzdXBwbHkgZm9yIEhQDQo+ID4gKwkJCSAgICAgIChEQTcy
+MTcgb25seSkNCj4gPiArDQo+ID4gKz09PT09PQ0KPiA+ICsNCj4gPiArT3B0aW9uYWwgQ2hpbGQg
+bm9kZSAtICdkYTcyMThfaHBsZGV0JyAoREE3MjE4IG9ubHkpOg0KPiA+ICsNCj4gPiArT3B0aW9u
+YWwgcHJvcGVydGllczoNCj4gPiArLSBkbGcsamFjay1yYXRlLW1pY3Jvc2Vjb25kIDogVGltZSBi
+ZXR3ZWVuIGphY2sgZGV0ZWN0IG1lYXN1cmVtZW50cyAodXMpDQo+IA0KPiAtdXMNCj4gDQo+IENv
+bXBsZXRlbHkgY29uc2lzdGVudCwgaXNuJ3QgaXQuIFdoeSB3ZSBkaWQgLW1pY3Jvdm9sdCBJIGRv
+bid0IGtub3cuDQoNCkkgd291bGQgZ3Vlc3MgdGhpcyBpcyBkdWUgdG8gdGhlIGFsbCBsb3dlci1j
+YXNlIHJ1bGUsIGFzICd1dicgZG9lc24ndCBsb29rIHJpZ2h0DQp3aGVuIGluZGljYXRpbmcgbWlj
+cm92b2x0cy4gTWF5YmUgdGhlIGxvd2VyLWNhc2UgcnVsZSBzaG91bGQgbm90IGFwcGx5IGZvcg0K
+YWJicmV2aWF0aW9ucyBsaWtlIHRoaXMgc28gd2UgY2FuIHVzZSAnbVYnLCAndVYnLCBldGMuLi4/
+IEluIHRoZW9yeSB0aGVuIGl0DQpjb3VsZCBiZSAnSHonIGFzIHdlbGwsIGlmIHdlJ3JlIGJlaW5n
+IGFic29sdXRlbHkgY29ycmVjdC4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
