@@ -1,39 +1,51 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 0/3] prepare GPC driver for multiple domain support
-Date: Mon, 23 Nov 2015 16:07:00 +0100
-Message-ID: <1448291223-9938-1-git-send-email-l.stach@pengutronix.de>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH] extcon: arizona: Update naming for micd-timeout DT to include units
+Date: Mon, 23 Nov 2015 14:51:30 +0000
+Message-ID: <1448290290-19267-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series reworks the i.MX6 GPC driver to support multiple power
-domains. The main issue is the DT binding which is not sufficient
-to support more than the single "PU" domain present on MX6Q.
+Add time units of -ms (milliseconds) to wlf,micd-timeout.
 
-This series introduces a new DT binding, which is more flexible and
-allows to model different numbers of power domains with a single
-unified binding. The driver is then reworked to split things a bit
-more cleanly and work with the new binding. Compatibility for the
-currently supported i.MX6Q/DL binding is kept, but deprecated, so
-existing DTBs continue to work.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ .../devicetree/bindings/extcon/extcon-arizona.txt  |    2 +-
+ drivers/extcon/extcon-arizona.c                    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Regards,
-Lucas
-
-Lucas Stach (3):
-  dt-bindings: add multidomain support to i.MX GPC DT binding
-  ARM: imx6: rework GPC to support mutiple power domains
-  ARM: imx6: adopt DT to new GPC binding
-
- .../devicetree/bindings/power/fsl,imx-gpc.txt      |  81 ++--
- arch/arm/boot/dts/imx6qdl.dtsi                     |  33 +-
- arch/arm/mach-imx/gpc.c                            | 435 ++++++++++++++++-----
- 3 files changed, 407 insertions(+), 142 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+index da9813b..05d85ac 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+@@ -33,7 +33,7 @@ Optional properties:
+     specified as per the ARIZONA_MICD_TIME_XXX defines.
+   - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
+     number of measurements to take, valid values being 2 and 4.
+-  - wlf,micd-timeout : Timeout for microphone detection, specified in
++  - wlf,micd-timeout-ms : Timeout for microphone detection, specified in
+     milliseconds.
+   - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
+     detection.
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index c377030..8647533 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -1230,7 +1230,7 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 	device_property_read_u32(arizona->dev, "wlf,micd-dbtime",
+ 				 &pdata->micd_dbtime);
+ 
+-	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
++	device_property_read_u32(arizona->dev, "wlf,micd-timeout-ms",
+ 				 &pdata->micd_timeout);
+ 
+ 	pdata->micd_force_micbias = device_property_read_bool(arizona->dev,
 -- 
-2.6.2
+1.7.2.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
