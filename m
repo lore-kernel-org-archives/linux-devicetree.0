@@ -1,72 +1,91 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/5] irqdomain: introduce irq_of_phandle_args_to_fwspec
-Date: Mon, 23 Nov 2015 11:16:53 +0100
-Message-ID: <1448273816-11290-3-git-send-email-carlo@caione.org>
-References: <1448273816-11290-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448273816-11290-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: [PATCH v3 1/6] PCI: designware: remove wrong io_base assignment
+Date: Mon, 23 Nov 2015 10:27:36 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E162C6F70@lhreml503-mbs>
+References: <cover.1448270813.git.stanimir.varbanov@linaro.org>
+ <44d133d5ebd4f7b9e8b817aa8bae12f690e70000.1448270813.git.stanimir.varbanov@linaro.org>
+ <6048361.Am0T3g77Bd@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <6048361.Am0T3g77Bd@wuerfel>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Hi Stanimir, Many Thanks for this fix
 
-Export of_phandle_args_to_fwspec with a new compliant name.
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-
+> owner@vger.kernel.org] On Behalf Of Arnd Bergmann
+> Sent: 23 November 2015 10:00
+> To: Stanimir Varbanov
+> Cc: linux-arm-msm@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> pci@vger.kernel.org; Bjorn Helgaas; Srinivas Kandagatla; Rob Herring; Rob
+> Herring; Mark Rutland; Pawel Moll; Ian Campbell; Jingoo Han; Pratyush Anand;
+> Bjorn Andersson
+> Subject: Re: [PATCH v3 1/6] PCI: designware: remove wrong io_base assignment
+> 
+> On Monday 23 November 2015 11:28:58 Stanimir Varbanov wrote:
+> > The io_base is used to keep the cpu physical address parsed
+> > from ranges dt property. After issue pci_remap_iospace the
+> > io_base has been assigned with io->start, which is not correct
+> > cause io->start is a PCI bus address.
+> >
+> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> > ---
+> >  drivers/pci/host/pcie-designware.c |    1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
+> designware.c
+> > index 540f077c37ea..02a7452bdf23 100644
+> > --- a/drivers/pci/host/pcie-designware.c
+> > +++ b/drivers/pci/host/pcie-designware.c
+> > @@ -440,7 +440,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> >  					 ret, pp->io);
+> >  				continue;
+> >  			}
+> > -			pp->io_base = pp->io->start;
+> >  			break;
+> >  		case IORESOURCE_MEM:
+> >  			pp->mem = win->res;
+> 
+> I was surprised to see such an obvious bug here, as we had spent a lot of
+> time trying to get it right. However, it broke only recently and it's
+> worth mentioning what commit did it, so
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- include/linux/of_irq.h | 2 ++
- kernel/irq/irqdomain.c | 5 +++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Looking at 
+"[PATCH v12 0/8] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05":
 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 6f879c6..66bd92e 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -34,6 +34,8 @@ static inline int of_irq_parse_oldworld(struct device_node *device, int index,
- extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq);
- extern int of_irq_parse_one(struct device_node *device, int index,
- 			  struct of_phandle_args *out_irq);
-+extern void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
-+					  struct irq_fwspec *fwspec);
- extern unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data);
- extern int of_irq_to_resource(struct device_node *dev, int index,
- 			      struct resource *r);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 22aa961..b2ff223 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -554,7 +554,7 @@ static int irq_domain_translate(struct irq_domain *d,
- 	return 0;
- }
- 
--static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
-+void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
- 				      struct irq_fwspec *fwspec)
- {
- 	int i;
-@@ -565,6 +565,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
- 	for (i = 0; i < irq_data->args_count; i++)
- 		fwspec->param[i] = irq_data->args[i];
- }
-+EXPORT_SYMBOL_GPL(irq_of_phandle_args_to_fwspec);
- 
- unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- {
-@@ -618,7 +619,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
- {
- 	struct irq_fwspec fwspec;
- 
--	of_phandle_args_to_fwspec(irq_data, &fwspec);
-+	irq_of_phandle_args_to_fwspec(irq_data, &fwspec);
- 	return irq_create_fwspec_mapping(&fwspec);
- }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
--- 
-2.5.0
+actually the bug came in as patch 3/6 of v11 patchset split
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+Change from v11:
+- Split 3/6 in v11 to 3/8, 4/8, 5/8 in v12.
+
+[...]
+
+This was not present in v11...sorry about this.
+
+Gab
+
+> 
+> Fixes: 0021d22b73d6 ("PCI: designware: Use of_pci_get_host_bridge_resources()
+> to parse DT")
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> The bug is present in 4.4-rc1 and we should get your fix merged into 4.4
+> as well, while all the other patches in your series are presumably for 4.5.
+> 
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
