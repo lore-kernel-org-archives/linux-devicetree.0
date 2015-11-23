@@ -1,265 +1,132 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner
- H3 DTSI
-Date: Mon, 23 Nov 2015 11:50:47 +0100
-Message-ID: <5652EF87.50604@redhat.com>
-References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
- <1445964626-6484-6-git-send-email-jenskuske@gmail.com>
- <CAGb2v64NZMw0vNvVtepthUMox5TDy07gTBAWZqf8GAq6TrMpOg@mail.gmail.com>
- <563614A3.6060805@gmail.com> <20151123085719.GT32142@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Martin Schiller <mschiller@tdt.de>
+Subject: RE: [PATCH 2/4] pinctrl/lantiq: introduce new dedicated devicetree
+ bindings
+Date: Mon, 23 Nov 2015 11:00:04 +0000
+Message-ID: <b42ea50ff4c548d2b447f0dd55e59578@TDT-MS.TDTNET.local>
+References: <1447995151-3857-1-git-send-email-mschiller@tdt.de>
+ <1447995151-3857-2-git-send-email-mschiller@tdt.de>
+ <5650850A.5050000@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEO7ZOZAKGQEDVC7LNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151123085719.GT32142@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5650850A.5050000@hauke-m.de>
+Content-Language: de-DE
+Sender: linux-gpio-owner@vger.kernel.org
+To: Hauke Mehrtens <hauke@hauke-m.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "jogo@openwrt.org" <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-HI,
-
-On 23-11-15 09:57, Maxime Ripard wrote:
-> Hi,
->
-> On Sun, Nov 01, 2015 at 02:33:23PM +0100, Jens Kuske wrote:
->>>> +               bus_gates: clk@01c20060 {
->>>> +                       #clock-cells = <1>;
->>>> +                       compatible = "allwinner,sun8i-h3-bus-gates-clk";
->>>> +                       reg = <0x01c20060 0x14>;
->>>> +                       clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
->>>> +                       clock-names = "ahb1", "ahb2", "apb1", "apb2";
->>>> +                       clock-indices = <5>, <6>, <8>,
->>>> +                                       <9>, <10>, <13>,
->>>> +                                       <14>, <17>, <18>,
->>>> +                                       <19>, <20>,
->>>> +                                       <21>, <23>,
->>>> +                                       <24>, <25>,
->>>> +                                       <26>, <27>,
->>>> +                                       <28>, <29>,
->>>> +                                       <30>, <31>, <32>,
->>>> +                                       <35>, <36>, <37>,
->>>> +                                       <40>, <41>, <43>,
->>>> +                                       <44>, <52>, <53>,
->>>> +                                       <54>, <64>,
->>>> +                                       <65>, <69>, <72>,
->>>> +                                       <76>, <77>, <78>,
->>>> +                                       <96>, <97>, <98>,
->>>> +                                       <112>, <113>,
->>>> +                                       <114>, <115>, <116>,
->>>> +                                       <128>, <135>;
->>>> +                       clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
->>>> +                                       "ahb1_mmc1", "ahb1_mmc2", "ahb1_nand",
->>>> +                                       "ahb1_sdram", "ahb2_gmac", "ahb1_ts",
->>>> +                                       "ahb1_hstimer", "ahb1_spi0",
->>>> +                                       "ahb1_spi1", "ahb1_otg",
->>>> +                                       "ahb1_otg_ehci0", "ahb1_ehic1",
->>>
->>> ahb1_ehci1? Same for the following 3 lines.
->> I'll fix them...
->>>
->>>> +                                       "ahb1_ehic2", "ahb1_ehic3",
->>>> +                                       "ahb1_otg_ohci0", "ahb2_ohic1",
->>>> +                                       "ahb2_ohic2", "ahb2_ohic3", "ahb1_ve",
->>>> +                                       "ahb1_lcd0", "ahb1_lcd1", "ahb1_deint",
->>>> +                                       "ahb1_csi", "ahb1_tve", "ahb1_hdmi",
->>>> +                                       "ahb1_de", "ahb1_gpu", "ahb1_msgbox",
->>>> +                                       "ahb1_spinlock", "apb1_codec",
->>>> +                                       "apb1_spdif", "apb1_pio", "apb1_ths",
->>>> +                                       "apb1_i2s0", "apb1_i2s1", "apb1_i2s2",
->>>> +                                       "apb2_i2c0", "apb2_i2c1", "apb2_i2c2",
->>>> +                                       "apb2_uart0", "apb2_uart1",
->>>> +                                       "apb2_uart2", "apb2_uart3", "apb2_scr",
->>>> +                                       "ahb1_ephy", "ahb1_dbg";
->>>
->>> If it weren't for the last 2 clocks, we could cleanly split out apb1 and apb2
->>> gates. Having a separate AHB clock gate taking 2 addresses seems messy
->>> as well. :(
->>
->> Well, maybe we still should do that, if we split the resets too at least
->> apb[12]  would line up again.
->>
->> I don't know what to do with these bus things any more, all variants I
->> sent had issues somewhere...
->
-> AFAIK, Arnd had some objections, but he never got back to us when we
-> explained how the hardware was laid out, so I don't know if they still
-> apply.
->
->>>> +               };
->>>> +
->>>> +               mmc0_clk: clk@01c20088 {
->>>> +                       #clock-cells = <1>;
->>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
->>>> +                       reg = <0x01c20088 0x4>;
->>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
->>>> +                       clock-output-names = "mmc0",
->>>> +                                            "mmc0_output",
->>>> +                                            "mmc0_sample";
->>>> +               };
->>>> +
->>>> +               mmc1_clk: clk@01c2008c {
->>>> +                       #clock-cells = <1>;
->>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
->>>> +                       reg = <0x01c2008c 0x4>;
->>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
->>>> +                       clock-output-names = "mmc1",
->>>> +                                            "mmc1_output",
->>>> +                                            "mmc1_sample";
->>>> +               };
->>>> +
->>>> +               mmc2_clk: clk@01c20090 {
->>>> +                       #clock-cells = <1>;
->>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
->>>> +                       reg = <0x01c20090 0x4>;
->>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
->>>> +                       clock-output-names = "mmc2",
->>>> +                                            "mmc2_output",
->>>> +                                            "mmc2_sample";
->>>> +               };
->>>> +
->>>> +               mbus_clk: clk@01c2015c {
->>>> +                       #clock-cells = <0>;
->>>> +                       compatible = "allwinner,sun8i-a23-mbus-clk";
->>>> +                       reg = <0x01c2015c 0x4>;
->>>> +                       clocks = <&osc24M>, <&pll6 1>, <&pll5>;
->>>> +                       clock-output-names = "mbus";
->>>> +               };
->>>> +       };
->>>> +
->>>> +       soc {
->>>> +               compatible = "simple-bus";
->>>> +               #address-cells = <1>;
->>>> +               #size-cells = <1>;
->>>> +               ranges;
->>>> +
->>>> +               dma: dma-controller@01c02000 {
->>>> +                       compatible = "allwinner,sun8i-h3-dma";
->>>> +                       reg = <0x01c02000 0x1000>;
->>>> +                       interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                       clocks = <&bus_gates 6>;
->>>> +                       resets = <&bus_rst 6>;
->>>> +                       #dma-cells = <1>;
->>>> +               };
->>>> +
->>>> +               mmc0: mmc@01c0f000 {
->>>> +                       compatible = "allwinner,sun5i-a13-mmc";
->>>> +                       reg = <0x01c0f000 0x1000>;
->>>> +                       clocks = <&bus_gates 8>,
->>>> +                                <&mmc0_clk 0>,
->>>> +                                <&mmc0_clk 1>,
->>>> +                                <&mmc0_clk 2>;
->>>> +                       clock-names = "ahb",
->>>> +                                     "mmc",
->>>> +                                     "output",
->>>> +                                     "sample";
->>>> +                       resets = <&bus_rst 8>;
->>>> +                       reset-names = "ahb";
->>>> +                       interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                       status = "disabled";
->>>> +                       #address-cells = <1>;
->>>> +                       #size-cells = <0>;
->>>> +               };
->>>> +
->>>> +               mmc1: mmc@01c10000 {
->>>> +                       compatible = "allwinner,sun5i-a13-mmc";
->>>> +                       reg = <0x01c10000 0x1000>;
->>>> +                       clocks = <&bus_gates 9>,
->>>> +                                <&mmc1_clk 0>,
->>>> +                                <&mmc1_clk 1>,
->>>> +                                <&mmc1_clk 2>;
->>>> +                       clock-names = "ahb",
->>>> +                                     "mmc",
->>>> +                                     "output",
->>>> +                                     "sample";
->>>> +                       resets = <&bus_rst 9>;
->>>> +                       reset-names = "ahb";
->>>> +                       interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                       status = "disabled";
->>>> +                       #address-cells = <1>;
->>>> +                       #size-cells = <0>;
->>>> +               };
->>>> +
->>>> +               mmc2: mmc@01c11000 {
->>>> +                       compatible = "allwinner,sun5i-a13-mmc";
->>>> +                       reg = <0x01c11000 0x1000>;
->>>> +                       clocks = <&bus_gates 10>,
->>>> +                                <&mmc2_clk 0>,
->>>> +                                <&mmc2_clk 1>,
->>>> +                                <&mmc2_clk 2>;
->>>> +                       clock-names = "ahb",
->>>> +                                     "mmc",
->>>> +                                     "output",
->>>> +                                     "sample";
->>>> +                       resets = <&bus_rst 10>;
->>>> +                       reset-names = "ahb";
->>>> +                       interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                       status = "disabled";
->>>> +                       #address-cells = <1>;
->>>> +                       #size-cells = <0>;
->>>> +               };
->>>> +
->>>> +               pio: pinctrl@01c20800 {
->>>> +                       compatible = "allwinner,sun8i-h3-pinctrl";
->>>> +                       reg = <0x01c20800 0x400>;
->>>> +                       interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
->>>> +                                    <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                       clocks = <&bus_gates 69>;
->>>> +                       gpio-controller;
->>>> +                       #gpio-cells = <3>;
->>>> +                       interrupt-controller;
->>>> +                       #interrupt-cells = <2>;
->>>> +
->>>> +                       uart0_pins_a: uart0@0 {
->>>> +                               allwinner,pins = "PA4", "PA5";
->>>> +                               allwinner,function = "uart0";
->>>> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>>> +                       };
->>>> +
->>>> +                       mmc0_pins_a: mmc0@0 {
->>>> +                               allwinner,pins = "PF0", "PF1", "PF2", "PF3",
->>>> +                                                "PF4", "PF5";
->>>> +                               allwinner,function = "mmc0";
->>>> +                               allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->>>> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>>> +                       };
->>>> +
->>>> +                       mmc0_cd_pin: mmc0_cd_pin@0 {
->>>> +                               allwinner,pins = "PF6";
->>>> +                               allwinner,function = "gpio_in";
->>>> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>> +                               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>>> +                       };
->>>
->>> This should be in the board DTS, unless this is the reference design,
->>> in which case you should name the label like "mmc0_cd_pin_reference_design".
->>>
->>
->> The datasheet mentions SDC0_DET function on PF6
-
-Hmm, not in my version, I've "Allwinner_H3_Datasheet_V1.0.pdf" and there
-PF6 only has generic input / output functionality.
-
- >> so I thought this is
->> sort of fixed to this pin now. All designs I've seen use this pin.
->
-> Why is it set as a gpio then if it is a separate function?
-
-I guess because we do not support this in the mmc driver yet. Also on
-older devices the mmc controller has build-in card-detection features
-(using the data lines in that case) but we've never supported this since
-none of the boards sofar have been using it.
-
-For now we can just treat PF6 as a gpio, until someone figures out how
-to do this inside the mmc driver.
-
-Regards,
-
-Hans
+T24gMTEvMjEvMjAxNSBhdCAzOjUxIFBNLCBIYXVrZSBNZWhydGVucyB3cm90ZToNCj4gT24gMTEv
+MjAvMjAxNSAwNTo1MiBBTSwgTWFydGluIFNjaGlsbGVyIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2gg
+aW50cm9kdWNlcyBuZXcgZGVkaWNhdGVkICJsYW50aXEscGluY3RybC08Y2hpcD4iDQo+IGRldmlj
+ZXRyZWUNCj4gPiBiaW5kaW5ncywgd2hlcmUgPGNoaXA+IGlzIG9uZSBvZiAiYXNlIiwgImRhbnVi
+ZSIsICJ4cngxMDAiLCAieHJ4MjAwIg0KPiBvcg0KPiA+ICJ4cngzMDAiIGFuZCBtYXJrcyB0aGUg
+ImxhbnRpcSxwaW5jdHJsLXh3YXkiIGFuZCAibGFudGlxLHBpbmN0cmwteHI5Ig0KPiBiaW5kaW5n
+cyBhcw0KPiA+IERFUFJFQ0FURUQuDQoNCihzbmlwKQ0KDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGluY3RybC9waW5jdHJsLWxhbnRpcS5oDQo+IGIvZHJpdmVycy9waW5jdHJsL3BpbmN0cmwt
+bGFudGlxLmgNCj4gPiBpbmRleCBlYjg5YmEwLi5lMTM3ZDEzIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
+aXZlcnMvcGluY3RybC9waW5jdHJsLWxhbnRpcS5oDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJs
+L3BpbmN0cmwtbGFudGlxLmgNCj4gPiBAQCAtMTYyLDYgKzE2MiwxNCBAQCBlbnVtIGx0cV9waW4g
+ew0KPiA+ICBHUElPNTMsDQo+ID4gIEdQSU81NCwNCj4gPiAgR1BJTzU1LA0KPiA+ICtHUElPNTYs
+DQo+ID4gK0dQSU81NywNCj4gPiArR1BJTzU4LA0KPiA+ICtHUElPNTksDQo+ID4gK0dQSU82MCwg
+LyogNjAgKi8NCj4gPiArR1BJTzYxLA0KPiA+ICtHUElPNjIsDQo+ID4gK0dQSU82MywNCj4gPg0K
+PiA+ICBHUElPNjQsDQo+ID4gIEdQSU82NSwNCj4NCj4gV2hhdCBpcyB0aGUgYWR2YW50YWdlIG9m
+IHVzaW5nIHRoaXMgZW51bSBjb21wYXJlZCB0byBqdXN0IHVzZSBpbnRlZ2Vycw0KPiBkaXJlY3Rs
+eT8gV2FzIGl0IGludGVudGlvbmFsbHkgdGhhdCBHUElPNjQgaGFzIHRoZSBudW1iZXIgNTYgYmVm
+b3JlPw0KDQpNYXliZSB0aGlzIEdQSU81NiAtIEdQSU82MyBnYXAgaGFzIHNvbWUgcmVsYXRpb24g
+dG8gdGhlIHhSWDEwMCAoYWthIGFyOSkgU29DLA0Kd2hpY2ggaGFzIDMgMS8yIEdQSU8gUG9ydHMg
+b2YgMTZiaXRzIChHUElPMCAtIEdQSU81NSkuDQoNCg0KPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL3BpbmN0cmwvcGluY3RybC14d2F5LmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC14
+d2F5LmMNCj4gPiBpbmRleCBhZTcyNGJkLi4yMzRkM2Y0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvcGluY3RybC9waW5jdHJsLXh3YXkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9waW5j
+dHJsLXh3YXkuYw0KPiA+IEBAIC03LDYgKzcsNyBAQA0KPiA+ICAgKiAgcHVibGlzaGhlZCBieSB0
+aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+ICAgKg0KPiA+ICAgKiAgQ29weXJpZ2h0
+IChDKSAyMDEyIEpvaG4gQ3Jpc3BpbiA8YmxvZ2ljQG9wZW53cnQub3JnPg0KPiA+ICsgKiAgQ29w
+eXJpZ2h0IChDKSAyMDE1IE1hcnRpbiBTY2hpbGxlciA8bXNjaGlsbGVyQHRkdC5kZT4NCj4gPiAg
+ICovDQo+ID4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KPiA+IEBAIC0yNCw3ICsyNSw3
+IEBADQo+ID4NCj4gPiAgI2luY2x1ZGUgPGxhbnRpcV9zb2MuaD4NCj4gPg0KPiA+IC0vKiB3ZSBo
+YXZlIDMgMS8yIGJhbmtzIG9mIDE2IGJpdCBlYWNoICovDQo+ID4gKy8qIHdlIGhhdmUgdXAgdG8g
+NCBiYW5rcyBvZiAxNiBiaXQgZWFjaCAqLw0KPiA+ICAjZGVmaW5lIFBJTlMxNg0KPiA+ICAjZGVm
+aW5lIFBPUlQzMw0KPiA+ICAjZGVmaW5lIFBPUlQoeCkoeCAvIFBJTlMpDQo+ID4gQEAgLTM1LDcg
+KzM2LDcgQEANCj4gPiAgI2RlZmluZSBNVVhfQUxUMTB4Mg0KPiA+DQo+ID4gIC8qDQo+ID4gLSAq
+IGVhY2ggYmFuayBoYXMgdGhpcyBvZmZzZXQgYXBhcnQgZnJvbSB0aGUgMS8yIGJhbmsgdGhhdCBp
+cyBtaXhlZA0KPiBpbnRvIHRoZQ0KPiA+ICsgKiBlYWNoIGJhbmsgaGFzIHRoaXMgb2Zmc2V0IGFw
+YXJ0IGZyb20gdGhlIDR0aCBiYW5rIHRoYXQgaXMgbWl4ZWQNCj4gaW50byB0aGUNCj4gPiAgICog
+b3RoZXIgMyByYW5nZXMNCj4gPiAgICovDQo+ID4gICNkZWZpbmUgUkVHX09GRjB4MzANCj4gPiBA
+QCAtNTEsNyArNTIsNyBAQA0KPiA+ICAjZGVmaW5lIEdQSU9fUFVEU0VMKHApKEdQSU9fQkFTRShw
+KSArIDB4MWMpDQo+ID4gICNkZWZpbmUgR1BJT19QVURFTihwKShHUElPX0JBU0UocCkgKyAweDIw
+KQ0KPiA+DQo+ID4gLS8qIHRoZSAxLzIgcG9ydCBuZWVkcyBzcGVjaWFsIG9mZnNldHMgZm9yIHNv
+bWUgcmVnaXN0ZXJzICovDQo+ID4gKy8qIHRoZSA0dGggcG9ydCBuZWVkcyBzcGVjaWFsIG9mZnNl
+dHMgZm9yIHNvbWUgcmVnaXN0ZXJzICovDQo+ID4gICNkZWZpbmUgR1BJTzNfT0QoR1BJT19CQVNF
+KDApICsgMHgyNCkNCj4gPiAgI2RlZmluZSBHUElPM19QVURTRUwoR1BJT19CQVNFKDApICsgMHgy
+OCkNCj4gPiAgI2RlZmluZSBHUElPM19QVURFTihHUElPX0JBU0UoMCkgKyAweDJDKQ0KPiA+IEBA
+IC04MCwxNyArODEsMTggQEANCj4gPiAgI2RlZmluZSBGVU5DX01VWChmLCBtKVwNCj4gPiAgeyAu
+ZnVuYyA9IGYsIC5tdXggPSBYV0FZX01VWF8jI20sIH0NCj4gPg0KDQooc25pcCkNCg0KPiA+ICAv
+KiAtLS0tLS0tLS0gIHBpbmNvbmYgcmVsYXRlZCBjb2RlIC0tLS0tLS0tLSAqLw0KPiA+ICBzdGF0
+aWMgaW50IHh3YXlfcGluY29uZl9nZXQoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiA+
+ICB1bnNpZ25lZCBwaW4sDQo+ID4gQEAgLTY5NSw5ICsxNTkzLDYgQEAgc3RhdGljIHN0cnVjdCBn
+cGlvX2NoaXAgeHdheV9jaGlwID0gew0KPiA+DQo+ID4NCj4gPiAgLyogLS0tLS0tLS0tIHJlZ2lz
+dGVyIHRoZSBwaW5jdHJsIGxheWVyIC0tLS0tLS0tLSAqLw0KPiA+IC1zdGF0aWMgY29uc3QgdW5z
+aWduZWQgeHdheV9leGluX3Bpbl9tYXBbXSA9IHtHUElPMCwgR1BJTzEsIEdQSU8yLA0KPiBHUElP
+MzksIEdQSU80NiwgR1BJTzl9Ow0KPiA+IC1zdGF0aWMgY29uc3QgdW5zaWduZWQgYXNlX2V4aW5f
+cGluc19tYXBbXSA9IHtHUElPNiwgR1BJTzI5LCBHUElPMH07DQo+ID4gLQ0KPiA+ICBzdGF0aWMg
+c3RydWN0IHBpbmN0cmxfeHdheV9zb2Mgew0KPiA+ICBpbnQgcGluX2NvdW50Ow0KPiA+ICBjb25z
+dCBzdHJ1Y3QgbHRxX21mcF9waW4gKm1mcDsNCj4gPiBAQCAtNzA4LDIxICsxNjAzLDQxIEBAIHN0
+YXRpYyBzdHJ1Y3QgcGluY3RybF94d2F5X3NvYyB7DQo+ID4gIGNvbnN0IHVuc2lnbmVkICpleGlu
+Ow0KPiA+ICB1bnNpZ25lZCBpbnQgbnVtX2V4aW47DQo+ID4gIH0gc29jX2NmZ1tdID0gew0KPiA+
+IC0vKiBsZWdhY3kgeHdheSAqLw0KPiA+ICsvKiBsZWdhY3kgeHdheSAoREVQUkVDQVRFRDogVXNl
+IFhXQVkgREFOVUJFIEZhbWlseSkgKi8NCj4gPiAge1hXQVlfTUFYX1BJTiwgeHdheV9tZnAsDQo+
+ID4gIHh3YXlfZ3JwcywgQVJSQVlfU0laRSh4d2F5X2dycHMpLA0KPiA+IC1kYW51YmVfZnVuY3Ms
+IEFSUkFZX1NJWkUoZGFudWJlX2Z1bmNzKSwNCj4gPiArbGVnYWN5X2RhbnViZV9mdW5jcywgQVJS
+QVlfU0laRShsZWdhY3lfZGFudWJlX2Z1bmNzKSwNCj4gPiAgeHdheV9leGluX3Bpbl9tYXAsIDN9
+LA0KPg0KPiBXaGF0IGlzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gdGhpcyBlbnRyeSBhbmQgdGhl
+IG5ldyBkYW51YmUgZW50cnk/IElzDQo+IHRoaXMgbGVnYXkgZW50cnkgbmVlZGVkIGhlcmUgb3Vy
+IGNhbiB3ZSBtYXAgdGhhdCB0byB0aGUgZGFudWJlIGVudHJ5Pw0KPiBJZg0KPiBpdCBpcyBub3Qg
+bmVlZGVkIHlvdSBzaG91bGQgcHJvYmFibHkgY2hhbmdlIGl0IGRpcmVjdGx5IGluIHRoZQ0KPiB4
+d2F5X21hdGNoIHRhYmxlLg0KDQpZZXMsIHlvdSBhcmUgcmlnaHQuIFdlIGNvdWxkIHNpbXBseSBt
+YXRjaCB0aGUgb2xkICJsYW50aXEscGluY3RybC14d2F5Ig0KY29tcGF0aWJsZSBzdHJpbmcgdG8g
+dGhlIG5ldyBkYW51YmUgZW50cnksIHdoZW4gd2UgYWxzbyBhZGQgdGhlIG9sZCAic3BpIg0KbXV4
+IGdyb3VwIChERVBSRUNBVEVEIGluIHRoZSBhc2UgY29kZSkgaGVyZSB0b28uDQoNCj4NCj4gPiAt
+LyogeHdheSB4cjkgc2VyaWVzICovDQo+ID4gKy8qIHh3YXkgeHI5IHNlcmllcyAoREVQUkVDQVRF
+RDogVXNlIFhXQVkgeFJYMTAwL3hSWDIwMCBGYW1pbHkpICovDQo+ID4gIHtYUjlfTUFYX1BJTiwg
+eHdheV9tZnAsDQo+ID4gIHh3YXlfZ3JwcywgQVJSQVlfU0laRSh4d2F5X2dycHMpLA0KPiA+ICB4
+cnhfZnVuY3MsIEFSUkFZX1NJWkUoeHJ4X2Z1bmNzKSwNCj4gPiAgeHdheV9leGluX3Bpbl9tYXAs
+IDZ9LA0KPiA+IC0vKiB4d2F5IGFzZSBzZXJpZXMgKi8NCj4gPiAte1hXQVlfTUFYX1BJTiwgYXNl
+X21mcCwNCj4gPiArLyogWFdBWSBBTUFaT04gRmFtaWx5ICovDQo+ID4gK3tBU0VfTUFYX1BJTiwg
+YXNlX21mcCwNCj4gPiAgYXNlX2dycHMsIEFSUkFZX1NJWkUoYXNlX2dycHMpLA0KPiA+ICBhc2Vf
+ZnVuY3MsIEFSUkFZX1NJWkUoYXNlX2Z1bmNzKSwNCj4gPiAtYXNlX2V4aW5fcGluc19tYXAsIDN9
+LA0KPiA+ICthc2VfZXhpbl9waW5fbWFwLCAzfSwNCj4gPiArLyogWFdBWSBEQU5VQkUgRmFtaWx5
+ICovDQo+ID4gK3tEQU5VQkVfTUFYX1BJTiwgZGFudWJlX21mcCwNCj4gPiArZGFudWJlX2dycHMs
+IEFSUkFZX1NJWkUoZGFudWJlX2dycHMpLA0KPiA+ICtkYW51YmVfZnVuY3MsIEFSUkFZX1NJWkUo
+ZGFudWJlX2Z1bmNzKSwNCj4gPiArZGFudWJlX2V4aW5fcGluX21hcCwgM30sDQo+ID4gKy8qIFhX
+QVkgeFJYMTAwIEZhbWlseSAqLw0KPiA+ICt7WFJYMTAwX01BWF9QSU4sIHhyeDEwMF9tZnAsDQo+
+ID4gK3hyeDEwMF9ncnBzLCBBUlJBWV9TSVpFKHhyeDEwMF9ncnBzKSwNCj4gPiAreHJ4MTAwX2Z1
+bmNzLCBBUlJBWV9TSVpFKHhyeDEwMF9mdW5jcyksDQo+ID4gK3hyeDEwMF9leGluX3Bpbl9tYXAs
+IDZ9LA0KPiA+ICsvKiBYV0FZIHhSWDIwMCBGYW1pbHkgKi8NCj4gPiAre1hSWDIwMF9NQVhfUElO
+LCB4cngyMDBfbWZwLA0KPiA+ICt4cngyMDBfZ3JwcywgQVJSQVlfU0laRSh4cngyMDBfZ3Jwcyks
+DQo+ID4gK3hyeDIwMF9mdW5jcywgQVJSQVlfU0laRSh4cngyMDBfZnVuY3MpLA0KPiA+ICt4cngy
+MDBfZXhpbl9waW5fbWFwLCA2fSwNCj4gPiArLyogWFdBWSB4UlgzMDAgRmFtaWx5ICovDQo+ID4g
+K3tYUlgzMDBfTUFYX1BJTiwgeHJ4MzAwX21mcCwNCj4gPiAreHJ4MzAwX2dycHMsIEFSUkFZX1NJ
+WkUoeHJ4MzAwX2dycHMpLA0KPiA+ICt4cngzMDBfZnVuY3MsIEFSUkFZX1NJWkUoeHJ4MzAwX2Z1
+bmNzKSwNCj4gPiAreHJ4MzAwX2V4aW5fcGluX21hcCwgNX0sDQo+ID4gIH07DQo+ID4NCj4gPiAg
+c3RhdGljIHN0cnVjdCBwaW5jdHJsX2dwaW9fcmFuZ2UgeHdheV9ncGlvX3JhbmdlID0gew0KPiA+
+IEBAIC03MzQsNiArMTY0OSwxMCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCB4
+d2F5X21hdGNoW10gPQ0KPiB7DQo+ID4gIHsgLmNvbXBhdGlibGUgPSAibGFudGlxLHBpbmN0cmwt
+eHdheSIsIC5kYXRhID0gJnNvY19jZmdbMF19LA0KPiA+ICB7IC5jb21wYXRpYmxlID0gImxhbnRp
+cSxwaW5jdHJsLXhyOSIsIC5kYXRhID0gJnNvY19jZmdbMV19LA0KPiA+ICB7IC5jb21wYXRpYmxl
+ID0gImxhbnRpcSxwaW5jdHJsLWFzZSIsIC5kYXRhID0gJnNvY19jZmdbMl19LA0KPiA+ICt7IC5j
+b21wYXRpYmxlID0gImxhbnRpcSxwaW5jdHJsLWRhbnViZSIsIC5kYXRhID0gJnNvY19jZmdbM119
+LA0KPiA+ICt7IC5jb21wYXRpYmxlID0gImxhbnRpcSxwaW5jdHJsLXhyeDEwMCIsIC5kYXRhID0g
+JnNvY19jZmdbNF19LA0KPiA+ICt7IC5jb21wYXRpYmxlID0gImxhbnRpcSxwaW5jdHJsLXhyeDIw
+MCIsIC5kYXRhID0gJnNvY19jZmdbNV19LA0KPiA+ICt7IC5jb21wYXRpYmxlID0gImxhbnRpcSxw
+aW5jdHJsLXhyeDMwMCIsIC5kYXRhID0gJnNvY19jZmdbNl19LA0KPg0KPiBVc2luZyBwb2ludGVy
+cyB0byBhbiBhcnJheSBlbGVtbnQgaGVyZSBsb29rcyBlcnJvciBwcm9uZSB0byBtZS4gV2h5IG5v
+dA0KPiB1c2Ugb25lIHN0YXRpYyBlbnRyeSBmb3IgZWFjaCBTb0MgYW5kIHJlZmVyZW5jZSBpdCBk
+aXJlY3RseS4NCj4NCj4gU29tZXRoaW5nIGxpa2UgdGhpczoNCj4NCj4gc3RhdGljIHN0cnVjdCBw
+aW5jdHJsX3h3YXlfc29jIHBpbmN0cmxfeHJ4MzAwID0gew0KPiBYUlgzMDBfTUFYX1BJTiwgeHJ4
+MzAwX21mcCwNCj4geHJ4MzAwX2dycHMsIEFSUkFZX1NJWkUoeHJ4MzAwX2dycHMpLA0KPiB4cngz
+MDBfZnVuY3MsIEFSUkFZX1NJWkUoeHJ4MzAwX2Z1bmNzKSwNCj4geHJ4MzAwX2V4aW5fcGluX21h
+cCwgNQ0KPiB9Ow0KPg0KPiBUaGVuIHlvdSBjYW4ganVzdCBkbyB0aGlzOg0KPiB7IC5jb21wYXRp
+YmxlID0gImxhbnRpcSxwaW5jdHJsLXhyeDMwMCIsIC5kYXRhID0gJnBpbmN0cmxfeHJ4MzAwfSwN
+Cj4NCg0KR29vZCBwb2ludCwgSSB3aWxsIGNoYW5nZSB0aGF0Lg0KDQpNYXJ0aW4NCg==
