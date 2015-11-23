@@ -1,161 +1,88 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH v2 4/6] clk: berlin: add clk support for berlin4ct
-Date: Mon, 23 Nov 2015 13:56:53 +0800
-Message-ID: <20151123135653.7e2919d7@xhacker>
-References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
-	<1448008952-1787-5-git-send-email-jszhang@marvell.com>
-	<564F8902.4000405@gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
+Date: Mon, 23 Nov 2015 11:43:05 +0530
+Message-ID: <5652AE71.4060609@codeaurora.org>
+References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-11-git-send-email-architt@codeaurora.org>
+ <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+ <564C981F.3040907@codeaurora.org>
+ <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <564F8902.4000405@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, antoine.tenart@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Nov 2015 21:56:34 +0100
-Sebastian Hesselbarth wrote:
-
-> On 20.11.2015 09:42, Jisheng Zhang wrote:
-> > This patch supports the gateclk and berlin-clk in berlin4ct SoC.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-> > ---
-> >  drivers/clk/berlin/Makefile        |  2 +-
-> >  drivers/clk/berlin/clk-berlin4ct.c | 97 ++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 98 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/clk/berlin/clk-berlin4ct.c
-> > 
-> > diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
-> > index fc92151..accfc3a 100644
-> > --- a/drivers/clk/berlin/Makefile
-> > +++ b/drivers/clk/berlin/Makefile
-> > @@ -1,5 +1,5 @@
-> >  obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
-> > -obj-y += pll.o clk.o gate.o
-> > +obj-y += pll.o clk.o gate.o clk-berlin4ct.o  
-> 
-> This will always compile clk-berlin4ct unconditionally on bg2x too.
-
-Indeed. this also always compile bg2x clk driver on BG4x too. Is it fine to
-introduce config option? any suggestion?
-
-> 
-> Also, keep the naming style.
-
-will do in v3
-
-> 
-> Sebastian
-> 
-> >  obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
-> >  obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
-> >  obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
-> > diff --git a/drivers/clk/berlin/clk-berlin4ct.c b/drivers/clk/berlin/clk-berlin4ct.c
-> > new file mode 100644
-> > index 0000000..0d994a4
-> > --- /dev/null
-> > +++ b/drivers/clk/berlin/clk-berlin4ct.c
-> > @@ -0,0 +1,97 @@
-> > +/*
-> > + * Copyright (c) 2015 Marvell Technology Group Ltd.
-> > + *
-> > + * Author: Jisheng Zhang <jszhang@marvell.com>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#include <linux/clk-provider.h>
-> > +
-> > +#include "clk.h"
-> > +
-> > +static struct clk_onecell_data gateclk_data;
-> > +static struct clk_onecell_data clk_data;
-> > +
-> > +static const struct gateclk_desc berlin4ct_gates[] __initconst = {
-> > +	{ "tspsysclk",		"perifsysclk",	0 },
-> > +	{ "usb0coreclk",	"perifsysclk",	1 },
-> > +	{ "zspsysclk",		"perifsysclk",	2 },
-> > +	{ "sdiosysclk",		"perifsysclk",	3 },
-> > +	{ "ethcoreclk",		"perifsysclk",	4 },
-> > +	{ "pcie0sys",		"perifsysclk",	6 },
-> > +	{ "sata0core",		"perifsysclk",	7 },
-> > +	{ "nfcsysclk",		"perifsysclk",	8 },
-> > +	{ "emmcsysclk",		"perifsysclk",	9 },
-> > +	{ "ihb0sysclk",		"perifsysclk",	10 },
-> > +};
-> > +
-> > +static void __init berlin4ct_gateclk_setup(struct device_node *np)
-> > +{
-> > +	int n = ARRAY_SIZE(berlin4ct_gates);
-> > +
-> > +	berlin_gateclk_setup(np, berlin4ct_gates, &gateclk_data, n);
-> > +}
-> > +CLK_OF_DECLARE(berlin4ct_gateclk, "marvell,berlin4ct-gateclk",
-> > +	       berlin4ct_gateclk_setup);
-> > +
-> > +static const struct clk_desc berlin4ct_descs[] __initconst = {
-> > +	{ "cpufastrefclk",	0x0 },
-> > +	{ "memfastrefclk",	0x4 },
-> > +	{ "cfgclk",		0x20,	CLK_IGNORE_UNUSED },
-> > +	{ "perifsysclk",	0x24,	CLK_IGNORE_UNUSED },
-> > +	{ "hbclk",		0x28 },
-> > +	{ "atbclk",		0x2c },
-> > +	{ "decoderclk",		0x40 },
-> > +	{ "decoderm3clk",	0x44 },
-> > +	{ "decoderpcubeclk",	0x48 },
-> > +	{ "encoderclk",		0x4c },
-> > +	{ "ovpcoreclk",		0x50 },
-> > +	{ "gfx2dcoreclk",	0x60 },
-> > +	{ "gfx3dcoreclk",	0x64 },
-> > +	{ "gfx3dshclk",		0x68 },
-> > +	{ "gfx3dsysclk",	0x6c },
-> > +	{ "gfx2dsysclk",	0x70 },
-> > +	{ "aviosysclk",		0x80 },
-> > +	{ "vppsysclk",		0x84 },
-> > +	{ "eddcclk",		0x88 },
-> > +	{ "aviobiuclk",		0x8c },
-> > +	{ "zspclk",		0xa0 },
-> > +	{ "tspclk",		0xc0 },
-> > +	{ "tsprefclk",		0xc4 },
-> > +	{ "ndsclk",		0xc8 },
-> > +	{ "nocsclk",		0xcc },
-> > +	{ "apbcoreclk",		0xd0,	CLK_IGNORE_UNUSED },
-> > +	{ "emmcclk",		0xe0 },
-> > +	{ "sd0clk",		0xe4 },
-> > +	{ "sd1clk",		0xe8 },
-> > +	{ "dllmstrefclk",	0xec },
-> > +	{ "gethrgmiiclk",	0xf0 },
-> > +	{ "gethrgmiisysclk",	0xf4 },
-> > +	{ "usim0clk",		0x100 },
-> > +	{ "pcietestclk",	0x110 },
-> > +	{ "usb2testclk",	0x120 },
-> > +	{ "usb3testclk",	0x124 },
-> > +	{ "usb3coreclk",	0x128 },
-> > +	{ "nfceccclk",		0x130 },
-> > +	{ "bcmclk",		0x140 },
-> > +};
-> > +
-> > +static void __init berlin4ct_clk_setup(struct device_node *np)
-> > +{
-> > +	int n = ARRAY_SIZE(berlin4ct_descs);
-> > +
-> > +	berlin_clk_setup(np, berlin4ct_descs, &clk_data, n);
-> > +}
-> > +CLK_OF_DECLARE(berlin4ct_clk, "marvell,berlin4ct-clk",
-> > +	       berlin4ct_clk_setup);
-> >   
-> 
-
+CgpPbiAxMS8yMS8yMDE1IDE6MjkgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+ICtTdGVwaGVuCj4K
+PiBPbiBXZWQsIE5vdiAxOCwgMjAxNSBhdCA5OjI0IEFNLCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0
+QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPj4gSGkgUm9iLAo+Pgo+PiBPbiAxMS8xOC8yMDE1IDY6
+NDggUE0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pj4KPj4+ICtkdCBsaXN0Cj4+Pgo+Pj4gT24gV2Vk
+LCBOb3YgMTgsIDIwMTUgYXQgNDo1NSBBTSwgQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVy
+b3JhLm9yZz4KPj4+IHdyb3RlOgo+Pj4+Cj4+Pj4gQWRkIGFkZGl0aW9uYWwgcHJvcGVydHkgaW5m
+byBuZWVkZWQgZm9yIERTSXYyIERULgo+Pj4KPj4+Cj4+PiBQbGVhc2UgdXNlIGdldF9tYWludGFp
+bmVycy5wbC4KPj4KPj4KPj4gU29ycnkgYWJvdXQgdGhhdCwgbWlzc2VkIG91dCBkb2luZyB0aGF0
+IHBvc3RpbmcgdGhpcyB0aW1lLgo+Pgo+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
+ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+IC0tLQo+Pj4+ICAgIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IHwgMTAgKysrKysrKysr
+LQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
+Pj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9tc20vZHNpLnR4dAo+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKPj4+PiBpbmRleCBmMzQ0YjllLi5jYTY1YTM0IDEwMDY0
+NAo+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
+bS9kc2kudHh0Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvbXNtL2RzaS50eHQKPj4+PiBAQCAtMTMsMTggKzEzLDI1IEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4+Pj4gICAgLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUgPCZtbWNjIE1EU1NfR0RT
+Qz4uCj4+Pj4gICAgLSBjbG9ja3M6IGRldmljZSBjbG9ja3MKPj4+PiAgICAgIFNlZSBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2tzL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IK
+Pj4+PiBkZXRhaWxzLgo+Pj4+IC0tIGNsb2NrLW5hbWVzOiB0aGUgZm9sbG93aW5nIGNsb2NrcyBh
+cmUgcmVxdWlyZWQ6Cj4+Pj4gKy0gY2xvY2stbmFtZXM6IHRoZXNlIHZhcnkgYmFzZWQgb24gdGhl
+IERTSSB2ZXJzaW9uLiBGb3IgRFNJNkc6Cj4+Pj4gICAgICAqICJidXNfY2xrIgo+Pj4+ICAgICAg
+KiAiYnl0ZV9jbGsiCj4+Pj4gKyAgKiAiYnl0ZV9jbGtfc3JjCj4+Pgo+Pj4KPj4+IFRoaXMgc291
+bmRzIGxpa2UgdGhlIHBhcmVudCBvZiBieXRlX2Nsay4gSXMgdGhhdCByZWFsbHkgYSBjbG9jayB3
+aXRoaW4KPj4+IHRoZSBibG9jaz8KPj4KPj4KPj4gYnl0ZV9jbGtfc3JjIGlzbid0IGluIHRoZSBi
+bG9jaywgYnV0IGJ5dGVfY2xrX3NyYydzIHBhcmVudCBpcyBvbmUgb2YKPj4gdGhlIFBMTHMgaW4g
+dGhpcyBibG9jay4gV2UgdGFrZSB0aGlzIGNsb2NrIHNvIHRoYXQgd2UgY2FuIHJlLXBhcmVudAo+
+PiBpdCB0byBhbiBhcHByb3ByaWF0ZSBQTEwuIFRoZSBkZWNpc2lvbiBvZiB3aGF0IFBMTCB0byBj
+aG9vc2UgbmVlZHMgdG8KPj4gYmUgZG9uZSBieSB0aGUgRFNJIGJsb2NrJ3MgZHJpdmVyLgo+Cj4g
+U2VlbXMgbGlrZSBhYnVzZSB0byBtZS4gVGhlIGxpc3Qgb2YgY2xvY2tzIHNob3VsZCBtYXRjaCB3
+aGF0IGFyZQo+IGlucHV0cyB0byB0aGUgYmxvY2ssIG5vdCB3aGF0IHRoZSBkcml2ZXIgaGFwcGVu
+cyB0byBuZWVkLiBXaXRob3V0IGEKPiBmdWxsIHVuZGVyc3RhbmRpbmcgb2YgdGhlIGNsb2NrIHRy
+ZWUgaGVyZSwgSSBkb24ndCBoYXZlIGEgc3VnZ2VzdGlvbi4KPiBNYXliZSBTdGVwaGVuIGRvZXMu
+CgpXZSBkb24ndCBuZWVkIHNwZWNpZnkgYnl0ZV9jbGtfc3JjIChhbmQgb3RoZXIgeHl6X2Nsa19z
+cmMgY2xvY2tzKSB2aWEKRFQuIFRoZXJlIGlzIGEgc3RhdGljIGxpbmsgc2V0IHVwIGJldHdlZW4g
+Ynl0ZV9jbGsgYW5kIGJ5dGVfY2xrX3NyYyBieQpvdXIgY2xvY2sgZHJpdmVyIHRoYXQgbmV2ZXIg
+Y2hhbmdlcy4gV2UgY2FuIHJldHJpZXZlIGl0IGluIHRoZSBkcml2ZXIKaXRzZWxmIHVzaW5nIGNs
+a19nZXRfcGFyZW50KGJ5dGVfY2xrKS4gVGhpcyB3YXkgd2Ugc3RpY2sgdG8gb25seQppbnB1dCBj
+bG9ja3MuCgpTdGVwaGVuLCBkb2VzIHRoYXQgc291bmQgb2theT8KCj4KPj4+PiAgICAgICogImNv
+cmVfY2xrIgo+Pj4+ICAgICAgKiAiY29yZV9tbXNzX2NsayIKPj4+PiAgICAgICogImlmYWNlX2Ns
+ayIKPj4+PiAgICAgICogIm1kcF9jb3JlX2NsayIKPj4+PiAgICAgICogInBpeGVsX2NsayIKPj4+
+PiArICAqICJwaXhlbF9jbGtfc3JjIgo+Pj4+ICsgIEZvciBEU0l2Miwgd2UgbmVlZCBhIGZldyBt
+b3JlOgo+Pj4KPj4+Cj4+PiBXaGF0IGlzIHRoZSBvdmVyYWxsIG9yZGVyIG9mIGNsb2Nrcz8gQXMg
+bGlzdGVkPwo+Pgo+Pgo+PiBPcmRlciBpbiB3aGljaCB0aGUgZHJpdmVyIGRvZXMgY2xrX2dldD8g
+SXQgdXNlcyB0aGUgY2xvY2sKPj4gbmFtZSB0byBnZXQgZWFjaCBvbmUgaW5kaXZpZHVhbGx5LCBz
+byB0aGUgb3JkZXIgZG9lc24ndCBtYXR0ZXIKPj4gYXMgc3VjaC4KPgo+IFRoZSBvcmRlciBpbiBE
+VC4gWW91IG1heSB1c2UgdGhlIG5hbWVzLCBidXQgdGhlIG9yZGVyIHNob3VsZCBzdGlsbCBiZSBz
+cGVjaWZpZWQuCgpPa2F5LiBJJ2xsIGNyb3NzIGNoZWNrIGFuZCBtYWtlIHN1cmUgdGhlIG9yZGVy
+IGlzIGFzIGluIG91ciBEVCBmaWxlcy4KCkFyY2hpdAoKPgo+IFJvYgo+IC0tCj4gVG8gdW5zdWJz
+Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFy
+bS1tc20iIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5l
+bC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21h
+am9yZG9tby1pbmZvLmh0bWwKPgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMu
+IGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29s
+bGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
