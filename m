@@ -1,62 +1,115 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 1/2] ASoC: da7218: Add bindings documentation for
- DA7218 audio codec
-Date: Mon, 23 Nov 2015 11:51:39 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D460ED28@SW-EX-MBX01.diasemi.com>
-References: <cover.1447941395.git.Adam.Thomson.Opensource@diasemi.com>
- <add67c0ebac7a516d3cf515fea10a08b7cabadbc.1447941395.git.Adam.Thomson.Opensource@diasemi.com>
- <20151120155351.GA13917@rob-hp-laptop>
+From: Salil Mehta <mehta.salil.lnk@gmail.com>
+Subject: Re: [PATCH V3 net-next 4/5] net:hns: Add support of ethtool TSO set
+ option for Hip06 in HNS
+Date: Mon, 23 Nov 2015 12:05:06 +0000
+Message-ID: <565300F2.7030308@gmail.com>
+References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com>
+ <1447966706-16219-5-git-send-email-salil.mehta@huawei.com>
+ <564F2915.1090507@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151120155351.GA13917@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <564F2915.1090507@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Salil Mehta <salil.mehta@huawei.com>, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTm92ZW1iZXIgMjAsIDIwMTUgMTU6NTQsIFJvYiBIZXJyaW5nIHdyb3RlOg0KDQo+ID4gKy0g
-ZGxnLG1pY2JpYXMxLWx2bC1taWxsaXZvbHQgOiBWb2x0YWdlIChtVikgZm9yIE1pYyBCaWFzIDEN
-Cj4gPiArCVs8MTIwMD4sIDwxNjAwPiwgPDE4MDA+LCA8MjAwMD4sIDwyMjAwPiwgPDI0MDA+LCA8
-MjYwMD4sIDwyODAwPiwNCj4gPDMwMDA+XQ0KPiA+ICstIGRsZyxtaWNiaWFzMi1sdmwtbWlsbGl2
-b2x0IDogVm9sdGFnZSAobVYpIGZvciBNaWMgQmlhcyAyDQo+ID4gKwlbPDEyMDA+LCA8MTYwMD4s
-IDwxODAwPiwgPDIwMDA+LCA8MjIwMD4sIDwyNDAwPiwgPDI2MDA+LCA8MjgwMD4sDQo+IDwzMDAw
-Pl0NCj4gPiArLSBkbGcsbWljMS1hbXAtaW4tc2VsIDogTWljMSBpbnB1dCBzb3VyY2UgdHlwZQ0K
-PiA+ICsJWyJkaWZmIiwgInNlX3AiLCAic2VfbiJdDQo+ID4gKy0gZGxnLG1pYzItYW1wLWluLXNl
-bCA6IE1pYzIgaW5wdXQgc291cmNlIHR5cGUNCj4gPiArCVsiZGlmZiIsICJzZV9wIiwgInNlX24i
-XQ0KPiA+ICstIGRsZyxkbWljMS1kYXRhLXNlbCA6IERNSUMxIGNoYW5uZWwgc2VsZWN0IGJhc2Vk
-IG9uIGNsb2NrIGVkZ2UuDQo+ID4gKwlbImxyaXNlX3JmYWxsIiwgImxmYWxsX3JyaXNlIl0NCj4g
-PiArLSBkbGcsZG1pYzEtc2FtcGxlcGhhc2UgOiBXaGVuIHRvIHNhbXBsZSBhdWRpbyBmcm9tIERN
-SUMxLg0KPiA+ICsJWyJvbl9jbGtlZGdlIiwgImJldHdlZW5fY2xrZWRnZSJdDQo+ID4gKy0gZGxn
-LGRtaWMxLWNsa3JhdGUtaGVydHogOiBETWljMSBjbG9jayBmcmVxdWVuY3kgKEh6KS4NCj4gDQo+
-IC1oeg0KPiANCj4gRG9jdW1lbnRpbmcgdGhlIHVuaXQgc3VmZml4ZXMgaXMgb24gbXkgdG9kbyBs
-aXN0Li4uDQoNClNvIGlzIHRoZSBnZW5lcmFsIHJ1bGUgdG8gdXNlIGFiYnJldmlhdGVkIHN1ZmZp
-eGVzLCBhcGFydCBmcm9tIG1pbGxpdm9sdHMsDQptaWNyb3ZvbHRzLCBldGMsIG9yIGFyZSB0aGVy
-ZSBzb21lIG90aGVyIHJ1bGVzIHRoYXQgSSBzaG91bGQgYmUgYXdhcmUgb2Y/IEkNCmRvbid0IHdh
-bnQgdG8gaGF2ZSB0byBrZWVwIHJlLXN1Ym1pdHRpbmcgcGF0Y2hlcyBpbiB0aGUgZnV0dXJlIGJl
-Y2F1c2UgSSdtIG5vdA0KZm9sbG93aW5nIGEgcnVsZSBJIGhhdmUgbm8gd2F5IG9mIGtub3dpbmcg
-YWJvdXQ/DQoNCj4gPiArCVs8MTUwMDAwMD4sIDwzMDAwMDAwPl0NCj4gPiArLSBkbGcsZG1pYzIt
-ZGF0YS1zZWwgOiBETWljMiBjaGFubmVsIHNlbGVjdCBiYXNlZCBvbiBjbG9jayBlZGdlLg0KPiA+
-ICsJWyJscmlzZV9yZmFsbCIsICJsZmFsbF9ycmlzZSJdDQo+ID4gKy0gZGxnLGRtaWMyLXNhbXBs
-ZXBoYXNlIDogV2hlbiB0byBzYW1wbGUgYXVkaW8gZnJvbSBETWljMi4NCj4gPiArCVsib25fY2xr
-ZWRnZSIsICJiZXR3ZWVuX2Nsa2VkZ2UiXQ0KPiA+ICstIGRsZyxkbWljMi1jbGtyYXRlLWhlcnR6
-IDogRE1pYzIgY2xvY2sgZnJlcXVlbmN5IChIeikuDQo+IA0KPiAtaHoNCj4gDQo+ID4gKwlbPDE1
-MDAwMDA+LCA8MzAwMDAwMD5dDQo+ID4gKy0gZGxnLGhwLWRpZmYtc2luZ2xlLXN1cHBseSA6IEJv
-b2xlYW4gZmxhZywgdXNlIHNpbmdsZSBzdXBwbHkgZm9yIEhQDQo+ID4gKwkJCSAgICAgIChEQTcy
-MTcgb25seSkNCj4gPiArDQo+ID4gKz09PT09PQ0KPiA+ICsNCj4gPiArT3B0aW9uYWwgQ2hpbGQg
-bm9kZSAtICdkYTcyMThfaHBsZGV0JyAoREE3MjE4IG9ubHkpOg0KPiA+ICsNCj4gPiArT3B0aW9u
-YWwgcHJvcGVydGllczoNCj4gPiArLSBkbGcsamFjay1yYXRlLW1pY3Jvc2Vjb25kIDogVGltZSBi
-ZXR3ZWVuIGphY2sgZGV0ZWN0IG1lYXN1cmVtZW50cyAodXMpDQo+IA0KPiAtdXMNCj4gDQo+IENv
-bXBsZXRlbHkgY29uc2lzdGVudCwgaXNuJ3QgaXQuIFdoeSB3ZSBkaWQgLW1pY3Jvdm9sdCBJIGRv
-bid0IGtub3cuDQoNCkkgd291bGQgZ3Vlc3MgdGhpcyBpcyBkdWUgdG8gdGhlIGFsbCBsb3dlci1j
-YXNlIHJ1bGUsIGFzICd1dicgZG9lc24ndCBsb29rIHJpZ2h0DQp3aGVuIGluZGljYXRpbmcgbWlj
-cm92b2x0cy4gTWF5YmUgdGhlIGxvd2VyLWNhc2UgcnVsZSBzaG91bGQgbm90IGFwcGx5IGZvcg0K
-YWJicmV2aWF0aW9ucyBsaWtlIHRoaXMgc28gd2UgY2FuIHVzZSAnbVYnLCAndVYnLCBldGMuLi4/
-IEluIHRoZW9yeSB0aGVuIGl0DQpjb3VsZCBiZSAnSHonIGFzIHdlbGwsIGlmIHdlJ3JlIGJlaW5n
-IGFic29sdXRlbHkgY29ycmVjdC4NCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+On 20/11/15 14:07, Sergei Shtylyov wrote:
+> On 11/19/2015 11:58 PM, Salil Mehta wrote:
+>
+>> From: Salil <salil.mehta@huawei.com>
+>>
+>> This patch adds the support of ethtool TSO option to V1 patch,
+>> meant to add support of Hip06 SoC to HNS
+>>
+>> Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+>> Signed-off-by: lisheng <lisheng011@huawei.com>
+>> ---
+>>   drivers/net/ethernet/hisilicon/hns/hns_enet.c |   47 
+>> +++++++++++++++++++++++++
+>>   1 file changed, 47 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c 
+>> b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+>> index 055e14c..a0763ab 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+>> @@ -1386,6 +1386,51 @@ static int hns_nic_change_mtu(struct 
+>> net_device *ndev, int new_mtu)
+>>       return ret;
+>>   }
+>>
+>> +static int hns_nic_set_features(struct net_device *netdev,
+>> +                netdev_features_t features)
+>> +{
+>> +    struct hns_nic_priv *priv = netdev_priv(netdev);
+>> +    struct hnae_handle *h = priv->ae_handle;
+>> +
+>> +    switch (priv->enet_ver) {
+>> +    case AE_VERSION_1:
+>> +        if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6))
+>
+>         if ((features & (NETIF_F_TSO| NETIF_F_TSO6))
+Thanks. changed in V4 PATCH.
+>
+>> +            netdev_info(netdev, "enet v1 do not support tso!\n");
+>> +    break;
+>
+>    The *break* should have the same indentation level as *if*.
+Thanks for pointing out. changed in V4 PATCH.
+>
+>> +    default:
+>> +        if ((features & NETIF_F_TSO) || (features & NETIF_F_TSO6)) {
+>
+>     if ((features & (NETIF_F_TSO| NETIF_F_TSO6))
+>
+>> +            priv->ops.fill_desc = fill_tso_desc;
+>> +            priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tso;
+>> +            /* The chip only support 7*4096 */
+>> +            netif_set_gso_max_size(netdev, 7 * 4096);
+>> +            h->dev->ops->set_tso_stats(h, 1);
+>> +        } else {
+>> +            priv->ops.fill_desc = fill_v2_desc;
+>> +            priv->ops.maybe_stop_tx = hns_nic_maybe_stop_tx;
+>> +            h->dev->ops->set_tso_stats(h, 0);
+>> +        }
+>> +    break;
+>
+>    Same here.
+Thanks for pointing out. changed in V4 PATCH.
+>
+>> +    }
+>> +    netdev->features = features;
+>> +    return 0;
+>> +}
+>> +
+>> +static netdev_features_t hns_nic_fix_features(
+>> +        struct net_device *netdev, netdev_features_t features)
+>> +{
+>> +    struct hns_nic_priv *priv = netdev_priv(netdev);
+>> +
+>> +    switch (priv->enet_ver) {
+>> +    case AE_VERSION_1:
+>> +        features &= ~(NETIF_F_TSO | NETIF_F_TSO6 |
+>> +                NETIF_F_HW_VLAN_CTAG_FILTER);
+>> +        break;
+>> +    default:
+>> +        break;
+>> +    }
+>
+>    Here it's indented correctly.
+Got it, thanks!
+>
+>> +    return features;
+>> +}
+>> +
+>>   /**
+>>    * nic_set_multicast_list - set mutl mac address
+>>    * @netdev: net device
+> [...]
+>
+> MBR, Sergei
+>
