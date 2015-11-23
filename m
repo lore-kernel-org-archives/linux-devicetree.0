@@ -1,132 +1,68 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: berlin4ct: enable all i2c nodes for the
- STB board
-Date: Mon, 23 Nov 2015 10:49:58 +0800
-Message-ID: <20151123104958.09420cee@xhacker>
-References: <1448012821-7413-1-git-send-email-jszhang@marvell.com>
-	<1448012821-7413-3-git-send-email-jszhang@marvell.com>
-	<564F8E64.7020606@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: vf610: fix clock definition for SAI2
+Date: Mon, 23 Nov 2015 11:04:05 +0800
+Message-ID: <20151123030405.GC13744@tiger>
+References: <1445141122-14183-1-git-send-email-stefan@agner.ch>
+ <1445141122-14183-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564F8E64.7020606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1445141122-14183-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, zidan.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Sebastian,
+On Sat, Oct 17, 2015 at 09:05:21PM -0700, Stefan Agner wrote:
+> So far, only the bus clock has been assigned, but in reality the
+> SAI IP has for clock inputs. The driver has been updated to
 
-On Fri, 20 Nov 2015 22:19:32 +0100
-Sebastian Hesselbarth wrote:
+s/for/four
 
-> On 20.11.2015 10:47, Jisheng Zhang wrote:
-> > Enable all i2c nodes for the Marvell berlin BG4CT STB board.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/marvell/berlin4ct-stb.dts | 50 +++++++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-> > index 348c37e..9e8e2e0 100644
-> > --- a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-> > @@ -61,6 +61,56 @@
-> >  	};
-> >  };
-> >  
-> > +&avio_pinctrl {
-> > +	twsi1_pmux: twsi1-pmux {
-> > +		groups = "TX_EDDC_SCL", "TX_EDDC_SDA";
-> > +		function = "tx_eddc";
-> > +	};  
-> 
-> Please keep the pinmux sub-nodes in the SoC dtsi as long
-> as they are not strictly board specific, i.e. gpios.
+Will fix it up when applying.
 
-Hmm, seems all boards configure this pin for EDDC usage, so it's fine
-to move to soc
+Shawn
 
+> make use of the additional clock inputs by c3ecef21c3f2 ("ASoC:
+> fsl_sai: add sai master mode support"). Due to a bug in the
+> clock tree, the audio clock has been enabled none the less by
+> the specified bus clock (see "ARM: imx: clk-vf610: fix SAI
+> clock tree"), which made master mode even without the proper
+> clock assigned working.
 > 
-> > +};
-> > +
-> > +&i2c0 {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&twsi0_pmux>;
-> > +	pinctrl-names = "default";  
+> This patch completes the clock definition for SAI2. On Vybrid,
+> only two MCLK out of the four options are available (the first
+> being the bus clock itself). See chapter 8.10.1.2.3 of the
+> Vybrid Reference manual ("SAI transmitter and receiver options
+> for MCLK selection"). Note: The audio clocks are only required
+> in master mode.
 > 
-> If there is only one (or a default) pinctrl-0 option for i2c0,
-> you can also move it to the SoC dtsi.
-
-Some board may not use i2c0, i2c2, i2c3 host and use the pin as gpio for other
-purpose. Considering the above twsi1_pmux usage, what's the better solution?
-move twsi1_pmux to soc's dtsi and leave i2c0, i2c2, i2c3 pinctrl in board dts?
-
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> > +};
-> > +
-> > +&i2c1 {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&twsi1_pmux>;
-> > +	pinctrl-names = "default";  
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 6865137..c2a4d1c 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -178,8 +178,10 @@
+>  				compatible = "fsl,vf610-sai";
+>  				reg = <0x40031000 0x1000>;
+>  				interrupts = <86 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clks VF610_CLK_SAI2>;
+> -				clock-names = "sai";
+> +				clocks = <&clks VF610_CLK_SAI2>,
+> +					<&clks VF610_CLK_SAI2_DIV>,
+> +					<&clks 0>, <&clks 0>;
+> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+>  				dma-names = "tx", "rx";
+>  				dmas = <&edma0 0 21>,
+>  					<&edma0 0 20>;
+> -- 
+> 2.6.1
 > 
-> ditto.
-> 
-> > +};
-> > +
-> > +&i2c2 {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&twsi2_pmux>;
-> > +	pinctrl-names = "default";  
-> 
-> ditto.
-> 
-> > +};
-> > +
-> > +&i2c3 {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&twsi3_pmux>;
-> > +	pinctrl-names = "default";  
-> 
-> ditto.
-> 
-> > +};
-> > +
-> > +&soc_pinctrl {
-> > +	twsi0_pmux: twsi0-pmux {
-> > +		groups = "TW0_SCL", "TW0_SDA";
-> > +		function = "tw0";
-> > +	};  
-> 
-> Same comment about moving pinmux nodes to SoC dtsi.
-> 
-> > +};
-> > +
-> > +&system_pinctrl {
-> > +	twsi2_pmux: twsi2-pmux {
-> > +		groups = "SM_TW2_SCL", "SM_TW2_SDA";
-> > +		function = "tw2";
-> > +	};
-> > +
-> > +	twsi3_pmux: twsi3-pmux {
-> > +		groups = "SM_TW3_SCL", "SM_TW3_SDA";
-> > +		function = "tw3";
-> > +	};  
-> 
-> ditto.
-> 
-> Sebastian
-> 
-> > +};
-> > +
-> >  &uart0 {
-> >  	status = "okay";
-> >  };
-> >   
-> 
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
