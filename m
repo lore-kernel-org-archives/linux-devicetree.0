@@ -1,109 +1,205 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/8] arm: dts: berlin2q: add watchdog nodes
-Date: Mon, 23 Nov 2015 12:59:53 +0800
-Message-ID: <20151123125953.5c30a0ef@xhacker>
-References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
-	<1447672194-483-2-git-send-email-jszhang@marvell.com>
-	<564E3549.2050700@gmail.com>	<20151120113414.1aa1e48e@xhacker>
-	<564F8062.8070609@gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] phy-sun4i-usb: Add support for the host
+ usb-phys found on the H3 SoC
+Date: Mon, 23 Nov 2015 10:40:45 +0530
+Message-ID: <56529FD5.5020305@ti.com>
+References: <1448191764-11454-1-git-send-email-hdegoede@redhat.com>
+Reply-To: kishon-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <564F8062.8070609-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBXV7ZKZAKGQE3EZAPMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1448191764-11454-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Nov 2015 21:19:46 +0100
-Sebastian Hesselbarth wrote:
+Hi,
 
-> On 20.11.2015 04:34, Jisheng Zhang wrote:
-> > On Thu, 19 Nov 2015 21:47:05 +0100
-> > Sebastian Hesselbarth wrote:  
-> >> On 16.11.2015 12:09, Jisheng Zhang wrote:  
-> >>> The Marvell Berlin BG2Q has 3 watchdogs which are compatible with the
-> >>> snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
-> >>> corresponding device tree nodes.
-> >>>
-> >>> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >>> ---
-> >>>  arch/arm/boot/dts/berlin2q.dtsi | 24 ++++++++++++++++++++++++
-> >>>  1 file changed, 24 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-> >>> index a3ecde5..fac4315 100644
-> >>> --- a/arch/arm/boot/dts/berlin2q.dtsi
-> >>> +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> >>> @@ -483,6 +483,30 @@
-> >>>  			ranges = <0 0xfc0000 0x10000>;
-> >>>  			interrupt-parent = <&sic>;
-> >>>  
-> >>> +			wdt0: watchdog@1000 {
-> >>> +				compatible = "snps,dw-wdt";
-> >>> +				reg = <0x1000 0x100>;
-> >>> +				clocks = <&refclk>;
-> >>> +				interrupts = <0>;
-> >>> +				status = "disabled";    
-> >>
-> >> as the watchdogs are internal and cannot be clock gated
-> >> at all, how about we remove the status = "disabled" and
-> >> make them always available?  
-> > 
-> > there are two issues here:
-> > 
-> > 1. the dw-wdt can't support multiple variants now. I have rewrite the driver
-> > with watchdog core supplied framework, but the patch isn't sent out and
-> > may be need time to clean up and review.  
+On Sunday 22 November 2015 04:59 PM, Hans de Goede wrote:
+> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 > 
-> Ok.
+> Note this commit only adds support for phys 1-3, phy 0, the otg phy, is
+> not yet (fully) supported after this commit.
 > 
-> > 2. not all dw-wdt devices are available and functional. This depends on
-> > board design and configuration.  
+> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Change break; after dev_err() to return, as intended, fixing a compiler
+>  warning (the dev_err case should never be reached).
+> ---
+>  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
+>  drivers/phy/phy-sun4i-usb.c                        | 67 +++++++++++++++++-----
+>  2 files changed, 53 insertions(+), 15 deletions(-)
 > 
-> I understand that "board design and configuration" may hinder the wdt
-> to issue a hard reset. But all others are able to issue a soft reset
-> or just an interrupt, right?
-> 
-> So, I still don't see why we should disable wdt nodes by default
-> except for the driver issue above.
-> 
-> > So IMHO status=disabled and patch5-8 is necessary, what do you think?  
-> 
-> No. I'd agree to enable wdt0 by default and leave wdt[1,2] disabled
-> because of the driver issue. Patches 5-8 only enable wdt0 anyway.
+> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> index 0cebf74..95736d7 100644
+> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>    * allwinner,sun7i-a20-usb-phy
+>    * allwinner,sun8i-a23-usb-phy
+>    * allwinner,sun8i-a33-usb-phy
+> +  * allwinner,sun8i-h3-usb-phy
+>  - reg : a list of offset + length pairs
+>  - reg-names :
+>    * "phy_ctrl"
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index b12964b..11bc9cd 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -46,6 +46,9 @@
+>  #define REG_PHYBIST			0x08
+>  #define REG_PHYTUNE			0x0c
+>  #define REG_PHYCTL_A33			0x10
+> +#define REG_PHY_UNK_H3			0x20
+> +
+> +#define REG_PMU_UNK_H3			0x10
+>  
+>  #define PHYCTL_DATA			BIT(7)
+>  
+> @@ -79,7 +82,7 @@
+>  #define PHY_DISCON_TH_SEL		0x2a
+>  #define PHY_SQUELCH_DETECT		0x3c
+>  
+> -#define MAX_PHYS			3
+> +#define MAX_PHYS			4
 
-That's fine.
+Is it 4 only for h3-usb-phy or for others too? If so, can we add it in driver data?
+>  
+>  /*
+>   * Note do not raise the debounce time, we must report Vusb high within 100ms
+> @@ -88,12 +91,19 @@
+>  #define DEBOUNCE_TIME			msecs_to_jiffies(50)
+>  #define POLL_TIME			msecs_to_jiffies(250)
+>  
+> +enum sun4i_usb_phy_type {
+> +	sun4i_a10_phy,
+> +	sun8i_a33_phy,
+> +	sun8i_h3_phy
+> +};
+> +
+>  struct sun4i_usb_phy_data {
+> +	struct device *dev;
+>  	void __iomem *base;
+>  	struct mutex mutex;
+>  	int num_phys;
+>  	u32 disc_thresh;
+> -	bool has_a33_phyctl;
+> +	enum sun4i_usb_phy_type type;
+>  	struct sun4i_usb_phy {
+>  		struct phy *phy;
+>  		void __iomem *pmu;
+> @@ -164,12 +174,18 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+>  
+>  	mutex_lock(&phy_data->mutex);
+>  
+> -	if (phy_data->has_a33_phyctl) {
+> +	switch (phy_data->type) {
+> +	case sun4i_a10_phy:
+> +		phyctl = phy_data->base + REG_PHYCTL_A10;
+> +		break;
+> +	case sun8i_a33_phy:
+>  		phyctl = phy_data->base + REG_PHYCTL_A33;
+>  		/* A33 needs us to set phyctl to 0 explicitly */
+>  		writel(0, phyctl);
+> -	} else {
+> -		phyctl = phy_data->base + REG_PHYCTL_A10;
+> +		break;
+> +	case sun8i_h3_phy:
+> +		dev_err(phy_data->dev, "H3 usb_phy_write is not supported\n");
+> +		return;
+>  	}
+>  
+>  	for (i = 0; i < len; i++) {
+> @@ -230,6 +246,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>  	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>  	int ret;
+> +	u32 val;
+>  
+>  	ret = clk_prepare_enable(phy->clk);
+>  	if (ret)
+> @@ -241,15 +258,26 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  		return ret;
+>  	}
+>  
+> -	/* Enable USB 45 Ohm resistor calibration */
+> -	if (phy->index == 0)
+> -		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+> +	if (data->type == sun8i_h3_phy) {
+> +		if (phy->index == 0) {
+> +			val = readl(data->base + REG_PHY_UNK_H3);
+> +			writel(val & ~1, data->base + REG_PHY_UNK_H3);
+> +		}
+> +
+> +		val = readl(phy->pmu + REG_PMU_UNK_H3);
+> +		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
+> +	} else {
+> +		/* Enable USB 45 Ohm resistor calibration */
+> +		if (phy->index == 0)
+> +			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+>  
+> -	/* Adjust PHY's magnitude and rate */
+> -	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+> +		/* Adjust PHY's magnitude and rate */
+> +		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+>  
+> -	/* Disconnect threshold adjustment */
+> -	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
+> +		/* Disconnect threshold adjustment */
+> +		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
+> +				    data->disc_thresh, 2);
+> +	}
+>  
+>  	sun4i_usb_phy_passby(phy, 1);
+>  
+> @@ -522,11 +550,14 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  	mutex_init(&data->mutex);
+>  	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+>  	dev_set_drvdata(dev, data);
+> +	data->dev = dev;
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+>  		data->num_phys = 2;
+> +	else if (of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+> +		data->num_phys = 4;
 
-> 
-> As soon as the driver issue is resolved, we enable all wdt nodes
-> unconditionally.
+this should come from driver data.
+>  	else
+>  		data->num_phys = 3;
+>  
+> @@ -538,13 +569,18 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy") ||
+>  	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+> -	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+> +	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy") ||
+> +	    of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+>  		dedicated_clocks = true;
 
-I will submit patch for the wdt driver and hope it will be merged
-in v4.5.
+same here.
+>  	else
+>  		dedicated_clocks = false;
+>  
+>  	if (of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+> -		data->has_a33_phyctl = true;
+> +		data->type = sun8i_a33_phy;
+> +	else if (of_device_is_compatible(np, "allwinner,sun8i-h3-usb-phy"))
+> +		data->type = sun8i_h3_phy;
+> +	else
+> +		data->type = sun4i_a10_phy;
 
-Thanks,
-Jisheng
+this too can come from driver data.
 
-> 
-> Sebastian
-> 
-> >> I have applied patches 1-4 with the status property removed.
-> >> This also renders patches 5-8 useless.
-> >>
-> >> So, for now tentatively
-> >>
-> >> Appled to berlin/dt and berlin64/dt respectivly
-> >>
-> >> with status property removed.
-> >>
-> >> Sebastian
-> >>  
-> >   
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
