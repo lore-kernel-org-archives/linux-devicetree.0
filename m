@@ -1,46 +1,42 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] LPC4337 CIAA-NXP DTS changes
-Date: Mon, 23 Nov 2015 19:17:59 +0100
-Message-ID: <CAGhQ9Vz-fpqKBtaHY5bDZqXEMrpat=UWz4KofGBWMNdNVWw4Cg@mail.gmail.com>
-References: <1448282225-2635-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<565309F3.1040306@vanguardiasur.com.ar>
+From: santosh shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH] ARM: dts: keystone: k2l: fix kernel crash when
+ clk_ignore_unused is not in bootargs
+Date: Mon, 23 Nov 2015 10:17:03 -0800
+Message-ID: <5653581F.4060902@oracle.com>
+References: <1448297649-22122-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565309F3.1040306-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1448297649-22122-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>, ssantosh@kernel.org, corbet@lwn.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ariel,
-
-On 23 November 2015 at 13:43, Ariel D'Alessandro
-<ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> (+Cc Joachim)
+On 11/23/2015 8:54 AM, Murali Karicheri wrote:
+> Currently kernel crash randomly when K2L EVM is booted without
+> clk_ignore_unused in the bootargs. This workaround is not needed
+> on other K2 devices such as K2HK and K2E and with this fix, we can
+> remove the workaround altogether. netcp driver on K2L uses linked
+> ram on OSR (On chip Static RAM) and requires the clock to this peripheral
+> enabled for proper functioning. This is the reason for the kernel crash.
+> So add the clock node to fix this issue.
 >
-> El 23/11/15 a las 09:37, Ariel D'Alessandro escribi=C3=B3:
->> Hi,
->>
->> This patch set includes some DTS changes for LPC4337 CIAA-NXP board.
->> It is based on tag next-20151120 of the linux-next repository. It ha=
-s
->> been successfully tested on a LPC4337 CIAA-NXP Board.
->>
->> Ariel D'Alessandro (3):
->>   ARM: dts: lpc4337-ciaa: enable EEPROM memory
->>   ARM: dts: lpc4337-ciaa: enable SCT-PWM
->>   ARM: dts: lpc4337-ciaa: add i2c0 and devices
+> While at it, remove the workaround documentation as well.
+>
+> With the fix applied, clk_summary dump shows the clock to OSR enabled.
+>
+> cat /sys/kernel/debug/clk/clk_summary
+>   ------cut--------------
+>     tcp3d-1                   0            0   399360000          0 0
+>     tcp3d-0                   0            0   399360000          0 0
+>     osr                       1            1   399360000          0 0
+>     fftc-0                    0            0   399360000          0 0
+>   -----cut----------------
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+Nice !!
+I will queue this up for fixes. Thanks.
 
-If you want me to pick up the patches please put me in the To field so
-they end up in my inbox.
-
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh
