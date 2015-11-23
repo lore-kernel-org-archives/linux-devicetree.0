@@ -1,101 +1,76 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v5 0/4] ARM: shmobile: r8a7740/sh73a0 DT Cache Handling
-Date: Mon, 23 Nov 2015 14:55:58 +0100
-Message-ID: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v5 2/4] ARM: shmobile: sh73a0 dtsi: Add L2 cache-controller node
+Date: Mon, 23 Nov 2015 14:56:00 +0100
+Message-ID: <1448286962-16897-3-git-send-email-geert+renesas@glider.be>
+References: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448286962-16897-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Add the missing L2 cache-controller node, and link the CPU nodes to it.
+This will allow migration to the generic l2c OF initialization.
 
-This patch series add minimal L1 and L2 cache descriptions to DT for
-r8a7740 and sh73a0, and migrates the shmobile DT-based generic r8a7740
-platform from calling l2x0_of_init() to the generic l2c OF
-initialization.
+The L2 cache is an ARM L2C-310 (r3p1), of size 512 KiB (64 KiB x 8
+ways).
 
-Note that the conversion to the generic l2c OF initialization is not
-done yet for sh73a0, as this initializes the L2 cache earlier, breaking
-the (fragile) sh73a0 secondary CPU bringup code.
-
-Also note that this conversion should be done on r8a7778, and r8a7779,
-too.
-
-Changes compared to v4 ("[PATCH v4 0/6] ARM: shmobile: r8a7740/sh73a0 DT
-Cache Handling",
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+v5:
   - Drop optional cache-{size,sets,{block,line}-size} properties, as
-    this information is auto-detected (I verified this for both L1 and
-    L2 cache properties),
-  - Merge the L1 patches into the L2 patches, as the only part left from
-    the L1 patches was adding the links from CPU to L2 cache nodes.
+    this information is auto-detected,
+  - Integrate linking CPUs to L2 cache into this patch,
 
-Changes compared to v3 ("[PATCH v3 0/6] ARM: l2c / shmobile: r8a7740 :
-Shared Override",
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
-  - "l2c: Add support for the "arm,shared-override" property" was split
-    off into an independent patch, and is now queued for v4.3 in
-    arm/for-next,
-  - Dropped armadillo legacy migration, as it no longer exists,
-  - Added sh73a0 L1 and L2 DT cache description.
+v4:
+  - New.
+---
+ arch/arm/boot/dts/sh73a0.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Changes compared to v2 ("[PATCH v2 0/5] ARM: shmobile: r8a7740/armadillo:
-Migrate to generic l2c OF",
-http://www.spinics.net/lists/devicetree/msg68176.html):
-  - Add DT support for Shared Override,
-  - Setting Shared Override is done only if CMA is not available (as
-    Russell claims it's not needed if CMA is available),
-  - Use 0/~0 in machine_desc.l2c_aux_{val,mask}, as DT now supports
-    "arm,shared-override".
-
-Changes compared to v1:
-  - Fix interrupt reference in DT,
-  - Describe L2 better in DT,
-  - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE in
-    machine_desc.l2c_aux_{val,mask}, as there's no DT property for
-    this.
-  - Add L1 cache to DT.
-
-Dependencies:
-  - This series applies to renesas-devel-20151123-v4.4-rc2,
-  - Patch 3 depends on patch 1,
-  - Patch 4 depends on patch 3.
-
-Given C code changesets depending on DT changesets in the same branch
-are frowned upon, you may want to postpone patches 3 and 4 to v4.6.
-Of course I'll sleep better if you just apply all 4 of them now ;-)
-
-I've been running this on r8a7740/armadillo and sh73a0/kzm9g for more
-than a year.
-
-Thanks for applying!
-
-Geert Uytterhoeven (4):
-  ARM: shmobile: r8a7740 dtsi: Add L2 cache-controller node
-  ARM: shmobile: sh73a0 dtsi: Add L2 cache-controller node
-  ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
-  ARM: shmobile: r8a7740: Remove mapping of L2 cache controller
-    registers
-
- arch/arm/boot/dts/r8a7740.dtsi         | 13 +++++++++++++
- arch/arm/boot/dts/sh73a0.dtsi          | 14 ++++++++++++++
- arch/arm/mach-shmobile/setup-r8a7740.c | 18 ++----------------
- 3 files changed, 29 insertions(+), 16 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index cbc885e46c504f56..f90ef9c93d3df3aa 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -28,6 +28,7 @@
+ 			reg = <0>;
+ 			clock-frequency = <1196000000>;
+ 			power-domains = <&pd_a2sl>;
++			next-level-cache = <&L2>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+@@ -35,6 +36,7 @@
+ 			reg = <1>;
+ 			clock-frequency = <1196000000>;
+ 			power-domains = <&pd_a2sl>;
++			next-level-cache = <&L2>;
+ 		};
+ 	};
+ 
+@@ -53,6 +55,18 @@
+ 		      <0xf0000100 0x100>;
+ 	};
+ 
++	L2: cache-controller {
++		compatible = "arm,pl310-cache";
++		reg = <0xf0100000 0x1000>;
++		interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&pd_a3sm>;
++		arm,data-latency = <3 3 3>;
++		arm,tag-latency = <2 2 2>;
++		arm,shared-override;
++		cache-unified;
++		cache-level = <2>;
++	};
++
+ 	sbsc2: memory-controller@fb400000 {
+ 		compatible = "renesas,sbsc-sh73a0";
+ 		reg = <0xfb400000 0x400>;
 -- 
 1.9.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
