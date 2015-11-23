@@ -1,69 +1,46 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH] ARM: dts: qcom: msm8974: Disable wled and move it to honami
-Date: Mon, 23 Nov 2015 11:04:07 -0800
-Message-ID: <1448305447-9092-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: [PATCH 1/2] ARM: dts: sun7i: Enable audio codec on OrangePi Mini
+Date: Mon, 23 Nov 2015 13:50:16 -0500
+Message-ID: <1448304618-3488-1-git-send-email-monnier@iro.umontreal.ca>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Stefan Monnier <monnier@iro.umontreal.ca>
 List-Id: devicetree@vger.kernel.org
 
-The properties specified in the wled node could harm connected hardware,
-so move the properties to Honami and disable the platform node.
+Enable the on-chip audio codec
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Stefan Monnier <monnier@iro.umontreal.ca>
 ---
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 13 +++++++++++++
- arch/arm/boot/dts/qcom-pm8941.dtsi                    |  9 ++-------
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index 37741725b7bd..a0398b69f4f2 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -403,4 +403,17 @@
- 			qcom,vset-millivolts = <3000>;
- 		};
- 	};
-+
-+	pm8941@1 {
-+		wled@d800 {
-+			status = "ok";
-+
-+			qcom,cs-out;
-+			qcom,current-limit = <20>;
-+			qcom,current-boost-limit = <805>;
-+			qcom,switching-freq = <1600>;
-+			qcom,ovp = <29>;
-+			qcom,num-strings = <2>;
-+		};
-+	};
+diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+index 4f65664..2be04c43 100644
+--- a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
++++ b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+@@ -95,6 +95,10 @@
+ 	status = "okay";
  };
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index b0d443999fcc..b73fee57cf18 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -159,17 +159,12 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
  
--		wled@d800 {
-+		pm8941_wled: wled@d800 {
- 			compatible = "qcom,pm8941-wled";
- 			reg = <0xd800 0x100>;
- 			label = "backlight";
- 
--			qcom,cs-out;
--			qcom,current-limit = <20>;
--			qcom,current-boost-limit = <805>;
--			qcom,switching-freq = <1600>;
--			qcom,ovp = <29>;
--			qcom,num-strings = <2>;
-+			status = "disabled";
- 		};
- 	};
++&codec {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
  };
 -- 
-2.4.2
+2.1.4
