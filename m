@@ -1,128 +1,59 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH V3 5/5] ARM: dts: exynos4412: Rename OPP nodes as opp@<opp-hz>
-Date: Tue, 24 Nov 2015 00:10:05 +0100
-Message-ID: <1527236.7CQ8yZPfHx@vostro.rjw.lan>
-References: <cover.1447209519.git.viresh.kumar@linaro.org> <af18ab62fc9c52e082380ce5989ea287304c9bde.1447209519.git.viresh.kumar@linaro.org> <2407684.GgMbGa6LFq@vostro.rjw.lan>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 12/50] powerpc/powernv: Track M64 segment consumption
+Date: Tue, 24 Nov 2015 09:42:27 +1100
+Message-ID: <20151123224227.GB5375@gwshan>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-13-git-send-email-gwshan@linux.vnet.ibm.com>
+ <56498D77.2060101@ozlabs.ru>
+ <20151117010446.GA26294@gwshan>
+ <564D1382.6030504@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2407684.GgMbGa6LFq@vostro.rjw.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <564D1382.6030504@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 24, 2015 12:04:00 AM Rafael J. Wysocki wrote:
-> On Wednesday, November 11, 2015 08:10:58 AM Viresh Kumar wrote:
-> > OPP bindings got updated to name OPP nodes this way, make changes
-> > according to that.
-> > 
-> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/exynos4412.dtsi | 28 ++++++++++++++--------------
-> >  1 file changed, 14 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> > index 294cfe40388d..40beede46e55 100644
-> > --- a/arch/arm/boot/dts/exynos4412.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> > @@ -64,73 +64,73 @@
-> >  		compatible = "operating-points-v2";
-> >  		opp-shared;
-> >  
-> > -		opp00 {
-> > +		opp@200000000 {
-> >  			opp-hz = /bits/ 64 <200000000>;
-> >  			opp-microvolt = <900000>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp01 {
-> > +		opp@300000000 {
-> >  			opp-hz = /bits/ 64 <300000000>;
-> >  			opp-microvolt = <900000>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp02 {
-> > +		opp@400000000 {
-> >  			opp-hz = /bits/ 64 <400000000>;
-> >  			opp-microvolt = <925000>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp03 {
-> > +		opp@500000000 {
-> >  			opp-hz = /bits/ 64 <500000000>;
-> >  			opp-microvolt = <950000>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp04 {
-> > +		opp@600000000 {
-> >  			opp-hz = /bits/ 64 <600000000>;
-> >  			opp-microvolt = <975000>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp05 {
-> > +		opp@700000000 {
-> >  			opp-hz = /bits/ 64 <700000000>;
-> >  			opp-microvolt = <987500>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp06 {
-> > +		opp@800000000 {
-> >  			opp-hz = /bits/ 64 <800000000>;
-> >  			opp-microvolt = <1000000>;
-> >  			clock-latency-ns = <200000>;
-> >  			opp-suspend;
-> >  		};
-> > -		opp07 {
-> > +		opp@900000000 {
-> >  			opp-hz = /bits/ 64 <900000000>;
-> >  			opp-microvolt = <1037500>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp08 {
-> > +		opp@1000000000 {
-> >  			opp-hz = /bits/ 64 <1000000000>;
-> >  			opp-microvolt = <1087500>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp09 {
-> > +		opp@1100000000 {
-> >  			opp-hz = /bits/ 64 <1100000000>;
-> >  			opp-microvolt = <1137500>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp10 {
-> > +		opp@1200000000 {
-> >  			opp-hz = /bits/ 64 <1200000000>;
-> >  			opp-microvolt = <1187500>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp11 {
-> > +		opp@1300000000 {
-> >  			opp-hz = /bits/ 64 <1300000000>;
-> >  			opp-microvolt = <1250000>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp12 {
-> > +		opp@1400000000 {
-> >  			opp-hz = /bits/ 64 <1400000000>;
-> >  			opp-microvolt = <1287500>;
-> >  			clock-latency-ns = <200000>;
-> >  		};
-> > -		opp13 {
-> > +		opp@1500000000 {
-> >  			opp-hz = /bits/ 64 <1500000000>;
-> >  			opp-microvolt = <1350000>;
-> >  			clock-latency-ns = <200000>;
-> > 
-> 
-> This one doesn't apply for me on top of the current Linus' tree, so please
-> update.
+On Thu, Nov 19, 2015 at 11:10:42AM +1100, Alexey Kardashevskiy wrote:
+>On 11/17/2015 12:04 PM, Gavin Shan wrote:
+>>On Mon, Nov 16, 2015 at 07:01:59PM +1100, Alexey Kardashevskiy wrote:
+>>>On 11/05/2015 12:12 AM, Gavin Shan wrote:
+>>>>As we track M32 segment consumption, this introduces an array to
+>>>>the PHB to track the mapping between M64 segment and PE number.
+>>>>The information is going to be used to find M64 segment from the
+>>>>PE number during PCI unplugging time in subsequent patches.
+>>>
+>>>
+>>>It would not hurt to put a few words about how we managed to live without
+>>>such a mapping for M64 before but we needed mapping for M32.
+>>>
+>>
+>>The M32 mapping (phb->ioda.m32_segmap[]) isn't used for anything before
+>>this patcheset. There're no need for M64 mapping before this patchset
+>>similarly, no need to add the words.
+>
+>After years I learned that reviewers ask less questions about new but yet
+>unused code when I put few words in the commit log confirming that it is not
+>used now but it will be used for <here I put what it is for> later.
+>
+>And it is not obvious that m32_segment is not used. And m64_segmap is started
+>being used only 13 patches later in:
+>
+>[PATCH v7 27/50] powerpc/powernv: Dynamically release PEs
+>
+>which is quite far, complicates reviewing. 12/50 is better be moved there (to
+>make it 26/50) or just merged into 27/50.
+>
 
-Scratch that, my bad.  Sorry.
+It doesn't make sense to me. As said in PATCH[00/50], the patchset consists of
+3 separate parts: PowerNV PCI rework; Using PCI slot; Hotplug standalone driver;
+For the first part ("PowerNV PCI rework"), the patches are organized in order:
+refactor/cleanup, IO/M32/M64, DMA, PE allocation/deallocation. So I don't think
+I need move the patch around if you don't have a stronger reason.
 
 Thanks,
-Rafael
-
+Gavin
