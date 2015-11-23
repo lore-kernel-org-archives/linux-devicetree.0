@@ -1,71 +1,66 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: add multidomain support to i.MX GPC DT
- binding
-Date: Mon, 23 Nov 2015 16:31:32 +0100
-Message-ID: <1448292692.4008.56.camel@pengutronix.de>
-References: <1448291223-9938-1-git-send-email-l.stach@pengutronix.de>
-	 <1448291223-9938-2-git-send-email-l.stach@pengutronix.de>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH 1/4] clocksource: Add brcm,bcm6345-timer device tree binding
+Date: Mon, 23 Nov 2015 16:33:03 +0100
+Message-ID: <CAOiHx=k0Aa+qrBT1J7_cQaQRxndBmwsgSgi3x0eJOYTAy6Zq7Q@mail.gmail.com>
+References: <5650BFD6.5030700@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448291223-9938-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5650BFD6.5030700@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Miguel Gaio <miguel.gaio@efixo.com>, Maxime Bizon <mbizon@freebox.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, linux-watchdog@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 23.11.2015, 16:07 +0100 schrieb Lucas Stach:
-> This adds a new binding for the Freescale i.MX GPC block, which allows
-> to describe multiple power domains in a more natural way. The driver
-> will continue to support the old binding for existing DTBs, but new
-> features like the additional domains present on i.MX6SX will only be
-> usable with the new binding.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Sat, Nov 21, 2015 at 8:02 PM, Simon Arlott <simon@fire.lp0.eu> wrote:
+> Add device tree binding for the BCM6345 timer. This is required for the
+> BCM6345 watchdog which needs to respond to one of the timer interrupts.
+>
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
 > ---
->  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
->  1 file changed, 54 insertions(+), 27 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> index 65cc0345747d..0b777b623812 100644
-> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> @@ -1,22 +1,41 @@
->  Freescale i.MX General Power Controller
->  =======================================
->  
-> -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> -domains.
-> +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
-> +counters and Power Gating Control (PGC).
->  
->  Required properties:
->  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
->  - reg: should be register base and length as documented in the
->    datasheet
-> -- interrupts: Should contain GPC interrupt request 1
-> -- pu-supply: Link to the LDO regulator powering the PU power domain
-> -- clocks: Clock phandles to devices in the PU power domain that need
-> -	  to be enabled during domain power-up for reset propagation.
-> -- #power-domain-cells: Should be 1, see below:
-> +- interrupts: Should contain GPC interrupts
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +  - ipg
+>  .../bindings/timer/brcm,bcm6345-timer.txt          | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+> new file mode 100644
+> index 0000000..2593907
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+> @@ -0,0 +1,57 @@
+> +Broadcom BCM6345 Timer
+> +
+> +This block is a timer that is connected to one interrupt on the main interrupt
+> +controller and functions as a programmable interrupt controller for timer events.
+> +
+> +- 3 to 4 independent timers with their own maskable level interrupt bit (but not
+> +  per CPU because there is only one parent interrupt and the timers share it)
+> +
 
-As long as there is just a single clock input, shouldn't we just remove
-the clock-names property?
+This is true for the 6345 one but not the 6318/63148/63381 one, which
+has one interrupt per timer (+ one extra watchdog interrupt on
+6318/63148), and the parent interrupt controller supports affinity. So
+you could e.g. route the timer 0 irq to cpu 0 and timer1 irq on cpu 1.
 
-Otherwise
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> +- 1 watchdog timer with an unmaskable level interrupt
+> +
+> +- Contains one enable/status word pair
+> +
+> +- No atomic set/clear operations
+> +
+> +The lack of per CPU ability of timers makes them unusable as a set of
+> +clockevent devices, otherwise they could be attached to the remaining
+> +interrupts.
+> +
+> +The BCM6318 also has a separate interrupt for every timer except the watchdog.
+> +
+> +Required properties:
+> +
+> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-timer"
 
-regards
-Philipp
+Since bcm6318 uses a slightly different register layout than the
+earlier SoCs, I'd argue that using bcm6345-timer as a compatible for
+bcm6318 is wrong.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Jonas
