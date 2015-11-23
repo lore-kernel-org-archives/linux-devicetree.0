@@ -1,115 +1,133 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH 1/2] arm64: dts: berlin4ct: add I2C nodes for BG4CT
-Date: Mon, 23 Nov 2015 10:43:30 +0800
-Message-ID: <20151123104330.6b9e649c@xhacker>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: berlin4ct: enable all i2c nodes for the
+ STB board
+Date: Mon, 23 Nov 2015 10:49:58 +0800
+Message-ID: <20151123104958.09420cee@xhacker>
 References: <1448012821-7413-1-git-send-email-jszhang@marvell.com>
-	<1448012821-7413-2-git-send-email-jszhang@marvell.com>
-	<564F8EF3.5010508@gmail.com>
+	<1448012821-7413-3-git-send-email-jszhang@marvell.com>
+	<564F8E64.7020606@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <564F8EF3.5010508@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <564F8E64.7020606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Nov 2015 22:21:55 +0100
-Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+Dear Sebastian,
+
+On Fri, 20 Nov 2015 22:19:32 +0100
+Sebastian Hesselbarth wrote:
 
 > On 20.11.2015 10:47, Jisheng Zhang wrote:
-> > The Marvell Berlin BG4CT SoC has 4 TWSI which are compatible with the
-> > Synopsys DesignWare I2C driver. Add the corresponding nodes.
+> > Enable all i2c nodes for the Marvell berlin BG4CT STB board.
 > > 
-> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > > ---
-> >  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 52 ++++++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
+> >  arch/arm64/boot/dts/marvell/berlin4ct-stb.dts | 50 +++++++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
 > > 
-> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > index cca4c41..39d0676 100644
-> > --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > @@ -232,6 +232,32 @@
-> >  				};
-> >  			};
+> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+> > index 348c37e..9e8e2e0 100644
+> > --- a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+> > @@ -61,6 +61,56 @@
+> >  	};
+> >  };
 > >  
-> > +			i2c0: i2c@1400 {
-> > +				compatible = "snps,designware-i2c";
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				reg = <0x1400 0x100>;
-> > +				clocks = <&clk CLK_APBCORE>;  
+> > +&avio_pinctrl {
+> > +	twsi1_pmux: twsi1-pmux {
+> > +		groups = "TX_EDDC_SCL", "TX_EDDC_SDA";
+> > +		function = "tx_eddc";
+> > +	};  
 > 
-> This patch looks fine to me, except that clock node naming and
-> clock indices may change. We should really postpone this series
-> until we worked out clock.
+> Please keep the pinmux sub-nodes in the SoC dtsi as long
+> as they are not strictly board specific, i.e. gpios.
 
-Indeed. This is just to sent out for review early, so that we can merge
-the i2c support once clk is ready.
+Hmm, seems all boards configure this pin for EDDC usage, so it's fine
+to move to soc
 
-Thanks for review,
-Jisheng
+> 
+> > +};
+> > +
+> > +&i2c0 {
+> > +	status = "okay";
+> > +	pinctrl-0 = <&twsi0_pmux>;
+> > +	pinctrl-names = "default";  
+> 
+> If there is only one (or a default) pinctrl-0 option for i2c0,
+> you can also move it to the SoC dtsi.
 
+Some board may not use i2c0, i2c2, i2c3 host and use the pin as gpio for other
+purpose. Considering the above twsi1_pmux usage, what's the better solution?
+move twsi1_pmux to soc's dtsi and leave i2c0, i2c2, i2c3 pinctrl in board dts?
+
+> 
+> > +};
+> > +
+> > +&i2c1 {
+> > +	status = "okay";
+> > +	pinctrl-0 = <&twsi1_pmux>;
+> > +	pinctrl-names = "default";  
+> 
+> ditto.
+> 
+> > +};
+> > +
+> > +&i2c2 {
+> > +	status = "okay";
+> > +	pinctrl-0 = <&twsi2_pmux>;
+> > +	pinctrl-names = "default";  
+> 
+> ditto.
+> 
+> > +};
+> > +
+> > +&i2c3 {
+> > +	status = "okay";
+> > +	pinctrl-0 = <&twsi3_pmux>;
+> > +	pinctrl-names = "default";  
+> 
+> ditto.
+> 
+> > +};
+> > +
+> > +&soc_pinctrl {
+> > +	twsi0_pmux: twsi0-pmux {
+> > +		groups = "TW0_SCL", "TW0_SDA";
+> > +		function = "tw0";
+> > +	};  
+> 
+> Same comment about moving pinmux nodes to SoC dtsi.
+> 
+> > +};
+> > +
+> > +&system_pinctrl {
+> > +	twsi2_pmux: twsi2-pmux {
+> > +		groups = "SM_TW2_SCL", "SM_TW2_SDA";
+> > +		function = "tw2";
+> > +	};
+> > +
+> > +	twsi3_pmux: twsi3-pmux {
+> > +		groups = "SM_TW3_SCL", "SM_TW3_SDA";
+> > +		function = "tw3";
+> > +	};  
+> 
+> ditto.
 > 
 > Sebastian
 > 
-> > +				i2c-sda-hold-time-ns = <35>;
-> > +				i2c-sda-falling-time-ns = <425>;
-> > +				i2c-scl-falling-time-ns = <205>;
-> > +				interrupts = <4>;
-> > +				status = "disabled";
-> > +			};
+> > +};
 > > +
-> > +			i2c1: i2c@1800 {
-> > +				compatible = "snps,designware-i2c";
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				reg = <0x1800 0x100>;
-> > +				clocks = <&clk CLK_APBCORE>;
-> > +				i2c-sda-hold-time-ns = <35>;
-> > +				i2c-sda-falling-time-ns = <425>;
-> > +				i2c-scl-falling-time-ns = <205>;
-> > +				interrupts = <5>;
-> > +				status = "disabled";
-> > +			};
-> > +
-> >  			aic: interrupt-controller@3800 {
-> >  				compatible = "snps,dw-apb-ictl";
-> >  				reg = <0x3800 0x30>;
-> > @@ -319,6 +345,32 @@
-> >  				};
-> >  			};
-> >  
-> > +			i2c2: i2c@b000 {
-> > +				compatible = "snps,designware-i2c";
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				reg = <0xb000 0x100>;
-> > +				clocks = <&osc>;
-> > +				i2c-sda-hold-time-ns = <140>;
-> > +				i2c-sda-falling-time-ns = <500>;
-> > +				i2c-scl-falling-time-ns = <220>;
-> > +				interrupts = <6>;
-> > +				status = "disabled";
-> > +			};
-> > +
-> > +			i2c3: i2c@c000 {
-> > +				compatible = "snps,designware-i2c";
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				reg = <0xc000 0x100>;
-> > +				clocks = <&osc>;
-> > +				i2c-sda-hold-time-ns = <140>;
-> > +				i2c-sda-falling-time-ns = <500>;
-> > +				i2c-scl-falling-time-ns = <220>;
-> > +				interrupts = <7>;
-> > +				status = "disabled";
-> > +			};
-> > +
-> >  			uart0: uart@d000 {
-> >  				compatible = "snps,dw-apb-uart";
-> >  				reg = <0xd000 0x100>;
+> >  &uart0 {
+> >  	status = "okay";
+> >  };
 > >   
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
