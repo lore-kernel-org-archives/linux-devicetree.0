@@ -1,62 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ARM: dts: sun8i: Add SID node
-Date: Mon, 23 Nov 2015 13:43:56 +0100
-Message-ID: <20151123124356.GW32142@lukather>
-References: <cover.1448263428.git.atx@atx.name>
- <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx@atx.name>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v4 3/4] Crypto: rockchip/crypto - add crypto driver for
+ rk3288
+Date: Mon, 23 Nov 2015 20:51:42 +0800
+Message-ID: <20151123125142.GA7709@gondor.apana.org.au>
+References: <1447732847-30514-1-git-send-email-zain.wang@rock-chips.com>
+ <1447732847-30514-4-git-send-email-zain.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1lE8Wy7Exphh2Vpg"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDMUZSZAKGQER5C27SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx-MwjtXicnQwU@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gpatchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1447732847-30514-4-git-send-email-zain.wang@rock-chips.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Zain Wang <zain.wang@rock-chips.com>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
---1lE8Wy7Exphh2Vpg
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Tue, Nov 17, 2015 at 12:00:46PM +0800, Zain Wang wrote:
+>
+> +static void rk_ablk_hw_init(struct rk_crypto_info *dev)
+> +{
+> +	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(dev->ablk_req);
+> +	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
+> +	u32 conf_reg = 0;
+> +
+> +	if (dev->mode & TDES) {
+> +		dev->mode &= ~TDES;
+> +		dev->mode |= RK_CRYPTO_TDES_FIFO_MODE |
+> +			     RK_CRYPTO_TDES_BYTESWAP_KEY |
+> +			     RK_CRYPTO_TDES_BYTESWAP_IV;
+> +		CRYPTO_WRITE(dev, RK_CRYPTO_TDES_CTRL, dev->mode);
+> +
+> +		memcpy(dev->reg + RK_CRYPTO_TDES_IV_0, dev->ablk_req->info, 8);
 
-Hi,
-
-On Mon, Nov 23, 2015 at 09:02:48AM +0100, Josef Gajdusek wrote:
-> Add a node describing the Security ID memory to the
-> Allwinner H3 .dtsi file.
-> 
-> Signed-off-by: Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 0faa38a..58de718 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -359,6 +359,13 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		sid: eeprom@01c14000 {
-> +			compatible = "allwinner,sun4i-a10-sid";
-> +			reg = <0x01c14000 0x400>;
-
-The datasheet says it's 256 bytes wide, while the size here is of 1kB,
-is it intentional?
+Please ensure that the IV is copied back after the operation.
+I know that many existing drivers are buggy in this regard but
+they will be fixed soon and we will start enforcing this rule
+so I don't want to add any new drivers that break this rule.
 
 Thanks,
-Maxime
-
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---1lE8Wy7Exphh2Vpg--
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
