@@ -1,63 +1,259 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] usb: chipidea: register driver as a peripheral
- with the phy
-Date: Mon, 23 Nov 2015 16:29:30 +0800
-Message-ID: <20151123082929.GA8193@shlinux2>
-References: <1448063240-2739-1-git-send-email-tim.bird@sonymobile.com>
- <1448063240-2739-3-git-send-email-tim.bird@sonymobile.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Mon, 23 Nov 2015 09:57:19 +0100
+Message-ID: <20151123085719.GT32142@lukather>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-6-git-send-email-jenskuske@gmail.com>
+ <CAGb2v64NZMw0vNvVtepthUMox5TDy07gTBAWZqf8GAq6TrMpOg@mail.gmail.com>
+ <563614A3.6060805@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yQifGgTvVVJcdOYJ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4NJZOZAKGQEPNSOXCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448063240-2739-3-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <563614A3.6060805-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 20, 2015 at 03:47:20PM -0800, Tim Bird wrote:
-> Register the chipidea driver with the phy, so that the phy
-> driver can kick the gadget driver when it resumes from low power.
-> The phy-msm-usb (Qualcomm) driver requires this in order to
-> recover gadget operation after you disconnect the USB cable
-> and reconnect it.
-> 
-> Signed-off-by: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->  drivers/usb/chipidea/udc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index 8223fe7..06234cd 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -1890,6 +1890,12 @@ static int udc_start(struct ci_hdrc *ci)
->  
->  	ci->gadget.ep0 = &ci->ep0in->ep;
->  
-> +	if (ci->usb_phy) {
-> +		retval = otg_set_peripheral(ci->usb_phy->otg, &ci->gadget);
-> +		if (retval)
-> +			goto destroy_eps;
-> +	}
-> +
->  	retval = usb_add_gadget_udc(dev, &ci->gadget);
->  	if (retval)
->  		goto destroy_eps;
+--yQifGgTvVVJcdOYJ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Hi Tim,
+Hi,
 
-I am afraid it can't work for current chipidea framework (find this
-problem after testing), the chipidea core manages its host and device
-function using its own API start/stop, it does not define struct usb_otg
-APIs. In fact, it is not reasonable control host and device function
-at PHY driver.
+On Sun, Nov 01, 2015 at 02:33:23PM +0100, Jens Kuske wrote:
+> >> +               bus_gates: clk@01c20060 {
+> >> +                       #clock-cells = <1>;
+> >> +                       compatible = "allwinner,sun8i-h3-bus-gates-clk";
+> >> +                       reg = <0x01c20060 0x14>;
+> >> +                       clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
+> >> +                       clock-names = "ahb1", "ahb2", "apb1", "apb2";
+> >> +                       clock-indices = <5>, <6>, <8>,
+> >> +                                       <9>, <10>, <13>,
+> >> +                                       <14>, <17>, <18>,
+> >> +                                       <19>, <20>,
+> >> +                                       <21>, <23>,
+> >> +                                       <24>, <25>,
+> >> +                                       <26>, <27>,
+> >> +                                       <28>, <29>,
+> >> +                                       <30>, <31>, <32>,
+> >> +                                       <35>, <36>, <37>,
+> >> +                                       <40>, <41>, <43>,
+> >> +                                       <44>, <52>, <53>,
+> >> +                                       <54>, <64>,
+> >> +                                       <65>, <69>, <72>,
+> >> +                                       <76>, <77>, <78>,
+> >> +                                       <96>, <97>, <98>,
+> >> +                                       <112>, <113>,
+> >> +                                       <114>, <115>, <116>,
+> >> +                                       <128>, <135>;
+> >> +                       clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
+> >> +                                       "ahb1_mmc1", "ahb1_mmc2", "ahb1_nand",
+> >> +                                       "ahb1_sdram", "ahb2_gmac", "ahb1_ts",
+> >> +                                       "ahb1_hstimer", "ahb1_spi0",
+> >> +                                       "ahb1_spi1", "ahb1_otg",
+> >> +                                       "ahb1_otg_ehci0", "ahb1_ehic1",
+> > 
+> > ahb1_ehci1? Same for the following 3 lines.
+> I'll fix them...
+> > 
+> >> +                                       "ahb1_ehic2", "ahb1_ehic3",
+> >> +                                       "ahb1_otg_ohci0", "ahb2_ohic1",
+> >> +                                       "ahb2_ohic2", "ahb2_ohic3", "ahb1_ve",
+> >> +                                       "ahb1_lcd0", "ahb1_lcd1", "ahb1_deint",
+> >> +                                       "ahb1_csi", "ahb1_tve", "ahb1_hdmi",
+> >> +                                       "ahb1_de", "ahb1_gpu", "ahb1_msgbox",
+> >> +                                       "ahb1_spinlock", "apb1_codec",
+> >> +                                       "apb1_spdif", "apb1_pio", "apb1_ths",
+> >> +                                       "apb1_i2s0", "apb1_i2s1", "apb1_i2s2",
+> >> +                                       "apb2_i2c0", "apb2_i2c1", "apb2_i2c2",
+> >> +                                       "apb2_uart0", "apb2_uart1",
+> >> +                                       "apb2_uart2", "apb2_uart3", "apb2_scr",
+> >> +                                       "ahb1_ephy", "ahb1_dbg";
+> > 
+> > If it weren't for the last 2 clocks, we could cleanly split out apb1 and apb2
+> > gates. Having a separate AHB clock gate taking 2 addresses seems messy
+> > as well. :(
+> 
+> Well, maybe we still should do that, if we split the resets too at least
+> apb[12]  would line up again.
+> 
+> I don't know what to do with these bus things any more, all variants I
+> sent had issues somewhere...
+
+AFAIK, Arnd had some objections, but he never got back to us when we
+explained how the hardware was laid out, so I don't know if they still
+apply.
+
+> >> +               };
+> >> +
+> >> +               mmc0_clk: clk@01c20088 {
+> >> +                       #clock-cells = <1>;
+> >> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+> >> +                       reg = <0x01c20088 0x4>;
+> >> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+> >> +                       clock-output-names = "mmc0",
+> >> +                                            "mmc0_output",
+> >> +                                            "mmc0_sample";
+> >> +               };
+> >> +
+> >> +               mmc1_clk: clk@01c2008c {
+> >> +                       #clock-cells = <1>;
+> >> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+> >> +                       reg = <0x01c2008c 0x4>;
+> >> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+> >> +                       clock-output-names = "mmc1",
+> >> +                                            "mmc1_output",
+> >> +                                            "mmc1_sample";
+> >> +               };
+> >> +
+> >> +               mmc2_clk: clk@01c20090 {
+> >> +                       #clock-cells = <1>;
+> >> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+> >> +                       reg = <0x01c20090 0x4>;
+> >> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+> >> +                       clock-output-names = "mmc2",
+> >> +                                            "mmc2_output",
+> >> +                                            "mmc2_sample";
+> >> +               };
+> >> +
+> >> +               mbus_clk: clk@01c2015c {
+> >> +                       #clock-cells = <0>;
+> >> +                       compatible = "allwinner,sun8i-a23-mbus-clk";
+> >> +                       reg = <0x01c2015c 0x4>;
+> >> +                       clocks = <&osc24M>, <&pll6 1>, <&pll5>;
+> >> +                       clock-output-names = "mbus";
+> >> +               };
+> >> +       };
+> >> +
+> >> +       soc {
+> >> +               compatible = "simple-bus";
+> >> +               #address-cells = <1>;
+> >> +               #size-cells = <1>;
+> >> +               ranges;
+> >> +
+> >> +               dma: dma-controller@01c02000 {
+> >> +                       compatible = "allwinner,sun8i-h3-dma";
+> >> +                       reg = <0x01c02000 0x1000>;
+> >> +                       interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       clocks = <&bus_gates 6>;
+> >> +                       resets = <&bus_rst 6>;
+> >> +                       #dma-cells = <1>;
+> >> +               };
+> >> +
+> >> +               mmc0: mmc@01c0f000 {
+> >> +                       compatible = "allwinner,sun5i-a13-mmc";
+> >> +                       reg = <0x01c0f000 0x1000>;
+> >> +                       clocks = <&bus_gates 8>,
+> >> +                                <&mmc0_clk 0>,
+> >> +                                <&mmc0_clk 1>,
+> >> +                                <&mmc0_clk 2>;
+> >> +                       clock-names = "ahb",
+> >> +                                     "mmc",
+> >> +                                     "output",
+> >> +                                     "sample";
+> >> +                       resets = <&bus_rst 8>;
+> >> +                       reset-names = "ahb";
+> >> +                       interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       status = "disabled";
+> >> +                       #address-cells = <1>;
+> >> +                       #size-cells = <0>;
+> >> +               };
+> >> +
+> >> +               mmc1: mmc@01c10000 {
+> >> +                       compatible = "allwinner,sun5i-a13-mmc";
+> >> +                       reg = <0x01c10000 0x1000>;
+> >> +                       clocks = <&bus_gates 9>,
+> >> +                                <&mmc1_clk 0>,
+> >> +                                <&mmc1_clk 1>,
+> >> +                                <&mmc1_clk 2>;
+> >> +                       clock-names = "ahb",
+> >> +                                     "mmc",
+> >> +                                     "output",
+> >> +                                     "sample";
+> >> +                       resets = <&bus_rst 9>;
+> >> +                       reset-names = "ahb";
+> >> +                       interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       status = "disabled";
+> >> +                       #address-cells = <1>;
+> >> +                       #size-cells = <0>;
+> >> +               };
+> >> +
+> >> +               mmc2: mmc@01c11000 {
+> >> +                       compatible = "allwinner,sun5i-a13-mmc";
+> >> +                       reg = <0x01c11000 0x1000>;
+> >> +                       clocks = <&bus_gates 10>,
+> >> +                                <&mmc2_clk 0>,
+> >> +                                <&mmc2_clk 1>,
+> >> +                                <&mmc2_clk 2>;
+> >> +                       clock-names = "ahb",
+> >> +                                     "mmc",
+> >> +                                     "output",
+> >> +                                     "sample";
+> >> +                       resets = <&bus_rst 10>;
+> >> +                       reset-names = "ahb";
+> >> +                       interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       status = "disabled";
+> >> +                       #address-cells = <1>;
+> >> +                       #size-cells = <0>;
+> >> +               };
+> >> +
+> >> +               pio: pinctrl@01c20800 {
+> >> +                       compatible = "allwinner,sun8i-h3-pinctrl";
+> >> +                       reg = <0x01c20800 0x400>;
+> >> +                       interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                                    <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       clocks = <&bus_gates 69>;
+> >> +                       gpio-controller;
+> >> +                       #gpio-cells = <3>;
+> >> +                       interrupt-controller;
+> >> +                       #interrupt-cells = <2>;
+> >> +
+> >> +                       uart0_pins_a: uart0@0 {
+> >> +                               allwinner,pins = "PA4", "PA5";
+> >> +                               allwinner,function = "uart0";
+> >> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> >> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> >> +                       };
+> >> +
+> >> +                       mmc0_pins_a: mmc0@0 {
+> >> +                               allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+> >> +                                                "PF4", "PF5";
+> >> +                               allwinner,function = "mmc0";
+> >> +                               allwinner,drive = <SUN4I_PINCTRL_30_MA>;
+> >> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> >> +                       };
+> >> +
+> >> +                       mmc0_cd_pin: mmc0_cd_pin@0 {
+> >> +                               allwinner,pins = "PF6";
+> >> +                               allwinner,function = "gpio_in";
+> >> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> >> +                               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> >> +                       };
+> > 
+> > This should be in the board DTS, unless this is the reference design,
+> > in which case you should name the label like "mmc0_cd_pin_reference_design".
+> > 
+> 
+> The datasheet mentions SDC0_DET function on PF6, so I thought this is
+> sort of fixed to this pin now. All designs I've seen use this pin.
+
+Why is it set as a gpio then if it is a separate function?
+
+Thanks!
+Maxime
 
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--yQifGgTvVVJcdOYJ--
