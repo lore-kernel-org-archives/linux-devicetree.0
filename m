@@ -1,240 +1,79 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH v2 6/6] arm64: dts: berlin4ct: add pll and clock nodes
-Date: Mon, 23 Nov 2015 16:54:44 +0800
-Message-ID: <20151123165444.740b457c@xhacker>
-References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
- <1448008952-1787-7-git-send-email-jszhang@marvell.com>
- <564F8B73.7070403@gmail.com>	<20151123152158.483aa6b5@xhacker>
- <5652CEB2.9030902@gmail.com>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] spi: dts: sun4i: Add support for inter-word
+ wait cycles using the SPI Wait Clock Register
+Date: Mon, 23 Nov 2015 10:14:44 +0100
+Message-ID: <CAGNoLaM2sK1XF_gQ6t=Gg4w9i4+edeGxKkafBGu3V9QkQzHfDg@mail.gmail.com>
+References: <1447948422-4915-1-git-send-email-mweseloh42@gmail.com>
+	<1447948422-4915-2-git-send-email-mweseloh42@gmail.com>
+	<CAGRGNgWQLE5h03+4shLmqD6iW_p=L-i3ewdLb8ndWpxGHWh4rQ@mail.gmail.com>
+	<CAGNoLaNhD73N5_1_NbkvRFnwNqO5ehQBTyeCEgzFVgWCrJZmWQ@mail.gmail.com>
+	<CAGRGNgV0kOkye-Zu4WGQKgGim7N2HB9rAFJ3HNQS89Rr6_WexQ@mail.gmail.com>
+	<CAGNoLaOOz2ACtS5iRUxjOknisMHm2Ow3OVsLkqpWuNU4J-9v-A@mail.gmail.com>
+	<20151120161246.GB21921@rob-hp-laptop>
+	<CAGNoLaPLXOmObXgW0YsN8giM1WCRDn7MieTBcKOE5sjXbjg0GA@mail.gmail.com>
+	<20151122194556.GO32142@lukather>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5652CEB2.9030902@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, antoine.tenart@free-electrons.com, robh+dt@kernel.org, galak@codeaurora.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDFO74UEV4IRBBFSZOZAKGQEJGAIUAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151122194556.GO32142@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Nov 2015 09:30:42 +0100
-Sebastian Hesselbarth wrote:
+2015-11-22 20:45 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+>> Julien, Rob: thanks for your comments! Ok, I will make the following changes:
+>>
+>> - remove "sun4i,spi-wdelay" from the sun4i binding and add the
+>> property to the spi-bus.txt binding instead
+>> - remove the comment about the additional 3 cycles from the documentation
+>> - modfy the spi-sun4i driver to take care of the minimum 3 cycle period
+>>
+>> Does that sound right?
+>>
+>> And maybe I could also use a more descriptive name for the property,
+>> maybe "spi-word-wait-cycles"?
+>
+> I don't think it should be in a clock-rate dependant unit. Using micro
+> or nano-seconds would be more appropriate I guess.
 
-> On 23.11.2015 08:21, Jisheng Zhang wrote:
-> > On Fri, 20 Nov 2015 22:06:59 +0100
-> > Sebastian Hesselbarth wrote:  
-> >> On 20.11.2015 09:42, Jisheng Zhang wrote:  
-> >>> Add syspll, mempll, cpupll, gateclk and berlin-clk nodes.
-> >>>
-> >>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-> >>> ---  
-> [...]
-> >>> +		syspll: syspll {
-> >>> +			compatible = "marvell,berlin-pll";
-> >>> +			reg = <0xea0200 0x14>, <0xea0710 4>;
-> >>> +			#clock-cells = <0>;
-> >>> +			clocks = <&osc>;
-> >>> +			bypass-shift = /bits/ 8 <0>;
-> >>> +		};
-> >>> +
-> >>> +		gateclk: gateclk {
-> >>> +			compatible = "marvell,berlin4ct-gateclk";
-> >>> +			reg = <0xea0700 4>;
-> >>> +			#clock-cells = <1>;
-> >>> +		};
-> >>> +
-> >>> +		clk: clk {
-> >>> +			compatible = "marvell,berlin4ct-clk";
-> >>> +			reg = <0xea0720 0x144>;  
-> >>
-> >> Looking at the reg ranges, I'd say that they are all clock related
-> >> and pretty close to each other:
-> >>
-> >> gateclk: reg = <0xea0700 4>;
-> >> bypass:  reg = <0xea0710 4>;
-> >> clk:     reg = <0xea0720 0x144>;  
-> >
-> > Although these ranges sit close, but we should represent HW structure as you
-> > said.  
-> 
-> Then how do you argue that you have to share the gate clock register
-> with every PLL? The answer is quite simple: You are not separating by
-> HW either but existing SW API.
+Thanks Maxime, using a time based value instead of cycles sounds like
+a much better approach.
 
-No, PLLs don't share register any more. You can find what all clock nodes will
-look like in:
+However... I'm starting to think that the proposed inter-word wait
+time DT property is just an ugly workaround. Let me explain my
+use-case:
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/387322.html
+I'm developing a driver for a sensor that requires a minimum wait time
+between words. The wait time depends on the mode the sensor is set to:
+37.5us in slow mode, 12.5us in fast mode. I initially used spidev to
+test the sensor from userspace. And for that use case, the
+"spi-wdelay" property that I proposed works well. But now I am writing
+the proper protocol driver and suddenly the explicit wait time setting
+seems just wrong. Ideally, the protocol driver would just expose a DT
+property that allows to choose between "slow" and "fast" mode.
 
-> 
-> If you would really want to just describe the HW, then you'd have to
-> have a single node for _all_ clocks that get controlled by 0xea0700/0x4,
-> feed some 32+ clocks into the node, and out again. Obviously, this
-> isn't what we want, right?
+I think that the correct approach would be to extend the SPI
+controller API to allow protocol drivers to set an inter-word delay.
+That would keep the magic numbers inside my protocol driver and out of
+the devicetree. And an additional ioctl call could set that inter-word
+delay from spidev, allowing userspace to set this value as well if
+needed.
 
-I represented the HW by "kind", for example, gateclks, common-clks, pllclk.
-And let common PLLs follow this rule as well:
+Mark: would you be open to such a change to the SPI controller API?
 
-one node for all common plls
+I could use the already available spi_transfer.delay_usecs for this,
+but I would require that I wrap each word in a single transfer, which
+adds significant processing overhead to the communication with the
+sensor.
 
-reg <0x922000 0x14>, <0x940034 0x14>, <0xea0200 0x14>
+Cheers,
 
-> 
-> So, the idea of berlin2 sysctrl nodes (and similar other SoCs) is: Some
-> SoCs just dump some functions into a bunch of registers with no
-> particular order. We'd never find a good representation for that in DT,
-> so we don't bother to try but let the driver implementation deal with
-> the mess. Using "simple-mfd" is a nice solution to scattered registers
-> please have a look at it and come up with a cleaner separation for bg4
-> clock.
-> 
-> > First of all, let me describe the clks/plls in BG4CT. BG4CT contains:
-> >
-> > two kinds of PLL: normal PLL and AVPLL. These PLLs are put with their users
-> > together. For example: mempll pll registers <0xf7940034, 0x14> is put together
-> > with mem controller registers. AVPLL control registers are put with AV devices.  
-> 
-> Why didn't you choose to have a memory-controller node that provides
-> mempll clock then? I am open to having multiple nodes providing clocks
-> but having a node for every clock in any subsystem is something I'll
-> not even think about.
-
-OK. As you said, "SoCs just dump some functions into a bunch of registers with
-no particular order", BG4CT is now cleaner, all common-clks are put together,
-gate-clks are put together, pllclks are put together, only the common PLLs
-are dumped here and there. So how about representing the HW by "kind", one
-node for common plls, one node for gateclks, one node for common clks and 
-one node for pllclks?
-
-                pll: pll {
-                        compatible = "marvell,berlin4ct-pll";
-                        reg = <0x922000 0x14>, <0x940034 0x14>, <0xea0200 0x14>
-                        #clock-cells = <0>;
-                        clocks = <&osc>;
-                };
-
-		pllclk: pllclk {
-                        compatible = "marvell,berlin4ct-pllclk";
-                        reg = <0xea0710 4>
-                        #clock-cells = <1>;
-		};
-
-                gateclk: gateclk {
-                        compatible = "marvell,berlin4ct-gateclk";
-                        reg = <0xea0700 4>;
-                        #clock-cells = <1>;
-                };
-
-                clk: clk {
-                        compatible = "marvell,berlin4ct-clk";
-                        reg = <0xea0720 0x144>;
-                        #clock-cells = <1>;
-                        clocks = <&pllclk SYSPLLCLK>;
-                };
-
-thanks
-
-> 
-> > You can also check mempll, cpupll and syspll ranges:
-> >
-> > cpupll: <0x922000 0x14>
-> >
-> > mempll: <0x940034 0x14>
-> >
-> > syspll: <0xea0200 0x14>
-> >
-> >
-> > We have three normal PLLS: cpupll, mempll and syspll. All these three PLLs use
-> > 25MHZ osc as clocksource. These plls can be bypassed. when syspll is bypassed
-> > the 25MHZ osc is directly output to syspllclk. When mempll/cpupll is bypassed,
-> > its corresponding fastrefclk is directly output to ddrphyclk/cpuclk:
-> >
-> >
-> >         ---25MHZ osc----------|\
-> >             ________            | |-- syspllclk
-> >         ---| SYSPLL |---------|/
-> >
-> >
-> >
-> >         ---cpufastrefclk------|\
-> >             ________            | |-- cpuclk
-> >         ---| CPUPLL |---------|/
-> >
-> >
-> >         ---memfastrefclk------|\
-> >             ________            | |-- ddrphyclk
-> >         ---| MEMPLL |---------|/
-> >
-> > NOTE: the fastrefclk is the so called normal clk below.
-> >
-> >
-> >
-> > two kinds of clk: normal clk and gate clk. The normal clk supports changing
-> > divider, selecting clock source, disabling/enabling etc. The gate clk only
-> > supports disabling/enabling. normal clks use syspllclk as clocksource, while
-> > gate clks use perifsysclk as clocksource.
-> >
-> >
-> > So what's the representing HW structure in fact? Here is my proposal:
-> > 1. have mempll, cpupll and syspll node in dts  
-> 
-> No.
-> 
-> > 2. one gateclk node in dts for gateclks  
-> 
-> No.
-> 
-> > 3. one normalclk node in dts for normal clks  
-> 
-> No.
-> 
-> > 4. one ccf clock-mux for cpuclk, ddrphyclk and syspllclk.  
-> 
-> No.
-> 
-> > what do you think?  
-> 
-> I think that the current separation is not a good one. I am open for
-> suggestions but I am not accepting single PLL/clock nodes.
-> 
-> >  From another side, let's have a look at driver/clk/mvebu. As can be seen,
-> > different clks register are close each other, for example, gateclk and coreclk
-> > in arch/arm/boot/dts/armada-xp.dtsi.
-> >
-> > And drivers/clk/sunxi, arch/arm/boot/dts/sun7i-a20.dtsi, the pll4, pll12, gt_clk
-> > and ahb*, apb* etc...
-> >
-> > why these SoCs don't merge clocks/gates/plls to a single clock complex node?
-> > I think that's because they are representing real HW structure.  
-> 
-> These SoC (at least mvebu) didn't merge them into a single clock
-> complex node because nobody had a better idea or an impression of
-> the consequences. Looking back with the idea of syscon/simple-mfd
-> we probably would have chosen to separate differently.
-> 
-> >> So, please just follow the OF/driver structure we already
-> >> have for Berlin2.  
-> 
-> To repeat: "please just follow the OF/driver structure we already
-> have for Berlin2"
-> 
-> Sebastian
-> 
-> >>> +			#clock-cells = <1>;
-> >>> +			clocks = <&syspll>;
-> >>> +		};
-> >>> +
-> >>>   		soc_pinctrl: pin-controller@ea8000 {
-> >>>   			compatible = "marvell,berlin4ct-soc-pinctrl";
-> >>>   			reg = <0xea8000 0x14>;
-> >>>  
-> >>  
-> >  
-> 
+    Marcus
