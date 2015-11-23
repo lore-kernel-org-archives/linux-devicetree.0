@@ -1,77 +1,47 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH RESEND 15/16] leds: add LM3633 driver
-Date: Mon, 23 Nov 2015 08:40:18 +0900
-Message-ID: <56525262.60308@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-16-git-send-email-milo.kim@ti.com>
- <5638DD99.9070502@samsung.com> <56419F0C.90009@ti.com>
- <564EE66C.5010709@samsung.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for Innosilicon HDMI
+ on Rockchip platform
+Date: Mon, 23 Nov 2015 09:26:04 +0800
+Message-ID: <56526B2C.8030202@rock-chips.com>
+References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
+ <1447228052-4897-1-git-send-email-ykk@rock-chips.com>
+ <1776316.RzHCH7Zejb@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <564EE66C.5010709@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1776316.RzHCH7Zejb@phil>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Zheng Yang <zhengyang@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Ben Chan <benchan@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On 11/20/2015 6:22 PM, Jacek Anaszewski wrote:
-> On 11/10/2015 08:38 AM, Kim, Milo wrote:
-> [...]
->>>> +                cat /sys/class/leds/<led>/pattern_levels
->>>> +                low brightness: 0, high brightness: 255
->>>> +
->>>> +What:        /sys/class/leds/<led>/run_pattern
->>>> +Date:        Oct 2015
->>>> +KernelVersion:    4.3
->>>> +Contact:    Milo Kim <milo.kim@ti.com>
->>>> +Description:    write only
->>>> +                After 'pattern_times' and 'pattern_levels' are updated,
->>>> +                run the pattern by writing 1 to 'run_pattern'.
->>>> +                To stop running pattern, writes 0 to 'run_pattern'.
->>>
->>> I wonder how registering an in-driver trigger would work. It would
->>> allow for hiding above pattern attributes when the trigger is inactive,
->>> and thus making the sysfs interface more transparent. You could avoid
->>> the need for run_pattern attribute, as setting the trigger would itself
->>> activate the pattern, and setting brightness to 0 would turn it off.
->>
->> I like this idea, let me try to fix it.
->
-> After thinking it over, I came to conclusion that implementing it as
-> an in-driver trigger is not a proper way to go, since triggers are
-> defined as kernel based source of LED events.
->
-> This is somehow abused in case of timer trigger which takes hardware
-> blinking feature as a first choice and applies software blinking as
-> a fallback only. To be consistent with that, we could go for adding
-> generic pattern trigger and add a led_pattern_set() API, similarly
-> to existing led_blink_set().
->
-> The problem is that different LED controllers may implement blinking
-> patterns that are configured with different set of parameters. This
-> subject would definitely require thorough analysis.
->
-> For now, please just expose pattern settings as separate sysfs
-> attributes of a LED class device.
->
-
-Thanks for your suggestion.
-Then, LM3633 LED driver will support 8 device attributes.
-
-	pattern_time_delay
-	pattern_time_rise
-	pattern_time_high
-	pattern_time_fall
-	pattern_time_low
-	pattern_brightness_low
-	pattern_brightness_high
-	pattern_run_pattern
-
-Details will be updated in Documentation/ABI/testing/sysfs-class-led-lm3633.
-
-Best regards,
-Milo
+SGkgSGVpa28sCgpPbiAxMS8yMi8yMDE1IDA0OjE0IEFNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToK
+PiBIaSBZYWtpciwKPgo+IEFtIE1pdHR3b2NoLCAxMS4gTm92ZW1iZXIgMjAxNSwgMTU6NDc6MzIg
+c2NocmllYiBZYWtpciBZYW5nOgo+PiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9j
+ay1jaGlwcy5jb20+Cj4+IC0tLQo+PiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1y
+b2NrY2hpcC50eHQgICAgICAgIHwgNTAgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDEgZmls
+ZSBjaGFuZ2VkLCA1MCBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1y
+b2NrY2hpcC50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9j
+a2NoaXAudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjE4OTg0
+MDgKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0Cj4+IEBAIC0wLDAg
+KzEsNTAgQEAKPj4gK1JvY2tjaGlwIHNwZWNpZmljIGV4dGVuc2lvbnMgdG8gdGhlIElubm9zaWxp
+Y29uIEhETUkKPj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4+ICsKPj4gK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6Cj4+ICsJInJvY2tjaGlwLHJrMzAz
+Ni1kdy1oZG1pIjsKPiBzaG91bGQgYmUgInJvY2tjaGlwLHJrMzAzNi1pbm5vLWhkbWkiOyBpbnN0
+ZWFkIEkgZ3Vlc3MKClJpZ2h0LCB0aGFua3MKCi0gWWFraXIKCj4KPiBIZWlrbwo+Cj4KPgoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
