@@ -1,92 +1,272 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v3 1/6] PCI: designware: remove wrong io_base assignment
-Date: Mon, 23 Nov 2015 18:23:47 +0200
-Message-ID: <56533D93.5000604@linaro.org>
-References: <cover.1448270813.git.stanimir.varbanov@linaro.org>
- <44d133d5ebd4f7b9e8b817aa8bae12f690e70000.1448270813.git.stanimir.varbanov@linaro.org>
- <6048361.Am0T3g77Bd@wuerfel>
- <EE11001F9E5DDD47B7634E2F8A612F2E162C6F70@lhreml503-mbs>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner
+ H3 DTSI
+Date: Mon, 23 Nov 2015 17:25:38 +0100
+Message-ID: <56533E02.6020807@gmail.com>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-6-git-send-email-jenskuske@gmail.com>
+ <CAGb2v64NZMw0vNvVtepthUMox5TDy07gTBAWZqf8GAq6TrMpOg@mail.gmail.com>
+ <563614A3.6060805@gmail.com> <20151123085719.GT32142@lukather>
+ <5652EF87.50604@redhat.com>
+Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E162C6F70@lhreml503-mbs>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBBH4ZSZAKGQEH3JYPQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5652EF87.50604-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2015 12:27 PM, Gabriele Paoloni wrote:
-> Hi Stanimir, Many Thanks for this fix
+On 23/11/15 11:50, Hans de Goede wrote:
+> HI,
 > 
->> -----Original Message-----
->> From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-
->> owner@vger.kernel.org] On Behalf Of Arnd Bergmann
->> Sent: 23 November 2015 10:00
->> To: Stanimir Varbanov
->> Cc: linux-arm-msm@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
->> pci@vger.kernel.org; Bjorn Helgaas; Srinivas Kandagatla; Rob Herring; Rob
->> Herring; Mark Rutland; Pawel Moll; Ian Campbell; Jingoo Han; Pratyush Anand;
->> Bjorn Andersson
->> Subject: Re: [PATCH v3 1/6] PCI: designware: remove wrong io_base assignment
+> On 23-11-15 09:57, Maxime Ripard wrote:
+>> Hi,
 >>
->> On Monday 23 November 2015 11:28:58 Stanimir Varbanov wrote:
->>> The io_base is used to keep the cpu physical address parsed
->>> from ranges dt property. After issue pci_remap_iospace the
->>> io_base has been assigned with io->start, which is not correct
->>> cause io->start is a PCI bus address.
+>> On Sun, Nov 01, 2015 at 02:33:23PM +0100, Jens Kuske wrote:
+>>>>> +               bus_gates: clk@01c20060 {
+>>>>> +                       #clock-cells = <1>;
+>>>>> +                       compatible = "allwinner,sun8i-h3-bus-gates-clk";
+>>>>> +                       reg = <0x01c20060 0x14>;
+>>>>> +                       clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
+>>>>> +                       clock-names = "ahb1", "ahb2", "apb1", "apb2";
+>>>>> +                       clock-indices = <5>, <6>, <8>,
+>>>>> +                                       <9>, <10>, <13>,
+>>>>> +                                       <14>, <17>, <18>,
+>>>>> +                                       <19>, <20>,
+>>>>> +                                       <21>, <23>,
+>>>>> +                                       <24>, <25>,
+>>>>> +                                       <26>, <27>,
+>>>>> +                                       <28>, <29>,
+>>>>> +                                       <30>, <31>, <32>,
+>>>>> +                                       <35>, <36>, <37>,
+>>>>> +                                       <40>, <41>, <43>,
+>>>>> +                                       <44>, <52>, <53>,
+>>>>> +                                       <54>, <64>,
+>>>>> +                                       <65>, <69>, <72>,
+>>>>> +                                       <76>, <77>, <78>,
+>>>>> +                                       <96>, <97>, <98>,
+>>>>> +                                       <112>, <113>,
+>>>>> +                                       <114>, <115>, <116>,
+>>>>> +                                       <128>, <135>;
+>>>>> +                       clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
+>>>>> +                                       "ahb1_mmc1", "ahb1_mmc2", "ahb1_nand",
+>>>>> +                                       "ahb1_sdram", "ahb2_gmac", "ahb1_ts",
+>>>>> +                                       "ahb1_hstimer", "ahb1_spi0",
+>>>>> +                                       "ahb1_spi1", "ahb1_otg",
+>>>>> +                                       "ahb1_otg_ehci0", "ahb1_ehic1",
+>>>>
+>>>> ahb1_ehci1? Same for the following 3 lines.
+>>> I'll fix them...
+>>>>
+>>>>> +                                       "ahb1_ehic2", "ahb1_ehic3",
+>>>>> +                                       "ahb1_otg_ohci0", "ahb2_ohic1",
+>>>>> +                                       "ahb2_ohic2", "ahb2_ohic3", "ahb1_ve",
+>>>>> +                                       "ahb1_lcd0", "ahb1_lcd1", "ahb1_deint",
+>>>>> +                                       "ahb1_csi", "ahb1_tve", "ahb1_hdmi",
+>>>>> +                                       "ahb1_de", "ahb1_gpu", "ahb1_msgbox",
+>>>>> +                                       "ahb1_spinlock", "apb1_codec",
+>>>>> +                                       "apb1_spdif", "apb1_pio", "apb1_ths",
+>>>>> +                                       "apb1_i2s0", "apb1_i2s1", "apb1_i2s2",
+>>>>> +                                       "apb2_i2c0", "apb2_i2c1", "apb2_i2c2",
+>>>>> +                                       "apb2_uart0", "apb2_uart1",
+>>>>> +                                       "apb2_uart2", "apb2_uart3", "apb2_scr",
+>>>>> +                                       "ahb1_ephy", "ahb1_dbg";
+>>>>
+>>>> If it weren't for the last 2 clocks, we could cleanly split out apb1 and apb2
+>>>> gates. Having a separate AHB clock gate taking 2 addresses seems messy
+>>>> as well. :(
 >>>
->>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>> ---
->>>  drivers/pci/host/pcie-designware.c |    1 -
->>>  1 file changed, 1 deletion(-)
+>>> Well, maybe we still should do that, if we split the resets too at least
+>>> apb[12]  would line up again.
 >>>
->>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
->> designware.c
->>> index 540f077c37ea..02a7452bdf23 100644
->>> --- a/drivers/pci/host/pcie-designware.c
->>> +++ b/drivers/pci/host/pcie-designware.c
->>> @@ -440,7 +440,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>  					 ret, pp->io);
->>>  				continue;
->>>  			}
->>> -			pp->io_base = pp->io->start;
->>>  			break;
->>>  		case IORESOURCE_MEM:
->>>  			pp->mem = win->res;
+>>> I don't know what to do with these bus things any more, all variants I
+>>> sent had issues somewhere...
 >>
->> I was surprised to see such an obvious bug here, as we had spent a lot of
->> time trying to get it right. However, it broke only recently and it's
->> worth mentioning what commit did it, so
-> 
-> Looking at 
-> "[PATCH v12 0/8] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05":
-> 
-> actually the bug came in as patch 3/6 of v11 patchset split
-> 
-> [...]
-> 
-> Change from v11:
-> - Split 3/6 in v11 to 3/8, 4/8, 5/8 in v12.
-> 
-> [...]
-> 
-> This was not present in v11...sorry about this.
-> 
-> Gab
-> 
+>> AFAIK, Arnd had some objections, but he never got back to us when we
+>> explained how the hardware was laid out, so I don't know if they still
+>> apply.
 >>
->> Fixes: 0021d22b73d6 ("PCI: designware: Use of_pci_get_host_bridge_resources()
->> to parse DT")
->> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc0_clk: clk@01c20088 {
+>>>>> +                       #clock-cells = <1>;
+>>>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+>>>>> +                       reg = <0x01c20088 0x4>;
+>>>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+>>>>> +                       clock-output-names = "mmc0",
+>>>>> +                                            "mmc0_output",
+>>>>> +                                            "mmc0_sample";
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc1_clk: clk@01c2008c {
+>>>>> +                       #clock-cells = <1>;
+>>>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+>>>>> +                       reg = <0x01c2008c 0x4>;
+>>>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+>>>>> +                       clock-output-names = "mmc1",
+>>>>> +                                            "mmc1_output",
+>>>>> +                                            "mmc1_sample";
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc2_clk: clk@01c20090 {
+>>>>> +                       #clock-cells = <1>;
+>>>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+>>>>> +                       reg = <0x01c20090 0x4>;
+>>>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+>>>>> +                       clock-output-names = "mmc2",
+>>>>> +                                            "mmc2_output",
+>>>>> +                                            "mmc2_sample";
+>>>>> +               };
+>>>>> +
+>>>>> +               mbus_clk: clk@01c2015c {
+>>>>> +                       #clock-cells = <0>;
+>>>>> +                       compatible = "allwinner,sun8i-a23-mbus-clk";
+>>>>> +                       reg = <0x01c2015c 0x4>;
+>>>>> +                       clocks = <&osc24M>, <&pll6 1>, <&pll5>;
+>>>>> +                       clock-output-names = "mbus";
+>>>>> +               };
+>>>>> +       };
+>>>>> +
+>>>>> +       soc {
+>>>>> +               compatible = "simple-bus";
+>>>>> +               #address-cells = <1>;
+>>>>> +               #size-cells = <1>;
+>>>>> +               ranges;
+>>>>> +
+>>>>> +               dma: dma-controller@01c02000 {
+>>>>> +                       compatible = "allwinner,sun8i-h3-dma";
+>>>>> +                       reg = <0x01c02000 0x1000>;
+>>>>> +                       interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +                       clocks = <&bus_gates 6>;
+>>>>> +                       resets = <&bus_rst 6>;
+>>>>> +                       #dma-cells = <1>;
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc0: mmc@01c0f000 {
+>>>>> +                       compatible = "allwinner,sun5i-a13-mmc";
+>>>>> +                       reg = <0x01c0f000 0x1000>;
+>>>>> +                       clocks = <&bus_gates 8>,
+>>>>> +                                <&mmc0_clk 0>,
+>>>>> +                                <&mmc0_clk 1>,
+>>>>> +                                <&mmc0_clk 2>;
+>>>>> +                       clock-names = "ahb",
+>>>>> +                                     "mmc",
+>>>>> +                                     "output",
+>>>>> +                                     "sample";
+>>>>> +                       resets = <&bus_rst 8>;
+>>>>> +                       reset-names = "ahb";
+>>>>> +                       interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +                       status = "disabled";
+>>>>> +                       #address-cells = <1>;
+>>>>> +                       #size-cells = <0>;
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc1: mmc@01c10000 {
+>>>>> +                       compatible = "allwinner,sun5i-a13-mmc";
+>>>>> +                       reg = <0x01c10000 0x1000>;
+>>>>> +                       clocks = <&bus_gates 9>,
+>>>>> +                                <&mmc1_clk 0>,
+>>>>> +                                <&mmc1_clk 1>,
+>>>>> +                                <&mmc1_clk 2>;
+>>>>> +                       clock-names = "ahb",
+>>>>> +                                     "mmc",
+>>>>> +                                     "output",
+>>>>> +                                     "sample";
+>>>>> +                       resets = <&bus_rst 9>;
+>>>>> +                       reset-names = "ahb";
+>>>>> +                       interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +                       status = "disabled";
+>>>>> +                       #address-cells = <1>;
+>>>>> +                       #size-cells = <0>;
+>>>>> +               };
+>>>>> +
+>>>>> +               mmc2: mmc@01c11000 {
+>>>>> +                       compatible = "allwinner,sun5i-a13-mmc";
+>>>>> +                       reg = <0x01c11000 0x1000>;
+>>>>> +                       clocks = <&bus_gates 10>,
+>>>>> +                                <&mmc2_clk 0>,
+>>>>> +                                <&mmc2_clk 1>,
+>>>>> +                                <&mmc2_clk 2>;
+>>>>> +                       clock-names = "ahb",
+>>>>> +                                     "mmc",
+>>>>> +                                     "output",
+>>>>> +                                     "sample";
+>>>>> +                       resets = <&bus_rst 10>;
+>>>>> +                       reset-names = "ahb";
+>>>>> +                       interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +                       status = "disabled";
+>>>>> +                       #address-cells = <1>;
+>>>>> +                       #size-cells = <0>;
+>>>>> +               };
+>>>>> +
+>>>>> +               pio: pinctrl@01c20800 {
+>>>>> +                       compatible = "allwinner,sun8i-h3-pinctrl";
+>>>>> +                       reg = <0x01c20800 0x400>;
+>>>>> +                       interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+>>>>> +                                    <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +                       clocks = <&bus_gates 69>;
+>>>>> +                       gpio-controller;
+>>>>> +                       #gpio-cells = <3>;
+>>>>> +                       interrupt-controller;
+>>>>> +                       #interrupt-cells = <2>;
+>>>>> +
+>>>>> +                       uart0_pins_a: uart0@0 {
+>>>>> +                               allwinner,pins = "PA4", "PA5";
+>>>>> +                               allwinner,function = "uart0";
+>>>>> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>>> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>>>> +                       };
+>>>>> +
+>>>>> +                       mmc0_pins_a: mmc0@0 {
+>>>>> +                               allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+>>>>> +                                                "PF4", "PF5";
+>>>>> +                               allwinner,function = "mmc0";
+>>>>> +                               allwinner,drive = <SUN4I_PINCTRL_30_MA>;
+>>>>> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>>>> +                       };
+>>>>> +
+>>>>> +                       mmc0_cd_pin: mmc0_cd_pin@0 {
+>>>>> +                               allwinner,pins = "PF6";
+>>>>> +                               allwinner,function = "gpio_in";
+>>>>> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>>> +                               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>>>>> +                       };
+>>>>
+>>>> This should be in the board DTS, unless this is the reference design,
+>>>> in which case you should name the label like "mmc0_cd_pin_reference_design".
+>>>>
+>>>
+>>> The datasheet mentions SDC0_DET function on PF6
+> 
+> Hmm, not in my version, I've "Allwinner_H3_Datasheet_V1.0.pdf" and there
+> PF6 only has generic input / output functionality.
 
-I think the bug is introduced in:
+Hm, indeed, it isn't mentioned in the Port Controller documentation, but
+the table on page 76 (3.2. GPIO Multiplexing Functions) has it.
 
-cbce7900598c ("PCI: designware: Make driver arch-agnostic")
+> 
+>  >> so I thought this is
+>>> sort of fixed to this pin now. All designs I've seen use this pin.
+>>
+>> Why is it set as a gpio then if it is a separate function?
+> 
+> I guess because we do not support this in the mmc driver yet. Also on
+> older devices the mmc controller has build-in card-detection features
+> (using the data lines in that case) but we've never supported this since
+> none of the boards sofar have been using it.
+> 
+> For now we can just treat PF6 as a gpio, until someone figures out how
+> to do this inside the mmc driver.
 
-cause the io_base is correctly calculated in 0021d22b73d6, do you agree?
+I could not find any documentation or reference how to use it, probably
+because it doesn't exist...
 
--- 
-regards,
-Stan
+Jens
