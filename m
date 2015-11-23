@@ -1,79 +1,161 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: document sun8i_ths
-Date: Mon, 23 Nov 2015 17:47:11 +0800
-Message-ID: <CAGb2v675YHYR=eNczrP8srPr5aYG+8eK9GPA7vevsxjsHEW1RA@mail.gmail.com>
-References: <cover.1448263428.git.atx@atx.name> <20e229f191031b0b0bff96dee118d1f2d988d7b3.1448263428.git.atx@atx.name>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Subject: Re: [PATCH v2] watchdog: add Alphascale asm9260-wdt driver
+Date: Mon, 23 Nov 2015 10:51:35 +0100
+Message-ID: <5652E1A7.2090108@rempel-privat.de>
+References: <20151027023132.GA1270@roeck-us.net>
+ <1446714416-22587-1-git-send-email-linux@rempel-privat.de>
+ <1446714416-22587-2-git-send-email-linux@rempel-privat.de>
+ <20151105204301.GA15806@rob-hp-laptop> <5652BC30.7060803@rempel-privat.de>
+ <5652BFA5.9010101@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOGBZOZAKGQEQ3GXUUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20e229f191031b0b0bff96dee118d1f2d988d7b3.1448263428.git.atx-MwjtXicnQwU@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gpatchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="lIevVQAstKCfBFoRqS98vk9CgJIvPke71"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5652BFA5.9010101-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 4:02 PM, Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org> wrote:
-> This patch adds the binding documentation for the sun8i_ths driver
->
-> Signed-off-by: Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>
-> ---
->  .../devicetree/bindings/thermal/sun8i-ths.txt      | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-ths.txt
->
-> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-ths.txt b/Documentation/devicetree/bindings/thermal/sun8i-ths.txt
-> new file mode 100644
-> index 0000000..67056bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/sun8i-ths.txt
-> @@ -0,0 +1,31 @@
-> +* sun8i THS
-> +
-> +Required properties:
-> +- compatible : "allwinner,sun8i-h3-ths"
-> +- reg : Address range of the thermal registers and location of the calibration
-> +        value
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lIevVQAstKCfBFoRqS98vk9CgJIvPke71
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-You are now using nvmem for the calibration data. You don't need the second
-entry.
+Am 23.11.2015 um 08:26 schrieb Guenter Roeck:
+> On 11/22/2015 11:11 PM, Oleksij Rempel wrote:
+>> Hi,
+>>
+>> thank you for review!
+>>
+>> Am 05.11.2015 um 21:43 schrieb Rob Herring:
+>>> On Thu, Nov 05, 2015 at 10:06:56AM +0100, Oleksij Rempel wrote:
+>>>> Add WD support for Alphascale asm9260 SoC. This driver
+>>>> provide support for different function modes:
+>>>> - HW mode to trigger SoC reset on timeout
+>>>> - SW mode do soft reset if needed
+>>>> - DEBUG mode
+>>>>
+>>>> Optional support for stopping watchdog. If reset binding are not
+>>>> provided
+>>>> this driver will work in nowayout mode.
+>>>>
+>>>> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+>>>> ---
+>>>>   .../bindings/watchdog/alphascale-asm9260.txt       |  39 ++
+>>>
+>>> It is preferred that bindings are a separate patch.
+>>>
+>>>>   drivers/watchdog/Kconfig                           |   9 +
+>>>>   drivers/watchdog/Makefile                          |   1 +
+>>>>   drivers/watchdog/asm9260_wdt.c                     | 415
+>>>> +++++++++++++++++++++
+>>>>   4 files changed, 464 insertions(+)
+>>>>   create mode 100644
+>>>> Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
+>>>>   create mode 100644 drivers/watchdog/asm9260_wdt.c
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
+>>>> b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
+>>>> new file mode 100644
+>>>> index 0000000..6e54d1f
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.=
+txt
+>>>> @@ -0,0 +1,39 @@
+>>>> +Alphascale asm9260 Watchdog timer
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- compatible : should be "alphascale,asm9260-wdt".
+>>>> +- reg : Specifies base physical address and size of the registers.
+>>>> +- clocks : the clocks feeding the watchdog timer. See
+>>>> clock-bindings.txt
+>>>> +- clock-names : should be set to
+>>>> +    "mod" - source for tick counter.
+>>>> +    "ahb" - ahb gate.
+>>>> +
+>>>> +Optional properties:
+>>>> +- resets : phandle pointing to the system reset controller with
+>>>> correct
+>>>> +    reset line index for watchdog controller reset. This propertie =
+is
+>>>
+>>> s/propertie/property/
+>>>
+>>>> +    required if you need to disable "nowayout" and it neened only w=
+ith
+>>>> +    CONFIG_WATCHDOG_NOWAYOUT=3Dn.
+>>>
+>>> The DT cannot depend on certain kernel configs.
+>>>
+>>>> +    Without reseting this WD controller, it is not possible to stop=
 
-> +- resets : Must contain an entry for each entry in reset-names.
-> +           see ../reset/reset.txt for details
-> +- reset-names : Must include the name "ahb"
-> +- clocks : Must contain an entry for each entry in clock-names.
-> +- clock-names : Must contain "ahb" for the bus gate and "ths" for the THS
-> +  clock
-> +
-> +Optional properties:
-> +- nvmem-cells : Must contain an entry for each entry in nvmem-cell-names
-> +- nvmem-cell-names : Must contain "calibration" for the cell containing the
-> +  temperature calibration cell, if available
-> +
-> +Example:
-> +ths: ths@01c25000 {
-> +       #thermal-sensor-cells = <0>;
-> +       compatible = "allwinner,sun8i-h3-ths";
-> +       reg = <0x01c25000 0x88>, <0x01c14234 0x4>;
+>>>
+>>> s/reseting/resetting/
+>>>
+>>>> +    counter.
+>>>> +- reset-names : should be set to "wdt_rst" if "resets" is used.
+>>>> +- timeout-sec : shall contain the default watchdog timeout in secon=
+ds,
+>>>> +    if unset, the default timeout is 30 seconds.
+>>>> +- alphascale,mode : tree modes are supported
+>>>
+>>> s/tree/three/
+>>>
+>>>> +    "hw" - hw reset (defaul).
+>>>
+>>> s/defaul/default/
+>>>
+>>>> +    "sw" - sw reset.
+>>>> +    "debug" - no action is taken.
+>>>
+>>> Seems like this should be a generic wdog property.
+>>>
+>>
+>> what do you mean?
+>> Using "mode" instead of "alphascale,mode" and implement it in WD
+>> framework?
+>>
+>=20
+> You should still read the property in the driver, even it if is made
+> generic.
+> The watchdog framework can't really use the information, most drivers d=
+on't
+> support selecting the mode. We can consider moving it into the framewor=
+k
+> if/when it benefits other drivers.
+>=20
+> On a side note, I would suggest "software" and "hardware" instead of sw=
 
-Same here.
+> / hw,
+> but that is just a personal preference.
 
-ChenYu
+Ok, then i will leave it for now as is. If "mode" will be introduced, it
+can brake compatibility. Using "alphascale,mode" feels save :)
 
-> +       interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-> +       resets = <&bus_rst 136>;
-> +       reset-names = "ahb";
-> +       clocks = <&bus_gates 72>, <&ths_clk>;
-> +       clock-names = "ahb", "ths";
-> +       nvmem-cells = <&ths_calibration>;
-> +       nvmem-cell-names = "calibration";
-> +};
-> --
-> 2.4.10
->
+--=20
+Regards,
+Oleksij
+
+
+--lIevVQAstKCfBFoRqS98vk9CgJIvPke71
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iF4EAREIAAYFAlZS4awACgkQHwImuRkmbWmPBQD/baZpTmdlQWmYU+x8Glno/mEU
++LsLacUCQdz7CZz1DkcA/iAGeDpWdHBBpM5uxUGBLfxfuFYXtn9e04mhEUYrQ8cn
+=tm5L
+-----END PGP SIGNATURE-----
+
+--lIevVQAstKCfBFoRqS98vk9CgJIvPke71--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
