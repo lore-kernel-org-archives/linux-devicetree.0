@@ -1,77 +1,46 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v5 2/4] ARM: shmobile: sh73a0 dtsi: Add L2 cache-controller node
-Date: Mon, 23 Nov 2015 14:56:00 +0100
-Message-ID: <1448286962-16897-3-git-send-email-geert+renesas@glider.be>
-References: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448286962-16897-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: [RFC PATCH 1/8] ARM: initialize cpu_scale to its default
+Date: Mon, 23 Nov 2015 14:28:34 +0000
+Message-ID: <1448288921-30307-2-git-send-email-juri.lelli@arm.com>
+References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Add the missing L2 cache-controller node, and link the CPU nodes to it.
-This will allow migration to the generic l2c OF initialization.
+Instead of looping through all cpus calling set_capacity_scale, we can
+initialise cpu_scale per-cpu variables to SCHED_CAPACITY_SCALE with their
+definition.
 
-The L2 cache is an ARM L2C-310 (r3p1), of size 512 KiB (64 KiB x 8
-ways).
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Signed-off-by: Juri Lelli <juri.lelli@arm.com>
 ---
-v5:
-  - Drop optional cache-{size,sets,{block,line}-size} properties, as
-    this information is auto-detected,
-  - Integrate linking CPUs to L2 cache into this patch,
+ arch/arm/kernel/topology.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-v4:
-  - New.
----
- arch/arm/boot/dts/sh73a0.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index cbc885e46c504f56..f90ef9c93d3df3aa 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -28,6 +28,7 @@
- 			reg = <0>;
- 			clock-frequency = <1196000000>;
- 			power-domains = <&pd_a2sl>;
-+			next-level-cache = <&L2>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
-@@ -35,6 +36,7 @@
- 			reg = <1>;
- 			clock-frequency = <1196000000>;
- 			power-domains = <&pd_a2sl>;
-+			next-level-cache = <&L2>;
- 		};
- 	};
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 08b7847..ec279d1 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -40,7 +40,7 @@
+  * to run the rebalance_domains for all idle cores and the cpu_capacity can be
+  * updated during this sequence.
+  */
+-static DEFINE_PER_CPU(unsigned long, cpu_scale);
++static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
  
-@@ -53,6 +55,18 @@
- 		      <0xf0000100 0x100>;
- 	};
+ unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
+ {
+@@ -306,8 +306,6 @@ void __init init_cpu_topology(void)
+ 		cpu_topo->socket_id = -1;
+ 		cpumask_clear(&cpu_topo->core_sibling);
+ 		cpumask_clear(&cpu_topo->thread_sibling);
+-
+-		set_capacity_scale(cpu, SCHED_CAPACITY_SCALE);
+ 	}
+ 	smp_wmb();
  
-+	L2: cache-controller {
-+		compatible = "arm,pl310-cache";
-+		reg = <0xf0100000 0x1000>;
-+		interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&pd_a3sm>;
-+		arm,data-latency = <3 3 3>;
-+		arm,tag-latency = <2 2 2>;
-+		arm,shared-override;
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
- 	sbsc2: memory-controller@fb400000 {
- 		compatible = "renesas,sbsc-sh73a0";
- 		reg = <0xfb400000 0x400>;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.2.2
