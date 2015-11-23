@@ -1,88 +1,35 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
-Date: Mon, 23 Nov 2015 11:43:05 +0530
-Message-ID: <5652AE71.4060609@codeaurora.org>
-References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-11-git-send-email-architt@codeaurora.org>
- <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
- <564C981F.3040907@codeaurora.org>
- <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: "Ivan T. Ivanov" <iivanov.xz@gmail.com>
+Subject: Re: [RFC/PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP bindings
+Date: Mon, 23 Nov 2015 08:37:19 +0200
+Message-ID: <30F64119-A5B2-45FA-ABA2-A7FB1A1D7952@gmail.com>
+References: <1447808426-21834-1-git-send-email-sboyd@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1447808426-21834-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMS8yMS8yMDE1IDE6MjkgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+ICtTdGVwaGVuCj4K
-PiBPbiBXZWQsIE5vdiAxOCwgMjAxNSBhdCA5OjI0IEFNLCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0
-QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPj4gSGkgUm9iLAo+Pgo+PiBPbiAxMS8xOC8yMDE1IDY6
-NDggUE0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pj4KPj4+ICtkdCBsaXN0Cj4+Pgo+Pj4gT24gV2Vk
-LCBOb3YgMTgsIDIwMTUgYXQgNDo1NSBBTSwgQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVy
-b3JhLm9yZz4KPj4+IHdyb3RlOgo+Pj4+Cj4+Pj4gQWRkIGFkZGl0aW9uYWwgcHJvcGVydHkgaW5m
-byBuZWVkZWQgZm9yIERTSXYyIERULgo+Pj4KPj4+Cj4+PiBQbGVhc2UgdXNlIGdldF9tYWludGFp
-bmVycy5wbC4KPj4KPj4KPj4gU29ycnkgYWJvdXQgdGhhdCwgbWlzc2VkIG91dCBkb2luZyB0aGF0
-IHBvc3RpbmcgdGhpcyB0aW1lLgo+Pgo+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
-ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+IC0tLQo+Pj4+ICAgIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IHwgMTAgKysrKysrKysr
-LQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
-Pj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9tc20vZHNpLnR4dAo+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKPj4+PiBpbmRleCBmMzQ0YjllLi5jYTY1YTM0IDEwMDY0
-NAo+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
-bS9kc2kudHh0Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvbXNtL2RzaS50eHQKPj4+PiBAQCAtMTMsMTggKzEzLDI1IEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4+Pj4gICAgLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUgPCZtbWNjIE1EU1NfR0RT
-Qz4uCj4+Pj4gICAgLSBjbG9ja3M6IGRldmljZSBjbG9ja3MKPj4+PiAgICAgIFNlZSBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2tzL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IK
-Pj4+PiBkZXRhaWxzLgo+Pj4+IC0tIGNsb2NrLW5hbWVzOiB0aGUgZm9sbG93aW5nIGNsb2NrcyBh
-cmUgcmVxdWlyZWQ6Cj4+Pj4gKy0gY2xvY2stbmFtZXM6IHRoZXNlIHZhcnkgYmFzZWQgb24gdGhl
-IERTSSB2ZXJzaW9uLiBGb3IgRFNJNkc6Cj4+Pj4gICAgICAqICJidXNfY2xrIgo+Pj4+ICAgICAg
-KiAiYnl0ZV9jbGsiCj4+Pj4gKyAgKiAiYnl0ZV9jbGtfc3JjCj4+Pgo+Pj4KPj4+IFRoaXMgc291
-bmRzIGxpa2UgdGhlIHBhcmVudCBvZiBieXRlX2Nsay4gSXMgdGhhdCByZWFsbHkgYSBjbG9jayB3
-aXRoaW4KPj4+IHRoZSBibG9jaz8KPj4KPj4KPj4gYnl0ZV9jbGtfc3JjIGlzbid0IGluIHRoZSBi
-bG9jaywgYnV0IGJ5dGVfY2xrX3NyYydzIHBhcmVudCBpcyBvbmUgb2YKPj4gdGhlIFBMTHMgaW4g
-dGhpcyBibG9jay4gV2UgdGFrZSB0aGlzIGNsb2NrIHNvIHRoYXQgd2UgY2FuIHJlLXBhcmVudAo+
-PiBpdCB0byBhbiBhcHByb3ByaWF0ZSBQTEwuIFRoZSBkZWNpc2lvbiBvZiB3aGF0IFBMTCB0byBj
-aG9vc2UgbmVlZHMgdG8KPj4gYmUgZG9uZSBieSB0aGUgRFNJIGJsb2NrJ3MgZHJpdmVyLgo+Cj4g
-U2VlbXMgbGlrZSBhYnVzZSB0byBtZS4gVGhlIGxpc3Qgb2YgY2xvY2tzIHNob3VsZCBtYXRjaCB3
-aGF0IGFyZQo+IGlucHV0cyB0byB0aGUgYmxvY2ssIG5vdCB3aGF0IHRoZSBkcml2ZXIgaGFwcGVu
-cyB0byBuZWVkLiBXaXRob3V0IGEKPiBmdWxsIHVuZGVyc3RhbmRpbmcgb2YgdGhlIGNsb2NrIHRy
-ZWUgaGVyZSwgSSBkb24ndCBoYXZlIGEgc3VnZ2VzdGlvbi4KPiBNYXliZSBTdGVwaGVuIGRvZXMu
-CgpXZSBkb24ndCBuZWVkIHNwZWNpZnkgYnl0ZV9jbGtfc3JjIChhbmQgb3RoZXIgeHl6X2Nsa19z
-cmMgY2xvY2tzKSB2aWEKRFQuIFRoZXJlIGlzIGEgc3RhdGljIGxpbmsgc2V0IHVwIGJldHdlZW4g
-Ynl0ZV9jbGsgYW5kIGJ5dGVfY2xrX3NyYyBieQpvdXIgY2xvY2sgZHJpdmVyIHRoYXQgbmV2ZXIg
-Y2hhbmdlcy4gV2UgY2FuIHJldHJpZXZlIGl0IGluIHRoZSBkcml2ZXIKaXRzZWxmIHVzaW5nIGNs
-a19nZXRfcGFyZW50KGJ5dGVfY2xrKS4gVGhpcyB3YXkgd2Ugc3RpY2sgdG8gb25seQppbnB1dCBj
-bG9ja3MuCgpTdGVwaGVuLCBkb2VzIHRoYXQgc291bmQgb2theT8KCj4KPj4+PiAgICAgICogImNv
-cmVfY2xrIgo+Pj4+ICAgICAgKiAiY29yZV9tbXNzX2NsayIKPj4+PiAgICAgICogImlmYWNlX2Ns
-ayIKPj4+PiAgICAgICogIm1kcF9jb3JlX2NsayIKPj4+PiAgICAgICogInBpeGVsX2NsayIKPj4+
-PiArICAqICJwaXhlbF9jbGtfc3JjIgo+Pj4+ICsgIEZvciBEU0l2Miwgd2UgbmVlZCBhIGZldyBt
-b3JlOgo+Pj4KPj4+Cj4+PiBXaGF0IGlzIHRoZSBvdmVyYWxsIG9yZGVyIG9mIGNsb2Nrcz8gQXMg
-bGlzdGVkPwo+Pgo+Pgo+PiBPcmRlciBpbiB3aGljaCB0aGUgZHJpdmVyIGRvZXMgY2xrX2dldD8g
-SXQgdXNlcyB0aGUgY2xvY2sKPj4gbmFtZSB0byBnZXQgZWFjaCBvbmUgaW5kaXZpZHVhbGx5LCBz
-byB0aGUgb3JkZXIgZG9lc24ndCBtYXR0ZXIKPj4gYXMgc3VjaC4KPgo+IFRoZSBvcmRlciBpbiBE
-VC4gWW91IG1heSB1c2UgdGhlIG5hbWVzLCBidXQgdGhlIG9yZGVyIHNob3VsZCBzdGlsbCBiZSBz
-cGVjaWZpZWQuCgpPa2F5LiBJJ2xsIGNyb3NzIGNoZWNrIGFuZCBtYWtlIHN1cmUgdGhlIG9yZGVy
-IGlzIGFzIGluIG91ciBEVCBmaWxlcy4KCkFyY2hpdAoKPgo+IFJvYgo+IC0tCj4gVG8gdW5zdWJz
-Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFy
-bS1tc20iIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5l
-bC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21h
-am9yZG9tby1pbmZvLmh0bWwKPgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMu
-IGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29s
-bGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+
+> On Nov 18, 2015, at 3:00 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> 
+> The drivers don't really need to know which PMIC they're for, so
+> make a generic binding for them. This alleviates us from updating
+> the drivers every time a new PMIC comes out. It's still
+> recommended that we update the binding with new PMIC models and
+> always specify the specific model for the MPPs and gpios before
+> the generic compatible string in devicetree, but this at least
+> cuts down on adding more and more compatible strings to the
+> drivers until we actually need them.
+> 
+> Cc: <devicetree@vger.kernel.org>
+> Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+
+Thanks.
+
+Acked-by: Ivan T. Ivanov <iivanov.xz@gmail.com>
