@@ -1,116 +1,88 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2] watchdog: add Alphascale asm9260-wdt driver
-Date: Sun, 22 Nov 2015 23:26:29 -0800
-Message-ID: <5652BFA5.9010101@roeck-us.net>
-References: <20151027023132.GA1270@roeck-us.net>
- <1446714416-22587-1-git-send-email-linux@rempel-privat.de>
- <1446714416-22587-2-git-send-email-linux@rempel-privat.de>
- <20151105204301.GA15806@rob-hp-laptop> <5652BC30.7060803@rempel-privat.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH v4 4/6] reset: sunxi: Add Allwinner H3
+ bus resets
+Date: Mon, 23 Nov 2015 15:41:52 +0800
+Message-ID: <CAGb2v665C-EM4t1h3rQ=hNR=1Z4J2mp7DRy_zM8-OkCXzZ03iw@mail.gmail.com>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-5-git-send-email-jenskuske@gmail.com> <13919923.o3Dj9msmoa@wuerfel>
+ <20151104163014.GB6114@lukather> <20151105074730.fd6a9d57a1f2c7933478c680@free.fr>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5652BC30.7060803-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBV4GZOZAKGQENKO6DNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151105074730.fd6a9d57a1f2c7933478c680-GANU6spQydw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: moinejf-GANU6spQydw@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2015 11:11 PM, Oleksij Rempel wrote:
-> Hi,
+On Thu, Nov 5, 2015 at 2:47 PM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wrote:
+> On Wed, 4 Nov 2015 08:30:14 -0800
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 >
-> thank you for review!
+>> Hi Arnd,
+>>
+>> On Fri, Oct 30, 2015 at 09:27:03AM +0100, Arnd Bergmann wrote:
+>> > On Tuesday 27 October 2015 17:50:24 Jens Kuske wrote:
+>> > >
+>> > > +static int sun8i_h3_bus_reset_xlate(struct reset_controller_dev *rcdev,
+>> > > +                                   const struct of_phandle_args *reset_spec)
+>> > > +{
+>> > > +       unsigned int index = reset_spec->args[0];
+>> > > +
+>> > > +       if (index < 96)
+>> > > +               return index;
+>> > > +       else if (index < 128)
+>> > > +               return index + 32;
+>> > > +       else if (index < 160)
+>> > > +               return index + 64;
+>> > > +       else
+>> > > +               return -EINVAL;
+>> > > +}
+>> > > +
+>> > >
+>> >
+>> > This looks like you are doing something wrong and should either
+>> > put the actual number into DT,
+>>
+>> This is the actual number, except that there's some useless registers
+>> in between. Allwinner documents it like that:
+>>
+>> 0x0   Reset 0
+>> 0x4   Reset 1
+>> 0xc   Reset 2
+>>
+>> So we have to adjust the offset to account with the blank register in
+>> between (0x8).
+>>
+>> > or use a two-cell representation, with the first cell indicating the
+>> > block (0, 1 or 2), and the second cell the index.
+>>
+>> And the missing register is not a block either.
+>>
+>> That would also imply either changing the bindings of that driver (and
+>> all the current DTS that are using it), or introducing a whole new
+>> driver just to deal with some extraordinary offset calculation.
 >
-> Am 05.11.2015 um 21:43 schrieb Rob Herring:
->> On Thu, Nov 05, 2015 at 10:06:56AM +0100, Oleksij Rempel wrote:
->>> Add WD support for Alphascale asm9260 SoC. This driver
->>> provide support for different function modes:
->>> - HW mode to trigger SoC reset on timeout
->>> - SW mode do soft reset if needed
->>> - DEBUG mode
->>>
->>> Optional support for stopping watchdog. If reset binding are not provided
->>> this driver will work in nowayout mode.
->>>
->>> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
->>> ---
->>>   .../bindings/watchdog/alphascale-asm9260.txt       |  39 ++
->>
->> It is preferred that bindings are a separate patch.
->>
->>>   drivers/watchdog/Kconfig                           |   9 +
->>>   drivers/watchdog/Makefile                          |   1 +
->>>   drivers/watchdog/asm9260_wdt.c                     | 415 +++++++++++++++++++++
->>>   4 files changed, 464 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->>>   create mode 100644 drivers/watchdog/asm9260_wdt.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->>> new file mode 100644
->>> index 0000000..6e54d1f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->>> @@ -0,0 +1,39 @@
->>> +Alphascale asm9260 Watchdog timer
->>> +
->>> +Required properties:
->>> +
->>> +- compatible : should be "alphascale,asm9260-wdt".
->>> +- reg : Specifies base physical address and size of the registers.
->>> +- clocks : the clocks feeding the watchdog timer. See clock-bindings.txt
->>> +- clock-names : should be set to
->>> +	"mod" - source for tick counter.
->>> +	"ahb" - ahb gate.
->>> +
->>> +Optional properties:
->>> +- resets : phandle pointing to the system reset controller with correct
->>> +	reset line index for watchdog controller reset. This propertie is
->>
->> s/propertie/property/
->>
->>> +	required if you need to disable "nowayout" and it neened only with
->>> +	CONFIG_WATCHDOG_NOWAYOUT=n.
->>
->> The DT cannot depend on certain kernel configs.
->>
->>> +	Without reseting this WD controller, it is not possible to stop
->>
->> s/reseting/resetting/
->>
->>> +	counter.
->>> +- reset-names : should be set to "wdt_rst" if "resets" is used.
->>> +- timeout-sec : shall contain the default watchdog timeout in seconds,
->>> +	if unset, the default timeout is 30 seconds.
->>> +- alphascale,mode : tree modes are supported
->>
->> s/tree/three/
->>
->>> +	"hw" - hw reset (defaul).
->>
->> s/defaul/default/
->>
->>> +	"sw" - sw reset.
->>> +	"debug" - no action is taken.
->>
->> Seems like this should be a generic wdog property.
->>
->
-> what do you mean?
-> Using "mode" instead of "alphascale,mode" and implement it in WD framework?
->
+> In the H3, the holes are not used, but what would occur if these holes
+> would be used for some other purpose in future SoCs? Double mapping?
 
-You should still read the property in the driver, even it if is made generic.
-The watchdog framework can't really use the information, most drivers don't
-support selecting the mode. We can consider moving it into the framework
-if/when it benefits other drivers.
+We'd have a different compatible string for it.
 
-On a side note, I would suggest "software" and "hardware" instead of sw / hw,
-but that is just a personal preference.
+My suggestion for the resets is to just split them into 3 nodes: AHB
+(since AHB1 and AHB2 devices are mixed together in the bunch), APB1,
+and APB2 reset controls.
 
-Thanks,
-Guenter
+This follows what we have for existing SoCs, and gets rid of the unused
+hole. We can use the existing "allwinner,sun6i-a31-clock-reset" and
+"allwinner,sun6i-a31-ahb1-reset" compatibles.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Regards
+ChenYu
