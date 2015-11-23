@@ -1,55 +1,161 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 11/19] ARM: dts: imx: replace legacy *,wakeup property
- with wakeup-source
-Date: Mon, 23 Nov 2015 13:37:05 +0800
-Message-ID: <20151123053705.GH13744@tiger>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
- <1445422216-29375-12-git-send-email-sudeep.holla@arm.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v2 4/6] clk: berlin: add clk support for berlin4ct
+Date: Mon, 23 Nov 2015 13:56:53 +0800
+Message-ID: <20151123135653.7e2919d7@xhacker>
+References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
+	<1448008952-1787-5-git-send-email-jszhang@marvell.com>
+	<564F8902.4000405@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445422216-29375-12-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <564F8902.4000405@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, antoine.tenart@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 21, 2015 at 11:10:08AM +0100, Sudeep Holla wrote:
-> Though the keyboard and other driver will continue to support the legacy
-> "gpio-key,wakeup", "linux,wakeup" boolean property to enable the wakeup
-> source, "wakeup-source" is the new standard binding.
+On Fri, 20 Nov 2015 21:56:34 +0100
+Sebastian Hesselbarth wrote:
+
+> On 20.11.2015 09:42, Jisheng Zhang wrote:
+> > This patch supports the gateclk and berlin-clk in berlin4ct SoC.
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> > ---
+> >  drivers/clk/berlin/Makefile        |  2 +-
+> >  drivers/clk/berlin/clk-berlin4ct.c | 97 ++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 98 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/clk/berlin/clk-berlin4ct.c
+> > 
+> > diff --git a/drivers/clk/berlin/Makefile b/drivers/clk/berlin/Makefile
+> > index fc92151..accfc3a 100644
+> > --- a/drivers/clk/berlin/Makefile
+> > +++ b/drivers/clk/berlin/Makefile
+> > @@ -1,5 +1,5 @@
+> >  obj-y += berlin2-avpll.o berlin2-pll.o berlin2-div.o
+> > -obj-y += pll.o clk.o gate.o
+> > +obj-y += pll.o clk.o gate.o clk-berlin4ct.o  
 > 
-> This patch replaces all the legacy wakeup properties with the unified
-> "wakeup-source" property in order to avoid any futher copy-paste
-> duplication.
+> This will always compile clk-berlin4ct unconditionally on bg2x too.
+
+Indeed. this also always compile bg2x clk driver on BG4x too. Is it fine to
+introduce config option? any suggestion?
+
 > 
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> Also, keep the naming style.
 
-<snip>
+will do in v3
 
-> diff --git a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
-> index 321662f53e33..16fc69c69ab2 100644
-> --- a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
-> +++ b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
-> @@ -156,7 +156,7 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_esdhc2>;
->  	cap-sdio-irq;
-> -	enable-sdio-wakeup;
-> +	wakeup-source;
+> 
+> Sebastian
+> 
+> >  obj-$(CONFIG_MACH_BERLIN_BG2)	+= bg2.o
+> >  obj-$(CONFIG_MACH_BERLIN_BG2CD)	+= bg2.o
+> >  obj-$(CONFIG_MACH_BERLIN_BG2Q)	+= bg2q.o
+> > diff --git a/drivers/clk/berlin/clk-berlin4ct.c b/drivers/clk/berlin/clk-berlin4ct.c
+> > new file mode 100644
+> > index 0000000..0d994a4
+> > --- /dev/null
+> > +++ b/drivers/clk/berlin/clk-berlin4ct.c
+> > @@ -0,0 +1,97 @@
+> > +/*
+> > + * Copyright (c) 2015 Marvell Technology Group Ltd.
+> > + *
+> > + * Author: Jisheng Zhang <jszhang@marvell.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms and conditions of the GNU General Public License,
+> > + * version 2, as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope it will be useful, but WITHOUT
+> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> > + * more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License along with
+> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +#include <linux/clk-provider.h>
+> > +
+> > +#include "clk.h"
+> > +
+> > +static struct clk_onecell_data gateclk_data;
+> > +static struct clk_onecell_data clk_data;
+> > +
+> > +static const struct gateclk_desc berlin4ct_gates[] __initconst = {
+> > +	{ "tspsysclk",		"perifsysclk",	0 },
+> > +	{ "usb0coreclk",	"perifsysclk",	1 },
+> > +	{ "zspsysclk",		"perifsysclk",	2 },
+> > +	{ "sdiosysclk",		"perifsysclk",	3 },
+> > +	{ "ethcoreclk",		"perifsysclk",	4 },
+> > +	{ "pcie0sys",		"perifsysclk",	6 },
+> > +	{ "sata0core",		"perifsysclk",	7 },
+> > +	{ "nfcsysclk",		"perifsysclk",	8 },
+> > +	{ "emmcsysclk",		"perifsysclk",	9 },
+> > +	{ "ihb0sysclk",		"perifsysclk",	10 },
+> > +};
+> > +
+> > +static void __init berlin4ct_gateclk_setup(struct device_node *np)
+> > +{
+> > +	int n = ARRAY_SIZE(berlin4ct_gates);
+> > +
+> > +	berlin_gateclk_setup(np, berlin4ct_gates, &gateclk_data, n);
+> > +}
+> > +CLK_OF_DECLARE(berlin4ct_gateclk, "marvell,berlin4ct-gateclk",
+> > +	       berlin4ct_gateclk_setup);
+> > +
+> > +static const struct clk_desc berlin4ct_descs[] __initconst = {
+> > +	{ "cpufastrefclk",	0x0 },
+> > +	{ "memfastrefclk",	0x4 },
+> > +	{ "cfgclk",		0x20,	CLK_IGNORE_UNUSED },
+> > +	{ "perifsysclk",	0x24,	CLK_IGNORE_UNUSED },
+> > +	{ "hbclk",		0x28 },
+> > +	{ "atbclk",		0x2c },
+> > +	{ "decoderclk",		0x40 },
+> > +	{ "decoderm3clk",	0x44 },
+> > +	{ "decoderpcubeclk",	0x48 },
+> > +	{ "encoderclk",		0x4c },
+> > +	{ "ovpcoreclk",		0x50 },
+> > +	{ "gfx2dcoreclk",	0x60 },
+> > +	{ "gfx3dcoreclk",	0x64 },
+> > +	{ "gfx3dshclk",		0x68 },
+> > +	{ "gfx3dsysclk",	0x6c },
+> > +	{ "gfx2dsysclk",	0x70 },
+> > +	{ "aviosysclk",		0x80 },
+> > +	{ "vppsysclk",		0x84 },
+> > +	{ "eddcclk",		0x88 },
+> > +	{ "aviobiuclk",		0x8c },
+> > +	{ "zspclk",		0xa0 },
+> > +	{ "tspclk",		0xc0 },
+> > +	{ "tsprefclk",		0xc4 },
+> > +	{ "ndsclk",		0xc8 },
+> > +	{ "nocsclk",		0xcc },
+> > +	{ "apbcoreclk",		0xd0,	CLK_IGNORE_UNUSED },
+> > +	{ "emmcclk",		0xe0 },
+> > +	{ "sd0clk",		0xe4 },
+> > +	{ "sd1clk",		0xe8 },
+> > +	{ "dllmstrefclk",	0xec },
+> > +	{ "gethrgmiiclk",	0xf0 },
+> > +	{ "gethrgmiisysclk",	0xf4 },
+> > +	{ "usim0clk",		0x100 },
+> > +	{ "pcietestclk",	0x110 },
+> > +	{ "usb2testclk",	0x120 },
+> > +	{ "usb3testclk",	0x124 },
+> > +	{ "usb3coreclk",	0x128 },
+> > +	{ "nfceccclk",		0x130 },
+> > +	{ "bcmclk",		0x140 },
+> > +};
+> > +
+> > +static void __init berlin4ct_clk_setup(struct device_node *np)
+> > +{
+> > +	int n = ARRAY_SIZE(berlin4ct_descs);
+> > +
+> > +	berlin_clk_setup(np, berlin4ct_descs, &clk_data, n);
+> > +}
+> > +CLK_OF_DECLARE(berlin4ct_clk, "marvell,berlin4ct-clk",
+> > +	       berlin4ct_clk_setup);
+> >   
+> 
 
-I do not see this be mentioned in commit log.  I do not see relevant
-kernel changes in v4.4-rc1 to support that.  Am I missing anything? 
-
-Shawn
-
->  	keep-power-in-suspend;
->  	max-frequency = <50000000>;
->  	no-1-8-v;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
