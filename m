@@ -1,60 +1,265 @@
-From: Martin Schiller <mschiller@tdt.de>
-Subject: RE: [PATCH 1/4] pinctrl/lantiq: update devicetree bindings
- Documentation
-Date: Mon, 23 Nov 2015 10:46:37 +0000
-Message-ID: <6a6af36764c34428851b0cc8f513e89d@TDT-MS.TDTNET.local>
-References: <1447995151-3857-1-git-send-email-mschiller@tdt.de>
- <20151120142640.GA3348@rob-hp-laptop>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v4 5/6] ARM: dts: sunxi: Add Allwinner
+ H3 DTSI
+Date: Mon, 23 Nov 2015 11:50:47 +0100
+Message-ID: <5652EF87.50604@redhat.com>
+References: <1445964626-6484-1-git-send-email-jenskuske@gmail.com>
+ <1445964626-6484-6-git-send-email-jenskuske@gmail.com>
+ <CAGb2v64NZMw0vNvVtepthUMox5TDy07gTBAWZqf8GAq6TrMpOg@mail.gmail.com>
+ <563614A3.6060805@gmail.com> <20151123085719.GT32142@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20151120142640.GA3348@rob-hp-laptop>
-Content-Language: de-DE
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "blogic@openwrt.org" <blogic@openwrt.org>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "jogo@openwrt.org" <jogo@openwrt.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBEO7ZOZAKGQEDVC7LNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151123085719.GT32142@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMjAvMjAxNSBhdCAzOjI2IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gRnJpLCBO
-b3YgMjAsIDIwMTUgYXQgMDU6NTI6MjhBTSArMDEwMCwgTWFydGluIFNjaGlsbGVyIHdyb3RlOg0K
-PiA+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgbmV3IGRlZGljYXRlZCAibGFudGlxLHBpbmN0cmwtPGNo
-aXA+IiBjb21wYXRpYmxlDQo+IHN0cmluZ3MNCj4gPiB0byB0aGUgZGV2aWNldHJlZSBiaW5kaW5n
-cyBEb2N1bWVudGF0aW9uLCB3aGVyZSA8Y2hpcD4gaXMgb25lIG9mDQo+ICJhc2UiLA0KPiA+ICJk
-YW51YmUiLCAieHJ4MTAwIiwgInhyeDIwMCIgb3IgInhyeDMwMCIgYW5kIG1hcmtzIHRoZQ0KPiAi
-bGFudGlxLHBpbmN0cmwteHdheSINCj4gPiBhbmQgImxhbnRpcSxwaW5jdHJsLXhyOSIgY29tcGF0
-aWJsZSBzdHJpbmdzIGFzIERFUFJFQ0FURUQuDQo+DQo+IFRoaXMgY291bGQgdXNlIGEgYmV0dGVy
-IHN1YmplY3QuIEV2ZXJ5IGNoYW5nZSB0byBiaW5kaW5ncyBhcmUgInVwZGF0aW5nDQo+IGJpbmRp
-bmcgZGVzY3JpcHRpb24uIg0KDQpPSywgc28gd291bGQgInBpbmN0cmwvbGFudGlxOiB1cGRhdGlu
-ZyBkdCBiaW5kaW5nIGRlc2NyaXB0aW9uIiBiZSBiZXR0ZXI/DQoNCj4NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IE1hcnRpbiBTY2hpbGxlciA8bXNjaGlsbGVyQHRkdC5kZT4NCj4gPiAtLS0NCj4g
-PiAgLi4uL2JpbmRpbmdzL3BpbmN0cmwvbGFudGlxLHBpbmN0cmwteHdheS50eHQgICAgICAgfCAx
-MDgNCj4gKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDAgaW5z
-ZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9sYW50aXEscGluY3RybC14d2F5
-LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2xhbnRp
-cSxwaW5jdHJsLXh3YXkudHh0DQo+ID4gaW5kZXggZTg5YjQ2Ny4uMTZkYWExMiAxMDA2NDQNCj4g
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9sYW50aXEs
-cGluY3RybC0NCj4geHdheS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGluY3RybC9sYW50aXEscGluY3RybC0NCj4geHdheS50eHQNCj4gPiBAQCAtMSw3
-ICsxLDE0IEBADQo+ID4gIExhbnRpcSBYV0FZIHBpbm11eCBjb250cm9sbGVyDQo+ID4NCj4gPiAg
-UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRpYmxlOiAibGFudGlxLHBpbmN0cmwt
-eHdheSIgb3IgImxhbnRpcSxwaW5jdHJsLXhyOSINCj4gPiArLSBjb21wYXRpYmxlOiAibGFudGlx
-LHBpbmN0cmwteHdheSIsIChERVBSRUNBVEVEOiBVc2UgWFdBWSBEQU5VQkUNCj4gRmFtaWx5KQ0K
-PiA+ICsgICAgICAibGFudGlxLHBpbmN0cmwteHI5IiwgKERFUFJFQ0FURUQ6IFVzZSBYV0FZIHhS
-WDEwMC94UlgyMDANCj4gRmFtaWx5KQ0KPiA+ICsgICAgICAibGFudGlxLHBpbmN0cmwtPGNoaXA+
-Iiwgd2hlcmUgPGNoaXA+IGlzOg0KPg0KPiA8Y2hpcD4gZmlyc3QgaXMgcHJlZmVycmVkOiBsYW50
-aXEsPGNoaXA+LXBpbmN0cmwNCj4NCj4gPiArImFzZSIgKFhXQVkgQU1BWk9OIEZhbWlseSkNCj4g
-PiArImRhbnViZSIgKFhXQVkgREFOVUJFIEZhbWlseSkNCj4gPiArInhyeDEwMCIgKFhXQVkgeFJY
-MTAwIEZhbWlseSkNCj4gPiArInhyeDIwMCIgKFhXQVkgeFJYMjAwIEZhbWlseSkNCj4gPiArInhy
-eDMwMCIgKFhXQVkgeFJYMzAwIEZhbWlseSkNCg0KTm8gcHJvYmxlbSwgSSB3aWxsIGNoYW5nZSB0
-aGlzIHRvICJsYW50aXEsPGNoaXA+LXBpbmN0cmwiIGZvciB0aGUgbmV3IGJpbmRpbmdzLg0KDQpN
-YXJ0aW4NCg0K
+HI,
+
+On 23-11-15 09:57, Maxime Ripard wrote:
+> Hi,
+>
+> On Sun, Nov 01, 2015 at 02:33:23PM +0100, Jens Kuske wrote:
+>>>> +               bus_gates: clk@01c20060 {
+>>>> +                       #clock-cells = <1>;
+>>>> +                       compatible = "allwinner,sun8i-h3-bus-gates-clk";
+>>>> +                       reg = <0x01c20060 0x14>;
+>>>> +                       clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
+>>>> +                       clock-names = "ahb1", "ahb2", "apb1", "apb2";
+>>>> +                       clock-indices = <5>, <6>, <8>,
+>>>> +                                       <9>, <10>, <13>,
+>>>> +                                       <14>, <17>, <18>,
+>>>> +                                       <19>, <20>,
+>>>> +                                       <21>, <23>,
+>>>> +                                       <24>, <25>,
+>>>> +                                       <26>, <27>,
+>>>> +                                       <28>, <29>,
+>>>> +                                       <30>, <31>, <32>,
+>>>> +                                       <35>, <36>, <37>,
+>>>> +                                       <40>, <41>, <43>,
+>>>> +                                       <44>, <52>, <53>,
+>>>> +                                       <54>, <64>,
+>>>> +                                       <65>, <69>, <72>,
+>>>> +                                       <76>, <77>, <78>,
+>>>> +                                       <96>, <97>, <98>,
+>>>> +                                       <112>, <113>,
+>>>> +                                       <114>, <115>, <116>,
+>>>> +                                       <128>, <135>;
+>>>> +                       clock-output-names = "ahb1_ce", "ahb1_dma", "ahb1_mmc0",
+>>>> +                                       "ahb1_mmc1", "ahb1_mmc2", "ahb1_nand",
+>>>> +                                       "ahb1_sdram", "ahb2_gmac", "ahb1_ts",
+>>>> +                                       "ahb1_hstimer", "ahb1_spi0",
+>>>> +                                       "ahb1_spi1", "ahb1_otg",
+>>>> +                                       "ahb1_otg_ehci0", "ahb1_ehic1",
+>>>
+>>> ahb1_ehci1? Same for the following 3 lines.
+>> I'll fix them...
+>>>
+>>>> +                                       "ahb1_ehic2", "ahb1_ehic3",
+>>>> +                                       "ahb1_otg_ohci0", "ahb2_ohic1",
+>>>> +                                       "ahb2_ohic2", "ahb2_ohic3", "ahb1_ve",
+>>>> +                                       "ahb1_lcd0", "ahb1_lcd1", "ahb1_deint",
+>>>> +                                       "ahb1_csi", "ahb1_tve", "ahb1_hdmi",
+>>>> +                                       "ahb1_de", "ahb1_gpu", "ahb1_msgbox",
+>>>> +                                       "ahb1_spinlock", "apb1_codec",
+>>>> +                                       "apb1_spdif", "apb1_pio", "apb1_ths",
+>>>> +                                       "apb1_i2s0", "apb1_i2s1", "apb1_i2s2",
+>>>> +                                       "apb2_i2c0", "apb2_i2c1", "apb2_i2c2",
+>>>> +                                       "apb2_uart0", "apb2_uart1",
+>>>> +                                       "apb2_uart2", "apb2_uart3", "apb2_scr",
+>>>> +                                       "ahb1_ephy", "ahb1_dbg";
+>>>
+>>> If it weren't for the last 2 clocks, we could cleanly split out apb1 and apb2
+>>> gates. Having a separate AHB clock gate taking 2 addresses seems messy
+>>> as well. :(
+>>
+>> Well, maybe we still should do that, if we split the resets too at least
+>> apb[12]  would line up again.
+>>
+>> I don't know what to do with these bus things any more, all variants I
+>> sent had issues somewhere...
+>
+> AFAIK, Arnd had some objections, but he never got back to us when we
+> explained how the hardware was laid out, so I don't know if they still
+> apply.
+>
+>>>> +               };
+>>>> +
+>>>> +               mmc0_clk: clk@01c20088 {
+>>>> +                       #clock-cells = <1>;
+>>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+>>>> +                       reg = <0x01c20088 0x4>;
+>>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+>>>> +                       clock-output-names = "mmc0",
+>>>> +                                            "mmc0_output",
+>>>> +                                            "mmc0_sample";
+>>>> +               };
+>>>> +
+>>>> +               mmc1_clk: clk@01c2008c {
+>>>> +                       #clock-cells = <1>;
+>>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+>>>> +                       reg = <0x01c2008c 0x4>;
+>>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+>>>> +                       clock-output-names = "mmc1",
+>>>> +                                            "mmc1_output",
+>>>> +                                            "mmc1_sample";
+>>>> +               };
+>>>> +
+>>>> +               mmc2_clk: clk@01c20090 {
+>>>> +                       #clock-cells = <1>;
+>>>> +                       compatible = "allwinner,sun4i-a10-mmc-clk";
+>>>> +                       reg = <0x01c20090 0x4>;
+>>>> +                       clocks = <&osc24M>, <&pll6 0>, <&pll8 0>;
+>>>> +                       clock-output-names = "mmc2",
+>>>> +                                            "mmc2_output",
+>>>> +                                            "mmc2_sample";
+>>>> +               };
+>>>> +
+>>>> +               mbus_clk: clk@01c2015c {
+>>>> +                       #clock-cells = <0>;
+>>>> +                       compatible = "allwinner,sun8i-a23-mbus-clk";
+>>>> +                       reg = <0x01c2015c 0x4>;
+>>>> +                       clocks = <&osc24M>, <&pll6 1>, <&pll5>;
+>>>> +                       clock-output-names = "mbus";
+>>>> +               };
+>>>> +       };
+>>>> +
+>>>> +       soc {
+>>>> +               compatible = "simple-bus";
+>>>> +               #address-cells = <1>;
+>>>> +               #size-cells = <1>;
+>>>> +               ranges;
+>>>> +
+>>>> +               dma: dma-controller@01c02000 {
+>>>> +                       compatible = "allwinner,sun8i-h3-dma";
+>>>> +                       reg = <0x01c02000 0x1000>;
+>>>> +                       interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       clocks = <&bus_gates 6>;
+>>>> +                       resets = <&bus_rst 6>;
+>>>> +                       #dma-cells = <1>;
+>>>> +               };
+>>>> +
+>>>> +               mmc0: mmc@01c0f000 {
+>>>> +                       compatible = "allwinner,sun5i-a13-mmc";
+>>>> +                       reg = <0x01c0f000 0x1000>;
+>>>> +                       clocks = <&bus_gates 8>,
+>>>> +                                <&mmc0_clk 0>,
+>>>> +                                <&mmc0_clk 1>,
+>>>> +                                <&mmc0_clk 2>;
+>>>> +                       clock-names = "ahb",
+>>>> +                                     "mmc",
+>>>> +                                     "output",
+>>>> +                                     "sample";
+>>>> +                       resets = <&bus_rst 8>;
+>>>> +                       reset-names = "ahb";
+>>>> +                       interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       status = "disabled";
+>>>> +                       #address-cells = <1>;
+>>>> +                       #size-cells = <0>;
+>>>> +               };
+>>>> +
+>>>> +               mmc1: mmc@01c10000 {
+>>>> +                       compatible = "allwinner,sun5i-a13-mmc";
+>>>> +                       reg = <0x01c10000 0x1000>;
+>>>> +                       clocks = <&bus_gates 9>,
+>>>> +                                <&mmc1_clk 0>,
+>>>> +                                <&mmc1_clk 1>,
+>>>> +                                <&mmc1_clk 2>;
+>>>> +                       clock-names = "ahb",
+>>>> +                                     "mmc",
+>>>> +                                     "output",
+>>>> +                                     "sample";
+>>>> +                       resets = <&bus_rst 9>;
+>>>> +                       reset-names = "ahb";
+>>>> +                       interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       status = "disabled";
+>>>> +                       #address-cells = <1>;
+>>>> +                       #size-cells = <0>;
+>>>> +               };
+>>>> +
+>>>> +               mmc2: mmc@01c11000 {
+>>>> +                       compatible = "allwinner,sun5i-a13-mmc";
+>>>> +                       reg = <0x01c11000 0x1000>;
+>>>> +                       clocks = <&bus_gates 10>,
+>>>> +                                <&mmc2_clk 0>,
+>>>> +                                <&mmc2_clk 1>,
+>>>> +                                <&mmc2_clk 2>;
+>>>> +                       clock-names = "ahb",
+>>>> +                                     "mmc",
+>>>> +                                     "output",
+>>>> +                                     "sample";
+>>>> +                       resets = <&bus_rst 10>;
+>>>> +                       reset-names = "ahb";
+>>>> +                       interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       status = "disabled";
+>>>> +                       #address-cells = <1>;
+>>>> +                       #size-cells = <0>;
+>>>> +               };
+>>>> +
+>>>> +               pio: pinctrl@01c20800 {
+>>>> +                       compatible = "allwinner,sun8i-h3-pinctrl";
+>>>> +                       reg = <0x01c20800 0x400>;
+>>>> +                       interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+>>>> +                                    <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       clocks = <&bus_gates 69>;
+>>>> +                       gpio-controller;
+>>>> +                       #gpio-cells = <3>;
+>>>> +                       interrupt-controller;
+>>>> +                       #interrupt-cells = <2>;
+>>>> +
+>>>> +                       uart0_pins_a: uart0@0 {
+>>>> +                               allwinner,pins = "PA4", "PA5";
+>>>> +                               allwinner,function = "uart0";
+>>>> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>>> +                       };
+>>>> +
+>>>> +                       mmc0_pins_a: mmc0@0 {
+>>>> +                               allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+>>>> +                                                "PF4", "PF5";
+>>>> +                               allwinner,function = "mmc0";
+>>>> +                               allwinner,drive = <SUN4I_PINCTRL_30_MA>;
+>>>> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>>> +                       };
+>>>> +
+>>>> +                       mmc0_cd_pin: mmc0_cd_pin@0 {
+>>>> +                               allwinner,pins = "PF6";
+>>>> +                               allwinner,function = "gpio_in";
+>>>> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>> +                               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>>>> +                       };
+>>>
+>>> This should be in the board DTS, unless this is the reference design,
+>>> in which case you should name the label like "mmc0_cd_pin_reference_design".
+>>>
+>>
+>> The datasheet mentions SDC0_DET function on PF6
+
+Hmm, not in my version, I've "Allwinner_H3_Datasheet_V1.0.pdf" and there
+PF6 only has generic input / output functionality.
+
+ >> so I thought this is
+>> sort of fixed to this pin now. All designs I've seen use this pin.
+>
+> Why is it set as a gpio then if it is a separate function?
+
+I guess because we do not support this in the mmc driver yet. Also on
+older devices the mmc controller has build-in card-detection features
+(using the data lines in that case) but we've never supported this since
+none of the boards sofar have been using it.
+
+For now we can just treat PF6 as a gpio, until someone figures out how
+to do this inside the mmc driver.
+
+Regards,
+
+Hans
