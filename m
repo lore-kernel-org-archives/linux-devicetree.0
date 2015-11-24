@@ -1,110 +1,83 @@
-From: Peter Maydell <peter.maydell@linaro.org>
-Subject: [PATCH v3] Documentation: dt: Add bindings for Secure-only devices
-Date: Tue, 24 Nov 2015 16:06:41 +0000
-Message-ID: <1448381201-10729-1-git-send-email-peter.maydell@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Roy Franz <roy.franz@linaro.org>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] mfd: axp20x: Add AXP223 to list of
+ supported PMICs in DT bindings
+Date: Tue, 24 Nov 2015 16:20:54 +0000
+Message-ID: <20151124162054.GF807@x1>
+References: <1448336916-31212-1-git-send-email-wens@csie.org>
+ <1448336916-31212-2-git-send-email-wens@csie.org>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBB2U42KZAKGQEOYP572Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448336916-31212-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The existing device tree bindings assume that we are only trying to
-describe a single address space with a device tree (for ARM, either
-the Normal or the Secure world). Some uses for device tree need to
-describe both Normal and Secure worlds in a single device tree. Add
-documentation of how to do this, by adding extra properties which
-describe when a device appears differently in the two worlds or when
-it only appears in one of them.
+On Tue, 24 Nov 2015, Chen-Yu Tsai wrote:
 
-The binding describes the general principles for adding new
-properties describing the secure world, but for now we only need a
-single new property, "secure-status", which can be used to annotate
-devices to indicate that they are only visible in one of the two
-worlds.
+> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+> It is functionally identical to AXP221; only the regulator default
+> voltage/status and the external host interface are different.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 
-The primary expected use of this binding is for a virtual machine
-like QEMU to describe the VM layout to a TrustZone aware firmware
-(which would then use the secure-only devices itself, and pass the DT
-on to a kernel running in the non-secure world, which ignores the
-secure-only devices and uses the rest).
+For my own reference:
+  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
----
-This binding doesn't affect the kernel itself, but the kernel
-Documentation/ tree is the de-facto current place where all DT
-bindings are documented, so Grant suggested this was the right
-place to send a doc patch.
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
+tion/devicetree/bindings/mfd/axp20x.txt
+> index a474359dd206..fd39fa54571b 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -5,11 +5,12 @@ axp152 (X-Powers)
+>  axp202 (X-Powers)
+>  axp209 (X-Powers)
+>  axp221 (X-Powers)
+> +axp223 (X-Powers)
+> =20
+>  Required properties:
+>  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+> -	      "x-powers,axp221"
+> -- reg: The I2C slave address for the AXP chip
+> +	      "x-powers,axp221", "x-powers,axp223"
+> +- reg: The I2C slave address or RSB hardware address for the AXP chip
+>  - interrupt-parent: The parent interrupt controller
+>  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+>  - interrupt-controller: The PMIC has its own internal IRQs
+> @@ -51,7 +52,7 @@ LDO3		: LDO		: ldo3in-supply
+>  LDO4		: LDO		: ldo24in-supply	: shared supply
+>  LDO5		: LDO		: ldo5in-supply
+> =20
+> -AXP221 regulators, type, and corresponding input supply names:
+> +AXP221/AXP223 regulators, type, and corresponding input supply names:
+> =20
+>  Regulator	  Type		  Supply Name		  Notes
+>  ---------	  ----		  -----------		  -----
 
-Changes v1->v2:
- * list all the status/secure-status combinations explicitly
- * use /* */ comment syntax, not //
-Changes v2->v3:
- * use secure-foo rather than secure-reg as the example when
-   explaining how the prefixing works
- * say how prefixing a vendor,foo property name works
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
- Documentation/devicetree/bindings/arm/secure.txt | 53 ++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
-new file mode 100644
-index 0000000..e31303f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/secure.txt
-@@ -0,0 +1,53 @@
-+* ARM Secure world bindings
-+
-+ARM CPUs with TrustZone support have two distinct address spaces,
-+"Normal" and "Secure". Most devicetree consumers (including the Linux
-+kernel) are not TrustZone aware and run entirely in either the Normal
-+world or the Secure world. However some devicetree consumers are
-+TrustZone aware and need to be able to determine whether devices are
-+visible only in the Secure address space, only in the Normal address
-+space, or visible in both. (One example of that situation would be a
-+virtual machine which boots Secure firmware and wants to tell the
-+firmware about the layout of the machine via devicetree.)
-+
-+The general principle of the naming scheme for Secure world bindings
-+is that any property that needs a different value in the Secure world
-+can be supported by prefixing the property name with "secure-". So for
-+instance "secure-foo" would override "foo". For property names with
-+a vendor prefix, the Secure variant of "vendor,foo" would be
-+"vendor,secure-foo". If there is no "secure-" property then the Secure
-+world value is the same as specified for the Normal world by the
-+non-prefixed property. However, only the properties listed below may
-+validly have "secure-" versions; this list will be enlarged on a
-+case-by-case basis.
-+
-+Defining the bindings in this way means that a device tree which has
-+been annotated to indicate the presence of Secure-only devices can
-+still be processed unmodified by existing Non-secure software (and in
-+particular by the kernel).
-+
-+Note that it is still valid for bindings intended for purely Secure
-+world consumers (like kernels that run entirely in Secure) to simply
-+describe the view of Secure world using the standard bindings. These
-+secure- bindings only need to be used where both the Secure and Normal
-+world views need to be described in a single device tree.
-+
-+Valid Secure world properties:
-+
-+- secure-status : specifies whether the device is present and usable
-+  in the secure world. The combination of this with "status" allows
-+  the various possible combinations of device visibility to be
-+  specified. If "secure-status" is not specified it defaults to the
-+  same value as "status"; if "status" is not specified either then
-+  both default to "okay". This means the following combinations are
-+  possible:
-+
-+   /* Neither specified: default to visible in both S and NS */
-+   secure-status = "okay";                          /* visible in both */
-+   status = "okay";                                 /* visible in both */
-+   status = "okay"; secure-status = "okay";         /* visible in both */
-+   secure-status = "disabled";                      /* NS-only */
-+   status = "okay"; secure-status = "disabled";     /* NS-only */
-+   status = "disabled"; secure-status = "okay";     /* S-only */
-+   status = "disabled";                             /* disabled in both */
-+   status = "disabled"; secure-status = "disabled"; /* disabled in both */
--- 
-1.9.1
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
