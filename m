@@ -1,476 +1,106 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 4/4] arm64: dts: uniphier: add PH1-LD10 SoC/board support
-Date: Tue, 24 Nov 2015 18:39:22 +0900
-Message-ID: <1448357962-12259-5-git-send-email-yamada.masahiro@socionext.com>
-References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Thomas Kaiser <Thomas.Kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
+ lamobo-r1 board
+Date: Tue, 24 Nov 2015 10:45:27 +0100
+Message-ID: <D279EE2F.E5EF6%Thomas.Kaiser@kaiser-edv.de>
+References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
+ <20151122195925.GR32142@lukather>
+ <5652CE10.1020808@redhat.com>
+Reply-To: thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="B_3531206750_4684923"
+Return-path: <linux-sunxi+bncBDQ6N3ODDQINBY6QWICRUBA5GJGHO-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <5652CE10.1020808-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the first ARMv8 SoC from Socionext Inc.
+> This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+--B_3531206750_4684923
+Content-type: text/plain; charset=UTF-8
 
- MAINTAINERS                                        |   1 +
- arch/arm64/boot/dts/Makefile                       |   1 +
- arch/arm64/boot/dts/socionext/Makefile             |   4 +
- .../boot/dts/socionext/uniphier-ph1-ld10-ref.dts   |  95 +++++++
- .../boot/dts/socionext/uniphier-ph1-ld10.dtsi      | 286 +++++++++++++++++++++
- .../arm64/boot/dts/socionext/uniphier-pinctrl.dtsi |   1 +
- .../boot/dts/socionext/uniphier-support-card.dtsi  |   1 +
- 7 files changed, 389 insertions(+)
- create mode 100644 arch/arm64/boot/dts/socionext/Makefile
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
- create mode 120000 arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
- create mode 120000 arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
+Hi,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e849a38..096b2b0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1642,6 +1642,7 @@ F:	arch/arm/boot/dts/uniphier*
- F:	arch/arm/include/asm/hardware/cache-uniphier.h
- F:	arch/arm/mach-uniphier/
- F:	arch/arm/mm/cache-uniphier.c
-+F:	arch/arm64/boot/dts/socionext/
- F:	drivers/bus/uniphier-system-bus.c
- F:	drivers/i2c/busses/i2c-uniphier*
- F:	drivers/pinctrl/uniphier/
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index eb3c42d..6672a96 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -11,6 +11,7 @@ dts-dirs += marvell
- dts-dirs += mediatek
- dts-dirs += qcom
- dts-dirs += rockchip
-+dts-dirs += socionext
- dts-dirs += sprd
- dts-dirs += xilinx
- 
-diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
-new file mode 100644
-index 0000000..8d72771
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/Makefile
-@@ -0,0 +1,4 @@
-+dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld10-ref.dtb
-+
-+always		:= $(dtb-y)
-+clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
-new file mode 100644
-index 0000000..7b36be4
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
-@@ -0,0 +1,95 @@
-+/*
-+ * Device Tree Source for UniPhier PH1-LD10 Reference Board
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+/include/ "uniphier-ph1-ld10.dtsi"
-+/include/ "uniphier-support-card.dtsi"
-+
-+/ {
-+	model = "UniPhier PH1-LD10 Reference Board";
-+	compatible = "socionext,ph1-ld10-ref", "socionext,ph1-ld10";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x80000000 0 0xc0000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	aliases {
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+		serial2 = &serial2;
-+		serial3 = &serial3;
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+	};
-+};
-+
-+&system_bus {
-+	ranges = <1 0x00000000 0x42000000 0x02000000>;
-+};
-+
-+&support_card {
-+	ranges = <0x00000000 1 0x01f00000 0x00100000>;
-+};
-+
-+&ethsc {
-+	interrupts = <0 48 4>;
-+};
-+
-+&serial0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
-new file mode 100644
-index 0000000..b899e54
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
-@@ -0,0 +1,286 @@
-+/*
-+ * Device Tree Source for UniPhier PH1-LD10 SoC
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/ {
-+	compatible = "socionext,ph1-ld10";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0 0x000>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0 0x001>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+
-+		cpu2: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0 0x100>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+
-+		cpu3: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0 0x101>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+	};
-+
-+	clocks {
-+		uart_clk: uart_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <58820000>;
-+		};
-+
-+		i2c_clk: i2c_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 13 0xf01>,
-+			     <1 14 0xf01>,
-+			     <1 11 0xf01>,
-+			     <1 10 0xf01>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0xffffffff>;
-+
-+		system_bus: system-bus {
-+			compatible = "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+		};
-+
-+		serial0: serial@54006800 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006800 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
-+			interrupts = <0 33 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial1: serial@54006900 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006900 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
-+			interrupts = <0 35 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial2: serial@54006a00 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006a00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
-+			interrupts = <0 37 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial3: serial@54006b00 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006b00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
-+			interrupts = <0 177 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		i2c0: i2c@58780000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58780000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c0>;
-+			interrupts = <0 41 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c1: i2c@58781000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58781000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c1>;
-+			interrupts = <0 42 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c2: i2c@58782000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58782000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c2>;
-+			interrupts = <0 43 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c3: i2c@58783000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58783000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c3>;
-+			interrupts = <0 44 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c4: i2c@58784000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58784000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 45 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		i2c5: i2c@58785000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58785000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 25 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		i2c6: i2c@58786000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58786000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 26 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		system-bus-controller@58c00000 {
-+			compatible = "socionext,uniphier-system-bus-controller";
-+			reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
-+			system-bus = <&system_bus>;
-+		};
-+
-+		pinctrl: pinctrl@5f801000 {
-+			compatible = "socionext,ph1-ld10-pinctrl", "syscon";
-+			reg = <0x5f801000 0xe00>;
-+		};
-+
-+		gic: interrupt-controller@5fe00000 {
-+			compatible = "arm,gic-v3";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x5fe00000 0x10000>,	/* GICD */
-+			      <0x5fe80000 0x80000>;	/* GICR */
-+			interrupts = <1 9 4>;
-+		};
-+	};
-+};
-+
-+/include/ "uniphier-pinctrl.dtsi"
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
-new file mode 120000
-index 0000000..f42fb6f
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/uniphier-pinctrl.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi b/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
-new file mode 120000
-index 0000000..1246db9
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/uniphier-support-card.dtsi
-\ No newline at end of file
+Hans de Goede wrote:
+
+> The Lamobo-R1 has a gpio header idententical to the one found
+> on the Banana Pi, i2c2 is routed to pins there.
+
+That's the reason this header exists in this form and that's the reason
+customers buy these boards that expose an 'RPi compatible' 26/40 pin GPIO
+header. That applies also to the various Orange Pi's and other
+$insert-your-favourite-fruit-here Pi  with different SoCs, eg.
+Roseapple/Lemon Pi with Actions Semi's S500. Even boards that do not share
+the RPi's naming scheme feature this GPIO header, eg. LeMaker's Guitar or
+ODROID C1/C1+
+
+Users expect this GPIO header being 'RPi compatible' regarding
+hardware-Addons (RPi HATs), software support (each of the above boards has a
+ported WiringPi lib) and tutorials they find on the net. Breaking this
+compatibility with mainline kernel is not a good idea IMO.
+
+Best regards,
+
+Thomas
+
+
 -- 
-1.9.1
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--B_3531206750_4684923
+Content-type: text/html; charset=UTF-8
+Content-transfer-encoding: quoted-printable
+
+<html><head></head><body style=3D"word-wrap: break-word; -webkit-nbsp-mode:=
+ space; -webkit-line-break: after-white-space; color: rgb(0, 0, 0); font-si=
+ze: 12px; font-family: Consolas, sans-serif;"><div>Hi,</div><div><br></div>=
+<div>Hans de Goede wrote:</div><span id=3D"OLK_SRC_BODY_SECTION"><div><br><=
+/div><blockquote id=3D"MAC_OUTLOOK_ATTRIBUTION_BLOCKQUOTE" style=3D"BORDER-=
+LEFT: #b5c4df 5 solid; PADDING:0 0 0 5; MARGIN:0 0 0 5;"><div style=3D"colo=
+r: rgb(0, 0, 0); font-family: Consolas; font-style: normal; font-variant: n=
+ormal; font-weight: normal; letter-spacing: normal; line-height: normal; or=
+phans: auto; text-align: start; text-indent: 0px; text-transform: none; whi=
+te-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-widt=
+h: 0px;">The Lamobo-R1 has a gpio header idententical to the one found</div=
+><div style=3D"color: rgb(0, 0, 0); font-family: Consolas; font-style: norm=
+al; font-variant: normal; font-weight: normal; letter-spacing: normal; line=
+-height: normal; orphans: auto; text-align: start; text-indent: 0px; text-t=
+ransform: none; white-space: normal; widows: auto; word-spacing: 0px; -webk=
+it-text-stroke-width: 0px;">on the Banana Pi, i2c2 is routed to pins there.=
+</div></blockquote></span><div><br></div><div>That's the reason this header=
+ exists in this form and that's the reason customers buy these boards that =
+expose an 'RPi compatible' 26/40 pin GPIO header. That applies also to the =
+various Orange Pi's and other $insert-your-favourite-fruit-here Pi &nbsp;wi=
+th different SoCs, eg. Roseapple/Lemon Pi with Actions Semi's S500. Even bo=
+ards that do not share the RPi's naming scheme feature this GPIO header, eg=
+. LeMaker's Guitar or ODROID C1/C1+</div><div><br></div><div>Users expect t=
+his GPIO header being 'RPi compatible' regarding hardware-Addons (RPi HATs)=
+, software support (each of the above boards has a ported WiringPi lib) and=
+ tutorials they find on the net. Breaking this compatibility with mainline =
+kernel is not a good idea IMO.</div><div><br></div><div>Best regards,</div>=
+<div><br></div><div>Thomas</div></body></html>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+--B_3531206750_4684923--
