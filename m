@@ -1,23 +1,77 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vfxxx: Include support for dspi[23]
- functionality.
-Date: Tue, 24 Nov 2015 17:49:32 +0800
-Message-ID: <20151124094932.GX11999@tiger>
-References: <1447905280-5172-2-git-send-email-cory.tusar@pid1solutions.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v6 01/12] dt-bindings: drm/mediatek: Add Mediatek
+ display subsystem dts binding
+Date: Tue, 24 Nov 2015 11:11:27 +0100
+Message-ID: <1448359887.3346.32.camel@pengutronix.de>
+References: <1447868060-11620-1-git-send-email-p.zabel@pengutronix.de>
+ <1447868060-11620-2-git-send-email-p.zabel@pengutronix.de>
+ <CAAFQd5BPSWGDUJTihZyWpy3T6kpmdqtn0v9g_7g-YzMgpgiaJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1447905280-5172-2-git-send-email-cory.tusar@pid1solutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cory Tusar <cory.tusar@pid1solutions.com>
-Cc: kernel@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAAFQd5BPSWGDUJTihZyWpy3T6kpmdqtn0v9g_7g-YzMgpgiaJQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Jie Qiu <jie.qiu@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 10:54:40PM -0500, Cory Tusar wrote:
-> Extend the existing Vybrid DSPI devicetree implementation to also
-> describe the dspi2 and dspi3 functional blocks.
-> 
-> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-
-Applied, thanks.
+SGkgVG9tYXN6LAoKQW0gRGllbnN0YWcsIGRlbiAyNC4xMS4yMDE1LCAxNDozMiArMDkwMCBzY2hy
+aWViIFRvbWFzeiBGaWdhOgo+IEhpIFBoaWxpcHAsIENLLAo+IAo+IFBsZWFzZSBzZWUgbXkgY29t
+bWVudHMgaW5saW5lLgo+IAo+IE9uIFRodSwgTm92IDE5LCAyMDE1IGF0IDI6MzQgQU0sIFBoaWxp
+cHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgpbLi4uXQo+ID4gK1JlcXVp
+cmVkIHByb3BlcnRpZXMgKGFsbCBmdW5jdGlvbiBibG9ja3MpOgo+ID4gKy0gY29tcGF0aWJsZTog
+Im1lZGlhdGVrLDxjaGlwPi1kaXNwLTxmdW5jdGlvbj4iLCBvbmUgb2YKPiA+ICsgICAgICAgIm1l
+ZGlhdGVrLDxjaGlwPi1kaXNwLW92bCIgICAtIG92ZXJsYXkgKDQgbGF5ZXJzLCBibGVuZGluZywg
+Y3NjKQo+ID4gKyAgICAgICAibWVkaWF0ZWssPGNoaXA+LWRpc3AtcmRtYSIgIC0gcmVhZCBETUEg
+LyBsaW5lIGJ1ZmZlcgo+ID4gKyAgICAgICAibWVkaWF0ZWssPGNoaXA+LWRpc3Atd2RtYSIgIC0g
+d3JpdGUgRE1BCj4gPiArICAgICAgICJtZWRpYXRlayw8Y2hpcD4tZGlzcC1jb2xvciIgLSBjb2xv
+ciBwcm9jZXNzb3IKPiA+ICsgICAgICAgIm1lZGlhdGVrLDxjaGlwPi1kaXNwLWFhbCIgICAtIGFk
+YXB0aXZlIGFtYmllbnQgbGlnaHQgY29udHJvbGxlcgo+ID4gKyAgICAgICAibWVkaWF0ZWssPGNo
+aXA+LWRpc3AtZ2FtbWEiIC0gZ2FtbWEgY29ycmVjdGlvbgo+ID4gKyAgICAgICAibWVkaWF0ZWss
+PGNoaXA+LWRpc3AtdWZvZSIgIC0gZGF0YSBjb21wcmVzc2lvbiBlbmdpbmUKPiA+ICsgICAgICAg
+Im1lZGlhdGVrLDxjaGlwPi1kc2kiICAgICAgICAtIERTSSBjb250cm9sbGVyLCBzZWUgbWVkaWF0
+ZWssZHNpLnR4dAo+ID4gKyAgICAgICAibWVkaWF0ZWssPGNoaXA+LWRwaSIgICAgICAgIC0gRFBJ
+IGNvbnRyb2xsZXIsIHNlZSBtZWRpYXRlayxkcGkudHh0Cj4gPiArICAgICAgICJtZWRpYXRlayw8
+Y2hpcD4tZGlzcC1tdXRleCIgLSBkaXNwbGF5IG11dGV4Cj4gPiArICAgICAgICJtZWRpYXRlayw8
+Y2hpcD4tZGlzcC1vZCIgICAgLSBvdmVyZHJpdmUKPiA+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBh
+ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGZ1bmN0aW9uIGJsb2NrIHJlZ2lzdGVyIHNwYWNlCj4g
+PiArLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBmdW5jdGlvbiBi
+bG9jay4KPiAKPiBEbyBhbGwgdGhlIGJsb2NrcyBoYXZlIG9ubHkgb25lIGludGVycnVwdCBzaWdu
+YWw/CgpBcyBmYXIgYXMgSSBhbSBhd2FyZSwgeWVzLiBUaGV5IGFsbCBoYXZlIHRoZWlyIG93biBt
+dWx0aXBsZXhlciwgd2l0aApzaW5nbGUgb3V0cHV0IHRvIHRoZSBHSUMgZWFjaC4KCj4gPiArLSBj
+bG9ja3M6IGRldmljZSBjbG9ja3MKPiA+ICsgIFNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgo+IAo+IFdoYXQg
+YWJvdXQgY2xvY2stbmFtZXM/IEFsc28gYWxsIHJlcXVpcmVkIGNsb2NrcyBmb3IgcGFydGljdWxh
+cgo+IGNvbXBhdGlibGUgc3RyaW5ncyBzaG91bGQgYmUgbGlzdGVkIGluIGRvY3VtZW50YXRpb24s
+CgpBbGwgdGhlIGludGVybmFsIGJsb2NrcyBqdXN0IGhhdmUgYSBzaW5nbGUgY2xvY2sgZ2F0ZS4g
+VGhlIGV4Y2VwdGlvbnMKYXJlIHRoZSBEU0kgYW5kIERQSSBjb250cm9sbGVycywgd2hpY2ggYXJl
+IGRvY3VtZW50ZWQgc2VwYXJhdGVseS4gSSdsbAphZGQgYSBub3RlLgoKPiA+ICstIGNvbXBhdGli
+bGU6ICJtZWRpYXRlayw8Y2hpcD4tZGRwIgo+IAo+IElzIHRoaXMgYSByZWJhc2UgZXJyb3I/IGNv
+bXBhdGlibGUgcHJvcGVydHkgd2FzIGFscmVhZHkgZGVzY3JpYmVkIGZldwo+IGxpbmVzIGFib3Zl
+IGFuZCBhbHNvIG1pc3NpbmcgZGVzY3JpcHRpb24uCgpZZXMsIEknbGwgZHJvcCB0aGlzIGxpbmUu
+Cgo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXMgKERNQSBmdW5jdGlvbiBibG9ja3MpOgo+
+ID4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZgo+ID4gKyAgICAgICAibWVkaWF0ZWss
+PGNoaXA+LWRpc3Atb3ZsIgo+ID4gKyAgICAgICAibWVkaWF0ZWssPGNoaXA+LWRpc3AtcmRtYSIK
+PiA+ICsgICAgICAgIm1lZGlhdGVrLDxjaGlwPi1kaXNwLXdkbWEiCj4gCj4gUGVyaGFwcyB0aGVz
+ZSAzIGNvdWxkIGFsc28gaGF2ZSBzb21lIHNob3J0IGRlc2NyaXB0aW9uIGxpa2UgdGhlIG9uZXMK
+PiBsaXN0ZWQgYWJvdmU/CgpUaGVzZSB0aHJlZSBhcmUgYWxyZWFkeSBpbmNsdWRlZCBpbiB0aGUg
+bGlzdCBhYm92ZS4gU2hvdWxkIEkgbWFrZSB0aGlzCiJBZGRpdGlvbmFsIHJlcXVpcmVkIHByb3Bl
+cnRpZXMgKERNQSBmdW5jdGlvbiBibG9ja3MpOiIgdG8gY2xhcmlmeT8KCj4gPiArLSBsYXJiOiBT
+aG91bGQgY29udGFpbiBhIHBoYW5kbGUgcG9pbnRpbmcgdG8gdGhlIGxvY2FsIGFyYml0ZXIgZGV2
+aWNlIGFzIGRlZmluZWQKPiA+ICsgIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb2MvbWVkaWF0ZWsvbWVkaWF0ZWssc21pLWxhcmIudHh0Cj4gPiArLSBpb21tdXM6IHJlcXVp
+cmVkIGEgaW9tbXUgbm9kZQo+IAo+IE1heWJlIHJld3JpdGUgdG86ICJTaG91bGQgcG9pbnQgdG8g
+cmVzcGVjdGl2ZSBJT01NVSBibG9jayBhcyBkZWZpbmVkCj4gaW4gPHBhdGggdG8gSU9NTVUgYmlu
+ZGluZyBkb2N1bWVudGF0aW9uPiI/CgpJJ2xsIGNoYW5nZSB0aGlzLgoKdGhhbmsgeW91ClBoaWxp
+cHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
