@@ -1,140 +1,33 @@
-From: Jia Hongtao <hongtao.jia@freescale.com>
-Subject: [PATCH V4 5/5] arm/ls1021a: Add TMU device tree support for LS1021A
-Date: Tue, 24 Nov 2015 14:52:48 +0800
-Message-ID: <1448347968-37766-6-git-send-email-hongtao.jia@freescale.com>
-References: <1448347968-37766-1-git-send-email-hongtao.jia@freescale.com>
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: [PATCH V3 0/3] add spba clock for fsl audio IP
+Date: Tue, 24 Nov 2015 15:03:27 +0800
+Message-ID: <cover.1448348336.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1448347968-37766-1-git-send-email-hongtao.jia@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: edubezval@gmail.com
-Cc: linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, scottwood@freescale.com, hongtao.jia@freescale.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, timur@tabi.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org
+Cc: alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Also add nodes and properties for thermal management support.
+add spba clock for fsl audio IP
 
-Signed-off-by: Jia Hongtao <hongtao.jia@freescale.com>
-Reviewed-by: Scott Wood <scottwood@freescale.com>
----
- arch/arm/boot/dts/ls1021a.dtsi | 84 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 2 deletions(-)
+Changes in V3
+- update the comments for clock description.
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 9430a99..d31a811 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -47,6 +47,7 @@
- 
- #include "skeleton64.dtsi"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	compatible = "fsl,ls1021a";
-@@ -70,14 +71,15 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		cpu@f00 {
-+		cpu0: cpu@f00 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <0xf00>;
- 			clocks = <&cluster1_clk>;
-+			#cooling-cells = <2>;
- 		};
- 
--		cpu@f01 {
-+		cpu1: cpu@f01 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <0xf01>;
-@@ -226,6 +228,84 @@
- 			};
- 		};
- 
-+		tmu: tmu@1f00000 {
-+			compatible = "fsl,qoriq-tmu";
-+			reg = <0x0 0x1f00000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x30061>;
-+			fsl,tmu-calibration = <0x00000000 0x0000000f
-+					       0x00000001 0x00000017
-+					       0x00000002 0x0000001e
-+					       0x00000003 0x00000026
-+					       0x00000004 0x0000002e
-+					       0x00000005 0x00000035
-+					       0x00000006 0x0000003d
-+					       0x00000007 0x00000044
-+					       0x00000008 0x0000004c
-+					       0x00000009 0x00000053
-+					       0x0000000a 0x0000005b
-+					       0x0000000b 0x00000064
-+
-+					       0x00010000 0x00000011
-+					       0x00010001 0x0000001c
-+					       0x00010002 0x00000024
-+					       0x00010003 0x0000002b
-+					       0x00010004 0x00000034
-+					       0x00010005 0x00000039
-+					       0x00010006 0x00000042
-+					       0x00010007 0x0000004c
-+					       0x00010008 0x00000051
-+					       0x00010009 0x0000005a
-+					       0x0001000a 0x00000063
-+
-+					       0x00020000 0x00000013
-+					       0x00020001 0x00000019
-+					       0x00020002 0x00000024
-+					       0x00020003 0x0000002c
-+					       0x00020004 0x00000035
-+					       0x00020005 0x0000003d
-+					       0x00020006 0x00000046
-+					       0x00020007 0x00000050
-+					       0x00020008 0x00000059
-+
-+					       0x00030000 0x00000002
-+					       0x00030001 0x0000000d
-+					       0x00030002 0x00000019
-+					       0x00030003 0x00000024>;
-+			#thermal-sensor-cells = <0>;
-+		};
-+
-+		thermal-zones {
-+			cpu_thermal: cpu-thermal {
-+				polling-delay-passive = <1000>;
-+				polling-delay = <5000>;
-+
-+				thermal-sensors = <&tmu>;
-+
-+				trips {
-+					cpu_alert: cpu-alert {
-+						temperature = <85000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
-+					cpu_crit: cpu-crit {
-+						temperature = <95000>;
-+						hysteresis = <2000>;
-+						type = "critical";
-+					};
-+				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&cpu_alert>;
-+						cooling-device =
-+							<&cpu0 THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>;
-+					};
-+				};
-+			};
-+		};
-+
- 		dspi0: dspi@2100000 {
- 			compatible = "fsl,ls1021a-v1.0-dspi";
- 			#address-cells = <1>;
+Shengjiu Wang (3):
+  ASoC: fsl_esai: spba clock is needed by esai device
+  ASoC: fsl_spdif: spba clk is needed by spdif device
+  ASoC: fsl_asrc: spba clock is needed by asrc device
+
+ Documentation/devicetree/bindings/sound/fsl,asrc.txt  |  5 +++++
+ Documentation/devicetree/bindings/sound/fsl,esai.txt  |  5 +++++
+ Documentation/devicetree/bindings/sound/fsl,spdif.txt |  5 +++++
+ sound/soc/fsl/fsl_asrc.c                              | 10 ++++++++++
+ sound/soc/fsl/fsl_asrc.h                              |  2 ++
+ sound/soc/fsl/fsl_esai.c                              | 13 +++++++++++++
+ sound/soc/fsl/fsl_spdif.c                             | 15 +++++++++++++++
+ 7 files changed, 55 insertions(+)
+
 -- 
-2.1.0.27.g96db324
-
+1.9.1
