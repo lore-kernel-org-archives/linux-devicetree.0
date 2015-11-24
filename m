@@ -1,70 +1,190 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 0/4] arm,arm64: uniphier: add a new driver, device tree updates
-Date: Tue, 24 Nov 2015 18:39:18 +0900
-Message-ID: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH 3/4] ARM: dts: uniphier: rename nodes from extbus to system-bus
+Date: Tue, 24 Nov 2015 18:39:21 +0900
+Message-ID: <1448357962-12259-4-git-send-email-yamada.masahiro@socionext.com>
+References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: arm@kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Olof,
+The officially documented name for this hardware is System Bus, so
+follow that naming.  It also corresponds to the compatible string.
 
-Here is another series for UniPhier SoC family:
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
- - 1/4: add a new driver.  The UniPhier System Bus is an external bus
-        where on-board devices are connected to the SoC.
-        (please check if the binding specification is OK.)
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts   | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi      | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts  | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts  | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi     | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-pro5.dtsi     | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts  | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi     | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts  | 2 +-
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi     | 2 +-
+ arch/arm/boot/dts/uniphier-proxstream2.dtsi  | 2 +-
+ arch/arm/boot/dts/uniphier-support-card.dtsi | 2 +-
+ 12 files changed, 12 insertions(+), 12 deletions(-)
 
- - 2/4: device tree updates to use the driver added by 1/4
-
- - 3/4: trivial rename of device node names
-
- - 4/4: initial commit for ARMv8 SoC/Board device trees
-
-Please apply 2/4, 3/4/, 4/4 into the same branch because 4/4 depends on 2/4 and 3/4.
-(4/4 creates symbolic links to ARM device trees.)
-
-
-
-Masahiro Yamada (4):
-  bus: uniphier-system-bus: add UniPhier System Bus Controller driver
-  ARM: dts: uniphier: add better-matching compatible string to extbus
-    nodes
-  ARM: dts: uniphier: rename nodes from extbus to system-bus
-  arm64: dts: uniphier: add PH1-LD10 SoC/board support
-
- .../bindings/arm/uniphier/uniphier-system-bus.txt  |  70 +++++
- MAINTAINERS                                        |   2 +
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts         |   2 +-
- arch/arm/boot/dts/uniphier-ph1-ld4.dtsi            |   5 +-
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts        |   2 +-
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts        |   2 +-
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi           |   5 +-
- arch/arm/boot/dts/uniphier-ph1-pro5.dtsi           |   5 +-
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts        |   2 +-
- arch/arm/boot/dts/uniphier-ph1-sld3.dtsi           |   5 +-
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts        |   2 +-
- arch/arm/boot/dts/uniphier-ph1-sld8.dtsi           |   5 +-
- arch/arm/boot/dts/uniphier-proxstream2.dtsi        |   5 +-
- arch/arm/boot/dts/uniphier-support-card.dtsi       |   2 +-
- arch/arm64/boot/dts/Makefile                       |   1 +
- arch/arm64/boot/dts/socionext/Makefile             |   4 +
- .../boot/dts/socionext/uniphier-ph1-ld10-ref.dts   |  95 +++++++
- .../boot/dts/socionext/uniphier-ph1-ld10.dtsi      | 286 +++++++++++++++++++++
- .../arm64/boot/dts/socionext/uniphier-pinctrl.dtsi |   1 +
- .../boot/dts/socionext/uniphier-support-card.dtsi  |   1 +
- drivers/bus/Kconfig                                |   9 +
- drivers/bus/Makefile                               |   1 +
- drivers/bus/uniphier-system-bus.c                  | 284 ++++++++++++++++++++
- 23 files changed, 778 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/uniphier/uniphier-system-bus.txt
- create mode 100644 arch/arm64/boot/dts/socionext/Makefile
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
- create mode 120000 arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
- create mode 120000 arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
- create mode 100644 drivers/bus/uniphier-system-bus.c
-
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+index f1e9d40..c625b4d 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+@@ -72,7 +72,7 @@
+ 	};
+ };
+ 
+-&extbus {
++&system_bus {
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+index c2913fe..0e2ba55 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+@@ -86,7 +86,7 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
+ 
+-		extbus: extbus {
++		system_bus: system-bus {
+ 			compatible = "socionext,uniphier-system-bus",
+ 				     "simple-bus";
+ 			#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+index 5baa9fc..3ac89fb 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+@@ -74,7 +74,7 @@
+ 	};
+ };
+ 
+-&extbus {
++&system_bus {
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+index 2462668..0c82353 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+@@ -74,7 +74,7 @@
+ 	};
+ };
+ 
+-&extbus {
++&system_bus {
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+index d110df7..09f78fa 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+@@ -94,7 +94,7 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
+ 
+-		extbus: extbus {
++		system_bus: system-bus {
+ 			compatible = "socionext,uniphier-system-bus",
+ 				     "simple-bus";
+ 			#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+index 0f1db60..f5aa24c 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+@@ -94,7 +94,7 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
+ 
+-		extbus: extbus {
++		system_bus: system-bus {
+ 			compatible = "socionext,uniphier-system-bus",
+ 				     "simple-bus";
+ 			#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+index b7a03215..29e8123 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+@@ -73,7 +73,7 @@
+ 	};
+ };
+ 
+-&extbus {
++&system_bus {
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index 888bb2e..d830ea9 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -94,7 +94,7 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
+ 
+-		extbus: extbus {
++		system_bus: system-bus {
+ 			compatible = "socionext,uniphier-system-bus",
+ 				     "simple-bus";
+ 			#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+index fc7250c..eb605d6 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+@@ -72,7 +72,7 @@
+ 	};
+ };
+ 
+-&extbus {
++&system_bus {
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+index b10c4bd..711a3f7 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+@@ -86,7 +86,7 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
+ 
+-		extbus: extbus {
++		system_bus: system-bus {
+ 			compatible = "socionext,uniphier-system-bus",
+ 				     "simple-bus";
+ 			#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2.dtsi b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+index 9186f8c9..ff4977c 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2.dtsi
++++ b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+@@ -108,7 +108,7 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
+ 
+-		extbus: extbus {
++		system_bus: system-bus {
+ 			compatible = "socionext,uniphier-system-bus",
+ 				     "simple-bus";
+ 			#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/boot/dts/uniphier-support-card.dtsi
+index da271e3..e8c9b49 100644
+--- a/arch/arm/boot/dts/uniphier-support-card.dtsi
++++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
+@@ -42,7 +42,7 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-&extbus {
++&system_bus {
+ 	support_card: support_card {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
 1.9.1
