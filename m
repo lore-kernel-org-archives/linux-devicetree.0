@@ -1,154 +1,38 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v3 3/6] DT: PCI: qcom: Document PCIe devicetree bindings
-Date: Tue, 24 Nov 2015 11:17:14 +0200
-Message-ID: <56542B1A.5060306@linaro.org>
-References: <cover.1448270813.git.stanimir.varbanov@linaro.org>
- <8fd3e7d1662f37abe549127d179c315dff3210d8.1448270813.git.stanimir.varbanov@linaro.org>
- <20151123181329.GN30882@usrtlx11787.corpusers.net>
+From: Shengjiu Wang <shengjiu.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V4 0/3] add spba clock for fsl audio IP
+Date: Tue, 24 Nov 2015 17:19:31 +0800
+Message-ID: <cover.1448356624.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151123181329.GN30882@usrtlx11787.corpusers.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Bjorn, thanks for the comments!
+add spba clock for fsl audio IP
 
-On 11/23/2015 08:13 PM, Bjorn Andersson wrote:
-> On Mon 23 Nov 01:29 PST 2015, Stanimir Varbanov wrote:
-> 
->> From: Stanimir Varbanov <svarbanov@mm-sol.com>
->>
->> Document Qualcomm PCIe driver devicetree bindings.
->>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  .../devicetree/bindings/pci/qcom,pcie.txt          |  231 ++++++++++++++++++++
->>  1 file changed, 231 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> new file mode 100644
->> index 000000000000..d7640d45fa31
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> @@ -0,0 +1,231 @@
->> +* Qualcomm PCI express root complex
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Value shall include
->> +		    - "qcom,pcie-v0" for apq/ipq8064
->> +		    - "qcom,pcie-v1" for apq8084
-> 
-> Do you know if we have the same v1 of this block in 8994?
+Changes in V3
+- add error check for spba clock
 
-I have no idea, but looking in caf msm-3.18 it should be possible to
-reuse the code for v1.
+Shengjiu Wang (3):
+  ASoC: fsl_esai: spba clock is needed by esai device
+  ASoC: fsl_spdif: spba clk is needed by spdif device
+  ASoC: fsl_asrc: spba clock is needed by asrc device
 
-> 
-> [..]
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries
->> +		    * should be populated for v0 and v1
->> +		    	- "iface"      Configuration AHB clock
->> +
->> +		    * should be populated for v0
->> +		    	- "core"       Clocks the pcie hw block
->> +		    	- "phy"        Clocks the pcie PHY block
->> +
->> +		    * should be populated for v1
->> +			- "aux"        Auxiliary (AUX) clock
->> +		    	- "bus_master" Master AXI clock
->> +		    	- "bus_slave"  Slave AXI clock
-> 
-> You have white spaces among your tabs here.
-
-Ops, I forgot to remove the white spaces.
-
-> 
-> [..]
->> +- <name>-supply:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: List of phandles to the power supply regulator(s)
->> +		    * should be populated for v0 and v1
->> +			- "vdda"        core analog power supply
->> +
->> +		    * should be populated for v0
->> +			- "vdda_phy"    analog power supply for PHY
->> +			- "vdda_refclk" analog power supply for IC which generate
->> +					reference clock
-> 
-> Exploding these into 3 different property descriptions would make it
-> easier to read, and you can say "required for v0" for the latter
-> two and simply "required" on the vdda.
-
-yes, that is a good idea.
-
-> 
-> [..]
->> +- <name>-gpio:
->> +	Usage: optional
->> +	Value type: <prop-encoded-array>
->> +	Definition: List of phandle and gpio specifier pairs. Should contain
->> +		    - "perst"  PCIe endpoint reset signal line
->> +		    - "pewake" PCIe endpoint wake signal line
-> 
-> This property should be pluralized, i.e. it's <name>-gpios.
-
-I hope you mean :
-
-- "perst-gpios" PCIe endpoint reset signal line
-- "pewake-gpios" PCIe endpoint wake signal line
-
-
-> 
-> Are these identifiers coming from some data sheet? Or could we simply
-> name them "reset" and "wakeup"?
-
-In the pcie express card electromechanical specification we have signal
-names PERST# and WAKE#, so I'd like to keep as they are in the
-specification, thus the wake# is wrong and I will rename it to wake-gpios.
-
-> 
->> +
->> +- pinctrl-0:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: List of phandles pointing at a pin(s) configuration
-> 
-> This is not required and as it's a property applicable to all devices we
-> normally don't mention them.
-
-agreed.
-
-> 
->> +
->> +- pinctrl-names
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: List of names of pinctrl-0 state
->> +
-> 
-> dito
-> 
-> Regards,
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+ Documentation/devicetree/bindings/sound/fsl,asrc.txt  |  5 +++++
+ Documentation/devicetree/bindings/sound/fsl,esai.txt  |  5 +++++
+ Documentation/devicetree/bindings/sound/fsl,spdif.txt |  5 +++++
+ sound/soc/fsl/fsl_asrc.c                              | 14 ++++++++++++++
+ sound/soc/fsl/fsl_asrc.h                              |  2 ++
+ sound/soc/fsl/fsl_esai.c                              | 17 +++++++++++++++++
+ sound/soc/fsl/fsl_spdif.c                             | 19 +++++++++++++++++++
+ 7 files changed, 67 insertions(+)
 
 -- 
-regards,
-Stan
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
