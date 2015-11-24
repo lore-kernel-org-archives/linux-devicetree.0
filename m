@@ -1,266 +1,85 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [alsa-devel] [PATCH 4/4] sound: codecs: pcm1792a: introduce
- channel side
-Date: Tue, 24 Nov 2015 21:10:54 +0100
-Message-ID: <CAOf5uwmg4vC18SWBe-cQ22tqSmQ3Xeg2uu8Ldmd3N8V64wgT4Q@mail.gmail.com>
-References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
-	<1448014157-36526-5-git-send-email-raphael.poggi@avalun.com>
-	<CAOf5uwmGk7WqOaAFj=fTw8+D+EszWPqReyfmS0njix=d7AokOA@mail.gmail.com>
-	<CACqcpZCSMwj2WOhX0ddD43VKCgOcNyrkkZrR0sWEsHE+H27TVg@mail.gmail.com>
-	<CAOf5uwmdwcdbxx2b6DvMeOJBahkZ3iiosWtHPD2zhxcDqO2b_A@mail.gmail.com>
-	<CACqcpZDQRtSqmLDC65ajNGY=VU8TFZBnVxhaM+cES37rv7zmyg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
+Date: Tue, 24 Nov 2015 14:16:55 -0600
+Message-ID: <20151124201655.GA23437@rob-hp-laptop>
+References: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACqcpZDQRtSqmLDC65ajNGY=VU8TFZBnVxhaM+cES37rv7zmyg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Rapha=C3=ABl_Poggi?= <poggi.raph@gmail.com>
-Cc: perex@perex.cz, tiwai@suse.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Tue, Nov 24, 2015 at 11:20:41AM +0900, Simon Horman wrote:
+> In general Renesas hardware is not documented to the extent where the
+> relationship between IP blocks on different SoCs can be assumed although
+> they may appear to operate the same way. Furthermore the documentation
+> typically does not specify a version for individual IP blocks. For these
+> reasons a convention of using the SoC name in place of a version and
+> providing SoC-specific compat strings has been adopted.
+> 
+> Although not universally liked this convention is used in the bindings for
+> most drivers for Renesas hardware. The purpose of this patch is to
+> update the Renesas USB DMA Controller driver to follow this convention.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> ---
+> * r8a7792 (R-Car V2H) is omitted as my reading of the documentation
+>   is that Renesas USB-DMAC does not exist on that SoC
+> * r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
+>   of USB-DMAC that SoC
+> 
+> * Once this has been merged I intend to provide follow-up patches
+>   to use these new compat strings in the relevant dtsi files.
+> ---
+>  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> index 040f365954cc..3bb624e10615 100644
+> --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> @@ -1,7 +1,12 @@
+>  * Renesas USB DMA Controller Device Tree bindings
+>  
+>  Required Properties:
+> -- compatible: must contain "renesas,usb-dmac"
+> +- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
+> +	      Examples with soctypes are:
+> +		- "renesas,usb-dmac-r8a7790" (R-Car H2)
+> +		- "renesas,usb-dmac-r8a7791" (R-Car M2-W)
+> +		- "renesas,usb-dmac-r8a7793" (R-Car M2-N)
+> +		- "renesas,usb-dmac-r8a7794" (R-Car E2)
 
-On Tue, Nov 24, 2015 at 5:04 PM, Rapha=C3=ABl Poggi <poggi.raph@gmail.c=
-om> wrote:
-> Hi,
->
-> 2015-11-24 9:27 GMT+01:00 Michael Trimarchi <michael@amarulasolutions=
-=2Ecom>:
->> Hi
->>
->> On Tue, Nov 24, 2015 at 9:21 AM, Rapha=C3=ABl Poggi <poggi.raph@gmai=
-l.com> wrote:
->>> Hi,
->>>
->>> 2015-11-21 10:37 GMT+01:00 Michael Trimarchi <michael@amarulasoluti=
-ons.com>:
->>>> Hi
->>>>
->>>> On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph@gmail.=
-com> wrote:
->>>>> From: Raphael Poggi <poggi.raph@gmail.com>
->>>>>
->>>>> Add possibility to choose the channel side using the device tree,
->>>>> and also modify it using alsa ctrl.
->>>>>
->>>>> Signed-off-by: Raphael Poggi <poggi.raph@gmail.com>
->>>>> ---
->>>>>  sound/soc/codecs/pcm1792a.c | 46 +++++++++++++++++++++++++++++++=
-++++++++++++++
->>>>>  1 file changed, 46 insertions(+)
->>>>>
->>>>> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm17=
-92a.c
->>>>> index febaa48..005b679 100644
->>>>> --- a/sound/soc/codecs/pcm1792a.c
->>>>> +++ b/sound/soc/codecs/pcm1792a.c
->>>>> @@ -65,6 +65,12 @@ static const struct reg_default pcm1792a_reg_d=
-efaults[] =3D {
->>>>>         { PCM1792A_DEVICE_ID, 0x00 },
->>>>>  };
->>>>>
->>>>> +enum __pcm1792_side {
->>>>> +       STEREO,
->>>>> +       MONORAL_LEFT,
->>>>> +       MONORAL_RIGHT
->>>>> +};
->>>>> +
->>>>>  static bool pcm1792a_accessible_reg(struct device *dev, unsigned=
- int reg)
->>>>>  {
->>>>>         return reg >=3D 0x10 && reg <=3D 0x17;
->>>>> @@ -83,6 +89,7 @@ struct pcm1792a_private {
->>>>>         struct regmap *regmap;
->>>>>         unsigned int format;
->>>>>         unsigned int rate;
->>>>> +       unsigned int side;
->>>>>  };
->>>>>
->>>>>  static int pcm1792a_set_dai_fmt(struct snd_soc_dai *codec_dai,
->>>>> @@ -153,6 +160,13 @@ static int pcm1792a_hw_params(struct snd_pcm=
-_substream *substream,
->>>>>         ret =3D regmap_update_bits(priv->regmap, PCM1792A_FMT_CON=
-TROL,
->>>>>                                  PCM1792A_FMT_MASK | PCM1792A_ATL=
-D_ENABLE, val);
->>>>>
->>>>> +       if (priv->side =3D=3D MONORAL_LEFT)
->>>>> +               val =3D PCM1792A_CHANNEL_MONO_LEFT;
->>>>> +       else if (priv->side =3D=3D MONORAL_RIGHT)
->>>>> +               val =3D PCM1792A_CHANNEL_MONO_RIGHT;
->>>>> +
->>>>> +       regmap_update_bits(priv->regmap, PCM1792A_CHANNEL, PCM179=
-2A_CHANNEL_MONO_MASK, val);
->>>>> +
->>>>>         return ret;
->>>>>  }
->>>>>
->>>>> @@ -222,10 +236,31 @@ static struct snd_soc_codec_driver soc_code=
-c_dev_pcm1792a =3D {
->>>>>         .num_dapm_routes        =3D ARRAY_SIZE(pcm1792a_dapm_rout=
-es),
->>>>>  };
->>>>>
->>>>> +static int pcm1792a_of_init(struct spi_device *spi)
->>>>> +{
->>>>> +       int ret =3D 0;
->>>>> +       struct pcm1792a_private *pcm1792a =3D dev_get_drvdata(&sp=
-i->dev);
->>>>> +       const char *name;
->>>>> +       struct device_node *np =3D spi->dev.of_node;
->>>>> +
->>>>> +       name =3D of_get_property(np, "ti,side", NULL);
->>>>> +       if (name) {
->>>>> +               if (!strcmp(name, "left"))
->>>>> +                       pcm1792a->side =3D MONORAL_LEFT;
->>>>> +               else
->>>>> +                       pcm1792a->side =3D MONORAL_RIGHT;
->>>>> +       }
->>>>> +       else
->>>>> +               pcm1792a->side =3D STEREO;
->>>>> +
->>>>> +       return ret;
->>>>> +}
->>>>> +
->>>>>  static int pcm1792a_spi_probe(struct spi_device *spi)
->>>>>  {
->>>>>         struct pcm1792a_private *pcm1792a;
->>>>>         int ret;
->>>>> +       struct device_node *np =3D spi->dev.of_node;
->>>>>
->>>>>         pcm1792a =3D devm_kzalloc(&spi->dev, sizeof(struct pcm179=
-2a_private),
->>>>>                                 GFP_KERNEL);
->>>>> @@ -241,6 +276,17 @@ static int pcm1792a_spi_probe(struct spi_dev=
-ice *spi)
->>>>>                 return ret;
->>>>>         }
->>>>>
->>>>> +       if (np) {
->>>>> +               ret =3D pcm1792a_of_init(spi);
->>>>> +               if (ret)
->>>>> +                       return ret;
->>>>> +       }
->>>>> +
->>>>> +       if (pcm1792a->side =3D=3D MONORAL_LEFT)
->>>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHA=
-NNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_LEFT);
->>>>> +       else if (pcm1792a->side =3D=3D MONORAL_RIGHT)
->>>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHA=
-NNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_RIGHT);
->>>>> +
->>>>
->>>> Why this is a part of dts and not a part of mixer control?
->>>>
->>>> Michael
->>>>
->>>
->>> The "channel side" bindings should be used when the pcm7192a is use=
-d
->>> in monaural mode (which requires two DACs, both DACs operate in a
->>> balanced mode for one channel of audio input data).
->>> This is a hardware level design, it will never change at runtime.
->>> I feel that a device tree binding is more appropriate than a contro=
-l.
->>>
+Weren't you changing the order of SoC and block names on new bindings? 
+Either way:
 
-If you put this in mixer control then you can avoid to have it in dts
-because you not suppose to
-boot playing music. Basically you can get the same result restore some
-alsa config that match
-your topology. Even if you have two mono amplifier you can have the
-situation that you want to
-invert channel left and right and this can be done easily just
-reconfigure one as mono left and the other
-as mono right or write your own sound card that do in one control,
-change both together. I suggest
-to wait some other opinions.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Michael
+Rob
 
->>
->> Well I know exactly why is used for, but I don't really know if it's
->> somenthing that should be
->> in dts. Do I want to do channel inversion?
->>
->> Michael
->>
->
-> I am not sure to understand. You mean "What if I want to do channel
-> inversion", right ?
-> If so, we have two differents "problems", one at hardware level desig=
-n
-> because monaural mode requires two DACs, and an another one at
-> software level
-> "channel inversion".
-> I have always thought that hardware description should be in dts,
-> that's why I implement monaural mode using dts.
->
-> Honestly, I don't know what is the best solution between "this is a
-> hardware design, it should be in dts and shouldn't change" vs "this
-> should be an alsa controler because we want extra features independen=
-t
-> from hardware design"
->
-> Rapha=C3=ABl
->
->>>>>         return snd_soc_register_codec(&spi->dev,
->>>>>                         &soc_codec_dev_pcm1792a, &pcm1792a_dai, 1=
-);
->>>>>  }
->>>>> --
->>>>> 2.1.0
->>>>>
->>>>> _______________________________________________
->>>>> Alsa-devel mailing list
->>>>> Alsa-devel@alsa-project.org
->>>>> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->>>>
->>>>
->>>>
->>>> --
->>>> | Michael Nazzareno Trimarchi                     Amarula Solution=
-s BV |
->>>> | COO  -  Founder                                      Cruquiuskad=
-e 47 |
->>>> | +31(0)851119172                                 Amsterdam 1018 A=
-M NL |
->>>> |                  [`as] http://www.amarulasolutions.com          =
-     |
->>>> --
->>>> To unsubscribe from this list: send the line "unsubscribe linux-ke=
-rnel" in
->>>> the body of a message to majordomo@vger.kernel.org
->>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>> Please read the FAQ at  http://www.tux.org/lkml/
->>
->>
->>
->> --
->> | Michael Nazzareno Trimarchi                     Amarula Solutions =
-BV |
->> | COO  -  Founder                                      Cruquiuskade =
-47 |
->> | +31(0)851119172                                 Amsterdam 1018 AM =
-NL |
->> |                  [`as] http://www.amarulasolutions.com            =
-   |
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kern=
-el" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
-
-
-
---=20
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV =
-|
-| COO  -  Founder                                      Cruquiuskade 47 =
-|
-| +31(0)851119172                                 Amsterdam 1018 AM NL =
-|
-|                  [`as] http://www.amarulasolutions.com               =
-|
+>  - reg: base address and length of the registers block for the DMAC
+>  - interrupts: interrupt specifiers for the DMAC, one for each entry in
+>    interrupt-names.
+> @@ -15,7 +20,7 @@ Required Properties:
+>  Example: R8A7790 (R-Car H2) USB-DMACs
+>  
+>  	usb_dmac0: dma-controller@e65a0000 {
+> -		compatible = "renesas,usb-dmac";
+> +		compatible = "renesas,usb-dmac-r8a7790", "renesas,usb-dmac";
+>  		reg = <0 0xe65a0000 0 0x100>;
+>  		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
+>  			      0 109 IRQ_TYPE_LEVEL_HIGH>;
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
