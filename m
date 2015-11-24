@@ -1,85 +1,90 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
-Date: Tue, 24 Nov 2015 14:16:55 -0600
-Message-ID: <20151124201655.GA23437@rob-hp-laptop>
-References: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
+From: "Simon Arlott" <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device tree
+ binding
+Date: Tue, 24 Nov 2015 20:19:37 -0000
+Message-ID: <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+References: <56506D55.3000907@simon.arlott.org.uk>
+    <20151122215945.GA5930@rob-hp-laptop>
+    <56523E85.905@simon.arlott.org.uk>
+    <56523EFF.9050502@simon.arlott.org.uk> <56535977.9050201@gmail.com>
+    <56541BD3.4070202@simon.arlott.org.uk> <5654AF69.7040901@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5654AF69.7040901-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 11:20:41AM +0900, Simon Horman wrote:
-> In general Renesas hardware is not documented to the extent where the
-> relationship between IP blocks on different SoCs can be assumed although
-> they may appear to operate the same way. Furthermore the documentation
-> typically does not specify a version for individual IP blocks. For these
-> reasons a convention of using the SoC name in place of a version and
-> providing SoC-specific compat strings has been adopted.
-> 
-> Although not universally liked this convention is used in the bindings for
-> most drivers for Renesas hardware. The purpose of this patch is to
-> update the Renesas USB DMA Controller driver to follow this convention.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> 
-> ---
-> * r8a7792 (R-Car V2H) is omitted as my reading of the documentation
->   is that Renesas USB-DMAC does not exist on that SoC
-> * r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
->   of USB-DMAC that SoC
-> 
-> * Once this has been merged I intend to provide follow-up patches
->   to use these new compat strings in the relevant dtsi files.
-> ---
->  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> index 040f365954cc..3bb624e10615 100644
-> --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> @@ -1,7 +1,12 @@
->  * Renesas USB DMA Controller Device Tree bindings
->  
->  Required Properties:
-> -- compatible: must contain "renesas,usb-dmac"
-> +- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
-> +	      Examples with soctypes are:
-> +		- "renesas,usb-dmac-r8a7790" (R-Car H2)
-> +		- "renesas,usb-dmac-r8a7791" (R-Car M2-W)
-> +		- "renesas,usb-dmac-r8a7793" (R-Car M2-N)
-> +		- "renesas,usb-dmac-r8a7794" (R-Car E2)
+Add device tree binding for NAND on the BCM63268.
 
-Weren't you changing the order of SoC and block names on new bindings? 
-Either way:
+The BCM63268 has a NAND interrupt register with combined status and enable
+registers.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 4ff7128..f2a71c8 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -72,6 +72,14 @@ we define additional 'compatible' properties and associated register resources w
+        and enable registers
+      - reg-names: (required) "nand-int-base"
 
->  - reg: base address and length of the registers block for the DMAC
->  - interrupts: interrupt specifiers for the DMAC, one for each entry in
->    interrupt-names.
-> @@ -15,7 +20,7 @@ Required Properties:
->  Example: R8A7790 (R-Car H2) USB-DMACs
->  
->  	usb_dmac0: dma-controller@e65a0000 {
-> -		compatible = "renesas,usb-dmac";
-> +		compatible = "renesas,usb-dmac-r8a7790", "renesas,usb-dmac";
->  		reg = <0 0xe65a0000 0 0x100>;
->  		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
->  			      0 109 IRQ_TYPE_LEVEL_HIGH>;
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
++   * "brcm,nand-bcm63268"
++     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
++     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
++       and enable registers, and boot address registers
++     - reg-names: (required) "nand-intr-base"
++     - clock: (required) reference to the clock for the NAND controller
++     - clock-names: (required) "nand"
++
+    * "brcm,nand-iproc"
+      - reg: (required) the "IDM" register range, for interrupt enable and APB
+        bus access endianness configuration, and the "EXT" register range,
+@@ -148,3 +156,30 @@ nand@f0442800 {
+ 		};
+ 	};
+ };
++
++nand@10000200 {
++	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm63268",
++		"brcm,brcmnand-v4.0", "brcm,brcmnand";
++	reg = <0x10000200 0x180>,
++	      <0x10000600 0x200>,
++	      <0x100000b0 0x10>;
++	reg-names = "nand", "nand-cache", "nand-intr-base";
++	interrupt-parent = <&periph_intc>;
++	interrupts = <50>;
++	clocks = <&periph_clk 20>;
++	clock-names = "nand";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand0: nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <1>;
++		nand-ecc-step-size = <512>;
++
++		#address-cells = <0>;
++		#size-cells = <0>;
++	};
++};
+-- 
+2.1.4
+
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
