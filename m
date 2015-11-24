@@ -1,88 +1,39 @@
-From: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH 08/14] ARM: am437x: cm-t43: dts: add eMMC support
-Date: Tue, 24 Nov 2015 15:19:09 +0200
-Message-ID: <1448371155-17307-9-git-send-email-nikita@compulab.co.il>
-References: <1448371155-17307-1-git-send-email-nikita@compulab.co.il>
+From: "Amis, Ryann" <ryann.amis-E5pelZJw2wiHXe+LvDLADg@public.gmane.org>
+Subject: RE:
+Date: Tue, 24 Nov 2015 13:21:08 +0000
+Message-ID: <003A34AB18F50C4395546E44C4FC83D78A847867__20180.0858522349$1448371711$gmane$org@MGCCCMAIL2010-4.mgccc.cc.ms.us>
+References: <D0613EBE33E8FD439137DAA95CCF59555B7A5A4D@MGCCCMAIL2010-5.mgccc.cc.ms.us>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448371155-17307-1-git-send-email-nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <D0613EBE33E8FD439137DAA95CCF59555B7A5A4D-np6RRm/yoI0WMyNdQYMtvx125T75Kgqw2GnX7Qjzz7g@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: MGCCC Helpdesk <helpdesk-E5pelZJw2wiHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-One of the CompuLab cm-t43 configurations comes with on-board eMMC as
-primary storage, residing on the mmc2 interface. Add it to the device tree.
-
-Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
----
- arch/arm/boot/dts/am437x-cm-t43.dts | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
-index 70d5c20..5ca4160 100644
---- a/arch/arm/boot/dts/am437x-cm-t43.dts
-+++ b/arch/arm/boot/dts/am437x-cm-t43.dts
-@@ -26,6 +26,16 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	vmmc_3v3: fixedregulator-v3_3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vmmc_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		enable-active-high;
-+	};
-+
- };
- 
- &am43xx_pinmux {
-@@ -45,6 +55,21 @@
- 		>;
- 	};
- 
-+	emmc_pins: emmc_pins {
-+		pinctrl-single,pins = <
-+			AM4372_IOPAD(0x820, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad8.mmc1_dat0 */
-+			AM4372_IOPAD(0x824, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad9.mmc1_dat1 */
-+			AM4372_IOPAD(0x828, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad10.mmc1_dat2 */
-+			AM4372_IOPAD(0x82c, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad11.mmc1_dat3 */
-+			AM4372_IOPAD(0x830, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad12.mmc1_dat4 */
-+			AM4372_IOPAD(0x834, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad13.mmc1_dat5 */
-+			AM4372_IOPAD(0x838, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad14.mmc1_dat6 */
-+			AM4372_IOPAD(0x83c, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_ad15.mmc1_dat7 */
-+			AM4372_IOPAD(0x880, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
-+			AM4372_IOPAD(0x884, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
-+		>;
-+	};
-+
- 	spi0_pins: pinmux_spi0_pins {
- 		pinctrl-single,pins = <
- 			AM4372_IOPAD(0x950, PIN_INPUT | MUX_MODE0) /* spi0_sclk.spi0_sclk */
-@@ -271,6 +296,15 @@
- 	status = "okay";
- };
- 
-+&mmc2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_pins>;
-+	vmmc-supply = <&vmmc_3v3>;
-+	bus-width = <8>;
-+	ti,non-removable;
-+};
-+
- &spi0 {
- 	status = "okay";
- 	pinctrl-names = "default";
--- 
-1.9.1
+4oCLT3VyIG5ldyB3ZWIgbWFpbCBoYXMgYmVlbiBpbXByb3ZlZCB3aXRoIGEgbmV3IG1lc3NhZ2lu
+ZyBzeXN0ZW0gZnJvbSBPd2Evb3V0bG9vayB3aGljaCBhbHNvIGluY2x1ZGUgZmFzdGVyIHVzYWdl
+IG9uIGVtYWlsLCBzaGFyZWQgY2FsZW5kYXIsIHdlYi1kb2N1bWVudHMgYW5kIHRoZSBuZXcgMjAx
+NSBhbnRpLXNwYW0gdmVyc2lvbi4gUGxlYXNlIHVzZSB0aGUgbGluayBiZWxvdyB0byBjb21wbGV0
+ZSB5b3VyIHVwZGF0ZSBmb3Igb3VyIG5ldyBPd2Evb3V0bG9vayBpbXByb3ZlZCB3ZWIgbWFpbC4g
+Q0xJQ0sgSEVSRTxodHRwczovL2Zvcm1jcmFmdHMuY29tL2EvMTU4NTE+IHRvIHVwZGF0ZSBvciBD
+b3B5IGFuZCBwZXN0IHRoZSBMaW5rIHRvIHlvdXIgQnJvd3NlcjogaHR0cDovL2JpdC5seS8xWG81
+VmQ0DQpUaGFua3MsDQpJVEMgQWRtaW5pc3RyYXRvci4NCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1h
+aWwgbWVzc2FnZSBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uYWwgYW5kIGNvbmZpZGVu
+dGlhbCB1c2Ugb2YgdGhlIHJlY2lwaWVudChzKSBuYW1lZCBhYm92ZS4gVGhpcyBtZXNzYWdlIG1h
+eSBiZSBhbiBhdHRvcm5leS1jbGllbnQgY29tbXVuaWNhdGlvbiBhbmQvb3Igd29yayBwcm9kdWN0
+IGFuZCBhcyBzdWNoIGlzIHByaXZpbGVnZWQgYW5kIGNvbmZpZGVudGlhbC4gSWYgdGhlIHJlYWRl
+ciBvZiB0aGlzIG1lc3NhZ2UgaXMgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgb3IgYW4gYWdl
+bnQgcmVzcG9uc2libGUgZm9yIGRlbGl2ZXJpbmcgaXQgdG8gdGhlIGludGVuZGVkIHJlY2lwaWVu
+dCwgeW91IGFyZSBoZXJlYnkgbm90aWZpZWQgdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGRv
+Y3VtZW50IGluIGVycm9yIGFuZCB0aGF0IGFueSByZXZpZXcsIGRpc3NlbWluYXRpb24sIGRpc3Ry
+aWJ1dGlvbiwgb3IgY29weWluZyBvZiB0aGlzIG1lc3NhZ2UgaXMgc3RyaWN0bHkgcHJvaGliaXRl
+ZC4gSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBjb21tdW5pY2F0aW9uIGluIGVycm9yLCBwbGVh
+c2Ugbm90aWZ5IHVzIGltbWVkaWF0ZWx5IGJ5IGUtbWFpbCwgYW5kIGRlbGV0ZSB0aGUgb3JpZ2lu
+YWwgbWVzc2FnZS4K
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
