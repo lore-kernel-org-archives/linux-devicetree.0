@@ -1,32 +1,62 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: vf610: relicense vf???.dtsi under GPLv2/X11
-Date: Tue, 24 Nov 2015 13:31:29 -0700
-Message-ID: <5654C921.4090707@wwwdotorg.org>
-References: <1448323069-23208-1-git-send-email-stefan@agner.ch>
- <1448323069-23208-2-git-send-email-stefan@agner.ch>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
+Date: Tue, 24 Nov 2015 21:44:59 +0100
+Message-ID: <CAPDyKFqiGe+E6WRELduZJoKwFRkgnFxBvPjEa3jX04EAC3vXrA@mail.gmail.com>
+References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
+	<1447956490-22930-3-git-send-email-alex.aring@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448323069-23208-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1447956490-22930-3-git-send-email-alex.aring@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list@broadcom.com, linux-pm@vg
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2015 04:57 PM, Stefan Agner wrote:
-> GPLv2-only devicetrees make reuse difficult for software components
-> licensed under a different license.
->
-> The consensus is that a GPL/X11 dual-license should allow all necessary
-> uses, so relicense the vfxxx.dtsi, vf500.dtsi and vf610.dtsi files to
-> this combination.
->
-> CCs were acquired using (updated some email addresses):
-> git shortlog -sne --no-merges arch/arm/boot/dts/vf???.dtsi
+[...]
 
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index 8c53c55..20479d7 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -134,6 +134,16 @@ config ARCH_BCM2835
+>           This enables support for the Broadcom BCM2835 SoC. This SoC is
+>           used in the Raspberry Pi and Roku 2 devices.
+>
+> +config RASPBERRYPI_POWER
+
+You don't need a new Kconfig option I think. If you fold in the below
+"select" under ARCH_BCM2835, that should work as well, right?
+
+select PM_GENERIC_DOMAINS if (RASPBERRYPI_FIRMWARE && PM && OF)
+
+> +       bool "Raspberry Pi power domain driver"
+> +       depends on ARCH_BCM2835
+> +       depends on RASPBERRYPI_FIRMWARE
+> +       select PM_GENERIC_DOMAINS if PM
+> +       select PM_GENERIC_DOMAINS_OF if PM
+> +       help
+> +         This enables support for the RPi power domains which can be enabled
+> +         or disabled via the RPi firmware.
+> +
+>  config ARCH_BCM_63XX
+>         bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
+>         depends on MMU
+> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+> index 892261f..fec2d6b 100644
+> --- a/arch/arm/mach-bcm/Makefile
+> +++ b/arch/arm/mach-bcm/Makefile
+> @@ -36,6 +36,7 @@ endif
+>
+>  # BCM2835
+>  obj-$(CONFIG_ARCH_BCM2835)     += board_bcm2835.o
+> +obj-$(CONFIG_RASPBERRYPI_POWER)        += raspberrypi-power.o
+
+According to above, then this should become:
+
+obj-$(CONFIG_PM_GENERIC_DOMAINS) += raspberrypi-power.o
+
+[...]
+
+Kind regards
+Uffe
