@@ -1,90 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] mfd: axp20x: Split the driver into core and i2c bits
-Date: Tue, 24 Nov 2015 14:35:49 +0200
-Message-ID: <CAHp75VdGAAh56dJRh=ETJLJGFguuw+6mNSfRQ7Br7tAjeZv+3w@mail.gmail.com>
-References: <1448336916-31212-1-git-send-email-wens@csie.org>
-	<1448336916-31212-3-git-send-email-wens@csie.org>
-	<CAHp75VesF5M6nJf6eaBO+Dg6nC3gj=rzL9YnQFAysQ4NFgOMHg@mail.gmail.com>
-	<CAGb2v65EH8sP_ONASZ5gWZXi1D0GqiJvT=X0ieYWehnfqM1Z=A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v65EH8sP_ONASZ5gWZXi1D0GqiJvT=X0ieYWehnfqM1Z=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v2 1/2] Add binding documentation for Zodiac Watchdog Timer
+Date: Tue, 24 Nov 2015 13:04:09 +0000
+Message-ID: <1448370250-28183-1-git-send-email-martyn.welch@collabora.co.uk>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 1:28 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Hi,
->
-> On Tue, Nov 24, 2015 at 5:37 PM, Andy Shevchenko
-> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Nov 24, 2015 at 5:48 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->>> The axp20x driver assumes the device is i2c based. This is not the
->>> case with later chips, which use a proprietary 2 wire serial bus
->>> by Allwinner called "Reduced Serial Bus".
->>>
->>> This patch follows the example of mfd/wm831x and splits it into
->>> an interface independent core, and an i2c specific glue layer.
->>> MFD_AXP20X and the new MFD_AXP20X_I2C are changed to tristate
->>> symbols, allowing the driver to be built as modules.
->>>
->>> Included but unused header files are removed as well.
+This patchs adds documentation for the binding of the Zodiac RAVE
+Switch Watchdog Processor. This is an i2c based watchdog.
 
-So=E2=80=A6
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+---
 
->>> +       if (dev->of_node) {
->>
->> What about
->>
->> if (=E2=80=A6of_node) {
->>       const struct of_device_id *id;
->> =E2=80=A6
->> } else if ACPI_COMPANION(=E2=80=A6) {
+v2: Addition of optional properties.
 
-This should be has_acpi_companion().
+ .../devicetree/bindings/watchdog/ziirave-wdt.txt      | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
 
->>       const struct acpi_device_id *id;
->> =E2=80=A6
->> } else {
->>  return -ENODEV;
->> }
->
-> I really don't want to change code that I'm just moving around.
-> Same goes for the other comments about this patch. I can do another
-> patch on top of this to fix the style issues if it really bothers
-> people.
+diff --git a/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
+new file mode 100644
+index 0000000..069cc2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
+@@ -0,0 +1,19 @@
++Zodiac RAVE Watchdog Timer
++
++Required properties:
++- compatible: must be "zii,rave-wdt"
++- reg: i2c slave address of device, usually 0x38
++
++Optional Properties:
++- timeout-sec: Watchdog timeout value in seconds.
++- reset-duration-msec: Duration of the pulse generated when the watchdog times
++  out. Value in milliseconds.
++
++Example:
++
++	watchdog@38 {
++		compatible = "zii,rave-wdt";
++		reg = <0x38>;
++		timeout-sec = <30>;
++		reset-duration-msec = <30>;
++	};
+-- 
+2.1.4
 
-=46air enough.
-My comments mostly about unnecessity of second parameter in the functio=
-ns.
-
-So,  you already did some clean up in this patch (above), what about
-to do another? I also prefer separate patch *before* you do a split.
-
->>> +       axp20x =3D devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KER=
-NEL);
->>> +       if (!axp20x)
->>> +               return -ENOMEM;
->>> +
->>> +       ret =3D axp20x_i2c_match_device(axp20x, &i2c->dev);
->>> +       if (ret)
->>> +               return ret;
->>> +
->>> +       axp20x->dev =3D &i2c->dev;
->>> +       axp20x->irq =3D i2c->irq;
->>
->> If you move _match_device() here you will be able to drop away struc=
-t
->> device * parameter.
-
---=20
-With Best Regards,
-Andy Shevchenko
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
