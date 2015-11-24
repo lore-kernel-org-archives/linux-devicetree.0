@@ -1,69 +1,154 @@
-From: Shengjiu Wang <shengjiu.wang@freescale.com>
-Subject: Re: [PATCH V3 1/3] ASoC: fsl_esai: spba clock is
- needed by esai device
-Date: Tue, 24 Nov 2015 17:02:58 +0800
-Message-ID: <20151124090256.GA17516@shlinux2>
-References: <cover.1448348336.git.shengjiu.wang@freescale.com>
- <37808c01df126622c41c2d413fddf838dc2aa71d.1448348336.git.shengjiu.wang@freescale.com>
- <20151124083344.GA14109@Asurada-CZ80>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v3 3/6] DT: PCI: qcom: Document PCIe devicetree bindings
+Date: Tue, 24 Nov 2015 11:17:14 +0200
+Message-ID: <56542B1A.5060306@linaro.org>
+References: <cover.1448270813.git.stanimir.varbanov@linaro.org>
+ <8fd3e7d1662f37abe549127d179c315dff3210d8.1448270813.git.stanimir.varbanov@linaro.org>
+ <20151123181329.GN30882@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20151124083344.GA14109@Asurada-CZ80>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, broonie@kernel.org, Xiubo.Lee@gmail.com, timur@tabi.org, lgirdwood@gmail.com, robh+dt@kernel.org, galak@codeaurora.org, tiwai@suse.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20151123181329.GN30882@usrtlx11787.corpusers.net>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 12:33:45AM -0800, Nicolin Chen wrote:
-> On Tue, Nov 24, 2015 at 03:03:28PM +0800, Shengjiu Wang wrote:
-> 
-> > @@ -469,6 +471,9 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
-> >  	ret = clk_prepare_enable(esai_priv->coreclk);
-> >  	if (ret)
-> >  		return ret;
-> > +	ret = clk_prepare_enable(esai_priv->spbaclk);
-> > +	if (ret)
-> > +		goto err_spbaclk;
-> >  	if (!IS_ERR(esai_priv->extalclk)) {
-> >  		ret = clk_prepare_enable(esai_priv->extalclk);
-> >  		if (ret)
-> 
-> Just like for extalclk there is a IS_ERR check out there, there
-> should be one for spbaclk as well. Otherwise....
-> 
-> root@imx6qdlsolo:~# aplay /unit_tests/audio8k16S.wav 
-> [   29.956250] Unable to handle kernel paging request at virtual address fffffffe
-> [   29.963491] pgd = edd98000
-> [   29.966278] [fffffffe] *pgd=afffd861, *pte=00000000, *ppte=00000000
-> [   29.972615] Internal error: Oops: 37 [#1] SMP ARM
-> [   29.977327] Modules linked in:
-> [   29.980410] CPU: 0 PID: 755 Comm: aplay Not tainted 4.4.0-rc1-12414-gcc8db17 #250
-> [   29.987899] Hardware name: Freescale i.MX6 SoloX (Device Tree)
-> [   29.993738] task: edece780 ti: ed26a000 task.ti: ed26a000
-> [   29.999156] PC is at clk_prepare+0x18/0x38
-> [   30.003268] LR is at mark_held_locks+0x70/0x98
-> [   30.007720] pc : [<c0568714>]    lr : [<c006f42c>]    psr: 600f0013
-> [   30.007720] sp : ed26bc60  ip : 00000003  fp : ed26bc74
-> [   30.019204] r10: eebe4d9c  r9 : eeb2e00c  r8 : eeb2e00c
-> [   30.024435] r7 : fffffffe  r6 : eeb2c500  r5 : eeb2d0c0  r4 : fffffffe
-> [   30.030966] r3 : edece780  r2 : 00000001  r1 : 00000001  r0 : 00000001
-> [   30.037502] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> [   30.044643] Control: 10c5387d  Table: add9804a  DAC: 00000051
-> [   30.050395] Process aplay (pid: 755, stack limit = 0xed26a210)
->
+Bjorn, thanks for the comments!
 
-Will fix it in next version, and send it out later.
+On 11/23/2015 08:13 PM, Bjorn Andersson wrote:
+> On Mon 23 Nov 01:29 PST 2015, Stanimir Varbanov wrote:
+> 
+>> From: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>
+>> Document Qualcomm PCIe driver devicetree bindings.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  .../devicetree/bindings/pci/qcom,pcie.txt          |  231 ++++++++++++++++++++
+>>  1 file changed, 231 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> new file mode 100644
+>> index 000000000000..d7640d45fa31
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> @@ -0,0 +1,231 @@
+>> +* Qualcomm PCI express root complex
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Value shall include
+>> +		    - "qcom,pcie-v0" for apq/ipq8064
+>> +		    - "qcom,pcie-v1" for apq8084
+> 
+> Do you know if we have the same v1 of this block in 8994?
 
-best regards
-wang shengjiu 
+I have no idea, but looking in caf msm-3.18 it should be possible to
+reuse the code for v1.
+
+> 
+> [..]
+>> +- clock-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Should contain the following entries
+>> +		    * should be populated for v0 and v1
+>> +		    	- "iface"      Configuration AHB clock
+>> +
+>> +		    * should be populated for v0
+>> +		    	- "core"       Clocks the pcie hw block
+>> +		    	- "phy"        Clocks the pcie PHY block
+>> +
+>> +		    * should be populated for v1
+>> +			- "aux"        Auxiliary (AUX) clock
+>> +		    	- "bus_master" Master AXI clock
+>> +		    	- "bus_slave"  Slave AXI clock
+> 
+> You have white spaces among your tabs here.
+
+Ops, I forgot to remove the white spaces.
+
+> 
+> [..]
+>> +- <name>-supply:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: List of phandles to the power supply regulator(s)
+>> +		    * should be populated for v0 and v1
+>> +			- "vdda"        core analog power supply
+>> +
+>> +		    * should be populated for v0
+>> +			- "vdda_phy"    analog power supply for PHY
+>> +			- "vdda_refclk" analog power supply for IC which generate
+>> +					reference clock
+> 
+> Exploding these into 3 different property descriptions would make it
+> easier to read, and you can say "required for v0" for the latter
+> two and simply "required" on the vdda.
+
+yes, that is a good idea.
+
+> 
+> [..]
+>> +- <name>-gpio:
+>> +	Usage: optional
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: List of phandle and gpio specifier pairs. Should contain
+>> +		    - "perst"  PCIe endpoint reset signal line
+>> +		    - "pewake" PCIe endpoint wake signal line
+> 
+> This property should be pluralized, i.e. it's <name>-gpios.
+
+I hope you mean :
+
+- "perst-gpios" PCIe endpoint reset signal line
+- "pewake-gpios" PCIe endpoint wake signal line
+
+
+> 
+> Are these identifiers coming from some data sheet? Or could we simply
+> name them "reset" and "wakeup"?
+
+In the pcie express card electromechanical specification we have signal
+names PERST# and WAKE#, so I'd like to keep as they are in the
+specification, thus the wake# is wrong and I will rename it to wake-gpios.
+
+> 
+>> +
+>> +- pinctrl-0:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: List of phandles pointing at a pin(s) configuration
+> 
+> This is not required and as it's a property applicable to all devices we
+> normally don't mention them.
+
+agreed.
+
+> 
+>> +
+>> +- pinctrl-names
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: List of names of pinctrl-0 state
+>> +
+> 
+> dito
+> 
+> Regards,
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+
+-- 
+regards,
+Stan
