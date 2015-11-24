@@ -1,11 +1,11 @@
 From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: vf610-cosmic: relicense vf610-cosmic.dts under GPLv2/X11
-Date: Mon, 23 Nov 2015 16:01:31 -0800
-Message-ID: <1448323291-23505-1-git-send-email-stefan@agner.ch>
+Subject: [PATCH 4/4] ARM: dts: vf610-twr: relicense vf610-twr.dts under GPLv2/X11
+Date: Mon, 23 Nov 2015 16:01:42 -0800
+Message-ID: <1448323302-23563-1-git-send-email-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 GPLv2-only devicetrees make reuse difficult for software components
@@ -15,24 +15,28 @@ The consensus is that a GPL/X11 dual-license should allow all necessary
 uses, so relicense the vf610-twr.dts file to this combination.
 
 CCs were acquired using (updated some email addresses):
-git shortlog -sne --no-merges arch/arm/boot/dts/vf610-cosmic.dts
+git shortlog -sne --no-merges arch/arm/boot/dts/vf610-twr.dts
 
+CC: Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
+CC: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 CC: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-CC: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+CC: Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+CC: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+CC: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 CC: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+CC: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- arch/arm/boot/dts/vf610-cosmic.dts | 40 ++++++++++++++++++++++++++++++++++----
+ arch/arm/boot/dts/vf610-twr.dts | 40 ++++++++++++++++++++++++++++++++++++----
  1 file changed, 36 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
-index 5447f25..d0559c1 100644
---- a/arch/arm/boot/dts/vf610-cosmic.dts
-+++ b/arch/arm/boot/dts/vf610-cosmic.dts
-@@ -2,10 +2,42 @@
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 5438ee4..ce937b9 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -1,10 +1,42 @@
+ /*
   * Copyright 2013 Freescale Semiconductor, Inc.
-  * Copyright 2013 Linaro Limited
   *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License as published by
