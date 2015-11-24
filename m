@@ -1,70 +1,189 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] extcon: arizona: Update naming for micd-timeout DT to
- include units
-Date: Tue, 24 Nov 2015 09:04:16 +0900
-Message-ID: <5653A980.30100@samsung.com>
-References: <1448290290-19267-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1448290290-19267-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+From: Constantine Shulyupin <const@makelinux.com>
+Subject: [PATCH v9] Documentation: add Device tree bindings for hwmon/nct7802
+Date: Tue, 24 Nov 2015 02:09:18 +0200
+Message-ID: <1448323758-28457-1-git-send-email-const@makelinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Constantine Shulyupin <const@MakeLinux.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015=EB=85=84 11=EC=9B=94 23=EC=9D=BC 23:51, Charles Keepax wrote:
-> Add time units of -ms (milliseconds) to wlf,micd-timeout.
->=20
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  .../devicetree/bindings/extcon/extcon-arizona.txt  |    2 +-
->  drivers/extcon/extcon-arizona.c                    |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.=
-txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> index da9813b..05d85ac 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> @@ -33,7 +33,7 @@ Optional properties:
->      specified as per the ARIZONA_MICD_TIME_XXX defines.
->    - wlf,micd-dbtime : Microphone detection hardware debounces specif=
-ied as the
->      number of measurements to take, valid values being 2 and 4.
-> -  - wlf,micd-timeout : Timeout for microphone detection, specified i=
-n
-> +  - wlf,micd-timeout-ms : Timeout for microphone detection, specifie=
-d in
->      milliseconds.
->    - wlf,micd-force-micbias : Force MICBIAS continuously on during mi=
-crophone
->      detection.
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
-arizona.c
-> index c377030..8647533 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1230,7 +1230,7 @@ static int arizona_extcon_device_get_pdata(stru=
-ct arizona *arizona)
->  	device_property_read_u32(arizona->dev, "wlf,micd-dbtime",
->  				 &pdata->micd_dbtime);
-> =20
-> -	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
-> +	device_property_read_u32(arizona->dev, "wlf,micd-timeout-ms",
->  				 &pdata->micd_timeout);
-> =20
->  	pdata->micd_force_micbias =3D device_property_read_bool(arizona->de=
-v,
->=20
+From: Constantine Shulyupin <const@MakeLinux.com>
 
-Applied it.
+Introduced subnodes sensor, fan and peci with properties.
 
-Thanks,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
+---
+Changed in v9:
+- Fixed nuvoton,nct7802-sensor
+- Introduced nuvoton,nct7802-vmon, nuvoton,nct7802-fan-in, nuvoton,nct7802-fan-ctl
+
+Changed in v8:
+- added senor type "local"
+- Compatible nodes converted to senor types "vcore", "vcc"
+
+Changed in v7:
+- sensors type (thermistor, thermistor, voltage) and pwm type
+selected with type property instead of compatible property.
+
+Changed in v6:
+- Removed previous definition.
+- Introduced subnodes sensor, fan and peci with properties.
+
+Changed in v5:
+- Fixed typos
+
+Changed in v4:
+- Removed registers initialization by names
+- Added properties nuvoton,sensor*-type
+
+Changed in v3:
+- Fixed vendor prefix
+- Added short registers description,
+  full registers description is available at
+https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+
+Changed in v2:
+- Removed nct7802,reg-init
+- Added registers initialization by names
+
+Introduced in v1:
+ - nct7802,reg-init
+---
+ .../devicetree/bindings/hwmon/nct7802.txt          | 125 +++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+new file mode 100644
+index 0000000..cf983b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+@@ -0,0 +1,125 @@
++Nuvoton NCT7802Y Hardware Monitoring IC
++
++Required node properties:
++
++ - "compatible": must be "nuvoton,nct7802"
++ - "reg": I2C bus address of the device
++ - #address-cells=<1>;
++ - #size-cells=<0>;
++
++Optional subnodes:
++
++Sensor subnodes properties:
++ - "compatible", allowed values:
++	 - "nuvoton,nct7802-sensor"
++ - "sensor-type", allowed values:
++	"thermal-diode"
++	"thermistor"
++	"voltage"
++	"local" (only one instance, no "reg" required)
++For sensors of types "thermal-diode", "thermistor" and "voltage" required
++ - "reg": sensor index in range 0 .. 2
++
++Except sensor at address 2 can't be "thermal-diode".
++
++Voltage monitor subnodes properties:
++ - "compatible", allowed values:
++	 - "nuvoton,nct7802-vmon"
++ - "vmon-type", allowed values:
++	"vcore"
++	"vcc"
++ - "reg" is not used because there is only one instance of
++ vcore and vcc voltage monitors.
++
++Fan subnodes:
++
++Fan tachometer subnode (input):
++
++Required properties:
++ - "reg" :sensor index of in range 0 .. 2.
++ - "compatible", should be "nuvoton,nct7802-fan-in"
++
++Fan PWM (or DC) subnode (output or control):
++
++Required properties:
++ - "reg" :sensor index of in range 0 .. 2.
++ - "compatible", should be "nuvoton,nct7802-fan-ctl"
++Optional boolean properties:
++ - "direct-current" :direct current powered fan instead default PWM
++ - "invert" :inverted polarity
++ - "open-drain" :open-drain output instead push pull
++
++Subnode "peci" properties:
++ - "reg" :sensor index in range 0 .. 1
++ - "compatible", should be "nuvoton,nct7802-peci"
++
++Not defined sensors, fans and PECI modules will be disabled.
++
++Example nct7802 node:
++
++nct7802-example@28 {
++	compatible = "nuvoton,nct7802";
++	reg = <0x28>;
++	#address-cells=<1>;
++	#size-cells=<0>;
++	local-sensor {
++		compatible = "nuvoton,nct7802-sensor";
++		sensor-type = "local";
++	};
++	sensor@0 {
++		compatible = "nuvoton,nct7802-sensor";
++		reg = <0>;
++		sensor-type = "thermal-diode";
++	};
++	sensor@1 {
++		compatible = "nuvoton,nct7802-sensor";
++		reg = <1>;
++		sensor-type = "thermistor";
++	};
++	sensor@2 {
++		compatible = "nuvoton,nct7802-sensor";
++		reg = <2>;
++		sensor-type = "voltage";
++	};
++	vcc {
++		compatible = "nuvoton,nct7802-vmon";
++		sensor-type = "vcc";
++	};
++	vcore {
++		compatible = "nuvoton,nct7802-vmon";
++		sensor-type = "vcore";
++	};
++	fan-in@0 {
++		compatible = "nuvoton,nct7802-fan-in";
++		reg = <0>;
++	};
++	fan-in@1 {
++		compatible = "nuvoton,nct7802-fan-in";
++		reg = <1>;
++	};
++	fan-ctl@0 {
++		compatible = "nuvoton,nct7802-fan-ctl";
++		reg = <0>;
++	};
++	dc-fan-ctl@1 {
++		compatible = "nuvoton,nct7802-fan-ctl";
++		reg = <1>;
++		direct-current;
++		open-drain;
++		invert;
++	};
++	pwm-fan-ctl@2 {
++		compatible = "nuvoton,nct7802-fan-ctl";
++		reg = <2>;
++		open-drain;
++		invert;
++	};
++	peci@0 {
++		compatible = "nuvoton,nct7802-peci";
++		reg = <0>;
++	};
++	peci@1 {
++		compatible = "nuvoton,nct7802-peci";
++		reg = <1>;
++	};
++};
+-- 
+1.9.1
