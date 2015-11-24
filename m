@@ -1,93 +1,57 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] spi: mediatek: revise mtk_spi_probe() failure flow
-Date: Tue, 24 Nov 2015 19:12:42 +0100
-Message-ID: <5654A89A.3090202@gmail.com>
-References: <1448332712-29039-1-git-send-email-leilk.liu@mediatek.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v4] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Tue, 24 Nov 2015 10:13:26 -0800
+Message-ID: <5654A8C6.3070306@caviumnetworks.com>
+References: <1426518362-24349-1-git-send-email-aleksey.makarov@auriga.com> <20150518210514.GG609@fuloong-minipc.musicnaut.iki.fi> <555A5C5C.9090903@auriga.com> <20151120173233.GH18138@blackmetal.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448332712-29039-1-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151120173233.GH18138@blackmetal.musicnaut.iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Aleksey Makarov <aleksey.makarov@auriga.com>, linux-mmc@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Aaron Williams <aaron.williams@cavium.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/20/2015 09:32 AM, Aaro Koskinen wrote:
+> Hi,
+>
+> On Mon, May 18, 2015 at 02:40:44PM -0700, Aleksey Makarov wrote:
+>> On 05/18/2015 02:05 PM, Aaro Koskinen wrote:
+>>> On Mon, Mar 16, 2015 at 06:06:00PM +0300, Aleksey Makarov wrote:
+>>>> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
+>>>> devices.  Device parameters are configured from device tree data.
+>>>>
+>>>> eMMC, MMC and SD devices are supported.
+>>>>
+>>>> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>>>> Signed-off-by: Chandrakala Chavva <cchavva@caviumnetworks.com>
+>>>> Signed-off-by: David Daney <david.daney@cavium.com>
+>>>> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+>>>> Signed-off-by: Leonid Rosenboim <lrosenboim@caviumnetworks.com>
+>>>> Signed-off-by: Peter Swain <pswain@cavium.com>
+>>>> Signed-off-by: Aaron Williams <aaron.williams@cavium.com>
+>>>> ---
+>>>
+>>> Any updates on this patch? Are you still working on it for
+>>> the mainline kernel inclusion?
+>>
+>> We are working on it.  It will also be used in ARM ThunderX arch.  So we
+>> will send a new version soon.
+>
+> Any updates?
+>
+> Also distros are waiting for this patch, MMC is the main medium on
+> some boards:
+>
+> 	https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=800594
+
+I am aware of the need, but haven't been able to find the time to work 
+on the MMC patch.
+
+David Daney
 
 
-On 24/11/15 03:38, Leilk Liu wrote:
-> This patch revises failure flow while pm_runtime_enable().
-
-Please write a proper commit message explaining what this patch does.
-
 >
-> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   drivers/spi/spi-mt65xx.c |   15 ++++++++-------
->   1 file changed, 8 insertions(+), 7 deletions(-)
+> A.
 >
-> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-> index 6c1a96e..00a36da 100644
-> --- a/drivers/spi/spi-mt65xx.c
-> +++ b/drivers/spi/spi-mt65xx.c
-> @@ -607,7 +607,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
->   	ret = clk_set_parent(mdata->sel_clk, mdata->parent_clk);
->   	if (ret < 0) {
->   		dev_err(&pdev->dev, "failed to clk_set_parent (%d)\n", ret);
-> -		goto err_disable_clk;
-> +		clk_disable_unprepare(mdata->spi_clk);
-> +		goto err_put_master;
->   	}
->
->   	clk_disable_unprepare(mdata->spi_clk);
-> @@ -617,7 +618,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
->   	ret = devm_spi_register_master(&pdev->dev, master);
->   	if (ret) {
->   		dev_err(&pdev->dev, "failed to register master (%d)\n", ret);
-> -		goto err_put_master;
-> +		goto err_disable_runtime_pm;
->   	}
->
->   	if (mdata->dev_comp->need_pad_sel) {
-> @@ -626,14 +627,14 @@ static int mtk_spi_probe(struct platform_device *pdev)
->   				"pad_num does not match num_chipselect(%d != %d)\n",
->   				mdata->pad_num, master->num_chipselect);
->   			ret = -EINVAL;
-> -			goto err_put_master;
-> +			goto err_disable_runtime_pm;
->   		}
->
->   		if (!master->cs_gpios && master->num_chipselect > 1) {
->   			dev_err(&pdev->dev,
->   				"cs_gpios not specified and num_chipselect > 1\n");
->   			ret = -EINVAL;
-> -			goto err_put_master;
-> +			goto err_disable_runtime_pm;
->   		}
->
->   		if (master->cs_gpios) {
-> @@ -644,7 +645,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
->   				if (ret) {
->   					dev_err(&pdev->dev,
->   						"can't get CS GPIO %i\n", i);
-> -					goto err_put_master;
-> +					goto err_disable_runtime_pm;
->   				}
->   			}
->   		}
-> @@ -652,8 +653,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
->
->   	return 0;
->
-> -err_disable_clk:
-> -	clk_disable_unprepare(mdata->spi_clk);
-> +err_disable_runtime_pm:
-> +	pm_runtime_disable(&pdev->dev);
->   err_put_master:
->   	spi_master_put(master);
->
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
