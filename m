@@ -1,87 +1,78 @@
-From: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] dts/ls2080a: Update PCIe compatible
-Date: Tue, 24 Nov 2015 14:04:35 +0800
-Message-ID: <1448345075-6801-1-git-send-email-Mingkai.Hu@freescale.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v5 0/4] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY
+ driver
+Date: Tue, 24 Nov 2015 06:16:42 +0000
+Message-ID: <SG2PR06MB0919EE202A7433E471268093D8060@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Language: ja-JP
+Sender: linux-sh-owner@vger.kernel.org
+To: "kishon@ti.com" <kishon@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hi Kishon,
 
-The patch adds LS2085a to PCIe compatible to fix the compatibility
-issue when using firmware with LS2085a compatible property.
+> From: Yoshihiro Shimoda
+> Sent: Tuesday, October 20, 2015 5:58 PM
+> 
+> This patch is based on the latest linux-phy / next branch.
+> (commit id = 0f8669e343982ac66f4420335777cb5456b8abb0)
 
-Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- Documentation/devicetree/bindings/pci/layerscape-pci.txt |  1 +
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12 ++++++++----
- 2 files changed, 9 insertions(+), 4 deletions(-)
+Would you review this patch set?
+I confirmed the patch set could apply the latest linux-phy / next branch correctly.
+(commit id = 8005c49d9aea74d382f474ce11afbbc7d7130bec)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e376785..4600007 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -15,6 +15,7 @@ Required properties:
- - compatible: should contain the platform identifier such as:
-         "fsl,ls1021a-pcie", "snps,dw-pcie"
-         "fsl,ls2080a-pcie", "snps,dw-pcie"
-+        "fsl,ls2085a-pcie", "snps,dw-pcie"
- - reg: base addresses and lengths of the PCIe controller
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index e81cd48..3821bb1 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -383,7 +383,8 @@
- 		};
- 
- 		pcie@3400000 {
--			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-+				     "snps,dw-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -406,7 +407,8 @@
- 		};
- 
- 		pcie@3500000 {
--			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-+				     "snps,dw-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -429,7 +431,8 @@
- 		};
- 
- 		pcie@3600000 {
--			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-+				     "snps,dw-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -452,7 +455,8 @@
- 		};
- 
- 		pcie@3700000 {
--			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-+				     "snps,dw-pcie";
- 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
- 			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
--- 
-2.1.0.27.g96db324
+Best regards,
+Yoshihiro Shimoda
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Changes from v4:
+>   - Modify Kconfig to "depends on OF && ARCH_SHMOBILE".
+>   - Modify Kconfig to "select GENERIC_PHY" instead of "depends on GENERIC_PHY".
+>   - Modify device tree documentation about "reg" of example.
+>   - Remove spinlock handling because phy-core driver calls mutex_lock().
+>   - Change valiable name to val instead of tmp.
+>   - Remove dev_set_drvdata.
+>   - Use dev_vdbg() instead of dev_dbg().
+>   - Change rcar_gen3_device_recognition()'s condition as one line.
+>   - Remove unnecessary value in rcar_gen3_phy_usb2_probe().
+>   - Modify MAINTAINERS about this driver.
+> 
+>  Changes from v3:
+>   - Shorten structure names to avoid new line if we add a long function name.
+>   - Add ID/VBUS pin detection for peripheral mode.
+> 
+>  Changes from v2:
+>   - Modify Kconfig to add "depends on OF" and "depends on ARCH_SHMOBILE".
+>   - Add more information in the dt document.
+>   - Change reg-names from "usb2" to "usb2_host".
+> 
+>  Changes from v1:
+>   - Revise some typos.
+>   - Remove using clk API to enable/disable the clocks.
+>     (In other words, this driver expects to enable/disable the clocks by
+>      Runtime PM API by the phy-core driver.)
+>   - Remove an unnecessary header file (asm/cmpxchg.h).
+> 
+> Yoshihiro Shimoda (4):
+>   phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+>   phy: rcar-gen3-usb2: change the mode to OTG on the combined channel
+>   phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection
+>   MAINTAINERS: add Renesas usb2 phy driver
+> 
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  39 +++
+>  MAINTAINERS                                        |   6 +
+>  drivers/phy/Kconfig                                |   7 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-rcar-gen3-usb2.c                   | 380 +++++++++++++++++++++
+>  5 files changed, 433 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+>  create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
+> 
+> --
+> 1.9.1
+
