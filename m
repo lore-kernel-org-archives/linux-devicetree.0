@@ -1,41 +1,55 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH] modpost: don't add a trailing wildcard for OF module
- aliases
-Date: Tue, 24 Nov 2015 09:07:30 +0100
-Message-ID: <1448352450.19513.53.camel@collabora.co.uk>
-References: <1447943308-27689-1-git-send-email-javier@osg.samsung.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: Re: [PATCH (v4) 2/2] mtd: brcmnand: Add support for the BCM63268
+Date: Tue, 24 Nov 2015 08:12:03 +0000
+Message-ID: <56541BD3.4070202@simon.arlott.org.uk>
+References: <56506D55.3000907@simon.arlott.org.uk>
+ <20151122215945.GA5930@rob-hp-laptop> <56523E85.905@simon.arlott.org.uk>
+ <56523EFF.9050502@simon.arlott.org.uk> <56535977.9050201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447943308-27689-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56535977.9050201@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE1LTExLTE5IGF0IDExOjI4IC0wMzAwLCBKYXZpZXIgTWFydGluZXogQ2FuaWxs
-YXMgd3JvdGU6Cj4gwqBzY3JpcHRzL21vZC9maWxlMmFsaWFzLmMgfCAzICstLQo+IMKgMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQg
-YS9zY3JpcHRzL21vZC9maWxlMmFsaWFzLmMgYi9zY3JpcHRzL21vZC9maWxlMmFsaWFzLmMKPiBp
-bmRleCA1Yjk2MjA2ZTlhYWIuLjY1ZWFhYjhiNzc5OCAxMDA2NDQKPiAtLS0gYS9zY3JpcHRzL21v
-ZC9maWxlMmFsaWFzLmMKPiArKysgYi9zY3JpcHRzL21vZC9maWxlMmFsaWFzLmMKPiBAQCAtMTI1
-LDcgKzEyNSw3IEBAIGRvCj4ge8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgc3ByaW50ZihzdHIgKyBzdHJsZW4oc3RyKSwgIioiKTvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoFwKPiDCoH0gd2hpbGUoMCkKPiDCoAo+IC0vKiBBbHdheXMgZW5kIGluIGEg
-d2lsZGNhcmQsIGZvciBmdXR1cmUgZXh0ZW5zaW9uICovCj4gKy8qIEVuZCBpbiBhIHdpbGRjYXJk
-LCBmb3IgZnV0dXJlIGV4dGVuc2lvbiAqLwo+IMKgc3RhdGljIGlubGluZSB2b2lkIGFkZF93aWxk
-Y2FyZChjaGFyICpzdHIpCj4gwqB7Cj4gwqAJaW50IGxlbiA9IHN0cmxlbihzdHIpOwo+IEBAIC03
-MDQsNyArNzA0LDYgQEAgc3RhdGljIGludCBkb19vZl9lbnRyeSAoY29uc3QgY2hhciAqZmlsZW5h
-bWUsCj4gdm9pZCAqc3ltdmFsLCBjaGFyICphbGlhcykKPiDCoAkJaWYgKGlzc3BhY2UgKCp0bXAp
-KQo+IMKgCQkJKnRtcCA9ICdfJzsKPiDCoAo+IC0JYWRkX3dpbGRjYXJkKGFsaWFzKTsKPiDCoAly
-ZXR1cm4gMTsKPiDCoH0KPiDCoEFERF9UT19ERVZUQUJMRSgib2YiLCBvZl9kZXZpY2VfaWQsIGRv
-X29mX2VudHJ5KTsKClJldmlld2VkLWJ5OiBTam9lcmQgU2ltb25zIDxzam9lcmQuc2ltb25zQGNv
-bGxhYm9yYS5jby51az4KCi0tIApTam9lcmQgU2ltb25zCkNvbGxhYm9yYSBMdGQuCg==
+On 23/11/15 18:22, Florian Fainelli wrote:
+> On 22/11/15 14:17, Simon Arlott wrote:
+>> The BCM63268 has a NAND interrupt register with combined status and enable
+>> registers. It also has a clock for the NAND controller that needs to be
+>> enabled.
+>> 
+>> Set up the device by enabling the clock, disabling and acking all
+>> interrupts, then handle the CTRL_READY interrupt.
+>> 
+>> Add a "device_remove" function to struct brcmnand_soc so that the clock
+>> can be disabled when the device is removed.
+>> 
+>> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+>> ---
+>> On 22/11/15 21:59, Rob Herring wrote:
+>>>>>> + * "brcm,nand-bcm63268"
+>>>>>> + - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
+>>>>
+>>>> vendor,<soc>-device is preferred.
+>> 
+>> The existing two bindings use brcm,nand-<soc>, but I've changed this one.
+> 
+> Could we stick with the existing binding naming convention of using:
+> 
+> brcm,nand-<soc> just so automated tools or other things can match this
+> one too, and +1 for consistency?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I could submit another patch renaming the existing bindings to
+brcm,<soc>-nand, and add that to the drivers? Then they'd be consistent.
+
+> Other than, that, same comment as Jonas, why do we we need the
+> device_remove callback to be called from the main driver down to this one?
+
+I'll add a "struct brcmnand_soc *brcmnand_get_socdata(struct device *)"
+instead so that I can access the soc data before calling brcmnand_remove.
+
+-- 
+Simon Arlott
