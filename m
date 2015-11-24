@@ -1,63 +1,45 @@
 From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: [PATCH v3 2/2] DT: watchdog: add Alphascale asm9260 watchdog binding documentation.
-Date: Tue, 24 Nov 2015 22:40:33 +0100
-Message-ID: <1448401233-1064-3-git-send-email-linux@rempel-privat.de>
+Subject: [PATCH v3 0/2] add Alphascale asm9260-wdt driver
+Date: Tue, 24 Nov 2015 22:40:31 +0100
+Message-ID: <1448401233-1064-1-git-send-email-linux@rempel-privat.de>
 References: <5652BFA5.9010101@roeck-us.net>
- <1448401233-1064-1-git-send-email-linux@rempel-privat.de>
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448401233-1064-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+In-Reply-To: <5652BFA5.9010101-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
----
- .../bindings/watchdog/alphascale-asm9260.txt       | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
+v2:
+- fix DT types
+- remove obsolet comments
+- add clk error handling
+- reduce log noise
+- allow to return an error in asm9260_wdt_get_dt_mode
 
-diff --git a/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
-new file mode 100644
-index 0000000..75b265a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
-@@ -0,0 +1,35 @@
-+Alphascale asm9260 Watchdog timer
-+
-+Required properties:
-+
-+- compatible : should be "alphascale,asm9260-wdt".
-+- reg : Specifies base physical address and size of the registers.
-+- clocks : the clocks feeding the watchdog timer. See clock-bindings.txt
-+- clock-names : should be set to
-+	"mod" - source for tick counter.
-+	"ahb" - ahb gate.
-+- resets : phandle pointing to the system reset controller with
-+	line index for the watchdog.
-+- reset-names : should be set to "wdt_rst".
-+
-+Optional properties:
-+- timeout-sec : shall contain the default watchdog timeout in seconds,
-+	if unset, the default timeout is 30 seconds.
-+- alphascale,mode : three modes are supported
-+	"hw" - hw reset (default).
-+	"sw" - sw reset.
-+	"debug" - no action is taken.
-+
-+Example:
-+
-+watchdog0: watchdog@80048000 {
-+	compatible = "alphascale,asm9260-wdt";
-+	reg = <0x80048000 0x10>;
-+	clocks = <&acc CLKID_SYS_WDT>, <&acc CLKID_AHB_WDT>;
-+	clock-names = "mod", "ahb";
-+	interrupts = <55>;
-+	resets = <&rst WDT_RESET>;
-+	reset-names = "wdt_rst";
-+	timeout-sec = <30>;
-+	alphascale,mode = "hw";
-+};
+v3:
+- split patch to two parts, binding documentation and driver
+- spelling fixes
+- make reset a required property. It will make the code easier
+- reduce timeout for asm9260_wdt_sys_reset
+- rework error handling in asm9260_wdt_get_dt_clks
+- asm9260_wdt_get_dt_mode - convert return type from int to void
+- don't touch watchdog_set_nowayout
+- don't do dev_err() if driver is still working, use dev_warn instead.
+- asm9260_wdt_remove - use asm9260_wdt_disable() instead of asm9260_wdt_shutdown()
+
+Oleksij Rempel (2):
+  watchdog: add Alphascale asm9260-wdt driver
+  DT: watchdog: add Alphascale asm9260 watchdog binding documentation.
+
+ .../bindings/watchdog/alphascale-asm9260.txt       |  35 ++
+ drivers/watchdog/Kconfig                           |  10 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/asm9260_wdt.c                     | 400 +++++++++++++++++++++
+ 4 files changed, 446 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
+ create mode 100644 drivers/watchdog/asm9260_wdt.c
+
 -- 
 2.5.0
 
