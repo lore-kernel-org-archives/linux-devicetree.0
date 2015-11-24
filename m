@@ -1,87 +1,227 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] simplefb: Add regulator handling support
-Date: Tue, 24 Nov 2015 13:00:46 +0200
-Message-ID: <5654435E.3060202@ti.com>
-References: <1447734663-19189-1-git-send-email-wens@csie.org>
-Reply-To: tomi.valkeinen-l0cyMroinI0@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="ncefJ31MsxRgxs7D4FUpbuCAAmhD2aQfu"
-Return-path: <linux-sunxi+bncBCGMHFOOT4LBB44G2GZAKGQEZN2EELQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1447734663-19189-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Adriana Reus <adriana.reus@intel.com>
+Subject: [PATCH 1/5] iio: light: us5182d: Add property for choosing default power mode
+Date: Tue, 24 Nov 2015 12:59:48 +0200
+Message-ID: <1448362792-5181-2-git-send-email-adriana.reus@intel.com>
+References: <1448362792-5181-1-git-send-email-adriana.reus@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448362792-5181-1-git-send-email-adriana.reus@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, pmeerw@pmeerw.net, lars@metafoo.de, Adriana Reus <adriana.reus@intel.com>
 List-Id: devicetree@vger.kernel.org
 
---ncefJ31MsxRgxs7D4FUpbuCAAmhD2aQfu
-Content-Type: text/plain; charset=UTF-8
+This chip supports two power modes.
+1. "one-shot" mode - the chip activates and executes one complete
+conversion loop and then shuts itself down. This is the default mode
+chosen for raw reads.
+2. "continuous" mode - the chip takes continuous measurements.
 
+Continuous mode is more expensive power-wise but may be more reliable.
+Add a property so that if preferred, the default power mode for raw
+reads can be set to continuous.
+Separate one-shot enabling in a separate function that will be used
+depending on the chosen power mode. Also create a function for
+powering the chip on and off.
 
+Signed-off-by: Adriana Reus <adriana.reus@intel.com>
+---
+ drivers/iio/light/us5182d.c | 90 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 78 insertions(+), 12 deletions(-)
 
-On 17/11/15 06:31, Chen-Yu Tsai wrote:
-> Hi everyone,
-> 
-> This is v5 of the simplefb regulator support series. This series adds
-> regulator claiming and enabling support for simplefb.
-> 
-> Hans, I dropped your Reviewed-by tag from patch 2 since v4.
-> 
-> Changes since v5:
->   - Rebased onto v4.4-rc1
->   - Dropped dts patches (merged)
-> 
-> Changes since v4:
->   - Fixed inverted logic when testing the property name.
->   - Fixed regulator supply name string copy length off by 1.
->   - Added real world user, MSI Primo 81 dts patches.
-> 
-> Changes since v3:
->   - Dropped extra "if" which is always true, leftover from v1.
->   - Updated commit message of patch 1
-> 
-> Sometimes the simplefb display output path consits of external conversion
-> chips and/or LCD drivers and backlights. These devices normally have
-> GPIOs to turn them on and/or bring them out of reset, and regulators
-> supplying power to them.
-> 
-> While the kernel does not touch unclaimed GPIOs, the regulator core
-> happily disables unused regulators. Thus we need simplefb to claim
-> and enable the regulators used throughout the display pipeline.
-> 
-> The binding supports any named regulator supplies under its device
-> node. The driver will look through its properties, and claim any
-> regulators by matching "*-supply", as Mark suggested.
-> 
-> I've not done a generic helper in the regulator core yet, instead doing
-> the regulator property handling in the simplefb code for now.
-> 
-> 
-> Patch 1 adds the regulator properties to the DT binding.
-> 
-> Patch 2 adds code to the simplefb driver to claim and enable regulators.
-> 
-> Regards
-> ChenYu
-> 
-> 
-> Chen-Yu Tsai (2):
->   dt-bindings: simplefb: Support regulator supply properties
->   simplefb: Claim and enable regulators
-> 
->  .../bindings/display/simple-framebuffer.txt        |  13 ++-
->  drivers/video/fbdev/simplefb.c                     | 120 ++++++++++++++++++++-
->  2 files changed, 128 insertions(+), 5 deletions(-)
-> 
-
-Thanks, queued for 4.5.
-
- Tomi
---ncefJ31MsxRgxs7D4FUpbuCAAmhD2aQfu--
+diff --git a/drivers/iio/light/us5182d.c b/drivers/iio/light/us5182d.c
+index 49dab3c..7993014 100644
+--- a/drivers/iio/light/us5182d.c
++++ b/drivers/iio/light/us5182d.c
+@@ -99,6 +99,11 @@ enum mode {
+ 	US5182D_PX_ONLY
+ };
+ 
++enum pmode {
++	US5182D_CONTINUOUS,
++	US5182D_ONESHOT
++};
++
+ struct us5182d_data {
+ 	struct i2c_client *client;
+ 	struct mutex lock;
+@@ -112,6 +117,9 @@ struct us5182d_data {
+ 	u16 *us5182d_dark_ths;
+ 
+ 	u8 opmode;
++	u8 power_mode;
++
++	bool default_continuous;
+ };
+ 
+ static IIO_CONST_ATTR(in_illuminance_scale_available,
+@@ -130,13 +138,11 @@ static const struct {
+ 	u8 reg;
+ 	u8 val;
+ } us5182d_regvals[] = {
+-	{US5182D_REG_CFG0, (US5182D_CFG0_SHUTDOWN_EN |
+-			    US5182D_CFG0_WORD_ENABLE)},
++	{US5182D_REG_CFG0, US5182D_CFG0_WORD_ENABLE},
+ 	{US5182D_REG_CFG1, US5182D_CFG1_ALS_RES16},
+ 	{US5182D_REG_CFG2, (US5182D_CFG2_PX_RES16 |
+ 			    US5182D_CFG2_PXGAIN_DEFAULT)},
+ 	{US5182D_REG_CFG3, US5182D_CFG3_LED_CURRENT100},
+-	{US5182D_REG_MODE_STORE, US5182D_STORE_MODE},
+ 	{US5182D_REG_CFG4, 0x00},
+ };
+ 
+@@ -169,7 +175,7 @@ static int us5182d_get_als(struct us5182d_data *data)
+ 	return result;
+ }
+ 
+-static int us5182d_set_opmode(struct us5182d_data *data, u8 mode)
++static int us5182d_oneshot_en(struct us5182d_data *data)
+ {
+ 	int ret;
+ 
+@@ -182,6 +188,20 @@ static int us5182d_set_opmode(struct us5182d_data *data, u8 mode)
+ 	 * required measurement.
+ 	 */
+ 	ret = ret | US5182D_CFG0_ONESHOT_EN;
++	return i2c_smbus_write_byte_data(data->client, US5182D_REG_CFG0, ret);
++
++}
++
++static int us5182d_set_opmode(struct us5182d_data *data, u8 mode)
++{
++	int ret;
++
++	if (mode == data->opmode)
++		return 0;
++
++	ret = i2c_smbus_read_byte_data(data->client, US5182D_REG_CFG0);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* update mode */
+ 	ret = ret & ~US5182D_OPMODE_MASK;
+@@ -196,9 +216,6 @@ static int us5182d_set_opmode(struct us5182d_data *data, u8 mode)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (mode == data->opmode)
+-		return 0;
+-
+ 	ret = i2c_smbus_write_byte_data(data->client, US5182D_REG_MODE_STORE,
+ 					US5182D_STORE_MODE);
+ 	if (ret < 0)
+@@ -210,6 +227,23 @@ static int us5182d_set_opmode(struct us5182d_data *data, u8 mode)
+ 	return 0;
+ }
+ 
++static int us5182d_shutdown_en (struct us5182d_data *data, u8 state)
++{
++	int ret;
++
++	if (data->power_mode == US5182D_ONESHOT)
++		return 0;
++
++	ret = i2c_smbus_read_byte_data(data->client, US5182D_REG_CFG0);
++	if (ret < 0)
++		return ret;
++
++	ret = ret & ~US5182D_CFG0_SHUTDOWN_EN;
++	ret = ret | state;
++
++	return i2c_smbus_write_byte_data(data->client, US5182D_REG_CFG0, ret);
++}
++
+ static int us5182d_read_raw(struct iio_dev *indio_dev,
+ 			    struct iio_chan_spec const *chan, int *val,
+ 			    int *val2, long mask)
+@@ -222,6 +256,11 @@ static int us5182d_read_raw(struct iio_dev *indio_dev,
+ 		switch (chan->type) {
+ 		case IIO_LIGHT:
+ 			mutex_lock(&data->lock);
++			if (data->power_mode == US5182D_ONESHOT) {
++				ret = us5182d_oneshot_en(data);
++				if (ret < 0)
++					goto out_err;
++			}
+ 			ret = us5182d_set_opmode(data, US5182D_OPMODE_ALS);
+ 			if (ret < 0)
+ 				goto out_err;
+@@ -234,6 +273,11 @@ static int us5182d_read_raw(struct iio_dev *indio_dev,
+ 			return IIO_VAL_INT;
+ 		case IIO_PROXIMITY:
+ 			mutex_lock(&data->lock);
++			if (data->power_mode == US5182D_ONESHOT) {
++				ret = us5182d_oneshot_en(data);
++				if (ret < 0)
++					goto out_err;
++			}
+ 			ret = us5182d_set_opmode(data, US5182D_OPMODE_PX);
+ 			if (ret < 0)
+ 				goto out_err;
+@@ -368,6 +412,7 @@ static int us5182d_init(struct iio_dev *indio_dev)
+ 		return ret;
+ 
+ 	data->opmode = 0;
++	data->power_mode = US5182D_CONTINUOUS;
+ 	for (i = 0; i < ARRAY_SIZE(us5182d_regvals); i++) {
+ 		ret = i2c_smbus_write_byte_data(data->client,
+ 						us5182d_regvals[i].reg,
+@@ -376,7 +421,15 @@ static int us5182d_init(struct iio_dev *indio_dev)
+ 			return ret;
+ 	}
+ 
+-	return 0;
++	if (!data->default_continuous) {
++		ret = us5182d_shutdown_en(data, US5182D_CFG0_SHUTDOWN_EN);
++		if (ret < 0)
++			return ret;
++		data->power_mode = US5182D_ONESHOT;
++	}
++
++
++	return ret;
+ }
+ 
+ static void us5182d_get_platform_data(struct iio_dev *indio_dev)
+@@ -399,6 +452,8 @@ static void us5182d_get_platform_data(struct iio_dev *indio_dev)
+ 				    "upisemi,lower-dark-gain",
+ 				    &data->lower_dark_gain))
+ 		data->lower_dark_gain = US5182D_REG_AUTO_LDARK_GAIN_DEFAULT;
++	data->default_continuous = device_property_read_bool(&data->client->dev,
++							     "upisemi,continuous");
+ }
+ 
+ static int  us5182d_dark_gain_config(struct iio_dev *indio_dev)
+@@ -464,16 +519,27 @@ static int us5182d_probe(struct i2c_client *client,
+ 
+ 	ret = us5182d_dark_gain_config(indio_dev);
+ 	if (ret < 0)
+-		return ret;
++		goto out_err;
++
++	ret = iio_device_register(indio_dev);
++	if (ret < 0)
++		goto out_err;
++
++	return 0;
++
++out_err:
++	us5182d_shutdown_en(data, US5182D_CFG0_SHUTDOWN_EN);
++	return ret;
+ 
+-	return iio_device_register(indio_dev);
+ }
+ 
+ static int us5182d_remove(struct i2c_client *client)
+ {
++	struct us5182d_data *data = iio_priv(i2c_get_clientdata(client));
++
+ 	iio_device_unregister(i2c_get_clientdata(client));
+-	return i2c_smbus_write_byte_data(client, US5182D_REG_CFG0,
+-					 US5182D_CFG0_SHUTDOWN_EN);
++
++	return us5182d_shutdown_en(data, US5182D_CFG0_SHUTDOWN_EN);
+ }
+ 
+ static const struct acpi_device_id us5182d_acpi_match[] = {
+-- 
+1.9.1
