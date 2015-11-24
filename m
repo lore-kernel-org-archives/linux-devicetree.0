@@ -1,41 +1,26 @@
-From: Zain <zain.wang@rock-chips.com>
-Subject: Re: [PATCH v4 2/4] clk: rockchip: set an ID for crypto clk
-Date: Tue, 24 Nov 2015 08:49:39 +0800
-Message-ID: <5653B423.5000406@rock-chips.com>
-References: <1447732847-30514-1-git-send-email-zain.wang@rock-chips.com>
- <1447732847-30514-3-git-send-email-zain.wang@rock-chips.com>
- <3324035.fFJ7jKO18L@diego>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 0/5] PM / OPP: opp-supported-hw and <prop>-name
+ bindings
+Date: Tue, 24 Nov 2015 07:29:42 +0530
+Message-ID: <20151124015942.GG5258@ubuntu>
+References: <cover.1447209519.git.viresh.kumar@linaro.org>
+ <18133487.DZlYslOPCi@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <3324035.fFJ7jKO18L@diego>
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org
-Cc: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, eddie.cai@rock-chips.com, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <18133487.DZlYslOPCi@vostro.rjw.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: robh+dt@kernel.org, sboyd@codeaurora.org, lee.jones@linaro.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On 24-11-15, 00:02, Rafael J. Wysocki wrote:
+> I'm tentatively queuing this series up for 4.5, but ACKs from Rob are
+> still missing for patches [2,5/5] AFAICS.
 
+He may not Ack the 5th one as that's a platform patch, and I have
+asked him yesterday again to have a look at 2/5.
 
-On 2015=E5=B9=B411=E6=9C=8824=E6=97=A5 07:24, Heiko St=C3=BCbner wrote:
-> Hi Zain,
->
-> Am Dienstag, 17. November 2015, 12:00:45 schrieb Zain Wang:
->> Set an ID for crypto clk, so that it can be called in other part.
->>
->> Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
->> Acked-by: Michael Turquette <mturquette@baylibre.com>
->> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> I've split this into the header and clk-rk3288.c changes and applied =
-it to my=20
-> clk-ids and clock branch for 4.5
-Thanks for your responding.
-
-Thanks
-Zain
->
-> Thanks
-> Heiko
->
->
->
+-- 
+viresh
