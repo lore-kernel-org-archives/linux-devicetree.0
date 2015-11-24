@@ -1,124 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Mon, 23 Nov 2015 20:06:31 -0600
-Message-ID: <20151124020631.GA15165@rob-hp-laptop>
-References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
- <1448288921-30307-3-git-send-email-juri.lelli@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448288921-30307-3-git-send-email-juri.lelli@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
+Date: Tue, 24 Nov 2015 11:20:41 +0900
+Message-ID: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 02:28:35PM +0000, Juri Lelli wrote:
-> ARM systems may be configured to have cpus with different power/performance
-> characteristics within the same chip. In this case, additional information
-> has to be made available to the kernel (the scheduler in particular) for it
-> to be aware of such differences and take decisions accordingly.
-> 
-> Therefore, this patch aims at standardizing cpu capacities device tree
-> bindings for ARM platforms. Bindings define cpu capacity parameter, to
-> allow operating systems to retrieve such information from the device tree
-> and initialize related kernel structures, paving the way for common code in
-> the kernel to deal with heterogeneity.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-> ---
->  .../devicetree/bindings/arm/cpu-capacity.txt       | 227 +++++++++++++++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt     |  17 ++
->  2 files changed, 244 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> new file mode 100644
-> index 0000000..2a00af0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> @@ -0,0 +1,227 @@
-> +==========================================
-> +ARM CPUs capacity bindings
-> +==========================================
-> +
-> +==========================================
-> +1 - Introduction
-> +==========================================
-> +
-> +ARM systems may be configured to have cpus with different power/performance
-> +characteristics within the same chip. In this case, additional information
-> +has to be made available to the kernel (the scheduler in particular) for
-> +it to be aware of such differences and take decisions accordingly.
-> +
-> +==========================================
-> +2 - CPU capacity definition
-> +==========================================
-> +
-> +CPU capacity is a number that provides the scheduler information about CPUs
-> +heterogeneity. Such heterogeneity can come from micro-architectural differences
-> +(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
-> +(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
-> +context is about differing performance characteristics; this binding tries to
-> +capture a first-order approximation of the relative performance of CPUs.
-> +
-> +One simple way to estimate CPU capacities is to iteratively run a well-known
-> +CPU user space benchmark (e.g, sysbench, dhrystone, etc.) on each CPU at
-> +maximum frequency and then normalize values w.r.t.  the best performing CPU.
-> +One can also do a statistically significant study of a wide collection of
-> +benchmarks, but pros of such an approach are not really evident at the time of
-> +writing.
-> +
-> +==========================================
-> +3 - capacity-scale
-> +==========================================
-> +
-> +CPUs capacities are defined with respect to capacity-scale property in the cpus
-> +node [1]. The property is optional; if not defined a 1024 capacity-scale is
-> +assumed. This property defines both the highest CPU capacity present in the
-> +system and granularity of CPU capacity values.
+In general Renesas hardware is not documented to the extent where the
+relationship between IP blocks on different SoCs can be assumed although
+they may appear to operate the same way. Furthermore the documentation
+typically does not specify a version for individual IP blocks. For these
+reasons a convention of using the SoC name in place of a version and
+providing SoC-specific compat strings has been adopted.
 
-I don't really see the point of this vs. having an absolute scale.
+Although not universally liked this convention is used in the bindings for
+most drivers for Renesas hardware. The purpose of this patch is to
+update the Renesas USB DMA Controller driver to follow this convention.
 
-> +
-> +==========================================
-> +4 - capacity
-> +==========================================
-> +
-> +capacity is an optional cpu node [1] property: u32 value representing CPU
-> +capacity, relative to capacity-scale. It is required and enforced that capacity
-> +<= capacity-scale.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 
-I think you need something absolute and probably per MHz (like 
-dynamic-power-coefficient property). Perhaps the IPC (instructions per 
-clock) value?
+---
+* r8a7792 (R-Car V2H) is omitted as my reading of the documentation
+  is that Renesas USB-DMAC does not exist on that SoC
+* r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
+  of USB-DMAC that SoC
 
-In other words, I want to see these numbers have a defined method 
-of determining them and don't want to see random values from every 
-vendor. ARM, Ltd. says core X has a value of Y would be good enough for 
-me. Vendor X's A57 having a value of 2 and Vendor Y's A57 having a 
-value of 1024 is not what I want to see. Of course things like cache 
-sizes can vary the performance, but is a baseline value good enough? 
+* Once this has been merged I intend to provide follow-up patches
+  to use these new compat strings in the relevant dtsi files.
+---
+ Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-However, no vendor will want to publish their values if these are 
-absolute values relative to other vendors.
+diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+index 040f365954cc..3bb624e10615 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
++++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+@@ -1,7 +1,12 @@
+ * Renesas USB DMA Controller Device Tree bindings
+ 
+ Required Properties:
+-- compatible: must contain "renesas,usb-dmac"
++- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
++	      Examples with soctypes are:
++		- "renesas,usb-dmac-r8a7790" (R-Car H2)
++		- "renesas,usb-dmac-r8a7791" (R-Car M2-W)
++		- "renesas,usb-dmac-r8a7793" (R-Car M2-N)
++		- "renesas,usb-dmac-r8a7794" (R-Car E2)
+ - reg: base address and length of the registers block for the DMAC
+ - interrupts: interrupt specifiers for the DMAC, one for each entry in
+   interrupt-names.
+@@ -15,7 +20,7 @@ Required Properties:
+ Example: R8A7790 (R-Car H2) USB-DMACs
+ 
+ 	usb_dmac0: dma-controller@e65a0000 {
+-		compatible = "renesas,usb-dmac";
++		compatible = "renesas,usb-dmac-r8a7790", "renesas,usb-dmac";
+ 		reg = <0 0xe65a0000 0 0x100>;
+ 		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
+ 			      0 109 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.1.4
 
-If you expect these to need frequent tuning, then don't put them in DT.
-
-Rob
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
