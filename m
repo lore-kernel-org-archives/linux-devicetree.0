@@ -1,67 +1,197 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] backlight: tps65217_bl: Add MODULE_DEVICE_TABLE.
-Date: Tue, 24 Nov 2015 16:31:57 +0000
-Message-ID: <20151124163157.GB12874@x1>
-References: <1447417148-733-1-git-send-email-enric.balletbo@collabora.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/4] bus: uniphier-system-bus: add UniPhier System Bus
+ Controller driver
+Date: Wed, 25 Nov 2015 01:54:16 +0900
+Message-ID: <CAK7LNAR_6qwVK9fNEAX-L_v1Z5cdGMU33bP75Rdtu5bdmid-3Q@mail.gmail.com>
+References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
+	<1448357962-12259-2-git-send-email-yamada.masahiro@socionext.com>
+	<20151124115053.GB4108@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1447417148-733-1-git-send-email-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151124115053.GB4108@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Nov 2015, Enric Balletbo i Serra wrote:
+Hi Mark,
 
-> The device table is required to load modules based on modaliases.
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  drivers/video/backlight/tps65217_bl.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/video/backlight/tps65217_bl.c b/drivers/video/ba=
-cklight/tps65217_bl.c
-> index 61d72bf..37a9731 100644
-> --- a/drivers/video/backlight/tps65217_bl.c
-> +++ b/drivers/video/backlight/tps65217_bl.c
-> @@ -320,10 +320,21 @@ static int tps65217_bl_probe(struct platform_de=
-vice *pdev)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id tps65217_bl_of_match[] =3D {
-> +	{ .compatible =3D "ti,tps65217-bl", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, tps65217_bl_of_match);
-> +#endif
-> +
->  static struct platform_driver tps65217_bl_driver =3D {
->  	.probe		=3D tps65217_bl_probe,
->  	.driver		=3D {
->  		.name	=3D "tps65217-bl",
-> +#ifdef CONFIG_OF
-> +		.of_match_table =3D tps65217_bl_of_match,
-> +#endif
 
-Please use of_match_ptr() instead.
+2015-11-24 20:50 GMT+09:00 Mark Rutland <mark.rutland@arm.com>:
+> On Tue, Nov 24, 2015 at 06:39:19PM +0900, Masahiro Yamada wrote:
+>> The UniPhier System Bus is an external bus where on-board devices are
+>> connected to the UniPhier SoC.  This driver parses the "ranges"
+>> property of the System Bus and set up the registers of the System Bus
+>> Controller for the correct bus routing.
+>
+> Could you elaborate on why you need to do that?
 
->  	},
->  };
-> =20
+In order to have access to the System Bus (external bus),
+the System Bus Controller must be set up.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> What needs to be configured specifically?
+
+The base address and the size of each bank (each chip select)
+must be set to the registers of the controller.
+
+
+
+> [...]
+>
+>> +The UniPhier System Bus is an external bus where on-board devices are connected
+>> +to the UniPhier SoC.  It it a simple parallel bus with address, data, and some
+>> +control signals.  It supports up to 8 banks (chip selects).
+>> +
+>> +Required properties for System Bus:
+>> +- compatible: should be "socionext,uniphier-system-bus", "simple-bus".
+>
+> If the kernel has to perform setup of the bus, then it is not a
+> "simple-bus".
+>
+> Configure the bus, then probe children. Don't use simple-bus jsut to get
+> probing.
+
+OK, I will fix in v2.
+
+
+
+>> +- #address-cells: should be equal to or grater than 2.  The first cell is the
+>
+> s/grater/greater/
+
+OK, thanks.
+
+
+>> +  bank number (chip select).  The rest is the base address within the bank that
+>> +  should be mapped onto the parent bus (usually AMBA).
+>> +
+>> +Optional properties for System Bus:
+>> +- #size-cells: should be the same as that of the parent bus, if exists.  The
+>> +  value of the parent bus is assumed, if not specified.
+>
+> This should be just as required as #address-cells, for consistency.
+
+Will fix.
+
+
+>> +
+>> +
+>> +UniPhier System Bus Controller
+>> +------------------------------
+>> +
+>> +The UniPhier System Bus Controller is a hardware block with registers that
+>> +controls the System Bus accessing; how each bank is mapped onto the parent bus,
+>> +various timing parameters of the bus access, etc.
+>> +
+>> +Required properties for System Bus Controller:
+>> +- compatible: should be "socionext,uniphier-system-bus-controller".
+>> +- reg: offsets and lengths of the register sets for the device.  It should
+>> +  contain 2 regions: base & control register, misc register, in this order.
+>
+> The example also has a system-bus phandle.
+
+Actually, I was wondering which is better to describe the relation between
+the bus and the controller,  phandle or compatible string..
+
+
+
+> Is the "misc register" part of the bus controller, or is it a shared
+> system controller?
+
+It is a part of the bus controller, but used for another purpose.
+(i.e. partly this is syscon.  I know this is strange, but it is
+what the hardware developers designed.)
+
+
+
+>> +Example
+>> +-------
+>> +     system_bus: system-bus {
+>> +             compatible = "socionext,uniphier-system-bus", "simple-bus";
+>> +             #address-cells = <2>;
+>> +             #size-cells = <1>;
+>> +             ranges = <1 0x00000000 0x42000000 0x02000000
+>> +                       5 0x00000000 0x48000000 0x01000000>;
+>> +
+>> +             eth: ethernet@1,01f00000 {
+>> +                     compatible = "smsc,lan9115";
+>> +                     reg = <1 0x01f00000 0x1000>;
+>> +                     phy-mode = "mii";
+>> +                     reg-io-width = <4>;
+>> +             };
+>> +
+>> +             serial: uart@5,00200000 {
+>> +                     compatible = "ns16550a";
+>> +                     reg = <5 0x00200000 0x20>;
+>> +                     clock-frequency = <12288000>;
+>> +                     reg-shift = <1>;
+>> +             };
+>> +     };
+>> +
+>> +     system-bus-controller@58c00000 {
+>> +             compatible = "socionext,uniphier-system-bus-controller";
+>> +             reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
+>> +             system-bus = <&system_bus>;
+>> +     };
+>
+> Assuming that the controller and bus are 1-1 related, make this a single
+> node. e.g.
+>
+> system-bus {
+>         compatible = "socionext,uniphier-system-bus";
+>         reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
+>         #address-cells = <2>;
+>         #size-cells = <1>;
+>         ranges = <1 0x00000000 0x42000000 0x02000000>,
+>                  <5 0x00000000 0x48000000 0x01000000>;
+>
+>         ...
+>         child nodes here
+>         ...
+>
+> };
+
+Hmm, make sense.  But, I prefer to reflect the hardware structure.
+
+The range of System Bus is <0x40000000 0x10000000>.
+
+The register of the System Bus Controller is
+<0x58c00000 0x400>  (and <0x59800000 0x2000>)
+
+
+The bus and its controller is different.
+
+
+> [...]
+>
+>> +static int uniphier_sbc_probe(struct platform_device *pdev)
+>> +{
+>> +     struct device *dev = &pdev->dev;
+>> +     struct uniphier_sbc_priv *priv;
+>> +     struct resource *regs;
+>> +     struct device_node *bus_np;
+>> +     int child_addrc, addrc, sizec, bank;
+>> +     u64 child_addr, addr, size;
+>> +     const __be32 *ranges;
+>> +     int rlen, rone, ret;
+>> +
+>> +     bus_np = of_find_compatible_node(NULL, NULL,
+>> +                                      "socionext,uniphier-system-bus");
+>
+> This is broken if you ever have multiple instances.
+>
+> Either use a single node, or if there is a more complex relationship
+> between busses and their controllers, describe that explicitly with
+> phandles.
+
+
+Probably, I will stick to phandle in v2.
+
+
+Thanks,
+
+-- 
+Best Regards
+Masahiro Yamada
