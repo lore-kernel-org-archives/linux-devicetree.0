@@ -1,163 +1,266 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf6xx: Cosmic+: M4(nommu) initial support
-Date: Tue, 24 Nov 2015 11:27:55 -0800
-Message-ID: <6ed40cc7c8a0c362c3c41cfc914581c4@agner.ch>
-References: <1445795456-6698-1-git-send-email-afzal.mohd.ma@gmail.com>
- <20151124032607.GD11999@tiger>
+From: Michael Trimarchi <michael@amarulasolutions.com>
+Subject: Re: [alsa-devel] [PATCH 4/4] sound: codecs: pcm1792a: introduce
+ channel side
+Date: Tue, 24 Nov 2015 21:10:54 +0100
+Message-ID: <CAOf5uwmg4vC18SWBe-cQ22tqSmQ3Xeg2uu8Ldmd3N8V64wgT4Q@mail.gmail.com>
+References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
+	<1448014157-36526-5-git-send-email-raphael.poggi@avalun.com>
+	<CAOf5uwmGk7WqOaAFj=fTw8+D+EszWPqReyfmS0njix=d7AokOA@mail.gmail.com>
+	<CACqcpZCSMwj2WOhX0ddD43VKCgOcNyrkkZrR0sWEsHE+H27TVg@mail.gmail.com>
+	<CAOf5uwmdwcdbxx2b6DvMeOJBahkZ3iiosWtHPD2zhxcDqO2b_A@mail.gmail.com>
+	<CACqcpZDQRtSqmLDC65ajNGY=VU8TFZBnVxhaM+cES37rv7zmyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151124032607.GD11999@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACqcpZDQRtSqmLDC65ajNGY=VU8TFZBnVxhaM+cES37rv7zmyg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Rapha=C3=ABl_Poggi?= <poggi.raph@gmail.com>
+Cc: perex@perex.cz, tiwai@suse.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-11-23 19:26, Shawn Guo wrote:
-> On Sun, Oct 25, 2015 at 11:20:56PM +0530, Afzal Mohammed wrote:
->> Minimal Cortex-M4 device tree to boot Linux to shell. M4 is booted via
->> Cortex-A5 running Linux using Stefan Agner's <stefan-XLVq0VzYD2Y@public.gmane.org> "m4boot"
->> utility.
+Hi
+
+On Tue, Nov 24, 2015 at 5:04 PM, Rapha=C3=ABl Poggi <poggi.raph@gmail.c=
+om> wrote:
+> Hi,
+>
+> 2015-11-24 9:27 GMT+01:00 Michael Trimarchi <michael@amarulasolutions=
+=2Ecom>:
+>> Hi
 >>
->> Signed-off-by: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Stefan,
-> 
-> Are you okay with this patch?
+>> On Tue, Nov 24, 2015 at 9:21 AM, Rapha=C3=ABl Poggi <poggi.raph@gmai=
+l.com> wrote:
+>>> Hi,
+>>>
+>>> 2015-11-21 10:37 GMT+01:00 Michael Trimarchi <michael@amarulasoluti=
+ons.com>:
+>>>> Hi
+>>>>
+>>>> On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph@gmail.=
+com> wrote:
+>>>>> From: Raphael Poggi <poggi.raph@gmail.com>
+>>>>>
+>>>>> Add possibility to choose the channel side using the device tree,
+>>>>> and also modify it using alsa ctrl.
+>>>>>
+>>>>> Signed-off-by: Raphael Poggi <poggi.raph@gmail.com>
+>>>>> ---
+>>>>>  sound/soc/codecs/pcm1792a.c | 46 +++++++++++++++++++++++++++++++=
+++++++++++++++
+>>>>>  1 file changed, 46 insertions(+)
+>>>>>
+>>>>> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm17=
+92a.c
+>>>>> index febaa48..005b679 100644
+>>>>> --- a/sound/soc/codecs/pcm1792a.c
+>>>>> +++ b/sound/soc/codecs/pcm1792a.c
+>>>>> @@ -65,6 +65,12 @@ static const struct reg_default pcm1792a_reg_d=
+efaults[] =3D {
+>>>>>         { PCM1792A_DEVICE_ID, 0x00 },
+>>>>>  };
+>>>>>
+>>>>> +enum __pcm1792_side {
+>>>>> +       STEREO,
+>>>>> +       MONORAL_LEFT,
+>>>>> +       MONORAL_RIGHT
+>>>>> +};
+>>>>> +
+>>>>>  static bool pcm1792a_accessible_reg(struct device *dev, unsigned=
+ int reg)
+>>>>>  {
+>>>>>         return reg >=3D 0x10 && reg <=3D 0x17;
+>>>>> @@ -83,6 +89,7 @@ struct pcm1792a_private {
+>>>>>         struct regmap *regmap;
+>>>>>         unsigned int format;
+>>>>>         unsigned int rate;
+>>>>> +       unsigned int side;
+>>>>>  };
+>>>>>
+>>>>>  static int pcm1792a_set_dai_fmt(struct snd_soc_dai *codec_dai,
+>>>>> @@ -153,6 +160,13 @@ static int pcm1792a_hw_params(struct snd_pcm=
+_substream *substream,
+>>>>>         ret =3D regmap_update_bits(priv->regmap, PCM1792A_FMT_CON=
+TROL,
+>>>>>                                  PCM1792A_FMT_MASK | PCM1792A_ATL=
+D_ENABLE, val);
+>>>>>
+>>>>> +       if (priv->side =3D=3D MONORAL_LEFT)
+>>>>> +               val =3D PCM1792A_CHANNEL_MONO_LEFT;
+>>>>> +       else if (priv->side =3D=3D MONORAL_RIGHT)
+>>>>> +               val =3D PCM1792A_CHANNEL_MONO_RIGHT;
+>>>>> +
+>>>>> +       regmap_update_bits(priv->regmap, PCM1792A_CHANNEL, PCM179=
+2A_CHANNEL_MONO_MASK, val);
+>>>>> +
+>>>>>         return ret;
+>>>>>  }
+>>>>>
+>>>>> @@ -222,10 +236,31 @@ static struct snd_soc_codec_driver soc_code=
+c_dev_pcm1792a =3D {
+>>>>>         .num_dapm_routes        =3D ARRAY_SIZE(pcm1792a_dapm_rout=
+es),
+>>>>>  };
+>>>>>
+>>>>> +static int pcm1792a_of_init(struct spi_device *spi)
+>>>>> +{
+>>>>> +       int ret =3D 0;
+>>>>> +       struct pcm1792a_private *pcm1792a =3D dev_get_drvdata(&sp=
+i->dev);
+>>>>> +       const char *name;
+>>>>> +       struct device_node *np =3D spi->dev.of_node;
+>>>>> +
+>>>>> +       name =3D of_get_property(np, "ti,side", NULL);
+>>>>> +       if (name) {
+>>>>> +               if (!strcmp(name, "left"))
+>>>>> +                       pcm1792a->side =3D MONORAL_LEFT;
+>>>>> +               else
+>>>>> +                       pcm1792a->side =3D MONORAL_RIGHT;
+>>>>> +       }
+>>>>> +       else
+>>>>> +               pcm1792a->side =3D STEREO;
+>>>>> +
+>>>>> +       return ret;
+>>>>> +}
+>>>>> +
+>>>>>  static int pcm1792a_spi_probe(struct spi_device *spi)
+>>>>>  {
+>>>>>         struct pcm1792a_private *pcm1792a;
+>>>>>         int ret;
+>>>>> +       struct device_node *np =3D spi->dev.of_node;
+>>>>>
+>>>>>         pcm1792a =3D devm_kzalloc(&spi->dev, sizeof(struct pcm179=
+2a_private),
+>>>>>                                 GFP_KERNEL);
+>>>>> @@ -241,6 +276,17 @@ static int pcm1792a_spi_probe(struct spi_dev=
+ice *spi)
+>>>>>                 return ret;
+>>>>>         }
+>>>>>
+>>>>> +       if (np) {
+>>>>> +               ret =3D pcm1792a_of_init(spi);
+>>>>> +               if (ret)
+>>>>> +                       return ret;
+>>>>> +       }
+>>>>> +
+>>>>> +       if (pcm1792a->side =3D=3D MONORAL_LEFT)
+>>>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHA=
+NNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_LEFT);
+>>>>> +       else if (pcm1792a->side =3D=3D MONORAL_RIGHT)
+>>>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHA=
+NNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_RIGHT);
+>>>>> +
+>>>>
+>>>> Why this is a part of dts and not a part of mixer control?
+>>>>
+>>>> Michael
+>>>>
+>>>
+>>> The "channel side" bindings should be used when the pcm7192a is use=
+d
+>>> in monaural mode (which requires two DACs, both DACs operate in a
+>>> balanced mode for one channel of audio input data).
+>>> This is a hardware level design, it will never change at runtime.
+>>> I feel that a device tree binding is more appropriate than a contro=
+l.
+>>>
 
-Looks good to me:
+If you put this in mixer control then you can avoid to have it in dts
+because you not suppose to
+boot playing music. Basically you can get the same result restore some
+alsa config that match
+your topology. Even if you have two mono amplifier you can have the
+situation that you want to
+invert channel left and right and this can be done easily just
+reconfigure one as mono left and the other
+as mono right or write your own sound card that do in one control,
+change both together. I suggest
+to wait some other opinions.
 
-Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Michael
 
---
-Stefan
-
-
->> ---
->>  arch/arm/boot/dts/Makefile           |  1 +
->>  arch/arm/boot/dts/vf610m4-cosmic.dts | 90 ++++++++++++++++++++++++++++++++++++
->>  2 files changed, 91 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/vf610m4-cosmic.dts
 >>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index bb8fa023d574..06a1a7a1d104 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -347,6 +347,7 @@ dtb-$(CONFIG_SOC_VF610) += \
->>  	vf610-colibri-eval-v3.dtb \
->>  	vf610m4-colibri.dtb \
->>  	vf610-cosmic.dtb \
->> +	vf610m4-cosmic.dtb \
->>  	vf610-twr.dtb
->>  dtb-$(CONFIG_ARCH_MXS) += \
->>  	imx23-evk.dtb \
->> diff --git a/arch/arm/boot/dts/vf610m4-cosmic.dts b/arch/arm/boot/dts/vf610m4-cosmic.dts
->> new file mode 100644
->> index 000000000000..8944a2d2054c
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/vf610m4-cosmic.dts
->> @@ -0,0 +1,90 @@
->> +/*
->> + * Device tree for Cosmic+ VF6xx Cortex-M4 support
->> + *
->> + * Copyright (C) 2015
->> + *
->> + * Based on vf610m4 Colibri
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +#include "vf610m4.dtsi"
->> +
->> +/ {
->> +	model = "VF610 Cortex-M4";
->> +	compatible = "fsl,vf610m4";
->> +};
->> +
->> +&gpio0 {
->> +	status = "disabled";
->> +};
->> +
->> +&gpio1 {
->> +	status = "disabled";
->> +};
->> +
->> +&gpio2 {
->> +	status = "disabled";
->> +};
->> +
->> +&gpio3 {
->> +	status = "disabled";
->> +};
->> +
->> +&gpio4 {
->> +	status = "disabled";
->> +};
->> +
->> +&uart3 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_uart3>;
->> +	status = "okay";
->> +};
->> +
->> +&iomuxc {
->> +	vf610-cosmic {
->> +		pinctrl_uart3: uart3grp {
->> +			fsl,pins = <
->> +				VF610_PAD_PTA20__UART3_TX		0x21a2
->> +				VF610_PAD_PTA21__UART3_RX		0x21a1
->> +			>;
->> +		};
->> +	};
->> +};
+>> Well I know exactly why is used for, but I don't really know if it's
+>> somenthing that should be
+>> in dts. Do I want to do channel inversion?
+>>
+>> Michael
+>>
+>
+> I am not sure to understand. You mean "What if I want to do channel
+> inversion", right ?
+> If so, we have two differents "problems", one at hardware level desig=
+n
+> because monaural mode requires two DACs, and an another one at
+> software level
+> "channel inversion".
+> I have always thought that hardware description should be in dts,
+> that's why I implement monaural mode using dts.
+>
+> Honestly, I don't know what is the best solution between "this is a
+> hardware design, it should be in dts and shouldn't change" vs "this
+> should be an alsa controler because we want extra features independen=
+t
+> from hardware design"
+>
+> Rapha=C3=ABl
+>
+>>>>>         return snd_soc_register_codec(&spi->dev,
+>>>>>                         &soc_codec_dev_pcm1792a, &pcm1792a_dai, 1=
+);
+>>>>>  }
+>>>>> --
+>>>>> 2.1.0
+>>>>>
+>>>>> _______________________________________________
+>>>>> Alsa-devel mailing list
+>>>>> Alsa-devel@alsa-project.org
+>>>>> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>>>>
+>>>>
+>>>>
+>>>> --
+>>>> | Michael Nazzareno Trimarchi                     Amarula Solution=
+s BV |
+>>>> | COO  -  Founder                                      Cruquiuskad=
+e 47 |
+>>>> | +31(0)851119172                                 Amsterdam 1018 A=
+M NL |
+>>>> |                  [`as] http://www.amarulasolutions.com          =
+     |
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe linux-ke=
+rnel" in
+>>>> the body of a message to majordomo@vger.kernel.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> Please read the FAQ at  http://www.tux.org/lkml/
+>>
+>>
+>>
 >> --
->> 2.5.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> | Michael Nazzareno Trimarchi                     Amarula Solutions =
+BV |
+>> | COO  -  Founder                                      Cruquiuskade =
+47 |
+>> | +31(0)851119172                                 Amsterdam 1018 AM =
+NL |
+>> |                  [`as] http://www.amarulasolutions.com            =
+   |
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kern=
+el" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
+--=20
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV =
+|
+| COO  -  Founder                                      Cruquiuskade 47 =
+|
+| +31(0)851119172                                 Amsterdam 1018 AM NL =
+|
+|                  [`as] http://www.amarulasolutions.com               =
+|
