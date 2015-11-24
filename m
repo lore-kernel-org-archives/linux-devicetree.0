@@ -1,34 +1,106 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH (v2) 7/10] watchdog: bcm63xx_wdt: Add get_timeleft function
-Date: Tue, 24 Nov 2015 14:43:32 -0800
-Message-ID: <5654E814.6030807@gmail.com>
-References: <5650BFD6.5030700@simon.arlott.org.uk>    <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>    <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>    <5651CB13.4090704@simon.arlott.org.uk>    <5651CC90.7090402@simon.arlott.org.uk> <a1461a17c94353f38316d2c6ae04d6b77c91bfd4@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V4 1/5] dt-bindings: Add QorIQ TMU thermal bindings
+Date: Tue, 24 Nov 2015 17:20:01 -0600
+Message-ID: <20151124232001.GA2958@rob-hp-laptop>
+References: <1448347968-37766-1-git-send-email-hongtao.jia@freescale.com>
+ <1448347968-37766-2-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a1461a17c94353f38316d2c6ae04d6b77c91bfd4-dyyJQ+qCPjsfFgGGEbPnq5KvX+y0N6jJ2mWzQvkZbzCn6nfhxgf73RdaaeUjXGGo@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448347968-37766-2-git-send-email-hongtao.jia@freescale.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jia Hongtao <hongtao.jia@freescale.com>
+Cc: edubezval@gmail.com, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, scottwood@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On 24/11/15 14:15, Simon Arlott wrote:
-> Return the remaining time from the hardware control register.
+On Tue, Nov 24, 2015 at 02:52:44PM +0800, Jia Hongtao wrote:
+> Add bindings documentation for TMU (Thermal Monitoring Unit) on QorIQ
+> platform.
 > 
-> Warn when the device is registered if the hardware watchdog is currently
-> running and report the remaining time left.
+> Signed-off-by: Jia Hongtao <hongtao.jia@freescale.com>
+> Reviewed-by: Scott Wood <scottwood@freescale.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  .../devicetree/bindings/thermal/qoriq-thermal.txt  | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
 > 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-At some point, we should probably consider merging bcm63xx_wdt with
-bcm7038_wdt which are nearly 100% identical pieces of hardware (coming
-from the same design group originally).
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> new file mode 100644
+> index 0000000..66223d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+> @@ -0,0 +1,63 @@
+> +* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
+> +
+> +Required properties:
+> +- compatible : Must include "fsl,qoriq-tmu". The version of the device is
+> +	determined by the TMU IP Block Revision Register (IPBRR0) at
+> +	offset 0x0BF8.
+> +	Table of correspondences between IPBRR0 values and example  chips:
+> +		Value           Device
+> +		----------      -----
+> +		0x01900102      T1040
+> +- reg : Address range of TMU registers.
+> +- interrupts : Contains the interrupt for TMU.
+> +- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
+> +	the SoC reference manual. The first cell is TTR0CR, the second is
+> +	TTR1CR, etc.
+> +- fsl,tmu-calibration : A list of cell pairs containing temperature
+> +	calibration data, as specified by the SoC reference manual.
+> +	The first cell of each pair is the value to be written to TTCFGR,
+> +	and the second is the value to be written to TSCFGR.
+> +
+> +Example:
+> +
+> +tmu@f0000 {
+> +	compatible = "fsl,qoriq-tmu";
+> +	reg = <0xf0000 0x1000>;
+> +	interrupts = <18 2 0 0>;
+> +	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
+> +	fsl,tmu-calibration = <0x00000000 0x00000025
+> +			       0x00000001 0x00000028
+> +			       0x00000002 0x0000002d
+> +			       0x00000003 0x00000031
+> +			       0x00000004 0x00000036
+> +			       0x00000005 0x0000003a
+> +			       0x00000006 0x00000040
+> +			       0x00000007 0x00000044
+> +			       0x00000008 0x0000004a
+> +			       0x00000009 0x0000004f
+> +			       0x0000000a 0x00000054
+> +
+> +			       0x00010000 0x0000000d
+> +			       0x00010001 0x00000013
+> +			       0x00010002 0x00000019
+> +			       0x00010003 0x0000001f
+> +			       0x00010004 0x00000025
+> +			       0x00010005 0x0000002d
+> +			       0x00010006 0x00000033
+> +			       0x00010007 0x00000043
+> +			       0x00010008 0x0000004b
+> +			       0x00010009 0x00000053
+> +
+> +			       0x00020000 0x00000010
+> +			       0x00020001 0x00000017
+> +			       0x00020002 0x0000001f
+> +			       0x00020003 0x00000029
+> +			       0x00020004 0x00000031
+> +			       0x00020005 0x0000003c
+> +			       0x00020006 0x00000042
+> +			       0x00020007 0x0000004d
+> +			       0x00020008 0x00000056
+> +
+> +			       0x00030000 0x00000012
+> +			       0x00030001 0x0000001d>;
+> +};
+> -- 
+> 2.1.0.27.g96db324
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
