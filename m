@@ -1,76 +1,551 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: add epson rx6110 binding
-Date: Tue, 24 Nov 2015 12:12:41 +0100
-Message-ID: <1448363561.3346.57.camel@pengutronix.de>
-References: <1448361533-10728-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] mfd: axp20x: Split the driver into
+ core and i2c bits
+Date: Tue, 24 Nov 2015 19:28:25 +0800
+Message-ID: <CAGb2v65EH8sP_ONASZ5gWZXi1D0GqiJvT=X0ieYWehnfqM1Z=A@mail.gmail.com>
+References: <1448336916-31212-1-git-send-email-wens@csie.org>
+ <1448336916-31212-3-git-send-email-wens@csie.org> <CAHp75VesF5M6nJf6eaBO+Dg6nC3gj=rzL9YnQFAysQ4NFgOMHg@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448361533-10728-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4MT2GZAKGQE267FVQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAHp75VesF5M6nJf6eaBO+Dg6nC3gj=rzL9YnQFAysQ4NFgOMHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 24.11.2015, 11:38 +0100 schrieb Steffen Trumtrar:
-> Add the binding documentation for the Epson RX6110 RTC.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> I'm not sure what the current policy for such simple SPI bindings is.
-> Are they necessary?
+Hi,
 
-Like for i2c there is trivial-devices.txt? Although in this case it's
-not just a compatible. Here you have a certain spi configuration that is
-necessary for the rtc to work.
+On Tue, Nov 24, 2015 at 5:37 PM, Andy Shevchenko
+<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Nov 24, 2015 at 5:48 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> The axp20x driver assumes the device is i2c based. This is not the
+>> case with later chips, which use a proprietary 2 wire serial bus
+>> by Allwinner called "Reduced Serial Bus".
+>>
+>> This patch follows the example of mfd/wm831x and splits it into
+>> an interface independent core, and an i2c specific glue layer.
+>> MFD_AXP20X and the new MFD_AXP20X_I2C are changed to tristate
+>> symbols, allowing the driver to be built as modules.
+>>
+>> Included but unused header files are removed as well.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  drivers/mfd/Kconfig        |  14 +++--
+>>  drivers/mfd/Makefile       |   1 +
+>>  drivers/mfd/axp20x-i2c.c   | 127 ++++++++++++++++++++++++++++++++++++++=
++++++++
+>>  drivers/mfd/axp20x.c       | 108 +++++---------------------------------
+>>  include/linux/mfd/axp20x.h |  33 +++++++++++-
+>>  5 files changed, 183 insertions(+), 100 deletions(-)
+>>  create mode 100644 drivers/mfd/axp20x-i2c.c
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 4d92df6ef9fe..804cd3dcce32 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -91,14 +91,18 @@ config MFD_BCM590XX
+>>           Support for the BCM590xx PMUs from Broadcom
+>>
+>>  config MFD_AXP20X
+>> -       bool "X-Powers AXP20X"
+>> +       tristate
+>>         select MFD_CORE
+>> -       select REGMAP_I2C
+>>         select REGMAP_IRQ
+>> -       depends on I2C=3Dy
+>> +
+>> +config MFD_AXP20X_I2C
+>> +       tristate "X-Powers AXP series PMICs with I2C"
+>> +       select MFD_AXP20X
+>> +       select REGMAP_I2C
+>> +       depends on I2C
+>>         help
+>> -         If you say Y here you get support for the X-Powers AXP202, AXP=
+209 and
+>> -         AXP288 power management IC (PMIC).
+>> +         If you say Y here you get support for the X-Powers AXP series =
+power
+>> +         management ICs (PMICs) controlled with I2C.
+>>           This driver include only the core APIs. You have to select ind=
+ividual
+>>           components like regulators or the PEK (Power Enable Key) under=
+ the
+>>           corresponding menus.
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index a8b76b81b467..a6913007d667 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -107,6 +107,7 @@ obj-$(CONFIG_PMIC_DA9052)   +=3D da9052-core.o
+>>  obj-$(CONFIG_MFD_DA9052_SPI)   +=3D da9052-spi.o
+>>  obj-$(CONFIG_MFD_DA9052_I2C)   +=3D da9052-i2c.o
+>>  obj-$(CONFIG_MFD_AXP20X)       +=3D axp20x.o
+>> +obj-$(CONFIG_MFD_AXP20X_I2C)   +=3D axp20x-i2c.o
+>>
+>>  obj-$(CONFIG_MFD_LP3943)       +=3D lp3943.o
+>>  obj-$(CONFIG_MFD_LP8788)       +=3D lp8788.o lp8788-irq.o
+>> diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
+>> new file mode 100644
+>> index 000000000000..75b247af2514
+>> --- /dev/null
+>> +++ b/drivers/mfd/axp20x-i2c.c
+>> @@ -0,0 +1,127 @@
+>> +/*
+>> + * axp20x-i2c.c - I2C driver for the X-Powers' Power Management ICs
+>> + *
+>> + * AXP20x typically comprises an adaptive USB-Compatible PWM charger, B=
+UCK DC-DC
+>> + * converters, LDOs, multiple 12-bit ADCs of voltage, current and tempe=
+rature
+>> + * as well as configurable GPIOs.
+>> + *
+>> + * This driver supports the I2C variants.
+>> + *
+>> + * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/err.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mfd/axp20x.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +
+>> +static const struct of_device_id axp20x_i2c_of_match[] =3D {
+>> +       { .compatible =3D "x-powers,axp152", .data =3D (void *) AXP152_I=
+D },
+>> +       { .compatible =3D "x-powers,axp202", .data =3D (void *) AXP202_I=
+D },
+>> +       { .compatible =3D "x-powers,axp209", .data =3D (void *) AXP209_I=
+D },
+>> +       { .compatible =3D "x-powers,axp221", .data =3D (void *) AXP221_I=
+D },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, axp20x_i2c_of_match);
+>> +
+>> +/*
+>> + * This is useless for OF-enabled devices, but it is needed by I2C subs=
+ystem
+>> + */
+>> +static const struct i2c_device_id axp20x_i2c_id[] =3D {
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
+>> +
+>> +static const struct acpi_device_id axp20x_i2c_acpi_match[] =3D {
+>> +       {
+>> +               .id =3D "INT33F4",
+>> +               .driver_data =3D AXP288_ID,
+>> +       },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, axp20x_i2c_acpi_match);
+>> +
+>> +static int axp20x_i2c_match_device(struct axp20x_dev *axp20x,
+>> +                                  struct device *dev)
+>> +{
+>> +       const struct acpi_device_id *acpi_id;
+>> +       const struct of_device_id *of_id;
+>> +
+>> +       if (dev->of_node) {
+>
+> What about
+>
+> if (=E2=80=A6of_node) {
+>       const struct of_device_id *id;
+> =E2=80=A6
+> } else if ACPI_COMPANION(=E2=80=A6) {
+>       const struct acpi_device_id *id;
+> =E2=80=A6
+> } else {
+>  return -ENODEV;
+> }
 
->  .../devicetree/bindings/rtc/epson,rtc-rx6110.txt   | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt b/Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt
-> new file mode 100644
-> index 000000000000..7ce7ae761657
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt
-> @@ -0,0 +1,25 @@
-> +Epson RX6110 Real Time Clock
-> +============================
-> +
-> +The Epson RX6110 can be used with SPI or I2C busses. The kind of
-> +bus depends on the SPISEL pin and can not be configured via software.
-> +
-> +SPI mode
-> +--------
-> +
-> +Required properties:
-> +- compatible: should be: "epson,rtc-rx6110"
+I really don't want to change code that I'm just moving around.
+Same goes for the other comments about this patch. I can do another
+patch on top of this to fix the style issues if it really bothers
+people.
 
-Should this just be "epson,rx6110" ?
 
-> +- reg: chip select number
-> +- spi-cs-high: RX6110 needs chipselect high
-> +- spi-cpha: RX6110 works with SPI shifted clock phase
-> +- spi-cpol: RX6110 works with SPI inverse clock polarity
-> +
-> +Example:
-> +
-> +	rtc: rtc@3 {
-> +		compatible = "epson,rtc-rx6110"
-> +		reg = <3>
-> +		spi-cs-high;
-> +		spi-cpba;
+Regards
+ChenYu
 
-s/b/h/
+>> +               of_id =3D of_match_device(axp20x_i2c_of_match, dev);
+>> +               if (!of_id) {
+>> +                       dev_err(dev, "Unable to match OF ID\n");
+>> +                       return -ENODEV;
+>> +               }
+>> +               axp20x->variant =3D (long) of_id->data;
+>
+> Extra space after casting.
+>
+>> +       } else {
+>> +               acpi_id =3D acpi_match_device(dev->driver->acpi_match_ta=
+ble, dev);
+>> +               if (!acpi_id || !acpi_id->driver_data) {
+>> +                       dev_err(dev, "Unable to match ACPI ID and data\n=
+");
+>> +                       return -ENODEV;
+>> +               }
+>> +               axp20x->variant =3D (long) acpi_id->driver_data;
+>
+> Ditto.
+>
+>> +       }
+>> +
+>> +       return axp20x_match_device(axp20x, dev);
+>> +}
+>> +
+>> +static int axp20x_i2c_probe(struct i2c_client *i2c,
+>> +                           const struct i2c_device_id *id)
+>> +{
+>> +       struct axp20x_dev *axp20x;
+>> +       int ret;
+>> +
+>> +       axp20x =3D devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KERNEL);
+>> +       if (!axp20x)
+>> +               return -ENOMEM;
+>> +
+>> +       ret =3D axp20x_i2c_match_device(axp20x, &i2c->dev);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       axp20x->dev =3D &i2c->dev;
+>> +       axp20x->irq =3D i2c->irq;
+>
+> If you move _match_device() here you will be able to drop away struct
+> device * parameter.
+>
+>> +       dev_set_drvdata(axp20x->dev, axp20x);
+>> +
+>> +       axp20x->regmap =3D devm_regmap_init_i2c(i2c, axp20x->regmap_cfg)=
+;
+>> +       if (IS_ERR(axp20x->regmap)) {
+>> +               ret =3D PTR_ERR(axp20x->regmap);
+>> +               dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       return axp20x_device_probe(axp20x);
+>> +}
+>> +
+>> +static int axp20x_i2c_remove(struct i2c_client *i2c)
+>> +{
+>> +       struct axp20x_dev *axp20x =3D i2c_get_clientdata(i2c);
+>> +
+>> +       return axp20x_device_remove(axp20x);
+>> +}
+>> +
+>> +static struct i2c_driver axp20x_i2c_driver =3D {
+>> +       .driver =3D {
+>> +               .name   =3D "axp20x",
+>> +               .of_match_table =3D of_match_ptr(axp20x_i2c_of_match),
+>> +               .acpi_match_table =3D ACPI_PTR(axp20x_i2c_acpi_match),
+>> +       },
+>> +       .probe          =3D axp20x_i2c_probe,
+>> +       .remove         =3D axp20x_i2c_remove,
+>> +       .id_table       =3D axp20x_i2c_id,
+>> +};
+>> +
+>> +module_i2c_driver(axp20x_i2c_driver);
+>> +
+>> +MODULE_DESCRIPTION("PMIC MFD I2C driver for AXP20X");
+>> +MODULE_AUTHOR("Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> index 9842199e2e6c..01f139856bf1 100644
+>> --- a/drivers/mfd/axp20x.c
+>> +++ b/drivers/mfd/axp20x.c
+>> @@ -5,6 +5,8 @@
+>>   * converters, LDOs, multiple 12-bit ADCs of voltage, current and tempe=
+rature
+>>   * as well as configurable GPIOs.
+>>   *
+>> + * This file contains the interface independent core functions.
+>> + *
+>>   * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+>>   *
+>>   * This program is free software; you can redistribute it and/or modify
+>> @@ -13,18 +15,14 @@
+>>   */
+>>
+>>  #include <linux/err.h>
+>> -#include <linux/i2c.h>
+>>  #include <linux/interrupt.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/regmap.h>
+>> -#include <linux/slab.h>
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/mfd/axp20x.h>
+>>  #include <linux/mfd/core.h>
+>> -#include <linux/of_device.h>
+>> -#include <linux/of_irq.h>
+>>  #include <linux/acpi.h>
+>>
+>>  #define AXP20X_OFF     0x80
+>> @@ -376,32 +374,6 @@ static const struct regmap_irq axp288_regmap_irqs[]=
+ =3D {
+>>         INIT_REGMAP_IRQ(AXP288, BC_USB_CHNG,            5, 1),
+>>  };
+>>
+>> -static const struct of_device_id axp20x_of_match[] =3D {
+>> -       { .compatible =3D "x-powers,axp152", .data =3D (void *) AXP152_I=
+D },
+>> -       { .compatible =3D "x-powers,axp202", .data =3D (void *) AXP202_I=
+D },
+>> -       { .compatible =3D "x-powers,axp209", .data =3D (void *) AXP209_I=
+D },
+>> -       { .compatible =3D "x-powers,axp221", .data =3D (void *) AXP221_I=
+D },
+>> -       { },
+>> -};
+>> -MODULE_DEVICE_TABLE(of, axp20x_of_match);
+>> -
+>> -/*
+>> - * This is useless for OF-enabled devices, but it is needed by I2C subs=
+ystem
+>> - */
+>> -static const struct i2c_device_id axp20x_i2c_id[] =3D {
+>> -       { },
+>> -};
+>> -MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
+>> -
+>> -static const struct acpi_device_id axp20x_acpi_match[] =3D {
+>> -       {
+>> -               .id =3D "INT33F4",
+>> -               .driver_data =3D AXP288_ID,
+>> -       },
+>> -       { },
+>> -};
+>> -MODULE_DEVICE_TABLE(acpi, axp20x_acpi_match);
+>> -
+>>  static const struct regmap_irq_chip axp152_regmap_irq_chip =3D {
+>>         .name                   =3D "axp152_irq_chip",
+>>         .status_base            =3D AXP152_IRQ1_STATE,
+>> @@ -606,27 +578,8 @@ static void axp20x_power_off(void)
+>>                      AXP20X_OFF);
+>>  }
+>>
+>> -static int axp20x_match_device(struct axp20x_dev *axp20x, struct device=
+ *dev)
+>> +int axp20x_match_device(struct axp20x_dev *axp20x, struct device *dev)
+>>  {
+>> -       const struct acpi_device_id *acpi_id;
+>> -       const struct of_device_id *of_id;
+>> -
+>> -       if (dev->of_node) {
+>> -               of_id =3D of_match_device(axp20x_of_match, dev);
+>> -               if (!of_id) {
+>> -                       dev_err(dev, "Unable to match OF ID\n");
+>> -                       return -ENODEV;
+>> -               }
+>> -               axp20x->variant =3D (long) of_id->data;
+>> -       } else {
+>> -               acpi_id =3D acpi_match_device(dev->driver->acpi_match_ta=
+ble, dev);
+>> -               if (!acpi_id || !acpi_id->driver_data) {
+>> -                       dev_err(dev, "Unable to match ACPI ID and data\n=
+");
+>> -                       return -ENODEV;
+>> -               }
+>> -               axp20x->variant =3D (long) acpi_id->driver_data;
+>> -       }
+>> -
+>>         switch (axp20x->variant) {
+>>         case AXP152_ID:
+>>                 axp20x->nr_cells =3D ARRAY_SIZE(axp152_cells);
+>> @@ -662,38 +615,18 @@ static int axp20x_match_device(struct axp20x_dev *=
+axp20x, struct device *dev)
+>>
+>>         return 0;
+>>  }
+>> +EXPORT_SYMBOL(axp20x_match_device);
+>>
+>> -static int axp20x_i2c_probe(struct i2c_client *i2c,
+>> -                        const struct i2c_device_id *id)
+>> +int axp20x_device_probe(struct axp20x_dev *axp20x)
+>>  {
+>> -       struct axp20x_dev *axp20x;
+>>         int ret;
+>>
+>> -       axp20x =3D devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KERNEL);
+>> -       if (!axp20x)
+>> -               return -ENOMEM;
+>> -
+>> -       ret =3D axp20x_match_device(axp20x, &i2c->dev);
+>> -       if (ret)
+>> -               return ret;
+>> -
+>> -       axp20x->i2c_client =3D i2c;
+>> -       axp20x->dev =3D &i2c->dev;
+>> -       dev_set_drvdata(axp20x->dev, axp20x);
+>> -
+>> -       axp20x->regmap =3D devm_regmap_init_i2c(i2c, axp20x->regmap_cfg)=
+;
+>> -       if (IS_ERR(axp20x->regmap)) {
+>> -               ret =3D PTR_ERR(axp20x->regmap);
+>> -               dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
+>> -               return ret;
+>> -       }
+>> -
+>> -       ret =3D regmap_add_irq_chip(axp20x->regmap, i2c->irq,
+>> +       ret =3D regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
+>>                                   IRQF_ONESHOT | IRQF_SHARED, -1,
+>>                                   axp20x->regmap_irq_chip,
+>>                                   &axp20x->regmap_irqc);
+>>         if (ret) {
+>> -               dev_err(&i2c->dev, "failed to add irq chip: %d\n", ret);
+>> +               dev_err(axp20x->dev, "failed to add irq chip: %d\n", ret=
+);
+>>                 return ret;
+>>         }
+>>
+>> @@ -701,8 +634,8 @@ static int axp20x_i2c_probe(struct i2c_client *i2c,
+>>                         axp20x->nr_cells, NULL, 0, NULL);
+>>
+>>         if (ret) {
+>> -               dev_err(&i2c->dev, "failed to add MFD devices: %d\n", re=
+t);
+>> -               regmap_del_irq_chip(i2c->irq, axp20x->regmap_irqc);
+>> +               dev_err(axp20x->dev, "failed to add MFD devices: %d\n", =
+ret);
+>> +               regmap_del_irq_chip(axp20x->irq, axp20x->regmap_irqc);
+>>                 return ret;
+>>         }
+>>
+>> @@ -711,38 +644,25 @@ static int axp20x_i2c_probe(struct i2c_client *i2c=
+,
+>>                 pm_power_off =3D axp20x_power_off;
+>>         }
+>>
+>> -       dev_info(&i2c->dev, "AXP20X driver loaded\n");
+>> +       dev_info(axp20x->dev, "AXP20X driver loaded\n");
+>>
+>>         return 0;
+>>  }
+>> +EXPORT_SYMBOL(axp20x_device_probe);
+>>
+>> -static int axp20x_i2c_remove(struct i2c_client *i2c)
+>> +int axp20x_device_remove(struct axp20x_dev *axp20x)
+>>  {
+>> -       struct axp20x_dev *axp20x =3D i2c_get_clientdata(i2c);
+>> -
+>>         if (axp20x =3D=3D axp20x_pm_power_off) {
+>>                 axp20x_pm_power_off =3D NULL;
+>>                 pm_power_off =3D NULL;
+>>         }
+>>
+>>         mfd_remove_devices(axp20x->dev);
+>> -       regmap_del_irq_chip(axp20x->i2c_client->irq, axp20x->regmap_irqc=
+);
+>> +       regmap_del_irq_chip(axp20x->irq, axp20x->regmap_irqc);
+>>
+>>         return 0;
+>>  }
+>> -
+>> -static struct i2c_driver axp20x_i2c_driver =3D {
+>> -       .driver =3D {
+>> -               .name   =3D "axp20x",
+>> -               .of_match_table =3D of_match_ptr(axp20x_of_match),
+>> -               .acpi_match_table =3D ACPI_PTR(axp20x_acpi_match),
+>> -       },
+>> -       .probe          =3D axp20x_i2c_probe,
+>> -       .remove         =3D axp20x_i2c_remove,
+>> -       .id_table       =3D axp20x_i2c_id,
+>> -};
+>> -
+>> -module_i2c_driver(axp20x_i2c_driver);
+>> +EXPORT_SYMBOL(axp20x_device_remove);
+>>
+>>  MODULE_DESCRIPTION("PMIC MFD core driver for AXP20X");
+>>  MODULE_AUTHOR("Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>");
+>> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+>> index b24c771cebd5..908f97f6e2d7 100644
+>> --- a/include/linux/mfd/axp20x.h
+>> +++ b/include/linux/mfd/axp20x.h
+>> @@ -396,7 +396,7 @@ enum axp288_irqs {
+>>
+>>  struct axp20x_dev {
+>>         struct device                   *dev;
+>> -       struct i2c_client               *i2c_client;
+>> +       int                             irq;
+>>         struct regmap                   *regmap;
+>>         struct regmap_irq_chip_data     *regmap_irqc;
+>>         long                            variant;
+>> @@ -462,4 +462,35 @@ static inline int axp20x_read_variable_width(struct=
+ regmap *regmap,
+>>         return result;
+>>  }
+>>
+>> +/**
+>> + * axp20x_match_device(): Setup axp20x variant related fields
+>> + *
+>> + * @axp20x: axp20x device to setup (.variant field must be set)
+>> + * @dev: device associated with this axp20x device
+>> + *
+>> + * This lets the axp20x core configure the mfd cells and register maps
+>> + * for later use.
+>> + */
+>> +int axp20x_match_device(struct axp20x_dev *axp20x, struct device *dev);
+>> +
+>> +/**
+>> + * axp20x_device_probe(): Probe a configured axp20x device
+>> + *
+>> + * @axp20x: axp20x device to probe (must be configured)
+>> + *
+>> + * This function lets the axp20x core register the axp20x mfd devices
+>> + * and irqchip. The axp20x device passed in must be fully configured
+>> + * with axp20x_match_device, its irq set, and regmap created.
+>> + */
+>> +int axp20x_device_probe(struct axp20x_dev *axp20x);
+>> +
+>> +/**
+>> + * axp20x_device_probe(): Remove a axp20x device
+>> + *
+>> + * @axp20x: axp20x device to remove
+>> + *
+>> + * This tells the axp20x core to remove the associated mfd devices
+>> + */
+>> +int axp20x_device_remove(struct axp20x_dev *axp20x);
+>> +
+>>  #endif /* __LINUX_MFD_AXP20X_H */
+>> --
+>> 2.6.2
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" =
+in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-> +		spi-cpol;
-> +	};
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
