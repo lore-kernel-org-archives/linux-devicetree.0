@@ -1,78 +1,97 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v5 0/4] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY
- driver
-Date: Tue, 24 Nov 2015 06:16:42 +0000
-Message-ID: <SG2PR06MB0919EE202A7433E471268093D8060@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/5] ARM: dts: sun8i: Add SID node
+Date: Tue, 24 Nov 2015 07:38:09 +0100
+Message-ID: <20151124063808.GB32142@lukather>
+References: <cover.1448263428.git.atx@atx.name>
+ <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx@atx.name>
+ <20151123124356.GW32142@lukather>
+ <CAGb2v65qfaTdQqXHD=-FHz1M1sHCTro97QETZUH=vA2BbRS+7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1445331471-5028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: "kishon@ti.com" <kishon@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Cjvo8w+V8lMs5Jsv"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65qfaTdQqXHD=-FHz1M1sHCTro97QETZUH=vA2BbRS+7A@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Josef Gajdusek <atx@atx.name>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, gpatchesrdh@mveas.com, Mike Turquette <mturquette@linaro.org>, Hans De Goede <hdegoede@redhat.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Emilio Lopez <emilio@elopez.com.ar>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
 
-> From: Yoshihiro Shimoda
-> Sent: Tuesday, October 20, 2015 5:58 PM
-> 
-> This patch is based on the latest linux-phy / next branch.
-> (commit id = 0f8669e343982ac66f4420335777cb5456b8abb0)
+--Cjvo8w+V8lMs5Jsv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Would you review this patch set?
-I confirmed the patch set could apply the latest linux-phy / next branch correctly.
-(commit id = 8005c49d9aea74d382f474ce11afbbc7d7130bec)
+On Tue, Nov 24, 2015 at 11:13:13AM +0800, Chen-Yu Tsai wrote:
+> Hi,
+>=20
+> On Mon, Nov 23, 2015 at 8:43 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > Hi,
+> >
+> > On Mon, Nov 23, 2015 at 09:02:48AM +0100, Josef Gajdusek wrote:
+> >> Add a node describing the Security ID memory to the
+> >> Allwinner H3 .dtsi file.
+> >>
+> >> Signed-off-by: Josef Gajdusek <atx@atx.name>
+> >> ---
+> >>  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i=
+-h3.dtsi
+> >> index 0faa38a..58de718 100644
+> >> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> >> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> >> @@ -359,6 +359,13 @@
+> >>                       #size-cells =3D <0>;
+> >>               };
+> >>
+> >> +             sid: eeprom@01c14000 {
+> >> +                     compatible =3D "allwinner,sun4i-a10-sid";
+> >> +                     reg =3D <0x01c14000 0x400>;
+> >
+> > The datasheet says it's 256 bytes wide, while the size here is of 1kB,
+> > is it intentional?
+>=20
+> My H3 datasheet (v1.1) says its 1 kB wide.
 
-Best regards,
-Yoshihiro Shimoda
+Is it? in the Security ID section, it is said to be 2kb =3D=3D 256B wide.
 
->  Changes from v4:
->   - Modify Kconfig to "depends on OF && ARCH_SHMOBILE".
->   - Modify Kconfig to "select GENERIC_PHY" instead of "depends on GENERIC_PHY".
->   - Modify device tree documentation about "reg" of example.
->   - Remove spinlock handling because phy-core driver calls mutex_lock().
->   - Change valiable name to val instead of tmp.
->   - Remove dev_set_drvdata.
->   - Use dev_vdbg() instead of dev_dbg().
->   - Change rcar_gen3_device_recognition()'s condition as one line.
->   - Remove unnecessary value in rcar_gen3_phy_usb2_probe().
->   - Modify MAINTAINERS about this driver.
-> 
->  Changes from v3:
->   - Shorten structure names to avoid new line if we add a long function name.
->   - Add ID/VBUS pin detection for peripheral mode.
-> 
->  Changes from v2:
->   - Modify Kconfig to add "depends on OF" and "depends on ARCH_SHMOBILE".
->   - Add more information in the dt document.
->   - Change reg-names from "usb2" to "usb2_host".
-> 
->  Changes from v1:
->   - Revise some typos.
->   - Remove using clk API to enable/disable the clocks.
->     (In other words, this driver expects to enable/disable the clocks by
->      Runtime PM API by the phy-core driver.)
->   - Remove an unnecessary header file (asm/cmpxchg.h).
-> 
-> Yoshihiro Shimoda (4):
->   phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
->   phy: rcar-gen3-usb2: change the mode to OTG on the combined channel
->   phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection
->   MAINTAINERS: add Renesas usb2 phy driver
-> 
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  39 +++
->  MAINTAINERS                                        |   6 +
->  drivers/phy/Kconfig                                |   7 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-rcar-gen3-usb2.c                   | 380 +++++++++++++++++++++
->  5 files changed, 433 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
->  create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
-> 
-> --
-> 1.9.1
+> It'd be nice if Allwinner actually listed the "usable" E-fuse
+> offsets and widths, instead of having us dig through the SDK code.
 
+Yep.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Cjvo8w+V8lMs5Jsv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWVAXQAAoJEBx+YmzsjxAgPQYP/iP6PvN/UMQmKwO0HR7KEgZw
+Pwyg9fx0eoZkBqyS1chxiQ1ptFLKlEgHlorthCa5F67e+b1968vMrLYnZrALTDCO
+zd+9ktnNAgU4QaHo6qbE0ThDkHd5qFd3bshnBijLnD2vEhWOjX6Ec1Y/XJoZDV1Y
+FuezTZeyM2stHSoL+dLHw3XU2T6Zef2V5u0iqgStqzsdhwM5bo5+vi5srVKPzvnX
+WZyRsJHhQ9v+1gcOLjx5RdVPe4egh/5WEGoCGdLb7c7dJF2CmQICdhyOA+r/Bhe5
+Oi6F1N65bnEFss36dqDM+Ql6Z7xf39vI5aJ0vqtabUSPFLlVMwWf31Ezao1fQQNT
+hHarPjEqMRCCYo9mpCrZnZnRc7eVI3WNwo4C6t0WYPb6Gyfp6X2rCThBp5QTGH54
+fQJTm7rJ6hq94miYxpO6p6ldXIQOxK/BgBs5KeAuH8w6cnLj7t5eUCD1xoWeQ5li
+7Kz5AfYgmyjR9nK1TT1COkQd37JDLKxq39dqrDWdJ4PLUrB6E78RuYvPlnD0Ebms
+bzNW5ZQVXcBCCe7eRvmBHi327LhMZeXc81/qyzXwiAPu2s7bZA9N9oHsSh3op5RF
+TJNca13GyCuKCP475gVEA8HhRZVLUZSM13TEuE5MH4rHxk2GI3NRyZEnPgcAsV0O
+NYmbhaYx2Ac8spijiTEK
+=hDTM
+-----END PGP SIGNATURE-----
+
+--Cjvo8w+V8lMs5Jsv--
