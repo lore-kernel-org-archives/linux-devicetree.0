@@ -1,100 +1,82 @@
-From: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V4 1/5] dt-bindings: Add QorIQ TMU thermal bindings
-Date: Tue, 24 Nov 2015 14:52:44 +0800
-Message-ID: <1448347968-37766-2-git-send-email-hongtao.jia@freescale.com>
-References: <1448347968-37766-1-git-send-email-hongtao.jia@freescale.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3-orangepi-plus: Enable
+ USB host controllers
+Date: Tue, 24 Nov 2015 08:44:48 +0100
+Message-ID: <20151124074448.GI32142@lukather>
+References: <1447616777-24660-1-git-send-email-hdegoede@redhat.com>
+ <1447616777-24660-5-git-send-email-hdegoede@redhat.com>
+ <CAGb2v669Cu6+G=P8yH-g5KbOsWTHBgnYUYf2fGt+jKXbqVAKfQ@mail.gmail.com>
+ <56498FA8.3050908@redhat.com>
+ <564B51D7.7090500@gmail.com>
+ <564F3077.7020104@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448347968-37766-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pfhjpIY4DSX7ckaW"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCNS2CZAKGQEHR3O66Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <564F3077.7020104-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for TMU (Thermal Monitoring Unit) on QorIQ
-platform.
+--pfhjpIY4DSX7ckaW
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Reviewed-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+Hi, 
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-new file mode 100644
-index 0000000..66223d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-@@ -0,0 +1,63 @@
-+* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+Required properties:
-+- compatible : Must include "fsl,qoriq-tmu". The version of the device is
-+	determined by the TMU IP Block Revision Register (IPBRR0) at
-+	offset 0x0BF8.
-+	Table of correspondences between IPBRR0 values and example  chips:
-+		Value           Device
-+		----------      -----
-+		0x01900102      T1040
-+- reg : Address range of TMU registers.
-+- interrupts : Contains the interrupt for TMU.
-+- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
-+	the SoC reference manual. The first cell is TTR0CR, the second is
-+	TTR1CR, etc.
-+- fsl,tmu-calibration : A list of cell pairs containing temperature
-+	calibration data, as specified by the SoC reference manual.
-+	The first cell of each pair is the value to be written to TTCFGR,
-+	and the second is the value to be written to TSCFGR.
-+
-+Example:
-+
-+tmu@f0000 {
-+	compatible = "fsl,qoriq-tmu";
-+	reg = <0xf0000 0x1000>;
-+	interrupts = <18 2 0 0>;
-+	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+	fsl,tmu-calibration = <0x00000000 0x00000025
-+			       0x00000001 0x00000028
-+			       0x00000002 0x0000002d
-+			       0x00000003 0x00000031
-+			       0x00000004 0x00000036
-+			       0x00000005 0x0000003a
-+			       0x00000006 0x00000040
-+			       0x00000007 0x00000044
-+			       0x00000008 0x0000004a
-+			       0x00000009 0x0000004f
-+			       0x0000000a 0x00000054
-+
-+			       0x00010000 0x0000000d
-+			       0x00010001 0x00000013
-+			       0x00010002 0x00000019
-+			       0x00010003 0x0000001f
-+			       0x00010004 0x00000025
-+			       0x00010005 0x0000002d
-+			       0x00010006 0x00000033
-+			       0x00010007 0x00000043
-+			       0x00010008 0x0000004b
-+			       0x00010009 0x00000053
-+
-+			       0x00020000 0x00000010
-+			       0x00020001 0x00000017
-+			       0x00020002 0x0000001f
-+			       0x00020003 0x00000029
-+			       0x00020004 0x00000031
-+			       0x00020005 0x0000003c
-+			       0x00020006 0x00000042
-+			       0x00020007 0x0000004d
-+			       0x00020008 0x00000056
-+
-+			       0x00030000 0x00000012
-+			       0x00030001 0x0000001d>;
-+};
+On Fri, Nov 20, 2015 at 03:38:47PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 17-11-15 17:12, Jens Kuske wrote:
+> >Enable the 2 USB host controllers used on the Orange Pi Plus
+> >and add the necessary regulators.
+> >
+> >Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> >Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >---
+> >
+> >Hi Hans,
+> >
+> >with these regulators USB works on the Orange Pi Plus too.
+> >I don't know if adding the regulators in the dts is okay, since most
+> >regulators are defined in the sunxi-common-regulators.dtsi, but
+> >we use different pins.
+> 
+> Thanks, I've added this to my sunxi-wip branch for now.
+> 
+> Regards,
+> 
+> Hans
+> 
+> p.s.
+> 
+> Any progress on getting the "core" H3 kernel support upstream ?
+> 
+> Given Arnd's remarks about how we should not hard-code the
+> indices in the clk driver + the very KISS nature of the
+> change to 1 parent-clk per gate setup I still believe
+> that that one is best.
+> 
+> Maxime ? Chen-Yu ? It would be really good to be able to
+> move forward with this, how do you want to proceed ?
+
+Yeah, sorry, Chen-Yu and I were busy because of $LIFE the past weeks,
+we're getting back to speed.
+
+Maxime
+
 -- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--pfhjpIY4DSX7ckaW--
