@@ -1,145 +1,68 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/4] bus: uniphier-system-bus: add UniPhier System Bus
- Controller driver
-Date: Tue, 24 Nov 2015 11:50:54 +0000
-Message-ID: <20151124115053.GB4108@leverpostej>
-References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
- <1448357962-12259-2-git-send-email-yamada.masahiro@socionext.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 3/4] regulator: tps65086: Add regulator driver for the
+ TPS65086 PMIC
+Date: Tue, 24 Nov 2015 12:11:55 +0000
+Message-ID: <20151124121155.GK1929@sirena.org.uk>
+References: <1447974102-24938-1-git-send-email-afd@ti.com>
+ <1447974102-24938-4-git-send-email-afd@ti.com>
+ <20151121133739.GG26072@sirena.org.uk>
+ <5650D6D2.5060108@ti.com>
+ <20151122131321.GM26072@sirena.org.uk>
+ <56534FA7.2040200@ti.com>
+ <20151123190026.GS26072@sirena.org.uk>
+ <56536677.5070102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OOq1TgGhe8eTwFBO"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448357962-12259-2-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <56536677.5070102@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm@kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 06:39:19PM +0900, Masahiro Yamada wrote:
-> The UniPhier System Bus is an external bus where on-board devices are
-> connected to the UniPhier SoC.  This driver parses the "ranges"
-> property of the System Bus and set up the registers of the System Bus
-> Controller for the correct bus routing.
 
-Could you elaborate on why you need to do that?
+--OOq1TgGhe8eTwFBO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-What needs to be configured specifically?
+On Mon, Nov 23, 2015 at 01:18:15PM -0600, Andrew F. Davis wrote:
 
-[...]
+> Right, so this is the kind of description that would be nice with the
+> declaration.
 
-> +The UniPhier System Bus is an external bus where on-board devices are connected
-> +to the UniPhier SoC.  It it a simple parallel bus with address, data, and some
-> +control signals.  It supports up to 8 banks (chip selects).
-> +
-> +Required properties for System Bus:
-> +- compatible: should be "socionext,uniphier-system-bus", "simple-bus".
+Feel free to send patches for the documentation, bearing in mind that
+there is a limit to how large we cna make it.
 
-If the kernel has to perform setup of the bus, then it is not a
-"simple-bus".
+> >>in the config takes precedence over the one in config->dev, the
+> >>opposite is true for regulators, this is very confusing and should be
+> >>standardized.
 
-Configure the bus, then probe children. Don't use simple-bus jsut to get
-probing.
+> >No, they both do the same thing.
 
-> +- #address-cells: should be equal to or grater than 2.  The first cell is the
+> I don't see that, config->dev->of_node is checked for the init data in
+> regulator_of_get_init_data, then config->of_node is then ignored if that
+> succeeds.
 
-s/grater/greater/
+Right, like I say this is because nobody should ever actually be using
+that capability if they also have good bindings.  If anyone did have a
+sensible use case that'd be where it would go but as things stand they
+will be pushed to do the right thing.
 
-> +  bank number (chip select).  The rest is the base address within the bank that
-> +  should be mapped onto the parent bus (usually AMBA).
-> +
-> +Optional properties for System Bus:
-> +- #size-cells: should be the same as that of the parent bus, if exists.  The
-> +  value of the parent bus is assumed, if not specified.
+--OOq1TgGhe8eTwFBO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This should be just as required as #address-cells, for consistency.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +
-> +
-> +UniPhier System Bus Controller
-> +------------------------------
-> +
-> +The UniPhier System Bus Controller is a hardware block with registers that
-> +controls the System Bus accessing; how each bank is mapped onto the parent bus,
-> +various timing parameters of the bus access, etc.
-> +
-> +Required properties for System Bus Controller:
-> +- compatible: should be "socionext,uniphier-system-bus-controller".
-> +- reg: offsets and lengths of the register sets for the device.  It should
-> +  contain 2 regions: base & control register, misc register, in this order.
+iQEcBAEBCAAGBQJWVFQGAAoJECTWi3JdVIfQdmQH/3+Frbwh9PyJ+y+ZLzrKNwro
+ud0849OraOtw08iASbo+4a7nDlWfryqyEzd8SWgInpI4yA5xWtrrJKrLKWNZOvaa
+w5qf1KmL5sR4Qc9kTXZrckLLvv+ERQHKo3fc0AB8HPTrw7p9Zn8f+dNzliTF1IYY
+Ee5mS06rz1Zc8oQ3y59ozmL9K3D4IO5YmX1GDTEf3lkbBCIRxFL9ymlGa8FFNMI7
+a/fr7mhLvwFCsBLyN3b52wNthsyoIpugqkuFx8OlUt43FwylfC1G7Yig3SsNWANJ
+nFIidMmzgzcx/t1b4yfNT0u4bYGBoTJQ6UPI0wL+1HfmVaJeocPl5M3rvD3aEPU=
+=PHWn
+-----END PGP SIGNATURE-----
 
-The example also has a system-bus phandle.
-
-Is the "misc register" part of the bus controller, or is it a shared
-system controller?
-
-> +Example
-> +-------
-> +	system_bus: system-bus {
-> +		compatible = "socionext,uniphier-system-bus", "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <1 0x00000000 0x42000000 0x02000000
-> +			  5 0x00000000 0x48000000 0x01000000>;
-> +
-> +		eth: ethernet@1,01f00000 {
-> +			compatible = "smsc,lan9115";
-> +			reg = <1 0x01f00000 0x1000>;
-> +			phy-mode = "mii";
-> +			reg-io-width = <4>;
-> +		};
-> +
-> +		serial: uart@5,00200000 {
-> +			compatible = "ns16550a";
-> +			reg = <5 0x00200000 0x20>;
-> +			clock-frequency = <12288000>;
-> +			reg-shift = <1>;
-> +		};
-> +	};
-> +
-> +	system-bus-controller@58c00000 {
-> +		compatible = "socionext,uniphier-system-bus-controller";
-> +		reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
-> +		system-bus = <&system_bus>;
-> +	};
-
-Assuming that the controller and bus are 1-1 related, make this a single
-node. e.g.
-
-system-bus {
-	compatible = "socionext,uniphier-system-bus";
-	reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
-	#address-cells = <2>;
-	#size-cells = <1>;
-	ranges = <1 0x00000000 0x42000000 0x02000000>,
-		 <5 0x00000000 0x48000000 0x01000000>;
-
-	...
-	child nodes here
-	...
-
-};
-
-[...]
-
-> +static int uniphier_sbc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct uniphier_sbc_priv *priv;
-> +	struct resource *regs;
-> +	struct device_node *bus_np;
-> +	int child_addrc, addrc, sizec, bank;
-> +	u64 child_addr, addr, size;
-> +	const __be32 *ranges;
-> +	int rlen, rone, ret;
-> +
-> +	bus_np = of_find_compatible_node(NULL, NULL,
-> +					 "socionext,uniphier-system-bus");
-
-This is broken if you ever have multiple instances.
-
-Either use a single node, or if there is a more complex relationship
-between busses and their controllers, describe that explicitly with
-phandles.
-
-Thanks,
-Mark.
+--OOq1TgGhe8eTwFBO--
