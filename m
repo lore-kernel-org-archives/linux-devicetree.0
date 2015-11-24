@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 4/6] regulator: axp20x: Support new AXP223 PMIC
-Date: Tue, 24 Nov 2015 11:48:34 +0800
-Message-ID: <1448336916-31212-5-git-send-email-wens@csie.org>
+Subject: [PATCH v4 1/6] mfd: axp20x: Add AXP223 to list of
+ supported PMICs in DT bindings
+Date: Tue, 24 Nov 2015 11:48:31 +0800
+Message-ID: <1448336916-31212-2-git-send-email-wens@csie.org>
 References: <1448336916-31212-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -24,38 +25,39 @@ It is functionally identical to AXP221; only the regulator default
 voltage/status and the external host interface are different.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/regulator/axp20x-regulator.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 35de22fdb7a0..55cce8125716 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -244,6 +244,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 		step = 75;
- 		break;
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		min = 1800;
- 		max = 4050;
- 		def = 3000;
-@@ -322,6 +323,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- 		break;
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index a474359dd206..fd39fa54571b 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -5,11 +5,12 @@ axp152 (X-Powers)
+ axp202 (X-Powers)
+ axp209 (X-Powers)
+ axp221 (X-Powers)
++axp223 (X-Powers)
  
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		if (id < AXP22X_DCDC1 || id > AXP22X_DCDC5)
- 			return -EINVAL;
+ Required properties:
+ - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+-	      "x-powers,axp221"
+-- reg: The I2C slave address for the AXP chip
++	      "x-powers,axp221", "x-powers,axp223"
++- reg: The I2C slave address or RSB hardware address for the AXP chip
+ - interrupt-parent: The parent interrupt controller
+ - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+ - interrupt-controller: The PMIC has its own internal IRQs
+@@ -51,7 +52,7 @@ LDO3		: LDO		: ldo3in-supply
+ LDO4		: LDO		: ldo24in-supply	: shared supply
+ LDO5		: LDO		: ldo5in-supply
  
-@@ -360,6 +362,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		nregulators = AXP20X_REG_ID_MAX;
- 		break;
- 	case AXP221_ID:
-+	case AXP223_ID:
- 		regulators = axp22x_regulators;
- 		nregulators = AXP22X_REG_ID_MAX;
- 		break;
+-AXP221 regulators, type, and corresponding input supply names:
++AXP221/AXP223 regulators, type, and corresponding input supply names:
+ 
+ Regulator	  Type		  Supply Name		  Notes
+ ---------	  ----		  -----------		  -----
 -- 
 2.6.2
