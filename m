@@ -1,61 +1,44 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] devicetree: bindings: Document qcom board
- compatible format
-Date: Mon, 23 Nov 2015 16:47:22 -0800
-Message-ID: <20151124004722.GL19156@codeaurora.org>
-References: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
- <1448062280-15406-2-git-send-email-sboyd@codeaurora.org>
- <20151122204935.GA465@rob-hp-laptop>
+From: Zain <zain.wang@rock-chips.com>
+Subject: Re: [PATCH v4 3/4] Crypto: rockchip/crypto - add crypto driver for
+ rk3288
+Date: Tue, 24 Nov 2015 08:48:54 +0800
+Message-ID: <5653B3F6.9080006@rock-chips.com>
+References: <1447732847-30514-1-git-send-email-zain.wang@rock-chips.com>
+ <1447732847-30514-4-git-send-email-zain.wang@rock-chips.com>
+ <20151123125142.GA7709@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151122204935.GA465@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20151123125142.GA7709@gondor.apana.org.au>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: zhengsq@rock-chips.com, hl@rock-chips.com, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/22, Rob Herring wrote:
-> On Fri, Nov 20, 2015 at 03:31:16PM -0800, Stephen Boyd wrote:
-> > Some qcom based bootloaders identify the dtb blob based on a set
-> > of device properties like SoC, platform, PMIC, and revisions of
-> > those components. In downstream kernels, these values are added
-> > to the different component dtsi files (i.e. pmic dtsi file, SoC
-> > dtsi file, board dtsi file, etc.) via qcom specific DT
-> > properties. The dtb files are parsed by a program called dtbTool
-> > that picks out these properties and creates a table of contents
-> > binary blob with the property information and some offsets into
-> > the concatenation of all the dtbs (termed a QCDT image).
-> > 
-> > The suggestion is to do this via the board compatible string
-> > instead, because these qcom specific properties are never used by
-> > the kernel. Add a document describing the format of the
-> > compatible string that encodes all this information that's
-> > currently encoded in the qcom,{msm-id,board-id,pmic-id}
-> > properties in downstream devicetrees. Future bootloaders may be
-> > updated to look at the compatible field instead of looking for
-> > the table of contents image. For non-updateable bootloaders, a
-> > new dtbTool program will parse the compatible string and generate
-> > a QCDT image from it.
-> > 
-> > Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
-> Much more reasonable now. I do find the '/' in it a bit strange though.
 
-I can remove the backslash if you like. Is a dash more preferred?
 
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-
-and if so can I keep the ack? I'll resend with that change and
-add the ack.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2015=E5=B9=B411=E6=9C=8823=E6=97=A5 20:51, Herbert Xu wrote:
+> On Tue, Nov 17, 2015 at 12:00:46PM +0800, Zain Wang wrote:
+>> +static void rk_ablk_hw_init(struct rk_crypto_info *dev)
+>> +{
+>> +	struct crypto_ablkcipher *tfm =3D crypto_ablkcipher_reqtfm(dev->ab=
+lk_req);
+>> +	struct rk_cipher_ctx *ctx =3D crypto_ablkcipher_ctx(tfm);
+>> +	u32 conf_reg =3D 0;
+>> +
+>> +	if (dev->mode & TDES) {
+>> +		dev->mode &=3D ~TDES;
+>> +		dev->mode |=3D RK_CRYPTO_TDES_FIFO_MODE |
+>> +			     RK_CRYPTO_TDES_BYTESWAP_KEY |
+>> +			     RK_CRYPTO_TDES_BYTESWAP_IV;
+>> +		CRYPTO_WRITE(dev, RK_CRYPTO_TDES_CTRL, dev->mode);
+>> +
+>> +		memcpy(dev->reg + RK_CRYPTO_TDES_IV_0, dev->ablk_req->info, 8);
+> Please ensure that the IV is copied back after the operation.
+> I know that many existing drivers are buggy in this regard but
+> they will be fixed soon and we will start enforcing this rule
+> so I don't want to add any new drivers that break this rule.
+Thanks your responding, I will fix it in v5.
+>
+> Thanks,
