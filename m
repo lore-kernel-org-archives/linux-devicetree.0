@@ -1,155 +1,103 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf6xx: Cosmic+: M4(nommu) initial support
-Date: Tue, 24 Nov 2015 11:26:07 +0800
-Message-ID: <20151124032607.GD11999@tiger>
-References: <1445795456-6698-1-git-send-email-afzal.mohd.ma@gmail.com>
+From: Shannon Zhao <zhaoshenglong@huawei.com>
+Subject: Re: [PATCH 12/13] arm/xen: Get event-channel irq
+ through HVM_PARAM when booting with ACPI
+Date: Tue, 24 Nov 2015 11:49:37 +0800
+Message-ID: <5653DE51.9030104@huawei.com>
+References: <1447754231-7772-1-git-send-email-shannon.zhao@linaro.org>
+	<1447754231-7772-13-git-send-email-shannon.zhao@linaro.org>
+	<alpine.DEB.2.02.1511201708120.1107@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1445795456-6698-1-git-send-email-afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <alpine.DEB.2.02.1511201708120.1107@kaball.uk.xensource.com>
+List-Unsubscribe: <http://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+	<mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <http://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+	<mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Sender: xen-devel-bounces@lists.xen.org
+Errors-To: xen-devel-bounces@lists.xen.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, shannon.zhao@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hangaohuai@huawei.com, linux-efi@vger.kernel.org, ian.campbell@citrix.com, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, julien.grall@citrix.com, stefano.stabellini@citrix.com, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 25, 2015 at 11:20:56PM +0530, Afzal Mohammed wrote:
-> Minimal Cortex-M4 device tree to boot Linux to shell. M4 is booted via
-> Cortex-A5 running Linux using Stefan Agner's <stefan-XLVq0VzYD2Y@public.gmane.org> "m4boot"
-> utility.
-> 
-> Signed-off-by: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Stefan,
 
-Are you okay with this patch?
+On 2015/11/21 1:11, Stefano Stabellini wrote:
+> On Tue, 17 Nov 2015, shannon.zhao@linaro.org wrote:
+>> From: Shannon Zhao <shannon.zhao@linaro.org>
+>>
+>> When booting with ACPI, it could get the event-channel irq through
+>> HVM_PARAM_CALLBACK_IRQ.
+>>
+>> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+>> ---
+>>  arch/arm/xen/enlighten.c | 23 +++++++++++++++++++----
+>>  1 file changed, 19 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+>> index 1373d6d..b8e9db8 100644
+>> --- a/arch/arm/xen/enlighten.c
+>> +++ b/arch/arm/xen/enlighten.c
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/cpufreq.h>
+>>  #include <linux/cpu.h>
+>>  #include <linux/console.h>
+>> +#include <linux/acpi.h>
+>>  
+>>  #include <linux/mm.h>
+>>  
+>> @@ -190,10 +191,24 @@ static int __init xen_guest_init(void)
+>>  	if (!xen_domain())
+>>  		return 0;
+>>  
+>> -	xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+>> -	if (!xen_events_irq) {
+>> -		pr_err("Xen event channel interrupt not found\n");
+>> -		return -ENODEV;
+>> +	if (!acpi_disabled) {
+>> +		struct xen_hvm_param a;
+>> +
+>> +		a.domid = DOMID_SELF;
+>> +		a.index = HVM_PARAM_CALLBACK_IRQ;
+>> +		if (HYPERVISOR_hvm_op(HVMOP_get_param, &a)) {
+> 
+> If HYPERVISOR_hvm_op returns an error (ret != 0), I wouldn't bother
+> checking for the returned value and simply return error.
+> 
+> On the other hand, if HYPERVISOR_hvm_op is successful (ret == 0), then
+> it might make sense to check for (a.value >> 56) == 3.
+> 
+Ok.
+> 
+>> +			if ((a.value >> 56) != 3) {
+>> +				pr_err("Can't get Xen event-channel irq\n");
+>> +				return -ENODEV;
+>> +			}
+>> +		}
+>> +		xen_events_irq = a.value & 0xff;
+>> +	} else {
+>> +		xen_events_irq = irq_of_parse_and_map(xen_node, 0);
+>> +		if (!xen_events_irq) {
+>> +			pr_err("Xen event channel interrupt not found\n");
+>> +			return -ENODEV;
+> 
+> Please make the error message common and move it out of the if/else.
+> 
+Sure. Thanks.
+> 
+>> +		}
+>>  	}
+>>  
+>>  	shared_info_page = (struct shared_info *)get_zeroed_page(GFP_KERNEL);
+>> -- 
+>> 2.1.0
+>>
+> 
+> .
+> 
 
-Shawn
-
-> ---
->  arch/arm/boot/dts/Makefile           |  1 +
->  arch/arm/boot/dts/vf610m4-cosmic.dts | 90 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 91 insertions(+)
->  create mode 100644 arch/arm/boot/dts/vf610m4-cosmic.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index bb8fa023d574..06a1a7a1d104 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -347,6 +347,7 @@ dtb-$(CONFIG_SOC_VF610) += \
->  	vf610-colibri-eval-v3.dtb \
->  	vf610m4-colibri.dtb \
->  	vf610-cosmic.dtb \
-> +	vf610m4-cosmic.dtb \
->  	vf610-twr.dtb
->  dtb-$(CONFIG_ARCH_MXS) += \
->  	imx23-evk.dtb \
-> diff --git a/arch/arm/boot/dts/vf610m4-cosmic.dts b/arch/arm/boot/dts/vf610m4-cosmic.dts
-> new file mode 100644
-> index 000000000000..8944a2d2054c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/vf610m4-cosmic.dts
-> @@ -0,0 +1,90 @@
-> +/*
-> + * Device tree for Cosmic+ VF6xx Cortex-M4 support
-> + *
-> + * Copyright (C) 2015
-> + *
-> + * Based on vf610m4 Colibri
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "vf610m4.dtsi"
-> +
-> +/ {
-> +	model = "VF610 Cortex-M4";
-> +	compatible = "fsl,vf610m4";
-> +};
-> +
-> +&gpio0 {
-> +	status = "disabled";
-> +};
-> +
-> +&gpio1 {
-> +	status = "disabled";
-> +};
-> +
-> +&gpio2 {
-> +	status = "disabled";
-> +};
-> +
-> +&gpio3 {
-> +	status = "disabled";
-> +};
-> +
-> +&gpio4 {
-> +	status = "disabled";
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart3>;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	vf610-cosmic {
-> +		pinctrl_uart3: uart3grp {
-> +			fsl,pins = <
-> +				VF610_PAD_PTA20__UART3_TX		0x21a2
-> +				VF610_PAD_PTA21__UART3_RX		0x21a1
-> +			>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.5.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Shannon
