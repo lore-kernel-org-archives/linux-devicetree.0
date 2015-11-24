@@ -1,499 +1,198 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/2] rtc: add driver for RX6110SA real time clock
-Date: Tue, 24 Nov 2015 11:38:53 +0100
-Message-ID: <1448361533-10728-2-git-send-email-s.trumtrar@pengutronix.de>
-References: <1448361533-10728-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 1/8] ARM: dt: Binding documentation for imx25 ADC/TSC
+Date: Tue, 24 Nov 2015 11:44:51 +0100
+Message-ID: <6186462.YDum13BH0b@adelgunde>
+References: <1447675269-8831-1-git-send-email-mpa@pengutronix.de> <1447675269-8831-2-git-send-email-mpa@pengutronix.de> <20151123145952.GC31376@x1>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart5983557.4qvLmEj1SL"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448361533-10728-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20151123145952.GC31376@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric =?ISO-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The RX6110 comes in two different variants: SPI and I2C.
-This driver only supports the SPI variant.
 
-If the need ever arises to also support the I2C variant, this driver
-could easily be refactured to support both cases.
+--nextPart5983557.4qvLmEj1SL
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-The original driver from Epson also has support for alarms.
-My hardware setup is "uncommon" however and I can not test this.
-That is why I decided to leave the code out of the driver for now
-and only added the code that I could test with my setup.
+On Monday 23 November 2015 14:59:52 Lee Jones wrote:
+> On Mon, 16 Nov 2015, Markus Pargmann wrote:
+>=20
+> > This documentation describes the devicetree bindings for the
+> > ADC/Touchscreen unit of the i.MX25 SoC.
+> >=20
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >=20
+> > Notes:
+> >     Changes in v6:
+> >      - Removed adc-ref property and replaced it with refp and refn =
+for positive and
+> >        negative references. The properties are optional now as the =
+default
+> >        behaviour is a positive internal reference voltage and ADC G=
+ND as negative
+> >        reference.
+> >=20
+> >  .../devicetree/bindings/mfd/fsl-imx25-tsadc.txt    | 46 ++++++++++=
+++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/fsl-imx25=
+=2Dtsadc.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.=
+txt b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
+> > new file mode 100644
+> > index 000000000000..a857af0eb68c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
+> > @@ -0,0 +1,46 @@
+> > +Freescale mx25 ADC/TSC multifunction device
+>=20
+> Prefer "MX25" and "MultiFunction Device (MFD)"
 
-Rebased onto rtc-for-4.5
+Fixed.
 
- drivers/rtc/Kconfig      |   9 +
- drivers/rtc/Makefile     |   1 +
- drivers/rtc/rtc-rx6110.c | 423 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 433 insertions(+)
- create mode 100644 drivers/rtc/rtc-rx6110.c
+>=20
+> > +This device combines two general purpose conversion queues one use=
+d for general
+> > +ADC and the other used for touchscreens.
+> > +
+> > +Required properties:
+> > + - compatible: Should be "fsl,imx25-tsadc".
+> > + - reg: Memory range of the device.
+>=20
+> Not exactly.  More like start location and size.
+>=20
+> > + - interrupts: Interrupt for this device as described in
+> > +   interrupts/interrupts.txt
+>=20
+> No such file.  In any case, I'd prefer:
+>=20
+> "(See: ../interrupt-controller/interrupts.txt)".
+>=20
+> > + - clocks: An 'ipg' clock defined as described in clocks/clock.txt=
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 57c2dbc4f438..832d436944fe 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -725,6 +725,15 @@ config RTC_DRV_RX4581
- 	  This driver can also be built as a module. If so the module
- 	  will be called rtc-rx4581.
- 
-+config RTC_DRV_RX6110
-+	tristate "Epson RX-6110"
-+	select REGMAP_SPI
-+	help
-+	  If you say yes here you will get support for the Epson RX-6610.
-+
-+	  This driver can also be built as a module. If so the module
-+	  will be called rtc-rx6110.
-+
- config RTC_DRV_MCP795
- 	tristate "Microchip MCP795"
- 	help
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index e491eb524434..a36fef669d2a 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -127,6 +127,7 @@ obj-$(CONFIG_RTC_DRV_RS5C348)	+= rtc-rs5c348.o
- obj-$(CONFIG_RTC_DRV_RS5C372)	+= rtc-rs5c372.o
- obj-$(CONFIG_RTC_DRV_RV3029C2)	+= rtc-rv3029c2.o
- obj-$(CONFIG_RTC_DRV_RX4581)	+= rtc-rx4581.o
-+obj-$(CONFIG_RTC_DRV_RX6110)	+= rtc-rx6110.o
- obj-$(CONFIG_RTC_DRV_RX8025)	+= rtc-rx8025.o
- obj-$(CONFIG_RTC_DRV_RX8581)	+= rtc-rx8581.o
- obj-$(CONFIG_RTC_DRV_S35390A)	+= rtc-s35390a.o
-diff --git a/drivers/rtc/rtc-rx6110.c b/drivers/rtc/rtc-rx6110.c
-new file mode 100644
-index 000000000000..01417b019563
---- /dev/null
-+++ b/drivers/rtc/rtc-rx6110.c
-@@ -0,0 +1,423 @@
-+/*
-+ * Driver for the Epson RTC module RX-6110 SA
-+ *
-+ * Copyright(C) 2015 Pengutronix, Steffen Trumtrar <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ * Copyright(C) SEIKO EPSON CORPORATION 2013. All rights reserved.
-+ *
-+ * Derived from RX-8025 driver:
-+ * Copyright (C) 2009 Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-+ *
-+ * Copyright (C) 2005 by Digi International Inc.
-+ * All rights reserved.
-+ *
-+ * Modified by fengjh at rising.com.cn
-+ * <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>
-+ * 2006.11
-+ *
-+ * Code cleanup by Sergei Poselenov, <sposelenov-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org>
-+ * Converted to new style by Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-+ * Alarm and periodic interrupt added by Dmitry Rakhchev <rda-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ *
-+ * This driver software is distributed as is, without any warranty of any kind,
-+ * either express or implied as further specified in the GNU Public License.
-+ * This software may be used and distributed according to the terms of the GNU
-+ * Public License, version 2 as published by the Free Software Foundation.
-+ * See the file COPYING in the main directory of this archive for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/bcd.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/regmap.h>
-+#include <linux/rtc.h>
-+#include <linux/spi/spi.h>
-+
-+/* RX-6110 Register definitions */
-+#define RX6110_REG_SEC		0x10
-+#define RX6110_REG_MIN		0x11
-+#define RX6110_REG_HOUR		0x12
-+#define RX6110_REG_WDAY		0x13
-+#define RX6110_REG_MDAY		0x14
-+#define RX6110_REG_MONTH	0x15
-+#define RX6110_REG_YEAR		0x16
-+#define RX6110_REG_RES1		0x17
-+#define RX6110_REG_ALMIN	0x18
-+#define RX6110_REG_ALHOUR	0x19
-+#define RX6110_REG_ALWDAY	0x1A
-+#define RX6110_REG_TCOUNT0	0x1B
-+#define RX6110_REG_TCOUNT1	0x1C
-+#define RX6110_REG_EXT		0x1D
-+#define RX6110_REG_FLAG		0x1E
-+#define RX6110_REG_CTRL		0x1F
-+#define RX6110_REG_USER0	0x20
-+#define RX6110_REG_USER1	0x21
-+#define RX6110_REG_USER2	0x22
-+#define RX6110_REG_USER3	0x23
-+#define RX6110_REG_USER4	0x24
-+#define RX6110_REG_USER5	0x25
-+#define RX6110_REG_USER6	0x26
-+#define RX6110_REG_USER7	0x27
-+#define RX6110_REG_USER8	0x28
-+#define RX6110_REG_USER9	0x29
-+#define RX6110_REG_USERA	0x2A
-+#define RX6110_REG_USERB	0x2B
-+#define RX6110_REG_USERC	0x2C
-+#define RX6110_REG_USERD	0x2D
-+#define RX6110_REG_USERE	0x2E
-+#define RX6110_REG_USERF	0x2F
-+#define RX6110_REG_RES2		0x30
-+#define RX6110_REG_RES3		0x31
-+#define RX6110_REG_IRQ		0x32
-+
-+/* Extension Register (1Dh) bit positions */
-+#define RX6110_BIT_EXT_TSEL		(7 << 0)
-+#define RX6110_BIT_EXT_WADA		(1 << 3)
-+#define RX6110_BIT_EXT_TE		(1 << 4)
-+#define RX6110_BIT_EXT_USEL		(1 << 5)
-+#define RX6110_BIT_EXT_FSEL		(3 << 6)
-+
-+/* Flag Register (1Eh) bit positions */
-+#define RX6110_BIT_FLAG_VLF		(1 << 1)
-+#define RX6110_BIT_FLAG_AF		(1 << 3)
-+#define RX6110_BIT_FLAG_TF		(1 << 4)
-+#define RX6110_BIT_FLAG_UF		(1 << 5)
-+
-+/* Control Register (1Fh) bit positions */
-+#define RX6110_BIT_CTRL_TSTP		(1 << 2)
-+#define RX6110_BIT_CTRL_AIE		(1 << 3)
-+#define RX6110_BIT_CTRL_TIE		(1 << 4)
-+#define RX6110_BIT_CTRL_UIE		(1 << 5)
-+#define RX6110_BIT_CTRL_STOP		(1 << 6)
-+#define RX6110_BIT_CTRL_TEST		(1 << 7)
-+
-+static struct spi_driver rx6110_driver;
-+
-+struct rx6110_data {
-+	struct rtc_device *rtc;
-+	struct regmap *regmap;
-+	int ctrlreg;
-+};
-+
-+/**
-+ * rx6110_get_week_day - translate reg_week_day to tm_wday
-+ * @reg_week_day: weekday register value
-+ *
-+ * Return: an integer representing the tm_wday
-+ */
-+static int rx6110_get_week_day(u8 reg_week_day)
-+{
-+	int tm_wday = -1;
-+	int i;
-+
-+	for (i = 0; i < 7; i++) {
-+		if (reg_week_day & 1) {
-+			tm_wday = i;
-+			break;
-+		}
-+		reg_week_day >>= 1;
-+	}
-+
-+	return tm_wday;
-+}
-+
-+/**
-+ * rx6110_get_time - get the current time from the rx6110 registers
-+ * @dev: the rtc device in use
-+ * @tm: holds date and time
-+ */
-+static int rx6110_get_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct rx6110_data *rx6110 = dev_get_drvdata(dev);
-+	unsigned char date[7];
-+	int ret;
-+
-+	/* read registers to date */
-+	ret = regmap_bulk_read(rx6110->regmap, RX6110_REG_SEC, date, 7);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Note: need to subtract 0x10 for index as register offset starts
-+	 * at 0x10
-+	 */
-+	tm->tm_sec = bcd2bin(date[0] & 0x7f);
-+	tm->tm_min = bcd2bin(date[1] & 0x7f);
-+	/* only 24-hour clock */
-+	tm->tm_hour = bcd2bin(date[2] & 0x3f);
-+	tm->tm_wday = rx6110_get_week_day(date[3] & 0x7f);
-+	tm->tm_mday = bcd2bin(date[4] & 0x3f);
-+	tm->tm_mon = bcd2bin(date[5] & 0x1f) - 1;
-+	tm->tm_year = bcd2bin(date[6]);
-+
-+	if (tm->tm_year < 70)
-+		tm->tm_year += 100;
-+
-+	dev_dbg(dev, "%s: date %ds %dm %dh %dmd %dm %dy\n", __func__,
-+		tm->tm_sec, tm->tm_min, tm->tm_hour,
-+		tm->tm_mday, tm->tm_mon, tm->tm_year);
-+
-+	return rtc_valid_tm(tm);
-+}
-+
-+/**
-+ * rx6110_set_time - set the current time in the rx6110 registers
-+ *
-+ * @dev: the rtc device in use
-+ * @tm: holds date and time
-+ *
-+ * BUG: The HW assumes every year that is a multiple of 4 to be a leap
-+ * year. Next time this is wrong is 2100, which will not be a leap year
-+ *
-+ * Note: If STOP is not set/cleared, the clock will start when the seconds
-+ *       register is written
-+ *
-+ */
-+static int rx6110_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct rx6110_data *rx6110 = dev_get_drvdata(dev);
-+	int ret;
-+
-+	/* set STOP bit before changing clock/calendar */
-+	ret = regmap_update_bits(rx6110->regmap, RX6110_REG_CTRL,
-+				 RX6110_BIT_CTRL_STOP, RX6110_BIT_CTRL_STOP);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_SEC,
-+			   bin2bcd(tm->tm_sec));
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_MIN,
-+			   bin2bcd(tm->tm_min));
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_HOUR,
-+			   bin2bcd(tm->tm_hour));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_MDAY,
-+			   bin2bcd(tm->tm_mday));
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_MONTH,
-+			   bin2bcd(tm->tm_mon + 1));
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_YEAR,
-+			   bin2bcd(tm->tm_year % 100));
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_WDAY,
-+			   1 << bin2bcd(tm->tm_wday));
-+	if (ret)
-+		return ret;
-+
-+	/* clear STOP bit after changing clock/calendar */
-+	ret = regmap_update_bits(rx6110->regmap, RX6110_REG_CTRL,
-+				 RX6110_BIT_CTRL_STOP, 0);
-+
-+	return ret;
-+}
-+
-+/**
-+ * rx6110_init - initialize the rx6110 registers
-+ *
-+ * @rx6110: pointer to the rx6110 struct in use
-+ *
-+ */
-+static int rx6110_init(struct rx6110_data *rx6110)
-+{
-+	struct rtc_device *rtc = rx6110->rtc;
-+	int need_clear = 0;
-+	int need_reset = 0;
-+	int ext;
-+	int flags;
-+	int ctrl;
-+	int ret;
-+
-+	/* set reserved register 0x17 with specified value of 0xB8 */
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_RES1, 0xB8);
-+	if (ret)
-+		goto out;
-+
-+	/* set reserved register 0x30 with specified value of 0x00 */
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_RES1, 0x00);
-+	if (ret)
-+		goto out;
-+
-+	/* set reserved register 0x31 with specified value of 0x10 */
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_RES1, 0x10);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(rx6110->regmap, RX6110_REG_IRQ, 0x0);
-+	if (ret)
-+		goto out;
-+
-+	/* get current extension, flag, control register values */
-+	ret = regmap_read(rx6110->regmap, RX6110_REG_EXT, &ext);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_read(rx6110->regmap, RX6110_REG_FLAG, &flags);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_read(rx6110->regmap, RX6110_REG_CTRL, &ctrl);
-+	if (ret)
-+		goto out;
-+
-+	dev_dbg(&rtc->dev, "ext: %x, flag: %x, ctrl: %x\n", ext, flags, ctrl);
-+
-+	/* check for VLF Flag (set at power-on) */
-+	if ((flags & RX6110_BIT_FLAG_VLF)) {
-+		dev_warn(&rtc->dev, "Frequency stop was detected, probably due to a supply voltage drop\n");
-+		need_reset = 1;
-+	}
-+
-+	/* check for Alarm Flag */
-+	if (flags & RX6110_BIT_FLAG_AF) {
-+		dev_warn(&rtc->dev, "Alarm was detected\n");
-+		need_clear = 1;
-+	}
-+
-+	/* check for Periodic Timer Flag */
-+	if (flags & RX6110_BIT_FLAG_TF) {
-+		dev_warn(&rtc->dev, "Periodic timer was detected\n");
-+		need_clear = 1;
-+	}
-+
-+	/* check for Update Timer Flag */
-+	if (flags & RX6110_BIT_FLAG_UF) {
-+		dev_warn(&rtc->dev, "Update timer was detected\n");
-+		need_clear = 1;
-+	}
-+
-+	/* reset or clear needed? */
-+	if (need_reset) {
-+		/* clear ext register */
-+		ret = regmap_write(rx6110->regmap, RX6110_REG_EXT, 0);
-+		if (ret)
-+			goto out;
-+
-+		/* clear ctrl register */
-+		ret = regmap_write(rx6110->regmap, RX6110_REG_CTRL, 0);
-+		if (ret)
-+			goto out;
-+
-+		ctrl = 0;
-+	}
-+
-+	if (need_clear) {
-+		ret = regmap_write(rx6110->regmap, RX6110_REG_FLAG, 0);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	if (need_reset) {
-+		struct rtc_time tm;
-+
-+		rx6110_set_time(&rtc->dev, &tm);
-+		dev_warn(&rtc->dev, "time reset to 1970/1/1\n");
-+	}
-+
-+
-+	/* set "test bit" and reserved bits of control register zero */
-+	rx6110->ctrlreg = ctrl & ~RX6110_BIT_CTRL_TEST;
-+out:
-+	return ret;
-+
-+}
-+
-+static struct rtc_class_ops rx6110_rtc_ops = {
-+	.read_time = rx6110_get_time,
-+	.set_time = rx6110_set_time,
-+};
-+
-+static struct regmap_config regmap_spi_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = RX6110_REG_IRQ,
-+	.read_flag_mask = 0x80,
-+};
-+
-+/**
-+ * rx6110_probe - initialize rtc driver
-+ * @spi: pointer to spi device
-+ */
-+static int rx6110_probe(struct spi_device *spi)
-+{
-+	struct rx6110_data *rx6110;
-+	int err;
-+
-+	if ((spi->bits_per_word && spi->bits_per_word != 8)
-+	    || (spi->max_speed_hz > 2000000)
-+	    || (spi->mode != (SPI_CS_HIGH | SPI_CPOL | SPI_CPHA))) {
-+		dev_warn(&spi->dev, "SPI settings: bits_per_word: %d, max_speed_hz: %d, mode: %xh\n",
-+			spi->bits_per_word, spi->max_speed_hz, spi->mode);
-+		dev_warn(&spi->dev, "driving device in an unsupported mode");
-+	}
-+
-+	rx6110 = devm_kzalloc(&spi->dev, sizeof(*rx6110), GFP_KERNEL);
-+	if (!rx6110)
-+		return -ENOMEM;
-+
-+	rx6110->regmap = devm_regmap_init_spi(spi, &regmap_spi_config);
-+	if (IS_ERR(rx6110->regmap)) {
-+		dev_err(&spi->dev, "regmap init failed for rtc rx6110\n");
-+		return PTR_ERR(rx6110->regmap);
-+	}
-+
-+	spi_set_drvdata(spi, rx6110);
-+
-+	rx6110->rtc = devm_rtc_device_register(&spi->dev,
-+					       rx6110_driver.driver.name,
-+					       &rx6110_rtc_ops, THIS_MODULE);
-+
-+	if (IS_ERR(rx6110->rtc))
-+		return PTR_ERR(rx6110->rtc);
-+
-+	err = rx6110_init(rx6110);
-+	if (err)
-+		return err;
-+
-+	rx6110->rtc->max_user_freq = 1;
-+
-+	return 0;
-+}
-+
-+static int rx6110_remove(struct spi_device *spi)
-+{
-+	return 0;
-+}
-+
-+static const struct spi_device_id rx6110_id[] = {
-+	{ "rtc-rx6110", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, rx6110_id);
-+
-+static struct spi_driver rx6110_driver = {
-+	.driver = {
-+		.name = "rtc-rx6110",
-+		.owner = THIS_MODULE,
-+	},
-+	.probe		= rx6110_probe,
-+	.remove		= rx6110_remove,
-+	.id_table	= rx6110_id,
-+};
-+
-+module_spi_driver(rx6110_driver);
-+
-+MODULE_AUTHOR("Val Krutov <val.krutov-vVP6MZSVwm2aMJb+Lgu22Q@public.gmane.org>");
-+MODULE_DESCRIPTION("RX-6110 SA RTC driver");
-+MODULE_LICENSE("GPL");
--- 
-2.6.2
+>=20
+> Didn't you check any of what you've written?
+>=20
+> "(See: ../clock/clock-bindings.txt)"
+
+Seems I didn't check these, sorry.
+
+>=20
+> > + - interrupt-controller: This device is an interrupt controller. I=
+t controls
+> > +   the interrupts of both conversion queues.
+> > + - #interrupt-cells: Should be '<1>'.
+> > + - #address-cells: Should be '<1>'.
+> > + - #size-cells: Should be '<1>'.
+> > + - ranges
+>=20
+> ?
+>=20
+> Also, don't think think that this looks better/easier to read?
+
+Yes a bit, changed it.
+
+>=20
+> > +Required properties:
+> > + - compatible:=09=09Should be "fsl,imx25-tsadc".
+> > + - reg:=09=09=09Memory range of the device.
+> > + - interrupts:=09=09Interrupt for this device as described in
+> > +=09=09=09=09interrupts/interrupts.txt
+> > + - clocks:=09=09=09An 'ipg' clock defined as described in clocks/c=
+lock.txt
+> > + - interrupt-controller:=09This device is an interrupt controller.=
+ It controls
+> > +   =09=09=09=09the interrupts of both conversion queues.
+> > + - #interrupt-cells:=09=09Should be '<1>'.
+> > + - #address-cells:=09=09Should be '<1>'.
+> > + - #size-cells:=09=09Should be '<1>'.
+>=20
+> [...]
+>=20
+> > +This device includes two conversion queues which can be added as s=
+ubnodes.
+> > +The first queue is for the touchscreen, the second for general pur=
+pose ADC.
+> > +
+> > +Example:
+> > +=09tscadc: tscadc@50030000 {
+> > +=09=09compatible =3D "fsl,imx25-tsadc";
+> > +=09=09reg =3D <0x50030000 0xc>;
+> > +=09=09interrupts =3D <46>;
+> > +=09=09clocks =3D <&clks 119>;
+> > +=09=09clock-names =3D "ipg";
+>=20
+> I don't think this is required, if you only have a single clock.
+
+I prefer this variation so that you immediately see what the clock is
+for. The number is not terribly helpful.
+
+Thanks,
+
+Markus
+
+>=20
+> > +=09=09interrupt-controller;
+> > +=09=09#interrupt-cells =3D <1>;
+> > +=09=09#address-cells =3D <1>;
+> > +=09=09#size-cells =3D <1>;
+> > +=09=09ranges;
+> > +
+> > +=09=09tsc: tcq@50030400 {
+> > +=09=09=09compatible =3D "fsl,imx25-tcq";
+> > +=09=09=09reg =3D <0x50030400 0x60>;
+> > +=09=09=09...
+> > +=09=09};
+> > +
+> > +=09=09adc: gcq@50030800 {
+> > +=09=09=09compatible =3D "fsl,imx25-gcq";
+> > +=09=09=09reg =3D <0x50030800 0x60>;
+> > +=09=09=09...
+> > +=09=09};
+> > +=09};
+>=20
+>=20
+
+=2D-=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
+
+--nextPart5983557.4qvLmEj1SL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWVD+qAAoJEEpcgKtcEGQQdLEP/i7le0wDFSLtPJSmA/45t7B+
+JInh2I9oroXF4F2mpLMe5j+HH8JpiwlrdCnGGHswx1akmK5ky6lLOobpPwpfoWqu
+hrArpK3/qkX+s599cAF/HyTrAaNVUaX131aLY6z8g1YdvMy62JiPSnFD8QqcAv7Y
+Nnb6ZEovuJ0dJYaoPcJDXMwPv4FsNbmBJmo5KEek3MW6u3uD4QakWYy0Xs2a4sI4
+5IHS7tbeRjZyjQnrECy70UJAfQM9Nxcy1gC3QqwY4DF/wS0myn9CvfOf++6YFw72
+uNCvw6bfN5s+KgJX6OC430bE9W+gs/kPmu4XUkxIwZ53RKTX0/OJZKrwaUkhoggF
+8QZKGQDojUxGca17GFXUq7rIvbibT2P17bFoslZhhym4FeftADwhP/sT0R1FzPrY
+drd76llTyLA5RKDLPBSKOX0PPw2KNTD4afEC8g+jSSB6SysG5D/nnOUsyV/EnNsE
+eGiK/k+yFdxnrOsDFhLAPuaNmIZZcTlEbi7CNfu3T29cfN2edpsHN500rFLMkeXM
+3jruR+PDocuoSdbOeByAOtJmppjiKrRzRB93ZvQPgl3xL8Lp5i8i+sYWoBVzVM7a
+BVptoJDVrq+jPnB7x/j60PSKyvsO/wc2Ou3s8zGiakW+it64wqRoa1qI0TcmCFRA
+/rwEctToc7wRI3auhWdn
+=1bel
+-----END PGP SIGNATURE-----
+
+--nextPart5983557.4qvLmEj1SL--
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
