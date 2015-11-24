@@ -1,235 +1,110 @@
-From: =?UTF-8?Q?Rapha=C3=ABl_Poggi?= <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 4/4] sound: codecs: pcm1792a: introduce
- channel side
-Date: Tue, 24 Nov 2015 17:04:58 +0100
-Message-ID: <CACqcpZDQRtSqmLDC65ajNGY=VU8TFZBnVxhaM+cES37rv7zmyg@mail.gmail.com>
-References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
- <1448014157-36526-5-git-send-email-raphael.poggi@avalun.com>
- <CAOf5uwmGk7WqOaAFj=fTw8+D+EszWPqReyfmS0njix=d7AokOA@mail.gmail.com>
- <CACqcpZCSMwj2WOhX0ddD43VKCgOcNyrkkZrR0sWEsHE+H27TVg@mail.gmail.com> <CAOf5uwmdwcdbxx2b6DvMeOJBahkZ3iiosWtHPD2zhxcDqO2b_A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOf5uwmdwcdbxx2b6DvMeOJBahkZ3iiosWtHPD2zhxcDqO2b_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Peter Maydell <peter.maydell@linaro.org>
+Subject: [PATCH v3] Documentation: dt: Add bindings for Secure-only devices
+Date: Tue, 24 Nov 2015 16:06:41 +0000
+Message-ID: <1448381201-10729-1-git-send-email-peter.maydell@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Roy Franz <roy.franz@linaro.org>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The existing device tree bindings assume that we are only trying to
+describe a single address space with a device tree (for ARM, either
+the Normal or the Secure world). Some uses for device tree need to
+describe both Normal and Secure worlds in a single device tree. Add
+documentation of how to do this, by adding extra properties which
+describe when a device appears differently in the two worlds or when
+it only appears in one of them.
 
-2015-11-24 9:27 GMT+01:00 Michael Trimarchi <michael@amarulasolutions.c=
-om>:
-> Hi
->
-> On Tue, Nov 24, 2015 at 9:21 AM, Rapha=C3=ABl Poggi <poggi.raph@gmail=
-=2Ecom> wrote:
->> Hi,
->>
->> 2015-11-21 10:37 GMT+01:00 Michael Trimarchi <michael@amarulasolutio=
-ns.com>:
->>> Hi
->>>
->>> On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph@gmail.c=
-om> wrote:
->>>> From: Raphael Poggi <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>
->>>> Add possibility to choose the channel side using the device tree,
->>>> and also modify it using alsa ctrl.
->>>>
->>>> Signed-off-by: Raphael Poggi <poggi.raph-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>>  sound/soc/codecs/pcm1792a.c | 46 ++++++++++++++++++++++++++++++++=
-+++++++++++++
->>>>  1 file changed, 46 insertions(+)
->>>>
->>>> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm179=
-2a.c
->>>> index febaa48..005b679 100644
->>>> --- a/sound/soc/codecs/pcm1792a.c
->>>> +++ b/sound/soc/codecs/pcm1792a.c
->>>> @@ -65,6 +65,12 @@ static const struct reg_default pcm1792a_reg_de=
-faults[] =3D {
->>>>         { PCM1792A_DEVICE_ID, 0x00 },
->>>>  };
->>>>
->>>> +enum __pcm1792_side {
->>>> +       STEREO,
->>>> +       MONORAL_LEFT,
->>>> +       MONORAL_RIGHT
->>>> +};
->>>> +
->>>>  static bool pcm1792a_accessible_reg(struct device *dev, unsigned =
-int reg)
->>>>  {
->>>>         return reg >=3D 0x10 && reg <=3D 0x17;
->>>> @@ -83,6 +89,7 @@ struct pcm1792a_private {
->>>>         struct regmap *regmap;
->>>>         unsigned int format;
->>>>         unsigned int rate;
->>>> +       unsigned int side;
->>>>  };
->>>>
->>>>  static int pcm1792a_set_dai_fmt(struct snd_soc_dai *codec_dai,
->>>> @@ -153,6 +160,13 @@ static int pcm1792a_hw_params(struct snd_pcm_=
-substream *substream,
->>>>         ret =3D regmap_update_bits(priv->regmap, PCM1792A_FMT_CONT=
-ROL,
->>>>                                  PCM1792A_FMT_MASK | PCM1792A_ATLD=
-_ENABLE, val);
->>>>
->>>> +       if (priv->side =3D=3D MONORAL_LEFT)
->>>> +               val =3D PCM1792A_CHANNEL_MONO_LEFT;
->>>> +       else if (priv->side =3D=3D MONORAL_RIGHT)
->>>> +               val =3D PCM1792A_CHANNEL_MONO_RIGHT;
->>>> +
->>>> +       regmap_update_bits(priv->regmap, PCM1792A_CHANNEL, PCM1792=
-A_CHANNEL_MONO_MASK, val);
->>>> +
->>>>         return ret;
->>>>  }
->>>>
->>>> @@ -222,10 +236,31 @@ static struct snd_soc_codec_driver soc_codec=
-_dev_pcm1792a =3D {
->>>>         .num_dapm_routes        =3D ARRAY_SIZE(pcm1792a_dapm_route=
-s),
->>>>  };
->>>>
->>>> +static int pcm1792a_of_init(struct spi_device *spi)
->>>> +{
->>>> +       int ret =3D 0;
->>>> +       struct pcm1792a_private *pcm1792a =3D dev_get_drvdata(&spi=
-->dev);
->>>> +       const char *name;
->>>> +       struct device_node *np =3D spi->dev.of_node;
->>>> +
->>>> +       name =3D of_get_property(np, "ti,side", NULL);
->>>> +       if (name) {
->>>> +               if (!strcmp(name, "left"))
->>>> +                       pcm1792a->side =3D MONORAL_LEFT;
->>>> +               else
->>>> +                       pcm1792a->side =3D MONORAL_RIGHT;
->>>> +       }
->>>> +       else
->>>> +               pcm1792a->side =3D STEREO;
->>>> +
->>>> +       return ret;
->>>> +}
->>>> +
->>>>  static int pcm1792a_spi_probe(struct spi_device *spi)
->>>>  {
->>>>         struct pcm1792a_private *pcm1792a;
->>>>         int ret;
->>>> +       struct device_node *np =3D spi->dev.of_node;
->>>>
->>>>         pcm1792a =3D devm_kzalloc(&spi->dev, sizeof(struct pcm1792=
-a_private),
->>>>                                 GFP_KERNEL);
->>>> @@ -241,6 +276,17 @@ static int pcm1792a_spi_probe(struct spi_devi=
-ce *spi)
->>>>                 return ret;
->>>>         }
->>>>
->>>> +       if (np) {
->>>> +               ret =3D pcm1792a_of_init(spi);
->>>> +               if (ret)
->>>> +                       return ret;
->>>> +       }
->>>> +
->>>> +       if (pcm1792a->side =3D=3D MONORAL_LEFT)
->>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHAN=
-NEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_LEFT);
->>>> +       else if (pcm1792a->side =3D=3D MONORAL_RIGHT)
->>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHAN=
-NEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_RIGHT);
->>>> +
->>>
->>> Why this is a part of dts and not a part of mixer control?
->>>
->>> Michael
->>>
->>
->> The "channel side" bindings should be used when the pcm7192a is used
->> in monaural mode (which requires two DACs, both DACs operate in a
->> balanced mode for one channel of audio input data).
->> This is a hardware level design, it will never change at runtime.
->> I feel that a device tree binding is more appropriate than a control=
-=2E
->>
->
-> Well I know exactly why is used for, but I don't really know if it's
-> somenthing that should be
-> in dts. Do I want to do channel inversion?
->
-> Michael
->
+The binding describes the general principles for adding new
+properties describing the secure world, but for now we only need a
+single new property, "secure-status", which can be used to annotate
+devices to indicate that they are only visible in one of the two
+worlds.
 
-I am not sure to understand. You mean "What if I want to do channel
-inversion", right ?
-If so, we have two differents "problems", one at hardware level design
-because monaural mode requires two DACs, and an another one at
-software level
-"channel inversion".
-I have always thought that hardware description should be in dts,
-that's why I implement monaural mode using dts.
+The primary expected use of this binding is for a virtual machine
+like QEMU to describe the VM layout to a TrustZone aware firmware
+(which would then use the secure-only devices itself, and pass the DT
+on to a kernel running in the non-secure world, which ignores the
+secure-only devices and uses the rest).
 
-Honestly, I don't know what is the best solution between "this is a
-hardware design, it should be in dts and shouldn't change" vs "this
-should be an alsa controler because we want extra features independent
-from hardware design"
+Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
+---
+This binding doesn't affect the kernel itself, but the kernel
+Documentation/ tree is the de-facto current place where all DT
+bindings are documented, so Grant suggested this was the right
+place to send a doc patch.
 
-Rapha=C3=ABl
+Changes v1->v2:
+ * list all the status/secure-status combinations explicitly
+ * use /* */ comment syntax, not //
+Changes v2->v3:
+ * use secure-foo rather than secure-reg as the example when
+   explaining how the prefixing works
+ * say how prefixing a vendor,foo property name works
 
->>>>         return snd_soc_register_codec(&spi->dev,
->>>>                         &soc_codec_dev_pcm1792a, &pcm1792a_dai, 1)=
-;
->>>>  }
->>>> --
->>>> 2.1.0
->>>>
->>>> _______________________________________________
->>>> Alsa-devel mailing list
->>>> Alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
->>>> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->>>
->>>
->>>
->>> --
->>> | Michael Nazzareno Trimarchi                     Amarula Solutions=
- BV |
->>> | COO  -  Founder                                      Cruquiuskade=
- 47 |
->>> | +31(0)851119172                                 Amsterdam 1018 AM=
- NL |
->>> |                  [`as] http://www.amarulasolutions.com           =
-    |
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-ker=
-nel" in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>> Please read the FAQ at  http://www.tux.org/lkml/
->
->
->
-> --
-> | Michael Nazzareno Trimarchi                     Amarula Solutions B=
-V |
-> | COO  -  Founder                                      Cruquiuskade 4=
-7 |
-> | +31(0)851119172                                 Amsterdam 1018 AM N=
-L |
-> |                  [`as] http://www.amarulasolutions.com             =
-  |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/arm/secure.txt | 53 ++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+new file mode 100644
+index 0000000..e31303f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/secure.txt
+@@ -0,0 +1,53 @@
++* ARM Secure world bindings
++
++ARM CPUs with TrustZone support have two distinct address spaces,
++"Normal" and "Secure". Most devicetree consumers (including the Linux
++kernel) are not TrustZone aware and run entirely in either the Normal
++world or the Secure world. However some devicetree consumers are
++TrustZone aware and need to be able to determine whether devices are
++visible only in the Secure address space, only in the Normal address
++space, or visible in both. (One example of that situation would be a
++virtual machine which boots Secure firmware and wants to tell the
++firmware about the layout of the machine via devicetree.)
++
++The general principle of the naming scheme for Secure world bindings
++is that any property that needs a different value in the Secure world
++can be supported by prefixing the property name with "secure-". So for
++instance "secure-foo" would override "foo". For property names with
++a vendor prefix, the Secure variant of "vendor,foo" would be
++"vendor,secure-foo". If there is no "secure-" property then the Secure
++world value is the same as specified for the Normal world by the
++non-prefixed property. However, only the properties listed below may
++validly have "secure-" versions; this list will be enlarged on a
++case-by-case basis.
++
++Defining the bindings in this way means that a device tree which has
++been annotated to indicate the presence of Secure-only devices can
++still be processed unmodified by existing Non-secure software (and in
++particular by the kernel).
++
++Note that it is still valid for bindings intended for purely Secure
++world consumers (like kernels that run entirely in Secure) to simply
++describe the view of Secure world using the standard bindings. These
++secure- bindings only need to be used where both the Secure and Normal
++world views need to be described in a single device tree.
++
++Valid Secure world properties:
++
++- secure-status : specifies whether the device is present and usable
++  in the secure world. The combination of this with "status" allows
++  the various possible combinations of device visibility to be
++  specified. If "secure-status" is not specified it defaults to the
++  same value as "status"; if "status" is not specified either then
++  both default to "okay". This means the following combinations are
++  possible:
++
++   /* Neither specified: default to visible in both S and NS */
++   secure-status = "okay";                          /* visible in both */
++   status = "okay";                                 /* visible in both */
++   status = "okay"; secure-status = "okay";         /* visible in both */
++   secure-status = "disabled";                      /* NS-only */
++   status = "okay"; secure-status = "disabled";     /* NS-only */
++   status = "disabled"; secure-status = "okay";     /* S-only */
++   status = "disabled";                             /* disabled in both */
++   status = "disabled"; secure-status = "disabled"; /* disabled in both */
+-- 
+1.9.1
