@@ -1,57 +1,40 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 5/5] MAINTAINERS: Update Wolfson Micro section to
- include CS47L24 source
-Date: Tue, 24 Nov 2015 17:03:18 +0000
-Message-ID: <20151124170318.GH12874@x1>
-References: <1446563316-28878-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1446563316-28878-6-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] cpufreq: qoriq: Register cooling device based on device
+ tree
+Date: Tue, 24 Nov 2015 09:24:23 -0800
+Message-ID: <20151124172422.GA14845@localhost.localdomain>
+References: <1448348129-46675-1-git-send-email-hongtao.jia@freescale.com>
+ <1448374697.27264.308.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446563316-28878-6-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: linus.walleij@linaro.org, broonie@kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <1448374697.27264.308.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Nov 2015, Richard Fitzgerald wrote:
+On Tue, Nov 24, 2015 at 08:18:17AM -0600, Scott Wood wrote:
+> On Tue, 2015-11-24 at 14:55 +0800, Jia Hongtao wrote:
+> > Register the qoriq cpufreq driver as a cooling device, based on the
+> > thermal device tree framework. When temperature crosses the passive trip
+> > point cpufreq is used to throttle CPUs.
+> > 
+> > Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Reviewed-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> When did I add "Reviewed-by" to this?
 
-> The CS47L24 source is part of the ex-Wolfson "Arizona" group of
-> drivers. Not all cs47lxx devices are part of the Arizona driver
-> group so the cs47l24 is explicitly listed by its full part number.
->=20
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
+This is typically why I prefer seeing people emailing their reviewed-by
+and acked-by to the mailing list in reply to the patch itself, instead
+of getting a patch with all the honors already added. :-/
 
-Applied, thanks.
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ee10b57..bd181c3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11444,6 +11444,7 @@ F:	drivers/input/touchscreen/wm831x-ts.c
->  F:	drivers/input/touchscreen/wm97*.c
->  F:	drivers/mfd/arizona*
->  F:	drivers/mfd/wm*.c
-> +F:	drivers/mfd/cs47l24*
->  F:	drivers/power/wm83*.c
->  F:	drivers/rtc/rtc-wm83*.c
->  F:	drivers/regulator/wm8*.c
-> @@ -11457,6 +11458,7 @@ F:	include/linux/wm97xx.h
->  F:	include/sound/wm????.h
->  F:	sound/soc/codecs/arizona.?
->  F:	sound/soc/codecs/wm*
-> +F:	sound/soc/codecs/cs47l24*
-> =20
->  WORKQUEUE
->  M:	Tejun Heo <tj@kernel.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> 
+> -Scott
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
