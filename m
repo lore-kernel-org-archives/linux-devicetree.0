@@ -1,158 +1,83 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun8i-h3-orangepi-plus:
- Enable USB host controllers
-Date: Tue, 24 Nov 2015 09:50:01 +0100
-Message-ID: <565424B9.5010601@redhat.com>
-References: <1447616777-24660-1-git-send-email-hdegoede@redhat.com>
- <1447616777-24660-5-git-send-email-hdegoede@redhat.com>
- <CAGb2v669Cu6+G=P8yH-g5KbOsWTHBgnYUYf2fGt+jKXbqVAKfQ@mail.gmail.com>
- <56498FA8.3050908@redhat.com> <564B51D7.7090500@gmail.com>
- <fff9e78a-e23e-4226-9cec-67550bf09efb@googlegroups.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [linux-meson] Re: [PATCH v2 3/5] pinctrl: meson: enable GPIO IRQs
+Date: Tue, 24 Nov 2015 10:04:50 +0100
+Message-ID: <CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A@mail.gmail.com>
+References: <1448273816-11290-1-git-send-email-carlo@caione.org>
+	<1448273816-11290-4-git-send-email-carlo@caione.org>
+	<20151124082801.09139a93@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBRGJ2CZAKGQEBQJ4BDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <fff9e78a-e23e-4226-9cec-67550bf09efb-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Troy Dack <troy-yfroEPzt3eC6c6uEtOJ/EA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151124082801.09139a93-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 23-11-15 23:20, Troy Dack wrote:
+On Tue, Nov 24, 2015 at 9:28 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Mon, 23 Nov 2015 11:16:54 +0100
+> Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 >
->
-> On Wednesday, 18 November 2015 03:12:11 UTC+11, Jens Kuske wrote:
+>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 >>
->> Enable the 2 USB host controllers used on the Orange Pi Plus
->> and add the necessary regulators.
+>> On Meson8 and Meson8b SoCs there are 8 independent filtered GPIO
+>> interrupt modules that can be programmed to use any of the GPIOs in the
+>> chip as an interrupt source.
 >>
->> Signed-off-by: Reinder de Haan <patch...-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org <javascript:>>
->> Signed-off-by: Hans de Goede <hdeg...-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org <javascript:>>
->> Signed-off-by: Jens Kuske <jens...-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <javascript:>>
+>> For each GPIO IRQ we have:
+>>
+>> GPIOs --> [mux]--> [polarity]--> [filter]--> [edge select]--> GIC
+>>
+>> The eight GPIO interrupts respond to mask/unmask/clear/etc.. just like
+>> any other interrupt in the chip. The difference for the GPIO interrupts
+>> is that they can be filtered and conditioned.
+>>
+>> This patch adds support for the external GPIOs interrupts and enables
+>> them for Meson8 and Meson8b SoCs.
+>>
+>> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
 >> ---
->>
->> Hi Hans,
->>
->> with these regulators USB works on the Orange Pi Plus too.
->> I don't know if adding the regulators in the dts is okay, since most
->> regulators are defined in the sunxi-common-regulators.dtsi, but
->> we use different pins.
->>
->> Jens
->>
->>
->>   arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 44
->> ++++++++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> index e67df59..1cb6c66 100644
->> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> @@ -58,6 +58,35 @@
->>           chosen {
->>                   stdout-path = "serial0:115200n8";
->>           };
+>
+> [...]
+>
+>> +     for (i = 0; i < pc->num_gic_irqs; i++) {
+>> +             struct of_phandle_args oirq;
 >> +
->> +        reg_usb3_vbus: usb3-vbus {
->> +                compatible = "regulator-fixed";
->> +                pinctrl-names = "default";
->> +                pinctrl-0 = <&usb3_vbus_pin_a>;
->> +                regulator-name = "usb3-vbus";
->> +                regulator-min-microvolt = <5000000>;
->> +                regulator-max-microvolt = <5000000>;
->> +                regulator-boot-on;
->> +                enable-active-high;
->> +                gpio = <&pio 6 11 GPIO_ACTIVE_HIGH>;
->> +        };
->> +};
+>> +             of_irq_parse_one(node, i, &oirq);
+>> +             irq_of_phandle_args_to_fwspec(&oirq, &pc->gic_irqs[i]);
 >> +
->> +&ehci1 {
->> +        status = "okay";
->> +};
->> +
->> +&ehci3 {
->> +        status = "okay";
->> +};
->> +
->> +&pio {
->> +        usb3_vbus_pin_a: usb3_vbus_pin@0 {
->> +                allwinner,pins = "PG11";
->> +                allwinner,function = "gpio_out";
->> +                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +        };
->>   };
->>
->>   &mmc0 {
->> @@ -70,8 +99,23 @@
->>           status = "okay";
->>   };
->>
->> +&reg_usb1_vbus {
->> +        gpio = <&pio 6 13 GPIO_ACTIVE_HIGH>;
->> +        status = "okay";
->> +};
->> +
->>   &uart0 {
->>           pinctrl-names = "default";
->>           pinctrl-0 = <&uart0_pins_a>;
->>           status = "okay";
->>   };
->> +
->> +&usb1_vbus_pin_a {
->> +        allwinner,pins = "PG13";
->> +};
->> +
->> +&usbphy {
->> +        usb1_vbus-supply = <&reg_usb1_vbus>;
->> +        usb3_vbus-supply = <&reg_usb3_vbus>;
->> +        status = "okay";
->> +};
->>
+>> +             pc->irq_map[i] = IRQ_FREE;
+>> +     }
 >
-> I've been trying to test these patches by using Hans' github sunxi-wip
-> branches of the kernel and U-Boot.
->
-> U-Boot at commit 7e17fd2 "suxni: Add support for Orangepi Plus and Orangepi
-> PC boards"
-> Kernel at commit cb45b8  "ARM: dts: sun8i-h3-orangepi-plus: Enable USB host
-> controllers"
->
-> Both have been built using the default defconfig for an OrangePi Plus
->
-> U-Boot starts and successfully boots the kernel, but the kernel does not
-> appear to boot fully and hangs at:
->
-> [    0.861175] cpu cpu0: failed to get cpu0 clock: -2
-> [    0.865973] cpufreq-dt: probe of cpufreq-dt failed with error -2
-> [    0.872017] Registering SWP/SWPB emulation handler
->
-> Full boot log: http://pastebin.com/VGkEix9p
->
-> Building the kernel (or just using a dab) with the dts from commit 0a8c01
-> "ARM: dts: sun8i: Add Orange Pi Plus support" results in the kernel booting
-> fully to a login prompt.  Of course without enabled/working USB.
->
-> There is a fair chance I've done something wrong that is causing this.  Any
-> advice on how to get a bootable kernel?
+> The whole thing feels weird. Why do you need to keep a set of fwspecs?
 
-Weird, are you sure you updated both the dtb and [u|z]image at the same time ?
+We only have 8 IRQs on the GIC side that we can use for the GPIOs. The
+set of fwspec is used to track these IRQs.
+At probe time we read from the DTS how many and which IRQs are
+reserved on the GIC for the GPIOs. Every time a GPIO IRQ is installed,
+we use one of these IRQ lines.
 
-I'm using this kernel config:
-https://fedorapeople.org/~jwrdegoede/kernel-driver-programming/kernel-config
+> All you need is a range of interrupts that would be conveniently
+> represented by a bitmap (assuming your interrupts space is a mostly
+> contiguous range).
 
-With that everything you need is builtin, no need to build modules.
+I could do that but it feels to me like we end up hiding from the DTS
+some information that naturally should be in there: a pinctrl device
+that is using 8 interrupt lines of its interrupt controller. IMO this
+is not a special case that requires some special treatment.
 
-Regards,
+> Overall, this patch is quite hard to review. Can you please split the
+> GPIO management from the irqchip side?
 
-Hans
+Sure. Fix in v2.
+
+Thanks for the review,
+
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
