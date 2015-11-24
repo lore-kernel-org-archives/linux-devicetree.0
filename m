@@ -1,69 +1,101 @@
-From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
-Date: Tue, 24 Nov 2015 11:20:41 +0900
-Message-ID: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
+From: lei liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/4] spi: mediatek: revise mtk_spi_probe() failure flow
+Date: Tue, 24 Nov 2015 10:33:24 +0800
+Message-ID: <1448332404.27169.4.camel@mhfsdcap03>
+References: <1447986080-31410-1-git-send-email-leilk.liu@mediatek.com>
+	 <1447986080-31410-4-git-send-email-leilk.liu@mediatek.com>
+	 <20151121133949.GH26072@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151121133949.GH26072-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In general Renesas hardware is not documented to the extent where the
-relationship between IP blocks on different SoCs can be assumed although
-they may appear to operate the same way. Furthermore the documentation
-typically does not specify a version for individual IP blocks. For these
-reasons a convention of using the SoC name in place of a version and
-providing SoC-specific compat strings has been adopted.
+On Sat, 2015-11-21 at 13:39 +0000, Mark Brown wrote:
+> On Fri, Nov 20, 2015 at 10:21:19AM +0800, Leilk Liu wrote:
+> > This patch revises failure flow while pm_runtime_enable().
+> 
+> Why?  This also doesn't apply against current code, please check and
+> resend.
 
-Although not universally liked this convention is used in the bindings for
-most drivers for Renesas hardware. The purpose of this patch is to
-update the Renesas USB DMA Controller driver to follow this convention.
+I don't know. I can git am this patch to spi/for-next. I will resend it,
+please help to apply it again, thanks.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> > 
+> > Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/spi/spi-mt65xx.c |   15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+> > index 6c1a96e..00a36da 100644
+> > --- a/drivers/spi/spi-mt65xx.c
+> > +++ b/drivers/spi/spi-mt65xx.c
+> > @@ -607,7 +607,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >  	ret = clk_set_parent(mdata->sel_clk, mdata->parent_clk);
+> >  	if (ret < 0) {
+> >  		dev_err(&pdev->dev, "failed to clk_set_parent (%d)\n", ret);
+> > -		goto err_disable_clk;
+> > +		clk_disable_unprepare(mdata->spi_clk);
+> > +		goto err_put_master;
+> >  	}
+> >  
+> >  	clk_disable_unprepare(mdata->spi_clk);
+> > @@ -617,7 +618,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >  	ret = devm_spi_register_master(&pdev->dev, master);
+> >  	if (ret) {
+> >  		dev_err(&pdev->dev, "failed to register master (%d)\n", ret);
+> > -		goto err_put_master;
+> > +		goto err_disable_runtime_pm;
+> >  	}
+> >  
+> >  	if (mdata->dev_comp->need_pad_sel) {
+> > @@ -626,14 +627,14 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >  				"pad_num does not match num_chipselect(%d != %d)\n",
+> >  				mdata->pad_num, master->num_chipselect);
+> >  			ret = -EINVAL;
+> > -			goto err_put_master;
+> > +			goto err_disable_runtime_pm;
+> >  		}
+> >  
+> >  		if (!master->cs_gpios && master->num_chipselect > 1) {
+> >  			dev_err(&pdev->dev,
+> >  				"cs_gpios not specified and num_chipselect > 1\n");
+> >  			ret = -EINVAL;
+> > -			goto err_put_master;
+> > +			goto err_disable_runtime_pm;
+> >  		}
+> >  
+> >  		if (master->cs_gpios) {
+> > @@ -644,7 +645,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >  				if (ret) {
+> >  					dev_err(&pdev->dev,
+> >  						"can't get CS GPIO %i\n", i);
+> > -					goto err_put_master;
+> > +					goto err_disable_runtime_pm;
+> >  				}
+> >  			}
+> >  		}
+> > @@ -652,8 +653,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >  
+> >  	return 0;
+> >  
+> > -err_disable_clk:
+> > -	clk_disable_unprepare(mdata->spi_clk);
+> > +err_disable_runtime_pm:
+> > +	pm_runtime_disable(&pdev->dev);
+> >  err_put_master:
+> >  	spi_master_put(master);
+> >  
+> > -- 
+> > 1.7.9.5
+> > 
+> > 
 
----
-* r8a7792 (R-Car V2H) is omitted as my reading of the documentation
-  is that Renesas USB-DMAC does not exist on that SoC
-* r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
-  of USB-DMAC that SoC
-
-* Once this has been merged I intend to provide follow-up patches
-  to use these new compat strings in the relevant dtsi files.
----
- Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-index 040f365954cc..3bb624e10615 100644
---- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-@@ -1,7 +1,12 @@
- * Renesas USB DMA Controller Device Tree bindings
- 
- Required Properties:
--- compatible: must contain "renesas,usb-dmac"
-+- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
-+	      Examples with soctypes are:
-+		- "renesas,usb-dmac-r8a7790" (R-Car H2)
-+		- "renesas,usb-dmac-r8a7791" (R-Car M2-W)
-+		- "renesas,usb-dmac-r8a7793" (R-Car M2-N)
-+		- "renesas,usb-dmac-r8a7794" (R-Car E2)
- - reg: base address and length of the registers block for the DMAC
- - interrupts: interrupt specifiers for the DMAC, one for each entry in
-   interrupt-names.
-@@ -15,7 +20,7 @@ Required Properties:
- Example: R8A7790 (R-Car H2) USB-DMACs
- 
- 	usb_dmac0: dma-controller@e65a0000 {
--		compatible = "renesas,usb-dmac";
-+		compatible = "renesas,usb-dmac-r8a7790", "renesas,usb-dmac";
- 		reg = <0 0xe65a0000 0 0x100>;
- 		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
- 			      0 109 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
