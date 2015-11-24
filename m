@@ -1,116 +1,76 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/4] bus: uniphier-system-bus: add UniPhier System Bus
- Controller driver
-Date: Tue, 24 Nov 2015 17:38:51 +0000
-Message-ID: <20151124173850.GC8468@leverpostej>
-References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
- <1448357962-12259-2-git-send-email-yamada.masahiro@socionext.com>
- <20151124115053.GB4108@leverpostej>
- <CAK7LNAR_6qwVK9fNEAX-L_v1Z5cdGMU33bP75Rdtu5bdmid-3Q@mail.gmail.com>
+From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [Qemu-devel] [PATCH v5 1/4] firmware: introduce sysfs driver for
+ QEMU's fw_cfg device
+Date: Tue, 24 Nov 2015 18:44:33 +0100
+Message-ID: <5654A201.2070902@redhat.com>
+References: <1448294264-17388-2-git-send-email-somlo@cmu.edu>
+ <201511240404.AFpczj7x%fengguang.wu@intel.com>
+ <20151124165553.GA22627@HEDWIG.INI.CMU.EDU> <5654A08A.6030002@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAR_6qwVK9fNEAX-L_v1Z5cdGMU33bP75Rdtu5bdmid-3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5654A08A.6030002-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Eric Blake <eblake-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jordan.l.justen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, revol-GANU6spQydw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> >> +UniPhier System Bus Controller
-> >> +------------------------------
-> >> +
-> >> +The UniPhier System Bus Controller is a hardware block with registers that
-> >> +controls the System Bus accessing; how each bank is mapped onto the parent bus,
-> >> +various timing parameters of the bus access, etc.
-> >> +
-> >> +Required properties for System Bus Controller:
-> >> +- compatible: should be "socionext,uniphier-system-bus-controller".
-> >> +- reg: offsets and lengths of the register sets for the device.  It should
-> >> +  contain 2 regions: base & control register, misc register, in this order.
-> >
-> > The example also has a system-bus phandle.
+On 11/24/15 18:38, Eric Blake wrote:
+> On 11/24/2015 09:55 AM, Gabriel L. Somlo wrote:
+>> On Tue, Nov 24, 2015 at 04:14:50AM +0800, kbuild test robot wrote:
 > 
-> Actually, I was wondering which is better to describe the relation between
-> the bus and the controller,  phandle or compatible string..
-
-To describe relationships between nodes, use phandles.
-
-Compatible strings alone cannot define relationships -- you cannot
-encode how multiple instances are related.
-
-> > Is the "misc register" part of the bus controller, or is it a shared
-> > system controller?
+>>>
+>>>    drivers/firmware/qemu_fw_cfg.c: In function 'fw_cfg_cmdline_set':
+>>>>> drivers/firmware/qemu_fw_cfg.c:510:7: warning: format '%lli' expects argument of type 'long long int *', but argument 3 has type 'phys_addr_t *' [-Wformat=]
+>>>           &ctrl_off, &data_off, &consumed);
+>>>           ^
+>>
+>> Oh, I think I know why this happened:
+>>
 > 
-> It is a part of the bus controller, but used for another purpose.
-> (i.e. partly this is syscon.  I know this is strange, but it is
-> what the hardware developers designed.)
-
-Ok. What else is going to need to use this in future?
-
-> > Assuming that the controller and bus are 1-1 related, make this a single
-> > node. e.g.
-> >
-> > system-bus {
-> >         compatible = "socionext,uniphier-system-bus";
-> >         reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
-> >         #address-cells = <2>;
-> >         #size-cells = <1>;
-> >         ranges = <1 0x00000000 0x42000000 0x02000000>,
-> >                  <5 0x00000000 0x48000000 0x01000000>;
-> >
-> >         ...
-> >         child nodes here
-> >         ...
-> >
-> > };
+>>
+>> So, I could use u64 instead of phys_addr_t and resource_size_t, and
+>> keep "%lli" (or "%Li"), but then I'd have to check if the parsed value
 > 
-> Hmm, make sense.  But, I prefer to reflect the hardware structure.
+> %Li is not POSIX.  Don't use it (stick with %lli).
 > 
-> The range of System Bus is <0x40000000 0x10000000>.
+>> would overflow a 32-bit address value on arches where phys_addr_t is
+>> u32, which would make things a bit more messy and awkward.
+>>
+>> I'm planning on #ifdef-ing the format string instead:
+>>
+>> #ifdef CONFIG_PHYS_ADDR_T_64BIT
+>> #define PH_ADDR_SCAN_FMT "@%Li%n:%Li:%Li%n"
+>> #else
+>> #define PH_ADDR_SCAN_FMT "@%li%n:%li:%li%n"
+>> #endif
 > 
-> The register of the System Bus Controller is
-> <0x58c00000 0x400>  (and <0x59800000 0x2000>)
+> A more typical approach is akin to <inttypes.h>; have PH_ADDR_FMT
+> defined to either "lli" or "li", then write sscanf(str, "@%"PH_ADDR_FMT
+> "%n:..., ...), using PH_ADDR_FMT multiple times.
 > 
+>> ...
+>>         processed = sscanf(str, PH_ADDR_SCAN_FMT,
+>>                            &base, &consumed,
+>>                            &ctrl_off, &data_off, &consumed);
 > 
-> The bus and its controller is different.
+> Umm, why are you passing &consumed to more than one sscanf() %?  That's
+> (probably) undefined behavior.
+> 
+> [In general, sscanf() is a horrid interface to use for parsing integers
+> - it has undefined behavior if the input text would trigger integer
+> overflow, making it safe to use ONLY on text that you control and can
+> guarantee won't overflow. By the time you've figured out if untrusted
+> text meets the requirement for safe parsing via sscanf(), you've
+> practically already parsed it via safer strtol() and friends.]
+> 
 
-So? We always describe the programming interface (i.e. the slave
-interface of the device that responds to the CPU).
+Yes, but this is the kernel, which may or may not follow POSIX
+semantics. (And may or may not curse at POSIX in the process, either
+way! :))
 
-There's no need for separate nodes. It only makes the driver more
-complicated.
-
-> >> +static int uniphier_sbc_probe(struct platform_device *pdev)
-> >> +{
-> >> +     struct device *dev = &pdev->dev;
-> >> +     struct uniphier_sbc_priv *priv;
-> >> +     struct resource *regs;
-> >> +     struct device_node *bus_np;
-> >> +     int child_addrc, addrc, sizec, bank;
-> >> +     u64 child_addr, addr, size;
-> >> +     const __be32 *ranges;
-> >> +     int rlen, rone, ret;
-> >> +
-> >> +     bus_np = of_find_compatible_node(NULL, NULL,
-> >> +                                      "socionext,uniphier-system-bus");
-> >
-> > This is broken if you ever have multiple instances.
-> >
-> > Either use a single node, or if there is a more complex relationship
-> > between busses and their controllers, describe that explicitly with
-> > phandles.
-> 
-> 
-> Probably, I will stick to phandle in v2.
-
-I would prefer a single node unless there's some other complication
-regarding the relationship of the controller and the bus itself.
-
-Thanks,
-Mark.
+Laszlo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
