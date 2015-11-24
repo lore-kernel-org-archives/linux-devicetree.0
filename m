@@ -1,139 +1,76 @@
-From: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/5] iio: light: us5182d: Add functions for selectively enabling als and proximity
-Date: Tue, 24 Nov 2015 12:59:50 +0200
-Message-ID: <1448362792-5181-4-git-send-email-adriana.reus@intel.com>
-References: <1448362792-5181-1-git-send-email-adriana.reus@intel.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448362792-5181-1-git-send-email-adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: add epson rx6110 binding
+Date: Tue, 24 Nov 2015 12:12:41 +0100
+Message-ID: <1448363561.3346.57.camel@pengutronix.de>
+References: <1448361533-10728-1-git-send-email-s.trumtrar@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448361533-10728-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Keep track of the als and px enabled/disabled status in
-order to enable them selectively.
+Am Dienstag, den 24.11.2015, 11:38 +0100 schrieb Steffen Trumtrar:
+> Add the binding documentation for the Epson RX6110 RTC.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> I'm not sure what the current policy for such simple SPI bindings is.
+> Are they necessary?
 
-Signed-off-by: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- drivers/iio/light/us5182d.c | 64 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 60 insertions(+), 4 deletions(-)
+Like for i2c there is trivial-devices.txt? Although in this case it's
+not just a compatible. Here you have a certain spi configuration that is
+necessary for the rtc to work.
 
-diff --git a/drivers/iio/light/us5182d.c b/drivers/iio/light/us5182d.c
-index 7993014..3d959f3 100644
---- a/drivers/iio/light/us5182d.c
-+++ b/drivers/iio/light/us5182d.c
-@@ -119,6 +119,9 @@ struct us5182d_data {
- 	u8 opmode;
- 	u8 power_mode;
- 
-+	bool als_enabled;
-+	bool px_enabled;
-+
- 	bool default_continuous;
- };
- 
-@@ -227,6 +230,48 @@ static int us5182d_set_opmode(struct us5182d_data *data, u8 mode)
- 	return 0;
- }
- 
-+static int us5182d_als_enable(struct us5182d_data *data)
-+{
-+	int ret;
-+	u8 mode;
-+
-+	if (data->power_mode == US5182D_ONESHOT)
-+		return us5182d_set_opmode(data, US5182D_ALS_ONLY);
-+
-+	if (data->als_enabled)
-+		return 0;
-+
-+	mode = data->px_enabled ? US5182D_ALS_PX : US5182D_ALS_ONLY;
-+
-+	ret = us5182d_set_opmode(data, mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	data->als_enabled = true;
-+	return 0;
-+}
-+
-+static int us5182d_px_enable(struct us5182d_data *data)
-+{
-+	int ret;
-+	u8 mode;
-+
-+	if (data->power_mode == US5182D_ONESHOT)
-+		return us5182d_set_opmode(data, US5182D_PX_ONLY);
-+
-+	if (data->px_enabled)
-+		return 0;
-+
-+	mode = data->als_enabled ? US5182D_ALS_PX : US5182D_PX_ONLY;
-+
-+	ret = us5182d_set_opmode(data, mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	data->px_enabled = true;
-+	return 0;
-+}
-+
- static int us5182d_shutdown_en (struct us5182d_data *data, u8 state)
- {
- 	int ret;
-@@ -241,7 +286,16 @@ static int us5182d_shutdown_en (struct us5182d_data *data, u8 state)
- 	ret = ret & ~US5182D_CFG0_SHUTDOWN_EN;
- 	ret = ret | state;
- 
--	return i2c_smbus_write_byte_data(data->client, US5182D_REG_CFG0, ret);
-+	ret = i2c_smbus_write_byte_data(data->client, US5182D_REG_CFG0, ret);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (state & US5182D_CFG0_SHUTDOWN_EN) {
-+		data->als_enabled = false;
-+		data->px_enabled = false;
-+	}
-+
-+	return ret;
- }
- 
- static int us5182d_read_raw(struct iio_dev *indio_dev,
-@@ -261,7 +315,7 @@ static int us5182d_read_raw(struct iio_dev *indio_dev,
- 				if (ret < 0)
- 					goto out_err;
- 			}
--			ret = us5182d_set_opmode(data, US5182D_OPMODE_ALS);
-+			ret = us5182d_als_enable(data);
- 			if (ret < 0)
- 				goto out_err;
- 
-@@ -278,7 +332,7 @@ static int us5182d_read_raw(struct iio_dev *indio_dev,
- 				if (ret < 0)
- 					goto out_err;
- 			}
--			ret = us5182d_set_opmode(data, US5182D_OPMODE_PX);
-+			ret = us5182d_px_enable(data);
- 			if (ret < 0)
- 				goto out_err;
- 
-@@ -421,6 +475,9 @@ static int us5182d_init(struct iio_dev *indio_dev)
- 			return ret;
- 	}
- 
-+	data->als_enabled = true;
-+	data->px_enabled = true;
-+
- 	if (!data->default_continuous) {
- 		ret = us5182d_shutdown_en(data, US5182D_CFG0_SHUTDOWN_EN);
- 		if (ret < 0)
-@@ -428,7 +485,6 @@ static int us5182d_init(struct iio_dev *indio_dev)
- 		data->power_mode = US5182D_ONESHOT;
- 	}
- 
--
- 	return ret;
- }
- 
--- 
-1.9.1
+>  .../devicetree/bindings/rtc/epson,rtc-rx6110.txt   | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt b/Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt
+> new file mode 100644
+> index 000000000000..7ce7ae761657
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/epson,rtc-rx6110.txt
+> @@ -0,0 +1,25 @@
+> +Epson RX6110 Real Time Clock
+> +============================
+> +
+> +The Epson RX6110 can be used with SPI or I2C busses. The kind of
+> +bus depends on the SPISEL pin and can not be configured via software.
+> +
+> +SPI mode
+> +--------
+> +
+> +Required properties:
+> +- compatible: should be: "epson,rtc-rx6110"
+
+Should this just be "epson,rx6110" ?
+
+> +- reg: chip select number
+> +- spi-cs-high: RX6110 needs chipselect high
+> +- spi-cpha: RX6110 works with SPI shifted clock phase
+> +- spi-cpol: RX6110 works with SPI inverse clock polarity
+> +
+> +Example:
+> +
+> +	rtc: rtc@3 {
+> +		compatible = "epson,rtc-rx6110"
+> +		reg = <3>
+> +		spi-cs-high;
+> +		spi-cpba;
+
+s/b/h/
+
+> +		spi-cpol;
+> +	};
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
