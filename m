@@ -1,51 +1,47 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] mmc: sdhci: set bus voltage before enabling bus power
-Date: Tue, 24 Nov 2015 10:23:41 +0100
-Message-ID: <20151124092341.GA2228@odux.rfo.atmel.com>
-References: <1446825570-30029-1-git-send-email-ludovic.desroches@atmel.com>
- <1446825570-30029-2-git-send-email-ludovic.desroches@atmel.com>
- <20151109132305.GC15706@odux.rfo.atmel.com>
- <CAPDyKFrTTEnSFNvmx3e__Ap9gOGpA2-bz+yrq7ibz0wXGSWCXA@mail.gmail.com>
- <20151109144030.GD15706@odux.rfo.atmel.com>
- <CAPDyKFquZ+_Rf07gX+i-=_bzSa7KJ5+xQ8N21kK2mvfMGdVQMw@mail.gmail.com>
- <20151109163026.GE15706@odux.rfo.atmel.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v3 1/6] PCI: designware: remove wrong io_base assignment
+Date: Tue, 24 Nov 2015 11:25:35 +0200
+Message-ID: <56542D0F.1020502@linaro.org>
+References: <cover.1448270813.git.stanimir.varbanov@linaro.org>
+ <EE11001F9E5DDD47B7634E2F8A612F2E162C6F70@lhreml503-mbs>
+ <56533D93.5000604@linaro.org> <6899049.45pKpnsxmL@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151109163026.GE15706-FuRPzXQv2LUWBfJKYY8PcdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <6899049.45pKpnsxmL@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On Mon, Nov 09, 2015 at 05:30:26PM +0100, Ludovic Desroches wrote:
-> On Mon, Nov 09, 2015 at 05:00:46PM +0100, Ulf Hansson wrote:
-
-[...]
-
-> > Now, this discussion was interesting, but I forgot what problem you
-> > actually where trying to solve? :-)
+On 11/23/2015 06:40 PM, Arnd Bergmann wrote:
+> On Monday 23 November 2015 18:23:47 Stanimir Varbanov wrote:
+>>>>
+>>>> Fixes: 0021d22b73d6 ("PCI: designware: Use of_pci_get_host_bridge_resources()
+>>>> to parse DT")
+>>>> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>>
+>> I think the bug is introduced in:
+>>
+>> cbce7900598c ("PCI: designware: Make driver arch-agnostic")
+>>
+>> cause the io_base is correctly calculated in 0021d22b73d6, do you agree?
 > 
-> There is this discussion because of two things:
-> - Fixing something I consider as a bug: when I have a VMMC, only
->   setting/clearing bit 0. Our controller strictly obeys to the spec and
->   check the 'SD Bus Voltage Select' field. Since we put a reserved value
->   (000), the Power On is not performed.
-> - I was trying to get help to understand what is this 'SD Bus Voltage'.
->   For our controller and sdhci_set_power(), it seems to stand for VMMC.
->   For me, everything concerning bus voltage is related to VQMMC, so I was
->   disappointed.
+> 
+> I think cbce7900598c just slightly changes the io_base value, but
+> it's still referring to a bus address, not a cpu address, both before
+> and after the patch.
+> 
+> 0021d22b73d6 hower seems to remove the correct 'pp->io_base = range.cpu_addr;'
+> and replaces it with 'pp->io_base = pp->io->start;', so it's now in
+> the wrong address space.
+> 
+> 	Arnd
+> 
 
-Do you plan to take the patch for VMMC? If yes, I will send a new patch
-for the device tree (I'll only add vmmc, not vqmmc as discussed); if
-not, forget these two patches.
+OK, I will resend this as separate patch, and will drop it from this series.
 
-Regards
-
-Ludovic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
