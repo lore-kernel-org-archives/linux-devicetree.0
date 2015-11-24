@@ -1,84 +1,82 @@
-From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH v2 6/6] ARM: OMAP2+: dts: cm-t335: add support for PWM backlight
-Date: Tue, 24 Nov 2015 16:02:13 +0200
-Message-ID: <1448373733-5839-7-git-send-email-uri.mashiach@compulab.co.il>
-References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
- <1448373733-5839-1-git-send-email-uri.mashiach@compulab.co.il>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448373733-5839-1-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 1/2] mmc: sdhci: set bus voltage before enabling bus power
+Date: Tue, 24 Nov 2015 15:08:31 +0100
+Message-ID: <20151124140831.GC2228@odux.rfo.atmel.com>
+References: <1446825570-30029-2-git-send-email-ludovic.desroches@atmel.com>
+ <20151109132305.GC15706@odux.rfo.atmel.com>
+ <CAPDyKFrTTEnSFNvmx3e__Ap9gOGpA2-bz+yrq7ibz0wXGSWCXA@mail.gmail.com>
+ <20151109144030.GD15706@odux.rfo.atmel.com>
+ <CAPDyKFquZ+_Rf07gX+i-=_bzSa7KJ5+xQ8N21kK2mvfMGdVQMw@mail.gmail.com>
+ <20151109163026.GE15706@odux.rfo.atmel.com>
+ <20151124092341.GA2228@odux.rfo.atmel.com>
+ <CAPDyKFp4U5vG_UswnLe1L2Vq1VwdkptThSdzhPYoP+hhGFTaQA@mail.gmail.com>
+ <20151124131213.GB2228@odux.rfo.atmel.com>
+ <CAPDyKFqr1=EytbC0hUyCk4Lb8GWJx0=Xg+ZmDoPJFp5L7G2nrQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqr1=EytbC0hUyCk4Lb8GWJx0=Xg+ZmDoPJFp5L7G2nrQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+On Tue, Nov 24, 2015 at 02:56:21PM +0100, Ulf Hansson wrote:
+> On 24 November 2015 at 14:12, Ludovic Desroches
+> <ludovic.desroches@atmel.com> wrote:
+> > On Tue, Nov 24, 2015 at 12:01:53PM +0100, Ulf Hansson wrote:
+> >> On 24 November 2015 at 10:23, Ludovic Desroches
+> >> <ludovic.desroches@atmel.com> wrote:
+> >> > Hi Ulf,
+> >> >
+> >> > On Mon, Nov 09, 2015 at 05:30:26PM +0100, Ludovic Desroches wrote:
+> >> >> On Mon, Nov 09, 2015 at 05:00:46PM +0100, Ulf Hansson wrote:
+> >> >
+> >> > [...]
+> >> >
+> >> >> > Now, this discussion was interesting, but I forgot what problem you
+> >> >> > actually where trying to solve? :-)
+> >> >>
+> >> >> There is this discussion because of two things:
+> >> >> - Fixing something I consider as a bug: when I have a VMMC, only
+> >> >>   setting/clearing bit 0. Our controller strictly obeys to the spec and
+> >> >>   check the 'SD Bus Voltage Select' field. Since we put a reserved value
+> >> >>   (000), the Power On is not performed.
+> >> >> - I was trying to get help to understand what is this 'SD Bus Voltage'.
+> >> >>   For our controller and sdhci_set_power(), it seems to stand for VMMC.
+> >> >>   For me, everything concerning bus voltage is related to VQMMC, so I was
+> >> >>   disappointed.
+> >> >
+> >> > Do you plan to take the patch for VMMC? If yes, I will send a new patch
+> >> > for the device tree (I'll only add vmmc, not vqmmc as discussed); if
+> >> > not, forget these two patches.
+> >> >
+> >>
+> >> Which patch do you refer to for "VMMC"?
+> >>
+> >
+> > This one to not write an invalid voltage in the power control register
+> > even if we have an external regulator for vmmc.
+> >
+> 
+> As I stated earlier, according to the SDHCI spec in the section for
+> the Power Control Register. Bit 0 needs to be set when communicating
+> with the card as it will for
+> example enable the clock.
+> 
 
-Add pinmux configuration for ECAP0 pin.
-Add node for PWM backlight device.
-Use PWM output from ecap0 as backlight source.
+I am okay with bit 0. I don't want to change this part, it will be done
+later in sdhci_set_power(). My concern is only about bit 3-1, I want to
+go through the switch statement.
 
-Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
----
-v1 -> v2: integrate AM33XX_IOPAD macro in pinmux definitions
+> I suspect if I apply your patch several sdhci variants would break,
+> don't you think?
 
- arch/arm/boot/dts/am335x-cm-t335.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+I wouldn't sign it with my blood but I don't think so. It seems they
+don't care about the SD bus Voltage since they work with an unsupported
+voltage.
 
-diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
-index 9be0bfe..4939d82 100644
---- a/arch/arm/boot/dts/am335x-cm-t335.dts
-+++ b/arch/arm/boot/dts/am335x-cm-t335.dts
-@@ -39,6 +39,13 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&ecap0 0 50000 0>;
-+		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-+		default-brightness-level = <8>;
-+	};
- };
- 
- &am33xx_pinmux {
-@@ -114,6 +121,13 @@
- 		>;
- 	};
- 
-+	ecap0_pins: pinmux_ecap0_pins {
-+		pinctrl-single,pins = <
-+			/* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out MODE0 */
-+			AM33XX_IOPAD(0x964, 0x0)
-+		>;
-+	};
-+
- 	cpsw_default: cpsw_default {
- 		pinctrl-single,pins = <
- 			/* Slave 1 */
-@@ -223,6 +237,16 @@
- 	};
- };
- 
-+&epwmss0 {
-+	status = "okay";
-+
-+	ecap0: ecap@48300100 {
-+		status = "okay";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ecap0_pins>;
-+	};
-+};
-+
- &gpmc {
- 	status = "okay";
- 	pinctrl-names = "default";
--- 
-2.5.0
+Regards
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ludovic
