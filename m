@@ -1,189 +1,557 @@
-From: Constantine Shulyupin <const@makelinux.com>
-Subject: [PATCH v9] Documentation: add Device tree bindings for hwmon/nct7802
-Date: Tue, 24 Nov 2015 02:09:18 +0200
-Message-ID: <1448323758-28457-1-git-send-email-const@makelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, Arnd Bergmann <arnd@arndb.de>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Constantine Shulyupin <const@MakeLinux.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v7 27/50] powerpc/powernv: Dynamically release PEs
+Date: Tue, 24 Nov 2015 11:22:18 +1100
+Message-ID: <5653ADBA.7040000@ozlabs.ru>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-28-git-send-email-gwshan@linux.vnet.ibm.com>
+ <564BE109.8000809@au1.ibm.com> <20151123230601.GC5375@gwshan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151123230601.GC5375@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, Alexey Kardashevskiy <aik@au1.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Constantine Shulyupin <const@MakeLinux.com>
+On 11/24/2015 10:06 AM, Gavin Shan wrote:
+> On Wed, Nov 18, 2015 at 01:23:05PM +1100, Alexey Kardashevskiy wrote:
+>> On 11/05/2015 12:12 AM, Gavin Shan wrote:
+>>> This adds a reference count of PE, representing the number of PCI
+>>> devices associated with the PE. The reference count is increased
+>>> or decreased when PCI devices join or leave the PE. Once it becomes
+>>> zero, the PE together with its used resources (IO, MMIO, DMA, PELTM,
+>>> PELTV) are released to support PCI hot unplug.
+>>
+>>
+>> The commit log suggest the patch only adds a counter, initializes it, and
+>> replaces unconditional release of an object (in this case - PE) with the
+>> conditional one. But it is more that that...
+>>
+>
+> Yes, it's more than that as stated in the commit log.
 
-Introduced subnodes sensor, fan and peci with properties.
+More? The commit log only tells about reference counting.
 
-Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
----
-Changed in v9:
-- Fixed nuvoton,nct7802-sensor
-- Introduced nuvoton,nct7802-vmon, nuvoton,nct7802-fan-in, nuvoton,nct7802-fan-ctl
 
-Changed in v8:
-- added senor type "local"
-- Compatible nodes converted to senor types "vcore", "vcc"
+>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>> ---
+>>>   arch/powerpc/platforms/powernv/pci-ioda.c | 245 ++++++++++++++++++++++++++----
+>>>   arch/powerpc/platforms/powernv/pci.h      |   1 +
+>>>   2 files changed, 218 insertions(+), 28 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> index 0bb0056..dcffce5 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> @@ -129,6 +129,215 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned long flags)
+>>>   		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
+>>>   }
+>>>
+>>> +static void pnv_pci_ioda1_release_dma_pe(struct pnv_ioda_pe *pe)
+>>> +{
+>>> +	struct pnv_phb *phb = pe->phb;
+>>> +	struct iommu_table *tbl;
+>>> +	int start, count, i;
+>>> +	int64_t rc;
+>>> +
+>>> +	/* Search for the used DMA32 segments */
+>>> +	start = -1;
+>>> +	count = 0;
+>>> +	for (i = 0; i < phb->ioda.dma32_count; i++) {
+>>> +		if (phb->ioda.dma32_segmap[i] != pe->pe_number)
+>>> +			continue;
+>>> +
+>>> +		count++;
+>>> +		if (start < 0)
+>>> +			start = i;
+>>> +	}
+>>> +
+>>> +	if (!count)
+>>> +		return;
+>>
+>>
+>> imho checking pe->table_group.tables[0] != NULL is shorter than the loop above.
+>>
+>
+> Will use it in next revision.
+>
+>>> +
+>>> +	/* Unlink IOMMU table from group */
+>>> +	tbl = pe->table_group.tables[0];
+>>> +	pnv_pci_unlink_table_and_group(tbl, &pe->table_group);
+>>> +	if (pe->table_group.group) {
+>>> +		iommu_group_put(pe->table_group.group);
+>>> +		WARN_ON(pe->table_group.group);
+>>> +	}
+>>> +
+>>> +	/* Release IOMMU table */
+>>> +	pnv_pci_ioda2_table_free_pages(tbl);
+>>
+>>
+>> This is IODA2 helper with multilevel support, does IODA1 support multilevel
+>> TCE tables? If not, it should WARN_ON on levels!=1.
+>>
+>> Another thing is you should first unprogram TVEs (via
+>> opal_pci_map_pe_dma_window), then invalidate the cache (if required, not sure
+>> if this is needed on IODA1), only then free the actual table.
+>>
+>>
+>>> +	iommu_free_table(tbl, of_node_full_name(pci_bus_to_OF_node(pe->pbus)));
+>>> +
+>>> +	/* Disable TVE */
+>>> +	for (i = start; i < start + count; i++) {
+>>> +		rc = opal_pci_map_pe_dma_window(phb->opal_id, pe->pe_number,
+>>> +						i, 0, 0ul, 0ul, 0ul);
+>>> +		if (rc)
+>>> +			pe_warn(pe, "Error %ld unmapping DMA32 seg#%d\n",
+>>> +				rc, i);
+>>> +
+>>> +		phb->ioda.dma32_segmap[i] = IODA_INVALID_PE;
+>>> +	}
+>>
+>>
+>> You could implement pnv_pci_ioda1_unset_window/pnv_ioda1_table_free as
+>> callbacks, change pnv_pci_ioda2_release_dma_pe() to use them (and rename it
+>> to reflect that it supports IODA1 and IODA2).
+>>
+>>
+>>> +}
+>>> +
+>>> +static unsigned int pnv_pci_ioda_pe_dma_weight(struct pnv_ioda_pe *pe);
+>>> +static long pnv_pci_ioda2_unset_window(struct iommu_table_group *table_group,
+>>> +		int num);
+>>> +static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
+>>> +
+>>> +static void pnv_pci_ioda2_release_dma_pe(struct pnv_ioda_pe *pe)
+>>
+>>
+>> You moved this function and changed it, please do one thing at once (which is
+>> "change", not "move").
+>>
+>>> +{
+>>> +	struct iommu_table *tbl;
+>>> +	unsigned int weight = pnv_pci_ioda_pe_dma_weight(pe);
+>>> +	int64_t rc;
+>>> +
+>>> +	if (!weight)
+>>> +		return;
+>>
+>>
+>> Checking for pe->table_group.group is better because if we ever change the
+>> logic of what gets included to an IOMMU group, we will have to do the change
+>> where we add devices to a group but we won't have to touch releasing code.
+>>
+>>
+>>> +
+>>> +	tbl = pe->table_group.tables[0];
+>>> +	rc = pnv_pci_ioda2_unset_window(&pe->table_group, 0);
+>>> +	if (rc)
+>>> +		pe_warn(pe, "OPAL error %ld release DMA window\n", rc);
+>>> +
+>>> +	pnv_pci_ioda2_set_bypass(pe, false);
+>>> +	if (pe->table_group.group) {
+>>> +		iommu_group_put(pe->table_group.group);
+>>> +		WARN_ON(pe->table_group.group);
+>>> +	}
+>>> +
+>>> +	pnv_pci_ioda2_table_free_pages(tbl);
+>>> +	iommu_free_table(tbl, "pnv");
+>>> +}
+>>> +
+>>> +static void pnv_ioda_release_dma_pe(struct pnv_ioda_pe *pe)
+>>
+>> Merge this into pnv_ioda_release_pe() - it is small and called just once.
+>>
+>>
+>>> +{
+>>> +	struct pnv_phb *phb = pe->phb;
+>>> +
+>>> +	switch (phb->type) {
+>>> +	case PNV_PHB_IODA1:
+>>> +		pnv_pci_ioda1_release_dma_pe(pe);
+>>> +		break;
+>>> +	case PNV_PHB_IODA2:
+>>> +		pnv_pci_ioda2_release_dma_pe(pe);
+>>> +		break;
+>>> +	default:
+>>> +		WARN_ON(1);
+>>> +	}
+>>> +}
+>>> +
+>>> +static void pnv_ioda_release_window(struct pnv_ioda_pe *pe, int win)
+>>> +{
+>>> +	struct pnv_phb *phb = pe->phb;
+>>> +	int index, *segmap = NULL;
+>>> +	int64_t rc;
+>>> +
+>>> +	switch (win) {
+>>> +	case OPAL_IO_WINDOW_TYPE:
+>>> +		segmap = phb->ioda.io_segmap;
+>>> +		break;
+>>> +	case OPAL_M32_WINDOW_TYPE:
+>>> +		segmap = phb->ioda.m32_segmap;
+>>> +		break;
+>>> +	case OPAL_M64_WINDOW_TYPE:
+>>> +		if (phb->type != PNV_PHB_IODA1)
+>>> +			return;
+>>> +		segmap = phb->ioda.m64_segmap;
+>>> +		break;
+>>> +	default:
+>>> +		return;
+>>
+>> Unnecessary return.
+>>
+>>
+>>> +	}
+>>> +
+>>> +	for (index = 0; index < phb->ioda.total_pe_num; index++) {
+>>> +		if (segmap[index] != pe->pe_number)
+>>> +			continue;
+>>> +
+>>> +		if (win == OPAL_M64_WINDOW_TYPE)
+>>> +			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>> +					phb->ioda.reserved_pe_idx, win,
+>>> +					index / PNV_IODA1_M64_SEGS,
+>>> +					index % PNV_IODA1_M64_SEGS);
+>>> +		else
+>>> +			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>> +					phb->ioda.reserved_pe_idx, win,
+>>> +					0, index);
+>>> +
+>>> +		if (rc != OPAL_SUCCESS)
+>>> +			pe_warn(pe, "Error %ld unmapping (%d) segment#%d\n",
+>>> +				rc, win, index);
+>>> +
+>>> +		segmap[index] = IODA_INVALID_PE;
+>>> +	}
+>>> +}
+>>> +
+>>> +static void pnv_ioda_release_pe_seg(struct pnv_ioda_pe *pe)
+>>> +{
+>>> +	struct pnv_phb *phb = pe->phb;
+>>> +	int win;
+>>> +
+>>> +	for (win = OPAL_M32_WINDOW_TYPE; win <= OPAL_IO_WINDOW_TYPE; win++) {
+>>> +		if (phb->type == PNV_PHB_IODA2 && win == OPAL_IO_WINDOW_TYPE)
+>>> +			continue;
+>>
+>> Move this check to pnv_ioda_release_window() or move case(win ==
+>> OPAL_M64_WINDOW_TYPE):if(phb->type != PNV_PHB_IODA1) from that function here.
+>>
+>>
+>>> +
+>>> +		pnv_ioda_release_window(pe, win);
+>>> +	}
+>>> +}
+>>
+>> This is shorter and cleaner:
+>>
+>>
+>> static void pnv_ioda_release_window(struct pnv_ioda_pe *pe, int win, int
+>> *segmap
+>> {
+>>         struct pnv_phb *phb = pe->phb;
+>>         int index;
+>>         int64_t rc;
+>>
+>>         for (index = 0; index < phb->ioda.total_pe_num; index++) {
+>>                 if (segmap[index] != pe->pe_number)
+>>                         continue;
+>>
+>>                 if (win == OPAL_M64_WINDOW_TYPE)
+>>                         rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>                                         phb->ioda.reserved_pe_idx, win,
+>>                                         index / PNV_IODA1_M64_SEGS,
+>>                                         index % PNV_IODA1_M64_SEGS);
+>>                 else
+>>                         rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>                                         phb->ioda.reserved_pe_idx, win,
+>>                                         0, index);
+>>
+>>                 if (rc != OPAL_SUCCESS)
+>>                         pe_warn(pe, "Error %ld unmapping (%d) segment#%d\n",
+>>                                 rc, win, index);
+>>
+>>                 segmap[index] = IODA_INVALID_PE;
+>>         }
+>> }
+>>
+>> static void pnv_ioda_release_pe_seg(struct pnv_ioda_pe *pe)
+>> {
+>>         pnv_ioda_release_window(pe, OPAL_M32_WINDOW_TYPE,
+>> phb->ioda.m32_segmap);
+>>         if (phb->type != PNV_PHB_IODA2)
+>>                 pnv_ioda_release_window(pe, OPAL_IO_WINDOW_TYPE,
+>>                                 phb->ioda.io_segmap);
+>> 	else
+>>                 pnv_ioda_release_window(pe, OPAL_M64_WINDOW_TYPE,
+>>                                 phb->ioda.m64_segmap);
+>> }
+>>
+>>
+>> I'd actually merge pnv_ioda_release_pe_seg() into pnv_ioda_release_pe() as
+>> well as it is also small and called once.
+>>
+>>
+>>> +
+>>> +static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb,
+>>> +				   struct pnv_ioda_pe *pe);
+>>> +static void pnv_ioda_free_pe(struct pnv_ioda_pe *pe);
+>>> +static void pnv_ioda_release_pe(struct pnv_ioda_pe *pe)
+>>> +{
+>>> +	struct pnv_ioda_pe *tmp, *slave;
+>>> +
+>>> +	/* Release slave PEs in compound PE */
+>>> +	if (pe->flags & PNV_IODA_PE_MASTER) {
+>>> +		list_for_each_entry_safe(slave, tmp, &pe->slaves, list)
+>>> +			pnv_ioda_release_pe(slave);
+>>> +	}
+>>> +
+>>> +	/* Remove the PE from the list */
+>>> +	list_del(&pe->list);
+>>> +
+>>> +	/* Release resources */
+>>> +	pnv_ioda_release_dma_pe(pe);
+>>> +	pnv_ioda_release_pe_seg(pe);
+>>> +	pnv_ioda_deconfigure_pe(pe->phb, pe);
+>>> +
+>>> +	pnv_ioda_free_pe(pe);
+>>> +}
+>>> +
+>>> +static inline struct pnv_ioda_pe *pnv_ioda_pe_get(struct pnv_ioda_pe *pe)
+>>> +{
+>>> +	if (!pe)
+>>> +		return NULL;
+>>> +
+>>> +	pe->device_count++;
+>>> +	return pe;
+>>> +}
+>>> +
+>>> +static inline void pnv_ioda_pe_put(struct pnv_ioda_pe *pe)
+>>
+>>
+>> Merge this into pnv_pci_release_device() as it is small and called only once.
+>>
+>
+> I don't think so. The functions pnv_ioda_pe_{get,put}() are paired. I think it's
+> good enough to have separate function for the logic included in pnv_ioda_pe_put().
 
-Changed in v7:
-- sensors type (thermistor, thermistor, voltage) and pwm type
-selected with type property instead of compatible property.
 
-Changed in v6:
-- Removed previous definition.
-- Introduced subnodes sensor, fan and peci with properties.
+Ok. Another thing - just out of curiosity - is it possible and ok to have 
+NULL in pe in these pnv_ioda_pe_put()/pnv_ioda_pe_get()? If it is NULL, 
+does not this mean that something went wrong and we want WARN_ON or 
+something like this?
 
-Changed in v5:
-- Fixed typos
 
-Changed in v4:
-- Removed registers initialization by names
-- Added properties nuvoton,sensor*-type
+>
+>>> +{
+>>> +	if (!pe)
+>>> +		return;
+>>> +
+>>> +	pe->device_count--;
+>>> +	WARN_ON(pe->device_count < 0);
+>>> +	if (pe->device_count == 0)
+>>> +		pnv_ioda_release_pe(pe);
+>>> +}
+>>> +
+>>> +static void pnv_pci_release_device(struct pci_dev *pdev)
+>>> +{
+>>> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+>>> +	struct pnv_phb *phb = hose->private_data;
+>>> +	struct pci_dn *pdn = pci_get_pdn(pdev);
+>>> +	struct pnv_ioda_pe *pe;
+>>> +
+>>> +	if (pdev->is_virtfn)
+>>> +		return;
+>>> +
+>>> +	if (!pdn || pdn->pe_number == IODA_INVALID_PE)
+>>> +		return;
+>>> +
+>>> +	pe = &phb->ioda.pe_array[pdn->pe_number];
+>>> +	pnv_ioda_pe_put(pe);
+>>> +}
+>>> +
+>>>   static struct pnv_ioda_pe *pnv_ioda_init_pe(struct pnv_phb *phb, int pe_no)
+>>>   {
+>>>   	phb->ioda.pe_array[pe_no].phb = phb;
+>>> @@ -724,7 +933,6 @@ static int pnv_ioda_set_peltv(struct pnv_phb *phb,
+>>>   	return 0;
+>>>   }
+>>>
+>>> -#ifdef CONFIG_PCI_IOV
+>>>   static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>>>   {
+>>>   	struct pci_dev *parent;
+>>> @@ -759,9 +967,11 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>>>   		}
+>>>   		rid_end = pe->rid + (count << 8);
+>>>   	} else {
+>>> +#ifdef CONFIG_PCI_IOV
+>>>   		if (pe->flags & PNV_IODA_PE_VF)
+>>>   			parent = pe->parent_dev;
+>>>   		else
+>>> +#endif
+>>>   			parent = pe->pdev->bus->self;
+>>>   		bcomp = OpalPciBusAll;
+>>>   		dcomp = OPAL_COMPARE_RID_DEVICE_NUMBER;
+>>> @@ -799,11 +1009,12 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>>>
+>>>   	pe->pbus = NULL;
+>>>   	pe->pdev = NULL;
+>>> +#ifdef CONFIG_PCI_IOV
+>>>   	pe->parent_dev = NULL;
+>>> +#endif
+>>
+>>
+>> These #ifdef movements seem very much unrelated.
+>>
+>
+> It's related: pnv_ioda_deconfigure_pe() was used for VF PE only. Now it's used by all
+> types of PEs.
 
-Changed in v3:
-- Fixed vendor prefix
-- Added short registers description,
-  full registers description is available at
-https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
 
-Changed in v2:
-- Removed nct7802,reg-init
-- Added registers initialization by names
+The commit log does not mention either VF or PF.
 
-Introduced in v1:
- - nct7802,reg-init
----
- .../devicetree/bindings/hwmon/nct7802.txt          | 125 +++++++++++++++++++++
- 1 file changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
 
-diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-new file mode 100644
-index 0000000..cf983b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-@@ -0,0 +1,125 @@
-+Nuvoton NCT7802Y Hardware Monitoring IC
-+
-+Required node properties:
-+
-+ - "compatible": must be "nuvoton,nct7802"
-+ - "reg": I2C bus address of the device
-+ - #address-cells=<1>;
-+ - #size-cells=<0>;
-+
-+Optional subnodes:
-+
-+Sensor subnodes properties:
-+ - "compatible", allowed values:
-+	 - "nuvoton,nct7802-sensor"
-+ - "sensor-type", allowed values:
-+	"thermal-diode"
-+	"thermistor"
-+	"voltage"
-+	"local" (only one instance, no "reg" required)
-+For sensors of types "thermal-diode", "thermistor" and "voltage" required
-+ - "reg": sensor index in range 0 .. 2
-+
-+Except sensor at address 2 can't be "thermal-diode".
-+
-+Voltage monitor subnodes properties:
-+ - "compatible", allowed values:
-+	 - "nuvoton,nct7802-vmon"
-+ - "vmon-type", allowed values:
-+	"vcore"
-+	"vcc"
-+ - "reg" is not used because there is only one instance of
-+ vcore and vcc voltage monitors.
-+
-+Fan subnodes:
-+
-+Fan tachometer subnode (input):
-+
-+Required properties:
-+ - "reg" :sensor index of in range 0 .. 2.
-+ - "compatible", should be "nuvoton,nct7802-fan-in"
-+
-+Fan PWM (or DC) subnode (output or control):
-+
-+Required properties:
-+ - "reg" :sensor index of in range 0 .. 2.
-+ - "compatible", should be "nuvoton,nct7802-fan-ctl"
-+Optional boolean properties:
-+ - "direct-current" :direct current powered fan instead default PWM
-+ - "invert" :inverted polarity
-+ - "open-drain" :open-drain output instead push pull
-+
-+Subnode "peci" properties:
-+ - "reg" :sensor index in range 0 .. 1
-+ - "compatible", should be "nuvoton,nct7802-peci"
-+
-+Not defined sensors, fans and PECI modules will be disabled.
-+
-+Example nct7802 node:
-+
-+nct7802-example@28 {
-+	compatible = "nuvoton,nct7802";
-+	reg = <0x28>;
-+	#address-cells=<1>;
-+	#size-cells=<0>;
-+	local-sensor {
-+		compatible = "nuvoton,nct7802-sensor";
-+		sensor-type = "local";
-+	};
-+	sensor@0 {
-+		compatible = "nuvoton,nct7802-sensor";
-+		reg = <0>;
-+		sensor-type = "thermal-diode";
-+	};
-+	sensor@1 {
-+		compatible = "nuvoton,nct7802-sensor";
-+		reg = <1>;
-+		sensor-type = "thermistor";
-+	};
-+	sensor@2 {
-+		compatible = "nuvoton,nct7802-sensor";
-+		reg = <2>;
-+		sensor-type = "voltage";
-+	};
-+	vcc {
-+		compatible = "nuvoton,nct7802-vmon";
-+		sensor-type = "vcc";
-+	};
-+	vcore {
-+		compatible = "nuvoton,nct7802-vmon";
-+		sensor-type = "vcore";
-+	};
-+	fan-in@0 {
-+		compatible = "nuvoton,nct7802-fan-in";
-+		reg = <0>;
-+	};
-+	fan-in@1 {
-+		compatible = "nuvoton,nct7802-fan-in";
-+		reg = <1>;
-+	};
-+	fan-ctl@0 {
-+		compatible = "nuvoton,nct7802-fan-ctl";
-+		reg = <0>;
-+	};
-+	dc-fan-ctl@1 {
-+		compatible = "nuvoton,nct7802-fan-ctl";
-+		reg = <1>;
-+		direct-current;
-+		open-drain;
-+		invert;
-+	};
-+	pwm-fan-ctl@2 {
-+		compatible = "nuvoton,nct7802-fan-ctl";
-+		reg = <2>;
-+		open-drain;
-+		invert;
-+	};
-+	peci@0 {
-+		compatible = "nuvoton,nct7802-peci";
-+		reg = <0>;
-+	};
-+	peci@1 {
-+		compatible = "nuvoton,nct7802-peci";
-+		reg = <1>;
-+	};
-+};
+> pe->parent_dev is declared as below:
+>
+> #ifdef CONFIG_PCI_IOV
+>          struct pci_dev          *parent_dev;
+> #endif
+>
+>>
+>>>
+>>>   	return 0;
+>>>   }
+>>> -#endif /* CONFIG_PCI_IOV */
+>>>
+>>>   static int pnv_ioda_configure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>>>   {
+>>> @@ -985,6 +1196,7 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
+>>>   			continue;
+>>>
+>>>   		pdn->pe_number = pe->pe_number;
+>>> +		pnv_ioda_pe_get(pe);
+>>>   		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
+>>>   			pnv_ioda_setup_same_PE(dev->subordinate, pe);
+>>>   	}
+>>> @@ -1047,9 +1259,8 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>>>   			bus->busn_res.start, pe->pe_number);
+>>>
+>>>   	if (pnv_ioda_configure_pe(phb, pe)) {
+>>> -		/* XXX What do we do here ? */
+>>> -		pnv_ioda_free_pe(pe);
+>>>   		pe->pbus = NULL;
+>>> +		pnv_ioda_release_pe(pe);
+>>
+>>
+>> This is unrelated unexplained change.
+>>
+>
+> Will drop it in next revision.
+>
+>>>   		return NULL;
+>>>   	}
+>>>
+>>> @@ -1199,29 +1410,6 @@ m64_failed:
+>>>   	return -EBUSY;
+>>>   }
+>>>
+>>> -static long pnv_pci_ioda2_unset_window(struct iommu_table_group *table_group,
+>>> -		int num);
+>>> -static void pnv_pci_ioda2_set_bypass(struct pnv_ioda_pe *pe, bool enable);
+>>> -
+>>> -static void pnv_pci_ioda2_release_dma_pe(struct pci_dev *dev, struct pnv_ioda_pe *pe)
+>>> -{
+>>> -	struct iommu_table    *tbl;
+>>> -	int64_t               rc;
+>>> -
+>>> -	tbl = pe->table_group.tables[0];
+>>> -	rc = pnv_pci_ioda2_unset_window(&pe->table_group, 0);
+>>> -	if (rc)
+>>> -		pe_warn(pe, "OPAL error %ld release DMA window\n", rc);
+>>> -
+>>> -	pnv_pci_ioda2_set_bypass(pe, false);
+>>> -	if (pe->table_group.group) {
+>>> -		iommu_group_put(pe->table_group.group);
+>>> -		BUG_ON(pe->table_group.group);
+>>> -	}
+>>> -	pnv_pci_ioda2_table_free_pages(tbl);
+>>> -	iommu_free_table(tbl, of_node_full_name(dev->dev.of_node));
+>>> -}
+>>> -
+>>>   static void pnv_ioda_release_vf_PE(struct pci_dev *pdev)
+>>>   {
+>>>   	struct pci_bus        *bus;
+>>> @@ -1242,7 +1430,7 @@ static void pnv_ioda_release_vf_PE(struct pci_dev *pdev)
+>>>   		if (pe->parent_dev != pdev)
+>>>   			continue;
+>>>
+>>> -		pnv_pci_ioda2_release_dma_pe(pdev, pe);
+>>> +		pnv_pci_ioda2_release_dma_pe(pe);
+>>
+>>
+>> This is unrelated change.
+>>
+>
+>
+>>>
+>>>   		/* Remove from list */
+>>>   		mutex_lock(&phb->ioda.pe_list_mutex);
+>>> @@ -3124,6 +3312,7 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
+>>>   	.teardown_msi_irqs	= pnv_teardown_msi_irqs,
+>>>   #endif
+>>>   	.enable_device_hook	= pnv_pci_enable_device_hook,
+>>> +	.release_device		= pnv_pci_release_device,
+>>>   	.window_alignment	= pnv_pci_window_alignment,
+>>>   	.setup_bridge		= pnv_pci_setup_bridge,
+>>>   	.reset_secondary_bus	= pnv_pci_reset_secondary_bus,
+>>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>> index ef5271a..3bb10de 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci.h
+>>> +++ b/arch/powerpc/platforms/powernv/pci.h
+>>> @@ -30,6 +30,7 @@ struct pnv_phb;
+>>>   struct pnv_ioda_pe {
+>>>   	unsigned long		flags;
+>>>   	struct pnv_phb		*phb;
+>>> +	int			device_count;
+>>
+>> Not atomic_t, no kref, no additional mutex, just "int"? Sure about it? If so,
+>> put a note to the commit log about what provides a guarantee that there is no
+>> race.
+>>
+>>
+>
+> It was a kref. Something you suggested on v5 as below:
+>
+> | You do not need kref here. You call kref_put() in a single location and can do
+> | stuff directly, without kref. Just have an "unsigned int" counter and that's
+> | it (it does not even have to be atomic if you do not have races but I am not
+> | sure you do not).
+
+
+
+Aaaaand I still do not see any mentioning why there is no race here.
+
+
+> |
+>
+>>>
+>>>   	/* A PE can be associated with a single device or an
+>>>   	 * entire bus (& children). In the former case, pdev
+>>>
+>
+> Thanks,
+> Gavin
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+
 -- 
-1.9.1
+Alexey
