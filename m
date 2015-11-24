@@ -1,151 +1,201 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 02/12] drm/mediatek: Add DRM Driver for Mediatek SoC
- MT8173.
-Date: Tue, 24 Nov 2015 17:27:13 +0900
-Message-ID: <CAAFQd5BHaaj6Y7N6fzmQ-55NaW9Y0RNj8sbEHvTJai0x6zrxpw@mail.gmail.com>
-References: <1447868060-11620-1-git-send-email-p.zabel@pengutronix.de>
- <1447868060-11620-3-git-send-email-p.zabel@pengutronix.de>
+From: Michael Trimarchi <michael@amarulasolutions.com>
+Subject: Re: [alsa-devel] [PATCH 4/4] sound: codecs: pcm1792a: introduce
+ channel side
+Date: Tue, 24 Nov 2015 09:27:41 +0100
+Message-ID: <CAOf5uwmdwcdbxx2b6DvMeOJBahkZ3iiosWtHPD2zhxcDqO2b_A@mail.gmail.com>
+References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
+	<1448014157-36526-5-git-send-email-raphael.poggi@avalun.com>
+	<CAOf5uwmGk7WqOaAFj=fTw8+D+EszWPqReyfmS0njix=d7AokOA@mail.gmail.com>
+	<CACqcpZCSMwj2WOhX0ddD43VKCgOcNyrkkZrR0sWEsHE+H27TVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1447868060-11620-3-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Jie Qiu <jie.qiu@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACqcpZCSMwj2WOhX0ddD43VKCgOcNyrkkZrR0sWEsHE+H27TVg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Rapha=C3=ABl_Poggi?= <poggi.raph@gmail.com>
+Cc: perex@perex.cz, tiwai@suse.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwgQ0ssCgpQbGVhc2Ugc2VlIG15IGNvbW1lbnRzIGlubGluZS4KCk9uIFRodSwg
-Tm92IDE5LCAyMDE1IGF0IDI6MzQgQU0sIFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9u
-aXguZGU+IHdyb3RlOgpbc25pcF0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0
-Yy5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi41MDhjOGYzCj4gLS0t
-IC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
-Ywo+IEBAIC0wLDAgKzEsNTk2IEBACltzbmlwXQo+ICsjaW5jbHVkZSAibXRrX2RybV9kcnYuaCIK
-PiArI2luY2x1ZGUgIm10a19kcm1fY3J0Yy5oIgo+ICsjaW5jbHVkZSAibXRrX2RybV9kZHAuaCIK
-PiArI2luY2x1ZGUgIm10a19kcm1fZGRwX2NvbXAuaCIKPiArI2luY2x1ZGUgIm10a19kcm1fZ2Vt
-LmgiCj4gKyNpbmNsdWRlICJtdGtfZHJtX3BsYW5lLmgiCj4gKwo+ICtzdHJ1Y3QgbXRrX2NydGNf
-ZGRwX2NvbnRleHQ7CgpJcyB0aGlzIGZvcndhcmQgZGVjbGFyYXRpb24gcmVhbGx5IG5lY2Vzc2Fy
-eT8KCj4gKwo+ICsvKgo+ICsgKiBNZWRpYVRlayBzcGVjaWZpYyBjcnRjIHN0cnVjdHVyZS4KPiAr
-ICoKPiArICogQGJhc2U6IGNydGMgb2JqZWN0Lgo+ICsgKiBAcGlwZTogYSBjcnRjIGluZGV4IGNy
-ZWF0ZWQgYXQgbG9hZCgpIHdpdGggYSBuZXcgY3J0YyBvYmplY3QgY3JlYXRpb24KPiArICogICAg
-IGFuZCB0aGUgY3J0YyBvYmplY3Qgd291bGQgYmUgc2V0IHRvIHByaXZhdGUtPmNydGMgYXJyYXkK
-PiArICogICAgIHRvIGdldCBhIGNydGMgb2JqZWN0IGNvcnJlc3BvbmRpbmcgdG8gdGhpcyBwaXBl
-IGZyb20gcHJpdmF0ZS0+Y3J0Ywo+ICsgKiAgICAgYXJyYXkgd2hlbiBpcnEgaW50ZXJydXB0IG9j
-Y3VycmVkLiB0aGUgcmVhc29uIG9mIHVzaW5nIHRoaXMgcGlwZSBpcyB0aGF0Cj4gKyAqICAgICBk
-cm0gZnJhbWV3b3JrIGRvZXNuJ3Qgc3VwcG9ydCBtdWx0aXBsZSBpcnEgeWV0Lgo+ICsgKiAgICAg
-d2UgY2FuIHJlZmVyIHRvIHRoZSBjcnRjIHRvIGN1cnJlbnQgaGFyZHdhcmUgaW50ZXJydXB0IG9j
-Y3VycmVkIHRocm91Z2gKPiArICogICAgIHRoaXMgcGlwZSB2YWx1ZS4KCk9ubHkgZmlyc3QgdHdv
-IGZpZWxkcyBkb2N1bWVudGVkPyBBbHNvIHRoaXMgaXNuJ3QgcHJvcGVyIGtlcm5lbGRvYwpzeW50
-YXggKHNlZSBEb2N1bWVudGF0aW9uL2tlcm5lbC1kb2MtbmFuby1IT1dUTy50eHQpLgoKPiArICov
-Cj4gK3N0cnVjdCBtdGtfZHJtX2NydGMgewo+ICsgICAgICAgc3RydWN0IGRybV9jcnRjICAgICAg
-ICAgICAgICAgICBiYXNlOwo+ICsgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgICAgICAg
-ICBwaXBlOwo+ICsKPiArICAgICAgIGJvb2wgICAgICAgICAgICAgICAgICAgICAgICAgICAgZG9f
-Zmx1c2g7Cj4gKwo+ICsgICAgICAgc3RydWN0IG10a19kcm1fcGxhbmUgICAgICAgICAgICBwbGFu
-ZXNbT1ZMX0xBWUVSX05SXTsKPiArCj4gKyAgICAgICB2b2lkIF9faW9tZW0gICAgICAgICAgICAg
-ICAgICAgICpjb25maWdfcmVnczsKPiArICAgICAgIHN0cnVjdCBtdGtfZGlzcF9tdXRleCAgICAg
-ICAgICAgKm11dGV4Owo+ICsgICAgICAgdTMyICAgICAgICAgICAgICAgICAgICAgICAgICAgICBk
-ZHBfY29tcF9ucjsKCkkgYXNzdW1lIHRoaXMgaXMgc2l6ZSBvZiBkZHBfY29tcCBhcnJheT8gV2h5
-IG5vdCBqdXN0IHVuc2lnbmVkIGludCB0aGVuPwoKPiArICAgICAgIHN0cnVjdCBtdGtfZGRwX2Nv
-bXAgICAgICAgICAgICAgKipkZHBfY29tcDsKPiArfTsKW3NuaXBdCj4gK3N0YXRpYyBib29sIG10
-a19kcm1fY3J0Y19tb2RlX2ZpeHVwKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywKPiArICAgICAgICAg
-ICAgICAgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsCj4gKyAgICAgICAgICAg
-ICAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGp1c3RlZF9tb2RlKQo+ICt7Cj4gKyAgICAg
-ICAvKiBkcm0gZnJhbWV3b3JrIGRvZXNuJ3QgY2hlY2sgTlVMTCAqLwoKTWF5YmUgcmVwaHJhc2Ug
-dGhlIGNvbW1lbnQgdG8gIk5vdGhpbmcgdG8gZG8gaGVyZSwgYnV0IHRoZSBjYWxsYmFjayBpcwpt
-YW5kYXRvcnkuIj8KCj4gKyAgICAgICByZXR1cm4gdHJ1ZTsKPiArfQpbc25pcF0KPiArc3RhdGlj
-IHZvaWQgbXRrX2NydGNfZGRwX3Bvd2VyX29uKHN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRj
-KQo+ICt7Cj4gKyAgICAgICBpbnQgcmV0Owo+ICsgICAgICAgaW50IGk7Cj4gKwo+ICsgICAgICAg
-RFJNX0lORk8oIm10a19jcnRjX2RkcF9wb3dlcl9vblxuIik7CgpEUk1fREVCVUdfRFJJVkVSKCkK
-Cj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspIHsK
-PiArICAgICAgICAgICAgICAgcmV0ID0gY2xrX2VuYWJsZShtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0t
-PmNsayk7Cj4gKyAgICAgICAgICAgICAgIGlmIChyZXQpCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgRFJNX0VSUk9SKCJGYWlsZWQgdG8gZW5hYmxlIGNsb2NrICVkOiAlZFxuIiwgaSwgcmV0KTsK
-ClRoaXMgaXMgdW5zYWZlLCBiZWNhdXNlIGV2ZW4gaWYgd2UgZmFpbCBoZXJlLCBtdGtfY3J0Y19k
-ZHBfcG93ZXJfb2ZmKCkKd2lsbCB0cnkgdG8gZGlzYWJsZSB0aGUgY2xvY2tzIGFueXdheSwgd2hp
-Y2ggd2lsbCBsZWFkIHRvIG5lZ2F0aXZlCmVuYWJsZSBjb3VudHMgKGFuZCBhIFdBUk4oKSBpbiBi
-ZXN0IGNhc2UpLiBDYW4gd2UgYWRkIHByb3BlciBlcnJvcgpoYW5kbGluZyB0byB0aGlzIGZ1bmN0
-aW9uIGFuZCBvdGhlciBmdW5jdGlvbnMgaW4gdGhlIGNhbGwgc3RhY2s/Cgo+ICsgICAgICAgfQo+
-ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfcG93ZXJfb2ZmKHN0cnVjdCBtdGtf
-ZHJtX2NydGMgKm10a19jcnRjKQo+ICt7Cj4gKyAgICAgICBpbnQgaTsKPiArCj4gKyAgICAgICBE
-Uk1fSU5GTygibXRrX2NydGNfZGRwX3Bvd2VyX29mZlxuIik7CgpEUk1fREVCVUdfRFJJVkVSKCkK
-Cj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBpKyspCj4g
-KyAgICAgICAgICAgICAgIGNsa19kaXNhYmxlKG10a19jcnRjLT5kZHBfY29tcFtpXS0+Y2xrKTsK
-PiArfQo+ICsKPiArc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2h3X2luaXQoc3RydWN0IG10a19k
-cm1fY3J0YyAqbXRrX2NydGMpCj4gK3sKPiArICAgICAgIHN0cnVjdCBkcm1fY3J0YyAqY3J0YyA9
-ICZtdGtfY3J0Yy0+YmFzZTsKPiArICAgICAgIHVuc2lnbmVkIGludCB3aWR0aCwgaGVpZ2h0LCB2
-cmVmcmVzaDsKPiArICAgICAgIGludCByZXQ7Cj4gKyAgICAgICBpbnQgaTsKPiArCj4gKyAgICAg
-ICBpZiAoY3J0Yy0+c3RhdGUpIHsKPiArICAgICAgICAgICAgICAgd2lkdGggPSBjcnRjLT5zdGF0
-ZS0+YWRqdXN0ZWRfbW9kZS5oZGlzcGxheTsKPiArICAgICAgICAgICAgICAgaGVpZ2h0ID0gY3J0
-Yy0+c3RhdGUtPmFkanVzdGVkX21vZGUudmRpc3BsYXk7Cj4gKyAgICAgICAgICAgICAgIHZyZWZy
-ZXNoID0gY3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGUudnJlZnJlc2g7Cj4gKyAgICAgICB9IGVs
-c2Ugewo+ICsgICAgICAgICAgICAgICBXQVJOX09OKHRydWUpOwo+ICsgICAgICAgICAgICAgICB3
-aWR0aCA9IDE5MjA7Cj4gKyAgICAgICAgICAgICAgIGhlaWdodCA9IDEwODA7Cj4gKyAgICAgICAg
-ICAgICAgIHZyZWZyZXNoID0gNjA7CgpXaGVuIGNhbiBjcnRjLT5zdGF0ZSBiZSBOVUxMPyBBbHNv
-IHNob3VsZG4ndCB3ZSBqdXN0IGZhaWwgaGVyZSBpbnN0ZWFkCm9mIGNhcnJ5aW5nIG9uPwoKPiAr
-ICAgICAgIH0KCm5pdDogVGhlIGlmIGFib3ZlIGNhbiBiZSByZXBsYWNlZCB3aXRoIHRoZSBmb2xs
-b3dpbmcuCgppZiAoV0FSTl9PTighY3J0Yy0+c3RhdGUpKSB7CiAgICAgLy8gZG8gdGhlIGVycm9y
-IGhhbmRsaW5nCn0gZWxzZSB7CiAgICAvLyBkZXJlZmVyZW5jZSBjcnRjLT5zdGF0ZQp9CgpUaGlz
-IGlzIGJldHRlciBiZWNhdXNlIHRoZSB3YXJuaW5nIGNvbmRpdGlvbiBzaG93cyB3aGF0J3Mgd3Jv
-bmcuCgo+ICsKPiArICAgICAgIERSTV9JTkZPKCJtdGtfY3J0Y19kZHBfaHdfaW5pdFxuIik7CgpE
-Uk1fREVCVUdfRFJJVkVSKCkKCj4gKwo+ICsgICAgICAgLyogZGlzcF9tdGNtb3MgKi8KPiArICAg
-ICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoY3J0Yy0+ZGV2LT5kZXYpOwo+ICsgICAgICAg
-aWYgKHJldCA8IDApCj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigiRmFpbGVkIHRvIGVuYWJs
-ZSBwb3dlciBkb21haW46ICVkXG4iLCByZXQpOwoKQ2Fycnlpbmcgb24gaGVyZSBhZnRlciBwbSBy
-dW50aW1lIGVycm9yIGlzIGF0IGxlYXN0IGluYXBwcm9wcmlhdGUgYW5kCmluIHByYWN0aWNlIGlz
-IGEgZ29vZCB3YXkgdG8gbG9jayB0aGUgc3lzdGVtIHVwLi4uCgo+ICsKPiArICAgICAgIG10a19k
-aXNwX211dGV4X3ByZXBhcmUobXRrX2NydGMtPm11dGV4KTsKPiArICAgICAgIG10a19jcnRjX2Rk
-cF9wb3dlcl9vbihtdGtfY3J0Yyk7Cj4gKwo+ICsgICAgICAgRFJNX0lORk8oIm1lZGlhdGVrX2Rk
-cF9kZHBfcGF0aF9zZXR1cFxuIik7CgpEUk1fREVCVUdfRFJJVkVSKCkKCj4gKyAgICAgICBmb3Ig
-KGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yIC0gMTsgaSsrKSB7Cj4gKyAgICAgICAg
-ICAgICAgIG10a19kZHBfYWRkX2NvbXBfdG9fcGF0aChtdGtfY3J0Yy0+Y29uZmlnX3JlZ3MsCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtdGtfY3J0Yy0+ZGRwX2Nv
-bXBbaV0tPmlkLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXRr
-X2NydGMtPmRkcF9jb21wW2kgKyAxXS0+aWQpOwo+ICsgICAgICAgICAgICAgICBtdGtfZGlzcF9t
-dXRleF9hZGRfY29tcChtdGtfY3J0Yy0+bXV0ZXgsCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIG10a19jcnRjLT5kZHBfY29tcFtpXS0+aWQpOwo+ICsgICAgICAgfQo+
-ICsgICAgICAgbXRrX2Rpc3BfbXV0ZXhfYWRkX2NvbXAobXRrX2NydGMtPm11dGV4LCBtdGtfY3J0
-Yy0+ZGRwX2NvbXBbaV0tPmlkKTsKPiArICAgICAgIG10a19kaXNwX211dGV4X2VuYWJsZShtdGtf
-Y3J0Yy0+bXV0ZXgpOwo+ICsKPiArICAgICAgIERSTV9JTkZPKCJkZHBfZGlzcF9wYXRoX3Bvd2Vy
-X29uICVkeCVkXG4iLCB3aWR0aCwgaGVpZ2h0KTsKCkRSTV9ERUJVR19EUklWRVIoKQoKPiArICAg
-ICAgIGZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykgewo+ICsgICAg
-ICAgICAgICAgICBzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wID0gbXRrX2NydGMtPmRkcF9jb21w
-W2ldOwo+ICsKPiArICAgICAgICAgICAgICAgbXRrX2RkcF9jb21wX2NvbmZpZyhjb21wLCB3aWR0
-aCwgaGVpZ2h0LCB2cmVmcmVzaCk7Cj4gKyAgICAgICAgICAgICAgIG10a19kZHBfY29tcF9wb3dl
-cl9vbihjb21wKTsKPiArICAgICAgIH0KPiArfQo+ICsKPiArc3RhdGljIHZvaWQgbXRrX2NydGNf
-ZGRwX2h3X2Zpbmkoc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMpCj4gK3sKPiArICAgICAg
-IHN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBtdGtfY3J0Yy0+YmFzZS5kZXY7Cj4gKyAgICAgICBp
-bnQgaTsKPiArCj4gKyAgICAgICBEUk1fSU5GTygibXRrX2NydGNfZGRwX2h3X2ZpbmlcbiIpOwoK
-RFJNX0RFQlVHX0RSSVZFUigpCgo+ICsgICAgICAgbXRrX2NydGNfZGRwX3Bvd2VyX29mZihtdGtf
-Y3J0Yyk7Cj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yOyBp
-KyspCj4gKyAgICAgICAgICAgICAgIG10a19kaXNwX211dGV4X3JlbW92ZV9jb21wKG10a19jcnRj
-LT5tdXRleCwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXRr
-X2NydGMtPmRkcF9jb21wW2ldLT5pZCk7Cj4gKyAgICAgICBtdGtfZGlzcF9tdXRleF9kaXNhYmxl
-KG10a19jcnRjLT5tdXRleCk7Cj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMtPmRk
-cF9jb21wX25yIC0gMTsgaSsrKSB7Cj4gKyAgICAgICAgICAgICAgIG10a19kZHBfcmVtb3ZlX2Nv
-bXBfZnJvbV9wYXRoKG10a19jcnRjLT5jb25maWdfcmVncywKPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgbXRrX2NydGMtPmRkcF9jb21wW2ldLT5pZCwKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXRrX2NydGMtPmRk
-cF9jb21wW2kgKyAxXS0+aWQpOwo+ICsgICAgICAgICAgICAgICBtdGtfZGlzcF9tdXRleF9yZW1v
-dmVfY29tcChtdGtfY3J0Yy0+bXV0ZXgsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIG10a19jcnRjLT5kZHBfY29tcFtpXS0+aWQpOwo+ICsgICAgICAgfQo+ICsg
-ICAgICAgbXRrX2Rpc3BfbXV0ZXhfcmVtb3ZlX2NvbXAobXRrX2NydGMtPm11dGV4LCBtdGtfY3J0
-Yy0+ZGRwX2NvbXBbaV0tPmlkKTsKPiArICAgICAgIG10a19kaXNwX211dGV4X3VucHJlcGFyZSht
-dGtfY3J0Yy0+bXV0ZXgpOwo+ICsgICAgICAgbXRrX2NydGMtPm11dGV4ID0gTlVMTDsKCm10a19j
-cnRjLT5tdXRleCB3YXMgYWNxdWlyZWQgYnkgbXRrX2Rpc3BfbXV0ZXhfZ2V0KCkuIFNob3VsZG4n
-dCBpdCBiZQpyZWxlYXNlZCB3aXRoIG10a19kaXNwX211dGV4X3B1dCgpPyAoSW4gZmFjdCBJIGNh
-biBzZWUKbXRrX2Rpc3Bfb3ZsX3VuYmluZCgpIGFscmVhZHkgZG9pbmcgdGhhdCkuCgo+ICsKPiAr
-ICAgICAgIC8qIGRpc3BfbXRjbW9zICovCgpUaGlzIGNvbW1lbnQgZG9lc24ndCBzZWVtIHRvIGJl
-IHZlcnkgbWVhbmluZ2Z1bC4KCj4gKyAgICAgICBwbV9ydW50aW1lX3B1dChkcm0tPmRldik7Cj4g
-K30KClRvIGJlIGNvbnRpbnVlZC4KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi
+
+On Tue, Nov 24, 2015 at 9:21 AM, Rapha=C3=ABl Poggi <poggi.raph@gmail.c=
+om> wrote:
+> Hi,
+>
+> 2015-11-21 10:37 GMT+01:00 Michael Trimarchi <michael@amarulasolution=
+s.com>:
+>> Hi
+>>
+>> On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph@gmail.co=
+m> wrote:
+>>> From: Raphael Poggi <poggi.raph@gmail.com>
+>>>
+>>> Add possibility to choose the channel side using the device tree,
+>>> and also modify it using alsa ctrl.
+>>>
+>>> Signed-off-by: Raphael Poggi <poggi.raph@gmail.com>
+>>> ---
+>>>  sound/soc/codecs/pcm1792a.c | 46 +++++++++++++++++++++++++++++++++=
+++++++++++++
+>>>  1 file changed, 46 insertions(+)
+>>>
+>>> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm1792=
+a.c
+>>> index febaa48..005b679 100644
+>>> --- a/sound/soc/codecs/pcm1792a.c
+>>> +++ b/sound/soc/codecs/pcm1792a.c
+>>> @@ -65,6 +65,12 @@ static const struct reg_default pcm1792a_reg_def=
+aults[] =3D {
+>>>         { PCM1792A_DEVICE_ID, 0x00 },
+>>>  };
+>>>
+>>> +enum __pcm1792_side {
+>>> +       STEREO,
+>>> +       MONORAL_LEFT,
+>>> +       MONORAL_RIGHT
+>>> +};
+>>> +
+>>>  static bool pcm1792a_accessible_reg(struct device *dev, unsigned i=
+nt reg)
+>>>  {
+>>>         return reg >=3D 0x10 && reg <=3D 0x17;
+>>> @@ -83,6 +89,7 @@ struct pcm1792a_private {
+>>>         struct regmap *regmap;
+>>>         unsigned int format;
+>>>         unsigned int rate;
+>>> +       unsigned int side;
+>>>  };
+>>>
+>>>  static int pcm1792a_set_dai_fmt(struct snd_soc_dai *codec_dai,
+>>> @@ -153,6 +160,13 @@ static int pcm1792a_hw_params(struct snd_pcm_s=
+ubstream *substream,
+>>>         ret =3D regmap_update_bits(priv->regmap, PCM1792A_FMT_CONTR=
+OL,
+>>>                                  PCM1792A_FMT_MASK | PCM1792A_ATLD_=
+ENABLE, val);
+>>>
+>>> +       if (priv->side =3D=3D MONORAL_LEFT)
+>>> +               val =3D PCM1792A_CHANNEL_MONO_LEFT;
+>>> +       else if (priv->side =3D=3D MONORAL_RIGHT)
+>>> +               val =3D PCM1792A_CHANNEL_MONO_RIGHT;
+>>> +
+>>> +       regmap_update_bits(priv->regmap, PCM1792A_CHANNEL, PCM1792A=
+_CHANNEL_MONO_MASK, val);
+>>> +
+>>>         return ret;
+>>>  }
+>>>
+>>> @@ -222,10 +236,31 @@ static struct snd_soc_codec_driver soc_codec_=
+dev_pcm1792a =3D {
+>>>         .num_dapm_routes        =3D ARRAY_SIZE(pcm1792a_dapm_routes=
+),
+>>>  };
+>>>
+>>> +static int pcm1792a_of_init(struct spi_device *spi)
+>>> +{
+>>> +       int ret =3D 0;
+>>> +       struct pcm1792a_private *pcm1792a =3D dev_get_drvdata(&spi-=
+>dev);
+>>> +       const char *name;
+>>> +       struct device_node *np =3D spi->dev.of_node;
+>>> +
+>>> +       name =3D of_get_property(np, "ti,side", NULL);
+>>> +       if (name) {
+>>> +               if (!strcmp(name, "left"))
+>>> +                       pcm1792a->side =3D MONORAL_LEFT;
+>>> +               else
+>>> +                       pcm1792a->side =3D MONORAL_RIGHT;
+>>> +       }
+>>> +       else
+>>> +               pcm1792a->side =3D STEREO;
+>>> +
+>>> +       return ret;
+>>> +}
+>>> +
+>>>  static int pcm1792a_spi_probe(struct spi_device *spi)
+>>>  {
+>>>         struct pcm1792a_private *pcm1792a;
+>>>         int ret;
+>>> +       struct device_node *np =3D spi->dev.of_node;
+>>>
+>>>         pcm1792a =3D devm_kzalloc(&spi->dev, sizeof(struct pcm1792a=
+_private),
+>>>                                 GFP_KERNEL);
+>>> @@ -241,6 +276,17 @@ static int pcm1792a_spi_probe(struct spi_devic=
+e *spi)
+>>>                 return ret;
+>>>         }
+>>>
+>>> +       if (np) {
+>>> +               ret =3D pcm1792a_of_init(spi);
+>>> +               if (ret)
+>>> +                       return ret;
+>>> +       }
+>>> +
+>>> +       if (pcm1792a->side =3D=3D MONORAL_LEFT)
+>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHANN=
+EL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_LEFT);
+>>> +       else if (pcm1792a->side =3D=3D MONORAL_RIGHT)
+>>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHANN=
+EL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_RIGHT);
+>>> +
+>>
+>> Why this is a part of dts and not a part of mixer control?
+>>
+>> Michael
+>>
+>
+> The "channel side" bindings should be used when the pcm7192a is used
+> in monaural mode (which requires two DACs, both DACs operate in a
+> balanced mode for one channel of audio input data).
+> This is a hardware level design, it will never change at runtime.
+> I feel that a device tree binding is more appropriate than a control.
+>
+
+Well I know exactly why is used for, but I don't really know if it's
+somenthing that should be
+in dts. Do I want to do channel inversion?
+
+Michael
+
+>>>         return snd_soc_register_codec(&spi->dev,
+>>>                         &soc_codec_dev_pcm1792a, &pcm1792a_dai, 1);
+>>>  }
+>>> --
+>>> 2.1.0
+>>>
+>>> _______________________________________________
+>>> Alsa-devel mailing list
+>>> Alsa-devel@alsa-project.org
+>>> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>>
+>>
+>>
+>> --
+>> | Michael Nazzareno Trimarchi                     Amarula Solutions =
+BV |
+>> | COO  -  Founder                                      Cruquiuskade =
+47 |
+>> | +31(0)851119172                                 Amsterdam 1018 AM =
+NL |
+>> |                  [`as] http://www.amarulasolutions.com            =
+   |
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kern=
+el" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
+--=20
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV =
+|
+| COO  -  Founder                                      Cruquiuskade 47 =
+|
+| +31(0)851119172                                 Amsterdam 1018 AM NL =
+|
+|                  [`as] http://www.amarulasolutions.com               =
+|
