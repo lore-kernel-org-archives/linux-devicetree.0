@@ -1,41 +1,80 @@
-From: "Amis, Ryann" <ryann.amis-E5pelZJw2wiHXe+LvDLADg@public.gmane.org>
-Subject: RE:
-Date: Tue, 24 Nov 2015 13:21:08 +0000
-Message-ID: <003A34AB18F50C4395546E44C4FC83D78A847867__20180.0858522349$1448371711$gmane$org@MGCCCMAIL2010-4.mgccc.cc.ms.us>
-References: <D0613EBE33E8FD439137DAA95CCF59555B7A5A4D@MGCCCMAIL2010-5.mgccc.cc.ms.us>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: [PATCH 1/3] i2c: at91: add setting HOLD field of TWIHS_CWGR via DT
+Date: Tue, 24 Nov 2015 14:47:40 +0100
+Message-ID: <1448372862-11912-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D0613EBE33E8FD439137DAA95CCF59555B7A5A4D-np6RRm/yoI0WMyNdQYMtvx125T75Kgqw2GnX7Qjzz7g@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MGCCC Helpdesk <helpdesk-E5pelZJw2wiHXe+LvDLADg@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cyrille.pichen@atmel.com, Wenyou Yang <wenyou.yang@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-4oCLT3VyIG5ldyB3ZWIgbWFpbCBoYXMgYmVlbiBpbXByb3ZlZCB3aXRoIGEgbmV3IG1lc3NhZ2lu
-ZyBzeXN0ZW0gZnJvbSBPd2Evb3V0bG9vayB3aGljaCBhbHNvIGluY2x1ZGUgZmFzdGVyIHVzYWdl
-IG9uIGVtYWlsLCBzaGFyZWQgY2FsZW5kYXIsIHdlYi1kb2N1bWVudHMgYW5kIHRoZSBuZXcgMjAx
-NSBhbnRpLXNwYW0gdmVyc2lvbi4gUGxlYXNlIHVzZSB0aGUgbGluayBiZWxvdyB0byBjb21wbGV0
-ZSB5b3VyIHVwZGF0ZSBmb3Igb3VyIG5ldyBPd2Evb3V0bG9vayBpbXByb3ZlZCB3ZWIgbWFpbC4g
-Q0xJQ0sgSEVSRTxodHRwczovL2Zvcm1jcmFmdHMuY29tL2EvMTU4NTE+IHRvIHVwZGF0ZSBvciBD
-b3B5IGFuZCBwZXN0IHRoZSBMaW5rIHRvIHlvdXIgQnJvd3NlcjogaHR0cDovL2JpdC5seS8xWG81
-VmQ0DQpUaGFua3MsDQpJVEMgQWRtaW5pc3RyYXRvci4NCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1h
-aWwgbWVzc2FnZSBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uYWwgYW5kIGNvbmZpZGVu
-dGlhbCB1c2Ugb2YgdGhlIHJlY2lwaWVudChzKSBuYW1lZCBhYm92ZS4gVGhpcyBtZXNzYWdlIG1h
-eSBiZSBhbiBhdHRvcm5leS1jbGllbnQgY29tbXVuaWNhdGlvbiBhbmQvb3Igd29yayBwcm9kdWN0
-IGFuZCBhcyBzdWNoIGlzIHByaXZpbGVnZWQgYW5kIGNvbmZpZGVudGlhbC4gSWYgdGhlIHJlYWRl
-ciBvZiB0aGlzIG1lc3NhZ2UgaXMgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgb3IgYW4gYWdl
-bnQgcmVzcG9uc2libGUgZm9yIGRlbGl2ZXJpbmcgaXQgdG8gdGhlIGludGVuZGVkIHJlY2lwaWVu
-dCwgeW91IGFyZSBoZXJlYnkgbm90aWZpZWQgdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGRv
-Y3VtZW50IGluIGVycm9yIGFuZCB0aGF0IGFueSByZXZpZXcsIGRpc3NlbWluYXRpb24sIGRpc3Ry
-aWJ1dGlvbiwgb3IgY29weWluZyBvZiB0aGlzIG1lc3NhZ2UgaXMgc3RyaWN0bHkgcHJvaGliaXRl
-ZC4gSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBjb21tdW5pY2F0aW9uIGluIGVycm9yLCBwbGVh
-c2Ugbm90aWZ5IHVzIGltbWVkaWF0ZWx5IGJ5IGUtbWFpbCwgYW5kIGRlbGV0ZSB0aGUgb3JpZ2lu
-YWwgbWVzc2FnZS4K
+From: Wenyou Yang <wenyou.yang@atmel.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Add the HOLD field management. Some i2c devices need a longer data hold
+time than the one given in the i2c bus specification. Since this value
+depends on the i2c device connected to the bus, add a DT property to
+configure it: "atmel,twd-hold-cycles".
+
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+ drivers/i2c/busses/i2c-at91.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
+index 10835d1..b3595ea 100644
+--- a/drivers/i2c/busses/i2c-at91.c
++++ b/drivers/i2c/busses/i2c-at91.c
+@@ -64,6 +64,7 @@
+ #define	AT91_TWI_IADR		0x000c	/* Internal Address Register */
+ 
+ #define	AT91_TWI_CWGR		0x0010	/* Clock Waveform Generator Reg */
++#define	AT91_TWI_CWGR_HOLD(x)	(((x) & 0x1f) << 24)
+ 
+ #define	AT91_TWI_SR		0x0020	/* Status Register */
+ #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+@@ -185,7 +186,8 @@ static void at91_init_twi_bus(struct at91_twi_dev *dev)
+  * Calculate symmetric clock as stated in datasheet:
+  * twi_clk = F_MAIN / (2 * (cdiv * (1 << ckdiv) + offset))
+  */
+-static void at91_calc_twi_clock(struct at91_twi_dev *dev, int twi_clk)
++static void at91_calc_twi_clock(struct at91_twi_dev *dev,
++				int twi_clk, u32 twd_hold)
+ {
+ 	int ckdiv, cdiv, div;
+ 	struct at91_twi_pdata *pdata = dev->pdata;
+@@ -204,7 +206,9 @@ static void at91_calc_twi_clock(struct at91_twi_dev *dev, int twi_clk)
+ 		cdiv = 255;
+ 	}
+ 
+-	dev->twi_cwgr_reg = (ckdiv << 16) | (cdiv << 8) | cdiv;
++	dev->twi_cwgr_reg = (ckdiv << 16) | (cdiv << 8) | cdiv
++			    | AT91_TWI_CWGR_HOLD(twd_hold);
++
+ 	dev_dbg(dev->dev, "cdiv %d ckdiv %d\n", cdiv, ckdiv);
+ }
+ 
+@@ -994,6 +998,7 @@ static int at91_twi_probe(struct platform_device *pdev)
+ 	int rc;
+ 	u32 phy_addr;
+ 	u32 bus_clk_rate;
++	u32 twd_hold_cycles = 0;
+ 
+ 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+ 	if (!dev)
+@@ -1050,7 +1055,10 @@ static int at91_twi_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		bus_clk_rate = DEFAULT_TWI_CLK_HZ;
+ 
+-	at91_calc_twi_clock(dev, bus_clk_rate);
++	of_property_read_u32(dev->dev->of_node, "atmel,twd-hold-cycles",
++			     &twd_hold_cycles);
++
++	at91_calc_twi_clock(dev, bus_clk_rate, twd_hold_cycles);
+ 	at91_init_twi_bus(dev);
+ 
+ 	snprintf(dev->adapter.name, sizeof(dev->adapter.name), "AT91");
+-- 
+2.5.0
