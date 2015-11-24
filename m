@@ -1,67 +1,86 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH RESEND 06/16] mfd: add TI LMU driver
-Date: Tue, 24 Nov 2015 11:35:51 +0900
-Message-ID: <5653CD07.2090602@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-7-git-send-email-milo.kim@ti.com> <20151123103025.GJ3098@x1>
+From: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] spi: mediatek: revise mtk_spi_probe() failure flow
+Date: Tue, 24 Nov 2015 10:38:32 +0800
+Message-ID: <1448332712-29039-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20151123103025.GJ3098@x1>
-Sender: linux-leds-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Mark Brown <broonie@kernel.org>, lm-sensors@lm-sensors.org, linux-leds@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+This patch revises failure flow while pm_runtime_enable().
 
-Thanks for all your comments. Please see my comments below.
+Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/spi/spi-mt65xx.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-On 11/23/2015 7:30 PM, Lee Jones wrote:
->> +int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read)
->> >+{
->> >+	int ret;
->> >+	unsigned int val;
->> >+
->> >+	ret = regmap_read(lmu->regmap, reg, &val);
->> >+	if (ret < 0)
->> >+		return ret;
->> >+
->> >+	*read = (u8)val;
->> >+	return 0;
->> >+}
->> >+EXPORT_SYMBOL_GPL(ti_lmu_read_byte);
-> It doesn't get much more simple than this.
->
-> What's the purpose of abstracting it?
->
->> >+int ti_lmu_write_byte(struct ti_lmu *lmu, u8 reg, u8 data)
->> >+{
->> >+	return regmap_write(lmu->regmap, reg, data);
->> >+}
->> >+EXPORT_SYMBOL_GPL(ti_lmu_write_byte);
->> >+
->> >+int ti_lmu_update_bits(struct ti_lmu *lmu, u8 reg, u8 mask, u8 data)
->> >+{
->> >+	return regmap_update_bits(lmu->regmap, reg, mask, data);
->> >+}
->> >+EXPORT_SYMBOL_GPL(ti_lmu_update_bits);
-> Okay, I lied, it does get more simple.
->
-> Seems like abstraction for the sake of abstraction here.
->
-> Feel free to try and convince me otherwise.
->
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 6c1a96e..00a36da 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -607,7 +607,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 	ret = clk_set_parent(mdata->sel_clk, mdata->parent_clk);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to clk_set_parent (%d)\n", ret);
+-		goto err_disable_clk;
++		clk_disable_unprepare(mdata->spi_clk);
++		goto err_put_master;
+ 	}
+ 
+ 	clk_disable_unprepare(mdata->spi_clk);
+@@ -617,7 +618,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register master (%d)\n", ret);
+-		goto err_put_master;
++		goto err_disable_runtime_pm;
+ 	}
+ 
+ 	if (mdata->dev_comp->need_pad_sel) {
+@@ -626,14 +627,14 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 				"pad_num does not match num_chipselect(%d != %d)\n",
+ 				mdata->pad_num, master->num_chipselect);
+ 			ret = -EINVAL;
+-			goto err_put_master;
++			goto err_disable_runtime_pm;
+ 		}
+ 
+ 		if (!master->cs_gpios && master->num_chipselect > 1) {
+ 			dev_err(&pdev->dev,
+ 				"cs_gpios not specified and num_chipselect > 1\n");
+ 			ret = -EINVAL;
+-			goto err_put_master;
++			goto err_disable_runtime_pm;
+ 		}
+ 
+ 		if (master->cs_gpios) {
+@@ -644,7 +645,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 				if (ret) {
+ 					dev_err(&pdev->dev,
+ 						"can't get CS GPIO %i\n", i);
+-					goto err_put_master;
++					goto err_disable_runtime_pm;
+ 				}
+ 			}
+ 		}
+@@ -652,8 +653,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-err_disable_clk:
+-	clk_disable_unprepare(mdata->spi_clk);
++err_disable_runtime_pm:
++	pm_runtime_disable(&pdev->dev);
+ err_put_master:
+ 	spi_master_put(master);
+ 
+-- 
+1.7.9.5
 
-The main reason was that LMU MFD core provides consistent register 
-access among LMU drivers like ti-lmu-backlight, leds-lm3633, 
-lm363x-regulator and ti-lmu-fault-monitor('ti-lmu-hwmon' will be changed 
-to this in the 2nd patch).
-
-However, LMU register helpers are exactly same as regmap interface 
-except using ti_lmu data structure. So let me replace them with regmap 
-functions. Thanks for pointing this out.
-
-Best regards,
-Milo
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
