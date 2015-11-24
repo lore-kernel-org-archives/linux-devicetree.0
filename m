@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [RESEND v4 6/6] ARM: STiH407: Move over to using the 'reserved-memory' API for obtaining DMA memory
-Date: Tue, 24 Nov 2015 13:14:22 +0000
-Message-ID: <1448370862-19120-7-git-send-email-lee.jones@linaro.org>
+Subject: [RESEND v4 2/6] remoteproc: debugfs: Add ability to boot remote processor using debugfs
+Date: Tue, 24 Nov 2015 13:14:18 +0000
+Message-ID: <1448370862-19120-3-git-send-email-lee.jones@linaro.org>
 References: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
@@ -10,106 +10,63 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Doing so saves quite a bit of code in the driver.
+This functionality is especially useful during the testing phase.  When
+used in conjunction with Mailbox's Test Framework we can trivially conduct
+end-to-end testing i.e. boot co-processor, send and receive messages to
+the co-processor, then shut it down again (repeat as required).
 
-For more information on the 'reserved-memory' bindings see:
-
-  Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-
-Suggested-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 46 +++++++++++++++++++++++++++++------
- 1 file changed, 38 insertions(+), 8 deletions(-)
+ drivers/remoteproc/remoteproc_debugfs.c | 34 +++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 15c20b6..27b8efc 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -15,6 +15,36 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index 9d30809..8113c18 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -88,8 +88,42 @@ static ssize_t rproc_state_read(struct file *filp, char __user *userbuf,
+ 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ }
  
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
++static ssize_t rproc_state_write(struct file *filp, const char __user *userbuf,
++				 size_t count, loff_t *ppos)
++{
++	struct rproc *rproc = filp->private_data;
++	char buf[10];
++	int ret;
 +
-+		gp0_reserved: rproc@40000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x40000000 0x01000000>;
-+			no-map;
-+		};
++	if (count > sizeof(buf))
++		return count;
 +
-+		gp1_reserved: rproc@41000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x41000000 0x01000000>;
-+			no-map;
-+		};
++	ret = copy_from_user(buf, userbuf, count);
++	if (ret)
++		return -EFAULT;
 +
-+		audio_reserved: rproc@42000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x42000000 0x01000000>;
-+			no-map;
-+		};
++	if (buf[count - 1] == '\n')
++		buf[count - 1] = '\0';
 +
-+		dmu_reserved: rproc@43000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x43000000 0x01000000>;
-+			no-map;
-+		};
-+	};
++	if (!strncmp(buf, "start", count)) {
++		ret = rproc_boot(rproc);
++		if (ret) {
++			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
++			return ret;
++		}
++	} else if (!strncmp(buf, "stop", count)) {
++		rproc_shutdown(rproc);
++	} else {
++		dev_err(&rproc->dev, "Unrecognised option: %s\n", buf);
++		return -EINVAL;
++	}
 +
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -651,9 +681,9 @@
- 			status		= "okay";
- 		};
- 
--		st231_gp0: st231-gp0@40000000 {
-+		st231_gp0: st231-gp0 {
- 			compatible	= "st,st231-rproc";
--			reg		= <0x40000000 0x01000000>;
-+			memory-region	= <&gp0_reserved>;
- 			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
- 			reset-names	= "sw_reset";
- 			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_0>;
-@@ -661,9 +691,9 @@
- 			st,syscfg	= <&syscfg_core 0x22c>;
- 		};
- 
--		st231_gp1: st231-gp1@41000000 {
-+		st231_gp1: st231-gp1 {
- 			compatible	= "st,st231-rproc";
--			reg		= <0x41000000 0x01000000>;
-+			memory-region	= <&gp1_reserved>;
- 			resets		= <&softreset STIH407_ST231_GP1_SOFTRESET>;
- 			reset-names	= "sw_reset";
- 			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_1>;
-@@ -671,9 +701,9 @@
- 			st,syscfg	= <&syscfg_core 0x220>;
- 		};
- 
--		st231_audio: st231-audio@42000000 {
-+		st231_audio: st231-audio {
- 			compatible	= "st,st231-rproc";
--			reg		= <0x42000000 0x01000000>;
-+			memory-region	= <&audio_reserved>;
- 			resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
- 			reset-names	= "sw_reset";
- 			clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
-@@ -681,9 +711,9 @@
- 			st,syscfg	= <&syscfg_core 0x228>;
- 		};
- 
--		st231_dmu: st231-dmu@43000000 {
-+		st231_dmu: st231-dmu {
- 			compatible	= "st,st231-rproc";
--			reg		= <0x43000000 0x01000000>;
-+			memory-region	= <&dmu_reserved>;
- 			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
- 			reset-names	= "sw_reset";
- 			clocks		= <&clk_s_c0_flexgen CLK_ST231_DMU>;
++	return count;
++}
++
+ static const struct file_operations rproc_state_ops = {
+ 	.read = rproc_state_read,
++	.write = rproc_state_write,
+ 	.open = simple_open,
+ 	.llseek	= generic_file_llseek,
+ };
 -- 
 1.9.1
