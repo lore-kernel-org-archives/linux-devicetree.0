@@ -1,121 +1,70 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH RESEND 06/16] mfd: add TI LMU driver
-Date: Tue, 24 Nov 2015 15:39:35 +0900
-Message-ID: <56540627.7010901@ti.com>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-7-git-send-email-milo.kim@ti.com> <20151123103025.GJ3098@x1>
- <5653CD07.2090602@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 1/5] ARM: dts: sun8i: Add SID node
+Date: Tue, 24 Nov 2015 14:42:26 +0800
+Message-ID: <CAGb2v67aS+2vM8CLB=4ynFOvb14t+kiWjJvAa60U2nq22S8ZEw@mail.gmail.com>
+References: <cover.1448263428.git.atx@atx.name> <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx@atx.name>
+ <20151123124356.GW32142@lukather> <CAGb2v65qfaTdQqXHD=-FHz1M1sHCTro97QETZUH=vA2BbRS+7A@mail.gmail.com>
+ <20151124063808.GB32142@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <5653CD07.2090602@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Mark Brown <broonie@kernel.org>, lm-sensors@lm-sensors.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151124063808.GB32142@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Josef Gajdusek <atx@atx.name>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, gpatchesrdh@mveas.com, Mike Turquette <mturquette@linaro.org>, Hans De Goede <hdegoede@redhat.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Emilio Lopez <emilio@elopez.com.ar>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2015 11:35 AM, Kim, Milo wrote:
-> Hi Lee,
+On Tue, Nov 24, 2015 at 2:38 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Tue, Nov 24, 2015 at 11:13:13AM +0800, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> On Mon, Nov 23, 2015 at 8:43 PM, Maxime Ripard
+>> <maxime.ripard@free-electrons.com> wrote:
+>> > Hi,
+>> >
+>> > On Mon, Nov 23, 2015 at 09:02:48AM +0100, Josef Gajdusek wrote:
+>> >> Add a node describing the Security ID memory to the
+>> >> Allwinner H3 .dtsi file.
+>> >>
+>> >> Signed-off-by: Josef Gajdusek <atx@atx.name>
+>> >> ---
+>> >>  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
+>> >>  1 file changed, 7 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> >> index 0faa38a..58de718 100644
+>> >> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>> >> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> >> @@ -359,6 +359,13 @@
+>> >>                       #size-cells = <0>;
+>> >>               };
+>> >>
+>> >> +             sid: eeprom@01c14000 {
+>> >> +                     compatible = "allwinner,sun4i-a10-sid";
+>> >> +                     reg = <0x01c14000 0x400>;
+>> >
+>> > The datasheet says it's 256 bytes wide, while the size here is of 1kB,
+>> > is it intentional?
+>>
+>> My H3 datasheet (v1.1) says its 1 kB wide.
 >
-> Thanks for all your comments. Please see my comments below.
+> Is it? in the Security ID section, it is said to be 2kb == 256B wide.
+
+Right. I was looking at the memory map. Maybe it's sparsely mapped?
+I guess we'll know soon.
+
+ChenYu
+
+>> It'd be nice if Allwinner actually listed the "usable" E-fuse
+>> offsets and widths, instead of having us dig through the SDK code.
 >
-> On 11/23/2015 7:30 PM, Lee Jones wrote:
->>> +int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read)
->>>> +{
->>>> +	int ret;
->>>> +	unsigned int val;
->>>> +
->>>> +	ret = regmap_read(lmu->regmap, reg, &val);
->>>> +	if (ret < 0)
->>>> +		return ret;
->>>> +
->>>> +	*read = (u8)val;
->>>> +	return 0;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(ti_lmu_read_byte);
->> It doesn't get much more simple than this.
->>
->> What's the purpose of abstracting it?
->>
->>>> +int ti_lmu_write_byte(struct ti_lmu *lmu, u8 reg, u8 data)
->>>> +{
->>>> +	return regmap_write(lmu->regmap, reg, data);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(ti_lmu_write_byte);
->>>> +
->>>> +int ti_lmu_update_bits(struct ti_lmu *lmu, u8 reg, u8 mask, u8 data)
->>>> +{
->>>> +	return regmap_update_bits(lmu->regmap, reg, mask, data);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(ti_lmu_update_bits);
->> Okay, I lied, it does get more simple.
->>
->> Seems like abstraction for the sake of abstraction here.
->>
->> Feel free to try and convince me otherwise.
->>
+> Yep.
 >
-> The main reason was that LMU MFD core provides consistent register
-> access among LMU drivers like ti-lmu-backlight, leds-lm3633,
-> lm363x-regulator and ti-lmu-fault-monitor('ti-lmu-hwmon' will be changed
-> to this in the 2nd patch).
+> Thanks!
+> Maxime
 >
-> However, LMU register helpers are exactly same as regmap interface
-> except using ti_lmu data structure. So let me replace them with regmap
-> functions. Thanks for pointing this out.
-
-I just realized LMU MFD core helpers also provide module dependencies by 
-using EXPORT_SYMBOL_GPL().
-
-# modprobe -D ti-lmu-backlight
-insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-insmod /lib/modules/<ver>/kernel/drivers/video/backlight/ti-lmu-backlight.ko
-# modprobe -D ti-lmu-fault-monitor
-insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu-fault-monitor.ko
-# modprobe -D lm363x-regulator
-insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-insmod /lib/modules/<ver>/kernel/drivers/regulator/lm363x-regulator.ko
-# modprobe -D leds-lm3633
-insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-insmod /lib/modules/<ver>/kernel/drivers/leds/leds-lm3633.ko
-
-ti-lmu.ko should be loaded first because it has hardware enable pin 
-control code. Four other drivers have dependency on this module. Without 
-EXPORT_SYMBOL_GPL(), this dependency will be gone like below.
-
-# modprobe -D ti-lmu-backlight
-insmod /lib/modules/<ver>/kernel/drivers/video/backlight/ti-lmu-backlight.ko
-# modprobe -D ti-lmu-fault-monitor
-insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu-fault-monitor.ko
-# modprobe -D lm363x-regulator
-insmod /lib/modules/<ver>/kernel/drivers/regulator/lm363x-regulator.ko
-# modprobe -D leds-lm3633
-insmod /lib/modules/<ver>/kernel/drivers/leds/leds-lm3633.ko
-
-If LMU MFD core module is not loaded and other modules call regmap 
-helpers, then loaded drivers will not work because hardware is not 
-enabled yet.
-
-So I'd like to keep LMU MFD helpers for module dependencies. 
-Additionally, I'll modify 'ti_lmu_read_byte()' as follows.
-
-int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read)
-{
-	return regmap_read(lmu->regmap, reg, (unsigned int *)read);
-}
-EXPORT_SYMBOL_GPL(ti_lmu_read_byte);
-
-Please let me know if you have better idea.
-
-Best regards,
-Milo
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
