@@ -1,141 +1,153 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RESEND 06/16] mfd: add TI LMU driver
-Date: Tue, 24 Nov 2015 08:18:47 +0000
-Message-ID: <20151124081847.GD807@x1>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <1446441875-1256-7-git-send-email-milo.kim@ti.com>
- <20151123103025.GJ3098@x1>
- <5653CD07.2090602@ti.com>
- <56540627.7010901@ti.com>
+From: =?UTF-8?Q?Rapha=C3=ABl_Poggi?= <poggi.raph@gmail.com>
+Subject: Re: [alsa-devel] [PATCH 4/4] sound: codecs: pcm1792a: introduce
+ channel side
+Date: Tue, 24 Nov 2015 09:21:55 +0100
+Message-ID: <CACqcpZCSMwj2WOhX0ddD43VKCgOcNyrkkZrR0sWEsHE+H27TVg@mail.gmail.com>
+References: <1448014157-36526-1-git-send-email-raphael.poggi@avalun.com>
+ <1448014157-36526-5-git-send-email-raphael.poggi@avalun.com> <CAOf5uwmGk7WqOaAFj=fTw8+D+EszWPqReyfmS0njix=d7AokOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56540627.7010901@ti.com>
+In-Reply-To: <CAOf5uwmGk7WqOaAFj=fTw8+D+EszWPqReyfmS0njix=d7AokOA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Kim, Milo" <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Mark Brown <broonie@kernel.org>, lm-sensors@lm-sensors.org, linux-leds@vger.kernel.org
+To: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: perex@perex.cz, tiwai@suse.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Nov 2015, Kim, Milo wrote:
+Hi,
 
-> On 11/24/2015 11:35 AM, Kim, Milo wrote:
-> >Hi Lee,
-> >
-> >Thanks for all your comments. Please see my comments below.
-> >
-> >On 11/23/2015 7:30 PM, Lee Jones wrote:
-> >>>+int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read)
-> >>>>+{
-> >>>>+	int ret;
-> >>>>+	unsigned int val;
-> >>>>+
-> >>>>+	ret =3D regmap_read(lmu->regmap, reg, &val);
-> >>>>+	if (ret < 0)
-> >>>>+		return ret;
-> >>>>+
-> >>>>+	*read =3D (u8)val;
-> >>>>+	return 0;
-> >>>>+}
-> >>>>+EXPORT_SYMBOL_GPL(ti_lmu_read_byte);
-> >>It doesn't get much more simple than this.
-> >>
-> >>What's the purpose of abstracting it?
-> >>
-> >>>>+int ti_lmu_write_byte(struct ti_lmu *lmu, u8 reg, u8 data)
-> >>>>+{
-> >>>>+	return regmap_write(lmu->regmap, reg, data);
-> >>>>+}
-> >>>>+EXPORT_SYMBOL_GPL(ti_lmu_write_byte);
-> >>>>+
-> >>>>+int ti_lmu_update_bits(struct ti_lmu *lmu, u8 reg, u8 mask, u8 d=
-ata)
-> >>>>+{
-> >>>>+	return regmap_update_bits(lmu->regmap, reg, mask, data);
-> >>>>+}
-> >>>>+EXPORT_SYMBOL_GPL(ti_lmu_update_bits);
-> >>Okay, I lied, it does get more simple.
-> >>
-> >>Seems like abstraction for the sake of abstraction here.
-> >>
-> >>Feel free to try and convince me otherwise.
-> >>
-> >
-> >The main reason was that LMU MFD core provides consistent register
-> >access among LMU drivers like ti-lmu-backlight, leds-lm3633,
-> >lm363x-regulator and ti-lmu-fault-monitor('ti-lmu-hwmon' will be cha=
-nged
-> >to this in the 2nd patch).
-> >
-> >However, LMU register helpers are exactly same as regmap interface
-> >except using ti_lmu data structure. So let me replace them with regm=
-ap
-> >functions. Thanks for pointing this out.
->=20
-> I just realized LMU MFD core helpers also provide module
-> dependencies by using EXPORT_SYMBOL_GPL().
->=20
-> # modprobe -D ti-lmu-backlight
-> insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-> insmod /lib/modules/<ver>/kernel/drivers/video/backlight/ti-lmu-backl=
-ight.ko
-> # modprobe -D ti-lmu-fault-monitor
-> insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu-fault-monitor.ko
-> # modprobe -D lm363x-regulator
-> insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-> insmod /lib/modules/<ver>/kernel/drivers/regulator/lm363x-regulator.k=
-o
-> # modprobe -D leds-lm3633
-> insmod /lib/modules/<ver>/kernel/drivers/base/regmap/regmap-i2c.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/mfd-core.ko
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu.ko
-> insmod /lib/modules/<ver>/kernel/drivers/leds/leds-lm3633.ko
->=20
-> ti-lmu.ko should be loaded first because it has hardware enable pin
-> control code. Four other drivers have dependency on this module.
-> Without EXPORT_SYMBOL_GPL(), this dependency will be gone like
-> below.
->=20
-> # modprobe -D ti-lmu-backlight
-> insmod /lib/modules/<ver>/kernel/drivers/video/backlight/ti-lmu-backl=
-ight.ko
-> # modprobe -D ti-lmu-fault-monitor
-> insmod /lib/modules/<ver>/kernel/drivers/mfd/ti-lmu-fault-monitor.ko
-> # modprobe -D lm363x-regulator
-> insmod /lib/modules/<ver>/kernel/drivers/regulator/lm363x-regulator.k=
-o
-> # modprobe -D leds-lm3633
-> insmod /lib/modules/<ver>/kernel/drivers/leds/leds-lm3633.ko
->=20
-> If LMU MFD core module is not loaded and other modules call regmap
-> helpers, then loaded drivers will not work because hardware is not
-> enabled yet.
->=20
-> So I'd like to keep LMU MFD helpers for module dependencies.
-> Additionally, I'll modify 'ti_lmu_read_byte()' as follows.
->=20
-> int ti_lmu_read_byte(struct ti_lmu *lmu, u8 reg, u8 *read)
-> {
-> 	return regmap_read(lmu->regmap, reg, (unsigned int *)read);
-> }
-> EXPORT_SYMBOL_GPL(ti_lmu_read_byte);
->=20
-> Please let me know if you have better idea.
+2015-11-21 10:37 GMT+01:00 Michael Trimarchi <michael@amarulasolutions.com>:
+> Hi
+>
+> On Fri, Nov 20, 2015 at 11:09 AM, Raphael Poggi <poggi.raph@gmail.com> wrote:
+>> From: Raphael Poggi <poggi.raph@gmail.com>
+>>
+>> Add possibility to choose the channel side using the device tree,
+>> and also modify it using alsa ctrl.
+>>
+>> Signed-off-by: Raphael Poggi <poggi.raph@gmail.com>
+>> ---
+>>  sound/soc/codecs/pcm1792a.c | 46 +++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 46 insertions(+)
+>>
+>> diff --git a/sound/soc/codecs/pcm1792a.c b/sound/soc/codecs/pcm1792a.c
+>> index febaa48..005b679 100644
+>> --- a/sound/soc/codecs/pcm1792a.c
+>> +++ b/sound/soc/codecs/pcm1792a.c
+>> @@ -65,6 +65,12 @@ static const struct reg_default pcm1792a_reg_defaults[] = {
+>>         { PCM1792A_DEVICE_ID, 0x00 },
+>>  };
+>>
+>> +enum __pcm1792_side {
+>> +       STEREO,
+>> +       MONORAL_LEFT,
+>> +       MONORAL_RIGHT
+>> +};
+>> +
+>>  static bool pcm1792a_accessible_reg(struct device *dev, unsigned int reg)
+>>  {
+>>         return reg >= 0x10 && reg <= 0x17;
+>> @@ -83,6 +89,7 @@ struct pcm1792a_private {
+>>         struct regmap *regmap;
+>>         unsigned int format;
+>>         unsigned int rate;
+>> +       unsigned int side;
+>>  };
+>>
+>>  static int pcm1792a_set_dai_fmt(struct snd_soc_dai *codec_dai,
+>> @@ -153,6 +160,13 @@ static int pcm1792a_hw_params(struct snd_pcm_substream *substream,
+>>         ret = regmap_update_bits(priv->regmap, PCM1792A_FMT_CONTROL,
+>>                                  PCM1792A_FMT_MASK | PCM1792A_ATLD_ENABLE, val);
+>>
+>> +       if (priv->side == MONORAL_LEFT)
+>> +               val = PCM1792A_CHANNEL_MONO_LEFT;
+>> +       else if (priv->side == MONORAL_RIGHT)
+>> +               val = PCM1792A_CHANNEL_MONO_RIGHT;
+>> +
+>> +       regmap_update_bits(priv->regmap, PCM1792A_CHANNEL, PCM1792A_CHANNEL_MONO_MASK, val);
+>> +
+>>         return ret;
+>>  }
+>>
+>> @@ -222,10 +236,31 @@ static struct snd_soc_codec_driver soc_codec_dev_pcm1792a = {
+>>         .num_dapm_routes        = ARRAY_SIZE(pcm1792a_dapm_routes),
+>>  };
+>>
+>> +static int pcm1792a_of_init(struct spi_device *spi)
+>> +{
+>> +       int ret = 0;
+>> +       struct pcm1792a_private *pcm1792a = dev_get_drvdata(&spi->dev);
+>> +       const char *name;
+>> +       struct device_node *np = spi->dev.of_node;
+>> +
+>> +       name = of_get_property(np, "ti,side", NULL);
+>> +       if (name) {
+>> +               if (!strcmp(name, "left"))
+>> +                       pcm1792a->side = MONORAL_LEFT;
+>> +               else
+>> +                       pcm1792a->side = MONORAL_RIGHT;
+>> +       }
+>> +       else
+>> +               pcm1792a->side = STEREO;
+>> +
+>> +       return ret;
+>> +}
+>> +
+>>  static int pcm1792a_spi_probe(struct spi_device *spi)
+>>  {
+>>         struct pcm1792a_private *pcm1792a;
+>>         int ret;
+>> +       struct device_node *np = spi->dev.of_node;
+>>
+>>         pcm1792a = devm_kzalloc(&spi->dev, sizeof(struct pcm1792a_private),
+>>                                 GFP_KERNEL);
+>> @@ -241,6 +276,17 @@ static int pcm1792a_spi_probe(struct spi_device *spi)
+>>                 return ret;
+>>         }
+>>
+>> +       if (np) {
+>> +               ret = pcm1792a_of_init(spi);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+>> +
+>> +       if (pcm1792a->side == MONORAL_LEFT)
+>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHANNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_LEFT);
+>> +       else if (pcm1792a->side == MONORAL_RIGHT)
+>> +               regmap_update_bits(pcm1792a->regmap, PCM1792A_CHANNEL, PCM1792A_CHANNEL_MONO_MASK, PCM1792A_CHANNEL_MONO_RIGHT);
+>> +
+>
+> Why this is a part of dts and not a part of mixer control?
+>
+> Michael
+>
 
-You're keeping the helpers for the wrong reasons.  This has now become
-a hack.  If you have dependencies between modules, either use the init
-levels or defer probe in the usual way.
+The "channel side" bindings should be used when the pcm7192a is used
+in monaural mode (which requires two DACs, both DACs operate in a
+balanced mode for one channel of audio input data).
+This is a hardware level design, it will never change at runtime.
+I feel that a device tree binding is more appropriate than a control.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>>         return snd_soc_register_codec(&spi->dev,
+>>                         &soc_codec_dev_pcm1792a, &pcm1792a_dai, 1);
+>>  }
+>> --
+>> 2.1.0
+>>
+>> _______________________________________________
+>> Alsa-devel mailing list
+>> Alsa-devel@alsa-project.org
+>> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>
+>
+>
+> --
+> | Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+> | COO  -  Founder                                      Cruquiuskade 47 |
+> | +31(0)851119172                                 Amsterdam 1018 AM NL |
+> |                  [`as] http://www.amarulasolutions.com               |
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
