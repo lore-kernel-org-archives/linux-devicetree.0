@@ -1,63 +1,163 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH (v4) 2/2] mtd: brcmnand: Add support for the BCM63268
-Date: Tue, 24 Nov 2015 10:41:45 -0800
-Message-ID: <5654AF69.7040901@gmail.com>
-References: <56506D55.3000907@simon.arlott.org.uk> <20151122215945.GA5930@rob-hp-laptop> <56523E85.905@simon.arlott.org.uk> <56523EFF.9050502@simon.arlott.org.uk> <56535977.9050201@gmail.com> <56541BD3.4070202@simon.arlott.org.uk>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf6xx: Cosmic+: M4(nommu) initial support
+Date: Tue, 24 Nov 2015 11:27:55 -0800
+Message-ID: <6ed40cc7c8a0c362c3c41cfc914581c4@agner.ch>
+References: <1445795456-6698-1-git-send-email-afzal.mohd.ma@gmail.com>
+ <20151124032607.GD11999@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56541BD3.4070202@simon.arlott.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>, Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151124032607.GD11999@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/11/15 00:12, Simon Arlott wrote:
-> On 23/11/15 18:22, Florian Fainelli wrote:
->> On 22/11/15 14:17, Simon Arlott wrote:
->>> The BCM63268 has a NAND interrupt register with combined status and enable
->>> registers. It also has a clock for the NAND controller that needs to be
->>> enabled.
->>>
->>> Set up the device by enabling the clock, disabling and acking all
->>> interrupts, then handle the CTRL_READY interrupt.
->>>
->>> Add a "device_remove" function to struct brcmnand_soc so that the clock
->>> can be disabled when the device is removed.
->>>
->>> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
->>> ---
->>> On 22/11/15 21:59, Rob Herring wrote:
->>>>>>> + * "brcm,nand-bcm63268"
->>>>>>> + - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
->>>>>
->>>>> vendor,<soc>-device is preferred.
->>>
->>> The existing two bindings use brcm,nand-<soc>, but I've changed this one.
+On 2015-11-23 19:26, Shawn Guo wrote:
+> On Sun, Oct 25, 2015 at 11:20:56PM +0530, Afzal Mohammed wrote:
+>> Minimal Cortex-M4 device tree to boot Linux to shell. M4 is booted via
+>> Cortex-A5 running Linux using Stefan Agner's <stefan-XLVq0VzYD2Y@public.gmane.org> "m4boot"
+>> utility.
 >>
->> Could we stick with the existing binding naming convention of using:
+>> Signed-off-by: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Stefan,
+> 
+> Are you okay with this patch?
+
+Looks good to me:
+
+Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+
+--
+Stefan
+
+
+>> ---
+>>  arch/arm/boot/dts/Makefile           |  1 +
+>>  arch/arm/boot/dts/vf610m4-cosmic.dts | 90 ++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 91 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/vf610m4-cosmic.dts
 >>
->> brcm,nand-<soc> just so automated tools or other things can match this
->> one too, and +1 for consistency?
-> 
-> I could submit another patch renaming the existing bindings to
-> brcm,<soc>-nand, and add that to the drivers? Then they'd be consistent.
-
-No, let's not create unnecessary churn because of a minor mistake. So,
-yes we *should* have used brcm,<soc>-nand in the first place, but now
-that there are DTSes out there using "brcm,nand-<soc>" there is not
-really any point in doing this, so please update your patches so they
-match the existing convention.
-
-> 
->> Other than, that, same comment as Jonas, why do we we need the
->> device_remove callback to be called from the main driver down to this one?
-> 
-> I'll add a "struct brcmnand_soc *brcmnand_get_socdata(struct device *)"
-> instead so that I can access the soc data before calling brcmnand_remove.
-> 
-
-
--- 
-Florian
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index bb8fa023d574..06a1a7a1d104 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -347,6 +347,7 @@ dtb-$(CONFIG_SOC_VF610) += \
+>>  	vf610-colibri-eval-v3.dtb \
+>>  	vf610m4-colibri.dtb \
+>>  	vf610-cosmic.dtb \
+>> +	vf610m4-cosmic.dtb \
+>>  	vf610-twr.dtb
+>>  dtb-$(CONFIG_ARCH_MXS) += \
+>>  	imx23-evk.dtb \
+>> diff --git a/arch/arm/boot/dts/vf610m4-cosmic.dts b/arch/arm/boot/dts/vf610m4-cosmic.dts
+>> new file mode 100644
+>> index 000000000000..8944a2d2054c
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/vf610m4-cosmic.dts
+>> @@ -0,0 +1,90 @@
+>> +/*
+>> + * Device tree for Cosmic+ VF6xx Cortex-M4 support
+>> + *
+>> + * Copyright (C) 2015
+>> + *
+>> + * Based on vf610m4 Colibri
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "vf610m4.dtsi"
+>> +
+>> +/ {
+>> +	model = "VF610 Cortex-M4";
+>> +	compatible = "fsl,vf610m4";
+>> +};
+>> +
+>> +&gpio0 {
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&gpio1 {
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&gpio2 {
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&gpio3 {
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&gpio4 {
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&uart3 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_uart3>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&iomuxc {
+>> +	vf610-cosmic {
+>> +		pinctrl_uart3: uart3grp {
+>> +			fsl,pins = <
+>> +				VF610_PAD_PTA20__UART3_TX		0x21a2
+>> +				VF610_PAD_PTA21__UART3_RX		0x21a1
+>> +			>;
+>> +		};
+>> +	};
+>> +};
+>> --
+>> 2.5.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
