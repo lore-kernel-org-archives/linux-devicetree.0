@@ -1,65 +1,70 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 0/6] Build and support rk3036 SoC platform
-Date: Tue, 24 Nov 2015 01:03:01 +0100
-Message-ID: <1518219.zj9d8yfxJz@diego>
-References: <1446708840-12038-1-git-send-email-zhengxing@rock-chips.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] extcon: arizona: Update naming for micd-timeout DT to
+ include units
+Date: Tue, 24 Nov 2015 09:04:16 +0900
+Message-ID: <5653A980.30100@samsung.com>
+References: <1448290290-19267-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446708840-12038-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-reply-to: <1448290290-19267-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kmixter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Xing Zheng,
+On 2015=EB=85=84 11=EC=9B=94 23=EC=9D=BC 23:51, Charles Keepax wrote:
+> Add time units of -ms (milliseconds) to wlf,micd-timeout.
+>=20
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+>  .../devicetree/bindings/extcon/extcon-arizona.txt  |    2 +-
+>  drivers/extcon/extcon-arizona.c                    |    2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.=
+txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> index da9813b..05d85ac 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> @@ -33,7 +33,7 @@ Optional properties:
+>      specified as per the ARIZONA_MICD_TIME_XXX defines.
+>    - wlf,micd-dbtime : Microphone detection hardware debounces specif=
+ied as the
+>      number of measurements to take, valid values being 2 and 4.
+> -  - wlf,micd-timeout : Timeout for microphone detection, specified i=
+n
+> +  - wlf,micd-timeout-ms : Timeout for microphone detection, specifie=
+d in
+>      milliseconds.
+>    - wlf,micd-force-micbias : Force MICBIAS continuously on during mi=
+crophone
+>      detection.
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
+arizona.c
+> index c377030..8647533 100644
+> --- a/drivers/extcon/extcon-arizona.c
+> +++ b/drivers/extcon/extcon-arizona.c
+> @@ -1230,7 +1230,7 @@ static int arizona_extcon_device_get_pdata(stru=
+ct arizona *arizona)
+>  	device_property_read_u32(arizona->dev, "wlf,micd-dbtime",
+>  				 &pdata->micd_dbtime);
+> =20
+> -	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
+> +	device_property_read_u32(arizona->dev, "wlf,micd-timeout-ms",
+>  				 &pdata->micd_timeout);
+> =20
+>  	pdata->micd_force_micbias =3D device_property_read_bool(arizona->de=
+v,
+>=20
 
-Am Donnerstag, 5. November 2015, 15:33:54 schrieb Xing Zheng:
-> Hi,
->   We need to support rk3036 soc platform via upstream, there are
-> some primary parts for the initial release of minimum system: dts,
-> clk-pll, smp, and clock tree for rk3036, and additional, we can use
-> these startup and run to init processs.
+Applied it.
 
-[...]
-
-after talking with Mike and agreeing that I'm again taking the regular
-clock patches to them, I've applied all of this to appropriate branches.
-I did some cosmetics, as explained below.
-
-
-> Xing Zheng (6):
->   dt-bindings: add documentation of rk3036 clock controller
->   clk: rockchip: add dt-binding header for rk3036
->   clk: rockchip: add new pll-type for rk3036 and similar socs
-- wrapped some overly long lines, otherwise this is similar to what
-  Stephen already took for the rk3066-pll-type.
-
-
->   clk: rockchip: add clock controller for rk3036
->   ARM: dts: rockchip: add core rk3036 dts
-- split off the evb into a separate patch
-- reordered some nodes (please order by the address (the @xxxxxxxx)
-- reordered some properties
-- fixed the gic cpu masks
-
-
->   ARM: dts: enable smp for rk3036
-folded into the core dtsi addition
-
-
-Please take a final look at [0] to make sure I didn't mess up anything.
-
-
-Thanks
-Heiko
-
-
-[0]
-https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/log/?h=v4.5-clk/next
-https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/log/?h=v4.5-armsoc/dts32
+Thanks,
+Chanwoo Choi
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
