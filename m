@@ -1,91 +1,110 @@
-From: Damien Horsley <Damien.Horsley@imgtec.com>
-Subject: [PATCH 1/2] ASoC: pcm3168a: Add binding document for
-	pcm3168a codec
-Date: Tue, 24 Nov 2015 14:43:43 +0000
-Message-ID: <1448376224-23964-2-git-send-email-Damien.Horsley@imgtec.com>
-References: <1448376224-23964-1-git-send-email-Damien.Horsley@imgtec.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] mfd: axp20x: Split the driver into
+ core and i2c bits
+Date: Tue, 24 Nov 2015 23:09:11 +0800
+Message-ID: <CAGb2v6592Yvh0=Q3=fgzj8AdRb37D4mRj0vnyJ3gXqGFBv2saw@mail.gmail.com>
+References: <1448336916-31212-1-git-send-email-wens@csie.org>
+ <1448336916-31212-3-git-send-email-wens@csie.org> <CAHp75VesF5M6nJf6eaBO+Dg6nC3gj=rzL9YnQFAysQ4NFgOMHg@mail.gmail.com>
+ <CAGb2v65EH8sP_ONASZ5gWZXi1D0GqiJvT=X0ieYWehnfqM1Z=A@mail.gmail.com> <CAHp75VdGAAh56dJRh=ETJLJGFguuw+6mNSfRQ7Br7tAjeZv+3w@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1448376224-23964-1-git-send-email-Damien.Horsley@imgtec.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Maciej S.
- Szmigiero" <mail@maciej.szmigiero.name>, Bard Liao <bardliao@realtek.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Charles Keepax <ckeepax@gmail.com>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, James Hartley <james.hartley@imgtec.com>, Thomas Niederprum <niederp@physik.uni-kl.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBL732GZAKGQE2WOJRDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAHp75VdGAAh56dJRh=ETJLJGFguuw+6mNSfRQ7Br7tAjeZv+3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
+On Tue, Nov 24, 2015 at 8:35 PM, Andy Shevchenko
+<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Nov 24, 2015 at 1:28 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On Tue, Nov 24, 2015 at 5:37 PM, Andy Shevchenko
+>> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Tue, Nov 24, 2015 at 5:48 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>>>> The axp20x driver assumes the device is i2c based. This is not the
+>>>> case with later chips, which use a proprietary 2 wire serial bus
+>>>> by Allwinner called "Reduced Serial Bus".
+>>>>
+>>>> This patch follows the example of mfd/wm831x and splits it into
+>>>> an interface independent core, and an i2c specific glue layer.
+>>>> MFD_AXP20X and the new MFD_AXP20X_I2C are changed to tristate
+>>>> symbols, allowing the driver to be built as modules.
+>>>>
+>>>> Included but unused header files are removed as well.
+>
+> So=E2=80=A6
+>
+>>>> +       if (dev->of_node) {
+>>>
+>>> What about
+>>>
+>>> if (=E2=80=A6of_node) {
+>>>       const struct of_device_id *id;
+>>> =E2=80=A6
+>>> } else if ACPI_COMPANION(=E2=80=A6) {
+>
+> This should be has_acpi_companion().
 
-Add binding document for Texas Instruments pcm3168a codec
+I don't think the "else if" is necessary. There's only 2 possible ways
+the device gets probed, either device tree or ACPI.
 
-Signed-off-by: Damien.Horsley <Damien.Horsley@imgtec.com>
----
- .../devicetree/bindings/sound/ti,pcm3168a.txt      | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
+>>>       const struct acpi_device_id *id;
+>>> =E2=80=A6
+>>> } else {
+>>>  return -ENODEV;
+>>> }
+>>
+>> I really don't want to change code that I'm just moving around.
+>> Same goes for the other comments about this patch. I can do another
+>> patch on top of this to fix the style issues if it really bothers
+>> people.
+>
+> Fair enough.
+> My comments mostly about unnecessity of second parameter in the functions=
+.
+>
+> So,  you already did some clean up in this patch (above), what about
+> to do another? I also prefer separate patch *before* you do a split.
 
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-new file mode 100644
-index 0000000..5d9cb84
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-@@ -0,0 +1,48 @@
-+Texas Instruments pcm3168a DT bindings
-+
-+This driver supports both SPI and I2C bus access for this codec
-+
-+Required properties:
-+
-+  - compatible: "ti,pcm3168a"
-+
-+  - clocks : Contains an entry for each entry in clock-names
-+
-+  - clock-names : Includes the following entries:
-+	"scki"	The system clock
-+
-+  - VDD1-supply : Digital power supply regulator 1 (+3.3V)
-+
-+  - VDD2-supply : Digital power supply regulator 2 (+3.3V)
-+
-+  - VCCAD1-supply : ADC power supply regulator 1 (+5V)
-+
-+  - VCCAD2-supply : ADC power supply regulator 2 (+5V)
-+
-+  - VCCDA1-supply : DAC power supply regulator 1 (+5V)
-+
-+  - VCCDA2-supply : DAC power supply regulator 2 (+5V)
-+
-+For required properties on SPI/I2C, consult SPI/I2C device tree documentation
-+
-+Examples:
-+
-+i2c0: i2c0@0 {
-+
-+	...
-+
-+	pcm3168a: audio-codec@44 {
-+		compatible = "ti,pcm3168a";
-+		reg = <0x44>;
-+		clocks = <&clk_core CLK_AUDIO>;
-+		clock-names = "scki";
-+		VDD1-supply = <&supply3v3>;
-+		VDD2-supply = <&supply3v3>;
-+		VCCAD1-supply = <&supply5v0>;
-+		VCCAD2-supply = <&supply5v0>;
-+		VCCDA1-supply = <&supply5v0>;
-+		VCCDA2-supply = <&supply5v0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&dac_clk_pin>;
-+	};
-+};
--- 
-2.1.4
+Sure. I'll do a patch or 2 before the split. Would you mind if I add your
+Suggested-by tag?
+
+
+Regards
+ChenYu
+
+>>>> +       axp20x =3D devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KERNEL=
+);
+>>>> +       if (!axp20x)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       ret =3D axp20x_i2c_match_device(axp20x, &i2c->dev);
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +
+>>>> +       axp20x->dev =3D &i2c->dev;
+>>>> +       axp20x->irq =3D i2c->irq;
+>>>
+>>> If you move _match_device() here you will be able to drop away struct
+>>> device * parameter.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
