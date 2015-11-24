@@ -1,60 +1,75 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 1/2] mmc: sdhci: set bus voltage before enabling bus power
-Date: Tue, 24 Nov 2015 14:12:13 +0100
-Message-ID: <20151124131213.GB2228@odux.rfo.atmel.com>
-References: <1446825570-30029-1-git-send-email-ludovic.desroches@atmel.com>
- <1446825570-30029-2-git-send-email-ludovic.desroches@atmel.com>
- <20151109132305.GC15706@odux.rfo.atmel.com>
- <CAPDyKFrTTEnSFNvmx3e__Ap9gOGpA2-bz+yrq7ibz0wXGSWCXA@mail.gmail.com>
- <20151109144030.GD15706@odux.rfo.atmel.com>
- <CAPDyKFquZ+_Rf07gX+i-=_bzSa7KJ5+xQ8N21kK2mvfMGdVQMw@mail.gmail.com>
- <20151109163026.GE15706@odux.rfo.atmel.com>
- <20151124092341.GA2228@odux.rfo.atmel.com>
- <CAPDyKFp4U5vG_UswnLe1L2Vq1VwdkptThSdzhPYoP+hhGFTaQA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFp4U5vG_UswnLe1L2Vq1VwdkptThSdzhPYoP+hhGFTaQA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RESEND v4 0/6] remoteproc: Add driver for STMicroelectronics platforms
+Date: Tue, 24 Nov 2015 13:14:16 +0000
+Message-ID: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 12:01:53PM +0100, Ulf Hansson wrote:
-> On 24 November 2015 at 10:23, Ludovic Desroches
-> <ludovic.desroches@atmel.com> wrote:
-> > Hi Ulf,
-> >
-> > On Mon, Nov 09, 2015 at 05:30:26PM +0100, Ludovic Desroches wrote:
-> >> On Mon, Nov 09, 2015 at 05:00:46PM +0100, Ulf Hansson wrote:
-> >
-> > [...]
-> >
-> >> > Now, this discussion was interesting, but I forgot what problem you
-> >> > actually where trying to solve? :-)
-> >>
-> >> There is this discussion because of two things:
-> >> - Fixing something I consider as a bug: when I have a VMMC, only
-> >>   setting/clearing bit 0. Our controller strictly obeys to the spec and
-> >>   check the 'SD Bus Voltage Select' field. Since we put a reserved value
-> >>   (000), the Power On is not performed.
-> >> - I was trying to get help to understand what is this 'SD Bus Voltage'.
-> >>   For our controller and sdhci_set_power(), it seems to stand for VMMC.
-> >>   For me, everything concerning bus voltage is related to VQMMC, so I was
-> >>   disappointed.
-> >
-> > Do you plan to take the patch for VMMC? If yes, I will send a new patch
-> > for the device tree (I'll only add vmmc, not vqmmc as discussed); if
-> > not, forget these two patches.
-> >
-> 
-> Which patch do you refer to for "VMMC"?
-> 
+ST's platforms often have multiple co-processors (usually ST40s or ST231s)
+on-board.  This provides the Linux-side infrastructure to flash and boot
+them successfully.
 
-This one to not write an invalid voltage in the power control register
-even if we have an external regulator for vmmc.
+This set has been tested on an STiH410-B2120.
 
-Regards
+v3 => v4:
+ Suggested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+ - Move to using 'reserved-memory' API
+   - New 'reserved-memory' nodes
+   - Remove memory locations from RemoteProc's DT node's reg properties
+   - Remove C code obtaining/allocating DMA memory
+ - Re-order .start() and .stop() ops
+ - Add protection around Reset API in error path
+ - Explicitly set .has_iommu to false
 
-Ludovic
+v2 => v3:
+ - Generify syscon property (st,syscfg-boot => st,syscfg)
+ - Rename IP in DT bindings doc (Remote Processor => Co-Processor)
+ - Remove superfluous 'clock-names' property
+ - Remove superfluous 'reg-names' property
+ - Populate MAINTAINERS
+ - Clean-up DTS formatting
+ - Use strings in debugfs to control procs ('1|0' => 'start|stop')
+ - Align copyright statement with MODULE() macros
+ - Rename driver data structure ('st_rproc' => 'ddata')
+ - Addition of a full error path in .start()
+
+v1 => v2:
+ - Remove Linux implementation specific comment from binding document
+ - Force debugfs '0' to shutdown co-processor - rather than !1
+ - Supply more detailed commit message
+ - Propagate errors back from .stop()
+ - Review GPL wording
+ - Supply original author's SoBs
+
+Lee Jones (6):
+  remoteproc: dt: Provide bindings for ST's Remote Processor Controller
+    driver
+  remoteproc: debugfs: Add ability to boot remote processor using
+    debugfs
+  remoteproc: Supply controller driver for ST's Remote Processors
+  MAINTAINERS: Add ST's Remote Processor Driver to ARM/STI ARCHITECTURE
+  ARM: STiH407: Add nodes for RemoteProc
+  ARM: STiH407: Move over to using the 'reserved-memory' API for
+    obtaining DMA memory
+
+ .../devicetree/bindings/remoteproc/st-rproc.txt    |  41 +++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/stih407-family.dtsi              |  70 +++++
+ drivers/remoteproc/Kconfig                         |   9 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/remoteproc_debugfs.c            |  34 +++
+ drivers/remoteproc/st_remoteproc.c                 | 297 +++++++++++++++++++++
+ 7 files changed, 453 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+ create mode 100644 drivers/remoteproc/st_remoteproc.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
