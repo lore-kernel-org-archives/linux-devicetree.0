@@ -1,108 +1,70 @@
-From: Shengjiu Wang <shengjiu.wang@freescale.com>
-Subject: [PATCH V4 2/3] ASoC: fsl_spdif: spba clk is needed by spdif device
-Date: Tue, 24 Nov 2015 17:19:33 +0800
-Message-ID: <02a93459781754faa531e37abb74470f9c90fafd.1448356624.git.shengjiu.wang@freescale.com>
-References: <cover.1448356624.git.shengjiu.wang@freescale.com>
+From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] DT: PCI: qcom: Document PCIe devicetree bindings
+Date: Tue, 24 Nov 2015 11:22:18 +0200
+Message-ID: <56542C4A.2070802@linaro.org>
+References: <cover.1448270813.git.stanimir.varbanov@linaro.org>
+ <8fd3e7d1662f37abe549127d179c315dff3210d8.1448270813.git.stanimir.varbanov@linaro.org>
+ <20151123231744.GA14078@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1448356624.git.shengjiu.wang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, timur@tabi.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org
-Cc: alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151123231744.GA14078@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SPDIF need to enable the spba clock, when sdma is using share peripheral
-script. In this case, there is two spba master port is used, if don't
-enable the clock, the spba bus will have arbitration issue, which may
-cause read/write wrong data from/to SPDIF registers.
+Thanks for the comments!
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
----
- Documentation/devicetree/bindings/sound/fsl,spdif.txt |  5 +++++
- sound/soc/fsl/fsl_spdif.c                             | 19 +++++++++++++++++++
- 2 files changed, 24 insertions(+)
+On 11/24/2015 01:17 AM, Rob Herring wrote:
+> On Mon, Nov 23, 2015 at 11:29:00AM +0200, Stanimir Varbanov wrote:
+>> From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>
+>> Document Qualcomm PCIe driver devicetree bindings.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/pci/qcom,pcie.txt          |  231 ++++++++++++++++++++
+>>  1 file changed, 231 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> new file mode 100644
+>> index 000000000000..d7640d45fa31
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> @@ -0,0 +1,231 @@
+>> +* Qualcomm PCI express root complex
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Value shall include
+>> +		    - "qcom,pcie-v0" for apq/ipq8064
+>> +		    - "qcom,pcie-v1" for apq8084
+> 
+> Use chip part numbers, not versions.
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-index b5ee32e..4ca39dd 100644
---- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-@@ -27,6 +27,11 @@ Required properties:
- 			  Transceiver Clock Diagram" of SoC reference manual.
- 			  It can also be referred to TxClk_Source bit of
- 			  register SPDIF_STC.
-+	"spba"		  The spba clock is required when SPDIF is placed as a
-+			  bus slave of the Shared Peripheral Bus and when two
-+			  or more bus masters (CPU, DMA or DSP) try to access
-+			  it. This property is optional depending on the SoC
-+			  design.
- 
-    - big-endian		: If this property is absent, the native endian mode
- 			  will be in use as default, or the big endian mode
-diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
-index 28a8823..151849f 100644
---- a/sound/soc/fsl/fsl_spdif.c
-+++ b/sound/soc/fsl/fsl_spdif.c
-@@ -88,6 +88,7 @@ struct spdif_mixer_control {
-  * @rxclk: rx clock sources for capture
-  * @coreclk: core clock for register access via DMA
-  * @sysclk: system clock for rx clock rate measurement
-+ * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @dma_params_tx: DMA parameters for transmit channel
-  * @dma_params_rx: DMA parameters for receive channel
-  */
-@@ -106,6 +107,7 @@ struct fsl_spdif_priv {
- 	struct clk *rxclk;
- 	struct clk *coreclk;
- 	struct clk *sysclk;
-+	struct clk *spbaclk;
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
- 	/* regcache for SRPC */
-@@ -474,6 +476,14 @@ static int fsl_spdif_startup(struct snd_pcm_substream *substream,
- 			return ret;
- 		}
- 
-+		if (!IS_ERR(spdif_priv->spbaclk)) {
-+			ret = clk_prepare_enable(spdif_priv->spbaclk);
-+			if (ret) {
-+				dev_err(&pdev->dev, "failed to enable spba clock\n");
-+				goto err_spbaclk;
-+			}
-+		}
-+
- 		ret = spdif_softreset(spdif_priv);
- 		if (ret) {
- 			dev_err(&pdev->dev, "failed to soft reset\n");
-@@ -515,6 +525,9 @@ disable_txclk:
- 	for (i--; i >= 0; i--)
- 		clk_disable_unprepare(spdif_priv->txclk[i]);
- err:
-+	if (!IS_ERR(spdif_priv->spbaclk))
-+		clk_disable_unprepare(spdif_priv->spbaclk);
-+err_spbaclk:
- 	clk_disable_unprepare(spdif_priv->coreclk);
- 
- 	return ret;
-@@ -548,6 +561,8 @@ static void fsl_spdif_shutdown(struct snd_pcm_substream *substream,
- 		spdif_intr_status_clear(spdif_priv);
- 		regmap_update_bits(regmap, REG_SPDIF_SCR,
- 				SCR_LOW_POWER, SCR_LOW_POWER);
-+		if (!IS_ERR(spdif_priv->spbaclk))
-+			clk_disable_unprepare(spdif_priv->spbaclk);
- 		clk_disable_unprepare(spdif_priv->coreclk);
- 	}
- }
-@@ -1261,6 +1276,10 @@ static int fsl_spdif_probe(struct platform_device *pdev)
- 		return PTR_ERR(spdif_priv->coreclk);
- 	}
- 
-+	spdif_priv->spbaclk = devm_clk_get(&pdev->dev, "spba");
-+	if (IS_ERR(spdif_priv->spbaclk))
-+		dev_warn(&pdev->dev, "no spba clock in devicetree\n");
-+
- 	/* Select clock source for rx/tx clock */
- 	spdif_priv->rxclk = devm_clk_get(&pdev->dev, "rxtx1");
- 	if (IS_ERR(spdif_priv->rxclk)) {
+Sure.
+
+> 
+> Also, shouldn't you have the Designware compatible in addition.
+> 
+> [...]
+> 
+>> +
+>> +- <name>-gpio:
+> 
+> Use -gpios
+
+Ok I will.
+
 -- 
-1.9.1
+regards,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
