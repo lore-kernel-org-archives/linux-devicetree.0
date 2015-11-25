@@ -1,89 +1,35 @@
-From: Qais Yousef <qais.yousef@imgtec.com>
-Subject: [PATCH v2 19/19] irqchip/mips-gic: Add new DT property to reserve IPIs
-Date: Wed, 25 Nov 2015 12:06:57 +0000
-Message-ID: <1448453217-3874-20-git-send-email-qais.yousef@imgtec.com>
-References: <1448453217-3874-1-git-send-email-qais.yousef@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] ARM: dts: Remove unneeded GPIO include in exynos4412-odroidu3
+Date: Wed, 25 Nov 2015 09:11:23 -0300
+Message-ID: <1448453483-3338-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448453217-3874-1-git-send-email-qais.yousef@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, jiang.liu@linux.intel.com, ralf@linux-mips.org, linux-mips@linux-mips.org, Qais Yousef <qais.yousef@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The new property will allow to specify the range of GIC hwirqs to use for IPIs.
+The <dt-bindings/gpio/gpio.h> header is already included in the
+exynos4412-odroid-common DTSI so there's no need to do it again
+in the DTS file.
 
-This is an optinal property. We preserve the previous behaviour of allocating
-the last 2 * gic_vpes if it's not specified or DT is not supported.
-
-Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
 ---
- .../devicetree/bindings/interrupt-controller/mips-gic.txt    |  7 +++++++
- drivers/irqchip/irq-mips-gic.c                               | 12 ++++++++++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-index aae4c384ee1f..173595305e26 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-@@ -23,6 +23,12 @@ Optional properties:
- - mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
-   to which the GIC may not route interrupts.  Valid values are 2 - 7.
-   This property is ignored if the CPU is started in EIC mode.
-+- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
-+  reserved for IPIs.
-+  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
-+  of the reserved range.
-+  If not specified, the driver will allocate the last 2 * number of VPEs in the
-+  system.
+ arch/arm/boot/dts/exynos4412-odroidu3.dts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+index 646ff0bd001a..dd89f7b37c9f 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+@@ -13,7 +13,6 @@
  
- Required properties for timer sub-node:
- - compatible : Should be "mti,gic-timer".
-@@ -44,6 +50,7 @@ Example:
- 		#interrupt-cells = <3>;
+ /dts-v1/;
+ #include "exynos4412-odroid-common.dtsi"
+-#include <dt-bindings/gpio/gpio.h>
  
- 		mti,reserved-cpu-vectors = <7>;
-+		mti,reserved-ipi-vectors = <40 8>;
- 
- 		timer {
- 			compatible = "mti,gic-timer";
-diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
-index c7043a15253b..659fe734d1b7 100644
---- a/drivers/irqchip/irq-mips-gic.c
-+++ b/drivers/irqchip/irq-mips-gic.c
-@@ -945,6 +945,7 @@ static void __init __gic_init(unsigned long gic_base_addr,
- 			      struct device_node *node)
- {
- 	unsigned int gicconfig;
-+	unsigned int v[2];
- 
- 	gic_base = ioremap_nocache(gic_base_addr, gic_addrspace_size);
- 
-@@ -1013,8 +1014,15 @@ static void __init __gic_init(unsigned long gic_base_addr,
- 
- 	gic_ipi_domain->bus_token = DOMAIN_BUS_IPI;
- 
--	/* Make the last 2 * NR_CPUS available for IPIs */
--	bitmap_set(ipi_resrv, gic_shared_intrs - 2 * gic_vpes, 2 * gic_vpes);
-+	if (node &&
-+	    !of_property_read_u32_array(node, "mti,reserved-ipi-vectors", &v, 2)) {
-+		bitmap_set(ipi_resrv, v[0], v[1]);
-+	} else {
-+		/* Make the last 2 * gic_vpes available for IPIs */
-+		bitmap_set(ipi_resrv,
-+			   gic_shared_intrs - 2 * gic_vpes,
-+			   2 * gic_vpes);
-+	}
- 
- 	gic_basic_init();
- }
+ / {
+ 	model = "Hardkernel ODROID-U3 board based on Exynos4412";
 -- 
-2.1.0
+2.4.3
