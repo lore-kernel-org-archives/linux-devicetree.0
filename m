@@ -1,196 +1,501 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH (v2) 1/10] clocksource: Add brcm,bcm6345-timer device
- tree binding
-Date: Tue, 24 Nov 2015 21:05:44 -0600
-Message-ID: <20151125030544.GA9933@rob-hp-laptop>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <CAOiHx=k0Aa+qrBT1J7_cQaQRxndBmwsgSgi3x0eJOYTAy6Zq7Q@mail.gmail.com>
- <5653612A.4050309@simon.arlott.org.uk>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] watchdog: add Alphascale asm9260-wdt driver
+Date: Tue, 24 Nov 2015 19:22:12 -0800
+Message-ID: <56552964.3030504@roeck-us.net>
+References: <5652BFA5.9010101@roeck-us.net>
+ <1448401233-1064-1-git-send-email-linux@rempel-privat.de>
+ <1448401233-1064-2-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <5653612A.4050309@simon.arlott.org.uk>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: Jonas Gorski <jogo@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Miguel Gaio <miguel.gaio@efixo.com>, Maxime Bizon <mbizon@freebox.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448401233-1064-2-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 06:55:38PM +0000, Simon Arlott wrote:
-> Add device tree bindings for the BCM6345/BCM6318 timers. This is requ=
-ired
-> for the BCM6345 watchdog which needs to respond to one of the timer
-> interrupts.
->=20
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+On 11/24/2015 01:40 PM, Oleksij Rempel wrote:
+> Add WD support for Alphascale asm9260 SoC. This driver
+> provide support for different function modes:
+> - HW mode to trigger SoC reset on timeout
+> - SW mode do soft reset if needed
+> - DEBUG mode
+>
+> Optional support for stopping watchdog. If reset binding are not provided
+> this driver will work in nowayout mode.
 
-Acked-by: Rob Herring <robh@kernel.org>
+I think this is no longer optional ?
 
+>
+> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 > ---
-> On 23/11/15 15:33, Jonas Gorski wrote:
-> > On Sat, Nov 21, 2015 at 8:02 PM, Simon Arlott <simon@fire.lp0.eu> w=
-rote:
-> >> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-time=
-r"
-> >=20
-> > Since bcm6318 uses a slightly different register layout than the
-> > earlier SoCs, I'd argue that using bcm6345-timer as a compatible fo=
-r
-> > bcm6318 is wrong.
->=20
-> I've split them out into two very similar bindings.
->=20
-> Patches 1/4 and 2/4 are replaced with (v2) 1/10 and (v2) 2/10.
->=20
->  .../bindings/timer/brcm,bcm6318-timer.txt          | 44 ++++++++++++=
-++++++++
->  .../bindings/timer/brcm,bcm6345-timer.txt          | 47 ++++++++++++=
-++++++++++
->  2 files changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm6=
-318-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm6=
-345-timer.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6318-tim=
-er.txt b/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer.txt
+>   drivers/watchdog/Kconfig       |  10 ++
+>   drivers/watchdog/Makefile      |   1 +
+>   drivers/watchdog/asm9260_wdt.c | 400 +++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 411 insertions(+)
+>   create mode 100644 drivers/watchdog/asm9260_wdt.c
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index c68edc1..9cd9b75 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -173,6 +173,16 @@ config ARM_SP805_WATCHDOG
+>   	  ARM Primecell SP805 Watchdog timer. This will reboot your system when
+>   	  the timeout is reached.
+>
+> +config ASM9260_WATCHDOG
+> +	tristate "Alphascale ASM9260 watchdog"
+> +	depends on MACH_ASM9260
+> +	depends on OF
+> +	select WATCHDOG_CORE
+> +	select RESET_CONTROLLER
+> +	help
+> +	  Watchdog timer embedded into Alphascale asm9260 chips. This will reboot your
+> +	  system when the timeout is reached.
+> +
+>   config AT91RM9200_WATCHDOG
+>   	tristate "AT91RM9200 watchdog"
+>   	depends on SOC_AT91RM9200 && MFD_SYSCON
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 0c616e3..bd7b0cd 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -30,6 +30,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
+>
+>   # ARM Architecture
+>   obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
+> +obj-$(CONFIG_ASM9260_WATCHDOG) += asm9260_wdt.o
+>   obj-$(CONFIG_AT91RM9200_WATCHDOG) += at91rm9200_wdt.o
+>   obj-$(CONFIG_AT91SAM9X_WATCHDOG) += at91sam9_wdt.o
+>   obj-$(CONFIG_CADENCE_WATCHDOG) += cadence_wdt.o
+> diff --git a/drivers/watchdog/asm9260_wdt.c b/drivers/watchdog/asm9260_wdt.c
 > new file mode 100644
-> index 0000000..cf4be7e
+> index 0000000..c8daeff
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer.txt
-> @@ -0,0 +1,44 @@
-> +Broadcom BCM6318 Timer
+> +++ b/drivers/watchdog/asm9260_wdt.c
+> @@ -0,0 +1,400 @@
+> +/*
+> + * Watchdog driver for Alphascale ASM9260.
+> + *
+> + * Copyright (c) 2014 Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
 > +
-> +This block is a timer that is connected to multiple interrupts on th=
-e main
-> +interrupt controller and functions as a programmable interrupt contr=
-oller for
-> +timer events. There is a main timer interrupt for all timers.
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/reset.h>
+> +#include <linux/watchdog.h>
 > +
-> +- 4 independent timers with their own interrupt, and own maskable le=
-vel
-> +  interrupt bit in the main timer interrupt
+> +#define CLOCK_FREQ	1000000
 > +
-> +- 1 watchdog timer with an unmaskable level interrupt bit in the mai=
-n timer
-> +  interrupt
+> +/* Watchdog Mode register */
+> +#define HW_WDMOD			0x00
+> +/* Wake interrupt. Set by HW, can't be cleared. */
+> +#define BM_MOD_WDINT			BIT(3)
+> +/* This bit set if timeout reached. Cleared by SW. */
+> +#define BM_MOD_WDTOF			BIT(2)
+> +/* HW Reset on timeout */
+> +#define BM_MOD_WDRESET			BIT(1)
+> +/* WD enable */
+> +#define BM_MOD_WDEN			BIT(0)
 > +
-> +- Contains one enable/status word pair
+> +/*
+> + * Watchdog Timer Constant register
+> + * Minimal value is 0xff, the meaning of this value
+> + * depends on used clock: T = WDCLK * (0xff + 1) * 4
+> + */
+> +#define HW_WDTC				0x04
+> +#define BM_WDTC_MAX(freq)		(0x7fffffff / (freq))
 > +
-> +- No atomic set/clear operations
+> +/* Watchdog Feed register */
+> +#define HW_WDFEED			0x08
 > +
-> +Required properties:
+> +/* Watchdog Timer Value register */
+> +#define HW_WDTV				0x0c
 > +
-> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6318-timer"
-> +- reg: specifies the base physical address and size of the registers=
-, excluding
-> +  the watchdog registers
-> +- interrupt-controller: identifies the node as an interrupt controll=
-er
-> +- #interrupt-cells: specifies the number of cells needed to encode a=
-n interrupt
-> +  source, should be 1.
-> +- interrupt-parent: specifies the phandle to the parent interrupt co=
-ntroller(s)
-> +  this one is cascaded from
-> +- interrupts: specifies the interrupt line(s) in the interrupt-paren=
-t controller
-> +  node for the main timer interrupt, followed by the individual time=
-r
-> +  interrupts; valid values depend on the type of parent interrupt co=
-ntroller
-> +- clocks: phandle of timer reference clock (periph)
+> +#define ASM9260_WDT_DEFAULT_TIMEOUT	30
 > +
-> +Example:
-> +
-> +timer: timer@10000040 {
-> +	compatible =3D "brcm,bcm63148-timer", "brcm,bcm6318-timer";
-> +	reg =3D <0x10000040 0x28>;
-> +
-> +	interrupt-controller;
-> +	#interrupt-cells =3D <1>;
-> +
-> +	interrupt-parent =3D <&periph_intc>;
-> +	interrupts =3D <31>, <0>, <1>, <2>, <3>;
-> +	clock =3D <&periph_osc>;
+> +enum asm9260_wdt_mode {
+> +	HW_RESET,
+> +	SW_RESET,
+> +	DEBUG,
 > +};
-> diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6345-tim=
-er.txt b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
-> new file mode 100644
-> index 0000000..03250dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
-> @@ -0,0 +1,47 @@
-> +Broadcom BCM6345 Timer
 > +
-> +This block is a timer that is connected to one interrupt on the main=
- interrupt
-> +controller and functions as a programmable interrupt controller for =
-timer
-> +events.
+> +struct asm9260_wdt_priv {
+> +	struct device		*dev;
+> +	struct watchdog_device	wdd;
+> +	struct clk		*clk;
+> +	struct clk		*clk_ahb;
+> +	struct reset_control	*rst;
+> +	struct notifier_block	restart_handler;
 > +
-> +- 3 independent timers with their own maskable level interrupt bit (=
-but not
-> +  per CPU because there is only one parent interrupt and the timers =
-share it)
-> +
-> +- 1 watchdog timer with an unmaskable level interrupt
-> +
-> +- Contains one enable/status word pair
-> +
-> +- No atomic set/clear operations
-> +
-> +The lack of per CPU ability of timers makes them unusable as a set o=
-f
-> +clockevent devices, otherwise they could be attached to the remainin=
-g
-> +interrupts.
-> +
-> +Required properties:
-> +
-> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-timer"
-> +- reg: specifies the base physical address and size of the registers=
-, excluding
-> +  the watchdog registers
-> +- interrupt-controller: identifies the node as an interrupt controll=
-er
-> +- #interrupt-cells: specifies the number of cells needed to encode a=
-n interrupt
-> +  source, should be 1.
-> +- interrupt-parent: specifies the phandle to the parent interrupt co=
-ntroller(s)
-> +  this one is cascaded from
-> +- interrupts: specifies the interrupt line(s) in the interrupt-paren=
-t controller
-> +  node for the timer interrupt; valid values depend on the type of p=
-arent
-> +  interrupt controller
-> +- clocks: phandle of timer reference clock (periph)
-> +
-> +Example:
-> +
-> +timer: timer@10000080 {
-> +	compatible =3D "brcm,bcm63168-timer", "brcm,bcm6345-timer";
-> +	reg =3D <0x10000080 0x1c>;
-> +
-> +	interrupt-controller;
-> +	#interrupt-cells =3D <1>;
-> +
-> +	interrupt-parent =3D <&periph_intc>;
-> +	interrupts =3D <0>;
-> +	clock=B7=3D=B7<&periph_osc>;
+> +	void __iomem		*iobase;
+> +	int			irq;
+> +	unsigned long		wdt_freq;
+> +	enum asm9260_wdt_mode	mode;
 > +};
-> --=20
-> 2.1.4
->=20
-> --=20
-> Simon Arlott
+> +
+> +static int asm9260_wdt_feed(struct watchdog_device *wdd)
+> +{
+> +	struct asm9260_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +
+> +	iowrite32(0xaa, priv->iobase + HW_WDFEED);
+> +	iowrite32(0x55, priv->iobase + HW_WDFEED);
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned int asm9260_wdt_gettimeleft(struct watchdog_device *wdd)
+> +{
+> +	struct asm9260_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +	u32 counter;
+> +
+> +	counter = ioread32(priv->iobase + HW_WDTV);
+> +
+> +	return DIV_ROUND_CLOSEST(counter, priv->wdt_freq);
+> +}
+> +
+> +static int asm9260_wdt_updatetimeout(struct watchdog_device *wdd)
+> +{
+> +	struct asm9260_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +	u32 counter;
+> +
+> +	counter = wdd->timeout * priv->wdt_freq;
+> +
+> +	iowrite32(counter, priv->iobase + HW_WDTC);
+> +
+> +	return 0;
+> +}
+> +
+> +static int asm9260_wdt_enable(struct watchdog_device *wdd)
+> +{
+> +	struct asm9260_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +	u32 mode = 0;
+> +
+> +	if (priv->mode == HW_RESET)
+> +		mode = BM_MOD_WDRESET;
+> +
+> +	iowrite32(BM_MOD_WDEN | mode, priv->iobase + HW_WDMOD);
+> +
+> +	asm9260_wdt_updatetimeout(wdd);
+> +
+> +	asm9260_wdt_feed(wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int asm9260_wdt_disable(struct watchdog_device *wdd)
+> +{
+> +	struct asm9260_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +
+> +	/* The only way to disable WD is to reset it. */
+> +	reset_control_assert(priv->rst);
+> +	reset_control_deassert(priv->rst);
+> +
+> +	return 0;
+> +}
+> +
+> +static int asm9260_wdt_settimeout(struct watchdog_device *wdd, unsigned int to)
+> +{
+> +	wdd->timeout = to;
+> +	asm9260_wdt_updatetimeout(wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static void asm9260_wdt_sys_reset(struct asm9260_wdt_priv *priv)
+> +{
+> +	/* init WD if it was not started */
+> +
+> +	iowrite32(BM_MOD_WDEN | BM_MOD_WDRESET, priv->iobase + HW_WDMOD);
+> +
+> +	iowrite32(0xff, priv->iobase + HW_WDTC);
+> +	/* first pass correct sequence */
+> +	asm9260_wdt_feed(&priv->wdd);
+> +	/*
+> +	 * Then write wrong pattern to the feed to trigger reset
+> +	 * ASAP.
+> +	 */
+> +	iowrite32(0xff, priv->iobase + HW_WDFEED);
+> +
+> +	mdelay(1000);
+> +}
+> +
+> +static irqreturn_t asm9260_wdt_irq(int irq, void *devid)
+> +{
+> +	struct asm9260_wdt_priv *priv = devid;
+> +	u32 stat;
+> +
+> +	stat = ioread32(priv->iobase + HW_WDMOD);
+> +	if (!(stat & BM_MOD_WDINT))
+> +		return IRQ_NONE;
+> +
+> +	if (priv->mode == DEBUG)
+> +		dev_info(priv->dev, "Watchdog Timeout. Do nothing.\n");
+> +	else {
+> +		dev_info(priv->dev, "Watchdog Timeout. Doing SW Reset.\n");
+> +		asm9260_wdt_sys_reset(priv);
+> +	}
+> +
+
+coding style asks for { } in both branches of the if statement.
+
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int asm9260_restart_handler(struct notifier_block *this,
+> +				   unsigned long mode, void *cmd)
+> +{
+> +	struct asm9260_wdt_priv *priv =
+> +		container_of(this, struct asm9260_wdt_priv, restart_handler);
+> +
+> +	asm9260_wdt_sys_reset(priv);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static const struct watchdog_info asm9260_wdt_ident = {
+> +	.options          =     WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING
+> +				| WDIOF_MAGICCLOSE,
+> +	.identity         =	"Alphascale asm9260 Watchdog",
+> +};
+> +
+> +static struct watchdog_ops asm9260_wdt_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= asm9260_wdt_enable,
+> +	.stop		= asm9260_wdt_disable,
+> +	.get_timeleft	= asm9260_wdt_gettimeleft,
+> +	.ping		= asm9260_wdt_feed,
+> +	.set_timeout	= asm9260_wdt_settimeout,
+> +};
+> +
+> +static int __init asm9260_wdt_get_dt_clks(struct asm9260_wdt_priv *priv)
+> +{
+> +	int err;
+> +	unsigned long clk;
+> +
+> +	priv->clk = devm_clk_get(priv->dev, "mod");
+> +	if (IS_ERR(priv->clk)) {
+> +		dev_err(priv->dev, "Failed to get \"mod\" clk\n");
+> +		return PTR_ERR(priv->clk);
+> +	}
+> +
+> +	/* configure AHB clock */
+> +	priv->clk_ahb = devm_clk_get(priv->dev, "ahb");
+> +	if (IS_ERR(priv->clk_ahb)) {
+> +		dev_err(priv->dev, "Failed to get \"ahb\" clk\n");
+> +		return PTR_ERR(priv->clk_ahb);
+> +	}
+> +
+> +	err = clk_prepare_enable(priv->clk_ahb);
+> +	if (err) {
+> +		dev_err(priv->dev, "Failed to enable ahb_clk!\n");
+> +		return err;
+> +	}
+> +
+> +	err = clk_set_rate(priv->clk, CLOCK_FREQ);
+> +	if (err) {
+> +		clk_disable_unprepare(priv->clk_ahb);
+> +		dev_err(priv->dev, "Failed to set rate!\n");
+> +		return err;
+> +	}
+> +
+> +	err = clk_prepare_enable(priv->clk);
+> +	if (err) {
+> +		clk_disable_unprepare(priv->clk_ahb);
+> +		dev_err(priv->dev, "Failed to enable clk!\n");
+> +		return err;
+> +	}
+> +
+> +	/* wdt has internal divider */
+> +	clk = clk_get_rate(priv->clk);
+> +	if (!clk) {
+> +		clk_disable_unprepare(priv->clk);
+> +		clk_disable_unprepare(priv->clk_ahb);
+> +		dev_err(priv->dev, "Failed, clk is 0!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv->wdt_freq = clk / 2;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __init asm9260_wdt_get_dt_mode(struct asm9260_wdt_priv *priv)
+> +{
+> +	const char *tmp;
+> +	int ret;
+> +
+> +	/* default mode */
+> +	priv->mode = HW_RESET;
+> +
+> +	ret = of_property_read_string(priv->dev->of_node,
+> +				      "alphascale,mode", &tmp);
+> +	if (ret < 0)
+> +		return;
+> +
+> +	if (!strcmp(tmp, "hw"))
+> +		priv->mode = HW_RESET;
+> +	else if (!strcmp(tmp, "sw"))
+> +		priv->mode = SW_RESET;
+> +	else if (!strcmp(tmp, "debug"))
+> +		priv->mode = DEBUG;
+> +	else
+> +		dev_warn(priv->dev, "unknown reset-type: %s. Using default \"hw\" mode.",
+> +			 tmp);
+> +}
+> +
+> +static int __init asm9260_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct asm9260_wdt_priv *priv;
+> +	struct watchdog_device *wdd;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(struct asm9260_wdt_priv),
+> +			    GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->iobase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->iobase))
+> +		return PTR_ERR(priv->iobase);
+> +
+> +	ret = asm9260_wdt_get_dt_clks(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->rst = devm_reset_control_get(&pdev->dev, "wdt_rst");
+> +	if (IS_ERR(priv->rst))
+> +		return PTR_ERR(priv->rst);
+> +
+> +	wdd = &priv->wdd;
+> +	wdd->info = &asm9260_wdt_ident;
+> +	wdd->ops = &asm9260_wdt_ops;
+> +	wdd->min_timeout = 1;
+> +	wdd->max_timeout = BM_WDTC_MAX(priv->wdt_freq);
+> +	wdd->parent = &pdev->dev;
+> +
+> +	watchdog_set_drvdata(wdd, priv);
+> +
+> +	/*
+> +	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
+> +	 * default, unless the max timeout is less than 30 seconds, then use
+> +	 * the max instead.
+> +	 */
+> +	wdd->timeout = ASM9260_WDT_DEFAULT_TIMEOUT;
+> +	watchdog_init_timeout(wdd, 0, &pdev->dev);
+> +
+> +	asm9260_wdt_get_dt_mode(priv);
+> +
+> +	if (priv->mode != HW_RESET)
+> +		priv->irq = platform_get_irq(pdev, 0);
+> +
+> +	if (priv->irq > 0) {
+> +		/*
+> +		 * Not all supported platforms specify an interrupt for the
+> +		 * watchdog, so let's make it optional.
+> +		 */
+> +		ret = devm_request_irq(&pdev->dev, priv->irq,
+> +				       asm9260_wdt_irq, IRQF_SHARED,
+> +				       pdev->name, priv);
+> +		if (ret < 0)
+> +			dev_warn(&pdev->dev, "failed to request IRQ\n");
+> +	}
+> +
+> +	ret = watchdog_register_device(wdd);
+> +	if (ret)
+> +		goto clk_off;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	priv->restart_handler.notifier_call = asm9260_restart_handler;
+> +	priv->restart_handler.priority = 128;
+> +	ret = register_restart_handler(&priv->restart_handler);
+> +	if (ret)
+> +		dev_warn(&pdev->dev, "cannot register restart handler\n");
+> +
+> +	dev_info(&pdev->dev, "Watchdog enabled (to=%d, mode=%d)\n",
+
+Wonder who will know what "to" means. How about "timeout" ?
+
+Also, would it possibly make more sense to spell out the mode ?
+Users won't know what 0/1/2 means.
+
+> +		 wdd->timeout, priv->mode);
+> +	return 0;
+> +
+> +clk_off:
+> +	clk_disable_unprepare(priv->clk);
+> +	clk_disable_unprepare(priv->clk_ahb);
+
+The interrupt is still enabled here. Is this safe ?
+
+> +	return ret;
+> +}
+> +
+> +static void asm9260_wdt_shutdown(struct platform_device *pdev)
+> +{
+> +	struct asm9260_wdt_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	asm9260_wdt_disable(&priv->wdd);
+> +}
+> +
+> +static int __exit asm9260_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct asm9260_wdt_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	asm9260_wdt_disable(&priv->wdd);
+> +
+> +	unregister_restart_handler(&priv->restart_handler);
+
+	watchdog_unregister_device() ?
+
+> +	clk_disable_unprepare(priv->clk);
+> +	clk_disable_unprepare(priv->clk_ahb);
+
+The interrupt is still enabled here, and the handler may be called
+since it is a shared interrupt. Is this safe ?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id asm9260_wdt_of_match[] = {
+> +	{ .compatible = "alphascale,asm9260-wdt"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, asm9260_wdt_of_match);
+> +
+> +static struct platform_driver asm9260_wdt_driver = {
+> +	.driver = {
+> +		.name = "asm9260-wdt",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table	= asm9260_wdt_of_match,
+> +	},
+> +	.probe = asm9260_wdt_probe,
+> +	.remove = asm9260_wdt_remove,
+> +	.shutdown = asm9260_wdt_shutdown,
+> +};
+> +module_platform_driver(asm9260_wdt_driver);
+> +
+> +MODULE_DESCRIPTION("asm9260 WatchDog Timer Driver");
+> +MODULE_AUTHOR("Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
