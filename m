@@ -1,45 +1,62 @@
-From: Meng Yi <b56799@freescale.com>
-Subject: [PATCH 2/2] ARM: dts: ls1021a: Add a TFT LCD panel.
-Date: Wed, 25 Nov 2015 14:46:07 +0800
-Message-ID: <1448433967-6710-2-git-send-email-b56799@freescale.com>
-References: <1448433967-6710-1-git-send-email-b56799@freescale.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v9] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Wed, 25 Nov 2015 07:50:18 +0000
+Message-ID: <20151125075018.68e97010@arm.com>
+References: <1447911323-12567-1-git-send-email-bharatku@xilinx.com>
+	<20151124173556.18aff6b5@arm.com>
+	<8520D5D51A55D047800579B0941471982586607F@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448433967-6710-1-git-send-email-b56799@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Meng Yi <b56799@freescale.com>, Alison Wang <b18965@freescale.com>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Jianwei Wang <jianwei.wang.chn@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <8520D5D51A55D047800579B0941471982586607F@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alison Wang <b18965@freescale.com>
-Signed-off-by: Xiubo Li <lixiubo@cmss.chinamobile.com>
-Signed-off-by: Jianwei Wang <jianwei.wang.chn@gmail.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Wed, 25 Nov 2015 05:40:49 +0000
+Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index fbb89d1..fad2e3b 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -105,6 +105,17 @@
- 			bitclock-master;
- 		};
- 	};
-+
-+	panel: panel {
-+		compatible = "nec,nl4827hc19-05b";
-+	};
-+
-+};
-+
-+&dcu {
-+	fsl,panel = <&panel>;
-+	status = "okay";
-+
- };
- 
- &dspi1 {
+> > On Thu, 19 Nov 2015 11:05:23 +0530
+> > Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
+> > 
+> > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> > >
+> > > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > +
+> > > +#define MSI_ADDRESS				0xDEED0000
+> > 
+> > How did you pick this value? What if it intersect with some actual RAM?
+> > What if a device actually does DMA to that location?
+> > 
+> > Wouldn't it make sense to actually pick a real *device* address (hint:
+> > your MSI controller itself) for this purpose, as the device will never DMA
+> > there?
+> >
+> > 
+> We have already mentioned in previous patch discussion, we don't have
+> any device address on our SOC for MSI, that's the reason we are
+> allocating a page for MSI in RAM. Since our memory write is consumed
+> by bridge and doesn't write to memory, you suggested to use some
+> random address,  so using some random address.
+
+This is becoming painful.
+
+- "write is consumed by bridge and doesn't write to memory": So why are
+  you using something that has a chance of actually being memory??? Are
+  you in the business of corrupting unsuspecting data?
+
+- "we don't have any device address on our SOC for MSI": You have
+  plenty, and that's the whole of your device space. *All of it*. So
+  just take the base address of your PCIe controller, and be done with
+  it. Or your UART. Anything that cannot be DMA'ed to from a PCIe
+  device, and that is downstream of your PCIe bridge.
+
+	M.
 -- 
-2.1.0.27.g96db324
+Jazz is not dead. It just smells funny.
