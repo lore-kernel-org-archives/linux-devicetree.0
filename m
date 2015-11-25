@@ -1,65 +1,75 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
-Date: Wed, 25 Nov 2015 09:21:25 +0900
-Message-ID: <20151125002125.GG20596@verge.net.au>
-References: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
- <SG2PR06MB09198719427CB3F4FE532834D8060@SG2PR06MB0919.apcprd06.prod.outlook.com>
+From: Shuge <shugelinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH v2 1/5] ARM: dts: sun8i: Add SID node
+Date: Wed, 25 Nov 2015 09:22:56 +0800
+Message-ID: <56550D70.6060109@gmail.com>
+References: <cover.1448263428.git.atx@atx.name>
+ <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx@atx.name>
+ <20151123124356.GW32142@lukather>
+ <a7d4e538-db64-476d-b5de-5222419229a2@googlegroups.com>
+ <20151124093202.GL32142@lukather>
+Reply-To: shugelinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB09198719427CB3F4FE532834D8060-ESzmfEwOt/zNQ8RBPPB5A20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCYY37UO6AHRBL432SZAKGQECWMZU6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151124093202.GL32142@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, atx-MwjtXicnQwU@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gpatchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 05:49:05AM +0000, Yoshihiro Shimoda wrote:
-> Hi Simon-san,
+On Monday, November 23, 2015 at 17:32 UTC+8, Maxime Ripard wrote:
+> On Mon, Nov 23, 2015 at 10:51:15PM -0800, Sugar Wu wrote:
+>> On Monday, November 23, 2015 at 8:43:59 PM UTC+8, Maxime Ripard wrote:
+>>>
+>>> Hi, 
+>>>
+>>> On Mon, Nov 23, 2015 at 09:02:48AM +0100, Josef Gajdusek wrote: 
+>>>> Add a node describing the Security ID memory to the 
+>>>> Allwinner H3 .dtsi file. 
+>>>>
+>>>> Signed-off-by: Josef Gajdusek <a...-MwjtXicnQwU@public.gmane.org <javascript:>> 
+>>>> --- 
+>>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++ 
+>>>>  1 file changed, 7 insertions(+) 
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi 
+>>> b/arch/arm/boot/dts/sun8i-h3.dtsi 
+>>>> index 0faa38a..58de718 100644 
+>>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi 
+>>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi 
+>>>> @@ -359,6 +359,13 @@ 
+>>>>                          #size-cells = <0>; 
+>>>>                  }; 
+>>>>   
+>>>> +                sid: eeprom@01c14000 { 
+>>>> +                        compatible = "allwinner,sun4i-a10-sid"; 
+>>>> +                        reg = <0x01c14000 0x400>; 
+>>>
+>>> The datasheet says it's 256 bytes wide, while the size here is of 1kB, 
+>>> is it intentional? 
+>>
+>> SID memory map is 0x01c14000 ~ 0x01c143FF, include 2048bits efuse space.
+>> H3 efuse space is SID_SRAM, its range is  0x01c14200 ~ +0x100.
 > 
-> > From: Simon Horman [mailto:horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> > Sent: Tuesday, November 24, 2015 11:21 AM
-> > 
-> > In general Renesas hardware is not documented to the extent where the
-> > relationship between IP blocks on different SoCs can be assumed although
-> > they may appear to operate the same way. Furthermore the documentation
-> > typically does not specify a version for individual IP blocks. For these
-> > reasons a convention of using the SoC name in place of a version and
-> > providing SoC-specific compat strings has been adopted.
-> > 
-> > Although not universally liked this convention is used in the bindings for
-> > most drivers for Renesas hardware. The purpose of this patch is to
-> > update the Renesas USB DMA Controller driver to follow this convention.
-> > 
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> 
-> Thank you for the patch!
-> 
-> > ---
-> > * r8a7792 (R-Car V2H) is omitted as my reading of the documentation
-> >   is that Renesas USB-DMAC does not exist on that SoC
-> 
-> I agree with you.
-> 
-> > * r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
-> >   of USB-DMAC that SoC
-> 
-> I think this is R-Car H3, not H2.
+> Interesting, what is below the 0x200 registers?
+>
+Some control register about SID.
+offset: 0x40  SID Program/Read Control Register
+offset: 0x50  SID Program Key Value Register
+offset: 0x60  SID Read Key Value Register
+offset: 0x70  \
+offset: 0x80  SJTAG Attribute 0 Register
+offset: 0x84  SJTAG Attribute 1 Register
+offset: 0x88  SJTAG Select Register
+offset: 0x90  SID Program Ctrol register for burned timing
 
-Yes, H3. Sorry about that.
-
-> Since R-Car H3's USB-DMAC is compatible with other SoCs,
-> would you add the R-Car H3's compatible string, if possible?
-
-Sure, will do.
-
-> Anyway,
-> Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-
-Thanks!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks!
+> Maxime
+> 
