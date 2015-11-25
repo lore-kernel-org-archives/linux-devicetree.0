@@ -1,74 +1,92 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/6] watchdog: ts4800: add driver for TS-4800 watchdog
-Date: Wed, 25 Nov 2015 14:29:56 -0600
-Message-ID: <20151125202956.GA10228@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 2/6] mfd: syscon: add a DT property to set value width
+Date: Wed, 25 Nov 2015 14:32:53 -0600
+Message-ID: <20151125203253.GA13437@rob-hp-laptop>
 References: <1448479507-1951-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1448479507-1951-4-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1448479507-1951-3-git-send-email-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448479507-1951-4-git-send-email-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+In-Reply-To: <1448479507-1951-3-git-send-email-damien.riegel@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Samuel Ortiz <sameo@linux.intel.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 02:25:04PM -0500, Damien Riegel wrote:
-> This watchdog is instantiated in a FPGA that is memory mapped. It is
-> made of only one register, called the feed register. Writing to this
-> register will re-arm the watchdog for a given time (and enable it if it
-> was disable). It can be disabled by writing a special value into it.
+On Wed, Nov 25, 2015 at 02:25:03PM -0500, Damien Riegel wrote:
+> Currently syscon has a fixed configuration of 32 bits for register and
+> values widths. In some cases, it would be desirable to be able to
+> customize the value width.
 > 
-> It is part of a syscon block, and the watchdog register offset in this
-> block varies from board to board. This offset is passed in the syscon
-> property after the phandle to the syscon node.
+> For example, certain boards (like the ones manufactured by Technologic
+> Systems) have a FPGA that is memory-mapped, but its registers are only
+> 16-bit wide.
 > 
-> Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/watchdog/ts4800-wdt.txt    |  25 +++
->  drivers/watchdog/Kconfig                           |  10 +
->  drivers/watchdog/Makefile                          |   1 +
->  drivers/watchdog/ts4800_wdt.c                      | 215 +++++++++++++++++++++
->  4 files changed, 251 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
->  create mode 100644 drivers/watchdog/ts4800_wdt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
-> new file mode 100644
-> index 0000000..388c60f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
-> @@ -0,0 +1,25 @@
-> +Technologic Systems Watchdog
-> +
-> +Required properties:
-> +- compatible: must be "technologic,ts4800-wdt"
-> +- syscon: phandle / integer array that points to the syscon node which
-> +          describes the FPGA's syscon registers.
-> +          - phandle to FPGA's syscon
-> +          - offset to the watchdog register
-> +
-> +Optional property:
-> +- timeout-sec: contains the watchdog timeout in seconds.
-> +
-> +Example:
-> +
-> +syscon: syscon@b0010000 {
-> +	compatible = "syscon", "simple-mfd";
-> +	reg = <0xb0010000 0x3d>;
-> +	bus-width = <16>;
-> +
-> +	wdt@e {
-> +		compatible = "technologic,ts4800-wdt";
-> +		syscon = <&syscon 0xe>;
+> This patch adds an optional "bus-width" DT binding for syscon that
+> allows to change the width for the data bus (i.e. val_bits). If this
+> property is provided, it will also adjust the register stride to
+> bus-width / 8. If not provided, the default configuration is used.
 
-If this is single register only for the watchdog, why do you need 
-syscon? You can just use reg.
+See the 8250 UART bindings. This problem is already solved and has 
+standard bindings for it.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> 
+> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt |  3 +++
+>  drivers/mfd/syscon.c                             | 13 +++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index fe8150b..4c9d187 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -13,6 +13,9 @@ Required properties:
+>  - compatible: Should contain "syscon".
+>  - reg: the register region can be accessed from syscon
+>  
+> +Optional property:
+> +- bus-width: width of the data bus. Can be <8>, <16>, <32>, or <64>.
+> +
+>  Examples:
+>  gpr: iomuxc-gpr@020e0000 {
+>  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index 176bf0f..5a93d80 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -47,6 +47,7 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>  	struct syscon *syscon;
+>  	struct regmap *regmap;
+>  	void __iomem *base;
+> +	u32 bus_width;
+>  	int ret;
+>  	struct regmap_config syscon_config = syscon_regmap_config;
+>  
+> @@ -69,6 +70,18 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>  	 else if (of_property_read_bool(np, "little-endian"))
+>  		syscon_config.val_format_endian = REGMAP_ENDIAN_LITTLE;
+>  
+> +	/*
+> +	 * search for bus-width property in DT. If it is not provided, default
+> +	 * to 32-bit. regmap_init_mmio will return an error if syscon_config's
+> +	 * values are invalid so there is no need to check them here.
+> +	 */
+> +	ret = of_property_read_u32(np, "bus-width", &bus_width);
+> +	if (ret)
+> +		bus_width = 32;
+> +
+> +	syscon_config.val_bits = bus_width;
+> +	syscon_config.reg_stride = syscon_config.val_bits / 8;
+> +
+>  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
+>  	if (IS_ERR(regmap)) {
+>  		pr_err("regmap init failed\n");
+> -- 
+> 2.5.0
+> 
