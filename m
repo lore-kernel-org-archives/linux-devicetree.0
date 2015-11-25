@@ -1,64 +1,130 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: Atmel: ClassD: add GCK's parent clock in DT binding
-Date: Wed, 25 Nov 2015 17:45:24 -0600
-Message-ID: <20151125234524.GA16553@rob-hp-laptop>
-References: <1448270399-28728-1-git-send-email-songjun.wu@atmel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v3] dt-bindings: Consolidate SRAM bindings from
+ all vendors
+Date: Wed, 25 Nov 2015 17:48:25 -0600
+Message-ID: <20151125234825.GA17558@rob-hp-laptop>
+References: <1447893769-17088-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448270399-28728-1-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1447893769-17088-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 05:19:58PM +0800, Songjun Wu wrote:
-> Set GCK's parent as audio clock.
+On Thu, Nov 19, 2015 at 09:42:49AM +0900, Krzysztof Kozlowski wrote:
+> SRAM bindings for various SoCs, using the mmio-sram genalloc
+> API, are spread over different places - per SoC vendor. Since all of
+> these are quite similar (they depend on mmio-sram) move them to a common
+> place.
 > 
-> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Acked-by: Heiko Stuebner <heiko@sntech.de>
 
-Applied, thanks.
+Applied, thanks. I said I would apply for 4.4, but it is not really 
+urgent, so I've just applied it for 4.5.
 
 Rob
 
+> 
 > ---
 > 
->  .../devicetree/bindings/sound/atmel-classd.txt     |    6 ++++++
->  1 file changed, 6 insertions(+)
+> Changes since v2:
+> 1. Update paths to sram.txt.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/atmel-classd.txt b/Documentation/devicetree/bindings/sound/atmel-classd.txt
-> index 0018451..549e701 100644
-> --- a/Documentation/devicetree/bindings/sound/atmel-classd.txt
-> +++ b/Documentation/devicetree/bindings/sound/atmel-classd.txt
-> @@ -16,6 +16,10 @@ Required properties:
->  	Required elements: "pclk", "gclk" and "aclk".
->  - clocks
->  	Please refer to clock-bindings.txt.
-> +- assigned-clocks
-> +	Should be <&classd_gclk>.
-> +- assigned-clock-parents
-> +	Should be <&audio_pll_pmc>.
+> Changes since v1:
+> 1. New patch. Extended suggestion from Rob.
+> ---
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt                      | 2 +-
+>  .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt}  | 0
+>  .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt}  | 2 +-
+>  .../bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt}       | 2 +-
+>  Documentation/devicetree/bindings/{misc => sram}/sram.txt               | 0
+>  .../devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt}     | 2 +-
+>  6 files changed, 4 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} (100%)
+>  rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} (92%)
+>  rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt} (95%)
+>  rename Documentation/devicetree/bindings/{misc => sram}/sram.txt (100%)
+>  rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt} (97%)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index 86302de67c2c..313dabdc14f9 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -63,7 +63,7 @@ Required properties:
+>  - compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
 >  
->  Optional properties:
->  - pinctrl-names, pinctrl-0
-> @@ -43,6 +47,8 @@ classd: classd@fc048000 {
->  		dma-names = "tx";
->  		clocks = <&classd_clk>, <&classd_gclk>, <&audio_pll_pmc>;
->  		clock-names = "pclk", "gclk", "aclk";
-> +		assigned-clocks = <&classd_gclk>;
-> +		assigned-clock-parents = <&audio_pll_pmc>;
+>  The rest of the properties should follow the generic mmio-sram description
+> -found in ../../misc/sysram.txt
+> +found in ../../sram/sram.txt
 >  
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&pinctrl_classd_default>;
+>  Each sub-node represents the reserved area for SCPI.
+>  
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
+> rename to Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
+> similarity index 92%
+> rename from Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
+> rename to Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
+> index d9416fb8db6f..800701ecffca 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
+> +++ b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
+> @@ -12,7 +12,7 @@ Required sub-node properties:
+>  - compatible : should be "rockchip,rk3066-smp-sram"
+>  
+>  The rest of the properties should follow the generic mmio-sram discription
+> -found in ../../misc/sram.txt
+> +found in Documentation/devicetree/bindings/sram/sram.txt
+>  
+>  Example:
+>  
+> diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt b/Documentation/devicetree/bindings/sram/samsung-sram.txt
+> similarity index 95%
+> rename from Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
+> rename to Documentation/devicetree/bindings/sram/samsung-sram.txt
+> index 4a0a4f70a0ce..6bc474b2b885 100644
+> --- a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
+> +++ b/Documentation/devicetree/bindings/sram/samsung-sram.txt
+> @@ -15,7 +15,7 @@ Required sub-node properties:
+>  		"samsung,exynos4210-sysram-ns" : for Non-secure SYSRAM
+>  
+>  The rest of the properties should follow the generic mmio-sram discription
+> -found in ../../misc/sysram.txt
+> +found in Documentation/devicetree/bindings/sram/sram.txt
+>  
+>  Example:
+>  
+> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/misc/sram.txt
+> rename to Documentation/devicetree/bindings/sram/sram.txt
+> diff --git a/Documentation/devicetree/bindings/soc/sunxi/sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> similarity index 97%
+> rename from Documentation/devicetree/bindings/soc/sunxi/sram.txt
+> rename to Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> index 067698112f5f..8d5665468fe7 100644
+> --- a/Documentation/devicetree/bindings/soc/sunxi/sram.txt
+> +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> @@ -16,7 +16,7 @@ SRAM nodes
+>  ----------
+>  
+>  Each SRAM is described using the mmio-sram bindings documented in
+> -Documentation/devicetree/bindings/misc/sram.txt
+> +Documentation/devicetree/bindings/sram/sram.txt
+>  
+>  Each SRAM will have SRAM sections that are going to be handled by the
+>  SRAM controller as subnodes. These sections are represented following
 > -- 
-> 1.7.9.5
+> 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
