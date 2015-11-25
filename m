@@ -1,56 +1,60 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 5/10] watchdog: bcm63xx_wdt: Use WATCHDOG_CORE
-Date: Wed, 25 Nov 2015 06:10:17 -0800
-Message-ID: <5655C149.5010008@roeck-us.net>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
- <5651CB13.4090704@simon.arlott.org.uk> <5651CBF0.30904@simon.arlott.org.uk>
- <56552099.7070709@roeck-us.net>
- <726719450643bb69683224d731b582b0df27fe1f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/2] ASoC: Add support for DA7217 and DA7218 audio codecs
+Date: Wed, 25 Nov 2015 14:24:26 +0000
+Message-ID: <cover.1448461029.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <726719450643bb69683224d731b582b0df27fe1f-dyyJQ+qCPjsfFgGGEbPnq5KvX+y0N6jJ2mWzQvkZbzCn6nfhxgf73RdaaeUjXGGo@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2015 05:02 AM, Simon Arlott wrote:
-> On Wed, November 25, 2015 02:44, Guenter Roeck wrote:
->> The "running" flag should no longer be needed. watchdog_active()
->> should provide that information.
->
-> I'm going to need to keep that because I need to know if it's running
-> in the interrupt handler, and wdd->lock is a mutex.
->
->>> @@ -306,17 +202,18 @@ unregister_timer:
->>>
->>>    static int bcm63xx_wdt_remove(struct platform_device *pdev)
->>>    {
->>> -	if (!nowayout)
->>> -		bcm63xx_wdt_hw_stop();
->>> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
->>>
->>> -	misc_deregister(&bcm63xx_wdt_miscdev);
->>>    	bcm63xx_timer_unregister(TIMER_WDT_ID);
->>> +	watchdog_unregister_device(wdd);
->>
->> Shouldn't that come first, before unregistering the timer ?
->
-> No, because wdd->dev is used in the interrupt handler. I will have to
-> move registration of the interrupt to after creating the watchdog
-> because it could currently be used before wdd->dev is set.
->
+This patch set adds DT and ASoC codec driver support for DA7217 and DA7218.
 
-Does unregistering the timer disable the interrupt ?
+Changes are based against v4.4-rc2 kernel version.
 
-Thanks,
-Guenter
+Changes in v4:
+ - DT binding updates for unit suffixes (hz, us) at Rob Herring's request.
+
+Changes in v3:
+ - At request of Rob Herring, added units suffix to applicable binding names.
+ - Add changes for codec Kconfig and Makefile which were somehow missed from
+   previous patches.
+
+Changes in v2:
+ - Removed Internal LDO voltage selection from DT
+ - BiQuad filter coefficients removed from DT, no programmed using mixer
+   controls.
+ - ALC calibration no longer bypasses regmap cache and instead saves & restores
+   registers around procedure, to avoid issues with concurrent regmap access.
+ - Removed all unnecessary default settings for mixers in probe.
+ - Reporting of mic level detection event to user-space, through input
+   VOICECOMMAND key event, removed as not intended for this purpose. Alternative
+   solution required as follow up. Event masked off until solution in place.
+ - Additional error checking & loggin around mclk usage, in sysclk and
+   bias_level functions.
+
+Adam Thomson (2):
+  ASoC: da7218: Add bindings documentation for DA7218 audio codec
+  ASoC: codecs: Add da7218 codec driver
+
+ Documentation/devicetree/bindings/sound/da7218.txt |  104 +
+ include/sound/da7218.h                             |  109 +
+ sound/soc/codecs/Kconfig                           |    4 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/da7218.c                          | 3305 ++++++++++++++++++++
+ sound/soc/codecs/da7218.h                          | 1414 +++++++++
+ 6 files changed, 4938 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/da7218.txt
+ create mode 100644 include/sound/da7218.h
+ create mode 100644 sound/soc/codecs/da7218.c
+ create mode 100644 sound/soc/codecs/da7218.h
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
