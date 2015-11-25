@@ -1,87 +1,73 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: Re: [PATCH 4/10] watchdog: bcm63xx_wdt: Handle hardware interrupt and
- remove software timer
-Date: Wed, 25 Nov 2015 20:28:59 +0000
-Message-ID: <56561A0B.9020700@simon.arlott.org.uk>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
- <5651CB13.4090704@simon.arlott.org.uk> <5651CB9C.4090005@simon.arlott.org.uk>
- <20151124182138.GB12289@roeck-us.net>
- <CAOiHx=kn4NPxxYq0Te_T+8y_Cb1udyU0_EO-_eKp2Xshh7X6EA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] watchdog: ts4800: add driver for TS-4800 watchdog
+Date: Wed, 25 Nov 2015 14:29:56 -0600
+Message-ID: <20151125202956.GA10228@rob-hp-laptop>
+References: <1448479507-1951-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1448479507-1951-4-git-send-email-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=kn4NPxxYq0Te_T+8y_Cb1udyU0_EO-_eKp2Xshh7X6EA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448479507-1951-4-git-send-email-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/15 20:14, Jonas Gorski wrote:
-> On Tue, Nov 24, 2015 at 7:21 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->> On Sun, Nov 22, 2015 at 02:05:16PM +0000, Simon Arlott wrote:
->>> There is a level triggered interrupt for the watchdog timer as part of
->>> the bcm63xx_timer device. The interrupt occurs when the hardware watchdog
->>> timer reaches 50% of the remaining time.
->>>
->>> It is not possible to mask the interrupt within the bcm63xx_timer device.
->>> To get around this limitation, handle the interrupt by restarting the
->>> watchdog with the current remaining time (which will be half the previous
->>> timeout) so that the interrupt occurs again at 1/4th, 1/8th, etc. of the
->>> original timeout value until the watchdog forces a reboot.
->>>
->>> The software timer was restarting the hardware watchdog with a 85 second
->>> timeout until the software timer expired, and then causing a panic()
->>> about 42.5 seconds later when the hardware interrupt occurred. The
->>> hardware watchdog would not reboot until a further 42.5 seconds had
->>> passed.
->>>
->>> Remove the software timer and rely on the hardware timer directly,
->>> reducing the maximum timeout from 256 seconds to 85 seconds
->>> (2^32 / WDT_HZ).
->>>
->>
->> Florian,
->>
->> can you have a look into this patch and confirm that there is no better
->> way to clear the interrupt status ?
+On Wed, Nov 25, 2015 at 02:25:04PM -0500, Damien Riegel wrote:
+> This watchdog is instantiated in a FPGA that is memory mapped. It is
+> made of only one register, called the feed register. Writing to this
+> register will re-arm the watchdog for a given time (and enable it if it
+> was disable). It can be disabled by writing a special value into it.
 > 
-> While the watchdog interrupt can't be masked, it should be able to be
-> cleared by writing 1 to the appropriate bit in the timer block's
-> interrupt status register. At least the broadcom sources do so.
+> It is part of a syscon block, and the watchdog register offset in this
+> block varies from board to board. This offset is passed in the syscon
+> property after the phandle to the syscon node.
+> 
+> Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/ts4800-wdt.txt    |  25 +++
+>  drivers/watchdog/Kconfig                           |  10 +
+>  drivers/watchdog/Makefile                          |   1 +
+>  drivers/watchdog/ts4800_wdt.c                      | 215 +++++++++++++++++++++
+>  4 files changed, 251 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
+>  create mode 100644 drivers/watchdog/ts4800_wdt.c
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
+> new file mode 100644
+> index 0000000..388c60f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
+> @@ -0,0 +1,25 @@
+> +Technologic Systems Watchdog
+> +
+> +Required properties:
+> +- compatible: must be "technologic,ts4800-wdt"
+> +- syscon: phandle / integer array that points to the syscon node which
+> +          describes the FPGA's syscon registers.
+> +          - phandle to FPGA's syscon
+> +          - offset to the watchdog register
+> +
+> +Optional property:
+> +- timeout-sec: contains the watchdog timeout in seconds.
+> +
+> +Example:
+> +
+> +syscon: syscon@b0010000 {
+> +	compatible = "syscon", "simple-mfd";
+> +	reg = <0xb0010000 0x3d>;
+> +	bus-width = <16>;
+> +
+> +	wdt@e {
+> +		compatible = "technologic,ts4800-wdt";
+> +		syscon = <&syscon 0xe>;
 
-Not according to the hardware itself:
-[    6.674626] watchdog watchdog0: warning timer fired, reboot in 7499ms
-[    6.681212] irq_bcm6345_l2_timer: bcm6345_timer_write_int_status: b0000083=08
-[    6.688583] watchdog watchdog0: warning timer fired, reboot in 7486ms
-[    6.695181] irq_bcm6345_l2_timer: bcm6345_timer_write_int_status: b0000083=08
-[    6.702554] watchdog watchdog0: warning timer fired, reboot in 7472ms
-[    6.709158] irq_bcm6345_l2_timer: bcm6345_timer_write_int_status: b0000083=08
-[    6.716529] watchdog watchdog0: warning timer fired, reboot in 7458ms
-[    6.723135] irq_bcm6345_l2_timer: bcm6345_timer_write_int_status: b0000083=08
-[    6.730538] watchdog watchdog0: warning timer fired, reboot in 7444ms
-[    6.737121] irq_bcm6345_l2_timer: bcm6345_timer_write_int_status: b0000083=08
-[    6.744482] watchdog watchdog0: warning timer fired, reboot in 7430ms
-[    6.751090] irq_bcm6345_l2_timer: bcm6345_timer_write_int_status: b0000083=08
+If this is single register only for the watchdog, why do you need 
+syscon? You can just use reg.
 
-
-typedef struct Timer {
-    uint16        unused0;
-    byte          TimerMask;
-#define TIMER0EN        0x01
-#define TIMER1EN        0x02
-#define TIMER2EN        0x04
-    byte          TimerInts;
-#define TIMER0          0x01
-#define TIMER1          0x02
-#define TIMER2          0x04
-#define WATCHDOG        0x08
-...
-
--- 
-Simon Arlott
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
