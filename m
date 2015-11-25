@@ -1,45 +1,116 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: add epson rx6110 binding
-Date: Wed, 25 Nov 2015 10:02:36 +0100
-Message-ID: <20151125090236.GF14709@pengutronix.de>
-References: <1448361533-10728-1-git-send-email-s.trumtrar@pengutronix.de>
- <1448363561.3346.57.camel@pengutronix.de>
- <20151124235524.GB18195@rob-hp-laptop>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
+Date: Wed, 25 Nov 2015 09:05:46 +0000
+Message-ID: <20151125090546.GN12874@x1>
+References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
+ <20151102085924.GP4058@x1>
+ <56385998.5080006@ti.com>
+ <20151103083344.GA3503@x1>
+ <5655767A.8030003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151124235524.GB18195@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <5655767A.8030003@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Kim, Milo" <milo.kim@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 05:55:24PM -0600, Rob Herring wrote:
-> On Tue, Nov 24, 2015 at 12:12:41PM +0100, Philipp Zabel wrote:
-> > Am Dienstag, den 24.11.2015, 11:38 +0100 schrieb Steffen Trumtrar:
-> > > Add the binding documentation for the Epson RX6110 RTC.
-> > > 
-> > > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> [...]
-> 
-> > > +Required properties:
-> > > +- compatible: should be: "epson,rtc-rx6110"
-> > 
-> > Should this just be "epson,rx6110" ?
-> 
-> Yes.
-> 
+On Wed, 25 Nov 2015, Kim, Milo wrote:
 
-Okay.
+> On 11/3/2015 5:33 PM, Lee Jones wrote:
+> >On Tue, 03 Nov 2015, Kim, Milo wrote:
+> >
+> >>Hi Lee,
+> >>
+> >>On 11/2/2015 5:59 PM, Lee Jones wrote:
+> >>>>  drivers/video/backlight/Kconfig                    |  62 ++
+> >>>>>  drivers/video/backlight/Makefile                   |   7 +
+> >>>>>  drivers/video/backlight/lm3532_bl.c                | 183 +++++
+> >>>>>  drivers/video/backlight/lm3631_bl.c                | 129 ++++
+> >>>>>  drivers/video/backlight/lm3632_bl.c                | 125 ++++
+> >>>>>  drivers/video/backlight/lm3633_bl.c                | 210 +++++=
++
+> >>>>>  drivers/video/backlight/lm3695_bl.c                |  91 +++
+> >>>>>  drivers/video/backlight/lm3697_bl.c                | 187 +++++
+> >>>>>  drivers/video/backlight/ti-lmu-backlight.c         | 429 +++++=
++++++++
+> >>>>>  drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
+> >>>How different are all of these drivers?
+> >>>
+> >>>Can you create one driver that supports them all instead?
+> >>>
+> >>
+> >>Thanks for your suggestion.
+> >>
+> >>'ti-lmu-backlight' is the common part of lmxxxx_bl drivers. And eac=
+h
+> >>lmxxx_bl has its own operation functions by using ti_lmu_bl_ops.
+> >>I've tried to make consolidated driver but it contained too much
+> >>device specific code in one file. So I prefer simple drivers
+> >>structure - 'common part' and 'device specific operations'.
+> >>It would be appreciated if you could introduce better idea.
+> >
+> >I wish to avoid having to apply the patches to conduct my own analys=
+is
+> >of the files, as I am severely restricted on time.  Can you tell me =
+how
+> >much duplicated code there is between the files?  How many lines wou=
+ld
+> >be saved by supporting all of the lm* drivers in a single file?
+> >
+>=20
+> Now, consolidated driver is ready. It improves not only lines of
+> code but also code size. Patch v2 will be sent soon.
+>=20
+> Lines of code
+> -------------
+> 194 lines are saved in consolidated driver.
+>=20
+> Patch v1: 1420 (8 files*)
+> Patch v2: 1226 (3 files**)
+>=20
+> *	ti-lmu-backlight.c (429)
+> 	ti-lmu-backlight.h (152)
+> 	lm3532_bl.c (183)
+> 	lm3631_bl.c (129)
+> 	lm3632_bl.c (125)
+> 	lm3633_bl.c (210)
+> 	lm3695_bl.c (95)
+> 	lm3697_bl.c (97)
+>=20
+> **	ti-lmu-backlight-core.c (649)
+> 	ti-lmu-backlight-data.c (287)
+> 	ti-lmu-backlight.h (290)
+>=20
+> Size
+> ----
+> The text segment is decreased by removing duplicate instructions.
+>=20
+> Patch v1
+>    text	   data	    bss	    dec	    hex	filename
+>   12202	    720	     40	  12962	   32a2	drivers/video/backlight/built=
+-in.o
+>=20
+> Patch v2
+>    text	   data	    bss	    dec	    hex	filename
+>    6883	    712	     41	   7636	   1dd4	drivers/video/backlight/built=
+-in.o
+>=20
+> Test environment
+> ----------------
+> - Kernel version: 4.4.0-rc2 (linux-next)
+> - backlight/built-in.o includes backlight core and ti-lmu-backlight
+> drivers. No other backlight drivers included.
+>=20
+> Change details will be described in the patch-set.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Excellent news.  Thanks for carrying out this work.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
