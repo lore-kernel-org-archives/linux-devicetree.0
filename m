@@ -1,60 +1,72 @@
-From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: [PATCH v3 2/5] Documentation: devicetree: Add DT bindings to eeprom_93xx46 driver.
-Date: Wed, 25 Nov 2015 00:30:49 -0500
-Message-ID: <1448429452-26972-3-git-send-email-cory.tusar@pid1solutions.com>
-References: <1448429452-26972-1-git-send-email-cory.tusar@pid1solutions.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448429452-26972-1-git-send-email-cory.tusar@pid1solutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org
-Cc: jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
+From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: vf610: relicense vf???.dtsi under GPLv2/X11
+Date: Wed, 25 Nov 2015 00:36:03 -0500
+Message-ID: <565548C3.2070903@pid1solutions.com>
+References: <1448323069-23208-1-git-send-email-stefan@agner.ch>
+ <1448323069-23208-2-git-send-email-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448323069-23208-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit documents bindings to be added to the eeprom_93xx46 driver
-which will allow:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-  - Device word size and read-only attributes to be specified.
-  - A device-specific compatible string for use with Atmel AT93C46D
-    EEPROMs.
-  - Specifying a GPIO line to function as a 'select' or 'enable' signal
-    prior to accessing the EEPROM.
+On 11/23/2015 06:57 PM, Stefan Agner wrote:
+> GPLv2-only devicetrees make reuse difficult for software components
+> licensed under a different license.
+> 
+> The consensus is that a GPL/X11 dual-license should allow all necessary
+> uses, so relicense the vfxxx.dtsi, vf500.dtsi and vf610.dtsi files to
+> this combination.
+> 
+> CCs were acquired using (updated some email addresses):
+> git shortlog -sne --no-merges arch/arm/boot/dts/vf???.dtsi
+> 
+> CC: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> CC: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
 
-Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/misc/eeprom-93xx46.txt     | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Acked-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
-new file mode 100644
-index 0000000..a8ebb46
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/eeprom-93xx46.txt
-@@ -0,0 +1,25 @@
-+EEPROMs (SPI) compatible with Microchip Technology 93xx46 family.
-+
-+Required properties:
-+- compatible : shall be one of:
-+    "atmel,at93c46d"
-+    "eeprom-93xx46"
-+- data-size : number of data bits per word (either 8 or 16)
-+
-+Optional properties:
-+- read-only : parameter-less property which disables writes to the EEPROM
-+- select-gpios : if present, specifies the GPIO that will be asserted prior to
-+  each access to the EEPROM (e.g. for SPI bus multiplexing)
-+
-+Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
-+apply.  In particular, "reg" and "spi-max-frequency" properties must be given.
-+
-+Example:
-+	eeprom@0 {
-+		compatible = "eeprom-93xx46";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cs-high;
-+		data-size = <8>;
-+		select-gpios = <&gpio4 4 GPIO_ACTIVE_HIGH>;
-+	};
--- 
-2.4.10
+> CC: Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> CC: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> CC: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> CC: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+
+
+- -- 
+Cory Tusar
+Principal
+PID 1 Solutions, Inc.
+
+
+"There are two ways of constructing a software design.  One way is to
+ make it so simple that there are obviously no deficiencies, and the
+ other way is to make it so complicated that there are no obvious
+ deficiencies."  --Sir Charles Anthony Richard Hoare
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlZVSMMACgkQHT1tsfGwHJ/rYQCgnPy1XpNbNsUDGrutOANmQwoi
+Q0YAmwfO5LbZvZOLIqZyLLdc34sLBEHn
+=hsX0
+-----END PGP SIGNATURE-----
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
