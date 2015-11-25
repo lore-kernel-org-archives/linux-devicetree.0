@@ -1,76 +1,81 @@
-From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH 1/1] arm64: dts: add all hi6220 i2c nodes
-Date: Wed, 25 Nov 2015 17:49:02 +0800
-Message-ID: <1448444942-5780-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Adriana Reus <adriana.reus@intel.com>
+Subject: Re: [PATCH 2/5] Documentation: devicetree: Add property for
+ controlling power saving mode for the us5182 als sensor
+Date: Wed, 25 Nov 2015 11:50:30 +0200
+Message-ID: <56558466.9000001@intel.com>
+References: <1448362792-5181-1-git-send-email-adriana.reus@intel.com>
+ <1448362792-5181-3-git-send-email-adriana.reus@intel.com>
+ <20151125000130.GA21418@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151125000130.GA21418@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: jic23@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, pawel.moll@arm.com, pmeerw@pmeerw.net, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
-use this I2C IP of Synopsys Designware for HiKey board.
-
-Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 37 +++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 82d2488..6b591a9 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -208,5 +208,42 @@
- 			clock-names = "uartclk", "apb_pclk";
- 			status = "disabled";
- 		};
-+
-+		i2c0: i2c@f7100000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xf7100000 0x0 0x1000>;
-+			interrupts = <0 44 4>;
-+			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
-+			clock-names = "clk_i2c0";
-+			i2c-sda-hold-time-ns = <300>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
-+			status = "ok";
-+		};
-+
-+		i2c1: i2c@f7101000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xf7101000 0x0 0x1000>;
-+			interrupts = <0 45 4>;
-+			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
-+			clock-names = "clk_i2c1";
-+			i2c-sda-hold-time-ns = <300>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
-+			status = "ok";
-+		};
-+
-+		i2c2: i2c@f7102000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xf7102000 0x0 0x1000>;
-+			interrupts = <0 46 4>;
-+			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
-+			clock-names = "clk_i2c2";
-+			i2c-sda-hold-time-ns = <300>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
-+			status = "ok";
-+		};
-+
- 	};
- };
--- 
-1.9.1
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 25.11.2015 02:01, Rob Herring wrote:
+> On Tue, Nov 24, 2015 at 12:59:49PM +0200, Adriana Reus wrote:
+>> Add a property to allow changing the default power-saving mode.
+>> By default, at read raw the chip will activate and provide
+>> one measurent, then it will shut itself down. However, the
+>> chip can also work in "continuous" mode which may be more reliable
+>> but is also more power consuming.
+>>
+>> Signed-off-by: Adriana Reus <adriana.reus@intel.com>
+>> ---
+>>   Documentation/devicetree/bindings/iio/light/us5182d.txt | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
+>> index 6f0a530..a619799 100644
+>> --- a/Documentation/devicetree/bindings/iio/light/us5182d.txt
+>> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
+>> @@ -7,13 +7,24 @@ Required properties:
+>>   Optional properties:
+>>   - upisemi,glass-coef: glass attenuation factor - compensation factor of
+>>                         resolution 1000 for material transmittance.
+>> +
+>>   - upisemi,dark-ths: array of 8 elements containing 16-bit thresholds (adc
+>>                       counts) corresponding to every scale.
+>> +
+>>   - upisemi,upper-dark-gain: 8-bit dark gain compensation factor(4 int and 4
+>>                              fractional bits - Q4.4) applied when light > threshold
+>> +
+>>   - upisemi,lower-dark-gain: 8-bit dark gain compensation factor(4 int and 4
+>>                              fractional bits - Q4.4) applied when light < threshold
+>>
+>> +- upisemi,continuous: This chip has two power modes: one-shot (chip takes one
+>> +                      measurement and then shuts itself down) and continuous (
+>> +                      chip takes continuous measurements). The one-shot mode is
+>> +                      more power-friendly but the continuous mode may be more
+>> +                      reliable. If this property is specified the continuous
+>> +                      mode will be used instead of the default one-shot one for
+>> +                      raw reads.
+>
+> I could imagine an OS may want to decide this on its own or use a
+> mixture of the modes.
+>
+> Rob
+>
+
+There is no possibility of mixing them up (at the same time), so for 
+example proximity cannot work in one mode and als the other.
+
+The one-shot mode can only be used for raw reads (for example when 
+user-space polls in_[proximity|light]_raw). If user-space wants to 
+enable events (activate interrupts when certain thresholds are met - 
+patch 5 of the series), then the chip has to switch to continuous 
+nonetheless because it needs to be active all the time. So one work-flow 
+scenario would be:
+
+Consumer1 starts polling the raw interface - default_mode
+Consumer2 activates events - continuous mode
+Consumer2 deactivates events - back to default_mode
+
+The only choice here is the default mode for raw reads, it currently is
+one-shot, this patch allows for continuous to be used if preferred.
