@@ -1,176 +1,237 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 2/2] phy-sun4i-usb: Add support for the host
- usb-phys found on the H3 SoC
-Date: Wed, 25 Nov 2015 17:50:02 +0100
-Message-ID: <1448470202-3628-2-git-send-email-hdegoede@redhat.com>
-References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/4] devicetree: bindings: let thermal-sensor point to
+ other thermal zones
+Date: Wed, 25 Nov 2015 17:54:41 +0000
+Message-ID: <20151125175441.GA32343@leverpostej>
+References: <1448464186-26289-1-git-send-email-javi.merino@arm.com>
+ <1448464186-26289-3-git-send-email-javi.merino@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBSON26ZAKGQEWXKY5EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1448470202-3628-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448464186-26289-3-git-send-email-javi.merino@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Javi Merino <javi.merino@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, rui.zang@intel.com, edubezval@gmail.com, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+On Wed, Nov 25, 2015 at 03:09:44PM +0000, Javi Merino wrote:
+> The thermal-sensor property of the thermal zone node accepts phandles to
+> thermal sensors.  However, thermal zones can be created as an
+> aggregation of other thermal zones.  Extend the thermal-sensors property
+> to allow phandles to other thermal zones.  This patch also adds an
+> example that showcases how a board thermal zone can be created from the
+> aggregation of the cpu, gpu and lcd thermal zones.
+> 
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Javi Merino <javi.merino@arm.com>
+> ---
+> 
+> Notes:
+>     Hi devicetree,
+>     
+>     Is it ok to extend the definition of the thermal-sensors property like
+>     this?  IOW are phandles strongly typed?
 
-Note this commit only adds support for phys 1-3, phy 0, the otg phy, is
-not yet (fully) supported after this commit.
+I think it's OK so long as each thermal zone has #theremal-sensor-cells
+set explicitly, if used as a sensor, and we can agree on the semantics
+of what it means for a thermal zone to be a sensor.
 
-Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Change break; after dev_err() to return, as intended, fixing a compiler
- warning (the dev_err case should never be reached)
-Changes in v3:
--Use of_match_node to get model specific config data
----
- .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
- drivers/phy/phy-sun4i-usb.c                        | 46 +++++++++++++++++-----
- 2 files changed, 38 insertions(+), 9 deletions(-)
+I don't really follow why you need the zone to be a sensor, and can't
+simply refer to the sensor from two zones. Are you trying to imply an
+ordering of trip points (e.g. that the sub-zones' trips should be taken
+into account first)?
 
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-index 0cebf74..95736d7 100644
---- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -9,6 +9,7 @@ Required properties:
-   * allwinner,sun7i-a20-usb-phy
-   * allwinner,sun8i-a23-usb-phy
-   * allwinner,sun8i-a33-usb-phy
-+  * allwinner,sun8i-h3-usb-phy
- - reg : a list of offset + length pairs
- - reg-names :
-   * "phy_ctrl"
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 1d8f85d..2aed482 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -46,6 +46,9 @@
- #define REG_PHYBIST			0x08
- #define REG_PHYTUNE			0x0c
- #define REG_PHYCTL_A33			0x10
-+#define REG_PHY_UNK_H3			0x20
-+
-+#define REG_PMU_UNK_H3			0x10
- 
- #define PHYCTL_DATA			BIT(7)
- 
-@@ -79,7 +82,7 @@
- #define PHY_DISCON_TH_SEL		0x2a
- #define PHY_SQUELCH_DETECT		0x3c
- 
--#define MAX_PHYS			3
-+#define MAX_PHYS			4
- 
- /*
-  * Note do not raise the debounce time, we must report Vusb high within 100ms
-@@ -91,6 +94,7 @@
- enum sun4i_usb_phy_type {
- 	sun4i_a10_phy,
- 	sun8i_a33_phy,
-+	sun8i_h3_phy,
- };
- 
- struct sun4i_usb_phy_cfg {
-@@ -101,6 +105,7 @@ struct sun4i_usb_phy_cfg {
- };
- 
- struct sun4i_usb_phy_data {
-+	struct device *dev;
- 	void __iomem *base;
- 	const struct sun4i_usb_phy_cfg *cfg;
- 	struct mutex mutex;
-@@ -183,6 +188,9 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
- 		/* A33 needs us to set phyctl to 0 explicitly */
- 		writel(0, phyctl);
- 		break;
-+	case sun8i_h3_phy:
-+		dev_err(phy_data->dev, "H3 usb_phy_write is not supported\n");
-+		return;
- 	}
- 
- 	for (i = 0; i < len; i++) {
-@@ -243,6 +251,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 	int ret;
-+	u32 val;
- 
- 	ret = clk_prepare_enable(phy->clk);
- 	if (ret)
-@@ -254,16 +263,26 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		return ret;
- 	}
- 
--	/* Enable USB 45 Ohm resistor calibration */
--	if (phy->index == 0)
--		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-+	if (data->cfg->type == sun8i_h3_phy) {
-+		if (phy->index == 0) {
-+			val = readl(data->base + REG_PHY_UNK_H3);
-+			writel(val & ~1, data->base + REG_PHY_UNK_H3);
-+		}
- 
--	/* Adjust PHY's magnitude and rate */
--	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+		val = readl(phy->pmu + REG_PMU_UNK_H3);
-+		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
-+	} else {
-+		/* Enable USB 45 Ohm resistor calibration */
-+		if (phy->index == 0)
-+			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
- 
--	/* Disconnect threshold adjustment */
--	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
--			    data->cfg->disc_thresh, 2);
-+		/* Adjust PHY's magnitude and rate */
-+		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+
-+		/* Disconnect threshold adjustment */
-+		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-+				    data->cfg->disc_thresh, 2);
-+	}
- 
- 	sun4i_usb_phy_passby(phy, 1);
- 
-@@ -555,6 +574,13 @@ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
- 	.dedicated_clocks = true,
- };
- 
-+static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
-+	.num_phys = 4,
-+	.disc_thresh = 3,
-+	.type = sun8i_h3_phy,
-+	.dedicated_clocks = true,
-+};
-+
- static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-@@ -562,6 +588,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = &sun7i_a20_cfg },
- 	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
- 	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
-+	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-@@ -595,6 +622,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	mutex_init(&data->mutex);
- 	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
- 	dev_set_drvdata(dev, data);
-+	data->dev = dev;
- 	data->cfg = match->data;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
--- 
-2.5.0
+> 
+>  .../devicetree/bindings/thermal/thermal.txt        | 154 ++++++++++++++++++++-
+>  1 file changed, 151 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> index 41b817f7b670..52b7e9ae3b4d 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> @@ -145,9 +145,12 @@ Required properties:
+>    Size: one cell
+>  
+>  - thermal-sensors:	A list of thermal sensor phandles and sensor specifier
+> -  Type: list of 	used while monitoring the thermal zone.
+> -  phandles + sensor
+> -  specifier
+> +  Type: list of 	used while monitoring the thermal zone. The phandles
+> +  phandles + sensor	can point to thermal sensors or other thermal zone
+> +  specifier		nodes. If it points to other thermal zone
+> +			nodes you should omit the sensor specifier
+> +			and set #thermal-sensor-cells to 0 for the
+> +			thermal zone.
+
+The example misses #thermal-sensor-cells = <0> for each of the zones.
+
+Can a zone normal have multiple sensors? If so, what is the aggregate
+value if a zone is used as a sensor? Max? Min? Scaled by contribution
+somehow?
+
+Thanks,
+Mark.
+
+>  
+>  - trips:		A sub-node which is a container of only trip point nodes
+>    Type: sub-node	required to describe the thermal zone.
+> @@ -603,3 +606,148 @@ thermal-zones {
+>  The above example is a mix of previous examples, a sensor IP with several internal
+>  sensors used to monitor different zones, one of them is composed by several sensors and
+>  with different cooling devices.
+> +
+> +(e) Board thermal with stacked thermal zones
+> +
+> +Instead of setting up one thermal zone combining multiple thermal
+> +zones and multiple trip points for each cooling device, we can create
+> +a hierarchy of thermal zones.
+> +
+> +#include <dt-bindings/thermal/thermal.h>
+> +
+> +&i2c1 {
+> +	...
+> +	/*
+> +	 * An IC with several temperature sensor.
+> +	 */
+> +	adc_dummy: sensor@0x50 {
+> +		...
+> +		#thermal-sensor-cells = <1>; /* sensor internal ID */
+> +	};
+> +};
+> +
+> +thermal-zones {
+> +
+> +        cpu_thermal: cpu_thermal {
+> +		polling-delay-passive = <1000>; /* milliseconds */
+> +		polling-delay = <2500>; /* milliseconds */
+> +
+> +		sustainable-power = <2500>;
+> +
+> +		thermal-sensors = <&adc_dummy 0>
+> +
+> +		trips {
+> +			cpu_trip: cpu-trip {
+> +				temperature = <60000>; /* millicelsius */
+> +				hysteresis = <2000>; /* millicelsius */
+> +				type = "passive";
+> +			};
+> +                };
+> +
+> +		cooling-maps {
+> +			map0 {
+> +				trip = <&cpu_trip>;
+> +				cooling-device = <&cpu0 0 2>;
+> +			};
+> +                };
+> +        };
+> +
+> +        gpu_thermal: gpu_thermal {
+> +		polling-delay-passive = <1000>; /* milliseconds */
+> +		polling-delay = <2500>; /* milliseconds */
+> +
+> +		sustainable-power = <2500>;
+> +
+> +		thermal-sensors = <&adc_dummy 2>
+> +
+> +		trips {
+> +			gpu_trip: gpu-trip {
+> +				temperature = <55000>; /* millicelsius */
+> +				hysteresis = <2000>; /* millicelsius */
+> +				type = "passive";
+> +			}
+> +                };
+> +
+> +		cooling-maps {
+> +			map0 {
+> +				trip = <&gpu_trip>;
+> +				cooling-device = <&gpu0 0 2>;
+> +			};
+> +                };
+> +        };
+> +
+> +        lcd_thermal: lcd_thermal {
+> +		polling-delay-passive = <1000>; /* milliseconds */
+> +		polling-delay = <2500>; /* milliseconds */
+> +
+> +		sustainable-power = <2500>;
+> +
+> +		thermal-sensors = <&adc_dummy 1>
+> +
+> +		trips {
+> +			lcd_trip: lcp-trip {
+> +				temperature = <53000>; /* millicelsius */
+> +				hysteresis = <2000>; /* millicelsius */
+> +				type = "passive";
+> +			};
+> +                };
+> +
+> +		cooling-maps {
+> +			map0 {
+> +				trip = <&lcd_trip>;
+> +				cooling-device = <&lcd0 5 10>;
+> +			};
+> +                };
+> +        };
+> +
+> +	board_thermal: board-thermal {
+> +		polling-delay-passive = <1000>; /* milliseconds */
+> +		polling-delay = <2500>; /* milliseconds */
+> +
+> +		thermal-sensors = <&cpu_thermal &gpu_thermal &lcd_thermal>
+> +
+> +		sustainable-power = <2500>;
+> +
+> +		trips {
+> +			warm_trip: warm-trip {
+> +				temperature = <62000>; /* millicelsius */
+> +				hysteresis = <2000>; /* millicelsius */
+> +				type = "passive";
+> +			};
+> +			crit_trip: crit-trip {
+> +				temperature = <68000>; /* millicelsius */
+> +				hysteresis = <2000>; /* millicelsius */
+> +				type = "critical";
+> +			};
+> +		};
+> +
+> +		cooling-maps {
+> +			map0 {
+> +				trip = <&warm_trip>;
+> +				cooling-device = <&cpu0 2 2>;
+> +				contribution = <55>;
+> +			};
+> +			map1 {
+> +				trip = <&warm_trip>;
+> +				cooling-device = <&gpu0 2 2>;
+> +				contribution = <20>;
+> +			};
+> +			map2 {
+> +				trip = <&lcd_trip>;
+> +				cooling-device = <&lcd0 7 10>;
+> +				contribution = <15>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +The above example is a different take at example (d).  We create one
+> +thermal zone per sensor: cpu_thermal, gpu_thermal and lcd_thermal.
+> +Each of which has its own trip point for each own cooling device.  We
+> +then define a board_thermal thermal zone that is a combination of all
+> +the other thermal zones.  If the board hits its warm_trip, then all
+> +cooling devices are throttled.
+> +
+> +This example illustrates how we can throttle each device individually
+> +if its too hot and at the same time have some control over the whole
+> +system.
+> -- 
+> 1.9.1
+> 
