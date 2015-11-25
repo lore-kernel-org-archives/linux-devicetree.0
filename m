@@ -1,62 +1,54 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v9] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 25 Nov 2015 07:50:18 +0000
-Message-ID: <20151125075018.68e97010@arm.com>
-References: <1447911323-12567-1-git-send-email-bharatku@xilinx.com>
-	<20151124173556.18aff6b5@arm.com>
-	<8520D5D51A55D047800579B0941471982586607F@XAP-PVEXMBX01.xlnx.xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8520D5D51A55D047800579B0941471982586607F@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 0/5] Fix a trivial typo and support rk3228/rk3399 SoCs for thermal driver.
+Date: Wed, 25 Nov 2015 15:59:32 +0800
+Message-ID: <1448438377-29203-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Dan Carpenter <dan.carpenter@oracle.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Kosina <trivial@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Nov 2015 05:40:49 +0000
-Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
+This series pacthes to support the next soc for this thermal driver.
+I don't have add the dts thermal data since these SoCs have *_not_* land
+in this mailline. I believe these SoCs dts will land in this mainline,
+then add the thermal data for Heiko.
 
-> > On Thu, 19 Nov 2015 11:05:23 +0530
-> > Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
-> > 
-> > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> > >
-> > > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> > > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > +
-> > > +#define MSI_ADDRESS				0xDEED0000
-> > 
-> > How did you pick this value? What if it intersect with some actual RAM?
-> > What if a device actually does DMA to that location?
-> > 
-> > Wouldn't it make sense to actually pick a real *device* address (hint:
-> > your MSI controller itself) for this purpose, as the device will never DMA
-> > there?
-> >
-> > 
-> We have already mentioned in previous patch discussion, we don't have
-> any device address on our SOC for MSI, that's the reason we are
-> allocating a page for MSI in RAM. Since our memory write is consumed
-> by bridge and doesn't write to memory, you suggested to use some
-> random address,  so using some random address.
+This series patches can apply into Eduardo branch.
+git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git
 
-This is becoming painful.
+Also, this series pacthes have build on github branch.
+https://github.com/rockchip-linux/kernel/commits/develop4.4
 
-- "write is consumed by bridge and doesn't write to memory": So why are
-  you using something that has a chance of actually being memory??? Are
-  you in the business of corrupting unsuspecting data?
+PATCH[1/5]:
+That's bit ugly typo, sorry for sending again :(.
 
-- "we don't have any device address on our SOC for MSI": You have
-  plenty, and that's the whole of your device space. *All of it*. So
-  just take the base address of your PCIe controller, and be done with
-  it. Or your UART. Anything that cannot be DMA'ed to from a PCIe
-  device, and that is downstream of your PCIe bridge.
+PATCH[2/5]:
+To fix a build warning came from Dan Carpenter report smatch check,
+Thanks. :)
 
-	M.
+PATCH[3/5]:
+Add the rk3228/rk339 SoCs compatible for dt-bindings.
+
+PATCH[4/5]:
+Add the rk3228 SoCs for thermal driver.
+
+PATCH[5/5]:
+Add the rk3399 SoCs for thermal driver.
+
+
+
+Caesar Wang (5):
+  thermal: rockchip: fix a trivial typo
+  thermal: rockchip: fix a impossible condition caused by the warning
+  dt-bindings: rockchip-thermal: Support the RK3228/RK3399 SoCs
+    compatible
+  thermal: rockchip: Support the RK3228 SoCs in thermal driver
+  thermal: rockchip: Support the RK3399 SoCs in thermal driver
+
+ .../bindings/thermal/rockchip-thermal.txt          |   2 +
+ drivers/thermal/rockchip_thermal.c                 | 159 ++++++++++++++++++++-
+ 2 files changed, 155 insertions(+), 6 deletions(-)
+
 -- 
-Jazz is not dead. It just smells funny.
+1.9.1
+
