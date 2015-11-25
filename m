@@ -1,60 +1,71 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: Re: [PATCH 5/10] watchdog: bcm63xx_wdt: Use WATCHDOG_CORE
-Date: Wed, 25 Nov 2015 19:43:50 +0000
-Message-ID: <56560F76.60000@simon.arlott.org.uk>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
- <5651CB13.4090704@simon.arlott.org.uk> <5651CBF0.30904@simon.arlott.org.uk>
- <56552099.7070709@roeck-us.net>
- <726719450643bb69683224d731b582b0df27fe1f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <5655C149.5010008@roeck-us.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT "/chosen/linux,atags" entry
+Date: Wed, 25 Nov 2015 20:48:59 +0100
+Message-ID: <17134653.86P3dFyQKK@wuerfel>
+References: <20150713131902.GH26485@atomide.com> <20151123144545.GD24147@pali> <20151125181644.GI2517@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5655C149.5010008-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151125181644.GI2517@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/15 14:10, Guenter Roeck wrote:
-> On 11/25/2015 05:02 AM, Simon Arlott wrote:
->> On Wed, November 25, 2015 02:44, Guenter Roeck wrote:
->>> The "running" flag should no longer be needed. watchdog_active()
->>> should provide that information.
->>
->> I'm going to need to keep that because I need to know if it's running
->> in the interrupt handler, and wdd->lock is a mutex.
->>
->>>> @@ -306,17 +202,18 @@ unregister_timer:
->>>>
->>>>    static int bcm63xx_wdt_remove(struct platform_device *pdev)
->>>>    {
->>>> -	if (!nowayout)
->>>> -		bcm63xx_wdt_hw_stop();
->>>> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
->>>>
->>>> -	misc_deregister(&bcm63xx_wdt_miscdev);
->>>>    	bcm63xx_timer_unregister(TIMER_WDT_ID);
->>>> +	watchdog_unregister_device(wdd);
->>>
->>> Shouldn't that come first, before unregistering the timer ?
->>
->> No, because wdd->dev is used in the interrupt handler. I will have to
->> move registration of the interrupt to after creating the watchdog
->> because it could currently be used before wdd->dev is set.
->>
-> 
-> Does unregistering the timer disable the interrupt ?
+On Wednesday 25 November 2015 10:16:44 Tony Lindgren wrote:
+> * Pali Roh=E1r <pali.rohar@gmail.com> [151123 06:46]:
+> > On Sunday 22 November 2015 07:51:46 Pavel Machek wrote:
+> > > On Wed 2015-11-11 17:10:46, Frank Rowand wrote:
+> > > > Adding devicetree list.
+> > > >=20
+> > > > Thread starts at
+> > > > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-July=
+/354459.html
+> > > >=20
+> > > > On 11/5/2015 8:17 AM, Tony Lindgren wrote:
+> > > > > * Pali Roh=E1r <pali.rohar@gmail.com> [151105 03:41]:
+> > > > >> On Tuesday 13 October 2015 16:37:46 Pali Roh=E1r wrote:
+> > > > >>> On Monday 12 October 2015 13:45:09 Tony Lindgren wrote:
+> > > > >>>> * Pali Roh=E1r <pali.rohar@gmail.com> [151012 13:29]:
+> > > > >>>>> On Monday 12 October 2015 22:16:40 Tony Lindgren wrote:
+> > > > >>>>>>
+> > > > >>>>>> Pali, any news on posting an updated series with the com=
+ments
+> > > > >>>>>> addressed in this thread? It seems that we all pretty mu=
+ch agree
+> > > > >>>>>> what needs to be done.
+> > > >=20
+> > > > I'm not real happy with the concept of patches 4 and 5 in this =
+series.
+> > > > My concern is that those two patches are using the FDT as a tra=
+nsport
+> > > > mechanism for a binary blob (the atags object).
+> > >=20
+> > > Umm. Ok. Do you have alternative proposal that works for everyone=
+?
+> > >=20
+> > > I mean. This discussion was going for quite a long time, and it w=
+ould
+> > > be nice to have some solution... patch proposal... something.
+> > >                                                                  =
+   Pavel
+> >=20
+> > Yes, discussion is going for a long time! So should I spend time fo=
+r
+> > adding documentation to my solution (this is last one thing which i=
+s
+> > missing)? Or my solution is wrong and somebody else will propose ne=
+w?
+> > I do not want to spend time on something which will be rejected and
+> > discarded.
+>=20
+> At least I don't have better solutions in mind.
 
-No, it sets the callback for that timer to NULL so that it won't be
-called.
+I would be happier if we could restrict this as much as possible to the
+boards that need it, as an opt-in. That way it doesn't become an ABI
+for people that don't already rely in this information. How about
+adding a check the code adds the linux,atags property to do it
+only for a whitelist of board numbers?
 
--- 
-Simon Arlott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
