@@ -1,90 +1,82 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND v2 0/4] SMP support for Broadcom NSP
-Date: Tue, 24 Nov 2015 16:06:00 -0800
-Message-ID: <5654FB68.60007@gmail.com>
-References: <1446839371-22601-1-git-send-email-kapilh@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND v4 1/6] remoteproc: dt: Provide bindings for ST's Remote
+ Processor Controller driver
+Date: Tue, 24 Nov 2015 18:07:27 -0600
+Message-ID: <20151125000727.GA26709@rob-hp-laptop>
+References: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
+ <1448370862-19120-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446839371-22601-1-git-send-email-kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448370862-19120-2-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/15 11:49, Kapil Hali wrote:
-> This is the second iteration in the series.
-> 
-> Changes in v2:
-> Removed the pen_holding method of SMP bringup for NSP SoC and
-> replaced it with simple wakeup of secondary core using ARM IPI.
-> 
-> 
-> This series adds SMP support for Broadcom's Northstar Plus SoC.
-> 
-> There are similar SMP enablement methods for many ARMv7 bsed SoCs.
-> BCM NSP SoC, has a typical such mechanism - after power-on, the
-> secondary core is held in a standby state, primary core provides a
-> startup address for the secondary core and wakes it up. Booting of
-> the secondary core is serialized using pen_release global variable.
-> 
-> The startup address is programmed at a special register location
-> which is defined in the device tree using a "secondary-boot-reg"
-> property in a node whose "enable-method" property matches.
-> 
-> The first patch adds cpu-enable-method in the device tree bindings
-> documentation. It also updates ARM CPU device tree documentation
-> with Broadcom Northstar Plus CPU details.
-> 
-> The second patch adds SMP support to the BCM NSP device tree file.
-> 
-> The third patch, enables SMP on BCM NSP. It also consolidates
-> common SMP handling between BCM NSP and BCM Kona.
-> 
-> The final patch, enables SMP on BCM 4708 and this patch is pulled
-> in from Jon Mason's patch from the mailing list.
-> 
-> This patch series is constructed based on Linux v4.3-rc2.
-> 
-> The source code is available at GITHUB:
-> https://github.com/Broadcom/cygnus-linux/tree/nsp-smp-v1
+On Tue, Nov 24, 2015 at 01:14:17PM +0000, Lee Jones wrote:
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  .../devicetree/bindings/remoteproc/st-rproc.txt    | 41 ++++++++++++++++++++++
 
-Kapil, were there additional changes requested for this patch series to
-be applied? The secondary-boot-reg property should probably be made part
-of the CPU node, even though you are strictly following the existing
-Kona SMP binding here (which was partially wrong on that subject).
+Acked-by: Rob Herring <robh@kernel.org>
 
-Could you resubmit these patches if there is anything that needs
-changing? Thanks!
-
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
 > 
-> Jon Mason (1):
->   ARM: BCM: Add SMP support for Broadcom 4708
+> diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+> new file mode 100644
+> index 0000000..1031bcd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+> @@ -0,0 +1,41 @@
+> +STMicroelectronics Co-Processor Bindings
+> +----------------------------------------
+> +
+> +This binding provides support for adjunct processors found on ST SoCs.
+> +
+> +Co-processors can be controlled from the bootloader or the primary OS. If
+> +the bootloader starts a co-processor, the primary OS must detect its state
+> +and act accordingly.
+> +
+> +Required properties:
+> +- compatible		Should be one of:
+> +				"st,st231-rproc"
+> +				"st,st40-rproc"
+> +- memory-region		Reserved memory (See: ../reserved-memory/reserved-memory.txt)
+> +- resets		Reset lines (See: ../reset/reset.txt)
+> +- reset-names		Must be "sw_reset" and "pwr_reset"
+> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
+> +- clock-frequency	Clock frequency to set co-processor at if the bootloader
+> +			hasn't already done so
+> +- st,syscfg		System configuration register which holds the boot vector
+> +			for the co-processor
+> +				1st cell: Phandle to syscon block
+> +				2nd cell: Boot vector register offset
+> +
+> +Example:
+> +
+> +	audio_reserved: rproc@42000000 {
+> +		compatible = "shared-dma-pool";
+> +		reg = <0x42000000 0x01000000>;
+> +		no-map;
+> +	};
+> +
+> +	st231-audio {
+> +		compatible	= "st,st231-rproc";
+> +		memory-region	= <&audio_reserved>;
+> +		resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
+> +		reset-names	= "sw_reset";
+> +		clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
+> +		clock-frequency	= <600000000>;
+> +		st,syscfg	= <&syscfg_core 0x228>;
+> +	};
+> -- 
+> 1.9.1
 > 
-> Kapil Hali (3):
->   dt-bindings: add SMP enable-method for Broadcom NSP
->   ARM: dts: add SMP support for Broadcom NSP
->   ARM: BCM: Add SMP support for Broadcom NSP
-> 
->  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 36 +++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->  arch/arm/boot/dts/bcm-nsp.dtsi                     | 33 ++++++---
->  arch/arm/boot/dts/bcm4708.dtsi                     |  2 +
->  arch/arm/mach-bcm/Kconfig                          |  3 +
->  arch/arm/mach-bcm/Makefile                         | 11 ++-
->  arch/arm/mach-bcm/bcm_nsp.h                        | 19 +++++
->  arch/arm/mach-bcm/{kona_smp.c => platsmp.c}        | 85 +++++++++++++++++++---
->  8 files changed, 167 insertions(+), 23 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->  create mode 100644 arch/arm/mach-bcm/bcm_nsp.h
->  rename arch/arm/mach-bcm/{kona_smp.c => platsmp.c} (75%)
-> 
-
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
