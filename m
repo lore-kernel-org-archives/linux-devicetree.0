@@ -1,116 +1,97 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 02/10] clockevents/drivers: add MPS2 Timer driver
-Date: Wed, 25 Nov 2015 15:21:27 +0000
-Message-ID: <5655D1F7.2030202@arm.com>
-References: <1448447621-17900-1-git-send-email-vladimir.murzin@arm.com> <1448447621-17900-3-git-send-email-vladimir.murzin@arm.com> <5655BA34.9040207@linaro.org> <5655CADA.1010803@arm.com> <5655CF58.6030507@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 19/19] irqchip/mips-gic: Add new DT property to
+ reserve IPIs
+Date: Wed, 25 Nov 2015 10:09:11 -0600
+Message-ID: <20151125160849.GA21688@rob-hp-laptop>
+References: <1448453217-3874-1-git-send-email-qais.yousef@imgtec.com>
+ <1448453217-3874-20-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5655CF58.6030507-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448453217-3874-20-git-send-email-qais.yousef@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qais Yousef <qais.yousef@imgtec.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, jiang.liu@linux.intel.com, ralf@linux-mips.org, linux-mips@linux-mips.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/15 15:10, Daniel Lezcano wrote:
-> On 11/25/2015 03:51 PM, Vladimir Murzin wrote:
->> Hi Daniel,
->>
->> Thanks for you review, I agree on all concerns raised and address them
->> in the next version. Just some points to confirm below (I left only
->> relevant parts).
->>
->>>> +static irqreturn_t mps2_timer_interrupt(int irq, void *dev_id)
->>>> +{
->>>> +    struct clockevent_mps2 *ce = dev_id;
->>>> +    u32 status = readl(ce->reg + TIMER_INT);
->>>> +
->>>> +    if (!status)
->>>> +        return IRQ_NONE;
->>>
->>> Why that could happen ? Add a comment.
->>>
->>
->> Sort of defensive programming, I never seen it happens, but just in case
->> of spurious interrupts... Do you prefer to get rid of this check or
->>
->>      /* spurious interrupt? */
->>      if (!status)
->>          return IRQ_NONE;
->>
->> would be fine to you?
+On Wed, Nov 25, 2015 at 12:06:57PM +0000, Qais Yousef wrote:
+> The new property will allow to specify the range of GIC hwirqs to use for IPIs.
 > 
-> Yes, that would be fine, but if it does never happen, we don't really
-> need this check. If you prefer to make sure there isn't a spurious
-> interrupt and considering it shouldn't happen, a pr_info trace may help
-> to spot this misbehavior.
+> This is an optinal property. We preserve the previous behaviour of allocating
+> the last 2 * gic_vpes if it's not specified or DT is not supported.
 > 
+> Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
 
-Good, I'll put pr_warn("spurious interrupt\n") then.
-
->>>> +}
->>>> +
->>>> +static void __init mps2_timer_init(struct device_node *np)
->>>> +{
->>>> +    static int clksrc;
->>>> +
->>>> +    if (!clksrc && !mps2_clocksource_init(np))
->>>> +        clksrc = 1;
->>>> +    else
->>>> +        mps2_clockevents_init(np);
->>>
->>> That assumes the clocksource is defined before the clockevents in the
->>> DT. If it is not the case, the mps2_clocksource_init will fail (and spit
->>> errors) and mps2_clockevents_init() won't be called.
->>>
->>
->> Does following (stolen from efm32) look better to you?
->>
->> static void __init mps2_timer_init(struct device_node *np)
->> {
->>     static int has_clocksource, has_clockevent;
->>     int ret;
->>
->>     if (!has_clocksource) {
->>         ret = mps2_clocksource_init(np);
->>         if (!ret) {
->>             has_clocksource = 1;
->>             return;
->>         }
->>     }
->>
->>     if (!has_clockevent) {
->>         ret = mps2_clockevent_init(np);
->>         if (!ret) {
->>             has_clockevent = 1;
->>             return;
->>         }
->>     }
->> }
-> 
-> Yes.
-> 
-> I don't like to have a "CLOCKSOURCE_OF_DECLARE" to initialize a
-> clockevent but I can't blame you, this is what is done in the other
-> drivers.
-
-Thanks for your time!
-
-Vladimir
+Acked-by: Rob Herring <robh@kernel.org>
 
 > 
->>>> +}
->>>> +
->>>> +CLOCKSOURCE_OF_DECLARE(mps2_timer, "arm,mps2-timer", mps2_timer_init);
->>>>
->>>
->>>
->>
+> ---
+>  .../devicetree/bindings/interrupt-controller/mips-gic.txt    |  7 +++++++
+>  drivers/irqchip/irq-mips-gic.c                               | 12 ++++++++++--
+>  2 files changed, 17 insertions(+), 2 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> index aae4c384ee1f..173595305e26 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> @@ -23,6 +23,12 @@ Optional properties:
+>  - mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
+>    to which the GIC may not route interrupts.  Valid values are 2 - 7.
+>    This property is ignored if the CPU is started in EIC mode.
+> +- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
+> +  reserved for IPIs.
+> +  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
+> +  of the reserved range.
+> +  If not specified, the driver will allocate the last 2 * number of VPEs in the
+> +  system.
+>  
+>  Required properties for timer sub-node:
+>  - compatible : Should be "mti,gic-timer".
+> @@ -44,6 +50,7 @@ Example:
+>  		#interrupt-cells = <3>;
+>  
+>  		mti,reserved-cpu-vectors = <7>;
+> +		mti,reserved-ipi-vectors = <40 8>;
+>  
+>  		timer {
+>  			compatible = "mti,gic-timer";
+> diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
+> index c7043a15253b..659fe734d1b7 100644
+> --- a/drivers/irqchip/irq-mips-gic.c
+> +++ b/drivers/irqchip/irq-mips-gic.c
+> @@ -945,6 +945,7 @@ static void __init __gic_init(unsigned long gic_base_addr,
+>  			      struct device_node *node)
+>  {
+>  	unsigned int gicconfig;
+> +	unsigned int v[2];
+>  
+>  	gic_base = ioremap_nocache(gic_base_addr, gic_addrspace_size);
+>  
+> @@ -1013,8 +1014,15 @@ static void __init __gic_init(unsigned long gic_base_addr,
+>  
+>  	gic_ipi_domain->bus_token = DOMAIN_BUS_IPI;
+>  
+> -	/* Make the last 2 * NR_CPUS available for IPIs */
+> -	bitmap_set(ipi_resrv, gic_shared_intrs - 2 * gic_vpes, 2 * gic_vpes);
+> +	if (node &&
+> +	    !of_property_read_u32_array(node, "mti,reserved-ipi-vectors", &v, 2)) {
+> +		bitmap_set(ipi_resrv, v[0], v[1]);
+> +	} else {
+> +		/* Make the last 2 * gic_vpes available for IPIs */
+> +		bitmap_set(ipi_resrv,
+> +			   gic_shared_intrs - 2 * gic_vpes,
+> +			   2 * gic_vpes);
+> +	}
+>  
+>  	gic_basic_init();
+>  }
+> -- 
+> 2.1.0
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
