@@ -1,113 +1,204 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: [PATCH (v2) 11/11] watchdog: bcm63xx_wdt: Use brcm,bcm6345-wdt device
- tree binding
-Date: Wed, 25 Nov 2015 23:09:42 +0000
-Message-ID: <56563FB6.8040001@simon.arlott.org.uk>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
- <5651CB13.4090704@simon.arlott.org.uk> <5651CDB6.5030406@simon.arlott.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9] Documentation: add Device tree bindings for
+ hwmon/nct7802
+Date: Wed, 25 Nov 2015 17:15:35 -0600
+Message-ID: <20151125231535.GA25979@rob-hp-laptop>
+References: <1448323758-28457-1-git-send-email-const@makelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5651CDB6.5030406-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448323758-28457-1-git-send-email-const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add of_match_table for "brcm,bcm6345-wdt".
-
-Use a NULL clock name when not on mach-bcm63xx so that the device tree
-clock name does not have to be "periph".
-
-Allow the watchdog to be selected on BMIPS_GENERIC and select the BCM6345
-timer interrupt handler.
-
-Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
----
-Patch 7 split into two patches.
-
-On 25/11/15 02:44, Guenter Roeck wrote:
->> +	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
->> +	wdd = devm_kzalloc(&pdev->dev, sizeof(*wdd), GFP_KERNEL);
+On Tue, Nov 24, 2015 at 02:09:18AM +0200, Constantine Shulyupin wrote:
+> From: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
 > 
-> It would be better to allocate wdd as part of struct bcm63xx_wdt_hw.
+> Introduced subnodes sensor, fan and peci with properties.
+> 
+> Signed-off-by: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
 
-This altered the context of this patch (was 10/10 now 11/11) because
-platform_get_drvdata() is now "hw" instead of "wdd".
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
- drivers/watchdog/Kconfig       |  3 ++-
- drivers/watchdog/bcm63xx_wdt.c | 14 +++++++++++++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 6815b74..0c50add 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1272,8 +1272,9 @@ config OCTEON_WDT
- 
- config BCM63XX_WDT
- 	tristate "Broadcom BCM63xx hardware watchdog"
--	depends on BCM63XX
-+	depends on BCM63XX || BMIPS_GENERIC
- 	select WATCHDOG_CORE
-+	select BCM6345_L2_TIMER_IRQ if BMIPS_GENERIC
- 	help
- 	  Watchdog driver for the built in watchdog hardware in Broadcom
- 	  BCM63xx SoC.
-diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
-index fa6c28b..4db4145 100644
---- a/drivers/watchdog/bcm63xx_wdt.c
-+++ b/drivers/watchdog/bcm63xx_wdt.c
-@@ -22,6 +22,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/watchdog.h>
-@@ -31,7 +32,11 @@
- 
- #define PFX KBUILD_MODNAME
- 
--#define WDT_CLK_NAME		"periph"
-+#ifdef CONFIG_BCM63XX
-+# define WDT_CLK_NAME		"periph"
-+#else
-+# define WDT_CLK_NAME		NULL
-+#endif
- 
- struct bcm63xx_wdt_hw {
- 	struct watchdog_device wdd;
-@@ -286,12 +291,19 @@ static void bcm63xx_wdt_shutdown(struct platform_device *pdev)
- 	bcm63xx_wdt_stop(&hw->wdd);
- }
- 
-+static const struct of_device_id bcm63xx_wdt_dt_ids[] = {
-+	{ .compatible = "brcm,bcm6345-wdt" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, bcm63xx_wdt_dt_ids);
-+
- static struct platform_driver bcm63xx_wdt_driver = {
- 	.probe	= bcm63xx_wdt_probe,
- 	.remove = bcm63xx_wdt_remove,
- 	.shutdown = bcm63xx_wdt_shutdown,
- 	.driver = {
- 		.name = "bcm63xx-wdt",
-+		.of_match_table = bcm63xx_wdt_dt_ids,
- 	}
- };
- 
--- 
-2.1.4
-
--- 
-Simon Arlott
+> ---
+> Changed in v9:
+> - Fixed nuvoton,nct7802-sensor
+> - Introduced nuvoton,nct7802-vmon, nuvoton,nct7802-fan-in, nuvoton,nct7802-fan-ctl
+> 
+> Changed in v8:
+> - added senor type "local"
+> - Compatible nodes converted to senor types "vcore", "vcc"
+> 
+> Changed in v7:
+> - sensors type (thermistor, thermistor, voltage) and pwm type
+> selected with type property instead of compatible property.
+> 
+> Changed in v6:
+> - Removed previous definition.
+> - Introduced subnodes sensor, fan and peci with properties.
+> 
+> Changed in v5:
+> - Fixed typos
+> 
+> Changed in v4:
+> - Removed registers initialization by names
+> - Added properties nuvoton,sensor*-type
+> 
+> Changed in v3:
+> - Fixed vendor prefix
+> - Added short registers description,
+>   full registers description is available at
+> https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+> 
+> Changed in v2:
+> - Removed nct7802,reg-init
+> - Added registers initialization by names
+> 
+> Introduced in v1:
+>  - nct7802,reg-init
+> ---
+>  .../devicetree/bindings/hwmon/nct7802.txt          | 125 +++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> new file mode 100644
+> index 0000000..cf983b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> @@ -0,0 +1,125 @@
+> +Nuvoton NCT7802Y Hardware Monitoring IC
+> +
+> +Required node properties:
+> +
+> + - "compatible": must be "nuvoton,nct7802"
+> + - "reg": I2C bus address of the device
+> + - #address-cells=<1>;
+> + - #size-cells=<0>;
+> +
+> +Optional subnodes:
+> +
+> +Sensor subnodes properties:
+> + - "compatible", allowed values:
+> +	 - "nuvoton,nct7802-sensor"
+> + - "sensor-type", allowed values:
+> +	"thermal-diode"
+> +	"thermistor"
+> +	"voltage"
+> +	"local" (only one instance, no "reg" required)
+> +For sensors of types "thermal-diode", "thermistor" and "voltage" required
+> + - "reg": sensor index in range 0 .. 2
+> +
+> +Except sensor at address 2 can't be "thermal-diode".
+> +
+> +Voltage monitor subnodes properties:
+> + - "compatible", allowed values:
+> +	 - "nuvoton,nct7802-vmon"
+> + - "vmon-type", allowed values:
+> +	"vcore"
+> +	"vcc"
+> + - "reg" is not used because there is only one instance of
+> + vcore and vcc voltage monitors.
+> +
+> +Fan subnodes:
+> +
+> +Fan tachometer subnode (input):
+> +
+> +Required properties:
+> + - "reg" :sensor index of in range 0 .. 2.
+> + - "compatible", should be "nuvoton,nct7802-fan-in"
+> +
+> +Fan PWM (or DC) subnode (output or control):
+> +
+> +Required properties:
+> + - "reg" :sensor index of in range 0 .. 2.
+> + - "compatible", should be "nuvoton,nct7802-fan-ctl"
+> +Optional boolean properties:
+> + - "direct-current" :direct current powered fan instead default PWM
+> + - "invert" :inverted polarity
+> + - "open-drain" :open-drain output instead push pull
+> +
+> +Subnode "peci" properties:
+> + - "reg" :sensor index in range 0 .. 1
+> + - "compatible", should be "nuvoton,nct7802-peci"
+> +
+> +Not defined sensors, fans and PECI modules will be disabled.
+> +
+> +Example nct7802 node:
+> +
+> +nct7802-example@28 {
+> +	compatible = "nuvoton,nct7802";
+> +	reg = <0x28>;
+> +	#address-cells=<1>;
+> +	#size-cells=<0>;
+> +	local-sensor {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		sensor-type = "local";
+> +	};
+> +	sensor@0 {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		reg = <0>;
+> +		sensor-type = "thermal-diode";
+> +	};
+> +	sensor@1 {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		reg = <1>;
+> +		sensor-type = "thermistor";
+> +	};
+> +	sensor@2 {
+> +		compatible = "nuvoton,nct7802-sensor";
+> +		reg = <2>;
+> +		sensor-type = "voltage";
+> +	};
+> +	vcc {
+> +		compatible = "nuvoton,nct7802-vmon";
+> +		sensor-type = "vcc";
+> +	};
+> +	vcore {
+> +		compatible = "nuvoton,nct7802-vmon";
+> +		sensor-type = "vcore";
+> +	};
+> +	fan-in@0 {
+> +		compatible = "nuvoton,nct7802-fan-in";
+> +		reg = <0>;
+> +	};
+> +	fan-in@1 {
+> +		compatible = "nuvoton,nct7802-fan-in";
+> +		reg = <1>;
+> +	};
+> +	fan-ctl@0 {
+> +		compatible = "nuvoton,nct7802-fan-ctl";
+> +		reg = <0>;
+> +	};
+> +	dc-fan-ctl@1 {
+> +		compatible = "nuvoton,nct7802-fan-ctl";
+> +		reg = <1>;
+> +		direct-current;
+> +		open-drain;
+> +		invert;
+> +	};
+> +	pwm-fan-ctl@2 {
+> +		compatible = "nuvoton,nct7802-fan-ctl";
+> +		reg = <2>;
+> +		open-drain;
+> +		invert;
+> +	};
+> +	peci@0 {
+> +		compatible = "nuvoton,nct7802-peci";
+> +		reg = <0>;
+> +	};
+> +	peci@1 {
+> +		compatible = "nuvoton,nct7802-peci";
+> +		reg = <1>;
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
