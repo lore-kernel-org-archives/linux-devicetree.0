@@ -1,116 +1,98 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RESEND 00/16] Support TI LMU devices
-Date: Wed, 25 Nov 2015 09:05:46 +0000
-Message-ID: <20151125090546.GN12874@x1>
-References: <1446441875-1256-1-git-send-email-milo.kim@ti.com>
- <20151102085924.GP4058@x1>
- <56385998.5080006@ti.com>
- <20151103083344.GA3503@x1>
- <5655767A.8030003@ti.com>
+From: lei liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] spi: mediatek: revise mtk_spi_probe() failure flow
+Date: Wed, 25 Nov 2015 17:14:50 +0800
+Message-ID: <1448442890.27169.5.camel@mhfsdcap03>
+References: <1448332712-29039-1-git-send-email-leilk.liu@mediatek.com>
+	 <5654A89A.3090202@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5655767A.8030003@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Kim, Milo" <milo.kim@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5654A89A.3090202-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Nov 2015, Kim, Milo wrote:
+On Tue, 2015-11-24 at 19:12 +0100, Matthias Brugger wrote:
+> 
+> On 24/11/15 03:38, Leilk Liu wrote:
+> > This patch revises failure flow while pm_runtime_enable().
+> 
+> Please write a proper commit message explaining what this patch does.
+> 
+OK, thanks!
 
-> On 11/3/2015 5:33 PM, Lee Jones wrote:
-> >On Tue, 03 Nov 2015, Kim, Milo wrote:
 > >
-> >>Hi Lee,
-> >>
-> >>On 11/2/2015 5:59 PM, Lee Jones wrote:
-> >>>>  drivers/video/backlight/Kconfig                    |  62 ++
-> >>>>>  drivers/video/backlight/Makefile                   |   7 +
-> >>>>>  drivers/video/backlight/lm3532_bl.c                | 183 +++++
-> >>>>>  drivers/video/backlight/lm3631_bl.c                | 129 ++++
-> >>>>>  drivers/video/backlight/lm3632_bl.c                | 125 ++++
-> >>>>>  drivers/video/backlight/lm3633_bl.c                | 210 +++++=
-+
-> >>>>>  drivers/video/backlight/lm3695_bl.c                |  91 +++
-> >>>>>  drivers/video/backlight/lm3697_bl.c                | 187 +++++
-> >>>>>  drivers/video/backlight/ti-lmu-backlight.c         | 429 +++++=
-+++++++
-> >>>>>  drivers/video/backlight/ti-lmu-backlight.h         | 152 +++++
-> >>>How different are all of these drivers?
-> >>>
-> >>>Can you create one driver that supports them all instead?
-> >>>
-> >>
-> >>Thanks for your suggestion.
-> >>
-> >>'ti-lmu-backlight' is the common part of lmxxxx_bl drivers. And eac=
-h
-> >>lmxxx_bl has its own operation functions by using ti_lmu_bl_ops.
-> >>I've tried to make consolidated driver but it contained too much
-> >>device specific code in one file. So I prefer simple drivers
-> >>structure - 'common part' and 'device specific operations'.
-> >>It would be appreciated if you could introduce better idea.
+> > Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   drivers/spi/spi-mt65xx.c |   15 ++++++++-------
+> >   1 file changed, 8 insertions(+), 7 deletions(-)
 > >
-> >I wish to avoid having to apply the patches to conduct my own analys=
-is
-> >of the files, as I am severely restricted on time.  Can you tell me =
-how
-> >much duplicated code there is between the files?  How many lines wou=
-ld
-> >be saved by supporting all of the lm* drivers in a single file?
+> > diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+> > index 6c1a96e..00a36da 100644
+> > --- a/drivers/spi/spi-mt65xx.c
+> > +++ b/drivers/spi/spi-mt65xx.c
+> > @@ -607,7 +607,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >   	ret = clk_set_parent(mdata->sel_clk, mdata->parent_clk);
+> >   	if (ret < 0) {
+> >   		dev_err(&pdev->dev, "failed to clk_set_parent (%d)\n", ret);
+> > -		goto err_disable_clk;
+> > +		clk_disable_unprepare(mdata->spi_clk);
+> > +		goto err_put_master;
+> >   	}
 > >
->=20
-> Now, consolidated driver is ready. It improves not only lines of
-> code but also code size. Patch v2 will be sent soon.
->=20
-> Lines of code
-> -------------
-> 194 lines are saved in consolidated driver.
->=20
-> Patch v1: 1420 (8 files*)
-> Patch v2: 1226 (3 files**)
->=20
-> *	ti-lmu-backlight.c (429)
-> 	ti-lmu-backlight.h (152)
-> 	lm3532_bl.c (183)
-> 	lm3631_bl.c (129)
-> 	lm3632_bl.c (125)
-> 	lm3633_bl.c (210)
-> 	lm3695_bl.c (95)
-> 	lm3697_bl.c (97)
->=20
-> **	ti-lmu-backlight-core.c (649)
-> 	ti-lmu-backlight-data.c (287)
-> 	ti-lmu-backlight.h (290)
->=20
-> Size
-> ----
-> The text segment is decreased by removing duplicate instructions.
->=20
-> Patch v1
->    text	   data	    bss	    dec	    hex	filename
->   12202	    720	     40	  12962	   32a2	drivers/video/backlight/built=
--in.o
->=20
-> Patch v2
->    text	   data	    bss	    dec	    hex	filename
->    6883	    712	     41	   7636	   1dd4	drivers/video/backlight/built=
--in.o
->=20
-> Test environment
-> ----------------
-> - Kernel version: 4.4.0-rc2 (linux-next)
-> - backlight/built-in.o includes backlight core and ti-lmu-backlight
-> drivers. No other backlight drivers included.
->=20
-> Change details will be described in the patch-set.
+> >   	clk_disable_unprepare(mdata->spi_clk);
+> > @@ -617,7 +618,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >   	ret = devm_spi_register_master(&pdev->dev, master);
+> >   	if (ret) {
+> >   		dev_err(&pdev->dev, "failed to register master (%d)\n", ret);
+> > -		goto err_put_master;
+> > +		goto err_disable_runtime_pm;
+> >   	}
+> >
+> >   	if (mdata->dev_comp->need_pad_sel) {
+> > @@ -626,14 +627,14 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >   				"pad_num does not match num_chipselect(%d != %d)\n",
+> >   				mdata->pad_num, master->num_chipselect);
+> >   			ret = -EINVAL;
+> > -			goto err_put_master;
+> > +			goto err_disable_runtime_pm;
+> >   		}
+> >
+> >   		if (!master->cs_gpios && master->num_chipselect > 1) {
+> >   			dev_err(&pdev->dev,
+> >   				"cs_gpios not specified and num_chipselect > 1\n");
+> >   			ret = -EINVAL;
+> > -			goto err_put_master;
+> > +			goto err_disable_runtime_pm;
+> >   		}
+> >
+> >   		if (master->cs_gpios) {
+> > @@ -644,7 +645,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >   				if (ret) {
+> >   					dev_err(&pdev->dev,
+> >   						"can't get CS GPIO %i\n", i);
+> > -					goto err_put_master;
+> > +					goto err_disable_runtime_pm;
+> >   				}
+> >   			}
+> >   		}
+> > @@ -652,8 +653,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+> >
+> >   	return 0;
+> >
+> > -err_disable_clk:
+> > -	clk_disable_unprepare(mdata->spi_clk);
+> > +err_disable_runtime_pm:
+> > +	pm_runtime_disable(&pdev->dev);
+> >   err_put_master:
+> >   	spi_master_put(master);
+> >
+> >
 
-Excellent news.  Thanks for carrying out this work.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
