@@ -1,29 +1,72 @@
-From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH 2/4] ARM: dts: vf610-colibri: relicense vf*colibri* under
- GPLv2/X11
-Date: Wed, 25 Nov 2015 13:56:42 +0530
-Message-ID: <20151125082642.GB19921@Sanchayan-Arch.toradex.int>
-References: <1448323278-23447-1-git-send-email-stefan@agner.ch>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 0/4] ARM: shmobile: r8a7740/sh73a0 DT Cache Handling
+Date: Wed, 25 Nov 2015 09:45:20 +0100
+Message-ID: <CAMuHMdXeb-hWhAXFtKDpnc_nuBgzi7usxPOmKY9kNmwM4A+54w@mail.gmail.com>
+References: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
+	<20151125015048.GN20596@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448323278-23447-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151125015048.GN20596@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15-11-23 16:01:18, Stefan Agner wrote:
-> GPLv2-only devicetrees make reuse difficult for software components
-> licensed under a different license.
-> 
-> The consensus is that a GPL/X11 dual-license should allow all necessary
-> uses, so relicense the vf*colibri* files to this combination.
+Hi Simon,
 
-Acked-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wed, Nov 25, 2015 at 2:50 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Mon, Nov 23, 2015 at 02:55:58PM +0100, Geert Uytterhoeven wrote:
+>> This patch series add minimal L1 and L2 cache descriptions to DT for
+>> r8a7740 and sh73a0, and migrates the shmobile DT-based generic r8a7740
+>> platform from calling l2x0_of_init() to the generic l2c OF
+>> initialization.
+>>
+>> Note that the conversion to the generic l2c OF initialization is not
+>> done yet for sh73a0, as this initializes the L2 cache earlier, breaking
+>> the (fragile) sh73a0 secondary CPU bringup code.
+>>
+>> Also note that this conversion should be done on r8a7778, and r8a7779,
+>> too.
+>
+> Based on your work I have prepared a DT patch for the r8a7779.
+
+Thanks for following up.
+
+> I don't think that a C patch is necessary, please correct me if I am wrong.
+
+Yes you do!
+Without machine_desc.l2x_aux_{val,mask}, the information in DT is not used.
+Cfr. arch/arm/mach-shmobile/setup-r8a7740.c
+
+> Regarding the r8a7778: My reading of the documentation is that although a
+> pl310 L2 cache controller is present it is not available for use as there
+> is no L2 cache memory present. For this reason I do not think any patches
+> are required for the r8a7798.
+
+I agree after consulting the datasheet.
+
+>> Dependencies:
+>>   - This series applies to renesas-devel-20151123-v4.4-rc2,
+>>   - Patch 3 depends on patch 1,
+>>   - Patch 4 depends on patch 3.
+>>
+>> Given C code changesets depending on DT changesets in the same branch
+>> are frowned upon, you may want to postpone patches 3 and 4 to v4.6.
+>> Of course I'll sleep better if you just apply all 4 of them now ;-)
+>
+> I have queued up the DT changes for v4.5.
+> And tentatively queued up the C changes for v4.6.
+
+Thank you!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
