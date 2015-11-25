@@ -1,116 +1,130 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 0/4] ARM: shmobile: r8a7740/sh73a0 DT Cache Handling
-Date: Wed, 25 Nov 2015 10:50:51 +0900
-Message-ID: <20151125015048.GN20596@verge.net.au>
-References: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: Re: [PATCH V3 1/3] ASoC: fsl_esai: spba clock is
+ needed by esai device
+Date: Wed, 25 Nov 2015 10:02:32 +0800
+Message-ID: <20151125020229.GA26087@shlinux2>
+References: <cover.1448348336.git.shengjiu.wang@freescale.com>
+ <37808c01df126622c41c2d413fddf838dc2aa71d.1448348336.git.shengjiu.wang@freescale.com>
+ <20151124232130.GA3400@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1448286962-16897-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20151124232130.GA3400@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, Xiubo.Lee@gmail.com, timur@tabi.org, lgirdwood@gmail.com, nicoleotsuka@gmail.com, broonie@kernel.org, galak@codeaurora.org, tiwai@suse.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 02:55:58PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
+On Tue, Nov 24, 2015 at 05:21:30PM -0600, Rob Herring wrote:
+> On Tue, Nov 24, 2015 at 03:03:28PM +0800, Shengjiu Wang wrote:
+> > ESAI need to enable the spba clock, when sdma is using share peripheral
+> > script. In this case, there is two spba master port is used, if don't
+> > enable the clock, the spba bus will have arbitration issue, which may
+> > cause read/write wrong data from/to ESAI registers.
+> > 
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
+> > ---
+> >  Documentation/devicetree/bindings/sound/fsl,esai.txt |  5 +++++
 > 
-> This patch series add minimal L1 and L2 cache descriptions to DT for
-> r8a7740 and sh73a0, and migrates the shmobile DT-based generic r8a7740
-> platform from calling l2x0_of_init() to the generic l2c OF
-> initialization.
-> 
-> Note that the conversion to the generic l2c OF initialization is not
-> done yet for sh73a0, as this initializes the L2 cache earlier, breaking
-> the (fragile) sh73a0 secondary CPU bringup code.
-> 
-> Also note that this conversion should be done on r8a7778, and r8a7779,
-> too.
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Based on your work I have prepared a DT patch for the r8a7779.
-I don't think that a C patch is necessary, please correct me if I am wrong.
+Hi Mark, Rob
 
-Regarding the r8a7778: My reading of the documentation is that although a
-pl310 L2 cache controller is present it is not available for use as there
-is no L2 cache memory present. For this reason I do not think any patches
-are required for the r8a7798.
+   Just a reminder. There is V4 for this patch set. I think the "Acked-by:" is
+for the V4. Thanks.
 
-> Changes compared to v4 ("[PATCH v4 0/6] ARM: shmobile: r8a7740/sh73a0 DT
-> Cache Handling",
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
->   - Drop optional cache-{size,sets,{block,line}-size} properties, as
->     this information is auto-detected (I verified this for both L1 and
->     L2 cache properties),
->   - Merge the L1 patches into the L2 patches, as the only part left from
->     the L1 patches was adding the links from CPU to L2 cache nodes.
-> 
-> Changes compared to v3 ("[PATCH v3 0/6] ARM: l2c / shmobile: r8a7740 :
-> Shared Override",
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
->   - "l2c: Add support for the "arm,shared-override" property" was split
->     off into an independent patch, and is now queued for v4.3 in
->     arm/for-next,
->   - Dropped armadillo legacy migration, as it no longer exists,
->   - Added sh73a0 L1 and L2 DT cache description.
-> 
-> Changes compared to v2 ("[PATCH v2 0/5] ARM: shmobile: r8a7740/armadillo:
-> Migrate to generic l2c OF",
-> http://www.spinics.net/lists/devicetree/msg68176.html):
->   - Add DT support for Shared Override,
->   - Setting Shared Override is done only if CMA is not available (as
->     Russell claims it's not needed if CMA is available),
->   - Use 0/~0 in machine_desc.l2c_aux_{val,mask}, as DT now supports
->     "arm,shared-override".
-> 
-> Changes compared to v1:
->   - Fix interrupt reference in DT,
->   - Describe L2 better in DT,
->   - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE in
->     machine_desc.l2c_aux_{val,mask}, as there's no DT property for
->     this.
->   - Add L1 cache to DT.
-> 
-> Dependencies:
->   - This series applies to renesas-devel-20151123-v4.4-rc2,
->   - Patch 3 depends on patch 1,
->   - Patch 4 depends on patch 3.
-> 
-> Given C code changesets depending on DT changesets in the same branch
-> are frowned upon, you may want to postpone patches 3 and 4 to v4.6.
-> Of course I'll sleep better if you just apply all 4 of them now ;-)
+best regards
+wang shengjiu
 
-I have queued up the DT changes for v4.5.
-And tentatively queued up the C changes for v4.6.
-
-> I've been running this on r8a7740/armadillo and sh73a0/kzm9g for more
-> than a year.
 > 
-> Thanks for applying!
-> 
-> Geert Uytterhoeven (4):
->   ARM: shmobile: r8a7740 dtsi: Add L2 cache-controller node
->   ARM: shmobile: sh73a0 dtsi: Add L2 cache-controller node
->   ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
->   ARM: shmobile: r8a7740: Remove mapping of L2 cache controller
->     registers
-> 
->  arch/arm/boot/dts/r8a7740.dtsi         | 13 +++++++++++++
->  arch/arm/boot/dts/sh73a0.dtsi          | 14 ++++++++++++++
->  arch/arm/mach-shmobile/setup-r8a7740.c | 18 ++----------------
->  3 files changed, 29 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> 
+> >  sound/soc/fsl/fsl_esai.c                             | 13 +++++++++++++
+> >  2 files changed, 18 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> > index d3b6b5f..cd3ee5d 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+> > @@ -27,6 +27,11 @@ Required properties:
+> >  			  derive HCK, SCK and FS.
+> >  	"fsys"		  The system clock derived from ahb clock used to
+> >  			  derive HCK, SCK and FS.
+> > +	"spba"		  The spba clock is required when ESAI is placed as a
+> > +			  bus slave of the Shared Peripheral Bus and when two
+> > +			  or more bus masters (CPU, DMA or DSP) try to access
+> > +			  it. This property is optional depending on the SoC
+> > +			  design.
+> >  
+> >    - fsl,fifo-depth	: The number of elements in the transmit and receive
+> >  			  FIFOs. This number is the maximum allowed value for
+> > diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+> > index 504e731..4d7589c 100644
+> > --- a/sound/soc/fsl/fsl_esai.c
+> > +++ b/sound/soc/fsl/fsl_esai.c
+> > @@ -35,6 +35,7 @@
+> >   * @coreclk: clock source to access register
+> >   * @extalclk: esai clock source to derive HCK, SCK and FS
+> >   * @fsysclk: system clock source to derive HCK, SCK and FS
+> > + * @spbaclk: SPBA clock (optional, depending on SoC design)
+> >   * @fifo_depth: depth of tx/rx FIFO
+> >   * @slot_width: width of each DAI slot
+> >   * @slots: number of slots
+> > @@ -54,6 +55,7 @@ struct fsl_esai {
+> >  	struct clk *coreclk;
+> >  	struct clk *extalclk;
+> >  	struct clk *fsysclk;
+> > +	struct clk *spbaclk;
+> >  	u32 fifo_depth;
+> >  	u32 slot_width;
+> >  	u32 slots;
+> > @@ -469,6 +471,9 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
+> >  	ret = clk_prepare_enable(esai_priv->coreclk);
+> >  	if (ret)
+> >  		return ret;
+> > +	ret = clk_prepare_enable(esai_priv->spbaclk);
+> > +	if (ret)
+> > +		goto err_spbaclk;
+> >  	if (!IS_ERR(esai_priv->extalclk)) {
+> >  		ret = clk_prepare_enable(esai_priv->extalclk);
+> >  		if (ret)
+> > @@ -499,6 +504,8 @@ err_fsysclk:
+> >  	if (!IS_ERR(esai_priv->extalclk))
+> >  		clk_disable_unprepare(esai_priv->extalclk);
+> >  err_extalck:
+> > +	clk_disable_unprepare(esai_priv->spbaclk);
+> > +err_spbaclk:
+> >  	clk_disable_unprepare(esai_priv->coreclk);
+> >  
+> >  	return ret;
+> > @@ -564,6 +571,7 @@ static void fsl_esai_shutdown(struct snd_pcm_substream *substream,
+> >  		clk_disable_unprepare(esai_priv->fsysclk);
+> >  	if (!IS_ERR(esai_priv->extalclk))
+> >  		clk_disable_unprepare(esai_priv->extalclk);
+> > +	clk_disable_unprepare(esai_priv->spbaclk);
+> >  	clk_disable_unprepare(esai_priv->coreclk);
+> >  }
+> >  
+> > @@ -819,6 +827,11 @@ static int fsl_esai_probe(struct platform_device *pdev)
+> >  		dev_warn(&pdev->dev, "failed to get fsys clock: %ld\n",
+> >  				PTR_ERR(esai_priv->fsysclk));
+> >  
+> > +	esai_priv->spbaclk = devm_clk_get(&pdev->dev, "spba");
+> > +	if (IS_ERR(esai_priv->spbaclk))
+> > +		dev_warn(&pdev->dev, "failed to get spba clock: %ld\n",
+> > +				PTR_ERR(esai_priv->spbaclk));
+> > +
+> >  	irq = platform_get_irq(pdev, 0);
+> >  	if (irq < 0) {
+> >  		dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
+> > -- 
+> > 1.9.1
+> > 
