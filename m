@@ -1,56 +1,103 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH v3 1/5] misc: eeprom_93xx46: Fix 16-bit read and write accesses.
-Date: Wed, 25 Nov 2015 00:30:48 -0500
-Message-ID: <1448429452-26972-2-git-send-email-cory.tusar@pid1solutions.com>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: [PATCH v3 3/5] misc: eeprom_93xx46: Implement eeprom_93xx46 DT bindings.
+Date: Wed, 25 Nov 2015 00:30:50 -0500
+Message-ID: <1448429452-26972-4-git-send-email-cory.tusar@pid1solutions.com>
 References: <1448429452-26972-1-git-send-email-cory.tusar@pid1solutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448429452-26972-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448429452-26972-1-git-send-email-cory.tusar@pid1solutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, agust@denx.de, gregkh@linuxfoundation.org
+Cc: jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Compatible at93xx46 devices from both Microchip and Atmel expect a
-word-based address, regardless of whether the device is strapped for 8-
-or 16-bit operation.  However, the offset parameter passed in when
-reading or writing at a specific location is always specified in terms
-of bytes.
+This commit implements bindings in the eeprom_93xx46 driver allowing
+device word size and read-only attributes to be specified via
+devicetree.
 
-This commit fixes 16-bit read and write accesses by shifting the offset
-parameter to account for this difference between a byte offset and a
-word-based address.
-
-Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/eeprom/eeprom_93xx46.c | 49 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
 diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index ff63f05..e1bf0a5 100644
+index e1bf0a5..cc27e11 100644
 --- a/drivers/misc/eeprom/eeprom_93xx46.c
 +++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -54,7 +54,7 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
- 		cmd_addr |= off & 0x7f;
- 		bits = 10;
- 	} else {
--		cmd_addr |= off & 0x3f;
-+		cmd_addr |= (off >> 1) & 0x3f;
- 		bits = 9;
- 	}
+@@ -13,6 +13,8 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ #include <linux/sysfs.h>
+@@ -294,12 +296,58 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
+ }
+ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
  
-@@ -155,7 +155,7 @@ eeprom_93xx46_write_word(struct eeprom_93xx46_dev *edev,
- 		bits = 10;
- 		data_len = 1;
- 	} else {
--		cmd_addr |= off & 0x3f;
-+		cmd_addr |= (off >> 1) & 0x3f;
- 		bits = 9;
- 		data_len = 2;
- 	}
++static const struct of_device_id eeprom_93xx46_of_table[] = {
++	{ .compatible = "eeprom-93xx46", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
++
++static int eeprom_93xx46_probe_dt(struct spi_device *spi)
++{
++	struct device_node *np = spi->dev.of_node;
++	struct eeprom_93xx46_platform_data *pd;
++	u32 tmp;
++	int ret;
++
++	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
++	if (!pd)
++		return -ENOMEM;
++
++	ret = of_property_read_u32(np, "data-size", &tmp);
++	if (ret < 0) {
++		dev_err(&spi->dev, "data-size property not found\n");
++		return ret;
++	}
++
++	if (tmp == 8) {
++		pd->flags |= EE_ADDR8;
++	} else if (tmp == 16) {
++		pd->flags |= EE_ADDR16;
++	} else {
++		dev_err(&spi->dev, "invalid data-size (%d)\n", tmp);
++		return -EINVAL;
++	}
++
++	if (of_property_read_bool(np, "read-only"))
++		pd->flags |= EE_READONLY;
++
++	spi->dev.platform_data = pd;
++
++	return 0;
++}
++
+ static int eeprom_93xx46_probe(struct spi_device *spi)
+ {
+ 	struct eeprom_93xx46_platform_data *pd;
+ 	struct eeprom_93xx46_dev *edev;
+ 	int err;
+ 
++	if (spi->dev.of_node) {
++		err = eeprom_93xx46_probe_dt(spi);
++		if (err < 0)
++			return err;
++	}
++
+ 	pd = spi->dev.platform_data;
+ 	if (!pd) {
+ 		dev_err(&spi->dev, "missing platform data\n");
+@@ -370,6 +418,7 @@ static int eeprom_93xx46_remove(struct spi_device *spi)
+ static struct spi_driver eeprom_93xx46_driver = {
+ 	.driver = {
+ 		.name	= "93xx46",
++		.of_match_table = of_match_ptr(eeprom_93xx46_of_table),
+ 	},
+ 	.probe		= eeprom_93xx46_probe,
+ 	.remove		= eeprom_93xx46_remove,
 -- 
 2.4.10
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
