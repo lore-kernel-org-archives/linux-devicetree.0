@@ -1,90 +1,51 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: Re: [RFC PATCH 02/10] clockevents/drivers: add MPS2 Timer driver
-Date: Wed, 25 Nov 2015 14:51:06 +0000
-Message-ID: <5655CADA.1010803@arm.com>
-References: <1448447621-17900-1-git-send-email-vladimir.murzin@arm.com> <1448447621-17900-3-git-send-email-vladimir.murzin@arm.com> <5655BA34.9040207@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: rockchip-thermal: Support the RK3228/RK3399 SoCs compatible
+Date: Wed, 25 Nov 2015 15:56:51 +0100
+Message-ID: <11146001.lIrLtFf7Xg@diego>
+References: <1448438377-29203-1-git-send-email-wxt@rock-chips.com> <1448438377-29203-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5655BA34.9040207@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, afaerber@suse.de, mcoquelin.stm32@gmail.com
-Cc: Mark.Rutland@arm.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448438377-29203-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-Thanks for you review, I agree on all concerns raised and address them
-in the next version. Just some points to confirm below (I left only
-relevant parts).
-
->> +static irqreturn_t mps2_timer_interrupt(int irq, void *dev_id)
->> +{
->> +    struct clockevent_mps2 *ce = dev_id;
->> +    u32 status = readl(ce->reg + TIMER_INT);
->> +
->> +    if (!status)
->> +        return IRQ_NONE;
+Am Mittwoch, 25. November 2015, 15:59:35 schrieb Caesar Wang:
+> This patchset attempts to new compatible for thermal founding
+> on RK3228/RK3399 SoCs.
 > 
-> Why that could happen ? Add a comment.
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
-
-Sort of defensive programming, I never seen it happens, but just in case
-of spurious interrupts... Do you prefer to get rid of this check or
-
-    /* spurious interrupt? */
-    if (!status)
-        return IRQ_NONE;
-
-would be fine to you?
-
->> +}
->> +
->> +static void __init mps2_timer_init(struct device_node *np)
->> +{
->> +    static int clksrc;
->> +
->> +    if (!clksrc && !mps2_clocksource_init(np))
->> +        clksrc = 1;
->> +    else
->> +        mps2_clockevents_init(np);
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> That assumes the clocksource is defined before the clockevents in the
-> DT. If it is not the case, the mps2_clocksource_init will fail (and spit
-> errors) and mps2_clockevents_init() won't be called.
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt index
+> 0dfa60d..af5f802 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -2,8 +2,10 @@
 > 
+>  Required properties:
+>  - compatible : should be "rockchip,<name>-tsadc"
+> +   "rockchip,rk3228-tsadc": found on RK3228 SoCs
+>     "rockchip,rk3288-tsadc": found on RK3288 SoCs
+>     "rockchip,rk3368-tsadc": found on RK3368 SoCs
+> +   "rockchip,rk3368-tsadc": found on RK3399 SoCs
 
-Does following (stolen from efm32) look better to you?
+copy'n'paste error, should proably be 
+ "rockchip,rk3399-tsadc": found on RK3399 SoCs
 
-static void __init mps2_timer_init(struct device_node *np)
-{
-	static int has_clocksource, has_clockevent;
-	int ret;
+>  - reg : physical base address of the controller and length of memory mapped
+> region.
+>  - interrupts : The interrupt number to the cpu. The interrupt specifier
+> format
 
-	if (!has_clocksource) {
-		ret = mps2_clocksource_init(np);
-		if (!ret) {
-			has_clocksource = 1;
-			return;
-		}
-	}
-
-	if (!has_clockevent) {
-		ret = mps2_clockevent_init(np);
-		if (!ret) {
-			has_clockevent = 1;
-			return;
-		}
-	}
-}
-
-Thanks
-Vladimir
-
->> +}
->> +
->> +CLOCKSOURCE_OF_DECLARE(mps2_timer, "arm,mps2-timer", mps2_timer_init);
->>
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
