@@ -1,237 +1,188 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/4] devicetree: bindings: let thermal-sensor point to
- other thermal zones
-Date: Wed, 25 Nov 2015 17:54:41 +0000
-Message-ID: <20151125175441.GA32343@leverpostej>
-References: <1448464186-26289-1-git-send-email-javi.merino@arm.com>
- <1448464186-26289-3-git-send-email-javi.merino@arm.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: rcar (usb): DT can override default window settings
+Date: Wed, 25 Nov 2015 11:57:28 -0600
+Message-ID: <20151125175728.GB8869@localhost>
+References: <1446567566-10952-1-git-send-email-phil.edworthy@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448464186-26289-3-git-send-email-javi.merino@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javi Merino <javi.merino@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, rui.zang@intel.com, edubezval@gmail.com, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <1446567566-10952-1-git-send-email-phil.edworthy@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 03:09:44PM +0000, Javi Merino wrote:
-> The thermal-sensor property of the thermal zone node accepts phandles to
-> thermal sensors.  However, thermal zones can be created as an
-> aggregation of other thermal zones.  Extend the thermal-sensors property
-> to allow phandles to other thermal zones.  This patch also adds an
-> example that showcases how a board thermal zone can be created from the
-> aggregation of the cpu, gpu and lcd thermal zones.
+On Tue, Nov 03, 2015 at 04:19:26PM +0000, Phil Edworthy wrote:
+> If the dtb specifies dma-ranges, we use those values. Otherwise, we
+> default to the values that were previously hardcoded into the driver.
 > 
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Javi Merino <javi.merino@arm.com>
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+
+Applied with acks from Rob and Simon to pci/host-rcar for v4.5, thanks!
+
 > ---
+>  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |  6 ++
+>  drivers/pci/host/pci-rcar-gen2.c                   | 76 +++++++++++++++++++++-
+>  2 files changed, 79 insertions(+), 3 deletions(-)
 > 
-> Notes:
->     Hi devicetree,
->     
->     Is it ok to extend the definition of the thermal-sensors property like
->     this?  IOW are phandles strongly typed?
-
-I think it's OK so long as each thermal zone has #theremal-sensor-cells
-set explicitly, if used as a sensor, and we can agree on the semantics
-of what it means for a thermal zone to be a sensor.
-
-I don't really follow why you need the zone to be a sensor, and can't
-simply refer to the sensor from two zones. Are you trying to imply an
-ordering of trip points (e.g. that the sub-zones' trips should be taken
-into account first)?
-
-> 
->  .../devicetree/bindings/thermal/thermal.txt        | 154 ++++++++++++++++++++-
->  1 file changed, 151 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index 41b817f7b670..52b7e9ae3b4d 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -145,9 +145,12 @@ Required properties:
->    Size: one cell
+> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> index 7fab84b..891463c 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> @@ -24,6 +24,11 @@ Required properties:
+>  - interrupt-map-mask: standard property that helps to define the interrupt
+>    mapping.
 >  
->  - thermal-sensors:	A list of thermal sensor phandles and sensor specifier
-> -  Type: list of 	used while monitoring the thermal zone.
-> -  phandles + sensor
-> -  specifier
-> +  Type: list of 	used while monitoring the thermal zone. The phandles
-> +  phandles + sensor	can point to thermal sensors or other thermal zone
-> +  specifier		nodes. If it points to other thermal zone
-> +			nodes you should omit the sensor specifier
-> +			and set #thermal-sensor-cells to 0 for the
-> +			thermal zone.
-
-The example misses #thermal-sensor-cells = <0> for each of the zones.
-
-Can a zone normal have multiple sensors? If so, what is the aggregate
-value if a zone is used as a sensor? Max? Min? Scaled by contribution
-somehow?
-
-Thanks,
-Mark.
-
+> +Optional properties:
+> +- dma-ranges: a single range for the inbound memory region. If not supplied,
+> +  defaults to 1GiB at 0x40000000. Note there are hardware restrictions on the
+> +  allowed combinations of address and size.
+> +
+>  Example SoC configuration:
 >  
->  - trips:		A sub-node which is a container of only trip point nodes
->    Type: sub-node	required to describe the thermal zone.
-> @@ -603,3 +606,148 @@ thermal-zones {
->  The above example is a mix of previous examples, a sensor IP with several internal
->  sensors used to monitor different zones, one of them is composed by several sensors and
->  with different cooling devices.
+>  	pci0: pci@ee090000  {
+> @@ -38,6 +43,7 @@ Example SoC configuration:
+>  		#address-cells = <3>;
+>  		#size-cells = <2>;
+>  		#interrupt-cells = <1>;
+> +		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
+>  		interrupt-map-mask = <0xff00 0 0 0x7>;
+>  		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>  				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+> diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
+> index c4f64bf..6295116 100644
+> --- a/drivers/pci/host/pci-rcar-gen2.c
+> +++ b/drivers/pci/host/pci-rcar-gen2.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> @@ -102,6 +103,8 @@ struct rcar_pci_priv {
+>  	unsigned busnr;
+>  	int irq;
+>  	unsigned long window_size;
+> +	unsigned long window_addr;
+> +	unsigned long window_pci;
+>  };
+>  
+>  /* PCI configuration space operations */
+> @@ -239,8 +242,8 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
+>  	       RCAR_PCI_ARBITER_PCIBP_MODE;
+>  	iowrite32(val, reg + RCAR_PCI_ARBITER_CTR_REG);
+>  
+> -	/* PCI-AHB mapping: 0x40000000 base */
+> -	iowrite32(0x40000000 | RCAR_PCIAHB_PREFETCH16,
+> +	/* PCI-AHB mapping */
+> +	iowrite32(priv->window_addr | RCAR_PCIAHB_PREFETCH16,
+>  		  reg + RCAR_PCIAHB_WIN1_CTR_REG);
+>  
+>  	/* AHB-PCI mapping: OHCI/EHCI registers */
+> @@ -251,7 +254,7 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
+>  	iowrite32(RCAR_AHBPCI_WIN1_HOST | RCAR_AHBPCI_WIN_CTR_CFG,
+>  		  reg + RCAR_AHBPCI_WIN1_CTR_REG);
+>  	/* Set PCI-AHB Window1 address */
+> -	iowrite32(0x40000000 | PCI_BASE_ADDRESS_MEM_PREFETCH,
+> +	iowrite32(priv->window_pci | PCI_BASE_ADDRESS_MEM_PREFETCH,
+>  		  reg + PCI_BASE_ADDRESS_1);
+>  	/* Set AHB-PCI bridge PCI communication area address */
+>  	val = priv->cfg_res->start + RCAR_AHBPCI_PCICOM_OFFSET;
+> @@ -284,6 +287,64 @@ static struct pci_ops rcar_pci_ops = {
+>  	.write	= pci_generic_config_write,
+>  };
+>  
+> +static int pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+> +				     struct device_node *node)
+> +{
+> +	const int na = 3, ns = 2;
+> +	int rlen;
 > +
-> +(e) Board thermal with stacked thermal zones
+> +	parser->node = node;
+> +	parser->pna = of_n_addr_cells(node);
+> +	parser->np = parser->pna + na + ns;
 > +
-> +Instead of setting up one thermal zone combining multiple thermal
-> +zones and multiple trip points for each cooling device, we can create
-> +a hierarchy of thermal zones.
+> +	parser->range = of_get_property(node, "dma-ranges", &rlen);
+> +	if (!parser->range)
+> +		return -ENOENT;
 > +
-> +#include <dt-bindings/thermal/thermal.h>
+> +	parser->end = parser->range + rlen / sizeof(__be32);
+> +	return 0;
+> +}
 > +
-> +&i2c1 {
-> +	...
-> +	/*
-> +	 * An IC with several temperature sensor.
-> +	 */
-> +	adc_dummy: sensor@0x50 {
-> +		...
-> +		#thermal-sensor-cells = <1>; /* sensor internal ID */
-> +	};
-> +};
+> +static int rcar_pci_parse_map_dma_ranges(struct rcar_pci_priv *pci,
+> +					 struct device_node *np)
+> +{
+> +	struct of_pci_range range;
+> +	struct of_pci_range_parser parser;
+> +	int index = 0;
 > +
-> +thermal-zones {
+> +	/* Failure to parse is ok as we fall back to defaults */
+> +	if (pci_dma_range_parser_init(&parser, np))
+> +		return 0;
 > +
-> +        cpu_thermal: cpu_thermal {
-> +		polling-delay-passive = <1000>; /* milliseconds */
-> +		polling-delay = <2500>; /* milliseconds */
+> +	/* Get the dma-ranges from DT */
+> +	for_each_of_pci_range(&parser, &range) {
+> +		/* Hardware only allows one inbound 32-bit range */
+> +		if (index)
+> +			return -EINVAL;
 > +
-> +		sustainable-power = <2500>;
+> +		pci->window_addr = (unsigned long)range.cpu_addr;
+> +		pci->window_pci = (unsigned long)range.pci_addr;
+> +		pci->window_size = (unsigned long)range.size;
 > +
-> +		thermal-sensors = <&adc_dummy 0>
+> +		/* Catch HW limitations */
+> +		if (!(range.flags & IORESOURCE_PREFETCH)) {
+> +			dev_err(pci->dev, "window must be prefetchable\n");
+> +			return -EINVAL;
+> +		}
+> +		if (pci->window_addr) {
+> +			u32 lowaddr = 1 << (ffs(pci->window_addr) - 1);
 > +
-> +		trips {
-> +			cpu_trip: cpu-trip {
-> +				temperature = <60000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "passive";
-> +			};
-> +                };
-> +
-> +		cooling-maps {
-> +			map0 {
-> +				trip = <&cpu_trip>;
-> +				cooling-device = <&cpu0 0 2>;
-> +			};
-> +                };
-> +        };
-> +
-> +        gpu_thermal: gpu_thermal {
-> +		polling-delay-passive = <1000>; /* milliseconds */
-> +		polling-delay = <2500>; /* milliseconds */
-> +
-> +		sustainable-power = <2500>;
-> +
-> +		thermal-sensors = <&adc_dummy 2>
-> +
-> +		trips {
-> +			gpu_trip: gpu-trip {
-> +				temperature = <55000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "passive";
+> +			if (lowaddr < pci->window_size) {
+> +				dev_err(pci->dev, "invalid window size/addr\n");
+> +				return -EINVAL;
 > +			}
-> +                };
+> +		}
+> +		index++;
+> +	}
 > +
-> +		cooling-maps {
-> +			map0 {
-> +				trip = <&gpu_trip>;
-> +				cooling-device = <&gpu0 0 2>;
-> +			};
-> +                };
-> +        };
+> +	return 0;
+> +}
 > +
-> +        lcd_thermal: lcd_thermal {
-> +		polling-delay-passive = <1000>; /* milliseconds */
-> +		polling-delay = <2500>; /* milliseconds */
+>  static int rcar_pci_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *cfg_res, *mem_res;
+> @@ -329,6 +390,9 @@ static int rcar_pci_probe(struct platform_device *pdev)
+>  		return priv->irq;
+>  	}
+>  
+> +	/* default window addr and size if not specified in DT */
+> +	priv->window_addr = 0x40000000;
+> +	priv->window_pci = 0x40000000;
+>  	priv->window_size = SZ_1G;
+>  
+>  	if (pdev->dev.of_node) {
+> @@ -344,6 +408,12 @@ static int rcar_pci_probe(struct platform_device *pdev)
+>  		priv->busnr = busnr.start;
+>  		if (busnr.end != busnr.start)
+>  			dev_warn(&pdev->dev, "only one bus number supported\n");
 > +
-> +		sustainable-power = <2500>;
-> +
-> +		thermal-sensors = <&adc_dummy 1>
-> +
-> +		trips {
-> +			lcd_trip: lcp-trip {
-> +				temperature = <53000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "passive";
-> +			};
-> +                };
-> +
-> +		cooling-maps {
-> +			map0 {
-> +				trip = <&lcd_trip>;
-> +				cooling-device = <&lcd0 5 10>;
-> +			};
-> +                };
-> +        };
-> +
-> +	board_thermal: board-thermal {
-> +		polling-delay-passive = <1000>; /* milliseconds */
-> +		polling-delay = <2500>; /* milliseconds */
-> +
-> +		thermal-sensors = <&cpu_thermal &gpu_thermal &lcd_thermal>
-> +
-> +		sustainable-power = <2500>;
-> +
-> +		trips {
-> +			warm_trip: warm-trip {
-> +				temperature = <62000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "passive";
-> +			};
-> +			crit_trip: crit-trip {
-> +				temperature = <68000>; /* millicelsius */
-> +				hysteresis = <2000>; /* millicelsius */
-> +				type = "critical";
-> +			};
-> +		};
-> +
-> +		cooling-maps {
-> +			map0 {
-> +				trip = <&warm_trip>;
-> +				cooling-device = <&cpu0 2 2>;
-> +				contribution = <55>;
-> +			};
-> +			map1 {
-> +				trip = <&warm_trip>;
-> +				cooling-device = <&gpu0 2 2>;
-> +				contribution = <20>;
-> +			};
-> +			map2 {
-> +				trip = <&lcd_trip>;
-> +				cooling-device = <&lcd0 7 10>;
-> +				contribution = <15>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +The above example is a different take at example (d).  We create one
-> +thermal zone per sensor: cpu_thermal, gpu_thermal and lcd_thermal.
-> +Each of which has its own trip point for each own cooling device.  We
-> +then define a board_thermal thermal zone that is a combination of all
-> +the other thermal zones.  If the board hits its warm_trip, then all
-> +cooling devices are throttled.
-> +
-> +This example illustrates how we can throttle each device individually
-> +if its too hot and at the same time have some control over the whole
-> +system.
+> +		ret = rcar_pci_parse_map_dma_ranges(priv, pdev->dev.of_node);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "failed to parse dma-range\n");
+> +			return ret;
+> +		}
+>  	} else {
+>  		priv->busnr = pdev->id;
+>  	}
 > -- 
 > 1.9.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
