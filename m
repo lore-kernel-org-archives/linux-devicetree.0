@@ -1,75 +1,65 @@
-From: Shuge <shugelinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH v2 1/5] ARM: dts: sun8i: Add SID node
-Date: Wed, 25 Nov 2015 09:22:56 +0800
-Message-ID: <56550D70.6060109@gmail.com>
-References: <cover.1448263428.git.atx@atx.name>
- <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx@atx.name>
- <20151123124356.GW32142@lukather>
- <a7d4e538-db64-476d-b5de-5222419229a2@googlegroups.com>
- <20151124093202.GL32142@lukather>
-Reply-To: shugelinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] MT8173 IOMMU SUPPORT
+Date: Wed, 25 Nov 2015 09:30:54 +0800
+Message-ID: <1448415054.13079.9.camel@mhfsdcap03>
+References: <1444357388-30257-1-git-send-email-yong.wu@mediatek.com>
+	<20151014125620.GQ27420@8bytes.org>
+	<1445488802.27202.67.camel@mhfsdcap03>
+	<20151023092636.GX27420@8bytes.org>
+	<1448344693.13079.6.camel@mhfsdcap03>
+	<20151124103819.GE17658@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCYY37UO6AHRBL432SZAKGQECWMZU6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151124093202.GL32142@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, atx-MwjtXicnQwU@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gpatchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20151124103819.GE17658-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, November 23, 2015 at 17:32 UTC+8, Maxime Ripard wrote:
-> On Mon, Nov 23, 2015 at 10:51:15PM -0800, Sugar Wu wrote:
->> On Monday, November 23, 2015 at 8:43:59 PM UTC+8, Maxime Ripard wrote:
->>>
->>> Hi, 
->>>
->>> On Mon, Nov 23, 2015 at 09:02:48AM +0100, Josef Gajdusek wrote: 
->>>> Add a node describing the Security ID memory to the 
->>>> Allwinner H3 .dtsi file. 
->>>>
->>>> Signed-off-by: Josef Gajdusek <a...-MwjtXicnQwU@public.gmane.org <javascript:>> 
->>>> --- 
->>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++ 
->>>>  1 file changed, 7 insertions(+) 
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi 
->>> b/arch/arm/boot/dts/sun8i-h3.dtsi 
->>>> index 0faa38a..58de718 100644 
->>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi 
->>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi 
->>>> @@ -359,6 +359,13 @@ 
->>>>                          #size-cells = <0>; 
->>>>                  }; 
->>>>   
->>>> +                sid: eeprom@01c14000 { 
->>>> +                        compatible = "allwinner,sun4i-a10-sid"; 
->>>> +                        reg = <0x01c14000 0x400>; 
->>>
->>> The datasheet says it's 256 bytes wide, while the size here is of 1kB, 
->>> is it intentional? 
->>
->> SID memory map is 0x01c14000 ~ 0x01c143FF, include 2048bits efuse space.
->> H3 efuse space is SID_SRAM, its range is  0x01c14200 ~ +0x100.
+On Tue, 2015-11-24 at 11:38 +0100, Thierry Reding wrote:
+> On Tue, Nov 24, 2015 at 01:58:13PM +0800, Yong Wu wrote:
+> > On Fri, 2015-10-23 at 11:26 +0200, Joerg Roedel wrote:
+> > > On Thu, Oct 22, 2015 at 12:40:02PM +0800, Yong Wu wrote:
+> > > >      But the mtk-iommu depend on the drivers/memory/mtk-smi.c(mtk-iommu
+> > > > has called a function of the mtk-smi).
+> > > >      So if there is dependence here, How should we do to merge them?
+> > > 
+> > > I can surely merge mtk-smi too, if it gets proper Reviewed-by and
+> > > Acked-by tags from the maintainer(s).
+> > > 
+> > > 
+> > > 	Joerg
+> > > 
+> > Hi Joerg,
+> > 
+> >    About the driver/memory/, We don't know who is his maintainer.
+> > MAINTAINERS file don't have drivers/memory maintainer.
+> > From the history in drivers/memory/ it looks like most of the
+> > drivers land with an ack from the architecture maintainer.
+> > And Matthias Brugger is our "ARM/Mediatek SoC support" maintainer.
+> > 
+> > Then do you mean that we need Matthias's ACK or whom others?
 > 
-> Interesting, what is below the 0x200 registers?
->
-Some control register about SID.
-offset: 0x40  SID Program/Read Control Register
-offset: 0x50  SID Program Key Value Register
-offset: 0x60  SID Read Key Value Register
-offset: 0x70  \
-offset: 0x80  SJTAG Attribute 0 Register
-offset: 0x84  SJTAG Attribute 1 Register
-offset: 0x88  SJTAG Select Register
-offset: 0x90  SID Program Ctrol register for burned timing
+> Yes, I think the sub-architecture maintainer's ACK is probably going to
+> be as good as it gets. Historically drivers/memory hasn't had enough of
+> a common ground to instate a framework.
+> 
+> Thierry
 
->
-> Thanks!
-> Maxime
-> 
+Got it.
+Thanks very much for your reply.
+
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
