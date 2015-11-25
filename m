@@ -1,71 +1,45 @@
-From: Curt Brune <curt-qUQiAmfTcIp+XZJcv9eMoEEOCMrvLtNR@public.gmane.org>
-Subject: [RFC 1/1] powerpc: legacy serial port use device tree cell-index property
-Date: Wed, 25 Nov 2015 10:46:49 -0800
-Message-ID: <1448477209-22340-2-git-send-email-curt@cumulusnetworks.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v6 4/6] ARM: imx_v6_v7_defconfig: add TS-4800 watchdog
+Date: Wed, 25 Nov 2015 14:25:05 -0500
+Message-ID: <1448479507-1951-5-git-send-email-damien.riegel@savoirfairelinux.com>
+References: <1448479507-1951-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1448479507-1951-1-git-send-email-damien.riegel@savoirfairelinux.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Damien Riegel <damien.riegel@savoirfairelinux.com>, Shawn Guo <shawnguo@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently for PowerPC systems using device tree, the legacy serial
-ports are allocated in the order by which they are found in the device
-tree structure.
+The TS-4800, based on an IMX.515, needs its watchdog support in order to
+work.
 
-This can cause problems in cases where the device tree nodes are
-sysnthesized by an external program (kexec for example), which may not
-preserve the original order of the device tree nodes.  This in turn
-can result in the serial console changing from ttyS0 to ttyS1
-unexpectedly.
-
-This patch uses the 'cell-index' property (if present) to map UART
-device tree nodes to legacy serial port number.  The cell-index
-property is widely used in all the Freescale .dts files for PowerPC.
-
-Signed-off-by: Curt Brune <curt-qUQiAmfTcIp+XZJcv9eMoEEOCMrvLtNR@public.gmane.org>
+Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 ---
- arch/powerpc/kernel/legacy_serial.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kernel/legacy_serial.c
-index 7b750c4..b717133 100644
---- a/arch/powerpc/kernel/legacy_serial.c
-+++ b/arch/powerpc/kernel/legacy_serial.c
-@@ -164,6 +164,8 @@ static int __init add_legacy_soc_port(struct device_node *np,
- 	u64 addr;
- 	const __be32 *addrp;
- 	struct device_node *tsi = of_get_parent(np);
-+	int index = -1, len;
-+	u32 *indexp;
- 
- 	/* We only support ports that have a clock frequency properly
- 	 * encoded in the device-tree.
-@@ -188,14 +190,19 @@ static int __init add_legacy_soc_port(struct device_node *np,
- 	if (addr == OF_BAD_ADDR)
- 		return -1;
- 
-+	/* Check if the ports have an ordering, defined by 'cell-index' */
-+	if (((indexp = (u32*)of_get_property(np, "cell-index", &len)) != NULL) &&
-+	    (len == sizeof(u32)))
-+		index = *indexp;
-+
- 	/* Add port, irq will be dealt with later. We passed a translated
- 	 * IO port value. It will be fixed up later along with the irq
- 	 */
- 	if (tsi && !strcmp(tsi->type, "tsi-bridge"))
--		return add_legacy_port(np, -1, UPIO_TSI, addr, addr,
-+		return add_legacy_port(np, index, UPIO_TSI, addr, addr,
- 				       NO_IRQ, legacy_port_flags, 0);
- 	else
--		return add_legacy_port(np, -1, UPIO_MEM, addr, addr,
-+		return add_legacy_port(np, index, UPIO_MEM, addr, addr,
- 				       NO_IRQ, legacy_port_flags, 0);
- }
- 
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 79194c6..8968166 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -195,6 +195,7 @@ CONFIG_THERMAL=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_IMX_THERMAL=y
+ CONFIG_WATCHDOG=y
++CONFIG_TS4800_WATCHDOG=y
+ CONFIG_IMX2_WDT=y
+ CONFIG_MFD_DA9052_I2C=y
+ CONFIG_MFD_MC13XXX_SPI=y
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
