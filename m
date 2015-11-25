@@ -1,187 +1,311 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] phy-sun4i-usb: Add support for the
- host usb-phys found on the H3 SoC
-Date: Wed, 25 Nov 2015 16:11:06 -0600
-Message-ID: <20151125221046.GA25917@rob-hp-laptop>
-References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
- <1448470202-3628-2-git-send-email-hdegoede@redhat.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH (v2) 4/10] watchdog: bcm63xx_wdt: Handle hardware interrupt
+ and remove software timer
+Date: Wed, 25 Nov 2015 22:33:54 +0000
+Message-ID: <56563752.50807@simon.arlott.org.uk>
+References: <5650BFD6.5030700@simon.arlott.org.uk>
+ <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
+ <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
+ <5651CB13.4090704@simon.arlott.org.uk> <5651CB9C.4090005@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBAPE3CZAKGQEIOA25ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448470202-3628-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5651CB9C.4090005-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 05:50:02PM +0100, Hans de Goede wrote:
-> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> 
-> Note this commit only adds support for phys 1-3, phy 0, the otg phy, is
-> not yet (fully) supported after this commit.
+There is a level triggered interrupt for the watchdog timer as part of
+the bcm63xx_timer device. The interrupt occurs when the hardware watchdog
+timer reaches 50% of the remaining time.
 
-Shouldn't the OTG phy have a different compatible string?
+It is not possible to mask the interrupt within the bcm63xx_timer device.
+To get around this limitation, handle the interrupt by restarting the
+watchdog with the current remaining time (which will be half the previous
+timeout) so that the interrupt occurs again at 1/4th, 1/8th, etc. of the
+original timeout value until the watchdog forces a reboot.
 
-> 
-> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> -Change break; after dev_err() to return, as intended, fixing a compiler
->  warning (the dev_err case should never be reached)
-> Changes in v3:
-> -Use of_match_node to get model specific config data
-> ---
->  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
->  drivers/phy/phy-sun4i-usb.c                        | 46 +++++++++++++++++-----
->  2 files changed, 38 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> index 0cebf74..95736d7 100644
-> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> @@ -9,6 +9,7 @@ Required properties:
->    * allwinner,sun7i-a20-usb-phy
->    * allwinner,sun8i-a23-usb-phy
->    * allwinner,sun8i-a33-usb-phy
-> +  * allwinner,sun8i-h3-usb-phy
->  - reg : a list of offset + length pairs
->  - reg-names :
->    * "phy_ctrl"
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> index 1d8f85d..2aed482 100644
-> --- a/drivers/phy/phy-sun4i-usb.c
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -46,6 +46,9 @@
->  #define REG_PHYBIST			0x08
->  #define REG_PHYTUNE			0x0c
->  #define REG_PHYCTL_A33			0x10
-> +#define REG_PHY_UNK_H3			0x20
-> +
-> +#define REG_PMU_UNK_H3			0x10
->  
->  #define PHYCTL_DATA			BIT(7)
->  
-> @@ -79,7 +82,7 @@
->  #define PHY_DISCON_TH_SEL		0x2a
->  #define PHY_SQUELCH_DETECT		0x3c
->  
-> -#define MAX_PHYS			3
-> +#define MAX_PHYS			4
->  
->  /*
->   * Note do not raise the debounce time, we must report Vusb high within 100ms
-> @@ -91,6 +94,7 @@
->  enum sun4i_usb_phy_type {
->  	sun4i_a10_phy,
->  	sun8i_a33_phy,
-> +	sun8i_h3_phy,
->  };
->  
->  struct sun4i_usb_phy_cfg {
-> @@ -101,6 +105,7 @@ struct sun4i_usb_phy_cfg {
->  };
->  
->  struct sun4i_usb_phy_data {
-> +	struct device *dev;
->  	void __iomem *base;
->  	const struct sun4i_usb_phy_cfg *cfg;
->  	struct mutex mutex;
-> @@ -183,6 +188,9 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
->  		/* A33 needs us to set phyctl to 0 explicitly */
->  		writel(0, phyctl);
->  		break;
-> +	case sun8i_h3_phy:
-> +		dev_err(phy_data->dev, "H3 usb_phy_write is not supported\n");
-> +		return;
->  	}
->  
->  	for (i = 0; i < len; i++) {
-> @@ -243,6 +251,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
->  	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
->  	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
->  	int ret;
-> +	u32 val;
->  
->  	ret = clk_prepare_enable(phy->clk);
->  	if (ret)
-> @@ -254,16 +263,26 @@ static int sun4i_usb_phy_init(struct phy *_phy)
->  		return ret;
->  	}
->  
-> -	/* Enable USB 45 Ohm resistor calibration */
-> -	if (phy->index == 0)
-> -		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-> +	if (data->cfg->type == sun8i_h3_phy) {
-> +		if (phy->index == 0) {
-> +			val = readl(data->base + REG_PHY_UNK_H3);
-> +			writel(val & ~1, data->base + REG_PHY_UNK_H3);
-> +		}
->  
-> -	/* Adjust PHY's magnitude and rate */
-> -	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-> +		val = readl(phy->pmu + REG_PMU_UNK_H3);
-> +		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
-> +	} else {
-> +		/* Enable USB 45 Ohm resistor calibration */
-> +		if (phy->index == 0)
-> +			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
->  
-> -	/* Disconnect threshold adjustment */
-> -	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-> -			    data->cfg->disc_thresh, 2);
-> +		/* Adjust PHY's magnitude and rate */
-> +		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-> +
-> +		/* Disconnect threshold adjustment */
-> +		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-> +				    data->cfg->disc_thresh, 2);
-> +	}
->  
->  	sun4i_usb_phy_passby(phy, 1);
->  
-> @@ -555,6 +574,13 @@ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
->  	.dedicated_clocks = true,
->  };
->  
-> +static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
-> +	.num_phys = 4,
-> +	.disc_thresh = 3,
-> +	.type = sun8i_h3_phy,
-> +	.dedicated_clocks = true,
-> +};
-> +
->  static const struct of_device_id sun4i_usb_phy_of_match[] = {
->  	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
->  	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-> @@ -562,6 +588,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
->  	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = &sun7i_a20_cfg },
->  	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
->  	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
-> +	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-> @@ -595,6 +622,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->  	mutex_init(&data->mutex);
->  	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
->  	dev_set_drvdata(dev, data);
-> +	data->dev = dev;
->  	data->cfg = match->data;
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
-> -- 
-> 2.5.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The software timer was restarting the hardware watchdog with a 85 second
+timeout until the software timer expired, and then causing a panic()
+about 42.5 seconds later when the hardware interrupt occurred. The
+hardware watchdog would not reboot until a further 42.5 seconds had
+passed.
+
+Remove the software timer and rely on the hardware timer directly,
+reducing the maximum timeout from 256 seconds to 85 seconds
+(2^32 / WDT_HZ).
+
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+---
+Initialise bcm63xx_wdt_device.running to false.
+
+ drivers/watchdog/bcm63xx_wdt.c | 125 ++++++++++++++++++++++++-----------------
+ 1 file changed, 73 insertions(+), 52 deletions(-)
+
+diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
+index ab26fd9..3f55cba 100644
+--- a/drivers/watchdog/bcm63xx_wdt.c
++++ b/drivers/watchdog/bcm63xx_wdt.c
+@@ -3,6 +3,7 @@
+  *
+  *  Copyright (C) 2007, Miguel Gaio <miguel.gaio-HH44TBFINEIAvxtiuMwx3w@public.gmane.org>
+  *  Copyright (C) 2008, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *  Copyright 2015 Simon Arlott
+  *
+  *  This program is free software; you can redistribute it and/or
+  *  modify it under the terms of the GNU General Public License
+@@ -20,11 +21,10 @@
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/uaccess.h>
+ #include <linux/watchdog.h>
+-#include <linux/timer.h>
+-#include <linux/jiffies.h>
+ #include <linux/interrupt.h>
+ #include <linux/ptrace.h>
+ #include <linux/resource.h>
+@@ -37,16 +37,17 @@
+ 
+ #define PFX KBUILD_MODNAME
+ 
+-#define WDT_HZ		50000000 /* Fclk */
+-#define WDT_DEFAULT_TIME	30      /* seconds */
+-#define WDT_MAX_TIME		256     /* seconds */
++#define WDT_HZ			50000000		/* Fclk */
++#define WDT_DEFAULT_TIME	30			/* seconds */
++#define WDT_MAX_TIME		(0xffffffff / WDT_HZ)	/* seconds */
+ 
+-static struct {
++struct bcm63xx_wdt_hw {
++	raw_spinlock_t lock;
+ 	void __iomem *regs;
+-	struct timer_list timer;
+ 	unsigned long inuse;
+-	atomic_t ticks;
+-} bcm63xx_wdt_device;
++	bool running;
++};
++static struct bcm63xx_wdt_hw bcm63xx_wdt_device;
+ 
+ static int expect_close;
+ 
+@@ -59,48 +60,67 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+ /* HW functions */
+ static void bcm63xx_wdt_hw_start(void)
+ {
+-	bcm_writel(0xfffffffe, bcm63xx_wdt_device.regs + WDT_DEFVAL_REG);
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&bcm63xx_wdt_device.lock, flags);
++	bcm_writel(wdt_time * WDT_HZ, bcm63xx_wdt_device.regs + WDT_DEFVAL_REG);
+ 	bcm_writel(WDT_START_1, bcm63xx_wdt_device.regs + WDT_CTL_REG);
+ 	bcm_writel(WDT_START_2, bcm63xx_wdt_device.regs + WDT_CTL_REG);
++	bcm63xx_wdt_device.running = true;
++	raw_spin_unlock_irqrestore(&bcm63xx_wdt_device.lock, flags);
+ }
+ 
+ static void bcm63xx_wdt_hw_stop(void)
+ {
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&bcm63xx_wdt_device.lock, flags);
+ 	bcm_writel(WDT_STOP_1, bcm63xx_wdt_device.regs + WDT_CTL_REG);
+ 	bcm_writel(WDT_STOP_2, bcm63xx_wdt_device.regs + WDT_CTL_REG);
++	bcm63xx_wdt_device.running = false;
++	raw_spin_unlock_irqrestore(&bcm63xx_wdt_device.lock, flags);
+ }
+ 
++/* The watchdog interrupt occurs when half the timeout is remaining */
+ static void bcm63xx_wdt_isr(void *data)
+ {
+-	struct pt_regs *regs = get_irq_regs();
+-
+-	die(PFX " fire", regs);
+-}
+-
+-static void bcm63xx_timer_tick(unsigned long unused)
+-{
+-	if (!atomic_dec_and_test(&bcm63xx_wdt_device.ticks)) {
+-		bcm63xx_wdt_hw_start();
+-		mod_timer(&bcm63xx_wdt_device.timer, jiffies + HZ);
+-	} else
+-		pr_crit("watchdog will restart system\n");
+-}
+-
+-static void bcm63xx_wdt_pet(void)
+-{
+-	atomic_set(&bcm63xx_wdt_device.ticks, wdt_time);
+-}
+-
+-static void bcm63xx_wdt_start(void)
+-{
+-	bcm63xx_wdt_pet();
+-	bcm63xx_timer_tick(0);
+-}
++	struct bcm63xx_wdt_hw *hw = &bcm63xx_wdt_device;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&hw->lock, flags);
++	if (!hw->running) {
++		/* Stop the watchdog as it shouldn't be running */
++		bcm_writel(WDT_STOP_1, hw->regs + WDT_CTL_REG);
++		bcm_writel(WDT_STOP_2, hw->regs + WDT_CTL_REG);
++	} else {
++		u32 timeleft = bcm_readl(hw->regs + WDT_CTL_REG);
++		u32 ms;
++
++		if (timeleft >= 2) {
++			/* The only way to clear this level triggered interrupt
++			 * without disrupting the normal running of the watchdog
++			 * is to restart the watchdog with the current remaining
++			 * time value (which will be half the previous timeout)
++			 * so the interrupt occurs again at 1/4th, 1/8th, etc.
++			 * of the original timeout value until we reboot.
++			 *
++			 * This is done with a lock held in case userspace is
++			 * trying to restart the watchdog on another CPU.
++			 */
++			bcm_writel(timeleft, hw->regs + WDT_DEFVAL_REG);
++			bcm_writel(WDT_START_1, hw->regs + WDT_CTL_REG);
++			bcm_writel(WDT_START_2, hw->regs + WDT_CTL_REG);
++		} else {
++			/* The watchdog cannot be started with a time of less
++			 * than 2 ticks (it won't fire).
++			 */
++			die(PFX ": watchdog timer expired\n", get_irq_regs());
++		}
+ 
+-static void bcm63xx_wdt_pause(void)
+-{
+-	del_timer_sync(&bcm63xx_wdt_device.timer);
+-	bcm63xx_wdt_hw_stop();
++		ms = timeleft / (WDT_HZ / 1000);
++		pr_alert("warning timer fired, reboot in %ums\n", ms);
++	}
++	raw_spin_unlock_irqrestore(&hw->lock, flags);
+ }
+ 
+ static int bcm63xx_wdt_settimeout(int new_time)
+@@ -118,17 +138,17 @@ static int bcm63xx_wdt_open(struct inode *inode, struct file *file)
+ 	if (test_and_set_bit(0, &bcm63xx_wdt_device.inuse))
+ 		return -EBUSY;
+ 
+-	bcm63xx_wdt_start();
++	bcm63xx_wdt_hw_start();
+ 	return nonseekable_open(inode, file);
+ }
+ 
+ static int bcm63xx_wdt_release(struct inode *inode, struct file *file)
+ {
+ 	if (expect_close == 42)
+-		bcm63xx_wdt_pause();
++		bcm63xx_wdt_hw_stop();
+ 	else {
+ 		pr_crit("Unexpected close, not stopping watchdog!\n");
+-		bcm63xx_wdt_start();
++		bcm63xx_wdt_hw_start();
+ 	}
+ 	clear_bit(0, &bcm63xx_wdt_device.inuse);
+ 	expect_close = 0;
+@@ -153,7 +173,7 @@ static ssize_t bcm63xx_wdt_write(struct file *file, const char *data,
+ 					expect_close = 42;
+ 			}
+ 		}
+-		bcm63xx_wdt_pet();
++		bcm63xx_wdt_hw_start();
+ 	}
+ 	return len;
+ }
+@@ -187,18 +207,18 @@ static long bcm63xx_wdt_ioctl(struct file *file, unsigned int cmd,
+ 			return -EFAULT;
+ 
+ 		if (new_value & WDIOS_DISABLECARD) {
+-			bcm63xx_wdt_pause();
++			bcm63xx_wdt_hw_stop();
+ 			retval = 0;
+ 		}
+ 		if (new_value & WDIOS_ENABLECARD) {
+-			bcm63xx_wdt_start();
++			bcm63xx_wdt_hw_start();
+ 			retval = 0;
+ 		}
+ 
+ 		return retval;
+ 
+ 	case WDIOC_KEEPALIVE:
+-		bcm63xx_wdt_pet();
++		bcm63xx_wdt_hw_start();
+ 		return 0;
+ 
+ 	case WDIOC_SETTIMEOUT:
+@@ -208,7 +228,7 @@ static long bcm63xx_wdt_ioctl(struct file *file, unsigned int cmd,
+ 		if (bcm63xx_wdt_settimeout(new_value))
+ 			return -EINVAL;
+ 
+-		bcm63xx_wdt_pet();
++		bcm63xx_wdt_hw_start();
+ 
+ 	case WDIOC_GETTIMEOUT:
+ 		return put_user(wdt_time, p);
+@@ -240,8 +260,6 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	int ret;
+ 	struct resource *r;
+ 
+-	setup_timer(&bcm63xx_wdt_device.timer, bcm63xx_timer_tick, 0L);
+-
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!r) {
+ 		dev_err(&pdev->dev, "failed to get resources\n");
+@@ -255,6 +273,9 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
++	raw_spin_lock_init(&bcm63xx_wdt_device.lock);
++	bcm63xx_wdt_device.running = false;
++
+ 	ret = bcm63xx_timer_register(TIMER_WDT_ID, bcm63xx_wdt_isr, NULL);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register wdt timer isr\n");
+@@ -264,8 +285,8 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	if (bcm63xx_wdt_settimeout(wdt_time)) {
+ 		bcm63xx_wdt_settimeout(WDT_DEFAULT_TIME);
+ 		dev_info(&pdev->dev,
+-			": wdt_time value must be 1 <= wdt_time <= 256, using %d\n",
+-			wdt_time);
++			": wdt_time value must be 1 <= wdt_time <= %d, using %d\n",
++			WDT_MAX_TIME, wdt_time);
+ 	}
+ 
+ 	ret = misc_register(&bcm63xx_wdt_miscdev);
+@@ -287,7 +308,7 @@ unregister_timer:
+ static int bcm63xx_wdt_remove(struct platform_device *pdev)
+ {
+ 	if (!nowayout)
+-		bcm63xx_wdt_pause();
++		bcm63xx_wdt_hw_stop();
+ 
+ 	misc_deregister(&bcm63xx_wdt_miscdev);
+ 	bcm63xx_timer_unregister(TIMER_WDT_ID);
+@@ -296,7 +317,7 @@ static int bcm63xx_wdt_remove(struct platform_device *pdev)
+ 
+ static void bcm63xx_wdt_shutdown(struct platform_device *pdev)
+ {
+-	bcm63xx_wdt_pause();
++	bcm63xx_wdt_hw_stop();
+ }
+ 
+ static struct platform_driver bcm63xx_wdt_driver = {
+-- 
+2.1.4
+
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
