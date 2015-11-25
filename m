@@ -1,187 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] pinctrl/lantiq: updating devicetree binding
- description
-Date: Wed, 25 Nov 2015 14:05:22 -0600
-Message-ID: <20151125200522.GB30473@rob-hp-laptop>
-References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
+Subject: Re: [PATCH 3/5] dt-bindings: rockchip-thermal: Support the
+ RK3228/RK3399 SoCs compatible
+Date: Wed, 25 Nov 2015 14:05:39 -0600
+Message-ID: <20151125200539.GC30473@rob-hp-laptop>
+References: <1448438377-29203-1-git-send-email-wxt@rock-chips.com>
+ <1448438377-29203-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Martin Schiller <mschiller@tdt.de>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ralf@linux-mips.org, blogic@openwrt.org, hauke@hauke-m.de, jogo@openwrt.org, daniel.schwierzeck@gmail.com
+In-Reply-To: <1448438377-29203-4-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 11:18:56AM +0100, Martin Schiller wrote:
-> This patch adds the new dedicated "lantiq,<chip>-pinctrl" compatible strings
-> to the devicetree bindings Documentation, where <chip> is one of "ase",
-> "danube", "xrx100", "xrx200" or "xrx300" and marks the "lantiq,pinctrl-xway",
-> "lantiq,pinctrl-ase" and "lantiq,pinctrl-xr9" compatible strings as DEPRECATED.
+On Wed, Nov 25, 2015 at 03:59:35PM +0800, Caesar Wang wrote:
+> This patchset attempts to new compatible for thermal founding
+> on RK3228/RK3399 SoCs.
 > 
-> Signed-off-by: Martin Schiller <mschiller@tdt.de>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
 Acked-by: Rob Herring <robh@kernel.org>
 
 > ---
->  .../bindings/pinctrl/lantiq,pinctrl-xway.txt       | 110 +++++++++++++++++++--
->  1 file changed, 102 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-> index e89b467..8e5216b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-> @@ -1,7 +1,16 @@
->  Lantiq XWAY pinmux controller
+>  Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> index 0dfa60d..af5f802 100644
+> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -2,8 +2,10 @@
 >  
 >  Required properties:
-> -- compatible: "lantiq,pinctrl-xway" or "lantiq,pinctrl-xr9"
-> +- compatible: "lantiq,pinctrl-xway", (DEPRECATED: Use "lantiq,pinctrl-danube")
-> +	      "lantiq,pinctrl-xr9", (DEPRECATED: Use "lantiq,xrx100-pinctrl" or
-> +					"lantiq,xrx200-pinctrl")
-> +	      "lantiq,pinctrl-ase", (DEPRECATED: Use "lantiq,ase-pinctrl")
-> +	      "lantiq,<chip>-pinctrl", where <chip> is:
-> +		"ase" (XWAY AMAZON Family)
-> +		"danube" (XWAY DANUBE Family)
-> +		"xrx100" (XWAY xRX100 Family)
-> +		"xrx200" (XWAY xRX200 Family)
-> +		"xrx300" (XWAY xRX300 Family)
->  - reg: Should contain the physical address and length of the gpio/pinmux
->    register range
->  
-> @@ -36,19 +45,87 @@ Required subnode-properties:
->  
->  Valid values for group and function names:
->  
-> +XWAY: (DEPRECATED: Use DANUBE)
->    mux groups:
->      exin0, exin1, exin2, jtag, ebu a23, ebu a24, ebu a25, ebu clk, ebu cs1,
->      ebu wait, nand ale, nand cs1, nand cle, spi, spi_cs1, spi_cs2, spi_cs3,
-> -    spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi , gpt1, gpt2,
-> +    spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi, gpt1, gpt2,
->      gpt3, clkout0, clkout1, clkout2, clkout3, gnt1, gnt2, gnt3, req1, req2,
->      req3
->  
-> -  additional mux groups (XR9 only):
-> -    mdio, nand rdy, nand rd, exin3, exin4, gnt4, req4
-> +  functions:
-> +    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu
-> +
-> +XR9: ( DEPRECATED: Use xRX100/xRX200)
-> +  mux groups:
-> +    exin0, exin1, exin2, exin3, exin4, jtag, ebu a23, ebu a24, ebu a25,
-> +    ebu clk, ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy,
-> +    nand rd, spi, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5, spi_cs6,
-> +    asc0, asc0 cts rts, stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1,
-> +    clkout2, clkout3, gnt1, gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio,
-> +    gphy0 led0, gphy0 led1, gphy0 led2, gphy1 led0, gphy1 led1, gphy1 led2
-> +
-> +  functions:
-> +    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, mdio, gphy
-> +
-> +AMAZON:
-> +  mux groups:
-> +    exin0, exin1, exin2, jtag, spi_di, spi_do, spi_clk, spi_cs1, spi_cs2,
-> +    spi_cs3, spi_cs4, spi_cs5, spi_cs6, asc, stp, gpt1, gpt2, gpt3, clkout0,
-> +    clkout1, clkout2, mdio, dfe led0, dfe led1, ephy led0, ephy led1, ephy led2
-> +
-> +  functions:
-> +    spi, asc, cgu, jtag, exin, stp, gpt, mdio, ephy, dfe
-> +
-> +DANUBE:
-> +  mux groups:
-> +    exin0, exin1, exin2, jtag, ebu a23, ebu a24, ebu a25, ebu clk, ebu cs1,
-> +    ebu wait, nand ale, nand cs1, nand cle, spi_di, spi_do, spi_clk, spi_cs1,
-> +    spi_cs2, spi_cs3, spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi,
-> +    gpt1, gpt2, gpt3, clkout0, clkout1, clkout2, clkout3, gnt1, gnt2, gnt3,
-> +    req1, req2, req3, dfe led0, dfe led1
->  
->    functions:
-> -    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, mdio
-> +    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, dfe
->  
-> +xRX100:
-> +  mux groups:
-> +    exin0, exin1, exin2, exin3, exin4, ebu a23, ebu a24, ebu a25, ebu clk,
-> +    ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy, nand rd,
-> +    spi_di, spi_do, spi_clk, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5,
-> +    spi_cs6, asc0, asc0 cts rts, stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1,
-> +    clkout2, clkout3, gnt1, gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio,
-> +    dfe led0, dfe led1
-> +
-> +  functions:
-> +    spi, asc, cgu, exin, stp, gpt, nmi, pci, ebu, mdio, dfe
-> +
-> +xRX200:
-> +  mux groups:
-> +    exin0, exin1, exin2, exin3, exin4, ebu a23, ebu a24, ebu a25, ebu clk,
-> +    ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy, nand rd,
-> +    spi_di, spi_do, spi_clk, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5,
-> +    spi_cs6, usif uart_rx, usif uart_tx, usif uart_rts, usif uart_cts,
-> +    usif uart_dtr, usif uart_dsr, usif uart_dcd, usif uart_ri, usif spi_di,
-> +    usif spi_do, usif spi_clk, usif spi_cs0, usif spi_cs1, usif spi_cs2,
-> +    stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1, clkout2, clkout3, gnt1,
-> +    gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio, dfe led0, dfe led1,
-> +    gphy0 led0, gphy0 led1, gphy0 led2, gphy1 led0, gphy1 led1, gphy1 led2
-> +
-> +  functions:
-> +    spi, usif, cgu, exin, stp, gpt, nmi, pci, ebu, mdio, dfe, gphy
-> +
-> +xRX300:
-> +  mux groups:
-> +    exin0, exin1, exin2, exin4, nand ale, nand cs0, nand cs1, nand cle,
-> +    nand rdy, nand rd, nand_d0, nand_d1, nand_d2, nand_d3, nand_d4, nand_d5,
-> +    nand_d6, nand_d7, nand_d1, nand wr, nand wp, nand se, spi_di, spi_do,
-> +    spi_clk, spi_cs1, spi_cs4, spi_cs6, usif uart_rx, usif uart_tx,
-> +    usif spi_di, usif spi_do, usif spi_clk, usif spi_cs0, stp, clkout2,
-> +    mdio, dfe led0, dfe led1, ephy0 led0, ephy0 led1, ephy1 led0, ephy1 led1
-> +
-> +  functions:
-> +    spi, usif, cgu, exin, stp, ebu, mdio, dfe, ephy
->  
->  
->  Definition of pin configurations:
-> @@ -62,15 +139,32 @@ Optional subnode-properties:
->      0: none, 1: down, 2: up.
->  - lantiq,open-drain: Boolean, enables open-drain on the defined pin.
->  
-> -Valid values for XWAY pin names:
-> +Valid values for XWAY pin names: (DEPRECATED: Use DANUBE)
->    Pinconf pins can be referenced via the names io0-io31.
->  
-> -Valid values for XR9 pin names:
-> +Valid values for XR9 pin names: (DEPRECATED: Use xrX100/xRX200)
->    Pinconf pins can be referenced via the names io0-io55.
->  
-> +Valid values for AMAZON pin names:
-> +  Pinconf pins can be referenced via the names io0-io31.
-> +
-> +Valid values for DANUBE pin names:
-> +  Pinconf pins can be referenced via the names io0-io31.
-> +
-> +Valid values for xRX100 pin names:
-> +  Pinconf pins can be referenced via the names io0-io55.
-> +
-> +Valid values for xRX200 pin names:
-> +  Pinconf pins can be referenced via the names io0-io49.
-> +
-> +Valid values for xRX300 pin names:
-> +  Pinconf pins can be referenced via the names io0-io1,io3-io6,io8-io11,
-> +						io13-io19,io23-io27,io34-io36,
-> +						io42-io43,io48-io61.
-> +
->  Example:
->  	gpio: pinmux@E100B10 {
-> -		compatible = "lantiq,pinctrl-xway";
-> +		compatible = "lantiq,danube-pinctrl";
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&state_default>;
->  
+>  - compatible : should be "rockchip,<name>-tsadc"
+> +   "rockchip,rk3228-tsadc": found on RK3228 SoCs
+>     "rockchip,rk3288-tsadc": found on RK3288 SoCs
+>     "rockchip,rk3368-tsadc": found on RK3368 SoCs
+> +   "rockchip,rk3368-tsadc": found on RK3399 SoCs
+>  - reg : physical base address of the controller and length of memory mapped
+>  	region.
+>  - interrupts : The interrupt number to the cpu. The interrupt specifier format
 > -- 
-> 2.1.4
+> 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
