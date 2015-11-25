@@ -1,65 +1,61 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: vf610-twr: relicense vf610-twr.dts under
- GPLv2/X11
-Date: Wed, 25 Nov 2015 00:42:49 -0500
-Message-ID: <56554A59.1010306@pid1solutions.com>
-References: <1448323302-23563-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448323302-23563-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Zain Wang <zain.wang@rock-chips.com>
+Subject: [PATCH v5 2/4] clk: rockchip: set an ID for crypto clk
+Date: Wed, 25 Nov 2015 13:43:31 +0800
+Message-ID: <1448430213-27203-3-git-send-email-zain.wang@rock-chips.com>
+References: <1448430213-27203-1-git-send-email-zain.wang@rock-chips.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1448430213-27203-1-git-send-email-zain.wang@rock-chips.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: zhengsq@rock-chips.com, hl@rock-chips.com, herbert@gondor.apana.org.au, davem@davemloft.net, mturquette@baylibre.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, Zain Wang <zain.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Set an ID for crypto clk, so that it can be called in other part.
 
-On 11/23/2015 07:01 PM, Stefan Agner wrote:
-> GPLv2-only devicetrees make reuse difficult for software components
-> licensed under a different license.
-> 
-> The consensus is that a GPL/X11 dual-license should allow all necessary
-> uses, so relicense the vf610-twr.dts file to this combination.
-> 
-> CCs were acquired using (updated some email addresses):
-> git shortlog -sne --no-merges arch/arm/boot/dts/vf610-twr.dts
-> 
-> CC: Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
-> CC: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Signed-off-by: Zain Wang <zain.wang@rock-chips.com>
+Acked-by: Michael Turquette <mturquette@baylibre.com>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+---
+Changed in v5:
+- None
+Changed in v4:
+- None
+Changed in v3:
+- None
+Changed in v2: 
+- None
+Changed in v1:
+- define SCLK_CRYPTO in rk3288-cru.h
+- use SCLK_CRYPTO instead of SRST_CRYPTO
 
-Acked-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+ drivers/clk/rockchip/clk-rk3288.c      | 2 +-
+ include/dt-bindings/clock/rk3288-cru.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-> CC: Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-
-
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
-
-
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlZVSlkACgkQHT1tsfGwHJ8KNwCfZ447EX1WDTNHtozjnAMJH9SP
-y8wAoJDqarHEEUSSYvRQzEln0R6aaNMK
-=tTfg
------END PGP SIGNATURE-----
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 9040878..3fceda1 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -295,7 +295,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 			RK3288_CLKGATE_CON(0), 4, GFLAGS),
+ 	GATE(0, "c2c_host", "aclk_cpu_src", 0,
+ 			RK3288_CLKGATE_CON(13), 8, GFLAGS),
+-	COMPOSITE_NOMUX(0, "crypto", "aclk_cpu_pre", 0,
++	COMPOSITE_NOMUX(SCLK_CRYPTO, "crypto", "aclk_cpu_pre", 0,
+ 			RK3288_CLKSEL_CON(26), 6, 2, DFLAGS,
+ 			RK3288_CLKGATE_CON(5), 4, GFLAGS),
+ 	GATE(0, "aclk_bus_2pmu", "aclk_cpu_pre", CLK_IGNORE_UNUSED,
+diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+index c719aac..30dcd60 100644
+--- a/include/dt-bindings/clock/rk3288-cru.h
++++ b/include/dt-bindings/clock/rk3288-cru.h
+@@ -86,6 +86,7 @@
+ #define SCLK_USBPHY480M_SRC	122
+ #define SCLK_PVTM_CORE		123
+ #define SCLK_PVTM_GPU		124
++#define SCLK_CRYPTO			125
+ 
+ #define SCLK_MAC		151
+ #define SCLK_MACREF_OUT		152
+-- 
+1.9.1
