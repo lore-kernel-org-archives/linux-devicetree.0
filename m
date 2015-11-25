@@ -1,72 +1,76 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] clk: imx: Add a virtual arm clk on i.mx7d
-Date: Wed, 25 Nov 2015 11:53:23 +0100
-Message-ID: <1448448803.3689.51.camel@pengutronix.de>
-References: <1448360716-1741-1-git-send-email-b51503@freescale.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/2] arm64: dts: mt8173: Add nor flash node
+Date: Wed, 25 Nov 2015 18:57:22 +0800
+Message-ID: <1448449042.24527.0.camel@mtksdaap41>
+References: <1447817403-16631-1-git-send-email-bayi.cheng@mediatek.com>
+	 <1447817403-16631-3-git-send-email-bayi.cheng@mediatek.com>
+	 <56559274.1090900@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448360716-1741-1-git-send-email-b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <56559274.1090900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 24.11.2015, 18:25 +0800 schrieb Bai Ping:
-> Add a virtual arm clk to abstract the actual steps
-> when changing the ARM core frequency.So we can using
-> the 'cpufreq-dt' driver on i.MX7D/Solo.
+On Wed, 2015-11-25 at 11:50 +0100, Matthias Brugger wrote:
 > 
-> Signed-off-by: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Now this is pretty cool, in how much code is actually reused here.
-
-For the whole series:
-Acked-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-BTW: Your mailers time is still wrong. It's now off by a whole day
-(-24h) instead of just some hours, making your mails look like they were
-sent yesterday.
-
-> ---
->  drivers/clk/imx/clk-imx7d.c             | 6 ++++++
->  include/dt-bindings/clock/imx7d-clock.h | 3 ++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
+> On 18/11/15 04:30, Bayi Cheng wrote:
+> > Add Mediatek nor flash node
+> >
+> > Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
+> >   1 file changed, 17 insertions(+), 1 deletion(-)
+> >
 > 
-> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-> index 448ef32..581b428 100644
-> --- a/drivers/clk/imx/clk-imx7d.c
-> +++ b/drivers/clk/imx/clk-imx7d.c
-> @@ -833,6 +833,12 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
->  
->  	clks[IMX7D_GPT_3M_CLK] = imx_clk_fixed_factor("gpt_3m", "osc", 1, 8);
->  
-> +	clks[IMX7D_CLK_ARM] = imx_clk_cpu("arm", "arm_a7_root_clk",
-> +					 clks[IMX7D_ARM_A7_ROOT_CLK],
-> +					 clks[IMX7D_ARM_A7_ROOT_SRC],
-> +					 clks[IMX7D_PLL_ARM_MAIN_CLK],
-> +					 clks[IMX7D_PLL_SYS_MAIN_CLK]);
-> +
->  	for (i = 0; i < ARRAY_SIZE(clks); i++)
->  		if (IS_ERR(clks[i]))
->  			pr_err("i.MX7D clk %d: register failed with %ld\n",
-> diff --git a/include/dt-bindings/clock/imx7d-clock.h b/include/dt-bindings/clock/imx7d-clock.h
-> index a4a7a9c..edca8985c 100644
-> --- a/include/dt-bindings/clock/imx7d-clock.h
-> +++ b/include/dt-bindings/clock/imx7d-clock.h
-> @@ -447,5 +447,6 @@
->  #define IMX7D_SEMA4_HS_ROOT_CLK		434
->  #define IMX7D_PLL_DRAM_TEST_DIV		435
->  #define IMX7D_ADC_ROOT_CLK		436
-> -#define IMX7D_CLK_END			437
-> +#define IMX7D_CLK_ARM			437
-> +#define IMX7D_CLK_END			438
->  #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
+> Applied to v4.5-next/dts
+> 
+> Thanks.
+> Matthias
+> 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 4dd5f93..7988656 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -387,7 +387,23 @@
+> >   			status = "disabled";
+> >   		};
+> >
+> > -		i2c3: i2c@11010000 {
+> > +		nor_flash: spi@1100d000 {
+> > +			compatible = "mediatek,mt8173-nor";
+> > +			reg = <0 0x1100d000 0 0xe0>;
+> > +			clocks = <&pericfg CLK_PERI_SPI>,
+> > +				 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> > +			clock-names = "spi", "sf";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +			status = "disabled";
+> > +
+> > +			flash@0 {
+> > +				compatible = "jedec,spi-nor";
+> > +				reg = <0>;
+> > +			};
+> > +		};
+> > +
+> > +		i2c3: i2c3@11010000 {
 
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+Hi Matthias,
+
+Just notice this one. Please make sure this line should be
+
+i2c3: i2c@11010000 {
+
+instead of
+
+i2c3: i2c3@11010000 {
+
+Joe.C
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
