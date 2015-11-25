@@ -1,144 +1,196 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH (v2) 7/10] watchdog: bcm63xx_wdt: Add get_timeleft
- function
-Date: Tue, 24 Nov 2015 18:51:00 -0800
-Message-ID: <56552214.2050808@roeck-us.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH (v2) 1/10] clocksource: Add brcm,bcm6345-timer device
+ tree binding
+Date: Tue, 24 Nov 2015 21:05:44 -0600
+Message-ID: <20151125030544.GA9933@rob-hp-laptop>
 References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
- <5651CB13.4090704@simon.arlott.org.uk> <5651CC90.7090402@simon.arlott.org.uk>
- <a1461a17c94353f38316d2c6ae04d6b77c91bfd4@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <CAOiHx=k0Aa+qrBT1J7_cQaQRxndBmwsgSgi3x0eJOYTAy6Zq7Q@mail.gmail.com>
+ <5653612A.4050309@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a1461a17c94353f38316d2c6ae04d6b77c91bfd4-dyyJQ+qCPjsfFgGGEbPnq5KvX+y0N6jJ2mWzQvkZbzCn6nfhxgf73RdaaeUjXGGo@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <5653612A.4050309@simon.arlott.org.uk>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Jonas Gorski <jogo@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Miguel Gaio <miguel.gaio@efixo.com>, Maxime Bizon <mbizon@freebox.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2015 02:15 PM, Simon Arlott wrote:
-> Return the remaining time from the hardware control register.
->
-> Warn when the device is registered if the hardware watchdog is currently
-> running and report the remaining time left.
+On Mon, Nov 23, 2015 at 06:55:38PM +0000, Simon Arlott wrote:
+> Add device tree bindings for the BCM6345/BCM6318 timers. This is requ=
+ired
+> for the BCM6345 watchdog which needs to respond to one of the timer
+> interrupts.
+>=20
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
 
-This is really two logical changes, isn't it ?
+Acked-by: Rob Herring <robh@kernel.org>
 
-Nice trick to figure out if the watchdog is running.
-
-What is the impact ? Will this result in interrupts ?
-If so, would it make sense to _not_ reset the system after a timeout
-in this case, but to keep pinging the watchdog while the watchdog device
-is not open ?
-
-Thanks,
-Guenter
-
->
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 > ---
-> Changed "if (timeleft > 0)" to "if (hw->running)" when checking if a
-> warning should be printed, in case the time left is truncated down to
-> 0 seconds.
->
->   drivers/watchdog/bcm63xx_wdt.c | 37 +++++++++++++++++++++++++++++++++++++
->   1 file changed, 37 insertions(+)
->
-> diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
-> index 3c7667a..9d099e0 100644
-> --- a/drivers/watchdog/bcm63xx_wdt.c
-> +++ b/drivers/watchdog/bcm63xx_wdt.c
-> @@ -14,6 +14,7 @@
->   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
->   #include <linux/clk.h>
-> +#include <linux/delay.h>
->   #include <linux/errno.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> @@ -75,6 +76,19 @@ static int bcm63xx_wdt_stop(struct watchdog_device *wdd)
->   	return 0;
->   }
->
-> +static unsigned int bcm63xx_wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	struct bcm63xx_wdt_hw *hw = watchdog_get_drvdata(wdd);
-> +	unsigned long flags;
-> +	u32 val;
+> On 23/11/15 15:33, Jonas Gorski wrote:
+> > On Sat, Nov 21, 2015 at 8:02 PM, Simon Arlott <simon@fire.lp0.eu> w=
+rote:
+> >> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-time=
+r"
+> >=20
+> > Since bcm6318 uses a slightly different register layout than the
+> > earlier SoCs, I'd argue that using bcm6345-timer as a compatible fo=
+r
+> > bcm6318 is wrong.
+>=20
+> I've split them out into two very similar bindings.
+>=20
+> Patches 1/4 and 2/4 are replaced with (v2) 1/10 and (v2) 2/10.
+>=20
+>  .../bindings/timer/brcm,bcm6318-timer.txt          | 44 ++++++++++++=
+++++++++
+>  .../bindings/timer/brcm,bcm6345-timer.txt          | 47 ++++++++++++=
+++++++++++
+>  2 files changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm6=
+318-timer.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm6=
+345-timer.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6318-tim=
+er.txt b/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer.txt
+> new file mode 100644
+> index 0000000..cf4be7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer.txt
+> @@ -0,0 +1,44 @@
+> +Broadcom BCM6318 Timer
 > +
-> +	raw_spin_lock_irqsave(&hw->lock, flags);
-> +	val = __raw_readl(hw->regs + WDT_CTL_REG);
-> +	val /= hw->clock_hz;
-> +	raw_spin_unlock_irqrestore(&hw->lock, flags);
-> +	return val;
-> +}
+> +This block is a timer that is connected to multiple interrupts on th=
+e main
+> +interrupt controller and functions as a programmable interrupt contr=
+oller for
+> +timer events. There is a main timer interrupt for all timers.
 > +
->   static int bcm63xx_wdt_set_timeout(struct watchdog_device *wdd,
->   	unsigned int timeout)
->   {
-> @@ -130,6 +144,7 @@ static struct watchdog_ops bcm63xx_wdt_ops = {
->   	.owner = THIS_MODULE,
->   	.start = bcm63xx_wdt_start,
->   	.stop = bcm63xx_wdt_stop,
-> +	.get_timeleft = bcm63xx_wdt_get_timeleft,
->   	.set_timeout = bcm63xx_wdt_set_timeout,
->   };
->
-> @@ -144,6 +159,8 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
->   	struct bcm63xx_wdt_hw *hw;
->   	struct watchdog_device *wdd;
->   	struct resource *r;
-> +	u32 timeleft1, timeleft2;
-> +	unsigned int timeleft;
->   	int ret;
->
->   	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
-> @@ -197,6 +214,23 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
->   	watchdog_init_timeout(wdd, 0, &pdev->dev);
->   	watchdog_set_nowayout(wdd, nowayout);
->
-> +	/* Compare two reads of the time left value, 2 clock ticks apart */
-> +	rmb();
-> +	timeleft1 = __raw_readl(hw->regs + WDT_CTL_REG);
-> +	udelay(DIV_ROUND_UP(1000000, hw->clock_hz / 2));
-> +	/* Ensure the register is read twice */
-> +	rmb();
-> +	timeleft2 = __raw_readl(hw->regs + WDT_CTL_REG);
+> +- 4 independent timers with their own interrupt, and own maskable le=
+vel
+> +  interrupt bit in the main timer interrupt
 > +
-> +	/* If the time left is changing, the watchdog is running */
-> +	if (timeleft1 != timeleft2) {
-> +		hw->running = true;
-> +		timeleft = bcm63xx_wdt_get_timeleft(wdd);
-> +	} else {
-> +		hw->running = false;
-> +		timeleft = 0;
-> +	}
+> +- 1 watchdog timer with an unmaskable level interrupt bit in the mai=
+n timer
+> +  interrupt
 > +
->   	ret = bcm63xx_timer_register(TIMER_WDT_ID, bcm63xx_wdt_isr, wdd);
->   	if (ret < 0) {
->   		dev_err(&pdev->dev, "failed to register wdt timer isr\n");
-> @@ -214,6 +248,8 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
->   		dev_name(wdd->dev), hw->regs,
->   		wdd->timeout, wdd->max_timeout);
->
-> +	if (hw->running)
-> +		dev_alert(wdd->dev, "running, reboot in %us\n", timeleft);
->   	return 0;
->
->   unregister_timer:
-> @@ -255,6 +291,7 @@ module_platform_driver(bcm63xx_wdt_driver);
->
->   MODULE_AUTHOR("Miguel Gaio <miguel.gaio-HH44TBFINEIAvxtiuMwx3w@public.gmane.org>");
->   MODULE_AUTHOR("Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>");
-> +MODULE_AUTHOR("Simon Arlott");
->   MODULE_DESCRIPTION("Driver for the Broadcom BCM63xx SoC watchdog");
->   MODULE_LICENSE("GPL");
->   MODULE_ALIAS("platform:bcm63xx-wdt");
->
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- Contains one enable/status word pair
+> +
+> +- No atomic set/clear operations
+> +
+> +Required properties:
+> +
+> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6318-timer"
+> +- reg: specifies the base physical address and size of the registers=
+, excluding
+> +  the watchdog registers
+> +- interrupt-controller: identifies the node as an interrupt controll=
+er
+> +- #interrupt-cells: specifies the number of cells needed to encode a=
+n interrupt
+> +  source, should be 1.
+> +- interrupt-parent: specifies the phandle to the parent interrupt co=
+ntroller(s)
+> +  this one is cascaded from
+> +- interrupts: specifies the interrupt line(s) in the interrupt-paren=
+t controller
+> +  node for the main timer interrupt, followed by the individual time=
+r
+> +  interrupts; valid values depend on the type of parent interrupt co=
+ntroller
+> +- clocks: phandle of timer reference clock (periph)
+> +
+> +Example:
+> +
+> +timer: timer@10000040 {
+> +	compatible =3D "brcm,bcm63148-timer", "brcm,bcm6318-timer";
+> +	reg =3D <0x10000040 0x28>;
+> +
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <1>;
+> +
+> +	interrupt-parent =3D <&periph_intc>;
+> +	interrupts =3D <31>, <0>, <1>, <2>, <3>;
+> +	clock =3D <&periph_osc>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6345-tim=
+er.txt b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+> new file mode 100644
+> index 0000000..03250dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+> @@ -0,0 +1,47 @@
+> +Broadcom BCM6345 Timer
+> +
+> +This block is a timer that is connected to one interrupt on the main=
+ interrupt
+> +controller and functions as a programmable interrupt controller for =
+timer
+> +events.
+> +
+> +- 3 independent timers with their own maskable level interrupt bit (=
+but not
+> +  per CPU because there is only one parent interrupt and the timers =
+share it)
+> +
+> +- 1 watchdog timer with an unmaskable level interrupt
+> +
+> +- Contains one enable/status word pair
+> +
+> +- No atomic set/clear operations
+> +
+> +The lack of per CPU ability of timers makes them unusable as a set o=
+f
+> +clockevent devices, otherwise they could be attached to the remainin=
+g
+> +interrupts.
+> +
+> +Required properties:
+> +
+> +- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-timer"
+> +- reg: specifies the base physical address and size of the registers=
+, excluding
+> +  the watchdog registers
+> +- interrupt-controller: identifies the node as an interrupt controll=
+er
+> +- #interrupt-cells: specifies the number of cells needed to encode a=
+n interrupt
+> +  source, should be 1.
+> +- interrupt-parent: specifies the phandle to the parent interrupt co=
+ntroller(s)
+> +  this one is cascaded from
+> +- interrupts: specifies the interrupt line(s) in the interrupt-paren=
+t controller
+> +  node for the timer interrupt; valid values depend on the type of p=
+arent
+> +  interrupt controller
+> +- clocks: phandle of timer reference clock (periph)
+> +
+> +Example:
+> +
+> +timer: timer@10000080 {
+> +	compatible =3D "brcm,bcm63168-timer", "brcm,bcm6345-timer";
+> +	reg =3D <0x10000080 0x1c>;
+> +
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <1>;
+> +
+> +	interrupt-parent =3D <&periph_intc>;
+> +	interrupts =3D <0>;
+> +	clock=B7=3D=B7<&periph_osc>;
+> +};
+> --=20
+> 2.1.4
+>=20
+> --=20
+> Simon Arlott
