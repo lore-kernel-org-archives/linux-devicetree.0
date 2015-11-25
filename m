@@ -1,88 +1,42 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] arm64: dts: add all hi6220 i2c nodes
-Date: Wed, 25 Nov 2015 20:24:49 +0800
-Message-ID: <20151125122449.GH11999@tiger>
-References: <1448444942-5780-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH 0/3] LPC4337 CIAA-NXP DTS changes
+Date: Wed, 25 Nov 2015 09:27:15 -0300
+Message-ID: <5655A923.7050601@vanguardiasur.com.ar>
+References: <1448282225-2635-1-git-send-email-ariel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448444942-5780-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, tyler.baker@linaro.org, arnd@arndb.de, bintian.wang@huawei.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, w.f@huawei.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448282225-2635-1-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 05:49:02PM +0800, Xinwei Kong wrote:
-> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
-> use this I2C IP of Synopsys Designware for HiKey board.
-> 
-> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 37 +++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 82d2488..6b591a9 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -208,5 +208,42 @@
->  			clock-names = "uartclk", "apb_pclk";
->  			status = "disabled";
->  		};
-> +
-> +		i2c0: i2c@f7100000 {
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0x0 0xf7100000 0x0 0x1000>;
-> +			interrupts = <0 44 4>;
-> +			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
-> +			clock-names = "clk_i2c0";
-> +			i2c-sda-hold-time-ns = <300>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
-> +			status = "ok";
+(+To: Joachim)
 
-Shouldn't it be set "disabled" in <soc>.dtsi and let <board>.dts enable
-it per board design?
+El 23/11/15 a las 09:37, Ariel D'Alessandro escribi=F3:
+> Hi,
+>=20
+> This patch set includes some DTS changes for LPC4337 CIAA-NXP board.
+> It is based on tag next-20151120 of the linux-next repository. It has
+> been successfully tested on a LPC4337 CIAA-NXP Board.
+>=20
+> Ariel D'Alessandro (3):
+>   ARM: dts: lpc4337-ciaa: enable EEPROM memory
+>   ARM: dts: lpc4337-ciaa: enable SCT-PWM
+>   ARM: dts: lpc4337-ciaa: add i2c0 and devices
+>=20
+>  arch/arm/boot/dts/lpc4337-ciaa.dts | 38 ++++++++++++++++++++++++++++=
+++++++++++
+>  1 file changed, 38 insertions(+)
+>=20
 
-Shawn
-
-> +		};
-> +
-> +		i2c1: i2c@f7101000 {
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0x0 0xf7101000 0x0 0x1000>;
-> +			interrupts = <0 45 4>;
-> +			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
-> +			clock-names = "clk_i2c1";
-> +			i2c-sda-hold-time-ns = <300>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
-> +			status = "ok";
-> +		};
-> +
-> +		i2c2: i2c@f7102000 {
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0x0 0xf7102000 0x0 0x1000>;
-> +			interrupts = <0 46 4>;
-> +			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
-> +			clock-names = "clk_i2c2";
-> +			i2c-sda-hold-time-ns = <300>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
-> +			status = "ok";
-> +		};
-> +
->  	};
->  };
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
