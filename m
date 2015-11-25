@@ -1,91 +1,61 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v9] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Wed, 25 Nov 2015 05:40:49 +0000
-Message-ID: <8520D5D51A55D047800579B0941471982586607F@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1447911323-12567-1-git-send-email-bharatku@xilinx.com>
- <20151124173556.18aff6b5@arm.com>
+From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: vf610-cosmic: relicense vf610-cosmic.dts
+ under GPLv2/X11
+Date: Wed, 25 Nov 2015 00:41:22 -0500
+Message-ID: <56554A02.8080202@pid1solutions.com>
+References: <1448323291-23505-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151124173556.18aff6b5@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448323291-23505-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Thu, 19 Nov 2015 11:05:23 +0530
-> Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+On 11/23/2015 07:01 PM, Stefan Agner wrote:
+> GPLv2-only devicetrees make reuse difficult for software components
+> licensed under a different license.
 > 
-> > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> > +
-> > +#define MSI_ADDRESS				0xDEED0000
+> The consensus is that a GPL/X11 dual-license should allow all necessary
+> uses, so relicense the vf610-twr.dts file to this combination.
 > 
-> How did you pick this value? What if it intersect with some actual RAM?
-> What if a device actually does DMA to that location?
+> CCs were acquired using (updated some email addresses):
+> git shortlog -sne --no-merges arch/arm/boot/dts/vf610-cosmic.dts
 > 
-> Wouldn't it make sense to actually pick a real *device* address (hint:
-> your MSI controller itself) for this purpose, as the device will never DMA
-> there?
->
-> 
-We have already mentioned in previous patch discussion, we don't have any device address on our SOC for MSI, that's 
- the reason we are allocating a page for MSI in RAM. Since our memory write is consumed by bridge and doesn't write to memory, you suggested to use 
-some random address,  so using some random address.
-> 
-> 
-> > +
-> > +static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int
-> virq,
-> > +				unsigned int nr_irqs, void *args) {
-> > +	struct nwl_pcie *pcie = domain->host_data;
-> > +	struct nwl_msi *msi = &pcie->msi;
-> > +	int bit;
-> > +	int i;
-> > +	int ret;
-> > +
-> > +	mutex_lock(&msi->lock);
-> > +	if (nr_irqs > 1) {
-> > +		ret = nwl_check_hwirq(msi, nr_irqs);
-> > +		if (ret < 0) {
-> > +			mutex_unlock(&msi->lock);
-> > +			return ret;
-> > +		}
-> > +	} else {
-> > +		ret = find_first_zero_bit(msi->used, INT_PCI_MSI_NR);
-> > +		if (ret == INT_PCI_MSI_NR) {
-> > +			mutex_unlock(&msi->lock);
-> > +			return -ENOSPC;
-> > +		}
-> > +	}
-> 
-> Let's be serious for a minute. What's wrong with
-> bitmap_find_next_zero_area, for example?
-Ok, will explore this API and do accordingly, and address in next patch.
-> 
-> > +
-> > +	for (i = 0; i < nr_irqs; i++) {
-> > +		bit = ret + i;
-> > +		set_bit(bit, msi->used);
-> > +
-> > +		irq_domain_set_info(domain, virq + i, bit, &nwl_irq_chip,
-> > +				domain->host_data, handle_simple_irq,
-> > +				NULL, NULL);
-> > +	}
-> > +	mutex_unlock(&msi->lock);
-> > +
-> > +	return 0;
-> > +}
-> 
-> Thanks,
-> 
-> 	M.
-> --
-> Jazz is not dead. It just smells funny.
+> CC: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+
+Acked-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+
+> CC: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> CC: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+
+
+- -- 
+Cory Tusar
+Principal
+PID 1 Solutions, Inc.
+
+
+"There are two ways of constructing a software design.  One way is to
+ make it so simple that there are obviously no deficiencies, and the
+ other way is to make it so complicated that there are no obvious
+ deficiencies."  --Sir Charles Anthony Richard Hoare
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlZVSgIACgkQHT1tsfGwHJ8+WgCgpIksiDYnrAinLzsEv11cl5Ez
+Hb4An1Bm9qpykikhgs+BDjuNiDp7KDC/
+=8817
+-----END PGP SIGNATURE-----
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
