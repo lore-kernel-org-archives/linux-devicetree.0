@@ -1,26 +1,31 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 2/7] dts: define ngpios property in gpio controller's
- node
-Date: Tue, 24 Nov 2015 16:11:03 -0800
-Message-ID: <5654FC97.5040302@gmail.com>
-References: <1447905139-16002-1-git-send-email-pramodku@broadcom.com> <1447905139-16002-3-git-send-email-pramodku@broadcom.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Enable PCIe PHY support in Cygnus
+Date: Tue, 24 Nov 2015 16:12:37 -0800
+Message-ID: <5654FCF5.40406@gmail.com>
+References: <1447870619-2828-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447905139-16002-3-git-send-email-pramodku@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pramod Kumar <pramodku@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas Gorski <jogo@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447870619-2828-1-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/11/15 19:52, Pramod Kumar wrote:
-> Add ngpios property in cygnus ASIU, CCM and CRMU gpio controller's node
+On 18/11/15 10:16, Ray Jui wrote:
+> This patch enales PCIe PHY in device tree for Broadcom Cygnus based platforms
 > 
-> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
-> Reviewed-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> This patch is developed based on v4.4-rc1 and available here:
+> https://github.com/Broadcom/cygnus-linux/tree/cygnus-pcie-phy-dt-v1
+> 
+> Ray Jui (1):
+>   ARM: dts: enable PCIe PHY support for Cygnus
 
-Applied to devicetree/next with a more specific subject, thanks!
+Applied to devicetree/next with Scott's Acked-by, thanks!
 -- 
 Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
