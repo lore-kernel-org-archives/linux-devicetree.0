@@ -1,80 +1,46 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [RFC PATCH 05/10] serial: mps2-uart: add support for early console
-Date: Wed, 25 Nov 2015 10:33:36 +0000
-Message-ID: <1448447621-17900-6-git-send-email-vladimir.murzin@arm.com>
-References: <1448447621-17900-1-git-send-email-vladimir.murzin@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448447621-17900-1-git-send-email-vladimir.murzin@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, afaerber@suse.de, mcoquelin.stm32@gmail.com
-Cc: Mark.Rutland@arm.com, Pawel.Moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
+Date: Wed, 25 Nov 2015 11:40:20 +0100
+Message-ID: <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
+References: <1448446739-5541-1-git-send-email-mschiller@tdt.de> <1448446739-5541-4-git-send-email-mschiller@tdt.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1448446739-5541-4-git-send-email-mschiller@tdt.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Schiller <mschiller@tdt.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Hauke Mehrtens <hauke@hauke-m.de>, daniel.schwierzeck@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This adds support early console for MPS2 UART which can be enabled via
-earlycon=3Dmps2,0x40004000
+Hi
 
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
----
- drivers/tty/serial/Kconfig     |    1 +
- drivers/tty/serial/mps2-uart.c |   30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+On Wed, Nov 25, 2015 at 11:18 AM, Martin Schiller <mschiller@tdt.de> wrote:
+> From: John Crispin <blogic@openwrt.org>
+>
+> This patch is included in the openwrt patchset for several years now and needs
+> to go upstream as well. It includes the following changes:
+> 1. Fix up inline function call to xway_mux_apply
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index b47f8fc..bb8c66b 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1477,6 +1477,7 @@ config SERIAL_MPS2_UART_CONSOLE
- =09bool "MPS2 UART console support"
- =09depends on SERIAL_MPS2_UART
- =09select SERIAL_CORE_CONSOLE
-+=09select SERIAL_EARLYCON
-=20
- config SERIAL_MPS2_UART
- =09tristate "MPS2 UART port"
-diff --git a/drivers/tty/serial/mps2-uart.c b/drivers/tty/serial/mps2-uart.=
-c
-index 00e882e..c2f530e 100644
---- a/drivers/tty/serial/mps2-uart.c
-+++ b/drivers/tty/serial/mps2-uart.c
-@@ -445,6 +445,36 @@ static struct console mps2_uart_console =3D {
-=20
- #define MPS2_SERIAL_CONSOLE (&mps2_uart_console)
-=20
-+static void mps2_early_putchar(struct uart_port *port, int ch)
-+{
-+
-+=09while (readb(port->membase + UARTn_STATE) & UARTn_STATE_TX_FULL)
-+=09=09cpu_relax();
-+
-+=09writeb((unsigned char)ch, port->membase + UARTn_DATA);
-+}
-+
-+
-+static void mps2_early_write(struct console *con, const char *s, unsigned =
-n)
-+{
-+=09struct earlycon_device *dev =3D con->data;
-+
-+=09uart_console_write(&dev->port, s, n, mps2_early_putchar);
-+}
-+
-+static int __init mps2_early_console_setup(struct earlycon_device *device,
-+=09=09=09=09=09   const char *opt)
-+{
-+=09if (!device->port.membase)
-+=09=09return -ENODEV;
-+
-+=09device->con->write =3D mps2_early_write;
-+
-+=09return 0;
-+}
-+EARLYCON_DECLARE(mps2, mps2_early_console_setup);
-+OF_EARLYCON_DECLARE(mps2, "arm,mps2-uart", mps2_early_console_setup);
-+
- #else
- #define MPS2_SERIAL_CONSOLE NULL
- #endif
---=20
-1.7.9.5
+This really needs an explanation what is being fixed here.
+
+> 2. Fix GPIO Setup of GPIO Port3
+
+This change looks fine.
+
+> 3. Implement gpio_chip.to_irq
+
+These are three different changes (two fixes, one new feature) and
+therefore should be split up into three patches.
+
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> Signed-off-by: Martin Schiller <mschiller@tdt.de>
+> ---
+
+Also please provide a changelog for your patches here.
+
+>  drivers/pinctrl/pinctrl-xway.c | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+>
+
+
+Jonas
