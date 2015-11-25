@@ -1,203 +1,130 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9] Documentation: add Device tree bindings for
- hwmon/nct7802
-Date: Wed, 25 Nov 2015 17:15:35 -0600
-Message-ID: <20151125231535.GA25979@rob-hp-laptop>
-References: <1448323758-28457-1-git-send-email-const@makelinux.com>
+Subject: Re: [PATCH v3] Documentation: dt: Add bindings for Secure-only
+ devices
+Date: Wed, 25 Nov 2015 17:43:59 -0600
+Message-ID: <20151125234359.GA15658@rob-hp-laptop>
+References: <1448381201-10729-1-git-send-email-peter.maydell@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448323758-28457-1-git-send-email-const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+In-Reply-To: <1448381201-10729-1-git-send-email-peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 02:09:18AM +0200, Constantine Shulyupin wrote:
-> From: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
+On Tue, Nov 24, 2015 at 04:06:41PM +0000, Peter Maydell wrote:
+> The existing device tree bindings assume that we are only trying to
+> describe a single address space with a device tree (for ARM, either
+> the Normal or the Secure world). Some uses for device tree need to
+> describe both Normal and Secure worlds in a single device tree. Add
+> documentation of how to do this, by adding extra properties which
+> describe when a device appears differently in the two worlds or when
+> it only appears in one of them.
 > 
-> Introduced subnodes sensor, fan and peci with properties.
+> The binding describes the general principles for adding new
+> properties describing the secure world, but for now we only need a
+> single new property, "secure-status", which can be used to annotate
+> devices to indicate that they are only visible in one of the two
+> worlds.
 > 
-> Signed-off-by: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
+> The primary expected use of this binding is for a virtual machine
+> like QEMU to describe the VM layout to a TrustZone aware firmware
+> (which would then use the secure-only devices itself, and pass the DT
+> on to a kernel running in the non-secure world, which ignores the
+> secure-only devices and uses the rest).
+> 
+> Signed-off-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> Changed in v9:
-> - Fixed nuvoton,nct7802-sensor
-> - Introduced nuvoton,nct7802-vmon, nuvoton,nct7802-fan-in, nuvoton,nct7802-fan-ctl
+> This binding doesn't affect the kernel itself, but the kernel
+> Documentation/ tree is the de-facto current place where all DT
+> bindings are documented, so Grant suggested this was the right
+> place to send a doc patch.
 > 
-> Changed in v8:
-> - added senor type "local"
-> - Compatible nodes converted to senor types "vcore", "vcc"
+> Changes v1->v2:
+>  * list all the status/secure-status combinations explicitly
+>  * use /* */ comment syntax, not //
+> Changes v2->v3:
+>  * use secure-foo rather than secure-reg as the example when
+>    explaining how the prefixing works
+>  * say how prefixing a vendor,foo property name works
+
+Applied, thanks.
+
+Rob
+
 > 
-> Changed in v7:
-> - sensors type (thermistor, thermistor, voltage) and pwm type
-> selected with type property instead of compatible property.
+>  Documentation/devicetree/bindings/arm/secure.txt | 53 ++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/secure.txt
 > 
-> Changed in v6:
-> - Removed previous definition.
-> - Introduced subnodes sensor, fan and peci with properties.
-> 
-> Changed in v5:
-> - Fixed typos
-> 
-> Changed in v4:
-> - Removed registers initialization by names
-> - Added properties nuvoton,sensor*-type
-> 
-> Changed in v3:
-> - Fixed vendor prefix
-> - Added short registers description,
->   full registers description is available at
-> https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
-> 
-> Changed in v2:
-> - Removed nct7802,reg-init
-> - Added registers initialization by names
-> 
-> Introduced in v1:
->  - nct7802,reg-init
-> ---
->  .../devicetree/bindings/hwmon/nct7802.txt          | 125 +++++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
 > new file mode 100644
-> index 0000000..cf983b3
+> index 0000000..e31303f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-> @@ -0,0 +1,125 @@
-> +Nuvoton NCT7802Y Hardware Monitoring IC
+> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+> @@ -0,0 +1,53 @@
+> +* ARM Secure world bindings
 > +
-> +Required node properties:
+> +ARM CPUs with TrustZone support have two distinct address spaces,
+> +"Normal" and "Secure". Most devicetree consumers (including the Linux
+> +kernel) are not TrustZone aware and run entirely in either the Normal
+> +world or the Secure world. However some devicetree consumers are
+> +TrustZone aware and need to be able to determine whether devices are
+> +visible only in the Secure address space, only in the Normal address
+> +space, or visible in both. (One example of that situation would be a
+> +virtual machine which boots Secure firmware and wants to tell the
+> +firmware about the layout of the machine via devicetree.)
 > +
-> + - "compatible": must be "nuvoton,nct7802"
-> + - "reg": I2C bus address of the device
-> + - #address-cells=<1>;
-> + - #size-cells=<0>;
+> +The general principle of the naming scheme for Secure world bindings
+> +is that any property that needs a different value in the Secure world
+> +can be supported by prefixing the property name with "secure-". So for
+> +instance "secure-foo" would override "foo". For property names with
+> +a vendor prefix, the Secure variant of "vendor,foo" would be
+> +"vendor,secure-foo". If there is no "secure-" property then the Secure
+> +world value is the same as specified for the Normal world by the
+> +non-prefixed property. However, only the properties listed below may
+> +validly have "secure-" versions; this list will be enlarged on a
+> +case-by-case basis.
 > +
-> +Optional subnodes:
+> +Defining the bindings in this way means that a device tree which has
+> +been annotated to indicate the presence of Secure-only devices can
+> +still be processed unmodified by existing Non-secure software (and in
+> +particular by the kernel).
 > +
-> +Sensor subnodes properties:
-> + - "compatible", allowed values:
-> +	 - "nuvoton,nct7802-sensor"
-> + - "sensor-type", allowed values:
-> +	"thermal-diode"
-> +	"thermistor"
-> +	"voltage"
-> +	"local" (only one instance, no "reg" required)
-> +For sensors of types "thermal-diode", "thermistor" and "voltage" required
-> + - "reg": sensor index in range 0 .. 2
+> +Note that it is still valid for bindings intended for purely Secure
+> +world consumers (like kernels that run entirely in Secure) to simply
+> +describe the view of Secure world using the standard bindings. These
+> +secure- bindings only need to be used where both the Secure and Normal
+> +world views need to be described in a single device tree.
 > +
-> +Except sensor at address 2 can't be "thermal-diode".
+> +Valid Secure world properties:
 > +
-> +Voltage monitor subnodes properties:
-> + - "compatible", allowed values:
-> +	 - "nuvoton,nct7802-vmon"
-> + - "vmon-type", allowed values:
-> +	"vcore"
-> +	"vcc"
-> + - "reg" is not used because there is only one instance of
-> + vcore and vcc voltage monitors.
+> +- secure-status : specifies whether the device is present and usable
+> +  in the secure world. The combination of this with "status" allows
+> +  the various possible combinations of device visibility to be
+> +  specified. If "secure-status" is not specified it defaults to the
+> +  same value as "status"; if "status" is not specified either then
+> +  both default to "okay". This means the following combinations are
+> +  possible:
 > +
-> +Fan subnodes:
-> +
-> +Fan tachometer subnode (input):
-> +
-> +Required properties:
-> + - "reg" :sensor index of in range 0 .. 2.
-> + - "compatible", should be "nuvoton,nct7802-fan-in"
-> +
-> +Fan PWM (or DC) subnode (output or control):
-> +
-> +Required properties:
-> + - "reg" :sensor index of in range 0 .. 2.
-> + - "compatible", should be "nuvoton,nct7802-fan-ctl"
-> +Optional boolean properties:
-> + - "direct-current" :direct current powered fan instead default PWM
-> + - "invert" :inverted polarity
-> + - "open-drain" :open-drain output instead push pull
-> +
-> +Subnode "peci" properties:
-> + - "reg" :sensor index in range 0 .. 1
-> + - "compatible", should be "nuvoton,nct7802-peci"
-> +
-> +Not defined sensors, fans and PECI modules will be disabled.
-> +
-> +Example nct7802 node:
-> +
-> +nct7802-example@28 {
-> +	compatible = "nuvoton,nct7802";
-> +	reg = <0x28>;
-> +	#address-cells=<1>;
-> +	#size-cells=<0>;
-> +	local-sensor {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		sensor-type = "local";
-> +	};
-> +	sensor@0 {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		reg = <0>;
-> +		sensor-type = "thermal-diode";
-> +	};
-> +	sensor@1 {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		reg = <1>;
-> +		sensor-type = "thermistor";
-> +	};
-> +	sensor@2 {
-> +		compatible = "nuvoton,nct7802-sensor";
-> +		reg = <2>;
-> +		sensor-type = "voltage";
-> +	};
-> +	vcc {
-> +		compatible = "nuvoton,nct7802-vmon";
-> +		sensor-type = "vcc";
-> +	};
-> +	vcore {
-> +		compatible = "nuvoton,nct7802-vmon";
-> +		sensor-type = "vcore";
-> +	};
-> +	fan-in@0 {
-> +		compatible = "nuvoton,nct7802-fan-in";
-> +		reg = <0>;
-> +	};
-> +	fan-in@1 {
-> +		compatible = "nuvoton,nct7802-fan-in";
-> +		reg = <1>;
-> +	};
-> +	fan-ctl@0 {
-> +		compatible = "nuvoton,nct7802-fan-ctl";
-> +		reg = <0>;
-> +	};
-> +	dc-fan-ctl@1 {
-> +		compatible = "nuvoton,nct7802-fan-ctl";
-> +		reg = <1>;
-> +		direct-current;
-> +		open-drain;
-> +		invert;
-> +	};
-> +	pwm-fan-ctl@2 {
-> +		compatible = "nuvoton,nct7802-fan-ctl";
-> +		reg = <2>;
-> +		open-drain;
-> +		invert;
-> +	};
-> +	peci@0 {
-> +		compatible = "nuvoton,nct7802-peci";
-> +		reg = <0>;
-> +	};
-> +	peci@1 {
-> +		compatible = "nuvoton,nct7802-peci";
-> +		reg = <1>;
-> +	};
-> +};
+> +   /* Neither specified: default to visible in both S and NS */
+> +   secure-status = "okay";                          /* visible in both */
+> +   status = "okay";                                 /* visible in both */
+> +   status = "okay"; secure-status = "okay";         /* visible in both */
+> +   secure-status = "disabled";                      /* NS-only */
+> +   status = "okay"; secure-status = "disabled";     /* NS-only */
+> +   status = "disabled"; secure-status = "okay";     /* S-only */
+> +   status = "disabled";                             /* disabled in both */
+> +   status = "disabled"; secure-status = "disabled"; /* disabled in both */
 > -- 
 > 1.9.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
