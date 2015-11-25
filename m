@@ -1,61 +1,160 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] i2c: at91: add DT property "atmel,twd-hold-cycles"
- to binding
-Date: Wed, 25 Nov 2015 16:46:27 -0600
-Message-ID: <20151125224627.GA16821@rob-hp-laptop>
-References: <1448372862-11912-1-git-send-email-ludovic.desroches@atmel.com>
- <1448372862-11912-2-git-send-email-ludovic.desroches@atmel.com>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH (v3) 6/11] watchdog: bcm63xx_wdt: Obtain watchdog clock HZ
+ from "periph" clk
+Date: Wed, 25 Nov 2015 22:47:59 +0000
+Message-ID: <56563A9F.5000901@simon.arlott.org.uk>
+References: <5650BFD6.5030700@simon.arlott.org.uk>
+ <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
+ <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
+ <5651CB13.4090704@simon.arlott.org.uk> <5651CC3C.5090200@simon.arlott.org.uk>
+ <38e0094262a1f609b95697730137fb81dc83fcea@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <5654E7DE.4020400@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448372862-11912-2-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: wsa@the-dreams.de, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cyrille.pichen@atmel.com, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5654E7DE.4020400-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 02:47:41PM +0100, Ludovic Desroches wrote:
-> From: Wenyou Yang <wenyou.yang@atmel.com>
-> 
-> Add a DT property "atmel,twd-hold-cycles" to specify the HOLD
-> filed of TWIHS_CWGR register to increase the TWD hold time.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+Instead of using a fixed clock HZ in the driver, obtain it from the
+"periph" clk that the watchdog timer uses.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+---
+Patch 7 split into two patches.
 
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-at91.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+On 24/11/15 22:42, Florian Fainelli wrote:
+> On 24/11/15 14:12, Simon Arlott wrote:
+>> Instead of using a fixed clock HZ in the driver, obtain it from the
+>> "periph" clk that the watchdog timer uses.
+>> 
+>> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-> index 6e81dc1..c81a0cb 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-> @@ -17,6 +17,9 @@ Optional properties:
->  - dma-names: should contain "tx" and "rx".
->  - atmel,fifo-size: maximum number of data the RX and TX FIFOs can store for FIFO
->    capable I2C controllers.
-> +- atmel,twd-hold-cycles: number of cycles for TWD hold time whose value is
-> +  determinated by (atmel,twd-hold-cycles + 3) x t_peripheral_clock,
-> +  maximum value is 0x1f.
->  - Child nodes conforming to i2c bus binding
->  
->  Examples :
-> @@ -29,6 +32,7 @@ i2c0: i2c@fff84000 {
->  	#size-cells = <0>;
->  	clocks = <&twi0_clk>;
->  	clock-frequency = <400000>;
-> +	atmel,twd-hold-cycles = <2>;
->  
->  	24c512@50 {
->  		compatible = "24c512";
-> -- 
-> 2.5.0
+> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Changed because of the reordering of timer/watchdog register calls.
+
+ drivers/watchdog/bcm63xx_wdt.c | 36 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
+index 2257924..0a19731 100644
+--- a/drivers/watchdog/bcm63xx_wdt.c
++++ b/drivers/watchdog/bcm63xx_wdt.c
+@@ -13,6 +13,7 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/clk.h>
+ #include <linux/errno.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+@@ -32,12 +33,14 @@
+ 
+ #define PFX KBUILD_MODNAME
+ 
+-#define WDT_HZ			50000000		/* Fclk */
++#define WDT_CLK_NAME		"periph"
+ 
+ struct bcm63xx_wdt_hw {
+ 	struct watchdog_device wdd;
+ 	raw_spinlock_t lock;
+ 	void __iomem *regs;
++	struct clk *clk;
++	unsigned long clock_hz;
+ 	bool running;
+ };
+ 
+@@ -54,7 +57,7 @@ static int bcm63xx_wdt_start(struct watchdog_device *wdd)
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&hw->lock, flags);
+-	bcm_writel(wdd->timeout * WDT_HZ, hw->regs + WDT_DEFVAL_REG);
++	bcm_writel(wdd->timeout * hw->clock_hz, hw->regs + WDT_DEFVAL_REG);
+ 	bcm_writel(WDT_START_1, hw->regs + WDT_CTL_REG);
+ 	bcm_writel(WDT_START_2, hw->regs + WDT_CTL_REG);
+ 	hw->running = true;
+@@ -118,7 +121,7 @@ static void bcm63xx_wdt_isr(void *data)
+ 			die(PFX ": watchdog timer expired\n", get_irq_regs());
+ 		}
+ 
+-		ms = timeleft / (WDT_HZ / 1000);
++		ms = timeleft / (hw->clock_hz / 1000);
+ 		dev_alert(hw->wdd.dev,
+ 			"warning timer fired, reboot in %ums\n", ms);
+ 	}
+@@ -162,6 +165,25 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
++	hw->clk = devm_clk_get(&pdev->dev, WDT_CLK_NAME);
++	if (IS_ERR(hw->clk)) {
++		if (PTR_ERR(hw->clk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "unable to request clock\n");
++		return PTR_ERR(hw->clk);
++	}
++
++	hw->clock_hz = clk_get_rate(hw->clk);
++	if (!hw->clock_hz) {
++		dev_err(&pdev->dev, "unable to fetch clock rate\n");
++		return -EINVAL;
++	}
++
++	ret = clk_prepare_enable(hw->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to enable clock\n");
++		return ret;
++	}
++
+ 	raw_spin_lock_init(&hw->lock);
+ 	hw->running = false;
+ 
+@@ -169,7 +191,7 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	wdd->ops = &bcm63xx_wdt_ops;
+ 	wdd->info = &bcm63xx_wdt_info;
+ 	wdd->min_timeout = 1;
+-	wdd->max_timeout = 0xffffffff / WDT_HZ;
++	wdd->max_timeout = 0xffffffff / hw->clock_hz;
+ 	wdd->timeout = min(30U, wdd->max_timeout);
+ 
+ 	platform_set_drvdata(pdev, hw);
+@@ -180,7 +202,7 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	ret = watchdog_register_device(wdd);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register watchdog device\n");
+-		return ret;
++		goto disable_clk;
+ 	}
+ 
+ 	ret = bcm63xx_timer_register(TIMER_WDT_ID, bcm63xx_wdt_isr, hw);
+@@ -198,6 +220,9 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 
+ unregister_watchdog:
+ 	watchdog_unregister_device(wdd);
++
++disable_clk:
++	clk_disable_unprepare(hw->clk);
+ 	return ret;
+ }
+ 
+@@ -207,6 +232,7 @@ static int bcm63xx_wdt_remove(struct platform_device *pdev)
+ 
+ 	bcm63xx_timer_unregister(TIMER_WDT_ID);
+ 	watchdog_unregister_device(&hw->wdd);
++	clk_disable_unprepare(hw->clk);
+ 	return 0;
+ }
+ 
+-- 
+2.1.4
+
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
