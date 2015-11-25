@@ -1,61 +1,89 @@
-From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH v3 1/2] Add binding documentation for Zodiac Watchdog Timer
-Date: Wed, 25 Nov 2015 12:03:34 +0000
-Message-ID: <1448453015-16126-1-git-send-email-martyn.welch@collabora.co.uk>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Qais Yousef <qais.yousef@imgtec.com>
+Subject: [PATCH v2 19/19] irqchip/mips-gic: Add new DT property to reserve IPIs
+Date: Wed, 25 Nov 2015 12:06:57 +0000
+Message-ID: <1448453217-3874-20-git-send-email-qais.yousef@imgtec.com>
+References: <1448453217-3874-1-git-send-email-qais.yousef@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448453217-3874-1-git-send-email-qais.yousef@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, jiang.liu@linux.intel.com, ralf@linux-mips.org, linux-mips@linux-mips.org, Qais Yousef <qais.yousef@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchs adds documentation for the binding of the Zodiac RAVE
-Switch Watchdog Processor. This is an i2c based watchdog.
+The new property will allow to specify the range of GIC hwirqs to use for IPIs.
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+This is an optinal property. We preserve the previous behaviour of allocating
+the last 2 * gic_vpes if it's not specified or DT is not supported.
+
+Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+
 ---
+ .../devicetree/bindings/interrupt-controller/mips-gic.txt    |  7 +++++++
+ drivers/irqchip/irq-mips-gic.c                               | 12 ++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-v2: Addition of optional properties.
-v3: Correct naming of reset-duration-msec -> reset-duration-ms
-
- .../devicetree/bindings/watchdog/ziirave-wdt.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
-new file mode 100644
-index 0000000..3d87818
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
-@@ -0,0 +1,19 @@
-+Zodiac RAVE Watchdog Timer
-+
-+Required properties:
-+- compatible: must be "zii,rave-wdt"
-+- reg: i2c slave address of device, usually 0x38
-+
-+Optional Properties:
-+- timeout-sec: Watchdog timeout value in seconds.
-+- reset-duration-ms: Duration of the pulse generated when the watchdog times
-+  out. Value in milliseconds.
-+
-+Example:
-+
-+	watchdog@38 {
-+		compatible = "zii,rave-wdt";
-+		reg = <0x38>;
-+		timeout-sec = <30>;
-+		reset-duration-ms = <30>;
-+	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+index aae4c384ee1f..173595305e26 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+@@ -23,6 +23,12 @@ Optional properties:
+ - mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
+   to which the GIC may not route interrupts.  Valid values are 2 - 7.
+   This property is ignored if the CPU is started in EIC mode.
++- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
++  reserved for IPIs.
++  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
++  of the reserved range.
++  If not specified, the driver will allocate the last 2 * number of VPEs in the
++  system.
+ 
+ Required properties for timer sub-node:
+ - compatible : Should be "mti,gic-timer".
+@@ -44,6 +50,7 @@ Example:
+ 		#interrupt-cells = <3>;
+ 
+ 		mti,reserved-cpu-vectors = <7>;
++		mti,reserved-ipi-vectors = <40 8>;
+ 
+ 		timer {
+ 			compatible = "mti,gic-timer";
+diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
+index c7043a15253b..659fe734d1b7 100644
+--- a/drivers/irqchip/irq-mips-gic.c
++++ b/drivers/irqchip/irq-mips-gic.c
+@@ -945,6 +945,7 @@ static void __init __gic_init(unsigned long gic_base_addr,
+ 			      struct device_node *node)
+ {
+ 	unsigned int gicconfig;
++	unsigned int v[2];
+ 
+ 	gic_base = ioremap_nocache(gic_base_addr, gic_addrspace_size);
+ 
+@@ -1013,8 +1014,15 @@ static void __init __gic_init(unsigned long gic_base_addr,
+ 
+ 	gic_ipi_domain->bus_token = DOMAIN_BUS_IPI;
+ 
+-	/* Make the last 2 * NR_CPUS available for IPIs */
+-	bitmap_set(ipi_resrv, gic_shared_intrs - 2 * gic_vpes, 2 * gic_vpes);
++	if (node &&
++	    !of_property_read_u32_array(node, "mti,reserved-ipi-vectors", &v, 2)) {
++		bitmap_set(ipi_resrv, v[0], v[1]);
++	} else {
++		/* Make the last 2 * gic_vpes available for IPIs */
++		bitmap_set(ipi_resrv,
++			   gic_shared_intrs - 2 * gic_vpes,
++			   2 * gic_vpes);
++	}
+ 
+ 	gic_basic_init();
+ }
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
