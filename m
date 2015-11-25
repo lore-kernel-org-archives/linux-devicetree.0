@@ -1,35 +1,54 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH] ARM: dts: Remove unneeded GPIO include in exynos4412-odroidu3
-Date: Wed, 25 Nov 2015 09:11:23 -0300
-Message-ID: <1448453483-3338-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH 0/3] LPC4337 CIAA-NXP DTS changes
+Date: Wed, 25 Nov 2015 09:22:55 -0300
+Message-ID: <5655A81F.9000302@vanguardiasur.com.ar>
+References: <1448282225-2635-1-git-send-email-ariel@vanguardiasur.com.ar>
+ <565309F3.1040306@vanguardiasur.com.ar>
+ <CAGhQ9Vz-fpqKBtaHY5bDZqXEMrpat=UWz4KofGBWMNdNVWw4Cg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9Vz-fpqKBtaHY5bDZqXEMrpat=UWz4KofGBWMNdNVWw4Cg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The <dt-bindings/gpio/gpio.h> header is already included in the
-exynos4412-odroid-common DTSI so there's no need to do it again
-in the DTS file.
+Joachim,
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+El 23/11/15 a las 15:17, Joachim Eastwood escribi=C3=B3:
+> Hi Ariel,
+>=20
+> On 23 November 2015 at 13:43, Ariel D'Alessandro
+> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>> (+Cc Joachim)
+>>
+>> El 23/11/15 a las 09:37, Ariel D'Alessandro escribi=C3=B3:
+>>> Hi,
+>>>
+>>> This patch set includes some DTS changes for LPC4337 CIAA-NXP board=
+=2E
+>>> It is based on tag next-20151120 of the linux-next repository. It h=
+as
+>>> been successfully tested on a LPC4337 CIAA-NXP Board.
+>>>
+>>> Ariel D'Alessandro (3):
+>>>   ARM: dts: lpc4337-ciaa: enable EEPROM memory
+>>>   ARM: dts: lpc4337-ciaa: enable SCT-PWM
+>>>   ARM: dts: lpc4337-ciaa: add i2c0 and devices
+>=20
+> If you want me to pick up the patches please put me in the To field s=
+o
+> they end up in my inbox.
 
----
+OK, I'm resending with you in the To field.
 
- arch/arm/boot/dts/exynos4412-odroidu3.dts | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index 646ff0bd001a..dd89f7b37c9f 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -13,7 +13,6 @@
- 
- /dts-v1/;
- #include "exynos4412-odroid-common.dtsi"
--#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Hardkernel ODROID-U3 board based on Exynos4412";
--- 
-2.4.3
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
