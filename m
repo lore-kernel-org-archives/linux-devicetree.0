@@ -1,130 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v3] dt-bindings: Consolidate SRAM bindings from
- all vendors
-Date: Wed, 25 Nov 2015 17:48:25 -0600
-Message-ID: <20151125234825.GA17558@rob-hp-laptop>
-References: <1447893769-17088-1-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] DT: add Olimex to vendor prefixes
+Date: Wed, 25 Nov 2015 17:48:53 -0600
+Message-ID: <20151125234853.GA18691@rob-hp-laptop>
+References: <1447849258-9181-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1447893769-17088-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+In-Reply-To: <1447849258-9181-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 09:42:49AM +0900, Krzysztof Kozlowski wrote:
-> SRAM bindings for various SoCs, using the mmio-sram genalloc
-> API, are spread over different places - per SoC vendor. Since all of
-> these are quite similar (they depend on mmio-sram) move them to a common
-> place.
+On Wed, Nov 18, 2015 at 12:20:58PM +0000, Stefan Wahren wrote:
+> This company already provided some products, so add them to the
+> vendor prefix list.
 > 
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Acked-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 
-Applied, thanks. I said I would apply for 4.4, but it is not really 
-urgent, so I've just applied it for 4.5.
+Applied, thanks.
 
 Rob
 
-> 
 > ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Changes since v2:
-> 1. Update paths to sram.txt.
-> 
-> Changes since v1:
-> 1. New patch. Extended suggestion from Rob.
-> ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt                      | 2 +-
->  .../bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt}  | 0
->  .../bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt}  | 2 +-
->  .../bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt}       | 2 +-
->  Documentation/devicetree/bindings/{misc => sram}/sram.txt               | 0
->  .../devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt}     | 2 +-
->  6 files changed, 4 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/{arm/rockchip/pmu-sram.txt => sram/rockchip-pmu-sram.txt} (100%)
->  rename Documentation/devicetree/bindings/{arm/rockchip/smp-sram.txt => sram/rockchip-smp-sram.txt} (92%)
->  rename Documentation/devicetree/bindings/{arm/exynos/smp-sysram.txt => sram/samsung-sram.txt} (95%)
->  rename Documentation/devicetree/bindings/{misc => sram}/sram.txt (100%)
->  rename Documentation/devicetree/bindings/{soc/sunxi/sram.txt => sram/sunxi-sram.txt} (97%)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> index 86302de67c2c..313dabdc14f9 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> @@ -63,7 +63,7 @@ Required properties:
->  - compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
->  
->  The rest of the properties should follow the generic mmio-sram description
-> -found in ../../misc/sysram.txt
-> +found in ../../sram/sram.txt
->  
->  Each sub-node represents the reserved area for SCPI.
->  
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/arm/rockchip/pmu-sram.txt
-> rename to Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-> similarity index 92%
-> rename from Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-> rename to Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-> index d9416fb8db6f..800701ecffca 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-> +++ b/Documentation/devicetree/bindings/sram/rockchip-smp-sram.txt
-> @@ -12,7 +12,7 @@ Required sub-node properties:
->  - compatible : should be "rockchip,rk3066-smp-sram"
->  
->  The rest of the properties should follow the generic mmio-sram discription
-> -found in ../../misc/sram.txt
-> +found in Documentation/devicetree/bindings/sram/sram.txt
->  
->  Example:
->  
-> diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-> similarity index 95%
-> rename from Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-> rename to Documentation/devicetree/bindings/sram/samsung-sram.txt
-> index 4a0a4f70a0ce..6bc474b2b885 100644
-> --- a/Documentation/devicetree/bindings/arm/exynos/smp-sysram.txt
-> +++ b/Documentation/devicetree/bindings/sram/samsung-sram.txt
-> @@ -15,7 +15,7 @@ Required sub-node properties:
->  		"samsung,exynos4210-sysram-ns" : for Non-secure SYSRAM
->  
->  The rest of the properties should follow the generic mmio-sram discription
-> -found in ../../misc/sysram.txt
-> +found in Documentation/devicetree/bindings/sram/sram.txt
->  
->  Example:
->  
-> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/misc/sram.txt
-> rename to Documentation/devicetree/bindings/sram/sram.txt
-> diff --git a/Documentation/devicetree/bindings/soc/sunxi/sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> similarity index 97%
-> rename from Documentation/devicetree/bindings/soc/sunxi/sram.txt
-> rename to Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> index 067698112f5f..8d5665468fe7 100644
-> --- a/Documentation/devicetree/bindings/soc/sunxi/sram.txt
-> +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> @@ -16,7 +16,7 @@ SRAM nodes
->  ----------
->  
->  Each SRAM is described using the mmio-sram bindings documented in
-> -Documentation/devicetree/bindings/misc/sram.txt
-> +Documentation/devicetree/bindings/sram/sram.txt
->  
->  Each SRAM will have SRAM sections that are going to be handled by the
->  SRAM controller as subnodes. These sections are represented following
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 55df1d4..a4f20355 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -161,6 +161,7 @@ nuvoton	Nuvoton Technology Corporation
+>  nvidia	NVIDIA
+>  nxp	NXP Semiconductors
+>  okaya	Okaya Electric America, Inc.
+> +olimex	OLIMEX Ltd.
+>  onnn	ON Semiconductor Corp.
+>  opencores	OpenCores.org
+>  option	Option NV
 > -- 
-> 1.9.1
+> 1.7.9.5
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
