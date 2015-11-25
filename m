@@ -1,218 +1,76 @@
-From: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Subject: Re: [PATCH 1/4] ARM: dts: vf610: relicense vf???.dtsi under GPLv2/X11
-Date: Wed, 25 Nov 2015 15:04:57 +0530
-Message-ID: <565580C1.2010101@toradex.com>
-References: <1448323069-23208-1-git-send-email-stefan@agner.ch>
- <1448323069-23208-2-git-send-email-stefan@agner.ch>
-Reply-To: bhuvanchandra.dv@toradex.com
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH 1/1] arm64: dts: add all hi6220 i2c nodes
+Date: Wed, 25 Nov 2015 17:49:02 +0800
+Message-ID: <1448444942-5780-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1448323069-23208-2-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Fugang Duan <B38611@freescale.com>, Cosmin Stoica <cosminstefan.stoica@freescale.com>, Chao Fu <B44548@freescale.com>, Sanchayan Maity <maitysanchayan@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Huang Shijie <b32955@freescale.com>, Xiubo Li <Li.Xiubo@freescale.com>, Yuan Yao <yao.yuan@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>, Frank Li <Frank.Li@freescale.com>, Cory Tusar <cory.tusar@pid1solutions.com>, Shawn Guo <shawnguo@kernel.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2015 05:27 AM, Stefan Agner wrote:
-> GPLv2-only devicetrees make reuse difficult for software components
-> licensed under a different license.
->
-> The consensus is that a GPL/X11 dual-license should allow all necessary
-> uses, so relicense the vfxxx.dtsi, vf500.dtsi and vf610.dtsi files to
-> this combination.
+This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
+use this I2C IP of Synopsys Designware for HiKey board.
 
-Acked-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 37 +++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
->
-> CCs were acquired using (updated some email addresses):
-> git shortlog -sne --no-merges arch/arm/boot/dts/vf???.dtsi
->
-> CC: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-> CC: Chao Fu <B44548@freescale.com>
-> CC: Cory Tusar <cory.tusar@pid1solutions.com>
-> CC: Cosmin Stoica <cosminstefan.stoica@freescale.com>
-> CC: Frank Li <Frank.Li@freescale.com>
-> CC: Fugang Duan <B38611@freescale.com>
-> CC: Huang Shijie <b32955@freescale.com>
-> CC: Jingchang Lu <jingchang.lu@freescale.com>
-> CC: Lucas Stach <l.stach@pengutronix.de>
-> CC: Sanchayan Maity <maitysanchayan@gmail.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Stephen Warren <swarren@wwwdotorg.org>
-> CC: Xiubo Li <Li.Xiubo@freescale.com>
-> CC: Yuan Yao <yao.yuan@freescale.com>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->   arch/arm/boot/dts/vf500.dtsi | 40 ++++++++++++++++++++++++++++++++++++----
->   arch/arm/boot/dts/vf610.dtsi | 40 ++++++++++++++++++++++++++++++++++++----
->   arch/arm/boot/dts/vfxxx.dtsi | 40 ++++++++++++++++++++++++++++++++++++----
->   3 files changed, 108 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/vf500.dtsi b/arch/arm/boot/dts/vf500.dtsi
-> index e976d2f..b94b992 100644
-> --- a/arch/arm/boot/dts/vf500.dtsi
-> +++ b/arch/arm/boot/dts/vf500.dtsi
-> @@ -1,10 +1,42 @@
->   /*
->    * Copyright 2013 Freescale Semiconductor, Inc.
->    *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
->    */
->
->   #include "skeleton.dtsi"
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> index 5f8eb1b..c172285 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -1,10 +1,42 @@
->   /*
->    * Copyright 2013 Freescale Semiconductor, Inc.
->    *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
->    */
->
->   #include "vf500.dtsi"
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 6736bae..9875e1b 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -1,10 +1,42 @@
->   /*
->    * Copyright 2013 Freescale Semiconductor, Inc.
->    *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License
-> + *     version 2 as published by the Free Software Foundation.
-> + *
-> + *     This file is distributed in the hope that it will be useful
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
->    */
->
->   #include "vf610-pinfunc.h"
->
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 82d2488..6b591a9 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -208,5 +208,42 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
++
++		i2c0: i2c@f7100000 {
++			compatible = "snps,designware-i2c";
++			reg = <0x0 0xf7100000 0x0 0x1000>;
++			interrupts = <0 44 4>;
++			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
++			clock-names = "clk_i2c0";
++			i2c-sda-hold-time-ns = <300>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
++			status = "ok";
++		};
++
++		i2c1: i2c@f7101000 {
++			compatible = "snps,designware-i2c";
++			reg = <0x0 0xf7101000 0x0 0x1000>;
++			interrupts = <0 45 4>;
++			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
++			clock-names = "clk_i2c1";
++			i2c-sda-hold-time-ns = <300>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
++			status = "ok";
++		};
++
++		i2c2: i2c@f7102000 {
++			compatible = "snps,designware-i2c";
++			reg = <0x0 0xf7102000 0x0 0x1000>;
++			interrupts = <0 46 4>;
++			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
++			clock-names = "clk_i2c2";
++			i2c-sda-hold-time-ns = <300>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
++			status = "ok";
++		};
++
+ 	};
+ };
 -- 
-Best regards,
-Bhuvan
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
