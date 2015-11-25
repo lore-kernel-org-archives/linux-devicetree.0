@@ -1,55 +1,89 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 4/10] watchdog: bcm63xx_wdt: Handle hardware interrupt and
- remove software timer
-Date: Wed, 25 Nov 2015 21:14:13 +0100
-Message-ID: <CAOiHx=kn4NPxxYq0Te_T+8y_Cb1udyU0_EO-_eKp2Xshh7X6EA@mail.gmail.com>
-References: <5650BFD6.5030700@simon.arlott.org.uk> <5650C08C.6090300@simon.arlott.org.uk>
- <5650E2FA.6090408@roeck-us.net> <5650E5BB.6020404@simon.arlott.org.uk>
- <56512937.6030903@roeck-us.net> <5651CB13.4090704@simon.arlott.org.uk>
- <5651CB9C.4090005@simon.arlott.org.uk> <20151124182138.GB12289@roeck-us.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] platform: goldfish: pipe: add devicetree bindings
+Date: Wed, 25 Nov 2015 14:24:16 -0600
+Message-ID: <20151125202416.GA4636@rob-hp-laptop>
+References: <1448481582-16991-1-git-send-email-jinqian@android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151124182138.GB12289-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448481582-16991-1-git-send-email-jinqian-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Jin Qian <jinqian-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Peter Senna Tschudin <peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 7:21 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On Sun, Nov 22, 2015 at 02:05:16PM +0000, Simon Arlott wrote:
->> There is a level triggered interrupt for the watchdog timer as part of
->> the bcm63xx_timer device. The interrupt occurs when the hardware watchdog
->> timer reaches 50% of the remaining time.
->>
->> It is not possible to mask the interrupt within the bcm63xx_timer device.
->> To get around this limitation, handle the interrupt by restarting the
->> watchdog with the current remaining time (which will be half the previous
->> timeout) so that the interrupt occurs again at 1/4th, 1/8th, etc. of the
->> original timeout value until the watchdog forces a reboot.
->>
->> The software timer was restarting the hardware watchdog with a 85 second
->> timeout until the software timer expired, and then causing a panic()
->> about 42.5 seconds later when the hardware interrupt occurred. The
->> hardware watchdog would not reboot until a further 42.5 seconds had
->> passed.
->>
->> Remove the software timer and rely on the hardware timer directly,
->> reducing the maximum timeout from 256 seconds to 85 seconds
->> (2^32 / WDT_HZ).
->>
->
-> Florian,
->
-> can you have a look into this patch and confirm that there is no better
-> way to clear the interrupt status ?
+On Wed, Nov 25, 2015 at 11:59:37AM -0800, Jin Qian wrote:
+> From: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> (cherry picked from commit 3c56d07eb796066530e93a40e74dea3bc59bf4cf)
+> Signed-off-by: Jin Qian <jinqian-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/goldfish/pipe.txt | 17 +++++++++++++++++
+>  drivers/platform/goldfish/goldfish_pipe.c           | 10 +++++++++-
+>  2 files changed, 26 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/goldfish/pipe.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/goldfish/pipe.txt b/Documentation/devicetree/bindings/goldfish/pipe.txt
+> new file mode 100644
+> index 0000000..6d3801e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/goldfish/pipe.txt
+> @@ -0,0 +1,17 @@
+> +Android Goldfish QEMU Pipe
+> +
+> +Andorid pipe virtual device generated by android emulator.
 
-While the watchdog interrupt can't be masked, it should be able to be
-cleared by writing 1 to the appropriate bit in the timer block's
-interrupt status register. At least the broadcom sources do so.
+The binding may be trivial, but there's a bigger question of whether 
+this is the right long term direction. For example is upstream QEMU 
+going to take all the Android pipe stuff? Couldn't virtio be used here 
+as the transport?
 
+Rob
 
-Jonas
+> +
+> +Required properties:
+> +
+> +- compatible : should contain "generic,android-pipe" to match emulator
+> +- reg        : <registers mapping>
+> +- interrupts : <interrupt mapping>
+> +
+> +Example:
+> +
+> +	android_pipe@a010000 {
+> +		compatible = "generic,android-pipe";
+> +		reg = <ff018000 0x2000>;
+> +		interrupts = <0x12>;
+> +	};
+> diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
+> index 20a9337..86cc57f 100644
+> --- a/drivers/platform/goldfish/goldfish_pipe.c
+> +++ b/drivers/platform/goldfish/goldfish_pipe.c
+> @@ -624,11 +624,19 @@ static int goldfish_pipe_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id goldfish_pipe_of_match[] = {
+> +	{ .compatible = "generic,android-pipe", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, goldfish_pipe_of_match);
+> +
+>  static struct platform_driver goldfish_pipe = {
+>  	.probe = goldfish_pipe_probe,
+>  	.remove = goldfish_pipe_remove,
+>  	.driver = {
+> -		.name = "goldfish_pipe"
+> +		.name = "goldfish_pipe",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = goldfish_pipe_of_match,
+>  	}
+>  };
+>  
+> -- 
+> 2.6.0.rc2.230.g3dd15c0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
