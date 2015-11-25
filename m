@@ -1,451 +1,171 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: [PATCH (v3) 5/11] watchdog: bcm63xx_wdt: Use WATCHDOG_CORE
-Date: Wed, 25 Nov 2015 22:40:41 +0000
-Message-ID: <565638E9.3010304@simon.arlott.org.uk>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <5650C08C.6090300@simon.arlott.org.uk> <5650E2FA.6090408@roeck-us.net>
- <5650E5BB.6020404@simon.arlott.org.uk> <56512937.6030903@roeck-us.net>
- <5651CB13.4090704@simon.arlott.org.uk> <5651CBF0.30904@simon.arlott.org.uk>
- <56552099.7070709@roeck-us.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] ARM: OMAP2+: dts: cm-t335: add initial support
+Date: Wed, 25 Nov 2015 16:44:59 -0600
+Message-ID: <20151125224459.GA12408@rob-hp-laptop>
+References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1448373733-5839-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1448373733-5839-2-git-send-email-uri.mashiach@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56552099.7070709-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448373733-5839-2-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert bcm63xx_wdt to use WATCHDOG_CORE.
-
-The default and maximum time constants that are only used once have been
-moved to the initialisation of the struct watchdog_device.
-
-Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
----
-Patch 7 split into two patches.
-
-On 25/11/15 02:44, Guenter Roeck wrote:
-> If I see correctly, there is no ping function. In that case, the watchdog core
-> will call the start function after updating the timeout, so there is no need
-> to do it here.
-
-Fixed.
- 
->> +static const struct watchdog_info bcm63xx_wdt_info = {
->> +	.options = WDIOC_GETTIMELEFT | WDIOF_SETTIMEOUT |
+On Tue, Nov 24, 2015 at 04:02:08PM +0200, Uri Mashiach wrote:
+> From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 > 
-> Where is the gettimeleft function ? I think you are adding it with a later patch,
-> but then you should set the flag there, not here.
-
-Removed WDIOC_GETTIMELEFT completely because it's not a flag.
-
->> +	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
->> +	wdd = devm_kzalloc(&pdev->dev, sizeof(*wdd), GFP_KERNEL);
+> Add basic support for CompuLab cm-t335 module based on AM335X SoC.
 > 
-> It would be better to allocate wdd as part of struct bcm63xx_wdt_hw.
-
-Fixed.
-
->> -	misc_deregister(&bcm63xx_wdt_miscdev);
->>   	bcm63xx_timer_unregister(TIMER_WDT_ID);
->> +	watchdog_unregister_device(wdd);
+> CM-T335 is a tiny computer-on-module (CoM) / system-on-module (SoM)
+> The module is built around the Texas Instruments Sitara AM3352/4
+> system-on-chip.
 > 
-> Shouldn't that come first, before unregistering the timer ?
+> The CPU is supplemented with up-to 512MB DDR3 and up-to 1GB of on-board
+> NAND storage, WiFi connected to SPI, Bluetooth, Analog audio, Gigabit
+> Ethernet, CAN bus.
+> 
+> Current patch adds support:
+> UART0 and GPIO LED
+> 
+> Detailed description can be found at the module site:
+> http://www.compulab.co.il/products/computer-on-modules/cm-t335/
+> 
+> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> [uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org: the default RAM amount reduced to
+> 128MB to support also the minimal module configuration]
+> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> ---
+> v1 -> v2: integrate AM33XX_IOPAD macro in pinmux definitions
 
-No, because wdd->dev is used in the interrupt handler. The handler will
-not be called after bcm63xx_timer_unregister() is called.
+This macro is exactly the kind we should not be doing in DT files which 
+are ones that expand to multiple cells. But not really much point in 
+doing 1 board differently from the rest, so:
 
-Moved registration of the timer in the probe function to after register
-of the watchdog device because the interrupt handler uses wdd->dev.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
- drivers/watchdog/Kconfig       |   1 +
- drivers/watchdog/bcm63xx_wdt.c | 259 +++++++++++++----------------------------
- 2 files changed, 79 insertions(+), 181 deletions(-)
+Rob
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 7a8a6c6..6815b74 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1273,6 +1273,7 @@ config OCTEON_WDT
- config BCM63XX_WDT
- 	tristate "Broadcom BCM63xx hardware watchdog"
- 	depends on BCM63XX
-+	select WATCHDOG_CORE
- 	help
- 	  Watchdog driver for the built in watchdog hardware in Broadcom
- 	  BCM63xx SoC.
-diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
-index 3f55cba..2257924 100644
---- a/drivers/watchdog/bcm63xx_wdt.c
-+++ b/drivers/watchdog/bcm63xx_wdt.c
-@@ -13,20 +13,15 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/bitops.h>
- #include <linux/errno.h>
--#include <linux/fs.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
--#include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
--#include <linux/uaccess.h>
- #include <linux/watchdog.h>
- #include <linux/interrupt.h>
--#include <linux/ptrace.h>
- #include <linux/resource.h>
- #include <linux/platform_device.h>
- 
-@@ -38,53 +33,59 @@
- #define PFX KBUILD_MODNAME
- 
- #define WDT_HZ			50000000		/* Fclk */
--#define WDT_DEFAULT_TIME	30			/* seconds */
--#define WDT_MAX_TIME		(0xffffffff / WDT_HZ)	/* seconds */
- 
- struct bcm63xx_wdt_hw {
-+	struct watchdog_device wdd;
- 	raw_spinlock_t lock;
- 	void __iomem *regs;
--	unsigned long inuse;
- 	bool running;
- };
--static struct bcm63xx_wdt_hw bcm63xx_wdt_device;
- 
--static int expect_close;
-+#define to_wdt_hw(x) container_of(x, struct bcm63xx_wdt_hw, wdd)
- 
--static int wdt_time = WDT_DEFAULT_TIME;
- static bool nowayout = WATCHDOG_NOWAYOUT;
- module_param(nowayout, bool, 0);
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 	__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
- 
--/* HW functions */
--static void bcm63xx_wdt_hw_start(void)
-+static int bcm63xx_wdt_start(struct watchdog_device *wdd)
- {
-+	struct bcm63xx_wdt_hw *hw = to_wdt_hw(wdd);
- 	unsigned long flags;
- 
--	raw_spin_lock_irqsave(&bcm63xx_wdt_device.lock, flags);
--	bcm_writel(wdt_time * WDT_HZ, bcm63xx_wdt_device.regs + WDT_DEFVAL_REG);
--	bcm_writel(WDT_START_1, bcm63xx_wdt_device.regs + WDT_CTL_REG);
--	bcm_writel(WDT_START_2, bcm63xx_wdt_device.regs + WDT_CTL_REG);
--	bcm63xx_wdt_device.running = true;
--	raw_spin_unlock_irqrestore(&bcm63xx_wdt_device.lock, flags);
-+	raw_spin_lock_irqsave(&hw->lock, flags);
-+	bcm_writel(wdd->timeout * WDT_HZ, hw->regs + WDT_DEFVAL_REG);
-+	bcm_writel(WDT_START_1, hw->regs + WDT_CTL_REG);
-+	bcm_writel(WDT_START_2, hw->regs + WDT_CTL_REG);
-+	hw->running = true;
-+	raw_spin_unlock_irqrestore(&hw->lock, flags);
-+	return 0;
- }
- 
--static void bcm63xx_wdt_hw_stop(void)
-+static int bcm63xx_wdt_stop(struct watchdog_device *wdd)
- {
-+	struct bcm63xx_wdt_hw *hw = to_wdt_hw(wdd);
- 	unsigned long flags;
- 
--	raw_spin_lock_irqsave(&bcm63xx_wdt_device.lock, flags);
--	bcm_writel(WDT_STOP_1, bcm63xx_wdt_device.regs + WDT_CTL_REG);
--	bcm_writel(WDT_STOP_2, bcm63xx_wdt_device.regs + WDT_CTL_REG);
--	bcm63xx_wdt_device.running = false;
--	raw_spin_unlock_irqrestore(&bcm63xx_wdt_device.lock, flags);
-+	raw_spin_lock_irqsave(&hw->lock, flags);
-+	bcm_writel(WDT_STOP_1, hw->regs + WDT_CTL_REG);
-+	bcm_writel(WDT_STOP_2, hw->regs + WDT_CTL_REG);
-+	hw->running = false;
-+	raw_spin_unlock_irqrestore(&hw->lock, flags);
-+	return 0;
-+}
-+
-+static int bcm63xx_wdt_set_timeout(struct watchdog_device *wdd,
-+	unsigned int timeout)
-+{
-+	wdd->timeout = timeout;
-+	return 0;
- }
- 
- /* The watchdog interrupt occurs when half the timeout is remaining */
- static void bcm63xx_wdt_isr(void *data)
- {
--	struct bcm63xx_wdt_hw *hw = &bcm63xx_wdt_device;
-+	struct bcm63xx_wdt_hw *hw = data;
- 	unsigned long flags;
- 
- 	raw_spin_lock_irqsave(&hw->lock, flags);
-@@ -118,147 +119,36 @@ static void bcm63xx_wdt_isr(void *data)
- 		}
- 
- 		ms = timeleft / (WDT_HZ / 1000);
--		pr_alert("warning timer fired, reboot in %ums\n", ms);
-+		dev_alert(hw->wdd.dev,
-+			"warning timer fired, reboot in %ums\n", ms);
- 	}
- 	raw_spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
--static int bcm63xx_wdt_settimeout(int new_time)
--{
--	if ((new_time <= 0) || (new_time > WDT_MAX_TIME))
--		return -EINVAL;
--
--	wdt_time = new_time;
--
--	return 0;
--}
--
--static int bcm63xx_wdt_open(struct inode *inode, struct file *file)
--{
--	if (test_and_set_bit(0, &bcm63xx_wdt_device.inuse))
--		return -EBUSY;
--
--	bcm63xx_wdt_hw_start();
--	return nonseekable_open(inode, file);
--}
--
--static int bcm63xx_wdt_release(struct inode *inode, struct file *file)
--{
--	if (expect_close == 42)
--		bcm63xx_wdt_hw_stop();
--	else {
--		pr_crit("Unexpected close, not stopping watchdog!\n");
--		bcm63xx_wdt_hw_start();
--	}
--	clear_bit(0, &bcm63xx_wdt_device.inuse);
--	expect_close = 0;
--	return 0;
--}
--
--static ssize_t bcm63xx_wdt_write(struct file *file, const char *data,
--				size_t len, loff_t *ppos)
--{
--	if (len) {
--		if (!nowayout) {
--			size_t i;
--
--			/* In case it was set long ago */
--			expect_close = 0;
--
--			for (i = 0; i != len; i++) {
--				char c;
--				if (get_user(c, data + i))
--					return -EFAULT;
--				if (c == 'V')
--					expect_close = 42;
--			}
--		}
--		bcm63xx_wdt_hw_start();
--	}
--	return len;
--}
--
--static struct watchdog_info bcm63xx_wdt_info = {
--	.identity       = PFX,
--	.options        = WDIOF_SETTIMEOUT |
--				WDIOF_KEEPALIVEPING |
--				WDIOF_MAGICCLOSE,
-+static struct watchdog_ops bcm63xx_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = bcm63xx_wdt_start,
-+	.stop = bcm63xx_wdt_stop,
-+	.set_timeout = bcm63xx_wdt_set_timeout,
- };
- 
--
--static long bcm63xx_wdt_ioctl(struct file *file, unsigned int cmd,
--				unsigned long arg)
--{
--	void __user *argp = (void __user *)arg;
--	int __user *p = argp;
--	int new_value, retval = -EINVAL;
--
--	switch (cmd) {
--	case WDIOC_GETSUPPORT:
--		return copy_to_user(argp, &bcm63xx_wdt_info,
--			sizeof(bcm63xx_wdt_info)) ? -EFAULT : 0;
--
--	case WDIOC_GETSTATUS:
--	case WDIOC_GETBOOTSTATUS:
--		return put_user(0, p);
--
--	case WDIOC_SETOPTIONS:
--		if (get_user(new_value, p))
--			return -EFAULT;
--
--		if (new_value & WDIOS_DISABLECARD) {
--			bcm63xx_wdt_hw_stop();
--			retval = 0;
--		}
--		if (new_value & WDIOS_ENABLECARD) {
--			bcm63xx_wdt_hw_start();
--			retval = 0;
--		}
--
--		return retval;
--
--	case WDIOC_KEEPALIVE:
--		bcm63xx_wdt_hw_start();
--		return 0;
--
--	case WDIOC_SETTIMEOUT:
--		if (get_user(new_value, p))
--			return -EFAULT;
--
--		if (bcm63xx_wdt_settimeout(new_value))
--			return -EINVAL;
--
--		bcm63xx_wdt_hw_start();
--
--	case WDIOC_GETTIMEOUT:
--		return put_user(wdt_time, p);
--
--	default:
--		return -ENOTTY;
--
--	}
--}
--
--static const struct file_operations bcm63xx_wdt_fops = {
--	.owner		= THIS_MODULE,
--	.llseek		= no_llseek,
--	.write		= bcm63xx_wdt_write,
--	.unlocked_ioctl	= bcm63xx_wdt_ioctl,
--	.open		= bcm63xx_wdt_open,
--	.release	= bcm63xx_wdt_release,
--};
--
--static struct miscdevice bcm63xx_wdt_miscdev = {
--	.minor	= WATCHDOG_MINOR,
--	.name	= "watchdog",
--	.fops	= &bcm63xx_wdt_fops,
-+static const struct watchdog_info bcm63xx_wdt_info = {
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.identity = "BCM63xx Watchdog",
- };
- 
--
- static int bcm63xx_wdt_probe(struct platform_device *pdev)
- {
--	int ret;
-+	struct bcm63xx_wdt_hw *hw;
-+	struct watchdog_device *wdd;
- 	struct resource *r;
-+	int ret;
-+
-+	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
-+	if (!hw)
-+		return -ENOMEM;
-+
-+	wdd = &hw->wdd;
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!r) {
-@@ -266,58 +156,65 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	bcm63xx_wdt_device.regs = devm_ioremap_nocache(&pdev->dev, r->start,
--							resource_size(r));
--	if (!bcm63xx_wdt_device.regs) {
-+	hw->regs = devm_ioremap_nocache(&pdev->dev, r->start, resource_size(r));
-+	if (!hw->regs) {
- 		dev_err(&pdev->dev, "failed to remap I/O resources\n");
- 		return -ENXIO;
- 	}
- 
--	raw_spin_lock_init(&bcm63xx_wdt_device.lock);
--	bcm63xx_wdt_device.running = false;
-+	raw_spin_lock_init(&hw->lock);
-+	hw->running = false;
- 
--	ret = bcm63xx_timer_register(TIMER_WDT_ID, bcm63xx_wdt_isr, NULL);
-+	wdd->parent = &pdev->dev;
-+	wdd->ops = &bcm63xx_wdt_ops;
-+	wdd->info = &bcm63xx_wdt_info;
-+	wdd->min_timeout = 1;
-+	wdd->max_timeout = 0xffffffff / WDT_HZ;
-+	wdd->timeout = min(30U, wdd->max_timeout);
-+
-+	platform_set_drvdata(pdev, hw);
-+
-+	watchdog_init_timeout(wdd, 0, &pdev->dev);
-+	watchdog_set_nowayout(wdd, nowayout);
-+
-+	ret = watchdog_register_device(wdd);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to register wdt timer isr\n");
-+		dev_err(&pdev->dev, "failed to register watchdog device\n");
- 		return ret;
- 	}
- 
--	if (bcm63xx_wdt_settimeout(wdt_time)) {
--		bcm63xx_wdt_settimeout(WDT_DEFAULT_TIME);
--		dev_info(&pdev->dev,
--			": wdt_time value must be 1 <= wdt_time <= %d, using %d\n",
--			WDT_MAX_TIME, wdt_time);
--	}
--
--	ret = misc_register(&bcm63xx_wdt_miscdev);
-+	ret = bcm63xx_timer_register(TIMER_WDT_ID, bcm63xx_wdt_isr, hw);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to register watchdog device\n");
--		goto unregister_timer;
-+		dev_err(&pdev->dev, "failed to register wdt timer isr\n");
-+		goto unregister_watchdog;
- 	}
- 
--	dev_info(&pdev->dev, " started, timer margin: %d sec\n",
--						WDT_DEFAULT_TIME);
-+	dev_info(&pdev->dev,
-+		"%s at MMIO 0x%p (timeout = %us, max_timeout = %us)",
-+		dev_name(wdd->dev), hw->regs,
-+		wdd->timeout, wdd->max_timeout);
- 
- 	return 0;
- 
--unregister_timer:
--	bcm63xx_timer_unregister(TIMER_WDT_ID);
-+unregister_watchdog:
-+	watchdog_unregister_device(wdd);
- 	return ret;
- }
- 
- static int bcm63xx_wdt_remove(struct platform_device *pdev)
- {
--	if (!nowayout)
--		bcm63xx_wdt_hw_stop();
-+	struct bcm63xx_wdt_hw *hw = platform_get_drvdata(pdev);
- 
--	misc_deregister(&bcm63xx_wdt_miscdev);
- 	bcm63xx_timer_unregister(TIMER_WDT_ID);
-+	watchdog_unregister_device(&hw->wdd);
- 	return 0;
- }
- 
- static void bcm63xx_wdt_shutdown(struct platform_device *pdev)
- {
--	bcm63xx_wdt_hw_stop();
-+	struct bcm63xx_wdt_hw *hw = platform_get_drvdata(pdev);
-+
-+	bcm63xx_wdt_stop(&hw->wdd);
- }
- 
- static struct platform_driver bcm63xx_wdt_driver = {
--- 
-2.1.4
-
--- 
-Simon Arlott
+> 
+>  .../devicetree/bindings/arm/omap/omap.txt          |  3 ++
+>  arch/arm/boot/dts/Makefile                         |  7 +--
+>  arch/arm/boot/dts/am335x-cm-t335.dts               | 63 ++++++++++++++++++++++
+>  3 files changed, 70 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/am335x-cm-t335.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> index 9f4e513..2154f97 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> @@ -138,6 +138,9 @@ Boards:
+>  - AM335X phyBOARD-WEGA: Single Board Computer dev kit
+>    compatible = "phytec,am335x-wega", "phytec,am335x-phycore-som", "ti,am33xx"
+>  
+> +- AM335X CM-T335 : System On Module, built around the Sitara AM3352/4
+> +  compatible = "compulab,cm-t335", "ti,am33xx"
+> +
+>  - OMAP5 EVM : Evaluation Module
+>    compatible = "ti,omap5-evm", "ti,omap5"
+>  
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index bb8fa02..0e011dc 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -446,13 +446,14 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+>  	am335x-base0033.dtb \
+>  	am335x-bone.dtb \
+>  	am335x-boneblack.dtb \
+> -	am335x-sl50.dtb \
+> +	am335x-chiliboard.dtb \
+> +	am335x-cm-t335.dtb \
+>  	am335x-evm.dtb \
+>  	am335x-evmsk.dtb \
+> +	am335x-lxm.dtb \
+>  	am335x-nano.dtb \
+>  	am335x-pepper.dtb \
+> -	am335x-lxm.dtb \
+> -	am335x-chiliboard.dtb \
+> +	am335x-sl50.dtb \
+>  	am335x-wega-rdk.dtb
+>  dtb-$(CONFIG_ARCH_OMAP4) += \
+>  	omap4-duovero-parlor.dtb \
+> diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
+> new file mode 100644
+> index 0000000..719658e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-cm-t335.dts
+> @@ -0,0 +1,63 @@
+> +/*
+> + * am335x-cm-t335.dts - Device Tree file for Compulab CM-T335
+> + *
+> + * Copyright (C) 2014 - 2015 CompuLab Ltd. - http://www.compulab.co.il/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "am33xx.dtsi"
+> +
+> +/ {
+> +	model = "CompuLab CM-T335";
+> +	compatible = "compulab,cm-t335", "ti,am33xx";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x8000000>;	/* 128 MB */
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&gpio_led_pins>;
+> +		led@0 {
+> +			label = "cm_t335:green";
+> +			gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;	/* gpio2_0 */
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +};
+> +
+> +&am33xx_pinmux {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <>;
+> +
+> +	gpio_led_pins: pinmux_gpio_led_pins {
+> +		pinctrl-single,pins = <
+> +			/* gpmc_csn3.gpio2_0 */
+> +			AM33XX_IOPAD(0x888, PIN_OUTPUT | MUX_MODE7)
+> +		>;
+> +	};
+> +
+> +	uart0_pins: pinmux_uart0_pins {
+> +		pinctrl-single,pins = <
+> +			/* uart0_rxd.uart0_rxd */
+> +			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)
+> +			/* uart0_txd.uart0_txd */
+> +			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)
+> +		>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins>;
+> +
+> +	status = "okay";
+> +};
+> +
+> -- 
+> 2.5.0
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
