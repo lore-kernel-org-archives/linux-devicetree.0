@@ -1,114 +1,98 @@
-From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: Re: [PATCH 01/14] DEVICETREE: Add bindings for PIC32 interrupt
- controller
-Date: Wed, 25 Nov 2015 11:22:12 -0700
-Message-ID: <5655FC54.8080906@microchip.com>
-References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-2-git-send-email-joshua.henderson@microchip.com>
- <7036408.cJ9oZKCcQe@wuerfel>
+From: Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] devicetree: bindings: let thermal-sensor point to
+ other thermal zones
+Date: Wed, 25 Nov 2015 18:41:44 +0000
+Message-ID: <20151125184144.GA24866@e104805>
+References: <1448464186-26289-1-git-send-email-javi.merino@arm.com>
+ <1448464186-26289-3-git-send-email-javi.merino@arm.com>
+ <20151125175441.GA32343@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7036408.cJ9oZKCcQe@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Cristian Birsan <cristian.birsan@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151125175441.GA32343@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rui.zang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2015 1:47 PM, Arnd Bergmann wrote:
-> On Friday 20 November 2015 17:17:13 Joshua Henderson wrote:
+On Wed, Nov 25, 2015 at 05:54:41PM +0000, Mark Rutland wrote:
+> On Wed, Nov 25, 2015 at 03:09:44PM +0000, Javi Merino wrote:
+> > The thermal-sensor property of the thermal zone node accepts phandles to
+> > thermal sensors.  However, thermal zones can be created as an
+> > aggregation of other thermal zones.  Extend the thermal-sensors property
+> > to allow phandles to other thermal zones.  This patch also adds an
+> > example that showcases how a board thermal zone can be created from the
+> > aggregation of the cpu, gpu and lcd thermal zones.
+> > 
+> > Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> > 
+> > Notes:
+> >     Hi devicetree,
+> >     
+> >     Is it ok to extend the definition of the thermal-sensors property like
+> >     this?  IOW are phandles strongly typed?
 > 
->> +Example
->> +-------
->> +
->> +evic: interrupt-controller@1f810000 {
->> +        compatible = "microchip,evic-v2";
->> +        interrupt-controller;
->> +        #interrupt-cells = <3>;
->> +        reg = <0x1f810000 0x1000>;
->> +        device_type="evic-v2";
->> +};
+> I think it's OK so long as each thermal zone has #thermal-sensor-cells
+> set explicitly, if used as a sensor, and we can agree on the semantics
+> of what it means for a thermal zone to be a sensor.
 > 
-> This is not a correct use of device_type. Just drop that property.
+> I don't really follow why you need the zone to be a sensor, and can't
+> simply refer to the sensor from two zones. Are you trying to imply an
+> ordering of trip points (e.g. that the sub-zones' trips should be taken
+> into account first)?
 
-Ack.
+No, it doesn't affect the ordering of trip points.
 
-> 
->> diff --git a/include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h b/include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h
->> new file mode 100644
->> index 0000000..2c466b8
->> --- /dev/null
->> +++ b/include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h
->> @@ -0,0 +1,238 @@
->> +/*
->> + * This header provides constants for the MICROCHIP PIC32 EVIC.
->> + */
->> +
->> +#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_MICROCHIP_EVIC_H
->> +#define _DT_BINDINGS_INTERRUPT_CONTROLLER_MICROCHIP_EVIC_H
->> +
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +
->> +/* Hardware interrupt number */
->> +#define CORE_TIMER_INTERRUPT 0
->> +#define CORE_SOFTWARE_INTERRUPT_0 1
->> +#define CORE_SOFTWARE_INTERRUPT_1 2
->> +#define EXTERNAL_INTERRUPT_0 3
->> +#define TIMER1 4
-> 
-> A header file like this is just going to make everyone's life
-> miserable. Try to remove as much as possible here: normally
-> you can just use the numbers from the data sheet that match
-> the actual hardware registers, and put them into the dts file.
-> 
+This came out of a discussion at LPC.  Currently thermal zones can
+only have on thermal sensor associated with them.  After some
+discussion, Mike Turquette suggested that we could use an approach
+similar to what it's done with power domains and stack them.
 
-Agreed.  Removing these defines along with removing the priorities from the bindings as suggested makes sense.  With doing that, this header file becomes pointless and it will be dropped.
+> >  .../devicetree/bindings/thermal/thermal.txt        | 154 ++++++++++++++++++++-
+> >  1 file changed, 151 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> > index 41b817f7b670..52b7e9ae3b4d 100644
+> > --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> > +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> > @@ -145,9 +145,12 @@ Required properties:
+> >    Size: one cell
+> >  
+> >  - thermal-sensors:	A list of thermal sensor phandles and sensor specifier
+> > -  Type: list of 	used while monitoring the thermal zone.
+> > -  phandles + sensor
+> > -  specifier
+> > +  Type: list of 	used while monitoring the thermal zone. The phandles
+> > +  phandles + sensor	can point to thermal sensors or other thermal zone
+> > +  specifier		nodes. If it points to other thermal zone
+> > +			nodes you should omit the sensor specifier
+> > +			and set #thermal-sensor-cells to 0 for the
+> > +			thermal zone.
+> 
+> The example misses #thermal-sensor-cells = <0> for each of the zones.
 
->> +/* Interrupt priority bits */
->> +#define PRI_0	0	/* Note:This priority disables the interrupt! */
->> +#define PRI_1	1
->> +#define PRI_2	2
->> +#define PRI_3	3
->> +#define PRI_4	4
->> +#define PRI_5	5
->> +#define PRI_6	6
->> +#define PRI_7	7
-> 
->> +/* Interrupt subpriority bits */
->> +#define SUB_PRI_0	0
->> +#define SUB_PRI_1	1
->> +#define SUB_PRI_2	2
->> +#define SUB_PRI_3	3
-> 
-> These are obviously silly and should be removed/
-> 
+You're right, I'll fix it for the next version
 
-Ack.
+> Can a zone normal have multiple sensors? If so, what is the aggregate
+> value if a zone is used as a sensor? Max? Min? Scaled by contribution
+> somehow?
 
->> +#define PRI_MASK	0x7	/* 3 bit priority mask */
->> +#define SUBPRI_MASK	0x3	/* 2 bit subpriority mask */
->> +#define INT_MASK	0x1F	/* 5 bit pri and subpri mask */
->> +#define NR_EXT_IRQS	5	/* 5 external interrupts sources */
->> +
->> +#define MICROCHIP_EVIC_MIN_PRIORITY 0
->> +#define MICROCHIP_EVIC_MAX_PRIORITY INT_MASK
->> +
->> +#define INT_PRI(pri, subpri)	\
->> +	(((pri & PRI_MASK) << 2) | (subpri & SUBPRI_MASK))
->> +
->> +#define DEFINE_INT(irq, pri) { irq, pri }
->> +
->> +#define DEFAULT_INT_PRI INT_PRI(2, 0)
-> 
-> Is it required to have a specific priority configured for each line?
-> If these are software selectable, it's probably better to not put
-> them into DT in the first place.
-> 
-> If you absolutely need them, I would suggest using two separate cells
-> for pri and subpri so you can avoid the macro.
-> 
+No, currently a thermal zone can only specify one sensor in its
+thermal-sensors property
 
-These priorities are hardware priorities that arbitrate pending interrupts to the CPU.  These are indeed software configurable and we can agree that DT is probably not the best place to put this configuration in light of this.  We'll default to something sane instead.  They will be removed from the binding.
-
-Josh
+Cheers,
+Javi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
