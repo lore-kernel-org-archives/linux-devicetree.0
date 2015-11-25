@@ -1,71 +1,26 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: enable pinctrl for Broadcom NSP
-Date: Tue, 24 Nov 2015 16:08:04 -0800
-Message-ID: <5654FBE4.5010802@gmail.com>
-References: <1448042309-46445-1-git-send-email-yrdreddy@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 2/7] dts: define ngpios property in gpio controller's
+ node
+Date: Tue, 24 Nov 2015 16:11:03 -0800
+Message-ID: <5654FC97.5040302@gmail.com>
+References: <1447905139-16002-1-git-send-email-pramodku@broadcom.com> <1447905139-16002-3-git-send-email-pramodku@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448042309-46445-1-git-send-email-yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447905139-16002-3-git-send-email-pramodku@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pramod Kumar <pramodku@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jason Uy <jasonuy@broadcom.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/15 09:58, Yendapally Reddy Dhananjaya Reddy wrote:
-> This enables the pinctrl support for Broadcom NSP SoC
+On 18/11/15 19:52, Pramod Kumar wrote:
+> Add ngpios property in cygnus ASIU, CCM and CRMU gpio controller's node
 > 
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 
-Looks like a sane pinctrl node here, unless there are objections, I
-would like to go ahead and apply this for v4.5, thanks!
-
-> ---
->  arch/arm/boot/dts/bcm-nsp.dtsi   | 7 +++++++
->  arch/arm/boot/dts/bcm958625k.dts | 9 +++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> index b74438c..a16d743 100644
-> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -226,5 +226,12 @@
->  			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
->  			clock-frequency = <100000>;
->  		};
-> +
-> +		pinctrl: pinctrl@3f1c0 {
-> +			compatible = "brcm,nsp-pinmux";
-> +			reg = <0x3f1c0 0x04>,
-> +			      <0x30028 0x04>,
-> +			      <0x3f408 0x04>;
-> +		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-> index b966955..e298450 100644
-> --- a/arch/arm/boot/dts/bcm958625k.dts
-> +++ b/arch/arm/boot/dts/bcm958625k.dts
-> @@ -105,3 +105,12 @@
->  		};
->  	};
->  };
-> +
-> +&pinctrl {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&nand_sel>;
-> +	nand_sel: nand_sel {
-> +		function = "nand";
-> +		groups = "nand_grp";
-> +	};
-> +};
-> 
-
-
+Applied to devicetree/next with a more specific subject, thanks!
 -- 
 Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
