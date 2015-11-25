@@ -1,82 +1,89 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: Re: [PATCH v6 3/6] watchdog: ts4800: add driver for TS-4800 watchdog
-Date: Wed, 25 Nov 2015 15:54:42 -0500
-Message-ID: <20151125205442.GA3627@localhost>
-References: <1448479507-1951-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1448479507-1951-4-git-send-email-damien.riegel@savoirfairelinux.com>
- <20151125202956.GA10228@rob-hp-laptop>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Wed, 25 Nov 2015 13:03:10 -0800
+Message-ID: <20151125210310.GT2517@atomide.com>
+References: <20150713131902.GH26485@atomide.com>
+ <20151123144545.GD24147@pali>
+ <20151125181644.GI2517@atomide.com>
+ <17134653.86P3dFyQKK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151125202956.GA10228@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, Wim Van Sebroeck <wim@iguana.be>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, kernel@savoirfairelinux.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Samuel Ortiz <sameo@linux.intel.com>
+In-Reply-To: <17134653.86P3dFyQKK@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 02:29:56PM -0600, Rob Herring wrote:
-> On Wed, Nov 25, 2015 at 02:25:04PM -0500, Damien Riegel wrote:
-> > This watchdog is instantiated in a FPGA that is memory mapped. It is
-> > made of only one register, called the feed register. Writing to this
-> > register will re-arm the watchdog for a given time (and enable it if it
-> > was disable). It can be disabled by writing a special value into it.
-> > 
-> > It is part of a syscon block, and the watchdog register offset in this
-> > block varies from board to board. This offset is passed in the syscon
-> > property after the phandle to the syscon node.
-> > 
-> > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> >  .../devicetree/bindings/watchdog/ts4800-wdt.txt    |  25 +++
-> >  drivers/watchdog/Kconfig                           |  10 +
-> >  drivers/watchdog/Makefile                          |   1 +
-> >  drivers/watchdog/ts4800_wdt.c                      | 215 +++++++++++++++++++++
-> >  4 files changed, 251 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
-> >  create mode 100644 drivers/watchdog/ts4800_wdt.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
-> > new file mode 100644
-> > index 0000000..388c60f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
-> > @@ -0,0 +1,25 @@
-> > +Technologic Systems Watchdog
-> > +
-> > +Required properties:
-> > +- compatible: must be "technologic,ts4800-wdt"
-> > +- syscon: phandle / integer array that points to the syscon node which
-> > +          describes the FPGA's syscon registers.
-> > +          - phandle to FPGA's syscon
-> > +          - offset to the watchdog register
-> > +
-> > +Optional property:
-> > +- timeout-sec: contains the watchdog timeout in seconds.
-> > +
-> > +Example:
-> > +
-> > +syscon: syscon@b0010000 {
-> > +	compatible = "syscon", "simple-mfd";
-> > +	reg = <0xb0010000 0x3d>;
-> > +	bus-width = <16>;
-> > +
-> > +	wdt@e {
-> > +		compatible = "technologic,ts4800-wdt";
-> > +		syscon = <&syscon 0xe>;
-> 
-> If this is single register only for the watchdog, why do you need 
-> syscon? You can just use reg.
+* Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [151125 11:50]:
+> On Wednesday 25 November 2015 10:16:44 Tony Lindgren wrote:
+> > * Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [151123 06:46]:
+> > > On Sunday 22 November 2015 07:51:46 Pavel Machek wrote:
+> > > > On Wed 2015-11-11 17:10:46, Frank Rowand wrote:
+> > > > > Adding devicetree list.
+> > > > >=20
+> > > > > Thread starts at
+> > > > > http://lists.infradead.org/pipermail/linux-arm-kernel/2015-Ju=
+ly/354459.html
+> > > > >=20
+> > > > > On 11/5/2015 8:17 AM, Tony Lindgren wrote:
+> > > > > > * Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [151105 03:41]:
+> > > > > >> On Tuesday 13 October 2015 16:37:46 Pali Roh=C3=A1r wrote:
+> > > > > >>> On Monday 12 October 2015 13:45:09 Tony Lindgren wrote:
+> > > > > >>>> * Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [151012 13:29]:
+> > > > > >>>>> On Monday 12 October 2015 22:16:40 Tony Lindgren wrote:
+> > > > > >>>>>>
+> > > > > >>>>>> Pali, any news on posting an updated series with the c=
+omments
+> > > > > >>>>>> addressed in this thread? It seems that we all pretty =
+much agree
+> > > > > >>>>>> what needs to be done.
+> > > > >=20
+> > > > > I'm not real happy with the concept of patches 4 and 5 in thi=
+s series.
+> > > > > My concern is that those two patches are using the FDT as a t=
+ransport
+> > > > > mechanism for a binary blob (the atags object).
+> > > >=20
+> > > > Umm. Ok. Do you have alternative proposal that works for everyo=
+ne?
+> > > >=20
+> > > > I mean. This discussion was going for quite a long time, and it=
+ would
+> > > > be nice to have some solution... patch proposal... something.
+> > > >                                                                =
+     Pavel
+> > >=20
+> > > Yes, discussion is going for a long time! So should I spend time =
+for
+> > > adding documentation to my solution (this is last one thing which=
+ is
+> > > missing)? Or my solution is wrong and somebody else will propose =
+new?
+> > > I do not want to spend time on something which will be rejected a=
+nd
+> > > discarded.
+> >=20
+> > At least I don't have better solutions in mind.
+>=20
+> I would be happier if we could restrict this as much as possible to t=
+he
+> boards that need it, as an opt-in. That way it doesn't become an ABI
+> for people that don't already rely in this information. How about
+> adding a check the code adds the linux,atags property to do it
+> only for a whitelist of board numbers?
 
-Because this is a single 16-bit register dedicated to the watchdog in a
-60-register syscon.
+Or populate /proc/atags only for the ones that need it from machine
+specific init_early?
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
