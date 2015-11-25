@@ -1,62 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH 00/10] Support for Cortex-M Prototyping System
-Date: Wed, 25 Nov 2015 12:22:24 +0100
-Message-ID: <20614077.l46PyO8gV6@wuerfel>
-References: <1448447621-17900-1-git-send-email-vladimir.murzin@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448447621-17900-1-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v3 1/2] Add binding documentation for Zodiac Watchdog Timer
+Date: Wed, 25 Nov 2015 12:03:34 +0000
+Message-ID: <1448453015-16126-1-git-send-email-martyn.welch@collabora.co.uk>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 November 2015 10:33:31 Vladimir Murzin wrote:
-> Hi,
-> 
-> This patch series provide the basic support for running ucLinux on V2M-MPS2
-> platform.
-> 
-> With these patches applied ucLinux can be run on both HW and FVP models
-> with Cortex-M3/M4/M7 configurations.
-> 
-> Board description:
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
-> 
-> Application notes (cover Cortex-M3/M4/M7):
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
-> 
-> Cortex-M System Design Kit (referenced as CMDK from documents above):
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
-> 
-> I'd be happy to hear any feedback/comments on this series!
+This patchs adds documentation for the binding of the Zodiac RAVE
+Switch Watchdog Processor. This is an i2c based watchdog.
 
-Looks pretty good overall, I didn't have any specific concerns.
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+---
 
-> Remain questions:
-> 
->  - Application notes 399/400 have PSRAM located at address different to what
->    we have for AN385/AN386, so I'm wondering what is the best practice to handle
->    CONFIG_DRAM_BASE? Different defconfig or there is better place?
+v2: Addition of optional properties.
+v3: Correct naming of reset-duration-msec -> reset-duration-ms
 
-I would not want to add more than one defconfig for a relatively simple
-platform. Most actual users would have to modify their config anyway, so
-I think it's best to just have one config file for the most common machine
-here and let users change the dram base if they have the other one.
+ .../devicetree/bindings/watchdog/ziirave-wdt.txt      | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
 
-We can also look at using the Kconfig fragments infrastructure more here.
- 
->  - I'm not sure about naming of dts files: Application Notes (mps2-an*) vs Cortex-M (mps2-cm*);
->    any preference?
+diff --git a/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
+new file mode 100644
+index 0000000..3d87818
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
+@@ -0,0 +1,19 @@
++Zodiac RAVE Watchdog Timer
++
++Required properties:
++- compatible: must be "zii,rave-wdt"
++- reg: i2c slave address of device, usually 0x38
++
++Optional Properties:
++- timeout-sec: Watchdog timeout value in seconds.
++- reset-duration-ms: Duration of the pulse generated when the watchdog times
++  out. Value in milliseconds.
++
++Example:
++
++	watchdog@38 {
++		compatible = "zii,rave-wdt";
++		reg = <0x38>;
++		timeout-sec = <30>;
++		reset-duration-ms = <30>;
++	};
+-- 
+2.1.4
 
-I don't mind either way.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
