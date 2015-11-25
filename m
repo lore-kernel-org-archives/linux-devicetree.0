@@ -1,188 +1,173 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: rcar (usb): DT can override default window settings
-Date: Wed, 25 Nov 2015 11:57:28 -0600
-Message-ID: <20151125175728.GB8869@localhost>
-References: <1446567566-10952-1-git-send-email-phil.edworthy@renesas.com>
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH V3] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support
+Date: Wed, 25 Nov 2015 19:14:13 +0100
+Message-ID: <CAOf5uw=q7fwh93w7LUQaAV3-+YLDwzL65wB1WB5L2BKUe+Vtpg@mail.gmail.com>
+References: <1447584853-12560-1-git-send-email-michael@amarulasolutions.com>
+	<1447665552.3144.6.camel@pengutronix.de>
+	<20151116112931.GA10464@panicking>
+	<1447673895.3144.16.camel@pengutronix.de>
+	<20151116114127.GB10464@panicking>
+	<1447674695.3144.21.camel@pengutronix.de>
+	<20151116115421.GC10464@panicking>
+	<20151116172318.GA513@panicking>
+	<1447752697.3144.47.camel@pengutronix.de>
+	<20151118151030.GA11558@panicking>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446567566-10952-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151118151030.GA11558@panicking>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 03, 2015 at 04:19:26PM +0000, Phil Edworthy wrote:
-> If the dtb specifies dma-ranges, we use those values. Otherwise, we
-> default to the values that were previously hardcoded into the driver.
-> 
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Hi Shawn
 
-Applied with acks from Rob and Simon to pci/host-rcar for v4.5, thanks!
-
+On Wed, Nov 18, 2015 at 4:10 PM, Michael Trimarchi
+<michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
+>
+> Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
->  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |  6 ++
->  drivers/pci/host/pci-rcar-gen2.c                   | 76 +++++++++++++++++++++-
->  2 files changed, 79 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> index 7fab84b..891463c 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> @@ -24,6 +24,11 @@ Required properties:
->  - interrupt-map-mask: standard property that helps to define the interrupt
->    mapping.
->  
-> +Optional properties:
-> +- dma-ranges: a single range for the inbound memory region. If not supplied,
-> +  defaults to 1GiB at 0x40000000. Note there are hardware restrictions on the
-> +  allowed combinations of address and size.
+> I'm not quite sure how ethernet tuning parameter
+> are working in other setup and this seems the
+> correct way to use it
+>
+
+As you can see my way to connect the ethernet phy is different. I have
+seen that most of the boards put all the tuning under fec but unfortunately
+this does not work. I don't know if people check if their value are correctly
+written to the phy.
+
 > +
->  Example SoC configuration:
->  
->  	pci0: pci@ee090000  {
-> @@ -38,6 +43,7 @@ Example SoC configuration:
->  		#address-cells = <3>;
->  		#size-cells = <2>;
->  		#interrupt-cells = <1>;
-> +		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
->  		interrupt-map-mask = <0xff00 0 0 0x7>;
->  		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->  				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-> diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
-> index c4f64bf..6295116 100644
-> --- a/drivers/pci/host/pci-rcar-gen2.c
-> +++ b/drivers/pci/host/pci-rcar-gen2.c
-> @@ -15,6 +15,7 @@
->  #include <linux/io.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
-> @@ -102,6 +103,8 @@ struct rcar_pci_priv {
->  	unsigned busnr;
->  	int irq;
->  	unsigned long window_size;
-> +	unsigned long window_addr;
-> +	unsigned long window_pci;
->  };
->  
->  /* PCI configuration space operations */
-> @@ -239,8 +242,8 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
->  	       RCAR_PCI_ARBITER_PCIBP_MODE;
->  	iowrite32(val, reg + RCAR_PCI_ARBITER_CTR_REG);
->  
-> -	/* PCI-AHB mapping: 0x40000000 base */
-> -	iowrite32(0x40000000 | RCAR_PCIAHB_PREFETCH16,
-> +	/* PCI-AHB mapping */
-> +	iowrite32(priv->window_addr | RCAR_PCIAHB_PREFETCH16,
->  		  reg + RCAR_PCIAHB_WIN1_CTR_REG);
->  
->  	/* AHB-PCI mapping: OHCI/EHCI registers */
-> @@ -251,7 +254,7 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
->  	iowrite32(RCAR_AHBPCI_WIN1_HOST | RCAR_AHBPCI_WIN_CTR_CFG,
->  		  reg + RCAR_AHBPCI_WIN1_CTR_REG);
->  	/* Set PCI-AHB Window1 address */
-> -	iowrite32(0x40000000 | PCI_BASE_ADDRESS_MEM_PREFETCH,
-> +	iowrite32(priv->window_pci | PCI_BASE_ADDRESS_MEM_PREFETCH,
->  		  reg + PCI_BASE_ADDRESS_1);
->  	/* Set AHB-PCI bridge PCI communication area address */
->  	val = priv->cfg_res->start + RCAR_AHBPCI_PCICOM_OFFSET;
-> @@ -284,6 +287,64 @@ static struct pci_ops rcar_pci_ops = {
->  	.write	= pci_generic_config_write,
->  };
->  
-> +static int pci_dma_range_parser_init(struct of_pci_range_parser *parser,
-> +				     struct device_node *node)
-> +{
-> +	const int na = 3, ns = 2;
-> +	int rlen;
+> +&fec {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_enet_3>;
+> +       phy-handle = <&eth_phy>;
+> +       phy-mode = "rgmii";
+> +       status = "okay";
+> +       mdio {
+> +               eth_phy: ethernet-phy {
+> +                       rxc-skew-ps = <1140>;
+> +                       txc-skew-ps = <1140>;
+> +                       txen-skew-ps = <600>;
+> +                       rxdv-skew-ps = <240>;
+> +                       rxd0-skew-ps = <420>;
+> +                       rxd1-skew-ps = <600>;
+> +                       rxd2-skew-ps = <420>;
+> +                       rxd3-skew-ps = <240>;
+> +                       txd0-skew-ps = <60>;
+> +                       txd1-skew-ps = <60>;
+> +                       txd2-skew-ps = <60>;
+> +                       txd3-skew-ps = <240>;
+> +               };
+> +       };
+> +};
 > +
-> +	parser->node = node;
-> +	parser->pna = of_n_addr_cells(node);
-> +	parser->np = parser->pna + na + ns;
+
+Michael
+
+
+> +&i2c1 {
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1_1>;
+> +};
 > +
-> +	parser->range = of_get_property(node, "dma-ranges", &rlen);
-> +	if (!parser->range)
-> +		return -ENOENT;
+> +&i2c2 {
+> +       clock-frequency = <100000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c2_2>;
+> +       status = "okay";
+> +};
 > +
-> +	parser->end = parser->range + rlen / sizeof(__be32);
-> +	return 0;
-> +}
+> +&i2c3 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c3_4>;
+> +       status = "okay";
+> +};
 > +
-> +static int rcar_pci_parse_map_dma_ranges(struct rcar_pci_priv *pci,
-> +					 struct device_node *np)
-> +{
-> +	struct of_pci_range range;
-> +	struct of_pci_range_parser parser;
-> +	int index = 0;
+> +&pcie {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_pcie>;
+> +       reset-gpio = <&gpio3 29 GPIO_ACTIVE_LOW>;
+> +       status = "okay";
+> +};
 > +
-> +	/* Failure to parse is ok as we fall back to defaults */
-> +	if (pci_dma_range_parser_init(&parser, np))
-> +		return 0;
+> +&ssi1 {
+> +       fsl,mode = "i2s-slave";
+> +       status = "okay";
+> +};
 > +
-> +	/* Get the dma-ranges from DT */
-> +	for_each_of_pci_range(&parser, &range) {
-> +		/* Hardware only allows one inbound 32-bit range */
-> +		if (index)
-> +			return -EINVAL;
+> +&uart4 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_uart4_1>;
+> +       status = "okay";
+> +};
 > +
-> +		pci->window_addr = (unsigned long)range.cpu_addr;
-> +		pci->window_pci = (unsigned long)range.pci_addr;
-> +		pci->window_size = (unsigned long)range.size;
+> +&usbh1 {
+> +       vbus-supply = <&reg_usb_h1_vbus>;
+> +       disable-over-current;
+> +       clocks = <&clks IMX6QDL_CLK_USBOH3>;
+> +       status = "okay";
+> +};
 > +
-> +		/* Catch HW limitations */
-> +		if (!(range.flags & IORESOURCE_PREFETCH)) {
-> +			dev_err(pci->dev, "window must be prefetchable\n");
-> +			return -EINVAL;
-> +		}
-> +		if (pci->window_addr) {
-> +			u32 lowaddr = 1 << (ffs(pci->window_addr) - 1);
+> +&usbotg {
+> +       vbus-supply = <&reg_usb_otg_vbus>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_usbotg_2>;
+> +       disable-over-current;
+> +       status = "okay";
+> +};
 > +
-> +			if (lowaddr < pci->window_size) {
-> +				dev_err(pci->dev, "invalid window size/addr\n");
-> +				return -EINVAL;
-> +			}
-> +		}
-> +		index++;
-> +	}
+> +&usdhc1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_usdhc1_1>;
+> +       no-1-8-v;
+> +       status = "okay";
+> +};
 > +
-> +	return 0;
-> +}
+> +&usdhc3 {
+> +       pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +       pinctrl-0 = <&pinctrl_usdhc3_2>;
+> +       pinctrl-1 = <&pinctrl_usdhc3_2_100mhz>;
+> +       pinctrl-2 = <&pinctrl_usdhc3_2_200mhz>;
+> +       vmcc-supply = <&reg_sd3_vmmc>;
+> +       cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+> +       bus-witdh=<4>;
+> +       no-1-8-v;
+> +       status = "okay";
+> +};
 > +
->  static int rcar_pci_probe(struct platform_device *pdev)
->  {
->  	struct resource *cfg_res, *mem_res;
-> @@ -329,6 +390,9 @@ static int rcar_pci_probe(struct platform_device *pdev)
->  		return priv->irq;
->  	}
->  
-> +	/* default window addr and size if not specified in DT */
-> +	priv->window_addr = 0x40000000;
-> +	priv->window_pci = 0x40000000;
->  	priv->window_size = SZ_1G;
->  
->  	if (pdev->dev.of_node) {
-> @@ -344,6 +408,12 @@ static int rcar_pci_probe(struct platform_device *pdev)
->  		priv->busnr = busnr.start;
->  		if (busnr.end != busnr.start)
->  			dev_warn(&pdev->dev, "only one bus number supported\n");
-> +
-> +		ret = rcar_pci_parse_map_dma_ranges(priv, pdev->dev.of_node);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "failed to parse dma-range\n");
-> +			return ret;
-> +		}
->  	} else {
->  		priv->busnr = pdev->id;
->  	}
-> -- 
-> 1.9.1
-> 
+> +&usdhc4 {
+> +       pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +       pinctrl-0 = <&pinctrl_usdhc4_1>;
+> +       pinctrl-1 = <&pinctrl_usdhc4_1_100mhz>;
+> +       pinctrl-2 = <&pinctrl_usdhc4_1_200mhz>;
+> +       vmcc-supply = <&reg_sd4_vmmc>;
+> +       bus-witdh=<8>;
+> +       no-1-8-v;
+> +       non-removable;
+> +       status = "okay";
+> +};
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.6.3
+>
+> --
+> | Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+> | COO  -  Founder                                      Cruquiuskade 47 |
+> | +31(0)851119172                                 Amsterdam 1018 AM NL |
+> |                  [`as] http://www.amarulasolutions.com               |
+
+
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
