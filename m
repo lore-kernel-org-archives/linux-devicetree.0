@@ -1,63 +1,91 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: add multidomain support to i.MX GPC DT
- binding
-Date: Tue, 24 Nov 2015 20:35:46 -0600
-Message-ID: <20151125023546.GA2326@rob-hp-laptop>
-References: <1448291223-9938-1-git-send-email-l.stach@pengutronix.de>
- <1448291223-9938-2-git-send-email-l.stach@pengutronix.de>
+Subject: Re: [PATCH v5 4/4] devicetree: update documentation for fw_cfg ARM
+ bindings
+Date: Tue, 24 Nov 2015 20:42:43 -0600
+Message-ID: <20151125024243.GA8005@rob-hp-laptop>
+References: <1448294264-17388-1-git-send-email-somlo@cmu.edu>
+ <1448294264-17388-5-git-send-email-somlo@cmu.edu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448291223-9938-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+In-Reply-To: <1448294264-17388-5-git-send-email-somlo-D+Gtc/HYRWM@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, jordan.l.justen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 04:07:01PM +0100, Lucas Stach wrote:
-> This adds a new binding for the Freescale i.MX GPC block, which allows
-> to describe multiple power domains in a more natural way. The driver
-> will continue to support the old binding for existing DTBs, but new
-> features like the additional domains present on i.MX6SX will only be
-> usable with the new binding.
+On Mon, Nov 23, 2015 at 10:57:44AM -0500, Gabriel L. Somlo wrote:
+> From: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
 > 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Remove fw_cfg hardware interface details from
+> Documentation/devicetree/bindings/arm/fw-cfg.txt,
+> and replace them with a pointer to the authoritative
+> documentation in the QEMU source tree.
+> 
+> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+> Cc: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
->  1 file changed, 54 insertions(+), 27 deletions(-)
+>  Documentation/devicetree/bindings/arm/fw-cfg.txt | 38 ++----------------------
+>  1 file changed, 2 insertions(+), 36 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> index 65cc0345747d..0b777b623812 100644
-> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> @@ -1,22 +1,41 @@
->  Freescale i.MX General Power Controller
->  =======================================
+> diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> index 953fb64..ce27386 100644
+> --- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> +++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
+> @@ -11,43 +11,9 @@ QEMU exposes the control and data register to ARM guests as memory mapped
+>  registers; their location is communicated to the guest's UEFI firmware in the
+>  DTB that QEMU places at the bottom of the guest's DRAM.
 >  
-> -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> -domains.
-> +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
-> +counters and Power Gating Control (PGC).
+> -The guest writes a selector value (a key) to the selector register, and then
+> -can read the corresponding data (produced by QEMU) via the data register. If
+> -the selected entry is writable, the guest can rewrite it through the data
+> -register.
+> +The authoritative guest-side hardware interface documentation to the fw_cfg
+> +device ca be found in "docs/specs/fw_cfg.txt" in the QEMU source tree.
+>  
+> -The selector register takes keys in big endian byte order.
+> -
+> -The data register allows accesses with 8, 16, 32 and 64-bit width (only at
+> -offset 0 of the register). Accesses larger than a byte are interpreted as
+> -arrays, bundled together only for better performance. The bytes constituting
+> -such a word, in increasing address order, correspond to the bytes that would
+> -have been transferred by byte-wide accesses in chronological order.
+> -
+> -The interface allows guest firmware to download various parameters and blobs
+> -that affect how the firmware works and what tables it installs for the guest
+> -OS. For example, boot order of devices, ACPI tables, SMBIOS tables, kernel and
+> -initrd images for direct kernel booting, virtual machine UUID, SMP information,
+> -virtual NUMA topology, and so on.
+> -
+> -The authoritative registry of the valid selector values and their meanings is
+> -the QEMU source code; the structure of the data blobs corresponding to the
+> -individual key values is also defined in the QEMU source code.
+> -
+> -The presence of the registers can be verified by selecting the "signature" blob
+> -with key 0x0000, and reading four bytes from the data register. The returned
+> -signature is "QEMU".
+> -
+> -The outermost protocol (involving the write / read sequences of the control and
+> -data registers) is expected to be versioned, and/or described by feature bits.
+> -The interface revision / feature bitmap can be retrieved with key 0x0001. The
+> -blob to be read from the data register has size 4, and it is to be interpreted
+> -as a uint32_t value in little endian byte order. The current value
+> -(corresponding to the above outer protocol) is zero.
+> -
+> -The guest kernel is not expected to use these registers (although it is
+> -certainly allowed to); the device tree bindings are documented here because
+> -this is where device tree bindings reside in general.
 >  
 >  Required properties:
->  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
->  - reg: should be register base and length as documented in the
->    datasheet
-> -- interrupts: Should contain GPC interrupt request 1
-> -- pu-supply: Link to the LDO regulator powering the PU power domain
-> -- clocks: Clock phandles to devices in the PU power domain that need
-> -	  to be enabled during domain power-up for reset propagation.
-> -- #power-domain-cells: Should be 1, see below:
-> +- interrupts: Should contain GPC interrupts
-
-How many and order?
-
-The rest looks fine.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+> -- 
+> 2.4.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
