@@ -1,350 +1,76 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/18] ARM: am57xx: cl-som-am57x: dts: add basic module
- support
-Date: Wed, 25 Nov 2015 14:05:50 -0600
-Message-ID: <20151125200550.GD30473@rob-hp-laptop>
-References: <1448433590-1399-1-git-send-email-lifshitz@compulab.co.il>
- <1448433590-1399-2-git-send-email-lifshitz@compulab.co.il>
+Subject: Re: [PATCH v3 2/2] DT: watchdog: add Alphascale asm9260 watchdog
+ binding documentation.
+Date: Wed, 25 Nov 2015 14:06:09 -0600
+Message-ID: <20151125200609.GF30473@rob-hp-laptop>
+References: <5652BFA5.9010101@roeck-us.net>
+ <1448401233-1064-1-git-send-email-linux@rempel-privat.de>
+ <1448401233-1064-3-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448433590-1399-2-git-send-email-lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Toni Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+In-Reply-To: <1448401233-1064-3-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 08:39:33AM +0200, Dmitry Lifshitz wrote:
-> Add support for CompuLab CM-SOM-AM57X board.
-> 
-> CL-SOM-AM57x is a miniature System-on-Module (SoM) based on
-> TI Sitara AM57x ARM Cortex-A15 System-on-Chip family.
-> 
-> https://www.compulab.co.il/products/computer-on-modules/cl-som-am57x-ti-am5728-am5718-system-on-module/
-> 
-> Add basic DT support for standalone module (without a carrier board):
-> 
-> * Memory configuration
-> * Heartbeat led
-> * I2C1 bus
-> * PMIC
-> * SATA
-> 
-> Signed-off-by: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+On Tue, Nov 24, 2015 at 10:40:33PM +0100, Oleksij Rempel wrote:
+> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
->  arch/arm/boot/dts/Makefile                         |   3 +-
->  arch/arm/boot/dts/am57xx-cl-som-am57x.dts          | 259 +++++++++++++++++++++
->  3 files changed, 264 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+>  .../bindings/watchdog/alphascale-asm9260.txt       | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> index da84372..dd53c90 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> @@ -156,6 +156,9 @@ Boards:
->  - AM437x SK EVM: AM437x StarterKit Evaluation Module
->    compatible = "ti,am437x-sk-evm", "ti,am4372", "ti,am43"
->  
-> +- AM57XX CL-SOM-AM57x
-> +  compatible = "compulab,cl-som-am57x", "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7"
-> +
->  - DRA742 EVM:  Software Development Board for DRA742
->    compatible = "ti,dra7-evm", "ti,dra742", "ti,dra74", "ti,dra7"
->  
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5492a24..803a020 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -477,8 +477,9 @@ dtb-$(CONFIG_SOC_OMAP5) += \
->  	omap5-sbc-t54.dtb \
->  	omap5-uevm.dtb
->  dtb-$(CONFIG_SOC_DRA7XX) += \
-> -	dra7-evm.dtb \
->  	am57xx-beagle-x15.dtb \
-> +	am57xx-cl-som-am57x.dtb \
-> +	dra7-evm.dtb \
->  	dra72-evm.dtb
->  dtb-$(CONFIG_ARCH_ORION5X) += \
->  	orion5x-lacie-d2-network.dtb \
-> diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> diff --git a/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
 > new file mode 100644
-> index 0000000..b11d7da
+> index 0000000..75b265a
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-> @@ -0,0 +1,259 @@
-> +/*
-> + * Support for CompuLab CL-SOM-AM57x System-on-Module
-> + *
-> + * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
-> + * Author: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + */
+> +++ b/Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
+> @@ -0,0 +1,35 @@
+> +Alphascale asm9260 Watchdog timer
 > +
-> +/dts-v1/;
+> +Required properties:
 > +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include "dra74x.dtsi"
+> +- compatible : should be "alphascale,asm9260-wdt".
+> +- reg : Specifies base physical address and size of the registers.
+> +- clocks : the clocks feeding the watchdog timer. See clock-bindings.txt
+> +- clock-names : should be set to
+> +	"mod" - source for tick counter.
+> +	"ahb" - ahb gate.
+> +- resets : phandle pointing to the system reset controller with
+> +	line index for the watchdog.
+> +- reset-names : should be set to "wdt_rst".
 > +
-> +/ {
-> +	model = "CompuLab CL-SOM-AM57x";
-> +	compatible = "compulab,cl-som-am57x", "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7";
+> +Optional properties:
+> +- timeout-sec : shall contain the default watchdog timeout in seconds,
+> +	if unset, the default timeout is 30 seconds.
+> +- alphascale,mode : three modes are supported
+> +	"hw" - hw reset (default).
+> +	"sw" - sw reset.
+> +	"debug" - no action is taken.
 > +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x20000000>; /* 512 MB - minimal configuration */
-> +	};
+> +Example:
 > +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&leds_pins_default>;
-> +
-> +		led@0 {
-> +			label = "cl-som-am57x:green";
-> +			gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&dra7_pmx_core {
-> +	leds_pins_default: leds_pins_default {
-> +		pinctrl-single,pins = <
-> +			DRA7XX_CORE_IOPAD(0x347c, PIN_OUTPUT | MUX_MODE14)	/* gpmc_a15.gpio2_5 */
-> +		>;
-> +	};
-> +
-> +	i2c1_pins_default: i2c1_pins_default {
-> +		pinctrl-single,pins = <
-> +			DRA7XX_CORE_IOPAD(0x3800, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_sda.sda */
-> +			DRA7XX_CORE_IOPAD(0x3804, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl.scl */
-> +		>;
-> +	};
-> +
-> +	tps659038_pins_default: tps659038_pins_default {
-> +		pinctrl-single,pins = <
-> +			DRA7XX_CORE_IOPAD(0x3818, PIN_INPUT_PULLUP | MUX_MODE14) /* wakeup0.gpio1_0 */
-> +		>;
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins_default>;
-> +	clock-frequency = <400000>;
-> +
-> +	tps659038: tps659038@58 {
-> +		compatible = "ti,tps659038";
-> +		reg = <0x58>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&tps659038_pins_default>;
-> +
-> +		#interrupt-cells = <2>;
-> +		interrupt-controller;
-> +
-> +		ti,system-power-controller;
-> +
-> +		tps659038_pmic {
-> +			compatible = "ti,tps659038-pmic";
-> +
-> +			regulators {
-> +				smps12_reg: smps12 {
-> +					/* VDD_MPU */
-> +					regulator-name = "smps12";
-> +					regulator-min-microvolt = < 850000>;
-> +					regulator-max-microvolt = <1250000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				smps3_reg: smps3 {
-> +					/* VDD_DDR */
-> +					regulator-name = "smps3";
-> +					regulator-min-microvolt = <1500000>;
-> +					regulator-max-microvolt = <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				smps45_reg: smps45 {
-> +					/* VDD_DSPEVE */
-> +					regulator-name = "smps45";
-> +					regulator-min-microvolt = < 850000>;
-> +					regulator-max-microvolt = <1160000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				smps6_reg: smps6 {
-> +					/* VDD_GPU */
-> +					regulator-name = "smps6";
-> +					regulator-min-microvolt = < 850000>;
-> +					regulator-max-microvolt = <1160000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				smps7_reg: smps7 {
-> +					/* VDD_CORE */
-> +					regulator-name = "smps7";
-> +					regulator-min-microvolt = < 850000>;
-> +					regulator-max-microvolt = <1160000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				smps8_reg: smps8 {
-> +					/* VDD_IVA */
-> +					regulator-name = "smps8";
-> +					regulator-min-microvolt = < 850000>;
-> +					regulator-max-microvolt = <1160000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				smps9_reg: smps9 {
-> +					/* PMIC_3V3 */
-> +					regulator-name = "smps9";
-> +					regulator-min-microvolt = <3300000>;
-> +					regulator-max-microvolt = <3300000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +
-> +				ldo1_reg: ldo1 {
-> +					/* VDD_SD / VDDSHV8  */
-> +					regulator-name = "ldo1";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <3300000>;
-> +					regulator-boot-on;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo2_reg: ldo2 {
-> +					/* VDD_1V8 */
-> +					regulator-name = "ldo2";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				ldo3_reg: ldo3 {
-> +					/* VDDA_1V8_PHYA */
-> +					regulator-name = "ldo3";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				ldo4_reg: ldo4 {
-> +					/* VDDA_1V8_PHYB */
-> +					regulator-name = "ldo4";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				ldo9_reg: ldo9 {
-> +					/* VDD_RTC */
-> +					regulator-name = "ldo9";
-> +					regulator-min-microvolt = <1050000>;
-> +					regulator-max-microvolt = <1050000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				ldoln_reg: ldoln {
-> +					/* VDDA_1V8_PLL */
-> +					regulator-name = "ldoln";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				ldousb_reg: ldousb {
-> +					/* VDDA_3V_USB: VDDA_USBHS33 */
-> +					regulator-name = "ldousb";
-> +					regulator-min-microvolt = <3300000>;
-> +					regulator-max-microvolt = <3300000>;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				/* regen1 not used */
-> +			};
-> +		};
-> +
-> +		tps659038_pwr_button: tps659038_pwr_button {
-> +			compatible = "ti,palmas-pwrbutton";
-> +			interrupt-parent = <&tps659038>;
-> +			interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-> +			wakeup-source;
-> +			ti,palmas-long-press-seconds = <12>;
-> +		};
-> +
-> +		tps659038_gpio: tps659038_gpio {
-> +			compatible = "ti,palmas-gpio";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	cpu0-supply = <&smps12_reg>;
-> +	voltage-tolerance = <1>;
-> +};
-> +
-> +&sata {
-> +	status = "okay";
-> +};
-> +
-> +&mailbox5 {
-> +	status = "okay";
-> +	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
-> +		status = "okay";
-> +	};
-> +	mbox_dsp1_ipc3x: mbox_dsp1_ipc3x {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&mailbox6 {
-> +	status = "okay";
-> +	mbox_ipu2_ipc3x: mbox_ipu2_ipc3x {
-> +		status = "okay";
-> +	};
-> +	mbox_dsp2_ipc3x: mbox_dsp2_ipc3x {
-> +		status = "okay";
-> +	};
+> +watchdog0: watchdog@80048000 {
+> +	compatible = "alphascale,asm9260-wdt";
+> +	reg = <0x80048000 0x10>;
+> +	clocks = <&acc CLKID_SYS_WDT>, <&acc CLKID_AHB_WDT>;
+> +	clock-names = "mod", "ahb";
+> +	interrupts = <55>;
+> +	resets = <&rst WDT_RESET>;
+> +	reset-names = "wdt_rst";
+> +	timeout-sec = <30>;
+> +	alphascale,mode = "hw";
 > +};
 > -- 
-> 1.9.1
+> 2.5.0
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
