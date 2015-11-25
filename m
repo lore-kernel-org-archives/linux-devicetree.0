@@ -1,73 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Add binding documentation for Zodiac Watchdog
- Timer
-Date: Wed, 25 Nov 2015 14:06:30 -0600
-Message-ID: <20151125200630.GH30473@rob-hp-laptop>
-References: <1448453015-16126-1-git-send-email-martyn.welch@collabora.co.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
+ tree binding
+Date: Wed, 25 Nov 2015 14:06:16 -0600
+Message-ID: <20151125200616.GG30473@rob-hp-laptop>
+References: <56506D55.3000907@simon.arlott.org.uk>
+ <20151122215945.GA5930@rob-hp-laptop>
+ <56523E85.905@simon.arlott.org.uk>
+ <56523EFF.9050502@simon.arlott.org.uk>
+ <56535977.9050201@gmail.com>
+ <56541BD3.4070202@simon.arlott.org.uk>
+ <5654AF69.7040901@gmail.com>
+ <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448453015-16126-1-git-send-email-martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 12:03:34PM +0000, Martyn Welch wrote:
-> This patchs adds documentation for the binding of the Zodiac RAVE
-> Switch Watchdog Processor. This is an i2c based watchdog.
+On Tue, Nov 24, 2015 at 08:19:37PM -0000, Simon Arlott wrote:
+> Add device tree binding for NAND on the BCM63268.
 > 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> The BCM63268 has a NAND interrupt register with combined status and enable
+> registers.
+> 
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> v2: Addition of optional properties.
-> v3: Correct naming of reset-duration-msec -> reset-duration-ms
-
-I acked v2, so please add it.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
+> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> index 4ff7128..f2a71c8 100644
+> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> @@ -72,6 +72,14 @@ we define additional 'compatible' properties and associated register resources w
+>         and enable registers
+>       - reg-names: (required) "nand-int-base"
 > 
->  .../devicetree/bindings/watchdog/ziirave-wdt.txt      | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
-> new file mode 100644
-> index 0000000..3d87818
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/ziirave-wdt.txt
-> @@ -0,0 +1,19 @@
-> +Zodiac RAVE Watchdog Timer
+> +   * "brcm,nand-bcm63268"
+> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
+> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
+> +       and enable registers, and boot address registers
+> +     - reg-names: (required) "nand-intr-base"
+> +     - clock: (required) reference to the clock for the NAND controller
+> +     - clock-names: (required) "nand"
 > +
-> +Required properties:
-> +- compatible: must be "zii,rave-wdt"
-> +- reg: i2c slave address of device, usually 0x38
+>     * "brcm,nand-iproc"
+>       - reg: (required) the "IDM" register range, for interrupt enable and APB
+>         bus access endianness configuration, and the "EXT" register range,
+> @@ -148,3 +156,30 @@ nand@f0442800 {
+>  		};
+>  	};
+>  };
 > +
-> +Optional Properties:
-> +- timeout-sec: Watchdog timeout value in seconds.
-> +- reset-duration-ms: Duration of the pulse generated when the watchdog times
-> +  out. Value in milliseconds.
+> +nand@10000200 {
+> +	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm63268",
+> +		"brcm,brcmnand-v4.0", "brcm,brcmnand";
+> +	reg = <0x10000200 0x180>,
+> +	      <0x10000600 0x200>,
+> +	      <0x100000b0 0x10>;
+> +	reg-names = "nand", "nand-cache", "nand-intr-base";
+> +	interrupt-parent = <&periph_intc>;
+> +	interrupts = <50>;
+> +	clocks = <&periph_clk 20>;
+> +	clock-names = "nand";
 > +
-> +Example:
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
 > +
-> +	watchdog@38 {
-> +		compatible = "zii,rave-wdt";
-> +		reg = <0x38>;
-> +		timeout-sec = <30>;
-> +		reset-duration-ms = <30>;
+> +	nand0: nandcs@0 {
+> +		compatible = "brcm,nandcs";
+> +		reg = <0>;
+> +		nand-on-flash-bbt;
+> +		nand-ecc-strength = <1>;
+> +		nand-ecc-step-size = <512>;
+> +
+> +		#address-cells = <0>;
+> +		#size-cells = <0>;
 > +	};
+> +};
 > -- 
 > 2.1.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> Simon Arlott
