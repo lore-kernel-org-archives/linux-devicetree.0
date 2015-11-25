@@ -1,49 +1,100 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] thermal: rcar: enable to set tripN-temp via DT
-Date: Wed, 25 Nov 2015 10:57:20 +0100
-Message-ID: <CAMuHMdVeDz0ECBM7H2b-GKJyY0NuEJBwoRpM0vE7f-Rkq1R3Dg@mail.gmail.com>
-References: <HK2PR04MB0804B55DC6CE36094AEF5162BC1C0@HK2PR04MB0804.apcprd04.prod.outlook.com>
-	<564D14A1.70806@renesas.com>
-	<87h9kiilbe.wl%kuninori.morimoto.gx@renesas.com>
-	<56545CE5.3040502@renesas.com>
-	<87mvu37wv2.wl%kuninori.morimoto.gx@renesas.com>
-	<5655059C.40509@renesas.com>
-	<87io4q97s7.wl%kuninori.morimoto.gx@renesas.com>
-	<20151125034320.GA14278@localhost.localdomain>
-	<87bnai8xnx.wl%kuninori.morimoto.gx@renesas.com>
+From: Martin Schiller <mschiller@tdt.de>
+Subject: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
+Date: Wed, 25 Nov 2015 11:18:59 +0100
+Message-ID: <1448446739-5541-4-git-send-email-mschiller@tdt.de>
+References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87bnai8xnx.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryusuke Sakato <ryusuke.sakato.bx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "osd2-bV+sCa4451V9uiUsa/gSgQ@public.gmane.org" <osd2-bV+sCa4451V9uiUsa/gSgQ@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ralf@linux-mips.org, blogic@openwrt.org, hauke@hauke-m.de, jogo@openwrt.org, daniel.schwierzeck@gmail.com, Martin Schiller <mschiller@tdt.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+From: John Crispin <blogic@openwrt.org>
 
-On Wed, Nov 25, 2015 at 6:23 AM, Kuninori Morimoto
-<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
->> Besides, your property is already covered by of-thermal. Please convert
->> your driver to use of-thermal, this way it will give you the flexibility
->> to configure thermal data in DT.
->
-> I see, but we need to keep compatibility for non-DT SoC.
-> (This driver is used from both DT, non-DT SoC)
+This patch is included in the openwrt patchset for several years now and needs
+to go upstream as well. It includes the following changes:
+1. Fix up inline function call to xway_mux_apply
+2. Fix GPIO Setup of GPIO Port3
+3. Implement gpio_chip.to_irq
 
-Which SoCs with non-DT support use this driver in mainline?
+Signed-off-by: John Crispin <blogic@openwrt.org>
+Signed-off-by: Martin Schiller <mschiller@tdt.de>
+---
+ drivers/pinctrl/pinctrl-xway.c | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index a064962..f0b1b48 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1496,10 +1496,9 @@ static struct pinctrl_desc xway_pctrl_desc = {
+ 	.confops	= &xway_pinconf_ops,
+ };
+ 
+-static inline int xway_mux_apply(struct pinctrl_dev *pctrldev,
++static int mux_apply(struct ltq_pinmux_info *info,
+ 				int pin, int mux)
+ {
+-	struct ltq_pinmux_info *info = pinctrl_dev_get_drvdata(pctrldev);
+ 	int port = PORT(pin);
+ 	u32 alt1_reg = GPIO_ALT1(pin);
+ 
+@@ -1519,6 +1518,14 @@ static inline int xway_mux_apply(struct pinctrl_dev *pctrldev,
+ 	return 0;
+ }
+ 
++static inline int xway_mux_apply(struct pinctrl_dev *pctrldev,
++				int pin, int mux)
++{
++	struct ltq_pinmux_info *info = pinctrl_dev_get_drvdata(pctrldev);
++
++	return mux_apply(info, pin, mux);
++}
++
+ static const struct ltq_cfg_param xway_cfg_params[] = {
+ 	{"lantiq,pull",		LTQ_PINCONF_PARAM_PULL},
+ 	{"lantiq,open-drain",	LTQ_PINCONF_PARAM_OPEN_DRAIN},
+@@ -1563,12 +1570,28 @@ static int xway_gpio_dir_out(struct gpio_chip *chip, unsigned int pin, int val)
+ {
+ 	struct ltq_pinmux_info *info = dev_get_drvdata(chip->dev);
+ 
++	if (PORT(pin) == PORT3)
++		gpio_setbit(info->membase[0], GPIO3_OD, PORT_PIN(pin));
++	else
++		gpio_setbit(info->membase[0], GPIO_OD(pin), PORT_PIN(pin));
+ 	gpio_setbit(info->membase[0], GPIO_DIR(pin), PORT_PIN(pin));
+ 	xway_gpio_set(chip, pin, val);
+ 
+ 	return 0;
+ }
+ 
++static int xway_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
++{
++	struct ltq_pinmux_info *info = dev_get_drvdata(chip->dev);
++	int i;
++
++	for (i = 0; i < info->num_exin; i++)
++		if (info->exin[i] == offset)
++			return ltq_eiu_get_irq(i);
++
++	return -1;
++}
++
+ static struct gpio_chip xway_chip = {
+ 	.label = "gpio-xway",
+ 	.direction_input = xway_gpio_dir_in,
+@@ -1577,6 +1600,7 @@ static struct gpio_chip xway_chip = {
+ 	.set = xway_gpio_set,
+ 	.request = gpiochip_generic_request,
+ 	.free = gpiochip_generic_free,
++	.to_irq = xway_gpio_to_irq,
+ 	.base = -1,
+ };
+ 
+-- 
+2.1.4
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
