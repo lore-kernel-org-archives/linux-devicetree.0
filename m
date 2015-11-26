@@ -1,101 +1,60 @@
-From: Denis Kirjanov <kda-u1c8ncikuMvVAZt0uhVF+Ni2O/JbrIOy@public.gmane.org>
-Subject: Re: [PATCH V2] cpufreq: qoriq: Register cooling device based on
- device tree
-Date: Thu, 26 Nov 2015 11:32:17 +0300
-Message-ID: <CAOJe8K3g_B=Pa7U9zFY6RjqrKOPY2a3mqMAw6uSqQBVz9qW7Zg@mail.gmail.com>
-References: <1448519249-11449-1-git-send-email-hongtao.jia@freescale.com>
+From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] platform: goldfish: pipe: add devicetree bindings
+Date: Thu, 26 Nov 2015 00:34:12 -0800
+Message-ID: <20151126083412.GB14945@lvm>
+References: <1448481582-16991-1-git-send-email-jinqian@android.com>
+ <20151125202416.GA4636@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448519249-11449-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151125202416.GA4636@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jin Qian <jinqian-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Peter Senna Tschudin <peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/15, Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Register the qoriq cpufreq driver as a cooling device, based on the
-> thermal device tree framework. When temperature crosses the passive trip
-> point cpufreq is used to throttle CPUs.
->
-> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> Changes for V2:
-> * Using ->ready callback for cpu cooling device registering.
->
->  drivers/cpufreq/qoriq-cpufreq.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/cpufreq/qoriq-cpufreq.c
-> b/drivers/cpufreq/qoriq-cpufreq.c
-> index 4f53fa2..a39f868 100644
-> --- a/drivers/cpufreq/qoriq-cpufreq.c
-> +++ b/drivers/cpufreq/qoriq-cpufreq.c
-> @@ -12,6 +12,7 @@
->
->  #include <linux/clk.h>
->  #include <linux/cpufreq.h>
-> +#include <linux/cpu_cooling.h>
->  #include <linux/errno.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
-> @@ -33,6 +34,7 @@
->  struct cpu_data {
->  	struct clk **pclk;
->  	struct cpufreq_frequency_table *table;
-> +	struct thermal_cooling_device *cdev;
->  };
->
->  /*
-> @@ -260,6 +262,30 @@ static int qoriq_cpufreq_target(struct cpufreq_policy
-> *policy,
->  	return clk_set_parent(policy->clk, parent);
->  }
->
-> +
-> +static void qoriq_cpufreq_ready(struct cpufreq_policy *policy)
-> +{
-> +	struct cpu_data *cpud = policy->driver_data;
-> +	struct device_node *np = of_get_cpu_node(policy->cpu, NULL);
-> +
-> +	if (WARN_ON(!np))
-> +		return;
-I doubt that WARN_ON is necessary here. Do you know the exact case
-where the np is NULL?
-> +
-> +	if (of_find_property(np, "#cooling-cells", NULL)) {
-> +		cpud->cdev = of_cpufreq_cooling_register(np,
-> +							 policy->related_cpus);
-> +
-> +		if (IS_ERR(cpud->cdev)) {
-> +			pr_err("Failed to register cooling device cpu%d: %ld\n",
-> +					policy->cpu, PTR_ERR(cpud->cdev));
-> +
-> +			cpud->cdev = NULL;
-> +		}
-> +	}
-> +
-> +	of_node_put(np);
-> +}
-> +
->  static struct cpufreq_driver qoriq_cpufreq_driver = {
->  	.name		= "qoriq_cpufreq",
->  	.flags		= CPUFREQ_CONST_LOOPS,
-> @@ -268,6 +294,7 @@ static struct cpufreq_driver qoriq_cpufreq_driver = {
->  	.verify		= cpufreq_generic_frequency_table_verify,
->  	.target_index	= qoriq_cpufreq_target,
->  	.get		= cpufreq_generic_get,
-> +	.ready		= qoriq_cpufreq_ready,
->  	.attr		= cpufreq_generic_attr,
->  };
->
-> --
-> 2.1.0.27.g96db324
->
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
+On Wed, Nov 25, 2015 at 02:24:16PM -0600, Rob Herring wrote:
+> On Wed, Nov 25, 2015 at 11:59:37AM -0800, Jin Qian wrote:
+> > From: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Signed-off-by: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> > (cherry picked from commit 3c56d07eb796066530e93a40e74dea3bc59bf4cf)
+> > Signed-off-by: Jin Qian <jinqian-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/goldfish/pipe.txt | 17 +++++++++++++++++
+> >  drivers/platform/goldfish/goldfish_pipe.c           | 10 +++++++++-
+> >  2 files changed, 26 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/goldfish/pipe.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/goldfish/pipe.txt b/Documentation/devicetree/bindings/goldfish/pipe.txt
+> > new file mode 100644
+> > index 0000000..6d3801e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/goldfish/pipe.txt
+> > @@ -0,0 +1,17 @@
+> > +Android Goldfish QEMU Pipe
+> > +
+> > +Andorid pipe virtual device generated by android emulator.
+> 
+> The binding may be trivial, but there's a bigger question of whether 
+> this is the right long term direction. For example is upstream QEMU 
+> going to take all the Android pipe stuff? Couldn't virtio be used here 
+> as the transport?
+> 
+The Android Pipe is not a very likely candidate for upstream QEMU, no.
+We are working on a TCG implementation of virtio-vsock
+(http://qemu-project.org/Features/VirtioVsock) which we think should be
+a suitable drop-in replacement for the Android pipe.  We have yet to
+measure performance differences between the two, especially in the
+context of 3D graphics, though.
+
+But I wonder if that should really block this from being merged?  The
+support may not be in QEMU but it's in the Android emulator and it would
+be a less broken implementation with these patches in the kernel than
+without, I think.
+
+-Christoffer
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
