@@ -1,50 +1,89 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [RFC PATCH 01/15] PM / devfreq: exynos: Add generic exynos bus
- frequency driver
-Date: Fri, 27 Nov 2015 01:12:50 +0900
-Message-ID: <CAGTfZH295rGWh4S0mPgC7GMiA04NKgDybRUVnfzZP5o9-HffMw@mail.gmail.com>
-References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
-	<1448545659-32287-2-git-send-email-cw00.choi@samsung.com>
-	<CAJ0PZbSJ26q9MWSXihQjZih0hSU=w+dR2HKxa67kJhmZtt1tJQ@mail.gmail.com>
-Reply-To: cw00.choi@samsung.com
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: Preprocessor arithmetic in dtsi files (base + offset)
+Date: Thu, 26 Nov 2015 17:23:15 +0100
+Message-ID: <CAMuHMdX9JRRURMxmNFcKOkzeO1B5Nmnk+XnOpgcLsPbiG4CfSA@mail.gmail.com>
+References: <56570620.3070106@free.fr>
+	<20151126135957.GC8644@n2100.arm.linux.org.uk>
+	<56571ACC.9080306@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAJ0PZbSJ26q9MWSXihQjZih0hSU=w+dR2HKxa67kJhmZtt1tJQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@gmail.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, tjakobi@math.uni-bielefeld.de, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56571ACC.9080306-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sebastian Frias <sebastian_frias-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 11:00 PM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
-> On Thu, Nov 26, 2015 at 10:47 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->> This patch adds the generic exynos bus frequency driver for AMBA AXI bus
->> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
->> have the common architecture for bus between DRAM and sub-blocks in SoC.
->> This driver can support the generic bus frequency driver for Exynos SoCs.
+On Thu, Nov 26, 2015 at 3:44 PM, Mason <slash.tmp-GANU6spQydw@public.gmane.org> wrote:
+> On 26/11/2015 14:59, Russell King - ARM Linux wrote:
+>> On Thu, Nov 26, 2015 at 02:16:16PM +0100, Mason wrote:
+>>> #define SCU_BASE 0x20000000
+>>>
+>>>      scu: scu@XXX {
+>>>              compatible = "arm,cortex-a9-scu";
+>>>              reg = <SCU_BASE 0x100>;
+>>>
+>>>      gic: interrupt-controller@XXX {
+>>>              compatible = "arm,cortex-a9-gic";
+>>>              reg = <SCU_BASE+0x1000 0x1000>, <SCU_BASE+0x100 0x0100>;
 >>
->> In devicetree, Each bus block has a bus clock, regulator, operation-point
->> and devfreq-event devices which measure the utilization of each bus block.
+>> You don't get preprocessor arithmetic here.  What you get is this passed
+>> to DTC:
 >>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  drivers/devfreq/Kconfig             |  15 ++
->>  drivers/devfreq/Makefile            |   1 +
->>  drivers/devfreq/exynos/Makefile     |   1 +
->>  drivers/devfreq/exynos/exynos-bus.c | 443 ++++++++++++++++++++++++++++++++++++
->>  4 files changed, 460 insertions(+)
->>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
+>>               reg = <0x20000000+0x1000 0x1000>...
 >>
+>> The only time the preprocessor does arithmetic is when it needs to
+>> evaluate an expression, eg, in an #if statement.
 >
-> Are we finally getting a common Exynos bus driver with full DT support?
-> (can this replace both Exynos4/5 drivers and support Exynos7 series?)
+> Doh! Brain malfunction. No arithmetic indeed.
+> Working with the preprocessor would have to involve token-pasting.
+>
+> #define SCU_BASE(OFFSET)        2000##OFFSET
+> #define SCU_BASEX(OFFSET)       0x2000##OFFSET
+>
+>         gic: interrupt-controller@SCU_BASE(1000) {
+>                 reg = <SCU_BASEX(1000) 0x1000>, <SCU_BASEX(0100) 0x0100>;
+>         };
+>
+> My very own abomination!
 
-Yes.
-This patch-set would support all Exynos SoCs for bus frequency driver.
-To make sure the support for Exynos7 series, I need to check the TRM
-document of Exynos7.  I think it is possible for support Exynos7.
+Yeah! ;-)
 
-I'm going to test this driver on various Exynos-based board.
+I guess this would work, too?
 
-Regards,
-Chanwoo Choi
+scu_container@20000000 {
+        compatible = "simple-bus";
+
+        ranges = <0x0 0x20000000 0x10000>;
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+        scu: scu@0 {
+                compatible = "arm,cortex-a9-scu";
+                reg = <0x0000 0x100>;
+
+        gic: interrupt-controller@1000 {
+                compatible = "arm,cortex-a9-gic";
+                reg = <0x1000 0x1000>, <0x0100 0x0100>;
+
+        twd-timer@0600 {
+                compatible = "arm,cortex-a9-twd-timer";
+                reg = <0x0600 0x10>;
+};
+
+No more explicit arithmetic needed, just substitue "20000000".
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
