@@ -1,100 +1,132 @@
 From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 10/11] ARM: dts: rockchip: add rk3288 mipi_dsi nodes
-Date: Thu, 26 Nov 2015 15:50:24 +0800
-Message-ID: <1448524225-5489-11-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v5 06/11] Documentation: dt-bindings: Add bindings for DW MIPI
+ DSI
+Date: Thu, 26 Nov 2015 15:50:20 +0800
+Message-ID: <1448524225-5489-7-git-send-email-zyw@rock-chips.com>
 References: <1448524225-5489-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 In-Reply-To: <1448524225-5489-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a mipi_dsi node, and also add mipi_dsi endpoints to vopb and vopl
-output port nodes.
+From: Liu Ying <Ying.liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
+This patch adds device tree bindings for Synopsys DesignWare MIPI DSI
+host controller DRM bridge driver.
+
+Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 ---
 
-Changes in v5:
-- modify the clk name to SCLK_MIPIDSI_24M
+Changes in v5: None
+Changes in v4:
+- remove the cfg clk
+- remove gpr property from example, since it is noused now.
+- add the description about ports
 
-Changes in v4: None
-Changes in v3: None
+Changes in v3:
+- move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
+
 Changes in v2: None
 
- arch/arm/boot/dts/rk3288.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ .../bindings/display/bridge/dw_mipi_dsi.txt        | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6a79c9c..c48891e 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -798,6 +798,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopb>;
- 			};
-+			vopb_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopb>;
-+			};
- 		};
- 	};
- 
-@@ -831,6 +835,10 @@
- 				reg = <0>;
- 				remote-endpoint = <&hdmi_in_vopl>;
- 			};
-+			vopl_out_mipi: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&mipi_in_vopl>;
-+			};
- 		};
- 	};
- 
-@@ -871,6 +879,37 @@
- 		};
- 	};
- 
-+	mipi_dsi: mipi@ff960000 {
+diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+new file mode 100644
+index 0000000..2e1d197
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+@@ -0,0 +1,74 @@
++Device-Tree bindings for Synopsys DesignWare MIPI DSI host controller
++
++The controller is a digital core that implements all protocol functions
++defined in the MIPI DSI specification, providing an interface between
++the system and the MIPI DPHY, and allowing communication with a MIPI DSI
++compliant display.
++
++Required properties:
++ - #address-cells: Should be <1>.
++ - #size-cells: Should be <0>.
++ - compatible: The first compatible string should be "fsl,imx6q-mipi-dsi"
++   for i.MX6q/sdl SoCs.  For other SoCs, please refer to their specific
++   device tree binding documentations.  A common compatible string
++   "snps,dw-mipi-dsi" should be appended for all SoCs.
++ - reg: Represent the physical address range of the controller.
++ - interrupts: Represent the controller's interrupt to the CPU(s).
++ - clocks, clock-names: Phandles to the controller's pll reference
++   clock(ref) and APB clock(pclk), as described in [1].
++ - port@[X]: SoC specific port nodes with endpoint definitions as defined
++   in Documentation/devicetree/bindings/media/video-interfaces.txt,
++   please refer to the SoC specific binding document:
++    * Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi-rockchip.txt
++
++
++For more required properties, please refer to relevant device tree binding
++documentations which describe the controller embedded in specific SoCs.
++
++Required sub-nodes:
++ - A node to represent a DSI peripheral as described in [2].
++
++For more required sub-nodes, please refer to relevant device tree binding
++documentations which describe the controller embedded in specific SoCs.
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
++
++example:
++	mipi_dsi: mipi@021e0000 {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0xff960000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_DSI0>;
++		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
++		reg = <0x021e0000 0x4000>;
++		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
++			 <&clks IMX6QDL_CLK_MIPI_IPG>;
 +		clock-names = "ref", "pclk";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
 +
 +		ports {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
-+			reg = <1>;
 +
-+			mipi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mipi_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_mipi>;
++			port@0 {
++				reg = <0>;
++
++				mipi_mux_0: endpoint {
++					remote-endpoint = <&ipu1_di0_mipi>;
 +				};
-+				mipi_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_mipi>;
++			};
++
++			port@1 {
++				reg = <1>;
++
++				mipi_mux_1: endpoint {
++					remote-endpoint = <&ipu1_di1_mipi>;
 +				};
 +			};
 +		};
-+	};
 +
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
++		panel {
++			compatible = "truly,tft480800-16-e-dsi";
++			reg = <0>;
++			/* ... */
++		};
++	};
 -- 
 2.6.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
