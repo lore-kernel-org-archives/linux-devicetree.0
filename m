@@ -1,7 +1,7 @@
 From: Martin Schiller <mschiller@tdt.de>
-Subject: [PATCH v3 5/5] pinctrl/lantiq: Implement gpio_chip.to_irq
-Date: Thu, 26 Nov 2015 11:00:10 +0100
-Message-ID: <1448532010-30930-5-git-send-email-mschiller@tdt.de>
+Subject: [PATCH v3 4/5] pinctrl/lantiq: Fix GPIO Setup of GPIO Port3
+Date: Thu, 26 Nov 2015 11:00:09 +0100
+Message-ID: <1448532010-30930-4-git-send-email-mschiller@tdt.de>
 References: <1448532010-30930-1-git-send-email-mschiller@tdt.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -24,39 +24,23 @@ Changes in v3:
 Changes in v2: 
 None
 
- drivers/pinctrl/pinctrl-xway.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/pinctrl/pinctrl-xway.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
-index b78baaa..8ae99a8 100644
+index a064962..b78baaa 100644
 --- a/drivers/pinctrl/pinctrl-xway.c
 +++ b/drivers/pinctrl/pinctrl-xway.c
-@@ -1573,6 +1573,18 @@ static int xway_gpio_dir_out(struct gpio_chip *chip, unsigned int pin, int val)
- 	return 0;
- }
+@@ -1563,6 +1563,10 @@ static int xway_gpio_dir_out(struct gpio_chip *chip, unsigned int pin, int val)
+ {
+ 	struct ltq_pinmux_info *info = dev_get_drvdata(chip->dev);
  
-+static int xway_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct ltq_pinmux_info *info = dev_get_drvdata(chip->dev);
-+	int i;
-+
-+	for (i = 0; i < info->num_exin; i++)
-+		if (info->exin[i] == offset)
-+			return ltq_eiu_get_irq(i);
-+
-+	return -1;
-+}
-+
- static struct gpio_chip xway_chip = {
- 	.label = "gpio-xway",
- 	.direction_input = xway_gpio_dir_in,
-@@ -1581,6 +1593,7 @@ static struct gpio_chip xway_chip = {
- 	.set = xway_gpio_set,
- 	.request = gpiochip_generic_request,
- 	.free = gpiochip_generic_free,
-+	.to_irq = xway_gpio_to_irq,
- 	.base = -1,
- };
++	if (PORT(pin) == PORT3)
++		gpio_setbit(info->membase[0], GPIO3_OD, PORT_PIN(pin));
++	else
++		gpio_setbit(info->membase[0], GPIO_OD(pin), PORT_PIN(pin));
+ 	gpio_setbit(info->membase[0], GPIO_DIR(pin), PORT_PIN(pin));
+ 	xway_gpio_set(chip, pin, val);
  
 -- 
 2.1.4
