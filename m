@@ -1,16 +1,16 @@
 From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: Re: [PATCH 12/14] DEVICETREE: Add bindings for PIC32 SDHC host
+Subject: Re: [PATCH 01/14] DEVICETREE: Add bindings for PIC32 interrupt
  controller
-Date: Wed, 25 Nov 2015 21:40:23 -0700
-Message-ID: <56568D37.7030406@microchip.com>
+Date: Wed, 25 Nov 2015 22:01:14 -0700
+Message-ID: <5656921A.7000109@microchip.com>
 References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
- <56508B72.8070701@cogentembedded.com>
+ <1448065205-15762-2-git-send-email-joshua.henderson@microchip.com>
+ <20151122211453.GA13180@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <56508B72.8070701@cogentembedded.com>
+In-Reply-To: <20151122211453.GA13180@rob-hp-laptop>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -20,73 +20,53 @@ List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
 List-owner: <mailto:ralf@linux-mips.org>
 List-post: <mailto:linux-mips@linux-mips.org>
 List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, Andrei Pistirica <andrei.pistirica@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Cristian Birsan <cristian.birsan@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Rob,
 
-On 11/21/2015 8:19 AM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 11/21/2015 3:17 AM, Joshua Henderson wrote:
-> 
->> From: Andrei Pistirica <andrei.pistirica@microchip.com>
+On 11/22/2015 2:14 PM, Rob Herring wrote:
+> On Fri, Nov 20, 2015 at 05:17:13PM -0700, Joshua Henderson wrote:
+>> From: Cristian Birsan <cristian.birsan@microchip.com>
 >>
->> Document the devicetree bindings for the SDHC peripheral found on
->> Microchip PIC32 class devices.
+>> Document the devicetree bindings for the interrupt controller on Microchip
+>> PIC32 class devices. This also adds a header defining associated interrupts
+>> and related settings.
 >>
->> Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
+>> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
 >> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
 >> ---
->>   .../devicetree/bindings/mmc/sdhci-pic32.txt        |   24 ++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+>>  .../microchip,pic32mz-evic.txt                     |   65 ++++++
+>>  .../interrupt-controller/microchip,pic32mz-evic.h  |  238 ++++++++++++++++++++
+>>  2 files changed, 303 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt
+>>  create mode 100644 include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h
 >>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt
 >> new file mode 100644
->> index 0000000..f16388c
+>> index 0000000..12fb91f
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
->> @@ -0,0 +1,24 @@
->> +* Microchip PIC32 SDHCI Controller
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt
+>> @@ -0,0 +1,65 @@
+>> +Microchip PIC32MZ Interrupt Controller
+>> +======================================
 >> +
->> +This file documents differences between the core properties in mmc.txt
->> +and the properties used by the sdhci-pic32 driver.
+>> +The Microchip PIC32MZ SOC contains an Enhanced Vectored Interrupt Controller
+>> +(EVIC) version 2. It handles internal and external interrupts and provides
+>> +support for priority, sub-priority, irq type and polarity.
 >> +
->> +Required properties:
->> +- compatible: Should be "microchip,pic32-sdhci"
->> +- reg: Should contain registers location and length
->> +- interrupts: Should contain interrupt
->> +- pinctrl: Should contain pinctrl for data and command lines
+>> +Required properties
+>> +-------------------
+>> +
+>> +- compatible: Should be "microchip,evic-v2"
 > 
->    This is a required prop, yet the example doesn't contain it?
+> This should be more specific like "microchip,pic32mz-evic". You can keep 
+> this one in addition if you like for matching.
+> 
+> Rob
 > 
 
-Ack.  Both the required properties and example need to contain pinctrl-names and pinctrl-0, not pinctrl.
+Agreed.  Due to feedback, we are settling on microchip,pic32mzda-evic and similar for all compatible properties in this patch series.  I don't see a need to keep a more abstract name around here if you don't.
 
->> +
->> +Optional properties:
->> +- no-1-8-v: 1.8V voltage selection not supported
->> +- piomode: disable DMA support
->> +
->> +Example:
->> +
->> +    sdhci@1f8ec000 {
->> +        compatible = "microchip,pic32-sdhci";
->> +        reg = <0x1f8ec000 0x100>;
->> +        interrupts = <SDHC_EVENT DEFAULT_INT_PRI IRQ_TYPE_LEVEL_HIGH>;
->> +        clocks = <&REFCLKO4>, <&PBCLK5>;
->> +        clock-names = "base_clk", "sys_clk";
-> 
->    The "clocks" and "clock-names" props are not documented.
-> 
-> [...]
-> 
-> MBR, Sergei
-> 
-
-Ack.
-
-Thanks for the feedback,
 Josh
