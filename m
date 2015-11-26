@@ -1,70 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: Atmel: ClassD: add GCK's parent
-	clock in DT binding
-Date: Thu, 26 Nov 2015 01:06:41 +0000
-Message-ID: <20151126010641.GY1929@sirena.org.uk>
-References: <1448270399-28728-1-git-send-email-songjun.wu@atmel.com>
- <20151125234524.GA16553@rob-hp-laptop>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 2/2] arm64: dts: mt8173: Add nor flash node
+Date: Thu, 26 Nov 2015 09:20:48 +0800
+Message-ID: <CAGS+omBVfc=BPLoobOJSDPnbv97PnGsRxUTF1gbXEz4DeufbmQ@mail.gmail.com>
+References: <1447817403-16631-1-git-send-email-bayi.cheng@mediatek.com> <1447817403-16631-3-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2083809360520250719=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20151125234524.GA16553@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Songjun Wu <songjun.wu@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447817403-16631-3-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Bayi, Matthias,
 
---===============2083809360520250719==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="VIFPKPeEU/ajvd6j"
-Content-Disposition: inline
+Sorry for the late review, one comment below...
 
+On Wed, Nov 18, 2015 at 11:30 AM, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Add Mediatek nor flash node
+>
+> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 4dd5f93..7988656 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -387,7 +387,23 @@
+>                         status = "disabled";
+>                 };
+>
+> -               i2c3: i2c@11010000 {
+> +               nor_flash: spi@1100d000 {
+> +                       compatible = "mediatek,mt8173-nor";
+> +                       reg = <0 0x1100d000 0 0xe0>;
+> +                       clocks = <&pericfg CLK_PERI_SPI>,
+> +                                <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> +                       clock-names = "spi", "sf";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +
+> +                       flash@0 {
+> +                               compatible = "jedec,spi-nor";
+> +                               reg = <0>;
+> +                       };
 
---VIFPKPeEU/ajvd6j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think this flash@0 node represents the flash device present on the
+board and should therefore be moved to the board-specific .dts.
 
-On Wed, Nov 25, 2015 at 05:45:24PM -0600, Rob Herring wrote:
-> On Mon, Nov 23, 2015 at 05:19:58PM +0800, Songjun Wu wrote:
-> > Set GCK's parent as audio clock.
+-Dan
 
-> > Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
-
-> Applied, thanks.
-
-I already applied this to the ASoC tree.
-
---VIFPKPeEU/ajvd6j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWVlsgAAoJECTWi3JdVIfQ7HMH/347uWTYpkv0deCfduGCPymK
-iK3mEDHgy3oE0fXTPWJs3UOubeL3qUDLaZxu6rKkOUi9T0bkjR064Mzi8cpuNKPQ
-aNVnfSUvk0vVpH218PaxIeO8SzcwFTSYR5CwjFaskv9xHZsEzd8UfKEvhWNYR7l6
-xx756CAdWlSHTFhHjl3THFAOOHA+m4bLxDaAkK6stkJi0GKT2ZWv07UaL1akp9wF
-xrj+hii8SVgjqTJBmOGR8XTYGorQCi5p+zFTLVJahoITV8ielMGM8+mxbPaXglSj
-6KYNnAowbySInJpGxFJ46M2cEv1X710cyk5FZRmUR+ZTeLWtjsW/T7cWOLneb2Y=
-=AqsY
------END PGP SIGNATURE-----
-
---VIFPKPeEU/ajvd6j--
-
---===============2083809360520250719==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2083809360520250719==--
+> +               };
+> +
+> +               i2c3: i2c3@11010000 {
+>                         compatible = "mediatek,mt8173-i2c";
+>                         reg = <0 0x11010000 0 0x70>,
+>                               <0 0x11000280 0 0x80>;
+> --
+> 1.8.1.1.dirty
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
