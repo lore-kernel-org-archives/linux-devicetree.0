@@ -1,89 +1,102 @@
-From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 03/14] DEVICETREE: Add PIC32 clock binding documentation
-Date: Wed, 25 Nov 2015 22:36:55 -0700
-Message-ID: <56569A77.8010800@microchip.com>
-References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-4-git-send-email-joshua.henderson@microchip.com>
- <20151122213110.GA16187@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151122213110.GA16187@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: arm64: dts: qcom: Add apq8096 dragonboard dts skeletons
+Date: Thu, 26 Nov 2015 11:23:58 +0530
+Message-ID: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: agross@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add new dtsi and dts files for the apq8096 dragonboards with just
+a serial device used as debug console
 
-On 11/22/2015 2:31 PM, Rob Herring wrote:
-> On Fri, Nov 20, 2015 at 05:17:15PM -0700, Joshua Henderson wrote:
->> From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->>
->> Document the devicetree bindings for the clock driver found on Microchip
->> PIC32 class devices.
->>
->> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/clock/microchip,pic32.txt  |  263 ++++++++++++++++++++
->>  1 file changed, 263 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
->> new file mode 100644
->> index 0000000..4cef72d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
->> @@ -0,0 +1,263 @@
->> +Binding for a Clock hardware block found on
->> +certain Microchip PIC32 MCU devices.
->> +
->> +Microchip SoC clocks-node consists of few oscillators, PLL, multiplexer
->> +and few divider nodes.
-> 
-> [...]
-> 
->> +Required properties:
->> +- compatible : should have "microchip,pic32-clk".
->> +- reg : A Base address and length of the register set.
->> +- interrupts : source of interrupt.
->> +
->> +Optional properties (for subnodes):
->> +- #clock-cells: From common clock binding, should be 0.
->> +
->> +- microchip,clock-indices: in multiplexer node clock sources always aren't linear
->> +    and contiguous. This property helps define clock-sources with respect to
->> +    the mux clock node.
->> +
->> +- microchip,ignore-unused : ignore gate request even if the gated clock is unused.
-> 
-> There is some discussion about this upstream with "critical-clocks" 
-> binding. Can you use and wait for that?
-> 
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+Patch applies on top of Stephens' patches to add msm8996 dtsi
+https://lkml.org/lkml/2015/11/17/955
 
-The way this is going, we might not have to wait. :)  Is there a patch available yet to try it out?  
+ arch/arm64/boot/dts/qcom/Makefile                 |  2 +-
+ arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts  | 21 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi | 30 +++++++++++++++++++++++
+ 3 files changed, 52 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
 
->> +- microchip,status-bit-mask: bitmask for status check. This will be used to confirm
->> +    particular operation by clock sub-node is completed. It is dependent sub-node.
->> +- microchip,bit-mask: enable mask, similar to microchip,status-bit-mask.
-> 
-> We've generally decided not to describe clocks at this level of detail 
-> in DT. It's fine though for simple clock trees. This one seems to be 
-> borderline IMO.
-> 
-
-The binding example is the entire clock tree.  These masks are right from the datasheet.  For reference, do you have an example of a better alternative?
-
->> +- microchip,slew-step: enable frequency slewing(stepping) during rate change;
->> +    applicable only to sys-clock subnode.
-> 
-
-Thanks,
-Josh
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index fa1f661..bd992ef 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,5 +1,5 @@
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-dragonboard.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
+new file mode 100644
+index 0000000..65f4a6a
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
+@@ -0,0 +1,21 @@
++/*
++ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include "apq8096-dragonboard.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. APQ 8096 DragonBoard";
++	compatible = "qcom,apq8096-dragonboard";
++};
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
+new file mode 100644
+index 0000000..9bab5c0
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
+@@ -0,0 +1,30 @@
++/*
++ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include "msm8996.dtsi"
++
++/ {
++	aliases {
++		serial0 = &blsp2_uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0";
++	};
++
++	soc {
++		serial@75b0000 {
++			status = "okay";
++		};
++	};
++};
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
