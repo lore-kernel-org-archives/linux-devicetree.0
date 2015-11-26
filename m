@@ -1,47 +1,88 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RESEND v4 0/6] remoteproc: Add driver for STMicroelectronics platforms
-Date: Thu, 26 Nov 2015 11:32:38 +0200
-Message-ID: <CAK=WgbbWTdDGMYOFjVO3s1bt1r5iou6Q-hHOh4SZG=rQuEa2eQ@mail.gmail.com>
-References: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
- <CAK=WgbZbiq_BAUEti9tWUtWqZPU_4gDJ5Mfqur=Ou2N4Ea+2GQ@mail.gmail.com> <20151126091043.GO12874@x1>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v6 2/2] leds: rt5033: Add RT5033 Flash led device driver
+Date: Thu, 26 Nov 2015 10:43:25 +0100
+Message-ID: <5656D43D.106@samsung.com>
+References: <1448446948-13729-1-git-send-email-ingi2.kim@samsung.com>
+ <1448446948-13729-3-git-send-email-ingi2.kim@samsung.com>
+ <5655D001.8090803@samsung.com> <5656BC88.2070603@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151126091043.GO12874@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <5656BC88.2070603@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, andi.shyti@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 11:10 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 26 Nov 2015, Ohad Ben-Cohen wrote:
->> On Tue, Nov 24, 2015 at 3:14 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > ST's platforms often have multiple co-processors (usually ST40s or ST231s)
->> > on-board.  This provides the Linux-side infrastructure to flash and boot
->> > them successfully.
->> >
->> > This set has been tested on an STiH410-B2120.
+Hi Ingi,
+
+On 11/26/2015 09:02 AM, Ingi Kim wrote:
+[...]
+>>> +torch_unlock:
+>>> +    mutex_unlock(&led->lock);
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static int rt5033_led_flash_brightness_set(struct led_classdev_flash *fled_cdev,
+>>> +                       u32 brightness)
+>>> +{
+>>> +    struct rt5033_sub_led *sub_led = flcdev_to_sub_led(fled_cdev);
+>>> +    struct rt5033_led *led = sub_led_to_led(sub_led);
+>>> +
+>>> +    mutex_lock(&led->lock);
+>>> +    sub_led->flash_brightness = brightness;
+>>> +    mutex_unlock(&led->lock);
 >>
->> It would be nice if you could get at least one Reviewed-by tag coming
->> outside of ST (e.g., Suman or Bjorn who are actively using and
->> improving remoteproc).
+>> Mutex protection is redundant in this case. You would need it if device
+>> state was also changed here.
 >
-> If you require reviews by these guys, shouldn't they be Maintainers?
+> Okay, I'll remove it.
+>
+>>
+>> BTW why flash brightness can't be written to the device here?
+>>
+>
+> Flash brightness is only affected when FLED flashed (strobing).
+> So, I think it is better to be written in rt5033_led_flash_strobe_set function.
 
-Additional review isn't a requirement, but it's a plus.
+strobe_set op should strobe the flash ASAP, and delegating brightness
+setting there extends a delay between calling strobe_set op
+and actual flash strobe. If you set the brightness here, then you
+wouldn't have to do that in the strobe_set op, of course unless the
+the brightness is altered through the API of the other LED, in two
+separate LEDs case.
 
-> Please be aware that
-> the DTS(I) changes are applied to this set for your information only
-> and are not to be applied through the RemoteProc tree.  The usual
-> process to which we conform is that Maxime (the STi Maintainer) will
-> apply the DT changes *after* the main driver has been applied, in this
-> case by you.
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int rt5033_led_flash_timeout_set(struct led_classdev_flash *fled_cdev,
+>>> +                    u32 timeout)
+>>> +{
+>>> +    struct rt5033_sub_led *sub_led = flcdev_to_sub_led(fled_cdev);
+>>> +    struct rt5033_led *led = sub_led_to_led(sub_led);
+>>> +
+>>> +    mutex_lock(&led->lock);
+>>> +    sub_led->flash_timeout = timeout;
+>>> +    mutex_unlock(&led->lock);
+>>
+>> Ditto.
+>>
 
-Ok, great, so I will not take patches 5 and 6.
+Timeout should be also written here.
 
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you will add regmap_write in both ops, then mutex protection will
+have to be preserved, to assure consistency between registers state
+and sub_led->flash_brightness and sub_led->flash_timeout state.
+
+>
+>>> +#define RT5033_FLED_CTRL4_VTRREG_MAX    0x60
+>>
+>> Rename DEF to MASK.
+
+Hmm, here it should be: Rename MAX to MASK.
+
+-- 
+Best Regards,
+Jacek Anaszewski
