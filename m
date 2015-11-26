@@ -1,88 +1,98 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: Preprocessor arithmetic in dtsi files (base + offset)
-Date: Thu, 26 Nov 2015 17:23:15 +0100
-Message-ID: <CAMuHMdX9JRRURMxmNFcKOkzeO1B5Nmnk+XnOpgcLsPbiG4CfSA@mail.gmail.com>
-References: <56570620.3070106@free.fr>
-	<20151126135957.GC8644@n2100.arm.linux.org.uk>
-	<56571ACC.9080306@free.fr>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [linux-meson] Re: [PATCH v2 3/5] pinctrl: meson: enable GPIO
+ IRQs
+Date: Thu, 26 Nov 2015 16:27:22 +0000
+Message-ID: <20151126162722.1146b220@arm.com>
+References: <1448273816-11290-1-git-send-email-carlo@caione.org>
+	<1448273816-11290-4-git-send-email-carlo@caione.org>
+	<20151124082801.09139a93@arm.com>
+	<CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56571ACC.9080306-GANU6spQydw@public.gmane.org>
+In-Reply-To: <CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sebastian Frias <sebastian_frias-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 3:44 PM, Mason <slash.tmp-GANU6spQydw@public.gmane.org> wrote:
-> On 26/11/2015 14:59, Russell King - ARM Linux wrote:
->> On Thu, Nov 26, 2015 at 02:16:16PM +0100, Mason wrote:
->>> #define SCU_BASE 0x20000000
->>>
->>>      scu: scu@XXX {
->>>              compatible = "arm,cortex-a9-scu";
->>>              reg = <SCU_BASE 0x100>;
->>>
->>>      gic: interrupt-controller@XXX {
->>>              compatible = "arm,cortex-a9-gic";
->>>              reg = <SCU_BASE+0x1000 0x1000>, <SCU_BASE+0x100 0x0100>;
->>
->> You don't get preprocessor arithmetic here.  What you get is this passed
->> to DTC:
->>
->>               reg = <0x20000000+0x1000 0x1000>...
->>
->> The only time the preprocessor does arithmetic is when it needs to
->> evaluate an expression, eg, in an #if statement.
->
-> Doh! Brain malfunction. No arithmetic indeed.
-> Working with the preprocessor would have to involve token-pasting.
->
-> #define SCU_BASE(OFFSET)        2000##OFFSET
-> #define SCU_BASEX(OFFSET)       0x2000##OFFSET
->
->         gic: interrupt-controller@SCU_BASE(1000) {
->                 reg = <SCU_BASEX(1000) 0x1000>, <SCU_BASEX(0100) 0x0100>;
->         };
->
-> My very own abomination!
+On Tue, 24 Nov 2015 10:04:50 +0100
+Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 
-Yeah! ;-)
+> On Tue, Nov 24, 2015 at 9:28 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Mon, 23 Nov 2015 11:16:54 +0100
+> > Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
+> >
+> >> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> >>
+> >> On Meson8 and Meson8b SoCs there are 8 independent filtered GPIO
+> >> interrupt modules that can be programmed to use any of the GPIOs in the
+> >> chip as an interrupt source.
+> >>
+> >> For each GPIO IRQ we have:
+> >>
+> >> GPIOs --> [mux]--> [polarity]--> [filter]--> [edge select]--> GIC
+> >>
+> >> The eight GPIO interrupts respond to mask/unmask/clear/etc.. just like
+> >> any other interrupt in the chip. The difference for the GPIO interrupts
+> >> is that they can be filtered and conditioned.
+> >>
+> >> This patch adds support for the external GPIOs interrupts and enables
+> >> them for Meson8 and Meson8b SoCs.
+> >>
+> >> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> >> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >> ---
+> >
+> > [...]
+> >
+> >> +     for (i = 0; i < pc->num_gic_irqs; i++) {
+> >> +             struct of_phandle_args oirq;
+> >> +
+> >> +             of_irq_parse_one(node, i, &oirq);
+> >> +             irq_of_phandle_args_to_fwspec(&oirq, &pc->gic_irqs[i]);
+> >> +
+> >> +             pc->irq_map[i] = IRQ_FREE;
+> >> +     }
+> >
+> > The whole thing feels weird. Why do you need to keep a set of fwspecs?
+> 
+> We only have 8 IRQs on the GIC side that we can use for the GPIOs. The
+> set of fwspec is used to track these IRQs.
+> At probe time we read from the DTS how many and which IRQs are
+> reserved on the GIC for the GPIOs. Every time a GPIO IRQ is installed,
+> we use one of these IRQ lines.
 
-I guess this would work, too?
+That doesn't answer my question. Having the raw IRQ numbers, why not.
+Storing a whole fwspec (16 u32 + 1 int + 1 pointer) seems completely
+overkill.
 
-scu_container@20000000 {
-        compatible = "simple-bus";
+> > All you need is a range of interrupts that would be conveniently
+> > represented by a bitmap (assuming your interrupts space is a mostly
+> > contiguous range).
+> 
+> I could do that but it feels to me like we end up hiding from the DTS
+> some information that naturally should be in there: a pinctrl device
+> that is using 8 interrupt lines of its interrupt controller. IMO this
+> is not a special case that requires some special treatment.
 
-        ranges = <0x0 0x20000000 0x10000>;
-        #address-cells = <1>;
-        #size-cells = <1>;
+Well, it is also arguable that these interrupts are not the pinctrl's,
+but those of the device that actually uses them (or we'd be describing
+interrupts in all interrupt controller bindings, which doesn't make any
+sense).
 
-        scu: scu@0 {
-                compatible = "arm,cortex-a9-scu";
-                reg = <0x0000 0x100>;
+See for example the TI crossbar, which has similar functionalities. I'm
+not going to take a hard line here, but the argument you have so far
+doesn't seem to hold much water for me. Or there is something obvious
+that I have missed, which is entirely possible.
 
-        gic: interrupt-controller@1000 {
-                compatible = "arm,cortex-a9-gic";
-                reg = <0x1000 0x1000>, <0x0100 0x0100>;
+Thanks,
 
-        twd-timer@0600 {
-                compatible = "arm,cortex-a9-twd-timer";
-                reg = <0x0600 0x10>;
-};
-
-No more explicit arithmetic needed, just substitue "20000000".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	M.
+-- 
+Jazz is not dead. It just smells funny.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
