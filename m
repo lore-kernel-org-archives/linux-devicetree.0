@@ -1,77 +1,65 @@
-From: bayi cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/2] arm64: dts: mt8173: Add nor flash node
-Date: Thu, 26 Nov 2015 10:42:53 +0800
-Message-ID: <1448505773.9118.19.camel@mhfsdcap03>
-References: <1447817403-16631-1-git-send-email-bayi.cheng@mediatek.com>
-	 <1447817403-16631-3-git-send-email-bayi.cheng@mediatek.com>
-	 <CAGS+omBVfc=BPLoobOJSDPnbv97PnGsRxUTF1gbXEz4DeufbmQ@mail.gmail.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: Re: [PATCH 3/5] dt-bindings: rockchip-thermal: Support the
+ RK3228/RK3399 SoCs compatible
+Date: Thu, 26 Nov 2015 10:57:49 +0800
+Message-ID: <5656752D.2010707@rock-chips.com>
+References: <1448438377-29203-1-git-send-email-wxt@rock-chips.com>
+ <1448438377-29203-4-git-send-email-wxt@rock-chips.com>
+ <11146001.lIrLtFf7Xg@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omBVfc=BPLoobOJSDPnbv97PnGsRxUTF1gbXEz4DeufbmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11146001.lIrLtFf7Xg@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Eduardo Valentin <edubezval@gmail.com>, linux-rockchip@lists.infradead.org, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-11-26 at 09:20 +0800, Daniel Kurtz wrote:
-> Hi Bayi, Matthias,
-> 
-> Sorry for the late review, one comment below...
-> 
-> On Wed, Nov 18, 2015 at 11:30 AM, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > Add Mediatek nor flash node
-> >
-> > Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
-> >  1 file changed, 17 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index 4dd5f93..7988656 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -387,7 +387,23 @@
-> >                         status = "disabled";
-> >                 };
-> >
-> > -               i2c3: i2c@11010000 {
-> > +               nor_flash: spi@1100d000 {
-> > +                       compatible = "mediatek,mt8173-nor";
-> > +                       reg = <0 0x1100d000 0 0xe0>;
-> > +                       clocks = <&pericfg CLK_PERI_SPI>,
-> > +                                <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-> > +                       clock-names = "spi", "sf";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +                       status = "disabled";
-> > +
-> > +                       flash@0 {
-> > +                               compatible = "jedec,spi-nor";
-> > +                               reg = <0>;
-> > +                       };
-> 
-> I think this flash@0 node represents the flash device present on the
-> board and should therefore be moved to the board-specific .dts.
-> 
-> -Dan
-> 
-Hi Daniel, Thanks for your comments, and I will fixed it in the next
-patch.
-> > +               };
-> > +
-> > +               i2c3: i2c3@11010000 {
-> >                         compatible = "mediatek,mt8173-i2c";
-> >                         reg = <0 0x11010000 0 0x70>,
-> >                               <0 0x11000280 0 0x80>;
-> > --
-> > 1.8.1.1.dirty
-> >
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=E5=9C=A8 2015=E5=B9=B411=E6=9C=8825=E6=97=A5 22:56, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Am Mittwoch, 25. November 2015, 15:59:35 schrieb Caesar Wang:
+>> This patchset attempts to new compatible for thermal founding
+>> on RK3228/RK3399 SoCs.
+>>
+>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>> ---
+>>
+>>   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 2=
+ ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
+mal.txt
+>> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt ind=
+ex
+>> 0dfa60d..af5f802 100644
+>> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>> @@ -2,8 +2,10 @@
+>>
+>>   Required properties:
+>>   - compatible : should be "rockchip,<name>-tsadc"
+>> +   "rockchip,rk3228-tsadc": found on RK3228 SoCs
+>>      "rockchip,rk3288-tsadc": found on RK3288 SoCs
+>>      "rockchip,rk3368-tsadc": found on RK3368 SoCs
+>> +   "rockchip,rk3368-tsadc": found on RK3399 SoCs
+> copy'n'paste error, should proably be
+>   "rockchip,rk3399-tsadc": found on RK3399 SoCs
+
+=46ixed in next version, thanks!
+>>   - reg : physical base address of the controller and length of memo=
+ry mapped
+>> region.
+>>   - interrupts : The interrupt number to the cpu. The interrupt spec=
+ifier
+>> format
+>
+>
+>
+
+--=20
+caesar wang | software engineer | wxt@rock-chip.com
