@@ -1,31 +1,65 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iommu/ipmmu-vmsa: Include SoC part number in DT
- binding docs
-Date: Thu, 26 Nov 2015 14:43:36 +0100
-Message-ID: <20151126134336.GB17674@8bytes.org>
-References: <20151117035320.30676.88818.sendpatchset@little-apple>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151117035320.30676.88818.sendpatchset@little-apple>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [RFC PATCH 04/15] ARM: dts: Add DMC bus freqeuncy for
+ exynos3250-rinato/monk
+Date: Thu, 26 Nov 2015 22:47:28 +0900
+Message-ID: <1448545659-32287-5-git-send-email-cw00.choi@samsung.com>
+References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, k.kozlowski@samsung.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 17, 2015 at 12:53:20PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-> 
-> Add part numbers for APE6 and current set of R-Car Gen2 SoCs to the
-> IPMMU DT binding documentation. The example is also updated to show
-> how the generic compatible string may be used as fallback.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+This patch adds the DMC (DRAM Memory Controller) bus frequency node
+which includes the devfreq-events and regulator properties. The bus
+frequency support the DVFS (Dynamic Voltage Frequency Scaling) feature
+with ondemand governor.
 
-Applied, thanks.
+The devfreq-events (ppmu_dmc0*) can monitor the utilization of DMC bus
+on runtime and the buck1_reg (VDD_MIF power line) supplies the power to
+the DMC block.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ arch/arm/boot/dts/exynos3250-monk.dts   | 6 ++++++
+ arch/arm/boot/dts/exynos3250-rinato.dts | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
+index 443a35085846..d982586a6533 100644
+--- a/arch/arm/boot/dts/exynos3250-monk.dts
++++ b/arch/arm/boot/dts/exynos3250-monk.dts
+@@ -498,6 +498,12 @@
+ 	};
+ };
+ 
++&bus_dmc {
++	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	vdd-supply = <&buck1_reg>;
++	status = "okay";
++};
++
+ &xusbxti {
+ 	clock-frequency = <24000000>;
+ };
+diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+index 3e64d5dcdd60..61477943015b 100644
+--- a/arch/arm/boot/dts/exynos3250-rinato.dts
++++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+@@ -675,6 +675,12 @@
+ 	};
+ };
+ 
++&bus_dmc {
++	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
++	vdd-supply = <&buck1_reg>;
++	status = "okay";
++};
++
+ &xusbxti {
+ 	clock-frequency = <24000000>;
+ };
+-- 
+1.9.1
+
