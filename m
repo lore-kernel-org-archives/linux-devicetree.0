@@ -1,72 +1,65 @@
-From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: Re: [PATCH 01/14] DEVICETREE: Add bindings for PIC32 interrupt
- controller
-Date: Wed, 25 Nov 2015 22:01:14 -0700
-Message-ID: <5656921A.7000109@microchip.com>
-References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-2-git-send-email-joshua.henderson@microchip.com>
- <20151122211453.GA13180@rob-hp-laptop>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH v9] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Thu, 26 Nov 2015 05:03:20 +0000
+Message-ID: <8520D5D51A55D047800579B09414719825866301@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1447911323-12567-1-git-send-email-bharatku@xilinx.com>
+	<20151124173556.18aff6b5@arm.com>
+	<8520D5D51A55D047800579B0941471982586607F@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20151125075018.68e97010@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20151122211453.GA13180@rob-hp-laptop>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Cristian Birsan <cristian.birsan@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151125075018.68e97010@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 11/22/2015 2:14 PM, Rob Herring wrote:
-> On Fri, Nov 20, 2015 at 05:17:13PM -0700, Joshua Henderson wrote:
->> From: Cristian Birsan <cristian.birsan@microchip.com>
->>
->> Document the devicetree bindings for the interrupt controller on Microchip
->> PIC32 class devices. This also adds a header defining associated interrupts
->> and related settings.
->>
->> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
->> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
->> ---
->>  .../microchip,pic32mz-evic.txt                     |   65 ++++++
->>  .../interrupt-controller/microchip,pic32mz-evic.h  |  238 ++++++++++++++++++++
->>  2 files changed, 303 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt
->>  create mode 100644 include/dt-bindings/interrupt-controller/microchip,pic32mz-evic.h
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt
->> new file mode 100644
->> index 0000000..12fb91f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mz-evic.txt
->> @@ -0,0 +1,65 @@
->> +Microchip PIC32MZ Interrupt Controller
->> +======================================
->> +
->> +The Microchip PIC32MZ SOC contains an Enhanced Vectored Interrupt Controller
->> +(EVIC) version 2. It handles internal and external interrupts and provides
->> +support for priority, sub-priority, irq type and polarity.
->> +
->> +Required properties
->> +-------------------
->> +
->> +- compatible: Should be "microchip,evic-v2"
+> Subject: Re: [PATCH v9] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+> PCIe Host Controller
 > 
-> This should be more specific like "microchip,pic32mz-evic". You can keep 
-> this one in addition if you like for matching.
+> On Wed, 25 Nov 2015 05:40:49 +0000
+> Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
 > 
-> Rob
+> > > On Thu, 19 Nov 2015 11:05:23 +0530
+> > > Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
+> > >
+> > > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+> > > >
+> > > > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > > > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> > > > Acked-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > > +
+> > > > +#define MSI_ADDRESS				0xDEED0000
+> > >
+> > > How did you pick this value? What if it intersect with some actual RAM?
+> > > What if a device actually does DMA to that location?
+> > >
+> > > Wouldn't it make sense to actually pick a real *device* address (hint:
+> > > your MSI controller itself) for this purpose, as the device will
+> > > never DMA there?
+> > >
+> > >
+> > We have already mentioned in previous patch discussion, we don't have
+> > any device address on our SOC for MSI, that's the reason we are
+> > allocating a page for MSI in RAM. Since our memory write is consumed
+> > by bridge and doesn't write to memory, you suggested to use some
+> > random address,  so using some random address.
 > 
-
-Agreed.  Due to feedback, we are settling on microchip,pic32mzda-evic and similar for all compatible properties in this patch series.  I don't see a need to keep a more abstract name around here if you don't.
-
-Josh
+> This is becoming painful.
+> 
+> - "write is consumed by bridge and doesn't write to memory": So why are
+>   you using something that has a chance of actually being memory??? Are
+>   you in the business of corrupting unsuspecting data?
+> 
+> - "we don't have any device address on our SOC for MSI": You have
+>   plenty, and that's the whole of your device space. *All of it*. So
+>   just take the base address of your PCIe controller, and be done with
+>   it. Or your UART. Anything that cannot be DMA'ed to from a PCIe
+>   device, and that is downstream of your PCIe bridge.
+> 
+Yes, PCIe controller base will be fine, will send next patch addressing this.
