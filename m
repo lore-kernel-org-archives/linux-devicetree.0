@@ -1,98 +1,96 @@
-From: Martin Schiller <mschiller@tdt.de>
-Subject: RE: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
-Date: Thu, 26 Nov 2015 07:47:22 +0000
-Message-ID: <c22e3b466e2a44cb82a66a4edac8e805@TDT-MS.TDTNET.local>
-References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
- <1448446739-5541-4-git-send-email-mschiller@tdt.de>
- <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
- <c9edbc5eafed4639983f8bcefe8e872e@TDT-MS.TDTNET.local>
- <5656AF01.3050700@openwrt.org>
- <39cc8cd2e53f492f88c45dd256a46b22@TDT-MS.TDTNET.local>
- <5656B2C0.6010701@openwrt.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5656B2C0.6010701@openwrt.org>
-Content-Language: de-DE
-Sender: linux-gpio-owner@vger.kernel.org
-To: John Crispin <blogic@openwrt.org>, Jonas Gorski <jogo@openwrt.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Hauke Mehrtens <hauke@hauke-m.de>, "daniel.schwierzeck@gmail.com" <daniel.schwierzeck@gmail.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v5 0/11] Add mipi dsi support for rk3288
+Date: Thu, 26 Nov 2015 15:50:14 +0800
+Message-ID: <1448524225-5489-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com
+Cc: Chris Zhong <zyw@rock-chips.com>, Liu Ying <Ying.Liu@freescale.com>, Takashi Iwai <tiwai@suse.de>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Jeff Chen <cym@rock-chips.com>, linux-clk@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, Huang Lin <hl@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vincent Palatin <vpalatin@chromium.org>, Russell King <linux@arm.linux.org.uk>, Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>Liu Ying <Yin>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMjYvMjAxNSBhdCA4OjIwIEFNLCBKb2huIENyaXNwaW4gd3JvdGU6DQo+DQo+DQo+IE9u
-IDI2LzExLzIwMTUgMDg6MTUsIE1hcnRpbiBTY2hpbGxlciB3cm90ZToNCj4gPiBPbiAxMS8yNi8y
-MDE1IGF0IDg6MDQgQU0sIEpvaG4gQ3Jpc3BpbiB3cm90ZToNCj4gPj4NCj4gPj4NCj4gPj4gT24g
-MjYvMTEvMjAxNSAwNzo0MCwgTWFydGluIFNjaGlsbGVyIHdyb3RlOg0KPiA+Pj4gT24gMTEvMjUv
-MjAxNSBhdCAxMTo0MCBBTSwgSm9uYXMgR29yc2tpIHdyb3RlOg0KPiA+Pj4+IEhpDQo+ID4+Pj4N
-Cj4gPj4+PiBPbiBXZWQsIE5vdiAyNSwgMjAxNSBhdCAxMToxOCBBTSwgTWFydGluIFNjaGlsbGVy
-DQo+IDxtc2NoaWxsZXJAdGR0LmRlPg0KPiA+Pj4+IHdyb3RlOg0KPiA+Pj4+PiBGcm9tOiBKb2hu
-IENyaXNwaW4gPGJsb2dpY0BvcGVud3J0Lm9yZz4NCj4gPj4+Pj4NCj4gPj4+Pj4gVGhpcyBwYXRj
-aCBpcyBpbmNsdWRlZCBpbiB0aGUgb3BlbndydCBwYXRjaHNldCBmb3Igc2V2ZXJhbCB5ZWFycw0K
-PiA+PiBub3cNCj4gPj4+PiBhbmQgbmVlZHMNCj4gPj4+Pj4gdG8gZ28gdXBzdHJlYW0gYXMgd2Vs
-bC4gSXQgaW5jbHVkZXMgdGhlIGZvbGxvd2luZyBjaGFuZ2VzOg0KPiA+Pj4+PiAxLiBGaXggdXAg
-aW5saW5lIGZ1bmN0aW9uIGNhbGwgdG8geHdheV9tdXhfYXBwbHkNCj4gPj4+Pg0KPiA+Pj4+IFRo
-aXMgcmVhbGx5IG5lZWRzIGFuIGV4cGxhbmF0aW9uIHdoYXQgaXMgYmVpbmcgZml4ZWQgaGVyZS4N
-Cj4gPj4+DQo+ID4+PiBJIGhvcGUgSm9obiAtIGFzIHRoZSBvcmlnaW5hbCBhdXRob3Igb2YgdGhp
-cyBwYXRjaCAtIGNhbiBleHBsYWluDQo+ID4+PiB3aHkgdGhpcyBjaGFuZ2UgaXMgbmVjZXNzYXJ5
-Lg0KPiA+Pg0KPiA+PiB3aGF0IGNoYW5nZT8gd2h5IGFtIEkgaW4gQ2M6IGFuZCBub3QgVG86IGlm
-IGFuIGFjdGlvbiBpcyByZXF1aXJlZCA/DQo+ID4+DQo+ID4+IEpvaG4NCj4gPg0KPiA+IFRoYXQg
-Y2hhbmdlIGlzIG1lYW50Og0KPiA+DQo+ICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjDQo+ICMNCj4gPj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLXh3YXkuYw0KPiBiL2RyaXZlcnMvcGluY3Ry
-bC9waW5jdHJsLQ0KPiA+PiB4d2F5LmMNCj4gPj4gaW5kZXggYTA2NDk2Mi4uZjBiMWI0OCAxMDA2
-NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3BpbmN0cmwteHdheS5jDQo+ID4+ICsrKyBi
-L2RyaXZlcnMvcGluY3RybC9waW5jdHJsLXh3YXkuYw0KPiA+PiBAQCAtMTQ5NiwxMCArMTQ5Niw5
-IEBAIHN0YXRpYyBzdHJ1Y3QgcGluY3RybF9kZXNjIHh3YXlfcGN0cmxfZGVzYyA9DQo+IHsNCj4g
-Pj4gIC5jb25mb3BzPSAmeHdheV9waW5jb25mX29wcywNCj4gPj4gIH07DQo+ID4+DQo+ID4+IC1z
-dGF0aWMgaW5saW5lIGludCB4d2F5X211eF9hcHBseShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdHJs
-ZGV2LA0KPiA+PiArc3RhdGljIGludCBtdXhfYXBwbHkoc3RydWN0IGx0cV9waW5tdXhfaW5mbyAq
-aW5mbywNCj4gPj4gIGludCBwaW4sIGludCBtdXgpDQo+ID4+ICB7DQo+ID4+IC1zdHJ1Y3QgbHRx
-X3Bpbm11eF9pbmZvICppbmZvID0gcGluY3RybF9kZXZfZ2V0X2RydmRhdGEocGN0cmxkZXYpOw0K
-PiA+PiAgaW50IHBvcnQgPSBQT1JUKHBpbik7DQo+ID4+ICB1MzIgYWx0MV9yZWcgPSBHUElPX0FM
-VDEocGluKTsNCj4gPj4NCj4gPj4gQEAgLTE1MTksNiArMTUxOCwxNCBAQCBzdGF0aWMgaW5saW5l
-IGludCB4d2F5X211eF9hcHBseShzdHJ1Y3QNCj4gPj4gcGluY3RybF9kZXYgKnBjdHJsZGV2LA0K
-PiA+PiAgcmV0dXJuIDA7DQo+ID4+ICB9DQo+ID4+DQo+ID4+ICtzdGF0aWMgaW5saW5lIGludCB4
-d2F5X211eF9hcHBseShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdHJsZGV2LA0KPiA+PiAraW50IHBp
-biwgaW50IG11eCkNCj4gPj4gK3sNCj4gPj4gK3N0cnVjdCBsdHFfcGlubXV4X2luZm8gKmluZm8g
-PSBwaW5jdHJsX2Rldl9nZXRfZHJ2ZGF0YShwY3RybGRldik7DQo+ID4+ICsNCj4gPj4gK3JldHVy
-biBtdXhfYXBwbHkoaW5mbywgcGluLCBtdXgpOw0KPiA+PiArfQ0KPiA+PiArDQo+ID4+ICBzdGF0
-aWMgY29uc3Qgc3RydWN0IGx0cV9jZmdfcGFyYW0geHdheV9jZmdfcGFyYW1zW10gPSB7DQo+ID4+
-ICB7ImxhbnRpcSxwdWxsIixMVFFfUElOQ09ORl9QQVJBTV9QVUxMfSwNCj4gPj4gIHsibGFudGlx
-LG9wZW4tZHJhaW4iLExUUV9QSU5DT05GX1BBUkFNX09QRU5fRFJBSU59LA0KPiA+DQo+ICMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjDQo+ID4NCj4NCj4gb2sgc28geW91IHBpY2tlZCB1cCBhIHBhdGNoIGFuZCBzZW50
-IGl0IHVwc3RyZWFtIHdpdGhvdXQgbG9va2luZyBhdA0KPiB3aGF0DQo+IGl0IHJlYWxseSBkb2Vz
-LiB0aGUgcGF0Y2ggaXMgc2ltcGx5IG5vdCByZWFkeSBmb3IgdXBzdHJlYW0uIHRoZSBwcm9ibGVt
-DQo+IGhlcmUgaXMgY29weSAmIHBhc3RlIGluY29uc2lzdGVuY3kuDQoNCk9mIGNvdXJzZSBJIGFu
-YWx5emVkIHRoZSB3aG9sZSBwYXRjaCBhbmQgLSBhcyB5b3UgbWF5IGhhdmUgbm90aWNlZCAtIGFk
-ZGVkDQphIGRlc2NyaXB0aW9uIGZvciB0aGUgMyBjaGFuZ2VzIHdoaWNoIHdlcmUgbWFkZSBpbiB0
-aGlzIHBhdGNoLg0KDQpJIGFsc28ga25vdyB0aGF0IHRoaXMgZmlyc3QgcGFydCBvZiB0aGUgcGF0
-Y2ggY2hhbmdlcyB0aGUgc2NvcGUgb2YgdGhlIGlubGluZQ0KY29kZSwgYnV0IEkgZGlkIG5vdCBr
-bm93IHdoeSB0aGlzIGNoYW5nZSB3YXMgZG9uZS4NCg0KPg0KPiBob3dldmVyIGlmIHdlIHdhbnQg
-dG8gcmVzb2x2ZSB0aGlzIHdlIHNob3VsZCBlaXRoZXIga2VlcCB0aGUgaW5saW5lcw0KPiBhbmQN
-Cj4ganVzdCBzdGljayB0byB0aGUgY3VycmVudCBjb2RlIHBhdHRlcm4gdXNlZCBvciB3ZSBjb3Vs
-ZCBqdXN0IGFzc3VtZQ0KPiB0aGF0DQo+IHRoZSBjb21waWxlciB3aWxsIGJlIHNtYXJ0IGVub3Vn
-aCB0byB0byBrbm93IHdoZW4gdG8gaW5saW5lIGFuZCByZW1vdmUNCj4gYWxsIG9mIHRoZW0uDQo+
-DQo+IGknbGwgbGVhdmUgaXQgdXAgdG8geW91IHRvIGRlY2lkZSBhbmQgcHJvcG9zZSB5b3VyIHNv
-bHV0aW9uIGFzIGEgcGF0Y2gNCj4gd2l0aCBhbiBleHBsYW5hdGlvbi4NCj4NCj4gSm9obg0KDQpT
-byBJIHRoaW5rIGl0IHdvdWxkIGJlIHRoZSBiZXN0IGZvciBub3cgdG8gbGVhdmUgdGhpcyBjb2Rl
-IGFzIGl0IGlzIGFuZCBtYWtlDQp0d28gc2VwYXJhdGUgcGF0Y2hlcyBmcm9tIHRoZSByZW1haW5p
-bmcgdHdvIGNoYW5nZXM6DQoNCi0gRml4IEdQSU8gU2V0dXAgb2YgR1BJTyBQb3J0Mw0KLSBJbXBs
-ZW1lbnQgZ3Bpb19jaGlwLnRvX2lycQ0KDQpNYXJ0aW4NCg0KPg0KPg0KPiA+Pg0KPiA+Pj4NCj4g
-Pj4+Pg0KPiA+Pj4+PiAyLiBGaXggR1BJTyBTZXR1cCBvZiBHUElPIFBvcnQzDQo+ID4+Pj4NCj4g
-Pj4+PiBUaGlzIGNoYW5nZSBsb29rcyBmaW5lLg0KPiA+Pj4+DQo+ID4+Pj4+IDMuIEltcGxlbWVu
-dCBncGlvX2NoaXAudG9faXJxDQo+ID4+Pj4NCj4gPj4+PiBUaGVzZSBhcmUgdGhyZWUgZGlmZmVy
-ZW50IGNoYW5nZXMgKHR3byBmaXhlcywgb25lIG5ldyBmZWF0dXJlKSBhbmQNCj4gPj4+PiB0aGVy
-ZWZvcmUgc2hvdWxkIGJlIHNwbGl0IHVwIGludG8gdGhyZWUgcGF0Y2hlcy4NCj4gPj4+DQo+ID4+
-PiBBcyBJJ20gbm90IHRoZSBhdXRob3Igb2YgdGhpcyBwYXRjaCwgSSBkZWNpZGVkIHRvIGxlYXZl
-IGl0IGFzIGl0DQo+IGlzLg0KPiA+Pj4gQnV0IHBlciBzZSB5b3UgYXJlIHJpZ2h0LCBpdCB3b3Vs
-ZCBiZSBiZXR0ZXIgdG8gc3BsaXQgaXQgdXAuDQo+ID4+Pg0KPiA+Pj4+DQo+ID4+Pj4+IFNpZ25l
-ZC1vZmYtYnk6IEpvaG4gQ3Jpc3BpbiA8YmxvZ2ljQG9wZW53cnQub3JnPg0KPiA+Pj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBNYXJ0aW4gU2NoaWxsZXIgPG1zY2hpbGxlckB0ZHQuZGU+DQo+ID4+Pj4+IC0t
-LQ0KPiA+Pj4+DQo+ID4+Pj4gQWxzbyBwbGVhc2UgcHJvdmlkZSBhIGNoYW5nZWxvZyBmb3IgeW91
-ciBwYXRjaGVzIGhlcmUuDQo+ID4+Pg0KPiA+Pj4gT0suDQo+ID4+Pg0KPiA+Pj4+DQo+ID4+Pj4+
-ICBkcml2ZXJzL3BpbmN0cmwvcGluY3RybC14d2F5LmMgfCAyOCArKysrKysrKysrKysrKysrKysr
-KysrKysrKy0tDQo+ID4+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgMiBk
-ZWxldGlvbnMoLSkNCj4gPj4+Pj4NCj4gPj4+Pg0KPiA+Pj4+DQo+ID4+Pj4gSm9uYXMNCj4gPj4+
-DQo+ID4+PiBNYXJ0aW4NCj4gPj4+DQo+ID4+Pg0KPiA+DQo+ID4NCg0KDQo=
+The rk3288 MIPI DSI is a Synopsys DesignWare MIPI DSI host controller
+IP. This series adds support for a Synopsys DesignWare MIPI DSI host
+controller DRM bridge driver and a rockchip MIPI DSI specific DRM
+driver.
+
+This series also includes a DRM panel driver for BOE TV080WUM-NL0 panel.
+This panel only use the MIPI DSI video mode.
+
+The MIPI DSI feature is tested on rk3288 evb board, backport them to
+chrome os kernel v3.14, and it can display normally.
+
+This patchset is base on the patchset from Ying.liu@freescale.com.
+<http://www.spinics.net/lists/dri-devel/msg77181.html>
+
+Changes in v5:
+- change the mipidsi clk to SCLK_MIPIDSI_24M
+- modify the mipidsi clk name to SCLK_MIPIDSI_24M
+Adviced by Thierry
+- use hyphens instead of underscore
+- use encoder in drm_bridge
+- reformatting the dptdin table
+- use readx_poll_timeout to check register
+- use msleep to wait
+- add a comment to explain how to program phy
+- change the program code to symbolic names
+- check this for validity of find_panel and clk_prepare_enable
+- eliminate the configuration clock
+- some optimization for coding style
+- modify the clk name to SCLK_MIPIDSI_24M
+- add a blank line befor lcd_en
+
+Changes in v4:
+- use clk_round_rate to check the clock rate in vop_crtc_mode_fixup
+- remove the cfg clk
+- remove gpr property from example, since it is noused now.
+- add the description about ports
+- eliminate some warnning
+
+Changes in v3:
+- move the dw_mipi_dsi.txt to Documentation/devicetree/bindings/display/bridge
+- move dw_mipi_dsi_rockchip.txt to bindings/display/rockchip/
+
+Changes in v2:
+- add the mipi clk id in a single patch
+
+Chris Zhong (9):
+  clk: rockchip: add id for mipidsi sclk on rk3288
+  clk: rockchip: add mipidsi clocks on rk3288
+  drm/rockchip: return a true clock rate to adjusted_mode
+  drm: bridge: allow some funcs to be optional
+  drm/bridge: Add Synopsys DesignWare MIPI DSI host controller driver
+  drm: rockchip: Support Synopsys DesignWare MIPI DSI host controller
+  Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
+  ARM: dts: rockchip: add rk3288 mipi_dsi nodes
+  ARM: dts: rockchip: add support mipi panel tv080wum-nl0 for rk3288-evb
+
+Liu Ying (2):
+  drm/dsi: Add a helper to get bits per pixel of MIPI DSI pixel format
+  Documentation: dt-bindings: Add bindings for DW MIPI DSI
+
+ .../bindings/display/bridge/dw_mipi_dsi.txt        |   74 ++
+ .../display/rockchip/dw_mipi_dsi_rockchip.txt      |   56 +
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   20 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |   39 +
+ drivers/clk/rockchip/clk-rk3288.c                  |    2 +-
+ drivers/gpu/drm/bridge/Kconfig                     |   10 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/dw-mipi-dsi.c               | 1084 ++++++++++++++++++++
+ drivers/gpu/drm/drm_bridge.c                       |    6 +-
+ drivers/gpu/drm/rockchip/Kconfig                   |   10 +
+ drivers/gpu/drm/rockchip/Makefile                  |    1 +
+ drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c    |  249 +++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |    8 +
+ include/drm/bridge/dw_mipi_dsi.h                   |   28 +
+ include/drm/drm_mipi_dsi.h                         |   14 +
+ include/dt-bindings/clock/rk3288-cru.h             |    1 +
+ 16 files changed, 1599 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+ create mode 100644 drivers/gpu/drm/bridge/dw-mipi-dsi.c
+ create mode 100644 drivers/gpu/drm/rockchip/dw_mipi_dsi_rockchip.c
+ create mode 100644 include/drm/bridge/dw_mipi_dsi.h
+
+-- 
+2.6.3
+
