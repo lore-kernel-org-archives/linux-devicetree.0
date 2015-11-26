@@ -1,59 +1,50 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [linux-meson] Re: [PATCH v2 3/5] pinctrl: meson: enable GPIO IRQs
-Date: Thu, 26 Nov 2015 17:09:55 +0100
-Message-ID: <CAOQ7t2YAseprbT29uQX-aKJcEm-b-Dy=jBW8a+Z2kWDyQskNeA@mail.gmail.com>
-References: <1448273816-11290-1-git-send-email-carlo@caione.org>
-	<1448273816-11290-4-git-send-email-carlo@caione.org>
-	<20151124082801.09139a93@arm.com>
-	<CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A@mail.gmail.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [RFC PATCH 01/15] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Fri, 27 Nov 2015 01:12:50 +0900
+Message-ID: <CAGTfZH295rGWh4S0mPgC7GMiA04NKgDybRUVnfzZP5o9-HffMw@mail.gmail.com>
+References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
+	<1448545659-32287-2-git-send-email-cw00.choi@samsung.com>
+	<CAJ0PZbSJ26q9MWSXihQjZih0hSU=w+dR2HKxa67kJhmZtt1tJQ@mail.gmail.com>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAJ0PZbSJ26q9MWSXihQjZih0hSU=w+dR2HKxa67kJhmZtt1tJQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@gmail.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, tjakobi@math.uni-bielefeld.de, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 24, 2015 at 10:04 AM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Nov 24, 2015 at 9:28 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-
->> [...]
+On Thu, Nov 26, 2015 at 11:00 PM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
+> On Thu, Nov 26, 2015 at 10:47 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> This patch adds the generic exynos bus frequency driver for AMBA AXI bus
+>> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
+>> have the common architecture for bus between DRAM and sub-blocks in SoC.
+>> This driver can support the generic bus frequency driver for Exynos SoCs.
 >>
->>> +     for (i = 0; i < pc->num_gic_irqs; i++) {
->>> +             struct of_phandle_args oirq;
->>> +
->>> +             of_irq_parse_one(node, i, &oirq);
->>> +             irq_of_phandle_args_to_fwspec(&oirq, &pc->gic_irqs[i]);
->>> +
->>> +             pc->irq_map[i] = IRQ_FREE;
->>> +     }
+>> In devicetree, Each bus block has a bus clock, regulator, operation-point
+>> and devfreq-event devices which measure the utilization of each bus block.
 >>
->> The whole thing feels weird. Why do you need to keep a set of fwspecs?
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/devfreq/Kconfig             |  15 ++
+>>  drivers/devfreq/Makefile            |   1 +
+>>  drivers/devfreq/exynos/Makefile     |   1 +
+>>  drivers/devfreq/exynos/exynos-bus.c | 443 ++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 460 insertions(+)
+>>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
+>>
 >
-> We only have 8 IRQs on the GIC side that we can use for the GPIOs. The
-> set of fwspec is used to track these IRQs.
-> At probe time we read from the DTS how many and which IRQs are
-> reserved on the GIC for the GPIOs. Every time a GPIO IRQ is installed,
-> we use one of these IRQ lines.
->
->> All you need is a range of interrupts that would be conveniently
->> represented by a bitmap (assuming your interrupts space is a mostly
->> contiguous range).
->
-> I could do that but it feels to me like we end up hiding from the DTS
-> some information that naturally should be in there: a pinctrl device
-> that is using 8 interrupt lines of its interrupt controller. IMO this
-> is not a special case that requires some special treatment.
+> Are we finally getting a common Exynos bus driver with full DT support?
+> (can this replace both Exynos4/5 drivers and support Exynos7 series?)
 
-Marc,
-What's your opinion on this? So I can start cooking v3
+Yes.
+This patch-set would support all Exynos SoCs for bus frequency driver.
+To make sure the support for Exynos7 series, I need to check the TRM
+document of Exynos7.  I think it is possible for support Exynos7.
 
-Thanks,
+I'm going to test this driver on various Exynos-based board.
 
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Chanwoo Choi
