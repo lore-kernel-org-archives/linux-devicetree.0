@@ -1,61 +1,45 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 1/3] dt-bindings: add Marvell core PLL and clock divider PMU
- documentation
-Date: Thu, 26 Nov 2015 22:23:21 +0000
-Message-ID: <E1a24wj-0004iw-Rf@rmk-PC.arm.linux.org.uk>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: dove: add Dove divider clocks
+Date: Thu, 26 Nov 2015 22:23:32 +0000
+Message-ID: <E1a24wu-0004jh-3M@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-clk-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the Marvell clock divider driver, which is used
-to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
+Add the Dove divider clocks to the Dove dtsi file.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 ---
- .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+ arch/arm/boot/dts/dove.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clock.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-new file mode 100644
-index 000000000000..0c602de279e5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-@@ -0,0 +1,28 @@
-+PLl divider based Dove clocks
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 179121630ad7..ea36a262d056 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -459,6 +459,12 @@
+ 					#clock-cells = <1>;
+ 				};
+ 
++				divider_clk: core-clock@0064 {
++					compatible = "marvell,dove-divider-clock";
++					reg = <0x0064 0x8>;
++					#clock-cells = <1>;
++				};
 +
-+Marvell Dove has a 2GHz PLL, which feeds into a set of dividers to provide
-+high speed clocks for a number of peripherals.  These dividers are part of
-+the PMU, and thus this node should be a child of the PMU node.
-+
-+The following clocks are provided:
-+
-+ID	Clock
-+-------------
-+0	AXI bus clock
-+1	GPU clock
-+2	VMeta clock
-+3	LCD clock
-+
-+Required properties:
-+- compatible : shall be "marvell,dove-divider-clock"
-+- reg : shall be the register address of the Core PLL and Clock Divider
-+   Control 0 register.  This will cover that register, as well as the
-+   Core PLL and Clock Divider Control 1 register.  Thus, it will have
-+   a size of 8.
-+- #clock-cells : from common clock binding; shall be set to 1
-+
-+divider_clk: core-clock@0064 {
-+	compatible = "marvell,dove-divider-clock";
-+	reg = <0x0064 0x8>;
-+	#clock-cells = <1>;
-+};
+ 				pinctrl: pin-ctrl@0200 {
+ 					compatible = "marvell,dove-pinctrl";
+ 					reg = <0x0200 0x14>,
 -- 
 2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
