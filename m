@@ -1,139 +1,43 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: Re: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
-Date: Thu, 26 Nov 2015 08:20:32 +0100
-Message-ID: <5656B2C0.6010701@openwrt.org>
-References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
- <1448446739-5541-4-git-send-email-mschiller@tdt.de>
- <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
- <c9edbc5eafed4639983f8bcefe8e872e@TDT-MS.TDTNET.local>
- <5656AF01.3050700@openwrt.org>
- <39cc8cd2e53f492f88c45dd256a46b22@TDT-MS.TDTNET.local>
+From: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 net-next 2/5] net:hns: Add Hip06 "RSS(Receive Side
+ Scaling)" support to HNS Driver
+Date: Thu, 26 Nov 2015 07:31:07 +0000
+Message-ID: <5656B53B.3080205@huawei.com>
+References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com> <1447966706-16219-3-git-send-email-salil.mehta@huawei.com> <CO2PR11MB0088B852596B9F86F7BDCF6F97180@CO2PR11MB0088.namprd11.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <39cc8cd2e53f492f88c45dd256a46b22@TDT-MS.TDTNET.local>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Martin Schiller <mschiller@tdt.de>, Jonas Gorski <jogo@openwrt.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Hauke Mehrtens <hauke@hauke-m.de>, "daniel.schwierzeck@gmail.com" <daniel.schwierzeck@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CO2PR11MB0088B852596B9F86F7BDCF6F97180-aWXWhCNu7Z/c7AgKY82GyJPPoyLQLiKMvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yuval Mintz <Yuval.Mintz-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org" <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org" <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>, "mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mehta.sal>
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 26/11/2015 08:15, Martin Schiller wrote:
-> On 11/26/2015 at 8:04 AM, John Crispin wrote:
->>
->>
->> On 26/11/2015 07:40, Martin Schiller wrote:
->>> On 11/25/2015 at 11:40 AM, Jonas Gorski wrote:
->>>> Hi
->>>>
->>>> On Wed, Nov 25, 2015 at 11:18 AM, Martin Schiller <mschiller@tdt.de>
->>>> wrote:
->>>>> From: John Crispin <blogic@openwrt.org>
->>>>>
->>>>> This patch is included in the openwrt patchset for several years
->> now
->>>> and needs
->>>>> to go upstream as well. It includes the following changes:
->>>>> 1. Fix up inline function call to xway_mux_apply
->>>>
->>>> This really needs an explanation what is being fixed here.
->>>
->>> I hope John - as the original author of this patch - can explain
->>> why this change is necessary.
->>
->> what change? why am I in Cc: and not To: if an action is required ?
->>
->> John
-> 
-> That change is meant:
-> ########################################################################
->> diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-
->> xway.c
->> index a064962..f0b1b48 100644
->> --- a/drivers/pinctrl/pinctrl-xway.c
->> +++ b/drivers/pinctrl/pinctrl-xway.c
->> @@ -1496,10 +1496,9 @@ static struct pinctrl_desc xway_pctrl_desc = {
->>  .confops= &xway_pinconf_ops,
->>  };
->>
->> -static inline int xway_mux_apply(struct pinctrl_dev *pctrldev,
->> +static int mux_apply(struct ltq_pinmux_info *info,
->>  int pin, int mux)
->>  {
->> -struct ltq_pinmux_info *info = pinctrl_dev_get_drvdata(pctrldev);
->>  int port = PORT(pin);
->>  u32 alt1_reg = GPIO_ALT1(pin);
->>
->> @@ -1519,6 +1518,14 @@ static inline int xway_mux_apply(struct
->> pinctrl_dev *pctrldev,
->>  return 0;
->>  }
->>
->> +static inline int xway_mux_apply(struct pinctrl_dev *pctrldev,
->> +int pin, int mux)
->> +{
->> +struct ltq_pinmux_info *info = pinctrl_dev_get_drvdata(pctrldev);
+On 11/22/2015 9:30 AM, Yuval Mintz wrote:
+>>   static void hns_ppe_init_hw(struct hns_ppe_cb *ppe_cb)  {
+> ...
+>> +	/* Set default RSS key and indrection table*/
+>> +	const u32 rss_key[HNS_PPEV2_RSS_KEY_NUM] = {
+>> +		0x6d5a56da, 0x255b0ec2,
+>> +		0x4167253d, 0x43a38fb0,
+>> +		0xd0ca2bcb, 0xae7b30b4,
+>> +		0x77cb2da3, 0x8030f20c,
+>> +		0x6a42b73b, 0xbeac01fa,
+>> +	};
 >> +
->> +return mux_apply(info, pin, mux);
->> +}
->> +
->>  static const struct ltq_cfg_param xway_cfg_params[] = {
->>  {"lantiq,pull",LTQ_PINCONF_PARAM_PULL},
->>  {"lantiq,open-drain",LTQ_PINCONF_PARAM_OPEN_DRAIN},
-> #######################################################################
-> 
-
-ok so you picked up a patch and sent it upstream without looking at what
-it really does. the patch is simply not ready for upstream. the problem
-here is copy & paste inconsistency.
-
-however if we want to resolve this we should either keep the inlines and
-just stick to the current code pattern used or we could just assume that
-the compiler will be smart enough to to know when to inline and remove
-all of them.
-
-i'll leave it up to you to decide and propose your solution as a patch
-with an explanation.
-
-	John
-
-
+>> +	/* set default RSS key and remember it */
+>> +	for (i = 0; i < HNS_PPEV2_RSS_KEY_NUM; i++)
+>> +		ppe_cb->rss_key[i]  = rss_key[i];
 >>
->>>
->>>>
->>>>> 2. Fix GPIO Setup of GPIO Port3
->>>>
->>>> This change looks fine.
->>>>
->>>>> 3. Implement gpio_chip.to_irq
->>>>
->>>> These are three different changes (two fixes, one new feature) and
->>>> therefore should be split up into three patches.
->>>
->>> As I'm not the author of this patch, I decided to leave it as it is.
->>> But per se you are right, it would be better to split it up.
->>>
->>>>
->>>>> Signed-off-by: John Crispin <blogic@openwrt.org>
->>>>> Signed-off-by: Martin Schiller <mschiller@tdt.de>
->>>>> ---
->>>>
->>>> Also please provide a changelog for your patches here.
->>>
->>> OK.
->>>
->>>>
->>>>>  drivers/pinctrl/pinctrl-xway.c | 28 ++++++++++++++++++++++++++--
->>>>>  1 file changed, 26 insertions(+), 2 deletions(-)
->>>>>
->>>>
->>>>
->>>> Jonas
->>>
->>> Martin
->>>
->>>
-> 
-> 
+> Is there any reason for the special default key?
+> Why not use netdev_rss_key_fill()?
+Thanks for pointing out this. I have incorported this change in latest 
+PATCH V5
+>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
