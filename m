@@ -1,99 +1,60 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [linux-meson] Re: [PATCH v2 3/5] pinctrl: meson: enable GPIO
- IRQs
-Date: Thu, 26 Nov 2015 16:27:22 +0000
-Message-ID: <20151126162722.1146b220@arm.com>
-References: <1448273816-11290-1-git-send-email-carlo@caione.org>
-	<1448273816-11290-4-git-send-email-carlo@caione.org>
-	<20151124082801.09139a93@arm.com>
-	<CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A@mail.gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [RFC PATCH 01/15] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Thu, 26 Nov 2015 22:47:19 +0530
+Message-ID: <CANAwSgQtvp_7hODvLz--5QmXMYqhOQYyBjihyRqWYv5HEk0u5A@mail.gmail.com>
+References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
+ <1448545659-32287-2-git-send-email-cw00.choi@samsung.com> <CAJ0PZbSJ26q9MWSXihQjZih0hSU=w+dR2HKxa67kJhmZtt1tJQ@mail.gmail.com>
+ <CAGTfZH295rGWh4S0mPgC7GMiA04NKgDybRUVnfzZP5o9-HffMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2ZUAefL2xuEzAwoQWi3tpu7N7y6krMv1UUzaBT4BYZv4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGTfZH295rGWh4S0mPgC7GMiA04NKgDybRUVnfzZP5o9-HffMw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Nov 2015 10:04:50 +0100
-Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
+Hi Chanwoo,
 
-> On Tue, Nov 24, 2015 at 9:28 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Mon, 23 Nov 2015 11:16:54 +0100
-> > Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
-> >
-> >> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> >>
-> >> On Meson8 and Meson8b SoCs there are 8 independent filtered GPIO
-> >> interrupt modules that can be programmed to use any of the GPIOs in the
-> >> chip as an interrupt source.
-> >>
-> >> For each GPIO IRQ we have:
-> >>
-> >> GPIOs --> [mux]--> [polarity]--> [filter]--> [edge select]--> GIC
-> >>
-> >> The eight GPIO interrupts respond to mask/unmask/clear/etc.. just like
-> >> any other interrupt in the chip. The difference for the GPIO interrupts
-> >> is that they can be filtered and conditioned.
-> >>
-> >> This patch adds support for the external GPIOs interrupts and enables
-> >> them for Meson8 and Meson8b SoCs.
-> >>
-> >> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> >> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>
-> >> ---
-> >
-> > [...]
-> >
-> >> +     for (i = 0; i < pc->num_gic_irqs; i++) {
-> >> +             struct of_phandle_args oirq;
-> >> +
-> >> +             of_irq_parse_one(node, i, &oirq);
-> >> +             irq_of_phandle_args_to_fwspec(&oirq, &pc->gic_irqs[i]);
-> >> +
-> >> +             pc->irq_map[i] = IRQ_FREE;
-> >> +     }
-> >
-> > The whole thing feels weird. Why do you need to keep a set of fwspecs?
-> 
-> We only have 8 IRQs on the GIC side that we can use for the GPIOs. The
-> set of fwspec is used to track these IRQs.
-> At probe time we read from the DTS how many and which IRQs are
-> reserved on the GIC for the GPIOs. Every time a GPIO IRQ is installed,
-> we use one of these IRQ lines.
+On 26 November 2015 at 21:42, Chanwoo Choi <cwchoi00@gmail.com> wrote:
+> On Thu, Nov 26, 2015 at 11:00 PM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
+>> On Thu, Nov 26, 2015 at 10:47 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>> This patch adds the generic exynos bus frequency driver for AMBA AXI bus
+>>> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
+>>> have the common architecture for bus between DRAM and sub-blocks in SoC.
+>>> This driver can support the generic bus frequency driver for Exynos SoCs.
+>>>
+>>> In devicetree, Each bus block has a bus clock, regulator, operation-point
+>>> and devfreq-event devices which measure the utilization of each bus block.
+>>>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> ---
+>>>  drivers/devfreq/Kconfig             |  15 ++
+>>>  drivers/devfreq/Makefile            |   1 +
+>>>  drivers/devfreq/exynos/Makefile     |   1 +
+>>>  drivers/devfreq/exynos/exynos-bus.c | 443 ++++++++++++++++++++++++++++++++++++
+>>>  4 files changed, 460 insertions(+)
+>>>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
+>>>
+>>
+>> Are we finally getting a common Exynos bus driver with full DT support?
+>> (can this replace both Exynos4/5 drivers and support Exynos7 series?)
+>
+> Yes.
+> This patch-set would support all Exynos SoCs for bus frequency driver.
+> To make sure the support for Exynos7 series, I need to check the TRM
+> document of Exynos7.  I think it is possible for support Exynos7.
+>
+> I'm going to test this driver on various Exynos-based board.
+>
+> Regards,
+> Chanwoo Choi
 
-That doesn't answer my question. Having the raw IRQ numbers, why not.
-Storing a whole fwspec (16 u32 + 1 int + 1 pointer) seems completely
-overkill.
+Please do consider Exynos 542x series as well.
 
-> > All you need is a range of interrupts that would be conveniently
-> > represented by a bitmap (assuming your interrupts space is a mostly
-> > contiguous range).
-> 
-> I could do that but it feels to me like we end up hiding from the DTS
-> some information that naturally should be in there: a pinctrl device
-> that is using 8 interrupt lines of its interrupt controller. IMO this
-> is not a special case that requires some special treatment.
-
-Well, it is also arguable that these interrupts are not the pinctrl's,
-but those of the device that actually uses them (or we'd be describing
-interrupts in all interrupt controller bindings, which doesn't make any
-sense).
-
-See for example the TI crossbar, which has similar functionalities. I'm
-not going to take a hard line here, but the argument you have so far
-doesn't seem to hold much water for me. Or there is something obvious
-that I have missed, which is entirely possible.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Anand Moon
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
