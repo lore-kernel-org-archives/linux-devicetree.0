@@ -1,41 +1,138 @@
-From: Martin Schiller <mschiller@tdt.de>
-Subject: RE: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
-Date: Thu, 26 Nov 2015 06:40:18 +0000
-Message-ID: <c9edbc5eafed4639983f8bcefe8e872e@TDT-MS.TDTNET.local>
-References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
- <1448446739-5541-4-git-send-email-mschiller@tdt.de>
- <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [PATCH v2 0/9] Support TI LMU devices
+Date: Thu, 26 Nov 2015 15:56:56 +0900
+Message-ID: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
-Content-Language: de-DE
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jonas Gorski <jogo@openwrt.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Hauke Mehrtens <hauke@hauke-m.de>, "daniel.schwierzeck@gmail.com" <daniel.schwierzeck@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: robh+dt@kernel.org, lee.jones@linaro.org, j.anaszewski@samsung.com, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMjUvMjAxNSBhdCAxMTo0MCBBTSwgSm9uYXMgR29yc2tpIHdyb3RlOg0KPiBIaQ0KPg0K
-PiBPbiBXZWQsIE5vdiAyNSwgMjAxNSBhdCAxMToxOCBBTSwgTWFydGluIFNjaGlsbGVyIDxtc2No
-aWxsZXJAdGR0LmRlPg0KPiB3cm90ZToNCj4gPiBGcm9tOiBKb2huIENyaXNwaW4gPGJsb2dpY0Bv
-cGVud3J0Lm9yZz4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggaXMgaW5jbHVkZWQgaW4gdGhlIG9wZW53
-cnQgcGF0Y2hzZXQgZm9yIHNldmVyYWwgeWVhcnMgbm93DQo+IGFuZCBuZWVkcw0KPiA+IHRvIGdv
-IHVwc3RyZWFtIGFzIHdlbGwuIEl0IGluY2x1ZGVzIHRoZSBmb2xsb3dpbmcgY2hhbmdlczoNCj4g
-PiAxLiBGaXggdXAgaW5saW5lIGZ1bmN0aW9uIGNhbGwgdG8geHdheV9tdXhfYXBwbHkNCj4NCj4g
-VGhpcyByZWFsbHkgbmVlZHMgYW4gZXhwbGFuYXRpb24gd2hhdCBpcyBiZWluZyBmaXhlZCBoZXJl
-Lg0KDQpJIGhvcGUgSm9obiAtIGFzIHRoZSBvcmlnaW5hbCBhdXRob3Igb2YgdGhpcyBwYXRjaCAt
-IGNhbiBleHBsYWluDQp3aHkgdGhpcyBjaGFuZ2UgaXMgbmVjZXNzYXJ5Lg0KDQo+DQo+ID4gMi4g
-Rml4IEdQSU8gU2V0dXAgb2YgR1BJTyBQb3J0Mw0KPg0KPiBUaGlzIGNoYW5nZSBsb29rcyBmaW5l
-Lg0KPg0KPiA+IDMuIEltcGxlbWVudCBncGlvX2NoaXAudG9faXJxDQo+DQo+IFRoZXNlIGFyZSB0
-aHJlZSBkaWZmZXJlbnQgY2hhbmdlcyAodHdvIGZpeGVzLCBvbmUgbmV3IGZlYXR1cmUpIGFuZA0K
-PiB0aGVyZWZvcmUgc2hvdWxkIGJlIHNwbGl0IHVwIGludG8gdGhyZWUgcGF0Y2hlcy4NCg0KQXMg
-SSdtIG5vdCB0aGUgYXV0aG9yIG9mIHRoaXMgcGF0Y2gsIEkgZGVjaWRlZCB0byBsZWF2ZSBpdCBh
-cyBpdCBpcy4NCkJ1dCBwZXIgc2UgeW91IGFyZSByaWdodCwgaXQgd291bGQgYmUgYmV0dGVyIHRv
-IHNwbGl0IGl0IHVwLg0KDQo+DQo+ID4gU2lnbmVkLW9mZi1ieTogSm9obiBDcmlzcGluIDxibG9n
-aWNAb3BlbndydC5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFydGluIFNjaGlsbGVyIDxtc2No
-aWxsZXJAdGR0LmRlPg0KPiA+IC0tLQ0KPg0KPiBBbHNvIHBsZWFzZSBwcm92aWRlIGEgY2hhbmdl
-bG9nIGZvciB5b3VyIHBhdGNoZXMgaGVyZS4NCg0KT0suDQoNCj4NCj4gPiAgZHJpdmVycy9waW5j
-dHJsL3BpbmN0cmwteHdheS5jIHwgMjggKysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiA+
-ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0K
-Pg0KPg0KPiBKb25hcw0KDQpNYXJ0aW4NCg0KDQo=
+TI Lighting Management Unit drivers support lighting devices below.
+
+         Enable pin  Backlight  HW fault monitoring  LEDs   Regulators
+         ----------  ---------  -------------------  ----  ------------
+LM3532       o           o               x            x         x
+LM3631       o           o               x            x    5 regulators
+LM3632       o           o               x            x    3 regulators
+LM3633       o           o               o            o         x
+LM3695       o           o               x            x         x
+LM3697       o           o               o            x         x
+
+This patch-set consists of several parts below.
+
+  DT bindings        : Binding information for each module
+  LMU MFD            : Device registration and HW enable pin control
+  LMU fault monitor  : HW fault monitoring for open and short circuit
+  LMU backlight      : Consolidated LMU backlight driver
+  LM3633 LED         : LED subsystem and dimming pattern generation
+                       supported
+  LM363X regulator   : LM3631 and LM3632 regulator driver for the
+                       display bias
+
+Updates from v1
+---------------
+  * DT bindings
+    mfd       : Describe complete DT properties.
+    backlight : Move backlight properties into leds/backlight/.
+                Use common LED properties like 'led-sources' and 'label'.
+    hwmon     : LMU fault monitoring driver is not HWMON any more.
+                So related properties are moved into 'ti-lmu' binding.
+    leds      : Use LED common properties like 'led-sources' and 'label'.
+
+  * MFD
+    Remove LMU helpers for I2C register access. Each driver uses regmap
+    helpers instead.
+
+  * LMU fault monitoring driver
+    In v1, it was HWMON driver but HWMON subsystem maintainer suggested
+    moving it into MFD because it has no sensor data like temperature or
+    voltage. Device attributes were replaced with debugfs files because
+    monitoring should be processed for debug purpose only.
+
+  * Backlight
+    Six separate driver code was consolidated.
+    Driver control code is implemented in 'ti-lmu-backlight-core.c'.
+    Device specific data is defined in 'ti-lmu-backlight-data.c'.
+    194 lines are saved in v2. The text segment is decreased by removing
+    duplicate instructions.
+
+    Lines of code:
+      v1: 1420 (8 files)
+      v2: 1226 (3 files)
+
+    Size:
+      v1:
+      text  data  bss  filename
+     12202   720   40  drivers/video/backlight/built-in.o
+      v2:
+      text  data  bss  filename
+      6883   712   41  drivers/video/backlight/built-in.o
+
+  * LED
+    Use single device attribute for LED dimming operation.
+    Max brightness is determined by DT property, 'led-max-microamp'.
+    Remove brightness workqueue.
+
+  * Regulator
+    Use 'of_match' in regulator_desc instead of calling of_regulator_match.
+    Remove unnecessary OF device ID because MFD core registers a platform
+    device based on the compatible string.
+
+Milo Kim (9):
+  Documentation: dt-bindings: mfd: add TI LMU device binding information
+  Documentation: dt-bindings: leds: backlight: add TI LMU backlight
+    binding information
+  Documentation: dt-bindings: leds: add LM3633 LED binding information
+  Documentation: dt-bindings: regulator: add LM363x regulator binding
+    information
+  mfd: add TI LMU driver
+  mfd: add TI LMU hardware fault monitoring driver
+  backlight: add TI LMU backlight driver
+  leds: add LM3633 driver
+  regulator: add LM363X driver
+
+ .../ABI/testing/debugfs-ti-lmu-fault-monitor       |  32 +
+ Documentation/ABI/testing/sysfs-class-led-lm3633   |  97 +++
+ .../bindings/leds/backlight/ti-lmu-backlight.txt   |  65 ++
+ .../devicetree/bindings/leds/leds-lm3633.txt       |  24 +
+ Documentation/devicetree/bindings/mfd/ti-lmu.txt   | 243 ++++++
+ .../bindings/regulator/lm363x-regulator.txt        |  34 +
+ drivers/leds/Kconfig                               |  10 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-lm3633.c                         | 840 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  22 +
+ drivers/mfd/Makefile                               |   3 +
+ drivers/mfd/ti-lmu-fault-monitor.c                 | 405 ++++++++++
+ drivers/mfd/ti-lmu.c                               | 259 +++++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/lm363x-regulator.c               | 309 ++++++++
+ drivers/video/backlight/Kconfig                    |   7 +
+ drivers/video/backlight/Makefile                   |   3 +
+ drivers/video/backlight/ti-lmu-backlight-core.c    | 649 ++++++++++++++++
+ drivers/video/backlight/ti-lmu-backlight-data.c    | 287 +++++++
+ include/linux/mfd/ti-lmu-backlight.h               | 290 +++++++
+ include/linux/mfd/ti-lmu-register.h                | 280 +++++++
+ include/linux/mfd/ti-lmu.h                         |  87 +++
+ 23 files changed, 3957 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-ti-lmu-fault-monitor
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-lm3633
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/ti-lmu-backlight.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3633.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+ create mode 100644 drivers/leds/leds-lm3633.c
+ create mode 100644 drivers/mfd/ti-lmu-fault-monitor.c
+ create mode 100644 drivers/mfd/ti-lmu.c
+ create mode 100644 drivers/regulator/lm363x-regulator.c
+ create mode 100644 drivers/video/backlight/ti-lmu-backlight-core.c
+ create mode 100644 drivers/video/backlight/ti-lmu-backlight-data.c
+ create mode 100644 include/linux/mfd/ti-lmu-backlight.h
+ create mode 100644 include/linux/mfd/ti-lmu-register.h
+ create mode 100644 include/linux/mfd/ti-lmu.h
+
+-- 
+1.9.1
