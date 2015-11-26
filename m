@@ -1,60 +1,86 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFC PATCH 01/15] PM / devfreq: exynos: Add generic exynos bus
- frequency driver
-Date: Thu, 26 Nov 2015 22:47:19 +0530
-Message-ID: <CANAwSgQtvp_7hODvLz--5QmXMYqhOQYyBjihyRqWYv5HEk0u5A@mail.gmail.com>
-References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
- <1448545659-32287-2-git-send-email-cw00.choi@samsung.com> <CAJ0PZbSJ26q9MWSXihQjZih0hSU=w+dR2HKxa67kJhmZtt1tJQ@mail.gmail.com>
- <CAGTfZH295rGWh4S0mPgC7GMiA04NKgDybRUVnfzZP5o9-HffMw@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] irqdomain: introduce
+ irq_of_phandle_args_to_fwspec
+Date: Thu, 26 Nov 2015 17:25:59 +0000
+Message-ID: <20151126172559.4e3cb76c@arm.com>
+References: <1448273816-11290-1-git-send-email-carlo@caione.org>
+	<1448273816-11290-3-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAGTfZH295rGWh4S0mPgC7GMiA04NKgDybRUVnfzZP5o9-HffMw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448273816-11290-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+On Mon, 23 Nov 2015 11:16:53 +0100
+Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 
-On 26 November 2015 at 21:42, Chanwoo Choi <cwchoi00@gmail.com> wrote:
-> On Thu, Nov 26, 2015 at 11:00 PM, MyungJoo Ham <myungjoo.ham@samsung.com> wrote:
->> On Thu, Nov 26, 2015 at 10:47 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->>> This patch adds the generic exynos bus frequency driver for AMBA AXI bus
->>> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
->>> have the common architecture for bus between DRAM and sub-blocks in SoC.
->>> This driver can support the generic bus frequency driver for Exynos SoCs.
->>>
->>> In devicetree, Each bus block has a bus clock, regulator, operation-point
->>> and devfreq-event devices which measure the utilization of each bus block.
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> ---
->>>  drivers/devfreq/Kconfig             |  15 ++
->>>  drivers/devfreq/Makefile            |   1 +
->>>  drivers/devfreq/exynos/Makefile     |   1 +
->>>  drivers/devfreq/exynos/exynos-bus.c | 443 ++++++++++++++++++++++++++++++++++++
->>>  4 files changed, 460 insertions(+)
->>>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
->>>
->>
->> Are we finally getting a common Exynos bus driver with full DT support?
->> (can this replace both Exynos4/5 drivers and support Exynos7 series?)
->
-> Yes.
-> This patch-set would support all Exynos SoCs for bus frequency driver.
-> To make sure the support for Exynos7 series, I need to check the TRM
-> document of Exynos7.  I think it is possible for support Exynos7.
->
-> I'm going to test this driver on various Exynos-based board.
->
-> Regards,
-> Chanwoo Choi
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> 
+> Export of_phandle_args_to_fwspec with a new compliant name.
+> 
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> ---
+>  include/linux/of_irq.h | 2 ++
+>  kernel/irq/irqdomain.c | 5 +++--
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index 6f879c6..66bd92e 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -34,6 +34,8 @@ static inline int of_irq_parse_oldworld(struct device_node *device, int index,
+>  extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq);
+>  extern int of_irq_parse_one(struct device_node *device, int index,
+>  			  struct of_phandle_args *out_irq);
+> +extern void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
+> +					  struct irq_fwspec *fwspec);
+>  extern unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data);
+>  extern int of_irq_to_resource(struct device_node *dev, int index,
+>  			      struct resource *r);
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 22aa961..b2ff223 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -554,7 +554,7 @@ static int irq_domain_translate(struct irq_domain *d,
+>  	return 0;
+>  }
+>  
+> -static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
+> +void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
+>  				      struct irq_fwspec *fwspec)
+>  {
+>  	int i;
+> @@ -565,6 +565,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
+>  	for (i = 0; i < irq_data->args_count; i++)
+>  		fwspec->param[i] = irq_data->args[i];
+>  }
+> +EXPORT_SYMBOL_GPL(irq_of_phandle_args_to_fwspec);
+>  
+>  unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  {
+> @@ -618,7 +619,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
+>  {
+>  	struct irq_fwspec fwspec;
+>  
+> -	of_phandle_args_to_fwspec(irq_data, &fwspec);
+> +	irq_of_phandle_args_to_fwspec(irq_data, &fwspec);
+>  	return irq_create_fwspec_mapping(&fwspec);
+>  }
+>  EXPORT_SYMBOL_GPL(irq_create_of_mapping);
 
-Please do consider Exynos 542x series as well.
+Given what I've said earlier about keeping fwspec structures around,
+you can probably discard that patch.
 
--Anand Moon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
