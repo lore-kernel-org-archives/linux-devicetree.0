@@ -1,33 +1,70 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Remove unneeded GPIO include in
- exynos4412-odroidu3
-Date: Thu, 26 Nov 2015 09:31:59 +0900
-Message-ID: <565652FF.8050305@samsung.com>
-References: <1448453483-3338-1-git-send-email-javier@osg.samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: Atmel: ClassD: add GCK's parent
+	clock in DT binding
+Date: Thu, 26 Nov 2015 01:06:41 +0000
+Message-ID: <20151126010641.GY1929@sirena.org.uk>
+References: <1448270399-28728-1-git-send-email-songjun.wu@atmel.com>
+ <20151125234524.GA16553@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1448453483-3338-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
-Cc: Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============2083809360520250719=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20151125234524.GA16553@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Songjun Wu <songjun.wu@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.11.2015 21:11, Javier Martinez Canillas wrote:
-> The <dt-bindings/gpio/gpio.h> header is already included in the
-> exynos4412-odroid-common DTSI so there's no need to do it again
-> in the DTS file.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/exynos4412-odroidu3.dts | 1 -
->  1 file changed, 1 deletion(-)
+
+--===============2083809360520250719==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="VIFPKPeEU/ajvd6j"
+Content-Disposition: inline
 
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+--VIFPKPeEU/ajvd6j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards,
-Krzysztof
+On Wed, Nov 25, 2015 at 05:45:24PM -0600, Rob Herring wrote:
+> On Mon, Nov 23, 2015 at 05:19:58PM +0800, Songjun Wu wrote:
+> > Set GCK's parent as audio clock.
+
+> > Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+
+> Applied, thanks.
+
+I already applied this to the ASoC tree.
+
+--VIFPKPeEU/ajvd6j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWVlsgAAoJECTWi3JdVIfQ7HMH/347uWTYpkv0deCfduGCPymK
+iK3mEDHgy3oE0fXTPWJs3UOubeL3qUDLaZxu6rKkOUi9T0bkjR064Mzi8cpuNKPQ
+aNVnfSUvk0vVpH218PaxIeO8SzcwFTSYR5CwjFaskv9xHZsEzd8UfKEvhWNYR7l6
+xx756CAdWlSHTFhHjl3THFAOOHA+m4bLxDaAkK6stkJi0GKT2ZWv07UaL1akp9wF
+xrj+hii8SVgjqTJBmOGR8XTYGorQCi5p+zFTLVJahoITV8ielMGM8+mxbPaXglSj
+6KYNnAowbySInJpGxFJ46M2cEv1X710cyk5FZRmUR+ZTeLWtjsW/T7cWOLneb2Y=
+=AqsY
+-----END PGP SIGNATURE-----
+
+--VIFPKPeEU/ajvd6j--
+
+--===============2083809360520250719==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2083809360520250719==--
