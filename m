@@ -1,88 +1,184 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v6 2/2] leds: rt5033: Add RT5033 Flash led device driver
-Date: Thu, 26 Nov 2015 10:43:25 +0100
-Message-ID: <5656D43D.106@samsung.com>
-References: <1448446948-13729-1-git-send-email-ingi2.kim@samsung.com>
- <1448446948-13729-3-git-send-email-ingi2.kim@samsung.com>
- <5655D001.8090803@samsung.com> <5656BC88.2070603@samsung.com>
+From: Martin Schiller <mschiller@tdt.de>
+Subject: [PATCH v3 1/5] pinctrl/lantiq: updating devicetree binding description
+Date: Thu, 26 Nov 2015 11:00:06 +0100
+Message-ID: <1448532010-30930-1-git-send-email-mschiller@tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <5656BC88.2070603@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, andi.shyti@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ralf@linux-mips.org, blogic@openwrt.org, hauke@hauke-m.de, jogo@openwrt.org, daniel.schwierzeck@gmail.com, Martin Schiller <mschiller@tdt.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ingi,
+This patch adds the new dedicated "lantiq,<chip>-pinctrl" compatible strings
+to the devicetree bindings Documentation, where <chip> is one of "ase",
+"danube", "xrx100", "xrx200" or "xrx300" and marks the "lantiq,pinctrl-xway",
+"lantiq,pinctrl-ase" and "lantiq,pinctrl-xr9" compatible strings as DEPRECATED.
 
-On 11/26/2015 09:02 AM, Ingi Kim wrote:
-[...]
->>> +torch_unlock:
->>> +    mutex_unlock(&led->lock);
->>> +    return ret;
->>> +}
->>> +
->>> +static int rt5033_led_flash_brightness_set(struct led_classdev_flash *fled_cdev,
->>> +                       u32 brightness)
->>> +{
->>> +    struct rt5033_sub_led *sub_led = flcdev_to_sub_led(fled_cdev);
->>> +    struct rt5033_led *led = sub_led_to_led(sub_led);
->>> +
->>> +    mutex_lock(&led->lock);
->>> +    sub_led->flash_brightness = brightness;
->>> +    mutex_unlock(&led->lock);
->>
->> Mutex protection is redundant in this case. You would need it if device
->> state was also changed here.
->
-> Okay, I'll remove it.
->
->>
->> BTW why flash brightness can't be written to the device here?
->>
->
-> Flash brightness is only affected when FLED flashed (strobing).
-> So, I think it is better to be written in rt5033_led_flash_strobe_set function.
+Signed-off-by: Martin Schiller <mschiller@tdt.de>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes in v3:
+None
 
-strobe_set op should strobe the flash ASAP, and delegating brightness
-setting there extends a delay between calling strobe_set op
-and actual flash strobe. If you set the brightness here, then you
-wouldn't have to do that in the strobe_set op, of course unless the
-the brightness is altered through the API of the other LED, in two
-separate LEDs case.
+Changes in v2:
+- subject of the patch
+- changed "lantiq,pinctrl-<chip>" to "lantiq,<chip>-pinctrl"
 
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int rt5033_led_flash_timeout_set(struct led_classdev_flash *fled_cdev,
->>> +                    u32 timeout)
->>> +{
->>> +    struct rt5033_sub_led *sub_led = flcdev_to_sub_led(fled_cdev);
->>> +    struct rt5033_led *led = sub_led_to_led(sub_led);
->>> +
->>> +    mutex_lock(&led->lock);
->>> +    sub_led->flash_timeout = timeout;
->>> +    mutex_unlock(&led->lock);
->>
->> Ditto.
->>
+ .../bindings/pinctrl/lantiq,pinctrl-xway.txt       | 110 +++++++++++++++++++--
+ 1 file changed, 102 insertions(+), 8 deletions(-)
 
-Timeout should be also written here.
-
-If you will add regmap_write in both ops, then mutex protection will
-have to be preserved, to assure consistency between registers state
-and sub_led->flash_brightness and sub_led->flash_timeout state.
-
->
->>> +#define RT5033_FLED_CTRL4_VTRREG_MAX    0x60
->>
->> Rename DEF to MASK.
-
-Hmm, here it should be: Rename MAX to MASK.
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
+index e89b467..8e5216b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
++++ b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
+@@ -1,7 +1,16 @@
+ Lantiq XWAY pinmux controller
+ 
+ Required properties:
+-- compatible: "lantiq,pinctrl-xway" or "lantiq,pinctrl-xr9"
++- compatible: "lantiq,pinctrl-xway", (DEPRECATED: Use "lantiq,pinctrl-danube")
++	      "lantiq,pinctrl-xr9", (DEPRECATED: Use "lantiq,xrx100-pinctrl" or
++					"lantiq,xrx200-pinctrl")
++	      "lantiq,pinctrl-ase", (DEPRECATED: Use "lantiq,ase-pinctrl")
++	      "lantiq,<chip>-pinctrl", where <chip> is:
++		"ase" (XWAY AMAZON Family)
++		"danube" (XWAY DANUBE Family)
++		"xrx100" (XWAY xRX100 Family)
++		"xrx200" (XWAY xRX200 Family)
++		"xrx300" (XWAY xRX300 Family)
+ - reg: Should contain the physical address and length of the gpio/pinmux
+   register range
+ 
+@@ -36,19 +45,87 @@ Required subnode-properties:
+ 
+ Valid values for group and function names:
+ 
++XWAY: (DEPRECATED: Use DANUBE)
+   mux groups:
+     exin0, exin1, exin2, jtag, ebu a23, ebu a24, ebu a25, ebu clk, ebu cs1,
+     ebu wait, nand ale, nand cs1, nand cle, spi, spi_cs1, spi_cs2, spi_cs3,
+-    spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi , gpt1, gpt2,
++    spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi, gpt1, gpt2,
+     gpt3, clkout0, clkout1, clkout2, clkout3, gnt1, gnt2, gnt3, req1, req2,
+     req3
+ 
+-  additional mux groups (XR9 only):
+-    mdio, nand rdy, nand rd, exin3, exin4, gnt4, req4
++  functions:
++    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu
++
++XR9: ( DEPRECATED: Use xRX100/xRX200)
++  mux groups:
++    exin0, exin1, exin2, exin3, exin4, jtag, ebu a23, ebu a24, ebu a25,
++    ebu clk, ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy,
++    nand rd, spi, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5, spi_cs6,
++    asc0, asc0 cts rts, stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1,
++    clkout2, clkout3, gnt1, gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio,
++    gphy0 led0, gphy0 led1, gphy0 led2, gphy1 led0, gphy1 led1, gphy1 led2
++
++  functions:
++    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, mdio, gphy
++
++AMAZON:
++  mux groups:
++    exin0, exin1, exin2, jtag, spi_di, spi_do, spi_clk, spi_cs1, spi_cs2,
++    spi_cs3, spi_cs4, spi_cs5, spi_cs6, asc, stp, gpt1, gpt2, gpt3, clkout0,
++    clkout1, clkout2, mdio, dfe led0, dfe led1, ephy led0, ephy led1, ephy led2
++
++  functions:
++    spi, asc, cgu, jtag, exin, stp, gpt, mdio, ephy, dfe
++
++DANUBE:
++  mux groups:
++    exin0, exin1, exin2, jtag, ebu a23, ebu a24, ebu a25, ebu clk, ebu cs1,
++    ebu wait, nand ale, nand cs1, nand cle, spi_di, spi_do, spi_clk, spi_cs1,
++    spi_cs2, spi_cs3, spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi,
++    gpt1, gpt2, gpt3, clkout0, clkout1, clkout2, clkout3, gnt1, gnt2, gnt3,
++    req1, req2, req3, dfe led0, dfe led1
+ 
+   functions:
+-    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, mdio
++    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, dfe
+ 
++xRX100:
++  mux groups:
++    exin0, exin1, exin2, exin3, exin4, ebu a23, ebu a24, ebu a25, ebu clk,
++    ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy, nand rd,
++    spi_di, spi_do, spi_clk, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5,
++    spi_cs6, asc0, asc0 cts rts, stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1,
++    clkout2, clkout3, gnt1, gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio,
++    dfe led0, dfe led1
++
++  functions:
++    spi, asc, cgu, exin, stp, gpt, nmi, pci, ebu, mdio, dfe
++
++xRX200:
++  mux groups:
++    exin0, exin1, exin2, exin3, exin4, ebu a23, ebu a24, ebu a25, ebu clk,
++    ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy, nand rd,
++    spi_di, spi_do, spi_clk, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5,
++    spi_cs6, usif uart_rx, usif uart_tx, usif uart_rts, usif uart_cts,
++    usif uart_dtr, usif uart_dsr, usif uart_dcd, usif uart_ri, usif spi_di,
++    usif spi_do, usif spi_clk, usif spi_cs0, usif spi_cs1, usif spi_cs2,
++    stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1, clkout2, clkout3, gnt1,
++    gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio, dfe led0, dfe led1,
++    gphy0 led0, gphy0 led1, gphy0 led2, gphy1 led0, gphy1 led1, gphy1 led2
++
++  functions:
++    spi, usif, cgu, exin, stp, gpt, nmi, pci, ebu, mdio, dfe, gphy
++
++xRX300:
++  mux groups:
++    exin0, exin1, exin2, exin4, nand ale, nand cs0, nand cs1, nand cle,
++    nand rdy, nand rd, nand_d0, nand_d1, nand_d2, nand_d3, nand_d4, nand_d5,
++    nand_d6, nand_d7, nand_d1, nand wr, nand wp, nand se, spi_di, spi_do,
++    spi_clk, spi_cs1, spi_cs4, spi_cs6, usif uart_rx, usif uart_tx,
++    usif spi_di, usif spi_do, usif spi_clk, usif spi_cs0, stp, clkout2,
++    mdio, dfe led0, dfe led1, ephy0 led0, ephy0 led1, ephy1 led0, ephy1 led1
++
++  functions:
++    spi, usif, cgu, exin, stp, ebu, mdio, dfe, ephy
+ 
+ 
+ Definition of pin configurations:
+@@ -62,15 +139,32 @@ Optional subnode-properties:
+     0: none, 1: down, 2: up.
+ - lantiq,open-drain: Boolean, enables open-drain on the defined pin.
+ 
+-Valid values for XWAY pin names:
++Valid values for XWAY pin names: (DEPRECATED: Use DANUBE)
+   Pinconf pins can be referenced via the names io0-io31.
+ 
+-Valid values for XR9 pin names:
++Valid values for XR9 pin names: (DEPRECATED: Use xrX100/xRX200)
+   Pinconf pins can be referenced via the names io0-io55.
+ 
++Valid values for AMAZON pin names:
++  Pinconf pins can be referenced via the names io0-io31.
++
++Valid values for DANUBE pin names:
++  Pinconf pins can be referenced via the names io0-io31.
++
++Valid values for xRX100 pin names:
++  Pinconf pins can be referenced via the names io0-io55.
++
++Valid values for xRX200 pin names:
++  Pinconf pins can be referenced via the names io0-io49.
++
++Valid values for xRX300 pin names:
++  Pinconf pins can be referenced via the names io0-io1,io3-io6,io8-io11,
++						io13-io19,io23-io27,io34-io36,
++						io42-io43,io48-io61.
++
+ Example:
+ 	gpio: pinmux@E100B10 {
+-		compatible = "lantiq,pinctrl-xway";
++		compatible = "lantiq,danube-pinctrl";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&state_default>;
+ 
 -- 
-Best Regards,
-Jacek Anaszewski
+2.1.4
+
