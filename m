@@ -1,35 +1,61 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Thu, 26 Nov 2015 23:12:38 +0200
-Message-ID: <565775C6.8070500@gmail.com>
-References: <20150713131902.GH26485@atomide.com> <20151123144545.GD24147@pali>
- <20151125181644.GI2517@atomide.com> <17134653.86P3dFyQKK@wuerfel>
- <20151125210310.GT2517@atomide.com> <56568849.5080103@gmail.com>
- <20151126090739.GD14190@pali> <20151126203930.GW2517@atomide.com>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 1/3] dt-bindings: add Marvell core PLL and clock divider PMU
+ documentation
+Date: Thu, 26 Nov 2015 22:23:21 +0000
+Message-ID: <E1a24wj-0004iw-Rf@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151126203930.GW2517@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Sebastian Reichel <sre@debian.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-clk-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Add documentation for the Marvell clock divider driver, which is used
+to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
 
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/dove-divider-clock.txt
 
-On 26.11.2015 22:39, Tony Lindgren wrote:
+diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clock.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+new file mode 100644
+index 000000000000..0c602de279e5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+@@ -0,0 +1,28 @@
++PLl divider based Dove clocks
++
++Marvell Dove has a 2GHz PLL, which feeds into a set of dividers to provide
++high speed clocks for a number of peripherals.  These dividers are part of
++the PMU, and thus this node should be a child of the PMU node.
++
++The following clocks are provided:
++
++ID	Clock
++-------------
++0	AXI bus clock
++1	GPU clock
++2	VMeta clock
++3	LCD clock
++
++Required properties:
++- compatible : shall be "marvell,dove-divider-clock"
++- reg : shall be the register address of the Core PLL and Clock Divider
++   Control 0 register.  This will cover that register, as well as the
++   Core PLL and Clock Divider Control 1 register.  Thus, it will have
++   a size of 8.
++- #clock-cells : from common clock binding; shall be set to 1
++
++divider_clk: core-clock@0064 {
++	compatible = "marvell,dove-divider-clock";
++	reg = <0x0064 0x8>;
++	#clock-cells = <1>;
++};
+-- 
+2.1.0
 
-> Just to explore options.. How about make a minimal device driver that
-> just loads the atags blob from /lib/firmware and then shows it in
-> /proc/atags? Of course some checking on the atags should be done by
-> the driver..
->
-
-What is the chance for such a driver to be accepted upstream? As IIRC 
-the current situation is because similar driver was rejected. Might be 
-wrong as well, it was about 2-3 years ago.
-
-Regards,
-Ivo
