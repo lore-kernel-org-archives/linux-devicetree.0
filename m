@@ -1,86 +1,58 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] irqdomain: introduce
- irq_of_phandle_args_to_fwspec
-Date: Thu, 26 Nov 2015 17:25:59 +0000
-Message-ID: <20151126172559.4e3cb76c@arm.com>
-References: <1448273816-11290-1-git-send-email-carlo@caione.org>
-	<1448273816-11290-3-git-send-email-carlo@caione.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v8 02/17] drm: bridge: analogix/dp: split exynos dp driver to bridge directory
+Date: Thu, 26 Nov 2015 18:30:52 +0100
+Message-ID: <1812354.kkj0DGG9mi@diego>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com> <1446020519-625-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448273816-11290-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1446020519-625-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Nov 2015 11:16:53 +0100
-Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
+Hi Yakir,
 
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Am Mittwoch, 28. Oktober 2015, 16:21:59 schrieb Yakir Yang:
+> Split the dp core driver from exynos directory to bridge directory,
+> and rename the core driver to analogix_dp_*, rename the platform
+> code to exynos_dp.
 > 
-> Export of_phandle_args_to_fwspec with a new compliant name.
+> Beside the new analogix_dp driver would export four hooks.
+> "analogix_dp_bind()" and "analogix_dp_unbind()"
+> "analogix_dp_detect()" and "analogix_dp_get_modes()"
 > 
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> ---
->  include/linux/of_irq.h | 2 ++
->  kernel/irq/irqdomain.c | 5 +++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
+> The bind/unbind symbols is used for analogix platform driver to connect
+> with analogix_dp core driver. And the detect/get_modes is used for analogix
+> platform driver to init the connector.
 > 
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 6f879c6..66bd92e 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -34,6 +34,8 @@ static inline int of_irq_parse_oldworld(struct device_node *device, int index,
->  extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq);
->  extern int of_irq_parse_one(struct device_node *device, int index,
->  			  struct of_phandle_args *out_irq);
-> +extern void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
-> +					  struct irq_fwspec *fwspec);
->  extern unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data);
->  extern int of_irq_to_resource(struct device_node *dev, int index,
->  			      struct resource *r);
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 22aa961..b2ff223 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -554,7 +554,7 @@ static int irq_domain_translate(struct irq_domain *d,
->  	return 0;
->  }
->  
-> -static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
-> +void irq_of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
->  				      struct irq_fwspec *fwspec)
->  {
->  	int i;
-> @@ -565,6 +565,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
->  	for (i = 0; i < irq_data->args_count; i++)
->  		fwspec->param[i] = irq_data->args[i];
->  }
-> +EXPORT_SYMBOL_GPL(irq_of_phandle_args_to_fwspec);
->  
->  unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  {
-> @@ -618,7 +619,7 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
->  {
->  	struct irq_fwspec fwspec;
->  
-> -	of_phandle_args_to_fwspec(irq_data, &fwspec);
-> +	irq_of_phandle_args_to_fwspec(irq_data, &fwspec);
->  	return irq_create_fwspec_mapping(&fwspec);
->  }
->  EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+> They reason why connector need register in helper driver is rockchip drm
+> haven't implement the atomic API, but Exynos drm have implement it, so
+> there would need two different connector helper functions, that's why we
+> leave the connector register in helper driver.
+> 
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 
-Given what I've said earlier about keeping fwspec structures around,
-you can probably discard that patch.
+[...]
 
-Thanks,
+> diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
+> index bd1a415..5f74f80 100644
+> --- a/drivers/gpu/drm/exynos/Kconfig
+> +++ b/drivers/gpu/drm/exynos/Kconfig
+> @@ -55,8 +55,9 @@ config DRM_EXYNOS_DSI
+>  	  This enables support for Exynos MIPI-DSI device.
+> 
+>  config DRM_EXYNOS_DP
+> -	bool "EXYNOS DRM DP driver support"
+> +	bool "EXYNOS specific extensions for Analogix DP driver"
+>  	depends on DRM_EXYNOS && (DRM_EXYNOS_FIMD || DRM_EXYNOS7_DECON)
+> +	select DRM_ANALOGIX_DP
+>  	default DRM_EXYNOS
+>  	select DRM_PANEL
+>  	help
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This doesn't apply anymore to 4.4-rc due to other changes in there. The 
+exynos/Makefile is affected as well.
