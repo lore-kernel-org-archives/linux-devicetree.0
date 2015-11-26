@@ -1,263 +1,92 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] phy-sun4i-usb: Use of_match_node to get model
- specific config data
-Date: Thu, 26 Nov 2015 12:22:59 +0800
-Message-ID: <CAGb2v64XL=bptxoCwiVkf8u-EfckpuASS3Foo=Q3i4a_6CaJYA@mail.gmail.com>
-References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
+From: Joshua Henderson <joshua.henderson@microchip.com>
+Subject: Re: [PATCH 12/14] DEVICETREE: Add bindings for PIC32 SDHC host
+ controller
+Date: Wed, 25 Nov 2015 21:40:23 -0700
+Message-ID: <56568D37.7030406@microchip.com>
+References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
+ <1448065205-15762-13-git-send-email-joshua.henderson@microchip.com>
+ <56508B72.8070701@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448470202-3628-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <56508B72.8070701@cogentembedded.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org
+Cc: linux-mips@linux-mips.org, Andrei Pistirica <andrei.pistirica@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 12:50 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Use of_match_node instead of calling of_device_is_compatible a ton of
-> times to get model specific config data.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v3:
-> -New patch in v3 of this patch-set
-> ---
->  drivers/phy/phy-sun4i-usb.c | 130 +++++++++++++++++++++++++++++---------------
->  1 file changed, 85 insertions(+), 45 deletions(-)
->
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> index b12964b..1d8f85d 100644
-> --- a/drivers/phy/phy-sun4i-usb.c
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -88,12 +88,22 @@
->  #define DEBOUNCE_TIME                  msecs_to_jiffies(50)
->  #define POLL_TIME                      msecs_to_jiffies(250)
->
-> +enum sun4i_usb_phy_type {
-> +       sun4i_a10_phy,
-> +       sun8i_a33_phy,
-> +};
-> +
-> +struct sun4i_usb_phy_cfg {
-> +       int num_phys;
-> +       u32 disc_thresh;
-> +       enum sun4i_usb_phy_type type;
-> +       bool dedicated_clocks;
-> +};
-> +
->  struct sun4i_usb_phy_data {
->         void __iomem *base;
-> +       const struct sun4i_usb_phy_cfg *cfg;
->         struct mutex mutex;
-> -       int num_phys;
-> -       u32 disc_thresh;
-> -       bool has_a33_phyctl;
->         struct sun4i_usb_phy {
->                 struct phy *phy;
->                 void __iomem *pmu;
-> @@ -164,12 +174,15 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
->
->         mutex_lock(&phy_data->mutex);
->
-> -       if (phy_data->has_a33_phyctl) {
-> +       switch (phy_data->cfg->type) {
-> +       case sun4i_a10_phy:
-> +               phyctl = phy_data->base + REG_PHYCTL_A10;
+Hi Sergei,
 
-Any reason why this offset isn't incorporated into phy_data?
+On 11/21/2015 8:19 AM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 11/21/2015 3:17 AM, Joshua Henderson wrote:
+> 
+>> From: Andrei Pistirica <andrei.pistirica@microchip.com>
+>>
+>> Document the devicetree bindings for the SDHC peripheral found on
+>> Microchip PIC32 class devices.
+>>
+>> Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
+>> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
+>> ---
+>>   .../devicetree/bindings/mmc/sdhci-pic32.txt        |   24 ++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+>> new file mode 100644
+>> index 0000000..f16388c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pic32.txt
+>> @@ -0,0 +1,24 @@
+>> +* Microchip PIC32 SDHCI Controller
+>> +
+>> +This file documents differences between the core properties in mmc.txt
+>> +and the properties used by the sdhci-pic32 driver.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "microchip,pic32-sdhci"
+>> +- reg: Should contain registers location and length
+>> +- interrupts: Should contain interrupt
+>> +- pinctrl: Should contain pinctrl for data and command lines
+> 
+>    This is a required prop, yet the example doesn't contain it?
+> 
 
-> +               break;
-> +       case sun8i_a33_phy:
->                 phyctl = phy_data->base + REG_PHYCTL_A33;
->                 /* A33 needs us to set phyctl to 0 explicitly */
->                 writel(0, phyctl);
-> -       } else {
-> -               phyctl = phy_data->base + REG_PHYCTL_A10;
-> +               break;
->         }
->
->         for (i = 0; i < len; i++) {
-> @@ -249,7 +262,8 @@ static int sun4i_usb_phy_init(struct phy *_phy)
->         sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
->
->         /* Disconnect threshold adjustment */
-> -       sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
-> +       sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-> +                           data->cfg->disc_thresh, 2);
->
->         sun4i_usb_phy_passby(phy, 1);
->
-> @@ -476,7 +490,7 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
->  {
->         struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
->
-> -       if (args->args[0] >= data->num_phys)
-> +       if (args->args[0] >= data->cfg->num_phys)
->                 return ERR_PTR(-ENODEV);
->
->         return data->phys[args->args[0]].phy;
-> @@ -499,6 +513,59 @@ static int sun4i_usb_phy_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static const struct sun4i_usb_phy_cfg sun4i_a10_cfg = {
-> +       .num_phys = 3,
-> +       .disc_thresh = 3,
-> +       .type = sun4i_a10_phy,
-> +       .dedicated_clocks = false,
-> +};
-> +
-> +static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
-> +       .num_phys = 2,
-> +       .disc_thresh = 2,
-> +       .type = sun4i_a10_phy,
-> +       .dedicated_clocks = false,
-> +};
-> +
-> +static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
-> +       .num_phys = 3,
-> +       .disc_thresh = 3,
-> +       .type = sun4i_a10_phy,
-> +       .dedicated_clocks = true,
-> +};
-> +
-> +static const struct sun4i_usb_phy_cfg sun7i_a20_cfg = {
-> +       .num_phys = 3,
-> +       .disc_thresh = 2,
-> +       .type = sun4i_a10_phy,
-> +       .dedicated_clocks = false,
-> +};
-> +
-> +static const struct sun4i_usb_phy_cfg sun8i_a23_cfg = {
-> +       .num_phys = 2,
-> +       .disc_thresh = 3,
-> +       .type = sun4i_a10_phy,
-> +       .dedicated_clocks = true,
-> +};
-> +
-> +static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
-> +       .num_phys = 2,
-> +       .disc_thresh = 3,
-> +       .type = sun8i_a33_phy,
-> +       .dedicated_clocks = true,
-> +};
-> +
-> +static const struct of_device_id sun4i_usb_phy_of_match[] = {
-> +       { .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
-> +       { .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-> +       { .compatible = "allwinner,sun6i-a31-usb-phy", .data = &sun6i_a31_cfg },
-> +       { .compatible = "allwinner,sun7i-a20-usb-phy", .data = &sun7i_a20_cfg },
-> +       { .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
-> +       { .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-> +
->  static const unsigned int sun4i_usb_phy0_cable[] = {
->         EXTCON_USB,
->         EXTCON_USB_HOST,
-> @@ -511,10 +578,16 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->         struct device *dev = &pdev->dev;
->         struct device_node *np = dev->of_node;
->         struct phy_provider *phy_provider;
-> -       bool dedicated_clocks;
-> +       const struct of_device_id *match;
->         struct resource *res;
->         int i, ret;
->
-> +       match = of_match_node(sun4i_usb_phy_of_match, dev->of_node);
+Ack.  Both the required properties and example need to contain pinctrl-names and pinctrl-0, not pinctrl.
 
-You can use of_device_get_match_data() for slightly less code. This
-will also let you keep the of_device_id table where it was, at the
-bottom.
+>> +
+>> +Optional properties:
+>> +- no-1-8-v: 1.8V voltage selection not supported
+>> +- piomode: disable DMA support
+>> +
+>> +Example:
+>> +
+>> +    sdhci@1f8ec000 {
+>> +        compatible = "microchip,pic32-sdhci";
+>> +        reg = <0x1f8ec000 0x100>;
+>> +        interrupts = <SDHC_EVENT DEFAULT_INT_PRI IRQ_TYPE_LEVEL_HIGH>;
+>> +        clocks = <&REFCLKO4>, <&PBCLK5>;
+>> +        clock-names = "base_clk", "sys_clk";
+> 
+>    The "clocks" and "clock-names" props are not documented.
+> 
+> [...]
+> 
+> MBR, Sergei
+> 
 
-> +       if (!match) {
+Ack.
 
-I'm working on something similar in the axp20x driver. Is there any
-case of_match_node or of_device_get_match_data can fail?
-
-
-Regards
-ChenYu
-
-> +               dev_err(dev, "of_match_node() failed\n");
-> +               return -EINVAL;
-> +       }
-> +
->         data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->         if (!data)
->                 return -ENOMEM;
-> @@ -522,29 +595,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->         mutex_init(&data->mutex);
->         INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
->         dev_set_drvdata(dev, data);
-> -
-> -       if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
-> -           of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
-> -           of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
-> -               data->num_phys = 2;
-> -       else
-> -               data->num_phys = 3;
-> -
-> -       if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
-> -           of_device_is_compatible(np, "allwinner,sun7i-a20-usb-phy"))
-> -               data->disc_thresh = 2;
-> -       else
-> -               data->disc_thresh = 3;
-> -
-> -       if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy") ||
-> -           of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
-> -           of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
-> -               dedicated_clocks = true;
-> -       else
-> -               dedicated_clocks = false;
-> -
-> -       if (of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
-> -               data->has_a33_phyctl = true;
-> +       data->cfg = match->data;
->
->         res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
->         data->base = devm_ioremap_resource(dev, res);
-> @@ -590,7 +641,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->                 }
->         }
->
-> -       for (i = 0; i < data->num_phys; i++) {
-> +       for (i = 0; i < data->cfg->num_phys; i++) {
->                 struct sun4i_usb_phy *phy = data->phys + i;
->                 char name[16];
->
-> @@ -602,7 +653,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->                         phy->vbus = NULL;
->                 }
->
-> -               if (dedicated_clocks)
-> +               if (data->cfg->dedicated_clocks)
->                         snprintf(name, sizeof(name), "usb%d_phy", i);
->                 else
->                         strlcpy(name, "usb_phy", sizeof(name));
-> @@ -689,17 +740,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->         return 0;
->  }
->
-> -static const struct of_device_id sun4i_usb_phy_of_match[] = {
-> -       { .compatible = "allwinner,sun4i-a10-usb-phy" },
-> -       { .compatible = "allwinner,sun5i-a13-usb-phy" },
-> -       { .compatible = "allwinner,sun6i-a31-usb-phy" },
-> -       { .compatible = "allwinner,sun7i-a20-usb-phy" },
-> -       { .compatible = "allwinner,sun8i-a23-usb-phy" },
-> -       { .compatible = "allwinner,sun8i-a33-usb-phy" },
-> -       { },
-> -};
-> -MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-> -
->  static struct platform_driver sun4i_usb_phy_driver = {
->         .probe  = sun4i_usb_phy_probe,
->         .remove = sun4i_usb_phy_remove,
-> --
-> 2.5.0
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for the feedback,
+Josh
