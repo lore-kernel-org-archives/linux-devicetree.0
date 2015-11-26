@@ -1,65 +1,104 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH 3/5] dt-bindings: rockchip-thermal: Support the
- RK3228/RK3399 SoCs compatible
-Date: Thu, 26 Nov 2015 10:57:49 +0800
-Message-ID: <5656752D.2010707@rock-chips.com>
-References: <1448438377-29203-1-git-send-email-wxt@rock-chips.com>
- <1448438377-29203-4-git-send-email-wxt@rock-chips.com>
- <11146001.lIrLtFf7Xg@diego>
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm64: dts: add all hi6220 i2c nodes
+Date: Thu, 26 Nov 2015 11:16:08 +0800
+Message-ID: <56567978.9070104@hisilicon.com>
+References: <1448444942-5780-1-git-send-email-kong.kongxinwei@hisilicon.com> <20151125122449.GH11999@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11146001.lIrLtFf7Xg@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Eduardo Valentin <edubezval@gmail.com>, linux-rockchip@lists.infradead.org, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151125122449.GH11999@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+hi Shawn,
 
-
-=E5=9C=A8 2015=E5=B9=B411=E6=9C=8825=E6=97=A5 22:56, Heiko St=C3=BCbner=
- =E5=86=99=E9=81=93:
-> Am Mittwoch, 25. November 2015, 15:59:35 schrieb Caesar Wang:
->> This patchset attempts to new compatible for thermal founding
->> on RK3228/RK3399 SoCs.
+On 2015/11/25 20:24, Shawn Guo wrote:
+> On Wed, Nov 25, 2015 at 05:49:02PM +0800, Xinwei Kong wrote:
+>> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
+>> use this I2C IP of Synopsys Designware for HiKey board.
 >>
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 >> ---
+>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 37 +++++++++++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
 >>
->>   Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 2=
- ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
-mal.txt
->> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt ind=
-ex
->> 0dfa60d..af5f802 100644
->> --- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> @@ -2,8 +2,10 @@
->>
->>   Required properties:
->>   - compatible : should be "rockchip,<name>-tsadc"
->> +   "rockchip,rk3228-tsadc": found on RK3228 SoCs
->>      "rockchip,rk3288-tsadc": found on RK3288 SoCs
->>      "rockchip,rk3368-tsadc": found on RK3368 SoCs
->> +   "rockchip,rk3368-tsadc": found on RK3399 SoCs
-> copy'n'paste error, should proably be
->   "rockchip,rk3399-tsadc": found on RK3399 SoCs
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> index 82d2488..6b591a9 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> @@ -208,5 +208,42 @@
+>>  			clock-names = "uartclk", "apb_pclk";
+>>  			status = "disabled";
+>>  		};
+>> +
+>> +		i2c0: i2c@f7100000 {
+>> +			compatible = "snps,designware-i2c";
+>> +			reg = <0x0 0xf7100000 0x0 0x1000>;
+>> +			interrupts = <0 44 4>;
+>> +			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
+>> +			clock-names = "clk_i2c0";
+>> +			i2c-sda-hold-time-ns = <300>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
+>> +			status = "ok";
+> 
+> Shouldn't it be set "disabled" in <soc>.dtsi and let <board>.dts enable
+> it per board design?
+> 
+> Shawn
 
-=46ixed in next version, thanks!
->>   - reg : physical base address of the controller and length of memo=
-ry mapped
->> region.
->>   - interrupts : The interrupt number to the cpu. The interrupt spec=
-ifier
->> format
->
->
->
+get it.
 
---=20
-caesar wang | software engineer | wxt@rock-chip.com
+thank you
+xinwei
+> 
+>> +		};
+>> +
+>> +		i2c1: i2c@f7101000 {
+>> +			compatible = "snps,designware-i2c";
+>> +			reg = <0x0 0xf7101000 0x0 0x1000>;
+>> +			interrupts = <0 45 4>;
+>> +			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
+>> +			clock-names = "clk_i2c1";
+>> +			i2c-sda-hold-time-ns = <300>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
+>> +			status = "ok";
+>> +		};
+>> +
+>> +		i2c2: i2c@f7102000 {
+>> +			compatible = "snps,designware-i2c";
+>> +			reg = <0x0 0xf7102000 0x0 0x1000>;
+>> +			interrupts = <0 46 4>;
+>> +			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
+>> +			clock-names = "clk_i2c2";
+>> +			i2c-sda-hold-time-ns = <300>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
+>> +			status = "ok";
+>> +		};
+>> +
+>>  	};
+>>  };
+>> -- 
+>> 1.9.1
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
