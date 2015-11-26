@@ -1,67 +1,86 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 11/12] clk: mediatek: Add hdmi_ref HDMI PHY PLL
- reference clock output
-Date: Thu, 26 Nov 2015 14:02:04 +0800
-Message-ID: <1448517724.16568.1.camel@mtksdaap41>
-References: <1447868060-11620-1-git-send-email-p.zabel@pengutronix.de>
-	 <1447868060-11620-12-git-send-email-p.zabel@pengutronix.de>
+From: Jia Hongtao <hongtao.jia@freescale.com>
+Subject: [PATCH V2] cpufreq: qoriq: Register cooling device based on device tree
+Date: Thu, 26 Nov 2015 14:27:29 +0800
+Message-ID: <1448519249-11449-1-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447868060-11620-12-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: edubezval@gmail.com, viresh.kumar@linaro.org
+Cc: linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, scottwood@freescale.com, hongtao.jia@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-11-18 at 18:34 +0100, Philipp Zabel wrote:
-> The configurable hdmi_ref output of the PLL block is derived from
-> the tvdpll_594m clock signal via a configurable PLL post-divider.
-> It is used as the PLL reference input to the HDMI PHY module.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Register the qoriq cpufreq driver as a cooling device, based on the
+thermal device tree framework. When temperature crosses the passive trip
+point cpufreq is used to throttle CPUs.
 
-Acked-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jia Hongtao <hongtao.jia@freescale.com>
+---
+Changes for V2:
+* Using ->ready callback for cpu cooling device registering.
 
-> ---
->  drivers/clk/mediatek/clk-mt8173.c      | 5 +++++
->  include/dt-bindings/clock/mt8173-clk.h | 3 ++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
-> index b305fa2..d7eadda 100644
-> --- a/drivers/clk/mediatek/clk-mt8173.c
-> +++ b/drivers/clk/mediatek/clk-mt8173.c
-> @@ -1091,6 +1091,11 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
->  		clk_data->clks[cku->id] = clk;
->  	}
->  
-> +	clk = clk_register_divider(NULL, "hdmi_ref", "tvdpll_594m", 0,
-> +				   base + 0x40, 16, 3, CLK_DIVIDER_POWER_OF_TWO,
-> +				   NULL);
-> +	clk_data->clks[CLK_APMIXED_HDMI_REF] = clk;
-> +
->  	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
->  	if (r)
->  		pr_err("%s(): could not register clock provider: %d\n",
-> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
-> index 7956ba1..6094bf7 100644
-> --- a/include/dt-bindings/clock/mt8173-clk.h
-> +++ b/include/dt-bindings/clock/mt8173-clk.h
-> @@ -176,7 +176,8 @@
->  #define CLK_APMIXED_LVDSPLL		13
->  #define CLK_APMIXED_MSDCPLL2		14
->  #define CLK_APMIXED_REF2USB_TX		15
-> -#define CLK_APMIXED_NR_CLK		16
-> +#define CLK_APMIXED_HDMI_REF		16
-> +#define CLK_APMIXED_NR_CLK		17
->  
->  /* INFRA_SYS */
->  
+ drivers/cpufreq/qoriq-cpufreq.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
+diff --git a/drivers/cpufreq/qoriq-cpufreq.c b/drivers/cpufreq/qoriq-cpufreq.c
+index 4f53fa2..a39f868 100644
+--- a/drivers/cpufreq/qoriq-cpufreq.c
++++ b/drivers/cpufreq/qoriq-cpufreq.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/cpufreq.h>
++#include <linux/cpu_cooling.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -33,6 +34,7 @@
+ struct cpu_data {
+ 	struct clk **pclk;
+ 	struct cpufreq_frequency_table *table;
++	struct thermal_cooling_device *cdev;
+ };
+ 
+ /*
+@@ -260,6 +262,30 @@ static int qoriq_cpufreq_target(struct cpufreq_policy *policy,
+ 	return clk_set_parent(policy->clk, parent);
+ }
+ 
++
++static void qoriq_cpufreq_ready(struct cpufreq_policy *policy)
++{
++	struct cpu_data *cpud = policy->driver_data;
++	struct device_node *np = of_get_cpu_node(policy->cpu, NULL);
++
++	if (WARN_ON(!np))
++		return;
++
++	if (of_find_property(np, "#cooling-cells", NULL)) {
++		cpud->cdev = of_cpufreq_cooling_register(np,
++							 policy->related_cpus);
++
++		if (IS_ERR(cpud->cdev)) {
++			pr_err("Failed to register cooling device cpu%d: %ld\n",
++					policy->cpu, PTR_ERR(cpud->cdev));
++
++			cpud->cdev = NULL;
++		}
++	}
++
++	of_node_put(np);
++}
++
+ static struct cpufreq_driver qoriq_cpufreq_driver = {
+ 	.name		= "qoriq_cpufreq",
+ 	.flags		= CPUFREQ_CONST_LOOPS,
+@@ -268,6 +294,7 @@ static struct cpufreq_driver qoriq_cpufreq_driver = {
+ 	.verify		= cpufreq_generic_frequency_table_verify,
+ 	.target_index	= qoriq_cpufreq_target,
+ 	.get		= cpufreq_generic_get,
++	.ready		= qoriq_cpufreq_ready,
+ 	.attr		= cpufreq_generic_attr,
+ };
+ 
+-- 
+2.1.0.27.g96db324
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
