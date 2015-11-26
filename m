@@ -1,47 +1,36 @@
-From: Martin Schiller <mschiller@tdt.de>
-Subject: [PATCH v3 4/5] pinctrl/lantiq: Fix GPIO Setup of GPIO Port3
-Date: Thu, 26 Nov 2015 11:00:09 +0100
-Message-ID: <1448532010-30930-4-git-send-email-mschiller@tdt.de>
-References: <1448532010-30930-1-git-send-email-mschiller@tdt.de>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: am437x: cm-t43: dts: add dual emac support
+Date: Thu, 26 Nov 2015 16:04:01 +0530
+Message-ID: <5656E019.3000903@ti.com>
+References: <1448371155-17307-1-git-send-email-nikita@compulab.co.il>
+ <1448371155-17307-7-git-send-email-nikita@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1448532010-30930-1-git-send-email-mschiller@tdt.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ralf@linux-mips.org, blogic@openwrt.org, hauke@hauke-m.de, jogo@openwrt.org, daniel.schwierzeck@gmail.com, Martin Schiller <mschiller@tdt.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448371155-17307-7-git-send-email-nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <blogic@openwrt.org>
+On Tuesday 24 November 2015 06:49 PM, Nikita Kiryanov wrote:
+> CM-T43 comes with 2 ethernet ports connected to the cpsw subsystem, which
+> has 2 modes of operation: switch mode and dual emac mode.
+> Add the relevant muxing and set it up to work in dual emac mode by
+> default.
+> 
+> Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Signed-off-by: Martin Schiller <mschiller@tdt.de>
----
-Changes in v3:
-- Moved this change into a separate patch
+Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 
-Changes in v2: 
-None
-
- drivers/pinctrl/pinctrl-xway.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
-index a064962..b78baaa 100644
---- a/drivers/pinctrl/pinctrl-xway.c
-+++ b/drivers/pinctrl/pinctrl-xway.c
-@@ -1563,6 +1563,10 @@ static int xway_gpio_dir_out(struct gpio_chip *chip, unsigned int pin, int val)
- {
- 	struct ltq_pinmux_info *info = dev_get_drvdata(chip->dev);
- 
-+	if (PORT(pin) == PORT3)
-+		gpio_setbit(info->membase[0], GPIO3_OD, PORT_PIN(pin));
-+	else
-+		gpio_setbit(info->membase[0], GPIO_OD(pin), PORT_PIN(pin));
- 	gpio_setbit(info->membase[0], GPIO_DIR(pin), PORT_PIN(pin));
- 	xway_gpio_set(chip, pin, val);
- 
--- 
-2.1.4
-
+Regards
+Mugunthan V N
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
