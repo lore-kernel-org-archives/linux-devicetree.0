@@ -1,94 +1,98 @@
-From: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 net-next 1/5] net:hns: Add support of Hip06 SoC to
- the Hislicon Network Subsystem
-Date: Thu, 26 Nov 2015 07:44:25 +0000
-Message-ID: <5656B859.7010106@huawei.com>
-References: <1447966706-16219-1-git-send-email-salil.mehta@huawei.com> <1447966706-16219-2-git-send-email-salil.mehta@huawei.com> <CO2PR11MB0088145308CE8BF0C504C9C497180@CO2PR11MB0088.namprd11.prod.outlook.com>
+From: Martin Schiller <mschiller@tdt.de>
+Subject: RE: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
+Date: Thu, 26 Nov 2015 07:47:22 +0000
+Message-ID: <c22e3b466e2a44cb82a66a4edac8e805@TDT-MS.TDTNET.local>
+References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
+ <1448446739-5541-4-git-send-email-mschiller@tdt.de>
+ <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
+ <c9edbc5eafed4639983f8bcefe8e872e@TDT-MS.TDTNET.local>
+ <5656AF01.3050700@openwrt.org>
+ <39cc8cd2e53f492f88c45dd256a46b22@TDT-MS.TDTNET.local>
+ <5656B2C0.6010701@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CO2PR11MB0088145308CE8BF0C504C9C497180-aWXWhCNu7Z/c7AgKY82GyJPPoyLQLiKMvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuval Mintz <Yuval.Mintz-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org" <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org" <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>, "mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mehta.sal>
-Cc: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, lipeng <lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5656B2C0.6010701@openwrt.org>
+Content-Language: de-DE
+Sender: linux-gpio-owner@vger.kernel.org
+To: John Crispin <blogic@openwrt.org>, Jonas Gorski <jogo@openwrt.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Hauke Mehrtens <hauke@hauke-m.de>, "daniel.schwierzeck@gmail.com" <daniel.schwierzeck@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 11/22/2015 9:19 AM, Yuval Mintz wrote:
->> +void hns_rcbv2_int_ctrl_hw(struct hnae_queue *q, u32 flag, u32 mask)
->> +{
->> +	u32 int_mask_en = !!mask;
->> +
->> +	if (flag & RCB_INT_FLAG_TX)
->> +		dsaf_write_dev(q, RCB_RING_INTMSK_TXWL_REG,
->> int_mask_en);
->> +
->> +	if (flag & RCB_INT_FLAG_RX)
->> +		dsaf_write_dev(q, RCB_RING_INTMSK_RXWL_REG,
->> int_mask_en);
->> +}
->> +
->> +void hns_rcbv2_int_clr_hw(struct hnae_queue *q, u32 flag)
->> +{
->> +	u32 clr = 1;
->> +
->> +	if (flag & RCB_INT_FLAG_TX)
->> +		dsaf_write_dev(q, RCBV2_TX_RING_INT_STS_REG, clr);
->> +
->> +	if (flag & RCB_INT_FLAG_RX)
->> +		dsaf_write_dev(q, RCBV2_RX_RING_INT_STS_REG, clr);
->> +}
->> +
-> Why do you need the int_mask_en, clr variables? Why not directly use values?
-'clr' variable can be avoided and is kind of redundant as it always 
-holds the
-same value. This chnage is now part of latest floated PATCH V5.
-
-Purpose of the mask is coming from the previous/legacy
-SoC Hip05 where operation is done on the basis of RX or TX direction.
-This mask does not seem very useful for now but we would like to take
-this change in future, if there is not any API's using this kind of 
-interface.
--Salil
->
->> +static void fill_v2_desc(struct hnae_ring *ring, void *priv,
-> ....
->> +	hnae_set_field(bn_pid, 0x7, 0, buf_num - 1);
-> Magic values?
-Changed to macro in PATCH V5. Thanks!
--Salil
->
->> +int hns_nic_net_xmit_hw(struct net_device *ndev,
->> +			struct sk_buff *skb,
->> +			struct hns_nic_ring_data *ring_data)
->> +{
->> -	/* If everything has gone correctly network should be the
->> +	/**
->> +	 * If everything has gone correctly network should be the
->>   	 * data section of the packet and will be the end of the header.
->>   	 * If not then it probably represents the end of the last recognized
->>   	 * header.
-> What happened to the network style comments?
-Fixed this in PATCH V5. Thanks !!
--Salil
->
->>   static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
->>   			       struct sk_buff **out_skb, int *out_bnum)
->> +	/**
->> +	 * we will be copying header into skb->data in
->> +	 * pskb_may_pull so it is in our interest to prefetch
->> +	 * it now to avoid a possible cache miss
->> +	 */
->> +	prefetchw(skb->data);
->> +
-> Likewise
-Fixed this in PATCH V5. Thanks !!
--Salil
->
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEvMjYvMjAxNSBhdCA4OjIwIEFNLCBKb2huIENyaXNwaW4gd3JvdGU6DQo+DQo+DQo+IE9u
+IDI2LzExLzIwMTUgMDg6MTUsIE1hcnRpbiBTY2hpbGxlciB3cm90ZToNCj4gPiBPbiAxMS8yNi8y
+MDE1IGF0IDg6MDQgQU0sIEpvaG4gQ3Jpc3BpbiB3cm90ZToNCj4gPj4NCj4gPj4NCj4gPj4gT24g
+MjYvMTEvMjAxNSAwNzo0MCwgTWFydGluIFNjaGlsbGVyIHdyb3RlOg0KPiA+Pj4gT24gMTEvMjUv
+MjAxNSBhdCAxMTo0MCBBTSwgSm9uYXMgR29yc2tpIHdyb3RlOg0KPiA+Pj4+IEhpDQo+ID4+Pj4N
+Cj4gPj4+PiBPbiBXZWQsIE5vdiAyNSwgMjAxNSBhdCAxMToxOCBBTSwgTWFydGluIFNjaGlsbGVy
+DQo+IDxtc2NoaWxsZXJAdGR0LmRlPg0KPiA+Pj4+IHdyb3RlOg0KPiA+Pj4+PiBGcm9tOiBKb2hu
+IENyaXNwaW4gPGJsb2dpY0BvcGVud3J0Lm9yZz4NCj4gPj4+Pj4NCj4gPj4+Pj4gVGhpcyBwYXRj
+aCBpcyBpbmNsdWRlZCBpbiB0aGUgb3BlbndydCBwYXRjaHNldCBmb3Igc2V2ZXJhbCB5ZWFycw0K
+PiA+PiBub3cNCj4gPj4+PiBhbmQgbmVlZHMNCj4gPj4+Pj4gdG8gZ28gdXBzdHJlYW0gYXMgd2Vs
+bC4gSXQgaW5jbHVkZXMgdGhlIGZvbGxvd2luZyBjaGFuZ2VzOg0KPiA+Pj4+PiAxLiBGaXggdXAg
+aW5saW5lIGZ1bmN0aW9uIGNhbGwgdG8geHdheV9tdXhfYXBwbHkNCj4gPj4+Pg0KPiA+Pj4+IFRo
+aXMgcmVhbGx5IG5lZWRzIGFuIGV4cGxhbmF0aW9uIHdoYXQgaXMgYmVpbmcgZml4ZWQgaGVyZS4N
+Cj4gPj4+DQo+ID4+PiBJIGhvcGUgSm9obiAtIGFzIHRoZSBvcmlnaW5hbCBhdXRob3Igb2YgdGhp
+cyBwYXRjaCAtIGNhbiBleHBsYWluDQo+ID4+PiB3aHkgdGhpcyBjaGFuZ2UgaXMgbmVjZXNzYXJ5
+Lg0KPiA+Pg0KPiA+PiB3aGF0IGNoYW5nZT8gd2h5IGFtIEkgaW4gQ2M6IGFuZCBub3QgVG86IGlm
+IGFuIGFjdGlvbiBpcyByZXF1aXJlZCA/DQo+ID4+DQo+ID4+IEpvaG4NCj4gPg0KPiA+IFRoYXQg
+Y2hhbmdlIGlzIG1lYW50Og0KPiA+DQo+ICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
+IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjDQo+ICMNCj4gPj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLXh3YXkuYw0KPiBiL2RyaXZlcnMvcGluY3Ry
+bC9waW5jdHJsLQ0KPiA+PiB4d2F5LmMNCj4gPj4gaW5kZXggYTA2NDk2Mi4uZjBiMWI0OCAxMDA2
+NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3BpbmN0cmwteHdheS5jDQo+ID4+ICsrKyBi
+L2RyaXZlcnMvcGluY3RybC9waW5jdHJsLXh3YXkuYw0KPiA+PiBAQCAtMTQ5NiwxMCArMTQ5Niw5
+IEBAIHN0YXRpYyBzdHJ1Y3QgcGluY3RybF9kZXNjIHh3YXlfcGN0cmxfZGVzYyA9DQo+IHsNCj4g
+Pj4gIC5jb25mb3BzPSAmeHdheV9waW5jb25mX29wcywNCj4gPj4gIH07DQo+ID4+DQo+ID4+IC1z
+dGF0aWMgaW5saW5lIGludCB4d2F5X211eF9hcHBseShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdHJs
+ZGV2LA0KPiA+PiArc3RhdGljIGludCBtdXhfYXBwbHkoc3RydWN0IGx0cV9waW5tdXhfaW5mbyAq
+aW5mbywNCj4gPj4gIGludCBwaW4sIGludCBtdXgpDQo+ID4+ICB7DQo+ID4+IC1zdHJ1Y3QgbHRx
+X3Bpbm11eF9pbmZvICppbmZvID0gcGluY3RybF9kZXZfZ2V0X2RydmRhdGEocGN0cmxkZXYpOw0K
+PiA+PiAgaW50IHBvcnQgPSBQT1JUKHBpbik7DQo+ID4+ICB1MzIgYWx0MV9yZWcgPSBHUElPX0FM
+VDEocGluKTsNCj4gPj4NCj4gPj4gQEAgLTE1MTksNiArMTUxOCwxNCBAQCBzdGF0aWMgaW5saW5l
+IGludCB4d2F5X211eF9hcHBseShzdHJ1Y3QNCj4gPj4gcGluY3RybF9kZXYgKnBjdHJsZGV2LA0K
+PiA+PiAgcmV0dXJuIDA7DQo+ID4+ICB9DQo+ID4+DQo+ID4+ICtzdGF0aWMgaW5saW5lIGludCB4
+d2F5X211eF9hcHBseShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdHJsZGV2LA0KPiA+PiAraW50IHBp
+biwgaW50IG11eCkNCj4gPj4gK3sNCj4gPj4gK3N0cnVjdCBsdHFfcGlubXV4X2luZm8gKmluZm8g
+PSBwaW5jdHJsX2Rldl9nZXRfZHJ2ZGF0YShwY3RybGRldik7DQo+ID4+ICsNCj4gPj4gK3JldHVy
+biBtdXhfYXBwbHkoaW5mbywgcGluLCBtdXgpOw0KPiA+PiArfQ0KPiA+PiArDQo+ID4+ICBzdGF0
+aWMgY29uc3Qgc3RydWN0IGx0cV9jZmdfcGFyYW0geHdheV9jZmdfcGFyYW1zW10gPSB7DQo+ID4+
+ICB7ImxhbnRpcSxwdWxsIixMVFFfUElOQ09ORl9QQVJBTV9QVUxMfSwNCj4gPj4gIHsibGFudGlx
+LG9wZW4tZHJhaW4iLExUUV9QSU5DT05GX1BBUkFNX09QRU5fRFJBSU59LA0KPiA+DQo+ICMjIyMj
+IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
+IyMjIyMjIyMjDQo+ID4NCj4NCj4gb2sgc28geW91IHBpY2tlZCB1cCBhIHBhdGNoIGFuZCBzZW50
+IGl0IHVwc3RyZWFtIHdpdGhvdXQgbG9va2luZyBhdA0KPiB3aGF0DQo+IGl0IHJlYWxseSBkb2Vz
+LiB0aGUgcGF0Y2ggaXMgc2ltcGx5IG5vdCByZWFkeSBmb3IgdXBzdHJlYW0uIHRoZSBwcm9ibGVt
+DQo+IGhlcmUgaXMgY29weSAmIHBhc3RlIGluY29uc2lzdGVuY3kuDQoNCk9mIGNvdXJzZSBJIGFu
+YWx5emVkIHRoZSB3aG9sZSBwYXRjaCBhbmQgLSBhcyB5b3UgbWF5IGhhdmUgbm90aWNlZCAtIGFk
+ZGVkDQphIGRlc2NyaXB0aW9uIGZvciB0aGUgMyBjaGFuZ2VzIHdoaWNoIHdlcmUgbWFkZSBpbiB0
+aGlzIHBhdGNoLg0KDQpJIGFsc28ga25vdyB0aGF0IHRoaXMgZmlyc3QgcGFydCBvZiB0aGUgcGF0
+Y2ggY2hhbmdlcyB0aGUgc2NvcGUgb2YgdGhlIGlubGluZQ0KY29kZSwgYnV0IEkgZGlkIG5vdCBr
+bm93IHdoeSB0aGlzIGNoYW5nZSB3YXMgZG9uZS4NCg0KPg0KPiBob3dldmVyIGlmIHdlIHdhbnQg
+dG8gcmVzb2x2ZSB0aGlzIHdlIHNob3VsZCBlaXRoZXIga2VlcCB0aGUgaW5saW5lcw0KPiBhbmQN
+Cj4ganVzdCBzdGljayB0byB0aGUgY3VycmVudCBjb2RlIHBhdHRlcm4gdXNlZCBvciB3ZSBjb3Vs
+ZCBqdXN0IGFzc3VtZQ0KPiB0aGF0DQo+IHRoZSBjb21waWxlciB3aWxsIGJlIHNtYXJ0IGVub3Vn
+aCB0byB0byBrbm93IHdoZW4gdG8gaW5saW5lIGFuZCByZW1vdmUNCj4gYWxsIG9mIHRoZW0uDQo+
+DQo+IGknbGwgbGVhdmUgaXQgdXAgdG8geW91IHRvIGRlY2lkZSBhbmQgcHJvcG9zZSB5b3VyIHNv
+bHV0aW9uIGFzIGEgcGF0Y2gNCj4gd2l0aCBhbiBleHBsYW5hdGlvbi4NCj4NCj4gSm9obg0KDQpT
+byBJIHRoaW5rIGl0IHdvdWxkIGJlIHRoZSBiZXN0IGZvciBub3cgdG8gbGVhdmUgdGhpcyBjb2Rl
+IGFzIGl0IGlzIGFuZCBtYWtlDQp0d28gc2VwYXJhdGUgcGF0Y2hlcyBmcm9tIHRoZSByZW1haW5p
+bmcgdHdvIGNoYW5nZXM6DQoNCi0gRml4IEdQSU8gU2V0dXAgb2YgR1BJTyBQb3J0Mw0KLSBJbXBs
+ZW1lbnQgZ3Bpb19jaGlwLnRvX2lycQ0KDQpNYXJ0aW4NCg0KPg0KPg0KPiA+Pg0KPiA+Pj4NCj4g
+Pj4+Pg0KPiA+Pj4+PiAyLiBGaXggR1BJTyBTZXR1cCBvZiBHUElPIFBvcnQzDQo+ID4+Pj4NCj4g
+Pj4+PiBUaGlzIGNoYW5nZSBsb29rcyBmaW5lLg0KPiA+Pj4+DQo+ID4+Pj4+IDMuIEltcGxlbWVu
+dCBncGlvX2NoaXAudG9faXJxDQo+ID4+Pj4NCj4gPj4+PiBUaGVzZSBhcmUgdGhyZWUgZGlmZmVy
+ZW50IGNoYW5nZXMgKHR3byBmaXhlcywgb25lIG5ldyBmZWF0dXJlKSBhbmQNCj4gPj4+PiB0aGVy
+ZWZvcmUgc2hvdWxkIGJlIHNwbGl0IHVwIGludG8gdGhyZWUgcGF0Y2hlcy4NCj4gPj4+DQo+ID4+
+PiBBcyBJJ20gbm90IHRoZSBhdXRob3Igb2YgdGhpcyBwYXRjaCwgSSBkZWNpZGVkIHRvIGxlYXZl
+IGl0IGFzIGl0DQo+IGlzLg0KPiA+Pj4gQnV0IHBlciBzZSB5b3UgYXJlIHJpZ2h0LCBpdCB3b3Vs
+ZCBiZSBiZXR0ZXIgdG8gc3BsaXQgaXQgdXAuDQo+ID4+Pg0KPiA+Pj4+DQo+ID4+Pj4+IFNpZ25l
+ZC1vZmYtYnk6IEpvaG4gQ3Jpc3BpbiA8YmxvZ2ljQG9wZW53cnQub3JnPg0KPiA+Pj4+PiBTaWdu
+ZWQtb2ZmLWJ5OiBNYXJ0aW4gU2NoaWxsZXIgPG1zY2hpbGxlckB0ZHQuZGU+DQo+ID4+Pj4+IC0t
+LQ0KPiA+Pj4+DQo+ID4+Pj4gQWxzbyBwbGVhc2UgcHJvdmlkZSBhIGNoYW5nZWxvZyBmb3IgeW91
+ciBwYXRjaGVzIGhlcmUuDQo+ID4+Pg0KPiA+Pj4gT0suDQo+ID4+Pg0KPiA+Pj4+DQo+ID4+Pj4+
+ICBkcml2ZXJzL3BpbmN0cmwvcGluY3RybC14d2F5LmMgfCAyOCArKysrKysrKysrKysrKysrKysr
+KysrKysrKy0tDQo+ID4+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkNCj4gPj4+Pj4NCj4gPj4+Pg0KPiA+Pj4+DQo+ID4+Pj4gSm9uYXMNCj4gPj4+
+DQo+ID4+PiBNYXJ0aW4NCj4gPj4+DQo+ID4+Pg0KPiA+DQo+ID4NCg0KDQo=
