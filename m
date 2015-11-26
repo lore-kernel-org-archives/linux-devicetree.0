@@ -1,103 +1,76 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: [PATCH v2 2/9] Documentation: dt-bindings: leds: backlight: add TI LMU backlight binding information
-Date: Thu, 26 Nov 2015 15:56:58 +0900
-Message-ID: <1448521025-2796-3-git-send-email-milo.kim@ti.com>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+From: John Crispin <blogic@openwrt.org>
+Subject: Re: [PATCH v2 4/4] pinctrl/lantiq: fix up pinmux
+Date: Thu, 26 Nov 2015 08:04:33 +0100
+Message-ID: <5656AF01.3050700@openwrt.org>
+References: <1448446739-5541-1-git-send-email-mschiller@tdt.de>
+ <1448446739-5541-4-git-send-email-mschiller@tdt.de>
+ <CAOiHx=moeuw-qWdq0YVzVD3dv0Zq+3rxb2tAKV1Hiz35y4+7DQ@mail.gmail.com>
+ <c9edbc5eafed4639983f8bcefe8e872e@TDT-MS.TDTNET.local>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, lee.jones@linaro.org, j.anaszewski@samsung.com, broonie@kernel.org
-Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <c9edbc5eafed4639983f8bcefe8e872e@TDT-MS.TDTNET.local>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Schiller <mschiller@tdt.de>, Jonas Gorski <jogo@openwrt.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Hauke Mehrtens <hauke@hauke-m.de>, "daniel.schwierzeck@gmail.com" <daniel.schwierzeck@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697 use common dt-bindings
-for describing backlight device.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org> 
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-leds@vger.kernel.org 
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Milo Kim <milo.kim@ti.com>
----
- .../bindings/leds/backlight/ti-lmu-backlight.txt   | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/ti-lmu-backlight.txt
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/ti-lmu-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/ti-lmu-backlight.txt
-new file mode 100644
-index 0000000..c2c35b2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/ti-lmu-backlight.txt
-@@ -0,0 +1,65 @@
-+TI LMU backlight device tree bindings
-+
-+Required property:
-+  - compatible: Should be one of:
-+                "ti,lm3532-backlight"
-+                "ti,lm3631-backlight"
-+                "ti,lm3632-backlight"
-+                "ti,lm3633-backlight"
-+                "ti,lm3695-backlight"
-+                "ti,lm3697-backlight"
-+
-+Optional properties:
-+  There are two backlight control mode. One is I2C, the other is PWM mode.
-+  Following properties are only specified in PWM mode.
-+  Please note that LMU backlight device can have only one PWM channel.
-+
-+  - pwms: OF device-tree PWM specification.
-+  - pwm-names: a list of names for the PWM devices specified in the "pwms"
-+               property.
-+
-+  For the PWM user nodes, please refer to [1].
-+
-+Child nodes:
-+  LMU backlight is represented as sub-nodes of the TI LMU device [2].
-+  So, LMU backlight should have more than one backlight child node.
-+  Each node exactly matches with backlight control bank configuration.
-+  Maximum numbers of child nodes depend on the device.
-+  1 = LM3631, LM3632, LM3695
-+  2 = LM3633, LM3697
-+  3 = LM3532
-+
-+  Required property of a child node:
-+  - led-sources: List of enabled channels from 0 to 2.
-+                 Please refer to LED binding [3].
-+                 For output channels, please refer to the datasheets [4].
-+
-+  Optional properties of a child node:
-+  - label: Backlight channel identification.
-+           Please refer to LED binding [3].
-+  - default-brightness-level: Backlight initial brightness value.
-+                              Type is <u32>. It is set as soon as backlight
-+                              device is created.
-+                              0 ~ 2047 = LM3631, LM3632, LM3633, LM3695 and
-+                                         LM3697
-+                              0 ~ 255  = LM3532
-+  - ramp-up-msec, ramp-down-msec: Light dimming effect properties.
-+                                  Type is <u32>. Unit is millisecond.
-+                                  0 ~ 65 msec    = LM3532
-+                                  0 ~ 4000 msec  = LM3631
-+                                  0 ~ 16000 msec = LM3633 and LM3697
-+  - pwm-period: PWM period. Only valid in PWM brightness mode.
-+                Type is <u32>. If this property is missing, then control
-+                mode is set to I2C by default.
-+
-+Examples: Please refer to ti-lmu dt-bindings. [2].
-+
-+[1] ../pwm/pwm.txt
-+[2] ../mfd/ti-lmu.txt
-+[3] ../leds/common.txt
-+[4] LM3532: http://www.ti.com/product/LM3532/datasheet
-+    LM3631: http://www.ti.com/product/LM3631/datasheet
-+    LM3632: http://www.ti.com/product/LM3632A/datasheet
-+    LM3633: http://www.ti.com/product/LM3633/datasheet
-+    LM3695: Datasheet is not opened yet, but only two strings are used.
-+    LM3697: http://www.ti.com/product/LM3697/datasheet
--- 
-1.9.1
+On 26/11/2015 07:40, Martin Schiller wrote:
+> On 11/25/2015 at 11:40 AM, Jonas Gorski wrote:
+>> Hi
+>>
+>> On Wed, Nov 25, 2015 at 11:18 AM, Martin Schiller <mschiller@tdt.de>
+>> wrote:
+>>> From: John Crispin <blogic@openwrt.org>
+>>>
+>>> This patch is included in the openwrt patchset for several years now
+>> and needs
+>>> to go upstream as well. It includes the following changes:
+>>> 1. Fix up inline function call to xway_mux_apply
+>>
+>> This really needs an explanation what is being fixed here.
+> 
+> I hope John - as the original author of this patch - can explain
+> why this change is necessary.
+
+what change? why am I in Cc: and not To: if an action is required ?
+
+	John
+
+> 
+>>
+>>> 2. Fix GPIO Setup of GPIO Port3
+>>
+>> This change looks fine.
+>>
+>>> 3. Implement gpio_chip.to_irq
+>>
+>> These are three different changes (two fixes, one new feature) and
+>> therefore should be split up into three patches.
+> 
+> As I'm not the author of this patch, I decided to leave it as it is.
+> But per se you are right, it would be better to split it up.
+> 
+>>
+>>> Signed-off-by: John Crispin <blogic@openwrt.org>
+>>> Signed-off-by: Martin Schiller <mschiller@tdt.de>
+>>> ---
+>>
+>> Also please provide a changelog for your patches here.
+> 
+> OK.
+> 
+>>
+>>>  drivers/pinctrl/pinctrl-xway.c | 28 ++++++++++++++++++++++++++--
+>>>  1 file changed, 26 insertions(+), 2 deletions(-)
+>>>
+>>
+>>
+>> Jonas
+> 
+> Martin
+> 
+> 
