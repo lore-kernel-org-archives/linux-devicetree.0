@@ -1,94 +1,69 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v5 09/11] Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
-Date: Thu, 26 Nov 2015 15:50:23 +0800
-Message-ID: <1448524225-5489-10-git-send-email-zyw@rock-chips.com>
-References: <1448524225-5489-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448524225-5489-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com
-Cc: Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Subject: [PATCH v2] arm64: dts: add all hi6220 i2c nodes
+Date: Thu, 26 Nov 2015 15:57:03 +0800
+Message-ID: <1448524623-10320-1-git-send-email-kong.kongxinwei@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, tyler.baker@linaro.org, arnd@arndb.de, bintian.wang@huawei.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, shawnguo@kernel.org
+Cc: puck.chen@hisilicon.com, liguozhu@hisilicon.com, w.f@huawei.com, kong.kongxinwei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-add device tree bindings for rk3288 specific Synopsys DW MIPI DSI driver
+This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
+use this I2C IP of Synopsys Designware for HiKey board.
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
-
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 ---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 37 +++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
-- move dw_mipi_dsi_rockchip.txt to bindings/display/rockchip/
-
-Changes in v2: None
-
- .../display/rockchip/dw_mipi_dsi_rockchip.txt      | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-new file mode 100644
-index 0000000..acd9ec9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-@@ -0,0 +1,56 @@
-+Rockchip specific extensions to the Synopsys Designware MIPI DSI
-+================================
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 82d2488..85d4a8b 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -208,5 +208,42 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
 +
-+Required properties:
-+- compatible: "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi".
-+- rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
-+- ports: contain a port node with endpoint definitions as defined in [1].
-+  For vopb,set the reg = <0> and set the reg = <1> for vopl.
-+
-+For more required properties, please refer to [2].
-+
-+[1] Documentation/devicetree/bindings/media/video-interfaces.txt
-+[2] Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-+
-+Example:
-+	mipi_dsi: mipi@ff960000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0xff960000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
-+		clock-names = "ref", "pclk";
-+		rockchip,grf = <&grf>;
-+		status = "okay";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			mipi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mipi_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_mipi>;
-+				};
-+				mipi_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_mipi>;
-+				};
-+			};
-+		};
-+
-+		panel {
-+			compatible ="boe,tv080wum-nl0";
-+			reg = <0>;
-+
-+			enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
++		i2c0: i2c@f7100000 {
++			compatible = "snps,designware-i2c";
++			reg = <0x0 0xf7100000 0x0 0x1000>;
++			interrupts = <0 44 4>;
++			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
++			clock-names = "clk_i2c0";
++			i2c-sda-hold-time-ns = <300>;
 +			pinctrl-names = "default";
-+			pinctrl-0 = <&lcd_en>;
-+			backlight = <&backlight>;
-+			status = "okay";
++			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
++			status = "disabled";
 +		};
-+	};
++
++		i2c1: i2c@f7101000 {
++			compatible = "snps,designware-i2c";
++			reg = <0x0 0xf7101000 0x0 0x1000>;
++			interrupts = <0 45 4>;
++			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
++			clock-names = "clk_i2c1";
++			i2c-sda-hold-time-ns = <300>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@f7102000 {
++			compatible = "snps,designware-i2c";
++			reg = <0x0 0xf7102000 0x0 0x1000>;
++			interrupts = <0 46 4>;
++			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
++			clock-names = "clk_i2c2";
++			i2c-sda-hold-time-ns = <300>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
++			status = "disabled";
++		};
++
+ 	};
+ };
 -- 
-2.6.3
+1.9.1
