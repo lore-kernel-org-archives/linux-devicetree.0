@@ -1,77 +1,45 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [4.4-rc][PATCH] ARM: dts: am4372: fix clock source for arm twd and global timers
-Date: Fri, 27 Nov 2015 21:44:28 +0200
-Message-ID: <1448653468-24908-1-git-send-email-grygorii.strashko@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Fri, 27 Nov 2015 19:51:48 +0000
+Message-ID: <20151127195148.GB30871@n2100.arm.linux.org.uk>
+References: <20150713131902.GH26485@atomide.com>
+ <20151123144545.GD24147@pali>
+ <20151125181644.GI2517@atomide.com>
+ <17134653.86P3dFyQKK@wuerfel>
+ <20151125210310.GT2517@atomide.com>
+ <56568849.5080103@gmail.com>
+ <20151126090739.GD14190@pali>
+ <20151127132722.GA30871@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151127132722.GA30871-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
-But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
-Timekeeping core misbehaves. For example, execution of command
-"sleep 5" will take 10 sec instead of 5.
+On Fri, Nov 27, 2015 at 01:27:23PM +0000, Russell King - ARM Linux wrote:
+> It is possible to redirect any program to open any other file.  You can
+> do it via a LD preload, and intercepting the open(), and possibly the
+> read() calls if you want to do something more fancy.  The down-side is
+> that you have to arrange for the preloaded object to be used by the
+> linker, and the additional overhead it places on the intercepted
+> functions.
 
-Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
-it for clocking ARM TWD and Global timer (same way as on OMAP4).
+Another idea if people don't like the preload idea.
 
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am4372.dtsi        | 4 ++--
- arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
+We could create a zero-sized /proc/atags, and then use a bind mount in
+userspace to bind some other file containing the required information
+on top.  That could even be the atag blob from /sys/firmware/whatever.
+The N700 (or whatever platform needs it) could be responsible for
+creating the zero-sized /proc/atags so that we don't have it everywhere.
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index d83ff9c..de8791a 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -74,7 +74,7 @@
- 		reg = <0x48240200 0x100>;
- 		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gic>;
--		clocks = <&dpll_mpu_m2_ck>;
-+		clocks = <&mpu_periphclk>;
- 	};
- 
- 	local_timer: timer@48240600 {
-@@ -82,7 +82,7 @@
- 		reg = <0x48240600 0x100>;
- 		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gic>;
--		clocks = <&dpll_mpu_m2_ck>;
-+		clocks = <&mpu_periphclk>;
- 	};
- 
- 	l2-cache-controller@48242000 {
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index cc88728..2ff58b1 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -259,6 +259,14 @@
- 		ti,invert-autoidle-bit;
- 	};
- 
-+	mpu_periphclk: mpu_periphclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&dpll_mpu_ck>;
-+		clock-mult = <1>;
-+		clock-div = <2>;
-+	};
-+
- 	dpll_ddr_ck: dpll_ddr_ck {
- 		#clock-cells = <0>;
- 		compatible = "ti,am3-dpll-clock";
 -- 
-2.6.3
-
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
