@@ -1,89 +1,96 @@
-From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 1/3] arm64: dts: mt8173: Add thermal zone node.
-Date: Fri, 27 Nov 2015 17:32:05 +0800
-Message-ID: <1448616727-29367-2-git-send-email-dawei.chien@mediatek.com>
-References: <1448616727-29367-1-git-send-email-dawei.chien@mediatek.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] phy-sun4i-usb: Use of_match_node
+ to get model specific config data
+Date: Fri, 27 Nov 2015 11:37:20 +0100
+Message-ID: <56583260.1080106@redhat.com>
+References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v64XL=bptxoCwiVkf8u-EfckpuASS3Foo=Q3i4a_6CaJYA@mail.gmail.com>
+ <5656F6F4.1040801@redhat.com> <20151127085332.GU32142@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1448616727-29367-1-git-send-email-dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151127085332.GU32142@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds thermal zone node to Mediatek MT8173 dtsi file.
+Hi,
 
-Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
-This patch is based on patchset:
-https://lkml.org/lkml/2015/11/18/84
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |   43 ++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+On 27-11-15 09:53, Maxime Ripard wrote:
+> On Thu, Nov 26, 2015 at 01:11:32PM +0100, Hans de Goede wrote:
+>>>> +enum sun4i_usb_phy_type {
+>>>> +       sun4i_a10_phy,
+>>>> +       sun8i_a33_phy,
+>>>> +};
+>>>> +
+>>>> +struct sun4i_usb_phy_cfg {
+>>>> +       int num_phys;
+>>>> +       u32 disc_thresh;
+>>>> +       enum sun4i_usb_phy_type type;
+>>>> +       bool dedicated_clocks;
+>>>> +};
+>>>> +
+>>>>   struct sun4i_usb_phy_data {
+>>>>          void __iomem *base;
+>>>> +       const struct sun4i_usb_phy_cfg *cfg;
+>>>>          struct mutex mutex;
+>>>> -       int num_phys;
+>>>> -       u32 disc_thresh;
+>>>> -       bool has_a33_phyctl;
+>>>>          struct sun4i_usb_phy {
+>>>>                  struct phy *phy;
+>>>>                  void __iomem *pmu;
+>>>> @@ -164,12 +174,15 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+>>>>
+>>>>          mutex_lock(&phy_data->mutex);
+>>>>
+>>>> -       if (phy_data->has_a33_phyctl) {
+>>>> +       switch (phy_data->cfg->type) {
+>>>> +       case sun4i_a10_phy:
+>>>> +               phyctl = phy_data->base + REG_PHYCTL_A10;
+>>>
+>>> Any reason why this offset isn't incorporated into phy_data?
+>>
+>> You mean in phy_data->cfg I assume, the difference needed for
+>> the "sun4i_usb_phy_write" functionality are not just the phyctl
+>> register offset...
+>>
+>>>
+>>>> +               break;
+>>>> +       case sun8i_a33_phy:
+>>>>                  phyctl = phy_data->base + REG_PHYCTL_A33;
+>>>>                  /* A33 needs us to set phyctl to 0 explicitly */
+>>>>                  writel(0, phyctl);
+>>
+>> e.g. the A33 needs this extra write, and on the H3 we need to do
+>> similar bitbanging, but slightly different, see:
+>>
+>> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/usb/host/sunxi_hci.c#L899
+>>
+>> Notice how it uses different addr and write register addresses
+>> their through the usb_phy_csr_add and usb_phy_csr_write helper
+>> functions as well as directly poking offset 0x20.
+>
+> Then it easy to support: one u8 for each register that changes, one
+> bool to tell if you need to clear the phyctl register or not, And you
+> don't have to duplicate the switch everywhere, and basically just
+> reimplement of_device_is_compatible without an actual compatible to
+> workaround the review ;)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index fda805d..4114cee 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -188,6 +188,49 @@
- 		clock-output-names = "cpum_ck";
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu_thermal {
-+			polling-delay-passive = <1000>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+
-+			thermal-sensors = <&thermal 0>;
-+			sustainable-power = <1500>; /* milliwatts */
-+
-+			trips {
-+				threshold: trip-point@0 {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				target: trip-point@1 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu_crit: cpu_crit@0 {
-+					temperature = <115000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map@0 {
-+					trip = <&target>;
-+					cooling-device = <&cpu0 0 0>;
-+					contribution = <1024>;
-+				};
-+				map@1 {
-+					trip = <&target>;
-+					cooling-device = <&cpu2 0 0>;
-+					contribution = <2048>;
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupt-parent = <&gic>;
--- 
-1.7.9.5
+You clearly have not looked at the actual code I've linked to, the
+entire "algorithm" for sun4i_usb_phy_write is different on the H3.
+
+Moreover, this has nothing to do with this patch, the code coding the
+difference behavior for the a10 style phy and the a33 style phy is already
+there before this patch-set, and this is not something Kishon asked
+me to change.
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
