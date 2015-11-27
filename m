@@ -1,56 +1,495 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v1 3/5] dt-bindings: rockchip-thermal: Support the
- RK3228/RK3399 SoCs compatible
-Date: Fri, 27 Nov 2015 10:52:24 +0800
-Message-ID: <1448592746-2129-4-git-send-email-wxt@rock-chips.com>
-References: <1448592746-2129-1-git-send-email-wxt@rock-chips.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: uniphier: add PH1-LD10 SoC/board support
+Date: Fri, 27 Nov 2015 12:10:27 +0900
+Message-ID: <CAK7LNARk-syRbZYtFm6+_jzc2EzB5WeiH=PggP3XxwXSnp+Xhw@mail.gmail.com>
+References: <1448505224-29430-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1448592746-2129-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448505224-29430-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset attempts to new compatible for thermal founding
-on RK3228/RK3399 SoCs.
+I found a bug in the DTSI.
+I will send v3.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+2015-11-26 11:33 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> This is the first ARMv8 SoC from Socionext Inc.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+>
+> Changes in v2:
+>   - Split into a single patch
+>
+>  MAINTAINERS                                        |   1 +
+>  arch/arm64/boot/dts/Makefile                       |   1 +
+>  arch/arm64/boot/dts/socionext/Makefile             |   4 +
+>  .../boot/dts/socionext/uniphier-ph1-ld10-ref.dts   |  95 +++++++
+>  .../boot/dts/socionext/uniphier-ph1-ld10.dtsi      | 280 +++++++++++++++++++++
+>  .../arm64/boot/dts/socionext/uniphier-pinctrl.dtsi |   1 +
+>  .../boot/dts/socionext/uniphier-support-card.dtsi  |   1 +
+>  7 files changed, 383 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/socionext/Makefile
+>  create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
+>  create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
+>  create mode 120000 arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
+>  create mode 120000 arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3f92804..99a1424 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1642,6 +1642,7 @@ F:        arch/arm/boot/dts/uniphier*
+>  F:     arch/arm/include/asm/hardware/cache-uniphier.h
+>  F:     arch/arm/mach-uniphier/
+>  F:     arch/arm/mm/cache-uniphier.c
+> +F:     arch/arm64/boot/dts/socionext/
+>  F:     drivers/i2c/busses/i2c-uniphier*
+>  F:     drivers/pinctrl/uniphier/
+>  F:     drivers/tty/serial/8250/8250_uniphier.c
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index eb3c42d..6672a96 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -11,6 +11,7 @@ dts-dirs += marvell
+>  dts-dirs += mediatek
+>  dts-dirs += qcom
+>  dts-dirs += rockchip
+> +dts-dirs += socionext
+>  dts-dirs += sprd
+>  dts-dirs += xilinx
+>
+> diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
+> new file mode 100644
+> index 0000000..8d72771
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/socionext/Makefile
+> @@ -0,0 +1,4 @@
+> +dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld10-ref.dtb
+> +
+> +always         := $(dtb-y)
+> +clean-files    := *.dtb
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
+> new file mode 100644
+> index 0000000..3e53317
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
+> @@ -0,0 +1,95 @@
+> +/*
+> + * Device Tree Source for UniPhier PH1-LD10 Reference Board
+> + *
+> + * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "uniphier-ph1-ld10.dtsi"
+> +/include/ "uniphier-support-card.dtsi"
+> +
+> +/ {
+> +       model = "UniPhier PH1-LD10 Reference Board";
+> +       compatible = "socionext,ph1-ld10-ref", "socionext,ph1-ld10";
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0 0x80000000 0 0xc0000000>;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       aliases {
+> +               serial0 = &serial0;
+> +               serial1 = &serial1;
+> +               serial2 = &serial2;
+> +               serial3 = &serial3;
+> +               i2c0 = &i2c0;
+> +               i2c1 = &i2c1;
+> +               i2c2 = &i2c2;
+> +               i2c3 = &i2c3;
+> +               i2c4 = &i2c4;
+> +               i2c5 = &i2c5;
+> +               i2c6 = &i2c6;
+> +       };
+> +};
+> +
+> +&extbus {
+> +       ranges = <1 0x00000000 0x42000000 0x02000000>;
+> +};
+> +
+> +&support_card {
+> +       ranges = <0x00000000 1 0x01f00000 0x00100000>;
+> +};
+> +
+> +&ethsc {
+> +       interrupts = <0 48 4>;
+> +};
+> +
+> +&serial0 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
+> new file mode 100644
+> index 0000000..1d66602
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
+> @@ -0,0 +1,280 @@
+> +/*
+> + * Device Tree Source for UniPhier PH1-LD10 SoC
+> + *
+> + * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/ {
+> +       compatible = "socionext,ph1-ld10";
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +       interrupt-parent = <&gic>;
+> +
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +
+> +               cpu-map {
+> +                       cluster0 {
+> +                               core0 {
+> +                                       cpu = <&cpu0>;
+> +                               };
+> +                               core1 {
+> +                                       cpu = <&cpu1>;
+> +                               };
+> +                       };
+> +
+> +                       cluster1 {
+> +                               core0 {
+> +                                       cpu = <&cpu0>;
+> +                               };
+> +                               core1 {
+> +                                       cpu = <&cpu1>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu0: cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a72", "arm,armv8";
+> +                       reg = <0 0x000>;
+> +                       enable-method = "spin-table";
+> +                       cpu-release-addr = <0 0x80000100>;
+> +               };
+> +
+> +               cpu1: cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a72", "arm,armv8";
+> +                       reg = <0 0x001>;
+> +                       enable-method = "spin-table";
+> +                       cpu-release-addr = <0 0x80000100>;
+> +               };
+> +
+> +               cpu2: cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0 0x100>;
+> +                       enable-method = "spin-table";
+> +                       cpu-release-addr = <0 0x80000100>;
+> +               };
+> +
+> +               cpu3: cpu@101 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0 0x101>;
+> +                       enable-method = "spin-table";
+> +                       cpu-release-addr = <0 0x80000100>;
+> +               };
+> +       };
+> +
+> +       clocks {
+> +               uart_clk: uart_clk {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <58820000>;
+> +               };
+> +
+> +               i2c_clk: i2c_clk {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <50000000>;
+> +               };
+> +       };
+> +
+> +       timer {
+> +               compatible = "arm,armv8-timer";
+> +               interrupts = <1 13 0xf01>,
+> +                            <1 14 0xf01>,
+> +                            <1 11 0xf01>,
+> +                            <1 10 0xf01>;
+> +       };
+> +
+> +       soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0 0 0 0xffffffff>;
+> +
+> +               extbus: extbus {
+> +                       compatible = "simple-bus";
+> +                       #address-cells = <2>;
+> +                       #size-cells = <1>;
+> +               };
+> +
+> +               serial0: serial@54006800 {
+> +                       compatible = "socionext,uniphier-uart";
+> +                       status = "disabled";
+> +                       reg = <0x54006800 0x40>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_uart0>;
+> +                       interrupts = <0 33 4>;
+> +                       clocks = <&uart_clk>;
+> +               };
+> +
+> +               serial1: serial@54006900 {
+> +                       compatible = "socionext,uniphier-uart";
+> +                       status = "disabled";
+> +                       reg = <0x54006900 0x40>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_uart1>;
+> +                       interrupts = <0 35 4>;
+> +                       clocks = <&uart_clk>;
+> +               };
+> +
+> +               serial2: serial@54006a00 {
+> +                       compatible = "socionext,uniphier-uart";
+> +                       status = "disabled";
+> +                       reg = <0x54006a00 0x40>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_uart2>;
+> +                       interrupts = <0 37 4>;
+> +                       clocks = <&uart_clk>;
+> +               };
+> +
+> +               serial3: serial@54006b00 {
+> +                       compatible = "socionext,uniphier-uart";
+> +                       status = "disabled";
+> +                       reg = <0x54006b00 0x40>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_uart3>;
+> +                       interrupts = <0 177 4>;
+> +                       clocks = <&uart_clk>;
+> +               };
+> +
+> +               i2c0: i2c@58780000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       status = "disabled";
+> +                       reg = <0x58780000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_i2c0>;
+> +                       interrupts = <0 41 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <100000>;
+> +               };
+> +
+> +               i2c1: i2c@58781000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       status = "disabled";
+> +                       reg = <0x58781000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_i2c1>;
+> +                       interrupts = <0 42 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <100000>;
+> +               };
+> +
+> +               i2c2: i2c@58782000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       status = "disabled";
+> +                       reg = <0x58782000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_i2c2>;
+> +                       interrupts = <0 43 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <100000>;
+> +               };
+> +
+> +               i2c3: i2c@58783000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       status = "disabled";
+> +                       reg = <0x58783000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_i2c3>;
+> +                       interrupts = <0 44 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <100000>;
+> +               };
+> +
+> +               i2c4: i2c@58784000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       reg = <0x58784000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <0 45 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <400000>;
+> +               };
+> +
+> +               i2c5: i2c@58785000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       reg = <0x58785000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <0 25 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <400000>;
+> +               };
+> +
+> +               i2c6: i2c@58786000 {
+> +                       compatible = "socionext,uniphier-fi2c";
+> +                       reg = <0x58786000 0x80>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <0 26 4>;
+> +                       clocks = <&i2c_clk>;
+> +                       clock-frequency = <400000>;
+> +               };
+> +
+> +               pinctrl: pinctrl@5f801000 {
+> +                       compatible = "socionext,ph1-ld10-pinctrl", "syscon";
+> +                       reg = <0x5f801000 0xe00>;
+> +               };
+> +
+> +               gic: interrupt-controller@5fe00000 {
+> +                       compatible = "arm,gic-v3";
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <3>;
+> +                       reg = <0x5fe00000 0x10000>,     /* GICD */
+> +                             <0x5fe80000 0x80000>;     /* GICR */
+> +                       interrupts = <1 9 4>;
+> +               };
+> +       };
+> +};
+> +
+> +/include/ "uniphier-pinctrl.dtsi"
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
+> new file mode 120000
+> index 0000000..f42fb6f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
+> @@ -0,0 +1 @@
+> +../../../../arm/boot/dts/uniphier-pinctrl.dtsi
+> \ No newline at end of file
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi b/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
+> new file mode 120000
+> index 0000000..1246db9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
+> @@ -0,0 +1 @@
+> +../../../../arm/boot/dts/uniphier-support-card.dtsi
+> \ No newline at end of file
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
----
 
-Changes in v1:
-- As Heiko comments, fix a copy incorrect name.
-- Add a Acked from Rob.
 
- Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-index 0dfa60d..08efe6b 100644
---- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-@@ -2,8 +2,10 @@
- 
- Required properties:
- - compatible : should be "rockchip,<name>-tsadc"
-+   "rockchip,rk3228-tsadc": found on RK3228 SoCs
-    "rockchip,rk3288-tsadc": found on RK3288 SoCs
-    "rockchip,rk3368-tsadc": found on RK3368 SoCs
-+   "rockchip,rk3399-tsadc": found on RK3399 SoCs
- - reg : physical base address of the controller and length of memory mapped
- 	region.
- - interrupts : The interrupt number to the cpu. The interrupt specifier format
 -- 
-1.9.1
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
