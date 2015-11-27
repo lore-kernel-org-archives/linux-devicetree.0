@@ -1,28 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] ARM: dts: rockchip: Add Crypto node for rk3288
-Date: Fri, 27 Nov 2015 18:25:45 +0100
-Message-ID: <5241592.XItMSCcUBk@diego>
-References: <1448430213-27203-1-git-send-email-zain.wang@rock-chips.com> <1448430213-27203-5-git-send-email-zain.wang@rock-chips.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 6/8] Input: goodix - add support for ESD
+Date: Fri, 27 Nov 2015 09:28:27 -0800
+Message-ID: <20151127172827.GA27040@dtor-ws>
+References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
+ <1447936001-21420-7-git-send-email-irina.tirdea@intel.com>
+ <20151120154458.GA12090@rob-hp-laptop>
+ <1F3AC3675D538145B1661F571FE1805F2F1265D3@irsmsx105.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448430213-27203-5-git-send-email-zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F1265D3-pww93C2UFcwu0RiL9chJVbfspsVTdybXVpNB7YpNyf8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 25. November 2015, 13:43:33 schrieb Zain Wang:
-> Add Crypto node for rk3288 including crypto controller and dma clk.
+On Fri, Nov 27, 2015 at 05:24:21PM +0000, Tirdea, Irina wrote:
 > 
-> Signed-off-by: Zain Wang <zain.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> 
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > Sent: 20 November, 2015 17:45
+> > To: Tirdea, Irina
+> > Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; Karsten Merker; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Purdila, Octavian;
+> > linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH v11 6/8] Input: goodix - add support for ESD
+> > 
+> > On Thu, Nov 19, 2015 at 02:26:39PM +0200, Irina Tirdea wrote:
+> > > Add ESD (Electrostatic Discharge) protection mechanism.
+> > 
+> > [...]
+> > 
+> > > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > > driver gt9xx.c for Android (publicly available in Android kernel
+> > > trees for various devices).
+> > >
+> > > Signed-off-by: Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > > For the binding: Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> > You should not have the "For the binding:" part here. It was just a note
+> > so it was clear what part I looked at.
+> > 
+> 
+> I saw it done like that in another patch already merged, so I thought it's
+> the right way [1]. Dmitry, could you fix this at merge or you need me to
+> send another patchset?
 
-applied to my dts32 branch for 4.5 .
+No, I can fix it up locally. Let me sort through the latest submission
+and I'll let you know if I need any changes.
 
-Thanks
-Heiko
+Thanks!
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
