@@ -1,152 +1,203 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: pcm3168a: Add driver for
- pcm3168a codec
-Date: Fri, 27 Nov 2015 12:54:11 +0000
-Message-ID: <20151127125411.GR1929@sirena.org.uk>
-References: <1448376224-23964-3-git-send-email-Damien.Horsley@imgtec.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Dynamically adding SPI buses (was: Re: [PATCH v8 0/8] Device Tree
+ Overlays - 8th time's the charm)
+Date: Fri, 27 Nov 2015 14:06:41 +0100
+Message-ID: <CAMuHMdUPa6YMa98v+qXMnxeMZ41AKFY1ni12rJewSEnqSB7TRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5429099748730146566=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1448376224-23964-3-git-send-email-Damien.Horsley@imgtec.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Damien Horsley <Damien.Horsley@imgtec.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kumar Gala <galak@codeaurora.org>, Charles Keepax <ckeepax@gmail.com>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, James Hartley <james.hartley@imgtec.com>, Thomas Niederprum <niederp@physik.uni-kl.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Fiore <mfjord02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mike,
 
---===============5429099748730146566==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J/rMgauiyHIRVABE"
-Content-Disposition: inline
+(replaying to an old mail, as I'm seeing the exact same behavior with current
+ overlay code)
 
-
---J/rMgauiyHIRVABE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Nov 24, 2015 at 02:43:44PM +0000, Damien Horsley wrote:
-> From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
->=20
-> Add driver for Texas Instruments pcm3168a codec
-
-Please try to keep your CC lists reasonable - only CC people who have an
-interest in the patch you're posting.  The CC list you have here is far
-too broad, I can't figure out why a lot of the people there ended up
-there.  If you've got 10 people that's generally a warning sign.
-
-Overall this looks good but there are a few smallish issues below:
-
-> +	if ((!slave_mode || (fmt & PCM3168A_FMT_DSP_MASK)) &&
-> +			(format =3D=3D SNDRV_PCM_FORMAT_S24_3LE)) {
-> +		dev_err(codec->dev, "48-bit frames not supported in master mode or sla=
-ve mode using DSP(A/B)\n");
-
-You've got a lot of weird indentation with the second line of multi-line
-if conditionals massively further indented than I'd expect.  These
-conditionals all also seem more complex than they should be - the fact
-that you're using so many !slave_modes makes me think that you should
-have a flag for master mode and...
-
-> +	if ((!slave_mode || ((fmt !=3D PCM3168A_FMT_RIGHT_J) &&
-> +			(fmt !=3D PCM3168A_FMT_LEFT_J))) &&
-> +			(format =3D=3D SNDRV_PCM_FORMAT_S16)) {
-
-=2E..especially with things like this the indentation makes it hard to
-tell what bits go together.
-
-> +	val =3D slave_mode ? 0 : ((i + 1) << shift);
-
-Please write normal if statements unless there's a strong reason to use
-the ternery operator.
-
-> +	/*
-> +	 * Justification has no effect for S32 and S16 as the whole frame
-> +	 * is filled with the samples, but the register field
-> +	 * must be set to a specific value for correct operation
-> +	 */
-> +	if ((fmt =3D=3D PCM3168A_FMT_RIGHT_J) &&
-> +			(format =3D=3D SNDRV_PCM_FORMAT_S32)) {
-> +		fmt =3D PCM3168A_FMT_LEFT_J;
-> +	} else if (format =3D=3D SNDRV_PCM_FORMAT_S16) {
-> +		fmt =3D PCM3168A_FMT_RIGHT_J_16;
-> +	}
-
-Being in right justified mode *does* have an effect - it changes where
-the audio data starts relative to LRCLK.  It is true that if the frame
-has exactly the right number of clocks left and right justified are
-identical but extra clocks are in general permitted so it looks like
-your right justified case above just isn't something the device really
-supports.
-
-> +	pcm3168a->scki =3D devm_clk_get(dev, "scki");
-> +	if (IS_ERR(pcm3168a->scki)) {
-> +		if (PTR_ERR(pcm3168a->scki) !=3D -EPROBE_DEFER)
-> +			dev_err(dev, "failed to acquire clock 'scki'\n");
-
-Please print the error code as well, it may help people understand the
-problem.
-
-> +	ret =3D snd_soc_register_codec(dev, &pcm3168a_driver, pcm3168a_dais,
-> +			ARRAY_SIZE(pcm3168a_dais));
-> +	if (ret) {
-> +		dev_err(dev, "failed to register codec: %d\n", ret);
-> +		goto err_regulator;
-> +	}
+On Thu, Nov 13, 2014 at 9:10 PM, Michael Fiore <mfjord02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> I have been doing some testing with the overlay patches and, while it
+> is working in general, I have noticed a couple of issues.
+>
+> I am using the following patchsets in conjunction with an updated DTC compiler:
+>
+> * Device Tree Overlays (v8)
+>
+> * of: Resolver and dynamic updates
+>
+> * configfs: Implement binary attributes (v3)
+>
+> I have applied all 3 of the patchsets against rev
+> f7e87a44ef60ad379e39b45437604141453bf0ec of the linux source tree.
+> This is the rev that was specified in the submission of the v8 Device
+> Tree Overlay patchset.
+>
+> My base dtb has a SPI bus set up, including chip selects, but
+> disabled.  My overlay dtb enables that bus and adds 3 spi devices. My
+> overlay is installed in /lib/firmware/port1_gpio.dtbo. The relevant
+> portion of my base dtb follows:
+>
+>  91             /* runs to Accessory Port 1 */
+>  92             spi0: spi@f0000000 {
+>  93                 status = "disabled";
+>  94                 cs-gpios = <&pioA 4 0>, <&pioA 2 0>, <&pioA 5 0>, <0>;
+>  95             };
+>
+> Overlay contents are as follows:
+>
+> /dts-v1/;
+> /plugin/;
+>
+> /* enable spi0 for mts-io */
+>
+> / {
+>     fragment@0 {
+>         target-path = "/ahb/apb/spi@f0000000";
+>         __overlay__ {
+>             status = "okay";
+>
+>             ap1-cs0@0 {
+>                 compatible = "mts-io-ap1-adc";
+>                 spi-max-frequency = <20000000>;
+>                 reg = <0>;
+>             };
+>             ap1-cs1@1 {
+>                 compatible = "mts-io-ap1-dout";
+>                 spi-max-frequency = <1000000>;
+>                 reg = <1>;
+>             };
+>             ap1-cs2@2 {
+>                 compatible = "mts-io-ap1-din";
+>                 spi-max-frequency = <1000000>;
+>                 reg = <2>;
+>             };
+>         };
+>     };
+> };
+>
+> I have added the following patch in order to more easily demonstrate
+> what I've observed. This change affects the function spi_add_device()
+>
+> Index: git/drivers/spi/spi.c
+> ===================================================================
+> --- git.orig/drivers/spi/spi.c 2014-11-13 07:41:14.424270598 -0600
+> +++ git/drivers/spi/spi.c 2014-11-13 08:34:24.700331795 -0600
+> @@ -424,6 +424,8 @@
+>   /* Set the bus ID string */
+>   spi_dev_set_name(spi);
+>
+> + dev_info(dev, "adding spi device - chip select [%d]", spi->chip_select);
 > +
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +	pm_runtime_idle(dev);
+>   /* We need to make sure there's no other device with this
+>   * chipselect **BEFORE** we call setup(), else we'll trash
+>   * its configuration.  Lock against concurrent add() calls.
+>
+> Applying the overlay from above gives the following output:
+>
+> root@mtr2d2:~# mount -t configfs none /config/
+> root@mtr2d2:~# cd /config/device-tree/overlays/
+> root@mtr2d2:/config/device-tree/overlays# mkdir port1
+> root@mtr2d2:/config/device-tree/overlays# echo port1_gpio.dtbo > port1/path
+> atmel_spi f0000000.spi: version: 0x212
+> atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx) for
+> DMA transfers
+> atmel_spi f0000000.spi: Atmel SPI Controller at 0xf0000000 (irq 142)
+> atmel_spi f0000000.spi: adding spi device - chip select [2]
+> atmel_spi f0000000.spi: adding spi device - chip select [1]
+> atmel_spi f0000000.spi: adding spi device - chip select [0]
+> atmel_spi f0000000.spi: adding spi device - chip select [0]
+> atmel_spi f0000000.spi: chipselect 0 already in use
+> spi_master spi32766: spi_device register error /ahb/apb/spi@f0000000/ap1-cs0@0
+> of_spi_notify: failed to create for '/ahb/apb/spi@f0000000/ap1-cs0@0'
+> __of_changeset_entry_notify: notifier error @/ahb/apb/spi@f0000000/ap1-cs0@0
+> atmel_spi f0000000.spi: adding spi device - chip select [1]
+> atmel_spi f0000000.spi: chipselect 1 already in use
+> spi_master spi32766: spi_device register error /ahb/apb/spi@f0000000/ap1-cs1@1
+> of_spi_notify: failed to create for '/ahb/apb/spi@f0000000/ap1-cs1@1'
+> __of_changeset_entry_notify: notifier error @/ahb/apb/spi@f0000000/ap1-cs1@1
+> atmel_spi f0000000.spi: adding spi device - chip select [2]
+> atmel_spi f0000000.spi: chipselect 2 already in use
+> spi_master spi32766: spi_device register error /ahb/apb/spi@f0000000/ap1-cs2@2
+> of_spi_notify: failed to create for '/ahb/apb/spi@f0000000/ap1-cs2@2'
+> __of_changeset_entry_notify: notifier error @/ahb/apb/spi@f0000000/ap1-cs2@2
+>
+> It appears that the spi devices are getting added twice.  Despite the
+> warnings and errors from the overlay driver and the spi subsystem, my
+> spi devices are working properly.
+>
+> Attempts to apply additional overlays succeed, but generate an additional error:
+>
+> root@mtr2d2:/config/device-tree/overlays# mkdir port2
+> root@mtr2d2:/config/device-tree/overlays# echo port2_gpio.dtbo > port2/path
+> atmel_spi f0004000.spi: version: 0x212
+> atmel_spi f0004000.spi: Using dma1chan0 (tx) and dma1chan1 (rx) for
+> DMA transfers
+> atmel_spi f0004000.spi: Atmel SPI Controller at 0xf0004000 (irq 143)
+> atmel_spi f0004000.spi: adding spi device - chip select [2]
+> atmel_spi f0004000.spi: adding spi device - chip select [1]
+> atmel_spi f0004000.spi: adding spi device - chip select [0]
+> atmel_spi f0004000.spi: adding spi device - chip select [0]
+> atmel_spi f0004000.spi: chipselect 0 already in use
+> spi_master spi32765: spi_device register error /ahb/apb/spi@f0004000/ap1-cs0@0
+> of_spi_notify: failed to create for '/ahb/apb/spi@f0004000/ap1-cs0@0'
+> __of_changeset_entry_notify: notifier error @/ahb/apb/spi@f0004000/ap1-cs0@0
+> atmel_spi f0004000.spi: adding spi device - chip select [1]
+> atmel_spi f0004000.spi: chipselect 1 already in use
+> spi_master spi32765: spi_device register error /ahb/apb/spi@f0004000/ap1-cs1@1
+> of_spi_notify: failed to create for '/ahb/apb/spi@f0004000/ap1-cs1@1'
+> __of_changeset_entry_notify: notifier error @/ahb/apb/spi@f0004000/ap1-cs1@1
+> atmel_spi f0004000.spi: adding spi device - chip select [2]
+> atmel_spi f0004000.spi: chipselect 2 already in use
+> spi_master spi32765: spi_device register error /ahb/apb/spi@f0004000/ap1-cs2@2
+> of_spi_notify: failed to create for '/ahb/apb/spi@f0004000/ap1-cs2@2'
+> __of_changeset_entry_notify: notifier error @/ahb/apb/spi@f0004000/ap1-cs2@2
 
-You should enable runtime PM before registering the CODEC since the core
-can do runtime PM operations and if it tries before runtime PM is
-enabled things will get unbalanced.
+When adding an SPI master device node to DT, or changing its status to "okay",
+of_register_spi_devices() will scan for SPI slaves, and will add all of them.
+Later, the notifier kicks:
 
-> +#define PCM3168A_DOUBLE_STS(xname, reg, shift_left, shift_right, max, in=
-vert) \
-> +{									\
-> +	.iface =3D SNDRV_CTL_ELEM_IFACE_MIXER, .name =3D (xname),		\
-> +	.info =3D snd_soc_info_volsw, .get =3D snd_soc_get_volsw,		\
-> +	.put =3D snd_soc_put_volsw,					\
-> +	.access =3D SNDRV_CTL_ELEM_ACCESS_READ |				\
-> +		SNDRV_CTL_ELEM_ACCESS_VOLATILE,				\
-> +	.private_value =3D SOC_DOUBLE_VALUE(reg, shift_left, shift_right,	\
-> +	max, invert, 0)							\
-> +}
+    static int of_spi_notify(struct notifier_block *nb, unsigned long action,
+                             void *arg)
+    {
+            ...
 
-This doesn't look like it should be driver specific - what's driver
-specific about it?
+            case OF_RECONFIG_CHANGE_ADD:
+                    master = of_find_spi_master_by_node(rd->dn->parent);
+                    if (master == NULL)
+                            return NOTIFY_OK;       /* not for us */
 
---J/rMgauiyHIRVABE
-Content-Type: application/pgp-signature; name="signature.asc"
+                    spi = of_register_spi_device(master, rd->dn);
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Woops, this fails, as the device has been added before!
+Should the code just check for the existence of the SPI slave first, or would
+that cause problems when just modifying an existing SPI slave node in DT?
 
-iQEcBAEBCAAGBQJWWFJyAAoJECTWi3JdVIfQm2QH/1LX1P27caTJ90CDeok58Q3i
-oVhsbqFypIf0JCGwouVIEkQDtWbIDaI1BTOFwyBAApZF3ZXRgO9IZ8qkkSxeI/A9
-Xbxso4nVvWe7MdU4cUS4aS3/pVfwPbekCISG5fTbO3CDnmDKkpK4COyXamIV+/5W
-lBgj41bjjcNhV8d4PUS6mT7aGfGa+0BsGTLTkJUZB1RXOwaE2HNioapLEXtvjzR1
-wRnH5sSJpu4WY4WoGaM+JScOo3k82h8YHcIVF7hGbkhCh/HNwLcWGQ2+3HeniNkz
-yKBChaAiiLfOfeA4iLdZKm7b3nhN2SafYqXd9WULeMNDSsfz4vA8OBnMGHJ7Emo=
-=fnGC
------END PGP SIGNATURE-----
+> (NULL device *): Direct firmware load for ort2_gpio.dtbo failed with error -2
+> -sh: echo: write error: No such file or directory
+>
+> The first character of the dtbo file name got chomped. Again, despite
+> the warnings and errors, the devices are successfully created and
+> functional:
+>
+> root@mtr2d2:/config/device-tree/overlays# ls /sys/bus/spi/devices/
+> spi32765.0  spi32765.1  spi32765.2  spi32766.0  spi32766.1  spi32766.2
 
---J/rMgauiyHIRVABE--
+FWIW, I fixed that one a while ago:
 
---===============5429099748730146566==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+http://permalink.gmane.org/gmane.linux.drivers.devicetree/120744
 
+Gr{oetje,eeting}s,
 
---===============5429099748730146566==--
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
