@@ -1,46 +1,46 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Fri, 27 Nov 2015 09:38:33 +0100
-Message-ID: <20151127083833.GA430@pali>
-References: <20150713131902.GH26485@atomide.com>
- <20151123144545.GD24147@pali>
- <20151125181644.GI2517@atomide.com>
- <17134653.86P3dFyQKK@wuerfel>
- <20151125210310.GT2517@atomide.com>
- <56568849.5080103@gmail.com>
- <20151126090739.GD14190@pali>
- <20151126203930.GW2517@atomide.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v8 08/17] drm: rockchip: dp: add rockchip platform dp driver
+Date: Fri, 27 Nov 2015 09:41:42 +0100
+Message-ID: <4247009.9cF1Z5lRXe@diego>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com> <1446020865-10625-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151126203930.GW2517@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1446020865-10625-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 November 2015 12:39:30 Tony Lindgren wrote:
-> Just to explore options.. How about make a minimal device driver that
-> just loads the atags blob from /lib/firmware and then shows it in
-> /proc/atags? Of course some checking on the atags should be done by
-> the driver..
+Hi Yakir,
 
-And who can dynamically create that blob file in /lib/firmware? If
-kernel does not export those atags (somehow) from bootloader, then
-userspace is not able to create that blob... cyclic problem.
+Am Mittwoch, 28. Oktober 2015, 16:27:45 schrieb Yakir Yang:
+> Rockchip have three clocks for dp controller, we leave pclk_edp
+> to analogix_dp driver control, and keep the sclk_edp_24m and
+> sclk_edp in platform driver.
+> 
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
 
-So no, problem is that bootloader provides via custom atags dynamic
-information like: boot reason (how was device started, by rtc alarm? by
-reboot? by usb charger? by power button?), boot mode (should be enter
-into firmware update mode?, is this normal boot mode?), ... and those
-information are needed for some proprietary software (e.g. firmware
-upgrade/flash) but also by any other open source applications (based on
-usb charger we enter different runlevel -- for just only charging
-device).
+> diff --git a/drivers/gpu/drm/rockchip/Kconfig
+> b/drivers/gpu/drm/rockchip/Kconfig index 35215f6..c2ba945 100644
+> --- a/drivers/gpu/drm/rockchip/Kconfig
+> +++ b/drivers/gpu/drm/rockchip/Kconfig
+> @@ -25,3 +25,12 @@ config ROCKCHIP_DW_HDMI
+>  	  for the Synopsys DesignWare HDMI driver. If you want to
+>  	  enable HDMI on RK3288 based SoC, you should selet this
+>  	  option.
+> +
+> +config ROCKCHIP_ANALOGIX_DP
+> +        tristate "Rockchip specific extensions for Analogix DP driver"
+> +        depends on DRM_ROCKCHIP
+> +        select DRM_ANALOGIX_DP
+> +        help
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+the indentation should probably be tabs here, ROCKCHIP_DW_HDMI also does it 
+wrong it seems, but DRM_ROCKCHIP looks correct :-)
+
+
+Heiko
