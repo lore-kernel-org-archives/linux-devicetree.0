@@ -1,46 +1,78 @@
-From: Greg Hackmann <ghackmann@google.com>
-Subject: Re: [PATCH v2 1/1] platform: goldfish: pipe: add devicetree bindings
-Date: Fri, 27 Nov 2015 10:17:44 -0800
-Message-ID: <56589E48.9000708@google.com>
-References: <1448481582-16991-1-git-send-email-jinqian@android.com>
- <20151125202416.GA4636@rob-hp-laptop> <20151126083412.GB14945@lvm>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [4.4-rc][PATCH] ARM: dts: am4372: fix clock source for arm twd and global timers
+Date: Fri, 27 Nov 2015 21:44:28 +0200
+Message-ID: <1448653468-24908-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151126083412.GB14945@lvm>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoffer Dall <christoffer.dall@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Jin Qian <jinqian@android.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Dan Carpenter <dan.carpenter@oracle.com>, Peter Senna Tschudin <peter.senna@gmail.com>, =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/15 12:34 AM, Christoffer Dall wrote:
-> On Wed, Nov 25, 2015 at 02:24:16PM -0600, Rob Herring wrote:
->>
->> The binding may be trivial, but there's a bigger question of whether
->> this is the right long term direction. For example is upstream QEMU
->> going to take all the Android pipe stuff? Couldn't virtio be used here
->> as the transport?
->>
->
-> But I wonder if that should really block this from being merged?  The
-> support may not be in QEMU but it's in the Android emulator and it would
-> be a less broken implementation with these patches in the kernel than
-> without, I think.
->
-> -Christoffer
->
+ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
+But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
+Timekeeping core misbehaves. For example, execution of command
+"sleep 5" will take 10 sec instead of 5.
 
-To add to Christoffer's point, we added these bindings so we don't need 
-to rely on the goldfish virtual bus for probing anymore.
+Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
+it for clocking ARM TWD and Global timer (same way as on OMAP4).
 
-Switching from the goldfish virtual bus to Device-Tree already 
-eliminates one big piece where the Android emulator has diverged from 
-upstream qemu.  And on the kernel side, it means we don't need ARM and 
-MIPS goldfish board code to instantiate the bus.
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am4372.dtsi        | 4 ++--
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-In the long term I'm happy to push the SDK team towards replacing the 
-Android pipe with a virtio alternative.  (We've already been switching 
-over to virtio for things like storage.)  But in the short term, we 
-still need it.  And I don't think it benefits the mainline kernel if we 
-have to maintain cleanup patches like this out-of-tree.
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index d83ff9c..de8791a 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -74,7 +74,7 @@
+ 		reg = <0x48240200 0x100>;
+ 		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&dpll_mpu_m2_ck>;
++		clocks = <&mpu_periphclk>;
+ 	};
+ 
+ 	local_timer: timer@48240600 {
+@@ -82,7 +82,7 @@
+ 		reg = <0x48240600 0x100>;
+ 		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&dpll_mpu_m2_ck>;
++		clocks = <&mpu_periphclk>;
+ 	};
+ 
+ 	l2-cache-controller@48242000 {
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index cc88728..2ff58b1 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -259,6 +259,14 @@
+ 		ti,invert-autoidle-bit;
+ 	};
+ 
++	mpu_periphclk: mpu_periphclk {
++		#clock-cells = <0>;
++		compatible = "fixed-factor-clock";
++		clocks = <&dpll_mpu_ck>;
++		clock-mult = <1>;
++		clock-div = <2>;
++	};
++
+ 	dpll_ddr_ck: dpll_ddr_ck {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,am3-dpll-clock";
+-- 
+2.6.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
