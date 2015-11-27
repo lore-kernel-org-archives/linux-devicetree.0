@@ -1,479 +1,61 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v3] arm64: dts: uniphier: add PH1-LD10 SoC/board support
-Date: Sat, 28 Nov 2015 02:22:31 +0900
-Message-ID: <1448644951-2623-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v11 6/8] Input: goodix - add support for ESD
+Date: Fri, 27 Nov 2015 17:24:21 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F1265D3@irsmsx105.ger.corp.intel.com>
+References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
+ <1447936001-21420-7-git-send-email-irina.tirdea@intel.com>
+ <20151120154458.GA12090@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151120154458.GA12090@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, Karsten Merker <merker@debian.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the first ARMv8 SoC from Socionext Inc.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
 
-Changes in v3:
-  - Fix phandle to cpu nodes in cluster1
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: 20 November, 2015 17:45
+> To: Tirdea, Irina
+> Cc: Dmitry Torokhov; Bastien Nocera; Aleksei Mamlin; Karsten Merker; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v11 6/8] Input: goodix - add support for ESD
+> 
+> On Thu, Nov 19, 2015 at 02:26:39PM +0200, Irina Tirdea wrote:
+> > Add ESD (Electrostatic Discharge) protection mechanism.
+> 
+> [...]
+> 
+> > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> > driver gt9xx.c for Android (publicly available in Android kernel
+> > trees for various devices).
+> >
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > For the binding: Acked-by: Rob Herring <robh@kernel.org>
+> 
+> You should not have the "For the binding:" part here. It was just a note
+> so it was clear what part I looked at.
+> 
 
-Changes in v2:
-  - Split into a single patch
+I saw it done like that in another patch already merged, so I thought it's
+the right way [1]. Dmitry, could you fix this at merge or you need me to
+send another patchset?
 
- MAINTAINERS                                        |   1 +
- arch/arm64/boot/dts/Makefile                       |   1 +
- arch/arm64/boot/dts/socionext/Makefile             |   4 +
- .../boot/dts/socionext/uniphier-ph1-ld10-ref.dts   |  95 +++++++
- .../boot/dts/socionext/uniphier-ph1-ld10.dtsi      | 280 +++++++++++++++++++++
- .../arm64/boot/dts/socionext/uniphier-pinctrl.dtsi |   1 +
- .../boot/dts/socionext/uniphier-support-card.dtsi  |   1 +
- 7 files changed, 383 insertions(+)
- create mode 100644 arch/arm64/boot/dts/socionext/Makefile
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
- create mode 120000 arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
- create mode 120000 arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
+Thanks,
+Irina
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f92804..99a1424 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1642,6 +1642,7 @@ F:	arch/arm/boot/dts/uniphier*
- F:	arch/arm/include/asm/hardware/cache-uniphier.h
- F:	arch/arm/mach-uniphier/
- F:	arch/arm/mm/cache-uniphier.c
-+F:	arch/arm64/boot/dts/socionext/
- F:	drivers/i2c/busses/i2c-uniphier*
- F:	drivers/pinctrl/uniphier/
- F:	drivers/tty/serial/8250/8250_uniphier.c
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index eb3c42d..6672a96 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -11,6 +11,7 @@ dts-dirs += marvell
- dts-dirs += mediatek
- dts-dirs += qcom
- dts-dirs += rockchip
-+dts-dirs += socionext
- dts-dirs += sprd
- dts-dirs += xilinx
- 
-diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
-new file mode 100644
-index 0000000..8d72771
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/Makefile
-@@ -0,0 +1,4 @@
-+dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld10-ref.dtb
-+
-+always		:= $(dtb-y)
-+clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
-new file mode 100644
-index 0000000..3e53317
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
-@@ -0,0 +1,95 @@
-+/*
-+ * Device Tree Source for UniPhier PH1-LD10 Reference Board
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+/include/ "uniphier-ph1-ld10.dtsi"
-+/include/ "uniphier-support-card.dtsi"
-+
-+/ {
-+	model = "UniPhier PH1-LD10 Reference Board";
-+	compatible = "socionext,ph1-ld10-ref", "socionext,ph1-ld10";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x80000000 0 0xc0000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	aliases {
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+		serial2 = &serial2;
-+		serial3 = &serial3;
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+	};
-+};
-+
-+&extbus {
-+	ranges = <1 0x00000000 0x42000000 0x02000000>;
-+};
-+
-+&support_card {
-+	ranges = <0x00000000 1 0x01f00000 0x00100000>;
-+};
-+
-+&ethsc {
-+	interrupts = <0 48 4>;
-+};
-+
-+&serial0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
-new file mode 100644
-index 0000000..0296af9
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
-@@ -0,0 +1,280 @@
-+/*
-+ * Device Tree Source for UniPhier PH1-LD10 SoC
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/ {
-+	compatible = "socionext,ph1-ld10";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu2>;
-+				};
-+				core1 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0 0x000>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0 0x001>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+
-+		cpu2: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0 0x100>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+
-+		cpu3: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0 0x101>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0 0x80000100>;
-+		};
-+	};
-+
-+	clocks {
-+		uart_clk: uart_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <58820000>;
-+		};
-+
-+		i2c_clk: i2c_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 13 0xf01>,
-+			     <1 14 0xf01>,
-+			     <1 11 0xf01>,
-+			     <1 10 0xf01>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0xffffffff>;
-+
-+		extbus: extbus {
-+			compatible = "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+		};
-+
-+		serial0: serial@54006800 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006800 0x40>;
-+			interrupts = <0 33 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial1: serial@54006900 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006900 0x40>;
-+			interrupts = <0 35 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial2: serial@54006a00 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006a00 0x40>;
-+			interrupts = <0 37 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial3: serial@54006b00 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006b00 0x40>;
-+			interrupts = <0 177 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		i2c0: i2c@58780000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58780000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 41 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c0>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c1: i2c@58781000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58781000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 42 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c1>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c2: i2c@58782000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58782000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 43 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c2>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c3: i2c@58783000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58783000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 44 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c3>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c4: i2c@58784000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58784000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 45 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		i2c5: i2c@58785000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58785000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 25 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		i2c6: i2c@58786000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58786000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 26 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		pinctrl: pinctrl@5f801000 {
-+			compatible = "socionext,ph1-ld10-pinctrl", "syscon";
-+			reg = <0x5f801000 0xe00>;
-+		};
-+
-+		gic: interrupt-controller@5fe00000 {
-+			compatible = "arm,gic-v3";
-+			reg = <0x5fe00000 0x10000>,	/* GICD */
-+			      <0x5fe80000 0x80000>;	/* GICR */
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupts = <1 9 4>;
-+		};
-+	};
-+};
-+
-+/include/ "uniphier-pinctrl.dtsi"
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
-new file mode 120000
-index 0000000..f42fb6f
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pinctrl.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/uniphier-pinctrl.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi b/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
-new file mode 120000
-index 0000000..1246db9
---- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-support-card.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/uniphier-support-card.dtsi
-\ No newline at end of file
--- 
-1.9.1
+[1] https://git.kernel.org/cgit/linux/kernel/git/jic23/iio.git/commit/?id=d2a3e0931a8f3b95b910096d022ffd98adbd075c
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> It is preferred to split DT bindings to separate patches for this
+> reason.
+> 
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > ---
+> >  .../bindings/input/touchscreen/goodix.txt          |   4 +
+> >  drivers/input/touchscreen/goodix.c                 | 160 ++++++++++++++++++++-
+> >  2 files changed, 159 insertions(+), 5 deletions(-)
