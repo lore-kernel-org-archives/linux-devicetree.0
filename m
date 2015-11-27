@@ -1,90 +1,121 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Fri, 27 Nov 2015 09:52:05 +0100
-Message-ID: <CAOf5uw==sROkdOU-mEEE2iqBECkX5XcqY_2kNxc1ZJFW+j7niw@mail.gmail.com>
-References: <20150713131902.GH26485@atomide.com>
-	<20151123144545.GD24147@pali>
-	<20151125181644.GI2517@atomide.com>
-	<17134653.86P3dFyQKK@wuerfel>
-	<20151125210310.GT2517@atomide.com>
-	<56568849.5080103@gmail.com>
-	<20151126090739.GD14190@pali>
-	<20151126203930.GW2517@atomide.com>
-	<20151127083833.GA430@pali>
-	<CAOf5uwn_3gY=xE8gBS2hZ-O4ZBZruxYRN8a_hO0bqCHy-yA2Gg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] phy-sun4i-usb: Use
+ of_match_node to get model specific config data
+Date: Fri, 27 Nov 2015 09:53:32 +0100
+Message-ID: <20151127085332.GU32142@lukather>
+References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v64XL=bptxoCwiVkf8u-EfckpuASS3Foo=Q3i4a_6CaJYA@mail.gmail.com>
+ <5656F6F4.1040801@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOf5uwn_3gY=xE8gBS2hZ-O4ZBZruxYRN8a_hO0bqCHy-yA2Gg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7QTDVAgpgOXqPYyV"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5656F6F4.1040801-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On Fri, Nov 27, 2015 at 9:44 AM, Michael Trimarchi
-<michael@amarulasolutions.com> wrote:
-> Hi
->
-> On Fri, Nov 27, 2015 at 9:38 AM, Pali Roh=C3=A1r <pali.rohar@gmail.co=
-m> wrote:
->> On Thursday 26 November 2015 12:39:30 Tony Lindgren wrote:
->>> Just to explore options.. How about make a minimal device driver th=
-at
->>> just loads the atags blob from /lib/firmware and then shows it in
->>> /proc/atags? Of course some checking on the atags should be done by
->>> the driver..
->>
->> And who can dynamically create that blob file in /lib/firmware? If
->> kernel does not export those atags (somehow) from bootloader, then
->> userspace is not able to create that blob... cyclic problem.
->>
->
-> Are those atags from bootloader fix or they change device by device. =
-If they
-> are fixed they can be included in some firmware and get from the disk=
-=2E
->
+--7QTDVAgpgOXqPYyV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, miss the second part of email ;)
+On Thu, Nov 26, 2015 at 01:11:32PM +0100, Hans de Goede wrote:
+> >>+enum sun4i_usb_phy_type {
+> >>+       sun4i_a10_phy,
+> >>+       sun8i_a33_phy,
+> >>+};
+> >>+
+> >>+struct sun4i_usb_phy_cfg {
+> >>+       int num_phys;
+> >>+       u32 disc_thresh;
+> >>+       enum sun4i_usb_phy_type type;
+> >>+       bool dedicated_clocks;
+> >>+};
+> >>+
+> >>  struct sun4i_usb_phy_data {
+> >>         void __iomem *base;
+> >>+       const struct sun4i_usb_phy_cfg *cfg;
+> >>         struct mutex mutex;
+> >>-       int num_phys;
+> >>-       u32 disc_thresh;
+> >>-       bool has_a33_phyctl;
+> >>         struct sun4i_usb_phy {
+> >>                 struct phy *phy;
+> >>                 void __iomem *pmu;
+> >>@@ -164,12 +174,15 @@ static void sun4i_usb_phy_write(struct sun4i_usb_=
+phy *phy, u32 addr, u32 data,
+> >>
+> >>         mutex_lock(&phy_data->mutex);
+> >>
+> >>-       if (phy_data->has_a33_phyctl) {
+> >>+       switch (phy_data->cfg->type) {
+> >>+       case sun4i_a10_phy:
+> >>+               phyctl =3D phy_data->base + REG_PHYCTL_A10;
+> >
+> >Any reason why this offset isn't incorporated into phy_data?
+>=20
+> You mean in phy_data->cfg I assume, the difference needed for
+> the "sun4i_usb_phy_write" functionality are not just the phyctl
+> register offset...
+>=20
+> >
+> >>+               break;
+> >>+       case sun8i_a33_phy:
+> >>                 phyctl =3D phy_data->base + REG_PHYCTL_A33;
+> >>                 /* A33 needs us to set phyctl to 0 explicitly */
+> >>                 writel(0, phyctl);
+>=20
+> e.g. the A33 needs this extra write, and on the H3 we need to do
+> similar bitbanging, but slightly different, see:
+>=20
+> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/usb/h=
+ost/sunxi_hci.c#L899
+>=20
+> Notice how it uses different addr and write register addresses
+> their through the usb_phy_csr_add and usb_phy_csr_write helper
+> functions as well as directly poking offset 0x20.
 
-Michael
+Then it easy to support: one u8 for each register that changes, one
+bool to tell if you need to clear the phyctl register or not, And you
+don't have to duplicate the switch everywhere, and basically just
+reimplement of_device_is_compatible without an actual compatible to
+workaround the review ;)
 
-> Michael
->
->> So no, problem is that bootloader provides via custom atags dynamic
->> information like: boot reason (how was device started, by rtc alarm?=
- by
->> reboot? by usb charger? by power button?), boot mode (should be ente=
-r
->> into firmware update mode?, is this normal boot mode?), ... and thos=
-e
->> information are needed for some proprietary software (e.g. firmware
->> upgrade/flash) but also by any other open source applications (based=
- on
->> usb charger we enter different runlevel -- for just only charging
->> device).
->>
->> --
->> Pali Roh=C3=A1r
->> pali.rohar@gmail.com
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-omap=
-" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+Maxime
 
 --=20
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV =
-|
-| COO  -  Founder                                      Cruquiuskade 47 =
-|
-| +31(0)851119172                                 Amsterdam 1018 AM NL =
-|
-|                  [`as] http://www.amarulasolutions.com               =
-|
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--7QTDVAgpgOXqPYyV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWWBoMAAoJEBx+YmzsjxAgRmYP+wbtlLdOAET+PiKj2ESF0KdY
+qmQRZ4LWPQFXgZ8TLEePrZfjOweZyIS9H7ij4214j1o7OErf20N3PDSbPtbQv01a
+QQ2/1M9uW7649CrdkJQOYhebME5LnL0c/Ky22YVBEEmYEvjFS16VPlQiECaM+NuC
+11S3LIJtqjj4oIBOkk9RBp/n9HZlaPzXrAj/u26km0MLdOK660/zNA6EP5CzIfU2
+y3DuQH/L5ubI+fsdKk12XHY2Q0TF0afivE/KBQEI1OeBEvjOOvOhV+gt7VfPxktu
+wx9CuxTpiFoFdLSJSzO8sbevwVMLNjfcyfpcRzB0blvHi1PMTUu7QZDxOClN/o/n
+4QfsDXEDAsH5AbfmwXlk657mawGiNW6T5udWiROoJVS2gFFi7DBWDVxeLUmKMhOQ
+XOufWXhauNzYi7eWL0tk4g8XkdBC3Vc/gRdjDvUASKlLHMkUcapcPcq80suF/N1O
+UJbm3/rzLTAgilFy80iYfnkB0pcwAfbuIQQ8VKARxMVq10Fv8H9D2x4pnvy6ffwp
+YHpREQ66VnMIRI4ZBufPVdLtR0LmgHkn8Oub+822gSBiVX8yIVyvaWiW1W5Pd4I6
+JMrER6s8Ldji7zjq6lE2OmmLxDdte0V1BpVTBHoRGaMX1qRrku+og5hP6twmgGAQ
+eHH6bQSVlq0y5YUTiehI
+=vPoR
+-----END PGP SIGNATURE-----
+
+--7QTDVAgpgOXqPYyV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
