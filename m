@@ -1,39 +1,45 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/3] dt-bindings: add Marvell core PLL and clock divider
- PMU documentation
-Date: Fri, 27 Nov 2015 20:53:51 +0100
-Message-ID: <20151127195351.GC14645@lunn.ch>
-References: <E1a24wj-0004iw-Rf@rmk-PC.arm.linux.org.uk>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: add Dove PLL divider support for GPU, VMeta and
+ AXI clocks
+Date: Fri, 27 Nov 2015 21:10:08 +0100
+Message-ID: <20151127201008.GD14645@lunn.ch>
+References: <E1a24wo-0004j2-Vd@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <E1a24wj-0004iw-Rf@rmk-PC.arm.linux.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <E1a24wo-0004j2-Vd-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 10:23:21PM +0000, Russell King wrote:
-> Add documentation for the Marvell clock divider driver, which is used
-> to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
-> 
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> ---
->  .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clock.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-> new file mode 100644
-> index 000000000000..0c602de279e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-> @@ -0,0 +1,28 @@
-> +PLl divider based Dove clocks
+Hi Russell
 
-Nit pick. It would be nice if the second L of PLL was also a capital.
+> +static int dove_calc_divider(const struct dove_clk *dc, unsigned long rate,
+> +			     unsigned long parent_rate, bool set)
+> +{
+> +	unsigned int divider, max;
+> +
+> +	divider = DIV_ROUND_CLOSEST(parent_rate, rate);
+> +
+> +	if (dc->divider_table) {
+> +		unsigned int i;
+> +
+> +		for (i = 0; dc->divider_table[i]; i++)
+> +			if (divider == dc->divider_table[i]) {
+> +				divider = i;
+> +				break;
+> +			}
+> +
+> +		if (dc->divider_table[i])
+> +			return -EINVAL;
 
-Acked-by: Andrew Lunn <andrew@lunn.ch>
+Is this condition correct? If we have reached the 0 at the end of the
+table, -EINVAL makes sense. But that would need a !
 
-	  Andrew
+       Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
