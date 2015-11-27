@@ -1,120 +1,49 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] phy-sun4i-usb: Use
- of_match_node to get model specific config data
-Date: Fri, 27 Nov 2015 09:53:32 +0100
-Message-ID: <20151127085332.GU32142@lukather>
-References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v64XL=bptxoCwiVkf8u-EfckpuASS3Foo=Q3i4a_6CaJYA@mail.gmail.com>
- <5656F6F4.1040801@redhat.com>
+From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/3] thermal: mediatek: Add cpu power cooling model
+Date: Fri, 27 Nov 2015 17:32:04 +0800
+Message-ID: <1448616727-29367-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7QTDVAgpgOXqPYyV"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5656F6F4.1040801-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Use Intelligent Power Allocation (IPA) technical to add dynamic power model
+for binding CPU thermal zone. The power allocator governor allocates power
+budget to control CPU temperature.
 
---7QTDVAgpgOXqPYyV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Power Allocator governor is able to keep SOC temperature within a defined
+temperature range to avoid SOC overheat and keep it's performance.
+mt8173-cpufreq.c need to register its' own power model with power allocator
+thermal governor, so that power allocator governor can allocates suitable
+power budget to control CPU temperature.
 
-On Thu, Nov 26, 2015 at 01:11:32PM +0100, Hans de Goede wrote:
-> >>+enum sun4i_usb_phy_type {
-> >>+       sun4i_a10_phy,
-> >>+       sun8i_a33_phy,
-> >>+};
-> >>+
-> >>+struct sun4i_usb_phy_cfg {
-> >>+       int num_phys;
-> >>+       u32 disc_thresh;
-> >>+       enum sun4i_usb_phy_type type;
-> >>+       bool dedicated_clocks;
-> >>+};
-> >>+
-> >>  struct sun4i_usb_phy_data {
-> >>         void __iomem *base;
-> >>+       const struct sun4i_usb_phy_cfg *cfg;
-> >>         struct mutex mutex;
-> >>-       int num_phys;
-> >>-       u32 disc_thresh;
-> >>-       bool has_a33_phyctl;
-> >>         struct sun4i_usb_phy {
-> >>                 struct phy *phy;
-> >>                 void __iomem *pmu;
-> >>@@ -164,12 +174,15 @@ static void sun4i_usb_phy_write(struct sun4i_usb_=
-phy *phy, u32 addr, u32 data,
-> >>
-> >>         mutex_lock(&phy_data->mutex);
-> >>
-> >>-       if (phy_data->has_a33_phyctl) {
-> >>+       switch (phy_data->cfg->type) {
-> >>+       case sun4i_a10_phy:
-> >>+               phyctl =3D phy_data->base + REG_PHYCTL_A10;
-> >
-> >Any reason why this offset isn't incorporated into phy_data?
->=20
-> You mean in phy_data->cfg I assume, the difference needed for
-> the "sun4i_usb_phy_write" functionality are not just the phyctl
-> register offset...
->=20
-> >
-> >>+               break;
-> >>+       case sun8i_a33_phy:
-> >>                 phyctl =3D phy_data->base + REG_PHYCTL_A33;
-> >>                 /* A33 needs us to set phyctl to 0 explicitly */
-> >>                 writel(0, phyctl);
->=20
-> e.g. the A33 needs this extra write, and on the H3 we need to do
-> similar bitbanging, but slightly different, see:
->=20
-> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/usb/h=
-ost/sunxi_hci.c#L899
->=20
-> Notice how it uses different addr and write register addresses
-> their through the usb_phy_csr_add and usb_phy_csr_write helper
-> functions as well as directly poking offset 0x20.
+Binging document is refer to this patchset
+https://lkml.org/lkml/2015/11/17/251
 
-Then it easy to support: one u8 for each register that changes, one
-bool to tell if you need to clear the phyctl register or not, And you
-don't have to duplicate the switch everywhere, and basically just
-reimplement of_device_is_compatible without an actual compatible to
-workaround the review ;)
+Change since V1:
+1. Include mt8171.h and sort header file for mt8173.dtsi
 
-Maxime
+Change since V2:
+1. Move dynamic/static power model in device tree
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Change since V3:
+1. Remove static power model.
+2. Split V3's device tree in two for thermal zones and dynamic power models respectively.
 
---7QTDVAgpgOXqPYyV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Dawei Chien (3):
+  arm64: dts: mt8173: Add thermal zone node for mt8173 platform.
+  arm64: dts: mt8173: Add dynamic power node for mt8173 platform.
+  thermal: mediatek: Add cpu dynamic power cooling model.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   47 ++++++++++++++++++++++++++++++
+ drivers/cpufreq/mt8173-cpufreq.c         |   28 +++++++++++++-----
+ 2 files changed, 67 insertions(+), 8 deletions(-)
 
-iQIcBAEBAgAGBQJWWBoMAAoJEBx+YmzsjxAgRmYP+wbtlLdOAET+PiKj2ESF0KdY
-qmQRZ4LWPQFXgZ8TLEePrZfjOweZyIS9H7ij4214j1o7OErf20N3PDSbPtbQv01a
-QQ2/1M9uW7649CrdkJQOYhebME5LnL0c/Ky22YVBEEmYEvjFS16VPlQiECaM+NuC
-11S3LIJtqjj4oIBOkk9RBp/n9HZlaPzXrAj/u26km0MLdOK660/zNA6EP5CzIfU2
-y3DuQH/L5ubI+fsdKk12XHY2Q0TF0afivE/KBQEI1OeBEvjOOvOhV+gt7VfPxktu
-wx9CuxTpiFoFdLSJSzO8sbevwVMLNjfcyfpcRzB0blvHi1PMTUu7QZDxOClN/o/n
-4QfsDXEDAsH5AbfmwXlk657mawGiNW6T5udWiROoJVS2gFFi7DBWDVxeLUmKMhOQ
-XOufWXhauNzYi7eWL0tk4g8XkdBC3Vc/gRdjDvUASKlLHMkUcapcPcq80suF/N1O
-UJbm3/rzLTAgilFy80iYfnkB0pcwAfbuIQQ8VKARxMVq10Fv8H9D2x4pnvy6ffwp
-YHpREQ66VnMIRI4ZBufPVdLtR0LmgHkn8Oub+822gSBiVX8yIVyvaWiW1W5Pd4I6
-JMrER6s8Ldji7zjq6lE2OmmLxDdte0V1BpVTBHoRGaMX1qRrku+og5hP6twmgGAQ
-eHH6bQSVlq0y5YUTiehI
-=vPoR
------END PGP SIGNATURE-----
-
---7QTDVAgpgOXqPYyV--
+--
+1.7.9.5
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
