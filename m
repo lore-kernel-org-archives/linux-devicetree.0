@@ -1,64 +1,213 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v5 1/9] mfd: axp20x: Add AXP223 to list of
- supported PMICs in DT bindings
-Date: Fri, 27 Nov 2015 14:43:22 +0800
-Message-ID: <1448606610-32647-2-git-send-email-wens@csie.org>
-References: <1448606610-32647-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBG7X36ZAKGQE243ZS4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1448606610-32647-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 6/6] arm64: dts: berlin4ct: add pll and clock nodes
+Date: Fri, 27 Nov 2015 08:51:27 +0100
+Message-ID: <56580B7F.5060709@gmail.com>
+References: <1448008952-1787-1-git-send-email-jszhang@marvell.com>
+ <1448008952-1787-7-git-send-email-jszhang@marvell.com>
+ <564F8B73.7070403@gmail.com> <20151123152158.483aa6b5@xhacker>
+ <5652CEB2.9030902@gmail.com> <20151123165444.740b457c@xhacker>
+ <20151124103504.0a07b258@xhacker>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151124103504.0a07b258@xhacker>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, sboyd@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, antoine.tenart@free-electrons.com, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
-It is functionally identical to AXP221; only the regulator default
-voltage/status and the external host interface are different.
+On 24.11.2015 03:35, Jisheng Zhang wrote:
+> On Mon, 23 Nov 2015 16:54:44 +0800
+> Jisheng Zhang wrote:
+>> On Mon, 23 Nov 2015 09:30:42 +0100
+>> Sebastian Hesselbarth wrote:
+>>> On 23.11.2015 08:21, Jisheng Zhang wrote:
+>>>> On Fri, 20 Nov 2015 22:06:59 +0100
+>>>> Sebastian Hesselbarth wrote:
+>>>>> On 20.11.2015 09:42, Jisheng Zhang wrote:
+>>>>>> Add syspll, mempll, cpupll, gateclk and berlin-clk nodes.
+>>>>>>
+>>>>>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+>>>>>> ---
+>>> [...]
+>>>>>> +		syspll: syspll {
+>>>>>> +			compatible = "marvell,berlin-pll";
+>>>>>> +			reg = <0xea0200 0x14>, <0xea0710 4>;
+>>>>>> +			#clock-cells = <0>;
+>>>>>> +			clocks = <&osc>;
+>>>>>> +			bypass-shift = /bits/ 8 <0>;
+>>>>>> +		};
+>>>>>> +
+>>>>>> +		gateclk: gateclk {
+>>>>>> +			compatible = "marvell,berlin4ct-gateclk";
+>>>>>> +			reg = <0xea0700 4>;
+>>>>>> +			#clock-cells = <1>;
+>>>>>> +		};
+>>>>>> +
+>>>>>> +		clk: clk {
+>>>>>> +			compatible = "marvell,berlin4ct-clk";
+>>>>>> +			reg = <0xea0720 0x144>;
+>>>>>
+>>>>> Looking at the reg ranges, I'd say that they are all clock related
+>>>>> and pretty close to each other:
+>>>>>
+>>>>> gateclk: reg = <0xea0700 4>;
+>>>>> bypass:  reg = <0xea0710 4>;
+>>>>> clk:     reg = <0xea0720 0x144>;
+>>>>
+>>>> Although these ranges sit close, but we should represent HW structure as you
+>>>> said.
+>>>
+>>> Then how do you argue that you have to share the gate clock register
+>>> with every PLL? The answer is quite simple: You are not separating by
+>>> HW either but existing SW API.
+>>
+>> No, PLLs don't share register any more. You can find what all clock nodes will
+>> look like in:
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Jisheng,
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index a474359dd206..fd39fa54571b 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -5,11 +5,12 @@ axp152 (X-Powers)
- axp202 (X-Powers)
- axp209 (X-Powers)
- axp221 (X-Powers)
-+axp223 (X-Powers)
- 
- Required properties:
- - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
--	      "x-powers,axp221"
--- reg: The I2C slave address for the AXP chip
-+	      "x-powers,axp221", "x-powers,axp223"
-+- reg: The I2C slave address or RSB hardware address for the AXP chip
- - interrupt-parent: The parent interrupt controller
- - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
- - interrupt-controller: The PMIC has its own internal IRQs
-@@ -51,7 +52,7 @@ LDO3		: LDO		: ldo3in-supply
- LDO4		: LDO		: ldo24in-supply	: shared supply
- LDO5		: LDO		: ldo5in-supply
- 
--AXP221 regulators, type, and corresponding input supply names:
-+AXP221/AXP223 regulators, type, and corresponding input supply names:
- 
- Regulator	  Type		  Supply Name		  Notes
- ---------	  ----		  -----------		  -----
--- 
-2.6.2
+referring to the sunxi clock related thread, I am glad you finally
+picked up the idea of merging clock nodes. Before you start reworking
+bg4 clocks, I think I should be a little bit more clear about what I
+expect to be the outcome.
+
+When I said "one single clock complex node", I was referring to the
+clocks located within the system-controller reg region, i.e. those at
+0xea0000. With bg2x we came to the conclusion that those registers
+cannot be not cleanly separated by functions, so we decided to have
+a single system-controller simple-mfd node with sub-nodes for
+pinctrl, clock, reset, and whatever we will find there in the future.
+
+Please also follow this scheme for bg4 because when you start looking
+at reset, you'll likely see the same issues we were facing: Either you
+have a reset controller node with a plethora of reg property entries
+or you constantly undermine the concept of requested resources by using
+of_iomap().
+
+Using simple-mfd is a compromise between detailed HW description and
+usability. It will also automatically deal with concurrent accesses to
+the same register for e.g. clock and reset because simple-mfd and syscon
+install an access lock for the reg region. Even though there may be no
+real concurrent accesses to the same register, it does no real harm
+because we are locking resisters that aren't supposed to be used in
+high-speed applications. Some of them are touched once at boot, most
+of them are never touched by Linux at all.
+
+For the other PLLs at <0x922000 0x14> and <0x940034 0x14>, I do accept
+that they are not part of the system-controller sub-node. For the short
+run, I would accept separate nodes for the PLLs alone, but on the long
+run they should be hidden within the functional node they belong to,
+i.e. mempll should be a clock provided by some memory-controller node.
+As soon as you look at power saving modes for the memory-controller,
+you would need access to memory-controller register _and_ mempll anyway.
+
+We do have our DT tagged unstable, so we still can easily revert our
+limited view of some nodes later.
+
+BTW, if the clock provided by mempll is used to generate peripheral
+clocks that are dealt with in the sysctrl clock complex, you should,
+of course, expose that relation in DT, e.g.:
+
+sysctrl: system-controller {
+	reg = <0xea0700 0xfoo>;
+
+	sysclk: clock {
+		#clock-cells = <1>;
+		clocks = <&osc>, <&memctrl 0>;
+		clock-names = "osc", "mempll";
+	};
+};
+
+memctrl: memory-controller {
+	reg = <0x920000 0xbar>;
+	/*
+	 * clock-cells can also be 0
+	 * if there is no other clock provided
+	 */
+	#clock-cells = <1>;
+
+	clocks = <&osc>;
+	clock-names = "osc";
+};
+
+some-peripheral: bla {
+	clocks = <&sysclk SOME_PERIPHERAL_CLOCK_ID>;
+};
+
+Sebastian
+
+>>> If you would really want to just describe the HW, then you'd have to
+>>> have a single node for _all_ clocks that get controlled by 0xea0700/0x4,
+>>> feed some 32+ clocks into the node, and out again. Obviously, this
+>>> isn't what we want, right?
+>>
+>> I represented the HW by "kind", for example, gateclks, common-clks, pllclk.
+>> And let common PLLs follow this rule as well:
+>>
+>> one node for all common plls
+>>
+>> reg <0x922000 0x14>, <0x940034 0x14>, <0xea0200 0x14>
+>>
+>>>
+>>> So, the idea of berlin2 sysctrl nodes (and similar other SoCs) is: Some
+>>> SoCs just dump some functions into a bunch of registers with no
+>>> particular order. We'd never find a good representation for that in DT,
+>>> so we don't bother to try but let the driver implementation deal with
+>>> the mess. Using "simple-mfd" is a nice solution to scattered registers
+>>> please have a look at it and come up with a cleaner separation for bg4
+>>> clock.
+>>>
+>>>> First of all, let me describe the clks/plls in BG4CT. BG4CT contains:
+>>>>
+>>>> two kinds of PLL: normal PLL and AVPLL. These PLLs are put with their users
+>>>> together. For example: mempll pll registers <0xf7940034, 0x14> is put together
+>>>> with mem controller registers. AVPLL control registers are put with AV devices.
+>>>
+>>> Why didn't you choose to have a memory-controller node that provides
+>>> mempll clock then? I am open to having multiple nodes providing clocks
+>>> but having a node for every clock in any subsystem is something I'll
+>>> not even think about.
+>>
+>> OK. As you said, "SoCs just dump some functions into a bunch of registers with
+>> no particular order", BG4CT is now cleaner, all common-clks are put together,
+>> gate-clks are put together, pllclks are put together, only the common PLLs
+>> are dumped here and there. So how about representing the HW by "kind", one
+>> node for common plls, one node for gateclks, one node for common clks and
+>> one node for pllclks?
+>>
+>>                  pll: pll {
+>>                          compatible = "marvell,berlin4ct-pll";
+>>                          reg = <0x922000 0x14>, <0x940034 0x14>, <0xea0200 0x14>
+>>                          #clock-cells = <0>;
+>
+> should be "#clock-cells = <1>;"
+>
+>>                          clocks = <&osc>;
+>>                  };
+>>
+>> 		pllclk: pllclk {
+>>                          compatible = "marvell,berlin4ct-pllclk";
+>>                          reg = <0xea0710 4>
+>>                          #clock-cells = <1>;
+>> 		};
+>>
+>>                  gateclk: gateclk {
+>>                          compatible = "marvell,berlin4ct-gateclk";
+>>                          reg = <0xea0700 4>;
+>>                          #clock-cells = <1>;
+>>                  };
+>>
+>>                  clk: clk {
+>>                          compatible = "marvell,berlin4ct-clk";
+>>                          reg = <0xea0720 0x144>;
+>>                          #clock-cells = <1>;
+>>                          clocks = <&pllclk SYSPLLCLK>;
+>>                  };
+>>
+>
+> there's no a node for every clock with this proposal, all clks/plls are separated
+> by "kind". Is this OK for you?
+>
+> thanks
+>
