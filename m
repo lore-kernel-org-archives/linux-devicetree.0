@@ -1,113 +1,130 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v3 1/2] phy-sun4i-usb: Use of_match_node
- to get model specific config data
-Date: Fri, 27 Nov 2015 11:41:17 +0100
-Message-ID: <5658334D.30804@redhat.com>
-References: <1448470202-3628-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v64XL=bptxoCwiVkf8u-EfckpuASS3Foo=Q3i4a_6CaJYA@mail.gmail.com>
- <5656F6F4.1040801@redhat.com> <20151127085332.GU32142@lukather>
- <56583260.1080106@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 3/9] Documentation: dt-bindings: leds: add LM3633 LED
+ binding information
+Date: Fri, 27 Nov 2015 12:19:14 +0100
+Message-ID: <56583C32.5030307@samsung.com>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-4-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBVHG4CZAKGQE5JGDEMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <56583260.1080106-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1448521025-2796-4-git-send-email-milo.kim@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: robh+dt@kernel.org, lee.jones@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Milo,
 
-On 27-11-15 11:37, Hans de Goede wrote:
-> Hi,
+On 11/26/2015 07:56 AM, Milo Kim wrote:
+> LM3633 LED device is one of TI LMU device list.
 >
-> On 27-11-15 09:53, Maxime Ripard wrote:
->> On Thu, Nov 26, 2015 at 01:11:32PM +0100, Hans de Goede wrote:
->>>>> +enum sun4i_usb_phy_type {
->>>>> +       sun4i_a10_phy,
->>>>> +       sun8i_a33_phy,
->>>>> +};
->>>>> +
->>>>> +struct sun4i_usb_phy_cfg {
->>>>> +       int num_phys;
->>>>> +       u32 disc_thresh;
->>>>> +       enum sun4i_usb_phy_type type;
->>>>> +       bool dedicated_clocks;
->>>>> +};
->>>>> +
->>>>>   struct sun4i_usb_phy_data {
->>>>>          void __iomem *base;
->>>>> +       const struct sun4i_usb_phy_cfg *cfg;
->>>>>          struct mutex mutex;
->>>>> -       int num_phys;
->>>>> -       u32 disc_thresh;
->>>>> -       bool has_a33_phyctl;
->>>>>          struct sun4i_usb_phy {
->>>>>                  struct phy *phy;
->>>>>                  void __iomem *pmu;
->>>>> @@ -164,12 +174,15 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
->>>>>
->>>>>          mutex_lock(&phy_data->mutex);
->>>>>
->>>>> -       if (phy_data->has_a33_phyctl) {
->>>>> +       switch (phy_data->cfg->type) {
->>>>> +       case sun4i_a10_phy:
->>>>> +               phyctl = phy_data->base + REG_PHYCTL_A10;
->>>>
->>>> Any reason why this offset isn't incorporated into phy_data?
->>>
->>> You mean in phy_data->cfg I assume, the difference needed for
->>> the "sun4i_usb_phy_write" functionality are not just the phyctl
->>> register offset...
->>>
->>>>
->>>>> +               break;
->>>>> +       case sun8i_a33_phy:
->>>>>                  phyctl = phy_data->base + REG_PHYCTL_A33;
->>>>>                  /* A33 needs us to set phyctl to 0 explicitly */
->>>>>                  writel(0, phyctl);
->>>
->>> e.g. the A33 needs this extra write, and on the H3 we need to do
->>> similar bitbanging, but slightly different, see:
->>>
->>> https://github.com/allwinner-zh/linux-3.4-sunxi/blob/master/drivers/usb/host/sunxi_hci.c#L899
->>>
->>> Notice how it uses different addr and write register addresses
->>> their through the usb_phy_csr_add and usb_phy_csr_write helper
->>> functions as well as directly poking offset 0x20.
->>
->> Then it easy to support: one u8 for each register that changes, one
->> bool to tell if you need to clear the phyctl register or not, And you
->> don't have to duplicate the switch everywhere, and basically just
->> reimplement of_device_is_compatible without an actual compatible to
->> workaround the review ;)
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> ---
+>   .../devicetree/bindings/leds/leds-lm3633.txt       | 24 ++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3633.txt
 >
-> You clearly have not looked at the actual code I've linked to, the
-> entire "algorithm" for sun4i_usb_phy_write is different on the H3.
->
-> Moreover, this has nothing to do with this patch, the code coding the
-> difference behavior for the a10 style phy and the a33 style phy is already
-> there before this patch-set, and this is not something Kishon asked
-> me to change.
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3633.txt b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
+> new file mode 100644
+> index 0000000..a553894
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
+> @@ -0,0 +1,24 @@
+> +TI LMU LM3633 LED device tree bindings
+> +
+> +Required properties:
+> +  - compatible: "ti,lm3633-leds"
+> +
+> +Child nodes:
+> +  Each node matches with LED control bank.
+> +  Please refer to the datasheet [1].
 
-And on top of that phy_data->cfg->type is also used in different places,
-where the behavior for h3 is again completely different then for the other
-phy-s. There are just some differences which cannot be encoded in the form
-of register offsets or bools between the old a10 usb phys and the newer ones.
+leds/common.txt documentation says that child nodes represent discrete
+LED elements.
 
-And yes I've considered to just do a whole new phy driver, but there is enough
-overlap to make doing this in one driver more sensible. This may change when
-we add otg support for the H3. But we can always do a new driver then, and
-remove the limited (see the 2nd patch in this series) amount of changes needed
-for the H3 from phy-sun4i-usb.c again.
+> +  Required properties of a child node:
+> +  - led-sources: List of enabled channels from 0 to 5.
+> +                 Please refer to LED binding [2].
 
-Regards,
+led-sources property should contain always one element -
+a control bank identifier that the iout is to be associated with.
+For example, if there are three LEDs and they should be controlled
+with control bank A, then the bindings should look as follows
+(assuming that control bank identifiers start from 0 [A:0, B:1,
+C:2, etc. - it has to be also explicitly stated in the documentation]:
 
-Hans
+lvled1 {
+	led-sources = <2>;
+	led-max-microamp = <1000>;
+}
+
+lvled2 {
+	led-sources = <2>;
+	led-max-microamp = <29000>;
+}
+
+lvled3 {
+	led-sources = <2>;
+	led-max-microamp = <7000>;
+}
+
+The driver should expose singled LED class device for this arrangement.
+
+Since all of these LEDs will be controlled by the common bank, the
+lowest led-max-micromp constraint value from the three should be taken
+as a base for calculating max_brightness property of the LED class
+device. Of course in the sane case all these properties should have
+the same values.
+
+If the LEDs are to be connected to separate banks, then DT child nodes
+should look e.g. as follows (led-max-microamp values are set
+arbitrarily here):
+
+lvled4 {
+	led-sources = <6>;
+	led-max-microamp = <20000>;
+}
+
+lvled5 {
+	led-sources = <7>;
+	led-max-microamp = <17000>;
+}
+
+lvled6 {
+	led-sources = <8>;
+	led-max-microamp = <11000>;
+}
+
+You can of course add label properties to the child nodes.
+LED class device name could be composed out of LED names
+separated with colon, so here it would be:
+
+lvled4:levled5:lvled6
+
+> +  Optional properties of a child node:
+> +  - label: LED channel identification. Please refer to LED binding [2].
+> +  - led-max-microamp: Max current setting. Type is <u32>.
+> +                      Unit is microampere. Range is from 5000 to 30000.
+> +                      Step is 1000. Please refer to LED binding [2].
+> +
+> +Example: Please refer to ti-lmu dt-bindings [3].
+> +
+> +[1] http://www.ti.com/product/LM3633/datasheet
+> +[2] ../leds/common.txt
+> +[2] ../mfd/ti-lmu.txt
+
+Last index should be [3] and all references above should be corrected
+accordingly.
+
+-- 
+Best Regards,
+Jacek Anaszewski
