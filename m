@@ -1,57 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 4/9] Documentation: dt-bindings: regulator: add LM363x
- regulator binding information
-Date: Fri, 27 Nov 2015 22:07:33 +0000
-Message-ID: <20151127220733.GT1929@sirena.org.uk>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-5-git-send-email-milo.kim@ti.com>
- <20151127123750.GQ1929@sirena.org.uk>
- <20151127204450.GA12162@rob-hp-laptop>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Fri, 27 Nov 2015 18:28:50 -0500 (EST)
+Message-ID: <alpine.LFD.2.20.1511271817230.22569@knanqh.ubzr>
+References: <20150713131902.GH26485@atomide.com> <20151127132722.GA30871@n2100.arm.linux.org.uk> <20151127195148.GB30871@n2100.arm.linux.org.uk> <11537945.4HX4Y84tjV@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CqxttG7JecUZZO5Y"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151127204450.GA12162@rob-hp-laptop>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Milo Kim <milo.kim@ti.com>, lee.jones@linaro.org, j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11537945.4HX4Y84tjV@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 27 Nov 2015, Arnd Bergmann wrote:
 
---CqxttG7JecUZZO5Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I don't mind creating the /proc/atags compatibility hack from the kernel
+> for a DT based N700 kernel, as long as we limit it as much as we can
+> to the machines that need it. Leaving a board file for the N700 in place
+> that contains the procfs code (and not much more) seems reasonable
+> here, as we are talking about a board specific hack and the whole point
+> appears to be running unmodified user space.
+> 
+> Regarding how to get the data into the kernel in the first place, my
+> preferred choice would still be to have an intermediate bootloader
+> such as pxa-impedance-matcher, but I won't complain if others are
+> happy enough about putting it into the ATAGS compat code we already
+> have, as long as it's limited to the boards we know need it.
 
-On Fri, Nov 27, 2015 at 02:44:50PM -0600, Rob Herring wrote:
-> On Fri, Nov 27, 2015 at 12:37:50PM +0000, Mark Brown wrote:
-> > On Thu, Nov 26, 2015 at 03:57:00PM +0900, Milo Kim wrote:
+Assuming you have a N700 board file for special procfs code, then why 
+not getting at the atags in memory where the bootloader has put them 
+directly from that same board file? This way it'll really be limited to 
+the board we know needs it and the special exception will be contained 
+to that one file.  Amongst the machine specific hooks, there is one that 
+gets invoked early during boot before those atags are overwritten.
 
-> > > This binding describes LM3631 and LM3632 regulator properties.
 
-> > Please use subject lines matching the style for the subsystem.
-
-> Which for bindings, my preference is "dt-bindings: ..." I assume you=20
-> meant to follow regulator style though.=20
-
-Given that maintainers are generally expected to review and apply
-bindings themselves it seems sensible (and it's what we mostly seem to
-do).
-
---CqxttG7JecUZZO5Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWWNQkAAoJECTWi3JdVIfQHc0H/1bUoGT6Ap3pLwsgit9n28Dn
-a5RxRzNziylbHwWBNH0UPyBfHiBNLcgwJ7koTHcl34h/oLMJUJ4tRkAl/5vclcLn
-VG5R3EvnSOzShtlSJimSi3vsEKaWIrdzNOYTy4wbR0irCzHl1c74Gg9ew5dGRuF9
-N+1g/0uFOvkPJQ65Pw4dSSR3JgCAxlPocWLtpsoQIuvKMcar8tfUq2N/VfZdDTua
-6S1G2feA5XB9/bG8z5UsiQgS3ut+cOrBdBzDtkv7Es81CiNw68JQus1eMa048MhA
-gW10A0ey9vMm6H/I5bZdj+Xl+S4i24Jjoml4jSx4s4WOGD9Q2G9XtTq+2SMcl+A=
-=/2YZ
------END PGP SIGNATURE-----
-
---CqxttG7JecUZZO5Y--
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
