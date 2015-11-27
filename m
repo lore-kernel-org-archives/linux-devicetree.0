@@ -1,101 +1,77 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Fri, 27 Nov 2015 13:27:23 +0000
-Message-ID: <20151127132722.GA30871@n2100.arm.linux.org.uk>
-References: <20150713131902.GH26485@atomide.com>
- <20151123144545.GD24147@pali>
- <20151125181644.GI2517@atomide.com>
- <17134653.86P3dFyQKK@wuerfel>
- <20151125210310.GT2517@atomide.com>
- <56568849.5080103@gmail.com>
- <20151126090739.GD14190@pali>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v8 14/17] drm: bridge: analogix/dp: add max link rate and lane count limit for RK3288
+Date: Fri, 27 Nov 2015 14:32:26 +0100
+Message-ID: <2807882.UeSPH80il3@diego>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com> <1446022561-16870-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151126090739.GD14190@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@debian.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1446022561-16870-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 10:07:39AM +0100, Pali Roh=E1r wrote:
-> On Wednesday 25 November 2015 20:19:21 Frank Rowand wrote:
-> > > Or populate /proc/atags only for the ones that need it from machi=
-ne
-> > > specific init_early?
-> >=20
-> > This is circling back to the first comment from Russell King where
-> > he suggested a legacy file for the N900 which calls save_atags():
-> >=20
-> >     Are the ATAGs at a fixed address on the N900?  Can that be hand=
-led in
-> >     some kind of legacy file for the N900 which calls save_atags() =
-on it, so
-> >     we don't end up introducing yet more stuff that we have to main=
-tain into
-> >     the distant future?  If not, what about copying a known working=
- atag
-> >     structure into a legacy file for the N900?
-> >=20
-> > It seems to me that patches 1, 2, 4, and 5 could be replaced by thi=
-s
-> > approach.
+Am Mittwoch, 28. Oktober 2015, 16:56:01 schrieb Yakir Yang:
+> There are some IP limit on rk3288 that only support 4 physical lanes
+> of 2.7/1.6 Gbps/lane, so seprate them out by device_type flag.
 >=20
-> Hi Frank, in this case I will ask my question again: It is possible t=
-o
-> read atags from that legacy file. And if yes how? I was not thinking
-> about this approach because somebody in past wrote that this is not
-> possible...
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
 
-It is possible to redirect any program to open any other file.  You can
-do it via a LD preload, and intercepting the open(), and possibly the
-read() calls if you want to do something more fancy.  The down-side is
-that you have to arrange for the preloaded object to be used by the
-linker, and the additional overhead it places on the intercepted
-functions.
+[...]
 
-Eg,
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c index
+> 6307060..563ffb1d 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> @@ -890,8 +890,8 @@ static void analogix_dp_commit(struct analogix_dp=
+_device
+> *dp) return;
+>  	}
+>=20
+> -	ret =3D analogix_dp_set_link_train(dp, dp->video_info.lane_count,
+> -					 dp->video_info.link_rate);
+> +	ret =3D analogix_dp_set_link_train(dp, dp->video_info.max_lane_coun=
+t,
+> +					 dp->video_info.max_link_rate);
+>  	if (ret) {
+>  		dev_err(dp->dev, "unable to do link train\n");
+>  		return;
+> @@ -1156,16 +1156,25 @@ static int analogix_dp_dt_parse_pdata(struct
+> analogix_dp_device *dp) struct device_node *dp_node =3D dp->dev->of_n=
+ode;
+>  	struct video_info *video_info =3D &dp->video_info;
+>=20
+> -	if (of_property_read_u32(dp_node, "samsung,link-rate",
+> -				 &video_info->link_rate)) {
+> -		dev_err(dp->dev, "failed to get link-rate\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (of_property_read_u32(dp_node, "samsung,lane-count",
+> -				 &video_info->lane_count)) {
+> -		dev_err(dp->dev, "failed to get lane-count\n");
+> -		return -EINVAL;
+> +	switch (dp->plat_data && dp->plat_data->dev_type) {
 
-openatags.c:
+drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: In function =E2=80=98=
+analogix_dp_dt_parse_pdata=E2=80=99:
+drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1191:10: warning: sw=
+itch condition has boolean value [-Wswitch-bool]
+  switch (dp->plat_data && dp->plat_data->dev_type) {
+          ^
 
-#define open libc_open
-#include <fcntl.h>
-#undef open
-#include <string.h>
+As I think we always will need to distinguish between implementations,
+I guess it should be safe to exit with an error, it that implementation=
+-data
+is not available, like just doing before the switch a:
 
-int open(const char *pathname, int flags, mode_t mode)
-{
-        static int (*old_open)(const char *pathname, int flags, mode_t =
-mode);
+if (!dp->plat_data)
+	return -EINVAL;
 
-        if (strcmp(pathname, "/proc/atags") =3D=3D 0)
-		pathname =3D "/tmp/my-atags";
 
-        if (!old_open)
-                old_open =3D dlsym(RTLD_NEXT, "open");
-
-        return old_open(pathname, flags, mode);
-}
-
-Build the above (untested) with:
-gcc -O2 -o openatags.o -c openatags.c
-gcc -shared -o openatags.so openatags.o -ldl
-
-Now, when running one of these programs, you can test it with:
-LD_PRELOAD=3Dopenatags.so /name/of/program
-
-You could also list the full pathname to openatags.so in /etc/ld.so.pre=
-load,
-but test it first, because it will always be used by the linker in that
-case, and you wouldn't want normal commands to misbehave.
-
-Note that putting it in /etc/ld.so.preload will also have the effect th=
-at
-cat /proc/atags will also get redirected to /tmp/my-atags too.
-
---=20
-=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Heiko
