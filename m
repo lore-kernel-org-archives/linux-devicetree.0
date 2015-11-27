@@ -1,11 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v5 0/9] mfd: axp20x: Add support for RSB based AXP223
-Date: Fri, 27 Nov 2015 14:43:21 +0800
-Message-ID: <1448606610-32647-1-git-send-email-wens@csie.org>
+Subject: [PATCH v5 8/9] ARM: dts: sun8i: sinlinx-sina33: Add
+ AXP223 PMIC device and regulator nodes
+Date: Fri, 27 Nov 2015 14:43:29 +0800
+Message-ID: <1448606610-32647-9-git-send-email-wens@csie.org>
+References: <1448606610-32647-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBG7X36ZAKGQE243ZS4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHHX36ZAKGQE3WYQXCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1448606610-32647-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -17,110 +20,123 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+This board has a X-Powers AXP223 PMIC connected via RSB. Its regulators
+provide power to various parts of the SoC and the board.
 
-This is v5 of the AXP223 PMIC series. v5 cleans up the code before and
-after the axp20x split, as suggested by Andy.
+Also update the regulator supply phandles.
 
-Changes since v4:
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 76 +++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 3 deletions(-)
 
-  - Get rid of second parameter of axp20x_match_device() (new patch 2)
-
-  - Match against dev->driver->of_match_table, so the entirety of
-    axp20x_match_device() can be kept in the core. (new patch 3)
-
-  - Move *_device_id tables to bottom of the driver, right above driver
-    declaration. (patch 4 & 6)
-
-  - Remove extra whitespaces while moving i2c specific code (patch 4)
-
-  - Remove leftover whitespace and code style issues in axp20x core
-    (new patch 5)
-
-  - Remove extra whitespaces in rsb specific code (patch 6)
-
-Changes since v3:
-
-  - Removed settings for axp223 reg_rtc_ldo from board dts files that
-    are already in axp22x.dtsi. The name is kept.
-
-  - Dropped simplefb label and defconfig patches, as they are merged.
-
-Changes since v2:
-
-  - s/It's/Its/ for the commit messages of patches 5 and 7
-
-  - Add Rob's Acked-by for patch 1
-
-Changes since v1:
-
-  - Dropped NMI interrupt controller dts patch (Merged)
-
-  - Change MFD_AXP20X to represent the axp20x core, and drop MFD_AXP20X_CORE
-  
-  - Keep the axp20x core bits named axp20x.c
-
-  - Add patch 7 to add AXP223 to sun8i-q8-common.dtsi
-
-  - Add patch 8 & 9 to update defconfigs
-
-  - Make axp20x drivers tristate and buildable as modules
-
-  - Drop "_sunxi" substring from identifiers in axp20x-rsb driver
-
-
-This series adds support for the Reduced Serial Bus based AXP223 PMIC.
-The AXP223 is functionally identical to the AXP221, which we already
-support. Only some default values for the regulators are different.
-The defaults fit their recommended application, paired with different
-SoCs.
-
-Patch 1 adds AXP223 to the list of supported chips in the DT binding.
-
-Patch 2 splits the axp20x mfd driver into 2 parts, a core library, and
-an I2C driver.
-
-Patch 3 adds an RSB based driver for the AXP223.
-
-Patch 4 adds support for the AXP223 regulators
-
-Patch 5 enables the AXP223 PMIC and its regulators for the Sinlinx
-SinA33.
-
-Patch 6 enables the AXP223 PMIC and its regulators for A23/A33 based
-Q8 devices.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (9):
-  mfd: axp20x: Add AXP223 to list of supported PMICs in DT bindings
-  mfd: axp20x: Remove second struct device * parameter for
-    axp20x_match_device()
-  mfd: axp20x: use dev->driver->of_match_table in axp20x_match_device()
-  mfd: axp20x: Split the driver into core and i2c bits
-  mfd: axp20x: Whitespace, open parenthesis alignment code style fixes
-  mfd: axp20x: Add support for RSB based AXP223 PMIC
-  regulator: axp20x: Support new AXP223 PMIC
-  ARM: dts: sun8i: sinlinx-sina33: Add AXP223 PMIC device and regulator
-    nodes
-  ARM: dts: sun8i: q8-common: Add AXP223 PMIC device and regulator nodes
-
- Documentation/devicetree/bindings/mfd/axp20x.txt |   7 +-
- arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts   |  76 ++++++++++++++++-
- arch/arm/boot/dts/sun8i-q8-common.dtsi           |  83 +++++++++++++++++-
- drivers/mfd/Kconfig                              |  25 ++++--
- drivers/mfd/Makefile                             |   2 +
- drivers/mfd/axp20x-i2c.c                         | 102 +++++++++++++++++++++++
- drivers/mfd/axp20x-rsb.c                         |  78 +++++++++++++++++
- drivers/mfd/axp20x.c                             | 101 +++++-----------------
- drivers/regulator/axp20x-regulator.c             |   3 +
- include/linux/mfd/axp20x.h                       |  34 +++++++-
- 10 files changed, 418 insertions(+), 93 deletions(-)
- create mode 100644 drivers/mfd/axp20x-i2c.c
- create mode 100644 drivers/mfd/axp20x-rsb.c
-
+diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+index 13ce68f06dd6..2809e079902e 100644
+--- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
++++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+@@ -68,7 +68,7 @@
+ };
+ 
+ &lradc {
+-	vref-supply = <&reg_vcc3v0>;
++	vref-supply = <&reg_dcdc1>;
+ 	status = "okay";
+ 
+ 	button@200 {
+@@ -96,7 +96,7 @@
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_sina33>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+ 	cd-inverted;
+@@ -106,7 +106,7 @@
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_8bit_pins>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	status = "okay";
+@@ -132,6 +132,76 @@
+ 
+ &r_rsb {
+ 	status = "okay";
++
++	axp22x: pmic@3e3 {
++		compatible = "x-powers,axp223";
++		reg = <0x3e3>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		eldoin-supply = <&reg_dcdc1>;
++	};
++};
++
++#include "axp22x.dtsi"
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-io";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <2350000>;
++	regulator-max-microvolt = <2650000>;
++	regulator-name = "vdd-dll";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2700000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_dc5ldo {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpus";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-3v0";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-sys";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram";
++};
++
++&reg_rtc_ldo {
++	regulator-name = "vcc-rtc";
+ };
+ 
+ &uart0 {
 -- 
 2.6.2
