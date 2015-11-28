@@ -1,140 +1,132 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: [PATCH 2/2] regulator: fixed: Add support for regmap
-Date: Sat, 28 Nov 2015 21:14:45 +0000
-Message-ID: <565A1945.1040800@simon.arlott.org.uk>
-References: <565A18DD.60108@simon.arlott.org.uk>
+From: Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Sun, 29 Nov 2015 03:14:40 +0530
+Message-ID: <CAFTCetQS=qd7Ey_KGNG5yegqnnG2KS5Ua7J9joOSOkN_9wdYRg@mail.gmail.com>
+References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
+	<1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
+	<20151116144525.GM20696@leverpostej>
+	<CAFTCetQpb4M0dxCWYHXVZYgNKjZT7-J91hhx1=aa7FhPWgEf6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565A18DD.60108-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+In-Reply-To: <CAFTCetQpb4M0dxCWYHXVZYgNKjZT7-J91hhx1=aa7FhPWgEf6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the device tree properties for regmap:
-* Lookup the regmap phandle
-* Use the enable offset and enable mask
-* Reuse enable-active-high value
+Hi Mark,
 
-Use an alternative set of regulator_ops when the regmap is set,
-specifying the regmap helper functions.
+On Wed, Nov 18, 2015 at 7:21 PM, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Mark,
+>
+> Thanks for the review.
+>
+> On Mon, Nov 16, 2015 at 8:15 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
+>>> This patch adds a devicetree binding documentation for ARM's
+>>> SP805 WatchDog Timer.
+>>>
+>>> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
+>>>  1 file changed, 33 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>> new file mode 100644
+>>> index 0000000..ec70fe9
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>> @@ -0,0 +1,33 @@
+>>> +* ARM SP805 Watchdog Timer (WDT) Controller
+>>> +
+>>> +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+>>> +can be used to identify the peripheral type, vendor, and revision.
+>>> +This value can be used for driver matching.
+>>> +
+>>> +Note that the current sp805_wdt driver relies on the 'drivers/amba/bus.c'
+>>> +framework to invoke the probe function of the sp805_wdt driver using the
+>>> +unique PRIMECELL identifiers of the sp805 wdt IP.
+>>
+>> This paragraph can go. We shouldn't describe kernel internals.
+>
+> Ok.
+>
+>>> +As SP805 WDT is a primecell IP, it follows the base bindings specified in
+>>> +'arm/primecell.txt'
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
+>>> +- reg : Base address and size of the watchdog timer registers.
+>>> +- interrupts : Should specify WDT interrupt number.
+>>> +
+>>> +Optional properties:
+>>> +- clocks : From common clock binding. First clock is phandle to clock for apb
+>>> +           pclk. Additional clocks are optional.
+>>> +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
+>>
+>> The hardware has "WDOGCLK", which is what the driver appears to expect
+>> first implicitly.
+>
+> Ok.
+>
+>>> +Examples:
+>>> +
+>>> +             cluster1_core0_watchdog: wdt@c000000 {
+>>> +                     compatible = "arm,sp805-wdt", "arm,primecell";
+>>> +                     reg = <0x0 0xc000000 0x0 0x1000>;
+>>> +                     interrupts = <1 12 0x8>; /* PPI, Level low type */
+>>
+>> I don't see how you can use PPIs here. This is not banked per CPU.
+>
+> I have raised this concern to my hardware team. This might be an issue
+> with the documentation.
+> I will change it in v2 as per their comments.
 
-As syscon_regmap_lookup_by_phandle() can only return -ENODEV or -ENOSYS
-as errors and -EPROBE_DEFER doesn't make sense for a register, the
-specific error is never propagated.
+I just checked back with the hardware team. They confirm that the
+WDOGINT interrupts lines
+from the eight instances of the SP805 WDT are infact connected to PPI
+input of the GICv3 controller.
 
-This is required for Broadcom BCM63xx SoCs that enable power to
-individual peripherals by clearing a bit in the miscIddqCtrl register.
+Also this SP805 WDT IP supports 2 interrupt lines:
+- WDOGINT
+- WDOGRES
 
-Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
----
- drivers/regulator/fixed.c       | 30 +++++++++++++++++++++++++++++-
- include/linux/regulator/fixed.h |  9 ++++++++-
- 2 files changed, 37 insertions(+), 2 deletions(-)
+but the current sp805_wdt.c driver doesn't handle the WDOGINT
+interrupt (irrespective of whether
+it is a SPI or PPI). I could not trace a request_irq being called for
+the same in the driver.
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index ff62d69..5a3fa44 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -30,6 +30,7 @@
- #include <linux/of_gpio.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regulator/machine.h>
-+#include <linux/mfd/syscon.h>
- 
- struct fixed_voltage_data {
- 	struct regulator_desc desc;
-@@ -92,6 +93,19 @@ of_get_fixed_voltage_config(struct device *dev,
- 	if ((config->gpio == -ENODEV) || (config->gpio == -EPROBE_DEFER))
- 		return ERR_PTR(-EPROBE_DEFER);
- 
-+	config->regmap = syscon_regmap_lookup_by_phandle(np, "regmap");
-+	if (!IS_ERR(config->regmap)) {
-+		u32 val;
-+
-+		if (of_property_read_u32(np, "regmap-offset", &val))
-+			return ERR_PTR(-EINVAL);
-+		config->enable_reg = val;
-+
-+		if (of_property_read_u32(np, "regmap-mask", &val))
-+			return ERR_PTR(-EINVAL);
-+		config->enable_mask = val;
-+	}
-+
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
- 
- 	config->enable_high = of_property_read_bool(np, "enable-active-high");
-@@ -107,6 +121,12 @@ of_get_fixed_voltage_config(struct device *dev,
- static struct regulator_ops fixed_voltage_ops = {
- };
- 
-+static struct regulator_ops fixed_voltage_regmap_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+};
-+
- static int reg_fixed_voltage_probe(struct platform_device *pdev)
- {
- 	struct fixed_voltage_config *config;
-@@ -140,7 +160,15 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 	}
- 	drvdata->desc.type = REGULATOR_VOLTAGE;
- 	drvdata->desc.owner = THIS_MODULE;
--	drvdata->desc.ops = &fixed_voltage_ops;
-+	if (!IS_ERR_OR_NULL(config->regmap)) {
-+		drvdata->desc.ops = &fixed_voltage_regmap_ops;
-+		cfg.regmap = config->regmap;
-+		drvdata->desc.enable_reg = config->enable_reg;
-+		drvdata->desc.enable_mask = config->enable_mask;
-+		drvdata->desc.enable_is_inverted = !config->enable_high;
-+	} else {
-+		drvdata->desc.ops = &fixed_voltage_ops;
-+	}
- 
- 	drvdata->desc.enable_time = config->startup_delay;
- 
-diff --git a/include/linux/regulator/fixed.h b/include/linux/regulator/fixed.h
-index 48918be..7cec0d1 100644
---- a/include/linux/regulator/fixed.h
-+++ b/include/linux/regulator/fixed.h
-@@ -26,6 +26,10 @@ struct regulator_init_data;
-  * @microvolts:		Output voltage of regulator
-  * @gpio:		GPIO to use for enable control
-  * 			set to -EINVAL if not used
-+ * @regmap:		Regmap to use for enable control
-+ *			set to -ENODEV if not used
-+ * @enable_reg:		Register for control when using regmap
-+ * @enable_mask:	Mask for control when using regmap
-  * @startup_delay:	Start-up time in microseconds
-  * @gpio_is_open_drain: Gpio pin is open drain or normal type.
-  *			If it is open drain type then HIGH will be set
-@@ -33,7 +37,7 @@ struct regulator_init_data;
-  *			and low will be set as gpio-output with driven
-  *			to low. For non-open-drain case, the gpio will
-  *			will be in output and drive to low/high accordingly.
-- * @enable_high:	Polarity of enable GPIO
-+ * @enable_high:	Polarity of enable GPIO/regmap
-  *			1 = Active high, 0 = Active low
-  * @enabled_at_boot:	Whether regulator has been enabled at
-  * 			boot or not. 1 = Yes, 0 = No
-@@ -50,6 +54,9 @@ struct fixed_voltage_config {
- 	const char *input_supply;
- 	int microvolts;
- 	int gpio;
-+	struct regmap *regmap;
-+	unsigned int enable_reg;
-+	unsigned int enable_mask;
- 	unsigned startup_delay;
- 	unsigned gpio_is_open_drain:1;
- 	unsigned enable_high:1;
--- 
-2.1.4
+So, I would suggest the following:
 
--- 
-Simon Arlott
+I can spin a patch for sp805_wdt.c to add support to handle WDOGINT
+interrupt when the WDT counter expires
+as currently the cadence_wdt driver does (see [1] and [2] as reference):
+
+[1] http://lxr.free-electrons.com/source/drivers/watchdog/cadence_wdt.c#L343
+[2] http://lxr.free-electrons.com/source/drivers/watchdog/cadence_wdt.c#L254
+
+Please suggest if this approach seems fine to you.
+
+Regards,
+Bhupesh
+
+
+>
+> Regards,
+> Bhupesh
+>
+>> Mark.
+>>
+>>> +                     clocks = <&clockgen 4 3>;
+>>> +                     clock-names = "apb_pclk";
+>>> +             };
+>>> +
+>>> --
+>>> 1.7.9.5
+>>>
+>>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
