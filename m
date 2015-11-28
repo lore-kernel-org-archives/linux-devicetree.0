@@ -1,95 +1,109 @@
 From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v2 00/10] Add New DRM Driver for HiSilicon hi6220 SoC
-Date: Sat, 28 Nov 2015 18:38:55 +0800
-Message-ID: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v2 01/10] arm64: dts: hisilicon: Add display subsystem DT nodes for hi6220
+Date: Sat, 28 Nov 2015 18:38:56 +0800
+Message-ID: <1448707145-69348-2-git-send-email-xinliang.liu@linaro.org>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: andy.green@linaro.org, xuyiping@hisilicon.com, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, lijianhua@huawei.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-ICBUaGlzIHBhdGNoIHNldCBhZGRzIGEgbmV3IGRybSBkcml2ZXIgZm9yIEhpU2lsaWNvbiBoaTYy
-MjAgU29DLgpDdXJyZW50IHRlc3RpbmcgYW5kIHN1cHBvcnQgYm9hcmQgaXMgSGlrZXkgYm9hcmQg
-d2hpY2ggaXMgb25lIG9mIExpbmFybwo5NmJvYXJkcy4gSXQgaXMgYW4gYXJtNjQgb3BlbiBzb3Vy
-Y2UgYm9hcmQuIEZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0CnRoaXMgYm9hcmQsIHBsZWFzZSBh
-Y2Nlc3MgaHR0cHM6Ly93d3cuOTZib2FyZHMub3JnLgoKSGFyZHdhcmUgRGV0YWlsCi0tLS0tLS0t
-LS0tLS0tLQogIFRoZSBkaXNwbGF5IHN1YnN5c3RlbSBvZiBIaTYyMjAgU29DIGlzIHNob3duIGFz
-IGJlbGxvdzoKICstLS0tLSsgICAgICAgKy0tLS0tLS0tLS0rICAgICArLS0tLS0rICAgICArLS0t
-LS0tLS0tKwogfCAgICAgfCAgICAgICB8ICAgICAgICAgIHwgICAgIHwgICAgIHwgICAgIHwgICAg
-ICAgICB8ICAgICAgICAgICAgIAkKIHwgRkIgIHwtLS0tLS0+fCAgIEFERSAgICB8LS0tLT58IERT
-SSB8LS0tLT58IEV4dGVybmFsfAogfCAgICAgfCAgICAgICB8ICAgICAgICAgIHwgICAgIHwgICAg
-IHwgICAgIHwgIEhETUkgICB8CiArLS0tLS0rICAgICAgICstLS0tLS0tLS0tKyAgICAgKy0tLS0t
-KyAgICAgKy0tLS0tLS0tLSsKCi0gQURFKEFkdmFuY2VkIERpc3BsYXkgRW5naW5lKSBpcyB0aGUg
-ZGlzcGxheSBjb250cm9sbGVyLiBJdCBjb250YWlucyA3CmNoYW5uZWxzLCAzIG92ZXJsYXkgY29t
-cG9zaXRvcnMgYW5kIGEgTERJLgogIC0gQSBjaGFubmVsIGxvb2tzIGxpa2U6IERNQS0tPmNsaXAt
-LT5zY2FsZS0tPmN0cmFucyhvciBjYWxsZWQgY3NjKS4KICAtIE92ZXJsYXkgY29tcG9zaXRvciBp
-cyByZXNwb25zZSB0byBjb21wb3NlIHBsYW5lcyB3aGljaCBjb21lIGZyb20gNwogIGNoYW5uZWxz
-IGFuZCBwYXNzIGNvbXBvc2VkIGltYWdlIHRvIExESS4KICAtIExESSBpcyByZXNwb25zZSB0byBn
-ZW5lcmF0ZSB0aW1pbmdzIGFuZCBSR0IgZGF0YSBzdHJlYW0uCi0gRFNJIGNvbnZlcnRzIHRoZSBS
-R0IgZGF0YSBzdHJlYW0gZnJvbSBBREUgdG8gRFNJIHBhY2tldHMuCi0gRXh0ZXJuYWwgSERNSSBt
-b2R1bGUgaXMgY29ubmVjdGVkIHdpdGggRFNJIGJ1cy4gTm93IEhpa2V5IHVzZSBhIEFESSdzCiAg
-QURWNzUzMyBleHRlcm5hbCBIRE1JIGNoaXAuCgpDaGFuZ2UgSGlzdG9yeQotLS0tLS0tLS0tLS0t
-CkNoYW5nZXMgaW4gdjI6Ci0gUmVtb3ZlIGFidHJhY3Rpb24gbGF5ZXIgb2YgcGxhbmUvY3J0Yy9l
-bmNvZGVyL2Nvbm5lY3Rvci4KLSBSZWZhY3RvciBhdG9taWMgaW1wbGVtZW50YXRpb24gYWNjb3Jk
-aW5nIHRvIERhbmllbCBWZXR0ZXIncyBndWlkZXM6Cmh0dHA6Ly9ibG9nLmZmd2xsLmNoLzIwMTQv
-MTEvYXRvbWljLW1vZGVzZXQtc3VwcG9ydC1mb3Ita21zLWRyaXZlcnMuaHRtbApodHRwOi8vYmxv
-Zy5mZndsbC5jaC8yMDE1LzA5L3hkYy0yMDE1LWF0b21pYy1tb2Rlc2V0dGluZy1mb3ItZHJpdmVy
-cy5odG1sCmh0dHA6Ly9ibG9nLmZmd2xsLmNoLzIwMTUvMDgvYXRvbWljLW1vZGVzZXR0aW5nLWRl
-c2lnbi1vdmVydmlldy5odG1sCi0gVXNlIGJyaWRnZSBpbnN0ZWFkIG9mIHNsYXZlIGVuY29kZXIg
-dG8gY29ubmVjdCBleHRlcm5hbCBIRE1JLgotIE1vdmUgZHQgYmluZGluZyBkb2NzIHRvIGJpbmRp
-bmdzL2Rpc3BsYXkvaGlzaWxpY29uIGRpcmVjdG9yeS4gCgoKWGlubGlhbmcgTGl1ICgxMCk6CiAg
-YXJtNjQ6IGR0czogaGlzaWxpY29uOiBBZGQgZGlzcGxheSBzdWJzeXN0ZW0gRFQgbm9kZXMgZm9y
-IGhpNjIyMC4KICBkcm0vaGlzaWxpY29uOiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgaGk2
-MjIwIGRpc3BsYXkgc3Vic3lzdGVtCiAgZHJtL2hpc2lsaWNvbjogQWRkIGhpc2lsaWNvbiBEUk0g
-bWFzdGVyIGRyaXZlcgogIGRybS9oaXNpbGljb246IEFkZCBjcnRjIGZ1bmNzIGZvciBBREUKICBk
-cm0vaGlzaWxpY29uOiBBZGQgcGxhbmUgZnVuY3MgZm9yIEFERQogIGRybS9oaXNpbGljb246IEFk
-ZCB2YmxhbmsgZmVhdHVyZQogIGRybS9oaXNpbGljb246IEFkZCBjbWEgZmJkZXYgYW5kIGhvdHBs
-dWcKICBkcm0vaGlzaWxpY29uOiBBZGQgZHNpIGVuY29kZXIgZHJpdmVyCiAgZHJtL2hpc2lsaWNv
-bjogQWRkIGRzaSBob3N0IGRyaXZlcgogIGRybS9oaXNpbGljb246IEFkZCBzdXBwb3J0IGZvciBl
-eHRlcm5hbCBicmlkZ2UKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1hZGUu
-dHh0ICAgICAgICB8ICAgNDIgKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2kt
-ZHJtLnR4dCAgICAgICAgfCAgIDY2ICsrCiAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24v
-aGlzaS1kc2kudHh0ICAgICAgICB8ICAgNTMgKwogYXJjaC9hcm02NC9ib290L2R0cy9oaXNpbGlj
-b24vaGk2MjIwLWhpa2V5LmR0cyAgICAgfCAgIDIxICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvaGlz
-aWxpY29uL2hpNjIyMC5kdHNpICAgICAgICAgIHwgICA0NCArCiBkcml2ZXJzL2dwdS9kcm0vS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKwogZHJpdmVycy9ncHUvZHJt
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1
-L2RybS9oaXNpbGljb24vS2NvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAxMCArCiBkcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgIDUgKwogZHJp
-dmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2FkZV9yZWcuaCAgICAgICAgICAgfCAgNDkwICsr
-KysrKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9hZGUuYyAgICAgICAg
-ICAgfCAxMDY4ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
-L2hpc2lfZHJtX2FkZS5oICAgICAgICAgICB8ICAgMTYgKwogZHJpdmVycy9ncHUvZHJtL2hpc2ls
-aWNvbi9oaXNpX2RybV9kcnYuYyAgICAgICAgICAgfCAgMjgwICsrKysrCiBkcml2ZXJzL2dwdS9k
-cm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5oICAgICAgICAgICB8ICAgMTkgKwogZHJpdmVycy9n
-cHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kc2kuYyAgICAgICAgICAgfCAgODI5ICsrKysrKysr
-KysrKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RzaV9yZWcuaCAgICAgICAg
-ICAgfCAgIDg5ICsrCiAxNiBmaWxlcyBjaGFuZ2VkLCAzMDM1IGluc2VydGlvbnMoKykKIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9o
-aXNpbGljb24vaGlzaS1hZGUudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2ktZHJtLnR4dAogY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hp
-c2lsaWNvbi9oaXNpLWRzaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-aGlzaWxpY29uL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlz
-aWxpY29uL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2ls
-aWNvbi9oaXNpX2FkZV9yZWcuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9o
-aXNpbGljb24vaGlzaV9kcm1fYWRlLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vaGlzaWxpY29uL2hpc2lfZHJtX2FkZS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kcnYuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZHJ2LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2RzaS5jCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RzaV9yZWcuaAoKLS0gCjEuOS4xCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add ade, dsi and adv7533 DT nodes for hikey board.
+
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Signed-off-by: Andy Green <andy.green@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 21 ++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 44 ++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 8d43a0f..81236b3 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -31,4 +31,25 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
+ 	};
++
++	soc {
++		i2c2: i2c@f7102000 {
++			status = "ok";
++
++			adv7533: adv7533@39 {
++				compatible = "adi,adv7533";
++				reg = <0x39>;
++				interrupt-parent = <&gpio1>;
++				interrupts = <1 2>;
++				pd-gpio = <&gpio0 4 0>;
++				adi,dsi-lanes = <4>;
++
++				port {
++					adv_in: endpoint {
++						remote-endpoint = <&dsi_out>;
++					};
++				};
++			};
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 82d2488..2d6cf03 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -208,5 +208,49 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
++
++		display-subsystem {
++			compatible = "hisilicon,hi6220-dss";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			ade: ade@f4100000 {
++				compatible = "hisilicon,hi6220-ade";
++				reg = <0x0 0xf4100000 0x0 0x7800>,
++				      <0x0 0xf4410000 0x0 0x1000>;
++				reg-names = "ade_base",
++					    "media_base";
++				interrupts = <0 115 4>; /* ldi interrupt */
++
++				clocks = <&media_ctrl HI6220_ADE_CORE>,
++					 <&media_ctrl HI6220_CODEC_JPEG>,
++					 <&media_ctrl HI6220_ADE_PIX_SRC>,
++					 <&media_ctrl HI6220_PLL_SYS>,
++					 <&media_ctrl HI6220_PLL_SYS_MEDIA>;
++				/*clock name*/
++				clock-names  = "clk_ade_core",
++					       "aclk_codec_jpeg_src",
++					       "clk_ade_pix",
++					       "clk_syspll_src",
++					       "clk_medpll_src";
++				ade_core_clk_rate = <360000000>;
++				media_noc_clk_rate = <288000000>;
++			};
++
++			dsi: dsi@0xf4107800 {
++				compatible = "hisilicon,hi6220-dsi";
++				reg = <0x0 0xf4107800 0x0 0x100>;
++				clocks = <&media_ctrl  HI6220_DSI_PCLK>;
++				clock-names = "pclk_dsi";
++
++				port {
++					dsi_out: endpoint {
++						remote-endpoint = <&adv_in>;
++					};
++				};
++
++			};
++		};
+ 	};
+ };
+-- 
+1.9.1
+
