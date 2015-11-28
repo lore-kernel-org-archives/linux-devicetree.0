@@ -1,48 +1,54 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Sat, 28 Nov 2015 12:34:23 -0500 (EST)
-Message-ID: <alpine.LFD.2.20.1511281232440.22569@knanqh.ubzr>
-References: <20150713131902.GH26485@atomide.com> <20151127132722.GA30871@n2100.arm.linux.org.uk> <20151127195148.GB30871@n2100.arm.linux.org.uk> <11537945.4HX4Y84tjV@wuerfel> <alpine.LFD.2.20.1511271817230.22569@knanqh.ubzr>
- <20151128123328.GC30871@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151128123328.GC30871@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Laura Abbott <lauraa@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dt: mvebu: ix4-300d: remove whole flash
+ partition
+Date: Sat, 28 Nov 2015 18:38:15 +0100
+Message-ID: <5659E687.9090502@gmail.com>
+References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1448709248-21177-2-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20151128165258.GG32356@lunn.ch>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151128165258.GG32356-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Nov 2015, Russell King - ARM Linux wrote:
-
-> On Fri, Nov 27, 2015 at 06:28:50PM -0500, Nicolas Pitre wrote:
-> > On Fri, 27 Nov 2015, Arnd Bergmann wrote:
-> > 
-> > > I don't mind creating the /proc/atags compatibility hack from the kernel
-> > > for a DT based N700 kernel, as long as we limit it as much as we can
-> > > to the machines that need it. Leaving a board file for the N700 in place
-> > > that contains the procfs code (and not much more) seems reasonable
-> > > here, as we are talking about a board specific hack and the whole point
-> > > appears to be running unmodified user space.
-> > > 
-> > > Regarding how to get the data into the kernel in the first place, my
-> > > preferred choice would still be to have an intermediate bootloader
-> > > such as pxa-impedance-matcher, but I won't complain if others are
-> > > happy enough about putting it into the ATAGS compat code we already
-> > > have, as long as it's limited to the boards we know need it.
-> > 
-> > Assuming you have a N700 board file for special procfs code, then why 
-> > not getting at the atags in memory where the bootloader has put them 
-> > directly from that same board file? This way it'll really be limited to 
-> > the board we know needs it and the special exception will be contained 
-> > to that one file.  Amongst the machine specific hooks, there is one that 
-> > gets invoked early during boot before those atags are overwritten.
+On 28.11.2015 17:52, Andrew Lunn wrote:
+> On Sat, Nov 28, 2015 at 12:14:05PM +0100, Sebastian Hesselbarth wrote:
+>> Current NAND node has an additional flash partition for the whole
+>> flash overlapping with real partitions. Remove this partition as
+>> the whole flash is already represented by the NAND device itself.
 > 
-> I've already suggested that.
+> If i remember correctly, we discussed this when the contribution was
+> made. I think the stock firmware might use this for applying updates.
+> Maybe Benoit can comment?
 
-Good. And Arnd likes the idea too. So we might be converging at last 
-which is a good thing.
+Yes, please.
+
+> If so, removing this will break compatibility with stock firmware. Do
+> we want to do that? There are a few other mvebu dts files with a
+> partition spanning the whole flash. Should we remove them as well?
+
+Well, there is already a mtd device that spans the whole flash so
+what is the purpose of another "partition" that isn't a part but
+all of the device? Actually, I doubt that a FW update will wipe
+the flash as a whole, i.e. including boot loader, boot env, user
+config.
+
+Anyway, let's see if Benoit can shed some light on this.
+
+FWIW, neither single partitions nor a combined partitions node
+should be a direct sub-node of the _controller_ but a NAND
+_device_ node instead. Luckily, multi-device systems are not that
+common, so I guess we wait with it until such a system pops up for
+testing.
+
+Sebastian
 
 
-Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
