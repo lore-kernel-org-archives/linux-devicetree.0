@@ -1,7 +1,7 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 2/4] ARM: dt: mvebu: ix4-300d: move partitions to partition sub-node
-Date: Sat, 28 Nov 2015 12:14:06 +0100
-Message-ID: <1448709248-21177-3-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 4/4] ARM: dt: mvebu: ix4-300d: Add ECC properties to NAND flash
+Date: Sat, 28 Nov 2015 12:14:08 +0100
+Message-ID: <1448709248-21177-5-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
@@ -10,10 +10,8 @@ To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benoit Masson <yahoo@perenite.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-NAND flash partitions should be part of a partitions sub-node
-not the flash node itself. Move the partitions which will also
-allow different bootloaders get rid of the stock partitions
-easily by removing the partitions node.
+The NAND device found on Lenovo ix4-300d uses 4-bit BCH ECC protection.
+Add the corresponding properties to the NAND node.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
@@ -31,86 +29,21 @@ Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org 
 Cc: linux-kernel@vger.kernel.org 
 ---
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 67 +++++++++++++------------
- 1 file changed, 36 insertions(+), 31 deletions(-)
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index 30a0a6eac645..76781fd18624 100644
+index 13cf69a8d0fb..e4bf83c4bd2f 100644
 --- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
 +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -151,37 +151,42 @@
+@@ -150,6 +150,8 @@
+ 				marvell,nand-keep-config;
  				marvell,nand-enable-arbiter;
  				nand-on-flash-bbt;
++				nand-ecc-strength = <4>;
++				nand-ecc-step-size = <512>;
  
--				partition@0 {
--					label = "u-boot";
--					reg = <0x0000000 0xe0000>;
--					read-only;
--				};
--
--				partition@e0000 {
--					label = "u-boot-env";
--					reg = <0xe0000 0x20000>;
--					read-only;
--				};
--
--				partition@100000 {
--					label = "u-boot-env2";
--					reg = <0x100000 0x20000>;
--					read-only;
--				};
--
--				partition@120000 {
--					label = "zImage";
--					reg = <0x120000 0x400000>;
--				};
--
--				partition@520000 {
--					label = "initrd";
--					reg = <0x520000 0x400000>;
--				};
--
--				partition@xE00000 {
--					label = "boot";
--					reg = <0xE00000 0x3F200000>;
-+				partitions {
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					partition@0 {
-+						label = "u-boot";
-+						reg = <0x0000000 0xe0000>;
-+						read-only;
-+					};
-+
-+					partition@e0000 {
-+						label = "u-boot-env";
-+						reg = <0xe0000 0x20000>;
-+						read-only;
-+					};
-+
-+					partition@100000 {
-+						label = "u-boot-env2";
-+						reg = <0x100000 0x20000>;
-+						read-only;
-+					};
-+
-+					partition@120000 {
-+						label = "zImage";
-+						reg = <0x120000 0x400000>;
-+					};
-+
-+					partition@520000 {
-+						label = "initrd";
-+						reg = <0x520000 0x400000>;
-+					};
-+
-+					partition@xE00000 {
-+						label = "boot";
-+						reg = <0xE00000 0x3F200000>;
-+					};
- 				};
- 			};
- 		};
+ 				partitions {
+ 					#address-cells = <1>;
 -- 
 2.1.4
