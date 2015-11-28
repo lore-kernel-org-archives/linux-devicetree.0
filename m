@@ -1,43 +1,49 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Fri, 27 Nov 2015 18:28:50 -0500 (EST)
-Message-ID: <alpine.LFD.2.20.1511271817230.22569@knanqh.ubzr>
-References: <20150713131902.GH26485@atomide.com> <20151127132722.GA30871@n2100.arm.linux.org.uk> <20151127195148.GB30871@n2100.arm.linux.org.uk> <11537945.4HX4Y84tjV@wuerfel>
+From: chenfeng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH V5 RESEND 0/3] Add iommu support for hi6220 HiKey board
+Date: Sat, 28 Nov 2015 10:09:07 +0800
+Message-ID: <56590CC3.5050401@hisilicon.com>
+References: <1447986309-47548-1-git-send-email-puck.chen@hisilicon.com>
+	<20151127114920.GH24300@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11537945.4HX4Y84tjV@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20151127114920.GH24300-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, puck.chen-Dw/NWeUnuQfQT0dZR+AlfA@public.gmane.org, arnd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Nov 2015, Arnd Bergmann wrote:
 
-> I don't mind creating the /proc/atags compatibility hack from the kernel
-> for a DT based N700 kernel, as long as we limit it as much as we can
-> to the machines that need it. Leaving a board file for the N700 in place
-> that contains the procfs code (and not much more) seems reasonable
-> here, as we are talking about a board specific hack and the whole point
-> appears to be running unmodified user space.
+
+On 2015/11/27 19:49, Joerg Roedel wrote:
+> On Fri, Nov 20, 2015 at 10:25:06AM +0800, Chen Feng wrote:
+>> eg:
+>> struct iommu_domain *domain = iommu_domain_alloc(bus);
+>> iommu_attach_device(domain, dev);
+>> struct iova_domain *iovad = (struct iova_domain *)m_dev->archdata.iommu;
+>> struct iova * t_iova = alloc_iova(iovad, size, limit_pfn, align);
+>> iommu_map(domain, t_iova->pfn_lo << 12, phy_addr, size, port);
 > 
-> Regarding how to get the data into the kernel in the first place, my
-> preferred choice would still be to have an intermediate bootloader
-> such as pxa-impedance-matcher, but I won't complain if others are
-> happy enough about putting it into the ATAGS compat code we already
-> have, as long as it's limited to the boards we know need it.
+> Any reason the media subsystem should use the iommu-api directly, and
+> not the dma-api? You can make your iommu available by adapting the
+> common dma-iommu implementation from Robin Murphy to your iommu to make
+> it usable through the dma-api.
+> 
 
-Assuming you have a N700 board file for special procfs code, then why 
-not getting at the atags in memory where the bootloader has put them 
-directly from that same board file? This way it'll really be limited to 
-the board we know needs it and the special exception will be contained 
-to that one file.  Amongst the machine specific hooks, there is one that 
-gets invoked early during boot before those atags are overwritten.
-
-
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ok, I will change this to dma-api. Since v1 version, the dma-api was not ok for arm64.
+I will do this with dma-api function.
+> 
+> 	Joerg
+> 
+> 
+> .
+> 
