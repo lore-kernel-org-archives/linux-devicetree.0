@@ -1,86 +1,199 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
-Date: Sat, 28 Nov 2015 15:25:35 +0000
-Message-ID: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 04/10] drm/hisilicon: Add crtc funcs for ADE
+Date: Sat, 28 Nov 2015 15:56:31 +0000
+Message-ID: <CACvgo50SD5dJ95rKSrbW1Zo3DRG9bWs2ZuDhfDC7UrZVMLSnJw@mail.gmail.com>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+	<1448707145-69348-5-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, ML dri-devel <dri-devel@lists.freedesktop.org>, xuwei5@hisilicon.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, lijianhua@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, LAKML <linux-arm-kernel@lists.infradead.org>, andy.green@linaro.org, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448707145-69348-5-git-send-email-xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, corbet-T1hC0tSOHrs@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lijianhua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWGlubGlhbmcsCgpPbiAyOCBOb3ZlbWJlciAyMDE1IGF0IDEwOjM4LCBYaW5saWFuZyBMaXUg
-PHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPiB3cm90ZToKPiBBZGQgRFJNIG1hc3RlciBkcml2ZXIg
-Zm9yIGhpNjIyMCBTb0Mgd2hpY2ggdXNlZCBpbiBIaUtleSBib2FyZC4KPiBBZGQgZHVtYiBidWZm
-ZXIgZmVhdHVyZS4KPiBBZGQgcHJpbWUgZG1hYnVmIGZlYXR1cmUuCj4KPiBTaWduZWQtb2ZmLWJ5
-OiBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPgo+IFNpZ25lZC1vZmYtYnk6
-IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29uLmNvbT4KPiBTaWduZWQtb2Zm
-LWJ5OiBBbmR5IEdyZWVuIDxhbmR5LmdyZWVuQGxpbmFyby5vcmc+CllvdXIgcy1vLWIgc2hvdWxk
-IGJlIHRoZSBib3R0b20gb2YgdGhlIGxpc3QuIFRoZXJlIHdhcyBhIHByZXNlbnRhdGlvbgooYWdl
-cyBhZ28pIGZyb20gR3JlZyBLSCwgd2hvIG5pY2VseSBkZXNjcmliZWQgdGhlIG9yZGVyIGFzIGEg
-ImNoYWluIG9mCmNvbW1hbmQiIG9yICJndWlsdCBwYXRoIi4gTG9va3MgbGlrZSB0aGUgcmVzdCBv
-ZiB0aGUgc2VyaWVzIGNvdWxkIHVzZQp0aGlzIHR3ZWFrLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUv
-ZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMiArCj4gIGRyaXZlcnMvZ3B1L2RybS9N
-YWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxp
-Y29uL0tjb25maWcgICAgICAgIHwgICA5ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
-TWFrZWZpbGUgICAgICAgfCAgIDMgKwo+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lf
-ZHJtX2Rydi5jIHwgMjE0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgNSBmaWxl
-cyBjaGFuZ2VkLCAyMjkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL2hpc2lsaWNvbi9LY29uZmlnCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5jCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IGluZGV4IDg3NzNm
-YWQuLjAzOGFhZTggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL0tjb25maWcKPiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IEBAIC0yNzQsMyArMjc0LDUgQEAgc291cmNlICJk
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9LY29uZmlnIgo+ICBzb3VyY2UgImRyaXZlcnMvZ3B1
-L2RybS9pbXgvS2NvbmZpZyIKPgo+ICBzb3VyY2UgImRyaXZlcnMvZ3B1L2RybS92YzQvS2NvbmZp
-ZyIKPiArCj4gK3NvdXJjZSAiZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9LY29uZmlnIgpJIGNv
-dWxkIHN3ZWFyIHRoYXQgd2UgY2FuIGEgcGF0Y2ggdGhhdCBzb3J0cyB0aGVzZSBhbHBoYWJldGlj
-YWxseSwKYWx0aG91Z2ggaXQgZG9lc24ndCBzZWVtIHRvIGhhdmUgbWFkZSBpdCB1cHN0cmVhbSB5
-ZXQgOi0oCgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
-L2hpc2lfZHJtX2Rydi5jCgo+ICtzdGF0aWMgaW50IGhpc2lfZHJtX2xvYWQoc3RydWN0IGRybV9k
-ZXZpY2UgKmRldiwgdW5zaWduZWQgbG9uZyBmbGFncykKPiArewpUaGUgdXNlIG9mIC5sb2FkIChh
-bmQgLnVubG9hZD8pIGNhbGxiYWNrcyBpcyBub3QgcmVjb21tZW5kZWQuIFRha2UgYQpsb29rIGF0
-IExhdXJlbnQgUGluY2hhcnQncyBwYXRjaCBbMV0gYWJvdXQgdGhlIHdoeXMgYW5kIGhvd3Mgb24g
-dGhlCnRvcGljCgo+ICtzdGF0aWMgc3RydWN0IGRtYV9idWYgKmhpc2lfZ2VtX3ByaW1lX2V4cG9y
-dChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqLAo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludCBmbGFncykKPiArewo+ICsgICAg
-ICAgLyogd2Ugd2FudCB0byBiZSBhYmxlIHRvIHdyaXRlIGluIG1tYXBwZWQgYnVmZmVyICovCj4g
-KyAgICAgICBmbGFncyB8PSBPX1JEV1I7CkVybS4uLiBzb21ldGhpbmcgZmVlbHMgZmlzaHkgaGVy
-ZS4gT3V0IG9mIHRoZSBleGlzdGluZyAxNSBkcml2ZXJzCnNldHRpbmcgdXAgdGhlIHByaW1lIGNh
-bGxiYWNrcyBvbmx5IG9uZSAoc3RpKSBkb2VzIGEgc2ltaWxhciB0aGluZy4gU28KZWl0aGVyIGV2
-ZXJ5b25lIGVsc2UgaXMgbWlzc2luZyBzb21ldGhpbmcgb2J2aW91cyBvciBoaXNpbGljb24gYW5k
-IHN0aQpjYW4gcmV3b3JrIHRoZWlyIGlubmVyIHdvcmtpbmcgdG8gcmVtb3ZlIHRoaXMgKGRhcmUg
-SSBzYXkgaXQpIGhhY2suCgo+ICtzdGF0aWMgaW50IGhpc2lfZ2VtX2NtYV9kdW1iX2NyZWF0ZShz
-dHJ1Y3QgZHJtX2ZpbGUgKmZpbGUsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBzdHJ1Y3QgZHJtX21vZGVfY3JlYXRlX2R1bWIgKmFyZ3MpCj4gK3sKPiArICAgICAg
-IGludCBtaW5fcGl0Y2ggPSBESVZfUk9VTkRfVVAoYXJncy0+d2lkdGggKiBhcmdzLT5icHAsIDgp
-Owo+ICsKPiArICAgICAgIC8qIG1hbGkgZ3B1IG5lZWQgcGl0Y2ggOCBieXRlcyBhbGlnbm1lbnQg
-Zm9yIDMyYnBwICovCj4gKyAgICAgICBhcmdzLT5waXRjaCA9IHJvdW5kdXAobWluX3BpdGNoLCA4
-KTsKPiArCkknbSBub3Qgc3VyZSB5b3Ugd2FudCB0aGlzIGtpbmQgb2YgZGVwZW5kZW5jeSBvZiBh
-biBvdXQgb2YgdHJlZSBkcml2ZXIKdXBzdHJlYW0uIElmIHRoaXMgaXMgc29tZSBsaW1pdGF0aW9u
-IG9uIHRoZSBkaXNwbGF5IGVuZ2luZSBzbyBiZSBpdCwKYnV0IHRhaWxvcmluZyB0aGluZ3MgZm9y
-IGFuIGV4dGVybmFsIG1vZHVsZSBzZWVtcyBsaWtlIGEgdmVyeSBiYWQKaWRlYS4KCj4gKyAgICAg
-ICByZXR1cm4gZHJtX2dlbV9jbWFfZHVtYl9jcmVhdGVfaW50ZXJuYWwoZmlsZSwgZGV2LCBhcmdz
-KTsKPiArfQoKPiArc3RhdGljIGludCBoaXNpX2RybV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikK
-PiArewo+ICsgICAgICAgZG1hX3NldF9jb2hlcmVudF9tYXNrKGRldiwgRE1BX0JJVF9NQVNLKDMy
-KSk7Cj4gKyAgICAgICByZXR1cm4gZHJtX3BsYXRmb3JtX2luaXQoJmhpc2lfZHJtX2RyaXZlciwg
-dG9fcGxhdGZvcm1fZGV2aWNlKGRldikpOwpBcyBwb2ludGVkIG91dCBieSB0aGUgdGhlIGtlcm5l
-bCBkb2MgLSBkcm1fcGxhdGZvcm1faW5pdCBpcyBkZXByZWNhdGVkLgoKClJlZ2FyZHMsCkVtaWwK
-ClsxXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1
-LU5vdmVtYmVyLzA5NTQ2Ni5odG1sCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+use_maskOn 28 November 2015 at 10:38, Xinliang Liu
+<xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Add crtc funcs and helper funcs for ADE.
+>
+> Signed-off-by: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+
+> --- /dev/null
+> +++ b/drivers/gpu/drm/hisilicon/hisi_ade_reg.h
+
+> +#define ADE_CTRL                       (0x4)
+> +#define ADE_CTRL1                      (0x8C)
+> +#define ADE_ROT_SRC_CFG                        (0x10)
+> +#define ADE_DISP_SRC_CFG               (0x18)
+> +#define ADE_WDMA2_SRC_CFG              (0x1C)
+> +#define ADE_SEC_OVLY_SRC_CFG           (0x20)
+> +#define ADE_WDMA3_SRC_CFG              (0x24)
+> +#define ADE_OVLY1_TRANS_CFG            (0x2C)
+> +#define ADE_EN                         (0x100)
+> +#define INTR_MASK_CPU_0                        (0xC10)
+> +#define INTR_MASK_CPU_1                        (0xC14)
+> +#define ADE_FRM_DISGARD_CTRL           (0xA4)
+> +/* reset and reload regs */
+> +#define ADE_SOFT_RST_SEL0              (0x78)
+> +#define ADE_SOFT_RST_SEL1              (0x7C)
+> +#define ADE_RELOAD_DIS0                        (0xAC)
+> +#define ADE_RELOAD_DIS1                        (0xB0)
+> +#define ADE_CH_RDMA_BIT_OFST           (0)
+> +#define ADE_CLIP_BIT_OFST              (15)
+> +#define ADE_SCL_BIT_OFST               (21)
+> +#define ADE_CTRAN_BIT_OFST             (24)
+> +#define ADE_OVLY_BIT_OFST              (37) /* 32+5 */
+Don't think we have any cases in drm where constants are wrapped in
+brackets. Is there any benefit of doing that here ?
+
+> +/* channel regs */
+> +#define RD_CH_PE(x)                    (0x1000 + (x) * 0x80)
+... and I'm not talking about cases where the macros such as this one.
+
+> +union U_LDI_CTRL {
+> +struct {
+> +       unsigned int    ldi_en                :1;
+> +       unsigned int    disp_mode_buf         :1;
+> +       unsigned int    date_gate_en          :1;
+> +       unsigned int    bpp                   :2;
+> +       unsigned int    wait_vsync_en         :1;
+> +       unsigned int    corlorbar_width       :7;
+> +       unsigned int    bgr                   :1;
+> +       unsigned int    color_mode            :1;
+> +       unsigned int    shutdown              :1;
+> +       unsigned int    vactive_line          :12;
+> +       unsigned int    ldi_en_self_clr       :1;
+> +       unsigned int    reserved_573          :3;
+> +       } bits;
+> +       unsigned int    u32;
+> +};
+> +
+> +union U_LDI_WORK_MODE {
+> +struct {
+> +       unsigned int    work_mode             :1;
+> +       unsigned int    wback_en              :1;
+> +       unsigned int    colorbar_en           :1;
+> +       unsigned int    reserved_577          :29;
+> +       } bits;
+> +       unsigned int    u32;
+> +};
+> +
+The struct in the above two unions is missing a level of indentation.
+
+
+> --- /dev/null
+> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
+
+> +static void ade_ldi_set_mode(struct ade_crtc *acrtc,
+> +                            struct drm_display_mode *mode,
+> +                            struct drm_display_mode *adj_mode)
+> +{
+> +       struct ade_hw_ctx *ctx = acrtc->ctx;
+> +       void __iomem *base = ctx->base;
+> +       u32 out_w = mode->hdisplay;
+> +       u32 out_h = mode->vdisplay;
+> +       u32 hfp, hbp, hsw, vfp, vbp, vsw;
+> +       u32 plr_flags;
+> +       int ret;
+> +
+> +       plr_flags = (mode->flags & DRM_MODE_FLAG_NVSYNC)
+> +                       ? HISI_LDI_FLAG_NVSYNC : 0;
+> +       plr_flags |= (mode->flags & DRM_MODE_FLAG_NHSYNC)
+> +                       ? HISI_LDI_FLAG_NHSYNC : 0;
+> +       hfp = mode->hsync_start - mode->hdisplay;
+> +       hbp = mode->htotal - mode->hsync_end;
+> +       hsw = mode->hsync_end - mode->hsync_start;
+> +       vfp = mode->vsync_start - mode->vdisplay;
+> +       vbp = mode->vtotal - mode->vsync_end;
+> +       vsw = mode->vsync_end - mode->vsync_start;
+> +       if (vsw > 15) {
+> +               DRM_INFO("vsw exceeded 15\n");
+
+DRM_ERROR or DRM_DEBUG_xx perhaps ?
+
+> +               vsw = 15;
+> +       }
+> +
+> +       writel((hbp << 20) | (hfp << 0), base + LDI_HRZ_CTRL0);
+> +       /* p3-73 6220V100 pdf:
+> +        *  "The configured value is the actual width - 1"
+> +        */
+> +       writel(hsw - 1, base + LDI_HRZ_CTRL1);
+> +       writel((vbp << 20) | (vfp << 0), base + LDI_VRT_CTRL0);
+> +       /* p3-74 6220V100 pdf:
+> +        *  "The configured value is the actual width - 1"
+> +        */
+> +       writel(vsw - 1, base + LDI_VRT_CTRL1);
+> +
+> +       /* p3-75 6220V100 pdf:
+> +        *  "The configured value is the actual width - 1"
+> +        */
+> +       writel(((out_h - 1) << 20) | ((out_w - 1) << 0),
+> +              base + LDI_DSP_SIZE);
+> +       writel(plr_flags, base + LDI_PLR_CTRL);
+> +
+> +       ret = clk_set_rate(ctx->ade_pix_clk, mode->clock * 1000);
+> +       /* Success should be guaranteed in aotomic_check
+> +        * failer shouldn't happen here
+> +        */
+> +       if (ret)
+> +               DRM_ERROR("set ade_pixel_clk_rate fail\n");
+DItto
+
+> +       adj_mode->clock = clk_get_rate(ctx->ade_pix_clk) / 1000;
+> +
+> +       /* ctran6 setting */
+> +       writel(1, base + ADE_CTRAN_DIS(ADE_CTRAN6));
+> +       writel(out_w * out_h - 1, base + ADE_CTRAN_IMAGE_SIZE(ADE_CTRAN6));
+> +       acrtc->use_mask |= BIT(ADE_CTRAN_BIT_OFST + ADE_CTRAN6);
+> +       DRM_INFO("set mode: %dx%d\n", out_w, out_h);
+> +
+DRM_DEBUG_DRIVER ?
+
+> +       /*
+> +        * other parameters setting
+> +        */
+> +       writel(BIT(0), base + LDI_WORK_MODE);
+> +       writel((0x3c << 6) | (ADE_OUT_RGB_888 << 3) | BIT(2) | BIT(0),
+> +              base + LDI_CTRL);
+> +       set_reg(base + LDI_DE_SPACE_LOW, 0x1, 1, 1);
+> +}
+> +
+> +static int ade_power_up(struct ade_hw_ctx *ctx)
+> +{
+> +       void __iomem *media_base = ctx->media_base;
+> +       int ret;
+> +
+> +       ret = clk_set_rate(ctx->ade_core_clk, ctx->ade_core_rate);
+> +       if (ret) {
+> +               DRM_ERROR("clk_set_rate ade_core_rate error\n");
+How about the following (or alike) less cryptic and more informative
+message. Other places could use a similar treatment.
+
+"Failed to set rate X clk (%d)\n", ret ?
+
+
+> +static void ade_crtc_enable(struct drm_crtc *crtc)
+> +{
+> +       struct ade_crtc *acrtc = to_ade_crtc(crtc);
+> +       struct ade_hw_ctx *ctx = acrtc->ctx;
+> +       int ret;
+> +
+> +       DRM_DEBUG_DRIVER("enter.\n");
+Does this and the remaining DEBUG_DRIVER(enter|exit) messages provide
+any meaningful input, past the driver development stage ?
+
+> +       if (acrtc->enable)
+> +               return;
+Esp. since we have cases like this where no message is available.
+
+Regards,
+Emil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
