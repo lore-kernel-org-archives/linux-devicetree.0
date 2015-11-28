@@ -1,155 +1,94 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dt: mvebu: ix4-300d: move partitions to
- partition sub-node
-Date: Sat, 28 Nov 2015 18:38:26 +0100
-Message-ID: <5659E692.9040007@gmail.com>
-References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1448709248-21177-3-git-send-email-sebastian.hesselbarth@gmail.com>
- <20151128170036.GH32356@lunn.ch>
-Content-Type: text/plain; charset=windows-1252
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: Re: [PATCH 05/10] Input: synaptics-rmi4: Add device tree support for
+ 2d sensors and F11
+Date: Sat, 28 Nov 2015 12:23:16 -0800
+Message-ID: <565A0D34.3040604@synaptics.com>
+References: <1448496553-25208-1-git-send-email-aduggan@synaptics.com>
+ <20151127211051.GA23000@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151128170036.GH32356@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benoit Masson <yahoo@perenite.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20151127211051.GA23000@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.11.2015 18:00, Andrew Lunn wrote:
-> On Sat, Nov 28, 2015 at 12:14:06PM +0100, Sebastian Hesselbarth wrote:
->> NAND flash partitions should be part of a partitions sub-node
->> not the flash node itself. Move the partitions which will also
->> allow different bootloaders get rid of the stock partitions
->> easily by removing the partitions node.
+Hi Rob,
+
+Thanks for reviewing! I will incorporate your feedback into the next 
+version.
+
+Andrew
+
+On 11/27/2015 01:10 PM, Rob Herring wrote:
+> On Wed, Nov 25, 2015 at 04:09:13PM -0800, Andrew Duggan wrote:
+>> 2D sensors have several parameter which can be set in the platform data.
+>> This patch adds support for getting those values from devicetree.
 >>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> 
-> Humm, did not know that. Quoting Documentation/devicetree/bindings/mtd/partition.txt:
-> 
->       The partition table should be a subnode of the mtd node and
->       should be named 'partitions'. Partitions are defined in subnodes
->       of the partitions node.
-> 
->       For backwards compatibility partitions as direct subnodes of the
->       mtd device are supported. This use is discouraged.
-> 
-> It also looks like none of the other MVEBU maintainers know that
-> either, since a quick look at the .dts files shows very few have a
-> partitions node.
-
-Me neither, Linus Walleij's latest contribution to the pogoplug
-series showed it to me. And while I am working on barebox support
-for the ix4, I always wanted to remove the stock partitions easily.
-
-Barebox always uses internal registers at 0xf1000000 so it will
-never boot that stupid stock kernel that depends on 0xd0000000
-registers.
-
-> Acked-by: Andrew Lunn <andrew@lunn.ch>
-> 
-> Thanks
-> 	Andrew
-
-ditto ;)
-
-Sebastian
-
+>> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
 >> ---
->> Cc: Jason Cooper <jason@lakedaemon.net> 
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Gregory Clement <gregory.clement@free-electrons.com> 
->> Cc: Rob Herring <robh+dt@kernel.org> 
->> Cc: Pawel Moll <pawel.moll@arm.com> 
->> Cc: Mark Rutland <mark.rutland@arm.com> 
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk> 
->> Cc: Kumar Gala <galak@codeaurora.org> 
->> Cc: Russell King <linux@arm.linux.org.uk> 
->> Cc: Benoit Masson <yahoo@perenite.com>
->> Cc: linux-arm-kernel@lists.infradead.org 
->> Cc: devicetree@vger.kernel.org 
->> Cc: linux-kernel@vger.kernel.org 
->> ---
->>  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 67 +++++++++++++------------
->>  1 file changed, 36 insertions(+), 31 deletions(-)
+>>   .../bindings/input/rmi4/rmi_2d_sensor.txt          |  54 +++++++++++
+>>   drivers/input/rmi4/rmi_2d_sensor.c                 | 103 +++++++++++++++++++++
+>>   drivers/input/rmi4/rmi_2d_sensor.h                 |   3 +
+>>   drivers/input/rmi4/rmi_f11.c                       |   7 +-
+>>   4 files changed, 166 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
 >>
->> diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
->> index 30a0a6eac645..76781fd18624 100644
->> --- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
->> +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
->> @@ -151,37 +151,42 @@
->>  				marvell,nand-enable-arbiter;
->>  				nand-on-flash-bbt;
->>  
->> -				partition@0 {
->> -					label = "u-boot";
->> -					reg = <0x0000000 0xe0000>;
->> -					read-only;
->> -				};
->> -
->> -				partition@e0000 {
->> -					label = "u-boot-env";
->> -					reg = <0xe0000 0x20000>;
->> -					read-only;
->> -				};
->> -
->> -				partition@100000 {
->> -					label = "u-boot-env2";
->> -					reg = <0x100000 0x20000>;
->> -					read-only;
->> -				};
->> -
->> -				partition@120000 {
->> -					label = "zImage";
->> -					reg = <0x120000 0x400000>;
->> -				};
->> -
->> -				partition@520000 {
->> -					label = "initrd";
->> -					reg = <0x520000 0x400000>;
->> -				};
->> -
->> -				partition@xE00000 {
->> -					label = "boot";
->> -					reg = <0xE00000 0x3F200000>;
->> +				partitions {
->> +					#address-cells = <1>;
->> +					#size-cells = <1>;
+>> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+>> new file mode 100644
+>> index 0000000..bbff31b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+>> @@ -0,0 +1,54 @@
+>> +Synaptics RMI4 2D Sensor Device Binding
 >> +
->> +					partition@0 {
->> +						label = "u-boot";
->> +						reg = <0x0000000 0xe0000>;
->> +						read-only;
->> +					};
+>> +The Synaptics RMI4 core is able to support RMI4 devices using differnet
+> s/differnet/different/
+>
+>> +transports and differnet functions. This file describes the device tree
+> ditto.
+>
+>> +bindings for devices which contain 2D sensors using Function 11 or
+>> +Function 12. Complete documentation for transports and other functions
+>> +can be found in:
+>> +Documentation/devicetree/bindings/input/rmi4.
 >> +
->> +					partition@e0000 {
->> +						label = "u-boot-env";
->> +						reg = <0xe0000 0x20000>;
->> +						read-only;
->> +					};
+>> +RMI4 Function 11 and Function 12 are for 2D touch position sensing.
+>> +Additional documentation for F11 can be found at:
+>> +http://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
 >> +
->> +					partition@100000 {
->> +						label = "u-boot-env2";
->> +						reg = <0x100000 0x20000>;
->> +						read-only;
->> +					};
->> +
->> +					partition@120000 {
->> +						label = "zImage";
->> +						reg = <0x120000 0x400000>;
->> +					};
->> +
->> +					partition@520000 {
->> +						label = "initrd";
->> +						reg = <0x520000 0x400000>;
->> +					};
->> +
->> +					partition@xE00000 {
->> +						label = "boot";
->> +						reg = <0xE00000 0x3F200000>;
->> +					};
->>  				};
->>  			};
->>  		};
->> -- 
->> 2.1.4
->>
+>> +Optional Properties:
+>> +- syna,swap-axes: Swap X and Y positions when reporting (boolean).
+>> +- syna,flip-x: Reverse the direction of X (boolean).
+>> +- syna,flip-y: Reverse the direction of Y (boolean).
+> We already have similar, generic properties for these.
+>
+>> +- syna,clip-x-low: Sets a minimum value for X.
+>> +- syna,clip-y-low: Sets a minimum value for Y.
+>> +- syna,clip-x-high: Sets a maximum value for X.
+>> +- syna,clip-y-high: Sets a maximum value for Y.
+>> +- syna,offset-x: Add an offset to X.
+>> +- syna,offset_y: Add an offset to Y.
+> Don't use "_".
+>
+>> +- syna,delta-x-threshold: Set the minimum distance on the X axis required
+>> +				to generate an interrupt in reduced reporting
+>> +				mode.
+>> +- syna,delta-y-threshold: Set the minimum distance on the Y axis required
+>> +				to generate an interrupt in reduced reporting
+>> +				mode.
+>> +- syna,type-a: Report type A multitouch events.
+>> +- syna,sensor-type: Set the sensor type. 1 for touchscreen 2 for touchpad.
+>> +- syna,x-mm: The length in millimeters of the X axis.
+>> +- syna,y-mm: The length in millimeters of the Y axis.
+> I think some of these have common properties defined too. If not, we
+> should add them.
+>
+>> +- syna,disable-report-mask: Mask for disabling posiiton reporting. Used to
+>> +				disable reporing absolute position data.
+>> +- syna,rezero-wait: Time in miliseconds to wait after issuing a rezero
+>> +				command.
+> Add -msec suffix.
+
