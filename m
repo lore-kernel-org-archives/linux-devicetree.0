@@ -1,30 +1,48 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dt: mvebu: ix4-300d: Add ECC properties to NAND
- flash
-Date: Sat, 28 Nov 2015 18:02:34 +0100
-Message-ID: <20151128170234.GJ32356@lunn.ch>
-References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1448709248-21177-5-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Sat, 28 Nov 2015 12:34:23 -0500 (EST)
+Message-ID: <alpine.LFD.2.20.1511281232440.22569@knanqh.ubzr>
+References: <20150713131902.GH26485@atomide.com> <20151127132722.GA30871@n2100.arm.linux.org.uk> <20151127195148.GB30871@n2100.arm.linux.org.uk> <11537945.4HX4Y84tjV@wuerfel> <alpine.LFD.2.20.1511271817230.22569@knanqh.ubzr>
+ <20151128123328.GC30871@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448709248-21177-5-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151128123328.GC30871@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Laura Abbott <lauraa@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 28, 2015 at 12:14:08PM +0100, Sebastian Hesselbarth wrote:
-> The NAND device found on Lenovo ix4-300d uses 4-bit BCH ECC protection.
-> Add the corresponding properties to the NAND node.
+On Sat, 28 Nov 2015, Russell King - ARM Linux wrote:
+
+> On Fri, Nov 27, 2015 at 06:28:50PM -0500, Nicolas Pitre wrote:
+> > On Fri, 27 Nov 2015, Arnd Bergmann wrote:
+> > 
+> > > I don't mind creating the /proc/atags compatibility hack from the kernel
+> > > for a DT based N700 kernel, as long as we limit it as much as we can
+> > > to the machines that need it. Leaving a board file for the N700 in place
+> > > that contains the procfs code (and not much more) seems reasonable
+> > > here, as we are talking about a board specific hack and the whole point
+> > > appears to be running unmodified user space.
+> > > 
+> > > Regarding how to get the data into the kernel in the first place, my
+> > > preferred choice would still be to have an intermediate bootloader
+> > > such as pxa-impedance-matcher, but I won't complain if others are
+> > > happy enough about putting it into the ATAGS compat code we already
+> > > have, as long as it's limited to the boards we know need it.
+> > 
+> > Assuming you have a N700 board file for special procfs code, then why 
+> > not getting at the atags in memory where the bootloader has put them 
+> > directly from that same board file? This way it'll really be limited to 
+> > the board we know needs it and the special exception will be contained 
+> > to that one file.  Amongst the machine specific hooks, there is one that 
+> > gets invoked early during boot before those atags are overwritten.
 > 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> I've already suggested that.
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Good. And Arnd likes the idea too. So we might be converging at last 
+which is a good thing.
 
-	  Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Nicolas
