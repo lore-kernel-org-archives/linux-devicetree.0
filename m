@@ -1,99 +1,86 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Sat, 28 Nov 2015 12:54:55 +0000
-Message-ID: <20151128125455.GD30871@n2100.arm.linux.org.uk>
-References: <20150713131902.GH26485@atomide.com>
- <11537945.4HX4Y84tjV@wuerfel>
- <alpine.LFD.2.20.1511271817230.22569@knanqh.ubzr>
- <2565382.eR6yg1spIk@wuerfel>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
+Date: Sat, 28 Nov 2015 15:25:35 +0000
+Message-ID: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2565382.eR6yg1spIk@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, ML dri-devel <dri-devel@lists.freedesktop.org>, xuwei5@hisilicon.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, lijianhua@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, LAKML <linux-arm-kernel@lists.infradead.org>, andy.green@linaro.org, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 28, 2015 at 01:27:07PM +0100, Arnd Bergmann wrote:
-> On Friday 27 November 2015 18:28:50 Nicolas Pitre wrote:
-> > On Fri, 27 Nov 2015, Arnd Bergmann wrote:
-> > 
-> > > I don't mind creating the /proc/atags compatibility hack from the kernel
-> > > for a DT based N700 kernel, as long as we limit it as much as we can
-> > > to the machines that need it. Leaving a board file for the N700 in place
-> > > that contains the procfs code (and not much more) seems reasonable
-> > > here, as we are talking about a board specific hack and the whole point
-> > > appears to be running unmodified user space.
-> > > 
-> > > Regarding how to get the data into the kernel in the first place, my
-> > > preferred choice would still be to have an intermediate bootloader
-> > > such as pxa-impedance-matcher, but I won't complain if others are
-> > > happy enough about putting it into the ATAGS compat code we already
-> > > have, as long as it's limited to the boards we know need it.
-> > 
-> > Assuming you have a N700 board file for special procfs code, then why 
-> > not getting at the atags in memory where the bootloader has put them 
-> > directly from that same board file? This way it'll really be limited to 
-> > the board we know needs it and the special exception will be contained 
-> > to that one file.  Amongst the machine specific hooks, there is one that 
-> > gets invoked early during boot before those atags are overwritten.
-> 
-> I didn't realize this was possible, as we don't know the atags pointer
-> when we instead get a DTB pointer. However you are right: the board
-> file knows exactly that the atag_offset is 0x100, so we can grab it
-> from there, and that will make the implementation really easy and
-> contained to a single file that has access to the atags and that
-> can create the /proc/atags file for it.
-
-I've made several suggestions over the year or so that this problem has
-been around, and solving this problem appears to be getting nowhere...
-(because we _still_ have the problem today.)  When the same suggestions
-start to be made by other people, I think there's not much more that can
-be done to help resolve the situation.  It's probably time to walk away
-from the problem, and let those who are supposedly motivated to use
-these troublesome platforms just get on with it.
-
-I'm not sure what Tony does at this point: if he rips out the non-DT
-OMAP code, it'll cause a regression, but at the same time, it provides
-additional motivation to get the problem resolved.  I can quite well
-see Pavel going off and whinging at Linus, Linus getting stressed at
-us for intentionally breaking something that used to work, and telling
-everyone that they shouldn't be working on the kernel, in his usual
-friendly way.
-
-So, I think if the non-DT OMAP stuff is getting in the way of further
-OMAP development, then the only solution is to put pressure on those
-who are holding it up: in other words, put pressure on those to get
-this damned problem solved.
-
-The only thing I can think of doing is to give the N900 people notice
-that they're causing a problem here, explaining exactly why - maybe
-explaining that it's been causing a problem however long it has and
-that the only option is going to be to fork mainline and effectively
-leave the code in mainline unmaintained because of this.
-
-Then, of course, those who have caused this situation then get the fun
-job of maintaining _all_ the OMAP code in mainline on their own, which
-I think would bury them under such a huge mountain that the code would
-end up being terminally broken, and ripe for deletion. At which point,
-it'd make sense to merge the maintained fork back into mainline, which
-of course wouldn't have the troublesome code platforms by that time. :)
-
-Yes, it's not particularly nice, but I don't see this problem getting
-resolved.
-
-(Maybe this email will be enough to motivate the N900 users to sort this
-out, but I suspect they'll prefer to spend time whinging and moaning at
-me in email rather than doing what needs to be done and fixing the
-problem.)
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgWGlubGlhbmcsCgpPbiAyOCBOb3ZlbWJlciAyMDE1IGF0IDEwOjM4LCBYaW5saWFuZyBMaXUg
+PHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPiB3cm90ZToKPiBBZGQgRFJNIG1hc3RlciBkcml2ZXIg
+Zm9yIGhpNjIyMCBTb0Mgd2hpY2ggdXNlZCBpbiBIaUtleSBib2FyZC4KPiBBZGQgZHVtYiBidWZm
+ZXIgZmVhdHVyZS4KPiBBZGQgcHJpbWUgZG1hYnVmIGZlYXR1cmUuCj4KPiBTaWduZWQtb2ZmLWJ5
+OiBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPgo+IFNpZ25lZC1vZmYtYnk6
+IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29uLmNvbT4KPiBTaWduZWQtb2Zm
+LWJ5OiBBbmR5IEdyZWVuIDxhbmR5LmdyZWVuQGxpbmFyby5vcmc+CllvdXIgcy1vLWIgc2hvdWxk
+IGJlIHRoZSBib3R0b20gb2YgdGhlIGxpc3QuIFRoZXJlIHdhcyBhIHByZXNlbnRhdGlvbgooYWdl
+cyBhZ28pIGZyb20gR3JlZyBLSCwgd2hvIG5pY2VseSBkZXNjcmliZWQgdGhlIG9yZGVyIGFzIGEg
+ImNoYWluIG9mCmNvbW1hbmQiIG9yICJndWlsdCBwYXRoIi4gTG9va3MgbGlrZSB0aGUgcmVzdCBv
+ZiB0aGUgc2VyaWVzIGNvdWxkIHVzZQp0aGlzIHR3ZWFrLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUv
+ZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMiArCj4gIGRyaXZlcnMvZ3B1L2RybS9N
+YWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxp
+Y29uL0tjb25maWcgICAgICAgIHwgICA5ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
+TWFrZWZpbGUgICAgICAgfCAgIDMgKwo+ICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lf
+ZHJtX2Rydi5jIHwgMjE0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgNSBmaWxl
+cyBjaGFuZ2VkLCAyMjkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9LY29uZmlnCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5jCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IGluZGV4IDg3NzNm
+YWQuLjAzOGFhZTggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL0tjb25maWcKPiArKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IEBAIC0yNzQsMyArMjc0LDUgQEAgc291cmNlICJk
+cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtmZC9LY29uZmlnIgo+ICBzb3VyY2UgImRyaXZlcnMvZ3B1
+L2RybS9pbXgvS2NvbmZpZyIKPgo+ICBzb3VyY2UgImRyaXZlcnMvZ3B1L2RybS92YzQvS2NvbmZp
+ZyIKPiArCj4gK3NvdXJjZSAiZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9LY29uZmlnIgpJIGNv
+dWxkIHN3ZWFyIHRoYXQgd2UgY2FuIGEgcGF0Y2ggdGhhdCBzb3J0cyB0aGVzZSBhbHBoYWJldGlj
+YWxseSwKYWx0aG91Z2ggaXQgZG9lc24ndCBzZWVtIHRvIGhhdmUgbWFkZSBpdCB1cHN0cmVhbSB5
+ZXQgOi0oCgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
+L2hpc2lfZHJtX2Rydi5jCgo+ICtzdGF0aWMgaW50IGhpc2lfZHJtX2xvYWQoc3RydWN0IGRybV9k
+ZXZpY2UgKmRldiwgdW5zaWduZWQgbG9uZyBmbGFncykKPiArewpUaGUgdXNlIG9mIC5sb2FkIChh
+bmQgLnVubG9hZD8pIGNhbGxiYWNrcyBpcyBub3QgcmVjb21tZW5kZWQuIFRha2UgYQpsb29rIGF0
+IExhdXJlbnQgUGluY2hhcnQncyBwYXRjaCBbMV0gYWJvdXQgdGhlIHdoeXMgYW5kIGhvd3Mgb24g
+dGhlCnRvcGljCgo+ICtzdGF0aWMgc3RydWN0IGRtYV9idWYgKmhpc2lfZ2VtX3ByaW1lX2V4cG9y
+dChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqLAo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludCBmbGFncykKPiArewo+ICsgICAg
+ICAgLyogd2Ugd2FudCB0byBiZSBhYmxlIHRvIHdyaXRlIGluIG1tYXBwZWQgYnVmZmVyICovCj4g
+KyAgICAgICBmbGFncyB8PSBPX1JEV1I7CkVybS4uLiBzb21ldGhpbmcgZmVlbHMgZmlzaHkgaGVy
+ZS4gT3V0IG9mIHRoZSBleGlzdGluZyAxNSBkcml2ZXJzCnNldHRpbmcgdXAgdGhlIHByaW1lIGNh
+bGxiYWNrcyBvbmx5IG9uZSAoc3RpKSBkb2VzIGEgc2ltaWxhciB0aGluZy4gU28KZWl0aGVyIGV2
+ZXJ5b25lIGVsc2UgaXMgbWlzc2luZyBzb21ldGhpbmcgb2J2aW91cyBvciBoaXNpbGljb24gYW5k
+IHN0aQpjYW4gcmV3b3JrIHRoZWlyIGlubmVyIHdvcmtpbmcgdG8gcmVtb3ZlIHRoaXMgKGRhcmUg
+SSBzYXkgaXQpIGhhY2suCgo+ICtzdGF0aWMgaW50IGhpc2lfZ2VtX2NtYV9kdW1iX2NyZWF0ZShz
+dHJ1Y3QgZHJtX2ZpbGUgKmZpbGUsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBzdHJ1Y3QgZHJtX21vZGVfY3JlYXRlX2R1bWIgKmFyZ3MpCj4gK3sKPiArICAgICAg
+IGludCBtaW5fcGl0Y2ggPSBESVZfUk9VTkRfVVAoYXJncy0+d2lkdGggKiBhcmdzLT5icHAsIDgp
+Owo+ICsKPiArICAgICAgIC8qIG1hbGkgZ3B1IG5lZWQgcGl0Y2ggOCBieXRlcyBhbGlnbm1lbnQg
+Zm9yIDMyYnBwICovCj4gKyAgICAgICBhcmdzLT5waXRjaCA9IHJvdW5kdXAobWluX3BpdGNoLCA4
+KTsKPiArCkknbSBub3Qgc3VyZSB5b3Ugd2FudCB0aGlzIGtpbmQgb2YgZGVwZW5kZW5jeSBvZiBh
+biBvdXQgb2YgdHJlZSBkcml2ZXIKdXBzdHJlYW0uIElmIHRoaXMgaXMgc29tZSBsaW1pdGF0aW9u
+IG9uIHRoZSBkaXNwbGF5IGVuZ2luZSBzbyBiZSBpdCwKYnV0IHRhaWxvcmluZyB0aGluZ3MgZm9y
+IGFuIGV4dGVybmFsIG1vZHVsZSBzZWVtcyBsaWtlIGEgdmVyeSBiYWQKaWRlYS4KCj4gKyAgICAg
+ICByZXR1cm4gZHJtX2dlbV9jbWFfZHVtYl9jcmVhdGVfaW50ZXJuYWwoZmlsZSwgZGV2LCBhcmdz
+KTsKPiArfQoKPiArc3RhdGljIGludCBoaXNpX2RybV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikK
+PiArewo+ICsgICAgICAgZG1hX3NldF9jb2hlcmVudF9tYXNrKGRldiwgRE1BX0JJVF9NQVNLKDMy
+KSk7Cj4gKyAgICAgICByZXR1cm4gZHJtX3BsYXRmb3JtX2luaXQoJmhpc2lfZHJtX2RyaXZlciwg
+dG9fcGxhdGZvcm1fZGV2aWNlKGRldikpOwpBcyBwb2ludGVkIG91dCBieSB0aGUgdGhlIGtlcm5l
+bCBkb2MgLSBkcm1fcGxhdGZvcm1faW5pdCBpcyBkZXByZWNhdGVkLgoKClJlZ2FyZHMsCkVtaWwK
+ClsxXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1
+LU5vdmVtYmVyLzA5NTQ2Ni5odG1sCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
