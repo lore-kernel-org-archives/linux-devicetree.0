@@ -1,39 +1,95 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v10] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Sat, 28 Nov 2015 09:59:19 +0000
-Message-ID: <8520D5D51A55D047800579B09414719825866D71@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1448636523-20503-1-git-send-email-bharatku@xilinx.com>
- <2717087.4cxEA98ZJk@wuerfel>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: [PATCH v2 00/10] Add New DRM Driver for HiSilicon hi6220 SoC
+Date: Sat, 28 Nov 2015 18:38:55 +0800
+Message-ID: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2717087.4cxEA98ZJk@wuerfel>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: andy.green@linaro.org, xuyiping@hisilicon.com, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, lijianhua@huawei.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v10] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
-> PCIe Host Controller
-> 
-> On Friday 27 November 2015 20:32:03 Bharat Kumar Gogada wrote:
-> > +       do {
-> > +               err = nwl_pcie_link_up(pcie, PHY_RDY_LINKUP);
-> > +               if (err != 1) {
-> > +                       check_link_up++;
-> > +                       if (check_link_up > LINKUP_ITER_CHECK)
-> > +                               return -ENODEV;
-> > +                       mdelay(1000);
-> > +               }
-> > +       } while (!err);
-> 
-> mdelay(1000) is not something anyone should do. Why can't you call a
-> sleeping function here?
-> 
-Agreed will use sleep function, will address it in next patch.
-
-Regards,
-Bharat
+ICBUaGlzIHBhdGNoIHNldCBhZGRzIGEgbmV3IGRybSBkcml2ZXIgZm9yIEhpU2lsaWNvbiBoaTYy
+MjAgU29DLgpDdXJyZW50IHRlc3RpbmcgYW5kIHN1cHBvcnQgYm9hcmQgaXMgSGlrZXkgYm9hcmQg
+d2hpY2ggaXMgb25lIG9mIExpbmFybwo5NmJvYXJkcy4gSXQgaXMgYW4gYXJtNjQgb3BlbiBzb3Vy
+Y2UgYm9hcmQuIEZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0CnRoaXMgYm9hcmQsIHBsZWFzZSBh
+Y2Nlc3MgaHR0cHM6Ly93d3cuOTZib2FyZHMub3JnLgoKSGFyZHdhcmUgRGV0YWlsCi0tLS0tLS0t
+LS0tLS0tLQogIFRoZSBkaXNwbGF5IHN1YnN5c3RlbSBvZiBIaTYyMjAgU29DIGlzIHNob3duIGFz
+IGJlbGxvdzoKICstLS0tLSsgICAgICAgKy0tLS0tLS0tLS0rICAgICArLS0tLS0rICAgICArLS0t
+LS0tLS0tKwogfCAgICAgfCAgICAgICB8ICAgICAgICAgIHwgICAgIHwgICAgIHwgICAgIHwgICAg
+ICAgICB8ICAgICAgICAgICAgIAkKIHwgRkIgIHwtLS0tLS0+fCAgIEFERSAgICB8LS0tLT58IERT
+SSB8LS0tLT58IEV4dGVybmFsfAogfCAgICAgfCAgICAgICB8ICAgICAgICAgIHwgICAgIHwgICAg
+IHwgICAgIHwgIEhETUkgICB8CiArLS0tLS0rICAgICAgICstLS0tLS0tLS0tKyAgICAgKy0tLS0t
+KyAgICAgKy0tLS0tLS0tLSsKCi0gQURFKEFkdmFuY2VkIERpc3BsYXkgRW5naW5lKSBpcyB0aGUg
+ZGlzcGxheSBjb250cm9sbGVyLiBJdCBjb250YWlucyA3CmNoYW5uZWxzLCAzIG92ZXJsYXkgY29t
+cG9zaXRvcnMgYW5kIGEgTERJLgogIC0gQSBjaGFubmVsIGxvb2tzIGxpa2U6IERNQS0tPmNsaXAt
+LT5zY2FsZS0tPmN0cmFucyhvciBjYWxsZWQgY3NjKS4KICAtIE92ZXJsYXkgY29tcG9zaXRvciBp
+cyByZXNwb25zZSB0byBjb21wb3NlIHBsYW5lcyB3aGljaCBjb21lIGZyb20gNwogIGNoYW5uZWxz
+IGFuZCBwYXNzIGNvbXBvc2VkIGltYWdlIHRvIExESS4KICAtIExESSBpcyByZXNwb25zZSB0byBn
+ZW5lcmF0ZSB0aW1pbmdzIGFuZCBSR0IgZGF0YSBzdHJlYW0uCi0gRFNJIGNvbnZlcnRzIHRoZSBS
+R0IgZGF0YSBzdHJlYW0gZnJvbSBBREUgdG8gRFNJIHBhY2tldHMuCi0gRXh0ZXJuYWwgSERNSSBt
+b2R1bGUgaXMgY29ubmVjdGVkIHdpdGggRFNJIGJ1cy4gTm93IEhpa2V5IHVzZSBhIEFESSdzCiAg
+QURWNzUzMyBleHRlcm5hbCBIRE1JIGNoaXAuCgpDaGFuZ2UgSGlzdG9yeQotLS0tLS0tLS0tLS0t
+CkNoYW5nZXMgaW4gdjI6Ci0gUmVtb3ZlIGFidHJhY3Rpb24gbGF5ZXIgb2YgcGxhbmUvY3J0Yy9l
+bmNvZGVyL2Nvbm5lY3Rvci4KLSBSZWZhY3RvciBhdG9taWMgaW1wbGVtZW50YXRpb24gYWNjb3Jk
+aW5nIHRvIERhbmllbCBWZXR0ZXIncyBndWlkZXM6Cmh0dHA6Ly9ibG9nLmZmd2xsLmNoLzIwMTQv
+MTEvYXRvbWljLW1vZGVzZXQtc3VwcG9ydC1mb3Ita21zLWRyaXZlcnMuaHRtbApodHRwOi8vYmxv
+Zy5mZndsbC5jaC8yMDE1LzA5L3hkYy0yMDE1LWF0b21pYy1tb2Rlc2V0dGluZy1mb3ItZHJpdmVy
+cy5odG1sCmh0dHA6Ly9ibG9nLmZmd2xsLmNoLzIwMTUvMDgvYXRvbWljLW1vZGVzZXR0aW5nLWRl
+c2lnbi1vdmVydmlldy5odG1sCi0gVXNlIGJyaWRnZSBpbnN0ZWFkIG9mIHNsYXZlIGVuY29kZXIg
+dG8gY29ubmVjdCBleHRlcm5hbCBIRE1JLgotIE1vdmUgZHQgYmluZGluZyBkb2NzIHRvIGJpbmRp
+bmdzL2Rpc3BsYXkvaGlzaWxpY29uIGRpcmVjdG9yeS4gCgoKWGlubGlhbmcgTGl1ICgxMCk6CiAg
+YXJtNjQ6IGR0czogaGlzaWxpY29uOiBBZGQgZGlzcGxheSBzdWJzeXN0ZW0gRFQgbm9kZXMgZm9y
+IGhpNjIyMC4KICBkcm0vaGlzaWxpY29uOiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgaGk2
+MjIwIGRpc3BsYXkgc3Vic3lzdGVtCiAgZHJtL2hpc2lsaWNvbjogQWRkIGhpc2lsaWNvbiBEUk0g
+bWFzdGVyIGRyaXZlcgogIGRybS9oaXNpbGljb246IEFkZCBjcnRjIGZ1bmNzIGZvciBBREUKICBk
+cm0vaGlzaWxpY29uOiBBZGQgcGxhbmUgZnVuY3MgZm9yIEFERQogIGRybS9oaXNpbGljb246IEFk
+ZCB2YmxhbmsgZmVhdHVyZQogIGRybS9oaXNpbGljb246IEFkZCBjbWEgZmJkZXYgYW5kIGhvdHBs
+dWcKICBkcm0vaGlzaWxpY29uOiBBZGQgZHNpIGVuY29kZXIgZHJpdmVyCiAgZHJtL2hpc2lsaWNv
+bjogQWRkIGRzaSBob3N0IGRyaXZlcgogIGRybS9oaXNpbGljb246IEFkZCBzdXBwb3J0IGZvciBl
+eHRlcm5hbCBicmlkZ2UKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1hZGUu
+dHh0ICAgICAgICB8ICAgNDIgKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2kt
+ZHJtLnR4dCAgICAgICAgfCAgIDY2ICsrCiAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24v
+aGlzaS1kc2kudHh0ICAgICAgICB8ICAgNTMgKwogYXJjaC9hcm02NC9ib290L2R0cy9oaXNpbGlj
+b24vaGk2MjIwLWhpa2V5LmR0cyAgICAgfCAgIDIxICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvaGlz
+aWxpY29uL2hpNjIyMC5kdHNpICAgICAgICAgIHwgICA0NCArCiBkcml2ZXJzL2dwdS9kcm0vS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKwogZHJpdmVycy9ncHUvZHJt
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1
+L2RybS9oaXNpbGljb24vS2NvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAxMCArCiBkcml2ZXJz
+L2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgIDUgKwogZHJp
+dmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2FkZV9yZWcuaCAgICAgICAgICAgfCAgNDkwICsr
+KysrKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9hZGUuYyAgICAgICAg
+ICAgfCAxMDY4ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
+L2hpc2lfZHJtX2FkZS5oICAgICAgICAgICB8ICAgMTYgKwogZHJpdmVycy9ncHUvZHJtL2hpc2ls
+aWNvbi9oaXNpX2RybV9kcnYuYyAgICAgICAgICAgfCAgMjgwICsrKysrCiBkcml2ZXJzL2dwdS9k
+cm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5oICAgICAgICAgICB8ICAgMTkgKwogZHJpdmVycy9n
+cHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kc2kuYyAgICAgICAgICAgfCAgODI5ICsrKysrKysr
+KysrKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RzaV9yZWcuaCAgICAgICAg
+ICAgfCAgIDg5ICsrCiAxNiBmaWxlcyBjaGFuZ2VkLCAzMDM1IGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9o
+aXNpbGljb24vaGlzaS1hZGUudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2ktZHJtLnR4dAogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hp
+c2lsaWNvbi9oaXNpLWRzaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+aGlzaWxpY29uL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlz
+aWxpY29uL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2ls
+aWNvbi9oaXNpX2FkZV9yZWcuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9o
+aXNpbGljb24vaGlzaV9kcm1fYWRlLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vaGlzaWxpY29uL2hpc2lfZHJtX2FkZS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kcnYuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZHJ2LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2RzaS5jCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RzaV9yZWcuaAoKLS0gCjEuOS4xCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
