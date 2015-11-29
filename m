@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 2/5] clk: sunxi: Add sun9i A80 apbs gates support
-Date: Sun, 29 Nov 2015 11:03:07 +0800
-Message-ID: <1448766190-11345-3-git-send-email-wens@csie.org>
+Subject: [PATCH v4 4/5] ARM: dts: sun9i: Add A80 PRCM clocks and
+ reset control nodes
+Date: Sun, 29 Nov 2015 11:03:09 +0800
+Message-ID: <1448766190-11345-5-git-send-email-wens@csie.org>
 References: <1448766190-11345-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6WV5GZAKGQEWBIRHXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB66V5GZAKGQE5J4WLEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1448766190-11345-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,39 +20,125 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the PRCM apbs clock gates found on the
-Allwinner A80 SoC.
+This adds the supported PRCM clocks and reset controls to the A80 dtsi.
+The DAUDIO module clocks are not supported yet.
+
+Also update clock and reset phandles for r_uart.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
- drivers/clk/sunxi/clk-simple-gates.c              | 2 ++
- 2 files changed, 3 insertions(+)
+ arch/arm/boot/dts/sun9i-a80.dtsi | 79 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index a94bb56a0e9e..b6859ed6913f 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -55,6 +55,7 @@ Required properties:
- 	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
- 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
- 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
-+	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
- 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
- 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
- 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
-diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
-index 0214c6548afd..c8acc0612c15 100644
---- a/drivers/clk/sunxi/clk-simple-gates.c
-+++ b/drivers/clk/sunxi/clk-simple-gates.c
-@@ -140,6 +140,8 @@ CLK_OF_DECLARE(sun9i_a80_apb0, "allwinner,sun9i-a80-apb0-gates-clk",
- 	       sunxi_simple_gates_init);
- CLK_OF_DECLARE(sun9i_a80_apb1, "allwinner,sun9i-a80-apb1-gates-clk",
- 	       sunxi_simple_gates_init);
-+CLK_OF_DECLARE(sun9i_a80_apbs, "allwinner,sun9i-a80-apbs-gates-clk",
-+	       sunxi_simple_gates_init);
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index 1118bf5cc4fb..a4ce348c0831 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -164,6 +164,14 @@
+ 					     "usb_phy2", "usb_hsic_12M";
+ 		};
  
- static const int sun4i_a10_ahb_critical_clocks[] __initconst = {
- 	14,	/* ahb_sdram */
++		pll3: clk@06000008 {
++			/* placeholder until implemented */
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-rate = <0>;
++			clock-output-names = "pll3";
++		};
++
+ 		pll4: clk@0600000c {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun9i-a80-pll4-clk";
+@@ -350,6 +358,68 @@
+ 					"apb1_uart2", "apb1_uart3",
+ 					"apb1_uart4", "apb1_uart5";
+ 		};
++
++		cpus_clk: clk@08001410 {
++			compatible = "allwinner,sun9i-a80-cpus-clk";
++			reg = <0x08001410 0x4>;
++			#clock-cells = <0>;
++			clocks = <&osc32k>, <&osc24M>, <&pll4>, <&pll3>;
++			clock-output-names = "cpus";
++		};
++
++		ahbs: ahbs_clk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <1>;
++			clocks = <&cpus_clk>;
++			clock-output-names = "ahbs";
++		};
++
++		apbs: clk@0800141c {
++			compatible = "allwinner,sun8i-a23-apb0-clk";
++			reg = <0x0800141c 0x4>;
++			#clock-cells = <0>;
++			clocks = <&ahbs>;
++			clock-output-names = "apbs";
++		};
++
++		apbs_gates: clk@08001428 {
++			compatible = "allwinner,sun9i-a80-apbs-gates-clk";
++			reg = <0x08001428 0x4>;
++			#clock-cells = <1>;
++			clocks = <&apbs>;
++			clock-indices = <0>, <1>,
++					<2>, <3>,
++					<4>, <5>,
++					<6>, <7>,
++					<12>, <13>,
++					<16>, <17>,
++					<18>, <20>;
++			clock-output-names = "apbs_pio", "apbs_ir",
++					"apbs_timer", "apbs_rsb",
++					"apbs_uart", "apbs_1wire",
++					"apbs_i2c0", "apbs_i2c1",
++					"apbs_ps2_0", "apbs_ps2_1",
++					"apbs_dma", "apbs_i2s0",
++					"apbs_i2s1", "apbs_twd";
++		};
++
++		r_1wire_clk: clk@08001450 {
++			reg = <0x08001450 0x4>;
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod0-clk";
++			clocks = <&osc32k>, <&osc24M>;
++			clock-output-names = "r_1wire";
++		};
++
++		r_ir_clk: clk@08001454 {
++			reg = <0x08001454 0x4>;
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod0-clk";
++			clocks = <&osc32k>, <&osc24M>;
++			clock-output-names = "r_ir";
++		};
+ 	};
+ 
+ 	soc {
+@@ -764,13 +834,20 @@
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		apbs_rst: reset@080014b0 {
++			reg = <0x080014b0 0x4>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			#reset-cells = <1>;
++		};
++
+ 		r_uart: serial@08002800 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x08002800 0x400>;
+ 			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&osc24M>;
++			clocks = <&apbs_gates 4>;
++			resets = <&apbs_rst 4>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.6.2
