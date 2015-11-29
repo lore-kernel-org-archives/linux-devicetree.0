@@ -1,91 +1,106 @@
-From: Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
-Date: Sun, 29 Nov 2015 03:17:24 +0530
-Message-ID: <CAFTCetRz7rKxttdOb-urx5yhggbCh_QEgfNHJ6FXautAK7Bf8Q@mail.gmail.com>
-References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
-	<1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
-	<20151116144525.GM20696@leverpostej>
-	<20151117001439.GA26823@rob-hp-laptop>
-	<CAFTCetSZbM8Y9j8YED6TVRih05R18vVuafCQKhX58A0fkzSocA@mail.gmail.com>
-	<CAL_JsqLSXSBWzbgxO00-sNaiiOu+w6zA+Aef5JuH2sdykx88CQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v4 0/5] ARM: sun9i: Add Allwinner A80 PRCM
+ clock/reset support
+Date: Sun, 29 Nov 2015 11:03:05 +0800
+Message-ID: <1448766190-11345-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLSXSBWzbgxO00-sNaiiOu+w6zA+Aef5JuH2sdykx88CQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Leo Li <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6WV5GZAKGQEWBIRHXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi everyone,
 
-On Wed, Nov 18, 2015 at 7:49 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Nov 18, 2015 at 8:03 AM, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Rob,
->>
->> Thanks for the review.
->>
->> On Tue, Nov 17, 2015 at 5:44 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Mon, Nov 16, 2015 at 02:45:25PM +0000, Mark Rutland wrote:
->>>> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
->>>> > This patch adds a devicetree binding documentation for ARM's
->>>> > SP805 WatchDog Timer.
->>>> >
->>>> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>>> > ---
->>>> >  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
->>>> >  1 file changed, 33 insertions(+)
->>>> >  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>> >
->>>> > diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>> > new file mode 100644
->>>> > index 0000000..ec70fe9
->>>> > --- /dev/null
->>>> > +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>> > @@ -0,0 +1,33 @@
->>>> > +* ARM SP805 Watchdog Timer (WDT) Controller
->>>> > +
->>>> > +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
->>>> > +can be used to identify the peripheral type, vendor, and revision.
->>>> > +This value can be used for driver matching.
->>>> > +
->>
->> [snip..]
->>
->>>> > +As SP805 WDT is a primecell IP, it follows the base bindings specified in
->>>> > +'arm/primecell.txt'
->>>> > +
->>>> > +Required properties:
->>>> > +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
->>>> > +- reg : Base address and size of the watchdog timer registers.
->>>> > +- interrupts : Should specify WDT interrupt number.
->>>> > +
->>>> > +Optional properties:
->>>> > +- clocks : From common clock binding. First clock is phandle to clock for apb
->>>> > +           pclk. Additional clocks are optional.
->>>> > +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
->>>>
->>>> The hardware has "WDOGCLK", which is what the driver appears to expect
->>>> first implicitly.
->>>
->>> The h/w has 2 clocks, PCLK and WDOGCLK, so both should be described and
->>> neither should be optional.
->>
->> As per the SP805 WDT TRM I have with me (see [1], Figure 1-1), this
->> h/w has only only input
->> clock WDOGCLK.
->>
->> [1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0270b/DDI0270.pdf
->
-> Look closer, PCLK is in the AMBA bus signals. The version online has
-> some timing diagrams also which I didn't find here.
+(resent with mailing lists CC-ed)
 
-Correct. So will add both PCLK and WDOGCLK to the compatible node in
-the v2 of this patch.
+This is v4 of the Allwinner A80 PRCM support series. Since v4, the
+series moved away from the mfd approach, and just lists the various
+controls directly under the "clocks" and "soc" nodes.
 
-Regards,
-Bhupesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v3:
+
+    - Only build new clock drivers for CONFIG_MACH_SUN9I
+
+    - Refactor sun8i-a23-apb0-clk driver to share common clock
+      registering code
+
+Changes since v2:
+
+    - Move away from mfd approach and directly list the clock and
+      reset controls as first class devices.
+
+    - Use the new clk-simple-gates driver for the apbs clock gates.
+
+    - Update clk code to use struct clk_request.
+
+    - Add 1wire clk node.
+
+    - Use GENMASK and always use shifted bitmasks in cpus clk driver.
+
+Changes since v1:
+
+    - Added missing clock gates based on updated documents
+
+    - Added new cpus clock driver based on updated documents
+
+    - Added pll3 clock placeholder
+
+    - Added comments about 24M & 32k oscillators
+
+The series adds support for the Power Reset and Clock Management
+module on Allwinner's A80 SoC. The PRCM manages clocks and resets
+for the "special" block of peripherals, or the R/RTC block in
+earlier SoCs, as well as power domain and resets for various parts
+of the SoC, such as the 2 processor clusters, the GPU and others.
+
+The special peripherals include a standby processor core, a timer
+block, a watchdog, pin controller, 1 wire interface, PS/2 interface,
+a UART, the RSB controller, a DMA controller, a consumer IR receiver
+block, 2 I2C controllers, and 2 I2S controllers. We do not have
+documents for all the peripherals. Support will be added where
+possible.
+
+Patch 1 adds CLK_OF_DECLARE support for sun8i-a23-apb0-clk driver.
+This driver was used with the mfd approach for the A23/A33 PRCM. As
+such it is a platform device driver.
+
+Patch 2 adds a new compatible string for the apbs gates to the
+clk-simple-gates driver.
+
+Patch 3 adds a new driver for the cpus clock.
+
+Patch 4 adds the various supported clock and reset control device nodes
+to the A80 dtsi.
+
+Patch 5 adds some TODO comments regarding the 2 system oscillators.
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (5):
+  clk: sunxi: Add CLK_OF_DECLARE support for sun8i-a23-apb0-clk driver
+  clk: sunxi: Add sun9i A80 apbs gates support
+  clk: sunxi: Add sun9i A80 cpus (cpu special) clock support
+  ARM: dts: sun9i: Add A80 PRCM clocks and reset control nodes
+  ARM: dts: sun9i: Add TODO comments for the main and low power clocks
+
+ Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
+ arch/arm/boot/dts/sun9i-a80.dtsi                  |  97 ++++++++-
+ drivers/clk/sunxi/Makefile                        |   6 +-
+ drivers/clk/sunxi/clk-simple-gates.c              |   2 +
+ drivers/clk/sunxi/clk-sun8i-apb0.c                |  71 +++++--
+ drivers/clk/sunxi/clk-sun9i-cpus.c                | 240 ++++++++++++++++++++++
+ 6 files changed, 403 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/clk/sunxi/clk-sun9i-cpus.c
+
+-- 
+2.6.2
