@@ -1,309 +1,88 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 3/5] clk: sunxi: Add sun9i A80 cpus (cpu
- special) clock support
-Date: Sun, 29 Nov 2015 11:03:08 +0800
-Message-ID: <1448766190-11345-4-git-send-email-wens@csie.org>
-References: <1448766190-11345-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: Dynamically adding SPI buses (was: Re: [PATCH v8 0/8] Device Tree
+ Overlays - 8th time's the charm)
+Date: Sun, 29 Nov 2015 10:47:07 +0100
+Message-ID: <CAMuHMdVxjzmOO5gwUs=sWU9hN+-xmEnMzMBn0C0Cc+J_wFuSYw@mail.gmail.com>
+References: <CAMuHMdUPa6YMa98v+qXMnxeMZ41AKFY1ni12rJewSEnqSB7TRA@mail.gmail.com>
+	<20151127132441.GS1929@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6WV5GZAKGQEWBIRHXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1448766190-11345-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151127132441.GS1929-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Fiore <mfjord02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The "cpus" clock is the clock for the embedded processor in the A80.
-It is also part of the PRCM clock tree. This clock includes a pre-
-divider on one of its inputs. For now we are using a custom clock
-driver for it. In the future we may want to develop a generalized
-driver for these types of clocks, which also includes the AHB clock
-driver on sun[5678]i.
+Hi Mark,
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/sunxi.txt |   1 +
- drivers/clk/sunxi/Makefile                        |   1 +
- drivers/clk/sunxi/clk-sun9i-cpus.c                | 240 ++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/clk/sunxi/clk-sun9i-cpus.c
+On Fri, Nov 27, 2015 at 2:24 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Nov 27, 2015 at 02:06:41PM +0100, Geert Uytterhoeven wrote:
+>> (replaying to an old mail, as I'm seeing the exact same behavior with current
+>>  overlay code)
+>
+> I don't seem to have this mail...  I'm not even sure that mailing list
+> archive does (at least
+>
+>    http://thread.gmane.org/gmane.linux.kernel.spi.devel/18597
+>
+> anyway).
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index b6859ed6913f..153ac72869e8 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -27,6 +27,7 @@ Required properties:
- 	"allwinner,sun5i-a10s-ahb-gates-clk" - for the AHB gates on A10s
- 	"allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
- 	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
-+	"allwinner,sun9i-a80-cpus-clk" - for the CPUS on A80
- 	"allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
- 	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
- 	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index c55d5cd1c0e5..f7d439fa9980 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -16,6 +16,7 @@ obj-y += clk-sun9i-mmc.o
- obj-y += clk-usb.o
- 
- obj-$(CONFIG_MACH_SUN9I) += clk-sun8i-apb0.o
-+obj-$(CONFIG_MACH_SUN9I) += clk-sun9i-cpus.o
- 
- obj-$(CONFIG_MFD_SUN6I_PRCM) += \
- 	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o
-diff --git a/drivers/clk/sunxi/clk-sun9i-cpus.c b/drivers/clk/sunxi/clk-sun9i-cpus.c
-new file mode 100644
-index 000000000000..7626d2194b96
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-sun9i-cpus.c
-@@ -0,0 +1,240 @@
-+/*
-+ * Copyright (C) 2015 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * Allwinner A80 CPUS clock driver
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+static DEFINE_SPINLOCK(sun9i_a80_cpus_lock);
-+
-+/**
-+ * sun9i_a80_cpus_clk_setup() - Setup function for a80 cpus composite clk
-+ */
-+
-+#define SUN9I_CPUS_MAX_PARENTS		4
-+#define SUN9I_CPUS_MUX_PARENT_PLL4	3
-+#define SUN9I_CPUS_MUX_SHIFT		16
-+#define SUN9I_CPUS_MUX_MASK		GENMASK(17, 16)
-+#define SUN9I_CPUS_MUX_GET_PARENT(reg)	((reg & SUN9I_CPUS_MUX_MASK) >> \
-+						SUN9I_CPUS_MUX_SHIFT)
-+
-+#define SUN9I_CPUS_DIV_SHIFT		4
-+#define SUN9I_CPUS_DIV_MASK		GENMASK(5, 4)
-+#define SUN9I_CPUS_DIV_GET(reg)		((reg & SUN9I_CPUS_DIV_MASK) >> \
-+						SUN9I_CPUS_DIV_SHIFT)
-+#define SUN9I_CPUS_DIV_SET(reg, div)	((reg & ~SUN9I_CPUS_DIV_MASK) | \
-+						(div << SUN9I_CPUS_DIV_SHIFT))
-+#define SUN9I_CPUS_PLL4_DIV_SHIFT	8
-+#define SUN9I_CPUS_PLL4_DIV_MASK	GENMASK(12, 8)
-+#define SUN9I_CPUS_PLL4_DIV_GET(reg)	((reg & SUN9I_CPUS_PLL4_DIV_MASK) >> \
-+						SUN9I_CPUS_PLL4_DIV_SHIFT)
-+#define SUN9I_CPUS_PLL4_DIV_SET(reg, div) ((reg & ~SUN9I_CPUS_PLL4_DIV_MASK) | \
-+						(div << SUN9I_CPUS_PLL4_DIV_SHIFT))
-+
-+struct sun9i_a80_cpus_clk {
-+	struct clk_hw hw;
-+	void __iomem *reg;
-+};
-+
-+#define to_sun9i_a80_cpus_clk(_hw) container_of(_hw, struct sun9i_a80_cpus_clk, hw)
-+
-+static unsigned long sun9i_a80_cpus_clk_recalc_rate(struct clk_hw *hw,
-+						    unsigned long parent_rate)
-+{
-+	struct sun9i_a80_cpus_clk *cpus = to_sun9i_a80_cpus_clk(hw);
-+	unsigned long rate;
-+	u32 reg;
-+
-+	/* Fetch the register value */
-+	reg = readl(cpus->reg);
-+
-+	/* apply pre-divider first if parent is pll4 */
-+	if (SUN9I_CPUS_MUX_GET_PARENT(reg) == SUN9I_CPUS_MUX_PARENT_PLL4)
-+		parent_rate /= SUN9I_CPUS_PLL4_DIV_GET(reg) + 1;
-+
-+	/* clk divider */
-+	rate = parent_rate / (SUN9I_CPUS_DIV_GET(reg) + 1);
-+
-+	return rate;
-+}
-+
-+static long sun9i_a80_cpus_clk_round(unsigned long rate, u8 *divp, u8 *pre_divp,
-+				     u8 parent, unsigned long parent_rate)
-+{
-+	u8 div, pre_div = 1;
-+
-+	/*
-+	 * clock can only divide, so we will never be able to achieve
-+	 * frequencies higher than the parent frequency
-+	 */
-+	if (parent_rate && rate > parent_rate)
-+		rate = parent_rate;
-+
-+	div = DIV_ROUND_UP(parent_rate, rate);
-+
-+	/* calculate pre-divider if parent is pll4 */
-+	if (parent == SUN9I_CPUS_MUX_PARENT_PLL4 && div > 4) {
-+		/* pre-divider is 1 ~ 32 */
-+		if (div < 32) {
-+			pre_div = div;
-+			div = 1;
-+		} else if (div < 64) {
-+			pre_div = DIV_ROUND_UP(div, 2);
-+			div = 2;
-+		} else if (div < 96) {
-+			pre_div = DIV_ROUND_UP(div, 3);
-+			div = 3;
-+		} else {
-+			pre_div = DIV_ROUND_UP(div, 4);
-+			div = 4;
-+		}
-+	}
-+
-+	/* we were asked to pass back divider values */
-+	if (divp) {
-+		*divp = div - 1;
-+		*pre_divp = pre_div - 1;
-+	}
-+
-+	return parent_rate / pre_div / div;
-+}
-+
-+static int sun9i_a80_cpus_clk_determine_rate(struct clk_hw *clk,
-+					     struct clk_rate_request *req)
-+{
-+	struct clk_hw *parent, *best_parent = NULL;
-+	int i, num_parents;
-+	unsigned long parent_rate, best = 0, child_rate, best_child_rate = 0;
-+	unsigned long rate = req->rate;
-+
-+	/* find the parent that can help provide the fastest rate <= rate */
-+	num_parents = clk_hw_get_num_parents(clk);
-+	for (i = 0; i < num_parents; i++) {
-+		parent = clk_hw_get_parent_by_index(clk, i);
-+		if (!parent)
-+			continue;
-+		if (clk_hw_get_flags(clk) & CLK_SET_RATE_PARENT)
-+			parent_rate = clk_hw_round_rate(parent, rate);
-+		else
-+			parent_rate = clk_hw_get_rate(parent);
-+
-+		child_rate = sun9i_a80_cpus_clk_round(rate, NULL, NULL, i,
-+						      parent_rate);
-+
-+		if (child_rate <= rate && child_rate > best_child_rate) {
-+			best_parent = parent;
-+			best = parent_rate;
-+			best_child_rate = child_rate;
-+		}
-+	}
-+
-+	if (!best_parent)
-+		return -EINVAL;
-+
-+	req->best_parent_hw = best_parent;
-+	req->best_parent_rate = best;
-+	req->rate = best_child_rate;
-+
-+	return 0;
-+}
-+
-+static int sun9i_a80_cpus_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-+				       unsigned long parent_rate)
-+{
-+	struct sun9i_a80_cpus_clk *cpus = to_sun9i_a80_cpus_clk(hw);
-+	unsigned long flags;
-+	u8 div, pre_div, parent;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&sun9i_a80_cpus_lock, flags);
-+
-+	reg = readl(cpus->reg);
-+
-+	/* need to know which parent is used to apply pre-divider */
-+	parent = SUN9I_CPUS_MUX_GET_PARENT(reg);
-+	sun9i_a80_cpus_clk_round(rate, &div, &pre_div, parent, parent_rate);
-+
-+	reg = SUN9I_CPUS_DIV_SET(reg, div);
-+	reg = SUN9I_CPUS_PLL4_DIV_SET(reg, pre_div);
-+	writel(reg, cpus->reg);
-+
-+	spin_unlock_irqrestore(&sun9i_a80_cpus_lock, flags);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops sun9i_a80_cpus_clk_ops = {
-+	.determine_rate	= sun9i_a80_cpus_clk_determine_rate,
-+	.recalc_rate	= sun9i_a80_cpus_clk_recalc_rate,
-+	.set_rate	= sun9i_a80_cpus_clk_set_rate,
-+};
-+
-+static void sun9i_a80_cpus_setup(struct device_node *node)
-+{
-+	const char *clk_name = node->name;
-+	const char *parents[SUN9I_CPUS_MAX_PARENTS];
-+	struct resource res;
-+	struct sun9i_a80_cpus_clk *cpus;
-+	struct clk_mux *mux;
-+	struct clk *clk;
-+	int ret;
-+
-+	cpus = kzalloc(sizeof(*cpus), GFP_KERNEL);
-+	if (!cpus)
-+		return;
-+
-+	cpus->reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(cpus->reg))
-+		goto err_free_cpus;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	/* we have a mux, we will have >1 parents */
-+	ret = of_clk_parent_fill(node, parents, SUN9I_CPUS_MAX_PARENTS);
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		goto err_unmap;
-+
-+	/* set up clock properties */
-+	mux->reg = cpus->reg;
-+	mux->shift = SUN9I_CPUS_MUX_SHIFT;
-+	/* un-shifted mask is what mux_clk expects */
-+	mux->mask = SUN9I_CPUS_MUX_MASK >> SUN9I_CPUS_MUX_SHIFT;
-+	mux->lock = &sun9i_a80_cpus_lock;
-+
-+	clk = clk_register_composite(NULL, clk_name, parents, ret,
-+				     &mux->hw, &clk_mux_ops,
-+				     &cpus->hw, &sun9i_a80_cpus_clk_ops,
-+				     NULL, NULL, 0);
-+	if (IS_ERR(clk))
-+		goto err_free_mux;
-+
-+	ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	if (ret)
-+		goto err_unregister;
-+
-+	return;
-+
-+err_unregister:
-+	clk_unregister(clk);
-+err_free_mux:
-+	kfree(mux);
-+err_unmap:
-+	iounmap(cpus->reg);
-+	of_address_to_resource(node, 0, &res);
-+	release_mem_region(res.start, resource_size(&res));
-+err_free_cpus:
-+	kfree(cpus);
-+}
-+CLK_OF_DECLARE(sun9i_a80_cpus, "allwinner,sun9i-a80-cpus-clk",
-+	       sun9i_a80_cpus_setup);
--- 
-2.6.2
+It was sent to the devicetree mailing list only, without anyone else CCed.
+Probably that's why no one noticed or replied to it before...
+
+>> When adding an SPI master device node to DT, or changing its status to "okay",
+>> of_register_spi_devices() will scan for SPI slaves, and will add all of them.
+>> Later, the notifier kicks:
+>
+>>     static int of_spi_notify(struct notifier_block *nb, unsigned long action,
+>>                              void *arg)
+>>     {
+>>             ...
+>>
+>>             case OF_RECONFIG_CHANGE_ADD:
+>>                     master = of_find_spi_master_by_node(rd->dn->parent);
+>>                     if (master == NULL)
+>>                             return NOTIFY_OK;       /* not for us */
+>>
+>>                     spi = of_register_spi_device(master, rd->dn);
+>
+>> Woops, this fails, as the device has been added before!
+>> Should the code just check for the existence of the SPI slave first, or would
+>> that cause problems when just modifying an existing SPI slave node in DT?
+>
+> Looking at the I2C code it seems like it's using
+> of_node_test_and_set_flag() to check for OF_POPULATED before
+> instantiating, doing that manually in every place where it might
+> instantiate a device and manually clearing when deinstantiating.
+
+Thanks for looking into that!
+
+> I have to say I don't entirely understand the logic behind how this
+> stuff is supposed to work, it's confusing to me why we have separate
+> dynamic and static instantiation paths in the first place or why this is
+> open coded in the buses.  It seems like a more robust thing here is to
+> always use the dynamic path even on static instantiation, or to move it
+> more into the driver core.
+
+Indeed.
+
+> Ideally I'd like to see the I2C code factored out into the DT core but
+> otherwise probably we have to cut'n'paste it.
+
+I'll give that a try...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
