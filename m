@@ -1,45 +1,117 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 3/5] dt-bindings: rockchip-thermal: Support the RK3228/RK3399 SoCs compatible
-Date: Mon, 30 Nov 2015 10:28:06 +0800
-Message-ID: <1448850488-16325-4-git-send-email-wxt@rock-chips.com>
-References: <1448850488-16325-1-git-send-email-wxt@rock-chips.com>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v6 2/2] leds: rt5033: Add RT5033 Flash led device driver
+Date: Mon, 30 Nov 2015 11:31:44 +0900
+Message-ID: <565BB510.2040903@samsung.com>
+References: <1448446948-13729-1-git-send-email-ingi2.kim@samsung.com>
+ <1448446948-13729-3-git-send-email-ingi2.kim@samsung.com>
+ <5655D001.8090803@samsung.com> <5656BC88.2070603@samsung.com>
+ <5656D43D.106@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448850488-16325-1-git-send-email-wxt@rock-chips.com>
+In-reply-to: <5656D43D.106@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Dan Carpenter <dan.carpenter@oracle.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, andi.shyti@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset attempts to new compatible for thermal founding
-on RK3228/RK3399 SoCs.
+Hi Jacek,
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
+On 2015=EB=85=84 11=EC=9B=94 26=EC=9D=BC 18:43, Jacek Anaszewski wrote:
+> Hi Ingi,
+>=20
+> On 11/26/2015 09:02 AM, Ingi Kim wrote:
+> [...]
+>>>> +torch_unlock:
+>>>> +    mutex_unlock(&led->lock);
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int rt5033_led_flash_brightness_set(struct led_classdev_fl=
+ash *fled_cdev,
+>>>> +                       u32 brightness)
+>>>> +{
+>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_cde=
+v);
+>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
+>>>> +
+>>>> +    mutex_lock(&led->lock);
+>>>> +    sub_led->flash_brightness =3D brightness;
+>>>> +    mutex_unlock(&led->lock);
+>>>
+>>> Mutex protection is redundant in this case. You would need it if de=
+vice
+>>> state was also changed here.
+>>
+>> Okay, I'll remove it.
+>>
+>>>
+>>> BTW why flash brightness can't be written to the device here?
+>>>
+>>
+>> Flash brightness is only affected when FLED flashed (strobing).
+>> So, I think it is better to be written in rt5033_led_flash_strobe_se=
+t function.
+>=20
+> strobe_set op should strobe the flash ASAP, and delegating brightness
+> setting there extends a delay between calling strobe_set op
+> and actual flash strobe. If you set the brightness here, then you
+> wouldn't have to do that in the strobe_set op, of course unless the
+> the brightness is altered through the API of the other LED, in two
+> separate LEDs case.
+>=20
 
----
+The brightness may be able to change its brightness in two separate LED=
+s case as you see.
+So, I think it would be better to write brightness setting in strobe_op=
+=2E
+In consideration of delay, of course, the brightness is set just when i=
+t would be changed.
 
-Changes in v2: None
-Changes in v1:
-- As Heiko comments, fix a copy incorrect name.
-- Add a Acked from Rob.
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int rt5033_led_flash_timeout_set(struct led_classdev_flash=
+ *fled_cdev,
+>>>> +                    u32 timeout)
+>>>> +{
+>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_cde=
+v);
+>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
+>>>> +
+>>>> +    mutex_lock(&led->lock);
+>>>> +    sub_led->flash_timeout =3D timeout;
+>>>> +    mutex_unlock(&led->lock);
+>>>
+>>> Ditto.
+>>>
+>=20
+> Timeout should be also written here.
+>=20
 
- Documentation/devicetree/bindings/thermal/rockchip-thermal.txt | 2 ++
- 1 file changed, 2 insertions(+)
+The timeout may be able to change its flash timeout in two separate LED=
+s case as you see.
+So, I think it would be better to write timeout setting in strobe_op.
+In consideration of delay, of course, the timeout is set just when it w=
+ould be changed.
 
-diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-index 0dfa60d..08efe6b 100644
---- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-@@ -2,8 +2,10 @@
- 
- Required properties:
- - compatible : should be "rockchip,<name>-tsadc"
-+   "rockchip,rk3228-tsadc": found on RK3228 SoCs
-    "rockchip,rk3288-tsadc": found on RK3288 SoCs
-    "rockchip,rk3368-tsadc": found on RK3368 SoCs
-+   "rockchip,rk3399-tsadc": found on RK3399 SoCs
- - reg : physical base address of the controller and length of memory mapped
- 	region.
- - interrupts : The interrupt number to the cpu. The interrupt specifier format
--- 
-1.9.1
+> If you will add regmap_write in both ops, then mutex protection will
+> have to be preserved, to assure consistency between registers state
+> and sub_led->flash_brightness and sub_led->flash_timeout state.
+>=20
+
+Thanks, but mutex protection is useless in this case.
+so I try to remove it.
+
+>>
+>>>> +#define RT5033_FLED_CTRL4_VTRREG_MAX    0x60
+>>>
+>>> Rename DEF to MASK.
+>=20
+> Hmm, here it should be: Rename MAX to MASK.
+>=20
+
+Oh
+Okay, Thanks :)
