@@ -1,90 +1,50 @@
-From: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH v2 06/18] ARM: am57xx: cl-som-am57x: dts: add spi-flash support
-Date: Mon, 30 Nov 2015 16:26:44 +0200
-Message-ID: <1448893604-719-1-git-send-email-lifshitz@compulab.co.il>
-References: <1448433590-1399-7-git-send-email-lifshitz@compulab.co.il>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448433590-1399-7-git-send-email-lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Toni Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/2] spi: Fix multi probing with overlays
+Date: Mon, 30 Nov 2015 15:28:05 +0100
+Message-ID: <1448893687-9159-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Michael Fiore <mfjord02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On-board spi-flash chip is used as a main boot device.
-Add spi-flash chip support (over QSPI bus).
+	Hi Mark, Pantelis,
 
-Signed-off-by: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
----
- v2: 
+This patch series fixes the issue where an SPI slave device is
+registered twice when loading a DT overlay that enables or adds an SPI
+master with a populated SPI bus:
 
- * Add "spi-max-frequency" property for &qspi node.
+    spi_sh_msiof e6e10000.spi: chipselect 0 already in use
+    spi_master spi2: spi_device register error /spi@e6e10000/spidev@0
+    of_spi_notify: failed to create for '/spi@e6e10000/spidev@0'
 
- arch/arm/boot/dts/am57xx-cl-som-am57x.dts | 43 +++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+The approach followed is similar to what's currently done on i2c, as
+suggested by Mark.
 
-diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-index 196e7c7..9042185 100644
---- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-+++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-@@ -93,6 +93,17 @@
- 			DRA7XX_CORE_IOPAD(0x3498, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_a22.mmc2_dat7 */
- 		>;
- 	};
-+
-+	qspi1_pins: pinmux_qspi1_pins {
-+		pinctrl-single,pins = <
-+			DRA7XX_CORE_IOPAD(0x3474, PIN_INPUT | MUX_MODE1)	/* gpmc_a13.qspi1_rtclk */
-+			DRA7XX_CORE_IOPAD(0x3480, PIN_INPUT | MUX_MODE1)	/* gpmc_a16.qspi1_d0 */
-+			DRA7XX_CORE_IOPAD(0x3484, PIN_INPUT | MUX_MODE1)	/* gpmc_a17.qspi1_d1 */
-+			DRA7XX_CORE_IOPAD(0x3488, PIN_INPUT | MUX_MODE1)	/* qpmc_a18.qspi1_sclk */
-+			DRA7XX_CORE_IOPAD(0x34b8, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_cs2.qspi1_cs0 */
-+			DRA7XX_CORE_IOPAD(0x34bc, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_cs3.qspi1_cs1 */
-+		>;
-+	};
- };
- 
- &i2c1 {
-@@ -332,3 +343,35 @@
- 	cap-mmc-dual-data-rate;
- };
- 
-+&qspi {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&qspi1_pins>;
-+
-+	spi-max-frequency = <20000000>;
-+
-+	spi_flash: spi_flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;				/* CS0 */
-+		spi-max-frequency = <20000000>;
-+		spi-tx-bus-width = <1>;
-+		spi-rx-bus-width = <1>;
-+
-+		partition@0 {
-+			label = "uboot";
-+			reg = <0x0 0xc0000>;
-+		};
-+
-+		partition@c0000 {
-+			label = "uboot environment";
-+			reg = <0xc0000 0x40000>;
-+		};
-+
-+		partition@100000 {
-+			label = "reserved";
-+			reg = <0x100000 0x0>;
-+		};
-+	};
-+};
+Thanks!
+
+Geert Uytterhoeven (2):
+  spi: Uninline spi_unregister_device()
+  spi: Mark instantiated device nodes with OF_POPULATE
+
+ drivers/spi/spi.c       | 29 +++++++++++++++++++++++++++++
+ include/linux/spi/spi.h |  7 +------
+ 2 files changed, 30 insertions(+), 6 deletions(-)
+
 -- 
 1.9.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
