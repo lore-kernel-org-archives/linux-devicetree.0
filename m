@@ -1,91 +1,36 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] net/macb: bindings doc: Merge cdns-emac to macb
-Date: Mon, 30 Nov 2015 15:08:53 +0100
-Message-ID: <565C5875.10207@atmel.com>
-References: <497a8248e7cf8b7f7f30d6c47c8591583dcc0bce.1448891503.git.michal.simek@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <497a8248e7cf8b7f7f30d6c47c8591583dcc0bce.1448891503.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] spi: sh-msiof: Add support for SH-Mobile AG5
+Date: Mon, 30 Nov 2015 15:14:00 +0100
+Message-ID: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 30/11/2015 14:51, Michal Simek a =E9crit :
-> Merge two bindings for the same driver to together.
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+MSIOF in SH-Mobile AG5 (sh73a0) is handled fine by the existing driver.
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->=20
->  Documentation/devicetree/bindings/net/cdns-emac.txt | 20 -----------=
----------
->  Documentation/devicetree/bindings/net/macb.txt      |  3 +++
->  2 files changed, 3 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/cdns-emac.t=
-xt
->=20
-> diff --git a/Documentation/devicetree/bindings/net/cdns-emac.txt b/Do=
-cumentation/devicetree/bindings/net/cdns-emac.txt
-> deleted file mode 100644
-> index 4451ee973223..000000000000
-> --- a/Documentation/devicetree/bindings/net/cdns-emac.txt
-> +++ /dev/null
-> @@ -1,20 +0,0 @@
-> -* Cadence EMAC Ethernet controller
-> -
-> -Required properties:
-> -- compatible: Should be "cdns,[<chip>-]{emac}"
-> -  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
-> -  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
-> -  Or the generic form: "cdns,emac".
-> -- reg: Address and length of the register set for the device
-> -- interrupts: Should contain macb interrupt
-> -- phy-mode: see ethernet.txt file in the same directory.
-> -
-> -Examples:
-> -
-> -	macb0: ethernet@fffc4000 {
-> -		compatible =3D "cdns,at91rm9200-emac";
-> -		reg =3D <0xfffc4000 0x4000>;
-> -		interrupts =3D <21>;
-> -		phy-mode =3D "rmii";
-> -		local-mac-address =3D [3a 0e 03 04 05 06];
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documen=
-tation/devicetree/bindings/net/macb.txt
-> index b5d79761ac97..1361a6daf63f 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -2,6 +2,7 @@
-> =20
->  Required properties:
->  - compatible: Should be "cdns,[<chip>-]{macb|gem}"
-> +  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
->    Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs or the 10/100M=
-bit IP
->    available on sama5d3 SoCs.
->    Use "cdns,at32ap7000-macb" for other 10/100 usage or use the gener=
-ic form: "cdns,macb".
-> @@ -10,7 +11,9 @@ Required properties:
->    Use "atmel,sama5d2-gem" for the GEM IP (10/100) available on Atmel=
- sama5d2 SoCs.
->    Use "atmel,sama5d3-gem" for the Gigabit IP available on Atmel sama=
-5d3 SoCs.
->    Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel=
- sama5d4 SoCs.
-> +  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
->    Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
-> +  Or the generic form: "cdns,emac".
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain macb interrupt
->  - phy-mode: See ethernet.txt file in the same directory.
->=20
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index 705075da2f10156e..aa005c1d10d95756 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -10,6 +10,7 @@ Required properties:
+ 			 "renesas,msiof-r8a7792" (R-Car V2H)
+ 			 "renesas,msiof-r8a7793" (R-Car M2-N)
+ 			 "renesas,msiof-r8a7794" (R-Car E2)
++			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+ - reg                  : A list of offsets and lengths of the register sets for
+ 			 the device.
+ 			 If only one register set is present, it is to be used
+-- 
+1.9.1
 
-
---=20
-Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
