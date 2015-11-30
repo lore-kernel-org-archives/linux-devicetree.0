@@ -1,35 +1,82 @@
-Return-Path: <Yuval.Mintz@qlogic.com>
-From: Yuval Mintz <Yuval.Mintz@qlogic.com>
-Subject: RE: [PATCH V4 net-next 4/5] net:hns: Add support of ethtool TSO set
- option for Hip06 in HNS
-Date: Sun, 22 Nov 2015 11:17:13 +0000
-Message-ID: <CO2PR11MB00885531F54375191E6F015597180@CO2PR11MB0088.namprd11.prod.outlook.com>
-References: <1448048952-146714-1-git-send-email-salil.mehta@huawei.com>
- <1448048952-146714-5-git-send-email-salil.mehta@huawei.com>
-In-Reply-To: <1448048952-146714-5-git-send-email-salil.mehta@huawei.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <qsyousef@gmail.com>
 MIME-Version: 1.0
-To: Salil Mehta <salil.mehta@huawei.com>, David Miller <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>, "dingtianhong@huawei.com" <dingtianhong@huawei.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "huangdaode@hisilicon.com" <huangdaode@hisilicon.com>, "kenneth-lee-2012@foxmail.com" <kenneth-lee-2012@foxmail.com>, "mehta.salil.lnk@gmail.com" <mehta.salil.lnk@gmail.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "lisheng011@huawei.com" <lisheng011@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>
+In-Reply-To: <CAL_JsqJOz7+spUgBf56RkwGKbvgOYHn8tgf1X9UuoUu4ttFSTA@mail.gmail.com>
+References: <CAL_JsqJOz7+spUgBf56RkwGKbvgOYHn8tgf1X9UuoUu4ttFSTA@mail.gmail.com>
+Date: Mon, 30 Nov 2015 12:11:57 +0000
+Message-ID: <CA+mqd+45AV82hbPeEJDOYjVaO5cEApgZBY6r5M=nF7aX=5ofYw@mail.gmail.com>
+Subject: Re: [GIT PULL] DeviceTree for 4.4
+From: Qais Yousef <qsyousef@gmail.com>
+Content-Type: multipart/alternative; boundary=001a1130c9e49a24e10525c0f21f
+To: Rob Herring <robherring2@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-> +static netdev_features_t hns_nic_fix_features(
-> +		struct net_device *netdev, netdev_features_t features) {
-> +	struct hns_nic_priv *priv =3D netdev_priv(netdev);
-> +
-> +	switch (priv->enet_ver) {
-> +	case AE_VERSION_1:
-> +		features &=3D ~(NETIF_F_TSO | NETIF_F_TSO6 |
-> +				NETIF_F_HW_VLAN_CTAG_FILTER);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return features;
-> +}
-> +
+--001a1130c9e49a24e10525c0f21f
+Content-Type: text/plain; charset=UTF-8
 
-Isn't AE_VERSION_1 something fixed once you publish your features?
-If it can't be changed, why not simply remove the features from
-`hw_features' instead of having to implement this ndo?
+Hi,
+
+On Fri, Nov 6, 2015 at 1:28 PM, Rob Herring <robherring2@gmail.com> wrote:
+
+>
+>
+> Jonas Gorski (3):
+>       of/irq: move of_msi_configure to the right guard and add a dummy
+>       of/irq: make of_irq_find_parent static
+>       of/irq: fix guards for irq_of_parse_and_map prototype
+>
+>
+>
+
+Sorry if I'm going about this in the wrong way. But the of/irq make
+of_irq_find_parent() static commit is breaking some patches that are still
+being reviewed.
+
+The patch in question can be found here
+
+    https://lkml.org/lkml/2015/11/25/291
+
+The whole series is here
+
+     https://lkml.org/lkml/2015/11/25/283
+
+Maybe I shouldn't have used this function. But if not, can we have this
+patch reverted?
+If I should be doing something else, can you point me to the right
+direction please?
+
+Thanks,
+Qais
+
+--001a1130c9e49a24e10525c0f21f
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<br><div><div class=3D"gmail_extra"><br><div class=3D"g=
+mail_quote">On Fri, Nov 6, 2015 at 1:28 PM, Rob Herring <span dir=3D"ltr">&=
+lt;<a href=3D"mailto:robherring2@gmail.com" target=3D"_blank">robherring2@g=
+mail.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex"><br>
+<br>
+Jonas Gorski (3):<br>
+=C2=A0 =C2=A0 =C2=A0 of/irq: move of_msi_configure to the right guard and a=
+dd a dummy<br>
+=C2=A0 =C2=A0 =C2=A0 of/irq: make of_irq_find_parent static<br>
+=C2=A0 =C2=A0 =C2=A0 of/irq: fix guards for irq_of_parse_and_map prototype<=
+br>
+<br>
+<br></blockquote><div><br><br></div><div>Sorry if I&#39;m going about this =
+in the wrong way. But the of/irq make of_irq_find_parent() static commit is=
+ breaking some patches that are still being reviewed.<br><br></div><div>The=
+ patch in question can be found here<br><br>=C2=A0 =C2=A0 <a href=3D"https:=
+//lkml.org/lkml/2015/11/25/291">https://lkml.org/lkml/2015/11/25/291</a><br=
+><br></div><div>The whole series is here<br><br>=C2=A0 =C2=A0=C2=A0 <a href=
+=3D"https://lkml.org/lkml/2015/11/25/283">https://lkml.org/lkml/2015/11/25/=
+283</a><br><br></div><div>Maybe I shouldn&#39;t have used this function. Bu=
+t if not, can we have this patch reverted?<br></div><div>If I should be doi=
+ng something else, can you point me to the right direction please?<br></div=
+><div><br></div><div>Thanks,<br></div><div>Qais<br></div></div><br></div></=
+div></div>
+
+--001a1130c9e49a24e10525c0f21f--
