@@ -1,231 +1,75 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH v2 8/9] leds: add LM3633 driver
-Date: Mon, 30 Nov 2015 17:48:47 +0900
-Message-ID: <565C0D6F.9000709@ti.com>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-9-git-send-email-milo.kim@ti.com>
- <56583C37.1050307@samsung.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH v2 0/3] dmaengine: Add supports for APM X-Gene SoC CRC32C
+ accerlerator driver
+Date: Mon, 30 Nov 2015 14:19:33 +0530
+Message-ID: <CAFd313z2dncWmBQJY48RkReVOhQqLs13UzehwrbizBbputOSEw@mail.gmail.com>
+References: <rsahu@apm.com>
+	<1447665169-14003-1-git-send-email-rsahu@apm.com>
+	<CAFd313zqimQtG8epeo3U7gzxWRf0hqO4K8hOFy4UK-6pG5GcJg@mail.gmail.com>
+	<20151130083950.GA7792@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <56583C37.1050307@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: robh+dt@kernel.org, lee.jones@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151130083950.GA7792@gondor.apana.org.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: davem@davemloft.net, Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, linux-crypto@vger.kernel.org, Kaustubh Gondkar <kgondkar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hi Herbert,
 
-Thanks for your detailed feedback. Please refer to my comments below.
+On Mon, Nov 30, 2015 at 2:09 PM, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> On Mon, Nov 30, 2015 at 02:06:03PM +0530, Rameshwar Sahu wrote:
+>> On Mon, Nov 16, 2015 at 2:42 PM,  <rsahu@apm.com> wrote:
+>> > From: Rameshwar Prasad Sahu <rsahu@apm.com>
+>> >
+>> > This patch implements support for APM X-Gene SoC CRC32C h/w accelerator driver
+>> > and adds CRC32C computations support in dmaengine framework. APM X-Gene SoC has
+>> > DMA engine capable of performing CRC32C computations.
+>> >
+>> > v2 changes:
+>> >         1. Added helper function in dmaengine framework
+>> >         2. Documented CRC32C support in Documentations/dmaengine/provider.txt
+>> >         3. Fixed algo name
+>> >         4. Fixed coding style issues
+>> >
+>> > Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+>> > ---
+>> >
+>> > Rameshwar Prasad Sahu (3):
+>> >   dmaengine: Add support for new feature CRC32C computations
+>> >   dmaengine: xgene-dma: Add support for CRC32C computations via DMA
+>> >     engine
+>> >   Crypto: Add support for APM X-Gene SoC CRC32C h/w accelerator driver
+>> >
+>> >  Documentation/dmaengine/provider.txt |    3 +
+>> >  drivers/crypto/Kconfig               |    8 +
+>> >  drivers/crypto/Makefile              |    1 +
+>> >  drivers/crypto/xgene-crc32c.c        |  234 +++++++++++++++++++++++++
+>> >  drivers/dma/dmaengine.c              |    2 +
+>> >  drivers/dma/xgene-dma.c              |  314 ++++++++++++++++++++++++++++++++--
+>> >  include/linux/dmaengine.h            |   13 ++
+>> >  7 files changed, 560 insertions(+), 15 deletions(-)
+>> >  create mode 100755 drivers/crypto/xgene-crc32c.c
+>>
+>> Any Comments on above patchset ??
+>
+> The main user of crc32c is lib/libcrc32c.c.  Unfortunately it is
+> entire synchronous so it won't be able to use your crc32c driver
+> at all.
 
-On 11/27/2015 8:19 PM, Jacek Anaszewski wrote:
-> Hi Milo,
+This is asynchronous implementation of the crc32c, mainly for
+offloading the computations, So client (who want to use it) can call
+it as like other async crypto algos available in linux/crypto, so they
+have frame the layer on top of this.
 >
-> Thanks for the update. I have few comments below.
->
->> diff --git a/drivers/leds/leds-lm3633.c b/drivers/leds/leds-lm3633.c
->> new file mode 100644
->> index 0000000..9c391ca
->> --- /dev/null
->> +++ b/drivers/leds/leds-lm3633.c
->> @@ -0,0 +1,840 @@
->> +/*
->> + * TI LM3633 LED driver
->> + *
->> + * Copyright 2015 Texas Instruments
->> + *
->> + * Author: Milo Kim <milo.kim@ti.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/bitops.h>
->> +#include <linux/kernel.h>
->> +#include <linux/leds.h>
->> +#include <linux/mfd/ti-lmu.h>
->> +#include <linux/mfd/ti-lmu-register.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/notifier.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +
->> +#define LM3633_MAX_PWM				255
->> +#define LM3633_MIN_CURRENT			5000
->> +#define LM3633_MAX_CURRENT			30000
->> +#define LM3633_MAX_PERIOD			9700
->> +#define LM3633_SHORT_TIMESTEP			16
->> +#define LM3633_LONG_TIMESTEP			131
->> +#define LM3633_TIME_OFFSET			61
->> +#define LM3633_PATTERN_REG_OFFSET		16
->> +#define LM3633_IMAX_OFFSET			6
->> +
->> +enum lm3633_led_bank_id {
->> +	LM3633_LED_BANK_C,
->> +	LM3633_LED_BANK_D,
->> +	LM3633_LED_BANK_E,
->> +	LM3633_LED_BANK_F,
->> +	LM3633_LED_BANK_G,
->> +	LM3633_LED_BANK_H,
->> +	LM3633_MAX_LEDS,
->> +};
->> +
->> +/**
->> + * struct ti_lmu_led_chip
->> + *
->> + * @dev:		Parent device pointer
->> + * @lmu:		LMU structure. Used for register R/W access.
->> + * @lock:		Secure handling for multiple user interface access
->> + * @lmu_led:		Multiple LED strings
->
-> Could you clarify what "string" means here?
->
->> + * @num_leds:		Number of LED strings
->
-> and here?
+> So who is going to be using this?
+One of our client is using this layer for offloading the crc32c to our
+dmaengine hw.
 
-Oops! I forgot to replace this term with 'output channel'. Thanks for 
-catching this.
-
->> +static u8 lm3633_convert_time_to_index(unsigned int msec)
->> +{
->> +	u8 idx, offset;
->> +
->> +	/*
->> +	 * Find an approximate index
 >
-> I think that we shouldn't approximate but clamp the msec
-> to the nearest possible device setting.
->
->> +	 *
->> +	 *      0 <= time <= 1000 : 16ms step
->> +	 *   1000 <  time <= 9700 : 131ms step, base index is 61
->> +	 */
->> +
->> +	msec = min_t(int, msec, LM3633_MAX_PERIOD);
->> +
->> +	if (msec <= 1000) {
->> +		idx = msec / LM3633_SHORT_TIMESTEP;
->> +		if (idx > 1)
->> +			idx--;
->> +		offset = 0;
->> +	} else {
->> +		idx = (msec - 1000) / LM3633_LONG_TIMESTEP;
->> +		offset = LM3633_TIME_OFFSET;
->> +	}
->> +
->> +	return idx + offset;
->> +}
->> +
->> +static u8 lm3633_convert_ramp_to_index(unsigned int msec)
->> +{
->> +	const int ramp_table[] = { 2, 250, 500, 1000, 2000, 4000, 8000, 16000 };
->> +	int size = ARRAY_SIZE(ramp_table);
->> +	int i;
->> +
->> +	if (msec <= ramp_table[0])
->> +		return 0;
->> +
->> +	if (msec > ramp_table[size - 1])
->> +		return size - 1;
->> +
->> +	for (i = 1; i < size; i++) {
->> +		if (msec == ramp_table[i])
->> +			return i;
->> +
->> +		/* Find an approximate index by looking up the table */
->
-> Similarly here. So you should have an array of the possible msec
-> values and iterate through it to look for the nearest one.
-
-Driver uses 'ramp_table[]' for this purpose. Could you describe it in 
-more details?
-
->> +
->> +static int lm3633_led_brightness_set(struct led_classdev *cdev,
->> +				     enum led_brightness brightness)
->> +{
->> +	struct ti_lmu_led *lmu_led = container_of(cdev, struct ti_lmu_led,
->> +						  cdev);
->> +	struct ti_lmu_led_chip *chip = lmu_led->chip;
->> +	struct regmap *regmap = chip->lmu->regmap;
->> +	u8 reg = LM3633_REG_BRT_LVLED_BASE + lmu_led->bank_id;
->> +	int ret;
->> +
->> +	mutex_lock(&chip->lock);
->> +
->> +	ret = regmap_write(regmap, reg, brightness);
->> +	if (ret) {
->> +		mutex_unlock(&chip->lock);
->> +		return ret;
->> +	}
->> +
->> +	if (brightness == 0)
->> +		lm3633_led_disable_bank(lmu_led);
->
-> This should be checked at first, as I suppose that disabling
-> a bank suffices to turn the LED off.
-
-Well, it's not a big deal when turn off the LED. However, our silicon 
-designer recommended brightness update should be done prior to enabling 
-LED bank. Let me share some block diagram.
-
-[I2C logic] - [brightness control] - [control bank] - [output channel]
-
-If control bank is enabled first, then previous brightness value in 
-register can be used instead of new updated brightness. So brightness 
-update should be done first.
-
->> +static u8 lm3633_led_scale_max_brightness(struct ti_lmu_led *lmu_led, u32 imax)
->> +{
->> +	u8 max_current = lm3633_led_convert_current_to_index(imax);
->> +	const u8 max_brightness_table[] = {
->> +		[LMU_IMAX_5mA]  = 191,
->> +		[LMU_IMAX_6mA]  = 197,
->> +		[LMU_IMAX_7mA]  = 203,
->> +		[LMU_IMAX_8mA]  = 208,
->> +		[LMU_IMAX_9mA]  = 212,
->> +		[LMU_IMAX_10mA] = 216,
->> +		[LMU_IMAX_11mA] = 219,
->> +		[LMU_IMAX_12mA] = 222,
->> +		[LMU_IMAX_13mA] = 225,
->> +		[LMU_IMAX_14mA] = 228,
->> +		[LMU_IMAX_15mA] = 230,
->> +		[LMU_IMAX_16mA] = 233,
->> +		[LMU_IMAX_17mA] = 235,
->> +		[LMU_IMAX_18mA] = 237,
->> +		[LMU_IMAX_19mA] = 239,
->> +		[LMU_IMAX_20mA] = 241,
->> +		[LMU_IMAX_21mA] = 242,
->> +		[LMU_IMAX_22mA] = 244,
->> +		[LMU_IMAX_23mA] = 246,
->> +		[LMU_IMAX_24mA] = 247,
->> +		[LMU_IMAX_25mA] = 249,
->> +		[LMU_IMAX_26mA] = 250,
->> +		[LMU_IMAX_27mA] = 251,
->> +		[LMU_IMAX_28mA] = 253,
->> +		[LMU_IMAX_29mA] = 254,
->> +		[LMU_IMAX_30mA] = 255,
->> +	};
->
-> After analyzing the subject one more time I think that we need to
-> change the approach regarding max brightness issue.
->
-> At first - we shouldn't fix max current to max possible register value.
-> Instead we should take led-max-microamp property and write its value
-> to the [0x22 + bank offset] registers.
->
-> With this approach whole 0-255 range of brightness levels will be
-> valid for the driver.
->
-> In effect all LMU_IMAX* enums seem to be not needed.
-
-Good to hear that, it's the most simplest work for the device ;)
-Let me update the driver. Thanks!
-
-Best regards,
-Milo
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
