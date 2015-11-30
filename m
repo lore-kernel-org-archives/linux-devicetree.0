@@ -1,40 +1,64 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ravb: add R8A7791 support
-Date: Mon, 30 Nov 2015 09:42:08 +0900
-Message-ID: <20151130004207.GD3501@verge.net.au>
-References: <6051623.qN4lqSyZKg@wasted.cogentembedded.com>
- <CAMuHMdWE_G2WqsGZEaa4Ck3zziTLGVPfaVdU2gbnLA5zWpmR1w@mail.gmail.com>
- <565B6AAD.8080205@cogentembedded.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v6 0/4] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+Date: Mon, 30 Nov 2015 10:44:29 +0900
+Message-ID: <1448847873-7072-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <565B6AAD.8080205@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 12:14:21AM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 11/29/2015 10:26 PM, Geert Uytterhoeven wrote:
-> 
-> >>Add support  for yet another ARM member of the R-Car family, R-Car M2, also
-> 
-> >R-Car M2-W?
-> 
->    Right, forgot about the postfixes.
-> 
-> >>known as R8A7791.
-> >
-> >There's also R-Car M2-N, aka R8A7793, but you probably know that ;-)
-> 
->    Will fix.
+This patch is based on the latest linux-phy / next branch.
+(commit id = 8005c49d9aea74d382f474ce11afbbc7d7130bec)
 
-I would prefer if we added generic gen2 and gen3 compat strings to the driver
-and only documented new soc-specific compat strings.
+ Changes from v5:
+ - Minor modify the rcar_gen3_phy_usb2_probe() in patch 1.
+ - Rebase the latest linux-phy / next branch.
 
-Actually by chance I was planning to up patches to do that and add compat
-strings for the missing Gen2 boards. But I won't complain if you beat me to
-it.
+ Changes from v4:
+  - Modify Kconfig to "depends on OF && ARCH_SHMOBILE".
+  - Modify Kconfig to "select GENERIC_PHY" instead of "depends on GENERIC_PHY".
+  - Modify device tree documentation about "reg" of example.
+  - Remove spinlock handling because phy-core driver calls mutex_lock().
+  - Change valiable name to val instead of tmp.
+  - Remove dev_set_drvdata.
+  - Use dev_vdbg() instead of dev_dbg().
+  - Change rcar_gen3_device_recognition()'s condition as one line.
+  - Remove unnecessary value in rcar_gen3_phy_usb2_probe().
+  - Modify MAINTAINERS about this driver.
+
+ Changes from v3:
+  - Shorten structure names to avoid new line if we add a long function name.
+  - Add ID/VBUS pin detection for peripheral mode.
+
+ Changes from v2:
+  - Modify Kconfig to add "depends on OF" and "depends on ARCH_SHMOBILE".
+  - Add more information in the dt document.
+  - Change reg-names from "usb2" to "usb2_host".
+
+ Changes from v1:
+  - Revise some typos.
+  - Remove using clk API to enable/disable the clocks.
+    (In other words, this driver expects to enable/disable the clocks by
+     Runtime PM API by the phy-core driver.)
+  - Remove an unnecessary header file (asm/cmpxchg.h).
+
+Yoshihiro Shimoda (4):
+  phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+  phy: rcar-gen3-usb2: change the mode to OTG on the combined channel
+  phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection
+  MAINTAINERS: add Renesas usb2 phy driver
+
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  39 +++
+ MAINTAINERS                                        |   6 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-rcar-gen3-usb2.c                   | 378 +++++++++++++++++++++
+ 5 files changed, 431 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+ create mode 100644 drivers/phy/phy-rcar-gen3-usb2.c
+
+-- 
+1.9.1
