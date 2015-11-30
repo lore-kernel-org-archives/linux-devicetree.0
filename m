@@ -1,68 +1,57 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dt: mvebu: ix4-300d: Add ECC properties to NAND flash
-Date: Mon, 30 Nov 2015 15:22:02 +0100
-Message-ID: <87a8pv5zzp.fsf@free-electrons.com>
-References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1448709248-21177-5-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20151129153548.304522af@free-electrons.com>
-	<565C090D.4060006@gmail.com>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 04/18] ARM: am57xx: cl-som-am57x: dts: add EEPROM support
+Date: Mon, 30 Nov 2015 16:23:46 +0200
+Message-ID: <565C5BF2.5000601@compulab.co.il>
+References: <1448433590-1399-1-git-send-email-lifshitz@compulab.co.il>
+ <1448433590-1399-5-git-send-email-lifshitz@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565C090D.4060006-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Sebastian Hesselbarth's message of
-	"Mon, 30 Nov 2015 09:30:05 +0100")
+In-Reply-To: <1448433590-1399-5-git-send-email-lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Toni Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
- 
- On lun., nov. 30 2015, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Dima,
 
-> On 29.11.2015 15:35, Thomas Petazzoni wrote:
->> Adding Ezequiel Garcia in Cc.
->>
->> On Sat, 28 Nov 2015 12:14:08 +0100, Sebastian Hesselbarth wrote:
->>> The NAND device found on Lenovo ix4-300d uses 4-bit BCH ECC protection.
->>> Add the corresponding properties to the NAND node.
->>
->> If the ONFI information from the NAND flash say that it requires 4 bits
->> per 512, then there should be no need to add this information to the
->> Device Tree as the pxa3xx_nand driver by default uses the ONFI
->> information.
->
-> Thomas,
->
-> as said in the cover letter, this is also DT cleanup with barebox
-> bootloader in mind. I do not accept what Linux' pxa3xx_nand driver
-> is doing as a reference here ;)
->
->> Those properties are only needed when for some reason the vendor has
->> chosen to use a ECC strength that doesn't match with the one advertised
->> by the flash in its ONFI information (either stronger or weaker). But
->> in this case, your commit log is confusing, because it says that the
->> "NAND device ... uses 4-bit BCH ECC protection". If it really does,
->> then the patch is not needed :-)
->
-> I agree that if ONFI is already advertising 4/512 ECC (and it is), we
-> do not need the properties. Anyway, IIRC barebox does not yet properly
-> parse ONFI or at least it does not derive minimum ECC settings from it.
->
-> I'll have to have a closer look at barebox' ONFI parsing capabilites
-> and can live with this patch not applied even though it does no harm.
+On 11/25/15 08:39, Dmitry Lifshitz wrote:
+> On-board EEPROM chip is used for storing a board production
+> info.
+> 
+> Add module EEPROM support (over I2C4 bus).
+> 
+> Signed-off-by: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am57xx-cl-som-am57x.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> index eb9b81b..b6919a7 100644
+> --- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> +++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> @@ -289,6 +289,12 @@
+>  		compatible = "emmicro,em3027";
+>  		reg = <0x56>;
+>  	};
+> +
+> +	eeprom_module: atmel@50 {
+> +		compatible = "atmel,24c02";
 
-So for now, I don't apply it.
+If I'm not mistaken, the eeprom should be 24c08, no?
 
-Thanks,
-
-Gregory
+> +		reg = <0x50>;
+> +		pagesize = <16>;
+> +	};
+>  };
+>  
+>  
+> 
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Regards,
+Igor.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
