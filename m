@@ -1,100 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 02/10] drm/hisilicon: Add DT binding docs for hi6220
- display subsystem
-Date: Mon, 30 Nov 2015 13:31:30 -0600
-Message-ID: <20151130193130.GA1616@rob-hp-laptop>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
- <1448707145-69348-3-git-send-email-xinliang.liu@linaro.org>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH V5 net-next 1/5] net:hns: Add support of Hip06 SoC to
+ the Hislicon Network Subsystem
+Date: Mon, 30 Nov 2015 14:50:57 -0500 (EST)
+Message-ID: <20151130.145057.216796732457000987.davem@davemloft.net>
+References: <1448522050-5576-1-git-send-email-salil.mehta@huawei.com>
+	<1448522050-5576-2-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1448707145-69348-3-git-send-email-xinliang.liu@linaro.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: linux-doc@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linuxarm@huawei.com, dri-devel@lists.freedesktop.org, xuwei5@hisilicon.com, benjamin.gaignard@linaro.org, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, lijianhua@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, linux-arm-kernel@lists.infradead.org, andy.green@linaro.org, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448522050-5576-2-git-send-email-salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBOb3YgMjgsIDIwMTUgYXQgMDY6Mzg6NTdQTSArMDgwMCwgWGlubGlhbmcgTGl1IHdy
-b3RlOgo+IEFkZCB0aGUgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciBoaTYy
-MjAgU29DIGRpc3BsYXkgc3Vic3lzdGVtLgo+IGRybSBtYXN0ZXIgZGV2aWNlIGJpbmRpbmcgZG9j
-Lgo+IEFERSBkaXNwbGF5IGNvbnRyb2xsZXIgYmluZGluZyBkb2MuCj4gRFNJIGNvbnRyb2xsZXIg
-YmluZGluZyBkb2MuCj4gCj4gU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5saWFuZy5s
-aXVAbGluYXJvLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBYaW53ZWkgS29uZyA8a29uZy5rb25neGlu
-d2VpQGhpc2lsaWNvbi5jb20+Cj4gU2lnbmVkLW9mZi1ieTogQW5keSBHcmVlbiA8YW5keS5ncmVl
-bkBsaW5hcm8ub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlz
-aS1hZGUudHh0ICAgICAgICB8IDQyICsrKysrKysrKysrKysrCj4gIC4uLi9iaW5kaW5ncy9kaXNw
-bGF5L2hpc2lsaWNvbi9oaXNpLWRybS50eHQgICAgICAgIHwgNjYgKysrKysrKysrKysrKysrKysr
-KysrKwo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1kc2kudHh0ICAgICAg
-ICB8IDUzICsrKysrKysrKysrKysrKysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgMTYxIGluc2VydGlv
-bnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWFkZS50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNp
-LWRybS50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWRzaS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2kt
-YWRlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2ls
-aWNvbi9oaXNpLWFkZS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAu
-LjI3NzdhMmMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2ktYWRlLnR4dAo+IEBAIC0wLDAgKzEsNDIg
-QEAKPiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIGhpc2lsaWNvbiBBREUgZGlzcGxheSBjb250
-cm9sbGVyIGRyaXZlcgo+ICsKPiArQURFIChBZHZhbmNlZCBEaXNwbGF5IEVuZ2luZSkgaXMgdGhl
-IGRpc3BsYXkgY29udHJvbGxlciB3aGljaCBncmFiIGltYWdlCj4gK2RhdGEgZnJvbSBtZW1vcnks
-IGRvIGNvbXBvc2l0aW9uLCBkbyBwb3N0IGltYWdlIHByb2Nlc3NpbmcsIGdlbmVyYXRlIFJHQgo+
-ICt0aW1pbmcgc3RyZWFtIGFuZCB0cmFuc2ZlciB0byBEU0kuCj4gKwo+ICtSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxv
-d2luZwo+ICsJImhpc2lsaWNvbixoaTYyMjAtYWRlIi4KPiArLSByZWc6IHBoeXNpY2FsIGJhc2Ug
-YWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICstIHJl
-Zy1uYW1lczogbmFtZSBvZiBwaHlzaWNhbCBiYXNlLgo+ICstIGludGVycnVwdDogdGhlIGludGVy
-cnVwdCBudW1iZXIuCj4gKy0gY2xvY2tzOiB0aGUgY2xvY2tzIG5lZWRlZC4KPiArLSBjbG9jay1u
-YW1lczogdGhlIG5hbWUgb2YgdGhlIGNsb2Nrcy4KPiArLSBhZGVfY29yZV9jbGtfcmF0ZTogQURF
-IGNvcmUgY2xvY2sgcmF0ZS4KPiArLSBtZWRpYV9ub2NfY2xrX3JhdGU6IG1lZGlhIG5vYyBtb2R1
-bGUgY2xvY2sgcmF0ZS4KCkkgdGhpbmsgeW91IGNhbiB1c2UgYXNzaWduZWQgY2xvY2sgcHJvcGVy
-dGllcyBpbnN0ZWFkOgoKYXNzaWduZWQtY2xvY2tzID0gPCZtZWRpYV9jdHJsIEhJNjIyMF9BREVf
-Q09SRT47CmFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDM2MDAwMDAwMD47CgpJJ20gbm90IHN1cmUg
-YWJvdXQgd2hhdCBtZWRpYV9ub2MgY29ycmVzcG9uZHMgdG8gaW4gY2xvY2tzIGxpc3QgdGhvdWdo
-LgoKPiArCj4gKwo+ICtBIGV4YW1wbGUgb2YgSGlLZXkgYm9hcmQgaGk2MjIwIFNvQyBzcGVjaWZp
-YyBEVCBlbnRyeToKPiArRXhhbXBsZToKPiArCj4gKwlhZGU6IGFkZUBmNDEwMDAwMCB7Cj4gKwkJ
-Y29tcGF0aWJsZSA9ICJoaXNpbGljb24saGk2MjIwLWFkZSI7Cj4gKwkJcmVnID0gPDB4MCAweGY0
-MTAwMDAwIDB4MCAweDc4MDA+LAo+ICsJCSAgICAgIDwweDAgMHhmNDQxMDAwMCAweDAgMHgxMDAw
-PjsKPiArCQlyZWctbmFtZXMgPSAiYWRlX2Jhc2UiLAo+ICsJCQkgICAgIm1lZGlhX2Jhc2UiOwo+
-ICsJCWludGVycnVwdHMgPSA8MCAxMTUgND47Cj4gKwo+ICsJCWNsb2NrcyA9IDwmbWVkaWFfY3Ry
-bCBISTYyMjBfQURFX0NPUkU+LAo+ICsJCQkgPCZtZWRpYV9jdHJsIEhJNjIyMF9DT0RFQ19KUEVH
-PiwKPiArCQkJIDwmbWVkaWFfY3RybCBISTYyMjBfQURFX1BJWF9TUkM+LAo+ICsJCQkgPCZtZWRp
-YV9jdHJsIEhJNjIyMF9QTExfU1lTPiwKPiArCQkJIDwmbWVkaWFfY3RybCBISTYyMjBfUExMX1NZ
-U19NRURJQT47Cj4gKwkJY2xvY2stbmFtZXMgID0gImNsa19hZGVfY29yZSIsCj4gKwkJCSAgICAg
-ICAiYWNsa19jb2RlY19qcGVnX3NyYyIsCj4gKwkJCSAgICAgICAiY2xrX2FkZV9waXgiLAo+ICsJ
-CQkgICAgICAgImNsa19zeXNwbGxfc3JjIiwKPiArCQkJICAgICAgICJjbGtfbWVkcGxsX3NyYyI7
-Cj4gKwkJYWRlX2NvcmVfY2xrX3JhdGUgPSA8MzYwMDAwMDAwPjsKPiArCQltZWRpYV9ub2NfY2xr
-X3JhdGUgPSA8Mjg4MDAwMDAwPjsKPiArCX07Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWRybS50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1kcm0u
-dHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5mZDkzMDI2Cj4gLS0t
-IC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2hpc2lsaWNvbi9oaXNpLWRybS50eHQKPiBAQCAtMCwwICsxLDY2IEBACj4gK0hpc2lsaWNv
-biBEUk0gbWFzdGVyIGRldmljZQo+ICsKPiArVGhlIEhpc2lsaWNvbiBEUk0gbWFzdGVyIGRldmlj
-ZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+ICt0aGUgb3RoZXIgZGlz
-cGxheSByZWxldmFudCBub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBkaXNwbGF5IHN1YnN5c3RlbS4K
-ClRoZXJlIGlzIG5vIG5lZWQgZm9yIHRoaXMgaW4gRFQuIFRoZSBBREUgY2FuIGJlIHRoZSBtYXN0
-ZXIgZGV2aWNlIGFuZCAKb2YtZ3JhcGggY2FuIGxpbmsgdG8gdGhlIERTSSBub2RlLiBJIGhhdmUg
-YSBzaW1pbGFyIGV4YW1wbGUgaGVyZVsxXSAKd2l0aCBhIExDRCBjb250cm9sbGVyIGJsb2NrLCBE
-U0kgYmxvY2sgYW5kIGFkdjc1MzMuCgo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBh
-dGlibGU6IFNob3VsZCBiZSAiaGlzaWxpY29uLDxjaGlwPi1kc3MiCj4gKy0gI2FkZHJlc3MtY2Vs
-bHM6IHNob3VsZCBiZSBzZXQgdG8gMi4KPiArLSAjc2l6ZS1jZWxsczogc2hvdWxkIGJlIHNldCB0
-byAyLgo+ICstIHJhbmdlOiB0byBhbGxvdyBwcm9iaW5nIG9mIHN1YmRldmljZXMuCj4gKwo+ICtP
-cHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGRtYS1jb2hlcmVudDogUHJlc2VudCBpZiBkbWEgb3Bl
-cmF0aW9ucyBhcmUgY29oZXJlbnQuCgpQdXQgdGhpcyBvbiB0aGUgYWN0dWFsbHkgRE1BIG1hc3Rl
-ci4KClJvYgoKWzFdIGh0dHBzOi8vZ2l0LmxpbmFyby5vcmcvcGVvcGxlL3JvYi5oZXJyaW5nL2xp
-bnV4LmdpdCBweGExOTI4LWRybS12MgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+From: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Date: Thu, 26 Nov 2015 07:14:06 +0000
+
+> -#define ENABLE		(0x1)
+> -#define DISABLE		(0x0)
+> +#define ENABLE		0x1
+> +#define DISABLE		0x0
+
+Defining such common macros names for such incredibly simple boolean values
+is asking for trouble, in particular it can possibly collide with other
+defines in the global namespace.
+
+Use "true", "false", and the "bool" type, because that is exactly how you
+are using these values.
+
+Thanks.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
