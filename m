@@ -1,104 +1,57 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: fix clock source for arm twd
- and global timers
-Date: Mon, 30 Nov 2015 13:53:50 +0200
-Message-ID: <565C38CE.1070907@ti.com>
-References: <1448653468-24908-1-git-send-email-grygorii.strashko@ti.com>
- <565C0814.3000001@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: Add regmap support to regulator-fixed
+ device tree binding
+Date: Mon, 30 Nov 2015 12:10:43 +0000
+Message-ID: <20151130121043.GX1929@sirena.org.uk>
+References: <565A18DD.60108@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HBXo5IaYAxUG7vuS"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565C0814.3000001-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <565A18DD.60108-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2015 10:25 AM, Tero Kristo wrote:
-> On 11/27/2015 09:44 PM, Grygorii Strashko wrote:
->> ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
->> But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
->> Timekeeping core misbehaves. For example, execution of command
->> "sleep 5" will take 10 sec instead of 5.
->>
->> Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
->> it for clocking ARM TWD and Global timer (same way as on OMAP4).
->>
->> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->> Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and
->> SCU nodes")
->> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/am4372.dtsi        | 4 ++--
->>   arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
->>   2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/am4372.dtsi
->> b/arch/arm/boot/dts/am4372.dtsi
->> index d83ff9c..de8791a 100644
->> --- a/arch/arm/boot/dts/am4372.dtsi
->> +++ b/arch/arm/boot/dts/am4372.dtsi
->> @@ -74,7 +74,7 @@
->>           reg = <0x48240200 0x100>;
->>           interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
->>           interrupt-parent = <&gic>;
->> -        clocks = <&dpll_mpu_m2_ck>;
->> +        clocks = <&mpu_periphclk>;
->>       };
->>
->>       local_timer: timer@48240600 {
->> @@ -82,7 +82,7 @@
->>           reg = <0x48240600 0x100>;
->>           interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
->>           interrupt-parent = <&gic>;
->> -        clocks = <&dpll_mpu_m2_ck>;
->> +        clocks = <&mpu_periphclk>;
->>       };
->>
->>       l2-cache-controller@48242000 {
->> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi
->> b/arch/arm/boot/dts/am43xx-clocks.dtsi
->> index cc88728..2ff58b1 100644
->> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->> @@ -259,6 +259,14 @@
->>           ti,invert-autoidle-bit;
->>       };
->>
->> +    mpu_periphclk: mpu_periphclk {
->> +        #clock-cells = <0>;
->> +        compatible = "fixed-factor-clock";
->> +        clocks = <&dpll_mpu_ck>;
->
-> I don't think this is correct, ARM core is fed dpll_mpu_m2_ck, where the
-> divisor value can potentially differ from 1. If you feed this clock
-> directly from dpll_mpu_ck, you bypass this divisor.
 
-Sry. My mistake. I'll update it to use dpll_mpu_m2_ck.
+--HBXo5IaYAxUG7vuS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Did you check what is the impact of cpufreq on the ARM TWD/timers?
+On Sat, Nov 28, 2015 at 09:13:01PM +0000, Simon Arlott wrote:
+> Add properties for regmap to the regulator-fixed device tree binding:
+> * Reference the regmap phandle
+> * Specify the enable offset and enable mask
+> * Reuse enable-active-high for regmap
+>=20
+> This is required for Broadcom BCM63xx SoCs that enable power to
+> individual peripherals by clearing a bit in the miscIddqCtrl register.
 
-TWD is cpufreq friendly, ARM GT is not.
+Just write a driver for this, the fixed driver is really intended for
+things like discrete regulators and if we were going to do a generic
+regmap driver (which I'm not terribly keen on as it means we're not able
+to later add additional information or custom handling in the driver) we
+should just do that rather than shoehorning things into the fixed driver.
 
+--HBXo5IaYAxUG7vuS
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> +        clock-mult = <1>;
->> +        clock-div = <2>;
->> +    };
->> +
->>       dpll_ddr_ck: dpll_ddr_ck {
->>           #clock-cells = <0>;
->>           compatible = "ti,am3-dpll-clock";
->>
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBCAAGBQJWXDzDAAoJECTWi3JdVIfQp5oH/jMvJGrqusp7GtHLhtpNoTqh
+GQvZqYxkcqogSvr2xt+Y6A1XOCYxocJ1k312TlNQx4foN51/kIdoeZxclFLLMxPn
+v9PXoLH3KkpgmS1Qb4KMFQJkrSaEL2+OWAyXF/afrPWzPCjvVPXwj4dzNPh5OqP7
+oNJ6y+YHETlt5Z2gjofNqW1GCO5oLxXA/qZjDDGSaC7jCmOLu8w8gwg5dI6X9Wzh
++sJwW2KVz9Cu0QtjP8vwwU1uaYEz/hEEWAOzWWXXPQfDg9rhKL/rzN7p9MuwDij6
+1K0pfgMBrg0D83ovvYyaK/zBiJZFcDPggawoagc4O0jocCjIfkk8eHxBM+zO5Dk=
+=Z23Z
+-----END PGP SIGNATURE-----
 
--- 
-regards,
--grygorii
+--HBXo5IaYAxUG7vuS--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
