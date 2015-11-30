@@ -1,36 +1,48 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] spi: sh-msiof: Add support for SH-Mobile AG5
-Date: Mon, 30 Nov 2015 15:14:00 +0100
-Message-ID: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 1/4] ARM: dt: mvebu: ix4-300d: remove whole flash partition
+Date: Mon, 30 Nov 2015 15:16:06 +0100
+Message-ID: <87si3n609l.fsf@free-electrons.com>
+References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1448709248-21177-2-git-send-email-sebastian.hesselbarth@gmail.com>
+	<20151128211129.GK32356@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151128211129.GK32356@lunn.ch> (Andrew Lunn's message of "Sat,
+	28 Nov 2015 22:11:29 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benoit Masson <yahoo@perenite.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-MSIOF in SH-Mobile AG5 (sh73a0) is handled fine by the existing driver.
+Hi Sebastian and Andrew,
+ 
+ On sam., nov. 28 2015, Andrew Lunn <andrew@lunn.ch> wrote:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
- 1 file changed, 1 insertion(+)
+>>On Sat, Nov 28, 2015 at 12:14:05PM +0100, Sebastian Hesselbarth wrote:
+>> Current NAND node has an additional flash partition for the whole
+>> flash overlapping with real partitions. Remove this partition as
+>> the whole flash is already represented by the NAND device itself.
+>> 
+>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>
+> Given Benoit comment
+>
+> Acked-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index 705075da2f10156e..aa005c1d10d95756 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -10,6 +10,7 @@ Required properties:
- 			 "renesas,msiof-r8a7792" (R-Car V2H)
- 			 "renesas,msiof-r8a7793" (R-Car M2-N)
- 			 "renesas,msiof-r8a7794" (R-Car E2)
-+			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
- - reg                  : A list of offsets and lengths of the register sets for
- 			 the device.
- 			 If only one register set is present, it is to be used
+
+Applied on mvebu/dt
+
+Thanks,
+
+Gregory
+
+
+>
+> 	  Andrew
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
