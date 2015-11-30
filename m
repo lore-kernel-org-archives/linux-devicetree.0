@@ -1,46 +1,105 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/5] arm: dts: complete dm816x device tree
-Date: Mon, 30 Nov 2015 10:22:40 -0800
-Message-ID: <20151130182240.GI2517@atomide.com>
-References: <56449D1D.4030803@baylibre.com>
- <20151112174706.GN3218@atomide.com>
- <5645AD6D.8010706@baylibre.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2] arm: dts: Fix audio card detection on peach boards
+Date: Mon, 30 Nov 2015 15:24:03 -0300
+Message-ID: <565C9443.3010303@osg.samsung.com>
+References: <1444653438-6532-1-git-send-email-alim.akhtar@samsung.com>
+ <565C56BD.2050002@osg.samsung.com>
+ <CAGOxZ52=rci6MaEL4aa_G8VP16kDi9QhYUcYS8qF263nZeHgpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5645AD6D.8010706@baylibre.com>
+In-Reply-To: <CAGOxZ52=rci6MaEL4aa_G8VP16kDi9QhYUcYS8qF263nZeHgpg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Paul Walmsley <paul@pwsan.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Brian Hutchinson <b.hutchman@gmail.com>, fisaksen@baylibre.com, devicetree@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski@samsung.com>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Neil Armstrong <narmstrong@baylibre.com> [151113 01:30]:
-> On 11/12/2015 06:47 PM, Tony Lindgren wrote:
-> > * Neil Armstrong <narmstrong@baylibre.com> [151112 06:08]:
-> >> In order to fix support for the dm816x platform, add missing bits in
-> >> the dm816x dtsi and cleanup OCP.
-> > 
-> > Which ones are needed as fixes for the v4.4-rc kernel?
-> > 
-> > Regards,
-> > 
-> > Tony
-> > 
-> >> The last patch adds support for the omap4-hwspinlock.
-> >>
-> >> v2: add ocp hwmod cleanup
-> >>
-> >> Neil Armstrong (5):
-> >>   arm: dts: add dm816x missing #mbox-cells
-> >>   arm: dts: add dm816x missing spi DT dma handles
-> Tony,
+Hi Alim,
+
+On 11/30/2015 01:59 PM, Alim Akhtar wrote:
+> Hi Javier,
 > 
-> The two first are fixes for v4.4-rc.
+> On Mon, Nov 30, 2015 at 7:31 PM, Javier Martinez Canillas
+> <javier@osg.samsung.com> wrote:
+>> Hello Alim,
+>>
+>> On 10/12/2015 09:37 AM, Alim Akhtar wrote:
+>>> Since commit 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards"),
+>>> sound card detection is broken on peach boards and gives below errors:
+>>>
+>>> [    3.630457] max98090 7-0010: MAX98091 REVID=0x51
+>>> [    3.634233] max98090 7-0010: use default 2.8v micbias
+>>> [    3.640985] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
+>>> [    3.645307] max98090 7-0010: Invalid master clock frequency
+>>> [    3.650824] snow-audio sound: ASoC: Peach-Pi-I2S-MAX98091 late_probe() failed: -22
+>>> [    3.658914] snow-audio sound: snd_soc_register_card failed (-22)
+>>> [    3.664366] snow-audio: probe of sound failed with error -22
+>>>
+>>> This patch adds missing assigned-clocks and assigned-clock-parents for
+>>> pmu_system_controller node which is used as "mclk" for audio codec.
+>>>
+>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>> Fixes: 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards")
+>>
+>> I found that this patch is not enough to have proper audio working
+>> on an Exynos5800 Peach Pi. Even playing a simple wav does not work:
+>>
+>> $ time aplay -D sysdefault /usr/share/sounds/alsa/Front_Center.wav
+>> Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Mono
+>>
+>> real    0m1.138s
+>> user    0m0.005s
+>> sys     0m0.005s
+>>
+>> This should be ~1.5 seconds so audio is processed faster than expected.
+>>
+> Did you tried playing any other file, like 128 KHz rate files etc..?
 
-OK applying first two into omap-for-v4.4/fixes, the rest
-into omap-for-v4.5/dt.
+Yes, I see the same problem with all the files I tested.
 
-Regards,
+>> So something else besides making the CLKOUT to provide a valid frequency
+>> for the codec's master clock is needed.
+>>
+> The $SUBJECT patch actually  fix the audio card detection issue, which
+> was failing because of the missing master clock.
+>
 
-Tony
+I thought the problem was not a missing master clock, but an invalid clock
+frequency. Since the error message in the patch change log was:
+
+"max98090 7-0010: Invalid master clock frequency"
+
+But what I tried to ask was what else was missing to have playback working.
+
+>> Do you know what's missing in mainline? For instance, I see that the
+>> sound/soc/samsung/snow.c ASoC machine driver doesn't have a hw_params
+>> but I'm not that familiar with ALSA to know if that makes sense or not.
+>>
+> I need to check this, currently I am out on a business travel, so
+> won't be able to check.
+
+No worries, I was asked in case you had more information. Audio is the
+only thing that is missing to have all peripherals working correctly with
+mainline.
+
+> Probably we can go back to before "2fad972d45c4" and check that.
+>
+
+Do you mean to revert $SUBJECT and "2fad972d45c4" to see if the bootloader
+sets this correctly? If I revert both patches then I have no audio at all.
+ 
+>> Also, do you know if the "simple-audio-card" can be used instead for
+>> snow and peachs as it is used for other Exynos5 boards or a specific
+>> ASoC machine driver is really needed for these Chromebooks?
+>>
+> Not sure, AFAIR, I used machine driver on chromebooks (snow and peach).
+>
+
+Yes, the downstream 3.8 ChromiumOS tree has also a machine driver but I
+don't see a simple-audio-card in that tree so it seems that predates it.
+
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
