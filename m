@@ -1,45 +1,80 @@
 From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH v7 4/6] ARM: imx_v6_v7_defconfig: add TS-4800 watchdog
-Date: Mon, 30 Nov 2015 10:59:49 -0500
-Message-ID: <1448899191-13891-5-git-send-email-damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v7 2/6] mfd: syscon: add a DT property to set value width
+Date: Mon, 30 Nov 2015 10:59:47 -0500
+Message-ID: <1448899191-13891-3-git-send-email-damien.riegel@savoirfairelinux.com>
 References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Damien Riegel <damien.riegel@savoirfairelinux.com>, Shawn Guo <shawnguo@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Samuel Ortiz <sameo@linux.intel.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-The TS-4800, based on an IMX.515, needs its watchdog support in order to
-work.
+Currently syscon has a fixed configuration of 32 bits for register and
+values widths. In some cases, it would be desirable to be able to
+customize the value width.
+
+For example, certain boards (like the ones manufactured by Technologic
+Systems) have a FPGA that is memory-mapped, but its registers are only
+16-bit wide.
+
+This patch adds an optional "reg-io-width" DT binding for syscon that
+allows to change the width for the data bus (i.e. val_bits). If this
+property is provided, it will also set the register stride to
+reg-io-width's value. If not provided, the default configuration is
+used.
 
 Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/mfd/syscon.txt |  4 ++++
+ drivers/mfd/syscon.c                             | 13 +++++++++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 79194c6..8968166 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -195,6 +195,7 @@ CONFIG_THERMAL=y
- CONFIG_CPU_THERMAL=y
- CONFIG_IMX_THERMAL=y
- CONFIG_WATCHDOG=y
-+CONFIG_TS4800_WATCHDOG=y
- CONFIG_IMX2_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_MC13XXX_SPI=y
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+index fe8150b..408f768 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+@@ -13,6 +13,10 @@ Required properties:
+ - compatible: Should contain "syscon".
+ - reg: the register region can be accessed from syscon
+ 
++Optional property:
++- reg-io-width: the size (in bytes) of the IO accesses that should be
++  performed on the device.
++
+ Examples:
+ gpr: iomuxc-gpr@020e0000 {
+ 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 176bf0f..b7aabee 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -47,6 +47,7 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 	struct syscon *syscon;
+ 	struct regmap *regmap;
+ 	void __iomem *base;
++	u32 reg_io_width;
+ 	int ret;
+ 	struct regmap_config syscon_config = syscon_regmap_config;
+ 
+@@ -69,6 +70,18 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 	 else if (of_property_read_bool(np, "little-endian"))
+ 		syscon_config.val_format_endian = REGMAP_ENDIAN_LITTLE;
+ 
++	/*
++	 * search for reg-io-width property in DT. If it is not provided,
++	 * default to 4 bytes. regmap_init_mmio will return an error if values
++	 * are invalid so there is no need to check them here.
++	 */
++	ret = of_property_read_u32(np, "reg-io-width", &reg_io_width);
++	if (ret)
++		reg_io_width = 4;
++
++	syscon_config.reg_stride = reg_io_width;
++	syscon_config.val_bits = reg_io_width * 8;
++
+ 	regmap = regmap_init_mmio(NULL, base, &syscon_config);
+ 	if (IS_ERR(regmap)) {
+ 		pr_err("regmap init failed\n");
 -- 
 2.5.0
