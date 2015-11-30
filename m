@@ -1,43 +1,78 @@
-MIME-Version: 1.0
-In-Reply-To: <563B6AF4.1010806@codeaurora.org>
-References: <1446444460-21600-1-git-send-email-okaya@codeaurora.org>
-	<1446444460-21600-2-git-send-email-okaya@codeaurora.org>
-	<CAL_Jsq+XCkaPD_Bop_BaTfEVP2YuOQ+=ChFvyLN47jps2NcZSA@mail.gmail.com>
-	<56378D38.9050509@codeaurora.org>
-	<56379CD6.5020807@codeaurora.org>
-	<CAL_JsqJYOe+uE1VE_ojSq=Hx=2roW1CAiB2Hyow0tKUR85cV0Q@mail.gmail.com>
-	<5637A1EB.9080002@codeaurora.org>
-	<CAL_JsqLeDEUk6fQN4J20jL5Yma12ucNb0V7PxbQqUC6jJUH3oQ@mail.gmail.com>
-	<5637ABD1.5060707@codeaurora.org>
-	<CAL_JsqLFjUx2KK1nx=c0b30VWcdgQLGsZy0Ps927AMBMJ-vZaA@mail.gmail.com>
-	<563B6AF4.1010806@codeaurora.org>
-Date: Fri, 6 Nov 2015 07:13:50 -0600
-Message-ID: <CAL_Jsq+Y8oe-LGQ2f=tNLq8JE2GEJA1=zU9DFyA1GbAY+t=akg@mail.gmail.com>
-Subject: Re: [PATCH V2 1/3] dma: add Qualcomm Technologies HIDMA management driver
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, Christopher Covington <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-ID: <devicetree@vger.kernel.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH 1/3] power: domain: add pm_genpd_uninit
+Date: Mon, 30 Nov 2015 15:19:09 -0800
+Message-ID: <7h7fkz9itu.fsf@deeprootsystems.com>
+References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
+	<1447956490-22930-2-git-send-email-alex.aring@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1447956490-22930-2-git-send-email-alex.aring@gmail.com>
+	(Alexander Aring's message of "Thu, 19 Nov 2015 19:08:08 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+List-Id: devicetree@vger.kernel.org
 
- 
+Alexander Aring <alex.aring@gmail.com> writes:
 
-On Thu, Nov 5, 2015 at 8:43 AM, Timur Tabi <timur@codeaurora.org> wrote:
-> Rob Herring wrote:
->>
->> I'm saying document it as "qcom,<chip>-hidma-mgmt" and when you have
->> the part number update the binding. Meanwhile push on the powers that
->> be to decide on a part number.
+> This patch adds function pm_genpd_uninit for undo a pm_genpd_init. This
+> is useful for multiple power domains while probing. If the probing fails
+> after one pm_genpd_init was called we need to undo all previous
+> registrations of generic pm domains inside the gpd_list list.
 >
+> There is a check on IS_ERR_OR_NULL(genpd) which is useful to check again
+> registered power domains and not registered domains, the driver can use
+> this mechanism to have an array with registered and non-registered power
+> domains, where non-registered power domains are NULL.
 >
-> Got it.  But we should we do about this:
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+> ---
+>  drivers/base/power/domain.c | 22 ++++++++++++++++++++++
+>  include/linux/pm_domain.h   |  4 ++++
+>  2 files changed, 26 insertions(+)
 >
-> static const struct of_device_id qcom_hidma_mgmt_match[] = {
->         { .compatible = "qcom,hidma-mgmt-1.0", },
->         {},
-> };
->
-> --
-> Sent by an employee of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the
-> Code Aurora Forum, hosted by The Linux Foundation.
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index e03b1ad..24f54b8 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1509,6 +1509,28 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
+>  }
+>  EXPORT_SYMBOL_GPL(pm_genpd_init);
+>  
+> +/**
+> + * pm_genpd_uninit - Uninitialize a generic I/O PM domain object.
+> + * @genpd: PM domain object to initialize.
+> + */
+> +void pm_genpd_uninit(struct generic_pm_domain *genpd)
+> +{
+> +	if (IS_ERR_OR_NULL(genpd))
+> +		return;
+> +
+> +	/* check if domain is still in registered inside the pm subsystem */
+> +	WARN_ON_ONCE(!list_empty(&genpd->master_links) ||
+> +		     !list_empty(&genpd->slave_links) ||
+> +		     !list_empty(&genpd->dev_list));
+
+So we WARN if there are parents/children/devices, but shouldn't this
+return an error instead of continuing to remove/uninit the genpd?
+
+The caller of _uninit should probably also be removing any
+parents/children and removing devices before calling _uninit, no?
+
+> +	mutex_lock(&gpd_list_lock);
+> +	list_del(&genpd->gpd_list_node);
+> +	mutex_unlock(&gpd_list_lock);
+> +
+> +	mutex_destroy(&genpd->lock);
+> +}
+> +EXPORT_SYMBOL_GPL(pm_genpd_uninit);
+
+Kevin
+
