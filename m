@@ -1,91 +1,129 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 5/9] i2c: brcmstb: fix start and stop conditions
-Date: Mon, 30 Nov 2015 16:41:02 +0100
-Message-ID: <20151130154102.GP1513@katana>
-References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
- <1445395021-4204-6-git-send-email-jaedon.shin@gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv2] ARM: dts: use vmmc-supply of emmc/sd for exynos5422-odroidxu3
+Date: Mon, 30 Nov 2015 21:19:13 +0530
+Message-ID: <CANAwSgRu7m06-vVtowxP6JKFhcAN5tZURbEaDhV=ULeL_NwUXQ@mail.gmail.com>
+References: <1445345793-5189-1-git-send-email-linux.amoon@gmail.com>
+ <56283582.5010908@samsung.com> <CANAwSgQFqcM++D6FoTXTnZJryaoi92pEiSvbjyz8rj79VmGOMQ@mail.gmail.com>
+ <CANAwSgR+UTZSQYhXcP1a_T9AvJCS98dj1fafzJZ1S3oXvMUx+A@mail.gmail.com> <565BE1B3.1070505@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kOdvwer/5gjFgNo6"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445395021-4204-6-git-send-email-jaedon.shin@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Jaedon Shin <jaedon.shin@gmail.com>
-Cc: Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <565BE1B3.1070505@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---kOdvwer/5gjFgNo6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 30 November 2015 at 11:12, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On 27.11.2015 15:42, Anand Moon wrote:
+>> hi Krzysztof,
+>>
+>> On 22 October 2015 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
+>>> hi Krzysztof,
+>>>
+>>> On 22 October 2015 at 06:31, Krzysztof Kozlowski
+>>> <k.kozlowski@samsung.com> wrote:
+>>>> On 20.10.2015 21:56, Anand Moon wrote:
+>>>>> Changes need for host controller to detect UHS-I highspeed cards.
+>>>>> Changes in VDDQ_MMC2 voltage range help scale
+>>>>> the required voltage to detect and load the microSD cards.
+>>>>
+>>>> Thanks for updating description of commit.
+>>>>
+>>>>>
+>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>>> ---
+>>>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
+>>>>>
+>>>>> Changes:
+>>>>> Drop the ranp_delay for LDO9.
+>>>>>
+>>>>> Thanks to : Krzysztof, Doug Anderson, Jaehoon Chung for helping
+>>>>> me out figure out the mmc core requirement.
+>>>>>
+>>>>> Also drop the previous changes:
+>>>>> use cd-gpio method to detect sd-card.
+>>>>> Added UHS-I bus speed support.
+>>>>>
+>>>>> [    4.713553] random: nonblocking pool is initialized
+>>>>> [    4.718423] 14530000.hdmi supply hdmi-en not found, using dummy regulator
+>>>>> [    4.726206] exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
+>>>>> [    4.732555] exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
+>>>>> [    4.740180] exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
+>>>>> [    4.746936] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+>>>>> [    4.753428] [drm] No driver support for vblank timestamp query.
+>>>>> [    4.940794] Console: switching to colour frame buffer device 274x77
+>>>>> [    4.995344] exynos-drm exynos-drm: fb0:  frame buffer device
+>>>>> [    5.024573] [drm] Initialized exynos 1.0.0 20110530 on minor 0
+>>>>> [    5.031164] exynos-dwc3 usb@12000000: no suspend clk specified
+>>>>> [    5.054571] usb 2-1: new full-speed USB device number 2 using exynos-ohci
+>>>>> [    5.159527] dwmmc_exynos 12220000.mmc: Busy; trying anyway
+>>>>> [    5.163705] mmc_host mmc1: Timeout sending command (cmd 0x202000 arg 0x0 status 0x0)
+>>>>> ---
+>>>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 7 ++++++-
+>>>>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>>>> index 1af5bdc..a4be3e0 100644
+>>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>>>> @@ -182,9 +182,10 @@
+>>>>>
+>>>>>                       ldo13_reg: LDO13 {
+>>>>>                               regulator-name = "vdd_ldo13";
+>>>>> -                             regulator-min-microvolt = <2800000>;
+>>>>> +                             regulator-min-microvolt = <1800000>;
+>>>>
+>>>> You did not convinced me in previous discussion about the change to
+>>>> 1.8V. I said that:
+>>>>> On the same diagram few lines below:
+>>>>> VDDQ_MMC2: 2.8V 250mA
+>>>>
+>>>> You responded:
+>>>>> You are correct.
+>>>>
+>>>> So I am confused. Are you sure that this SD card block can/should
+>>>> operate on 1.8V? Have you actually tried this?
+>>>>
+>>>
+>>> Look like I missed this point. Here is the link I would like to share.
+>>>
+>>> http://www.hjreggel.net/cardspeed/cs_sdxc.html
+>>> Section: Summary of SD modes
+>>>
+>>> https://en.wikipedia.org/wiki/Secure_Digital
+>>> Section: Power consumption
+>>>
+>>> Their different requirement for voltage requirement for UHS-I, the max
+>>> value is around 3.3V
+>>
+>> Do you have any comment on this voltage selection for UHS-I card (1.8V).
+>
+> I asked whether you tried this, whether setting real 1.8V works fine.
+> You did not respond. As you can see on Odroid schematics, the VDDQ for
+> MMC[01] operates under 1.8V.
+>
+> The VDDQ for MMC2 - under 2.8V.
+>
+> In commit description you mentioned that this voltage "helps scale the
+> required voltage to detect and load the microSD cards". What does it
+> mean "help"? I would expect that detecting and loading of microSD cards
+> either works or does not work. I am not sure how does it help.
+>
+> Best regards,
+> Krzysztof
 
-On Wed, Oct 21, 2015 at 11:36:57AM +0900, Jaedon Shin wrote:
-> Fixes conditions for RESTART, NOSTART and NOSTOP. The masks of start and
-> stop is already in brcmstb_set_i2c_start_stop(). Therefore, the caller
-> does not need a mask value.
+I will fix the commit message.
 
-Hmm, and what if that changes for some reason in the future (driver
-refactoring)? I'd rather leave it as it is; it is a micro-optimization
-after all.
+Earlier around v4.2 detection of UHS-I card was not working,but now it
+seen to work in v4.4 kernel.
+May be some driver issue which might have been fixed.
 
->=20
-> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-brcmstb.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-br=
-cmstb.c
-> index 53eb8b0c9bad..dcd1209f843f 100644
-> --- a/drivers/i2c/busses/i2c-brcmstb.c
-> +++ b/drivers/i2c/busses/i2c-brcmstb.c
-> @@ -464,7 +464,7 @@ static int brcmstb_i2c_xfer(struct i2c_adapter *adapt=
-er,
->  			pmsg->buf ? pmsg->buf[0] : '0', pmsg->len);
-> =20
->  		if (i < (num - 1) && (msgs[i + 1].flags & I2C_M_NOSTART))
-> -			brcmstb_set_i2c_start_stop(dev, ~(COND_START_STOP));
-> +			brcmstb_set_i2c_start_stop(dev, 0);
->  		else
->  			brcmstb_set_i2c_start_stop(dev,
->  						   COND_RESTART | COND_NOSTOP);
-> @@ -485,8 +485,7 @@ static int brcmstb_i2c_xfer(struct i2c_adapter *adapt=
-er,
->  			bytes_to_xfer =3D min(len, N_DATA_BYTES);
-> =20
->  			if (len <=3D N_DATA_BYTES && i =3D=3D (num - 1))
-> -				brcmstb_set_i2c_start_stop(dev,
-> -							   ~(COND_START_STOP));
-> +				brcmstb_set_i2c_start_stop(dev, 0);
-> =20
->  			rc =3D brcmstb_i2c_xfer_bsc_data(dev, tmp_buf,
->  						       bytes_to_xfer, pmsg);
-> --=20
-> 2.6.1
->=20
+I am just trying to set the voltage range for LDO13 from 1.8V (min) to
+2.8V (max).
+If setting this is wrong according to datasheet then I will drop this setting.
 
---kOdvwer/5gjFgNo6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWXG4OAAoJEBQN5MwUoCm2SfgQAII/cyivEot2YOJJU16DofUH
-XxMJJxgPB7SY9SVaQhdjiHiaMBqvdLKq/h6sFXdVfuAvij+BE1eY5sSR8djGs2Bc
-eDj7sXFTSN1kZQ/1+WiC0TMwSNrGH9yEYIGwZl5n7SYm5oYWjRgZ9kIucMGVl7cI
-KqVQv6DLvRNgeOePb9S4Bzw8QZQqI9cDDH4oLBMFhqhaYAATxY4B/UX7tg068uUL
-sUBKZrZq1Gs0/vEBhDPpFTvJFZFNN3bbHEm10W0qolmBhxR+0paYA+/yy8tF2MBi
-zkmsUNEEG+Yj5m4PyzOwjhXMD88BGKZ3VVVfV6nruKhMR1Rg0Mpelf6L1K/2Dr1S
-90wmTa5594VVOwH7CQBV0FcSBW6AN6zuxzUNqIcgqGBFRsGIYTM39UKyKNWAvk73
-AhWlX5FQ/8CiYdiRcu6Jj9+wUkOJokKPVd/Dbhf7eDI3+jt3nDzLetG2fyb4O46D
-LiBjFxNObUlqJxZji2wGXwjIaFv8q/pnelLvzLL9DAzSkRy9tZc62UZHfSanwd24
-E2jUlJSojiMnEW4RXF5kVnQVyRK2xw8t0LvGPDz5OdnqSj0snxePG+JdLgiK3sKj
-x7JFlzoj6fEjBqgsgG3VitPRufy4zhs9LH3Y5Dsvcl+uWdPladwmWfSsOfJ7FAq0
-wuOwtt2EEmuJ8ydB3Biq
-=rvMD
------END PGP SIGNATURE-----
-
---kOdvwer/5gjFgNo6--
+-Anand Moon
