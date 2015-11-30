@@ -1,84 +1,47 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [4.4-rc][PATCH v2] ARM: dts: am4372: fix clock source for arm twd and global timers
-Date: Mon, 30 Nov 2015 17:56:38 +0200
-Message-ID: <1448898998-32749-1-git-send-email-grygorii.strashko@ti.com>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v7 5/6] of: documentation: add bindings documentation for
+ TS-4800
+Date: Mon, 30 Nov 2015 10:59:50 -0500
+Message-ID: <1448899191-13891-6-git-send-email-damien.riegel@savoirfairelinux.com>
+References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Damien Riegel <damien.riegel@savoirfairelinux.com>, Shawn Guo <shawnguo@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
-But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
-Timekeeping core misbehaves. For example, execution of command
-"sleep 5" will take 10 sec instead of 5.
+This adds the documentation for the TS-4800 by Technologic Systems.
 
-Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
-it for clocking ARM TWD and Global timer (same way as on OMAP4).
-
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-Changes in v2:
- - fix: mpu_periphclk should be clocked from dpll_mpu_m2_ck instead of
-   dpll_mpu_ck.
-link on v1:
- http://www.spinics.net/lists/arm-kernel/msg463898.html
+ Documentation/devicetree/bindings/arm/technologic.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/technologic.txt
 
- arch/arm/boot/dts/am4372.dtsi        | 4 ++--
- arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index d83ff9c..de8791a 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -74,7 +74,7 @@
- 		reg = <0x48240200 0x100>;
- 		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gic>;
--		clocks = <&dpll_mpu_m2_ck>;
-+		clocks = <&mpu_periphclk>;
- 	};
- 
- 	local_timer: timer@48240600 {
-@@ -82,7 +82,7 @@
- 		reg = <0x48240600 0x100>;
- 		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gic>;
--		clocks = <&dpll_mpu_m2_ck>;
-+		clocks = <&mpu_periphclk>;
- 	};
- 
- 	l2-cache-controller@48242000 {
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index cc88728..a38af2b 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -259,6 +259,14 @@
- 		ti,invert-autoidle-bit;
- 	};
- 
-+	mpu_periphclk: mpu_periphclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&dpll_mpu_m2_ck>;
-+		clock-mult = <1>;
-+		clock-div = <2>;
-+	};
+diff --git a/Documentation/devicetree/bindings/arm/technologic.txt b/Documentation/devicetree/bindings/arm/technologic.txt
+new file mode 100644
+index 0000000..8422988
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/technologic.txt
+@@ -0,0 +1,6 @@
++Technologic Systems Platforms Device Tree Bindings
++--------------------------------------------------
 +
- 	dpll_ddr_ck: dpll_ddr_ck {
- 		#clock-cells = <0>;
- 		compatible = "ti,am3-dpll-clock";
++TS-4800 board
++Required root node properties:
++	- compatible = "technologic,imx51-ts4800", "fsl,imx51";
 -- 
-2.6.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
