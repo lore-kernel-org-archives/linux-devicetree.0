@@ -1,86 +1,113 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: add Marvell core PLL and clock divider
- PMU documentation
-Date: Mon, 30 Nov 2015 15:03:45 -0600
-Message-ID: <20151130210345.GA18808@rob-hp-laptop>
-References: <E1a24wj-0004iw-Rf@rmk-PC.arm.linux.org.uk>
- <20151127202114.GA613@rob-hp-laptop>
- <20151127203932.GP8644@n2100.arm.linux.org.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v7 05/14] dt-bindings: drm/mediatek: Add Mediatek HDMI dts
+ binding
+Date: Mon, 30 Nov 2015 22:07:47 +0100
+Message-ID: <1448917676-25584-6-git-send-email-p.zabel@pengutronix.de>
+References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151127203932.GP8644@n2100.arm.linux.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Bolle <pebolle@tiscali.nl>, YT Shen <yt.shen@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>, Jie Qiu <jie.qiu@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, Tomasz Figa <tfiga@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 27, 2015 at 08:39:32PM +0000, Russell King - ARM Linux wrote:
-> On Fri, Nov 27, 2015 at 02:21:14PM -0600, Rob Herring wrote:
-> > On Thu, Nov 26, 2015 at 10:23:21PM +0000, Russell King wrote:
-> > > Add documentation for the Marvell clock divider driver, which is used
-> > > to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
-> > > 
-> > > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> > > ---
-> > >  .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clock.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-> > > new file mode 100644
-> > > index 000000000000..0c602de279e5
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-> > > @@ -0,0 +1,28 @@
-> > > +PLl divider based Dove clocks
-> > > +
-> > > +Marvell Dove has a 2GHz PLL, which feeds into a set of dividers to provide
-> > > +high speed clocks for a number of peripherals.  These dividers are part of
-> > > +the PMU, and thus this node should be a child of the PMU node.
-> > 
-> > It seems a bit strange to just be documenting these clocks. What about 
-> > the rest of the SOC clocks?
-> 
-> This is all that this pair of registers provide.
-> 
-> The SoC has other clocks handled by other DT nodes - for Dove, we now
-> have:
-> 
->         gate_clk: clock-gating-ctrl@0038 {
->                 compatible = "marvell,dove-gating-clock";
->                 reg = <0x0038 0x4>;
->                 clocks = <&core_clk 0>;
->                 #clock-cells = <1>;
->         };
->         divider_clk: core-clock@0064 {
->                 compatible = "marvell,dove-divider-clock";
->                 reg = <0x0064 0x8>;
->                 #clock-cells = <1>;
->         };
->         core_clk: core-clocks@0214 {
->                 compatible = "marvell,dove-core-clock";
->                 reg = <0x0214 0x4>;
->                 #clock-cells = <1>;
->         };
-> 
-> and all three of these are part of the PMU register block.  I'm not sure
-> why the mvebu maintainers decided to minutely describe the PMU like this,
-> but unfortunately that's the structure we have.
-
-Okay,
-
-Acked-by: Rob Herring <robh@kernel.org>
- 
-> IMHO, it would've been cleaner to have these components registered
-> separately from a central PMU driver (as I'm doing with the power
-> domains, resets and IRQs that are part of the PMU), but my view is
-> limited to Dove and not the other mvebu clocks, so there may be a good
-> reason for it.
-
-Yes, we debated which way to go early on and decided generally to go 
-this direction, but it seems Dove was before that. We could try to 
-migrate Dove, but it is probably not worth the pain at this point.
-
-Rob
+QWRkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIE1lZGlhdGVrIEhE
+TUksCkhETUkgUEhZIGFuZCBIRE1JIEREQyBkZXZpY2VzLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlw
+cCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0
+ZWssaGRtaS50eHQgICAgfCAxNDIgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgMTQyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxoZG1pLnR4dAoKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlh
+dGVrL21lZGlhdGVrLGhkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssaGRtaS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMC4uZTNkZGUyOQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGhkbWkudHh0CkBA
+IC0wLDAgKzEsMTQyIEBACitNZWRpYXRlayBIRE1JIEVuY29kZXIKKz09PT09PT09PT09PT09PT09
+PT09PQorCitUaGUgTWVkaWF0ZWsgSERNSSBlbmNvZGVyIGNhbiBnZW5lcmF0ZSBIRE1JIDEuNGEg
+b3IgTUhMIDIuMCBzaWduYWxzIGZyb20KK2l0cyBwYXJhbGxlbCBpbnB1dC4KKworUmVxdWlyZWQg
+cHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJtZWRpYXRlayw8Y2hpcD4taGRt
+aSIuCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRy
+b2xsZXIncyByZWdpc3RlcnMKKy0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBzaWduYWwgZnJv
+bSB0aGUgZnVuY3Rpb24gYmxvY2suCistIGNsb2NrczogZGV2aWNlIGNsb2NrcworICBTZWUgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dCBm
+b3IgZGV0YWlscy4KKy0gY2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGl4ZWwiLCAicGxsIiwg
+ImJjbGsiLCBhbmQgInNwZGlmIi4KKy0gcGh5czogcGhhbmRsZSBsaW5rIHRvIHRoZSBIRE1JIFBI
+WSBub2RlLgorICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHkt
+YmluZGluZ3MudHh0IGZvciBkZXRhaWxzLgorLSBwaHktbmFtZXM6IG11c3QgY29udGFpbiAiaGRt
+aSIKKy0gbWVkaWF0ZWssc3lzY29uLWhkbWk6IHBoYW5kbGUgbGluayBhbmQgcmVnaXN0ZXIgb2Zm
+c2V0IHRvIHRoZSBzeXN0ZW0KKyAgY29uZmlndXJhdGlvbiByZWdpc3RlcnMuIEZvciBtdDgxNzMg
+dGhpcyBtdXN0IGJlIG9mZnNldCAweDkwMCBpbnRvIHRoZQorICBNTVNZU19DT05GSUcgcmVnaW9u
+OiA8Jm1tc3lzIDB4OTAwPi4KKy0gcG9ydHM6IEEgbm9kZSBjb250YWluaW5nIGlucHV0IGFuZCBv
+dXRwdXQgcG9ydCBub2RlcyB3aXRoIGVuZHBvaW50CisgIGRlZmluaXRpb25zIGFzIGRvY3VtZW50
+ZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKy0gcG9y
+dEAwOiBUaGUgaW5wdXQgcG9ydCBpbiB0aGUgcG9ydHMgbm9kZSBzaG91bGQgYmUgY29ubmVjdGVk
+IHRvIGEgRFBJIG91dHB1dAorICBwb3J0LgorLSBwb3J0QDE6IFRoZSBvdXRwdXQgcG9ydCBpbiB0
+aGUgcG9ydHMgbm9kZSBzaG91bGQgYmUgY29ubmVjdGVkIHRvIHRoZSBpbnB1dAorICBwb3J0IG9m
+IGEgY29ubmVjdG9yIG5vZGUgdGhhdCBjb250YWlucyBhIGRkYy1pMmMtYnVzIHByb3BlcnR5LCBv
+ciB0byB0aGUKKyAgaW5wdXQgcG9ydCBvZiBhbiBhdHRhY2hlZCBicmlkZ2UgY2hpcCwgc3VjaCBh
+cyBhIFNsaW1Qb3J0IHRyYW5zbWl0dGVyLgorCitIRE1JIENFQworPT09PT09PT0KKworVGhlIEhE
+TUkgQ0VDIGNvbnRyb2xsZXIgaGFuZGxlcyBob3RwbHVnIGRldGVjdGlvbiBhbmQgQ0VDIGNvbW11
+bmljYXRpb24uCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IFNob3VsZCBi
+ZSAibWVkaWF0ZWssPGNoaXA+LWNlYyIKKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5k
+IGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycworLSBpbnRlcnJ1cHRzOiBUaGUg
+aW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBmdW5jdGlvbiBibG9jay4KKy0gY2xvY2tzOiBkZXZp
+Y2UgY2xvY2sKKworSERNSSBEREMKKz09PT09PT09CisKK1RoZSBIRE1JIEREQyBpMmMgY29udHJv
+bGxlciBpcyB1c2VkIHRvIGludGVyZmFjZSB3aXRoIHRoZSBIRE1JIEREQyBwaW5zLgorVGhlIE1l
+ZGlhdGVrJ3MgSTJDIGNvbnRyb2xsZXIgaXMgdXNlZCB0byBpbnRlcmZhY2Ugd2l0aCBJMkMgZGV2
+aWNlcy4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJt
+ZWRpYXRlayw8Y2hpcD4taGRtaS1kZGMiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
+ZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMKKy0gY2xvY2tzOiBkZXZpY2Ug
+Y2xvY2sKKy0gY2xvY2stbmFtZXM6IFNob3VsZCBiZSAiZGRjLWkyYyIuCisKK0hETUkgUEhZCis9
+PT09PT09PQorCitUaGUgSERNSSBQSFkgc2VyaWFsaXplcyB0aGUgSERNSSBlbmNvZGVyJ3MgdGhy
+ZWUgY2hhbm5lbCAxMC1iaXQgcGFyYWxsZWwKK291dHB1dCBhbmQgZHJpdmVzIHRoZSBIRE1JIHBh
+ZHMuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6ICJtZWRpYXRlayw8Y2hp
+cD4taGRtaS1waHkiCistIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2Yg
+dGhlIG1vZHVsZSdzIHJlZ2lzdGVycworLSBjbG9ja3M6IFBMTCByZWZlcmVuY2UgY2xvY2sKKy0g
+Y2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGxsX3JlZiIKKy0gI3BoeS1jZWxsczogbXVzdCBi
+ZSA8MD4uCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1lZGlhdGVrLGliaWFzOiBUWCBEUlYg
+YmlhcyBjdXJyZW50IGZvciA8MS42NUdicHMsIGRlZmF1bHRzIHRvIDB4YQorLSBtZWRpYXRlayxp
+Ymlhc191cDogVFggRFJWIGJpYXMgY3VycmVudCBmb3IgPjEuNjVHYnBzLCBkZWZhdWx0cyB0byAw
+eDFjCisKK0V4YW1wbGU6CisKK2NlYzogY2VjQDEwMDEzMDAwIHsKKwljb21wYXRpYmxlID0gIm1l
+ZGlhdGVrLG10ODE3My1jZWMiOworCXJlZyA9IDwwIDB4MTAwMTMwMDAgMCAweGJjPjsKKwlpbnRl
+cnJ1cHRzID0gPEdJQ19TUEkgMTY3IElSUV9UWVBFX0xFVkVMX0xPVz47CisJY2xvY2tzID0gPCZp
+bmZyYWNmZyBDTEtfSU5GUkFfQ0VDPjsKK307CisKK2hkbWlfcGh5OiBoZG1pLXBoeUAxMDIwOTEw
+MCB7CisJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtaGRtaS1waHkiOworCXJlZyA9IDww
+IDB4MTAyMDkxMDAgMCAweDI0PjsKKwljbG9ja3MgPSA8JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURf
+SERNSV9SRUY+OworCWNsb2NrLW5hbWVzID0gInBsbF9yZWYiOworCW1lZGlhdGVrLGliaWFzID0g
+PDB4YT47CisJbWVkaWF0ZWssaWJpYXNfdXAgPSA8MHgxYz47CisJI3BoeS1jZWxscyA9IDwwPjsK
+K307CisKK2hkbWlfZGRjMDogaTJjQDExMDEyMDAwIHsKKwljb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10ODE3My1oZG1pLWRkYyI7CisJcmVnID0gPDAgMHgxMTAxMjAwMCAwIDB4MWM+OworCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSA4MSBJUlFfVFlQRV9MRVZFTF9MT1c+OworCWNsb2NrcyA9IDwmcGVy
+aWNmZyBDTEtfUEVSSV9JMkM1PjsKKwljbG9jay1uYW1lcyA9ICJkZGMtaTJjIjsKK307CisKK2hk
+bWkwOiBoZG1pQDE0MDI1MDAwIHsKKwljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1oZG1p
+IjsKKwlyZWcgPSA8MCAweDE0MDI1MDAwIDAgMHg0MDA+OworCWludGVycnVwdHMgPSA8R0lDX1NQ
+SSAyMDYgSVJRX1RZUEVfTEVWRUxfTE9XPjsKKwljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9IRE1J
+X1BJWEVMPiwKKwkJIDwmbW1zeXMgQ0xLX01NX0hETUlfUExMQ0s+LAorCQkgPCZtbXN5cyBDTEtf
+TU1fSERNSV9BVURJTz4sCisJCSA8Jm1tc3lzIENMS19NTV9IRE1JX1NQRElGPjsKKwljbG9jay1u
+YW1lcyA9ICJwaXhlbCIsICJwbGwiLCAiYmNsayIsICJzcGRpZiI7CisJcGluY3RybC1uYW1lcyA9
+ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmhkbWlfcGluPjsKKwlwaHlzID0gPCZoZG1pX3Bo
+eT47CisJcGh5LW5hbWVzID0gImhkbWkiOworCW1lZGlhdGVrLHN5c2Nvbi1oZG1pID0gPCZtbXN5
+cyAweDkwMD47CisKKwlwb3J0cyB7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKKworCQlwb3J0QDAgeworCQkJcmVnID0gPDA+OworCisJCQloZG1pMF9pbjog
+ZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBpMF9vdXQ+OworCQkJfTsKKwkJ
+fTsKKworCQlwb3J0QDEgeworCQkJcmVnID0gPDE+OworCisJCQloZG1pMF9vdXQ6IGVuZHBvaW50
+IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfY29uX2luPjsKKwkJCX07CisJCX07CisJ
+fTsKK307CisKK2Nvbm5lY3RvciB7CisJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7CisJ
+dHlwZSA9ICJhIjsKKwlkZGMtaTJjLWJ1cyA9IDwmaGRtaWRkYzA+OworCisJcG9ydCB7CisJCWhk
+bWlfY29uX2luOiBlbmRwb2ludCB7CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX291dD47
+CisJCX07CisJfTsKK307Ci0tIAoyLjYuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
