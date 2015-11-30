@@ -1,48 +1,47 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 1/4] ARM: dt: mvebu: ix4-300d: remove whole flash partition
-Date: Mon, 30 Nov 2015 15:16:06 +0100
-Message-ID: <87si3n609l.fsf@free-electrons.com>
-References: <1448709248-21177-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1448709248-21177-2-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20151128211129.GK32356@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151128211129.GK32356@lunn.ch> (Andrew Lunn's message of "Sat,
-	28 Nov 2015 22:11:29 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Benoit Masson <yahoo@perenite.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] ARM: shmobile: sh73a0: Add MSIOF support
+Date: Mon, 30 Nov 2015 15:16:50 +0100
+Message-ID: <1448893012-8465-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian and Andrew,
- 
- On sam., nov. 28 2015, Andrew Lunn <andrew@lunn.ch> wrote:
+	Hi Simon, Magnus,
 
->>On Sat, Nov 28, 2015 at 12:14:05PM +0100, Sebastian Hesselbarth wrote:
->> Current NAND node has an additional flash partition for the whole
->> flash overlapping with real partitions. Remove this partition as
->> the whole flash is already represented by the NAND device itself.
->> 
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->
-> Given Benoit comment
->
-> Acked-by: Andrew Lunn <andrew@lunn.ch>
+This patch series adds support for the 4 MSIOF channels on SH-Mobile
+AG5.
 
+It has been tested (TX only) using MSIOF1 on the CN21 test connector.
+RX hasn't been tested, as there are one-directional buffers between the
+real MSIOF interface on high-density connector CN8 and the CN21 test
+connector.
 
-Applied on mvebu/dt
+Functionality-wise, this depends on the bindings in "[PATCH] spi:
+sh-msiof: Add support for SH-Mobile AG5", and pinctrl in "[PATCH]
+pinctrl: sh-pfc: sh73a0: Add MSIOF support".
 
-Thanks,
+Thanks!
 
-Gregory
+Geert Uytterhoeven (2):
+  ARM: shmobile: sh73a0: Add MSIOF clocks
+  ARM: shmobile: sh73a0: Add MSIOF device nodes
 
-
->
-> 	  Andrew
+ arch/arm/boot/dts/sh73a0.dtsi            | 72 ++++++++++++++++++++++++++------
+ include/dt-bindings/clock/sh73a0-clock.h |  6 ++-
+ 2 files changed, 65 insertions(+), 13 deletions(-)
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
