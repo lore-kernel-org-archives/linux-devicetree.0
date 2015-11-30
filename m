@@ -1,84 +1,40 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT "/chosen/linux,atags" entry
-Date: Mon, 30 Nov 2015 01:15:12 +0100
-Message-ID: <201511300115.12478@pali>
-References: <20150713131902.GH26485@atomide.com> <20151129180939.GE30871@n2100.arm.linux.org.uk> <alpine.LFD.2.20.1511291902100.22569@knanqh.ubzr>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ravb: add R8A7791 support
+Date: Mon, 30 Nov 2015 09:42:08 +0900
+Message-ID: <20151130004207.GD3501@verge.net.au>
+References: <6051623.qN4lqSyZKg@wasted.cogentembedded.com>
+ <CAMuHMdWE_G2WqsGZEaa4Ck3zziTLGVPfaVdU2gbnLA5zWpmR1w@mail.gmail.com>
+ <565B6AAD.8080205@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3817658.Tbqq1GDGLX";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.20.1511291902100.22569-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas =?utf-8?q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565B6AAD.8080205@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart3817658.Tbqq1GDGLX
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 30, 2015 at 12:14:21AM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 11/29/2015 10:26 PM, Geert Uytterhoeven wrote:
+> 
+> >>Add support  for yet another ARM member of the R-Car family, R-Car M2, also
+> 
+> >R-Car M2-W?
+> 
+>    Right, forgot about the postfixes.
+> 
+> >>known as R8A7791.
+> >
+> >There's also R-Car M2-N, aka R8A7793, but you probably know that ;-)
+> 
+>    Will fix.
 
-On Monday 30 November 2015 01:09:17 Nicolas Pitre wrote:
-> On Sun, 29 Nov 2015, Russell King - ARM Linux wrote:
-> > On Sat, Nov 28, 2015 at 12:34:23PM -0500, Nicolas Pitre wrote:
-> > > Good. And Arnd likes the idea too. So we might be converging at
-> > > last which is a good thing.
-> >=20
-> > I disagree with the idea that there is convergence.  There might be
-> > convergence towards an idea, but... Here's a mail extract, from
-> > July 7th, from earlier in this very thread:
-> >=20
-> > Pali:
-> > > Me:
-> > > > Are the ATAGs at a fixed address on the N900?
-> > >=20
-> > > Yes, in board-rx51.c is:
-> > >=20
-> > > .atag_offset    =3D 0x100
-> > >=20
-> > > and Nokia Bootloader (proprietary) store them to that address.
-> > >=20
-> > > > Can that be handled in
-> > > > some kind of legacy file for the N900 which calls save_atags()
-> > > > on it, so we don't end up introducing yet more stuff that we
-> > > > have to maintain into the distant future?  If not, what about
-> > > > copying a known working atag structure into a legacy file for
-> > > > the N900?
-> > >=20
-> > > I already asked question if it is possible to read ATAGs from DT
-> > > booted kernel. And somebody (do not remember who) wrote to ML,
-> > > that it is not possible and it can be done in that uncompress
-> > > code.
->=20
-> Who is that somebody? If ever it happened to be me then objection is
-> withdrawn. Otherwise that somebody should come forth and speak up
-> again.
->=20
+I would prefer if we added generic gen2 and gen3 compat strings to the driver
+and only documented new soc-specific compat strings.
 
-=2E.. do not remember ... this discussion were in more email threads and=20
-takes more then one year... sorry but my memory is not excellent
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-
---nextPart3817658.Tbqq1GDGLX
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlZblRAACgkQi/DJPQPkQ1IpmwCeN9QCeO99b8gdCwiWdgQaL6/r
-5rkAnAmFGNXecQJJmCmhox93KOnZu85Q
-=XTRZ
------END PGP SIGNATURE-----
-
---nextPart3817658.Tbqq1GDGLX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Actually by chance I was planning to up patches to do that and add compat
+strings for the missing Gen2 boards. But I won't complain if you beat me to
+it.
