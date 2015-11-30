@@ -1,54 +1,69 @@
-From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: dts: qcom: msm8974-honami: Define pinctrl state
- for blsp_uart2
-Date: Mon, 30 Nov 2015 12:19:13 -0800
-Message-ID: <CAJAp7OjWj2ZGwypXdWbkDVadJePT7PrPSDJ3-89q+oxGdhDHWw@mail.gmail.com>
-References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<CAMAWPa9fHWY3diCfZG2s0ZaNqza+SnK+4QZzkAwW8xb9zjOqHg@mail.gmail.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree binding
+Date: Mon, 30 Nov 2015 20:30:07 +0000
+Message-ID: <565CB1CF.5040306@simon.arlott.org.uk>
+References: <565A18DD.60108@simon.arlott.org.uk>
+ <20151130121043.GX1929@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMAWPa9fHWY3diCfZG2s0ZaNqza+SnK+4QZzkAwW8xb9zjOqHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151130121043.GX1929@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 11:23 AM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Oct 20, 2015 at 9:57 PM, Bjorn Andersson
-> <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
->> Make sure the blsp1_uart2 pins are in the correct state for the uart.
->>
->> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->
-> kernelci.org has been detecting boot failures on my z1 since
-> next-20151120[1] and I finally got around to bisecting, which pointed
-> to this patch which is in next in the for of commit 14cd83b824aa ARM:
-> dts: qcom: msm8974-honami: Define pinctrl state for blsp_uart2
->
-> That commit doesn't revert cleanly on top of next-20151130, but
-> manually removing the stuff added in this patch, next-20151130 boots
-> fine on the z1.
->
-> Kevin
->
-> [1] http://kernelci.org/boot/qcom-msm8974-sony-xperia-honami/job/next/kernel/next-20151127/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5658061359b5140196b5fd2f
+The BCM63xx has one or more registers with bits that act as regulators
+to enable/disable power to individual chip peripherals.
 
-Thanks Kevin,
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+ .../bindings/regulator/brcm,bcm63xx-regulator.txt  | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/brcm,bcm63xx-regulator.txt
 
-I did see these too. But at the same time, as far as I can see, the
-qcom_defconfig boots just fine - indicating that this particular
-commit would not be the cause.
+diff --git a/Documentation/devicetree/bindings/regulator/brcm,bcm63xx-regulator.txt b/Documentation/devicetree/bindings/regulator/brcm,bcm63xx-regulator.txt
+new file mode 100644
+index 0000000..e905241
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/brcm,bcm63xx-regulator.txt
+@@ -0,0 +1,33 @@
++BCM63xx regulators
++
++The BCM63xx has one or more registers with bits that act as regulators
++to enable/disable power to individual chip peripherals.
++
++Required properties:
++- compatible: Must be "brcm,bcm<soc>-regulator", "brcm,bcm63xx-regulator";
++- regmap: regmap phandle to use for enable control
++- offset: register offset
++- mask: register enable mask
++- startup-delay-us: startup time in microseconds
++
++Any property defined as part of the core regulator
++binding, defined in regulator.txt, can also be used.
++
++However the regulator is expected to have the same values
++for regulator-min-microvolt and regulator-max-microvolt.
++
++Example:
++
++misc: syscon@10001800 {
++	compatible = "syscon";
++	reg = <0x10001800 0xd0>;
++};
++
++robosw_power: robosw {
++	compatible = "brcm,bcm63168-regulator", "brcm,bcm63xx-regulator";
++	regulator-name = "robosw_power";
++	regmap = <&misc>;
++	offset = <0x4c>;
++	mask = <0x40>;
++	startup-delay-us = <100000>;
++};
+-- 
+2.1.4
 
-I'll fire up some builds to figure out what's going on.
-
-
-PS. I believe earlycon would be more helpful than earlyprintk on the
-multi platform build command line...
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Simon Arlott
