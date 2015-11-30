@@ -1,192 +1,216 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] clk: hi3519: add CRG driver for hisilicon hi3519 soc
-Date: Mon, 30 Nov 2015 14:35:21 -0600
-Message-ID: <20151130203521.GA16224@rob-hp-laptop>
-References: <1448694806-31226-1-git-send-email-xuejiancheng@huawei.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH (v2) 2/2] regulator: bcm63xx: Add BCM63xx fixed regulator
+ device
+Date: Mon, 30 Nov 2015 20:38:30 +0000
+Message-ID: <565CB3C6.30301@simon.arlott.org.uk>
+References: <565A18DD.60108@simon.arlott.org.uk>
+ <20151130121043.GX1929@sirena.org.uk> <565CB1CF.5040306@simon.arlott.org.uk>
+ <565CB1FF.9090407@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448694806-31226-1-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@linaro.org, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <565CB1FF.9090407@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 28, 2015 at 03:13:26PM +0800, Jiancheng Xue wrote:
-> The CRG(Clock and Reset Generator) module provides
-> clock and reset signals for other modules in hi3519 soc.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> ---
->  .../devicetree/bindings/clock/hi3519-clock.txt     |  46 +++++++
->  drivers/clk/hisilicon/Makefile                     |   1 +
->  drivers/clk/hisilicon/clk-hi3519.c                 | 130 ++++++++++++++++++
->  drivers/clk/hisilicon/reset.c                      | 149 +++++++++++++++++++++
->  drivers/clk/hisilicon/reset.h                      |  25 ++++
->  include/dt-bindings/clock/hi3519-clock.h           |  78 +++++++++++
+The BCM63xx has one or more registers with bits that act as regulators
+to enable/disable power to individual chip peripherals.
 
-It is preferred to put binding doc and header in separate patch.
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+On 30/11/15 20:30, Simon Arlott wrote:
+> +	/* Only status change is supported, regardless of DT init data */
+> +	init_data->valid_ops_mask &= ~REGULATOR_CHANGE_STATUS;
 
->  6 files changed, 429 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-clock.txt
->  create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
->  create mode 100644 drivers/clk/hisilicon/reset.c
->  create mode 100644 drivers/clk/hisilicon/reset.h
->  create mode 100644 include/dt-bindings/clock/hi3519-clock.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/hi3519-clock.txt b/Documentation/devicetree/bindings/clock/hi3519-clock.txt
-> new file mode 100644
-> index 0000000..9fea878
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/hi3519-clock.txt
-> @@ -0,0 +1,46 @@
-> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
-> +
-> +The Hi3519 CRG module provides clock and reset signals to various
-> +controllers within the SoC.
-> +
-> +This binding uses the following bindings:
-> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +    Documentation/devicetree/bindings/reset/reset.txt
-> +
-> +Required Properties:
-> +
-> +- compatible: should be one of the following.
-> +  - "hisilicon,hi3519-clock" - controller compatible with Hi3519 SoC.
+Sorry, I thought I had tested it again after adding that line.
 
-Use -crg rather than -clock if that is the block name.
+ MAINTAINERS                           |   1 +
+ drivers/regulator/Kconfig             |   9 +++
+ drivers/regulator/Makefile            |   1 +
+ drivers/regulator/bcm63xx-regulator.c | 125 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 136 insertions(+)
+ create mode 100644 drivers/regulator/bcm63xx-regulator.c
 
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
-> +
-> +Each clock is assigned an identifier and client nodes use this identifier
-> +to specify the clock which they consume.
-> +
-> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
-> +
-> +- #reset-cells: should be 2.
-> +
-> +A reset signal can be controlled by writing a bit register in the CRG module.
-> +The reset specifier consists of two cells. The first cell represents the
-> +register offset relative to the base address. The second cell represents the
-> +bit index in the register.
-> +
-> +Example: CRG nodes
-> +CRG: clock-reset-controller {
-> +	compatible = "hisilicon,hi3519-clock";
-> +        reg = <0x12010000 0x10000>;
-> +        #clock-cells = <1>;
-> +        #reset-cells = <2>;
-> +};
-> +
-> +Example: consumer nodes
-> +i2c0: i2c@0x12110000 {
-> +	compatible = "hisilicon,hi3519-i2c";
-> +        reg = <0x12110000 0x1000>;
-> +        clocks = <&CRG HI3519_I2C0_RST>;*/
-> +        resets = <&CRG 0xE4 0>;
-> +};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a381176..29e0589 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2376,6 +2376,7 @@ F:	arch/mips/boot/dts/brcm/bcm*.dts*
+ F:	drivers/irqchip/irq-bcm63*
+ F:	drivers/irqchip/irq-bcm7*
+ F:	drivers/irqchip/irq-brcmstb*
++F:	drivers/regulator/bcm63*
+ F:	include/linux/bcm63xx_wdt.h
+ 
+ BROADCOM TG3 GIGABIT ETHERNET DRIVER
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 8df0b0e..8a2d5db 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -146,6 +146,15 @@ config REGULATOR_AXP20X
+ 	  This driver provides support for the voltage regulators on the
+ 	  AXP20X PMIC.
+ 
++config REGULATOR_BCM63XX
++	tristate "Broadcom BCM63xx Regulators"
++	depends on OF
++	depends on MFD_SYSCON
++	depends on BMIPS_GENERIC
++	help
++	  This driver provides support for the fixed regulators on the
++	  BCM63xx SoCs.
++
+ config REGULATOR_BCM590XX
+ 	tristate "Broadcom BCM590xx PMU Regulators"
+ 	depends on MFD_BCM590XX
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 0f81749..23e8a4b 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_REGULATOR_ARIZONA) += arizona-micsupp.o arizona-ldo1.o
+ obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
+ obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
+ obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
++obj-$(CONFIG_REGULATOR_BCM63XX) += bcm63xx-regulator.o
+ obj-$(CONFIG_REGULATOR_BCM590XX) += bcm590xx-regulator.o
+ obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
+ obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
+diff --git a/drivers/regulator/bcm63xx-regulator.c b/drivers/regulator/bcm63xx-regulator.c
+new file mode 100644
+index 0000000..13a0fbc
+--- /dev/null
++++ b/drivers/regulator/bcm63xx-regulator.c
+@@ -0,0 +1,125 @@
++/*
++ * Copyright 2015 Simon Arlott
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ * Derived from fixed.c:
++ * Copyright 2008 Wolfson Microelectronics PLC.
++ *
++ * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
++ *
++ * Copyright (c) 2009 Nokia Corporation
++ * Roger Quadros <ext-roger.quadros@nokia.com>
++ */
++
++#include <linux/err.h>
++#include <linux/mutex.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/regulator/machine.h>
++#include <linux/mfd/syscon.h>
++
++static struct regulator_ops bcm63xx_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++};
++
++static int __init bcm63xx_regulator_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct regulator_desc *desc;
++	struct regulator_init_data *init_data;
++	struct regulator_config cfg = { };
++	struct regulator_dev *reg_dev;
++	u32 val;
++	int ret;
++
++	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
++	if (!desc)
++		return -ENOMEM;
++
++	init_data = of_get_regulator_init_data(dev, np, desc);
++	if (!init_data) {
++		dev_err(dev, "Failed to get regulator init data\n");
++		return -EINVAL;
++	}
++
++	/* Only status change is supported, regardless of DT init data */
++	init_data->constraints.valid_ops_mask &= REGULATOR_CHANGE_STATUS;
++
++	desc->name = devm_kstrdup(dev, init_data->constraints.name, GFP_KERNEL);
++	if (desc->name == NULL)
++		return -ENOMEM;
++	desc->type = REGULATOR_VOLTAGE;
++	desc->owner = THIS_MODULE;
++	desc->ops = &bcm63xx_regulator_ops;
++
++	/* Clearing a bit in the register enables power */
++	desc->enable_is_inverted = true;
++
++	cfg.dev = dev;
++	cfg.init_data = init_data;
++	cfg.of_node = np;
++
++	cfg.regmap = syscon_regmap_lookup_by_phandle(np, "regmap");
++	if (IS_ERR(cfg.regmap)) {
++		ret = PTR_ERR(cfg.regmap);
++		dev_err(dev, "Failed to get regmap for %s: %d\n",
++			desc->name, ret);
++		return ret;
++	}
++
++	if (of_property_read_u32(np, "offset", &val)) {
++		dev_err(dev, "Missing register offset for %s\n", desc->name);
++		return -EINVAL;
++	}
++	desc->enable_reg = val;
++
++	if (of_property_read_u32(np, "mask", &val)) {
++		dev_err(dev, "Missing register mask for %s\n", desc->name);
++		return -EINVAL;
++	}
++	desc->enable_mask = val;
++
++	if (!of_property_read_u32(np, "startup-delay-us", &val))
++		desc->enable_time = val;
++
++	reg_dev = devm_regulator_register(dev, desc, &cfg);
++	if (IS_ERR(reg_dev)) {
++		ret = PTR_ERR(reg_dev);
++		dev_err(dev, "Failed to register regulator %s: %d\n",
++			desc->name, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id bcm63xx_regulator_of_match[] __initconst = {
++	{ .compatible = "brcm,bcm63xx-regulator", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, bcm63xx_regulator_of_match);
++
++static struct platform_driver bcm63xx_regulator_driver __refdata = {
++	.probe		= bcm63xx_regulator_probe,
++	.driver		= {
++		.name		= "bcm63xx-regulator",
++		.of_match_table = bcm63xx_regulator_of_match,
++	},
++};
++
++module_platform_driver(bcm63xx_regulator_driver);
++
++MODULE_AUTHOR("Simon Arlott");
++MODULE_DESCRIPTION("BCM63xx regulator");
++MODULE_LICENSE("GPL");
+-- 
+2.1.4
 
-
-> diff --git a/drivers/clk/hisilicon/reset.h b/drivers/clk/hisilicon/reset.h
-> new file mode 100644
-> index 0000000..74bea4e
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/reset.h
-> @@ -0,0 +1,25 @@
-> +/*
-> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef	__HISI_RESET_H
-> +#define	__HISI_RESET_H
-> +
-> +#include <linux/of.h>
-> +
-> +int __init hisi_reset_init(struct device_node *np, int nr_rsts);
-> +
-> +#endif	/* __HISI_RESET_H */
-> diff --git a/include/dt-bindings/clock/hi3519-clock.h b/include/dt-bindings/clock/hi3519-clock.h
-> new file mode 100644
-> index 0000000..2e08666
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/hi3519-clock.h
-> @@ -0,0 +1,78 @@
-> +/*
-> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef __DTS_HI3519_CLOCK_H
-> +#define __DTS_HI3519_CLOCK_H
-> +
-> +/* fixed rate */
-> +#define HI3519_FIXED_2376M		1
-> +#define HI3519_FIXED_1188M		2
-> +#define HI3519_FIXED_594M		3
-> +#define HI3519_FIXED_297M		4
-> +#define HI3519_FIXED_148P5M		5
-> +#define HI3519_FIXED_74P25M		6
-> +#define HI3519_FIXED_792M		7
-> +#define HI3519_FIXED_475M		8
-> +#define HI3519_FIXED_340M		9
-> +#define HI3519_FIXED_72M		10
-> +#define HI3519_FIXED_400M		11
-> +#define HI3519_FIXED_200M		12
-> +#define HI3519_FIXED_54M		13
-> +#define HI3519_FIXED_27M		14
-> +#define HI3519_FIXED_37P125M		15
-> +#define HI3519_FIXED_3000M		16
-> +#define HI3519_FIXED_1500M		17
-> +#define HI3519_FIXED_500M		18
-> +#define HI3519_FIXED_250M		19
-> +#define HI3519_FIXED_125M		20
-> +#define HI3519_FIXED_1000M		21
-> +#define HI3519_FIXED_600M		22
-> +#define HI3519_FIXED_750M		23
-> +#define HI3519_FIXED_150M		24
-> +#define HI3519_FIXED_75M		25
-> +#define HI3519_FIXED_300M		26
-> +#define HI3519_FIXED_60M		27
-> +#define HI3519_FIXED_214M		28
-> +#define HI3519_FIXED_107M		29
-> +#define HI3519_FIXED_100M		30
-> +#define HI3519_FIXED_50M		31
-> +#define HI3519_FIXED_25M		32
-> +#define HI3519_FIXED_24M		33
-> +#define HI3519_FIXED_3M			34
-
-All these are really fixed frequency, not just fixed until the s/w 
-support is written? 
-
-You only need to include clocks which are externally accessible from the 
-CRG.
+-- 
+Simon Arlott
