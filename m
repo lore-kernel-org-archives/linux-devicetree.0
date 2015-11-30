@@ -1,260 +1,100 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 8/9] leds: add LM3633 driver
-Date: Mon, 30 Nov 2015 13:26:59 +0100
-Message-ID: <565C4093.9010802@samsung.com>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-9-git-send-email-milo.kim@ti.com>
- <56583C37.1050307@samsung.com> <565C0D6F.9000709@ti.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH RESEND 1/8] arm: dts: berlin2q: add watchdog nodes
+Date: Mon, 30 Nov 2015 20:59:41 +0800
+Message-ID: <20151130205941.12e22f04@xhacker>
+References: <1447672194-483-1-git-send-email-jszhang@marvell.com>
+	<1447672194-483-2-git-send-email-jszhang@marvell.com>
+	<564E3549.2050700@gmail.com>	<20151120113414.1aa1e48e@xhacker>
+	<564F8062.8070609@gmail.com>	<20151123125953.5c30a0ef@xhacker>
+	<565991B0.5030909@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <565C0D6F.9000709@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "Kim, Milo" <milo.kim@ti.com>
-Cc: robh+dt@kernel.org, lee.jones@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <565991B0.5030909@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2015 09:48 AM, Kim, Milo wrote:
-> Hi Jacek,
->
-> Thanks for your detailed feedback. Please refer to my comments below.
->
-> On 11/27/2015 8:19 PM, Jacek Anaszewski wrote:
->> Hi Milo,
->>
->> Thanks for the update. I have few comments below.
->>
->>> diff --git a/drivers/leds/leds-lm3633.c b/drivers/leds/leds-lm3633.c
->>> new file mode 100644
->>> index 0000000..9c391ca
->>> --- /dev/null
->>> +++ b/drivers/leds/leds-lm3633.c
->>> @@ -0,0 +1,840 @@
->>> +/*
->>> + * TI LM3633 LED driver
->>> + *
->>> + * Copyright 2015 Texas Instruments
->>> + *
->>> + * Author: Milo Kim <milo.kim@ti.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + */
->>> +
->>> +#include <linux/bitops.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/leds.h>
->>> +#include <linux/mfd/ti-lmu.h>
->>> +#include <linux/mfd/ti-lmu-register.h>
->>> +#include <linux/module.h>
->>> +#include <linux/mutex.h>
->>> +#include <linux/notifier.h>
->>> +#include <linux/of.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/slab.h>
->>> +
->>> +#define LM3633_MAX_PWM                255
->>> +#define LM3633_MIN_CURRENT            5000
->>> +#define LM3633_MAX_CURRENT            30000
->>> +#define LM3633_MAX_PERIOD            9700
->>> +#define LM3633_SHORT_TIMESTEP            16
->>> +#define LM3633_LONG_TIMESTEP            131
->>> +#define LM3633_TIME_OFFSET            61
->>> +#define LM3633_PATTERN_REG_OFFSET        16
->>> +#define LM3633_IMAX_OFFSET            6
->>> +
->>> +enum lm3633_led_bank_id {
->>> +    LM3633_LED_BANK_C,
->>> +    LM3633_LED_BANK_D,
->>> +    LM3633_LED_BANK_E,
->>> +    LM3633_LED_BANK_F,
->>> +    LM3633_LED_BANK_G,
->>> +    LM3633_LED_BANK_H,
->>> +    LM3633_MAX_LEDS,
->>> +};
->>> +
->>> +/**
->>> + * struct ti_lmu_led_chip
->>> + *
->>> + * @dev:        Parent device pointer
->>> + * @lmu:        LMU structure. Used for register R/W access.
->>> + * @lock:        Secure handling for multiple user interface access
->>> + * @lmu_led:        Multiple LED strings
->>
->> Could you clarify what "string" means here?
->>
->>> + * @num_leds:        Number of LED strings
->>
->> and here?
->
-> Oops! I forgot to replace this term with 'output channel'. Thanks for
-> catching this.
->
->>> +static u8 lm3633_convert_time_to_index(unsigned int msec)
->>> +{
->>> +    u8 idx, offset;
->>> +
->>> +    /*
->>> +     * Find an approximate index
->>
->> I think that we shouldn't approximate but clamp the msec
->> to the nearest possible device setting.
->>
->>> +     *
->>> +     *      0 <= time <= 1000 : 16ms step
->>> +     *   1000 <  time <= 9700 : 131ms step, base index is 61
->>> +     */
->>> +
->>> +    msec = min_t(int, msec, LM3633_MAX_PERIOD);
->>> +
->>> +    if (msec <= 1000) {
->>> +        idx = msec / LM3633_SHORT_TIMESTEP;
->>> +        if (idx > 1)
->>> +            idx--;
->>> +        offset = 0;
->>> +    } else {
->>> +        idx = (msec - 1000) / LM3633_LONG_TIMESTEP;
->>> +        offset = LM3633_TIME_OFFSET;
->>> +    }
->>> +
->>> +    return idx + offset;
->>> +}
->>> +
->>> +static u8 lm3633_convert_ramp_to_index(unsigned int msec)
->>> +{
->>> +    const int ramp_table[] = { 2, 250, 500, 1000, 2000, 4000, 8000,
->>> 16000 };
->>> +    int size = ARRAY_SIZE(ramp_table);
->>> +    int i;
->>> +
->>> +    if (msec <= ramp_table[0])
->>> +        return 0;
->>> +
->>> +    if (msec > ramp_table[size - 1])
->>> +        return size - 1;
->>> +
->>> +    for (i = 1; i < size; i++) {
->>> +        if (msec == ramp_table[i])
->>> +            return i;
->>> +
->>> +        /* Find an approximate index by looking up the table */
->>
->> Similarly here. So you should have an array of the possible msec
->> values and iterate through it to look for the nearest one.
->
-> Driver uses 'ramp_table[]' for this purpose. Could you describe it in
-> more details?
+On Sat, 28 Nov 2015 12:36:16 +0100
+Sebastian Hesselbarth wrote:
 
-Right, but why the values don't match the ones from the documentation?
-e.g.: 2, 262, 524, 1049, 2097 etc.
+> On 23.11.2015 05:59, Jisheng Zhang wrote:
+> > On Fri, 20 Nov 2015 21:19:46 +0100
+> > Sebastian Hesselbarth wrote:  
+> >> On 20.11.2015 04:34, Jisheng Zhang wrote:  
+> >>> On Thu, 19 Nov 2015 21:47:05 +0100
+> >>> Sebastian Hesselbarth wrote:    
+> >>>> On 16.11.2015 12:09, Jisheng Zhang wrote:    
+> >>>>> The Marvell Berlin BG2Q has 3 watchdogs which are compatible with the
+> >>>>> snps,dw-wdt driver sit in the sysmgr domain. This patch adds the
+> >>>>> corresponding device tree nodes.
+> >>>>>
+> >>>>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> >>>>> ---  
+> [...]
+> >>>>> +			wdt0: watchdog@1000 {
+> >>>>> +				compatible = "snps,dw-wdt";
+> >>>>> +				reg = <0x1000 0x100>;
+> >>>>> +				clocks = <&refclk>;
+> >>>>> +				interrupts = <0>;
+> >>>>> +				status = "disabled";      
+> >>>>
+> >>>> as the watchdogs are internal and cannot be clock gated
+> >>>> at all, how about we remove the status = "disabled" and
+> >>>> make them always available?    
+> >>>
+> >>> there are two issues here:
+> >>>
+> >>> 1. the dw-wdt can't support multiple variants now. I have rewrite the driver
+> >>> with watchdog core supplied framework, but the patch isn't sent out and
+> >>> may be need time to clean up and review.    
+> >>
+> >> Ok.
+> >>  
+> >>> 2. not all dw-wdt devices are available and functional. This depends on
+> >>> board design and configuration.    
+> >>
+> >> I understand that "board design and configuration" may hinder the wdt
+> >> to issue a hard reset. But all others are able to issue a soft reset
+> >> or just an interrupt, right?
+> >>
+> >> So, I still don't see why we should disable wdt nodes by default
+> >> except for the driver issue above.
+> >>  
+> >>> So IMHO status=disabled and patch5-8 is necessary, what do you think?    
+> >>
+> >> No. I'd agree to enable wdt0 by default and leave wdt[1,2] disabled
+> >> because of the driver issue. Patches 5-8 only enable wdt0 anyway.  
+> > 
+> > That's fine.  
+> 
+> Jisheng,
+> 
+> I amended your SoC dtsi watchdog patches accordingly. wdt0 is
+> now always enabled, while the others are disabled.
+> 
+> So, with the changes Patches 1-4 applied to berlin/dt and berlin64/dt
+> respectively. Patches 5-8 dropped.
+> 
+> >> As soon as the driver issue is resolved, we enable all wdt nodes
+> >> unconditionally.  
+> > 
+> > I will submit patch for the wdt driver and hope it will be merged
+> > in v4.5.  
+> 
+> Ok. Feel free to add a patch that removes the status disabled properties
+> again if berlin[64]/dt has already hit mainline in the meantime.
 
-And regarding sysfs attributes - they should be readable and return
-the aligned value.
+Got it. No problems.
 
->>> +
->>> +static int lm3633_led_brightness_set(struct led_classdev *cdev,
->>> +                     enum led_brightness brightness)
->>> +{
->>> +    struct ti_lmu_led *lmu_led = container_of(cdev, struct ti_lmu_led,
->>> +                          cdev);
->>> +    struct ti_lmu_led_chip *chip = lmu_led->chip;
->>> +    struct regmap *regmap = chip->lmu->regmap;
->>> +    u8 reg = LM3633_REG_BRT_LVLED_BASE + lmu_led->bank_id;
->>> +    int ret;
->>> +
->>> +    mutex_lock(&chip->lock);
->>> +
->>> +    ret = regmap_write(regmap, reg, brightness);
->>> +    if (ret) {
->>> +        mutex_unlock(&chip->lock);
->>> +        return ret;
->>> +    }
->>> +
->>> +    if (brightness == 0)
->>> +        lm3633_led_disable_bank(lmu_led);
->>
->> This should be checked at first, as I suppose that disabling
->> a bank suffices to turn the LED off.
->
-> Well, it's not a big deal when turn off the LED. However, our silicon
-> designer recommended brightness update should be done prior to enabling
-> LED bank. Let me share some block diagram.
->
-> [I2C logic] - [brightness control] - [control bank] - [output channel]
->
-> If control bank is enabled first, then previous brightness value in
-> register can be used instead of new updated brightness. So brightness
-> update should be done first.
+> 
+> If not, keep me posted on the DW wdt patch outcome.
 
-So, call "regmap_write(regmap, reg, brightness)" only if brightness > 0.
+Will do. These days, I'm focusing on clk patches and some trivial dw-apb-timer
+performance improvement patches. I will loop you in the mail when send out
+dw wdt driver rewrite patch.
 
-How about below (error handling skipped):
-
-if (brightness > 0) {
-         regmap_write(regmap, reg, brightness);
-	lm3633_led_enable_bank(lmu_led);
-} else {
-	lm3633_led_disable_bank(lmu_led);
-}
-
-
->
->>> +static u8 lm3633_led_scale_max_brightness(struct ti_lmu_led
->>> *lmu_led, u32 imax)
->>> +{
->>> +    u8 max_current = lm3633_led_convert_current_to_index(imax);
->>> +    const u8 max_brightness_table[] = {
->>> +        [LMU_IMAX_5mA]  = 191,
->>> +        [LMU_IMAX_6mA]  = 197,
->>> +        [LMU_IMAX_7mA]  = 203,
->>> +        [LMU_IMAX_8mA]  = 208,
->>> +        [LMU_IMAX_9mA]  = 212,
->>> +        [LMU_IMAX_10mA] = 216,
->>> +        [LMU_IMAX_11mA] = 219,
->>> +        [LMU_IMAX_12mA] = 222,
->>> +        [LMU_IMAX_13mA] = 225,
->>> +        [LMU_IMAX_14mA] = 228,
->>> +        [LMU_IMAX_15mA] = 230,
->>> +        [LMU_IMAX_16mA] = 233,
->>> +        [LMU_IMAX_17mA] = 235,
->>> +        [LMU_IMAX_18mA] = 237,
->>> +        [LMU_IMAX_19mA] = 239,
->>> +        [LMU_IMAX_20mA] = 241,
->>> +        [LMU_IMAX_21mA] = 242,
->>> +        [LMU_IMAX_22mA] = 244,
->>> +        [LMU_IMAX_23mA] = 246,
->>> +        [LMU_IMAX_24mA] = 247,
->>> +        [LMU_IMAX_25mA] = 249,
->>> +        [LMU_IMAX_26mA] = 250,
->>> +        [LMU_IMAX_27mA] = 251,
->>> +        [LMU_IMAX_28mA] = 253,
->>> +        [LMU_IMAX_29mA] = 254,
->>> +        [LMU_IMAX_30mA] = 255,
->>> +    };
->>
->> After analyzing the subject one more time I think that we need to
->> change the approach regarding max brightness issue.
->>
->> At first - we shouldn't fix max current to max possible register value.
->> Instead we should take led-max-microamp property and write its value
->> to the [0x22 + bank offset] registers.
->>
->> With this approach whole 0-255 range of brightness levels will be
->> valid for the driver.
->>
->> In effect all LMU_IMAX* enums seem to be not needed.
->
-> Good to hear that, it's the most simplest work for the device ;)
-> Let me update the driver. Thanks!
->
-> Best regards,
-> Milo
->
->
-
-
--- 
-Best Regards,
-Jacek Anaszewski
+Thanks a lot,
+Jisheng
