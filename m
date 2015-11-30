@@ -1,42 +1,42 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCHv2 3/4] devicetree: add rpi power domain driver bindings
-Date: Mon, 30 Nov 2015 14:09:45 -0800
-Message-ID: <87y4dfgmvq.fsf@eliezer.anholt.net>
-References: <1448816373-18235-1-git-send-email-alex.aring@gmail.com>
- <1448816373-18235-4-git-send-email-alex.aring@gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCHv2 2/4] ARM: bcm2835: add rpi power domain driver
+Date: Mon, 30 Nov 2015 14:12:39 -0800
+Message-ID: <87vb8jgmqw.fsf@eliezer.anholt.net>
+References: <1448816373-18235-1-git-send-email-alex.aring@gmail.com> <1448816373-18235-3-git-send-email-alex.aring@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4974873323641280752=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1448816373-18235-4-git-send-email-alex.aring@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>, pavel@ucw.cz, f.fainelli@gmail.com, linux@arm.linux.org.uk, khilman@kernel.org, lee@kernel.org, bcm-kernel-feedback-list@broadcom.com, len.brown@intel.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rjui@broadcom.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, ijc+devicetree@hellion.org.uk, sbranden@broadcom.com, gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, kernel@pengutronix.de, galak@codeaurora.org
-List-Id: devicetree@vger.kernel.org
-
---===============4974873323641280752==
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448816373-18235-3-git-send-email-alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
 
-Alexander Aring <alex.aring@gmail.com> writes:
+Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-> This patch adds devicetree tree bindings for the Raspberry Pi power
-> domain driver.
+> This patch adds support for RPi several Power Domains and enable support
+> to enable the USB Power Domain when it's not enabled before.
 >
-> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> This patch based on Eric Anholt's patch to support Power Domains. He had
+> an issue about -EPROBE_DEFER inside the power domain subsystem, this
+> issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
+> if we fail to init or turn-on domain").
+>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Signed-off-by: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 
-Acked-by: Eric Anholt <eric@anholt.net>
+Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+
+I'm still hoping Ulf will pull this patch along with the genpd change,
+to reduce synchronization between trees.  (That just leaves the DT
+change's dependency on the header in this one).
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -44,32 +44,22 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJWXMkpAAoJELXWKTbR/J7ovZAQALcYGRqBsaNOZ0Mc8xQ9n930
-RN0MypQnU6+Q68gMKRdBzEv+DBzn5xIMwsqKZeBOPndtQQ3HrgjoWcVqtc9lL8KW
-JFJ/diKYuGRuWgsuJ1abplYFXNgICCM9XQCGBic/w93KotiMkgV0evgZ45Zr0b/v
-Dg+3Q7AtG2aitCAY0IaKYU/2o0AH5Xc4D/+m6Ed6Ln5wfy8lBSxauHJvf35ItcdG
-n08X38dBEbyIvHOnffAOuduZTP0NmZEkR1emlaYbE7031+JUBXcjzrbt6W6T+6VS
-6QtNbwokE+x+rB4PViLOO3VDXgNzxTg/piVhkOUPHImSKp4rf7V/owTEuaq9e16D
-dvWDZB3mOF2gAi/rq8n6zy5wJ1Iw5eVIWX0SAV9zZy/VLYF1vHpMOWrKJ2qhdKJ1
-xbU/kVkQj+SQkmT5jhhlhyjpoet4JNnp9lXhEIfbi8IO4Z9A+TfHMrvm6XexfZYO
-EOxMFbS0YjaMYKkwe6PtJLhxKEJe7ZQXUiIs/065PqYdS7h+E5vc0qsDM2aCwPHT
-iRuHjMmn6kMmomZ1r1e/blDlWJ3sAqQcg2XeYKWWUZXIc2e8nCgOghk/d19JyBJa
-sPfCkoYJXvJgHwSU30rqBMckjuQ1eic7GE5bGMTXKjL/yazifzt75tJiqMYno3vQ
-3bM6si9iU+Y4qBiuIrma
-=oJ78
+iQIcBAEBCgAGBQJWXMnXAAoJELXWKTbR/J7o0wIQALH9gywWendv2eDXhgKoqobh
+NbjV6CoycPpRdeBk3ZJCeetaBuh3AJRx8854ZgiuxQH46C96odXepoQjIRulznAv
+I5Qxeg7yD4zSNm25OR8DBOZgyovPbOo4s5WmHaxmyGOInbYOUHq2yC0x+u+3wLLy
+mqGb/eO6CY2K3VJr7UT6YWElrd1eKWIBhqp1zGx3aLCj+s9MiBj8LDF1C0rX52UD
+wXLo+hdp6xdH6exlUnf9yXVVy5Mj5a7pomjPtV5IWP3D0rHhA9GXq5El7MQfGX4g
+GSS6UXLWXzyO7Rjejt9gSBfSYKE7Gm99eI3ndkYk9Njr8kzVCw0dhLoBL3mgSbnU
+DcPLgP2hc5a+hINxJn76a17Oi66y7ThiM43S3j50aJg4713u0lEcvaOIjZq0kt7Q
+oK4KgjtLnaYm4OctE4fzq2DZ8PYVSkMSjT+qdF5HPZVBlG3Osdgh3PBWwhEBoiWE
+b1wMfLgN8X5dEtsRTe6WRNCUpmIA+UQ2LWWpoXtRAA5ppDs7MXGVmPnLys3UgVX6
+CGltfOroLMZ5HWgsiN3cuyZsn79JQhAH1fg5GVd8YJvCqBjhIRlNsZ/Kty19lLm3
+84kGjY0osdzIPerKMMbcjXTOVy3q1+76ZysTFAgaLSSdY+KQmHYJ/O9DTC6qqxbD
+J0PcXnIHXdgU48QL3ihJ
+=AeB0
 -----END PGP SIGNATURE-----
 --=-=-=--
-
-
---===============4974873323641280752==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4974873323641280752==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
