@@ -1,61 +1,99 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v4 5/5] ARM: dts: AM4372: add entry for qspi mmap region
-Date: Mon, 30 Nov 2015 10:45:15 +0530
-Message-ID: <1448860515-28336-6-git-send-email-vigneshr@ti.com>
-References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 3/3] thermal: mediatek: Add cpu dynamic power cooling
+ model.
+Date: Mon, 30 Nov 2015 11:08:45 +0530
+Message-ID: <20151130053845.GM3373@ubuntu>
+References: <1448616727-29367-1-git-send-email-dawei.chien@mediatek.com>
+ <1448616727-29367-4-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1448616727-29367-4-git-send-email-dawei.chien@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Dawei Chien <dawei.chien@mediatek.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add qspi memory mapped region entries for AM43xx based SoCs. Also,
-update the binding documents for the controller to document this change.
+On 27-11-15, 17:32, Dawei Chien wrote:
+> MT8173 cpufreq driver use of_cpufreq_power_cooling_register registering
+> cooling devices with dynamic power coefficient.
+> 
+> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> ---
+> This patch is base on patchset:
+> https://lkml.org/lkml/2015/11/17/251
+> ---
+>  drivers/cpufreq/mt8173-cpufreq.c |   28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
+> index 83001dc..4d39468 100644
+> --- a/drivers/cpufreq/mt8173-cpufreq.c
+> +++ b/drivers/cpufreq/mt8173-cpufreq.c
+> @@ -263,24 +263,34 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	return 0;
+>  }
+>  
+> +#define DYNAMIC_POWER "dynamic-power-coefficient"
+> +
+>  static void mtk_cpufreq_ready(struct cpufreq_policy *policy)
+>  {
+>  	struct mtk_cpu_dvfs_info *info = policy->driver_data;
+>  	struct device_node *np = of_node_get(info->cpu_dev->of_node);
+> +	u32 capacitance;
+>  
+>  	if (WARN_ON(!np))
+>  		return;
+>  
+>  	if (of_find_property(np, "#cooling-cells", NULL)) {
+> -		info->cdev = of_cpufreq_cooling_register(np,
+> -							 policy->related_cpus);
+> +		if (!info->cdev) {
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
+Why will info->cdev be non-NULL here ?
 
-v4: No changes.
+> +			of_property_read_u32(np, DYNAMIC_POWER, &capacitance);
 
- Documentation/devicetree/bindings/spi/ti_qspi.txt | 5 +++--
- arch/arm/boot/dts/am4372.dtsi                     | 4 +++-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+This can fail, in which case capacitance will be used uninitialized.
+Fix that by initializing it with 0 at the beginning of this routine.
 
-diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-index 334aa3f32cbc..5a1542eda387 100644
---- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
-+++ b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-@@ -17,9 +17,10 @@ Recommended properties:
- 
- Example:
- 
-+For am4372:
- qspi: qspi@4b300000 {
--	compatible = "ti,dra7xxx-qspi";
--	reg = <0x47900000 0x100>, <0x30000000 0x3ffffff>;
-+	compatible = "ti,am4372-qspi";
-+	reg = <0x47900000 0x100>, <0x30000000 0x4000000>;
- 	reg-names = "qspi_base", "qspi_mmap";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index d83ff9c9701e..e32d164102d1 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -963,7 +963,9 @@
- 
- 		qspi: qspi@47900000 {
- 			compatible = "ti,am4372-qspi";
--			reg = <0x47900000 0x100>;
-+			reg = <0x47900000 0x100>,
-+			      <0x30000000 0x4000000>;
-+			reg-names = "qspi_base", "qspi_mmap";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "qspi";
+> +			info->cdev = of_cpufreq_power_cooling_register(np,
+> +							policy->related_cpus,
+> +							capacitance,
+> +							NULL);
+>  
+> -		if (IS_ERR(info->cdev)) {
+> -			dev_err(info->cpu_dev,
+> -				"running cpufreq without cooling device: %ld\n",
+> -				PTR_ERR(info->cdev));
+> +			if (IS_ERR(info->cdev)) {
+> +				dev_err(info->cpu_dev,
+> +					"running cpufreq without cooling device: %ld\n",
+> +					PTR_ERR(info->cdev));
+>  
+> -			info->cdev = NULL;
+> +				info->cdev = NULL;
+> +			}
+>  		}
+>  	}
+>  
+> @@ -460,7 +470,9 @@ static int mtk_cpufreq_exit(struct cpufreq_policy *policy)
+>  {
+>  	struct mtk_cpu_dvfs_info *info = policy->driver_data;
+>  
+> -	cpufreq_cooling_unregister(info->cdev);
+> +	if (info->cdev)
+> +		cpufreq_cooling_unregister(info->cdev);
+> +
+
+Why do you need to update this?
+
+>  	dev_pm_opp_free_cpufreq_table(info->cpu_dev, &policy->freq_table);
+>  	mtk_cpu_dvfs_info_release(info);
+>  	kfree(info);
+> -- 
+> 1.7.9.5
+
 -- 
-2.6.3
+viresh
