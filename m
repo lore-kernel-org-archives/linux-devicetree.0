@@ -1,70 +1,54 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] net/macb: bindings doc: Merge cdns-emac to macb
-Date: Mon, 30 Nov 2015 14:51:46 +0100
-Message-ID: <497a8248e7cf8b7f7f30d6c47c8591583dcc0bce.1448891503.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] pinctrl: meson: enable support for external GPIO interrupts
+Date: Mon, 30 Nov 2015 14:53:23 +0100
+Message-ID: <CACRpkdZqv62Vsb1Fs9fo27-K-T=O6wJLfzRB6ZCPehWOGrxUzg@mail.gmail.com>
+References: <1448273816-11290-1-git-send-email-carlo@caione.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448273816-11290-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Merge two bindings for the same driver to together.
+On Mon, Nov 23, 2015 at 11:16 AM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> In Meson SoCs we have 8 independent GPIO interrupts that can be programmed to
+> use any of the GPIOs in the chip as interrupt source.
+>
+> These GPIOs are managed by GIC but they can be conditioned (and enabled) by
+> some registers external to the GIC.
+>
+> GPIOs |--[mux1 or mux2]--[polarity]--[filter]--[edge_select]--> GIC
+>
+> For discussion see comment to the [PATCH 3/5].
+>
+> Changelog:
+>
+> * V2:
+>     - Introduced .irq_request_resources() and .irq_release_resources()
+>     - s/virq/irq/ and s/pin/hwirq/
+>     - Moved to the new irq_fwspec
 
- Documentation/devicetree/bindings/net/cdns-emac.txt | 20 --------------------
- Documentation/devicetree/bindings/net/macb.txt      |  3 +++
- 2 files changed, 3 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/cdns-emac.txt
+I'm waiting for the next version of this patch set.
 
-diff --git a/Documentation/devicetree/bindings/net/cdns-emac.txt b/Documentation/devicetree/bindings/net/cdns-emac.txt
-deleted file mode 100644
-index 4451ee973223..000000000000
---- a/Documentation/devicetree/bindings/net/cdns-emac.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--* Cadence EMAC Ethernet controller
--
--Required properties:
--- compatible: Should be "cdns,[<chip>-]{emac}"
--  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
--  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
--  Or the generic form: "cdns,emac".
--- reg: Address and length of the register set for the device
--- interrupts: Should contain macb interrupt
--- phy-mode: see ethernet.txt file in the same directory.
--
--Examples:
--
--	macb0: ethernet@fffc4000 {
--		compatible = "cdns,at91rm9200-emac";
--		reg = <0xfffc4000 0x4000>;
--		interrupts = <21>;
--		phy-mode = "rmii";
--		local-mac-address = [3a 0e 03 04 05 06];
--	};
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index b5d79761ac97..1361a6daf63f 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -2,6 +2,7 @@
- 
- Required properties:
- - compatible: Should be "cdns,[<chip>-]{macb|gem}"
-+  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
-   Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs or the 10/100Mbit IP
-   available on sama5d3 SoCs.
-   Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
-@@ -10,7 +11,9 @@ Required properties:
-   Use "atmel,sama5d2-gem" for the GEM IP (10/100) available on Atmel sama5d2 SoCs.
-   Use "atmel,sama5d3-gem" for the Gigabit IP available on Atmel sama5d3 SoCs.
-   Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel sama5d4 SoCs.
-+  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
-   Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
-+  Or the generic form: "cdns,emac".
- - reg: Address and length of the register set for the device
- - interrupts: Should contain macb interrupt
- - phy-mode: See ethernet.txt file in the same directory.
--- 
-1.9.1
+However I am a bit concerned that we're starting to have a few
+GPIO controllers now that are not really cascaded irqchips,
+but instead just shunt the line through to some other interrupt
+controller through a mux or latch.
+
+We might need to add some handling to gpiolib core that
+does this, like gpiochip_add_irq_mux() that sets up the
+irqdomain we have for GPIOLIB_IRQCHIP to be used like
+this and pull this code into gpiolib to avoid duplication of
+code and bugs.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
