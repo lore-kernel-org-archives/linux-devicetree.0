@@ -1,46 +1,44 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: arm64: dts: qcom: Add apq8096 dragonboard dts skeletons
-Date: Mon, 30 Nov 2015 15:48:17 -0800
-Message-ID: <20151130234817.GC21446@codeaurora.org>
-References: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
+Date: Mon, 30 Nov 2015 15:51:56 -0800
+Message-ID: <7hr3j782qr.fsf@deeprootsystems.com>
+References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
+	<1447956490-22930-3-git-send-email-alex.aring@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1447956490-22930-3-git-send-email-alex.aring@gmail.com>
+	(Alexander Aring's message of "Thu, 19 Nov 2015 19:08:09 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 11/26, Rajendra Nayak wrote:
-> Add new dtsi and dts files for the apq8096 dragonboards with just
-> a serial device used as debug console
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
-> Patch applies on top of Stephens' patches to add msm8996 dtsi
-> https://lkml.org/lkml/2015/11/17/955
-> 
->  arch/arm64/boot/dts/qcom/Makefile                 |  2 +-
->  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts  | 21 ++++++++++++++++
->  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi | 30 +++++++++++++++++++++++
->  3 files changed, 52 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index fa1f661..bd992ef 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -1,5 +1,5 @@
->  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
-> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-dragonboard.dtb
+Alexander Aring <alex.aring@gmail.com> writes:
 
-We should move to one dtb per line in this file. Other platforms
-are doing the same thing.
+> This patch adds support for RPi several Power Domains and enable support
+> to enable the USB Power Domain when it's not enabled before.
+>
+> This patch based on Eric Anholt's patch to support Power Domains. He had
+> an issue about -EPROBE_DEFER inside the power domain subsystem, this
+> issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
+> if we fail to init or turn-on domain").
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+[...]
+
+> +#define RPI_POWER_DOMAIN(_domain, _name)			\
+> +	[_domain] = {						\
+
+Using _domain as the array index is going to create a sparsely filled
+array here, wasting memory.   I'm not sure what the other domain numbers
+are for other domains to know if this is a big waste or not, but it's
+still a bit wasteful.
+
+In any case, AFAICT, it doesn't look like you need to have the array
+index match the domain number anyways since you're using container_of().
+
+So I suggest just removing this array index part, and just creating them
+in arrary order.  Then your _probe function isn't going to try to setup
+3 non-enabled domains before it finally hits the USB domain.
+
+Kevin
