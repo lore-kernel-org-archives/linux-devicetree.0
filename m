@@ -1,129 +1,47 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv2] ARM: dts: use vmmc-supply of emmc/sd for exynos5422-odroidxu3
-Date: Mon, 30 Nov 2015 21:19:13 +0530
-Message-ID: <CANAwSgRu7m06-vVtowxP6JKFhcAN5tZURbEaDhV=ULeL_NwUXQ@mail.gmail.com>
-References: <1445345793-5189-1-git-send-email-linux.amoon@gmail.com>
- <56283582.5010908@samsung.com> <CANAwSgQFqcM++D6FoTXTnZJryaoi92pEiSvbjyz8rj79VmGOMQ@mail.gmail.com>
- <CANAwSgR+UTZSQYhXcP1a_T9AvJCS98dj1fafzJZ1S3oXvMUx+A@mail.gmail.com> <565BE1B3.1070505@samsung.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+Date: Mon, 30 Nov 2015 16:55:35 +0100
+Message-ID: <CALszF6DLfpA6bdndRvBjufXnsoOxRT0bgN8P_D=2gqc1CK4=+A@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
+	<56261239.5030007@linaro.org>
+	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
+	<CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
+	<CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
+	<CACRpkdZTHcROza2diFCOj783T1zfbkd=Dov3PUzDV2U35qEFXA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <565BE1B3.1070505@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZTHcROza2diFCOj783T1zfbkd=Dov3PUzDV2U35qEFXA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On 30 November 2015 at 11:12, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> On 27.11.2015 15:42, Anand Moon wrote:
->> hi Krzysztof,
->>
->> On 22 October 2015 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
->>> hi Krzysztof,
->>>
->>> On 22 October 2015 at 06:31, Krzysztof Kozlowski
->>> <k.kozlowski@samsung.com> wrote:
->>>> On 20.10.2015 21:56, Anand Moon wrote:
->>>>> Changes need for host controller to detect UHS-I highspeed cards.
->>>>> Changes in VDDQ_MMC2 voltage range help scale
->>>>> the required voltage to detect and load the microSD cards.
->>>>
->>>> Thanks for updating description of commit.
->>>>
->>>>>
->>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>> ---
->>>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>>>>
->>>>> Changes:
->>>>> Drop the ranp_delay for LDO9.
->>>>>
->>>>> Thanks to : Krzysztof, Doug Anderson, Jaehoon Chung for helping
->>>>> me out figure out the mmc core requirement.
->>>>>
->>>>> Also drop the previous changes:
->>>>> use cd-gpio method to detect sd-card.
->>>>> Added UHS-I bus speed support.
->>>>>
->>>>> [    4.713553] random: nonblocking pool is initialized
->>>>> [    4.718423] 14530000.hdmi supply hdmi-en not found, using dummy regulator
->>>>> [    4.726206] exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
->>>>> [    4.732555] exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
->>>>> [    4.740180] exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
->>>>> [    4.746936] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
->>>>> [    4.753428] [drm] No driver support for vblank timestamp query.
->>>>> [    4.940794] Console: switching to colour frame buffer device 274x77
->>>>> [    4.995344] exynos-drm exynos-drm: fb0:  frame buffer device
->>>>> [    5.024573] [drm] Initialized exynos 1.0.0 20110530 on minor 0
->>>>> [    5.031164] exynos-dwc3 usb@12000000: no suspend clk specified
->>>>> [    5.054571] usb 2-1: new full-speed USB device number 2 using exynos-ohci
->>>>> [    5.159527] dwmmc_exynos 12220000.mmc: Busy; trying anyway
->>>>> [    5.163705] mmc_host mmc1: Timeout sending command (cmd 0x202000 arg 0x0 status 0x0)
->>>>> ---
->>>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 7 ++++++-
->>>>>  1 file changed, 6 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>>> index 1af5bdc..a4be3e0 100644
->>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>>> @@ -182,9 +182,10 @@
->>>>>
->>>>>                       ldo13_reg: LDO13 {
->>>>>                               regulator-name = "vdd_ldo13";
->>>>> -                             regulator-min-microvolt = <2800000>;
->>>>> +                             regulator-min-microvolt = <1800000>;
->>>>
->>>> You did not convinced me in previous discussion about the change to
->>>> 1.8V. I said that:
->>>>> On the same diagram few lines below:
->>>>> VDDQ_MMC2: 2.8V 250mA
->>>>
->>>> You responded:
->>>>> You are correct.
->>>>
->>>> So I am confused. Are you sure that this SD card block can/should
->>>> operate on 1.8V? Have you actually tried this?
->>>>
->>>
->>> Look like I missed this point. Here is the link I would like to share.
->>>
->>> http://www.hjreggel.net/cardspeed/cs_sdxc.html
->>> Section: Summary of SD modes
->>>
->>> https://en.wikipedia.org/wiki/Secure_Digital
->>> Section: Power consumption
->>>
->>> Their different requirement for voltage requirement for UHS-I, the max
->>> value is around 3.3V
->>
->> Do you have any comment on this voltage selection for UHS-I card (1.8V).
+2015-11-17 12:00 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Fri, Nov 6, 2015 at 1:57 PM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
 >
-> I asked whether you tried this, whether setting real 1.8V works fine.
-> You did not respond. As you can see on Odroid schematics, the VDDQ for
-> MMC[01] operates under 1.8V.
+>> Thinking again at it, I persist to believe have the defines makes it
+>> easier to use.
+>> With auto-completion, it makes it faster and less error prone to
+>> select the right
+>> alternate function without parsing the datasheet.
 >
-> The VDDQ for MMC2 - under 2.8V.
+> Auto-completion ... should we design our source code to
+> fit certain editors?
+No, you are right.
+But even without auto-completion, it is easier to have the values pre-computed.
+And Mediatek has the defines, so it is better to do the same for STM32
+for consistency.
+
+>> But as these defines are not actually used on driver side, maybe I
+>> could just move
+>> them to the dts directory?
 >
-> In commit description you mentioned that this voltage "helps scale the
-> required voltage to detect and load the microSD cards". What does it
-> mean "help"? I would expect that detecting and loading of microSD cards
-> either works or does not work. I am not sure how does it help.
->
-> Best regards,
-> Krzysztof
+> No strong opinion there. include/dt-bindings is part of the bindings
+> documentation actually so I guess it goes there.
+Ok.
 
-I will fix the commit message.
-
-Earlier around v4.2 detection of UHS-I card was not working,but now it
-seen to work in v4.4 kernel.
-May be some driver issue which might have been fixed.
-
-I am just trying to set the voltage range for LDO13 from 1.8V (min) to
-2.8V (max).
-If setting this is wrong according to datasheet then I will drop this setting.
-
--Anand Moon
+Thanks,
+Maxime
