@@ -1,127 +1,70 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: fix clock source for arm twd
- and global timers
-Date: Mon, 30 Nov 2015 15:49:04 +0200
-Message-ID: <565C53D0.6090305@ti.com>
-References: <1448653468-24908-1-git-send-email-grygorii.strashko@ti.com>
- <565C0814.3000001@ti.com> <565C38CE.1070907@ti.com> <565C4FE2.3090403@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565C4FE2.3090403-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] net/macb: bindings doc: Merge cdns-emac to macb
+Date: Mon, 30 Nov 2015 14:51:46 +0100
+Message-ID: <497a8248e7cf8b7f7f30d6c47c8591583dcc0bce.1448891503.git.michal.simek@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2015 03:32 PM, Tero Kristo wrote:
-> On 11/30/2015 01:53 PM, Grygorii Strashko wrote:
->> On 11/30/2015 10:25 AM, Tero Kristo wrote:
->>> On 11/27/2015 09:44 PM, Grygorii Strashko wrote:
->>>> ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
->>>> But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
->>>> Timekeeping core misbehaves. For example, execution of command
->>>> "sleep 5" will take 10 sec instead of 5.
->>>>
->>>> Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
->>>> it for clocking ARM TWD and Global timer (same way as on OMAP4).
->>>>
->>>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>>> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->>>> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->>>> Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and
->>>> SCU nodes")
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>   arch/arm/boot/dts/am4372.dtsi        | 4 ++--
->>>>   arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
->>>>   2 files changed, 10 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/am4372.dtsi
->>>> b/arch/arm/boot/dts/am4372.dtsi
->>>> index d83ff9c..de8791a 100644
->>>> --- a/arch/arm/boot/dts/am4372.dtsi
->>>> +++ b/arch/arm/boot/dts/am4372.dtsi
->>>> @@ -74,7 +74,7 @@
->>>>           reg = <0x48240200 0x100>;
->>>>           interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
->>>>           interrupt-parent = <&gic>;
->>>> -        clocks = <&dpll_mpu_m2_ck>;
->>>> +        clocks = <&mpu_periphclk>;
->>>>       };
->>>>
->>>>       local_timer: timer@48240600 {
->>>> @@ -82,7 +82,7 @@
->>>>           reg = <0x48240600 0x100>;
->>>>           interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
->>>>           interrupt-parent = <&gic>;
->>>> -        clocks = <&dpll_mpu_m2_ck>;
->>>> +        clocks = <&mpu_periphclk>;
->>>>       };
->>>>
->>>>       l2-cache-controller@48242000 {
->>>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> index cc88728..2ff58b1 100644
->>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> @@ -259,6 +259,14 @@
->>>>           ti,invert-autoidle-bit;
->>>>       };
->>>>
->>>> +    mpu_periphclk: mpu_periphclk {
->>>> +        #clock-cells = <0>;
->>>> +        compatible = "fixed-factor-clock";
->>>> +        clocks = <&dpll_mpu_ck>;
->>>
->>> I don't think this is correct, ARM core is fed dpll_mpu_m2_ck, where the
->>> divisor value can potentially differ from 1. If you feed this clock
->>> directly from dpll_mpu_ck, you bypass this divisor.
->>
->> Sry. My mistake. I'll update it to use dpll_mpu_m2_ck.
->>
->>>
->>> Did you check what is the impact of cpufreq on the ARM TWD/timers?
->>
->> TWD is cpufreq friendly, ARM GT is not.
-> 
-> I think the TWD kick period changes with cpufreq also right?
+Merge two bindings for the same driver to together.
 
-linux/arch/arm/kernel/smp_twd.c has code to handle cpufreq.
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-> 
-> How are the clocks handled with cpufreq? The user just needs to 
-> understand that the timers will be screwed if he uses ARM GT? Should we 
-> add some sort of dependency to disable the ARM GT if cpufreq is enabled?
+ Documentation/devicetree/bindings/net/cdns-emac.txt | 20 --------------------
+ Documentation/devicetree/bindings/net/macb.txt      |  3 +++
+ 2 files changed, 3 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/cdns-emac.txt
 
-Yep. May be, but very good question is how to do that in case of
-OMAP multiplatform build which enables most of all config options at once.
-
-There two threads related to this:
-[1] http://www.spinics.net/lists/arm-kernel/msg459649.html
-[2] http://www.spinics.net/lists/arm-kernel/msg461141.html
-
-Personally, I've do not see better way than [2] right now.
-
-
->>>> +        clock-mult = <1>;
->>>> +        clock-div = <2>;
->>>> +    };
->>>> +
->>>>       dpll_ddr_ck: dpll_ddr_ck {
->>>>           #clock-cells = <0>;
->>>>           compatible = "ti,am3-dpll-clock";
->>>>
-
-By the way, does this patch is still correct taking into account dependency
-from cpufreq?
-Does it make sense update it to use dpll_mpu_ck and resend?
-
+diff --git a/Documentation/devicetree/bindings/net/cdns-emac.txt b/Documentation/devicetree/bindings/net/cdns-emac.txt
+deleted file mode 100644
+index 4451ee973223..000000000000
+--- a/Documentation/devicetree/bindings/net/cdns-emac.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-* Cadence EMAC Ethernet controller
+-
+-Required properties:
+-- compatible: Should be "cdns,[<chip>-]{emac}"
+-  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
+-  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
+-  Or the generic form: "cdns,emac".
+-- reg: Address and length of the register set for the device
+-- interrupts: Should contain macb interrupt
+-- phy-mode: see ethernet.txt file in the same directory.
+-
+-Examples:
+-
+-	macb0: ethernet@fffc4000 {
+-		compatible = "cdns,at91rm9200-emac";
+-		reg = <0xfffc4000 0x4000>;
+-		interrupts = <21>;
+-		phy-mode = "rmii";
+-		local-mac-address = [3a 0e 03 04 05 06];
+-	};
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index b5d79761ac97..1361a6daf63f 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -2,6 +2,7 @@
+ 
+ Required properties:
+ - compatible: Should be "cdns,[<chip>-]{macb|gem}"
++  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
+   Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs or the 10/100Mbit IP
+   available on sama5d3 SoCs.
+   Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
+@@ -10,7 +11,9 @@ Required properties:
+   Use "atmel,sama5d2-gem" for the GEM IP (10/100) available on Atmel sama5d2 SoCs.
+   Use "atmel,sama5d3-gem" for the Gigabit IP available on Atmel sama5d3 SoCs.
+   Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel sama5d4 SoCs.
++  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
+   Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
++  Or the generic form: "cdns,emac".
+ - reg: Address and length of the register set for the device
+ - interrupts: Should contain macb interrupt
+ - phy-mode: See ethernet.txt file in the same directory.
 -- 
-regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
