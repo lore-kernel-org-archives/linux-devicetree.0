@@ -1,116 +1,38 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCHv2] ARM: dts: use vmmc-supply of emmc/sd for
- exynos5422-odroidxu3
-Date: Mon, 30 Nov 2015 14:42:11 +0900
-Message-ID: <565BE1B3.1070505@samsung.com>
-References: <1445345793-5189-1-git-send-email-linux.amoon@gmail.com>
- <56283582.5010908@samsung.com>
- <CANAwSgQFqcM++D6FoTXTnZJryaoi92pEiSvbjyz8rj79VmGOMQ@mail.gmail.com>
- <CANAwSgR+UTZSQYhXcP1a_T9AvJCS98dj1fafzJZ1S3oXvMUx+A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CANAwSgR+UTZSQYhXcP1a_T9AvJCS98dj1fafzJZ1S3oXvMUx+A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH] of/address: replace printk(KERN_ERR ...) with pr_err(...)
+Date: Mon, 30 Nov 2015 15:14:19 +0900
+Message-ID: <1448864059-12319-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27.11.2015 15:42, Anand Moon wrote:
-> hi Krzysztof,
-> 
-> On 22 October 2015 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
->> hi Krzysztof,
->>
->> On 22 October 2015 at 06:31, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->>> On 20.10.2015 21:56, Anand Moon wrote:
->>>> Changes need for host controller to detect UHS-I highspeed cards.
->>>> Changes in VDDQ_MMC2 voltage range help scale
->>>> the required voltage to detect and load the microSD cards.
->>>
->>> Thanks for updating description of commit.
->>>
->>>>
->>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>> ---
->>>> Changes based on git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v4.4-next/dt-samsung branch
->>>>
->>>> Changes:
->>>> Drop the ranp_delay for LDO9.
->>>>
->>>> Thanks to : Krzysztof, Doug Anderson, Jaehoon Chung for helping
->>>> me out figure out the mmc core requirement.
->>>>
->>>> Also drop the previous changes:
->>>> use cd-gpio method to detect sd-card.
->>>> Added UHS-I bus speed support.
->>>>
->>>> [    4.713553] random: nonblocking pool is initialized
->>>> [    4.718423] 14530000.hdmi supply hdmi-en not found, using dummy regulator
->>>> [    4.726206] exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
->>>> [    4.732555] exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
->>>> [    4.740180] exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
->>>> [    4.746936] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
->>>> [    4.753428] [drm] No driver support for vblank timestamp query.
->>>> [    4.940794] Console: switching to colour frame buffer device 274x77
->>>> [    4.995344] exynos-drm exynos-drm: fb0:  frame buffer device
->>>> [    5.024573] [drm] Initialized exynos 1.0.0 20110530 on minor 0
->>>> [    5.031164] exynos-dwc3 usb@12000000: no suspend clk specified
->>>> [    5.054571] usb 2-1: new full-speed USB device number 2 using exynos-ohci
->>>> [    5.159527] dwmmc_exynos 12220000.mmc: Busy; trying anyway
->>>> [    5.163705] mmc_host mmc1: Timeout sending command (cmd 0x202000 arg 0x0 status 0x0)
->>>> ---
->>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 7 ++++++-
->>>>  1 file changed, 6 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> index 1af5bdc..a4be3e0 100644
->>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>>> @@ -182,9 +182,10 @@
->>>>
->>>>                       ldo13_reg: LDO13 {
->>>>                               regulator-name = "vdd_ldo13";
->>>> -                             regulator-min-microvolt = <2800000>;
->>>> +                             regulator-min-microvolt = <1800000>;
->>>
->>> You did not convinced me in previous discussion about the change to
->>> 1.8V. I said that:
->>>> On the same diagram few lines below:
->>>> VDDQ_MMC2: 2.8V 250mA
->>>
->>> You responded:
->>>> You are correct.
->>>
->>> So I am confused. Are you sure that this SD card block can/should
->>> operate on 1.8V? Have you actually tried this?
->>>
->>
->> Look like I missed this point. Here is the link I would like to share.
->>
->> http://www.hjreggel.net/cardspeed/cs_sdxc.html
->> Section: Summary of SD modes
->>
->> https://en.wikipedia.org/wiki/Secure_Digital
->> Section: Power consumption
->>
->> Their different requirement for voltage requirement for UHS-I, the max
->> value is around 3.3V
-> 
-> Do you have any comment on this voltage selection for UHS-I card (1.8V).
+A trivial change suggested by checkpatch.pl.
 
-I asked whether you tried this, whether setting real 1.8V works fine.
-You did not respond. As you can see on Odroid schematics, the VDDQ for
-MMC[01] operates under 1.8V.
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-The VDDQ for MMC2 - under 2.8V.
+ drivers/of/address.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In commit description you mentioned that this voltage "helps scale the
-required voltage to detect and load the microSD cards". What does it
-mean "help"? I would expect that detecting and loading of microSD cards
-either works or does not work. I am not sure how does it help.
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index cd53fe4..5289c80 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -596,7 +596,7 @@ static u64 __of_translate_address(struct device_node *dev,
+ 		pbus = of_match_bus(parent);
+ 		pbus->count_cells(dev, &pna, &pns);
+ 		if (!OF_CHECK_COUNTS(pna, pns)) {
+-			printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
++			pr_err("prom_parse: Bad cell count for %s\n",
+ 			       of_node_full_name(dev));
+ 			break;
+ 		}
+-- 
+1.9.1
 
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
