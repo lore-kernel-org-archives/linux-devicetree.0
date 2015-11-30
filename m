@@ -1,53 +1,86 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: dts: qcom: msm8974-honami: Define pinctrl state
- for blsp_uart2
-Date: Mon, 30 Nov 2015 15:01:17 -0600
-Message-ID: <20151130210117.GA14162@Agamemnon.attlocal.net>
-References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAMAWPa9fHWY3diCfZG2s0ZaNqza+SnK+4QZzkAwW8xb9zjOqHg@mail.gmail.com>
- <CAJAp7OjWj2ZGwypXdWbkDVadJePT7PrPSDJ3-89q+oxGdhDHWw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: add Marvell core PLL and clock divider
+ PMU documentation
+Date: Mon, 30 Nov 2015 15:03:45 -0600
+Message-ID: <20151130210345.GA18808@rob-hp-laptop>
+References: <E1a24wj-0004iw-Rf@rmk-PC.arm.linux.org.uk>
+ <20151127202114.GA613@rob-hp-laptop>
+ <20151127203932.GP8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJAp7OjWj2ZGwypXdWbkDVadJePT7PrPSDJ3-89q+oxGdhDHWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20151127203932.GP8644@n2100.arm.linux.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 12:19:13PM -0800, Bjorn Andersson wrote:
-> On Mon, Nov 30, 2015 at 11:23 AM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue, Oct 20, 2015 at 9:57 PM, Bjorn Andersson
-> > <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> >> Make sure the blsp1_uart2 pins are in the correct state for the uart.
-> >>
-> >> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> >
-> > kernelci.org has been detecting boot failures on my z1 since
-> > next-20151120[1] and I finally got around to bisecting, which pointed
-> > to this patch which is in next in the for of commit 14cd83b824aa ARM:
-> > dts: qcom: msm8974-honami: Define pinctrl state for blsp_uart2
-> >
-> > That commit doesn't revert cleanly on top of next-20151130, but
-> > manually removing the stuff added in this patch, next-20151130 boots
-> > fine on the z1.
-> >
-> > Kevin
-> >
-> > [1] http://kernelci.org/boot/qcom-msm8974-sony-xperia-honami/job/next/kernel/next-20151127/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5658061359b5140196b5fd2f
+On Fri, Nov 27, 2015 at 08:39:32PM +0000, Russell King - ARM Linux wrote:
+> On Fri, Nov 27, 2015 at 02:21:14PM -0600, Rob Herring wrote:
+> > On Thu, Nov 26, 2015 at 10:23:21PM +0000, Russell King wrote:
+> > > Add documentation for the Marvell clock divider driver, which is used
+> > > to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
+> > > 
+> > > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> > > ---
+> > >  .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clock.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+> > > new file mode 100644
+> > > index 000000000000..0c602de279e5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+> > > @@ -0,0 +1,28 @@
+> > > +PLl divider based Dove clocks
+> > > +
+> > > +Marvell Dove has a 2GHz PLL, which feeds into a set of dividers to provide
+> > > +high speed clocks for a number of peripherals.  These dividers are part of
+> > > +the PMU, and thus this node should be a child of the PMU node.
+> > 
+> > It seems a bit strange to just be documenting these clocks. What about 
+> > the rest of the SOC clocks?
 > 
-> Thanks Kevin,
+> This is all that this pair of registers provide.
 > 
-> I did see these too. But at the same time, as far as I can see, the
-> qcom_defconfig boots just fine - indicating that this particular
-> commit would not be the cause.
+> The SoC has other clocks handled by other DT nodes - for Dove, we now
+> have:
 > 
-> I'll fire up some builds to figure out what's going on.
+>         gate_clk: clock-gating-ctrl@0038 {
+>                 compatible = "marvell,dove-gating-clock";
+>                 reg = <0x0038 0x4>;
+>                 clocks = <&core_clk 0>;
+>                 #clock-cells = <1>;
+>         };
+>         divider_clk: core-clock@0064 {
+>                 compatible = "marvell,dove-divider-clock";
+>                 reg = <0x0064 0x8>;
+>                 #clock-cells = <1>;
+>         };
+>         core_clk: core-clocks@0214 {
+>                 compatible = "marvell,dove-core-clock";
+>                 reg = <0x0214 0x4>;
+>                 #clock-cells = <1>;
+>         };
+> 
+> and all three of these are part of the PMU register block.  I'm not sure
+> why the mvebu maintainers decided to minutely describe the PMU like this,
+> but unfortunately that's the structure we have.
 
-I threw the extra config options that qcom_defconfig had on it on top of my next
-branch.  I hadn't seen any kernel ci runs on that yet.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay,
+
+Acked-by: Rob Herring <robh@kernel.org>
+ 
+> IMHO, it would've been cleaner to have these components registered
+> separately from a central PMU driver (as I'm doing with the power
+> domains, resets and IRQs that are part of the PMU), but my view is
+> limited to Dove and not the other mvebu clocks, so there may be a good
+> reason for it.
+
+Yes, we debated which way to go early on and decided generally to go 
+this direction, but it seems Dove was before that. We could try to 
+migrate Dove, but it is probably not worth the pain at this point.
+
+Rob
