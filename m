@@ -1,47 +1,60 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 3/9] includes: dt-bindings: Add STM32F429 pinctrl DT bindings
-Date: Mon, 30 Nov 2015 16:55:35 +0100
-Message-ID: <CALszF6DLfpA6bdndRvBjufXnsoOxRT0bgN8P_D=2gqc1CK4=+A@mail.gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1445102604-11502-4-git-send-email-mcoquelin.stm32@gmail.com>
-	<56261239.5030007@linaro.org>
-	<CALszF6DQ2G_Fzhk_SP+A0i_Z4mg9etdf1NcfQS3cPpB0zNot-w@mail.gmail.com>
-	<CACRpkdashSEWL+KFgD+MmdoZwjXnsXpxy-MPmDciO9n87+6BBQ@mail.gmail.com>
-	<CALszF6B7928hpMDMH0_wmo-MakZX7sofO85aeBwv-aCLBHnrkA@mail.gmail.com>
-	<CACRpkdZTHcROza2diFCOj783T1zfbkd=Dov3PUzDV2U35qEFXA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/18] ARM: am57xx: cl-som-am57x: dts: add basic module
+ support
+Date: Mon, 30 Nov 2015 09:55:37 -0600
+Message-ID: <20151130155537.GA11704@rob-hp-laptop>
+References: <1448433590-1399-1-git-send-email-lifshitz@compulab.co.il>
+ <1448433590-1399-2-git-send-email-lifshitz@compulab.co.il>
+ <565629D2.2010401@ti.com>
+ <565AEB19.4050107@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZTHcROza2diFCOj783T1zfbkd=Dov3PUzDV2U35qEFXA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Thompson <daniel.thompson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bruno Herrera <bruherrera@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <565AEB19.4050107-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Toni Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-11-17 12:00 GMT+01:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Fri, Nov 6, 2015 at 1:57 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->
->> Thinking again at it, I persist to believe have the defines makes it
->> easier to use.
->> With auto-completion, it makes it faster and less error prone to
->> select the right
->> alternate function without parsing the datasheet.
->
-> Auto-completion ... should we design our source code to
-> fit certain editors?
-No, you are right.
-But even without auto-completion, it is easier to have the values pre-computed.
-And Mediatek has the defines, so it is better to do the same for STM32
-for consistency.
+On Sun, Nov 29, 2015 at 02:10:01PM +0200, Dmitry Lifshitz wrote:
+> Hi Nishanth,
+> 
+> Thank you for the provided feedback.
+> 
+> On 11/25/2015 11:36 PM, Nishanth Menon wrote:
+> >On 11/25/2015 12:39 AM, Dmitry Lifshitz wrote:
+> >[...]
+> >
+> >>diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> >>new file mode 100644
+> >>index 0000000..b11d7da
+> >>--- /dev/null
+> >>+++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+> >[...]
+> >
+> >>+/ {
+> >>+	model = "CompuLab CL-SOM-AM57x";
+> >>+	compatible = "compulab,cl-som-am57x", "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7";
+> >>+
+> >>+	memory {
+> >>+		device_type = "memory";
+> >>+		reg = <0x80000000 0x20000000>; /* 512 MB - minimal configuration */
+> >
+> >I think if you like to enable LPAE, the format might look a little
+> >different..
+> >
+> 
+> We would like to have a basic HW support in the mainline. It might be
+> enhanced later, once we get to work on LPAE stuff.
 
->> But as these defines are not actually used on driver side, maybe I
->> could just move
->> them to the dts directory?
->
-> No strong opinion there. include/dt-bindings is part of the bindings
-> documentation actually so I guess it goes there.
-Ok.
+I think what is meant here is the cell sizes should be 2 instead of 1. 
+You can do that independent of LPAE support. I would expect the base SOC 
+dtsi file to set the cell sizes correctly though.
 
-Thanks,
-Maxime
+Rob
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
