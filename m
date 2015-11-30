@@ -1,38 +1,39 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH] of/address: replace printk(KERN_ERR ...) with pr_err(...)
-Date: Mon, 30 Nov 2015 15:14:19 +0900
-Message-ID: <1448864059-12319-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] of/address: fix typo in comment block of of_translate_one()
+Date: Mon, 30 Nov 2015 15:22:37 +0900
+Message-ID: <1448864557-18658-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-A trivial change suggested by checkpatch.pl.
+Remove the "not" before "cannot".
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+I am fixing the comment block style while I am here.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- drivers/of/address.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/address.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index cd53fe4..5289c80 100644
+index 5289c80..91a469d 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -596,7 +596,7 @@ static u64 __of_translate_address(struct device_node *dev,
- 		pbus = of_match_bus(parent);
- 		pbus->count_cells(dev, &pna, &pns);
- 		if (!OF_CHECK_COUNTS(pna, pns)) {
--			printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
-+			pr_err("prom_parse: Bad cell count for %s\n",
- 			       of_node_full_name(dev));
- 			break;
- 		}
+@@ -485,9 +485,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	int rone;
+ 	u64 offset = OF_BAD_ADDR;
+ 
+-	/* Normally, an absence of a "ranges" property means we are
++	/*
++	 * Normally, an absence of a "ranges" property means we are
+ 	 * crossing a non-translatable boundary, and thus the addresses
+-	 * below the current not cannot be converted to CPU physical ones.
++	 * below the current cannot be converted to CPU physical ones.
+ 	 * Unfortunately, while this is very clear in the spec, it's not
+ 	 * what Apple understood, and they do have things like /uni-n or
+ 	 * /ht nodes with no "ranges" property and a lot of perfectly
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
