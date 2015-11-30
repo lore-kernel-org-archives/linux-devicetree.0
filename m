@@ -1,98 +1,67 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH] arm: dts: berlin2q-marvell-dmp: add sdhci1 fully functionality
-Date: Mon, 30 Nov 2015 21:54:39 +0800
-Message-ID: <1448891679-7894-1-git-send-email-jszhang@marvell.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v2] arm: dts: Fix audio card detection on peach boards
+Date: Mon, 30 Nov 2015 11:01:33 -0300
+Message-ID: <565C56BD.2050002@osg.samsung.com>
+References: <1444653438-6532-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1444653438-6532-1-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The sdhci1 on Marvell BG2Q DMP board is used as sdcard interface, we
-have gpios for card detection, write-protect, vqmmc and vmmc.
+Hello Alim,
 
-This patch adds pinmux for this sdcard interface, then adds regulators
-for vmmc and vqmmc, lastly adds cd-gpios, wp-gpios properties.
+On 10/12/2015 09:37 AM, Alim Akhtar wrote:
+> Since commit 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards"),
+> sound card detection is broken on peach boards and gives below errors:
+> 
+> [    3.630457] max98090 7-0010: MAX98091 REVID=0x51
+> [    3.634233] max98090 7-0010: use default 2.8v micbias
+> [    3.640985] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
+> [    3.645307] max98090 7-0010: Invalid master clock frequency
+> [    3.650824] snow-audio sound: ASoC: Peach-Pi-I2S-MAX98091 late_probe() failed: -22
+> [    3.658914] snow-audio sound: snd_soc_register_card failed (-22)
+> [    3.664366] snow-audio: probe of sound failed with error -22
+> 
+> This patch adds missing assigned-clocks and assigned-clock-parents for
+> pmu_system_controller node which is used as "mclk" for audio codec.
+> 
+> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Fixes: 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards")
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
-since v1:
- - move sd1_pmux to soc dtsi
- - remove cd-inverted and make cd-gpio GPIO_ACTIVE_LOW
+I found that this patch is not enough to have proper audio working
+on an Exynos5800 Peach Pi. Even playing a simple wav does not work:
 
- arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 37 ++++++++++++++++++++++++++++--
- arch/arm/boot/dts/berlin2q.dtsi            |  5 ++++
- 2 files changed, 40 insertions(+), 2 deletions(-)
+$ time aplay -D sysdefault /usr/share/sounds/alsa/Front_Center.wav 
+Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Mono
 
-diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-index cdcf89b..33b2875 100644
---- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-+++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-@@ -84,12 +84,45 @@
- 			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
-+
-+		reg_sdio1_vmmc: regulator@3 {
-+			compatible = "regulator-fixed";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-name = "sdio1_vmmc";
-+			enable-active-high;
-+			regulator-boot-on;
-+			gpio = <&portb 21 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		reg_sdio1_vqmmc: regulator@4 {
-+			compatible = "regulator-gpio";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-name = "sdio1_vqmmc";
-+			regulator-type = "voltage";
-+			enable-active-high;
-+			gpios = <&portb 16 GPIO_ACTIVE_HIGH>;
-+			states = <3300000 0x1
-+				  1800000 0x0>;
-+		};
-+	};
-+};
-+
-+&soc_pinctrl {
-+	sd1gpio_pmux: sd1pwr-pmux {
-+		groups = "G23", "G32";
-+		function = "gpio";
- 	};
- };
- 
- &sdhci1 {
--	broken-cd;
--	sdhci,wp-inverted;
-+	vmmc-supply = <&reg_sdio1_vmmc>;
-+	vqmmc-supply = <&reg_sdio1_vqmmc>;
-+	cd-gpios = <&portc 30 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&portd 0 GPIO_ACTIVE_HIGH>;
-+	pinctrl-0 = <&sd1gpio_pmux>, <&sd1_pmux>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 8ea177f..73a9362 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -417,6 +417,11 @@
- 			soc_pinctrl: pin-controller {
- 				compatible = "marvell,berlin2q-soc-pinctrl";
- 
-+				sd1_pmux: sd1-pmux {
-+					groups = "G31";
-+					function = "sd1";
-+				};
-+
- 				twsi0_pmux: twsi0-pmux {
- 					groups = "G6";
- 					function = "twsi0";
+real	0m1.138s
+user	0m0.005s
+sys	0m0.005s
+
+This should be ~1.5 seconds so audio is processed faster than expected.
+
+So something else besides making the CLKOUT to provide a valid frequency
+for the codec's master clock is needed.
+
+Do you know what's missing in mainline? For instance, I see that the
+sound/soc/samsung/snow.c ASoC machine driver doesn't have a hw_params
+but I'm not that familiar with ALSA to know if that makes sense or not.
+
+Also, do you know if the "simple-audio-card" can be used instead for
+snow and peachs as it is used for other Exynos5 boards or a specific
+ASoC machine driver is really needed for these Chromebooks?
+
+Best regards,
 -- 
-2.6.2
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
