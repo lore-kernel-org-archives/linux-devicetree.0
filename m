@@ -1,78 +1,46 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH 1/3] power: domain: add pm_genpd_uninit
-Date: Mon, 30 Nov 2015 15:19:09 -0800
-Message-ID: <7h7fkz9itu.fsf@deeprootsystems.com>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
-	<1447956490-22930-2-git-send-email-alex.aring@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: arm64: dts: qcom: Add apq8096 dragonboard dts skeletons
+Date: Mon, 30 Nov 2015 15:48:17 -0800
+Message-ID: <20151130234817.GC21446@codeaurora.org>
+References: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1447956490-22930-2-git-send-email-alex.aring@gmail.com>
-	(Alexander Aring's message of "Thu, 19 Nov 2015 19:08:08 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexander Aring <alex.aring@gmail.com>
-Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Alexander Aring <alex.aring@gmail.com> writes:
-
-> This patch adds function pm_genpd_uninit for undo a pm_genpd_init. This
-> is useful for multiple power domains while probing. If the probing fails
-> after one pm_genpd_init was called we need to undo all previous
-> registrations of generic pm domains inside the gpd_list list.
->
-> There is a check on IS_ERR_OR_NULL(genpd) which is useful to check again
-> registered power domains and not registered domains, the driver can use
-> this mechanism to have an array with registered and non-registered power
-> domains, where non-registered power domains are NULL.
->
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+On 11/26, Rajendra Nayak wrote:
+> Add new dtsi and dts files for the apq8096 dragonboards with just
+> a serial device used as debug console
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
->  drivers/base/power/domain.c | 22 ++++++++++++++++++++++
->  include/linux/pm_domain.h   |  4 ++++
->  2 files changed, 26 insertions(+)
->
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index e03b1ad..24f54b8 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -1509,6 +1509,28 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
->  }
->  EXPORT_SYMBOL_GPL(pm_genpd_init);
->  
-> +/**
-> + * pm_genpd_uninit - Uninitialize a generic I/O PM domain object.
-> + * @genpd: PM domain object to initialize.
-> + */
-> +void pm_genpd_uninit(struct generic_pm_domain *genpd)
-> +{
-> +	if (IS_ERR_OR_NULL(genpd))
-> +		return;
-> +
-> +	/* check if domain is still in registered inside the pm subsystem */
-> +	WARN_ON_ONCE(!list_empty(&genpd->master_links) ||
-> +		     !list_empty(&genpd->slave_links) ||
-> +		     !list_empty(&genpd->dev_list));
+> Patch applies on top of Stephens' patches to add msm8996 dtsi
+> https://lkml.org/lkml/2015/11/17/955
+> 
+>  arch/arm64/boot/dts/qcom/Makefile                 |  2 +-
+>  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts  | 21 ++++++++++++++++
+>  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi | 30 +++++++++++++++++++++++
+>  3 files changed, 52 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index fa1f661..bd992ef 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,5 +1,5 @@
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-dragonboard.dtb
 
-So we WARN if there are parents/children/devices, but shouldn't this
-return an error instead of continuing to remove/uninit the genpd?
+We should move to one dtb per line in this file. Other platforms
+are doing the same thing.
 
-The caller of _uninit should probably also be removing any
-parents/children and removing devices before calling _uninit, no?
-
-> +	mutex_lock(&gpd_list_lock);
-> +	list_del(&genpd->gpd_list_node);
-> +	mutex_unlock(&gpd_list_lock);
-> +
-> +	mutex_destroy(&genpd->lock);
-> +}
-> +EXPORT_SYMBOL_GPL(pm_genpd_uninit);
-
-Kevin
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
