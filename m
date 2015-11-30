@@ -1,47 +1,122 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH] thermal: rcar: add .set_trip_temp support
-Date: Mon, 30 Nov 2015 10:51:00 -0800
-Message-ID: <20151130185058.GA5900@localhost.localdomain>
-References: <87a8q28wsv.wl%kuninori.morimoto.gx@renesas.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
+ lamobo-r1 board
+Date: Mon, 30 Nov 2015 19:55:28 +0100
+Message-ID: <20151130185528.GC3664@lukather>
+References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
+ <20151122195925.GR32142@lukather>
+ <5652CE10.1020808@redhat.com>
+ <20151124072012.GD32142@lukather>
+ <565423E1.5090200@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8X7/QrJGcKSMr1RN"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBK5X6KZAKGQEYA6V3HI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87a8q28wsv.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, Ryusuke Sakato <ryusuke.sakato.bx@renesas.com>, linux-kernel@vger.kernel.org, "osd2@lm.renesas.com" <osd2@lm.renesas.com>
+In-Reply-To: <565423E1.5090200-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 05:42:27AM +0000, Kuninori Morimoto wrote:
-> 
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> You can set trip temp if your kernel has CONFIG_THERMAL_WRITABLE_TRIPS
-> 
-> echo $temp > /sys/class/thermal/thermal_zone0/trip_point_0_temp
-> 
-> -45000 < $temp < 125000 is supported
-> Default is 90000
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
->   This patch is v2 of "[PATCH] thermal: rcar: enable to set tripN-temp via DT"
->   I think it will be full-DT feature if it uses of-thermal, but this driver is used
->   from non-DT SoC too. We would like to keep non-DT support.
->   And we would like to do is only exchange trip temp.
->   .set_trip_temp is very enouth for it at this point.
->   But, it can use of-thermal feature in the future.
+--8X7/QrJGcKSMr1RN
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Kuninori,
-
-
-According to discussion on your first version [1], this patch is not needed
-anymore, right?
-
-If you want to add the support for writable trip points, please, add the
-support to of-thermal, as this driver supports only DT booting boards.
-
-
-[1] - https://lkml.org/lkml/2015/11/25/888
+On Tue, Nov 24, 2015 at 09:46:25AM +0100, Hans de Goede wrote:
+> >>>>+&i2c0 {
+> >>>>+	pinctrl-names = "default";
+> >>>>+	pinctrl-0 = <&i2c0_pins_a>;
+> >>>>+	status = "okay";
+> >>>>+
+> >>>>+	axp209: pmic@34 {
+> >>>>+		reg = <0x34>;
+> >>>>+		interrupt-parent = <&nmi_intc>;
+> >>>>+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> >>>>+	};
+> >>>>+};
+> >>>>+
+> >>>>+&i2c2 {
+> >>>>+	pinctrl-names = "default";
+> >>>>+	pinctrl-0 = <&i2c2_pins_a>;
+> >>>>+	status = "okay";
+> >>>>+};
+> >>>
+> >>>What is connected on i2c2?
+> >>
+> >>The Lamobo-R1 has a gpio header idententical to the one found
+> >>on the Banana Pi, i2c2 is routed to pins there.
+> >
+> >So it's just a generic header with the pins left as is, and it's up to
+> >the user to plug something on it?
+> >
+> >The policy we had so far for this was to not enforce anything for
+> >these pins, and leave to the user the choice to to do whatever he
+> >wanted.
 > 
+> I'm not aware of such a policy and I actually believe that the policy
+> sofar has been to go with the function as which the pins are marked
+> in vendor documentation.
+> 
+> Looking at just SBC-s we're enabling at least 1 extra (unused other
+> then for a header) i2c controller on:
+> 
+> arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
+> arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+> arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
+> arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+> arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> arch/arm/boot/dts/sun7i-a20-bananapro.dts
+> arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+> arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+> arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
+> arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> 
+> And spi on:
+> 
+> arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
+> arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> arch/arm/boot/dts/sun7i-a20-bananapro.dts
+> arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+> 
+> And note how the official documentation labels
+> the pins as sda / scl resp. miso/mosi:
+> 
+> http://www.bananapi.com/index.php/component/content/article?id=24
+> 
+> (you need to scroll down a bit)
+
+Hmmm, I've been pretty bad at this, haven't I ? :)
+
+> As said this board is using the same header as found
+> on the banana pi and for the pi we are configuring
+> these pins as i2c / spi and looking at how I see
+> people use the raspberry pi at my local hackerspace
+> this is also what people want most of the time.
+
+What I'm more concerned about is people that will not want that. By
+putting this into our DT, they will never be able to use their pin
+without any way out of this apart from patching the DT itself.
+
+But yeah, ok.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--8X7/QrJGcKSMr1RN--
