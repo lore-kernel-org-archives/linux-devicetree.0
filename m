@@ -1,105 +1,59 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2] arm: dts: Fix audio card detection on peach boards
-Date: Mon, 30 Nov 2015 15:24:03 -0300
-Message-ID: <565C9443.3010303@osg.samsung.com>
-References: <1444653438-6532-1-git-send-email-alim.akhtar@samsung.com>
- <565C56BD.2050002@osg.samsung.com>
- <CAGOxZ52=rci6MaEL4aa_G8VP16kDi9QhYUcYS8qF263nZeHgpg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 27/28] dt-bindings: mips: img,boston: Document img,boston
+ binding
+Date: Mon, 30 Nov 2015 12:34:17 -0600
+Message-ID: <20151130183417.GA16490@rob-hp-laptop>
+References: <1448900513-20856-1-git-send-email-paul.burton@imgtec.com>
+ <1448900513-20856-28-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGOxZ52=rci6MaEL4aa_G8VP16kDi9QhYUcYS8qF263nZeHgpg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1448900513-20856-28-git-send-email-paul.burton@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@gmail.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski@samsung.com>, kgene <kgene@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, stable@vger.kernel.org
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: linux-mips@linux-mips.org, Tejun Heo <tj@kernel.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alim,
-
-On 11/30/2015 01:59 PM, Alim Akhtar wrote:
-> Hi Javier,
+On Mon, Nov 30, 2015 at 04:21:52PM +0000, Paul Burton wrote:
+> Add documentation for the simple img,boston devicetree binding & the
+> boot protocol used to pass the devicetree to the kernel.
 > 
-> On Mon, Nov 30, 2015 at 7:31 PM, Javier Martinez Canillas
-> <javier@osg.samsung.com> wrote:
->> Hello Alim,
->>
->> On 10/12/2015 09:37 AM, Alim Akhtar wrote:
->>> Since commit 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards"),
->>> sound card detection is broken on peach boards and gives below errors:
->>>
->>> [    3.630457] max98090 7-0010: MAX98091 REVID=0x51
->>> [    3.634233] max98090 7-0010: use default 2.8v micbias
->>> [    3.640985] snow-audio sound: HiFi <-> 3830000.i2s mapping ok
->>> [    3.645307] max98090 7-0010: Invalid master clock frequency
->>> [    3.650824] snow-audio sound: ASoC: Peach-Pi-I2S-MAX98091 late_probe() failed: -22
->>> [    3.658914] snow-audio sound: snd_soc_register_card failed (-22)
->>> [    3.664366] snow-audio: probe of sound failed with error -22
->>>
->>> This patch adds missing assigned-clocks and assigned-clock-parents for
->>> pmu_system_controller node which is used as "mclk" for audio codec.
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> Fixes: 2fad972d45c4 ("ARM: dts: Add mclk entry for Peach boards")
->>
->> I found that this patch is not enough to have proper audio working
->> on an Exynos5800 Peach Pi. Even playing a simple wav does not work:
->>
->> $ time aplay -D sysdefault /usr/share/sounds/alsa/Front_Center.wav
->> Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Mono
->>
->> real    0m1.138s
->> user    0m0.005s
->> sys     0m0.005s
->>
->> This should be ~1.5 seconds so audio is processed faster than expected.
->>
-> Did you tried playing any other file, like 128 KHz rate files etc..?
+> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/mips/img/boston.txt | 15 +++++++++++++++
+>  MAINTAINERS                                           |  5 +++++
+>  2 files changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/img/boston.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/img/boston.txt b/Documentation/devicetree/bindings/mips/img/boston.txt
+> new file mode 100644
+> index 0000000..27b2806
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/img/boston.txt
+> @@ -0,0 +1,15 @@
+> +Imagination Technologies Boston Development Board
+> +=================================================
+> +
+> +Required properties:
+> +--------------------
+> + - compatible: Must be "img,boston".
 
-Yes, I see the same problem with all the files I tested.
+No SOC compatible in addition?
 
->> So something else besides making the CLKOUT to provide a valid frequency
->> for the codec's master clock is needed.
->>
-> The $SUBJECT patch actually  fix the audio card detection issue, which
-> was failing because of the missing master clock.
->
+> +
+> +Boot protocol:
+> +--------------
+> +In accordance with the MIPS UHI specification[1], the bootloader must pass the
+> +following arguments to the kernel:
+> + - $a0: -2.
+> + - $a1: KSEG0 address of the flattened device-tree blob.
 
-I thought the problem was not a missing master clock, but an invalid clock
-frequency. Since the error message in the patch change log was:
+If this is standard, I don't know that we need to repeat it for every 
+board.
 
-"max98090 7-0010: Invalid master clock frequency"
+Rob
 
-But what I tried to ask was what else was missing to have playback working.
-
->> Do you know what's missing in mainline? For instance, I see that the
->> sound/soc/samsung/snow.c ASoC machine driver doesn't have a hw_params
->> but I'm not that familiar with ALSA to know if that makes sense or not.
->>
-> I need to check this, currently I am out on a business travel, so
-> won't be able to check.
-
-No worries, I was asked in case you had more information. Audio is the
-only thing that is missing to have all peripherals working correctly with
-mainline.
-
-> Probably we can go back to before "2fad972d45c4" and check that.
->
-
-Do you mean to revert $SUBJECT and "2fad972d45c4" to see if the bootloader
-sets this correctly? If I revert both patches then I have no audio at all.
- 
->> Also, do you know if the "simple-audio-card" can be used instead for
->> snow and peachs as it is used for other Exynos5 boards or a specific
->> ASoC machine driver is really needed for these Chromebooks?
->>
-> Not sure, AFAIR, I used machine driver on chromebooks (snow and peach).
->
-
-Yes, the downstream 3.8 ChromiumOS tree has also a machine driver but I
-don't see a simple-audio-card in that tree so it seems that predates it.
-
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+> +
+> +[1] http://prplfoundation.org/wiki/MIPS_documentation
