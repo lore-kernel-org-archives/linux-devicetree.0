@@ -1,42 +1,83 @@
-From: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH 01/14] ARM: am437x: cm-t43: dts: add basic support for
- sbc-t43
-Date: Mon, 30 Nov 2015 17:33:43 +0200
-Message-ID: <20151130153343.GB17574@skynet>
-References: <1448371155-17307-1-git-send-email-nikita@compulab.co.il>
- <1448371155-17307-2-git-send-email-nikita@compulab.co.il>
- <20151125230300.GA23057@rob-hp-laptop>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 3/9] i2c: brcmstb: add missing parenthesis
+Date: Mon, 30 Nov 2015 16:36:04 +0100
+Message-ID: <20151130153604.GN1513@katana>
+References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
+ <1445395021-4204-4-git-send-email-jaedon.shin@gmail.com>
+ <5628425C.5080104@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dPW7zu3hTOhZvCDO"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151125230300.GA23057@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+In-Reply-To: <5628425C.5080104@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jaedon Shin <jaedon.shin@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 05:03:00PM -0600, Rob Herring wrote:
-> On Tue, Nov 24, 2015 at 03:19:02PM +0200, Nikita Kiryanov wrote:
-> > Add basic support for SBC-T43: a CM-T43 based single board computer.
-> > CM-T43 is an AM437x based System-on-Module designed to serve as a building
-> > block in embedded applications. SBC-T43 is composed of CM-T43 module on
-> > top of the SB-SOM-T43 baseboard.
-> > Basic support includes UART, GPIO, and I2C.
-> > 
-> > Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> > Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> > Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> 
-> Some minor nits below, otherwise:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
 
-V2 coming up.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--dPW7zu3hTOhZvCDO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Oct 21, 2015 at 06:56:44PM -0700, Florian Fainelli wrote:
+> Le 20/10/2015 19:36, Jaedon Shin a =C3=A9crit :
+> > Add the necessary parenthesis for NOACK condition.
+> >=20
+> > Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+>=20
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+I wouldn't call them necessary?
+
+>=20
+> > ---
+> >  drivers/i2c/busses/i2c-brcmstb.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-=
+brcmstb.c
+> > index 6b8bbf99880d..2d7d155029dc 100644
+> > --- a/drivers/i2c/busses/i2c-brcmstb.c
+> > +++ b/drivers/i2c/busses/i2c-brcmstb.c
+> > @@ -305,7 +305,7 @@ static int brcmstb_send_i2c_cmd(struct brcmstb_i2c_=
+dev *dev,
+> >  	}
+> > =20
+> >  	if ((CMD_RD || CMD_WR) &&
+> > -	    bsc_readl(dev, iic_enable) & BSC_IIC_EN_NOACK_MASK) {
+> > +	    (bsc_readl(dev, iic_enable) & BSC_IIC_EN_NOACK_MASK)) {
+> >  		rc =3D -EREMOTEIO;
+> >  		dev_dbg(dev->device, "controller received NOACK intr for %s\n",
+> >  			cmd_string[cmd]);
+> >=20
+>=20
+>=20
+> --=20
+> Florian
+
+--dPW7zu3hTOhZvCDO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWXGzkAAoJEBQN5MwUoCm2BRQP/3Jp7MtRO1DcmUk+TOVQ49y3
+kvJgqGzocRCKPZzKr3a2MRRqvsRxODIjOWbM7tptNGMZVDbqBquhZB5tHfQFp7Ux
+95MjyBV6pU0jMIWnR14LwKknrUXjBN7YPrr9hbUmjKm7QAxI8LZLc5cAdE+fqza6
+uZ9qybujqnTO2eFlnXquFXPG3cnbZDx1zY9PkWmjF7sbEr7GdtcQSiq/S3tC+hJD
+XuQIMI47sp0sdBE+BefiCLPp8cF8ly67fmQ7yHtBh2D5gLE8m7MPAT9u/wKStKYX
+COCKmsyiW8jlbI5qksUq9+k8Xm3XNYaaFjXgqRWI/TSPuIC9DdSj2ZebI2AN/LCg
+t9n2QqwZcPU15hpxsm8FITtkSlhY3w3ldtGwL0GfS12HfsG0iKRFW6faYUJ2jLkM
+pQgAkD0bFcOEQN2y+O6cGw19AqU8kHjl66OpkIM+UNDBwVJxB7XHtlWJPq/7v5wO
+pfILsiO1rm59aX05Kh3FJyDkMixv3tBGJogfIYOLcHNRDfih9qBX2U6dtAchEhlN
+W4ZoDiHQdKKL6xGQch7nq2ap0WFXj693dCF0gCcXJYp4kzmoqaAesoG9el6Q2a1M
+nNwlO6osnPgwmdmkD1uCRDjPxSXOJu20hzlPRpms7Wstafu5H4rJAoCtL9NI8brU
+qnWOoBDAihktR/EOXG7V
+=4IwD
+-----END PGP SIGNATURE-----
+
+--dPW7zu3hTOhZvCDO--
