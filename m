@@ -1,89 +1,32 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH v2] arm, am335x: add support for the bosch shc board
-Date: Mon, 30 Nov 2015 07:51:01 +0100
-Message-ID: <565BF1D5.8020708@denx.de>
-References: <1447748655-2088-1-git-send-email-hs@denx.de>
- <564B9C3D.7070303@ti.com> <564C35D0.8060609@denx.de>
-Reply-To: hs@denx.de
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: Re: [RFC PATCH 02/15] PM / devfreq: exynos: Add documentation for
+ generic exynos bus frequency driver
+Date: Mon, 30 Nov 2015 07:23:31 +0000 (GMT)
+Message-ID: <962403713.42381448868207072.JavaMail.weblogic@epmlwas08c>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <564C35D0.8060609@denx.de>
+MIME-version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, Georg.Soffel@bosch-si.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tony Lindgren <tony@atomide.com>
+To: Chanwoo Choi <cwchoi00@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello all,
-
-Am 18.11.2015 um 09:24 schrieb Heiko Schocher:
-> Hello Dave,
->
-> Am 17.11.2015 um 22:29 schrieb Dave Gerlach:
->> Hi,
->> On 11/17/2015 02:24 AM, Heiko Schocher wrote:
->>> add support for the am335x based shc board.
->>>
->>> UART: 0-2 and 4
->>> DRAM: 512 MiB
->>> MMC:  OMAP SD/MMC: 0 @ 26 MHz
->>>        OMAP SD/MMC: 1 @ 26 MHz
->>> I2C:  at24 eeprom, pcf8563
->>> USB:  USB1 (host)
->>>
->>> Signed-off-by: Heiko Schocher <hs@denx.de>
->>> ---
->>> The following patches are needed to get all working
->>> for the shc board:
->>> - disable clkout on pcf8563
->>>    accepted.
->>>    http://www.spinics.net/lists/devicetree/msg98542.html
->>>
->>> - leds: leds-gpio: add shutdown function
->>>    accepted.
->>>    https://lkml.org/lkml/2015/10/13/169
->>>
->>> - net: phy: smsc: disable energy detect mode
->>>    accepted
->>>    [PATCH v2 2/2] net: phy: smsc: disable energy detect mode
->>>    https://lkml.org/lkml/2015/10/17/2
->>>    [PATCH v2 1/2] drivers: net: cpsw: add phy-handle parsing
->>>    https://lkml.org/lkml/2015/10/17/4
->>>
->>> - ARM: OMAP2+: omap_hwmod: Introduce ti,no-init dt property
->>>    http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/328204.html
->>>    @Dave: What is the current state of this patch?
->>>    I have the same problem here on this am335x based board
->>>
->>
->> A different approach is being taken for resolving the issue of rtc hwmod on am43x epos evm [1],
->> which is what I was attempting to solve with the patch you have linked. We decided to avoid changing
->> omap_hwmod code and I haven't been pursuing the ti,no-init flag anymore.
->
-> Maybe I overlook something, but I cannot see, how [1] solves the RTC
-> hwmod problem on am335x SoC based boards. Not all boards have this problem,
-> so the RTC hwmod cannot be disabled for all am335x boards ...
->
-> It must be somehow configurable for boards ... I have am335x boards
-> which use the rtc from the SoC
-
-gentle ping ...
-
-No more comments on this patch? Is it Ok for mainline or are
-there more issues?
-
-bye,
-Heiko
->
->> Regards,
->> Dave
->>
->> [1] http://www.spinics.net/lists/linux-omap/msg121987.html
->
-> bye,
-> Heiko
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+PiBIaSBSb2IsDQo+IA0KPiBPbiBTYXQsIE5vdiAyOCwgMjAxNSBhdCA1OjMwIEFNLCBSb2IgSGVy
+cmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToNCj4gPiBPbiBUaHUsIE5vdiAyNiwgMjAxNSBh
+dCAxMDo0NzoyNlBNICswOTAwLCBDaGFud29vIENob2kgd3JvdGU6DQo+ID4+IFRoaXMgcGF0Y2gg
+YWRkcyB0aGUgZG9jdW1lbnRhdGlvbiBmb3IgZ2VuZXJpYyBleHlub3MgYnVzIGZyZXF1ZW5jeQ0K
+PiA+PiBkcml2ZXIuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hvaSA8Y3cw
+MC5jaG9pQHNhbXN1bmcuY29tPg0KPiA+PiAtLS0NCj4gPj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2RldmZyZXEvZXh5bm9zLWJ1cy50eHQgICAgIHwgOTIgKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDkyIGluc2VydGlvbnMoKykNCj4gPj4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGV2ZnJlcS9leHlu
+b3MtYnVzLnR4dA0KPiA+PiArRXhhbXBsZTIgOg0KPiA+PiArICAgICBUaGUgYnVzIG9mIERNQyBi
+bG9jayBpbiBleHlub3MzMjUwLmR0c2kgYXJlIGxpc3RlZCBiZWxvdzoNCj4gPg0KPiA+IFdoYXQg
+aXMgRE1DPw0KPiANCj4gRE1DIChEUkFNIE1lbW9yeSBDb250cm9sbGVyKQ0KDQpJdCdzIER5bmFt
+aWMgTWVtb3J5IENvbnRyb2xsZXIuIChEUkFNID1+IER5bmFtaWMgTWVtb3J5KQ0KDQpZb3UgbWF5
+IG5lZWQgdG8gd3JpdGUgdGhlIGZ1bGwgbmFtZSB3aXRoIHRoZSBmaXJzdCByZWZlcmVuY2Ugb2Yg
+RE1DIHRoZXJlDQppbiB0aGUgZG9jdW1lbnRhdGlvbiBhcyAiRE1DIiBtYXkgY29uZnVzZSBhIGxv
+dCBvZiBwZW9wbGUuDQoNCg0KDQpDaGVlcnMsDQpNeXVuZ0pvbw0KDQo=
