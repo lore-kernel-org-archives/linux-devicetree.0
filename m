@@ -1,32 +1,25 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/3] dmaengine: Add supports for APM X-Gene SoC CRC32C
- accerlerator driver
-Date: Mon, 30 Nov 2015 16:50:54 +0800
-Message-ID: <20151130085054.GA7928@gondor.apana.org.au>
-References: <rsahu@apm.com>
- <1447665169-14003-1-git-send-email-rsahu@apm.com>
- <CAFd313zqimQtG8epeo3U7gzxWRf0hqO4K8hOFy4UK-6pG5GcJg@mail.gmail.com>
- <20151130083950.GA7792@gondor.apana.org.au>
- <CAFd313z2dncWmBQJY48RkReVOhQqLs13UzehwrbizBbputOSEw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/4] gpio: lpc32xx: add new LPC32xx GPIO controller driver
+Date: Mon, 30 Nov 2015 09:54:10 +0100
+Message-ID: <CACRpkdYN+_2qrP3tDDj2SxDAEJr05FnPLKyFPEF9BGdVyQdTuQ@mail.gmail.com>
+References: <1447982995-30231-1-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFd313z2dncWmBQJY48RkReVOhQqLs13UzehwrbizBbputOSEw@mail.gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Rameshwar Sahu <rsahu@apm.com>
-Cc: davem@davemloft.net, Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, linux-crypto@vger.kernel.org, Kaustubh Gondkar <kgondkar@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1447982995-30231-1-git-send-email-vz@mleia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 02:19:33PM +0530, Rameshwar Sahu wrote:
->
-> One of our client is using this layer for offloading the crc32c to our
-> dmaengine hw.
+On Fri, Nov 20, 2015 at 2:29 AM, Vladimir Zapolskiy <vz@mleia.com> wrote:
 
-Is this going to be merged into the kernel?
+> Unfortunately the old driver has too many hacks inherited from the
+> ancient legacy NXP BSP and I find it can not be maintained, the new
+> driver has compatible interface to device tree clients, so moving
+> to the new driver should not impact any GPIO consumers.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Has it been tested on the old hardware too?
+
+Yours,
+Linus Walleij
