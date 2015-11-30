@@ -1,82 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] reset: Add brcm,bcm63xx-reset device tree binding
-Date: Mon, 30 Nov 2015 16:24:40 -0600
-Message-ID: <20151130222440.GA3420@rob-hp-laptop>
-References: <565CB83B.7010000@simon.arlott.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 4/5] ARM: dts: DRA7: add entry for qspi mmap region
+Date: Mon, 30 Nov 2015 14:34:09 -0800
+Message-ID: <20151130223408.GJ23396@atomide.com>
+References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
+ <1448860515-28336-5-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <565CB83B.7010000@simon.arlott.org.uk>
+In-Reply-To: <1448860515-28336-5-git-send-email-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, MIPS Mailing List <linux-mips@linux-mips.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 08:57:31PM +0000, Simon Arlott wrote:
-> Add device tree binding for the BCM63xx soft reset controller.
+* Vignesh R <vigneshr@ti.com> [151129 21:16]:
+> Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
+> update the binding documents for the controller to document this change.
 > 
-> The BCM63xx contains a soft-reset controller activated by setting
-> a bit (that must previously have cleared).
-> 
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
-> ---
->  .../bindings/reset/brcm,bcm63xx-reset.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
-> new file mode 100644
-> index 0000000..48e9daf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
-> @@ -0,0 +1,37 @@
-> +BCM63xx reset controller
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+...
+> --- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/ti_qspi.txt
+> @@ -26,3 +26,17 @@ qspi: qspi@4b300000 {
+>  	spi-max-frequency = <25000000>;
+>  	ti,hwmods = "qspi";
+>  };
 > +
-> +The BCM63xx contains a basic soft reset controller in the perf register
-> +set which resets components using a bit in a register.
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm63xx-reset"
-> +- regmap:	The register map phandle
-> +- offset:	Offset in the register map for the reset register (in bytes)
-> +- #reset-cells:	Must be set to 1
-> +
-> +Optional properties:
-> +- mask:		Mask of valid reset bits in the reset register (32 bit access)
-> +		(Defaults to all bits)
-
-The bits correspond to the cell values in resets properties? If so then, 
-is this really needed? If you are only validating cell values against 
-this mask, then drop it (assume the DT does not have crap).
-
-Rob
-
-> +
-> +Example:
-> +
-> +periph_soft_rst: reset-controller {
-> +	compatible = "brcm,bcm63168-reset", "brcm,bcm63xx-reset";
-> +	regmap = <&periph_cntl>;
-> +	offset = <0x10>;
-> +
-> +	#reset-cells = <1>;
+> +For dra7xx:
+> +qspi: qspi@4b300000 {
+> +	compatible = "ti,dra7xxx-qspi";
+> +	reg = <0x4b300000 0x100>,
+> +	      <0x5c000000 0x4000000>,
+> +	      <0x4a002558 0x4>;
+> +	reg-names = "qspi_base", "qspi_mmap",
+> +		    "qspi_ctrlmod";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	spi-max-frequency = <48000000>;
+> +	ti,hwmods = "qspi";
 > +};
-> +
-> +usbh: usbphy@10002700 {
-> +	compatible = "brcm,bcm63168-usbh";
-> +	reg = <0x10002700 0x38>;
-> +	clocks = <&periph_clk 13>, <&timer_clk 18>;
-> +	resets = <&periph_soft_rst 6>;
-> +	power-supply = <&power_usbh>;
-> +	#phy-cells = <0>;
-> +};
-> +
-> -- 
-> 2.1.4
-> 
-> -- 
-> Simon Arlott
+
+Actually none of the IO areas above are within the same interconnect target:
+
+0x4b300000  QSPI0 address space in L3 main interconnect
+0x5c000000  QSPI1 address space in L3 main interconnect
+0x4a002558  CTRL_CORE_CONTROL_IO_2 in System Control Module (SCM) in L4_CFG
+
+The first two address spaces should be two separate instances of this driver.
+The CTRL_CORE_CONTROL_IO_2 needs seems like a shared clock register that
+needs to be accessed using the clock framework most likely.
+
+So not applying, this will be impossible to move to some real interconnect
+driver until these issues are fixed.
+
+Regards,
+
+Tony
