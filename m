@@ -1,34 +1,103 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] regulator: tps65217: remove tps65217.dtsi file
-Date: Mon, 30 Nov 2015 13:15:08 -0800
-Message-ID: <20151130211507.GQ2517@atomide.com>
-References: <1445949397-22745-1-git-send-email-hs@denx.de>
- <20151112140122.GA1076@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 09/15] PM / devfreq: exynos: Update documentation for
+ bus devices using passive governor
+Date: Mon, 30 Nov 2015 15:14:53 -0600
+Message-ID: <20151130211453.GA29423@rob-hp-laptop>
+References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
+ <1448545659-32287-10-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151112140122.GA1076@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Georg.Soffel-k21M0aUVSxZWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>
+In-Reply-To: <1448545659-32287-10-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, k.kozlowski@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [151112 06:02]:
-> On Tue, Oct 27, 2015 at 01:36:36PM +0100, Heiko Schocher wrote:
-> > remove tps65217.dtsi and adapt all boards, which
-> > used it.
-> > 
-> > Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> > Tested-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> > Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Thu, Nov 26, 2015 at 10:47:33PM +0900, Chanwoo Choi wrote:
+> This patch updates the documentation for passive bus devices and adds the
+> detailed example of Exynos3250.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  .../devicetree/bindings/devfreq/exynos-bus.txt     | 226 ++++++++++++++++++++-
+>  1 file changed, 223 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> index 5d90623bd173..c4a6fe30075e 100644
+> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> @@ -12,18 +12,23 @@ SoC has the different sub-blocks. So, this difference should be specified
+>  in devicetree file instead of each device driver. In result, this driver
+>  is able to support the bus frequency for all Exynos SoCs.
+>  
+> -Required properties for bus device:
+> +Required properties for all bus devices:
+>  - compatible: Should be "samsung,exynos-bus".
+>  - clock-names : the name of clock used by the bus, "bus".
+>  - clocks : phandles for clock specified in "clock-names" property.
+>  - #clock-cells: should be 1.
+>  - operating-points-v2: the OPP table including frequency/voltage information
+>    to support DVFS (Dynamic Voltage/Frequency Scaling) feature.
+> +
+> +Required properties for only parent bus device:
+>  - vdd-supply: the regulator to provide the buses with the voltage.
+>  - devfreq-events: the devfreq-event device to monitor the curret utilization
+>    of buses.
+>  
+> -Optional properties for bus device:
+> +Required properties for only passive bus device:
+> +- devfreq: the parent bus device.
+> +
+> +Optional properties for only parent bus device:
+>  - exynos,saturation-ratio: the percentage value which is used to calibrate
+>                     the performance count againt total cycle count.
+>  
+> @@ -32,7 +37,19 @@ Example1:
+>  	power line (regulator). The MIF (Memory Interface) AXI bus is used to
+>  	transfer data between DRAM and CPU and uses the VDD_MIF regualtor.
+>  
+> -	- power line(VDD_MIF) --> bus for DMC block (dmc clock)
+> +	- MIF (Memory Interface) block
+> +	: VDD_MIF |--- DMC
+> +
+> +	- INT (Internal) block
+> +	: VDD_INT |--- LEFTBUS  |--- PERIL
+> +		  |    (parent) |--- MFC
+> +		  |             |--- G3D
+> +		  |
+> +		  |--- RIGHTBUS |--- FSYS
+> +				|--- LCD0
+> +				|--- PERIR
+> +				|--- ISP
+> +				|--- CAM
 
-Applying into omap-for-v4.5/dt thanks.
+I would expect the DT to mirror this topology which doesn't seem to be 
+the case in the example.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  	- MIF bus's frequency/voltage table
+>  	-----------------------
+> @@ -45,6 +62,20 @@ Example1:
+>  	|L5| 400000 |875000   |
+>  	-----------------------
+>  
+> +	- INT bus's frequency/voltage table
+> +	-----------------------------------------------------------------------
+> +	|Lv| Freq                                                   | Voltage |
+> +	-----------------------------------------------------------------------
+> +	|  |LEFTBUS|RIGHTBUS|LCD0   |FSYS   |MCUISP |ISP    |PERIL  |VDD_INT  |
+> +	|  |*parent|passive |passive|passive|passive|passive|passive|         |
+> +	-----------------------------------------------------------------------
+> +	|L1|50000  |50000   |50000  |50000  |50000  |50000  |50000  |900000   |
+> +	|L2|80000  |80000   |80000  |80000  |80000  |80000  |80000  |900000   |
+> +	|L3|100000 |100000  |100000 |100000 |100000 |100000 |100000 |1000000  |
+> +	|L4|133000 |133000  |133000 |133000 |200000 |200000 |       |1000000  |
+> +	|L5|200000 |200000  |200000 |200000 |400000 |300000 |       |1000000  |
+> +	-----------------------------------------------------------------------
+
+Do you really have 5 states? It look like there are 2 to me because the 
+OPP tables only really need to have the max freq at each voltage point. 
+
+Rob
