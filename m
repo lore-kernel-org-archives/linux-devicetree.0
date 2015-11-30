@@ -1,45 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] spi: sh-msiof: Add support for SH-Mobile AG5
-Date: Mon, 30 Nov 2015 09:57:18 -0600
-Message-ID: <20151130155718.GA2805@rob-hp-laptop>
-References: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [4.4-rc][PATCH v2] ARM: dts: am4372: fix clock source for arm twd and global timers
+Date: Mon, 30 Nov 2015 17:56:38 +0200
+Message-ID: <1448898998-32749-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 03:14:00PM +0100, Geert Uytterhoeven wrote:
-> MSIOF in SH-Mobile AG5 (sh73a0) is handled fine by the existing driver.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
+But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
+Timekeeping core misbehaves. For example, execution of command
+"sleep 5" will take 10 sec instead of 5.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
+it for clocking ARM TWD and Global timer (same way as on OMAP4).
 
-> ---
->  Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> index 705075da2f10156e..aa005c1d10d95756 100644
-> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> @@ -10,6 +10,7 @@ Required properties:
->  			 "renesas,msiof-r8a7792" (R-Car V2H)
->  			 "renesas,msiof-r8a7793" (R-Car M2-N)
->  			 "renesas,msiof-r8a7794" (R-Car E2)
-> +			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
->  - reg                  : A list of offsets and lengths of the register sets for
->  			 the device.
->  			 If only one register set is present, it is to be used
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+Changes in v2:
+ - fix: mpu_periphclk should be clocked from dpll_mpu_m2_ck instead of
+   dpll_mpu_ck.
+link on v1:
+ http://www.spinics.net/lists/arm-kernel/msg463898.html
+
+ arch/arm/boot/dts/am4372.dtsi        | 4 ++--
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index d83ff9c..de8791a 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -74,7 +74,7 @@
+ 		reg = <0x48240200 0x100>;
+ 		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&dpll_mpu_m2_ck>;
++		clocks = <&mpu_periphclk>;
+ 	};
+ 
+ 	local_timer: timer@48240600 {
+@@ -82,7 +82,7 @@
+ 		reg = <0x48240600 0x100>;
+ 		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&dpll_mpu_m2_ck>;
++		clocks = <&mpu_periphclk>;
+ 	};
+ 
+ 	l2-cache-controller@48242000 {
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index cc88728..a38af2b 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -259,6 +259,14 @@
+ 		ti,invert-autoidle-bit;
+ 	};
+ 
++	mpu_periphclk: mpu_periphclk {
++		#clock-cells = <0>;
++		compatible = "fixed-factor-clock";
++		clocks = <&dpll_mpu_m2_ck>;
++		clock-mult = <1>;
++		clock-div = <2>;
++	};
++
+ 	dpll_ddr_ck: dpll_ddr_ck {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,am3-dpll-clock";
+-- 
+2.6.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
