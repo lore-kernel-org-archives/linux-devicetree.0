@@ -1,32 +1,45 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 1/3] i2c: at91: add setting HOLD field of TWIHS_CWGR via
- DT
-Date: Mon, 30 Nov 2015 16:57:23 +0100
-Message-ID: <20151130155723.GA29282@odux.rfo.atmel.com>
-References: <1448372862-11912-1-git-send-email-ludovic.desroches@atmel.com>
- <20151130151319.GM1513@katana>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] spi: sh-msiof: Add support for SH-Mobile AG5
+Date: Mon, 30 Nov 2015 09:57:18 -0600
+Message-ID: <20151130155718.GA2805@rob-hp-laptop>
+References: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151130151319.GM1513@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cyrille.pichen@atmel.com, Wenyou Yang <wenyou.yang@atmel.com>
+In-Reply-To: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 04:13:20PM +0100, Wolfram Sang wrote:
-> On Tue, Nov 24, 2015 at 02:47:40PM +0100, Ludovic Desroches wrote:
-> > From: Wenyou Yang <wenyou.yang@atmel.com>
-> > 
-> > Add the HOLD field management. Some i2c devices need a longer data hold
-> > time than the one given in the i2c bus specification. Since this value
-> > depends on the i2c device connected to the bus, add a DT property to
-> > configure it: "atmel,twd-hold-cycles".
+On Mon, Nov 30, 2015 at 03:14:00PM +0100, Geert Uytterhoeven wrote:
+> MSIOF in SH-Mobile AG5 (sh73a0) is handled fine by the existing driver.
 > 
-> We already have "i2c-sda-hold-time-ns". Can you use that one? Sorry that
-> this is not obviously documented, I am working on it...
-> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I think we can use it, I'll rework the patch to convert duration in
-number of cycles.
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> index 705075da2f10156e..aa005c1d10d95756 100644
+> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>  			 "renesas,msiof-r8a7792" (R-Car V2H)
+>  			 "renesas,msiof-r8a7793" (R-Car M2-N)
+>  			 "renesas,msiof-r8a7794" (R-Car E2)
+> +			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+>  - reg                  : A list of offsets and lengths of the register sets for
+>  			 the device.
+>  			 If only one register set is present, it is to be used
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
