@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] ARM: shmobile: sh73a0: Add MSIOF clocks
-Date: Mon, 30 Nov 2015 15:16:51 +0100
-Message-ID: <1448893012-8465-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/2] ARM: shmobile: sh73a0: Add MSIOF device nodes
+Date: Mon, 30 Nov 2015 15:16:52 +0100
+Message-ID: <1448893012-8465-3-git-send-email-geert+renesas@glider.be>
 References: <1448893012-8465-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1448893012-8465-1-git-send-email-geert+renesas@glider.be>
@@ -10,95 +10,68 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The 4 MSIOF clocks are MSTP clocks, and children of the SUB clock.
+The sh73a0 has 4 MSIOF devices, located in the A3SP power area.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/sh73a0.dtsi            | 28 ++++++++++++++++------------
- include/dt-bindings/clock/sh73a0-clock.h |  6 +++++-
- 2 files changed, 21 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/sh73a0.dtsi | 44 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index f90ef9c93d3df3aa..c55b09e640f0b7d3 100644
+index c55b09e640f0b7d3..866ee5de09454d14 100644
 --- a/arch/arm/boot/dts/sh73a0.dtsi
 +++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -812,13 +812,13 @@
- 		mstp0_clks: mstp0_clks@e6150130 {
- 			compatible = "renesas,sh73a0-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0xe6150130 4>, <0xe6150030 4>;
--			clocks = <&cpg_clocks SH73A0_CLK_HP>;
-+			clocks = <&cpg_clocks SH73A0_CLK_HP>, <&sub_clk>;
- 			#clock-cells = <1>;
- 			clock-indices = <
--				SH73A0_CLK_IIC2
-+				SH73A0_CLK_IIC2 SH73A0_CLK_MSIOF0
- 			>;
- 			clock-output-names =
--				"iic2";
-+				"iic2", "msiof0";
- 		};
- 		mstp1_clks: mstp1_clks@e6150134 {
- 			compatible = "renesas,sh73a0-mstp-clocks", "renesas,cpg-mstp-clocks";
-@@ -848,20 +848,24 @@
- 			reg = <0xe6150138 4>, <0xe6150040 4>;
- 			clocks = <&sub_clk>, <&cpg_clocks SH73A0_CLK_HP>,
- 				 <&cpg_clocks SH73A0_CLK_HP>, <&sub_clk>,
--				 <&sub_clk>, <&sub_clk>, <&sub_clk>, <&sub_clk>,
--				 <&sub_clk>, <&sub_clk>;
-+				 <&sub_clk>, <&sub_clk>, <&sub_clk>,
-+				 <&sub_clk>, <&sub_clk>, <&sub_clk>,
-+				 <&sub_clk>, <&sub_clk>, <&sub_clk>;
- 			#clock-cells = <1>;
- 			clock-indices = <
- 				SH73A0_CLK_SCIFA7 SH73A0_CLK_SY_DMAC
--				SH73A0_CLK_MP_DMAC SH73A0_CLK_SCIFA5
--				SH73A0_CLK_SCIFB SH73A0_CLK_SCIFA0
--				SH73A0_CLK_SCIFA1 SH73A0_CLK_SCIFA2
--				SH73A0_CLK_SCIFA3 SH73A0_CLK_SCIFA4
-+				SH73A0_CLK_MP_DMAC SH73A0_CLK_MSIOF3
-+				SH73A0_CLK_MSIOF1 SH73A0_CLK_SCIFA5
-+				SH73A0_CLK_SCIFB SH73A0_CLK_MSIOF2
-+				SH73A0_CLK_SCIFA0 SH73A0_CLK_SCIFA1
-+				SH73A0_CLK_SCIFA2 SH73A0_CLK_SCIFA3
-+				SH73A0_CLK_SCIFA4
- 			>;
- 			clock-output-names =
--				"scifa7", "sy_dmac", "mp_dmac", "scifa5",
--				"scifb", "scifa0", "scifa1", "scifa2",
--				"scifa3", "scifa4";
-+				"scifa7", "sy_dmac", "mp_dmac", "msiof3",
-+				"msiof1", "scifa5", "scifb", "msiof2",
-+				"scifa0", "scifa1", "scifa2", "scifa3",
-+				"scifa4";
- 		};
- 		mstp3_clks: mstp3_clks@e615013c {
- 			compatible = "renesas,sh73a0-mstp-clocks", "renesas,cpg-mstp-clocks";
-diff --git a/include/dt-bindings/clock/sh73a0-clock.h b/include/dt-bindings/clock/sh73a0-clock.h
-index 53369568c24c5dc6..2eca353a29d74bc6 100644
---- a/include/dt-bindings/clock/sh73a0-clock.h
-+++ b/include/dt-bindings/clock/sh73a0-clock.h
-@@ -28,7 +28,8 @@
- #define SH73A0_CLK_HP		14
+@@ -273,6 +273,50 @@
+ 		status = "disabled";
+ 	};
  
- /* MSTP0 */
--#define SH73A0_CLK_IIC2	1
-+#define SH73A0_CLK_IIC2		1
-+#define SH73A0_CLK_MSIOF0	0
- 
- /* MSTP1 */
- #define SH73A0_CLK_CEU1		29
-@@ -45,8 +46,11 @@
- #define SH73A0_CLK_SCIFA7	19
- #define SH73A0_CLK_SY_DMAC	18
- #define SH73A0_CLK_MP_DMAC	17
-+#define SH73A0_CLK_MSIOF3	15
-+#define SH73A0_CLK_MSIOF1	8
- #define SH73A0_CLK_SCIFA5	7
- #define SH73A0_CLK_SCIFB	6
-+#define SH73A0_CLK_MSIOF2	5
- #define SH73A0_CLK_SCIFA0	4
- #define SH73A0_CLK_SCIFA1	3
- #define SH73A0_CLK_SCIFA2	2
++	msiof0: spi@e6e20000 {
++		compatible = "renesas,msiof-sh73a0", "renesas,sh-mobile-msiof";
++		reg = <0xe6e20000 0x0064>;
++		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp0_clks SH73A0_CLK_MSIOF0>;
++		power-domains = <&pd_a3sp>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof1: spi@e6e10000 {
++		compatible = "renesas,msiof-sh73a0", "renesas,sh-mobile-msiof";
++		reg = <0xe6e10000 0x0064>;
++		interrupts = <0 77 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks SH73A0_CLK_MSIOF1>;
++		power-domains = <&pd_a3sp>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof2: spi@e6e00000 {
++		compatible = "renesas,msiof-sh73a0", "renesas,sh-mobile-msiof";
++		reg = <0xe6e00000 0x0064>;
++		interrupts = <0 76 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks SH73A0_CLK_MSIOF2>;
++		power-domains = <&pd_a3sp>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof3: spi@e6c90000 {
++		compatible = "renesas,msiof-sh73a0", "renesas,sh-mobile-msiof";
++		reg = <0xe6c90000 0x0064>;
++		interrupts = <0 59 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks SH73A0_CLK_MSIOF3>;
++		power-domains = <&pd_a3sp>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	sdhi0: sd@ee100000 {
+ 		compatible = "renesas,sdhi-sh73a0";
+ 		reg = <0xee100000 0x100>;
 -- 
 1.9.1
 
