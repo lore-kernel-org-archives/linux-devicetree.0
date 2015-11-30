@@ -1,104 +1,126 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 2/2] ARM: sunxi: chip: Add Wifi chip
-Date: Mon, 30 Nov 2015 16:29:06 +0100
-Message-ID: <1448897346-17780-3-git-send-email-maxime.ripard@free-electrons.com>
-References: <1448897346-17780-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448897346-17780-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 12/14] ARM: sb-som: dts: introduce SB-SOM baseboard
+Date: Mon, 30 Nov 2015 17:32:46 +0200
+Message-ID: <20151130153246.GA17574@skynet>
+References: <1448371155-17307-1-git-send-email-nikita@compulab.co.il>
+ <1448371155-17307-13-git-send-email-nikita@compulab.co.il>
+ <20151125225734.GA17604@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151125225734.GA17604@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The CHIP has a WiFi/BT chip on an SDIO bus. That controller is maintained
-in reset through a GPIO and uses two independent regulators to be powered
-that must be kept in sync.
+On Wed, Nov 25, 2015 at 04:57:34PM -0600, Rob Herring wrote:
+> On Tue, Nov 24, 2015 at 03:19:13PM +0200, Nikita Kiryanov wrote:
+> > CompuLab SB-SOM baseboard is a carrier board for multiple arm-based SoMs.
+> > It currently supports (with minor adjustments to assembly) CM-T43, CM-T54,
+> > and CM-QS600 modules. It is a building block in the SBC-T43 single board
+> > computer, which consists of cm-t43 on top of sb-som-t43.
+> > 
+> > Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> > Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> > Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/arm/compulab-boards.txt    |  5 +++
+> >  .../bindings/display/panel/startek,startek-kd050c  |  4 +++
+> 
+> .txt please.
 
-Model this using an MMC power sequence and a coupled voltage regulator.
+Right, will V2..
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun5i-r8-chip.dts | 44 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+> 
+> >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+> >  arch/arm/boot/dts/compulab-sb-som.dtsi             | 42 ++++++++++++++++++++++
+> >  4 files changed, 52 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/compulab-boards.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/startek,startek-kd050c
+> >  create mode 100644 arch/arm/boot/dts/compulab-sb-som.dtsi
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/compulab-boards.txt b/Documentation/devicetree/bindings/arm/compulab-boards.txt
+> > new file mode 100644
+> > index 0000000..3e742a5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/compulab-boards.txt
+> > @@ -0,0 +1,5 @@
+> > +CompuLab SB-SOM is a multi-module baseboard capable of carrying CM-T43, CM-T54,
+> > +and QS-600 modules with minor modifications to the SB-SOM assembly.
+> 
+> All these modules have compatible strings?
 
-diff --git a/arch/arm/boot/dts/sun5i-r8-chip.dts b/arch/arm/boot/dts/sun5i-r8-chip.dts
-index 530ab28e9ca2..b5ef4eb5b6b4 100644
---- a/arch/arm/boot/dts/sun5i-r8-chip.dts
-+++ b/arch/arm/boot/dts/sun5i-r8-chip.dts
-@@ -64,6 +64,24 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	mmc0_pwrseq: mmc0_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&chip_wifi_reg_on_pin>;
-+		reset-gpios = <&pio 2 19 GPIO_ACTIVE_LOW>; /* PC19 */
-+	};
-+
-+	/*
-+	 * Both LDO3 and LDO4 are used in parallel to power up the
-+	 * WiFi/BT Chip.
-+	 */
-+	vcc_wifi: wifi_reg {
-+		compatible = "coupled-voltage-regulator";
-+		regulator-name = "vcc-wifi";
-+		vin0-supply = <&reg_ldo3>;
-+		vin1-supply = <&reg_ldo4>;
-+	};
- };
- 
- &codec {
-@@ -113,10 +131,15 @@
- 	};
- };
- 
-+&mmc0_pins_a {
-+	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>;
--	vmmc-supply = <&reg_vcc3v3>;
-+	vmmc-supply = <&vcc_wifi>;
-+	mmc-pwrseq = <&mmc0_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
-@@ -138,6 +161,13 @@
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- 
-+	chip_wifi_reg_on_pin: chip_wifi_reg_on_pin@0 {
-+		allwinner,pins = "PC19";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	chip_id_det_pin: chip_id_det_pin@0 {
- 		allwinner,pins = "PG2";
- 		allwinner,function = "gpio_in";
-@@ -171,6 +201,18 @@
- 	regulator-always-on;
- };
- 
-+&reg_ldo3 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi-1";
-+};
-+
-+&reg_ldo4 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi-2";
-+};
-+
- &reg_ldo5 {
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
--- 
-2.6.3
+Yes, although they are currently undocumented. QS-600 should be CM-QS600
+though.. Will fix in V2.
+
+> 
+> > +
+> > +Required root node properties:
+> > +    - compatible = should be "compulab,sb-som"
+> > diff --git a/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c b/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c
+> > new file mode 100644
+> > index 0000000..70cd8d1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c
+> > @@ -0,0 +1,4 @@
+> > +Startek Electronic Technology Co. KD050C 5.0" WVGA TFT LCD panel
+> > +
+> > +Required properties:
+> > +- compatible: should be "startek,startek-kd050c"
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index 55df1d4..409b134 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -218,6 +218,7 @@ sony	Sony Corporation
+> >  spansion	Spansion Inc.
+> >  sprd	Spreadtrum Communications Inc.
+> >  st	STMicroelectronics
+> > +startek	Startek
+> >  ste	ST-Ericsson
+> >  stericsson	ST-Ericsson
+> >  synology	Synology, Inc.
+> > diff --git a/arch/arm/boot/dts/compulab-sb-som.dtsi b/arch/arm/boot/dts/compulab-sb-som.dtsi
+> > new file mode 100644
+> > index 0000000..402a143
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/compulab-sb-som.dtsi
+> > @@ -0,0 +1,42 @@
+> > +/*
+> > + * Copyright (C) 2015 CompuLab, Ltd. - http://www.compulab.co.il/
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +/ {
+> > +	model = "CompuLab SB-SOM";
+> > +	compatible = "compulab,sb-som";
+> 
+> I would expect this to have a more specific.
+
+SB-SOM supports multiple modules. This device tree aggregates what is
+common to all possible module-baseboard combinations, which is why the
+compatible string is generic.
+
+> 
+> > +	lcd0: display {
+> > +		compatible = "startek,startek-kd050c", "panel-dpi";
+> > +		label = "lcd";
+> 
+> This isn't documented, nor do I think it is needed.
+
+It is documented in Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+You're correct about it being optional though.
+
+> 
+> Rob
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
