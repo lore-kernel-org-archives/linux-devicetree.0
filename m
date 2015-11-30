@@ -1,47 +1,83 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ravb: add R8A7791 support
-Date: Mon, 30 Nov 2015 22:08:22 +0300
-Message-ID: <565C9EA6.309@cogentembedded.com>
-References: <6051623.qN4lqSyZKg@wasted.cogentembedded.com>
- <CAMuHMdWE_G2WqsGZEaa4Ck3zziTLGVPfaVdU2gbnLA5zWpmR1w@mail.gmail.com>
- <565B6AAD.8080205@cogentembedded.com> <20151130004207.GD3501@verge.net.au>
+From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/7] ARM: dts: qcom: msm8974-honami: Define pinctrl state
+ for blsp_uart2
+Date: Mon, 30 Nov 2015 11:23:23 -0800
+Message-ID: <CAMAWPa9fHWY3diCfZG2s0ZaNqza+SnK+4QZzkAwW8xb9zjOqHg@mail.gmail.com>
+References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151130004207.GD3501@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445403470-17434-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 11/30/2015 03:42 AM, Simon Horman wrote:
-
->>>> Add support  for yet another ARM member of the R-Car family, R-Car M2, also
->>
->>> R-Car M2-W?
->>
->>     Right, forgot about the postfixes.
->>
->>>> known as R8A7791.
->>>
->>> There's also R-Car M2-N, aka R8A7793, but you probably know that ;-)
->>
->>     Will fix.
+On Tue, Oct 20, 2015 at 9:57 PM, Bjorn Andersson
+<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> Make sure the blsp1_uart2 pins are in the correct state for the uart.
 >
-> I would prefer if we added generic gen2 and gen3 compat strings to the driver
-> and only documented new soc-specific compat strings.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-    That's a new policy it seems. Previously you preferred the SoC-specific 
-strings to be used, didn;t you?
+kernelci.org has been detecting boot failures on my z1 since
+next-20151120[1] and I finally got around to bisecting, which pointed
+to this patch which is in next in the for of commit 14cd83b824aa ARM:
+dts: qcom: msm8974-honami: Define pinctrl state for blsp_uart2
 
-> Actually by chance I was planning to up patches to do that and add compat
-> strings for the missing Gen2 boards. But I won't complain if you beat me to
-> it.
+That commit doesn't revert cleanly on top of next-20151130, but
+manually removing the stuff added in this patch, next-20151130 boots
+fine on the z1.
 
-    No, I'm pretty busy as is. :-)
+Kevin
 
-MBR, Sergei
+[1] http://kernelci.org/boot/qcom-msm8974-sony-xperia-honami/job/next/kernel/next-20151127/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5658061359b5140196b5fd2f
 
+> ---
+>  .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> index 016f9ad9392a..6f7e4ef4ccf7 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> @@ -23,6 +23,29 @@
+>  &soc {
+>         serial@f991e000 {
+>                 status = "ok";
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&blsp1_uart2_pin_a>;
+> +       };
+> +
+> +       pinctrl@fd510000 {
+> +               blsp1_uart2_pin_a: blsp1-uart2-pin-active {
+> +                       rx {
+> +                               pins = "gpio5";
+> +                               function = "blsp_uart2";
+> +
+> +                               drive-strength = <2>;
+> +                               bias-pull-up;
+> +                       };
+> +
+> +                       tx {
+> +                               pins = "gpio4";
+> +                               function = "blsp_uart2";
+> +
+> +                               drive-strength = <4>;
+> +                               bias-disable;
+> +                       };
+> +               };
+>         };
+>  };
+>
+> --
+> 2.4.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
