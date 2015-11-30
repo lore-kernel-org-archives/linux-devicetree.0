@@ -1,33 +1,49 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] dts: define ngpios property in gpio controller's node
-Date: Mon, 30 Nov 2015 09:35:08 +0100
-Message-ID: <CACRpkdaFbotbq6iu3TJwJKY9-SAad8CZD+VQ3j-4Le940ZQ+FQ@mail.gmail.com>
-References: <1447905139-16002-1-git-send-email-pramodku@broadcom.com>
-	<1447905139-16002-3-git-send-email-pramodku@broadcom.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH v2 0/3] dmaengine: Add supports for APM X-Gene SoC CRC32C
+ accerlerator driver
+Date: Mon, 30 Nov 2015 14:06:03 +0530
+Message-ID: <CAFd313zqimQtG8epeo3U7gzxWRf0hqO4K8hOFy4UK-6pG5GcJg@mail.gmail.com>
+References: <rsahu@apm.com>
+	<1447665169-14003-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447905139-16002-3-git-send-email-pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jason Uy <jasonuy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1447665169-14003-1-git-send-email-rsahu@apm.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, linux-crypto@vger.kernel.org, Rameshwar Prasad Sahu <rsahu@apm.com>, Kaustubh Gondkar <kgondkar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 19, 2015 at 4:52 AM, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-
-> Add ngpios property in cygnus ASIU, CCM and CRMU gpio controller's node
+On Mon, Nov 16, 2015 at 2:42 PM,  <rsahu@apm.com> wrote:
+> From: Rameshwar Prasad Sahu <rsahu@apm.com>
 >
-> Signed-off-by: Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> This patch implements support for APM X-Gene SoC CRC32C h/w accelerator driver
+> and adds CRC32C computations support in dmaengine framework. APM X-Gene SoC has
+> DMA engine capable of performing CRC32C computations.
+>
+> v2 changes:
+>         1. Added helper function in dmaengine framework
+>         2. Documented CRC32C support in Documentations/dmaengine/provider.txt
+>         3. Fixed algo name
+>         4. Fixed coding style issues
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>
+> Rameshwar Prasad Sahu (3):
+>   dmaengine: Add support for new feature CRC32C computations
+>   dmaengine: xgene-dma: Add support for CRC32C computations via DMA
+>     engine
+>   Crypto: Add support for APM X-Gene SoC CRC32C h/w accelerator driver
+>
+>  Documentation/dmaengine/provider.txt |    3 +
+>  drivers/crypto/Kconfig               |    8 +
+>  drivers/crypto/Makefile              |    1 +
+>  drivers/crypto/xgene-crc32c.c        |  234 +++++++++++++++++++++++++
+>  drivers/dma/dmaengine.c              |    2 +
+>  drivers/dma/xgene-dma.c              |  314 ++++++++++++++++++++++++++++++++--
+>  include/linux/dmaengine.h            |   13 ++
+>  7 files changed, 560 insertions(+), 15 deletions(-)
+>  create mode 100755 drivers/crypto/xgene-crc32c.c
 
-Acked-by
-
-I see that Florian has already picked it up, nice!
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any Comments on above patchset ??
