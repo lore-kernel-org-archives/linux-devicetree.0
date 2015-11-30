@@ -1,101 +1,71 @@
 From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH] arm: dts: berlin2q-marvell-dmp: add sdhci1 fully
- functionality
-Date: Mon, 30 Nov 2015 21:07:42 +0800
-Message-ID: <20151130210742.2c18adb1@xhacker>
-References: <1448543588-1021-1-git-send-email-jszhang@marvell.com>
-	<56598DE1.9010209@gmail.com>
+Subject: [PATCH] arm64: dts: berlin4ct: support cpuidle-dt
+Date: Mon, 30 Nov 2015 21:41:58 +0800
+Message-ID: <1448890918-6999-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56598DE1.9010209@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, will.deacon@arm.com, catalin.marinas@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Nov 2015 12:20:01 +0100
-Sebastian Hesselbarth  wrote:
+This patch adds an idle-states node to describe the berlin4ct idle
+states and also adds references to the idle-states node in all CPU
+nodes. After this patch cpuidle is enabled.
 
-> On 26.11.2015 14:13, Jisheng Zhang wrote:
-> > The sdhci1 on Marvell BG2Q DMP board is used as sdcard interface, we
-> > have gpios for card detection, write-protect, vqmmc and vmmc.
-> > 
-> > This patch adds pinmux for this sdcard interface, then adds regulators
-> > for vmmc and vqmmc, lastly adds cd-gpios, wp-gpios properties.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-> > ---
-> >  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 43 ++++++++++++++++++++++++++++--
-> >  1 file changed, 41 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> > index cdcf89b..1fdc1d7 100644
-> > --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> > +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> > @@ -84,12 +84,51 @@
-> >  			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
-> >  			enable-active-high;
-> >  		};
-> > +
-> > +		reg_sdio1_vmmc: regulator@3 {
-> > +			compatible = "regulator-fixed";
-> > +			regulator-min-microvolt = <3300000>;
-> > +			regulator-max-microvolt = <3300000>;
-> > +			regulator-name = "sdio1_vmmc";
-> > +			enable-active-high;
-> > +			regulator-boot-on;
-> > +			gpio = <&portb 21 GPIO_ACTIVE_HIGH>;
-> > +		};
-> > +
-> > +		reg_sdio1_vqmmc: regulator@4 {
-> > +			compatible = "regulator-gpio";
-> > +			regulator-min-microvolt = <1800000>;
-> > +			regulator-max-microvolt = <3300000>;
-> > +			regulator-name = "sdio1_vqmmc";
-> > +			regulator-type = "voltage";
-> > +			enable-active-high;
-> > +			gpios = <&portb 16 GPIO_ACTIVE_HIGH>;
-> > +			states = <3300000 0x1
-> > +				  1800000 0x0>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&soc_pinctrl {
-> > +	sd1gpio_pmux: sd1pwr-pmux {
-> > +		groups = "G23", "G32";
-> > +		function = "gpio";
-> > +	};
-> > +
-> > +	sd1_pmux: sd1-pmux {
-> > +		groups = "G31";
-> > +		function = "sd1";  
-> 
-> Jisheng,
-> 
-> while having the sd1gpio_pmux in the board file, I think the
-> sd1_pmux is best kept in the SoC.dtsi.
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Indeed, there's no other usage with sd1's pinmux. will do in v2
-
-> 
-> >  	};
-> >  };
-> >  
-> >  &sdhci1 {
-> > -	broken-cd;
-> > -	sdhci,wp-inverted;
-> > +	vmmc-supply = <&reg_sdio1_vmmc>;
-> > +	vqmmc-supply = <&reg_sdio1_vqmmc>;
-> > +	cd-inverted;
-> > +	cd-gpios = <&portc 30 GPIO_ACTIVE_HIGH>;  
-> 
-> How about removing cd-inverted and make cd-gpio GPIO_ACTIVE_LOW
-> instead?
-
-Good idea! Will do in v2.
-
-Thanks for your review,
-Jisheng
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index 39d0676..3649cea 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -69,6 +69,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -76,6 +77,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x1>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -83,6 +85,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x2>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -90,6 +93,19 @@
+ 			device_type = "cpu";
+ 			reg = <0x3>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP_0>;
++		};
++
++		idle-states {
++			entry-method = "psci";
++			CPU_SLEEP_0: cpu-sleep-0 {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <75>;
++				exit-latency-us = <155>;
++				min-residency-us = <1000>;
++			};
+ 		};
+ 	};
+ 
+-- 
+2.6.2
