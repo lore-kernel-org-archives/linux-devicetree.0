@@ -1,91 +1,77 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [RESEND RFC/PATCH 3/8] media: platform: mtk-vpu: Support Mediatek VPU
-Date: Mon, 30 Nov 2015 15:36:07 +0000
-Message-ID: <CAMTL27G8WRTTGCtU9pXpp1-inyzZE9Jat1SkOiX5HMG5E-eFzw@mail.gmail.com>
-References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
-	<1447764885-23100-4-git-send-email-tiffany.lin@mediatek.com>
-	<5655DDB4.2080002@linaro.org>
-	<1448626209.7734.26.camel@mtksdaap41>
-	<56584AC5.7020704@linaro.org>
-	<1448883819.15961.7.camel@mtksdaap41>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 4/9] i2c: brcmstb: enable ACK condition
+Date: Mon, 30 Nov 2015 16:37:12 +0100
+Message-ID: <20151130153712.GO1513@katana>
+References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
+ <1445395021-4204-5-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1448883819.15961.7.camel@mtksdaap41>
-Sender: linux-media-owner@vger.kernel.org
-To: andrew-ct chen <andrew-ct.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eddie Huang <eddie.huang@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Fabien Dessenne <fabien.dessenne@st.com>, Peter Griffin <peter.griffin@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Rob
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lCFQJunhLz1tFGpX"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1445395021-4204-5-git-send-email-jaedon.shin@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 November 2015 at 11:43, andrew-ct chen
-<andrew-ct.chen@mediatek.com> wrote:
-> On Fri, 2015-11-27 at 12:21 +0000, Daniel Thompson wrote:
->> On 27/11/15 12:10, andrew-ct chen wrote:
->> >>> +
->> >>> > >+      memcpy((void *)send_obj->share_buf, buf, len);
->> >>> > >+      send_obj->len = len;
->> >>> > >+      send_obj->id = id;
->> >>> > >+      vpu_cfg_writel(vpu, 0x1, HOST_TO_VPU);
->> >>> > >+
->> >>> > >+      /* Wait until VPU receives the command */
->> >>> > >+      timeout = jiffies + msecs_to_jiffies(IPI_TIMEOUT_MS);
->> >>> > >+      do {
->> >>> > >+              if (time_after(jiffies, timeout)) {
->> >>> > >+                      dev_err(vpu->dev, "vpu_ipi_send: IPI timeout!\n");
->> >>> > >+                      return -EIO;
->> >>> > >+              }
->> >>> > >+      } while (vpu_cfg_readl(vpu, HOST_TO_VPU));
->> >> >
->> >> >Do we need to busy wait every time we communicate with the co-processor?
->> >> >Couldn't we put this wait*before*  we write to HOST_TO_VPU above.
->> >> >
->> >> >That way we only spin when there is a need to.
->> >> >
->> > Since the hardware VPU only allows that one client sends the command to
->> > it each time.
->> > We need the wait to make sure VPU accepted the command and cleared the
->> > interrupt and then the next command would be served.
->>
->> I understand that the VPU  can only have on message outstanding at once.
->>
->> I just wonder why we busy wait *after* sending the first command rather
->> than *before* sending the second one.
->
-> No other special reasons. Just send one command and wait until VPU gets
-> the command. Then, I think this wait also can be put before we write to
-> HOST_TO_VPU.Is this better than former? May I know the reason?
 
-Busy waiting is bad; it is a waste of host CPU processor time and/or power.
+--lCFQJunhLz1tFGpX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When the busy wait occurs after queuing then we will busy wait for
-every command we send.
+On Wed, Oct 21, 2015 at 11:36:56AM +0900, Jaedon Shin wrote:
+> Removes the condition of a message with under 32 bytes in length. The
+> messages that do not require an ACK are I2C_M_IGNORE_NAK flag.
 
-If busy wait occurs before next queuing then we will wait for a
-shorter time in total because we have the chance to do something
-useful on the host before we have to wait.
+Makes me wonder why it worked before? Kamal?
 
+>=20
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-brcmstb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-br=
+cmstb.c
+> index 2d7d155029dc..53eb8b0c9bad 100644
+> --- a/drivers/i2c/busses/i2c-brcmstb.c
+> +++ b/drivers/i2c/busses/i2c-brcmstb.c
+> @@ -330,7 +330,7 @@ static int brcmstb_i2c_xfer_bsc_data(struct brcmstb_i=
+2c_dev *dev,
+>  	int no_ack =3D pmsg->flags & I2C_M_IGNORE_NAK;
+> =20
+>  	/* see if the transaction needs to check NACK conditions */
+> -	if (no_ack || len <=3D N_DATA_BYTES) {
+> +	if (no_ack) {
+>  		cmd =3D (pmsg->flags & I2C_M_RD) ? CMD_RD_NOACK
+>  			: CMD_WR_NOACK;
+>  		pi2creg->ctlhi_reg |=3D BSC_CTLHI_REG_IGNORE_ACK_MASK;
+> --=20
+> 2.6.1
+>=20
 
->> Streamed decode/encode typically ends up being rate controlled by
->> capture or display meaning that in these cases we don't need to busy
->> wait at all (because by the time we send the next frame the VPU has
->> already accepted the previous message).
->
-> For now, only one device "encoder" exists, it is true.
-> But, we'll have encoder and decoder devices, the decode and encode
-> requested to VPU are simultaneous.
+--lCFQJunhLz1tFGpX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Sure, I accept that lock and busy-wait is an appropriate way to ensure
-safety (assuming the VPU is fairly quick clearing the HOST_TO_VPU
-flag).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJWXG0oAAoJEBQN5MwUoCm2YUcQAINvkVvLKN1gK978wqwFcCdN
+NGSnXk4xAPLUZt/UdUl/90Ieib1GzJlhy7gDFQ/U4XJ/zrjLc4nSsCyAr6ze4wRT
+z/GrM7OxMUmIORoVkYnTAu/opN3zfFcLw7tajmGRwTiN7U7RdJ0DLEX406VxpJqj
+jupXzOEKkNl5Pa+KU1mKKp201o9eOEkCS5m3fxxrz9HwkydGaWvAXjBpJ7kMRDrY
+Uro+lxy6zrD3xLwuPhwla9huCyww9mNiPrTSHbkvPMmqjVsVWTXopfTVBnzGRz3N
+5GFuY9QD/NL21x00j3QoRA7sQr9lr+RxkcsregIhLIdjdYpsc5jHoApdTj3E31wW
+m2H+0uGRsoBDlzC+XLhCaWRq8x0rVSMzFI9PKNlX3rEZrw4Mo5CJGuzgXzQcNM1v
+lALwa3xqil1QJoSf4/PT+eSccOOHSjZ4I3gymQ7K/kNl61lKy5i7NbTNzctiI/HV
+7nlrihZ85lMyLQ0jSouL/YBhUlLMG3AeASuo+InhFZc0A6ZwJxEGM+YM9FArPmEX
+afe+xcZwErjZV9cRH3JAgDc6aPR9cyd2YB8wHOB4ZAPvqz/5kILizTwGOnM6yOm+
+VJ2m837tIijYzA3F+gSrcWxwz2rV0mVbNQ/CbXQbiq6rwjqfHmulwKnauIJ322bQ
+9XCSGVMv+FzmPcyBjXvJ
+=MUjC
+-----END PGP SIGNATURE-----
 
-> Is this supposed to be removed for this patches and we can add it back
-> if the another device(decoder) is ready for review?
-
-No I'm not suggesting that.
-
-I only recommend moving the busy wait *before* end sending of command
-(for efficiency reasons mentioned above).
-
-
-Daniel.
+--lCFQJunhLz1tFGpX--
