@@ -1,109 +1,91 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Mon, 30 Nov 2015 16:39:33 +0100
-Message-ID: <20151130153933.GD29576@pali>
-References: <20150713131902.GH26485@atomide.com>
- <20151129180939.GE30871@n2100.arm.linux.org.uk>
- <alpine.LFD.2.20.1511291902100.22569@knanqh.ubzr>
- <201511300115.12478@pali>
- <20151130152352.GY2517@atomide.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 5/9] i2c: brcmstb: fix start and stop conditions
+Date: Mon, 30 Nov 2015 16:41:02 +0100
+Message-ID: <20151130154102.GP1513@katana>
+References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
+ <1445395021-4204-6-git-send-email-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kOdvwer/5gjFgNo6"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151130152352.GY2517-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <1445395021-4204-6-git-send-email-jaedon.shin@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jaedon Shin <jaedon.shin@gmail.com>
+Cc: Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 30 November 2015 07:23:53 Tony Lindgren wrote:
-> * Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [151129 16:16]:
-> > On Monday 30 November 2015 01:09:17 Nicolas Pitre wrote:
-> > > On Sun, 29 Nov 2015, Russell King - ARM Linux wrote:
-> > > > On Sat, Nov 28, 2015 at 12:34:23PM -0500, Nicolas Pitre wrote:
-> > > > > Good. And Arnd likes the idea too. So we might be converging =
-at
-> > > > > last which is a good thing.
-> > > >=20
-> > > > I disagree with the idea that there is convergence.  There migh=
-t be
-> > > > convergence towards an idea, but... Here's a mail extract, from
-> > > > July 7th, from earlier in this very thread:
-> > > >=20
-> > > > Pali:
-> > > > > Me:
-> > > > > > Are the ATAGs at a fixed address on the N900?
-> > > > >=20
-> > > > > Yes, in board-rx51.c is:
-> > > > >=20
-> > > > > .atag_offset    =3D 0x100
-> > > > >=20
-> > > > > and Nokia Bootloader (proprietary) store them to that address=
-=2E
-> > > > >=20
-> > > > > > Can that be handled in
-> > > > > > some kind of legacy file for the N900 which calls save_atag=
-s()
-> > > > > > on it, so we don't end up introducing yet more stuff that w=
-e
-> > > > > > have to maintain into the distant future?  If not, what abo=
-ut
-> > > > > > copying a known working atag structure into a legacy file f=
-or
-> > > > > > the N900?
-> > > > >=20
-> > > > > I already asked question if it is possible to read ATAGs from=
- DT
-> > > > > booted kernel. And somebody (do not remember who) wrote to ML=
-,
-> > > > > that it is not possible and it can be done in that uncompress
-> > > > > code.
-> > >=20
-> > > Who is that somebody? If ever it happened to be me then objection=
- is
-> > > withdrawn. Otherwise that somebody should come forth and speak up
-> > > again.
-> > >=20
-> >=20
-> > ... do not remember ... this discussion were in more email threads =
-and=20
-> > takes more then one year... sorry but my memory is not excellent
->=20
-> Yes this certainly seems like the best solution. I think we got into
-> the atags-to-dt track as some of the atags are already being translat=
-ed.
->=20
-> In this case there's no need to translate them AFAIK. You can just
-> parse them and have them available for the user space. So as long as
-> nothing trashes the atags at the atag_offset, you should be able to
-> call a function to parse them in the n900 specific init_machine.
->=20
-> Regards,
->=20
-> Tony
 
-In arch/arm/kernel/setup.c is function setup_arch() and it calls:
+--kOdvwer/5gjFgNo6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  mdesc =3D setup_machine_fdt(__atags_pointer);
-  if (!mdesc)
-      mdesc =3D setup_machine_tags(__atags_pointer, __machine_arch_type=
-);
+On Wed, Oct 21, 2015 at 11:36:57AM +0900, Jaedon Shin wrote:
+> Fixes conditions for RESTART, NOSTART and NOSTOP. The masks of start and
+> stop is already in brcmstb_set_i2c_start_stop(). Therefore, the caller
+> does not need a mask value.
 
-So it looks like that on atags address is stored either atags structure
-or DT structure... so it is truth kernel uncompress code put DT blob to
-same offset where is expected atags structure? If yes, then this is
-probably reason why atags cannot be read from booted DT kernel. Can
-somebody with deep knowledge of DT/atags and uncompress code verify thi=
-s?
+Hmm, and what if that changes for some reason in the future (driver
+refactoring)? I'd rather leave it as it is; it is a micro-optimization
+after all.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-brcmstb.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-br=
+cmstb.c
+> index 53eb8b0c9bad..dcd1209f843f 100644
+> --- a/drivers/i2c/busses/i2c-brcmstb.c
+> +++ b/drivers/i2c/busses/i2c-brcmstb.c
+> @@ -464,7 +464,7 @@ static int brcmstb_i2c_xfer(struct i2c_adapter *adapt=
+er,
+>  			pmsg->buf ? pmsg->buf[0] : '0', pmsg->len);
+> =20
+>  		if (i < (num - 1) && (msgs[i + 1].flags & I2C_M_NOSTART))
+> -			brcmstb_set_i2c_start_stop(dev, ~(COND_START_STOP));
+> +			brcmstb_set_i2c_start_stop(dev, 0);
+>  		else
+>  			brcmstb_set_i2c_start_stop(dev,
+>  						   COND_RESTART | COND_NOSTOP);
+> @@ -485,8 +485,7 @@ static int brcmstb_i2c_xfer(struct i2c_adapter *adapt=
+er,
+>  			bytes_to_xfer =3D min(len, N_DATA_BYTES);
+> =20
+>  			if (len <=3D N_DATA_BYTES && i =3D=3D (num - 1))
+> -				brcmstb_set_i2c_start_stop(dev,
+> -							   ~(COND_START_STOP));
+> +				brcmstb_set_i2c_start_stop(dev, 0);
+> =20
+>  			rc =3D brcmstb_i2c_xfer_bsc_data(dev, tmp_buf,
+>  						       bytes_to_xfer, pmsg);
+> --=20
+> 2.6.1
+>=20
+
+--kOdvwer/5gjFgNo6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWXG4OAAoJEBQN5MwUoCm2SfgQAII/cyivEot2YOJJU16DofUH
+XxMJJxgPB7SY9SVaQhdjiHiaMBqvdLKq/h6sFXdVfuAvij+BE1eY5sSR8djGs2Bc
+eDj7sXFTSN1kZQ/1+WiC0TMwSNrGH9yEYIGwZl5n7SYm5oYWjRgZ9kIucMGVl7cI
+KqVQv6DLvRNgeOePb9S4Bzw8QZQqI9cDDH4oLBMFhqhaYAATxY4B/UX7tg068uUL
+sUBKZrZq1Gs0/vEBhDPpFTvJFZFNN3bbHEm10W0qolmBhxR+0paYA+/yy8tF2MBi
+zkmsUNEEG+Yj5m4PyzOwjhXMD88BGKZ3VVVfV6nruKhMR1Rg0Mpelf6L1K/2Dr1S
+90wmTa5594VVOwH7CQBV0FcSBW6AN6zuxzUNqIcgqGBFRsGIYTM39UKyKNWAvk73
+AhWlX5FQ/8CiYdiRcu6Jj9+wUkOJokKPVd/Dbhf7eDI3+jt3nDzLetG2fyb4O46D
+LiBjFxNObUlqJxZji2wGXwjIaFv8q/pnelLvzLL9DAzSkRy9tZc62UZHfSanwd24
+E2jUlJSojiMnEW4RXF5kVnQVyRK2xw8t0LvGPDz5OdnqSj0snxePG+JdLgiK3sKj
+x7JFlzoj6fEjBqgsgG3VitPRufy4zhs9LH3Y5Dsvcl+uWdPladwmWfSsOfJ7FAq0
+wuOwtt2EEmuJ8ydB3Biq
+=rvMD
+-----END PGP SIGNATURE-----
+
+--kOdvwer/5gjFgNo6--
