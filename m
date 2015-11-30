@@ -1,117 +1,86 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm, am335x: add support for the bosch shc board
-Date: Mon, 30 Nov 2015 13:41:30 -0800
-Message-ID: <20151130214130.GA23396@atomide.com>
-References: <1447748655-2088-1-git-send-email-hs@denx.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 03/14] DEVICETREE: Add PIC32 clock binding documentation
+Date: Mon, 30 Nov 2015 15:43:44 -0600
+Message-ID: <20151130214344.GA13253@rob-hp-laptop>
+References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
+ <1448065205-15762-4-git-send-email-joshua.henderson@microchip.com>
+ <20151122213110.GA16187@rob-hp-laptop>
+ <56569A77.8010800@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 Content-Disposition: inline
-In-Reply-To: <1447748655-2088-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Georg.Soffel-k21M0aUVSxZWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <56569A77.8010800@microchip.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Joshua Henderson <joshua.henderson@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Purna Chandra Mandal <purna.mandal@microchip.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> [151117 00:25]:
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-shc.dts
-> +&tps {
-> +	compatible = "ti,tps65217";
-> +	ti,pmic-shutdown-controller;
-> +
-> +	regulators {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		dcdc1_reg: regulator@0 {
-> +			reg = <0>;
-> +			regulator-name = "vdds_dpr";
-> +			regulator-compatible = "dcdc1";
-> +			regulator-min-microvolt = <1300000>;
-> +			regulator-max-microvolt = <1450000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		dcdc2_reg: regulator@1 {
-> +			reg = <1>;
-> +			/*
-> +			 * VDD_MPU voltage limits 0.95V - 1.26V with
-> +			 * +/-4% tolerance
-> +			 */
-> +			regulator-compatible = "dcdc2";
-> +			regulator-name = "vdd_mpu";
-> +			regulator-min-microvolt = <925000>;
-> +			regulator-max-microvolt = <1375000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +			regulator-ramp-delay = <70000>;
-> +		};
-> +
-> +		dcdc3_reg: regulator@2 {
-> +			reg = <2>;
-> +			/*
-> +			 * VDD_CORE voltage limits 0.95V - 1.1V with
-> +			 * +/-4% tolerance
-> +			 */
-> +			regulator-name = "vdd_core";
-> +			regulator-compatible = "dcdc3";
-> +			regulator-min-microvolt = <925000>;
-> +			regulator-max-microvolt = <1125000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo1_reg: regulator@3 {
-> +			reg = <3>;
-> +			regulator-name = "vio,vrtc,vdds";
-> +			regulator-compatible = "ldo1";
-> +			regulator-min-microvolt = <1000000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo2_reg: regulator@4 {
-> +			reg = <4>;
-> +			regulator-name = "vdd_3v3aux";
-> +			regulator-compatible = "ldo2";
-> +			regulator-min-microvolt = <900000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo3_reg: regulator@5 {
-> +			reg = <5>;
-> +			regulator-name = "vdd_1v8";
-> +			regulator-compatible = "ldo3";
-> +			regulator-min-microvolt = <900000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		ldo4_reg: regulator@6 {
-> +			reg = <6>;
-> +			regulator-name = "vdd_3v3a";
-> +			regulator-compatible = "ldo4";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +};
+On Wed, Nov 25, 2015 at 10:36:55PM -0700, Joshua Henderson wrote:
+> Hi Rob,
+> 
+> On 11/22/2015 2:31 PM, Rob Herring wrote:
+> > On Fri, Nov 20, 2015 at 05:17:15PM -0700, Joshua Henderson wrote:
+> >> From: Purna Chandra Mandal <purna.mandal@microchip.com>
+> >>
+> >> Document the devicetree bindings for the clock driver found on Microchip
+> >> PIC32 class devices.
+> >>
+> >> Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
+> >> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
+> >> ---
+> >>  .../devicetree/bindings/clock/microchip,pic32.txt  |  263 ++++++++++++++++++++
+> >>  1 file changed, 263 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+> >> new file mode 100644
+> >> index 0000000..4cef72d
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+> >> @@ -0,0 +1,263 @@
+> >> +Binding for a Clock hardware block found on
+> >> +certain Microchip PIC32 MCU devices.
+> >> +
+> >> +Microchip SoC clocks-node consists of few oscillators, PLL, multiplexer
+> >> +and few divider nodes.
+> > 
+> > [...]
+> > 
+> >> +Required properties:
+> >> +- compatible : should have "microchip,pic32-clk".
 
-Applying this into omap-for-v4.5/dt.. But I'm getting concerned about this
-"regulator-always-on" stuff and having multiple copies of the same thing.
+BTW, this should list out the actual compatible strings.
 
-I think we should have a common am33xx-tps65217.dtsi file that has the
-regulators defined at one place and other then include it. And they are
-controllable AFAIK..
+> > There is some discussion about this upstream with "critical-clocks" 
+> > binding. Can you use and wait for that?
+> > 
+> 
+> The way this is going, we might not have to wait. :)  Is there a patch available yet to try it out?  
 
-Regards,
+Yes, googling "Lee Jones critical-clocks" should find it.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> +- microchip,status-bit-mask: bitmask for status check. This will be used to confirm
+> >> +    particular operation by clock sub-node is completed. It is dependent sub-node.
+> >> +- microchip,bit-mask: enable mask, similar to microchip,status-bit-mask.
+> > 
+> > We've generally decided not to describe clocks at this level of detail 
+> > in DT. It's fine though for simple clock trees. This one seems to be 
+> > borderline IMO.
+> > 
+> 
+> The binding example is the entire clock tree.  These masks are right from the datasheet.  For reference, do you have an example of a better alternative?
+
+Okay, like I said, borderline. If this is complete, then it is fine. 
+Adding more clocks or a newer version of the SoC with more clocks would 
+change that opinion.
+
+Rob
