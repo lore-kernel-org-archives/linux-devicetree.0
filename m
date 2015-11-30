@@ -1,65 +1,82 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCHv2 2/4] ARM: bcm2835: add rpi power domain driver
-Date: Mon, 30 Nov 2015 14:12:39 -0800
-Message-ID: <87vb8jgmqw.fsf@eliezer.anholt.net>
-References: <1448816373-18235-1-git-send-email-alex.aring@gmail.com> <1448816373-18235-3-git-send-email-alex.aring@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] reset: Add brcm,bcm63xx-reset device tree binding
+Date: Mon, 30 Nov 2015 16:24:40 -0600
+Message-ID: <20151130222440.GA3420@rob-hp-laptop>
+References: <565CB83B.7010000@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448816373-18235-3-git-send-email-alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565CB83B.7010000@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, MIPS Mailing List <linux-mips@linux-mips.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Nov 30, 2015 at 08:57:31PM +0000, Simon Arlott wrote:
+> Add device tree binding for the BCM63xx soft reset controller.
+> 
+> The BCM63xx contains a soft-reset controller activated by setting
+> a bit (that must previously have cleared).
+> 
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> ---
+>  .../bindings/reset/brcm,bcm63xx-reset.txt          | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
+> new file mode 100644
+> index 0000000..48e9daf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
+> @@ -0,0 +1,37 @@
+> +BCM63xx reset controller
+> +
+> +The BCM63xx contains a basic soft reset controller in the perf register
+> +set which resets components using a bit in a register.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm63xx-reset"
+> +- regmap:	The register map phandle
+> +- offset:	Offset in the register map for the reset register (in bytes)
+> +- #reset-cells:	Must be set to 1
+> +
+> +Optional properties:
+> +- mask:		Mask of valid reset bits in the reset register (32 bit access)
+> +		(Defaults to all bits)
 
-Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+The bits correspond to the cell values in resets properties? If so then, 
+is this really needed? If you are only validating cell values against 
+this mask, then drop it (assume the DT does not have crap).
 
-> This patch adds support for RPi several Power Domains and enable support
-> to enable the USB Power Domain when it's not enabled before.
->
-> This patch based on Eric Anholt's patch to support Power Domains. He had
-> an issue about -EPROBE_DEFER inside the power domain subsystem, this
-> issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
-> if we fail to init or turn-on domain").
->
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Signed-off-by: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Rob
 
-Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-
-I'm still hoping Ulf will pull this patch along with the genpd change,
-to reduce synchronization between trees.  (That just leaves the DT
-change's dependency on the header in this one).
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWXMnXAAoJELXWKTbR/J7o0wIQALH9gywWendv2eDXhgKoqobh
-NbjV6CoycPpRdeBk3ZJCeetaBuh3AJRx8854ZgiuxQH46C96odXepoQjIRulznAv
-I5Qxeg7yD4zSNm25OR8DBOZgyovPbOo4s5WmHaxmyGOInbYOUHq2yC0x+u+3wLLy
-mqGb/eO6CY2K3VJr7UT6YWElrd1eKWIBhqp1zGx3aLCj+s9MiBj8LDF1C0rX52UD
-wXLo+hdp6xdH6exlUnf9yXVVy5Mj5a7pomjPtV5IWP3D0rHhA9GXq5El7MQfGX4g
-GSS6UXLWXzyO7Rjejt9gSBfSYKE7Gm99eI3ndkYk9Njr8kzVCw0dhLoBL3mgSbnU
-DcPLgP2hc5a+hINxJn76a17Oi66y7ThiM43S3j50aJg4713u0lEcvaOIjZq0kt7Q
-oK4KgjtLnaYm4OctE4fzq2DZ8PYVSkMSjT+qdF5HPZVBlG3Osdgh3PBWwhEBoiWE
-b1wMfLgN8X5dEtsRTe6WRNCUpmIA+UQ2LWWpoXtRAA5ppDs7MXGVmPnLys3UgVX6
-CGltfOroLMZ5HWgsiN3cuyZsn79JQhAH1fg5GVd8YJvCqBjhIRlNsZ/Kty19lLm3
-84kGjY0osdzIPerKMMbcjXTOVy3q1+76ZysTFAgaLSSdY+KQmHYJ/O9DTC6qqxbD
-J0PcXnIHXdgU48QL3ihJ
-=AeB0
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +Example:
+> +
+> +periph_soft_rst: reset-controller {
+> +	compatible = "brcm,bcm63168-reset", "brcm,bcm63xx-reset";
+> +	regmap = <&periph_cntl>;
+> +	offset = <0x10>;
+> +
+> +	#reset-cells = <1>;
+> +};
+> +
+> +usbh: usbphy@10002700 {
+> +	compatible = "brcm,bcm63168-usbh";
+> +	reg = <0x10002700 0x38>;
+> +	clocks = <&periph_clk 13>, <&timer_clk 18>;
+> +	resets = <&periph_soft_rst 6>;
+> +	power-supply = <&power_usbh>;
+> +	#phy-cells = <0>;
+> +};
+> +
+> -- 
+> 2.1.4
+> 
+> -- 
+> Simon Arlott
