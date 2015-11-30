@@ -1,83 +1,100 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: dts: qcom: msm8974-honami: Define pinctrl state
- for blsp_uart2
-Date: Mon, 30 Nov 2015 11:23:23 -0800
-Message-ID: <CAMAWPa9fHWY3diCfZG2s0ZaNqza+SnK+4QZzkAwW8xb9zjOqHg@mail.gmail.com>
-References: <1445403470-17434-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/10] drm/hisilicon: Add DT binding docs for hi6220
+ display subsystem
+Date: Mon, 30 Nov 2015 13:31:30 -0600
+Message-ID: <20151130193130.GA1616@rob-hp-laptop>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+ <1448707145-69348-3-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1445403470-17434-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1448707145-69348-3-git-send-email-xinliang.liu@linaro.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: linux-doc@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linuxarm@huawei.com, dri-devel@lists.freedesktop.org, xuwei5@hisilicon.com, benjamin.gaignard@linaro.org, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, lijianhua@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, linux-arm-kernel@lists.infradead.org, andy.green@linaro.org, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 20, 2015 at 9:57 PM, Bjorn Andersson
-<bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
-> Make sure the blsp1_uart2 pins are in the correct state for the uart.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-
-kernelci.org has been detecting boot failures on my z1 since
-next-20151120[1] and I finally got around to bisecting, which pointed
-to this patch which is in next in the for of commit 14cd83b824aa ARM:
-dts: qcom: msm8974-honami: Define pinctrl state for blsp_uart2
-
-That commit doesn't revert cleanly on top of next-20151130, but
-manually removing the stuff added in this patch, next-20151130 boots
-fine on the z1.
-
-Kevin
-
-[1] http://kernelci.org/boot/qcom-msm8974-sony-xperia-honami/job/next/kernel/next-20151127/defconfig/multi_v7_defconfig/lab/lab-khilman/?_id=5658061359b5140196b5fd2f
-
-> ---
->  .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-> index 016f9ad9392a..6f7e4ef4ccf7 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-> @@ -23,6 +23,29 @@
->  &soc {
->         serial@f991e000 {
->                 status = "ok";
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&blsp1_uart2_pin_a>;
-> +       };
-> +
-> +       pinctrl@fd510000 {
-> +               blsp1_uart2_pin_a: blsp1-uart2-pin-active {
-> +                       rx {
-> +                               pins = "gpio5";
-> +                               function = "blsp_uart2";
-> +
-> +                               drive-strength = <2>;
-> +                               bias-pull-up;
-> +                       };
-> +
-> +                       tx {
-> +                               pins = "gpio4";
-> +                               function = "blsp_uart2";
-> +
-> +                               drive-strength = <4>;
-> +                               bias-disable;
-> +                       };
-> +               };
->         };
->  };
->
-> --
-> 2.4.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBOb3YgMjgsIDIwMTUgYXQgMDY6Mzg6NTdQTSArMDgwMCwgWGlubGlhbmcgTGl1IHdy
+b3RlOgo+IEFkZCB0aGUgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciBoaTYy
+MjAgU29DIGRpc3BsYXkgc3Vic3lzdGVtLgo+IGRybSBtYXN0ZXIgZGV2aWNlIGJpbmRpbmcgZG9j
+Lgo+IEFERSBkaXNwbGF5IGNvbnRyb2xsZXIgYmluZGluZyBkb2MuCj4gRFNJIGNvbnRyb2xsZXIg
+YmluZGluZyBkb2MuCj4gCj4gU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5saWFuZy5s
+aXVAbGluYXJvLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBYaW53ZWkgS29uZyA8a29uZy5rb25neGlu
+d2VpQGhpc2lsaWNvbi5jb20+Cj4gU2lnbmVkLW9mZi1ieTogQW5keSBHcmVlbiA8YW5keS5ncmVl
+bkBsaW5hcm8ub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlz
+aS1hZGUudHh0ICAgICAgICB8IDQyICsrKysrKysrKysrKysrCj4gIC4uLi9iaW5kaW5ncy9kaXNw
+bGF5L2hpc2lsaWNvbi9oaXNpLWRybS50eHQgICAgICAgIHwgNjYgKysrKysrKysrKysrKysrKysr
+KysrKwo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1kc2kudHh0ICAgICAg
+ICB8IDUzICsrKysrKysrKysrKysrKysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgMTYxIGluc2VydGlv
+bnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWFkZS50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNp
+LWRybS50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWRzaS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2kt
+YWRlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2ls
+aWNvbi9oaXNpLWFkZS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAu
+LjI3NzdhMmMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2hpc2ktYWRlLnR4dAo+IEBAIC0wLDAgKzEsNDIg
+QEAKPiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIGhpc2lsaWNvbiBBREUgZGlzcGxheSBjb250
+cm9sbGVyIGRyaXZlcgo+ICsKPiArQURFIChBZHZhbmNlZCBEaXNwbGF5IEVuZ2luZSkgaXMgdGhl
+IGRpc3BsYXkgY29udHJvbGxlciB3aGljaCBncmFiIGltYWdlCj4gK2RhdGEgZnJvbSBtZW1vcnks
+IGRvIGNvbXBvc2l0aW9uLCBkbyBwb3N0IGltYWdlIHByb2Nlc3NpbmcsIGdlbmVyYXRlIFJHQgo+
+ICt0aW1pbmcgc3RyZWFtIGFuZCB0cmFuc2ZlciB0byBEU0kuCj4gKwo+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxv
+d2luZwo+ICsJImhpc2lsaWNvbixoaTYyMjAtYWRlIi4KPiArLSByZWc6IHBoeXNpY2FsIGJhc2Ug
+YWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICstIHJl
+Zy1uYW1lczogbmFtZSBvZiBwaHlzaWNhbCBiYXNlLgo+ICstIGludGVycnVwdDogdGhlIGludGVy
+cnVwdCBudW1iZXIuCj4gKy0gY2xvY2tzOiB0aGUgY2xvY2tzIG5lZWRlZC4KPiArLSBjbG9jay1u
+YW1lczogdGhlIG5hbWUgb2YgdGhlIGNsb2Nrcy4KPiArLSBhZGVfY29yZV9jbGtfcmF0ZTogQURF
+IGNvcmUgY2xvY2sgcmF0ZS4KPiArLSBtZWRpYV9ub2NfY2xrX3JhdGU6IG1lZGlhIG5vYyBtb2R1
+bGUgY2xvY2sgcmF0ZS4KCkkgdGhpbmsgeW91IGNhbiB1c2UgYXNzaWduZWQgY2xvY2sgcHJvcGVy
+dGllcyBpbnN0ZWFkOgoKYXNzaWduZWQtY2xvY2tzID0gPCZtZWRpYV9jdHJsIEhJNjIyMF9BREVf
+Q09SRT47CmFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDM2MDAwMDAwMD47CgpJJ20gbm90IHN1cmUg
+YWJvdXQgd2hhdCBtZWRpYV9ub2MgY29ycmVzcG9uZHMgdG8gaW4gY2xvY2tzIGxpc3QgdGhvdWdo
+LgoKPiArCj4gKwo+ICtBIGV4YW1wbGUgb2YgSGlLZXkgYm9hcmQgaGk2MjIwIFNvQyBzcGVjaWZp
+YyBEVCBlbnRyeToKPiArRXhhbXBsZToKPiArCj4gKwlhZGU6IGFkZUBmNDEwMDAwMCB7Cj4gKwkJ
+Y29tcGF0aWJsZSA9ICJoaXNpbGljb24saGk2MjIwLWFkZSI7Cj4gKwkJcmVnID0gPDB4MCAweGY0
+MTAwMDAwIDB4MCAweDc4MDA+LAo+ICsJCSAgICAgIDwweDAgMHhmNDQxMDAwMCAweDAgMHgxMDAw
+PjsKPiArCQlyZWctbmFtZXMgPSAiYWRlX2Jhc2UiLAo+ICsJCQkgICAgIm1lZGlhX2Jhc2UiOwo+
+ICsJCWludGVycnVwdHMgPSA8MCAxMTUgND47Cj4gKwo+ICsJCWNsb2NrcyA9IDwmbWVkaWFfY3Ry
+bCBISTYyMjBfQURFX0NPUkU+LAo+ICsJCQkgPCZtZWRpYV9jdHJsIEhJNjIyMF9DT0RFQ19KUEVH
+PiwKPiArCQkJIDwmbWVkaWFfY3RybCBISTYyMjBfQURFX1BJWF9TUkM+LAo+ICsJCQkgPCZtZWRp
+YV9jdHJsIEhJNjIyMF9QTExfU1lTPiwKPiArCQkJIDwmbWVkaWFfY3RybCBISTYyMjBfUExMX1NZ
+U19NRURJQT47Cj4gKwkJY2xvY2stbmFtZXMgID0gImNsa19hZGVfY29yZSIsCj4gKwkJCSAgICAg
+ICAiYWNsa19jb2RlY19qcGVnX3NyYyIsCj4gKwkJCSAgICAgICAiY2xrX2FkZV9waXgiLAo+ICsJ
+CQkgICAgICAgImNsa19zeXNwbGxfc3JjIiwKPiArCQkJICAgICAgICJjbGtfbWVkcGxsX3NyYyI7
+Cj4gKwkJYWRlX2NvcmVfY2xrX3JhdGUgPSA8MzYwMDAwMDAwPjsKPiArCQltZWRpYV9ub2NfY2xr
+X3JhdGUgPSA8Mjg4MDAwMDAwPjsKPiArCX07Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWRybS50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1kcm0u
+dHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5mZDkzMDI2Cj4gLS0t
+IC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2hpc2lsaWNvbi9oaXNpLWRybS50eHQKPiBAQCAtMCwwICsxLDY2IEBACj4gK0hpc2lsaWNv
+biBEUk0gbWFzdGVyIGRldmljZQo+ICsKPiArVGhlIEhpc2lsaWNvbiBEUk0gbWFzdGVyIGRldmlj
+ZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+ICt0aGUgb3RoZXIgZGlz
+cGxheSByZWxldmFudCBub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBkaXNwbGF5IHN1YnN5c3RlbS4K
+ClRoZXJlIGlzIG5vIG5lZWQgZm9yIHRoaXMgaW4gRFQuIFRoZSBBREUgY2FuIGJlIHRoZSBtYXN0
+ZXIgZGV2aWNlIGFuZCAKb2YtZ3JhcGggY2FuIGxpbmsgdG8gdGhlIERTSSBub2RlLiBJIGhhdmUg
+YSBzaW1pbGFyIGV4YW1wbGUgaGVyZVsxXSAKd2l0aCBhIExDRCBjb250cm9sbGVyIGJsb2NrLCBE
+U0kgYmxvY2sgYW5kIGFkdjc1MzMuCgo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBh
+dGlibGU6IFNob3VsZCBiZSAiaGlzaWxpY29uLDxjaGlwPi1kc3MiCj4gKy0gI2FkZHJlc3MtY2Vs
+bHM6IHNob3VsZCBiZSBzZXQgdG8gMi4KPiArLSAjc2l6ZS1jZWxsczogc2hvdWxkIGJlIHNldCB0
+byAyLgo+ICstIHJhbmdlOiB0byBhbGxvdyBwcm9iaW5nIG9mIHN1YmRldmljZXMuCj4gKwo+ICtP
+cHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGRtYS1jb2hlcmVudDogUHJlc2VudCBpZiBkbWEgb3Bl
+cmF0aW9ucyBhcmUgY29oZXJlbnQuCgpQdXQgdGhpcyBvbiB0aGUgYWN0dWFsbHkgRE1BIG1hc3Rl
+ci4KClJvYgoKWzFdIGh0dHBzOi8vZ2l0LmxpbmFyby5vcmcvcGVvcGxlL3JvYi5oZXJyaW5nL2xp
+bnV4LmdpdCBweGExOTI4LWRybS12MgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
