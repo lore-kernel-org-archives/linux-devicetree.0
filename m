@@ -1,75 +1,47 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
- lamobo-r1 board
-Date: Mon, 30 Nov 2015 20:03:29 +0100
-Message-ID: <20151130190329.GD3664@lukather>
-References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
- <20151122195925.GR32142@lukather>
- <5652CE10.1020808@redhat.com>
- <D279EE2F.E5EF6%Thomas.Kaiser@kaiser-edv.de>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: Add coupled regulator
+Date: Mon, 30 Nov 2015 16:06:14 -0300
+Message-ID: <CABxcv=kn+jkQV2g=a+Sz8TdhMcvcQiBWsBuPejA159mm8WWB=w@mail.gmail.com>
+References: <1448897346-17780-1-git-send-email-maxime.ripard@free-electrons.com>
+	<1448897346-17780-2-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAV36KZAKGQESOGVDLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <D279EE2F.E5EF6%Thomas.Kaiser-id7G5ibTm3AZ78jC37dNPg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Thomas Kaiser <Thomas.Kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org>
-Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448897346-17780-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---76DTJ5CE0DCVQemd
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hello Maxime,
 
-On Tue, Nov 24, 2015 at 10:45:27AM +0100, Thomas Kaiser wrote:
-> Hi,
-> 
-> Hans de Goede wrote:
-> 
-> > The Lamobo-R1 has a gpio header idententical to the one found
-> > on the Banana Pi, i2c2 is routed to pins there.
-> 
-> That's the reason this header exists in this form and that's the reason
-> customers buy these boards that expose an 'RPi compatible' 26/40 pin GPIO
-> header. That applies also to the various Orange Pi's and other
-> $insert-your-favourite-fruit-here Pi  with different SoCs, eg.
-> Roseapple/Lemon Pi with Actions Semi's S500. Even boards that do not share
-> the RPi's naming scheme feature this GPIO header, eg. LeMaker's Guitar or
-> ODROID C1/C1+
-> 
-> Users expect this GPIO header being 'RPi compatible' regarding
-> hardware-Addons (RPi HATs), software support (each of the above boards has a
-> ported WiringPi lib) and tutorials they find on the net.
+On Mon, Nov 30, 2015 at 12:29 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-The point is that it's *not* a GPIO header, and it's even worse that
-that, if you actually want to use a GPIO on that header, you just
-can't.
+[snip]
 
-> Breaking this compatibility with mainline kernel is not a good idea
-> IMO.
+>
+> +config REGULATOR_COUPLED_VOLTAGE
 
-This compatibility is a fallacy in the first place. It might be an
-electrical one, but it's certainly not a software one. How do you deal
-with alternative pin configuration? How do you deal with the GPIOs
-toggling? Which i2c bus is routed on this header?
+Shouldn't this depend on OF?
 
-And that wouldn't break anything. Quite the opposite actually, it
-would allow people that want to deviate from the standard to do so
-while allowing people that want to follow that standard to do so as
-well.
+> +       tristate "Coupled voltage regulator support"
 
-Maxime
+the Kconfig symbol is tristate so the driver can be built as a module...
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---76DTJ5CE0DCVQemd--
+> +
+> +static struct of_device_id coupled_regulator_of_match[] = {
+> +       { .compatible = "coupled-voltage-regulator" },
+> +       { /* Sentinel */ },
+> +};
+> +
+
+...but the driver is missing a MODULE_DEVICE_TABLE(of, ...) so module
+autoloading won't work.
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
