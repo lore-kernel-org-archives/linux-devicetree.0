@@ -1,36 +1,53 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] ARM: dts: DRA7: add entry for qspi mmap region
-Date: Mon, 30 Nov 2015 14:01:03 -0800
-Message-ID: <20151130220102.GG23396@atomide.com>
-References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
- <1448860515-28336-5-git-send-email-vigneshr@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] ravb: add R8A7791 support
+Date: Tue, 01 Dec 2015 01:01:18 +0300
+Message-ID: <1661514.u50jDu7LON@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448860515-28336-5-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> [151129 21:16]:
-> Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
-> update the binding documents for the controller to document this change.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> ---
-> 
-> v4: No changes.
+Add support  for yet another ARM member of the R-Car family, R-Car M2-W,
+also known as R8A7791.
 
-OK I'll apply patches 4 and 5 of this series into omap-for-v4.5/dt thanks.
-The rest should get merged via the MTD tree.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Regards,
+---
+The patch is against DaveM's 'net-next.git' repo but I wouldn't mind if it's
+applied to 'net.git' instead. :-)
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in version 2:
+- fixed the SoC name in the changelog.
+
+ Documentation/devicetree/bindings/net/renesas,ravb.txt |    1 +
+ drivers/net/ethernet/renesas/ravb_main.c               |    1 +
+ 2 files changed, 2 insertions(+)
+
+Index: net-next/Documentation/devicetree/bindings/net/renesas,ravb.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/renesas,ravb.txt
++++ net-next/Documentation/devicetree/bindings/net/renesas,ravb.txt
+@@ -5,6 +5,7 @@ interface contains.
+ 
+ Required properties:
+ - compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
++	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
+ 	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
+ 	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
+ - reg: offset and length of (1) the register block and (2) the stream buffer.
+Index: net-next/drivers/net/ethernet/renesas/ravb_main.c
+===================================================================
+--- net-next.orig/drivers/net/ethernet/renesas/ravb_main.c
++++ net-next/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1655,6 +1655,7 @@ static int ravb_mdio_release(struct ravb
+ 
+ static const struct of_device_id ravb_match_table[] = {
+ 	{ .compatible = "renesas,etheravb-r8a7790", .data = (void *)RCAR_GEN2 },
++	{ .compatible = "renesas,etheravb-r8a7791", .data = (void *)RCAR_GEN2 },
+ 	{ .compatible = "renesas,etheravb-r8a7794", .data = (void *)RCAR_GEN2 },
+ 	{ .compatible = "renesas,etheravb-r8a7795", .data = (void *)RCAR_GEN3 },
+ 	{ }
