@@ -1,105 +1,91 @@
-From: "Kim, Milo" <milo.kim@ti.com>
-Subject: Re: [PATCH v2 3/9] Documentation: dt-bindings: leds: add LM3633 LED
- binding information
-Date: Mon, 30 Nov 2015 17:19:03 +0900
-Message-ID: <565C0677.4030606@ti.com>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-4-git-send-email-milo.kim@ti.com>
- <56583C32.5030307@samsung.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: fix clock source for arm twd
+ and global timers
+Date: Mon, 30 Nov 2015 10:25:56 +0200
+Message-ID: <565C0814.3000001@ti.com>
+References: <1448653468-24908-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56583C32.5030307@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: robh+dt@kernel.org, lee.jones@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448653468-24908-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On 11/27/2015 8:19 PM, Jacek Anaszewski wrote:
-> Hi Milo,
+On 11/27/2015 09:44 PM, Grygorii Strashko wrote:
+> ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
+> But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
+> Timekeeping core misbehaves. For example, execution of command
+> "sleep 5" will take 10 sec instead of 5.
 >
-> On 11/26/2015 07:56 AM, Milo Kim wrote:
->> LM3633 LED device is one of TI LMU device list.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: linux-leds@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Milo Kim <milo.kim@ti.com>
->> ---
->>    .../devicetree/bindings/leds/leds-lm3633.txt       | 24 ++++++++++++++++++++++
->>    1 file changed, 24 insertions(+)
->>    create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3633.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3633.txt b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
->> new file mode 100644
->> index 0000000..a553894
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3633.txt
->> @@ -0,0 +1,24 @@
->> +TI LMU LM3633 LED device tree bindings
->> +
->> +Required properties:
->> +  - compatible: "ti,lm3633-leds"
->> +
->> +Child nodes:
->> +  Each node matches with LED control bank.
->> +  Please refer to the datasheet [1].
+> Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
+> it for clocking ARM TWD and Global timer (same way as on OMAP4).
 >
-> leds/common.txt documentation says that child nodes represent discrete
-> LED elements.
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/am4372.dtsi        | 4 ++--
+>   arch/arm/boot/dts/am43xx-clocks.dtsi | 8 ++++++++
+>   2 files changed, 10 insertions(+), 2 deletions(-)
 >
->> +  Required properties of a child node:
->> +  - led-sources: List of enabled channels from 0 to 5.
->> +                 Please refer to LED binding [2].
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index d83ff9c..de8791a 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -74,7 +74,7 @@
+>   		reg = <0x48240200 0x100>;
+>   		interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>   		interrupt-parent = <&gic>;
+> -		clocks = <&dpll_mpu_m2_ck>;
+> +		clocks = <&mpu_periphclk>;
+>   	};
 >
-> led-sources property should contain always one element -
-> a control bank identifier that the iout is to be associated with.
-> For example, if there are three LEDs and they should be controlled
-> with control bank A, then the bindings should look as follows
-> (assuming that control bank identifiers start from 0 [A:0, B:1,
-> C:2, etc. - it has to be also explicitly stated in the documentation]:
-
-My understanding is 'led-sources' means output channel rather than 
-control bank. Output channel is visible and intuitive - just output LED.
-On the other hand, control banks works inside the silicon, LM3633.
-I'm not sure other LED devices have control bank or not, but output 
-channel is common concept.
-
+>   	local_timer: timer@48240600 {
+> @@ -82,7 +82,7 @@
+>   		reg = <0x48240600 0x100>;
+>   		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>   		interrupt-parent = <&gic>;
+> -		clocks = <&dpll_mpu_m2_ck>;
+> +		clocks = <&mpu_periphclk>;
+>   	};
 >
-> lvled1 {
-> 	led-sources = <2>;
-> 	led-max-microamp = <1000>;
-> }
+>   	l2-cache-controller@48242000 {
+> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> index cc88728..2ff58b1 100644
+> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> @@ -259,6 +259,14 @@
+>   		ti,invert-autoidle-bit;
+>   	};
 >
-> lvled2 {
-> 	led-sources = <2>;
-> 	led-max-microamp = <29000>;
-> }
+> +	mpu_periphclk: mpu_periphclk {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-factor-clock";
+> +		clocks = <&dpll_mpu_ck>;
+
+I don't think this is correct, ARM core is fed dpll_mpu_m2_ck, where the 
+divisor value can potentially differ from 1. If you feed this clock 
+directly from dpll_mpu_ck, you bypass this divisor.
+
+Did you check what is the impact of cpufreq on the ARM TWD/timers?
+
+-Tero
+
+> +		clock-mult = <1>;
+> +		clock-div = <2>;
+> +	};
+> +
+>   	dpll_ddr_ck: dpll_ddr_ck {
+>   		#clock-cells = <0>;
+>   		compatible = "ti,am3-dpll-clock";
 >
-> lvled3 {
-> 	led-sources = <2>;
-> 	led-max-microamp = <7000>;
-> }
 
-For this reason, I don't understand this LED configuration - one output 
-channel with multiple LED devices. LED child node should be matched with 
-led class device.
-If three output channels are controlled by one control bank, then it 
-should be represented as below.
-
-lvled-group-A {
-	led-sources = <0>, <1>, <2>;
-	led-max-microamp = <some value>;
-}
-
-Please let me know if I misunderstand.
-
-Best regards,
-Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
