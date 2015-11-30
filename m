@@ -1,83 +1,91 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 3/9] i2c: brcmstb: add missing parenthesis
-Date: Mon, 30 Nov 2015 16:36:04 +0100
-Message-ID: <20151130153604.GN1513@katana>
-References: <1445395021-4204-1-git-send-email-jaedon.shin@gmail.com>
- <1445395021-4204-4-git-send-email-jaedon.shin@gmail.com>
- <5628425C.5080104@gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [RESEND RFC/PATCH 3/8] media: platform: mtk-vpu: Support Mediatek VPU
+Date: Mon, 30 Nov 2015 15:36:07 +0000
+Message-ID: <CAMTL27G8WRTTGCtU9pXpp1-inyzZE9Jat1SkOiX5HMG5E-eFzw@mail.gmail.com>
+References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
+	<1447764885-23100-4-git-send-email-tiffany.lin@mediatek.com>
+	<5655DDB4.2080002@linaro.org>
+	<1448626209.7734.26.camel@mtksdaap41>
+	<56584AC5.7020704@linaro.org>
+	<1448883819.15961.7.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dPW7zu3hTOhZvCDO"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5628425C.5080104@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jaedon Shin <jaedon.shin@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1448883819.15961.7.camel@mtksdaap41>
+Sender: linux-media-owner@vger.kernel.org
+To: andrew-ct chen <andrew-ct.chen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eddie Huang <eddie.huang@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Fabien Dessenne <fabien.dessenne@st.com>, Peter Griffin <peter.griffin@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Rob
 List-Id: devicetree@vger.kernel.org
 
+On 30 November 2015 at 11:43, andrew-ct chen
+<andrew-ct.chen@mediatek.com> wrote:
+> On Fri, 2015-11-27 at 12:21 +0000, Daniel Thompson wrote:
+>> On 27/11/15 12:10, andrew-ct chen wrote:
+>> >>> +
+>> >>> > >+      memcpy((void *)send_obj->share_buf, buf, len);
+>> >>> > >+      send_obj->len = len;
+>> >>> > >+      send_obj->id = id;
+>> >>> > >+      vpu_cfg_writel(vpu, 0x1, HOST_TO_VPU);
+>> >>> > >+
+>> >>> > >+      /* Wait until VPU receives the command */
+>> >>> > >+      timeout = jiffies + msecs_to_jiffies(IPI_TIMEOUT_MS);
+>> >>> > >+      do {
+>> >>> > >+              if (time_after(jiffies, timeout)) {
+>> >>> > >+                      dev_err(vpu->dev, "vpu_ipi_send: IPI timeout!\n");
+>> >>> > >+                      return -EIO;
+>> >>> > >+              }
+>> >>> > >+      } while (vpu_cfg_readl(vpu, HOST_TO_VPU));
+>> >> >
+>> >> >Do we need to busy wait every time we communicate with the co-processor?
+>> >> >Couldn't we put this wait*before*  we write to HOST_TO_VPU above.
+>> >> >
+>> >> >That way we only spin when there is a need to.
+>> >> >
+>> > Since the hardware VPU only allows that one client sends the command to
+>> > it each time.
+>> > We need the wait to make sure VPU accepted the command and cleared the
+>> > interrupt and then the next command would be served.
+>>
+>> I understand that the VPU  can only have on message outstanding at once.
+>>
+>> I just wonder why we busy wait *after* sending the first command rather
+>> than *before* sending the second one.
+>
+> No other special reasons. Just send one command and wait until VPU gets
+> the command. Then, I think this wait also can be put before we write to
+> HOST_TO_VPU.Is this better than former? May I know the reason?
 
---dPW7zu3hTOhZvCDO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Busy waiting is bad; it is a waste of host CPU processor time and/or power.
 
-On Wed, Oct 21, 2015 at 06:56:44PM -0700, Florian Fainelli wrote:
-> Le 20/10/2015 19:36, Jaedon Shin a =C3=A9crit :
-> > Add the necessary parenthesis for NOACK condition.
-> >=20
-> > Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
->=20
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+When the busy wait occurs after queuing then we will busy wait for
+every command we send.
 
-I wouldn't call them necessary?
+If busy wait occurs before next queuing then we will wait for a
+shorter time in total because we have the chance to do something
+useful on the host before we have to wait.
 
->=20
-> > ---
-> >  drivers/i2c/busses/i2c-brcmstb.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-=
-brcmstb.c
-> > index 6b8bbf99880d..2d7d155029dc 100644
-> > --- a/drivers/i2c/busses/i2c-brcmstb.c
-> > +++ b/drivers/i2c/busses/i2c-brcmstb.c
-> > @@ -305,7 +305,7 @@ static int brcmstb_send_i2c_cmd(struct brcmstb_i2c_=
-dev *dev,
-> >  	}
-> > =20
-> >  	if ((CMD_RD || CMD_WR) &&
-> > -	    bsc_readl(dev, iic_enable) & BSC_IIC_EN_NOACK_MASK) {
-> > +	    (bsc_readl(dev, iic_enable) & BSC_IIC_EN_NOACK_MASK)) {
-> >  		rc =3D -EREMOTEIO;
-> >  		dev_dbg(dev->device, "controller received NOACK intr for %s\n",
-> >  			cmd_string[cmd]);
-> >=20
->=20
->=20
-> --=20
-> Florian
 
---dPW7zu3hTOhZvCDO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>> Streamed decode/encode typically ends up being rate controlled by
+>> capture or display meaning that in these cases we don't need to busy
+>> wait at all (because by the time we send the next frame the VPU has
+>> already accepted the previous message).
+>
+> For now, only one device "encoder" exists, it is true.
+> But, we'll have encoder and decoder devices, the decode and encode
+> requested to VPU are simultaneous.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Sure, I accept that lock and busy-wait is an appropriate way to ensure
+safety (assuming the VPU is fairly quick clearing the HOST_TO_VPU
+flag).
 
-iQIcBAEBAgAGBQJWXGzkAAoJEBQN5MwUoCm2BRQP/3Jp7MtRO1DcmUk+TOVQ49y3
-kvJgqGzocRCKPZzKr3a2MRRqvsRxODIjOWbM7tptNGMZVDbqBquhZB5tHfQFp7Ux
-95MjyBV6pU0jMIWnR14LwKknrUXjBN7YPrr9hbUmjKm7QAxI8LZLc5cAdE+fqza6
-uZ9qybujqnTO2eFlnXquFXPG3cnbZDx1zY9PkWmjF7sbEr7GdtcQSiq/S3tC+hJD
-XuQIMI47sp0sdBE+BefiCLPp8cF8ly67fmQ7yHtBh2D5gLE8m7MPAT9u/wKStKYX
-COCKmsyiW8jlbI5qksUq9+k8Xm3XNYaaFjXgqRWI/TSPuIC9DdSj2ZebI2AN/LCg
-t9n2QqwZcPU15hpxsm8FITtkSlhY3w3ldtGwL0GfS12HfsG0iKRFW6faYUJ2jLkM
-pQgAkD0bFcOEQN2y+O6cGw19AqU8kHjl66OpkIM+UNDBwVJxB7XHtlWJPq/7v5wO
-pfILsiO1rm59aX05Kh3FJyDkMixv3tBGJogfIYOLcHNRDfih9qBX2U6dtAchEhlN
-W4ZoDiHQdKKL6xGQch7nq2ap0WFXj693dCF0gCcXJYp4kzmoqaAesoG9el6Q2a1M
-nNwlO6osnPgwmdmkD1uCRDjPxSXOJu20hzlPRpms7Wstafu5H4rJAoCtL9NI8brU
-qnWOoBDAihktR/EOXG7V
-=4IwD
------END PGP SIGNATURE-----
 
---dPW7zu3hTOhZvCDO--
+> Is this supposed to be removed for this patches and we can add it back
+> if the another device(decoder) is ready for review?
+
+No I'm not suggesting that.
+
+I only recommend moving the busy wait *before* end sending of command
+(for efficiency reasons mentioned above).
+
+
+Daniel.
