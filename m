@@ -1,136 +1,53 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v6 2/2] leds: rt5033: Add RT5033 Flash led device driver
-Date: Mon, 30 Nov 2015 11:59:38 +0100
-Message-ID: <565C2C1A.3080100@samsung.com>
-References: <1448446948-13729-1-git-send-email-ingi2.kim@samsung.com>
- <1448446948-13729-3-git-send-email-ingi2.kim@samsung.com>
- <5655D001.8090803@samsung.com> <5656BC88.2070603@samsung.com>
- <5656D43D.106@samsung.com> <565BB510.2040903@samsung.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [RFC PATCH 1/8] ARM: initialize cpu_scale to its default
+Date: Mon, 30 Nov 2015 12:13:02 +0100
+Message-ID: <CAKfTPtCVv_dwAu-PVfkmpCPjNMo_nnLQzr2Yc1p2oFYOORH=GA@mail.gmail.com>
+References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com> <1448288921-30307-2-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <565BB510.2040903@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ingi Kim <ingi2.kim@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, andi.shyti@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1448288921-30307-2-git-send-email-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ingi,
+On 23 November 2015 at 15:28, Juri Lelli <juri.lelli@arm.com> wrote:
+> Instead of looping through all cpus calling set_capacity_scale, we can
+> initialise cpu_scale per-cpu variables to SCHED_CAPACITY_SCALE with their
+> definition.
+>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+> ---
+>  arch/arm/kernel/topology.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 08b7847..ec279d1 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -40,7 +40,7 @@
+>   * to run the rebalance_domains for all idle cores and the cpu_capacity can be
+>   * updated during this sequence.
+>   */
+> -static DEFINE_PER_CPU(unsigned long, cpu_scale);
+> +static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
+>
+>  unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
+>  {
+> @@ -306,8 +306,6 @@ void __init init_cpu_topology(void)
+>                 cpu_topo->socket_id = -1;
+>                 cpumask_clear(&cpu_topo->core_sibling);
+>                 cpumask_clear(&cpu_topo->thread_sibling);
+> -
+> -               set_capacity_scale(cpu, SCHED_CAPACITY_SCALE);
+>         }
+>         smp_wmb();
 
-On 11/30/2015 03:31 AM, Ingi Kim wrote:
-> Hi Jacek,
->
-> On 2015=EB=85=84 11=EC=9B=94 26=EC=9D=BC 18:43, Jacek Anaszewski wrot=
-e:
->> Hi Ingi,
->>
->> On 11/26/2015 09:02 AM, Ingi Kim wrote:
->> [...]
->>>>> +torch_unlock:
->>>>> +    mutex_unlock(&led->lock);
->>>>> +    return ret;
->>>>> +}
->>>>> +
->>>>> +static int rt5033_led_flash_brightness_set(struct led_classdev_f=
-lash *fled_cdev,
->>>>> +                       u32 brightness)
->>>>> +{
->>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_cd=
-ev);
->>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
->>>>> +
->>>>> +    mutex_lock(&led->lock);
->>>>> +    sub_led->flash_brightness =3D brightness;
->>>>> +    mutex_unlock(&led->lock);
->>>>
->>>> Mutex protection is redundant in this case. You would need it if d=
-evice
->>>> state was also changed here.
->>>
->>> Okay, I'll remove it.
->>>
->>>>
->>>> BTW why flash brightness can't be written to the device here?
->>>>
->>>
->>> Flash brightness is only affected when FLED flashed (strobing).
->>> So, I think it is better to be written in rt5033_led_flash_strobe_s=
-et function.
->>
->> strobe_set op should strobe the flash ASAP, and delegating brightnes=
-s
->> setting there extends a delay between calling strobe_set op
->> and actual flash strobe. If you set the brightness here, then you
->> wouldn't have to do that in the strobe_set op, of course unless the
->> the brightness is altered through the API of the other LED, in two
->> separate LEDs case.
->>
->
-> The brightness may be able to change its brightness in two separate L=
-EDs case as you see.
-> So, I think it would be better to write brightness setting in strobe_=
-op.
+FWIW, Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Could you motivate your statement, please? Why would it be better?
-
-> In consideration of delay, of course, the brightness is set just when=
- it would be changed.
-
-I think that joint iout arrangement will be prevailing - this is the
-case for your board, isn't it? With the modification I am proposing
-the gain is clear.
-
->>>>> +
->>>>> +    return 0;
->>>>> +}
->>>>> +
->>>>> +static int rt5033_led_flash_timeout_set(struct led_classdev_flas=
-h *fled_cdev,
->>>>> +                    u32 timeout)
->>>>> +{
->>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_cd=
-ev);
->>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
->>>>> +
->>>>> +    mutex_lock(&led->lock);
->>>>> +    sub_led->flash_timeout =3D timeout;
->>>>> +    mutex_unlock(&led->lock);
->>>>
->>>> Ditto.
->>>>
->>
->> Timeout should be also written here.
->>
 >
-> The timeout may be able to change its flash timeout in two separate L=
-EDs case as you see.
-> So, I think it would be better to write timeout setting in strobe_op.
-> In consideration of delay, of course, the timeout is set just when it=
- would be changed.
+> --
+> 2.2.2
 >
->> If you will add regmap_write in both ops, then mutex protection will
->> have to be preserved, to assure consistency between registers state
->> and sub_led->flash_brightness and sub_led->flash_timeout state.
->>
->
-> Thanks, but mutex protection is useless in this case.
-> so I try to remove it.
->
->>>
->>>>> +#define RT5033_FLED_CTRL4_VTRREG_MAX    0x60
->>>>
->>>> Rename DEF to MASK.
->>
->> Hmm, here it should be: Rename MAX to MASK.
->>
->
-> Oh
-> Okay, Thanks :)
->
-
-
---=20
-Best Regards,
-Jacek Anaszewski
