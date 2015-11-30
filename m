@@ -1,31 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: am437x/am33xx/omap/dm816x: Add gpmc dma
- channel
-Date: Mon, 30 Nov 2015 11:06:16 -0800
-Message-ID: <20151130190616.GN2517@atomide.com>
-References: <1444930648-19313-1-git-send-email-fcooper@ti.com>
- <1444930648-19313-5-git-send-email-fcooper@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ravb: add R8A7791 support
+Date: Mon, 30 Nov 2015 22:08:22 +0300
+Message-ID: <565C9EA6.309@cogentembedded.com>
+References: <6051623.qN4lqSyZKg@wasted.cogentembedded.com>
+ <CAMuHMdWE_G2WqsGZEaa4Ck3zziTLGVPfaVdU2gbnLA5zWpmR1w@mail.gmail.com>
+ <565B6AAD.8080205@cogentembedded.com> <20151130004207.GD3501@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1444930648-19313-5-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: linux-kernel@vger.kernel.org, rogerq@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, nsekhar@ti.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151130004207.GD3501@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Franklin S Cooper Jr <fcooper@ti.com> [151015 10:42]:
-> Add dma channel information to the gpmc. Although not enabled by
-> default this will allow prefetch-dma to be used.
+Hello.
 
-Picking up this patch only out of the series into omap-for-v4.5/dt.
-The documentation patch does not apply as it has a dependency to
-another series for adding the documentation. Please resend that
-one separately once the documentation hits the mainline kernel.
+On 11/30/2015 03:42 AM, Simon Horman wrote:
 
-The others patches in this series should get merged via the MTD tree.
+>>>> Add support  for yet another ARM member of the R-Car family, R-Car M2, also
+>>
+>>> R-Car M2-W?
+>>
+>>     Right, forgot about the postfixes.
+>>
+>>>> known as R8A7791.
+>>>
+>>> There's also R-Car M2-N, aka R8A7793, but you probably know that ;-)
+>>
+>>     Will fix.
+>
+> I would prefer if we added generic gen2 and gen3 compat strings to the driver
+> and only documented new soc-specific compat strings.
 
-Regards,
+    That's a new policy it seems. Previously you preferred the SoC-specific 
+strings to be used, didn;t you?
 
-Tony
+> Actually by chance I was planning to up patches to do that and add compat
+> strings for the missing Gen2 boards. But I won't complain if you beat me to
+> it.
+
+    No, I'm pretty busy as is. :-)
+
+MBR, Sergei
+
