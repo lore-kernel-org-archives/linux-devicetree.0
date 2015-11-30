@@ -1,54 +1,112 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH 0/4] gpio: lpc32xx: add new LPC32xx GPIO controller driver
-Date: Mon, 30 Nov 2015 11:13:17 +0200
-Message-ID: <565C132D.4040609@mleia.com>
-References: <1447982995-30231-1-git-send-email-vz@mleia.com> <CACRpkdYN+_2qrP3tDDj2SxDAEJr05FnPLKyFPEF9BGdVyQdTuQ@mail.gmail.com>
+From: dawei chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH v4 3/3] thermal: mediatek: Add cpu dynamic power cooling
+ model.
+Date: Mon, 30 Nov 2015 17:26:21 +0800
+Message-ID: <1448875581.29031.14.camel@mtksdaap41>
+References: <1448616727-29367-1-git-send-email-dawei.chien@mediatek.com>
+	 <1448616727-29367-4-git-send-email-dawei.chien@mediatek.com>
+	 <20151130053845.GM3373@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYN+_2qrP3tDDj2SxDAEJr05FnPLKyFPEF9BGdVyQdTuQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151130053845.GM3373@ubuntu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 30.11.2015 10:54, Linus Walleij wrote:
-> On Fri, Nov 20, 2015 at 2:29 AM, Vladimir Zapolskiy <vz@mleia.com> wrote:
+On Mon, 2015-11-30 at 11:08 +0530, Viresh Kumar wrote:
+> On 27-11-15, 17:32, Dawei Chien wrote:
+> > MT8173 cpufreq driver use of_cpufreq_power_cooling_register registering
+> > cooling devices with dynamic power coefficient.
+> > 
+> > Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> > ---
+> > This patch is base on patchset:
+> > https://lkml.org/lkml/2015/11/17/251
+> > ---
+> >  drivers/cpufreq/mt8173-cpufreq.c |   28 ++++++++++++++++++++--------
+> >  1 file changed, 20 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
+> > index 83001dc..4d39468 100644
+> > --- a/drivers/cpufreq/mt8173-cpufreq.c
+> > +++ b/drivers/cpufreq/mt8173-cpufreq.c
+> > @@ -263,24 +263,34 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+> >  	return 0;
+> >  }
+> >  
+> > +#define DYNAMIC_POWER "dynamic-power-coefficient"
+> > +
+> >  static void mtk_cpufreq_ready(struct cpufreq_policy *policy)
+> >  {
+> >  	struct mtk_cpu_dvfs_info *info = policy->driver_data;
+> >  	struct device_node *np = of_node_get(info->cpu_dev->of_node);
+> > +	u32 capacitance;
+> >  
+> >  	if (WARN_ON(!np))
+> >  		return;
+> >  
+> >  	if (of_find_property(np, "#cooling-cells", NULL)) {
+> > -		info->cdev = of_cpufreq_cooling_register(np,
+> > -							 policy->related_cpus);
+> > +		if (!info->cdev) {
 > 
->> Unfortunately the old driver has too many hacks inherited from the
->> ancient legacy NXP BSP and I find it can not be maintained, the new
->> driver has compatible interface to device tree clients, so moving
->> to the new driver should not impact any GPIO consumers.
+> Why will info->cdev be non-NULL here ?
+
+This is a error-checking to avoid user or any script by command line hotplug CPU
+more than two times, we don't need to register cooling device on this case.
+
+I will remove it if you don't agree it.
+
+> > +			of_property_read_u32(np, DYNAMIC_POWER, &capacitance);
 > 
-> Has it been tested on the old hardware too?
+> This can fail, in which case capacitance will be used uninitialized.
+> Fix that by initializing it with 0 at the beginning of this routine.
 
-the hardware here is the same, the driver is different.
+Thank you, I will follow your comment to fix it on next version.
 
-With the existing LPC32xx DTS files I tested that the DTS GPIO client's
-interface is unchanged and that GPIO client drivers correctly work with
-the new GPIO controller driver.
+> > +			info->cdev = of_cpufreq_power_cooling_register(np,
+> > +							policy->related_cpus,
+> > +							capacitance,
+> > +							NULL);
+> >  
+> > -		if (IS_ERR(info->cdev)) {
+> > -			dev_err(info->cpu_dev,
+> > -				"running cpufreq without cooling device: %ld\n",
+> > -				PTR_ERR(info->cdev));
+> > +			if (IS_ERR(info->cdev)) {
+> > +				dev_err(info->cpu_dev,
+> > +					"running cpufreq without cooling device: %ld\n",
+> > +					PTR_ERR(info->cdev));
+> >  
+> > -			info->cdev = NULL;
+> > +				info->cdev = NULL;
+> > +			}
+> >  		}
+> >  	}
+> >  
+> > @@ -460,7 +470,9 @@ static int mtk_cpufreq_exit(struct cpufreq_policy *policy)
+> >  {
+> >  	struct mtk_cpu_dvfs_info *info = policy->driver_data;
+> >  
+> > -	cpufreq_cooling_unregister(info->cdev);
+> > +	if (info->cdev)
+> > +		cpufreq_cooling_unregister(info->cdev);
+> > +
+> 
+> Why do you need to update this?
 
-As a summary about the change,
-* DT binding of GPIO controller in lpc32xx.dtsi is extended (no removed
-properties),
-* client's DT binding to the GPIO controller are untouched,
-* GPIO controller code is completely replaced,
-* GPIO client's side is untouched.
+This is a error-checking to avoid user or any script by command line
+unplug CPU more than two times, we don't need to unregister cooling
+device on this case.
 
-As a reminder about the necessity of the change, the legacy driver
-operates with hardware IRQs, this prevents switching of the platfrom to
-SPARSE_IRQ model.
+I will remove it if you don't agree it.
 
-It is important that the change depends on IRQ chip driver, which is
-also under review.
-
-I would appreciate, if review of this change can be started, so that
-both IRQ chip driver and GPIO controller driver are accepted in one
-merge window.
-
---
-With best wishes,
-Vladimir
+> >  	dev_pm_opp_free_cpufreq_table(info->cpu_dev, &policy->freq_table);
+> >  	mtk_cpu_dvfs_info_release(info);
+> >  	kfree(info);
+> > -- 
+> > 1.7.9.5
+> 
