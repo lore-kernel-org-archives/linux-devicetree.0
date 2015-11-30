@@ -1,103 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 09/15] PM / devfreq: exynos: Update documentation for
- bus devices using passive governor
-Date: Mon, 30 Nov 2015 15:14:53 -0600
-Message-ID: <20151130211453.GA29423@rob-hp-laptop>
-References: <1448545659-32287-1-git-send-email-cw00.choi@samsung.com>
- <1448545659-32287-10-git-send-email-cw00.choi@samsung.com>
+Subject: Re: [PATCH 09/10] Input: synaptics-rmi4: Add device tree support to
+ the SPI transport driver
+Date: Mon, 30 Nov 2015 15:28:00 -0600
+Message-ID: <20151130212800.GA6213@rob-hp-laptop>
+References: <1448496625-25408-1-git-send-email-aduggan@synaptics.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448545659-32287-10-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, k.kozlowski@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1448496625-25408-1-git-send-email-aduggan@synaptics.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andrew Duggan <aduggan@synaptics.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Christopher Heiny <cheiny@synaptics.com>, Stephen Chandler Paul <cpaul@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 10:47:33PM +0900, Chanwoo Choi wrote:
-> This patch updates the documentation for passive bus devices and adds the
-> detailed example of Exynos3250.
+On Wed, Nov 25, 2015 at 04:10:25PM -0800, Andrew Duggan wrote:
+> Add devicetree binding for SPI devices.
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
 > ---
->  .../devicetree/bindings/devfreq/exynos-bus.txt     | 226 ++++++++++++++++++++-
->  1 file changed, 223 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/input/rmi4/rmi_spi.txt     | 57 ++++++++++++++++++++++
+>  drivers/input/rmi4/rmi_spi.c                       | 44 ++++++++++++++++-
+>  2 files changed, 100 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> index 5d90623bd173..c4a6fe30075e 100644
-> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> @@ -12,18 +12,23 @@ SoC has the different sub-blocks. So, this difference should be specified
->  in devicetree file instead of each device driver. In result, this driver
->  is able to support the bus frequency for all Exynos SoCs.
->  
-> -Required properties for bus device:
-> +Required properties for all bus devices:
->  - compatible: Should be "samsung,exynos-bus".
->  - clock-names : the name of clock used by the bus, "bus".
->  - clocks : phandles for clock specified in "clock-names" property.
->  - #clock-cells: should be 1.
->  - operating-points-v2: the OPP table including frequency/voltage information
->    to support DVFS (Dynamic Voltage/Frequency Scaling) feature.
+> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+> new file mode 100644
+> index 0000000..f20366b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+> @@ -0,0 +1,57 @@
+> +Synaptics RMI4 SPI Device Binding
 > +
-> +Required properties for only parent bus device:
->  - vdd-supply: the regulator to provide the buses with the voltage.
->  - devfreq-events: the devfreq-event device to monitor the curret utilization
->    of buses.
->  
-> -Optional properties for bus device:
-> +Required properties for only passive bus device:
-> +- devfreq: the parent bus device.
+> +The Synaptics RMI4 core is able to support RMI4 devices using differnet
+> +transports and differnet functions. This file describes the device tree
+> +bindings for devices using the SPI tranport driver. Complete documentation
+> +for other transports and functions cen be found ini
+> +Documentation/devicetree/bindings/input/rmi4.
 > +
-> +Optional properties for only parent bus device:
->  - exynos,saturation-ratio: the percentage value which is used to calibrate
->                     the performance count againt total cycle count.
->  
-> @@ -32,7 +37,19 @@ Example1:
->  	power line (regulator). The MIF (Memory Interface) AXI bus is used to
->  	transfer data between DRAM and CPU and uses the VDD_MIF regualtor.
->  
-> -	- power line(VDD_MIF) --> bus for DMC block (dmc clock)
-> +	- MIF (Memory Interface) block
-> +	: VDD_MIF |--- DMC
+> +Required Properties:
+> +- compatible: syna,rmi-spi
+> +- reg: Chip select address for the device
+> +- #address-cells: Set to 1 to indicate that the function child nodes
+> +		    consist of only on uint32 value.
+> +- #size-cells: Set to 0 to indicate that the function child nodes do not
+> +		have a size property.
 > +
-> +	- INT (Internal) block
-> +	: VDD_INT |--- LEFTBUS  |--- PERIL
-> +		  |    (parent) |--- MFC
-> +		  |             |--- G3D
-> +		  |
-> +		  |--- RIGHTBUS |--- FSYS
-> +				|--- LCD0
-> +				|--- PERIR
-> +				|--- ISP
-> +				|--- CAM
+> +Optional Properties:
+> +- interrupts: interrupt which the rmi device is connected to.
+> +- interrupt-parent: The interrupt controller.
+> +See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +- syna,spi-read-delay: millisecond delay between read byte transfers.
+> +- syna,spi-write-delay: millisecond delay between write byte transfers.
 
-I would expect the DT to mirror this topology which doesn't seem to be 
-the case in the example.
+These could possibly be common SPI properties, but they would need to be 
+somewhat better defined as every access on SPI is a read and a write. 
+What if you have a read then write or write then read? Just a time 
+between transfers would probably make more sense.
 
-
->  	- MIF bus's frequency/voltage table
->  	-----------------------
-> @@ -45,6 +62,20 @@ Example1:
->  	|L5| 400000 |875000   |
->  	-----------------------
->  
-> +	- INT bus's frequency/voltage table
-> +	-----------------------------------------------------------------------
-> +	|Lv| Freq                                                   | Voltage |
-> +	-----------------------------------------------------------------------
-> +	|  |LEFTBUS|RIGHTBUS|LCD0   |FSYS   |MCUISP |ISP    |PERIL  |VDD_INT  |
-> +	|  |*parent|passive |passive|passive|passive|passive|passive|         |
-> +	-----------------------------------------------------------------------
-> +	|L1|50000  |50000   |50000  |50000  |50000  |50000  |50000  |900000   |
-> +	|L2|80000  |80000   |80000  |80000  |80000  |80000  |80000  |900000   |
-> +	|L3|100000 |100000  |100000 |100000 |100000 |100000 |100000 |1000000  |
-> +	|L4|133000 |133000  |133000 |133000 |200000 |200000 |       |1000000  |
-> +	|L5|200000 |200000  |200000 |200000 |400000 |300000 |       |1000000  |
-> +	-----------------------------------------------------------------------
-
-Do you really have 5 states? It look like there are 2 to me because the 
-OPP tables only really need to have the max freq at each voltage point. 
+Minimally, they should have -msec suffix.
 
 Rob
