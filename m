@@ -1,115 +1,65 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 01/28] serial: earlycon: allow MEM32 I/O for DT earlycon
-Date: Mon, 30 Nov 2015 16:21:26 +0000
-Message-ID: <1448900513-20856-2-git-send-email-paul.burton@imgtec.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 02/28] dt-bindings: ascii-lcd: Document a binding for simple ASCII LCDs
+Date: Mon, 30 Nov 2015 16:21:27 +0000
+Message-ID: <1448900513-20856-3-git-send-email-paul.burton@imgtec.com>
 References: <1448900513-20856-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448900513-20856-1-git-send-email-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448900513-20856-1-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Read the reg-io-width property when earlycon is setup via device tree,
-and set the I/O type to UPIO_MEM32 when 4 is read. This behaviour
-matches that of the of_serial driver, and is needed for DT configured
-earlycon on the MIPS Boston board.
+Add documentation for a devicetree binding for simple memory-mapped
+ASCII LCD displays, such as those found on the Imagination Technologies
+Boston & Malta development boards.
 
-Note that this is only possible when CONFIG_LIBFDT is enabled, but
-enabling it everywhere seems like overkill. Thus systems that need this
-functionality should select CONFIG_LIBFDT for themselves.
-
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 ---
 
- drivers/of/fdt.c              |  2 +-
- drivers/tty/serial/Makefile   |  1 +
- drivers/tty/serial/earlycon.c | 15 ++++++++++++++-
- include/linux/serial_core.h   |  2 +-
- 4 files changed, 17 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/ascii-lcd.txt | 10 ++++++++++
+ MAINTAINERS                                     |  5 +++++
+ 2 files changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ascii-lcd.txt
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index d243029..71c7f0d 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -833,7 +833,7 @@ static int __init early_init_dt_scan_chosen_serial(void)
- 		if (addr == OF_BAD_ADDR)
- 			return -ENXIO;
- 
--		of_setup_earlycon(addr, match->data);
-+		of_setup_earlycon(fdt, offset, addr, match->data);
- 		return 0;
- 	}
- 	return -ENODEV;
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index 5ab4111..1d290d6 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_SERIAL_21285) += 21285.o
- 
- obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
- obj-$(CONFIG_SERIAL_EARLYCON_ARM_SEMIHOST) += earlycon-arm-semihost.o
-+CFLAGS_earlycon.o += -I$(srctree)/scripts/dtc/libfdt
- 
- # These Sparc drivers have to appear before others such as 8250
- # which share ttySx minor node space.  Otherwise console device
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index f096360..2b936a7 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -17,6 +17,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/libfdt.h>
- #include <linux/serial_core.h>
- #include <linux/sizes.h>
- #include <linux/mod_devicetable.h>
-@@ -196,17 +197,29 @@ static int __init param_setup_earlycon(char *buf)
- }
- early_param("earlycon", param_setup_earlycon);
- 
--int __init of_setup_earlycon(unsigned long addr,
-+int __init of_setup_earlycon(const void *fdt, int offset, unsigned long addr,
- 			     int (*setup)(struct earlycon_device *, const char *))
- {
- 	int err;
- 	struct uart_port *port = &early_console_dev.port;
-+	const __be32 *prop;
- 
- 	port->iotype = UPIO_MEM;
- 	port->mapbase = addr;
- 	port->uartclk = BASE_BAUD * 16;
- 	port->membase = earlycon_map(addr, SZ_4K);
- 
-+	if (config_enabled(CONFIG_LIBFDT)) {
-+		prop = fdt_getprop(fdt, offset, "reg-io-width", NULL);
-+		if (prop) {
-+			switch (be32_to_cpup(prop)) {
-+			case 4:
-+				port->iotype = UPIO_MEM32;
-+				break;
-+			}
-+		}
-+	}
+diff --git a/Documentation/devicetree/bindings/ascii-lcd.txt b/Documentation/devicetree/bindings/ascii-lcd.txt
+new file mode 100644
+index 0000000..40ae536
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ascii-lcd.txt
+@@ -0,0 +1,10 @@
++Binding for simple memory-mapped ASCII LCD displays
 +
- 	early_console_dev.con->data = &early_console_dev;
- 	err = setup(&early_console_dev, NULL);
- 	if (err < 0)
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 297d4fa..aa375f1 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -345,7 +345,7 @@ struct earlycon_id {
- } __aligned(32);
++Required properties:
++- compatible : should be one of:
++    "img,boston-lcd"
++    "mti,malta-lcd"
++- reg : memory region locating the device registers
++
++The layout of the registers & properties of the display are determined
++from the compatible string, making this binding somewhat trivial.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba790b..1e2b74b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1782,6 +1782,11 @@ S:	Maintained
+ F:	Documentation/hwmon/asc7621
+ F:	drivers/hwmon/asc7621.c
  
- extern int setup_earlycon(char *buf);
--extern int of_setup_earlycon(unsigned long addr,
-+extern int of_setup_earlycon(const void *fdt, int offset, unsigned long addr,
- 			     int (*setup)(struct earlycon_device *, const char *));
- 
- #define EARLYCON_DECLARE(_name, func)					\
++ASCII LCD DRIVER
++M:	Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
++S:	Maintained
++F:	Documentation/devicetree/bindings/ascii-lcd.txt
++
+ ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+ M:	Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ L:	acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 -- 
 2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
