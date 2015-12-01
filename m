@@ -1,53 +1,47 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] reset: Add brcm,bcm63xx-reset device tree binding
-Date: Tue, 1 Dec 2015 14:16:10 +0300
-Message-ID: <565D817A.2030607@cogentembedded.com>
-References: <565CB83B.7010000@simon.arlott.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] clk: sunxi: Add sun9i A80 apbs gates support
+Date: Tue, 1 Dec 2015 12:16:15 +0100
+Message-ID: <20151201111615.GG29263@lukather>
+References: <1448766190-11345-1-git-send-email-wens@csie.org>
+ <1448766190-11345-3-git-send-email-wens@csie.org>
+ <20151130171406.GA10111@rob-hp-laptop>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <565CB83B.7010000@simon.arlott.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5UGlQXeG3ziZS81+"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAED62ZAKGQEVIQYMSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151130171406.GA10111@rob-hp-laptop>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+--5UGlQXeG3ziZS81+
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 11/30/2015 11:57 PM, Simon Arlott wrote:
+On Mon, Nov 30, 2015 at 11:14:06AM -0600, Rob Herring wrote:
+> On Sun, Nov 29, 2015 at 11:03:07AM +0800, Chen-Yu Tsai wrote:
+> > This patch adds support for the PRCM apbs clock gates found on the
+> > Allwinner A80 SoC.
+> > 
+> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> Add device tree binding for the BCM63xx soft reset controller.
->
-> The BCM63xx contains a soft-reset controller activated by setting
-> a bit (that must previously have cleared).
->
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
-> ---
->   .../bindings/reset/brcm,bcm63xx-reset.txt          | 37 ++++++++++++++++++++++
->   1 file changed, 37 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
->
-> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
-> new file mode 100644
-> index 0000000..48e9daf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm63xx-reset.txt
-> @@ -0,0 +1,37 @@
-> +BCM63xx reset controller
-> +
-> +The BCM63xx contains a basic soft reset controller in the perf register
-> +set which resets components using a bit in a register.
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm63xx-reset"
+Applied, thanks!
 
-     Wildcards (xx) are not allowed here. Please choose a "least common 
-denominator" SoC and name the string after it.
+Maxime
 
-[...]
-
-MBR, Sergei
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--5UGlQXeG3ziZS81+--
