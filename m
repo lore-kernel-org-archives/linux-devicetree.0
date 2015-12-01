@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 5/6] pinctrl: dt-binding: Extend meson documentation with GPIO IRQs support
-Date: Tue,  1 Dec 2015 17:24:21 +0100
-Message-ID: <1448987062-31225-6-git-send-email-carlo@caione.org>
+Subject: [PATCH v3 3/6] pinctrl: meson: Make helper functions public
+Date: Tue,  1 Dec 2015 17:24:19 +0100
+Message-ID: <1448987062-31225-4-git-send-email-carlo@caione.org>
 References: <1448987062-31225-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1448987062-31225-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
@@ -12,45 +12,58 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Extend the pinctrl binding documentation with the support for external
-GPIO interrupts.
+meson_get_domain_and_bank() and meson_map_resource() are not static
+anymore.
 
 Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/pinctrl/meson/pinctrl-meson.c | 10 +++++-----
+ drivers/pinctrl/meson/pinctrl-meson.h |  7 +++++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 3f6a524..de669ce 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -3,6 +3,12 @@
- Required properties for the root node:
-  - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
-  - reg: address and size of registers controlling irq functionality
-+ - reg-names: should be "irq"
-+ - interrupt-controller: marks the device node as an interrupt controller
-+ - #interrupt-cells: should be 2. The first cell is the GPIO number. The
-+		     second cell is used to specify trigger type.
-+ - amlogic,irqs-gpio: specifies the GPIO IRQ numbers on the GIC (GPIO_IRQ#)
-+ - interrupt-parent: specifies the parent interrupt controller.
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 84943e4..0c5655b 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -99,9 +99,9 @@ static int meson_get_bank(struct meson_domain *domain, unsigned int pin,
+  *
+  * Return:	0 on success, a negative value on error
+  */
+-static int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
+-				     struct meson_domain **domain,
+-				     struct meson_bank **bank)
++int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
++			      struct meson_domain **domain,
++			      struct meson_bank **bank)
+ {
+ 	struct meson_domain *d;
+ 	int i;
+@@ -618,8 +618,8 @@ static struct regmap_config meson_regmap_config = {
+ 	.reg_stride = 4,
+ };
  
- === GPIO sub-nodes ===
+-static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
+-					 struct device_node *node, char *name)
++struct regmap *meson_map_resource(struct meson_pinctrl *pc,
++				  struct device_node *node, char *name)
+ {
+ 	struct resource res;
+ 	void __iomem *base;
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index 374f4b6..a0bf705 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -214,3 +214,10 @@ struct meson_pinctrl {
  
-@@ -46,7 +52,12 @@ pinctrl-bindings.txt
- 
- 	pinctrl: pinctrl@c1109880 {
- 		compatible = "amlogic,meson8-pinctrl";
-+		reg-names = "irq";
- 		reg = <0xc1109880 0x10>;
-+		interrupt-parent = <&gic>;
-+		amlogic,irqs-gpio = <64 65 66 67 68 69 70 71>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
+ extern struct meson_pinctrl_data meson8_pinctrl_data;
+ extern struct meson_pinctrl_data meson8b_pinctrl_data;
++
++int meson_get_domain_and_bank(struct meson_pinctrl *pc, unsigned int pin,
++			      struct meson_domain **domain,
++			      struct meson_bank **bank);
++
++struct regmap *meson_map_resource(struct meson_pinctrl *pc,
++				  struct device_node *node, char *name);
 -- 
 2.5.0
 
