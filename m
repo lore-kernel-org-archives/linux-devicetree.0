@@ -1,138 +1,58 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v2 02/10] drm/hisilicon: Add DT binding docs for hi6220
- display subsystem
-Date: Tue, 1 Dec 2015 15:17:24 +0800
-Message-ID: <CAGd==07B4e6uevH5LmW_MeG4SbViKqQ+MwKTtWtXi4UBmv6pSw@mail.gmail.com>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
-	<1448707145-69348-3-git-send-email-xinliang.liu@linaro.org>
-	<20151130193130.GA1616@rob-hp-laptop>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: arm64: dts: qcom: Add apq8096 dragonboard dts skeletons
+Date: Mon, 30 Nov 2015 23:21:22 -0800
+Message-ID: <20151201072122.GA26865@codeaurora.org>
+References: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
+ <20151130234817.GC21446@codeaurora.org>
+ <565D0D83.201@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20151130193130.GA1616@rob-hp-laptop>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, architt@codeaurora.org, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, linuxarm@huawei.com, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@huawei.com, lijianhua@huawei.com, Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565D0D83.201@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2015 at 03:31, Rob Herring <robh@kernel.org> wrote:
+On 12/01, Rajendra Nayak wrote:
+> 
+> On 12/01/2015 05:18 AM, Stephen Boyd wrote:
+> > On 11/26, Rajendra Nayak wrote:
+> >> Add new dtsi and dts files for the apq8096 dragonboards with just
+> >> a serial device used as debug console
+> >>
+> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> >> ---
+> >> Patch applies on top of Stephens' patches to add msm8996 dtsi
+> >> https://lkml.org/lkml/2015/11/17/955
+> >>
+> >>  arch/arm64/boot/dts/qcom/Makefile                 |  2 +-
+> >>  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts  | 21 ++++++++++++++++
+> >>  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi | 30 +++++++++++++++++++++++
+> >>  3 files changed, 52 insertions(+), 1 deletion(-)
+> >>  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
+> >>  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> >> index fa1f661..bd992ef 100644
+> >> --- a/arch/arm64/boot/dts/qcom/Makefile
+> >> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> >> @@ -1,5 +1,5 @@
+> >>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+> >> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+> >> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-dragonboard.dtb
+> > 
+> > We should move to one dtb per line in this file. Other platforms
+> > are doing the same thing.
+> 
+> Sure, will repost with the change. I just saw the 8916/8016 ones were all in
+> a single line so did the same.
+> 
 
-Hi Rob, thank you for review.
+Yeah we should probably change the 8916 one too. Make everything
+the same.
 
-> On Sat, Nov 28, 2015 at 06:38:57PM +0800, Xinliang Liu wrote:
->> Add the device tree binding documentation for hi6220 SoC display subsystem.
->> drm master device binding doc.
->> ADE display controller binding doc.
->> DSI controller binding doc.
->>
->> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
->> Signed-off-by: Andy Green <andy.green@linaro.org>
->> ---
->>  .../bindings/display/hisilicon/hisi-ade.txt        | 42 ++++++++++++++
->>  .../bindings/display/hisilicon/hisi-drm.txt        | 66 ++++++++++++++++++++++
->>  .../bindings/display/hisilicon/hisi-dsi.txt        | 53 +++++++++++++++++
->>  3 files changed, 161 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-drm.txt
->>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-dsi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->> new file mode 100644
->> index 0000000..2777a2c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->> @@ -0,0 +1,42 @@
->> +Device-Tree bindings for hisilicon ADE display controller driver
->> +
->> +ADE (Advanced Display Engine) is the display controller which grab image
->> +data from memory, do composition, do post image processing, generate RGB
->> +timing stream and transfer to DSI.
->> +
->> +Required properties:
->> +- compatible: value should be one of the following
->> +     "hisilicon,hi6220-ade".
->> +- reg: physical base address and length of the controller's registers.
->> +- reg-names: name of physical base.
->> +- interrupt: the interrupt number.
->> +- clocks: the clocks needed.
->> +- clock-names: the name of the clocks.
->> +- ade_core_clk_rate: ADE core clock rate.
->> +- media_noc_clk_rate: media noc module clock rate.
->
-> I think you can use assigned clock properties instead:
->
-> assigned-clocks = <&media_ctrl HI6220_ADE_CORE>;
-> assigned-clock-rates = <360000000>;
->
-> I'm not sure about what media_noc corresponds to in clocks list though.
->
-
-will use assigned-clocks in v3.
-
->> +
->> +
->> +A example of HiKey board hi6220 SoC specific DT entry:
->> +Example:
->> +
->> +     ade: ade@f4100000 {
->> +             compatible = "hisilicon,hi6220-ade";
->> +             reg = <0x0 0xf4100000 0x0 0x7800>,
->> +                   <0x0 0xf4410000 0x0 0x1000>;
->> +             reg-names = "ade_base",
->> +                         "media_base";
->> +             interrupts = <0 115 4>;
->> +
->> +             clocks = <&media_ctrl HI6220_ADE_CORE>,
->> +                      <&media_ctrl HI6220_CODEC_JPEG>,
->> +                      <&media_ctrl HI6220_ADE_PIX_SRC>,
->> +                      <&media_ctrl HI6220_PLL_SYS>,
->> +                      <&media_ctrl HI6220_PLL_SYS_MEDIA>;
->> +             clock-names  = "clk_ade_core",
->> +                            "aclk_codec_jpeg_src",
->> +                            "clk_ade_pix",
->> +                            "clk_syspll_src",
->> +                            "clk_medpll_src";
->> +             ade_core_clk_rate = <360000000>;
->> +             media_noc_clk_rate = <288000000>;
->> +     };
->> diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-drm.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-drm.txt
->> new file mode 100644
->> index 0000000..fd93026
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-drm.txt
->> @@ -0,0 +1,66 @@
->> +Hisilicon DRM master device
->> +
->> +The Hisilicon DRM master device is a virtual device needed to list all
->> +the other display relevant nodes that comprise the display subsystem.
->
-> There is no need for this in DT. The ADE can be the master device and
-> of-graph can link to the DSI node. I have a similar example here[1]
-> with a LCD controller block, DSI block and adv7533.
-
-This sounds good, then I can remove the virtual master device.
-I will refer to this example and make ADE as the master device in v3.
-
->
->> +Required properties:
->> +- compatible: Should be "hisilicon,<chip>-dss"
->> +- #address-cells: should be set to 2.
->> +- #size-cells: should be set to 2.
->> +- range: to allow probing of subdevices.
->> +
->> +Optional properties:
->> +- dma-coherent: Present if dma operations are coherent.
->
-> Put this on the actually DMA master.
-
-The DMA modules reside in the begining of each channel(or plane) of ADE.
-So I need to put this dma-coherent property to ADE device node, right?
-
-Thanks,
--xinliang
-
->
-> Rob
->
-> [1] https://git.linaro.org/people/rob.herring/linux.git pxa1928-drm-v2
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
