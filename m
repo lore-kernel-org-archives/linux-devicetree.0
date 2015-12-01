@@ -1,53 +1,83 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH v4 2/4] Documentation: add the binding file for Freescale imx7d ADC driver
-Date: Tue, 1 Dec 2015 16:22:28 +0800
-Message-ID: <1448958150-25579-3-git-send-email-haibo.chen@freescale.com>
-References: <1448958150-25579-1-git-send-email-haibo.chen@freescale.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
+Date: Tue, 1 Dec 2015 09:33:09 +0100
+Message-ID: <CAMuHMdWF25z0m09QxbFyLDJZ6gZt-fscsi=2H3Ss3GZbVbS1Eg@mail.gmail.com>
+References: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
+	<20151124201655.GA23437@rob-hp-laptop>
+	<20151125002032.GF20596@verge.net.au>
+	<20151201064726.GJ16260@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448958150-25579-1-git-send-email-haibo.chen@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, shawnguo@kernel.org, kernel@pengutronix.de
-Cc: haibo.chen@freescale.com, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151201064726.GJ16260@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh@kernel.org>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds the binding file for Freescale imx7d ADC driver.
+On Tue, Dec 1, 2015 at 7:47 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, Nov 25, 2015 at 09:20:32AM +0900, Simon Horman wrote:
+>> On Tue, Nov 24, 2015 at 02:16:55PM -0600, Rob Herring wrote:
+>> > On Tue, Nov 24, 2015 at 11:20:41AM +0900, Simon Horman wrote:
+>> > > In general Renesas hardware is not documented to the extent where the
+>> > > relationship between IP blocks on different SoCs can be assumed although
+>> > > they may appear to operate the same way. Furthermore the documentation
+>> > > typically does not specify a version for individual IP blocks. For these
+>> > > reasons a convention of using the SoC name in place of a version and
+>> > > providing SoC-specific compat strings has been adopted.
+>> > >
+>> > > Although not universally liked this convention is used in the bindings for
+>> > > most drivers for Renesas hardware. The purpose of this patch is to
+>> > > update the Renesas USB DMA Controller driver to follow this convention.
+>> > >
+>> > > Cc: devicetree@vger.kernel.org
+>> > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> > > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>> > >
+>> > > ---
+>> > > * r8a7792 (R-Car V2H) is omitted as my reading of the documentation
+>> > >   is that Renesas USB-DMAC does not exist on that SoC
+>> > > * r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
+>> > >   of USB-DMAC that SoC
+>> > >
+>> > > * Once this has been merged I intend to provide follow-up patches
+>> > >   to use these new compat strings in the relevant dtsi files.
+>> > > ---
+>> > >  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
+>> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+>> > >
+>> > > diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+>> > > index 040f365954cc..3bb624e10615 100644
+>> > > --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+>> > > +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+>> > > @@ -1,7 +1,12 @@
+>> > >  * Renesas USB DMA Controller Device Tree bindings
+>> > >
+>> > >  Required Properties:
+>> > > -- compatible: must contain "renesas,usb-dmac"
+>> > > +- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
+>> > > +       Examples with soctypes are:
+>> > > +         - "renesas,usb-dmac-r8a7790" (R-Car H2)
+>> > > +         - "renesas,usb-dmac-r8a7791" (R-Car M2-W)
+>> > > +         - "renesas,usb-dmac-r8a7793" (R-Car M2-N)
+>> > > +         - "renesas,usb-dmac-r8a7794" (R-Car E2)
+>> >
+>> > Weren't you changing the order of SoC and block names on new bindings?
+>>
+>> Could you clarify what the desired order is?
+>> My intention is for these bindings to use the preferred order.
+>
+> ping
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/iio/adc/imx7d-adc.txt      | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+Not speaking for Rob, but I think he means e.g. "renesas,r8a7790-usb-dmac".
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
-new file mode 100644
-index 0000000..5c184b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
-@@ -0,0 +1,22 @@
-+Freescale imx7d ADC bindings
-+
-+The devicetree bindings are for the ADC driver written for
-+imx7d SoC.
-+
-+Required properties:
-+- compatible: Should be "fsl,imx7d-adc"
-+- reg: Offset and length of the register set for the ADC device
-+- interrupts: The interrupt number for the ADC device
-+- clocks: The root clock of the ADC controller
-+- clock-names: Must contain "adc", matching entry in the clocks property
-+- vref-supply: The regulator supply ADC reference voltage
-+
-+Example:
-+adc1: adc@30610000 {
-+	compatible = "fsl,imx7d-adc";
-+	reg = <0x30610000 0x10000>;
-+	interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clks IMX7D_ADC_ROOT_CLK>;
-+	clock-names = "adc";
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+};
--- 
-1.9.1
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
